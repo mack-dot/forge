@@ -1,0 +1,49 @@
+{
+  "commands": [
+    {
+      "command": "python3 gate/gate.py --impl impl/Ledger.dfy --evidence build/stage4-fee-source.json",
+      "exit_code": 0,
+      "log": "build/stage4-fee-proof-attempt1.log"
+    },
+    {
+      "command": "python3 scripts/build_model.py",
+      "exit_code": 0,
+      "log": "build/stage4-fee-model.log"
+    },
+    {
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 0
+    },
+    {
+      "command": "node --import tsx tests/fees.examples.ts",
+      "exit_code": 0
+    },
+    {
+      "command": "npx --no-install tsc --noEmit",
+      "diagnostic": "tests/fees.examples.ts lines 20 and 37: TS2339 set does not exist on ReadonlyMap; fixture setup used the read-only public state type",
+      "exit_code": 2
+    },
+    {
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "node --import tsx tests/fees.examples.ts",
+      "exit_code": 0,
+      "output": "{\"result\":\"passed\",\"method\":\"unit_tested\",\"cases\":10,\"implementations\":[\"ts/ledger.ts\",\"compiled Dafny model\"],\"end_to_end\":false}\n"
+    }
+  ],
+  "end_to_end": false,
+  "examples": {
+    "cases": 10,
+    "end_to_end": false,
+    "implementations": [
+      "ts/ledger.ts",
+      "compiled Dafny model"
+    ],
+    "method": "unit_tested",
+    "result": "passed"
+  },
+  "stage_exit": false
+}
