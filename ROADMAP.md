@@ -6,7 +6,8 @@ This is the execution plan and decision record. Stages 0–3 are DONE. The
 approved ledger refinement passed the real Dafny gate. The schema, policy,
 artifact-binding, replay, and Stage 1 regression checks produced their required
 results. The user approved the tested Node-loader demo invocation, which ran
-with exit 0. Stage 4 is CURRENT; its implementation has not started.
+with exit 0. Stage 4 is CURRENT. Its member-selection diagnostic has run;
+the incremental gate and GitHub workflow are not implemented.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -522,6 +523,14 @@ implementation or later-stage spec change was started.
 ### Stage 4 — CHANGE LOOP
 
 **Status: CURRENT**
+
+Investigation: `python3 scripts/probe_stage_4.py` ran with exit 0. It invokes
+real Dafny commands on isolated copies. Full verification accepted the original
+ledger (exit 0) and rejected a broken helper proof (exit 4). Selecting only
+`Ledger.Apply` returned exit 0 in both cases. Selection therefore cannot replace
+dependency coverage. The diagnostic accepts no artifacts and completes no
+Stage 4 EXIT. Exact child commands and obligation counts are recorded in
+`results/stage4-member-probe.json`; see `unsure.md` U033.
 
 Create a GitHub Action that computes affected claims from dependencies and
 content hashes, invokes per-lemma/per-member verification, and posts a

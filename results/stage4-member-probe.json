@@ -1,0 +1,183 @@
+{
+  "accepts_artifacts": false,
+  "cases": [
+    {
+      "command": ".toolchain/dafny-4.11.0/dafny/dafny verify build/stage4-member-probe/correct/impl/Ledger.dfy build/stage4-member-probe/correct/gate/ContractBinding.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --log-format 'trx;LogFileName=build/stage4-member-probe/correct-full.trx'",
+      "exit_code": 0,
+      "fixture_source_sha256": "9d8272df6868b7a3db89fe5679ed704fc826795720c954cebf1e60d42363c82f",
+      "name": "correct-full",
+      "obligation_count": 12,
+      "obligations": [
+        {
+          "member": "Ledger.Apply (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.Apply (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalRemove (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalRemove (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalReplace (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalReplace (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.Apply (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.IsFreshValid (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.IsRetry (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.NonNegative (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.Total (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.WellFormed (well-formedness)",
+          "outcome": "Passed"
+        }
+      ],
+      "raw_log": "build/stage4-member-probe/correct-full.log",
+      "selected_symbol": null
+    },
+    {
+      "command": ".toolchain/dafny-4.11.0/dafny/dafny verify build/stage4-member-probe/correct/impl/Ledger.dfy build/stage4-member-probe/correct/gate/ContractBinding.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --log-format 'trx;LogFileName=build/stage4-member-probe/correct-apply.trx' --filter-symbol Ledger.Apply.",
+      "exit_code": 0,
+      "fixture_source_sha256": "9d8272df6868b7a3db89fe5679ed704fc826795720c954cebf1e60d42363c82f",
+      "name": "correct-apply",
+      "obligation_count": 2,
+      "obligations": [
+        {
+          "member": "Ledger.Apply (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.Apply (well-formedness)",
+          "outcome": "Passed"
+        }
+      ],
+      "raw_log": "build/stage4-member-probe/correct-apply.log",
+      "selected_symbol": "Ledger.Apply."
+    },
+    {
+      "command": ".toolchain/dafny-4.11.0/dafny/dafny verify build/stage4-member-probe/broken-helper/impl/Ledger.dfy build/stage4-member-probe/broken-helper/gate/ContractBinding.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --log-format 'trx;LogFileName=build/stage4-member-probe/broken-helper-full.trx'",
+      "exit_code": 4,
+      "fixture_source_sha256": "f053a3c5815ec54d18e58a7efc7169b03e74ebf9137463af1fcb0ae89f4beac6",
+      "name": "broken-helper-full",
+      "obligation_count": 12,
+      "obligations": [
+        {
+          "member": "Ledger.Apply (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.Apply (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalRemove (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalRemove (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.TotalReplace (correctness)",
+          "outcome": "Failed"
+        },
+        {
+          "member": "Ledger.TotalReplace (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.Apply (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.IsFreshValid (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.IsRetry (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.NonNegative (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.Total (well-formedness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "LedgerSpec.WellFormed (well-formedness)",
+          "outcome": "Passed"
+        }
+      ],
+      "raw_log": "build/stage4-member-probe/broken-helper-full.log",
+      "selected_symbol": null
+    },
+    {
+      "command": ".toolchain/dafny-4.11.0/dafny/dafny verify build/stage4-member-probe/broken-helper/impl/Ledger.dfy build/stage4-member-probe/broken-helper/gate/ContractBinding.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --log-format 'trx;LogFileName=build/stage4-member-probe/broken-helper-apply.trx' --filter-symbol Ledger.Apply.",
+      "exit_code": 0,
+      "fixture_source_sha256": "f053a3c5815ec54d18e58a7efc7169b03e74ebf9137463af1fcb0ae89f4beac6",
+      "name": "broken-helper-apply",
+      "obligation_count": 2,
+      "obligations": [
+        {
+          "member": "Ledger.Apply (correctness)",
+          "outcome": "Passed"
+        },
+        {
+          "member": "Ledger.Apply (well-formedness)",
+          "outcome": "Passed"
+        }
+      ],
+      "raw_log": "build/stage4-member-probe/broken-helper-apply.log",
+      "selected_symbol": "Ledger.Apply."
+    }
+  ],
+  "end_to_end": false,
+  "expected_codes_observed": true,
+  "helper_rejection_observed": true,
+  "input_sha256": {
+    "gate/ContractBinding.dfy": "da994efac59d9a4a7fd384c710f657002891298cf61beb459a98b85b1d32d4cc",
+    "impl/Ledger.dfy": "9d8272df6868b7a3db89fe5679ed704fc826795720c954cebf1e60d42363c82f",
+    "scripts/probe_stage_4.py": "0c5840569468c189411d77a39ee9c832cb3b69b06b341cc940a86ca5a59723b0",
+    "spec.lock": "3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae",
+    "spec/LedgerSpec.dfy": "e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f",
+    "toolchain/pins.json": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c"
+  },
+  "inputs_unchanged": true,
+  "kind": "member_selection_diagnostic",
+  "limitation": "Selection alone does not check dependencies or authorize proof reuse. No dependency graph, incremental gate, PR workflow, or Stage 4 EXIT is established by this diagnostic.",
+  "member_selection_observed": true,
+  "probe_exit_code": 0,
+  "reproduce_cmd": "python3 scripts/probe_stage_4.py",
+  "stage": 4,
+  "stage_exit": false,
+  "tool": "Dafny",
+  "tool_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+  "version_exit_code": 0
+}

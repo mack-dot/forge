@@ -551,3 +551,35 @@ curl: (6) Could not resolve host: github.com
 - Next action: publish this append-only receipt and verify the resulting branch
   head and changed log blob. The receipt names the already verified snapshot;
   it does not claim a self-referential commit hash for its own publication.
+
+## U033 — Member selection skips a broken helper proof
+
+- References: U003, U032. Stage: 4, CURRENT.
+- Observed: python3 scripts/probe_stage_4.py exited 0. This is a diagnostic,
+  not an acceptance gate or a Stage 4 EXIT. Each child invoked real pinned
+  Dafny 4.11.0 with bundled Z3, resource limit 1000000, no verification time
+  limit, one core, and included-file verification.
+- Observed: full verification of the unchanged ledger exited 0. Selecting only
+  Ledger.Apply with --filter-symbol Ledger.Apply. also exited 0.
+- Observed: an isolated implementation copy with assert false in TotalReplace
+  failed full verification with exit 4. The TRX report names that helper's
+  correctness obligation as Failed. The same copy returned exit 0 when the
+  command selected only Ledger.Apply. The approved source and spec did not change.
+- Scope: this demonstrates a coverage gap if member selection is used alone.
+  It does not show a Dafny soundness defect, establish a safe dependency graph,
+  prove a cached result reusable, or complete the required GitHub Action runs.
+  No artifact is accepted by this diagnostic. end_to_end remains false.
+- Evidence: results/stage4-member-probe.json records exact child commands,
+  numeric exit codes, source hashes, obligation names, and counts. Raw logs
+  and disposable fixtures remain under build/stage4-member-probe/.
+- Documentation: the pinned manual documents symbol selection and describes
+  funcCallGraph as a function call graph. That description alone does not
+  establish complete proof dependencies for method bodies and contracts:
+  https://dafny.org/v4.11.0/DafnyRef/DafnyRef.
+- Open: dependency completeness, trusted baseline reuse, and actual CI execution.
+  Current toolchain pins name Darwin/arm64. A CI host must use a validated,
+  pinned environment; this probe does not establish portability.
+- Next check: obtain dependency information from the established Dafny tools,
+  compare selective results with full verification after controlled changes,
+  and verify all affected helpers. Broaden verification whenever coverage is
+  uncertain. Stage 4's three real-PR EXITs remain NOT RUN.
