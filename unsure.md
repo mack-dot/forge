@@ -524,3 +524,30 @@ curl: (6) Could not resolve host: github.com
 - Next action: publish the authorized completed-stage snapshot through the
   connected app, then verify the remote branch and every uploaded file digest.
   No successful upload is claimed by this availability check alone.
+
+## U032 — Completed-stage snapshot published and verified
+
+- References: U031.
+- Observed: the connected app published the completed Stage 0–3 snapshot to
+  the public mack-dot/forge repository on main. Snapshot commit:
+  c909a640ffaef595bf720c71e196e1706e69a9ac.
+- Observed: a fresh main-ref lookup matched that commit. The recursive Git tree
+  was not truncated and contained exactly 68 files. Every remote blob SHA and
+  mode matched the local publication snapshot. Local Git hash-object exited 0.
+- Observed: a fresh repository lookup confirmed owner mack-dot and public
+  visibility. Repository URL: https://github.com/mack-dot/forge.
+- Published records include the approved spec and lock, implementations,
+  negative fixtures, gates, schema, policy, pinned tool descriptions, full
+  roadmap, append-only findings, source-proof evidence, and comparison evidence.
+  Generated build folders, installed packages, caches, and local Git metadata
+  were excluded. The generated JS module is reproducible from the tracked build.
+- Resolution: the requested public publication is established for this snapshot.
+  Local CLI connectivity and local .git permissions are still separate limits;
+  the connected GitHub app supplied the verified publication path.
+- Scope: publication is not a new program proof, a signature, or a deployment.
+  Stage 3 remains DONE; Stage 4 remains CURRENT and unimplemented. Evidence
+  retains source_proof for Dafny, tested_against_proved_model for TypeScript,
+  source_to_module_proved=false, and end_to_end=false.
+- Next action: publish this append-only receipt and verify the resulting branch
+  head and changed log blob. The receipt names the already verified snapshot;
+  it does not claim a self-referential commit hash for its own publication.
