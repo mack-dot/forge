@@ -32,6 +32,7 @@ module Ledger refines LedgerSpec {
       outcome := Ok;
     } else if IsFreshValid(state, id, request) {
       var debit := state.balances[request.sender] - request.amount;
+      assert 0 <= debit;
       TotalReplace(state.balances, request.sender, debit);
       var debited := state.balances[request.sender := debit];
       var credit := state.balances[request.recipient] + request.amount;
