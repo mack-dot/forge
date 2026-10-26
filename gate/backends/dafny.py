@@ -25,6 +25,17 @@ CLAIMS = {
     'C4': 'A fresh valid transfer terminates and performs the exact debit and credit.',
     'C5': 'Every other request is rejected without changing either state map.',
 }
+FEE_SPEC_SHA = '2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940'
+
+
+def claim_statements(spec_sha):
+    claims = dict(CLAIMS)
+    if spec_sha == FEE_SPEC_SHA:
+        claims['C4'] = ('A fresh valid transfer terminates, debits amount plus one from the sender, '
+                        'credits the recipient by amount, and credits fee account 0 by one.')
+    return claims
+
+
 OPTIONS = [
     '--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1',
     '--resource-limit', '1000000', '--verification-time-limit', '0',
@@ -150,7 +161,7 @@ def identity(state):
             {'id': claim, 'statement_plain_english': statement,
              'spec_ref': 'spec/LedgerSpec.dfy:' + str(state['ranges'][claim][0]),
              'spec_sha': state['lock']['spec_sha256']}
-            for claim, statement in CLAIMS.items()
+            for claim, statement in claim_statements(state['lock']['spec_sha256']).items()
         ],
     }
 
@@ -227,7 +238,7 @@ def verify(impl_name):
                 {'id': claim, 'statement_plain_english': statement,
                  'spec_ref': 'spec/LedgerSpec.dfy:' + str(ranges[claim][0]),
                  'spec_sha': lock['spec_sha256']}
-                for claim, statement in CLAIMS.items()
+                for claim, statement in claim_statements(lock['spec_sha256']).items()
             ],
             'evidence': [
                 {'claim_id': claim, 'artifact_sha': artifact_sha,

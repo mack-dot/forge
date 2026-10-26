@@ -2,7 +2,7 @@
 
 Stage 4 is incomplete. The incremental gate works for the fixed ledger layout.
 Real implementation-edit and unapproved-spec PR checks passed their EXITs.
-The exact fee proposal and revision-bound spec approval remain pending.
+The exact fee proposal is approved. Its real approved-spec PR EXIT remains pending.
 
 Run the gate from a trusted checkout. Pass a complete candidate checkout as data:
 
@@ -22,12 +22,14 @@ run this exact command and compare the resulting evidence bytes.
 For the archived example on a fresh checkout, first run
 `python3 scripts/check_stage_4_local.py` to reconstruct its inputs.
 
-The current path rejects any difference in `spec/**`, `spec.lock`, `gate/**`,
+The current path rejects unapproved differences in `spec/**`, `spec.lock`, `gate/**`,
 `policy/**`, toolchain pins, schemas, workflow configuration, or project
 instructions. This is an external baseline check. Editing both a spec and its
-lock cannot authorize a change. There is no spec-approval bypass or approval-label
-override. The approved-spec path still needs implementation after the concrete
-fee proposal and human approval.
+lock cannot authorize a change. Approval labels cannot override that check.
+The fee approval record in the trusted base binds the old and new spec and lock
+digests, plus the frozen proposal content and revision. Only those exact two
+file changes are authorized. All other protected files must still match the base.
+Editing the candidate's approval record cannot grant permission.
 
 ## Established checker and reuse
 
@@ -140,5 +142,9 @@ The exact `affected-claims` and `unapproved-spec` EXIT commands each exited 0 in
 These runs concern their recorded base/head revisions; later documentation
 commits do not turn them into checks of another revision.
 
-The `approved-spec` EXIT remains **NOT RUN**. Review [the exact fee proposal](../proposals/fees.md)
-before applying its spec and lock changes. No later stage has started.
+The `approved-spec` EXIT remains **NOT RUN**. The user approved
+[the exact fee proposal](../proposals/fees.md); see its [decision record](../proposals/fees-decision.md).
+Local v1-to-v2 checks passed: 4 candidate obligations checked, 8 reused; repeated
+evidence and literal replay matched. Later spec edits, C2 weakening, candidate
+approval edits, and policy edits failed. The real fee PR is the remaining check.
+No later stage has started.

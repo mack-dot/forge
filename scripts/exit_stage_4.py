@@ -82,7 +82,7 @@ def check(record, variant):
     number, run_id = record['pr_number'], record['run_id']
     base, head = record['base_sha'], record['head_sha']
     run = api('/actions/runs/' + str(run_id))
-    positive = variant == 'apply-edit'
+    positive = variant in ('apply-edit', 'approved-spec')
     require(run['status'] == 'completed' and run['conclusion'] == ('success' if positive else 'failure'),
             'Run did not finish with the required result')
     require(run['event'] == 'pull_request_target' and run['path'] == '.github/workflows/proof-gate.yml'
@@ -113,19 +113,39 @@ def check(record, variant):
     head_lock = json.loads(content('spec.lock', head))
     require(head_lock['spec_sha256'] == sha(head_spec), 'Candidate lock does not match its spec')
     if positive:
-        require(base_spec == head_spec and content('spec.lock', base) == content('spec.lock', head),
-                'Affected-claims PR changed its specification')
-        original = content('impl/Ledger.dfy', base)
-        target = b'var debit := state.balances[request.sender] - request.amount;'
-        require(original.count(target) == 1 and content('impl/Ledger.dfy', head) ==
-                original.replace(target, target + b'\n      assert 0 <= debit;', 1), 'Unexpected valid edit')
         snapshots = receipt['operation']['snapshots']
         require(len(snapshots) == 2 and snapshots[0]['checked_count'] == 12
                 and snapshots[0]['reused_count'] == 0, 'Baseline was not fully checked')
-        require(snapshots[1]['checked'] == ['Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)']
-                and snapshots[1]['checked_count'] == 2 and snapshots[1]['reused_count'] == 10,
-                'Affected member counts differ from the required demonstration')
         bundle = receipt['evidence']
+        if variant == 'apply-edit':
+            require(base_spec == head_spec and content('spec.lock', base) == content('spec.lock', head),
+                    'Affected-claims PR changed its specification')
+            original = content('impl/Ledger.dfy', base)
+            target = b'var debit := state.balances[request.sender] - request.amount;'
+            require(original.count(target) == 1 and content('impl/Ledger.dfy', head) ==
+                    original.replace(target, target + b'\n      assert 0 <= debit;', 1), 'Unexpected valid edit')
+            require(snapshots[1]['checked'] == ['Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)']
+                    and snapshots[1]['checked_count'] == 2 and snapshots[1]['reused_count'] == 10,
+                    'Affected member counts differ from the required demonstration')
+        else:
+            approval_bytes = content('gate/approvals/fees-v2.json', base)
+            approval = json.loads(approval_bytes)
+            require(approval['decision'] == 'approved_as_written' and base_spec != head_spec,
+                    'Missing approval or spec transition')
+            for path in ('spec/LedgerSpec.dfy', 'spec.lock'):
+                require(sha(content(path, base)) == approval['base_inputs'][path]
+                        and sha(content(path, head)) == approval['approved_inputs'][path],
+                        'Spec revision is outside the exact approval')
+            require(sha(content(approval['proposal'], approval['proposal_revision'])) == approval['proposal_sha256'],
+                    'Approval does not bind the published proposal text')
+            bound = bundle['backend_details']['spec_approval']
+            require(bound['record_sha256'] == sha(approval_bytes)
+                    and bound['base_inputs'] == approval['base_inputs']
+                    and bound['approved_inputs'] == approval['approved_inputs']
+                    and bound['proposal_revision'] == approval['proposal_revision'], 'Evidence approval binding mismatch')
+            require('Ledger.Apply (correctness)' in snapshots[1]['checked']
+                    and 'LedgerSpec.IsFreshValid (well-formedness)' in snapshots[1]['checked'],
+                    'Changed spec or implementation was not rechecked')
         require(bundle['end_to_end'] is False and bundle['backend_details']['toolchain_profile'] == 'linux',
                 'Evidence coverage or toolchain mismatch')
         require(sha(canonical(bundle)) == receipt['evidence_sha256'], 'Evidence bytes do not match receipt')
@@ -175,9 +195,9 @@ def main():
     destination.parent.mkdir(parents=True, exist_ok=True)
     require(not destination.exists(), 'Preserve the prior EXIT report before running again')
     try:
-        require(case != 'approved-spec', 'The exact fee proposal and human approval are still pending')
         records = json.loads((ROOT / 'results/stage4/pr-runs.json').read_text())
-        variants = ['apply-edit'] if case == 'affected-claims' else ['spec-and-lock', 'weaken-c2']
+        variants = {'affected-claims': ['apply-edit'], 'unapproved-spec': ['spec-and-lock', 'weaken-c2'],
+                    'approved-spec': ['approved-spec']}[case]
         for variant in variants:
             report['runs'].append(check(records[variant], variant))
         report.update(result='passed', exit_code=0)

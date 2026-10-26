@@ -19,7 +19,8 @@ import tempfile
 
 sys.dont_write_bytecode = True
 
-from common import ROOT, Rejected, canonical, digest, relative
+from common import ROOT, Rejected, canonical, digest, relative, read_json
+from approval import authorize
 from dependencies import check_dependencies
 from backends import dafny
 
@@ -123,7 +124,7 @@ def trace_coverage(output):
     return snapshots
 
 
-def reproduction_input(baseline, proposed, protected):
+def reproduction_input(baseline, proposed, protected, candidate):
     identity = digest(canonical({
         'baseline': {name: digest(content) for name, content in baseline.items()},
         'candidate': {name: digest(content) for name, content in proposed.items()},
@@ -137,7 +138,7 @@ def reproduction_input(baseline, proposed, protected):
             staged = Path(temporary) / 'candidate'
             staged.mkdir()
             for name, expected in protected.items():
-                content = (ROOT / name).read_bytes()
+                content = (candidate / name).read_bytes()
                 if digest(content) != expected:
                     raise Rejected('INPUT_CHANGED: protected input changed before reproduction capture')
                 target = staged / name
@@ -160,14 +161,12 @@ def check(candidate, output, work, operation, profile='local'):
     state = dafny.prepare('impl/Ledger.dfy', profile)
     trusted_before = protected_manifest(ROOT)
     proposed_before = protected_manifest(candidate)
-    if proposed_before != trusted_before:
-        changed = sorted(name for name in trusted_before.keys() | proposed_before.keys()
-                         if trusted_before.get(name) != proposed_before.get(name))
-        raise Rejected('UNAPPROVED_PROTECTED_CHANGE: ' + ', '.join(changed)
-                       + '; approval of exact spec text is required; PR labels do not authorize it')
+    approval = authorize(ROOT, trusted_before, proposed_before)
     baseline = source_bytes(ROOT)
     proposed = source_bytes(candidate)
-    paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve()]
+    paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve(), ROOT / 'gate/approval.py']
+    if approval:
+        paths += [ROOT / approval['record'], ROOT / read_json(ROOT / approval['record'])['proposal']]
     if profile == 'linux':
         paths += [ROOT / 'toolchain/validator-linux-pins.json', ROOT / 'toolchain/requirements-linux.txt']
     inputs_before = snapshot(paths)
@@ -177,6 +176,13 @@ def check(candidate, output, work, operation, profile='local'):
     trusted['protected-manifest.json'] = digest(canonical(trusted_before))
     expected_state = dict(state, before=dict(state['before']))
     expected_state['before']['impl/Ledger.dfy'] = digest(proposed['impl/Ledger.dfy'])
+    expected_state['before']['spec/LedgerSpec.dfy'] = digest(proposed['spec/LedgerSpec.dfy'])
+    expected_state['lock'] = read_json(candidate / 'spec.lock')
+    expected_state['ranges'] = dafny.claim_ranges(proposed['spec/LedgerSpec.dfy'].decode())
+    if (expected_state['lock']['spec_sha256'] != expected_state['before']['spec/LedgerSpec.dfy']
+            or expected_state['lock']['dafny_build'] != state['pins']['dafny']['version_output']):
+        raise Rejected('SPEC_LOCK: proposed spec or toolchain binding differs')
+    trusted['candidate/spec.lock'] = proposed_before['spec.lock']
     expected = dafny.identity(expected_state)
     rules, policy_identity = load_policy('critical')
 
@@ -216,7 +222,7 @@ def check(candidate, output, work, operation, profile='local'):
     snapshots = trace_coverage(trace)
     operation['snapshots'] = snapshots
     names = sorted(snapshots[1]['checked'] + snapshots[1]['reused'])
-    saved_input = reproduction_input(baseline, proposed, trusted_before)
+    saved_input = reproduction_input(baseline, proposed, proposed_before, candidate)
     reproduce = ('python3 gate/incremental.py --candidate ' + shlex.quote(saved_input)
                  + ' --evidence build/change-evidence.json')
     if profile != 'local':
@@ -240,6 +246,7 @@ def check(candidate, output, work, operation, profile='local'):
         for claim in sorted(dafny.CLAIMS)
     ], backend_details={
         'toolchain_profile': profile,
+        'spec_approval': approval,
         'verification_options': SNAPSHOT_OPTIONS,
         'solver_sha256': state['pins']['z3']['executable_sha256'],
         'verified_obligations': names,
@@ -262,7 +269,8 @@ def check(candidate, output, work, operation, profile='local'):
                       'claim_apply_status': {claim: apply_status for claim in sorted(dafny.CLAIMS)},
                       'evidence_sha256': digest(output.read_bytes())})
     rows = ['| Claim | Established source behavior | Apply proof |', '| --- | --- | --- |']
-    rows += ['| ' + claim + ' | ' + dafny.CLAIMS[claim] + ' | ' + apply_status + ' |'
+    statements = dafny.claim_statements(expected_state['lock']['spec_sha256'])
+    rows += ['| ' + claim + ' | ' + statements[claim] + ' | ' + apply_status + ' |'
              for claim in sorted(dafny.CLAIMS)]
     (work / 'claims.md').write_text('\n'.join(rows) + '\n\n'
         + 'Dafny source proof only. end_to_end=false.\n'

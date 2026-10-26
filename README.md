@@ -79,10 +79,11 @@ incremental counts describe member obligations, not five independent proofs.
 The trusted baseline is fully checked first. [Change-loop notes](docs/stage4-change-loop.md)
 describe native cache reuse, its MD5 checksum assumption, and exact replay.
 The affected-claims and unapproved-spec EXIT commands both passed in GitHub.
-The remaining Stage 4 work needs approval of the exact [fee proposal](proposals/fees.md).
-It proposes a one-unit fee paid by the sender to account `0` on each fresh
-successful transfer. Retries and rejected requests pay no fee. The proposal is
-pending; the approved ledger still has no fee.
+The user approved the exact [fee proposal](proposals/fees.md); its
+[decision record](proposals/fees-decision.md) binds the published text.
+Local checks accepted the one-unit fee paid by the sender to account `0` on each
+fresh successful transfer. Retries and rejected requests pay no fee. The fee PR
+and approved-spec EXIT are still pending; main retains the v1 baseline for that check.
 
 ## Run the demo
 
@@ -130,7 +131,7 @@ prove the program's behavior.
 | [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks, and actual results. |
 | [unsure.md](unsure.md) | Append-only findings, uncertainty, corrections, and resolutions. |
 | [docs/stage4-change-loop.md](docs/stage4-change-loop.md) | Current change-loop implementation and limits. |
-| [proposals/fees.md](proposals/fees.md) | Pending fee intent, exact diff, content digests, and examples. |
+| [proposals/fees.md](proposals/fees.md) | Frozen fee intent, exact diff, content digests, and examples; see its decision record. |
 | [gate/README.md](gate/README.md) | Gate commands and rejection controls. |
 | [ts/README.md](ts/README.md) | Model compilation, property tests, and evidence boundaries. |
 | [VISION.md](VISION.md) | Long-term directions and irreducible limits. |

@@ -8,7 +8,7 @@ import sys
 import urllib.request
 
 from common import ROOT, digest, read_json
-from backends.dafny import CLAIMS
+from backends.dafny import CLAIMS, claim_statements
 
 
 def api(method, path, body=None):
@@ -56,7 +56,8 @@ def main():
         if set(statuses) != set(CLAIMS) or any(x not in ('checked', 'reused') for x in statuses.values()):
             raise RuntimeError('REPORT_FORMAT: missing or invalid claim status')
         for claim in sorted(CLAIMS):
-            rows.append('| ' + claim + ' | ' + CLAIMS[claim] + ' | source_proof | ' + statuses[claim] + ' |')
+            statements = claim_statements(receipt['evidence']['claims'][0]['spec_sha'])
+            rows.append('| ' + claim + ' | ' + statements[claim] + ' | source_proof | ' + statuses[claim] + ' |')
         candidate = receipt['operation']['snapshots'][1]
         checked, reused = candidate['checked_count'], candidate['reused_count']
         if any(type(x) is not int or not 0 <= x <= 10000 for x in (checked, reused)):

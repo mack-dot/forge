@@ -797,3 +797,55 @@ curl: (6) Could not resolve host: github.com
 - Next check: human approval of this exact proposal, followed by the trusted
   revision-bound approval path, implementation changes, and the approved-spec
   real PR EXIT. Stage 4 stays CURRENT; later stages have not started.
+
+## U044 — The published fee proposal received explicit approval
+
+- References: U043.
+- Observed: the user answered yes to the request to approve fees.md as written
+  at public revision 648229df2d0e13e8d872e0a867ab0ce940ea8146.
+- Applied locally: exactly the published spec and lock diff. Their SHA-256 values
+  match the two candidate digests in U043. The original checkout is preserved
+  under build/stage4-fees-original. No proof result is inferred from approval.
+- Recorded: gate/approvals/fees-v2.json binds the base and approved input hashes
+  and the immutable proposal revision and content. This is a trusted-maintainer
+  record of conversational approval, not a cryptographic user signature.
+- Next check: enforce the approval from the trusted PR base, reject any later
+  spec edit, verify the fee refinement, and run the approved-spec real PR EXIT.
+
+## U045 — Fee proofs, model comparisons, and exact approval controls passed locally
+
+- References: U044.
+- Observed: the real Dafny source gate accepted the fee refinement on its first
+  attempt (exit 0). The real model build exited 0. Ten explicit behavior examples
+  passed against both TypeScript and the compiled model (exit 0), including
+  exact funding, absent/reserved fee accounts, rejected requests, and retries.
+- Observed: all 16 commands in results/stage4/fee-regressions.json exited 0.
+  This includes the fresh source gate and all supported Stage 1–3 scenarios.
+  The existing planted bugs still pass the weak unit tests and fail the gate.
+- Observed: python3 scripts/check_stage_4_approval.py exited 0. The v1 baseline
+  checked all 12 obligations. The approved v2 candidate checked 4 and reused 8.
+  Repeated runs and literal replay produced byte-identical evidence.
+- Observed: a further spec edit, C2 weakening, candidate-owned approval edit,
+  and policy edit were each rejected with gate exit 1. No accepted evidence was
+  emitted. The updated local incremental controls also exited 0.
+- Evidence: results/stage4/approval-local.json, approved-local-evidence.json,
+  fee-initial-checks.json, fee-regressions.json, fee-typescript-evidence.json,
+  and results/stage4-local.json. The prior snapshots remain archived.
+- Scope: local source proof and finite model comparisons retain separate methods.
+  The approval record is trusted maintainer input, not a signed user identity.
+  Native cache assumptions remain; no binary or deployment coverage is added.
+- Next check: publish trusted approval support while retaining the v1 baseline,
+  then run the v2 spec and implementation as a real PR and execute approved-spec.
+
+## U046 — The fee example fixture needed a type-correct setup
+
+- References: U045.
+- Observed: typechecking after adding fees.examples.ts exited 2. TypeScript
+  rejected two fixture setup calls to set on the public ReadonlyMap state type.
+  The runtime examples had passed; that did not establish type correctness.
+- Fix: construct the accepted-entry maps in the fixture factory before exposing
+  the State value. The production read-only types and ledger code are unchanged.
+- Observed: the repeated npx --no-install tsc --noEmit command exited 0 and
+  node --import tsx tests/fees.examples.ts exited 0 with all ten examples.
+  Both the failed and successful commands remain in fee-initial-checks.json.
+- Scope: a test fixture typing error, not a failed Dafny proof or changed spec.

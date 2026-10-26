@@ -54,9 +54,9 @@ def main():
         candidate = copy_candidate(name)
         implementation = candidate / 'impl/Ledger.dfy'
         if name in ('apply-edit', 'apply-edit-repeat'):
-            replace_once(implementation, 'var debit := state.balances[request.sender] - request.amount;',
-                         'var debit := state.balances[request.sender] - request.amount;\n'
-                         '      assert 0 <= debit;')
+            debit = next(line.strip() for line in implementation.read_text().splitlines()
+                         if line.strip().startswith('var debit :='))
+            replace_once(implementation, debit, debit + '\n      assert 0 <= debit;')
         elif name == 'broken-helper':
             replace_once(implementation, '  {\n    TotalRemove(balances, account);',
                          '  {\n    assert false;\n    TotalRemove(balances, account);')

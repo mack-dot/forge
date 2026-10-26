@@ -9,8 +9,8 @@ results. The user approved the tested Node-loader demo invocation, which ran
 with exit 0. Stage 4 is CURRENT. Its local snapshot gate has passed rejection
 and reproducibility controls. Linux CI inventory succeeded and its observed
 pins are recorded. The real affected-claims and unapproved-spec PR EXITs passed.
-The exact fee proposal is published for human approval. The approved-spec EXIT
-remains incomplete; Stage 4 is CURRENT.
+The user approved the exact published fee proposal. Its local proof and approval
+controls passed. The approved-spec real PR EXIT remains incomplete; Stage 4 is CURRENT.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -596,12 +596,22 @@ PR 3 / run 40402975014 rejected C2 weakening with gate 1. Both failures reported
 `UNAPPROVED_PROTECTED_CHANGE`, emitted no accepted evidence, and had successful
 reporting jobs. The negative workflow failures are the required observations.
 
-Pending intent approval: [proposals/fees.md](proposals/fees.md) contains the exact
-unapplied spec and lock diff. Candidate spec SHA-256:
+Approved intent: [proposals/fees.md](proposals/fees.md) contains the exact
+spec and lock diff approved by the user's yes response. Candidate spec SHA-256:
 `2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940`.
 It proposes one unit per fresh successful transfer, paid by the sender to fee
-account 0. Retries and rejections pay no fee. The approved spec and lock remain
-unchanged. Stop for approval of this exact text before applying it; no Stage 5 work.
+account 0. Retries and rejections pay no fee. The exact approved diff was applied
+locally; both candidate digests match. See proposals/fees-decision.md and U044.
+The trusted approval support is published separately from the fee PR, so the
+real workflow can check the v1-to-v2 spec transition against an external baseline.
+
+Local fee validation: the source proof passed on its first attempt (gate 0).
+The model build, ten explicit examples, all 16 full-gate/Stage 1–3 regression
+commands, and the updated local incremental controls passed (scenario codes 0).
+`python3 scripts/check_stage_4_approval.py` exited 0: approved candidate checked
+4 obligations and reused 8; altered spec, C2, approval metadata, and policy each
+failed with gate 1. Literal replay exited 0 with identical evidence. These are
+local checks, not the pending approved-spec real PR EXIT. See U045.
 
 ### Stage 5 — SPEC TOOLING
 
