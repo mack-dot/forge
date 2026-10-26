@@ -974,3 +974,54 @@ curl: (6) Could not resolve host: github.com
   The print-effect survivor shows the current state-only scope. TypeScript remains
   tested against the model. The compiler/runtime/bridge link and native trusted
   base remain assumptions; every artifact keeps end_to_end=false.
+
+## U052 — Stage 6 booking intent needs an exact approval decision
+
+- References: U001, U049, U051. Stage 5 publication is complete at public main
+  c5e3be0fb5188a05ea0559b63396cf7712061c2c. A fresh connected GitHub read confirmed
+  that head when Stage 6 preparation began. The prior turn made concrete progress.
+- Observed: no booking spec or implementation existed at Stage 6 entry. The
+  roadmap names four claims but leaves selection and cancellation/retry details
+  open. Existing exact approvals cover the ledger and fee change, not this draft.
+- Proposed: select the lowest allowed free slot; cancellation uses a separate
+  operation ID and targets the original booking ID. Accepted retries return the
+  historical receipt with no state change. Rejected IDs are not reserved.
+- Consequence: a book retry after cancellation does not restore the booking.
+  An old cancellation retry does not free a slot used by a later booking. These
+  requirements are explicit in proposals/booking.md and its exact spec diff.
+- Observed: the real command .toolchain/dafny-4.11.0/dafny/dafny resolve
+  proposals/booking/BookingSpec.dfy exited 0 on attempt 1. It explicitly reported
+  that verification was not attempted. This is not a proof or Stage 6 EXIT.
+- Evidence: results/stage6/proposal/resolve-attempt1.json and its raw log.
+  Candidate SHA-256: 6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319.
+- Status: PENDING HUMAN APPROVAL of the exact proposal. Production protected
+  files remain unchanged. No booking implementation or later-stage work ran.
+- Next check: receive the required intent decision, then verify the concrete
+  refinement and complete dependency closure using the established Dafny backend.
+
+## U053 — Reuse measurement must include setup and disclose token coverage gaps
+
+- References: U004, U034, U052.
+- Observed: the ledger implementation already contains TotalRemove and
+  TotalReplace for finite integer-map sums. The proposed booking state uses
+  0/1 capacity flags. An update to an existing slot meets TotalReplace's stated
+  membership premise. Reuse is a design candidate, not yet an accepted proof.
+- Planned measurement: compare one self-contained source input, shared source
+  files with full cold checks, and the shared layout with native Dafny/Boogie
+  dependency-cache reuse. Charge baseline verification and all setup. Record
+  layout differences, complete obligations, failure controls, and five repeats.
+- Known limit: those fixed-source verifier measurements alone cannot establish
+  an LLM authoring benefit. Source sharing alone is not a cached proof result.
+  Native cache trust and MD5-collision assumptions from U034 remain explicit.
+- Observed: get_goal reported 778672 cumulative goal tokens at the Stage 6 entry
+  checkpoint. This aggregate is not a per-condition counter or a Stage 6 total.
+  No provider-category or complete authoring-transcript export was inspected.
+- Open: complete token, prompt/response, failure-attempt, and human-intervention
+  accounting across Stage 6 setup and measurement. Missing data is unknown,
+  never zero. Common preparation must not be silently dropped or allocated by guess.
+- Impact: no complete cost or speedup claim is established. Missing required
+  accounting is a Stage 6 completion blocker until resolved or explicitly revised
+  by the user; the booking proposal does not waive the measurement requirement.
+- Next check after intent approval: establish measurement boundaries and inspect
+  available usage provenance before executing the benchmark. Report recorded
+  totals separately from fresh timing reruns. Keep end_to_end=false.

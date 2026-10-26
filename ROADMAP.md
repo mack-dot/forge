@@ -7,7 +7,8 @@ produced claim explanations and real accept/reject examples, verified a
 non-trivial successful execution, flagged the isolated vacuous spec, and
 measured mutation kills and survivors. Both Stage 5 EXIT commands exited 0.
 The final evidence and generated documents reproduced byte for byte. Stage 6
-is CURRENT and has not started. This run stops at the stage transition.
+is CURRENT. The booking contract proposal is ready for human intent approval;
+implementation and benchmark EXIT commands have not run.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -680,7 +681,14 @@ DONE. Stage 6 is CURRENT; no Stage 6 implementation or benchmark ran in this tur
 
 ### Stage 6 — SECOND DOMAIN + REUSE MEASUREMENT
 
-**Status: CURRENT — not started**
+**Status: CURRENT — exact booking proposal pending approval**
+
+The proposed behavior and exact new spec/lock additions are published in
+[proposals/booking.md](proposals/booking.md). The draft selects the lowest allowed
+free slot, cancels by booking ID, and replays historical success receipts without
+new effects. Its abstract contract passed the real Dafny resolver. No booking
+implementation, proof, or benchmark has run. The protected baseline is unchanged.
+Approval must cover the exact proposal before implementation starts.
 
 Build a booking matcher with four claims: no double-booking; a valid request
 gets a slot when one exists; cancellation frees the slot; retries are idempotent.
@@ -698,6 +706,17 @@ Record cache state, seeds, resource use, sample count, and hardware.
 
 Separate reproduction of recorded totals from fresh experimental reruns.
 Any reuse benefit is a result to measure, not an assumed outcome.
+
+Preparation record (not an EXIT):
+
+| Exact command | Real exit code | Observation |
+| --- | --- | --- |
+| `.toolchain/dafny-4.11.0/dafny/dafny resolve proposals/booking/BookingSpec.dfy` | 0 | Draft parsed and type-checked; verification was not attempted. [Actual record](results/stage6/proposal/resolve-attempt1.json). |
+
+The [proposal](proposals/booking.md#stage-6-measurement-protocol) defines the
+three comparison conditions, charged setup costs, negative controls, and reporting
+limits. Complete authoring-token and transcript coverage still needs inspection;
+missing values remain unknown. See append-only `unsure.md` entries U052–U053.
 
 ### Stage 7 — BINARY LAYER
 
@@ -803,7 +822,8 @@ The ledger refinement establishes C1–C5 at source level under the recorded
 assumptions. No binary, deployment, or whole-application claim is established.
 Stage 2 schema, policy, identity, and replay checks passed, including every
 Stage 1 regression. Stage 3's model-comparison checks and approved demo invocation
-also passed. Stage 4 is CURRENT.
+also passed. Stages 4 and 5 are complete in their stage records above.
+Stage 6 is CURRENT; its exact booking proposal awaits approval.
 
 Commands ran from the repository root. The required `dafny --version` invocation
 used `export PATH="$PWD/.toolchain/dafny-4.11.0/dafny:$PATH"` in that shell. Other
@@ -886,9 +906,10 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
 - Runtime provenance: Node and Python installer origins were not independently
   authenticated. Their checked versions and executable hashes are pinned. Keep
   the disclosed trust assumptions in `toolchain/pins.json` and `unsure.md` U015.
-- Stage 4: implement the change loop, trusted spec-approval baseline, and affected
-  claim verification. Obtain approval of any concrete spec diff before applying
-  it. Real PR and GitHub Action EXITs require an accessible repository.
+- Stage 6: obtain approval of the exact [booking proposal](proposals/booking.md),
+  then implement and verify the booking matcher and run the reuse benchmark.
+  Preserve all setup/failure costs and resolve token-accounting coverage before
+  claiming complete measurements. Stage 4 real PR EXITs are complete.
 - Publication: the user created [mack-dot/forge](https://github.com/mack-dot/forge).
   The connected app confirms public visibility, the mack-dot owner, and push
   access. The earlier 404/creation blocker is resolved. Publication uses that

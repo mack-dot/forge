@@ -43,7 +43,12 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–5 are complete. Stage 6 is current and has not started.**
+**Stages 0–5 are complete. Stage 6 is current; its booking spec awaits approval.**
+
+The [booking proposal](proposals/booking.md) defines matching, cancellation, and
+retry behavior. Its draft passed syntax and type checking only. The proposed
+benchmark compares cold verification, shared source files, and native dependency
+cache reuse. Booking proofs and benchmark results remain pending.
 
 The ledger demo uses Dafny 4.11.0 and bundled Z3 4.12.1. Its approved source
 refinement establishes these claims for sequential operations over mathematical
