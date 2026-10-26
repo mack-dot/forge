@@ -849,3 +849,36 @@ curl: (6) Could not resolve host: github.com
   node --import tsx tests/fees.examples.ts exited 0 with all ten examples.
   Both the failed and successful commands remain in fee-initial-checks.json.
 - Scope: a test fixture typing error, not a failed Dafny proof or changed spec.
+
+## U047 — Exact approved fee transition passed the real workflow and all Stage 4 EXITs
+
+- References: U044–U046.
+- Published: trusted approval support at 8751d3fdbc2705beaeed28a492bab983271a7b1c.
+  All 20 changed blob hashes and modes were verified. The v1 spec remained the
+  trusted baseline for the real fee PR.
+- Observed: PR 4 / run 40405564741, verification job 121862309455, accepted the
+  approved v2 candidate with gate exit 0. The baseline checked all 12 obligations;
+  the candidate checked 4 and reused 8. Literal replay exited 0 and produced
+  identical evidence. Verification and reporting jobs both succeeded.
+- Evidence records spec SHA-256
+  2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940,
+  exact base/approved lock and spec digests, and the trusted approval record.
+- Observed: PR 5 / run 40405711794, verification job 121862797245, attempted C2
+  weakening after fee approval. It exited 1 with UNAPPROVED_PROTECTED_CHANGE,
+  emitted no accepted evidence, and its reporting job succeeded. Exact-text
+  approval did not authorize a later edit, even with an updated candidate lock.
+- Observed: PR 4 merged at 08cae1c59f6c1b40354851b422070a1edb4dc39d. The merged
+  tree exactly matched the checked PR tree. The subsequent EXIT record update
+  at 88057d49f9abe6cf3a701c1f388a2377108428e3 had all four changed blobs verified.
+- Observed: final EXIT run 40409284514, job 121875254229, succeeded. The exact
+  affected-claims, unapproved-spec, and approved-spec commands each exited 0.
+  Raw gate codes were 0 for both accepted PRs and 1 for all three rejected PRs.
+- Evidence: results/stage4/exit-run.json, the three per-case EXIT reports,
+  pr-4-receipt.json, and pr-5-receipt.json. Earlier reports remain archived.
+  https://github.com/mack-dot/forge/actions/runs/40409284514.
+- Resolution: all Stage 4 EXIT requirements are established for their recorded
+  revisions. Stage 4 is DONE; Stage 5 is CURRENT. This run stops at that transition.
+- Limits: approval is a trusted maintainer record of the user's response, not a
+  signed user attestation. Native cache assumptions remain explicit. TypeScript
+  has finite model-comparison evidence, not proof. No binary, compiler,
+  concurrency, persistence, or deployment guarantee was added; end_to_end=false.

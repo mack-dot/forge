@@ -5,6 +5,12 @@ contract. It uses `bigint` for account IDs, request IDs, balances, and amounts.
 It copies maps on accepted transfers and leaves both maps unchanged on retries
 and rejection. The caller must supply a WellFormed state.
 
+Under the approved fee spec, each fresh accepted transfer debits the sender by
+amount plus one, credits the recipient by amount, and credits fee account `0`
+by one. Account `0` must exist and cannot be a fresh transfer's sender or
+recipient. Accepted identical retries and rejected requests pay no fee.
+`tests/fees.examples.ts` checks these boundaries against both implementations.
+
 This implementation has finite comparison-test evidence. It has no source proof.
 The Dafny source retains its separate source-proof evidence.
 

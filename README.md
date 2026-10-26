@@ -43,7 +43,7 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–3 are complete. Stage 4 is in progress.**
+**Stages 0–4 are complete. Stage 5 is current and has not started.**
 
 The ledger demo uses Dafny 4.11.0 and bundled Z3 4.12.1. Its approved source
 refinement establishes these claims for sequential operations over mathematical
@@ -54,12 +54,14 @@ integers and finite maps, starting from a well-formed state:
 | C1 | A transfer preserves total funds. |
 | C2 | Resulting balances remain non-negative. |
 | C3 | An identical accepted retry returns `Ok` without repeating its effect. |
-| C4 | A fresh valid request terminates and performs the exact debit and credit. |
+| C4 | A fresh valid request terminates, debits amount plus one, credits the recipient by amount, and credits fee account `0` by one. |
 | C5 | Every other request returns `Rejected` and leaves both state maps unchanged. |
 
 Self-transfers are rejected. Reusing an accepted request ID with different
-arguments is rejected. See the [approved specification](spec/LedgerSpec.dfy)
-and [intent proposal](proposals/initial-ledger.md) for the complete rules.
+arguments is rejected. Fresh transfers need account `0`, cannot use it as sender
+or recipient, and need funds for the amount plus the one-unit fee. Retries and
+rejections pay no fee. See the [approved specification](spec/LedgerSpec.dfy),
+[fee proposal](proposals/fees.md), and its [approval decision](proposals/fees-decision.md).
 
 Four planted bugs pass the deliberately weak unit suite and fail the gate.
 They cover money creation, an exact-balance boundary error, a repeated transfer,
@@ -69,21 +71,21 @@ insufficient evidence methods, and unsupported proof labels.
 | Artifact or check | Established scope | Record |
 | --- | --- | --- |
 | Dafny ledger source | C1–C5, `source_proof`, under recorded assumptions | [Source evidence](evidence.json) |
-| Handwritten TypeScript | 300 property runs and 3,506 state comparisons against the compiled model; `tested_against_proved_model` | [Stage 3 results](results/stage3.json) |
+| Handwritten TypeScript | 300 property runs and 4,131 state comparisons against the fee model; `tested_against_proved_model` | [Current comparison evidence](results/stage4/fee-typescript-evidence.json) |
 | Local incremental gate | Valid Apply edit checked 2 member obligations and reused 10; broken dependencies were rejected | [Local controls](results/stage4-local.json) |
 | Linux toolchain | Real installation, true-lemma acceptance, and false-lemma rejection | [Successful inventory run](https://github.com/mack-dot/forge/actions/runs/40397041174) |
-| Actual GitHub change loop | Valid PR accepted with 2 obligations checked and 10 reused; two unapproved spec PRs rejected; claims posted | [Stage 4 EXIT run](https://github.com/mack-dot/forge/actions/runs/40403180524) |
+| Actual GitHub change loop | Implementation edit: 2 obligations checked, 10 reused. Approved fee spec change: 4 checked, 8 reused. Unapproved spec changes rejected; claims posted | [Fee PR](https://github.com/mack-dot/forge/pull/4) and [post-approval rejection](https://github.com/mack-dot/forge/pull/5) |
 
 All five ledger claims currently share the Apply proof obligation. The
 incremental counts describe member obligations, not five independent proofs.
 The trusted baseline is fully checked first. [Change-loop notes](docs/stage4-change-loop.md)
 describe native cache reuse, its MD5 checksum assumption, and exact replay.
-The affected-claims and unapproved-spec EXIT commands both passed in GitHub.
-The user approved the exact [fee proposal](proposals/fees.md); its
-[decision record](proposals/fees-decision.md) binds the published text.
-Local checks accepted the one-unit fee paid by the sender to account `0` on each
-fresh successful transfer. Retries and rejected requests pay no fee. The fee PR
-and approved-spec EXIT are still pending; main retains the v1 baseline for that check.
+The user approved the exact fee proposal, and its implementation is merged.
+The trusted approval record binds the old and new spec/lock bytes and the frozen
+proposal revision. A later C2 edit was rejected in a real PR. All three Stage 4 EXIT commands passed in the
+[final recorded run](https://github.com/mack-dot/forge/actions/runs/40409284514).
+The original Stage 3 results remain archived separately from the current fee
+model comparisons.
 
 ## Run the demo
 

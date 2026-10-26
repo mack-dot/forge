@@ -1,16 +1,13 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 4 — CHANGE LOOP**
+**CURRENT: Stage 5 — SPEC TOOLING**
 
-This is the execution plan and decision record. Stages 0–3 are DONE. The
-approved ledger refinement passed the real Dafny gate. The schema, policy,
-artifact-binding, replay, and Stage 1 regression checks produced their required
-results. The user approved the tested Node-loader demo invocation, which ran
-with exit 0. Stage 4 is CURRENT. Its local snapshot gate has passed rejection
-and reproducibility controls. Linux CI inventory succeeded and its observed
-pins are recorded. The real affected-claims and unapproved-spec PR EXITs passed.
-The user approved the exact published fee proposal. Its local proof and approval
-controls passed. The approved-spec real PR EXIT remains incomplete; Stage 4 is CURRENT.
+This is the execution plan and decision record. Stages 0–4 are DONE. The
+approved fee refinement passed the real Dafny gate and GitHub PR workflow.
+All three Stage 4 EXIT commands ran with exit 0. The gate bound approval to
+exact spec and lock bytes, reproduced identical evidence, and rejected a later
+C2 weakening. Stage 5 is CURRENT and has not started. This run stops at the
+stage transition.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -266,8 +263,8 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 1 | LEDGER DEMO | DONE |
 | 2 | EVIDENCE SCHEMA + POLICY | DONE |
 | 3 | TYPESCRIPT INTEGRATION | DONE |
-| 4 | CHANGE LOOP | CURRENT |
-| 5 | SPEC TOOLING | NOT STARTED |
+| 4 | CHANGE LOOP | DONE |
+| 5 | SPEC TOOLING | CURRENT |
 | 6 | SECOND DOMAIN + REUSE MEASUREMENT | NOT STARTED |
 | 7 | BINARY LAYER | NOT STARTED |
 | 8 | ML BOUNDARY | NOT STARTED |
@@ -525,7 +522,7 @@ implementation or later-stage spec change was started.
 
 ### Stage 4 — CHANGE LOOP
 
-**Status: CURRENT**
+**Status: DONE**
 
 Investigation: `python3 scripts/probe_stage_4.py` ran with exit 0. It invokes
 real Dafny commands on isolated copies. Full verification accepted the original
@@ -578,7 +575,7 @@ to weaken C2. An approval label alone is insufficient evidence of approved text.
 | --- | --- | --- |
 | `python3 scripts/exit_stage_4.py --case affected-claims` | A real PR without a spec change verifies only affected claims; logs checked/reused counts. | 0 |
 | `python3 scripts/exit_stage_4.py --case unapproved-spec` | The real workflow rejects an unapproved spec change and the C2 weakening attempt. | 0 |
-| `python3 scripts/exit_stage_4.py --case approved-spec` | After human approval, the real workflow accepts the new spec and records its new SHA. | NOT RUN |
+| `python3 scripts/exit_stage_4.py --case approved-spec` | After human approval, the real workflow accepts the new spec and records its new SHA. | 0 |
 
 Record PR and workflow run references. Local scenarios cannot substitute for
 the required GitHub Action runs. Keep this stage CURRENT while approval is pending.
@@ -611,11 +608,28 @@ commands, and the updated local incremental controls passed (scenario codes 0).
 `python3 scripts/check_stage_4_approval.py` exited 0: approved candidate checked
 4 obligations and reused 8; altered spec, C2, approval metadata, and policy each
 failed with gate 1. Literal replay exited 0 with identical evidence. These are
-local checks, not the pending approved-spec real PR EXIT. See U045.
+local checks; the real approved-spec EXIT is recorded below. See U045.
+
+Final Stage 4 execution: [run 40409284514](https://github.com/mack-dot/forge/actions/runs/40409284514),
+job 121875254229, commit `88057d49f9abe6cf3a701c1f388a2377108428e3`.
+The three exact EXIT commands above each exited 0. The unapproved-spec case
+checked three real rejection PRs, including the new post-approval C2 mutation.
+Prior EXIT reports are preserved with `-before-fees` names.
+
+PR 4 / run 40405564741 accepted the exact fee spec with gate 0: baseline 12
+checked; candidate 4 checked, 8 reused. Literal replay exited 0 and reproduced
+identical evidence. Its new spec SHA is the approved candidate digest above.
+PR 5 / run 40405711794 changed C2 after fee approval and was rejected with gate 1,
+`UNAPPROVED_PROTECTED_CHANGE`, and no accepted evidence. Both reporting jobs
+succeeded. PR 4 merged at `08cae1c59f6c1b40354851b422070a1edb4dc39d`; the merged
+tree exactly matched the checked PR tree. See U047 and results/stage4/exit-run.json.
+
+Every Stage 4 EXIT requirement is established for the recorded revisions.
+Stage 4 is DONE. Stage 5 is CURRENT; no Stage 5 implementation ran in this turn.
 
 ### Stage 5 — SPEC TOOLING
 
-**Status: NOT STARTED**
+**Status: CURRENT — not started**
 
 Render every claim in plain English. Generate accept/reject examples. Add a
 checked witness of a non-trivial successful execution. Mutate implementations

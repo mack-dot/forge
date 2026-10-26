@@ -75,6 +75,42 @@
       "status_id": 57309403263,
       "variant": "weaken-c2",
       "verify_job_id": 121853374594
+    },
+    {
+      "artifact_id": 12690431440,
+      "comment_url": "https://github.com/mack-dot/forge/pull/5#issuecomment-6427924182",
+      "gate_exit_code": 1,
+      "pr_number": 5,
+      "receipt": {
+        "base_sha": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+        "command": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/incremental.py --profile linux --candidate /home/runner/work/forge/forge/candidate --evidence build/pr/evidence.json --work build/pr/check",
+        "end_to_end": false,
+        "evidence": null,
+        "evidence_sha256": null,
+        "exit_code": 1,
+        "format_version": 1,
+        "head_sha": "7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+        "operation": {
+          "commands": [],
+          "end_to_end": false,
+          "error": "UNAPPROVED_PROTECTED_CHANGE: spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it",
+          "exit_code": 1,
+          "result": "rejected",
+          "stage": 4,
+          "stage_exit": false
+        },
+        "pr_number": 5,
+        "replay": null,
+        "repository": "mack-dot/forge",
+        "result": "rejected",
+        "run_id": 40405711794,
+        "run_url": "https://github.com/mack-dot/forge/actions/runs/40405711794"
+      },
+      "report_job_id": 121862994604,
+      "run_url": "https://github.com/mack-dot/forge/actions/runs/40405711794",
+      "status_id": 57311043246,
+      "variant": "after-approval-c2",
+      "verify_job_id": 121862797245
     }
   ],
   "stage": 4,

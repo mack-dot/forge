@@ -1,8 +1,8 @@
 # Stage 4 change loop: current implementation
 
-Stage 4 is incomplete. The incremental gate works for the fixed ledger layout.
-Real implementation-edit and unapproved-spec PR checks passed their EXITs.
-The exact fee proposal is approved. Its real approved-spec PR EXIT remains pending.
+Stage 4 is complete. The incremental gate works for the fixed ledger layout.
+All three real PR EXIT commands passed. The exact approved fee change is merged.
+Stage 5 is current; this document records the completed change-loop scope.
 
 Run the gate from a trusted checkout. Pass a complete candidate checkout as data:
 
@@ -142,9 +142,14 @@ The exact `affected-claims` and `unapproved-spec` EXIT commands each exited 0 in
 These runs concern their recorded base/head revisions; later documentation
 commits do not turn them into checks of another revision.
 
-The `approved-spec` EXIT remains **NOT RUN**. The user approved
-[the exact fee proposal](../proposals/fees.md); see its [decision record](../proposals/fees-decision.md).
-Local v1-to-v2 checks passed: 4 candidate obligations checked, 8 reused; repeated
-evidence and literal replay matched. Later spec edits, C2 weakening, candidate
-approval edits, and policy edits failed. The real fee PR is the remaining check.
-No later stage has started.
+The user approved [the exact fee proposal](../proposals/fees.md); see its
+[decision record](../proposals/fees-decision.md). PR 4 accepted that exact spec
+transition, checked 4 candidate obligations, and reused 8. Its evidence carries
+the new spec SHA and trusted approval record. Literal replay was byte-identical.
+PR 5 then attempted to weaken C2 and was rejected before accepting any evidence.
+
+All three exact Stage 4 EXIT commands exited 0 in
+[run 40409284514](https://github.com/mack-dot/forge/actions/runs/40409284514).
+The unapproved-spec EXIT includes the post-approval C2 rejection. PR 4 merged
+with a tree identical to the checked candidate. The recorded baseline and head
+identities remain authoritative for each run. Stage 5 work has not started.
