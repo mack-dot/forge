@@ -668,3 +668,31 @@ curl: (6) Could not resolve host: github.com
   its inputs on a fresh checkout with the recorded toolchain.
 - Scope: this is local source-proof replay under the explicit cache assumptions.
   It does not complete a real-PR EXIT or authorize a fee-spec change.
+
+## U038 — Linux inventory ran successfully; profile is recorded but not enabled
+
+- References: U032, U034, U036, U037.
+- Observed: the Stage 4 local gate and inventory workflow were published on main
+  at bafcd92533034dc342c53688f058ab8cfbc577a6. The connected GitHub app confirmed
+  the branch head and all 17 changed blob hashes and modes.
+- Observed: GitHub Actions run 40397041174 and job 121832698153 completed with
+  success. The actual .toolchain/ci-python/bin/python toolchain/inventory_ci.py
+  step exited 0. Its recorded child commands returned 0 for tool versions,
+  wheel download, installation, validator imports, and the true lemma. The false
+  lemma returned the required verification failure code 4.
+- Evidence: https://github.com/mack-dot/forge/actions/runs/40397041174.
+  results/stage4/ci-inventory.json preserves the run, job, artifact, real child
+  commands, numeric exit codes, and measured package and executable digests.
+  Reconstructing the inventory from its job-log chunks reproduced its reported
+  SHA-256 abcd98359f85cb1daa315cd718d84b7145bd9e4b93451f3315361aa428637c95.
+- Recorded: toolchain/linux-pins.json, validator-linux-pins.json, and
+  requirements-linux.txt capture the observed Linux executable, package-file,
+  and wheel digests. These files are not yet selected by the acceptance gate.
+- Scope: Python and wheel publisher authentication is not inferred from observed
+  file digests. The Dafny archive matched its published release digest. This
+  inventory accepts no ledger candidate, PR, binary, or deployment.
+- Resolution: a real Linux runner can install and run the selected toolchain.
+  The earlier portability question now has concrete installation evidence.
+- Next check: add a fixed Linux profile to the trusted gate, preserve all local
+  rejection behavior, then run the actual PR workflow and its required EXITs.
+  The fee proposal and exact-text human approval also remain pending.

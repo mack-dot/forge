@@ -1,0 +1,271 @@
+{
+  "stage": 4,
+  "stage_exit": false,
+  "accepts_artifacts": false,
+  "end_to_end": false,
+  "repository": "mack-dot/forge",
+  "commit": "bafcd92533034dc342c53688f058ab8cfbc577a6",
+  "run_id": 40397041174,
+  "job_id": 121832698153,
+  "run_url": "https://github.com/mack-dot/forge/actions/runs/40397041174",
+  "conclusion": "success",
+  "inventory_command": ".toolchain/ci-python/bin/python toolchain/inventory_ci.py",
+  "inventory_exit_code": 0,
+  "artifact_id": 12687735063,
+  "artifact_digest": "sha256:03ffa823270ac115d27fa648a4313cbeda6229379b496cf6f099406d27c44993",
+  "inventory": {
+    "accepts_artifacts": false,
+    "commands": [
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/ci-python/bin/python -m pip --version",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/dafny-4.11.0/dafny/dafny --version",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --version",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/ci-python/bin/python -m pip download --no-deps --only-binary=:all: --dest /home/runner/work/forge/forge/.toolchain/ci-downloads/wheels PyYAML==6.0.1 attrs==25.3.0 jsonschema==4.21.1 jsonschema-specifications==2023.12.1 referencing==0.33.0 rpds-py==0.17.1",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/ci-python/bin/python -m pip install --force-reinstall --no-index --no-deps --find-links /home/runner/work/forge/forge/.toolchain/ci-downloads/wheels PyYAML==6.0.1 attrs==25.3.0 jsonschema==4.21.1 jsonschema-specifications==2023.12.1 referencing==0.33.0 rpds-py==0.17.1",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/ci-python/bin/python -c 'from jsonschema import Draft202012Validator; import yaml; Draft202012Validator({\"type\":\"integer\"}).validate(1); assert yaml.safe_load(\"value: 1\") == {\"value\":1}'",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/dafny-4.11.0/dafny/dafny verify /home/runner/work/forge/forge/build/ci-inventory/True.dfy --solver-path /home/runner/work/forge/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1",
+        "exit_code": 0
+      },
+      {
+        "command": "/home/runner/work/forge/forge/.toolchain/dafny-4.11.0/dafny/dafny verify /home/runner/work/forge/forge/build/ci-inventory/False.dfy --solver-path /home/runner/work/forge/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1",
+        "exit_code": 4
+      }
+    ],
+    "dafny": {
+      "archive_sha256": "a46a9ff7cdd720f7955854c78e95df13f4cfe6b80691b05f8654fe19e8267179",
+      "executable_sha256": "e540b4826363afb87c326446239a682d45086905425fa6299c103eca9693846d",
+      "url": "https://github.com/dafny-lang/dafny/releases/download/v4.11.0/dafny-4.11.0-x64-ubuntu-22.04.zip",
+      "version_output": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2"
+    },
+    "end_to_end": false,
+    "limits": [
+      "This first inventory observes Python distribution and wheel digests; it does not independently authenticate their original publishers.",
+      "The Linux profile must be reviewed and pinned before any PR result is accepted.",
+      "The host image and GitHub Actions runtime remain part of the trusted base."
+    ],
+    "pip_version": "25.3",
+    "platform": {
+      "architecture": "x86_64",
+      "os": "Linux",
+      "runner_image": "ubuntu22",
+      "runner_image_version_observed": "20261023.322.3"
+    },
+    "python": {
+      "executable_sha256": "8cd5e3f36820503286daa4a29dcd1a34b205175f8cfb2241ff91a6fc071b6294",
+      "version": "3.10.11"
+    },
+    "stage": 4,
+    "stage_exit": false,
+    "validator_pins": {
+      "packages": {
+        "PyYAML": {
+          "files": {
+            "PyYAML-6.0.1.dist-info/LICENSE": "8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4",
+            "PyYAML-6.0.1.dist-info/METADATA": "50d345f3e4b3cf038a5d5a3e915e655d4187dbfc0358c0661b1a884a9a791d09",
+            "PyYAML-6.0.1.dist-info/WHEEL": "8996975f44ddeb6370c3c6e88e5d04f38b891e34f8d5cb073ca6666d405b24fb",
+            "PyYAML-6.0.1.dist-info/top_level.txt": "ae98f42153138ac02387fd6f1b709c7fdbf98e9090c00cfa703d48554e597614",
+            "_yaml/__init__.py": "d3801eff9a2cc5a8692476b75c165401fe308ba5d7df6811f03e97ea9eb81840",
+            "yaml/__init__.py": "6e1974e6a49e3bed59c654918c6aef9769bd9eb5dbd67f7e1906ad4cdd0caea7",
+            "yaml/_yaml.cpython-310-x86_64-linux-gnu.so": "ffd895ac049ab508104855e529e09edae2b64f22b093d9ddeb50acffe7ea0073",
+            "yaml/composer.py": "fcaa37d16afa783594794a5ab94193dcb720f503c19ce3d59539c8311189f453",
+            "yaml/constructor.py": "90d8247da78b524c10618fd0e857f54f3d97570fe91b5c5513d024ef3faf88b0",
+            "yaml/cyaml.py": "e99ac01bd7c062f7557b614aff0d21997a06ed962ca185306a91bc0a20bbd87d",
+            "yaml/dumper.py": "3cb72d66563064ba7b5e679477046ebf89d8399d940670c8532f3e94a7cb17ea",
+            "yaml/emitter.py": "8e086d694ede170837d5b1b407b45979aff6f40762f422a65eafd08e04290a44",
+            "yaml/error.py": "021f73fada072546c4f63f8cf18a7181244ce4280b09cc15cc980b2d1176171a",
+            "yaml/events.py": "e74fd392c810884e2ea7e94aa3f57e9c1cbeb402319083d0c58e6a0e1282787c",
+            "yaml/loader.py": "5156becc8aa6905482218abf3e04869b835226db4763645fff3438fdbd5f1cdd",
+            "yaml/nodes.py": "80f28d8fca4a09d87677882bde021820d9cf39a3b11a12405226211919cf13ce",
+            "yaml/parser.py": "8a55a9e6fbe0a07146cef3990c8b45a068c3e83e369e1959ad9ca30306b4a09a",
+            "yaml/reader.py": "d1d9b38ab3a20c6e17a38d519ee412ecaf6b918df18c78956ac7c330d4ea08dc",
+            "yaml/representer.py": "22e58ff9c016f6c1ca1274b4802a926bcf78935060e1c813c5a0f021c6d143e6",
+            "yaml/resolver.py": "f4bf9561f9b89961f1503d558385fbae30d12bfed565de9bf76c33abb63620a6",
+            "yaml/scanner.py": "60433788b652690c17710460da5d91e0c753d3318fd85f5e1e42862a71f25906",
+            "yaml/serializer.py": "0a1b85826854d35863e31808f0668abfabdf33606e8f06bd8bb7761401e3edc0",
+            "yaml/tokens.py": "953408cd2570f0c83dc2fe39f7e4e388e41eeb05738aa69196a5f6ffcf6ba79e"
+          },
+          "version": "6.0.1"
+        },
+        "attrs": {
+          "files": {
+            "attr/__init__.py": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5",
+            "attr/__init__.pyi": "4085e79c73e8b9c9835a46e936c5933fe7202756e7f257bb0e3c916bfc1875ec",
+            "attr/_cmp.py": "dcd9f54e3c659546225ff9c9a159c4917a0393484cd4360a8f90c4ec665ee22d",
+            "attr/_cmp.pyi": "53efd153f5193b23d4110cd713a44c61041c8e4651636e704c7f7db0dd2cecc3",
+            "attr/_compat.py": "e219576d685d0e34020cae85285d448276773ce88782da69e78a84d27c5a1878",
+            "attr/_config.py": "746ab7c51e9f819105e9406dfcbd13f9e507201e22e37911987d0fdbcb09570f",
+            "attr/_funcs.py": "e7eb54289b69de1e44979e4470397a1965c5a7af1f4fc0fc53bb8244deb8f7b2",
+            "attr/_make.py": "94150f3e6c6203505e1f307a3a51e808487efad56f335a335cef1e5ce6ba8387",
+            "attr/_next_gen.py": "ec54646ed97f374d7b4ae0617ff570de6c36736a46661b4218ecda760cfbb69e",
+            "attr/_typing_compat.pyi": "5c33f9e13527f992a10fad9339079b9b3af0172a268540a8191a5c95be9a9510",
+            "attr/_version_info.py": "7b14aa6f76f913e7cc4ac819025130f5770ba448286cf391099a5c68482500ce",
+            "attr/_version_info.pyi": "c7f3372f75ae07baff50b5c05a3c7de7db9d290e072c1f25fa1b1cd450c636f9",
+            "attr/converters.py": "1a50de3b33de4c581e0412db8fd1b9ec4cf994093af2e85200b45827f7b17bce",
+            "attr/converters.pyi": "a2b5366df7fe56341ada4303caf9cc415ef7a094f6591c90bb0e19475ca6d5b1",
+            "attr/exceptions.py": "1d116ae22c9b9afefe0dc670ca397a3357ae33661e2552bf845c6e6811809e02",
+            "attr/exceptions.pyi": "cd9abc6c2527280cbd983b41130e366613e1014207a1329e7434089c90fcf373",
+            "attr/filters.py": "64188a58ba774742df099b2aed7d75a67f565fc36c952db05cce23b272ce19cf",
+            "attr/filters.pyi": "dc9e411be753c65b41935ffe46e351507aefdaabb5bfcbf868334043bfe689f0",
+            "attr/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "attr/setters.py": "e7e75c4fadc640adf938d1334a07d70a46c1ee93e4691faabf5e669b83d54b34",
+            "attr/setters.pyi": "367564685535041e0907c13826e5f2af34d482fb4ca63f29df005d258eee8b1e",
+            "attr/validators.py": "59a0751cb0071ea4475acaeffcaf47fac27b1128a5dc7dc29afd9df13b55671e",
+            "attr/validators.pyi": "b365a128faac9316ec72425f2a4f333aeb81d3cf067e0a72c5c09848d14ba8d5",
+            "attrs-25.3.0.dist-info/METADATA": "5b7f1c4448fbb35c2a35fd5f838855c1998bd7187401d4a9e0886d4cc44e8a7c",
+            "attrs-25.3.0.dist-info/WHEEL": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+            "attrs-25.3.0.dist-info/licenses/LICENSE": "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f",
+            "attrs/__init__.py": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25",
+            "attrs/__init__.pyi": "9d99889e872333bb47578010c34bf13bf7e8ea82632ff3e89e557dcca296f036",
+            "attrs/converters.py": "f244258eb5707d24d1bbc20dc0493c488d1e1abce659fb6c4fbaccd04ab2a213",
+            "attrs/exceptions.py": "0020829a0d7dfaf0c56833d8f6f165d7df523d709030dfdb10db380c02e3ce6b",
+            "attrs/filters.py": "54e50c66e83db8453a754b80d1d1758c89d42b43cbddf2e03f45414b977e0831",
+            "attrs/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "attrs/setters.py": "78bd5889d6105774f687dfd2608652651d4501c1c66f54ee093cb41342efd925",
+            "attrs/validators.py": "c5ccbac03e53b5391d086d5fe1759ba1c3d23b47da06393921f5497cfe92523d"
+          },
+          "version": "25.3.0"
+        },
+        "jsonschema": {
+          "files": {
+            "jsonschema-4.21.1.dist-info/METADATA": "c7627b72eaa7326a294619451c2b56303d67437aa252932a874cb3d9c4533d3f",
+            "jsonschema-4.21.1.dist-info/WHEEL": "99161210bdc887a8396bf095308730885fffd007b8fe02d8874d5814dc22ab59",
+            "jsonschema-4.21.1.dist-info/entry_points.txt": "bceeeb5f816cff1215272da99c0b4a8134b17e99e8cc0550d038c29a93319d61",
+            "jsonschema-4.21.1.dist-info/licenses/COPYING": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439",
+            "jsonschema/__init__.py": "2e43f0b1cc92949f654cea7b641d4cee343c99b1bbf9b606e35881c1b67ea3db",
+            "jsonschema/__main__.py": "88bb197f6ba9501de294129394c9f22be1c7b760a79df930c318bf73a80bbd20",
+            "jsonschema/_format.py": "cd4f41835f1d9f5bbd7f8dce457a3aff3a5c47dd939b5773d149585e3ce36e05",
+            "jsonschema/_keywords.py": "afcfc3aea01f9fa40bc109e65c4820bde89253e51a20bda9da7b8f20d7a57c57",
+            "jsonschema/_legacy_keywords.py": "dad5aec113d66d84bb10097cc01202feb69b1aebf527875f60ba8d10fa528610",
+            "jsonschema/_types.py": "583153e3d5fe810778c3921bce98d9ca155d3ad8c2e2cc10e2e1da3e61f9b2fc",
+            "jsonschema/_typing.py": "35984f86404e9fd20d61993c1baf6b0deb916a6ced81708c2e1d74cfd71f4fa8",
+            "jsonschema/_utils.py": "cfcad4daf5426118b75d457c6d7553c3d47380c902ef80bda253df68587cfb5f",
+            "jsonschema/benchmarks/__init__.py": "034b10af10c15474b243ef2bbb72f5d613177f7abd815b81f71fd88076f847d3",
+            "jsonschema/benchmarks/contains.py": "81ec50a14ac23b0102a1f6edd7d05ea2c419ed614be8f0dd917e3d0d6c0194e8",
+            "jsonschema/benchmarks/issue232.py": "dcb2d82c89411909d5bb2ca8da202ffb1932e4fe8f4451c0371e3ecc82103a81",
+            "jsonschema/benchmarks/issue232/issue.json": "79a3ce663311bb9bbc4692abb00f6e93bb9c3d94b9b64286e03fe190e4d0dc79",
+            "jsonschema/benchmarks/json_schema_test_suite.py": "3ef7da6e9518705e3fedcb180d37136ae103f2b9c510661b758e51a935c3d3cb",
+            "jsonschema/benchmarks/nested_schemas.py": "9a8d3b771f82220992388eb608db38839c6ed45cc79252c1a644280f159870ab",
+            "jsonschema/benchmarks/subcomponents.py": "7c4ca2333b1678ada977b0c4182bae63ebf31ae9f08477334415849c144b288a",
+            "jsonschema/benchmarks/unused_registry.py": "87047038d73d71e7cfb58ce4a17fd36113b71b25288eb8afd3e61068adef9e3d",
+            "jsonschema/benchmarks/validator_creation.py": "52451094b027bacb27aff29d08875a77ac71da95f140b998b6c5e88a2aca7964",
+            "jsonschema/cli.py": "486cbd24f834da681784dc6e814f225e160d8af7d28c184a4cd02057dd2dcbe3",
+            "jsonschema/exceptions.py": "e20e9aef88d26ff8e74b2ce600e871c0f8773188901c5cab26557cb3b14537a2",
+            "jsonschema/protocols.py": "5d744896c6e833995cd26c5e312502426aeab5c1b348ce53bb07c828107846e4",
+            "jsonschema/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "jsonschema/tests/_suite.py": "acfe8df6b198adf5890a63df8946dfa1d7d0d2dc2a509924f2c6e5183ee9cde9",
+            "jsonschema/tests/fuzz_validate.py": "7d403bc932488a1682c09a659147a165ec81f381dc5c472ab58e683c95c83bb2",
+            "jsonschema/tests/test_cli.py": "b8532ed986c87db4830a7ca484b2f8f95477fa3835b6f40b267d81962c29fc1c",
+            "jsonschema/tests/test_deprecations.py": "f55c4e09f5b3306d53838383f2b894fd99dde870ce41991ea73560c6c754754f",
+            "jsonschema/tests/test_exceptions.py": "dba97823896e52de3b9ba097a51db15e864f70c0161aaee46dabc9d52f1489a5",
+            "jsonschema/tests/test_format.py": "7959b948c69617694e3cedbc6cf03036f92242f1c240acbe327b808047217c47",
+            "jsonschema/tests/test_jsonschema_test_suite.py": "6b6b1a3ecd82c30834b1d45dbbeb89f20a125cb6eaad2fa90b8f10272d0ae031",
+            "jsonschema/tests/test_types.py": "705e752930e676cc74e8cac87387d72add17f5f22c560c39ba14fc09a9956bc5",
+            "jsonschema/tests/test_utils.py": "94945563241e6504d409353f337061964c4f3208ec73c29009ded4fd0928a24f",
+            "jsonschema/tests/test_validators.py": "7a26a282c64ccc7618b27890d543f281a4b9e9ad5dfbfefef4d0b8c155c0873b",
+            "jsonschema/validators.py": "c93da801e9caddc47285c4de1ce6ef7c29b401698f5e1502fe2768aff2083304"
+          },
+          "version": "4.21.1"
+        },
+        "jsonschema-specifications": {
+          "files": {
+            "jsonschema_specifications-2023.12.1.dist-info/METADATA": "7e74f19a481a1e62d9d96189d5eac0f05496b509b1d70077b699da971050d82d",
+            "jsonschema_specifications-2023.12.1.dist-info/WHEEL": "99161210bdc887a8396bf095308730885fffd007b8fe02d8874d5814dc22ab59",
+            "jsonschema_specifications-2023.12.1.dist-info/licenses/COPYING": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+            "jsonschema_specifications/__init__.py": "5e66003119cf6d1bffa22740bcd672a0eb6dc1802f05daabefba2e0c3df66571",
+            "jsonschema_specifications/_core.py": "b4585cd42325789dc024e2bf6e3c4ea4541376bb140a51467c5c4f054fc279b3",
+            "jsonschema_specifications/schemas/draft201909/metaschema.json": "7b761b3e121f0a0ca1ea2a0b8e2cc856bcf801604b8268d71bacaa202bc0c13b",
+            "jsonschema_specifications/schemas/draft201909/vocabularies/applicator": "6895100e99726fbb107058512bbec3ecfd4b24e8fd2facee3e505ee72b0d4c31",
+            "jsonschema_specifications/schemas/draft201909/vocabularies/content": "9b7d4f55a4e2fdb02c430068fdffabc732addce238da3f1df2690249c3353274",
+            "jsonschema_specifications/schemas/draft201909/vocabularies/core": "b5a2c4957f6495d0a5081f0409ebe8a14e4139acb203fc748471f8ede2af5b2c",
+            "jsonschema_specifications/schemas/draft201909/vocabularies/meta-data": "d47e2445dd6a82271a298d83cc6c6cb8d4ae1e15e0dc56becd37a163ecf01286",
+            "jsonschema_specifications/schemas/draft201909/vocabularies/validation": "1e526c1d335a734805fc82cf5798c12b960ad7da2517c66cda5a1b09359c3c1c",
+            "jsonschema_specifications/schemas/draft202012/metaschema.json": "41da76f5afb7ce062d248f762463a92f7ca47e4e0f905b224ba6afeef91ded0f",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/applicator": "c4a6e4147b91fef7fea6dc058cb1bf93402f7414b76578a8b16aaf1dad6aacef",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/content": "08343747764e4a5814262793cf4d652057a7913863c5950d43297e8e1fdac5b6",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/core": "c2d12a8e4dd11d336dfc83a3f663aa4c69f0b49b3beb094ffeb25b5316f4803d",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/format": "50ebbfe790611a849b8cc400a09c1d0e0fb6ab5c0d43a0f22201fd3625056bf4",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/format-annotation": "abc775adfefd89d22358170d9bf93f4ebd2349563bbbedd60f02bef7c812bcc0",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/format-assertion": "c52242b9a1bb786b26c3e82c7add428c31f9c96e575dce99e56ea5feaa6da20c",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/meta-data": "8f76d6e14f41b9b92ef933b708cdc5144c8b5268651ad11918485fb1754f1c76",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/unevaluated": "2dbfbcb73994b670b0976492adee1fffb46c21682784d2f5a4ca561f9e2d0cb4",
+            "jsonschema_specifications/schemas/draft202012/vocabularies/validation": "7010a31e541f32d2be721e2de348df75c9b36876a3ed304877fc0abda1d37a58",
+            "jsonschema_specifications/schemas/draft3/metaschema.json": "2cf75f64436fb5be374a2eaa27ab8b7e1fd651c9b46daea6c67b02fd64e2458b",
+            "jsonschema_specifications/schemas/draft4/metaschema.json": "e1489d0b4755f02793302591d3fcb8f07b6893a82a94f24895f8e4edf11b82e2",
+            "jsonschema_specifications/schemas/draft6/metaschema.json": "c29dfce9f54835c3a06c03b3c5d5ec0eda77706568f9c4df7cfbc7566a51006d",
+            "jsonschema_specifications/schemas/draft7/metaschema.json": "3d5392088261606c559b603f385329c9f1ab45b5d667eb990687453b055d405e",
+            "jsonschema_specifications/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "jsonschema_specifications/tests/test_jsonschema_specifications.py": "5a46d8456e80e85a19d2b8af4a17ea54b482b00887276c7c4f1a840894d73d36"
+          },
+          "version": "2023.12.1"
+        },
+        "referencing": {
+          "files": {
+            "referencing-0.33.0.dist-info/METADATA": "d7887111b20d83593b53310d07a7ba308c5de03a8ef55f470bf56e95bcd263ed",
+            "referencing-0.33.0.dist-info/WHEEL": "4c93e729db6b4ae7bbc59fc0546929f585dcbc3ae86ec8c176cd5dbb7371e9d7",
+            "referencing-0.33.0.dist-info/licenses/COPYING": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+            "referencing/__init__.py": "410203773b61492777fef88747a67ee503938899ef2ddd2905a8ec9aad10fc2a",
+            "referencing/_attrs.py": "6e04fe28c84354b786b56c4cfd218a61e2da6411734f691454574090e7178bc8",
+            "referencing/_attrs.pyi": "27a4ad3142aa8b13b81fb1228bdf935cd7c239f4bc6879bed5ec2298e03ef28a",
+            "referencing/_core.py": "007b7e021072baa0949c744dd15656728f8b7762a687429576e9f54b39ecc5f7",
+            "referencing/exceptions.py": "46112fd4ec19e087b853011d7c1ae748676a958114241c246b1777463dd37583",
+            "referencing/jsonschema.py": "2c99155c6f0c192125785de0675e40c176579cbb0b85aa044e7276e58ebe31f1",
+            "referencing/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "referencing/retrieval.py": "8caf34d6996bafd310d8fbb24bb4b23578efbccb8afc49d7e0ebbf217d4c0f77",
+            "referencing/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "referencing/tests/test_core.py": "78f654600e987439a8779e27ff42e6884fb3b3d7514c763d04f2a31049b06eb3",
+            "referencing/tests/test_exceptions.py": "ede39d1f2a1b5ccb7bfa1e409e71fbbbc8b0dae1cf687ed4e01b3d2612e08d6a",
+            "referencing/tests/test_jsonschema.py": "e109e35163803009f9c9e03c66d95d264848e78bf02962560742c3ccd771e717",
+            "referencing/tests/test_referencing_suite.py": "cdf260d7ad9db2b064b2a2bf5caa3b063070c4c145901156c915c0e969e2f6e4",
+            "referencing/tests/test_retrieval.py": "bdc6e77c0e13a957aa5335b4ef7c0efa72dea9522fd2b41958d5afd33f649b8f",
+            "referencing/typing.py": "982ae2ce241a536c0c3cfeff1490559f8ddd09804c9bf0a752f57a4be91c8507"
+          },
+          "version": "0.33.0"
+        },
+        "rpds-py": {
+          "files": {
+            "rpds/__init__.py": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3",
+            "rpds/__init__.pyi": "bb07abc7884bc5d0b074ac66fa96b3dd84e2febced124d14a5925c5388455765",
+            "rpds/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "rpds/rpds.cpython-310-x86_64-linux-gnu.so": "5eb4b2e45ee20f9c473745441ac530ba9cb8c67d8f226051bc3c1f4d4d2daf37",
+            "rpds_py-0.17.1.dist-info/METADATA": "52874d59fb698441225355a86a19914e112fceb9b063c28492168c92ddfdc23a",
+            "rpds_py-0.17.1.dist-info/WHEEL": "9c0672ad7ca511a52eacfa3ca52859a3d89017ac40fb113ef0a33a5892c62f58",
+            "rpds_py-0.17.1.dist-info/license_files/LICENSE": "314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909"
+          },
+          "version": "0.17.1"
+        }
+      },
+      "python_version": "3.10.11"
+    },
+    "wheel_sha256": {
+      "PyYAML-6.0.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "ba336e390cd8e4d1739f42dfe9bb83a3cc2e80f567d8805e11b46f4a943f5515",
+      "attrs-25.3.0-py3-none-any.whl": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+      "jsonschema-4.21.1-py3-none-any.whl": "7996507afae316306f9e2290407761157c6f78002dcf7419acb99822143d1c6f",
+      "jsonschema_specifications-2023.12.1-py3-none-any.whl": "87e4fdf3a94858b8a2ba2778d9ba57d8a9cafca7c7489c46ba0d30a8bc6a9c3c",
+      "referencing-0.33.0-py3-none-any.whl": "39240f2ecc770258f28b642dd47fd74bc8b02484de54e1882b74b35ebd779bd5",
+      "rpds_py-0.17.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "720215373a280f78a1814becb1312d4e4d1077b1202a56d2b0815e95ccb99ce9"
+    },
+    "z3": {
+      "executable_sha256": "22214e518eed9eec867d18b485e7b2570d09cbf1d94a47c8eec6ec4de0287eff",
+      "path": ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+      "version_output": "Z3 version 4.12.1 - 64 bit"
+    }
+  }
+}

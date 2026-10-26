@@ -92,4 +92,15 @@ and records Python, solver, and validator file digests. It runs only trusted
 main-branch code and has read-only repository permission. It accepts no PR or
 artifact. The Linux profile must be pinned before the PR gate uses it.
 
+The inventory completed successfully in
+[run 40397041174](https://github.com/mack-dot/forge/actions/runs/40397041174).
+`results/stage4/ci-inventory.json` records the actual commands and exit codes.
+The observed Linux profile and wheel hashes are now recorded under `toolchain/`.
+They are not yet enabled by the acceptance gate.
+
+The archived local proof example belongs to trusted revision
+`bafcd92533034dc342c53688f058ab8cfbc577a6`. Use that revision to reproduce its
+exact evidence. Later changes to protected inputs produce a different evidence
+identity even when the ledger source is unchanged.
+
 Stage 4's required real-PR EXIT commands remain **NOT RUN**.

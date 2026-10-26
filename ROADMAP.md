@@ -7,8 +7,9 @@ approved ledger refinement passed the real Dafny gate. The schema, policy,
 artifact-binding, replay, and Stage 1 regression checks produced their required
 results. The user approved the tested Node-loader demo invocation, which ran
 with exit 0. Stage 4 is CURRENT. Its local snapshot gate has passed rejection
-and reproducibility controls. Linux CI inventory is being prepared; the real
-PR workflow and approved-spec path remain incomplete.
+and reproducibility controls. Linux CI inventory succeeded and its observed
+pins are recorded. The Linux acceptance profile, real PR workflow, and
+approved-spec path remain incomplete.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -542,6 +543,14 @@ was byte-identical. The first local test driver run exited 1 because it expected
 the wrong exit code for Dafny's bare-assume warning; that failure is preserved.
 These local controls do not satisfy the real-PR EXITs below. See
 `docs/stage4-change-loop.md`, `results/stage4-local.json`, and `unsure.md` U034–U036.
+
+The exact saved reproduction command also ran with exit 0 and reproduced
+identical evidence. Linux inventory then succeeded in
+[Actions run 40397041174](https://github.com/mack-dot/forge/actions/runs/40397041174):
+the inventory command exited 0, the true lemma exited 0, and the false lemma
+exited 4. Exact child commands and measured pins are in
+`results/stage4/ci-inventory.json`. The new Linux profile is recorded but not yet
+enabled for acceptance. These are preparation checks, not real-PR EXITs.
 
 Create a GitHub Action that computes affected claims from dependencies and
 content hashes, invokes per-lemma/per-member verification, and posts a
