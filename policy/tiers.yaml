@@ -1,0 +1,94 @@
+{
+  "format_version": 1,
+  "id": "forge-ledger",
+  "tiers": {
+    "critical": {
+      "artifact_kind": "source",
+      "description": "Ledger source changes require source proof of every approved claim.",
+      "required_claims": {
+        "C1": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "C2": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "C3": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "C4": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "C5": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        }
+      }
+    },
+    "standard": {
+      "artifact_kind": "source",
+      "description": "A test-evidence tier. Acceptance retains the actual method and makes no proof upgrade.",
+      "required_claims": {
+        "C1": {
+          "allowed_methods": [
+            "unit_tested",
+            "property_tested",
+            "tested_against_proved_model",
+            "source_proof"
+          ],
+          "minimum_method": "unit_tested"
+        },
+        "C2": {
+          "allowed_methods": [
+            "unit_tested",
+            "property_tested",
+            "tested_against_proved_model",
+            "source_proof"
+          ],
+          "minimum_method": "unit_tested"
+        },
+        "C3": {
+          "allowed_methods": [
+            "unit_tested",
+            "property_tested",
+            "tested_against_proved_model",
+            "source_proof"
+          ],
+          "minimum_method": "unit_tested"
+        },
+        "C4": {
+          "allowed_methods": [
+            "unit_tested",
+            "property_tested",
+            "tested_against_proved_model",
+            "source_proof"
+          ],
+          "minimum_method": "unit_tested"
+        },
+        "C5": {
+          "allowed_methods": [
+            "unit_tested",
+            "property_tested",
+            "tested_against_proved_model",
+            "source_proof"
+          ],
+          "minimum_method": "unit_tested"
+        }
+      }
+    }
+  },
+  "version": "1.0.0"
+}

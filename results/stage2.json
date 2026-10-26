@@ -1,0 +1,369 @@
+{
+  "approved_spec_sha256": "e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f",
+  "cases": {
+    "artifact-mismatch": {
+      "child_exit_codes": [
+        {
+          "diagnostic": "ARTIFACT_MISMATCH: C1 evidence names another artifact",
+          "exit_code": 1,
+          "name": "record-digest"
+        },
+        {
+          "diagnostic": "ARTIFACT_MISMATCH: artifact differs from the current backend input bytes",
+          "exit_code": 1,
+          "name": "coherent-forged-digest"
+        },
+        {
+          "diagnostic": "ARTIFACT_MISMATCH: source manifest differs from current backend inputs",
+          "exit_code": 1,
+          "name": "manifest-digest"
+        }
+      ],
+      "result": "passed"
+    },
+    "method-policy": {
+      "child_exit_codes": [
+        {
+          "diagnostic": "METHOD_POLICY: C1 requires source_proof; observed unit_tested",
+          "exit_code": 1,
+          "name": "unit_tested"
+        },
+        {
+          "diagnostic": "METHOD_POLICY: C1 requires source_proof; observed bounded_model_checked",
+          "exit_code": 1,
+          "name": "bounded_model_checked"
+        },
+        {
+          "diagnostic": "METHOD_POLICY: C1 requires source_proof; observed kernel_checked_proof",
+          "exit_code": 1,
+          "name": "kernel_checked_proof"
+        }
+      ],
+      "result": "passed"
+    },
+    "policy-controls": {
+      "child_exit_codes": [
+        {
+          "diagnostic": "POLICY_BINDING: policy id, version, tier, or digest differs",
+          "exit_code": 1,
+          "name": "policy-version"
+        },
+        {
+          "diagnostic": "POLICY_BINDING: policy id, version, tier, or digest differs",
+          "exit_code": 1,
+          "name": "policy-tier"
+        },
+        {
+          "diagnostic": "POLICY_BINDING: policy id, version, tier, or digest differs",
+          "exit_code": 1,
+          "name": "policy-digest"
+        },
+        {
+          "diagnostic": "TRUSTED_INPUTS: trusted input set or digests differ",
+          "exit_code": 1,
+          "name": "trusted-input"
+        },
+        {
+          "diagnostic": "CLAIM_BINDING: duplicate, missing, changed, or unknown claim/spec binding",
+          "exit_code": 1,
+          "name": "claim-spec"
+        },
+        {
+          "diagnostic": "CLAIM_BINDING: duplicate, missing, changed, or unknown claim/spec binding",
+          "exit_code": 1,
+          "name": "claim-statement"
+        },
+        {
+          "diagnostic": "CLAIM_BINDING: duplicate, missing, changed, or unknown claim/spec binding",
+          "exit_code": 1,
+          "name": "missing-claim"
+        },
+        {
+          "diagnostic": "CLAIM_BINDING: evidence names an unknown claim",
+          "exit_code": 1,
+          "name": "unknown-claim"
+        },
+        {
+          "diagnostic": "MISSING_EVIDENCE: no passing evidence for C5",
+          "exit_code": 1,
+          "name": "missing-result"
+        },
+        {
+          "diagnostic": "MISSING_EVIDENCE: no passing evidence for C1",
+          "exit_code": 1,
+          "name": "unknown-result"
+        },
+        {
+          "diagnostic": "COVERAGE_SCOPE: end-to-end coverage is not established by this gate",
+          "exit_code": 1,
+          "name": "end-to-end"
+        },
+        {
+          "diagnostic": "BACKEND_BINDING: evidence names a different selected backend",
+          "exit_code": 1,
+          "name": "backend"
+        },
+        {
+          "diagnostic": "REPRODUCTION_MISMATCH: supplied evidence differs from the fresh checker result",
+          "exit_code": 1,
+          "name": "invented-producer"
+        },
+        {
+          "diagnostic": "POLICY_TIER: unknown code tier missing",
+          "exit_code": 1,
+          "name": "unknown-tier"
+        },
+        {
+          "diagnostic": "DOCUMENT_FORMAT: duplicate JSON key end_to_end",
+          "exit_code": 1,
+          "name": "duplicate-json-key"
+        }
+      ],
+      "result": "passed"
+    },
+    "round-trip": {
+      "child_exit_codes": [
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "fresh-checker-replay"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "byte-comparison"
+        }
+      ],
+      "result": "passed"
+    },
+    "schema": {
+      "child_exit_codes": [
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "stage1-schema"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "stage2-schema"
+        },
+        {
+          "diagnostic": "SCHEMA_REJECTED: /: {'artifact': {'build_cmd': '', 'kind': 'source', 'sha256': 'ac63e0a9da7f70f271ec43a5ae7bf4839f7b9b753935a02c0c1cd0280a1aa153'}, 'backend': 'dafny', 'backend_details': {'verification_options': ['--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1', '--resource-limit', ",
+          "exit_code": 1,
+          "name": "unknown-method"
+        },
+        {
+          "diagnostic": "SCHEMA_REJECTED: /: {'artifact': {'build_cmd': '', 'kind': 'source', 'sha256': 'ac63e0a9da7f70f271ec43a5ae7bf4839f7b9b753935a02c0c1cd0280a1aa153'}, 'backend': 'dafny', 'backend_details': {'verification_options': ['--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1', '--resource-limit', ",
+          "exit_code": 1,
+          "name": "extra-timestamp"
+        }
+      ],
+      "result": "passed"
+    }
+  },
+  "development_checks": [
+    {
+      "exit_code": 1,
+      "operation": "Initial archival/pin preparation script",
+      "result": "Parse-time SyntaxError: bytes can only contain ASCII literal characters; no statements executed."
+    },
+    {
+      "exit_code": 0,
+      "operation": "Corrected archival/pin preparation script"
+    },
+    {
+      "exit_code": 0,
+      "operation": "Python compilation of gate modules"
+    },
+    {
+      "exit_code": 0,
+      "operation": "Standalone schema validation of exact Stage 1 archive"
+    },
+    {
+      "exit_code": 0,
+      "operation": "Comparison of preserved audit/verifier invocation and handling block"
+    }
+  ],
+  "end_to_end": false,
+  "evidence_sha256": "0400b148904360eb3fde1940acaf73ba0a1342f9244da8cf1f69046a6c9d4e16",
+  "exit_commands": [
+    {
+      "command": "python3 gate/gate.py --impl impl/Ledger.dfy --evidence evidence.json",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case schema",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case artifact-mismatch",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case method-policy",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case round-trip",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case policy-controls",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case reproducibility",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case planted-bugs",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case spec-lock",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case contract-binding",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case audit-controls",
+      "exit_code": 0
+    }
+  ],
+  "policy": {
+    "id": "forge-ledger",
+    "sha256": "6630ed763d6811e14c3c726429ba2c64ead78d57f323c5db10d6aeeca8715629",
+    "tier": "critical",
+    "version": "1.0.0"
+  },
+  "schema_version": "2.0.0",
+  "scope": "Structural validation, exact artifact/claim/policy binding, and replay through the actual Dafny backend. No binary or deployment coverage.",
+  "stage": 2,
+  "stage1_archive_sha256": "8389e88aac8526ce48dd8ef70c8e6e40f53ccf5360465b79cb8cec27b3c66df3",
+  "stage1_regressions": {
+    "audit-controls": {
+      "child_exit_codes": [
+        {
+          "diagnostic": null,
+          "exit_code": 2,
+          "name": "bodyless_lemma-dafny-audit"
+        },
+        {
+          "diagnostic": "AUDIT_REJECTED: C1 C2 C3 C4 C5 not established; Dafny audit exit 2; rejected program or unchecked assumptions/code",
+          "exit_code": 1,
+          "name": "bodyless_lemma"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 2,
+          "name": "axiom_lemma-dafny-audit"
+        },
+        {
+          "diagnostic": "AUDIT_REJECTED: C1 C2 C3 C4 C5 not established; Dafny audit exit 2; rejected program or unchecked assumptions/code",
+          "exit_code": 1,
+          "name": "axiom_lemma"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 2,
+          "name": "verify_false-dafny-audit"
+        },
+        {
+          "diagnostic": "AUDIT_REJECTED: C1 C2 C3 C4 C5 not established; Dafny audit exit 2; rejected program or unchecked assumptions/code",
+          "exit_code": 1,
+          "name": "verify_false"
+        }
+      ],
+      "result": "passed"
+    },
+    "contract-binding": {
+      "child_exit_codes": [
+        {
+          "diagnostic": "SOURCE_SCOPE: requires the exact approved include and module Ledger refines LedgerSpec preamble; no other includes",
+          "exit_code": 1,
+          "name": "missing-approved-contract"
+        }
+      ],
+      "result": "passed"
+    },
+    "planted-bugs": {
+      "child_exit_codes": [
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "self_transfer-units"
+        },
+        {
+          "diagnostic": "VERIFICATION_REJECTED: C1 C5 not established; Dafny exit 4",
+          "exit_code": 1,
+          "name": "self_transfer-gate"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "off_by_one-units"
+        },
+        {
+          "diagnostic": "VERIFICATION_REJECTED: C4 not established; Dafny exit 4",
+          "exit_code": 1,
+          "name": "off_by_one-gate"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "retry_double-units"
+        },
+        {
+          "diagnostic": "VERIFICATION_REJECTED: C1 C3 not established; Dafny exit 4",
+          "exit_code": 1,
+          "name": "retry_double-gate"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "sneaky_assume-units"
+        },
+        {
+          "diagnostic": "AUDIT_REJECTED: C1 C2 C3 C4 C5 not established; Dafny audit exit 2; rejected program or unchecked assumptions/code",
+          "exit_code": 1,
+          "name": "sneaky_assume-gate"
+        }
+      ],
+      "result": "passed"
+    },
+    "reproducibility": {
+      "child_exit_codes": [
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "gate-first"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "gate-second"
+        },
+        {
+          "diagnostic": null,
+          "exit_code": 0,
+          "name": "byte-comparison"
+        }
+      ],
+      "result": "passed"
+    },
+    "spec-lock": {
+      "child_exit_codes": [
+        {
+          "diagnostic": "SPEC_LOCK: C1 C2 C3 C4 C5 not established; spec digest mismatch",
+          "exit_code": 1,
+          "name": "changed-spec-old-lock"
+        }
+      ],
+      "result": "passed"
+    }
+  },
+  "verified_obligations": 12
+}

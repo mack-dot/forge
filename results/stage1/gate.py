@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+"""Stage 1 policy adapter. Dafny alone checks program correctness."""
+
+import argparse
+import hashlib
+import json
+import platform
+from pathlib import Path
+import shlex
+import subprocess
+import sys
+import tempfile
+import xml.etree.ElementTree as ET
+
+
+ROOT = Path(__file__).resolve().parent.parent
+DAFNY = ROOT / '.toolchain/dafny-4.11.0/dafny/dafny'
+SPEC = ROOT / 'spec/LedgerSpec.dfy'
+BINDING = ROOT / 'gate/ContractBinding.dfy'
+AUDIT = ROOT / 'gate/expected-audit.md'
+CLAIMS = {
+    'C1': 'A transfer preserves total funds.',
+    'C2': 'Every resulting account balance is non-negative.',
+    'C3': 'An accepted identical retry returns Ok without repeating its effect.',
+    'C4': 'A fresh valid transfer terminates and performs the exact debit and credit.',
+    'C5': 'Every other request is rejected without changing either state map.',
+}
+OPTIONS = [
+    '--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1',
+    '--resource-limit', '1000000', '--verification-time-limit', '0',
+    '--cores', '1', '--verify-included-files',
+]
+REQUIRED_RESULTS = {
+    'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)',
+    'LedgerSpec.Apply (well-formedness)',
+    'LedgerSpec.NonNegative (well-formedness)',
+    'LedgerSpec.WellFormed (well-formedness)',
+    'LedgerSpec.Total (well-formedness)',
+    'LedgerSpec.IsRetry (well-formedness)',
+    'LedgerSpec.IsFreshValid (well-formedness)',
+}
+
+
+class Rejected(Exception):
+    pass
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True)
+            + '\n').encode('utf-8')
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def relative(path):
+    return path.resolve().relative_to(ROOT).as_posix()
+
+
+def run(command, log):
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    log.write_text(result.stdout + result.stderr)
+    return result
+
+
+def claim_ranges(source):
+    """Read the approved comment markers; do not interpret Dafny expressions."""
+    starts = []
+    for number, line in enumerate(source.splitlines(), 1):
+        for claim in CLAIMS:
+            if line.strip().startswith('// ' + claim + ':'):
+                starts.append((number, claim))
+    if [claim for _, claim in starts] != list(CLAIMS):
+        raise Rejected('CLAIM_MARKERS: approved claim locations are missing')
+    return {claim: (line + 1, starts[index + 1][0] - 1
+                    if index + 1 < len(starts) else len(source.splitlines()))
+            for index, (line, claim) in enumerate(starts)}
+
+
+def failed_claims(output, ranges):
+    """Map first-party diagnostic locations to the approved claim markers."""
+    found = set()
+    for line in output.splitlines():
+        if not line.startswith('{'):
+            continue
+        item = json.loads(line)
+        if item.get('type') != 'diagnostic':
+            continue
+        diagnostic = item['value']
+        if diagnostic.get('severity') != 1:
+            continue
+        for location in [diagnostic.get('location', {})] + [
+            related.get('location', {})
+            for related in diagnostic.get('relatedInformation', [])
+        ]:
+            filename = location.get('filePath')
+            if not filename or (ROOT / filename).resolve() != SPEC:
+                continue
+            # Dafny 4.11 JSON uses one-based lines, unlike LSP positions.
+            number = location['range']['start']['line']
+            for claim, (start, end) in ranges.items():
+                if start <= number <= end:
+                    found.add(claim)
+    return sorted(found)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--impl', default='impl/Ledger.dfy')
+    parser.add_argument('--evidence', default='evidence.json')
+    args = parser.parse_args()
+    implementation = (ROOT / args.impl).resolve()
+    output = (ROOT / args.evidence).resolve()
+    impl_name = relative(implementation)
+    output_name = relative(output)
+    if implementation.parent not in (ROOT / 'impl', ROOT / 'bugs'):
+        raise Rejected('SOURCE_SCOPE: Stage 1 accepts one file in impl/ or bugs/')
+    if implementation.suffix != '.dfy':
+        raise Rejected('SOURCE_SCOPE: the implementation must be a Dafny source file')
+    if output.suffix != '.json' or output_name.split('/')[0] not in (
+        'evidence.json', 'build'
+    ):
+        raise Rejected('OUTPUT_SCOPE: write evidence.json or a JSON file under build/')
+
+    # Remove an old result before checking a new artifact. Never emit stale success.
+    output.unlink(missing_ok=True)
+    pins = json.loads((ROOT / 'toolchain/pins.json').read_text())
+    lock = json.loads((ROOT / 'spec.lock').read_text())
+    spec_bytes = SPEC.read_bytes()
+    implementation_bytes = implementation.read_bytes()
+    if lock.get('spec_file') != 'spec/LedgerSpec.dfy' or digest(spec_bytes) != lock.get('spec_sha256'):
+        raise Rejected('SPEC_LOCK: C1 C2 C3 C4 C5 not established; spec digest mismatch')
+    if lock.get('dafny_version') != '4.11.0' or lock.get('dafny_build') != pins['dafny']['version_output']:
+        raise Rejected('TOOLCHAIN_LOCK: Dafny version does not match the approved lock')
+    if pins.get('verification_options') != OPTIONS:
+        raise Rejected('TOOLCHAIN_LOCK: verification options differ from the fixed Stage 1 policy')
+    if platform.python_version() != pins['python']['version']:
+        raise RuntimeError('TOOLCHAIN_ERROR: Python version differs from the pin')
+
+    # A deliberately narrow byte-level input policy closes the source file set.
+    # Dafny's parser and auditor handle language semantics and forbidden constructs.
+    preamble = (b'include "../spec/LedgerSpec.dfy"\n\n'
+                b'module Ledger refines LedgerSpec {\n')
+    if not implementation_bytes.startswith(preamble) or implementation_bytes.count(b'include') != 1:
+        raise Rejected('SOURCE_SCOPE: requires the exact approved include and '
+                       'module Ledger refines LedgerSpec preamble; no other includes')
+    for executable, expected in [
+        (DAFNY, pins['dafny']['executable_sha256']),
+        (ROOT / pins['z3']['path'], pins['z3']['executable_sha256']),
+    ]:
+        if digest(executable.read_bytes()) != expected:
+            raise RuntimeError('TOOLCHAIN_ERROR: executable digest differs from its pin')
+    ranges = claim_ranges(spec_bytes.decode('utf-8'))
+    input_paths = [implementation, SPEC, BINDING, AUDIT, Path(__file__).resolve(),
+                   ROOT / 'spec.lock', ROOT / 'toolchain/pins.json']
+    before = {relative(path): digest(path.read_bytes()) for path in input_paths}
+    (ROOT / 'build').mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='gate-', dir=ROOT / 'build') as temporary:
+        work = Path(temporary)
+        version = run([str(DAFNY), '--version'], work / 'version.log')
+        if version.returncode != 0 or version.stdout.strip() != pins['dafny']['version_output']:
+            raise RuntimeError('TOOLCHAIN_ERROR: Dafny version command failed or mismatched')
+        audit_report = work / 'expected-audit.md'
+        audit_report.write_bytes(AUDIT.read_bytes())
+        audit = run([
+            str(DAFNY), 'audit', impl_name, 'gate/ContractBinding.dfy',
+            '--report-format', 'md', '--report-file', str(audit_report),
+            '--compare-report',
+        ], work / 'audit.log')
+        if audit.returncode != 0:
+            print(audit.stdout + audit.stderr, file=sys.stderr)
+            raise Rejected('AUDIT_REJECTED: C1 C2 C3 C4 C5 not established; '
+                           'Dafny audit exit ' + str(audit.returncode)
+                           + '; rejected program or unchecked assumptions/code')
+        report = work / 'verification.trx'
+        verification = run([
+            str(DAFNY), 'verify', impl_name, 'gate/ContractBinding.dfy', *OPTIONS,
+            '--json-output', '--log-format', 'trx;LogFileName=' + str(report),
+        ], work / 'verification.log')
+        if verification.returncode != 0:
+            claims = failed_claims(verification.stdout, ranges)
+            print(verification.stdout + verification.stderr, file=sys.stderr)
+            raise Rejected('VERIFICATION_REJECTED: ' + ' '.join(claims or CLAIMS)
+                           + ' not established; Dafny exit ' + str(verification.returncode))
+        tree = ET.parse(report)
+        results = [element for element in tree.iter()
+                   if element.tag.endswith('UnitTestResult')]
+        names = {element.get('testName') for element in results}
+        if not REQUIRED_RESULTS <= names or any(element.get('outcome') != 'Passed' for element in results):
+            raise Rejected('PROOF_COVERAGE: required obligations were absent or did not pass')
+        after = {relative(path): digest(path.read_bytes()) for path in input_paths}
+        if before != after:
+            raise Rejected('INPUT_CHANGED: source or trusted inputs changed while checking')
+
+        manifest = [{'path': name, 'sha256': before[name]}
+                    for name in sorted([impl_name, 'spec/LedgerSpec.dfy'])]
+        artifact_sha = digest(canonical(manifest))
+        reproduce = 'python3 gate/gate.py --impl ' + shlex.quote(impl_name) + ' --evidence evidence.json'
+        assumptions = [
+            'The caller supplies a WellFormed state; external state history is not established.',
+            'Operations are sequential over mathematical unbounded integers and finite maps.',
+            'No claim covers concurrency, persistence, serialization, authentication, or deployment.',
+        ]
+        trusted_base = [
+            'Dafny ' + pins['dafny']['version_output'], 'bundled Z3 4.12.1',
+            'Dafny bundled Boogie and .NET runtime',
+            'Python ' + pins['python']['version'] + ' and this gate adapter',
+            'approved spec, local spec.lock, contract-binding harness, and empty audit baseline',
+            'host operating system and hardware',
+        ]
+        evidence = {
+            'format_version': 1,
+            'end_to_end': False,
+            'artifact': {'kind': 'source', 'sha256': artifact_sha, 'build_cmd': ''},
+            'source_manifest': manifest,
+            'claims': [
+                {'id': claim, 'statement_plain_english': statement,
+                 'spec_ref': 'spec/LedgerSpec.dfy:' + str(ranges[claim][0]),
+                 'spec_sha': lock['spec_sha256']}
+                for claim, statement in CLAIMS.items()
+            ],
+            'evidence': [
+                {'claim_id': claim, 'artifact_sha': artifact_sha,
+                 'method': 'source_proof', 'tool': 'Dafny',
+                 'tool_version': pins['dafny']['version_output'], 'result': 'passed',
+                 'assumptions': assumptions, 'trusted_base': trusted_base,
+                 'reproduce_cmd': reproduce, 'producer': 'forge/local-dafny-gate'}
+                for claim in CLAIMS
+            ],
+            'trusted_input_sha256': {name: before[name] for name in sorted(before)
+                                     if name not in [impl_name, 'spec/LedgerSpec.dfy']},
+            'verification_options': OPTIONS,
+            'verified_obligations': sorted(names),
+        }
+        output.parent.mkdir(parents=True, exist_ok=True)
+        temporary_output = work / 'evidence.json'
+        temporary_output.write_bytes(canonical(evidence))
+        temporary_output.replace(output)
+    print('ACCEPTED: C1 C2 C3 C4 C5; method=source_proof; end_to_end=false')
+    return 0
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except Rejected as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(1)
+    except (OSError, ValueError, KeyError, RuntimeError, ET.ParseError) as error:
+        print('GATE_ERROR: ' + str(error), file=sys.stderr)
+        sys.exit(2)

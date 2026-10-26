@@ -1,0 +1,129 @@
+{
+  "additional_audit_controls": [
+    {
+      "exit_code": 2,
+      "name": "bodyless_lemma-dafny-audit"
+    },
+    {
+      "exit_code": 1,
+      "name": "bodyless_lemma"
+    },
+    {
+      "exit_code": 2,
+      "name": "axiom_lemma-dafny-audit"
+    },
+    {
+      "exit_code": 1,
+      "name": "axiom_lemma"
+    },
+    {
+      "exit_code": 2,
+      "name": "verify_false-dafny-audit"
+    },
+    {
+      "exit_code": 1,
+      "name": "verify_false"
+    }
+  ],
+  "approved_spec_sha256": "e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f",
+  "earlier_failed_scenarios": [
+    {
+      "case": "planted-bugs",
+      "exit_code": 1,
+      "reason": "self_transfer: expected claim/rule was not named"
+    },
+    {
+      "case": "contract-binding",
+      "exit_code": 1,
+      "reason": "rejection did not identify the missing refinement relationship"
+    }
+  ],
+  "end_to_end": false,
+  "evidence_sha256": "8389e88aac8526ce48dd8ef70c8e6e40f53ccf5360465b79cb8cec27b3c66df3",
+  "exit_commands": [
+    {
+      "command": "python3 gate/gate.py --impl impl/Ledger.dfy --evidence evidence.json",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case reproducibility",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case planted-bugs",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case spec-lock",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case contract-binding",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case audit-controls",
+      "exit_code": 0
+    }
+  ],
+  "negative_controls": [
+    {
+      "checker": "dafny verify",
+      "checker_exit_code": 4,
+      "diagnostic": "VERIFICATION_REJECTED: C1 C5 not established; Dafny exit 4",
+      "fixture": "bugs/self_transfer.dfy",
+      "fixture_sha256": "d2b6058bf1313456c459567f7577dae336ca881a708fbf7919b229cda87f7a7a",
+      "gate_exit_code": 1,
+      "unit_exit_code": 0,
+      "unit_method": "unit_tested"
+    },
+    {
+      "checker": "dafny verify",
+      "checker_exit_code": 4,
+      "diagnostic": "VERIFICATION_REJECTED: C4 not established; Dafny exit 4",
+      "fixture": "bugs/off_by_one.dfy",
+      "fixture_sha256": "8510b2112e83fd873802f0e97c452724bf4de43e2379fd9fedcb4f801bd81623",
+      "gate_exit_code": 1,
+      "unit_exit_code": 0,
+      "unit_method": "unit_tested"
+    },
+    {
+      "checker": "dafny verify",
+      "checker_exit_code": 4,
+      "diagnostic": "VERIFICATION_REJECTED: C1 C3 not established; Dafny exit 4",
+      "fixture": "bugs/retry_double.dfy",
+      "fixture_sha256": "2c8859bbf3405f5f4597a66e522d90639ad563cb11a5b80caad7882c34223ebf",
+      "gate_exit_code": 1,
+      "unit_exit_code": 0,
+      "unit_method": "unit_tested"
+    },
+    {
+      "checker": "dafny audit --compare-report",
+      "checker_exit_code": 2,
+      "diagnostic": "AUDIT_REJECTED: C1 C2 C3 C4 C5 not established; Dafny audit exit 2; rejected program or unchecked assumptions/code",
+      "fixture": "bugs/sneaky_assume.dfy",
+      "fixture_sha256": "3ceee0d40330595951e278316a6eff9f04bdae15a8c04ced84584ad5009d6a89",
+      "gate_exit_code": 1,
+      "unit_exit_code": 0,
+      "unit_method": "unit_tested"
+    }
+  ],
+  "reproducibility_child_exit_codes": [
+    {
+      "exit_code": 0,
+      "name": "gate-first"
+    },
+    {
+      "exit_code": 0,
+      "name": "gate-second"
+    },
+    {
+      "exit_code": 0,
+      "name": "byte-comparison"
+    }
+  ],
+  "scope": "Source proof and tested rejection controls only; no deployed artifact is covered.",
+  "stage": 1,
+  "stale_lock_gate_exit_code": 1,
+  "unbound_candidate_gate_exit_code": 1
+}

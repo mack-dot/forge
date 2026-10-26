@@ -1,0 +1,466 @@
+{
+  "cases": {
+    "stage3/correct-typescript": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "correct"
+        }
+      ]
+    },
+    "stage3/evidence-labels": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "source-proof"
+        },
+        {
+          "exit_code": 0,
+          "name": "model-comparison"
+        },
+        {
+          "exit_code": 1,
+          "name": "critical-tier"
+        }
+      ]
+    },
+    "stage3/loader-demo": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "loader-demo"
+        }
+      ]
+    },
+    "stage3/reproducibility": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "first"
+        },
+        {
+          "exit_code": 0,
+          "name": "second"
+        },
+        {
+          "exit_code": 0,
+          "name": "byte-comparison"
+        }
+      ]
+    },
+    "stage3/self-transfer": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "build-model"
+        },
+        {
+          "exit_code": 1,
+          "name": "fast-check-self-transfer"
+        },
+        {
+          "exit_code": 1,
+          "name": "self-transfer-gate"
+        }
+      ]
+    }
+  },
+  "demo_exit_change": {
+    "approval": "The user approved the previously proposed replacement in response to the blocker explanation.",
+    "original_command": "npx tsx app/main.ts",
+    "replacement_command": "node --import tsx app/main.ts",
+    "replacement_exit_code": 0,
+    "replacement_stdout": "Ok\nRejected\n",
+    "scope": "Only the demo invocation changed; implementation, test corpus, specs, policy, and evidence methods are unchanged."
+  },
+  "development_results": [
+    {
+      "command": "npm ls --depth=0",
+      "exit_code": 0
+    },
+    {
+      "command": "npx --no-install tsx --version",
+      "exit_code": 1,
+      "reason": "listen EPERM; local IPC denied"
+    },
+    {
+      "attempt": 1,
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 2,
+      "reason": "Example array inferred as variable-length array instead of one-element tuple; fixed example tuple shape."
+    },
+    {
+      "attempt": 2,
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 0
+    },
+    {
+      "command": "node --import tsx app/main.ts",
+      "exit_code": 0,
+      "stdout": "Ok\nRejected\n"
+    },
+    {
+      "command": "python3 scripts/build_model.py",
+      "exit_code": 0
+    },
+    {
+      "command": "npx tsx app/main.ts",
+      "exit_code": 1,
+      "reason": "listen EPERM: local IPC denied; actual CLI-demo result retained after the approved invocation change."
+    },
+    {
+      "command": "python3 scripts/exit_stage_3.py --case cli-demo",
+      "exit_code": 1
+    }
+  ],
+  "end_to_end": false,
+  "exit_commands": [
+    {
+      "command": "node --import tsx app/main.ts",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_3.py --case correct-typescript",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_3.py --case self-transfer",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_3.py --case evidence-labels",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_3.py --case reproducibility",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_3.py --case loader-demo",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case reproducibility",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case planted-bugs",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case spec-lock",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case contract-binding",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_1.py --case audit-controls",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case schema",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case artifact-mismatch",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case method-policy",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case round-trip",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/exit_stage_2.py --case policy-controls",
+      "exit_code": 0
+    }
+  ],
+  "model_module_sha256": "2387fcdf5fcfb6d9bc4a05e752b55549cd001ada104431a5bf1311e92ce2b567",
+  "original_npx_exit_established": false,
+  "property_result": {
+    "counterexample": null,
+    "counterexample_path": null,
+    "counters": {
+      "above_safe_integer": 3506,
+      "compared_steps": 3506,
+      "conflicting_ids": 455,
+      "exact_balance": 466,
+      "fresh_successes": 430,
+      "insufficient_funds": 1734,
+      "nonpositive_amounts": 724,
+      "rejected": 2602,
+      "retries": 474,
+      "self_transfers": 608,
+      "successful": 904,
+      "unknown_accounts": 488
+    },
+    "end_to_end": false,
+    "failure_kind": null,
+    "failure_message": null,
+    "fixed_prefix": [
+      "exact",
+      "retry",
+      "conflict",
+      "self",
+      "unknown",
+      "nonpositive",
+      "insufficient"
+    ],
+    "generated_integer_magnitude_limit": "340282366920938463463374607431768211456",
+    "implementation": "ts/ledger.ts",
+    "max_generated_operations": 40,
+    "method": "tested_against_proved_model",
+    "num_runs": 300,
+    "num_shrinks": 0,
+    "num_skips": 0,
+    "requested_runs": 300,
+    "result": "passed",
+    "seed": 3032026,
+    "tool": "fast-check",
+    "tool_version": "4.3.0"
+  },
+  "publication": {
+    "cli_command": "gh repo create mack-dot/forge --public --description 'Proof-gated changes: LLMs propose, established checkers decide, reproducible evidence records what was established.'",
+    "cli_diagnostic": "error connecting to api.github.com",
+    "cli_exit_code": 1,
+    "confirmed": false,
+    "connected_app_http_status": 404,
+    "repository": "mack-dot/forge"
+  },
+  "regressions": {
+    "stage1/audit-controls": {
+      "child_exit_codes": [
+        {
+          "exit_code": 2,
+          "name": "bodyless_lemma-dafny-audit"
+        },
+        {
+          "exit_code": 1,
+          "name": "bodyless_lemma"
+        },
+        {
+          "exit_code": 2,
+          "name": "axiom_lemma-dafny-audit"
+        },
+        {
+          "exit_code": 1,
+          "name": "axiom_lemma"
+        },
+        {
+          "exit_code": 2,
+          "name": "verify_false-dafny-audit"
+        },
+        {
+          "exit_code": 1,
+          "name": "verify_false"
+        }
+      ]
+    },
+    "stage1/contract-binding": {
+      "child_exit_codes": [
+        {
+          "exit_code": 1,
+          "name": "missing-approved-contract"
+        }
+      ]
+    },
+    "stage1/planted-bugs": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "self_transfer-units"
+        },
+        {
+          "exit_code": 1,
+          "name": "self_transfer-gate"
+        },
+        {
+          "exit_code": 0,
+          "name": "off_by_one-units"
+        },
+        {
+          "exit_code": 1,
+          "name": "off_by_one-gate"
+        },
+        {
+          "exit_code": 0,
+          "name": "retry_double-units"
+        },
+        {
+          "exit_code": 1,
+          "name": "retry_double-gate"
+        },
+        {
+          "exit_code": 0,
+          "name": "sneaky_assume-units"
+        },
+        {
+          "exit_code": 1,
+          "name": "sneaky_assume-gate"
+        }
+      ]
+    },
+    "stage1/reproducibility": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "gate-first"
+        },
+        {
+          "exit_code": 0,
+          "name": "gate-second"
+        },
+        {
+          "exit_code": 0,
+          "name": "byte-comparison"
+        }
+      ]
+    },
+    "stage1/spec-lock": {
+      "child_exit_codes": [
+        {
+          "exit_code": 1,
+          "name": "changed-spec-old-lock"
+        }
+      ]
+    },
+    "stage2/artifact-mismatch": {
+      "child_exit_codes": [
+        {
+          "exit_code": 1,
+          "name": "record-digest"
+        },
+        {
+          "exit_code": 1,
+          "name": "coherent-forged-digest"
+        },
+        {
+          "exit_code": 1,
+          "name": "manifest-digest"
+        }
+      ]
+    },
+    "stage2/method-policy": {
+      "child_exit_codes": [
+        {
+          "exit_code": 1,
+          "name": "unit_tested"
+        },
+        {
+          "exit_code": 1,
+          "name": "bounded_model_checked"
+        },
+        {
+          "exit_code": 1,
+          "name": "kernel_checked_proof"
+        }
+      ]
+    },
+    "stage2/policy-controls": {
+      "child_exit_codes": [
+        {
+          "exit_code": 1,
+          "name": "policy-version"
+        },
+        {
+          "exit_code": 1,
+          "name": "policy-tier"
+        },
+        {
+          "exit_code": 1,
+          "name": "policy-digest"
+        },
+        {
+          "exit_code": 1,
+          "name": "trusted-input"
+        },
+        {
+          "exit_code": 1,
+          "name": "claim-spec"
+        },
+        {
+          "exit_code": 1,
+          "name": "claim-statement"
+        },
+        {
+          "exit_code": 1,
+          "name": "missing-claim"
+        },
+        {
+          "exit_code": 1,
+          "name": "unknown-claim"
+        },
+        {
+          "exit_code": 1,
+          "name": "missing-result"
+        },
+        {
+          "exit_code": 1,
+          "name": "unknown-result"
+        },
+        {
+          "exit_code": 1,
+          "name": "end-to-end"
+        },
+        {
+          "exit_code": 1,
+          "name": "backend"
+        },
+        {
+          "exit_code": 1,
+          "name": "invented-producer"
+        },
+        {
+          "exit_code": 1,
+          "name": "unknown-tier"
+        },
+        {
+          "exit_code": 1,
+          "name": "duplicate-json-key"
+        }
+      ]
+    },
+    "stage2/round-trip": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "fresh-checker-replay"
+        },
+        {
+          "exit_code": 0,
+          "name": "byte-comparison"
+        }
+      ]
+    },
+    "stage2/schema": {
+      "child_exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "stage1-schema"
+        },
+        {
+          "exit_code": 0,
+          "name": "stage2-schema"
+        },
+        {
+          "exit_code": 1,
+          "name": "unknown-method"
+        },
+        {
+          "exit_code": 1,
+          "name": "extra-timestamp"
+        }
+      ]
+    }
+  },
+  "required_demo_exit_established": true,
+  "source_evidence_sha256": "92c741d9ef0accd516e1b528db82d46dc25549ee40a44274cf50f0166b91463a",
+  "stage": 3,
+  "status": "done",
+  "typescript_evidence_sha256": "9fe3e04bd97b20e2a1e7cb13c502dd208a122216bcb0aa4347b8ac01c4e268ad"
+}
