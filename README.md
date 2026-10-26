@@ -43,7 +43,7 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–4 are complete. Stage 5 is current and has not started.**
+**Stages 0–5 are complete. Stage 6 is current and has not started.**
 
 The ledger demo uses Dafny 4.11.0 and bundled Z3 4.12.1. Its approved source
 refinement establishes these claims for sequential operations over mathematical
@@ -74,6 +74,7 @@ insufficient evidence methods, and unsupported proof labels.
 | Handwritten TypeScript | 300 property runs and 4,131 state comparisons against the fee model; `tested_against_proved_model` | [Current comparison evidence](results/stage4/fee-typescript-evidence.json) |
 | Local incremental gate | Valid Apply edit checked 2 member obligations and reused 10; broken dependencies were rejected | [Local controls](results/stage4-local.json) |
 | Linux toolchain | Real installation, true-lemma acceptance, and false-lemma rejection | [Successful inventory run](https://github.com/mack-dot/forge/actions/runs/40397041174) |
+| Spec quality | Successful-execution witness checked; reject-all vacuity flagged; 8/10 valid, audit-clean mutants killed, 2 survived | [Spec-quality report](docs/spec-quality.md) |
 | Actual GitHub change loop | Implementation edit: 2 obligations checked, 10 reused. Approved fee spec change: 4 checked, 8 reused. Unapproved spec changes rejected; claims posted | [Fee PR](https://github.com/mack-dot/forge/pull/4) and [post-approval rejection](https://github.com/mack-dot/forge/pull/5) |
 
 All five ledger claims currently share the Apply proof obligation. The
@@ -86,6 +87,13 @@ proposal revision. A later C2 edit was rejected in a real PR. All three Stage 4 
 [final recorded run](https://github.com/mack-dot/forge/actions/runs/40409284514).
 The original Stage 3 results remain archived separately from the current fee
 model comparisons.
+
+[Generated claim explanations](docs/claims.md) link C1–C5 to their spec locations
+and show real accept/reject examples. The Stage 5 report keeps invalid programs
+and audit rejections separate from spec-proof kills. Its survivors include a
+an algebraic rewrite control and an added print statement: the current contracts
+do not constrain printed output. These finite diagnostics expose scope limits;
+they do not prove that the spec captures every human requirement.
 
 ## Run the demo
 
@@ -131,6 +139,9 @@ prove the program's behavior.
 | Document | Purpose |
 | --- | --- |
 | [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks, and actual results. |
+| [docs/claims.md](docs/claims.md) | Generated claim explanations and observed behavior examples. |
+| [docs/spec-quality.md](docs/spec-quality.md) | Checked success witness, mutation results, and reproduction commands. |
+| [Stage 5 logs](results/stage5/logs/index.json) | Raw checker logs, including preserved driver failures. |
 | [unsure.md](unsure.md) | Append-only findings, uncertainty, corrections, and resolutions. |
 | [docs/stage4-change-loop.md](docs/stage4-change-loop.md) | Current change-loop implementation and limits. |
 | [proposals/fees.md](proposals/fees.md) | Frozen fee intent, exact diff, content digests, and examples; see its decision record. |

@@ -1,0 +1,128 @@
+{
+  "byte_identical": true,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "scripts/generate_claim_docs.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/1-0.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_5.py",
+        "--case",
+        "vacuity"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/1-1.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_5.py",
+        "--case",
+        "mutations"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/1-2.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/render_spec_report.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/1-3.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/generate_claim_docs.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/2-0.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_5.py",
+        "--case",
+        "vacuity"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/2-1.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_5.py",
+        "--case",
+        "mutations"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/2-2.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/render_spec_report.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-bound-replay/2-3.log"
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-bound-replay/first/results/stage5/examples.json",
+        "results/stage5/examples.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-bound-replay/first/results/stage5/source-evidence.json",
+        "results/stage5/source-evidence.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-bound-replay/first/results/stage5/spec-quality.json",
+        "results/stage5/spec-quality.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-bound-replay/first/docs/claims.md",
+        "docs/claims.md"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-bound-replay/first/docs/spec-quality.md",
+        "docs/spec-quality.md"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "end_to_end": false,
+  "exit_code": 0,
+  "output_sha256": {
+    "docs/claims.md": "045e9ac169f164c04ca263851250d1f5146c1552e7c61cf125abbcaabf697cd0",
+    "docs/spec-quality.md": "5e2ff90cfe0cc86e41d6018671a6a800c5b344082128221e6cfc221db11bfeaf",
+    "results/stage5/examples.json": "77f56cbf627ae2f48ae83519a84b70cc0e0040ec0451699759347067dee54c3f",
+    "results/stage5/source-evidence.json": "ed015ad9fd6532548f7af1fbba47abad365edf6f01d9373b29b7382199bafdb8",
+    "results/stage5/spec-quality.json": "0c86a14d0d0908baeccf78642b54f2bbe9190013307773b1a7840fad76ff6cfe"
+  },
+  "result": "passed",
+  "stage_exit": false
+}

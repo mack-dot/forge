@@ -1,13 +1,13 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 5 — SPEC TOOLING**
+**CURRENT: Stage 6 — SECOND DOMAIN + REUSE MEASUREMENT**
 
-This is the execution plan and decision record. Stages 0–4 are DONE. The
-approved fee refinement passed the real Dafny gate and GitHub PR workflow.
-All three Stage 4 EXIT commands ran with exit 0. The gate bound approval to
-exact spec and lock bytes, reproduced identical evidence, and rejected a later
-C2 weakening. Stage 5 is CURRENT and has not started. This run stops at the
-stage transition.
+This is the execution plan and decision record. Stages 0–5 are DONE. Stage 5
+produced claim explanations and real accept/reject examples, verified a
+non-trivial successful execution, flagged the isolated vacuous spec, and
+measured mutation kills and survivors. Both Stage 5 EXIT commands exited 0.
+The final evidence and generated documents reproduced byte for byte. Stage 6
+is CURRENT and has not started. This run stops at the stage transition.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -264,8 +264,8 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 2 | EVIDENCE SCHEMA + POLICY | DONE |
 | 3 | TYPESCRIPT INTEGRATION | DONE |
 | 4 | CHANGE LOOP | DONE |
-| 5 | SPEC TOOLING | CURRENT |
-| 6 | SECOND DOMAIN + REUSE MEASUREMENT | NOT STARTED |
+| 5 | SPEC TOOLING | DONE |
+| 6 | SECOND DOMAIN + REUSE MEASUREMENT | CURRENT |
 | 7 | BINARY LAYER | NOT STARTED |
 | 8 | ML BOUNDARY | NOT STARTED |
 | 9 | PROVENANCE | NOT STARTED |
@@ -629,7 +629,7 @@ Stage 4 is DONE. Stage 5 is CURRENT; no Stage 5 implementation ran in this turn.
 
 ### Stage 5 — SPEC TOOLING
 
-**Status: CURRENT — not started**
+**Status: DONE**
 
 Render every claim in plain English. Generate accept/reject examples. Add a
 checked witness of a non-trivial successful execution. Mutate implementations
@@ -638,16 +638,49 @@ vacuous specs; do not weaken the approved spec.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/exit_stage_5.py --case vacuity` | Flags a spec that accepts implementations which reject everything. | NOT RUN |
-| `python3 scripts/exit_stage_5.py --case mutations` | Lists killed and surviving mutants and the kill rate. | NOT RUN |
+| `python3 scripts/exit_stage_5.py --case vacuity` | Flags a spec that accepts implementations which reject everything. | 0 |
+| `python3 scripts/exit_stage_5.py --case mutations` | Lists killed and surviving mutants and the kill rate. | 0 |
 
 Report invalid mutants and inconclusive checks separately from kills. A witness
 rules out the demonstrated vacuity; it does not prove that the spec captures all
 human intent. A kill rate is a measured diagnostic, not a completeness theorem.
 
+Actual execution records: results/stage5/vacuity.json, mutations.json,
+replay.json, and auxiliary.json. The raw log archive index binds 86 actual logs.
+Both exact EXIT commands ran with exit 0 after correcting the driver issues
+recorded in U048. Earlier failed driver runs remain preserved, with codes 1.
+The production gate and approved spec were not changed to resolve those issues.
+
+`python3 scripts/generate_claim_docs.py` exited 0 and generated docs/claims.md
+from actual source-proof evidence and 227 model comparisons: 6 Ok, 221 Rejected.
+All matched TypeScript; the comparison evidence binds both the candidate bytes
+and the reference model. The explicit TypeScript compiler check exited 0.
+
+The successful-execution witness verified with 13 obligations and Dafny exit 0.
+An isolated spec with false retry/fresh-valid predicates admitted a reject-all
+implementation (Dafny 0). The same successful-execution witness failed there
+(Dafny 4), so the vacuity diagnostic flagged it. That fixture was never approved
+for production acceptance.
+
+Mutation results: 8 killed, 2 survived, 1 invalid, 1 audit rejected, 0 inconclusive.
+Spec-proof kill rate: 8/10 (80.00%). The algebraic rewrite and print-effect
+mutants survived. The labeled algebraic control stays in the denominator;
+invalid programs and audit rejections do not count as spec-proof kills.
+Printed output is outside the current state claims. No general defect-coverage
+rate or semantic-equivalence result is inferred.
+
+`python3 scripts/render_spec_report.py` exited 0. After the input-binding fix
+in U050, two complete runs of generation, both EXITs, and rendering returned 0.
+Five real cmp commands returned 0 for examples.json, source-evidence.json,
+spec-quality.json, docs/claims.md, and docs/spec-quality.md. Canonical summaries
+exclude raw timing/log data. See U051 for the completion scope.
+
+Every Stage 5 requirement is established for the recorded inputs. Stage 5 is
+DONE. Stage 6 is CURRENT; no Stage 6 implementation or benchmark ran in this turn.
+
 ### Stage 6 — SECOND DOMAIN + REUSE MEASUREMENT
 
-**Status: NOT STARTED**
+**Status: CURRENT — not started**
 
 Build a booking matcher with four claims: no double-booking; a valid request
 gets a slot when one exists; cancellation frees the slot; retries are idempotent.

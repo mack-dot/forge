@@ -882,3 +882,95 @@ curl: (6) Could not resolve host: github.com
   signed user attestation. Native cache assumptions remain explicit. TypeScript
   has finite model-comparison evidence, not proof. No binary, compiler,
   concurrency, persistence, or deployment guarantee was added; end_to_end=false.
+
+## U048 — Stage 5 driver expectations needed correction; proof results were preserved
+
+- References: U047.
+- Observed: the approved successful-execution witness passed Dafny with 13
+  verified obligations and exit 0 on its first run. An isolated spec with both
+  validity predicates replaced by false admitted a reject-all implementation.
+- First driver failure: its coverage check expected the production spec's
+  well-formedness tasks for IsRetry and IsFreshValid. The real TRX omitted those
+  tasks for the constant-false predicates and reported 10 verified obligations.
+  Only the isolated fixture's expected coverage was corrected. The production
+  gate and approved spec were not modified.
+- Second driver failure: Dafny actually rejected the vacuous witness with exit 4,
+  but the driver read a message field instead of Dafny's defaultFormatMessage.
+  The assertion diagnostic was present in the actual checker log.
+- Mutation driver failure: the balance-clearing mutant failed WellFormed and
+  key-preservation postconditions before named C1–C5 clauses. The driver now
+  records those exact contract locations rather than inventing a claim label.
+- Evidence: vacuity-attempt1.json, vacuity-attempt2.json, and
+  mutations-attempt1.json under results/stage5/ preserve real failed driver codes.
+  Original logs remain in build/stage5-history/ and the published log archive.
+- Scope: these were reporting/control errors. No failed proof was relabeled as
+  passed, and no production acceptance rule or spec was relaxed.
+
+## U049 — A successful witness and finite mutation results expose scope limits
+
+- References: U048.
+- Observed: python3 scripts/exit_stage_5.py --case vacuity exited 0 after the
+  driver corrections. The approved witness verified (Dafny 0). The isolated
+  reject-all implementation verified against its vacuous spec (Dafny 0), while
+  the same non-trivial-success witness failed there (Dafny 4).
+- Observed: python3 scripts/exit_stage_5.py --case mutations exited 0. Eight
+  valid, audit-clean mutants failed actual spec postconditions. Two survived.
+  The measured spec-proof kill rate is 8/10, or 80.00%, for this exact corpus.
+- Survivors: the algebraic rewrite control and the added print statement.
+  Printed output is outside the approved ledger-state claims. Survival is not
+  proof of equivalence or satisfaction of every human requirement.
+- Excluded from that denominator: one syntax-invalid mutant (resolve 2) and one
+  forbidden-assumption fixture (audit 2). Neither is counted as a spec-proof kill.
+  No inconclusive check occurred. The labeled algebraic control stays included.
+- Observed: the generator produced 227 actual comparisons against the compiled
+  model: 6 Ok and 221 Rejected. Each matched the handwritten TypeScript.
+  These finite examples are tested_against_proved_model, not a TypeScript proof.
+- Limits: the witness rules out this reject-all vacuity, not every intent error.
+  The kill rate is not an estimate of real-world defect coverage. The compiler,
+  runtime, and bridge link remains an assumption; end_to_end=false.
+- Next check: exact replay of canonical reports and generated documents, then
+  publish the completed Stage 5 record without changing protected inputs.
+
+## U050 — Generated comparison evidence now binds the candidate bytes and replays exactly
+
+- References: U049.
+- Observed gap: the first generated example record bound the reference source
+  and compiled model but omitted a candidate artifact digest. A direct metadata
+  inspection exited 1. Passing comparisons alone did not fill that identity gap.
+- Change: the generator records the TypeScript source manifest, candidate digest,
+  and comparison-input digests. The driver captures input hashes before checking
+  and rejects changes to source, witness, driver, or comparison inputs during a run.
+- Observed: the final metadata inspection exited 0. Candidate source digest:
+  f1b083ba262b96618a5d68936c46098f95ccfe6d73c19a276dd49e83d8773a47.
+- Observed: after the correction, both complete runs of generation, vacuity,
+  mutations, and report rendering exited 0. Five real cmp commands each exited 0:
+  examples.json, source-evidence.json, spec-quality.json, claims.md, and
+  spec-quality.md were byte-identical. The final replay record contains 13 real
+  commands and their codes. Earlier records remain archived with explicit names.
+- Evidence: results/stage5/input-binding-inspection.json, input-binding-final.json,
+  replay.json, and spec-quality.json. The canonical diagnostic summary contains
+  no timestamps or timing data. Raw logs are separate operational records.
+- Resolution: the final comparison evidence identifies the actual candidate as
+  well as its reference model. This adds no compiler or deployment proof.
+
+## U051 — Stage 5 completed with measured scope and unchanged protected inputs
+
+- References: U048–U050.
+- Observed: plain-English C1–C5 rendering and 227 generated accept/reject examples
+  were produced by the real source gate, compiler, and model comparisons.
+- Observed: the final python3 scripts/exit_stage_5.py --case vacuity command exited
+  0; approved witness verifier 0, vacuous reject-all verifier 0, vacuous witness 4.
+- Observed: the final python3 scripts/exit_stage_5.py --case mutations command
+  exited 0. Spec kills: 8; survivors: 2; invalid: 1; audit rejected: 1;
+  inconclusive: 0. Kill rate: 8/10, including the labeled algebraic control.
+- Evidence: docs/claims.md, docs/spec-quality.md, and results/stage5/ retain the
+  source identities, exact commands, real codes, counts, failures, and limits.
+  The log archive index binds 86 actual logs to their recorded SHA-256 values.
+- The approved spec, lock, policy, gate, and toolchain inputs remained unchanged.
+  The vacuous spec and all implementation mutations were isolated test fixtures.
+- Resolution: all Stage 5 EXIT requirements are established. Stage 5 is DONE;
+  Stage 6 is CURRENT. This run stops at that transition; no Stage 6 work ran.
+- Limits: neither a witness nor a finite kill rate proves complete intent coverage.
+  The print-effect survivor shows the current state-only scope. TypeScript remains
+  tested against the model. The compiler/runtime/bridge link and native trusted
+  base remain assumptions; every artifact keeps end_to_end=false.

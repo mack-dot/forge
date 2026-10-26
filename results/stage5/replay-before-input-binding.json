@@ -1,0 +1,99 @@
+{
+  "byte_identical": true,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "scripts/generate_claim_docs.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-replay/docs-current.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/render_spec_report.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-replay/render-first.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/generate_claim_docs.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-replay/docs-replay.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_5.py",
+        "--case",
+        "vacuity"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-replay/vacuity-replay.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_5.py",
+        "--case",
+        "mutations"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-replay/mutations-replay.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/render_spec_report.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage5-replay/render-replay.log"
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-replay/first/results/stage5/examples.json",
+        "results/stage5/examples.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-replay/first/results/stage5/source-evidence.json",
+        "results/stage5/source-evidence.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-replay/first/results/stage5/spec-quality.json",
+        "results/stage5/spec-quality.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-replay/first/docs/claims.md",
+        "docs/claims.md"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage5-replay/first/docs/spec-quality.md",
+        "docs/spec-quality.md"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "exit_code": 0,
+  "result": "passed"
+}
