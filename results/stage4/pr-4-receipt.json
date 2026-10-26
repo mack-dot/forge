@@ -1,0 +1,375 @@
+{
+  "base_sha": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+  "command": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/incremental.py --profile linux --candidate /home/runner/work/forge/forge/candidate --evidence build/pr/evidence.json --work build/pr/check",
+  "end_to_end": false,
+  "evidence": {
+    "artifact": {
+      "build_cmd": "",
+      "kind": "source",
+      "sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69"
+    },
+    "backend": "dafny-incremental",
+    "backend_details": {
+      "baseline_source_manifest": [
+        {
+          "path": "gate/ContractBinding.dfy",
+          "sha256": "da994efac59d9a4a7fd384c710f657002891298cf61beb459a98b85b1d32d4cc"
+        },
+        {
+          "path": "impl/Ledger.dfy",
+          "sha256": "9d8272df6868b7a3db89fe5679ed704fc826795720c954cebf1e60d42363c82f"
+        },
+        {
+          "path": "spec/LedgerSpec.dfy",
+          "sha256": "e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f"
+        }
+      ],
+      "cache_counts": "Operational report only; cache expiry can change work counts.",
+      "claim_obligation": {
+        "C1": "Ledger.Apply (correctness)",
+        "C2": "Ledger.Apply (correctness)",
+        "C3": "Ledger.Apply (correctness)",
+        "C4": "Ledger.Apply (correctness)",
+        "C5": "Ledger.Apply (correctness)"
+      },
+      "dependency_method": "Dafny/Boogie built-in snapshot cache, level 1",
+      "solver_sha256": "22214e518eed9eec867d18b485e7b2570d09cbf1d94a47c8eec6ec4de0287eff",
+      "spec_approval": {
+        "approved_inputs": {
+          "spec.lock": "32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69",
+          "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+        },
+        "base_inputs": {
+          "spec.lock": "3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae",
+          "spec/LedgerSpec.dfy": "e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f"
+        },
+        "proposal_revision": "648229df2d0e13e8d872e0a867ab0ce940ea8146",
+        "proposal_sha256": "231683731387e795ca399e7beba5a85766a06d3236d261ca083835ca6fb8efa2",
+        "record": "gate/approvals/fees-v2.json",
+        "record_sha256": "71320a658a8007846b14dcb94055697fb8927d768cedc0e1cccac2ac5f7d272a"
+      },
+      "toolchain_profile": "linux",
+      "verification_options": [
+        "/compile:0",
+        "/verifySnapshots:1",
+        "/trace",
+        "/rlimit:1000000",
+        "/timeLimit:0",
+        "/vcsCores:1",
+        "/verifyAllModules"
+      ],
+      "verified_obligations": [
+        "Ledger.Apply (correctness)",
+        "Ledger.Apply (well-formedness)",
+        "Ledger.TotalRemove (correctness)",
+        "Ledger.TotalRemove (well-formedness)",
+        "Ledger.TotalReplace (correctness)",
+        "Ledger.TotalReplace (well-formedness)",
+        "LedgerSpec.Apply (well-formedness)",
+        "LedgerSpec.IsFreshValid (well-formedness)",
+        "LedgerSpec.IsRetry (well-formedness)",
+        "LedgerSpec.NonNegative (well-formedness)",
+        "LedgerSpec.Total (well-formedness)",
+        "LedgerSpec.WellFormed (well-formedness)"
+      ]
+    },
+    "claims": [
+      {
+        "id": "C1",
+        "spec_ref": "spec/LedgerSpec.dfy:53",
+        "spec_sha": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+        "statement_plain_english": "A transfer preserves total funds."
+      },
+      {
+        "id": "C2",
+        "spec_ref": "spec/LedgerSpec.dfy:55",
+        "spec_sha": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+        "statement_plain_english": "Every resulting account balance is non-negative."
+      },
+      {
+        "id": "C3",
+        "spec_ref": "spec/LedgerSpec.dfy:57",
+        "spec_sha": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+        "statement_plain_english": "An accepted identical retry returns Ok without repeating its effect."
+      },
+      {
+        "id": "C4",
+        "spec_ref": "spec/LedgerSpec.dfy:60",
+        "spec_sha": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+        "statement_plain_english": "A fresh valid transfer terminates, debits amount plus one from the sender, credits the recipient by amount, and credits fee account 0 by one."
+      },
+      {
+        "id": "C5",
+        "spec_ref": "spec/LedgerSpec.dfy:69",
+        "spec_sha": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+        "statement_plain_english": "Every other request is rejected without changing either state map."
+      }
+    ],
+    "end_to_end": false,
+    "evidence": [
+      {
+        "artifact_sha": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+        "assumptions": [
+          "The caller supplies a WellFormed state; operations are sequential over mathematical integers.",
+          "The executing checkout is a trusted baseline obtained outside the candidate change.",
+          "Dafny/Boogie snapshot dependency tracking and internal checksums are trusted.",
+          "Dafny 4.11.0 uses MD5 internally; no cache-checksum collision occurs among the inputs in this run.",
+          "No claim covers compilation, concurrency, persistence, external services, or deployment."
+        ],
+        "claim_id": "C1",
+        "method": "source_proof",
+        "producer": "forge/dafny-snapshot-gate",
+        "reproduce_cmd": "python3 gate/incremental.py --candidate build/change-inputs/b9442f94ef4f2f9b0df9d08a7cebd0bb287b0bf249a7f73dc9c92653abce55c5 --evidence build/change-evidence.json --profile linux",
+        "result": "passed",
+        "tool": "Dafny",
+        "tool_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+        "trusted_base": [
+          "Dafny 4.11.0, bundled Boogie 3.5.5, Z3 4.12.1, and .NET runtime",
+          "Python 3.10.11 and the trusted gate",
+          "Approved spec, policy, audit baseline, host OS, and hardware",
+          "Forge schema and method-policy gate with policy 1.0.0",
+          "Python validator packages: PyYAML 6.0.1, attrs 25.3.0, jsonschema 4.21.1, jsonschema-specifications 2023.12.1, referencing 0.33.0, rpds-py 0.17.1",
+          "Preinstalled validator package archives were not independently authenticated."
+        ]
+      },
+      {
+        "artifact_sha": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+        "assumptions": [
+          "The caller supplies a WellFormed state; operations are sequential over mathematical integers.",
+          "The executing checkout is a trusted baseline obtained outside the candidate change.",
+          "Dafny/Boogie snapshot dependency tracking and internal checksums are trusted.",
+          "Dafny 4.11.0 uses MD5 internally; no cache-checksum collision occurs among the inputs in this run.",
+          "No claim covers compilation, concurrency, persistence, external services, or deployment."
+        ],
+        "claim_id": "C2",
+        "method": "source_proof",
+        "producer": "forge/dafny-snapshot-gate",
+        "reproduce_cmd": "python3 gate/incremental.py --candidate build/change-inputs/b9442f94ef4f2f9b0df9d08a7cebd0bb287b0bf249a7f73dc9c92653abce55c5 --evidence build/change-evidence.json --profile linux",
+        "result": "passed",
+        "tool": "Dafny",
+        "tool_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+        "trusted_base": [
+          "Dafny 4.11.0, bundled Boogie 3.5.5, Z3 4.12.1, and .NET runtime",
+          "Python 3.10.11 and the trusted gate",
+          "Approved spec, policy, audit baseline, host OS, and hardware",
+          "Forge schema and method-policy gate with policy 1.0.0",
+          "Python validator packages: PyYAML 6.0.1, attrs 25.3.0, jsonschema 4.21.1, jsonschema-specifications 2023.12.1, referencing 0.33.0, rpds-py 0.17.1",
+          "Preinstalled validator package archives were not independently authenticated."
+        ]
+      },
+      {
+        "artifact_sha": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+        "assumptions": [
+          "The caller supplies a WellFormed state; operations are sequential over mathematical integers.",
+          "The executing checkout is a trusted baseline obtained outside the candidate change.",
+          "Dafny/Boogie snapshot dependency tracking and internal checksums are trusted.",
+          "Dafny 4.11.0 uses MD5 internally; no cache-checksum collision occurs among the inputs in this run.",
+          "No claim covers compilation, concurrency, persistence, external services, or deployment."
+        ],
+        "claim_id": "C3",
+        "method": "source_proof",
+        "producer": "forge/dafny-snapshot-gate",
+        "reproduce_cmd": "python3 gate/incremental.py --candidate build/change-inputs/b9442f94ef4f2f9b0df9d08a7cebd0bb287b0bf249a7f73dc9c92653abce55c5 --evidence build/change-evidence.json --profile linux",
+        "result": "passed",
+        "tool": "Dafny",
+        "tool_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+        "trusted_base": [
+          "Dafny 4.11.0, bundled Boogie 3.5.5, Z3 4.12.1, and .NET runtime",
+          "Python 3.10.11 and the trusted gate",
+          "Approved spec, policy, audit baseline, host OS, and hardware",
+          "Forge schema and method-policy gate with policy 1.0.0",
+          "Python validator packages: PyYAML 6.0.1, attrs 25.3.0, jsonschema 4.21.1, jsonschema-specifications 2023.12.1, referencing 0.33.0, rpds-py 0.17.1",
+          "Preinstalled validator package archives were not independently authenticated."
+        ]
+      },
+      {
+        "artifact_sha": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+        "assumptions": [
+          "The caller supplies a WellFormed state; operations are sequential over mathematical integers.",
+          "The executing checkout is a trusted baseline obtained outside the candidate change.",
+          "Dafny/Boogie snapshot dependency tracking and internal checksums are trusted.",
+          "Dafny 4.11.0 uses MD5 internally; no cache-checksum collision occurs among the inputs in this run.",
+          "No claim covers compilation, concurrency, persistence, external services, or deployment."
+        ],
+        "claim_id": "C4",
+        "method": "source_proof",
+        "producer": "forge/dafny-snapshot-gate",
+        "reproduce_cmd": "python3 gate/incremental.py --candidate build/change-inputs/b9442f94ef4f2f9b0df9d08a7cebd0bb287b0bf249a7f73dc9c92653abce55c5 --evidence build/change-evidence.json --profile linux",
+        "result": "passed",
+        "tool": "Dafny",
+        "tool_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+        "trusted_base": [
+          "Dafny 4.11.0, bundled Boogie 3.5.5, Z3 4.12.1, and .NET runtime",
+          "Python 3.10.11 and the trusted gate",
+          "Approved spec, policy, audit baseline, host OS, and hardware",
+          "Forge schema and method-policy gate with policy 1.0.0",
+          "Python validator packages: PyYAML 6.0.1, attrs 25.3.0, jsonschema 4.21.1, jsonschema-specifications 2023.12.1, referencing 0.33.0, rpds-py 0.17.1",
+          "Preinstalled validator package archives were not independently authenticated."
+        ]
+      },
+      {
+        "artifact_sha": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+        "assumptions": [
+          "The caller supplies a WellFormed state; operations are sequential over mathematical integers.",
+          "The executing checkout is a trusted baseline obtained outside the candidate change.",
+          "Dafny/Boogie snapshot dependency tracking and internal checksums are trusted.",
+          "Dafny 4.11.0 uses MD5 internally; no cache-checksum collision occurs among the inputs in this run.",
+          "No claim covers compilation, concurrency, persistence, external services, or deployment."
+        ],
+        "claim_id": "C5",
+        "method": "source_proof",
+        "producer": "forge/dafny-snapshot-gate",
+        "reproduce_cmd": "python3 gate/incremental.py --candidate build/change-inputs/b9442f94ef4f2f9b0df9d08a7cebd0bb287b0bf249a7f73dc9c92653abce55c5 --evidence build/change-evidence.json --profile linux",
+        "result": "passed",
+        "tool": "Dafny",
+        "tool_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+        "trusted_base": [
+          "Dafny 4.11.0, bundled Boogie 3.5.5, Z3 4.12.1, and .NET runtime",
+          "Python 3.10.11 and the trusted gate",
+          "Approved spec, policy, audit baseline, host OS, and hardware",
+          "Forge schema and method-policy gate with policy 1.0.0",
+          "Python validator packages: PyYAML 6.0.1, attrs 25.3.0, jsonschema 4.21.1, jsonschema-specifications 2023.12.1, referencing 0.33.0, rpds-py 0.17.1",
+          "Preinstalled validator package archives were not independently authenticated."
+        ]
+      }
+    ],
+    "format_version": 2,
+    "policy": {
+      "id": "forge-ledger",
+      "sha256": "6630ed763d6811e14c3c726429ba2c64ead78d57f323c5db10d6aeeca8715629",
+      "tier": "critical",
+      "version": "1.0.0"
+    },
+    "schema_version": "2.0.0",
+    "source_manifest": [
+      {
+        "path": "impl/Ledger.dfy",
+        "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+      },
+      {
+        "path": "spec/LedgerSpec.dfy",
+        "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+      }
+    ],
+    "trusted_input_sha256": {
+      "baseline/gate/ContractBinding.dfy": "da994efac59d9a4a7fd384c710f657002891298cf61beb459a98b85b1d32d4cc",
+      "baseline/impl/Ledger.dfy": "9d8272df6868b7a3db89fe5679ed704fc826795720c954cebf1e60d42363c82f",
+      "baseline/spec/LedgerSpec.dfy": "e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f",
+      "candidate/spec.lock": "32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69",
+      "gate/approval.py": "8eedbadd24c16e2e3cc01fcec7c0deae9e4bfcf5a7c27412b5bf9d7b90cd08bc",
+      "gate/approvals/fees-v2.json": "71320a658a8007846b14dcb94055697fb8927d768cedc0e1cccac2ac5f7d272a",
+      "gate/backends/__init__.py": "4f797ea3cb64ee52910fe9b9132a90b39f5144ed749e6a866098f422837f8fda",
+      "gate/backends/dafny.py": "ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe",
+      "gate/common.py": "06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988",
+      "gate/core.py": "bf8f0a54a149c052f179e0f8754671b6b5e6f9085c17d1bdbd4a31f01dd00013",
+      "gate/dependencies.py": "df8e9dafebdb87c596e4ddae8c715d93ebf7268f60f27837dd84955a5f5b11af",
+      "gate/expected-audit.md": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae",
+      "gate/gate.py": "46ab9852c2bfdb21113cdab6717df4cf960af10864357774d3058405f5655ab8",
+      "gate/incremental.py": "486456f8d190366c677e3a6f71680878d1d0ec2fd96dd3c629a7a5bffa624d73",
+      "policy/tiers.yaml": "6630ed763d6811e14c3c726429ba2c64ead78d57f323c5db10d6aeeca8715629",
+      "proposals/fees.md": "231683731387e795ca399e7beba5a85766a06d3236d261ca083835ca6fb8efa2",
+      "protected-manifest.json": "b28de502f541ffd47d3776549e7e7ddf32204b78b58f3e96a5a686dfdb62212e",
+      "schemas/evidence.schema.json": "5113a6dc0c26c4f474ecf22bd558967ad260e4d16bb4eb017bf852ae18dc2caa",
+      "schemas/policy.schema.json": "ba706f6f15c087e1c0673743717d76e1fdb02f8d2efe791611b121429954ed4d",
+      "spec.lock": "3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae",
+      "toolchain/linux-pins.json": "11128aa46f89391c39e6927f71dd1ba5ff8af1495ea0ad42253f7263294be819",
+      "toolchain/requirements-linux.txt": "e97632efdcf876751f2de303e5bdbfd89bcac93f76144efb145180261d4d81a7",
+      "toolchain/requirements-stage2.txt": "3be95de3a966c4e4a5ff4ee4e233035b9fc4b5baa84862523f27fa9a16539097",
+      "toolchain/validator-linux-pins.json": "c8a7e57f444a32b793f5fe77b91aafd7c4b8c23a08a2fb47c2e183b05b5f22cc",
+      "toolchain/validator-pins.json": "4566ee79b6f939b70ed54f3d7c31fe617c1a65c5d8e36dd1894552c5352534f9"
+    }
+  },
+  "evidence_sha256": "14433e349c3c256aba8969cb60db215e5f57b1999c68e817cdb20208fe9cc363",
+  "exit_code": 0,
+  "format_version": 1,
+  "head_sha": "0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+  "operation": {
+    "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+    "claim_apply_status": {
+      "C1": "checked",
+      "C2": "checked",
+      "C3": "checked",
+      "C4": "checked",
+      "C5": "checked"
+    },
+    "commands": [
+      {
+        "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+        "exit_code": 0,
+        "log": "build/pr/check/version.log"
+      },
+      {
+        "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/pr/check/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/pr/check/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/pr/check/audit-0.md --compare-report",
+        "exit_code": 0,
+        "log": "build/pr/check/audit-0.log"
+      },
+      {
+        "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/pr/check/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/pr/check/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/pr/check/audit-1.md --compare-report",
+        "exit_code": 0,
+        "log": "build/pr/check/audit-1.log"
+      },
+      {
+        "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/pr/check/Snapshot.dfy",
+        "exit_code": 0,
+        "log": "build/pr/check/snapshots.log"
+      }
+    ],
+    "end_to_end": false,
+    "evidence_sha256": "14433e349c3c256aba8969cb60db215e5f57b1999c68e817cdb20208fe9cc363",
+    "exit_code": 0,
+    "result": "accepted",
+    "snapshots": [
+      {
+        "checked": [
+          "Ledger.Apply (correctness)",
+          "Ledger.Apply (well-formedness)",
+          "Ledger.TotalRemove (correctness)",
+          "Ledger.TotalRemove (well-formedness)",
+          "Ledger.TotalReplace (correctness)",
+          "Ledger.TotalReplace (well-formedness)",
+          "LedgerSpec.Apply (well-formedness)",
+          "LedgerSpec.IsFreshValid (well-formedness)",
+          "LedgerSpec.IsRetry (well-formedness)",
+          "LedgerSpec.NonNegative (well-formedness)",
+          "LedgerSpec.Total (well-formedness)",
+          "LedgerSpec.WellFormed (well-formedness)"
+        ],
+        "checked_count": 12,
+        "reused": [],
+        "reused_count": 0
+      },
+      {
+        "checked": [
+          "Ledger.Apply (correctness)",
+          "Ledger.Apply (well-formedness)",
+          "LedgerSpec.Apply (well-formedness)",
+          "LedgerSpec.IsFreshValid (well-formedness)"
+        ],
+        "checked_count": 4,
+        "reused": [
+          "Ledger.TotalRemove (correctness)",
+          "Ledger.TotalRemove (well-formedness)",
+          "Ledger.TotalReplace (correctness)",
+          "Ledger.TotalReplace (well-formedness)",
+          "LedgerSpec.IsRetry (well-formedness)",
+          "LedgerSpec.NonNegative (well-formedness)",
+          "LedgerSpec.Total (well-formedness)",
+          "LedgerSpec.WellFormed (well-formedness)"
+        ],
+        "reused_count": 8
+      }
+    ],
+    "stage": 4,
+    "stage_exit": false
+  },
+  "pr_number": 4,
+  "replay": {
+    "byte_identical": true,
+    "command": "python3 gate/incremental.py --candidate build/change-inputs/b9442f94ef4f2f9b0df9d08a7cebd0bb287b0bf249a7f73dc9c92653abce55c5 --evidence build/change-evidence.json --profile linux",
+    "exit_code": 0
+  },
+  "repository": "mack-dot/forge",
+  "result": "accepted",
+  "run_id": 40405564741,
+  "run_url": "https://github.com/mack-dot/forge/actions/runs/40405564741"
+}

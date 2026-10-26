@@ -167,7 +167,16 @@ def check(record, variant):
             target = b'    forall account | account in balances :: 0 <= balances[account]'
             require(base_spec.count(target) == 1, 'C2 fixture target changed')
             expected = base_spec.replace(target, b'    true', 1)
-        require(head_spec == expected, 'Wrong unapproved-spec mutation')
+        if variant == 'after-approval-c2':
+            approval = json.loads(content('gate/approvals/fees-v2.json', base))
+            target = b'ghost predicate NonNegative(balances: map<int, int>) {\n    true\n  }'
+            original = (b'ghost predicate NonNegative(balances: map<int, int>) {\n'
+                        b'    forall account | account in balances :: 0 <= balances[account]\n  }')
+            require(head_spec.count(target) == 1 and
+                    sha(head_spec.replace(target, original, 1)) == approval['approved_inputs']['spec/LedgerSpec.dfy'],
+                    'Wrong post-approval C2 mutation')
+        else:
+            require(head_spec == expected, 'Wrong unapproved-spec mutation')
         require(receipt['evidence'] is None and receipt['evidence_sha256'] is None,
                 'Rejected PR emitted accepted evidence')
         require(receipt['operation'].get('error', '').startswith('UNAPPROVED_PROTECTED_CHANGE:'),
@@ -196,7 +205,8 @@ def main():
     require(not destination.exists(), 'Preserve the prior EXIT report before running again')
     try:
         records = json.loads((ROOT / 'results/stage4/pr-runs.json').read_text())
-        variants = {'affected-claims': ['apply-edit'], 'unapproved-spec': ['spec-and-lock', 'weaken-c2'],
+        variants = {'affected-claims': ['apply-edit'],
+                    'unapproved-spec': ['spec-and-lock', 'weaken-c2', 'after-approval-c2'],
                     'approved-spec': ['approved-spec']}[case]
         for variant in variants:
             report['runs'].append(check(records[variant], variant))
