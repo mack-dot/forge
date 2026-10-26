@@ -750,3 +750,50 @@ curl: (6) Could not resolve host: github.com
   remains in results/stage4/regressions.json and stale-evidence-regression.json.
 - Scope: this resolves a test setup error. It does not grant authority to
   hand-edited evidence or complete any real-PR EXIT.
+
+## U042 — Real PR acceptance and rejection EXITs passed
+
+- References: U034–U041.
+- Published: README thesis, Linux profile, trusted PR workflow, and regression
+  records at 0e6d48ca008695f0c8a89965264bd62f73fbd8b2. All 21 changed blobs
+  and modes matched the local publication payload. The uncertainty log preserved
+  every prior byte. PR receipts and the EXIT runner followed at
+  b2906e2f64f9e1ecd364d2dced55a391f736c236; its five changed blobs were verified.
+- Observed: PR 1 / run 40402849081 accepted the implementation edit with gate 0.
+  Baseline: 12 checked. Candidate: 2 checked, 10 reused. Literal replay exited 0
+  and produced byte-identical evidence. Both workflow jobs succeeded.
+- Observed: PR 2 / run 40402945633 and PR 3 / run 40402975014 rejected the spec
+  plus matching-lock edit and C2 weakening, respectively. Both gates exited 1
+  with UNAPPROVED_PROTECTED_CHANGE and no accepted evidence. Both reporting jobs
+  succeeded and posted claims and failed commit statuses on the exact heads.
+- Observed: the GitHub run API reports the PR head in head_sha for these target
+  event runs. The EXIT runner checks that observed field against the PR head;
+  the trusted checkout is independently bound to the event's base SHA.
+- Observed: actual EXIT run 40403180524, job 121854084912, completed successfully.
+  python3 scripts/exit_stage_4.py --case affected-claims exited 0.
+  python3 scripts/exit_stage_4.py --case unapproved-spec exited 0.
+- Evidence: results/stage4/pr-runs.json, pr-1/2/3-receipt.json, exit-run.json,
+  exit-affected-claims.json, and exit-unapproved-spec.json.
+  https://github.com/mack-dot/forge/actions/runs/40403180524.
+- Scope: the Linux source-proof path and the demonstrated real PR controls now
+  have observed results. The MD5 cache assumption remains. No binary, deployment,
+  merge-protection configuration, or approved fee-spec result is established.
+
+## U043 — Fee intent is concrete and awaits exact-text approval
+
+- References: U042.
+- Prepared: proposals/fees.md proposes a one-unit fee on each fresh successful
+  transfer. The sender pays amount plus one; account 0 receives the fee. Fresh
+  requests involving account 0 are rejected. An identical accepted retry or an
+  invalid request has no fee and no state effect.
+- Candidate spec SHA-256:
+  2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940.
+- Candidate lock SHA-256:
+  32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69.
+- Scope: the exact diff is unapplied. Its proposed lock approval fields describe
+  the required post-approval state; they are not an approval already obtained.
+  No proof of the proposed implementation is claimed. Examples are requirements,
+  not executed tests. The approved spec and lock bytes remain unchanged.
+- Next check: human approval of this exact proposal, followed by the trusted
+  revision-bound approval path, implementation changes, and the approved-spec
+  real PR EXIT. Stage 4 stays CURRENT; later stages have not started.

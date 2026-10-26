@@ -1,7 +1,8 @@
 # Stage 4 change loop: current implementation
 
-Stage 4 is incomplete. The local incremental gate works for the fixed ledger
-layout. Real pull-request checks and revision-bound spec approval remain pending.
+Stage 4 is incomplete. The incremental gate works for the fixed ledger layout.
+Real implementation-edit and unapproved-spec PR checks passed their EXITs.
+The exact fee proposal and revision-bound spec approval remain pending.
 
 Run the gate from a trusted checkout. Pass a complete candidate checkout as data:
 
@@ -122,4 +123,22 @@ The archived local proof example belongs to trusted revision
 exact evidence. Later changes to protected inputs produce a different evidence
 identity even when the ledger source is unchanged.
 
-Stage 4's required real-PR EXIT commands remain **NOT RUN**.
+## Actual PR results
+
+- [PR 1](https://github.com/mack-dot/forge/pull/1): gate exit 0; baseline checked
+  12 obligations; candidate checked 2 and reused 10. Literal replay exited 0
+  and reproduced identical evidence. Verification and reporting jobs succeeded.
+- [PR 2](https://github.com/mack-dot/forge/pull/2): changed spec and matching lock
+  rejected with gate exit 1 and `UNAPPROVED_PROTECTED_CHANGE`.
+- [PR 3](https://github.com/mack-dot/forge/pull/3): C2 weakening rejected with
+  gate exit 1 and the same protected-change reason. Neither rejected PR emitted
+  accepted evidence. Both reporting jobs posted the failure and claims table.
+
+The exact `affected-claims` and `unapproved-spec` EXIT commands each exited 0 in
+[run 40403180524](https://github.com/mack-dot/forge/actions/runs/40403180524).
+`results/stage4/exit-run.json` and the per-case reports retain the actual records.
+These runs concern their recorded base/head revisions; later documentation
+commits do not turn them into checks of another revision.
+
+The `approved-spec` EXIT remains **NOT RUN**. Review [the exact fee proposal](../proposals/fees.md)
+before applying its spec and lock changes. No later stage has started.

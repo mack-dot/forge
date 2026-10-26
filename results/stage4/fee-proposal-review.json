@@ -1,0 +1,28 @@
+{
+  "approved_files_unchanged": true,
+  "candidate_hashes_match": true,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "-"
+      ],
+      "exit_code": 0,
+      "scope": "disposable proposal review copy"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "-"
+      ],
+      "exit_code": 0,
+      "scope": "disposable proposal review copy"
+    }
+  ],
+  "human_approval": "pending",
+  "spec_proof_run": false,
+  "stage_exit": false
+}

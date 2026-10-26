@@ -8,8 +8,9 @@ artifact-binding, replay, and Stage 1 regression checks produced their required
 results. The user approved the tested Node-loader demo invocation, which ran
 with exit 0. Stage 4 is CURRENT. Its local snapshot gate has passed rejection
 and reproducibility controls. Linux CI inventory succeeded and its observed
-pins are recorded. The Linux acceptance profile and real PR workflow are
-implemented; their real-PR EXIT validation and approved-spec path remain incomplete.
+pins are recorded. The real affected-claims and unapproved-spec PR EXITs passed.
+The exact fee proposal is published for human approval. The approved-spec EXIT
+remains incomplete; Stage 4 is CURRENT.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -550,7 +551,7 @@ identical evidence. Linux inventory then succeeded in
 the inventory command exited 0, the true lemma exited 0, and the false lemma
 exited 4. Exact child commands and measured pins are in
 `results/stage4/ci-inventory.json`. The new Linux profile is now selected explicitly
-by the PR gate. Its real-PR checks still require execution. The workflow runs
+by the PR gate. Its real-PR results are recorded below. The workflow runs
 trusted checking and reporting code in separate jobs. These preparation checks
 do not satisfy the real-PR EXITs.
 
@@ -575,12 +576,32 @@ to weaken C2. An approval label alone is insufficient evidence of approved text.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/exit_stage_4.py --case affected-claims` | A real PR without a spec change verifies only affected claims; logs checked/reused counts. | NOT RUN |
-| `python3 scripts/exit_stage_4.py --case unapproved-spec` | The real workflow rejects an unapproved spec change and the C2 weakening attempt. | NOT RUN |
+| `python3 scripts/exit_stage_4.py --case affected-claims` | A real PR without a spec change verifies only affected claims; logs checked/reused counts. | 0 |
+| `python3 scripts/exit_stage_4.py --case unapproved-spec` | The real workflow rejects an unapproved spec change and the C2 weakening attempt. | 0 |
 | `python3 scripts/exit_stage_4.py --case approved-spec` | After human approval, the real workflow accepts the new spec and records its new SHA. | NOT RUN |
 
 Record PR and workflow run references. Local scenarios cannot substitute for
 the required GitHub Action runs. Keep this stage CURRENT while approval is pending.
+
+Actual EXIT execution: [run 40403180524](https://github.com/mack-dot/forge/actions/runs/40403180524),
+job 121854084912, trusted revision `b2906e2f64f9e1ecd364d2dced55a391f736c236`.
+Both exact commands above exited 0. `results/stage4/exit-run.json` and
+`exit-affected-claims.json` / `exit-unapproved-spec.json` retain the API bindings,
+actual checker receipts, comments, statuses, and real exit codes.
+
+PR 1 / run 40402849081 accepted the valid Apply edit: gate 0; baseline checked 12;
+candidate checked 2 and reused 10; literal replay 0 and byte-identical evidence.
+PR 2 / run 40402945633 rejected an unapproved spec plus matching lock with gate 1.
+PR 3 / run 40402975014 rejected C2 weakening with gate 1. Both failures reported
+`UNAPPROVED_PROTECTED_CHANGE`, emitted no accepted evidence, and had successful
+reporting jobs. The negative workflow failures are the required observations.
+
+Pending intent approval: [proposals/fees.md](proposals/fees.md) contains the exact
+unapplied spec and lock diff. Candidate spec SHA-256:
+`2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940`.
+It proposes one unit per fresh successful transfer, paid by the sender to fee
+account 0. Retries and rejections pay no fee. The approved spec and lock remain
+unchanged. Stop for approval of this exact text before applying it; no Stage 5 work.
 
 ### Stage 5 — SPEC TOOLING
 

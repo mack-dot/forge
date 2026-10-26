@@ -72,12 +72,17 @@ insufficient evidence methods, and unsupported proof labels.
 | Handwritten TypeScript | 300 property runs and 3,506 state comparisons against the compiled model; `tested_against_proved_model` | [Stage 3 results](results/stage3.json) |
 | Local incremental gate | Valid Apply edit checked 2 member obligations and reused 10; broken dependencies were rejected | [Local controls](results/stage4-local.json) |
 | Linux toolchain | Real installation, true-lemma acceptance, and false-lemma rejection | [Successful inventory run](https://github.com/mack-dot/forge/actions/runs/40397041174) |
+| Actual GitHub change loop | Valid PR accepted with 2 obligations checked and 10 reused; two unapproved spec PRs rejected; claims posted | [Stage 4 EXIT run](https://github.com/mack-dot/forge/actions/runs/40403180524) |
 
 All five ledger claims currently share the Apply proof obligation. The
 incremental counts describe member obligations, not five independent proofs.
 The trusted baseline is fully checked first. [Change-loop notes](docs/stage4-change-loop.md)
 describe native cache reuse, its MD5 checksum assumption, and exact replay.
-The real PR workflow and approved-spec change path are still being validated.
+The affected-claims and unapproved-spec EXIT commands both passed in GitHub.
+The remaining Stage 4 work needs approval of the exact [fee proposal](proposals/fees.md).
+It proposes a one-unit fee paid by the sender to account `0` on each fresh
+successful transfer. Retries and rejected requests pay no fee. The proposal is
+pending; the approved ledger still has no fee.
 
 ## Run the demo
 
@@ -125,6 +130,7 @@ prove the program's behavior.
 | [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks, and actual results. |
 | [unsure.md](unsure.md) | Append-only findings, uncertainty, corrections, and resolutions. |
 | [docs/stage4-change-loop.md](docs/stage4-change-loop.md) | Current change-loop implementation and limits. |
+| [proposals/fees.md](proposals/fees.md) | Pending fee intent, exact diff, content digests, and examples. |
 | [gate/README.md](gate/README.md) | Gate commands and rejection controls. |
 | [ts/README.md](ts/README.md) | Model compilation, property tests, and evidence boundaries. |
 | [VISION.md](VISION.md) | Long-term directions and irreducible limits. |
