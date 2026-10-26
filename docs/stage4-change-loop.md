@@ -95,8 +95,27 @@ artifact. The Linux profile must be pinned before the PR gate uses it.
 The inventory completed successfully in
 [run 40397041174](https://github.com/mack-dot/forge/actions/runs/40397041174).
 `results/stage4/ci-inventory.json` records the actual commands and exit codes.
-The observed Linux profile and wheel hashes are now recorded under `toolchain/`.
-They are not yet enabled by the acceptance gate.
+The observed Linux profile and wheel hashes are recorded under `toolchain/`.
+The incremental gate now selects this fixed profile with `--profile linux`.
+The CI installer checks the archive, executable, and installed package digests.
+
+The PR workflow runs trusted base-revision code on an exact candidate revision.
+It checks tracked files against each Git commit before and after verification.
+The verification job has read-only repository permission. Checker subprocesses
+receive an environment allowlist without API credentials. Candidate code is
+input to Dafny; candidate scripts and dependencies do not execute.
+
+A separate reporting job reads the receipt as data, checks the revision bindings,
+and posts the claims table and `forge/proof-gate` status. This job checks out only
+trusted reporting code. A base or head change before reporting requires a new run.
+Repository settings must require the status before it can enforce merge policy;
+posting a status alone does not prevent a repository administrator from merging.
+
+`scripts/exit_stage_4.py` checks actual GitHub jobs, checker log receipts, source
+bytes, published comments, and commit statuses. It records real gate and replay
+codes. The EXIT workflow runs it against frozen PR/run references. The first two
+cases require one accepted implementation edit and two rejected spec changes.
+The approved-spec case remains pending exact-text human approval.
 
 The archived local proof example belongs to trusted revision
 `bafcd92533034dc342c53688f058ab8cfbc577a6`. Use that revision to reproduce its

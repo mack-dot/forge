@@ -1,0 +1,21 @@
+{
+  "case": "method-policy",
+  "commands": [
+    {
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "gate/gate.py",
+        "--check-evidence",
+        "build/stage2/method-policy/unit_tested.input.json",
+        "--evidence",
+        "build/stage2/method-policy/unit_tested.output.json"
+      ],
+      "exit_code": 1,
+      "log": "build/stage2/method-policy/unit_tested.log",
+      "name": "unit_tested"
+    }
+  ],
+  "error": "unit_tested: expected rejection METHOD_POLICY; got exit 1",
+  "evidence_sha256": "92c741d9ef0accd516e1b528db82d46dc25549ee40a44274cf50f0166b91463a",
+  "result": "failed"
+}

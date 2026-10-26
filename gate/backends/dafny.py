@@ -88,14 +88,18 @@ def failed_claims(output, ranges):
     return sorted(found)
 
 
-def prepare(impl_name):
+def prepare(impl_name, profile='local'):
     implementation = (ROOT / impl_name).resolve()
     impl_name = relative(implementation)
     if implementation.parent not in (ROOT / 'impl', ROOT / 'bugs'):
         raise Rejected('SOURCE_SCOPE: Stage 1 accepts one file in impl/ or bugs/')
     if implementation.suffix != '.dfy':
         raise Rejected('SOURCE_SCOPE: the implementation must be a Dafny source file')
-    pins = json.loads((ROOT / 'toolchain/pins.json').read_text())
+    profiles = {'local': 'toolchain/pins.json', 'linux': 'toolchain/linux-pins.json'}
+    if profile not in profiles:
+        raise RuntimeError('TOOLCHAIN_ERROR: unknown Dafny profile')
+    pin_path = ROOT / profiles[profile]
+    pins = json.loads(pin_path.read_text())
     lock = json.loads((ROOT / 'spec.lock').read_text())
     spec_bytes = SPEC.read_bytes()
     implementation_bytes = implementation.read_bytes()
@@ -107,6 +111,11 @@ def prepare(impl_name):
         raise Rejected('TOOLCHAIN_LOCK: verification options differ from the fixed Stage 1 policy')
     if platform.python_version() != pins['python']['version']:
         raise RuntimeError('TOOLCHAIN_ERROR: Python version differs from the pin')
+    if profile == 'linux':
+        if platform.system() != 'Linux' or platform.machine() != 'x86_64':
+            raise RuntimeError('TOOLCHAIN_ERROR: Linux profile requires Linux/x86_64')
+        if digest(Path(sys.executable).read_bytes()) != pins['python']['executable_sha256']:
+            raise RuntimeError('TOOLCHAIN_ERROR: Python executable differs from the Linux pin')
 
     # A deliberately narrow byte-level input policy closes the source file set.
     # Dafny's parser and auditor handle language semantics and forbidden constructs.
@@ -123,7 +132,7 @@ def prepare(impl_name):
             raise RuntimeError('TOOLCHAIN_ERROR: executable digest differs from its pin')
     ranges = claim_ranges(spec_bytes.decode('utf-8'))
     input_paths = [implementation, SPEC, BINDING, AUDIT, Path(__file__).resolve(),
-                   ROOT / 'spec.lock', ROOT / 'toolchain/pins.json']
+                   ROOT / 'spec.lock', pin_path]
     before = {relative(path): digest(path.read_bytes()) for path in input_paths}
     return {'implementation': implementation, 'impl_name': impl_name,
             'pins': pins, 'lock': lock, 'ranges': ranges,

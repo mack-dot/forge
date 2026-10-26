@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "observed-ci-profile-not-yet-enabled",
+  "status": "pinned-ci-profile",
   "platform": {
     "os": "Linux",
     "architecture": "x86_64",
@@ -51,7 +51,7 @@
   },
   "trust_assumptions": [
     "This first inventory observes Python distribution and wheel digests; it does not independently authenticate their original publishers.",
-    "The Linux profile must be reviewed and pinned before any PR result is accepted.",
+    "The Linux profile uses observed executable and package digests from the recorded real inventory run.",
     "The host image and GitHub Actions runtime remain part of the trusted base."
   ]
 }

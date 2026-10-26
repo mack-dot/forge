@@ -8,8 +8,8 @@ artifact-binding, replay, and Stage 1 regression checks produced their required
 results. The user approved the tested Node-loader demo invocation, which ran
 with exit 0. Stage 4 is CURRENT. Its local snapshot gate has passed rejection
 and reproducibility controls. Linux CI inventory succeeded and its observed
-pins are recorded. The Linux acceptance profile, real PR workflow, and
-approved-spec path remain incomplete.
+pins are recorded. The Linux acceptance profile and real PR workflow are
+implemented; their real-PR EXIT validation and approved-spec path remain incomplete.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -549,8 +549,18 @@ identical evidence. Linux inventory then succeeded in
 [Actions run 40397041174](https://github.com/mack-dot/forge/actions/runs/40397041174):
 the inventory command exited 0, the true lemma exited 0, and the false lemma
 exited 4. Exact child commands and measured pins are in
-`results/stage4/ci-inventory.json`. The new Linux profile is recorded but not yet
-enabled for acceptance. These are preparation checks, not real-PR EXITs.
+`results/stage4/ci-inventory.json`. The new Linux profile is now selected explicitly
+by the PR gate. Its real-PR checks still require execution. The workflow runs
+trusted checking and reporting code in separate jobs. These preparation checks
+do not satisfy the real-PR EXITs.
+
+Pre-publication regression record: `results/stage4/regressions.json` retains all
+20 exact commands and real codes. The updated local controls exited 0. All five
+Stage 1 scenarios exited 0. An initial Stage 2 method-policy check exited 1
+because its fixture used stale evidence and reached `TRUSTED_INPUTS` first.
+After the real source gate refreshed evidence (exit 0), all five Stage 2 scenarios
+and all five supported Stage 3 scenarios exited 0. See U041 for the setup error;
+no acceptance rule was relaxed. The actual loader demo printed `Ok` then `Rejected`.
 
 Create a GitHub Action that computes affected claims from dependencies and
 content hashes, invokes per-lemma/per-member verification, and posts a

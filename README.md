@@ -1,81 +1,139 @@
 # Forge
 
-Proof-gated changes for software engineering.
-
 **LLMs propose, checkers dispose. Humans approve intent (specs), not code.**
 
-Agents propose implementations. Established checkers determine which claims are
-accepted. Every accepted artifact must carry reproducible evidence naming the
-claim, exact artifact, method, tool version, assumptions, and trusted components.
-Tests, bounded checks, and proofs retain their distinct meanings.
+Forge is a public research prototype for **proof-gated software changes**.
+Agents propose implementations. Established checkers decide whether the required
+claims hold. Each accepted artifact carries reproducible evidence tied to its
+exact bytes, specification, checking method, and assumptions.
 
-## Current status
+The aim is to let agents change critical software components while people remain
+responsible for the behavior those components must implement.
 
-- Stage 0 is complete. Dafny 4.11.0 and bundled Z3 4.12.1 ran successfully.
-  The true smoke lemma verified with exit 0. The false lemma was rejected with
-  exit 4 for its false postcondition.
-- Stage 1 is complete. The [ledger implementation](impl/Ledger.dfy) satisfies
-  C1–C5 in the approved [specification](spec/LedgerSpec.dfy), bound by
-  [spec.lock](spec.lock). The real Dafny verifier checked 12 obligations.
-- The gate produced [source-proof evidence](evidence.json). Repeated runs
-  produced identical bytes. All four planted bugs passed the basic unit suite
-  and were rejected by the gate. [Actual results](results/stage1.json) record
-  checker, gate, and scenario exit codes separately.
-- Stage 2 is complete. The [schema](schemas/evidence.schema.json) validates
-  both evidence formats. The [tier policy](policy/tiers.yaml) rejects insufficient
-  methods, and the gate rejects altered artifact and claim bindings. Imported
-  evidence must match a fresh checker run. All Stage 1 regressions still pass.
-- Stage 3 is complete. The compiled model and TypeScript implementation run.
-  The correct TypeScript passed 300 property runs and 3,506 state comparisons;
-  the planted self-transfer bug failed. Evidence labels and reproducibility
-  checks passed, as did all prior-stage regressions.
-- The user approved `node --import tsx app/main.ts` as the demo EXIT. It exited
-  0 and printed `Ok` then `Rejected`. The original CLI's IPC failure is retained
-  in the execution record. Stage 4 is current. Its local incremental gate has
-  passed dependency and replay controls. The real PR workflow remains pending.
-  See [the change-loop notes](docs/stage4-change-loop.md) for scope and limits.
-- The repository is public at [mack-dot/forge](https://github.com/mack-dot/forge).
-  Publication uses the connected GitHub app. The append-only findings log records
-  repository access and snapshot verification.
+## The thesis
 
-## Follow the work
+Generating code and establishing that it is acceptable are different tasks.
+An agent can produce a plausible implementation and plausible tests for the same
+mistake. Forge puts acceptance outside the proposing agent: a versioned spec
+states the requirements, a policy names acceptable evidence, and an established
+checker supplies the result.
 
-| File | Purpose |
+Our working hypothesis is that this can reduce implementation review for small,
+well-specified components. We have not yet measured the productivity benefit,
+maintenance cost, or usefulness across ordinary repositories. Those measurements
+are explicit roadmap stages.
+
+The first target is a critical rule inside a larger application: money movement,
+idempotent requests, booking constraints, refund limits, or permission decisions.
+UI quality, model quality, and many integration properties still need tests and
+measurements. Forge keeps those evidence types distinct.
+
+```mermaid
+flowchart LR
+    H[Human approves intent] --> S[Versioned specification]
+    A[Agent proposes source] --> C[Established checker]
+    S --> C
+    C --> E[Evidence tied to exact artifact]
+    E --> P[Policy gate]
+    P --> R[Accepted artifact and evidence]
+```
+
+The acceptance result is conditional on the recorded spec and trusted base.
+A proof can establish the wrong requirement if the spec misses human intent.
+
+## What works today
+
+**Stages 0–3 are complete. Stage 4 is in progress.**
+
+The ledger demo uses Dafny 4.11.0 and bundled Z3 4.12.1. Its approved source
+refinement establishes these claims for sequential operations over mathematical
+integers and finite maps, starting from a well-formed state:
+
+| Claim | Required behavior |
 | --- | --- |
-| [ROADMAP.md](ROADMAP.md) | Stages 0–10, CURRENT stage, required EXIT checks, and actual run results. |
-| [unsure.md](unsure.md) | Append-only uncertainties, findings, corrections, and resolutions. |
-| [proposals/initial-ledger.md](proposals/initial-ledger.md) | Approved behavior, examples, exact initial spec diff, and digest. |
-| [toolchain/README.md](toolchain/README.md) | Local setup and reproduction of the Stage 0 checks. |
-| [toolchain/pins.json](toolchain/pins.json) | Pinned versions, verification settings, and disclosed trust assumptions. |
-| [gate/README.md](gate/README.md) | Run the Stage 1 gate and its rejection checks; understand their scope. |
-| [evidence.json](evidence.json) | Canonical C1–C5 source-proof evidence for the exact recorded inputs. |
-| [results/stage1.json](results/stage1.json) | Actual Stage 1 EXIT results and negative-control codes. |
-| [results/stage1/evidence.json](results/stage1/evidence.json) | Exact archived Stage 1 evidence before the Stage 2 refactor. |
-| [results/stage2.json](results/stage2.json) | Actual schema, policy, replay, and Stage 1 regression results. |
-| [ts/README.md](ts/README.md) | JavaScript build, TypeScript comparisons, reproduction, and limits. |
-| [results/stage3.json](results/stage3.json) | Actual Stage 3 results, approved demo invocation change, and retained failures. |
-| [results/stage3/typescript-evidence.json](results/stage3/typescript-evidence.json) | Comparison-test evidence linked to the separate source proof and generated module. |
+| C1 | A transfer preserves total funds. |
+| C2 | Resulting balances remain non-negative. |
+| C3 | An identical accepted retry returns `Ok` without repeating its effect. |
+| C4 | A fresh valid request terminates and performs the exact debit and credit. |
+| C5 | Every other request returns `Rejected` and leaves both state maps unchanged. |
+
+Self-transfers are rejected. Reusing an accepted request ID with different
+arguments is rejected. See the [approved specification](spec/LedgerSpec.dfy)
+and [intent proposal](proposals/initial-ledger.md) for the complete rules.
+
+Four planted bugs pass the deliberately weak unit suite and fail the gate.
+They cover money creation, an exact-balance boundary error, a repeated transfer,
+and a forbidden assumption. The gate also rejects altered artifact identities,
+insufficient evidence methods, and unsupported proof labels.
+
+| Artifact or check | Established scope | Record |
+| --- | --- | --- |
+| Dafny ledger source | C1–C5, `source_proof`, under recorded assumptions | [Source evidence](evidence.json) |
+| Handwritten TypeScript | 300 property runs and 3,506 state comparisons against the compiled model; `tested_against_proved_model` | [Stage 3 results](results/stage3.json) |
+| Local incremental gate | Valid Apply edit checked 2 member obligations and reused 10; broken dependencies were rejected | [Local controls](results/stage4-local.json) |
+| Linux toolchain | Real installation, true-lemma acceptance, and false-lemma rejection | [Successful inventory run](https://github.com/mack-dot/forge/actions/runs/40397041174) |
+
+All five ledger claims currently share the Apply proof obligation. The
+incremental counts describe member obligations, not five independent proofs.
+The trusted baseline is fully checked first. [Change-loop notes](docs/stage4-change-loop.md)
+describe native cache reuse, its MD5 checksum assumption, and exact replay.
+The real PR workflow and approved-spec change path are still being validated.
+
+## Run the demo
+
+First follow the [toolchain setup](toolchain/README.md) and
+[TypeScript setup](ts/README.md). The current pins describe specific tested
+environments; arbitrary local tool versions do not satisfy the gate.
+
+```sh
+python3 gate/gate.py --impl impl/Ledger.dfy --evidence evidence.json
+python3 scripts/build_model.py
+node --import tsx app/main.ts
+```
+
+The demo prints `Ok`, then `Rejected`. The supported Node loader invocation is
+the approved demo command. The earlier `tsx` CLI socket failure remains in the
+execution record.
+
+Run the negative and reproducibility controls with the commands in
+[ROADMAP.md](ROADMAP.md). A scenario can exit `0` because it observed the required
+checker rejection. Reports keep the checker, gate, and scenario exit codes
+separate.
+
+## What an evidence bundle says
+
+Each bundle names the claim, spec digest, artifact digest, method, tool version,
+result, assumptions, trusted components, producer, and reproduction command.
+The gate validates those bindings and the policy. Imported evidence must match
+a fresh checker run; valid JSON alone establishes no proof.
+
+`source_proof`, `bounded_model_checked`, `tested_against_proved_model`, and
+`unit_tested` retain their meanings. The gate never promotes a test result to a
+proof. Stronger-sounding evidence about a different property cannot satisfy a
+required claim.
+
+Current evidence keeps **`end_to_end=false`**. The Dafny source proof does not
+cover the compiler, generated JavaScript, handwritten TypeScript, persistence,
+concurrency, or a deployed application. Binary checking and deployment identity
+are later roadmap work. A signature will authenticate a bundle; it will not
+prove the program's behavior.
+
+## Follow and contribute
+
+| Document | Purpose |
+| --- | --- |
+| [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks, and actual results. |
+| [unsure.md](unsure.md) | Append-only findings, uncertainty, corrections, and resolutions. |
+| [docs/stage4-change-loop.md](docs/stage4-change-loop.md) | Current change-loop implementation and limits. |
+| [gate/README.md](gate/README.md) | Gate commands and rejection controls. |
+| [ts/README.md](ts/README.md) | Model compilation, property tests, and evidence boundaries. |
 | [VISION.md](VISION.md) | Long-term directions and irreducible limits. |
 | [AGENTS.md](AGENTS.md) | Instructions for agents working in this repository. |
 
-Agents must work only on the CURRENT stage. Do not modify a protected spec, lock,
-policy, or gate to make a check pass. Spec changes require a proposal and human
-intent approval. Keep `unsure.md` append-only. Record real commands and exit codes;
-never report a planned or simulated check as a result.
-
-## Assurance boundary
-
-Stage 1 establishes the specified sequential ledger transition at Dafny source
-level, under its recorded assumptions and trusted base. It does not cover a
-compiled binary, deployment, persistence, concurrency, or an entire application.
-`end_to_end=false` records those missing links. It is not a failed proof result.
-Existing Node and Python runtime provenance limits remain recorded in `unsure.md`.
-The evidence is unsigned. The gate reruns its checker before accepting imported
-evidence; schema validation alone makes no proof claim. Stage 9 plans signed
-provenance. Validator-package provenance limits are also disclosed in `unsure.md`.
-The handwritten TypeScript uses `tested_against_proved_model`. The Dafny source
-uses `source_proof`. The compiler, generated runtime, and TypeScript conversion
-bridge remain assumptions; no proof covers the generated JavaScript module.
+Work only on the CURRENT stage. Propose spec changes with an exact diff and
+plain-English reason, then wait for human intent approval. Do not weaken a spec,
+policy, or gate to pass a check. Preserve the uncertainty log and record real
+commands and exit codes. Planned work is not a passing result.
 
 ## License
 

@@ -696,3 +696,57 @@ curl: (6) Could not resolve host: github.com
 - Next check: add a fixed Linux profile to the trusted gate, preserve all local
   rejection behavior, then run the actual PR workflow and its required EXITs.
   The fee proposal and exact-text human approval also remain pending.
+
+## U039 — Linux PR acceptance is implemented; real PR results are pending
+
+- References: U034–U038.
+- Change: the incremental gate selects a fixed Linux profile. Its installer
+  checks the recorded archive, executable, wheel, and installed package digests.
+  The default local profile retains its existing pins and rejection rules.
+- Observed: the updated python3 scripts/check_stage_4_local.py command exited 0.
+  It checked 2 candidate obligations and reused 10 for the valid Apply edit.
+  Broken proofs and unapproved protected changes were rejected. Literal replay
+  exited 0 and reproduced byte-identical evidence.
+- Prepared: the PR workflow executes trusted base-revision code. It checks
+  candidate tracked files against the exact commit before and after checking.
+  Candidate scripts do not run. Checker subprocesses receive an environment
+  allowlist. A separate trusted job posts claims and a commit status.
+- Scope: local controls do not establish successful PR execution or enforce
+  repository merge settings. The real-PR EXIT runner reads GitHub job results,
+  actual receipt logs, exact source bytes, comments, and statuses.
+- Pending: publish the workflow, run the three real PR demonstrations, inspect
+  installation and checker results, then execute the real-PR EXIT commands.
+  No fee-spec change is approved by this implementation work.
+
+## U040 — GitHub event policy is an external workflow dependency
+
+- References: U039.
+- Observed: GitHub's current documentation says the default public-repository
+  pull_request_target policy is in evaluate mode. It announces enforcement for
+  affected repositories on December 2, 2026. This is not a present observed
+  failure of Forge's workflow.
+- Source: https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target.
+- Impact: continued operation may require an applicable repository event policy
+  permitting this trigger. The connected app cannot manage administration
+  settings. A posted commit status alone also does not enforce merge protection.
+- Scope: trusted code reads candidate sources as data. Verification has read-only
+  repository permissions; posting runs separately with only reporting permissions.
+  This limits credentials but does not prove the checker or runner is exploit-free.
+- Next check: inspect actual PR runs now. Recheck applicable event policy before
+  the announced enforcement date. Do not infer a configured merge rule or policy.
+
+## U041 — Regression fixtures must use evidence from the current trusted code
+
+- References: U039.
+- Observed: the Stage 2 method-policy regression exited 1. Its unit_tested
+  fixture was rejected with TRUSTED_INPUTS before reaching METHOD_POLICY.
+  The root evidence file still bound the earlier adapter and dependency code.
+- Cause: regression setup refreshed source evidence too late in the command
+  sequence. The gate correctly rejected stale trusted-input digests.
+- Action: preserve the failed report, run the real full source gate to refresh
+  evidence, and repeat the affected Stage 2 checks. No acceptance rule changed.
+- Observed: the refresh exited 0. All five repeated Stage 2 cases exited 0,
+  including method-policy and fresh-checker round-trip. The earlier failure
+  remains in results/stage4/regressions.json and stale-evidence-regression.json.
+- Scope: this resolves a test setup error. It does not grant authority to
+  hand-edited evidence or complete any real-PR EXIT.

@@ -1,0 +1,85 @@
+name: Forge proof gate
+
+"on":
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  verify:
+    if: github.event.pull_request.base.repo.full_name == github.repository
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    outputs:
+      report_ready: ${{ steps.check.outputs.report_ready }}
+    steps:
+      - name: Read the trusted base revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          persist-credentials: false
+      - name: Read the proposed revision as data
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+          submodules: false
+          lfs: false
+      - name: Select the recorded Python version
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.10.11'
+          check-latest: false
+      - name: Install and authenticate the recorded toolchain bytes
+        working-directory: trusted
+        run: |
+          python -m venv .toolchain/ci-python
+          .toolchain/ci-python/bin/python -m pip install --disable-pip-version-check pip==25.3
+          .toolchain/ci-python/bin/python toolchain/install_ci.py
+      - name: Check exact PR revisions with trusted code
+        id: check
+        working-directory: trusted
+        run: .toolchain/ci-python/bin/python gate/pr_check.py --candidate ../candidate
+      - name: Save the real checker receipt
+        if: always() && steps.check.outputs.report_ready == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-proof-report
+          path: trusted/build/pr/
+          if-no-files-found: error
+
+  report:
+    needs: verify
+    if: always() && needs.verify.outputs.report_ready == 'true'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+      statuses: write
+    steps:
+      - name: Read only trusted reporting code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Select the reporting Python version
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.10.11'
+          check-latest: false
+      - name: Read the report as data
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: forge-proof-report
+          path: build/report
+      - name: Publish claims and a status for the checked revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python gate/post_pr_report.py

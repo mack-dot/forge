@@ -8,6 +8,7 @@ The caller must obtain this checkout from a trusted revision, outside the PR.
 
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import shlex
@@ -82,7 +83,10 @@ def source_bytes(root):
 
 
 def run(command, log, records):
-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    # The checker reads candidate source; it receives no Actions/API credentials.
+    allowed = ('PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'LD_LIBRARY_PATH', 'DOTNET_ROOT')
+    environment = {name: os.environ[name] for name in allowed if name in os.environ}
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, env=environment)
     output = result.stdout + result.stderr
     log.write_text(output)
     records.append({'command': shlex.join(str(item) for item in command),
@@ -149,11 +153,11 @@ def reproduction_input(baseline, proposed, protected):
     return destination.relative_to(ROOT).as_posix()
 
 
-def check(candidate, output, work, operation):
-    versions = check_dependencies()
+def check(candidate, output, work, operation, profile='local'):
+    versions = check_dependencies(profile)
     from core import framework_paths, load_policy, make_bundle, snapshot, validate_evidence
 
-    state = dafny.prepare('impl/Ledger.dfy')
+    state = dafny.prepare('impl/Ledger.dfy', profile)
     trusted_before = protected_manifest(ROOT)
     proposed_before = protected_manifest(candidate)
     if proposed_before != trusted_before:
@@ -164,6 +168,8 @@ def check(candidate, output, work, operation):
     baseline = source_bytes(ROOT)
     proposed = source_bytes(candidate)
     paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve()]
+    if profile == 'linux':
+        paths += [ROOT / 'toolchain/validator-linux-pins.json', ROOT / 'toolchain/requirements-linux.txt']
     inputs_before = snapshot(paths)
     trusted = {name: value for name, value in inputs_before.items() if name not in SOURCE_FILES}
     trusted.update({'baseline/' + name: digest(value) for name, value in baseline.items()})
@@ -213,6 +219,8 @@ def check(candidate, output, work, operation):
     saved_input = reproduction_input(baseline, proposed, trusted_before)
     reproduce = ('python3 gate/incremental.py --candidate ' + shlex.quote(saved_input)
                  + ' --evidence build/change-evidence.json')
+    if profile != 'local':
+        reproduce += ' --profile ' + profile
     assumptions = [
         'The caller supplies a WellFormed state; operations are sequential over mathematical integers.',
         'The executing checkout is a trusted baseline obtained outside the candidate change.',
@@ -231,6 +239,7 @@ def check(candidate, output, work, operation):
          'reproduce_cmd': reproduce, 'producer': 'forge/dafny-snapshot-gate'}
         for claim in sorted(dafny.CLAIMS)
     ], backend_details={
+        'toolchain_profile': profile,
         'verification_options': SNAPSHOT_OPTIONS,
         'solver_sha256': state['pins']['z3']['executable_sha256'],
         'verified_obligations': names,
@@ -268,6 +277,7 @@ def check(candidate, output, work, operation):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--candidate', type=Path, required=True)
+    parser.add_argument('--profile', choices=('local', 'linux'), default='local')
     parser.add_argument('--evidence', type=Path, default=Path('build/change-evidence.json'))
     parser.add_argument('--work', type=Path, help='Fresh directory under build/; otherwise allocate one')
     args = parser.parse_args()
@@ -293,7 +303,7 @@ def main():
     operation = {'stage': 4, 'stage_exit': False, 'commands': [], 'end_to_end': False}
     code = 0
     try:
-        check(candidate, output, work, operation)
+        check(candidate, output, work, operation, args.profile)
     except Rejected as error:
         operation.update({'result': 'rejected', 'error': str(error)})
         print(str(error), file=sys.stderr)

@@ -7,8 +7,12 @@ from pathlib import Path
 from common import ROOT, digest, read_json
 
 
-def check_dependencies():
-    pins = read_json(ROOT / 'toolchain/validator-pins.json')
+def check_dependencies(profile='local'):
+    profiles = {'local': 'toolchain/validator-pins.json',
+                'linux': 'toolchain/validator-linux-pins.json'}
+    if profile not in profiles:
+        raise RuntimeError('TOOLCHAIN_ERROR: unknown validator profile')
+    pins = read_json(ROOT / profiles[profile])
     if platform.python_version() != pins['python_version']:
         raise RuntimeError('TOOLCHAIN_ERROR: Python version differs from validator pin')
     for name, expected in pins['packages'].items():

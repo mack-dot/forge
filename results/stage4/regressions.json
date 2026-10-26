@@ -1,0 +1,207 @@
+{
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_stage_4_local.py"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/0.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_1.py",
+        "--case",
+        "reproducibility"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/1.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_1.py",
+        "--case",
+        "planted-bugs"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/2.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_1.py",
+        "--case",
+        "spec-lock"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/3.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_1.py",
+        "--case",
+        "contract-binding"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/4.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_1.py",
+        "--case",
+        "audit-controls"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/5.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "schema"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/6.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "artifact-mismatch"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/7.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "method-policy"
+      ],
+      "exit_code": 1,
+      "log": "build/stage4-regressions/8.log"
+    },
+    {
+      "command": [
+        "python3",
+        "gate/gate.py",
+        "--impl",
+        "impl/Ledger.dfy",
+        "--evidence",
+        "evidence.json"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/9.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "schema"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/10.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "artifact-mismatch"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/11.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "method-policy"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/12.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "round-trip"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/13.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_2.py",
+        "--case",
+        "policy-controls"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/14.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_3.py",
+        "--case",
+        "correct-typescript"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/15.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_3.py",
+        "--case",
+        "self-transfer"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/16.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_3.py",
+        "--case",
+        "evidence-labels"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/17.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_3.py",
+        "--case",
+        "reproducibility"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/18.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_3.py",
+        "--case",
+        "loader-demo"
+      ],
+      "exit_code": 0,
+      "log": "build/stage4-regressions/19.log"
+    }
+  ],
+  "prior_failure_preserved": true,
+  "result": "passed_after_refreshing_stale_evidence",
+  "stage_exit": false
+}
