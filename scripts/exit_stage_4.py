@@ -86,7 +86,7 @@ def check(record, variant):
     require(run['status'] == 'completed' and run['conclusion'] == ('success' if positive else 'failure'),
             'Run did not finish with the required result')
     require(run['event'] == 'pull_request_target' and run['path'] == '.github/workflows/proof-gate.yml'
-            and run['repository']['full_name'] == REPOSITORY and run['head_sha'] == base,
+            and run['repository']['full_name'] == REPOSITORY and run['head_sha'] == head,
             'Workflow origin or revision mismatch')
     jobs = api('/actions/runs/' + str(run_id) + '/jobs?filter=latest&per_page=100')['jobs']
     verify = [j for j in jobs if j['name'] == 'verify']
