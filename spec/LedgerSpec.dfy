@@ -63,3 +63,5 @@ abstract module LedgerSpec {
     ensures (!IsRetry(state, id, request) && !IsFreshValid(state, id, request)) ==>
       outcome == Rejected && next == state
 }
+
+// Unapproved spec revision.
