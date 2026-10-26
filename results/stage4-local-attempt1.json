@@ -1,0 +1,77 @@
+{
+  "command": "python3 scripts/check_stage_4_local.py",
+  "exit_code": 1,
+  "operations": [
+    {
+      "case": "run-apply-edit",
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gate_exit_code": 0
+    },
+    {
+      "case": "run-apply-edit-repeat",
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gate_exit_code": 0
+    },
+    {
+      "case": "run-broken-helper",
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "gate_exit_code": 1
+    },
+    {
+      "case": "run-helper-contract",
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "gate_exit_code": 1
+    },
+    {
+      "case": "run-self-transfer",
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "gate_exit_code": 1
+    },
+    {
+      "case": "run-sneaky-assume",
+      "checker_exit_codes": [
+        0,
+        0,
+        2
+      ],
+      "gate_exit_code": 1
+    },
+    {
+      "case": "run-unchanged",
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gate_exit_code": 0
+    }
+  ],
+  "raw_logs": "build/stage4-local-history/attempt1",
+  "reason": "The fresh Dafny check of an unannotated assume exited 2 for its warning, rather than the initially expected 0. The incremental gate had already rejected it with audit exit 2 and gate exit 1. No acceptance rule changed."
+}

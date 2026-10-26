@@ -31,7 +31,9 @@ Tests, bounded checks, and proofs retain their distinct meanings.
   checks passed, as did all prior-stage regressions.
 - The user approved `node --import tsx app/main.ts` as the demo EXIT. It exited
   0 and printed `Ok` then `Rejected`. The original CLI's IPC failure is retained
-  in the execution record. Stage 4 is current; its implementation has not started.
+  in the execution record. Stage 4 is current. Its local incremental gate has
+  passed dependency and replay controls. The real PR workflow remains pending.
+  See [the change-loop notes](docs/stage4-change-loop.md) for scope and limits.
 - The repository is public at [mack-dot/forge](https://github.com/mack-dot/forge).
   Publication uses the connected GitHub app. The append-only findings log records
   repository access and snapshot verification.

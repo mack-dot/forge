@@ -6,8 +6,9 @@ This is the execution plan and decision record. Stages 0–3 are DONE. The
 approved ledger refinement passed the real Dafny gate. The schema, policy,
 artifact-binding, replay, and Stage 1 regression checks produced their required
 results. The user approved the tested Node-loader demo invocation, which ran
-with exit 0. Stage 4 is CURRENT. Its member-selection diagnostic has run;
-the incremental gate and GitHub workflow are not implemented.
+with exit 0. Stage 4 is CURRENT. Its local snapshot gate has passed rejection
+and reproducibility controls. Linux CI inventory is being prepared; the real
+PR workflow and approved-spec path remain incomplete.
 Uncertainties and runtime-provenance limits are recorded
 in the append-only [unsure.md](unsure.md) log.
 
@@ -531,6 +532,16 @@ ledger (exit 0) and rejected a broken helper proof (exit 4). Selecting only
 dependency coverage. The diagnostic accepts no artifacts and completes no
 Stage 4 EXIT. Exact child commands and obligation counts are recorded in
 `results/stage4-member-probe.json`; see `unsure.md` U033.
+
+Local implementation: `gate/incremental.py` uses Dafny/Boogie snapshot caching,
+audits both revisions, binds evidence to SHA-256 source identities, and rejects
+changes to trusted inputs. `python3 scripts/check_stage_4_local.py` ran with
+exit 0. A valid Apply edit checked 2 obligations and reused 10; broken helpers,
+weakened helper contracts, and planted bugs were rejected. Repeated evidence
+was byte-identical. The first local test driver run exited 1 because it expected
+the wrong exit code for Dafny's bare-assume warning; that failure is preserved.
+These local controls do not satisfy the real-PR EXITs below. See
+`docs/stage4-change-loop.md`, `results/stage4-local.json`, and `unsure.md` U034–U036.
 
 Create a GitHub Action that computes affected claims from dependencies and
 content hashes, invokes per-lemma/per-member verification, and posts a

@@ -583,3 +583,88 @@ curl: (6) Could not resolve host: github.com
   compare selective results with full verification after controlled changes,
   and verify all affected helpers. Broaden verification whenever coverage is
   uncertain. Stage 4's three real-PR EXITs remain NOT RUN.
+
+## U034 — Built-in snapshot reuse passed local dependency controls
+
+- References: U003, U033. Stage: 4, CURRENT.
+- Observed: the pinned Dafny source exposes legacy snapshot verification. Its
+  translator creates member checksums; bundled Boogie 3.5.5 collects proof
+  dependencies and chooses cache reuse. No custom dependency checker was built.
+- Observed: python3 scripts/check_stage_4_local.py exited 0. The trusted baseline
+  was fully checked first. An unchanged candidate reused all 12 obligations.
+  A valid Apply edit checked 2 obligations and reused 10. All C1-C5 claims share
+  Apply; these are member-obligation counts, not five independent proof runs.
+- Observed: broken-helper, weakened-helper-contract, and self-transfer cases
+  returned incremental gate exit 1 and actual Dafny exit 4. Fresh checks without
+  caching also returned 4. Unannotated assume returned audit exit 2 and gate 1.
+  A fresh verify command also returned 2 because warnings were not allowed.
+- Observed: spec-plus-lock edits and C2 weakening were rejected before any
+  checker invocation. Repeated valid candidates produced identical evidence.
+- Preserved failure: the first local driver run exited 1 because it expected
+  exit 0 from the bare-assume fresh check. The real result was 2, with a warning
+  naming the unannotated assumption. Only that test expectation changed.
+- Scope: the local gate accepts only the fixed ledger layout against an external
+  trusted checkout. The tests do not prove the cache or general dependency
+  completeness. Real PR workflows and exact-revision spec approval are pending.
+- Evidence: results/stage4-local.json, results/stage4-local-attempt1.json,
+  gate/incremental.py, and docs/stage4-change-loop.md.
+
+## U035 — Cache checksum and determinism assumptions remain explicit
+
+- References: U003, U034.
+- Observed in the pinned upstream source: Dafny 4.11.0 computes MD5 checksums
+  for verification cache entries. Boogie compares member and dependency
+  checksums before reuse. MD5 is not a security-grade artifact hash.
+- Impact: reuse trusts that no cache-checksum collision occurs among the inputs
+  in the run. The new evidence states this assumption. The controls do not
+  establish resistance to an adversarial cache collision. The default full
+  gate remains available without this cache assumption.
+- Observed in Boogie 3.5.5 source: cache entries have an idle-expiry policy.
+  A delayed run can perform more checks after entries expire. Cache counts and
+  timing therefore remain outside canonical proof evidence; they are recorded
+  in the operational report. Proof scope and source identities remain bound.
+- Scope: no guarantee of independent proof-kernel checking or broad-language
+  cache soundness is made. No binary or deployment coverage is added.
+- Source links and reproduction details are in docs/stage4-change-loop.md.
+- Next check: exercise the same controls on the pinned CI environment and retain
+  these assumptions in the PR report. Do not invent a replacement cache verifier.
+
+## U036 — Linux CI environment requires its own measured pins
+
+- References: U033, U034.
+- Observed: current accepted local toolchain pins describe Darwin/arm64.
+  They cannot authenticate Linux executables by reusing the same binary hashes.
+- Prepared: a trusted-main GitHub Actions inventory workflow using commit-pinned
+  checkout, setup-python, and upload-artifact actions. It selects Python 3.10.11,
+  pip 25.3, and the existing validator package versions. It checks the official
+  Dafny 4.11.0 Linux archive SHA-256 before extraction.
+- Source: the Dafny release API supplied Linux archive digest
+  a46a9ff7cdd720f7955854c78e95df13f4cfe6b80691b05f8654fe19e8267179.
+- Scope: this inventory job accepts no PR or artifact. It must really run, and
+  its executable and package digests must be pinned before the CI gate uses them.
+  Python distribution and wheel publisher authentication are not inferred from
+  merely observing installed bytes. The host image remains in the trusted base.
+- Pending: publish and run this workflow, inspect its actual result, and then
+  implement the PR workflow using the validated CI profile. No successful CI
+  installation or Stage 4 EXIT is claimed by this preparation entry.
+
+## U037 — Exact evidence reproduction now runs without path substitution
+
+- References: U034, U035.
+- Observed gap: a direct inspection returned exit 1 because the first snapshot
+  evidence used a candidate-checkout placeholder in reproduce_cmd. Repeated
+  identical-input tests had passed, but that did not establish literal replay.
+- Change: the gate saves exact candidate inputs in a content-addressed directory
+  under build/change-inputs/. Its saved command names that directory and creates
+  a fresh work directory automatically. Accepted evidence is published atomically.
+- Observed: the final python3 scripts/check_stage_4_local.py run exited 0 after
+  the gate and CI inventory files were finalized. It also executed the exact
+  saved reproduction command, which exited 0 and produced identical evidence.
+- Observed: all prior rejection controls still behaved as required. Raw failures
+  and intermediate results remain preserved; none were changed to passing codes.
+- Evidence: results/stage4-local.json records the literal command and its exit
+  code. results/stage4/source-evidence.json and results/stage4/apply-edit.dfy
+  archive the accepted local example. The local control script reconstructs
+  its inputs on a fresh checkout with the recorded toolchain.
+- Scope: this is local source-proof replay under the explicit cache assumptions.
+  It does not complete a real-PR EXIT or authorize a fee-spec change.

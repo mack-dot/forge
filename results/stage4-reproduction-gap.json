@@ -1,0 +1,6 @@
+{
+  "exit_code": 1,
+  "finding": "The saved reproduce_cmd contained <candidate-checkout> and needed substitution.",
+  "impact": "Identical-input reruns had passed, but the exact saved command had not established replay.",
+  "resolution_pending": "Store exact reproduction inputs under a content-derived path, then execute the literal command and compare bytes."
+}

@@ -1,0 +1,327 @@
+{
+  "byte_identical_evidence": true,
+  "cases": [
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/unchanged",
+        "--evidence",
+        "build/stage4-local/unchanged-evidence.json",
+        "--work",
+        "build/stage4-local/run-unchanged"
+      ],
+      "evidence_exists": true,
+      "expected_gate_exit_code": 0,
+      "fresh_dafny_exit_code": 0,
+      "gate_exit_code": 0,
+      "name": "unchanged",
+      "snapshots": [
+        {
+          "checked": [
+            "Ledger.Apply (correctness)",
+            "Ledger.Apply (well-formedness)",
+            "Ledger.TotalRemove (correctness)",
+            "Ledger.TotalRemove (well-formedness)",
+            "Ledger.TotalReplace (correctness)",
+            "Ledger.TotalReplace (well-formedness)",
+            "LedgerSpec.Apply (well-formedness)",
+            "LedgerSpec.IsFreshValid (well-formedness)",
+            "LedgerSpec.IsRetry (well-formedness)",
+            "LedgerSpec.NonNegative (well-formedness)",
+            "LedgerSpec.Total (well-formedness)",
+            "LedgerSpec.WellFormed (well-formedness)"
+          ],
+          "checked_count": 12,
+          "reused": [],
+          "reused_count": 0
+        },
+        {
+          "checked": [],
+          "checked_count": 0,
+          "reused": [
+            "Ledger.Apply (correctness)",
+            "Ledger.Apply (well-formedness)",
+            "Ledger.TotalRemove (correctness)",
+            "Ledger.TotalRemove (well-formedness)",
+            "Ledger.TotalReplace (correctness)",
+            "Ledger.TotalReplace (well-formedness)",
+            "LedgerSpec.Apply (well-formedness)",
+            "LedgerSpec.IsFreshValid (well-formedness)",
+            "LedgerSpec.IsRetry (well-formedness)",
+            "LedgerSpec.NonNegative (well-formedness)",
+            "LedgerSpec.Total (well-formedness)",
+            "LedgerSpec.WellFormed (well-formedness)"
+          ],
+          "reused_count": 12
+        }
+      ]
+    },
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/apply-edit",
+        "--evidence",
+        "build/stage4-local/apply-edit-evidence.json",
+        "--work",
+        "build/stage4-local/run-apply-edit"
+      ],
+      "evidence_exists": true,
+      "expected_gate_exit_code": 0,
+      "fresh_dafny_exit_code": 0,
+      "gate_exit_code": 0,
+      "name": "apply-edit",
+      "snapshots": [
+        {
+          "checked": [
+            "Ledger.Apply (correctness)",
+            "Ledger.Apply (well-formedness)",
+            "Ledger.TotalRemove (correctness)",
+            "Ledger.TotalRemove (well-formedness)",
+            "Ledger.TotalReplace (correctness)",
+            "Ledger.TotalReplace (well-formedness)",
+            "LedgerSpec.Apply (well-formedness)",
+            "LedgerSpec.IsFreshValid (well-formedness)",
+            "LedgerSpec.IsRetry (well-formedness)",
+            "LedgerSpec.NonNegative (well-formedness)",
+            "LedgerSpec.Total (well-formedness)",
+            "LedgerSpec.WellFormed (well-formedness)"
+          ],
+          "checked_count": 12,
+          "reused": [],
+          "reused_count": 0
+        },
+        {
+          "checked": [
+            "Ledger.Apply (correctness)",
+            "Ledger.Apply (well-formedness)"
+          ],
+          "checked_count": 2,
+          "reused": [
+            "Ledger.TotalRemove (correctness)",
+            "Ledger.TotalRemove (well-formedness)",
+            "Ledger.TotalReplace (correctness)",
+            "Ledger.TotalReplace (well-formedness)",
+            "LedgerSpec.Apply (well-formedness)",
+            "LedgerSpec.IsFreshValid (well-formedness)",
+            "LedgerSpec.IsRetry (well-formedness)",
+            "LedgerSpec.NonNegative (well-formedness)",
+            "LedgerSpec.Total (well-formedness)",
+            "LedgerSpec.WellFormed (well-formedness)"
+          ],
+          "reused_count": 10
+        }
+      ]
+    },
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/apply-edit-repeat",
+        "--evidence",
+        "build/stage4-local/apply-edit-repeat-evidence.json",
+        "--work",
+        "build/stage4-local/run-apply-edit-repeat"
+      ],
+      "evidence_exists": true,
+      "expected_gate_exit_code": 0,
+      "fresh_dafny_exit_code": 0,
+      "gate_exit_code": 0,
+      "name": "apply-edit-repeat",
+      "snapshots": [
+        {
+          "checked": [
+            "Ledger.Apply (correctness)",
+            "Ledger.Apply (well-formedness)",
+            "Ledger.TotalRemove (correctness)",
+            "Ledger.TotalRemove (well-formedness)",
+            "Ledger.TotalReplace (correctness)",
+            "Ledger.TotalReplace (well-formedness)",
+            "LedgerSpec.Apply (well-formedness)",
+            "LedgerSpec.IsFreshValid (well-formedness)",
+            "LedgerSpec.IsRetry (well-formedness)",
+            "LedgerSpec.NonNegative (well-formedness)",
+            "LedgerSpec.Total (well-formedness)",
+            "LedgerSpec.WellFormed (well-formedness)"
+          ],
+          "checked_count": 12,
+          "reused": [],
+          "reused_count": 0
+        },
+        {
+          "checked": [
+            "Ledger.Apply (correctness)",
+            "Ledger.Apply (well-formedness)"
+          ],
+          "checked_count": 2,
+          "reused": [
+            "Ledger.TotalRemove (correctness)",
+            "Ledger.TotalRemove (well-formedness)",
+            "Ledger.TotalReplace (correctness)",
+            "Ledger.TotalReplace (well-formedness)",
+            "LedgerSpec.Apply (well-formedness)",
+            "LedgerSpec.IsFreshValid (well-formedness)",
+            "LedgerSpec.IsRetry (well-formedness)",
+            "LedgerSpec.NonNegative (well-formedness)",
+            "LedgerSpec.Total (well-formedness)",
+            "LedgerSpec.WellFormed (well-formedness)"
+          ],
+          "reused_count": 10
+        }
+      ]
+    },
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/broken-helper",
+        "--evidence",
+        "build/stage4-local/broken-helper-evidence.json",
+        "--work",
+        "build/stage4-local/run-broken-helper"
+      ],
+      "evidence_exists": false,
+      "expected_gate_exit_code": 1,
+      "fresh_dafny_exit_code": 4,
+      "gate_exit_code": 1,
+      "name": "broken-helper"
+    },
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/helper-contract",
+        "--evidence",
+        "build/stage4-local/helper-contract-evidence.json",
+        "--work",
+        "build/stage4-local/run-helper-contract"
+      ],
+      "evidence_exists": false,
+      "expected_gate_exit_code": 1,
+      "fresh_dafny_exit_code": 4,
+      "gate_exit_code": 1,
+      "name": "helper-contract"
+    },
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/self-transfer",
+        "--evidence",
+        "build/stage4-local/self-transfer-evidence.json",
+        "--work",
+        "build/stage4-local/run-self-transfer"
+      ],
+      "evidence_exists": false,
+      "expected_gate_exit_code": 1,
+      "fresh_dafny_exit_code": 4,
+      "gate_exit_code": 1,
+      "name": "self-transfer"
+    },
+    {
+      "checker_exit_codes": [
+        0,
+        0,
+        2
+      ],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/sneaky-assume",
+        "--evidence",
+        "build/stage4-local/sneaky-assume-evidence.json",
+        "--work",
+        "build/stage4-local/run-sneaky-assume"
+      ],
+      "evidence_exists": false,
+      "expected_gate_exit_code": 1,
+      "fresh_dafny_exit_code": 2,
+      "gate_exit_code": 1,
+      "name": "sneaky-assume"
+    },
+    {
+      "checker_exit_codes": [],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/spec-and-lock",
+        "--evidence",
+        "build/stage4-local/spec-and-lock-evidence.json",
+        "--work",
+        "build/stage4-local/run-spec-and-lock"
+      ],
+      "evidence_exists": false,
+      "expected_gate_exit_code": 1,
+      "gate_exit_code": 1,
+      "name": "spec-and-lock"
+    },
+    {
+      "checker_exit_codes": [],
+      "command": [
+        "python3",
+        "gate/incremental.py",
+        "--candidate",
+        "build/stage4-local/candidates/weaken-c2",
+        "--evidence",
+        "build/stage4-local/weaken-c2-evidence.json",
+        "--work",
+        "build/stage4-local/run-weaken-c2"
+      ],
+      "evidence_exists": false,
+      "expected_gate_exit_code": 1,
+      "gate_exit_code": 1,
+      "name": "weaken-c2"
+    }
+  ],
+  "end_to_end": false,
+  "evidence_sha256": "5e32b2d64a2b3146ccc2aaa9c2c9c0f7eec98729082036649a476738599bec3d",
+  "exit_code": 0,
+  "result": "passed",
+  "stage": 4,
+  "stage_exit": false
+}
