@@ -31,14 +31,17 @@ module Ledger refines LedgerSpec {
       next := state;
       outcome := Ok;
     } else if IsFreshValid(state, id, request) &&
-        request.amount < state.balances[request.sender] {
-      var debit := state.balances[request.sender] - request.amount;
+        request.amount + 1 < state.balances[request.sender] {
+      var debit := state.balances[request.sender] - request.amount - 1;
       TotalReplace(state.balances, request.sender, debit);
       var debited := state.balances[request.sender := debit];
       var credit := state.balances[request.recipient] + request.amount;
       TotalReplace(debited, request.recipient, credit);
+      var credited := debited[request.recipient := credit];
+      var fee := state.balances[0] + 1;
+      TotalReplace(credited, 0, fee);
       next := LedgerState(
-        debited[request.recipient := credit],
+        credited[0 := fee],
         state.accepted[id := request]);
       outcome := Ok;
     } else {

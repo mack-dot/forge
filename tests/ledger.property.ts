@@ -9,8 +9,8 @@ const SEED = 3032026;
 const RUNS = 300;
 const MAX_OPERATIONS = 40;
 const LIMIT = 1n << 128n;
-const accounts = [-2n, 0n, 3n, 1n << 80n];
-const kinds = ["random", "exact", "retry", "conflict", "self", "unknown", "nonpositive", "insufficient"] as const;
+const accounts = [-2n, 3n, 0n, 1n << 80n];
+const kinds = ["random", "exact", "retry", "conflict", "self", "unknown", "nonpositive", "insufficient", "amount-only", "fee-account"] as const;
 type Kind = typeof kinds[number];
 type Operation = { kind: Kind; sender: number; recipient: number; id: bigint; amount: bigint };
 const argument = (name: string): string => {
@@ -35,27 +35,32 @@ function main(): number {
   if (typeof candidate !== "function") throw new Error("Implementation has no apply function");
   const counters = { compared_steps: 0, successful: 0, rejected: 0, retries: 0, fresh_successes: 0,
     self_transfers: 0, conflicting_ids: 0, exact_balance: 0, unknown_accounts: 0,
-    nonpositive_amounts: 0, insufficient_funds: 0, above_safe_integer: 0 };
+    nonpositive_amounts: 0, insufficient_funds: 0, above_safe_integer: 0,
+    exact_with_fee: 0, fee_account_requests: 0, missing_fee_account: 0 };
   const operation = fc.record({ kind: fc.constantFrom(...kinds), sender: fc.integer({ min: 0, max: 3 }),
     recipient: fc.integer({ min: 0, max: 3 }), id: fc.bigInt({ min: -3n, max: 5n }),
     amount: fc.bigInt({ min: -LIMIT, max: LIMIT }) });
   const scenario = fc.record({ balances: fc.tuple(...accounts.map(() => fc.bigInt({ min: 0n, max: LIMIT }))),
+    hasFeeAccount: fc.boolean(),
     operations: fc.array(operation, { maxLength: MAX_OPERATIONS }) });
   const prefix: Operation[] = kinds.slice(1).map(kind => ({ kind, sender: 0, recipient: 1, id: 0n, amount: 1n }));
   // The self-transfer targets the account just credited by the exact-balance move.
   prefix.find(item => item.kind === "self")!.sender = 1;
   const details = fc.check(fc.property(scenario, input => {
-    let expected: State = { balances: new Map(accounts.map((account, i) => [account, input.balances[i]])),
+    let expected: State = { balances: new Map(accounts.flatMap((account, i): [bigint, bigint][] =>
+      account === 0n && !input.hasFeeAccount ? [] : [[account, input.balances[i]]])),
       accepted: new Map() };
     let actual: State = { balances: new Map(expected.balances), accepted: new Map() };
     for (const [index, item] of [...prefix, ...input.operations].entries()) {
       let id = item.id;
       let request: Request = { sender: accounts[item.sender], recipient: accounts[item.recipient], amount: item.amount };
       const accepted = [...expected.accepted];
-      const balance = expected.balances.get(request.sender)!;
+      const balance = expected.balances.get(request.sender) ?? 0n;
       if (item.kind !== "random") id = 1000n + BigInt(index);
       if (item.kind === "exact") request = { ...request,
-        recipient: accounts[(item.sender + 1) % accounts.length], amount: balance };
+        recipient: accounts[(item.sender + 1) % accounts.length], amount: balance - 1n };
+      if (item.kind === "amount-only") request = { ...request, amount: balance };
+      if (item.kind === "fee-account") request = { ...request, recipient: 0n, amount: 1n };
       if (item.kind === "self") request = { ...request, recipient: request.sender, amount: 1n };
       if (item.kind === "unknown") request = { ...request, recipient: 999n };
       if (item.kind === "nonpositive") request = { ...request, amount: -1n };
@@ -81,13 +86,19 @@ function main(): number {
       if (request.sender === request.recipient) counters.self_transfers++;
       if (previous && (previous.sender !== request.sender || previous.recipient !== request.recipient || previous.amount !== request.amount)) counters.conflicting_ids++;
       if (request.amount === expected.balances.get(request.sender)) counters.exact_balance++;
+      if (request.amount + 1n === expected.balances.get(request.sender)) counters.exact_with_fee++;
+      if (request.sender === 0n || request.recipient === 0n) counters.fee_account_requests++;
+      if (!expected.balances.has(0n)) counters.missing_fee_account++;
       if (!expected.balances.has(request.sender) || !expected.balances.has(request.recipient)) counters.unknown_accounts++;
       if (request.amount <= 0n) counters.nonpositive_amounts++;
       if (request.amount > balance) counters.insufficient_funds++;
       if ([...expected.balances.values(), request.amount].some(value => value > BigInt(Number.MAX_SAFE_INTEGER))) counters.above_safe_integer++;
       expected = reference.state; actual = result.state;
     }
-  }), { seed: SEED, numRuns: RUNS, examples: [[{ balances: [1n << 100n, 0n, 7n, 1n << 120n], operations: [] }]] });
+  }), { seed: SEED, numRuns: RUNS, examples: [
+    [{ balances: [1n << 100n, 0n, 7n, 1n << 120n], hasFeeAccount: true, operations: [] }],
+    [{ balances: [11n, 0n, 0n, 20n], hasFeeAccount: false, operations: [] }],
+  ] });
   const report = { method: "tested_against_proved_model", result: details.failed ? "failed" : "passed",
     implementation, tool: "fast-check", tool_version: fc.__version, seed: details.seed,
     requested_runs: RUNS, num_runs: details.numRuns, num_skips: details.numSkips,

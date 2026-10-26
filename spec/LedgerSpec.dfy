@@ -1,4 +1,5 @@
 abstract module LedgerSpec {
+  // Each fresh transfer pays one unit to fee account 0.
   datatype Request = TransferRequest(sender: int, recipient: int, amount: int)
   datatype Outcome = Ok | Rejected
   datatype State = LedgerState(
@@ -36,7 +37,11 @@ abstract module LedgerSpec {
     request.sender in state.balances &&
     request.recipient in state.balances &&
     request.sender != request.recipient &&
-    0 < request.amount <= state.balances[request.sender]
+    0 in state.balances &&
+    request.sender != 0 &&
+    request.recipient != 0 &&
+    0 < request.amount &&
+    request.amount + 1 <= state.balances[request.sender]
   }
 
   method Apply(state: State, id: int, request: Request)
@@ -51,13 +56,14 @@ abstract module LedgerSpec {
     // C3: accepted retries return Ok and do not repeat the effect.
     ensures IsRetry(state, id, request) ==>
       outcome == Ok && next == state
-    // C4: a valid new request succeeds with the exact debit and credit.
+    // C4: a valid new request succeeds with exact debit, credit, and fee.
     ensures IsFreshValid(state, id, request) ==>
       outcome == Ok &&
       next.balances ==
         state.balances[
-          request.sender := state.balances[request.sender] - request.amount][
-          request.recipient := state.balances[request.recipient] + request.amount] &&
+          request.sender := state.balances[request.sender] - request.amount - 1][
+          request.recipient := state.balances[request.recipient] + request.amount][
+          0 := state.balances[0] + 1] &&
       next.accepted == state.accepted[id := request]
     // C5: every other request is rejected with no state change.
     ensures (!IsRetry(state, id, request) && !IsFreshValid(state, id, request)) ==>
