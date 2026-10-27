@@ -1,0 +1,14 @@
+{
+  "all_stage8_exits": "NOT RUN",
+  "command": [
+    "git",
+    "apply",
+    "--check",
+    "proposals/refund-gate/protected.diff"
+  ],
+  "existing_protected_files_unchanged": true,
+  "exit_code": 0,
+  "only_approved_contract_additions_applied": true,
+  "patch_applied": false,
+  "patch_sha256": "e957da8b4af6a4f3df44d615b2e69eab1360569a7a11bbfa7c4dba430c70ab66"
+}

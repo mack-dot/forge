@@ -1,0 +1,32 @@
+{
+  "approved_contract_changes": false,
+  "base_commit": "e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+  "changes": [
+    {
+      "bytes": 18476,
+      "candidate": "proposals/refund-gate/refund.py",
+      "operation": "add",
+      "sha256": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb",
+      "target": "gate/refund.py"
+    },
+    {
+      "bytes": 2084,
+      "candidate": "proposals/refund-gate/Bindings.dfy",
+      "operation": "add",
+      "sha256": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+      "target": "gate/refund/Bindings.dfy"
+    },
+    {
+      "bytes": 15148,
+      "candidate": "proposals/refund-gate/hostile.ts",
+      "operation": "add",
+      "sha256": "cc3db1659761d16bb123fd984ec84ece6b58c6ec1eebe925602a9f8122987dea",
+      "target": "gate/refund/hostile.ts"
+    }
+  ],
+  "end_to_end": false,
+  "existing_protected_files_changed": false,
+  "patch_sha256": "e957da8b4af6a4f3df44d615b2e69eab1360569a7a11bbfa7c4dba430c70ab66",
+  "real_refunds_authorized": false,
+  "status": "pending_human_approval"
+}

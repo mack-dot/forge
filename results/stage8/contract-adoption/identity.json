@@ -1,0 +1,75 @@
+{
+  "approved_commit": "e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+  "approved_tree": "2f02e0e921387be548ba4226d8f69744b7de493d",
+  "changes": [
+    {
+      "bytes": 3029,
+      "candidate": "proposals/refund/RefundSpec.dfy",
+      "operation": "add",
+      "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+      "target": "spec/refund/RefundSpec.dfy"
+    },
+    {
+      "bytes": 8110,
+      "candidate": "proposals/refund/protocol.md",
+      "operation": "add",
+      "sha256": "5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4",
+      "target": "spec/refund/protocol.md"
+    },
+    {
+      "bytes": 605,
+      "candidate": "proposals/refund/spec.lock",
+      "operation": "add",
+      "sha256": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57",
+      "target": "spec/refund/spec.lock"
+    },
+    {
+      "bytes": 1668,
+      "candidate": "proposals/refund/refund-policy.yaml",
+      "operation": "add",
+      "sha256": "4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83",
+      "target": "policy/refund.yaml"
+    }
+  ],
+  "checks": "Git blob identities match approved public tree; candidates and patch match manifest; all targets absent",
+  "end_to_end": false,
+  "existing_protected_unchanged": true,
+  "manifest_sha256": "72b8087c84cd06f058d2a634cf5666e8b5333f34374220d5bd8d941ede2653a8",
+  "protected_before": {
+    "gate/ContractBinding.dfy": "da994efac59d9a4a7fd384c710f657002891298cf61beb459a98b85b1d32d4cc",
+    "gate/README.md": "4d68715188cd0e2e039d77490acee7bb7065f4e029eeb9075b401ecca887a704",
+    "gate/__pycache__/common.cpython-310.pyc": "e45700ce17ae31d41e32ffc34967ba7ab761d4b2e6012f9a3249163525e7c02d",
+    "gate/__pycache__/core.cpython-310.pyc": "ffca100a442dadcdf70ecfad84be1158d724cfa3b7f352f2714f9a4f3370f829",
+    "gate/__pycache__/dependencies.cpython-310.pyc": "f70968e57d33b2d8607aa16ed4d86b7b1136a7fd3f4c0a60123bc9336c8a4f3e",
+    "gate/__pycache__/gate.cpython-310.pyc": "1505ba5e99ef0d4800b8f17b25e16e71bb9e10a06362ccacde5bb275ed7de58d",
+    "gate/__pycache__/incremental.cpython-310.pyc": "7e3522490045ae6402fd175ce46688a755f99124fac47cb2676faa9986855041",
+    "gate/approval.py": "8eedbadd24c16e2e3cc01fcec7c0deae9e4bfcf5a7c27412b5bf9d7b90cd08bc",
+    "gate/approvals/fees-v2.json": "71320a658a8007846b14dcb94055697fb8927d768cedc0e1cccac2ac5f7d272a",
+    "gate/backends/__init__.py": "4f797ea3cb64ee52910fe9b9132a90b39f5144ed749e6a866098f422837f8fda",
+    "gate/backends/__pycache__/__init__.cpython-310.pyc": "a24eab0c3551b27c1288445b60392fe63e70a3e9a96eb3da02bf74493edeab40",
+    "gate/backends/__pycache__/dafny.cpython-310.pyc": "f6a05c4d07629219749e8093ebb5e8d924d7f12a97318aae643b2a403405a6b3",
+    "gate/backends/__pycache__/typescript.cpython-310.pyc": "58912817173a8e0fe983f119f87e1bda64d0b183c33d0be2b30125b9f3f177cd",
+    "gate/backends/dafny.py": "ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe",
+    "gate/backends/typescript.py": "fb0bf52d278f8b9854284a3ac29f3b3e11d3c3d31a1285951b8ae9760d471d6c",
+    "gate/booking-coverage.json": "916f46110171d54713c9040be8bb69125e2d9b7315c159d59147115c09091036",
+    "gate/booking.py": "cd7ec962a978ce468f1152b2fb146d5e3262d27f6128017247c50d558a67eb1a",
+    "gate/common.py": "06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988",
+    "gate/core.py": "bf8f0a54a149c052f179e0f8754671b6b5e6f9085c17d1bdbd4a31f01dd00013",
+    "gate/dependencies.py": "df8e9dafebdb87c596e4ddae8c715d93ebf7268f60f27837dd84955a5f5b11af",
+    "gate/expected-audit.md": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae",
+    "gate/gate.py": "46ab9852c2bfdb21113cdab6717df4cf960af10864357774d3058405f5655ab8",
+    "gate/incremental.py": "486456f8d190366c677e3a6f71680878d1d0ec2fd96dd3c629a7a5bffa624d73",
+    "gate/post_pr_report.py": "afe7b82120f04c4430a4c8f94e1ea544f764ae4468f7b37048ca7abdd4a207c5",
+    "gate/pr_check.py": "ff2f50b4943163ae8131c2dfba2e8af31596201ce8b98aee79e560e1e8d3ace3",
+    "policy/booking.yaml": "1cb757827269d3891c68055e568d5d315398a7ddbfc5e81fb88dae1146489ab6",
+    "policy/tiers.yaml": "6630ed763d6811e14c3c726429ba2c64ead78d57f323c5db10d6aeeca8715629",
+    "spec.lock": "32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69",
+    "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+    "spec/booking/BookingSpec.dfy": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319",
+    "spec/booking/spec.lock": "c6ff76b98ef844d08e4255938414477d21c2be2dcb7e83ae7d8165c05061b88e"
+  },
+  "source_proof_executed": false,
+  "stage8_exit_commands": "NOT RUN",
+  "unsure_prefix_bytes": 96318,
+  "unsure_prefix_sha256": "60bb4655b124c7c761ff8a5eb269707c2fdc6ae456fa5eaa3393e92f37283116"
+}

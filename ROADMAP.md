@@ -10,8 +10,10 @@ byte. Stage 7's upstream replay, negative control, and own-binary EXIT each
 returned 0. The exact 1,240-byte C self-test has a normal-termination proof and
 a valid-entry witness. Independent checking covered 579 modules; all 86 closure
 assumptions are permitted. Final source and ELF identities match. Stage 8 is
-CURRENT. Its exact refund contract proposal awaits human approval; no Stage 8
-implementation or EXIT has started. `end_to_end=false`.
+CURRENT. Its four exact refund contract additions are approved and adopted.
+The wrapper and proposed binding passed direct development verification. Three
+new gate additions await separate exact approval; no Stage 8 EXIT has run.
+`end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
 The long-term horizon and irreducible limits live in [VISION.md](VISION.md).
@@ -926,7 +928,7 @@ Completed own-binary proof:
 
 ### Stage 8 — ML BOUNDARY
 
-**Status: CURRENT — exact refund contract awaits human approval**
+**Status: CURRENT — contract adopted; exact gate additions await approval**
 
 Wrap an LLM-backed refund suggester in verified code. Enforce refund ≤ charge,
 allowed reasons, and a safe fallback for timeout or invalid output. Treat model
@@ -947,7 +949,7 @@ Record fuzz seeds, counts, and limits. Do not turn “no violations observed” 
 a universal proof. Keep application timeout behavior distinct from proof-run
 resource limits.
 
-Stage 8 contract preparation (not EXIT results):
+Historical Stage 8 contract preparation (not EXIT results; resolved below):
 
 - The user requires universal safety **and** exact acceptance of every valid
   proposal. Fallback must preserve the absence of refund side effects.
@@ -974,6 +976,50 @@ Stage 8 contract preparation (not EXIT results):
   All three EXIT commands remain NOT RUN. See append-only U070.
 - Stop for exact human contract approval. Stage 8 remains CURRENT;
   `end_to_end=false`. No Stage 9 work has started.
+
+Stage 8 contract adoption and gate preparation (not EXIT results):
+
+- The user approved exactly the four additions at published revision
+  `e3aa546f86dc5b43ec8c754792e3db4cb413b410`, bound to its manifest and digests.
+  The approval excludes real refunds and unspecified gate changes. See
+  [proposals/refund-decision.md](proposals/refund-decision.md).
+- The published Git tree, candidate blob identities, manifest and patch hashes
+  matched. All four target paths were absent. Their exact approved bytes are
+  now installed. All existing protected files remain unchanged. Identity
+  records: [contract adoption](results/stage8/contract-adoption/identity.json).
+- `impl/Refund.dfy` implements the approved pure boundary. The direct checks
+  below used the real pinned toolchain. The proposed binding covers arbitrary
+  inputs with no preconditions and includes an eligible successful witness.
+  These results do not complete the protected gate or any Stage 8 EXIT.
+- [proposals/refund-gate.md](proposals/refund-gate.md) proposes exactly three
+  gate additions, with their complete diff and digest manifest. None is applied.
+  They preserve fresh full verification, empty audits, source identities,
+  resource limits, and distinct source-proof and property-test methods.
+
+| Development/review command | Actual exit code | Actual result |
+| --- | --- | --- |
+| `.toolchain/dafny-4.11.0/dafny/dafny --version` | 0 | Expected pinned build. |
+| `.toolchain/dafny-4.11.0/dafny/dafny verify impl/Refund.dfy proposals/refund-gate/Bindings.dfy` plus pinned options and TRX output | 0 | All six required source, contract, universal-binding and witness obligations passed. |
+| `.toolchain/dafny-4.11.0/dafny/dafny audit impl/Refund.dfy proposals/refund-gate/Bindings.dfy` with empty-report comparison | 0 | Zero reported findings. |
+| `.toolchain/dafny-4.11.0/dafny/dafny build impl/Refund.dfy --target js --output build/refund-proposal/model` plus pinned options | 0 | Real generated JavaScript; four source obligations verified during build. |
+| `node node_modules/typescript/bin/tsc` on the proposed hostile suite, with strict no-emit options | 2, then 0 | TS2769 tuple-type error retained; corrected type declaration passed. No hostile cases executed. |
+| `git apply --check proposals/refund-gate/protected.diff` | 0 | Complete three-addition patch is applicable; not applied. |
+
+Exact argv, input digests, before/after identities, complete outputs, TRX, generated
+JavaScript, and the failed static-check source snapshot are retained in
+[results/stage8/gate-proposal](results/stage8/gate-proposal/). The Python candidate
+parsed successfully with the standard AST parser. Python, validator packages,
+Node and installed package content matched their existing pins.
+
+The new protected gate has not executed. The runtime adapter and EXIT harness
+remain unimplemented. Negative controls, hostile cases, canonical accepted
+evidence reproduction, and model evaluation have not run. The planned 9,000
+generated cases are not actual coverage. Model quality is unmeasured. All three
+EXIT commands above remain NOT RUN. No Stage 8 accepted bundle is published.
+
+Stop for separate exact approval of the three proposed gate additions, as the
+latest user instruction requires. See append-only U071. Stage 8 remains CURRENT;
+`end_to_end=false`. Stage 9 has not started.
 
 ### Stage 9 — PROVENANCE
 
@@ -1108,8 +1154,10 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
   authenticated. Their checked versions and executable hashes are pinned. Keep
   the disclosed trust assumptions in `toolchain/pins.json` and `unsure.md` U015.
 - Stage 8 is CURRENT after the completed Stage 7 binary proofs. Its wrapper
-  specification and implementation have not started. Deployment correctness
-  remains unproved; `end_to_end=false`. Prior measurements retain their limits.
+  contract is approved and adopted. The wrapper has passed direct development
+  verification; the exact new gate additions await separate approval. All
+  Stage 8 EXITs remain NOT RUN. Deployment correctness remains unproved;
+  `end_to_end=false`. Prior measurements retain their limits.
 - Publication: the user created [mack-dot/forge](https://github.com/mack-dot/forge).
   The connected app confirms public visibility, the mack-dot owner, and push
   access. The earlier 404/creation blocker is resolved. Publication uses that

@@ -1,0 +1,90 @@
+{
+  "after_sha256": {
+    "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+    "proposals/refund-gate/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+    "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+    "toolchain/pins.json": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c"
+  },
+  "commands": [
+    {
+      "argv": [
+        ".toolchain/dafny-4.11.0/dafny/dafny",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "results/stage8/gate-proposal/attempt-0001/command-1.log",
+      "log_sha256": "2e4243de9dcb2a6464f6e6e20031511043025167bf72bf67a6bdf0de213717ef"
+    },
+    {
+      "argv": [
+        ".toolchain/dafny-4.11.0/dafny/dafny",
+        "verify",
+        "impl/Refund.dfy",
+        "proposals/refund-gate/Bindings.dfy",
+        "--solver-path",
+        ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+        "--resource-limit",
+        "1000000",
+        "--verification-time-limit",
+        "0",
+        "--cores",
+        "1",
+        "--verify-included-files",
+        "--json-output",
+        "--log-format",
+        "trx;LogFileName=/Users/mackianni/forge/results/stage8/gate-proposal/attempt-0001/verification.trx"
+      ],
+      "exit_code": 0,
+      "log": "results/stage8/gate-proposal/attempt-0001/command-2.log",
+      "log_sha256": "ac3f853aa7cbc7009b1cc0a4833ee450fdf233ca0f752f19c873ea1db8c2f956"
+    },
+    {
+      "argv": [
+        ".toolchain/dafny-4.11.0/dafny/dafny",
+        "audit",
+        "impl/Refund.dfy",
+        "proposals/refund-gate/Bindings.dfy",
+        "--report-format",
+        "md",
+        "--report-file",
+        "/Users/mackianni/forge/results/stage8/gate-proposal/attempt-0001/audit.md",
+        "--compare-report"
+      ],
+      "exit_code": 0,
+      "log": "results/stage8/gate-proposal/attempt-0001/audit.log",
+      "log_sha256": "c40b7394c6b9c33baae94cdd718de528c1db1ce60d663d1601a016c2aa00d9ed"
+    },
+    {
+      "argv": [
+        ".toolchain/dafny-4.11.0/dafny/dafny",
+        "build",
+        "impl/Refund.dfy",
+        "--target",
+        "js",
+        "--output",
+        "build/refund-proposal/model",
+        "--solver-path",
+        ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+        "--resource-limit",
+        "1000000",
+        "--verification-time-limit",
+        "0",
+        "--cores",
+        "1",
+        "--verify-included-files"
+      ],
+      "exit_code": 0,
+      "log": "results/stage8/gate-proposal/attempt-0001/build.log",
+      "log_sha256": "5a85d064fb0f77424cdbc9152b314adb2489c99bc1ced2177cad5955d588c71c"
+    }
+  ],
+  "end_to_end": false,
+  "gate_applied": false,
+  "input_sha256": {
+    "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+    "proposals/refund-gate/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+    "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+    "toolchain/pins.json": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c"
+  },
+  "stage8_exit": "NOT RUN"
+}

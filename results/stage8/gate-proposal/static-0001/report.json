@@ -1,0 +1,28 @@
+{
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--strict",
+    "--target",
+    "ES2022",
+    "--module",
+    "Node16",
+    "--moduleResolution",
+    "Node16",
+    "--esModuleInterop",
+    "--types",
+    "node",
+    "proposals/refund-gate/hostile.ts"
+  ],
+  "exit_code": 2,
+  "gate_applied": false,
+  "input_sha256": {
+    "proposals/refund-gate/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+    "proposals/refund-gate/hostile.ts": "27f4371c6b607b49bad6de0e1cd474a26b1ba0eca6793b434c979daa93e03a5a",
+    "proposals/refund-gate/refund.py": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb"
+  },
+  "python_ast_parse": "passed",
+  "stage8_exits": "NOT RUN",
+  "tests_executed": false
+}
