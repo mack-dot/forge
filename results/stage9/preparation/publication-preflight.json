@@ -1,0 +1,17 @@
+{
+  "acceptance_requirements_changed": false,
+  "diagnostic_probe": {
+    "actual_exec_exit_code": 0,
+    "command": "python3 -c read characters 0:55000 of /private/tmp/forge-stage9-publish.json",
+    "original_token_count": 13750,
+    "returned_characters": 55000
+  },
+  "end_to_end": false,
+  "failed_orchestration_attempt": {
+    "operation": "load_local_publication_payload",
+    "reason": "The orchestration guard treated a present original_token_count field as truncation. Presence alone does not indicate truncation. No GitHub mutation occurred.",
+    "stage9_exit_command": false
+  },
+  "repair": "Require actual exit code 0 and exact expected character count before decoding JSON.",
+  "scope": "publication_transport_only"
+}

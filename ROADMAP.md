@@ -14,7 +14,8 @@ wrapper-proof, hostile-outputs and evidence-separation EXITs each returned 0.
 The exact approved snapshot repair retains field and prototype mutation
 rejection. Source and property-test evidence each reproduced byte for byte
 through fresh checks. All failures remain archived. Stage 9 is CURRENT;
-no Stage 9 implementation has started.
+the exact provenance trust proposal awaits human approval. No Stage 9 gate,
+signing workflow, signature verification or deployment has started.
 `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
@@ -1128,7 +1129,7 @@ verify this checkpoint, then stop. No Stage 9 implementation has started.
 
 ### Stage 9 — PROVENANCE
 
-**Status: CURRENT**
+**Status: CURRENT — blocked on exact provenance-contract approval**
 
 Sign evidence bundles using pinned sigstore/in-toto tooling. Before allowing a
 deployment, verify the signer identity, artifact digest, and policy version.
@@ -1147,6 +1148,30 @@ envelopes and external transparency records, which may contain time metadata.
 
 Run the established signature verifier for the actual accept/reject decision.
 Signing an unsupported claim does not make it established.
+
+#### Current preparation and approval boundary
+
+The published Stage 8 base is `80a65d46b1dbc8f3ccfd249bfd628568406c5774`.
+[proposals/provenance.md](proposals/provenance.md) contains the exact proposed
+contract, policy and identity-lock additions, complete patch and file digests.
+No protected changes have been applied. The user requires exact approval before
+changing this trust boundary. The proposal names one GitHub Actions signer,
+pinned Cosign 3.1.4, Sigstore public TUF trust, both existing binary claims,
+fresh full kernel replay, strict evidence methods, request freshness and actual
+container filesystem observation. Its deployment claim is file identity at
+observation time; it does not claim RISC-V execution or deployment correctness.
+An exact release-gate/workflow implementation requires separate approval.
+
+| Preparation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `python3 proposals/provenance/check_proposal.py` | 0 | Proposal integrity only: three unapplied additions, 47 locked existing files, unchanged complete module/assumption lists. |
+| `git apply --check /Users/mackianni/forge/proposals/provenance/protected.diff` | 0 | Patch applicability only; no application. |
+
+These are not Stage 9 EXIT results. All six required EXIT commands remain NOT
+RUN. Cosign was not installed or executed. No signature or deployment was made.
+Preparation logs and identity snapshots are under `results/stage9/preparation/`.
+All 30 existing protected files and all old Stage 7–8 records remain unchanged.
+See U074. `end_to_end=false`.
 
 ### Stage 10 — SHADOW MODE
 

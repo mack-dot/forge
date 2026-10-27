@@ -1,0 +1,1335 @@
+diff --git a/spec/provenance/protocol.md b/spec/provenance/protocol.md
+new file mode 100644
+--- /dev/null
++++ b/spec/provenance/protocol.md
+@@ -0,0 +1,228 @@
++# Forge Stage 9 provenance contract, version 1.0.0
++
++## Scope and activation
++
++This contract governs one research release of the exact Stage 7 C self-test ELF.
++It adds provenance and observed deployed-file identity. It does not add a proof
++method, authorize production deployment, execute payments, or establish whole
++application correctness. Every canonical result has `end_to_end=false`.
++
++The associated policy is `policy/provenance.json`. Its identifier is
++`forge-stage9-provenance`, version `1.0.0`, epoch `1`. The lock is
++`spec/provenance/spec.lock`. A release verifier uses its independently installed,
++approved policy and lock. Candidate bundles cannot supply replacement trust.
++
++This contract alone cannot authorize a release. An exact, separately approved
++`gate/provenance/implementation.lock` must bind every executable acceptance and
++signing input, including workflow bytes, helper code, schemas, container and
++action pins, deployment observer, and dependency locks. Missing approval or any
++missing/mismatched input is rejection. Approval of this contract does not approve
++future gate code, workflows, or an implementation lock with unspecified bytes.
++
++## Authorized signer and root of trust
++
++The sole positive signer is the GitHub Actions workload identity:
++
++`https://github.com/mack-dot/forge/.github/workflows/provenance.yml@refs/heads/main`
++
++The OIDC issuer is exactly `https://token.actions.githubusercontent.com`.
++The repository is `mack-dot/forge`, repository ID `1434789853`, owner ID
++`235131950`. The event is `workflow_dispatch`; the ref is `refs/heads/main`.
++No wildcard identities, local agent keys, alternate issuers, forks, pull-request
++jobs, or user-entered certificate identities are authorized.
++
++Cosign must authenticate the issuer, certificate identity, workflow repository,
++ref, event and exact workflow commit. The expected commit comes from a trusted
++release request, not from the candidate attestation. The verifier retrieves the
++workflow and its entire approved executable input set at that authenticated
++commit and checks them against the separately approved implementation lock.
++An approved workflow path at an unapproved revision is insufficient. The GitHub
++repository/owner IDs must also match authenticated GitHub API metadata; these
++API checks are a distinct HTTPS/GitHub trust assumption, not a claim that Cosign
++checks numeric IDs. Unknown identity fields or absent required checks reject.
++
++The producer has `contents: read` and `id-token: write` only where needed. It
++does not check out or execute candidate-controlled workflow code. It runs the
++approved checkers in an isolated job with pinned tools. Signing occurs only
++after actual checks pass for the exact bytes to be signed. The OIDC token and
++ephemeral signing key must not enter logs or published evidence. The public
++certificate, signature and transparency records are published.
++
++Cosign is version 3.1.4, with executable hashes in the policy. Its embedded
++Sigstore public-good TUF bootstrap is the initial trust anchor. Its established
++TUF client must authenticate updates, versions and expiration using a trusted
++clock. TUF-authorized root rotation is explicitly within this trust delegation.
++Archive the actual validated root, target and metadata bytes and their hashes
++for each run. Neither a candidate-supplied root nor a silently substituted local
++root is trusted. Environment overrides and insecure verification flags reject.
++
++Require certificate-chain verification, certificate transparency verification,
++Rekor inclusion verification and authenticated signing time. A certificate must
++be valid at the authenticated signing time. An expired leaf certificate does
++not, by itself, invalidate a historical signature. Historical authenticity does
++not authorize a fresh release. Current release checks also require current TUF
++validation and the freshness rules below. Historical offline verification is
++reported separately and cannot substitute for a fresh release decision.
++
++Trust includes GitHub account/workflow controls, GitHub OIDC and API services,
++Sigstore Fulcio, CT and Rekor services, TUF threshold authorities, the pinned
++Cosign build/distribution, HTTPS bootstrap, the release controller, its clock
++and state, isolation of the checker job, and host OS/hardware. A compromised
++authorized producer can sign lies; a signature alone does not prove a theorem.
++
++## Claims and independent proof requirements
++
++The only release artifact is the 1,240-byte ELF with SHA-256
++`8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6`.
++Its locked Stage 7 evidence contains two required claims:
++
++- `S7-OWN-TERMINATION`: every valid modeled input and entry of this fixed-input
++  ELF terminates normally with status 0 under the pinned LPS `may_fail` model.
++- `S7-OWN-VALID-EXECUTION`: a genuine valid input and entry exists, and all valid
++  executions from it terminate normally with status 0 in that model.
++
++Both require `kernel_checked_proof`. No other evidence method is a substitute.
++The exact statements, proof sources, executable, build provenance, input
++identities, toolchain and complete assumption audit are locked. Retain the full
++13 assumptions for each theorem and 86 permitted assumptions in the independent
++closure. Counts are descriptive; equality of names and identities is required.
++Do not enlarge an allowlist or omit dependencies to obtain acceptance.
++
++Before signing, the approved producer must freshly execute real proof
++compilation, theorem/witness binding checks, independent `rocqchk` over the
++complete dependency closure, and the final assumption audit. This is a Stage 9
++replay of the accepted Stage 7 result, not a new theorem or a completed result
++in advance. Check ELF and source identities before and after. Record commands,
++codes, all output, dependency membership and digests. Reusing compiled inputs
++does not count as fresh kernel execution. A `passed` field or a historical log
++alone never satisfies this producer requirement. The release verifier freshly
++verifies the actual signature and enforces this approved producer and proof
++receipt policy; it does not pretend to run a kernel if it only verifies a receipt.
++Independent replay remains possible from the archived exact inputs.
++
++The model and primitive assumptions remain those in the locked Stage 7 audit:
++Rocq 9.2.0, the published ELF loader and pinned RISC-V/LPS execution model,
++valid-input/entry restrictions, single-thread execution, no external interference,
++and the recorded allocation/environment limits. Compiler correctness, general
++GCD correctness, physical model fidelity and whole-service behavior stay unproved.
++
++Locked Stage 8 source and property evidence are supplementary only. Preserve
++`source_proof` for R1–R5 and `property_tested` for T1–T3. Model recommendation
++quality remains unmeasured. Neither Stage 8 artifact authorizes this ELF or
++converts a refund-source claim into a binary or deployment claim.
++
++## Signed statement and deterministic evidence
++
++Use the established in-toto Statement v1 and Sigstore DSSE bundle formats.
++The statement type is `https://in-toto.io/Statement/v1`; the predicate type is
++`https://github.com/mack-dot/forge/attestations/provenance/v1`.
++Use pinned Cosign `attest-blob` and `verify-blob-attestation`; do not implement
++cryptography, signature validation, certificate validation, or proof semantics.
++
++The statement must bind the exact ELF subject and the packaged image subject
++with SHA-256 digests. The predicate binds the claim IDs and required methods,
++the exact existing proof evidence and audit, fresh proof-replay receipts, all
++specification hashes, policy ID/version/epoch/hash, contract and lock hashes,
++implementation-lock hash, dependency/toolchain identities, source revision,
++build and packaging commands, package-to-ELF mapping, and a trusted release
++request. All referenced bytes are available and hash-checked. No digest is
++accepted merely because it occurs in a signed JSON document.
++
++Canonical JSON uses sorted keys, compact separators, ASCII escaping and one
++final newline. Reject duplicate keys, non-finite numbers and ambiguous fields.
++Canonical evidence is a separate file. The signed statement is a provenance
++envelope input and may bind external request and execution-receipt digests.
++Canonical evidence excludes timestamps, certificates, signatures, log entries,
++random deployment IDs and resource timings. Archive those external records and
++fresh-execution receipts separately. Reproduction compares canonical evidence
++for identical explicit inputs; it does not demand identical signatures or
++identical network metadata. Changes to an explicitly bound input change the
++corresponding digest. Existing Stage 7–8 canonical files remain unchanged.
++
++## Freshness and release authorization
++
++The trusted release controller supplies the expected source commit, exact
++artifact/package hashes, approved policy version/epoch/hash, implementation-lock
++hash and a fresh 256-bit challenge. The controller stores the pending challenge
++and consumes it atomically at admission. It never takes expected values from
++the candidate it is deciding upon. The signed release request binds these
++values and the canonical-evidence digest. It is external request metadata;
++the deterministic proof evidence does not gain random fields or timestamps.
++
++A stale policy, old specification, substituted evidence, wrong expected commit,
++unknown/consumed challenge, or changed artifact rejects even with a valid
++signature. Loss of controller state requires rejection, not challenge reuse.
++Repeated independent verification of a historical bundle is allowed as an
++audit operation; it cannot repeat deployment admission. This controller is a
++Stage 9 research fixture with explicit trusted state, not production rollout
++authorization. Remote attestation of the controller is not established.
++
++## Packaging and observed deployment identity
++
++Build a research-only container that stores the exact ELF at
++`/opt/forge/gcd-selftest.elf`. Record the base image digest and platform manifest,
++build recipe, resulting image/config/layer digests and ELF mapping. Packaging
++may add metadata and layers; it must not strip, relink or otherwise alter the ELF.
++Inspect actual package contents with established container tooling and hash
++the extracted ELF. The planned base is the existing pinned Stage 7 checker
++image; all final runtime/tool pins require the separate implementation approval.
++
++Create and start a local, isolated non-production container from that package.
++Use no network, no privilege escalation, a non-root user, a read-only root
++filesystem and explicit CPU/memory/PID limits. Do not modify global Docker
++configuration. The container may run an idle supervisor: this demonstration
++claims materialization of the ELF, not execution of RISC-V instructions.
++
++Observe the actual container ID, state, image and configuration. Read the ELF
++bytes through the actual running container filesystem namespace, then hash
++the observed bytes and compare with the accepted ELF. Record mounts before
++and after; reject mounts or transformations that replace or obscure the target.
++Bind the observation to the exact container, path, package and release request.
++An intended manifest, image tag or `docker export` alone is insufficient.
++Require pre/post identity checks; reject instability or unobserved targets.
++
++The observation supports only `deployed_file_identity` at that observation.
++It does not prove that the guest ELF ran, that every executed byte came from
++the image, that a live process is unmodified, or that the state persists later.
++The observer, container engine/runtime, filesystem namespace, loader if used,
++host kernel, hardware and possible emulation remain explicit trusted boundaries.
++Do not label an emulator's `/proc/.../exe` as the guest ELF. There is no deployment
++correctness proof or remote platform attestation. Keep `end_to_end=false`.
++
++## EXIT controls and records
++
++Each of the six ROADMAP EXIT commands records the harness code separately from
++every real Cosign, policy, proof and deployment command code. Where no tool ran,
++record `not_run` and its reason, never an invented nonzero code. Preserve every
++attempt, including setup failures, exact inputs, seeds where used and raw output.
++
++- `valid-bundle`: actual authorized signature, fresh proof receipt, all locked
++  claims and identities, current request and policy pass. Repeat canonical
++  construction and fresh signature verification. Reject altered evidence and
++  a validly signed unsupported/mislabeled property; no method upgrade is allowed.
++- `unsigned`: valid statement and available inputs but no signature; the real
++  Cosign verification path rejects unsigned material for absence of signature.
++- `wrong-signer`: a genuinely signed, otherwise valid fixture verifies under
++  its own identity, then fails under the unchanged authorized signer policy.
++  No private key is silently authorized to make the positive case pass.
++- `wrong-digest`: a genuinely authorized signature for a different real blob
++  verifies against that blob, then fails binding to the expected artifact. Also
++  reject tampering with signed evidence. Record the cryptographic verifier's
++  code and any separate policy rejection; they need not be the same code.
++- `wrong-policy`: an authenticated signature covering a wrong ID/version/epoch
++  or policy hash must pass signature verification and fail release policy.
++  Include stale/consumed-request, changed-spec and unsupported-method controls.
++- `deployed-identity`: the observed deployed ELF matches. Deliberately replace
++  it in the actual deployed view and require refusal of the coverage claim.
++  A test against an unchanged intended manifest is not this negative control.
++
++Negative fixtures may be signed by a separate, exactly approved test-only
++workflow. That workflow never has the authorized positive identity. A negative
++control that needs an authorized signature over a disallowed statement must
++be an explicitly reviewed test path in the separately approved workflow. Its
++output cannot authorize a release without all independent policy checks.
++These fixtures must be explicitly marked as security controls and can never
++authorize deployment. Check the intended signature/digest/policy rejection
++before this additional fixture exclusion, so it cannot mask a broken control.
++Missing dependencies, malformed setup, network or permission errors cannot
++count as successful security controls. Unavailable capabilities block Stage 9.
+diff --git a/policy/provenance.json b/policy/provenance.json
+new file mode 100644
+--- /dev/null
++++ b/policy/provenance.json
+@@ -0,0 +1,181 @@
++{
++  "activation": {
++    "candidate_supplied_policy": "reject",
++    "implementation_lock": "gate/provenance/implementation.lock",
++    "missing_lock": "reject",
++    "separate_exact_human_approval_required": true
++  },
++  "canonical_evidence": {
++    "encoding": "sorted_compact_ascii_json_with_final_newline",
++    "fresh_execution_metadata": "separate",
++    "identical_explicit_inputs_require_identical_bytes": true,
++    "request_metadata": "separate",
++    "signature_metadata": "separate",
++    "timestamps": false
++  },
++  "contract": "spec/provenance/protocol.md",
++  "deployment": {
++    "actual_namespace_readback_required": true,
++    "actual_started_container_required": true,
++    "base_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
++    "before_after_inspection_required": true,
++    "deployment_correctness_proved": false,
++    "environment": "isolated_local_research_container",
++    "package_file_hash_required": true,
++    "path": "/opt/forge/gcd-selftest.elf",
++    "platform": "linux/amd64",
++    "platform_manifest": "sha256:1b7a1e562f37e418359b646d68d9e0b69b512fa8a03188b0c35fe1ca4b3f4be2",
++    "riscv_execution_claimed": false,
++    "scope": "deployed_file_identity",
++    "substituted_deployed_bytes": "reject",
++    "target_obscuring_mount": "reject",
++    "unobserved_target": "reject"
++  },
++  "end_to_end": false,
++  "epoch": 1,
++  "format_version": 1,
++  "freshness": {
++    "atomic_consume_on_admission": true,
++    "candidate_defines_expected_values": false,
++    "challenge_bits": 256,
++    "challenge_origin": "trusted_controller",
++    "controller_input": [
++      "expected_source_commit",
++      "artifact_sha256",
++      "package_sha256",
++      "policy_id",
++      "policy_version",
++      "policy_epoch",
++      "policy_sha256",
++      "implementation_lock_sha256",
++      "challenge"
++    ],
++    "stale_or_consumed_request": "reject",
++    "state_loss": "reject"
++  },
++  "id": "forge-stage9-provenance",
++  "lock": "spec/provenance/spec.lock",
++  "model_quality": "unmeasured",
++  "proof": {
++    "accepted_evidence": {
++      "path": "results/stage7/accepted/own/evidence.json",
++      "sha256": "cdc906f980d4cbe8e489aac8be77c87c323c87f2fb0e49c74a5aa48ae1fc8f80"
++    },
++    "assumption_audit": {
++      "path": "results/stage7/accepted/own/assumption-audit.json",
++      "sha256": "55a1a9e5f66b71536b84ff7e265b7c25ca155892ba27548a941ced58e1effe85"
++    },
++    "assumptions_must_equal_locked_lists": true,
++    "before_after_identity_checks": true,
++    "fresh_assumption_audit": true,
++    "fresh_binding_checks": true,
++    "fresh_complete_rocqchk": true,
++    "fresh_producer_compilation": true,
++    "historical_log_only": "reject",
++    "unsigned_self_report_only": "reject"
++  },
++  "release_artifact": {
++    "bytes": 1240,
++    "kind": "binary",
++    "path": "results/stage7/accepted/own/gcd-selftest.elf",
++    "sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
++    "target": "riscv64-linux-musl"
++  },
++  "required_claims": [
++    {
++      "allowed_methods": [
++        "kernel_checked_proof"
++      ],
++      "id": "S7-OWN-TERMINATION",
++      "result": "passed",
++      "spec_ref": "examples/binary/Statements.v#selftest_halts",
++      "spec_sha": "b6fc5d989a52a2431e7ede510a7aa156062f94ef3229b3d4f5d4b42d2a5ed3ba"
++    },
++    {
++      "allowed_methods": [
++        "kernel_checked_proof"
++      ],
++      "id": "S7-OWN-VALID-EXECUTION",
++      "result": "passed",
++      "spec_ref": "examples/binary/WitnessSpec.v#selftest_has_valid_execution",
++      "spec_sha": "535ebed602993c18c8499fd38ed485047f972708f93fa522b70a7461030f019f"
++    }
++  ],
++  "security_control_fixture_may_authorize_deployment": false,
++  "signature": {
++    "environment_trust_overrides": "reject",
++    "executable_sha256": {
++      "darwin-arm64": "9f9b8cd557cf2e5b3df3373a00baa005a86b02391e3e06dd0ce37b3a1533d3a4",
++      "linux-amd64": "424e2c97d0b45fd7a6b608a87f090f35633f4c23ece5f092d48bba11aaf4bbfa"
++    },
++    "fresh_signature_verification": true,
++    "ignore_verification_flags": "reject",
++    "in_toto_attestation_commit": "df02077bf97218a8860a5c534eff1f1381f56984",
++    "in_toto_attestation_library": "v1.2.0",
++    "predicate_type": "https://github.com/mack-dot/forge/attestations/provenance/v1",
++    "require_authenticated_signing_time": true,
++    "require_certificate_chain": true,
++    "require_ct": true,
++    "require_rekor_inclusion": true,
++    "sign_command": "cosign attest-blob",
++    "source_commit": "0e48502cf5ef34e2e60bbd3617aa19945712f705",
++    "statement_type": "https://in-toto.io/Statement/v1",
++    "tool": "cosign",
++    "verify_command": "cosign verify-blob-attestation",
++    "version": "3.1.4"
++  },
++  "signer": {
++    "event": "workflow_dispatch",
++    "identity": "https://github.com/mack-dot/forge/.github/workflows/provenance.yml@refs/heads/main",
++    "issuer": "https://token.actions.githubusercontent.com",
++    "local_key_authorization": false,
++    "numeric_id_source": "authenticated_github_api",
++    "owner_id": 235131950,
++    "ref": "refs/heads/main",
++    "repository": "mack-dot/forge",
++    "repository_id": 1434789853,
++    "wildcards": false,
++    "workflow_and_executable_inputs": "must_match_separately_approved_implementation_lock",
++    "workflow_commit": "must_equal_independent_release_request"
++  },
++  "supplementary_stage8": [
++    {
++      "claims": [
++        "R1",
++        "R2",
++        "R3",
++        "R4",
++        "R5"
++      ],
++      "file": {
++        "path": "results/stage8/completed/source-evidence.json",
++        "sha256": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86"
++      },
++      "method": "source_proof"
++    },
++    {
++      "claims": [
++        "T1",
++        "T2",
++        "T3"
++      ],
++      "file": {
++        "path": "results/stage8/completed/property-evidence.json",
++        "sha256": "77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd"
++      },
++      "method": "property_tested"
++    }
++  ],
++  "trust_root": {
++    "archive_validated_metadata_and_digests": true,
++    "bootstrap": "embedded_in_pinned_cosign_executable",
++    "candidate_supplied_root": "reject",
++    "current_metadata_expiration_checked": true,
++    "expired_leaf_rule": "certificate_must_be_valid_at_authenticated_signing_time",
++    "historical_offline_audit_authorizes_new_release": false,
++    "profile": "sigstore_public_good",
++    "tuf_authorized_root_rotation": true,
++    "updates": "authenticated_by_established_tuf_client"
++  },
++  "version": "1.0.0"
++}
+diff --git a/spec/provenance/spec.lock b/spec/provenance/spec.lock
+new file mode 100644
+--- /dev/null
++++ b/spec/provenance/spec.lock
+@@ -0,0 +1,911 @@
++{
++  "activation_requires_separate_exact_implementation_approval": true,
++  "base_commit": "80a65d46b1dbc8f3ccfd249bfd628568406c5774",
++  "checked_modules": [
++    "Corelib.Init.Ltac",
++    "Corelib.Init.Notations",
++    "Corelib.Init.Logic",
++    "Corelib.Init.Datatypes",
++    "Corelib.Init.Specif",
++    "Corelib.Init.Sumbool",
++    "Corelib.Init.Tauto",
++    "Corelib.Init.Tactics",
++    "Corelib.Init.Wf",
++    "Corelib.Init.Decimal",
++    "Corelib.Init.Hexadecimal",
++    "Corelib.Init.Number",
++    "Corelib.Init.Nat",
++    "Corelib.Init.Peano",
++    "Corelib.Init.Byte",
++    "Corelib.Init.Equality",
++    "Corelib.Init.Prelude",
++    "Corelib.Numbers.Cyclic.Int63.CarryType",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63",
++    "Corelib.Strings.PrimString",
++    "Stdlib.Strings.PrimString",
++    "Stdlib.Init.Byte",
++    "Corelib.Numbers.BinNums",
++    "Corelib.BinNums.PosDef",
++    "Stdlib.BinNums.PosDef",
++    "Stdlib.Numbers.BinNums",
++    "Stdlib.PArith.BinPosDef",
++    "Stdlib.Logic.Decidable",
++    "Corelib.Relations.Relation_Definitions",
++    "Corelib.Program.Tactics",
++    "Corelib.Program.Basics",
++    "Corelib.Classes.Init",
++    "Corelib.Classes.RelationClasses",
++    "Corelib.ssr.ssrclasses",
++    "Corelib.ssr.ssrunder",
++    "Corelib.ssr.ssrsetoid",
++    "Corelib.Classes.Morphisms",
++    "Corelib.Classes.Equivalence",
++    "Corelib.Classes.Morphisms_Prop",
++    "Corelib.Classes.CRelationClasses",
++    "Corelib.Classes.CMorphisms",
++    "Corelib.Classes.SetoidTactics",
++    "Corelib.Setoids.Setoid",
++    "Stdlib.Setoids.Setoid",
++    "Stdlib.Classes.Morphisms",
++    "Stdlib.Logic.HLevelsBase",
++    "Stdlib.Classes.DecidableClass",
++    "Stdlib.Bool.Bool",
++    "Stdlib.Classes.RelationClasses",
++    "Stdlib.Structures.Equalities",
++    "Stdlib.Relations.Relation_Definitions",
++    "Stdlib.Relations.Relation_Operators",
++    "Stdlib.Relations.Operators_Properties",
++    "Stdlib.Relations.Relations",
++    "Stdlib.Structures.Orders",
++    "Stdlib.Program.Basics",
++    "Stdlib.Structures.OrdersTac",
++    "Stdlib.Structures.OrdersFacts",
++    "Stdlib.Structures.GenericMinMax",
++    "Stdlib.Classes.Morphisms_Prop",
++    "Stdlib.Numbers.NumPrelude",
++    "Stdlib.Numbers.NatInt.NZAxioms",
++    "Stdlib.Numbers.NatInt.NZBase",
++    "Stdlib.Numbers.NatInt.NZOrder",
++    "Stdlib.Numbers.NatInt.NZAdd",
++    "Stdlib.Numbers.NatInt.NZMul",
++    "Stdlib.Numbers.NatInt.NZAddOrder",
++    "Stdlib.Numbers.NatInt.NZMulOrder",
++    "Stdlib.Numbers.NatInt.NZPow",
++    "Stdlib.Numbers.NatInt.NZLog",
++    "Stdlib.Numbers.NatInt.NZDiv",
++    "Stdlib.Numbers.NatInt.NZParity",
++    "Stdlib.Numbers.NatInt.NZBits",
++    "Stdlib.Numbers.NatInt.NZGcd",
++    "Stdlib.Numbers.NatInt.NZSqrt",
++    "Stdlib.Numbers.Natural.Abstract.NAxioms",
++    "Stdlib.Numbers.Natural.Abstract.NBase",
++    "Stdlib.Numbers.Natural.Abstract.NAdd",
++    "Stdlib.Numbers.Natural.Abstract.NOrder",
++    "Stdlib.Numbers.Natural.Abstract.NAddOrder",
++    "Stdlib.Numbers.Natural.Abstract.NMulOrder",
++    "Stdlib.Numbers.Natural.Abstract.NSub",
++    "Stdlib.Numbers.Natural.Abstract.NParity",
++    "Stdlib.Numbers.Natural.Abstract.NPow",
++    "Stdlib.Numbers.Natural.Abstract.NLog",
++    "Stdlib.Numbers.Natural.Abstract.NDiv",
++    "Stdlib.Numbers.Natural.Abstract.NBits",
++    "Stdlib.Numbers.Natural.Abstract.NGcd",
++    "Stdlib.Numbers.Natural.Abstract.NLcm",
++    "Stdlib.Numbers.Natural.Abstract.NDiv0",
++    "Stdlib.Numbers.Natural.Abstract.NLcm0",
++    "Stdlib.Numbers.Natural.Abstract.NSqrt",
++    "Stdlib.Numbers.Natural.Abstract.NMaxMin",
++    "Stdlib.Numbers.Natural.Abstract.NProperties",
++    "Stdlib.Arith.PeanoNat",
++    "Stdlib.Logic.EqdepFacts",
++    "Stdlib.Logic.Eqdep_dec",
++    "Stdlib.PArith.BinPos",
++    "Stdlib.PArith.Pnat",
++    "Corelib.BinNums.NatDef",
++    "Stdlib.BinNums.NatDef",
++    "Stdlib.NArith.BinNatDef",
++    "Stdlib.NArith.BinNat",
++    "Stdlib.NArith.Nnat",
++    "Stdlib.Arith.EqNat",
++    "Stdlib.Strings.Byte",
++    "Stdlib.Strings.Ascii",
++    "Corelib.Lists.ListDef",
++    "Stdlib.Lists.ListDef",
++    "Stdlib.Lists.List",
++    "Stdlib.Strings.String",
++    "Stdlib.setoid_ring.Ring_theory",
++    "Corelib.BinNums.IntDef",
++    "Stdlib.BinNums.IntDef",
++    "Stdlib.ZArith.BinIntDef",
++    "Stdlib.Numbers.Integer.Abstract.ZAxioms",
++    "Stdlib.Numbers.Integer.Abstract.ZBase",
++    "Stdlib.Numbers.Integer.Abstract.ZAdd",
++    "Stdlib.Numbers.Integer.Abstract.ZMul",
++    "Stdlib.Numbers.Integer.Abstract.ZLt",
++    "Stdlib.Numbers.Integer.Abstract.ZAddOrder",
++    "Stdlib.Numbers.Integer.Abstract.ZMulOrder",
++    "Stdlib.Numbers.Integer.Abstract.ZSgnAbs",
++    "Stdlib.Numbers.Integer.Abstract.ZDivFloor",
++    "Stdlib.Numbers.Integer.Abstract.ZParity",
++    "Stdlib.Numbers.Integer.Abstract.ZPow",
++    "Stdlib.Numbers.Integer.Abstract.ZBits",
++    "Stdlib.Numbers.Integer.Abstract.ZDivTrunc",
++    "Stdlib.Numbers.Integer.Abstract.ZGcd",
++    "Stdlib.Numbers.Integer.Abstract.ZLcm",
++    "Stdlib.Numbers.Integer.Abstract.ZMaxMin",
++    "Stdlib.Numbers.Integer.Abstract.ZProperties",
++    "Stdlib.ZArith.BinInt",
++    "Stdlib.setoid_ring.BinList",
++    "Stdlib.setoid_ring.Ring_polynom",
++    "Stdlib.setoid_ring.InitialRing",
++    "Stdlib.Lists.ListTactics",
++    "Stdlib.setoid_ring.Ring_tac",
++    "Stdlib.setoid_ring.Ring_base",
++    "Stdlib.setoid_ring.Ring",
++    "Stdlib.setoid_ring.NArithRing",
++    "Stdlib.NArith.Ngcd_def",
++    "Stdlib.NArith.Nsqrt_def",
++    "Stdlib.NArith.Ndiv_def",
++    "Stdlib.NArith.NArith_base",
++    "Stdlib.NArith.NArith",
++    "LinuxProcessSemantics.LinuxProcessSem.MemImageType",
++    "Stdlib.Init.Nat",
++    "Corelib.Array.PrimArray",
++    "Corelib.Array.ArrayAxioms",
++    "Stdlib.Array.ArrayAxioms",
++    "Stdlib.Array.PrimArray",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms",
++    "Stdlib.Numbers.Cyclic.Int63.Uint63Axioms",
++    "Stdlib.Numbers.Cyclic.Int63.PrimInt63",
++    "Stdlib.setoid_ring.Algebra_syntax",
++    "Stdlib.setoid_ring.Ncring",
++    "Stdlib.setoid_ring.Ncring_polynom",
++    "Stdlib.setoid_ring.Ncring_initial",
++    "Stdlib.setoid_ring.Ncring_tac",
++    "Stdlib.setoid_ring.Cring",
++    "Stdlib.micromega.ZifyClasses",
++    "Stdlib.Arith.Compare_dec",
++    "Stdlib.Arith.Wf_nat",
++    "Stdlib.Arith.Peano_dec",
++    "Stdlib.Arith.Between",
++    "Stdlib.Arith.Factorial",
++    "Stdlib.Arith.Arith_base",
++    "Stdlib.ZArith.Znat",
++    "Stdlib.micromega.ZifyInst",
++    "Stdlib.micromega.Zify",
++    "Stdlib.micromega.VarMap",
++    "Stdlib.micromega.Refl",
++    "Stdlib.micromega.Tauto",
++    "Stdlib.micromega.OrderedRing",
++    "Stdlib.micromega.Env",
++    "Stdlib.micromega.EnvRing",
++    "Stdlib.micromega.RingMicromega",
++    "Stdlib.setoid_ring.ZArithRing",
++    "Stdlib.micromega.ZMicromega",
++    "Stdlib.micromega.Lia",
++    "Stdlib.ZArith.Zeven",
++    "Stdlib.ZArith.Zcompare",
++    "Stdlib.ZArith.Zorder",
++    "Stdlib.ZArith.Zmisc",
++    "Stdlib.ZArith.Wf_Z",
++    "Stdlib.Init.Sumbool",
++    "Stdlib.ZArith.ZArith_dec",
++    "Stdlib.ZArith.Zabs",
++    "Stdlib.ZArith.Zcomplements",
++    "Stdlib.ZArith.Zbool",
++    "Stdlib.ZArith.Zdiv",
++    "Stdlib.ZArith.Zdivisibility",
++    "Stdlib.ZArith.auxiliary",
++    "Stdlib.ZArith.Zmin",
++    "Stdlib.ZArith.Zhints",
++    "Stdlib.ZArith.Zmax",
++    "Stdlib.ZArith.Zminmax",
++    "Stdlib.ZArith.ZArith_base",
++    "Stdlib.ZArith.Znumtheory",
++    "Stdlib.setoid_ring.Integral_domain",
++    "Stdlib.nsatz.NsatzTactic",
++    "Stdlib.ZArith.ZNsatz",
++    "Stdlib.omega.PreOmega",
++    "Stdlib.ZArith.Zdiv_facts",
++    "Stdlib.ZArith.ZModOffset",
++    "Stdlib.PArith.POrderedType",
++    "Stdlib.PArith.PArith",
++    "Stdlib.btauto.Algebra",
++    "Stdlib.btauto.Reflect",
++    "Stdlib.btauto.Btauto",
++    "Stdlib.ZArith.Zbitwise",
++    "Stdlib.ZArith.Zcong",
++    "Stdlib.ZArith.Zpow_def",
++    "Stdlib.ZArith.Zpower",
++    "Stdlib.micromega.ZArith_hints",
++    "Stdlib.omega.OmegaLemmas",
++    "Stdlib.ZArith.ZArith",
++    "Stdlib.ZArith.Zgcd_alt",
++    "Stdlib.ZArith.Zpow_facts",
++    "Stdlib.Numbers.Cyclic.Int63.CarryType",
++    "Stdlib.Numbers.Cyclic.Abstract.DoubleType",
++    "Stdlib.Unicode.Utf8_core",
++    "Stdlib.Unicode.Utf8",
++    "Stdlib.Numbers.Cyclic.Int63.Uint63",
++    "Stdlib.Array.PArray",
++    "ReadFile.NestedArray",
++    "ReadFile.ReadFile",
++    "Forge.Binary.images.Program",
++    "stdpp.options",
++    "Corelib.ssrmatching.ssrmatching",
++    "Corelib.ssr.ssreflect",
++    "Stdlib.ssr.ssreflect",
++    "Stdlib.Program.Syntax",
++    "Stdlib.Lists.ListDec",
++    "Stdlib.Lists.Finite",
++    "Stdlib.Sorting.Permutation",
++    "Stdlib.Init.Peano",
++    "stdpp.base",
++    "stdpp.proof_irrel",
++    "stdpp.decidable",
++    "stdpp.tactics",
++    "Stdlib.Vectors.Fin",
++    "stdpp.fin",
++    "stdpp.well_founded",
++    "stdpp.option",
++    "Stdlib.QArith.QArith_base",
++    "Stdlib.QArith.Qreduction",
++    "Stdlib.setoid_ring.Field_theory",
++    "Stdlib.setoid_ring.Field_tac",
++    "Stdlib.setoid_ring.Field",
++    "Stdlib.QArith.Qcanon",
++    "Stdlib.QArith.QNsatz",
++    "Stdlib.QArith.Qfield",
++    "Stdlib.QArith.Qring",
++    "Stdlib.QArith.QArith",
++    "stdpp.numbers",
++    "stdpp.list_basics",
++    "stdpp.list_relations",
++    "stdpp.list_monad",
++    "stdpp.list_tactics",
++    "stdpp.list_misc",
++    "stdpp.list_numbers",
++    "stdpp.list",
++    "stdpp.countable",
++    "Stdlib.Vectors.VectorDef",
++    "Stdlib.Vectors.VectorSpec",
++    "Stdlib.Vectors.VectorEq",
++    "Stdlib.Vectors.Vector",
++    "stdpp.vector",
++    "stdpp.finite",
++    "Stdlib.micromega.SatDivMod",
++    "Stdlib.micromega.ZifyNat",
++    "stdpp.bitvector.definitions",
++    "stdpp.bitvector.tactics",
++    "stdpp.bitvector.bitvector",
++    "LinuxProcessSemantics.Riscv.Prelude",
++    "LinuxProcessSemantics.LinuxProcessSem.BvBase",
++    "LinuxProcessSemantics.LinuxProcessSem.Fs",
++    "LinuxProcessSemantics.LinuxProcessSem.State",
++    "LinuxProcessSemantics.LinuxProcessSem.Monad",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Syscall",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Uaccess",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Uapi",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Drivers.Char.Random",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Namei",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.ReadWrite",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.File",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Open",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Fcntl",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Net.Socket",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Time.Time",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Time.PosixTimers",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Time.Hrtimer",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Fork",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Sys",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Signal",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Sched.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Groups",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Futex.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Kernel.Exit",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Mm.Madvise",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Mm.Mprotect",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Mm.Mmap",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Mm.Mremap",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.EventFd",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Select",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.EventPoll",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Pipe",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Timerfd",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Locks",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Readdir",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Ioctl",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Stat",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.Sync",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Fs.DPath",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.Dispatch",
++    "LinuxProcessSemantics.LinuxProcessSem.Sys.SyscallTable",
++    "LinuxProcessSemantics.LinuxProcessSem.Specs",
++    "LinuxProcessSemantics.LinuxProcessSem.StackLayout",
++    "Corelib.Floats.FloatClass",
++    "Corelib.Floats.SpecFloat",
++    "Stdlib.Floats.SpecFloat",
++    "Stdlib.ZArith.Zquot",
++    "Flocq.Core.Zaux",
++    "Flocq.Core.Digits",
++    "Stdlib.QArith.QOrderedType",
++    "Stdlib.QArith.Qminmax",
++    "Stdlib.Logic.ConstructiveEpsilon",
++    "Stdlib.Reals.Cauchy.ConstructiveExtra",
++    "Stdlib.Reals.Cauchy.PosExtra",
++    "Stdlib.micromega.DeclConstantZ",
++    "Stdlib.micromega.DeclConstant",
++    "Stdlib.micromega.QMicromega",
++    "Stdlib.micromega.Lqa",
++    "Stdlib.QArith.Qround",
++    "Stdlib.QArith.Qabs",
++    "Stdlib.QArith.Qpower",
++    "Stdlib.Reals.Cauchy.QExtra",
++    "Stdlib.Classes.CMorphisms",
++    "Stdlib.Reals.Cauchy.ConstructiveCauchyReals",
++    "Stdlib.Reals.Cauchy.ConstructiveCauchyRealsMult",
++    "Stdlib.Reals.Cauchy.ConstructiveCauchyAbs",
++    "Stdlib.Reals.Abstract.ConstructiveReals",
++    "Stdlib.Reals.Cauchy.ConstructiveRcomplete",
++    "Stdlib.Logic.FunctionalExtensionality",
++    "Stdlib.Logic.HLevels",
++    "Stdlib.Reals.ClassicalDedekindReals",
++    "Stdlib.Reals.Rdefinitions",
++    "Stdlib.Reals.Abstract.ConstructiveAbs",
++    "Stdlib.Reals.Abstract.ConstructiveLimits",
++    "Stdlib.Reals.Abstract.ConstructiveLUB",
++    "Stdlib.Reals.Raxioms",
++    "Stdlib.Reals.Rpow_def",
++    "Stdlib.setoid_ring.ArithRing",
++    "Stdlib.setoid_ring.RealField",
++    "Stdlib.Reals.RIneq",
++    "Stdlib.Reals.R_Ifp",
++    "Stdlib.Reals.Rbasic_fun",
++    "Stdlib.Reals.ArithProp",
++    "Stdlib.Reals.SplitRmult",
++    "Stdlib.Reals.SplitAbsolu",
++    "Stdlib.Reals.R_sqr",
++    "Stdlib.Reals.Rfunctions",
++    "Stdlib.Reals.Rregisternames",
++    "Stdlib.Reals.Qreals",
++    "Stdlib.micromega.RMicromega",
++    "Stdlib.micromega.Lra",
++    "Stdlib.Reals.DiscrR",
++    "Stdlib.Reals.Rbase",
++    "Stdlib.micromega.Fourier_util",
++    "Stdlib.micromega.Fourier",
++    "Stdlib.Logic.Hurkens",
++    "Stdlib.Logic.PropExtensionalityFacts",
++    "Stdlib.Logic.ClassicalFacts",
++    "Stdlib.Logic.Classical_Prop",
++    "Stdlib.Logic.Classical_Pred_Type",
++    "Stdlib.Reals.RList",
++    "Stdlib.Reals.Rlimit",
++    "Stdlib.Reals.Rderiv",
++    "Stdlib.Reals.Ranalysis1",
++    "Stdlib.Reals.Rtopology",
++    "Stdlib.Reals.MVT",
++    "Stdlib.Arith.Compare",
++    "Stdlib.Reals.Rseries",
++    "Stdlib.Reals.SeqProp",
++    "Stdlib.Reals.Rcomplete",
++    "Stdlib.Reals.PartSum",
++    "Stdlib.Reals.Alembert",
++    "Stdlib.Reals.Cauchy_prod",
++    "Stdlib.Reals.Binomial",
++    "Stdlib.Reals.Rprod",
++    "Stdlib.Reals.Rsigma",
++    "Stdlib.Reals.AltSeries",
++    "Stdlib.Reals.SeqSeries",
++    "Stdlib.Reals.PSeries_reg",
++    "Stdlib.Reals.Rsqrt_def",
++    "Stdlib.Reals.Rtrigo_fun",
++    "Stdlib.Reals.Rtrigo_def",
++    "Stdlib.Reals.Cos_rel",
++    "Stdlib.Reals.Cos_plus",
++    "Stdlib.Reals.Rtrigo_alt",
++    "Stdlib.Reals.Rtrigo1",
++    "Stdlib.Reals.Exp_prop",
++    "Stdlib.Reals.Ranalysis2",
++    "Stdlib.Reals.Ranalysis3",
++    "Stdlib.Reals.Ranalysis4",
++    "Stdlib.Reals.R_sqrt",
++    "Stdlib.Reals.Sqrt_reg",
++    "Stdlib.Reals.Rpower",
++    "Stdlib.Reals.Rgeom",
++    "Stdlib.Reals.Rtrigo_calc",
++    "Stdlib.Reals.Rtrigo_reg",
++    "Stdlib.Reals.Ranalysis_reg",
++    "Stdlib.Reals.RiemannInt_SF",
++    "Stdlib.Reals.RiemannInt",
++    "Stdlib.Reals.Ranalysis5",
++    "Stdlib.Reals.Rtrigo_facts",
++    "Stdlib.Reals.Ratan",
++    "Stdlib.Reals.Machin",
++    "Stdlib.Reals.Rtrigo",
++    "Stdlib.Reals.Ranalysis",
++    "Stdlib.Reals.NewtonInt",
++    "Stdlib.Reals.Integration",
++    "Stdlib.Reals.Zfloor",
++    "Stdlib.Reals.Reals",
++    "Stdlib.micromega.Psatz",
++    "Flocq.Core.Raux",
++    "Flocq.Core.Defs",
++    "Flocq.Core.Float_prop",
++    "Flocq.Core.Round_pred",
++    "Flocq.Core.Generic_fmt",
++    "Flocq.Core.Ulp",
++    "Flocq.Core.Round_NE",
++    "Flocq.Core.FIX",
++    "Flocq.Core.FLX",
++    "Flocq.Core.FLT",
++    "Flocq.Core.Core",
++    "Flocq.Prop.Relative",
++    "Flocq.Calc.Bracket",
++    "Flocq.Calc.Sqrt",
++    "Flocq.Calc.Div",
++    "Flocq.Calc.Operations",
++    "Flocq.Calc.Round",
++    "Flocq.IEEE754.BinarySingleNaN",
++    "LinuxProcessSemantics.Riscv.Fpu",
++    "LinuxProcessSemantics.Riscv.Instr",
++    "LinuxProcessSemantics.Riscv.Sem",
++    "LinuxProcessSemantics.Riscv.Decode",
++    "LinuxProcessSemantics.Riscv.DecodeC",
++    "LinuxProcessSemantics.LinuxProcessSem.RiscvSemantics",
++    "LinuxProcessSemantics.LinuxProcessSem.Run",
++    "LinuxProcessSemantics.EquivalenceDefinition.Equivalence",
++    "OssFuzzTheorems.Core.Images",
++    "Forge.Binary.Images",
++    "LinuxProcessSemantics.EquivalenceDefinition.FinInput",
++    "LinuxProcessSemantics.EquivalenceDefinition.MustExit",
++    "LinuxProcessSemantics.EquivalenceDefinition.Classifier",
++    "Forge.Binary.WitnessSpec",
++    "LinuxProcessSemantics.LinuxProcessSem.OmniRun",
++    "LinuxProcessSemantics.EquivalenceDefinition.OmniEquivalence",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Prelude",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Drivers.Char.Random",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Uaccess",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Net.Socket",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Time.Time",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Time.PosixTimers",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Time.Hrtimer",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Fork",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Sys",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Signal",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Sched.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Groups",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Futex.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Kernel.Exit",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Mm.Madvise",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Mm.Mprotect",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Mm.Mremap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Mm.Mmap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.EventFd",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.EventPoll",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.ReadWrite",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Pipe",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Timerfd",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Readdir",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Namei",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Locks",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Fcntl",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Ioctl",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Select",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Stat",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Sync",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.Open",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.File",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Witness.Fs.DPath",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Prelude",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Uaccess",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.ReadWrite",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Drivers.Char.Random",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Open",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Net.Socket",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Time.Time",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Time.PosixTimers",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Time.Hrtimer",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Fork",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Mm.Mmap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Sys",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Signal",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Sched.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Groups",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Futex.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Kernel.Exit",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Mm.Madvise",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Mm.Mprotect",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Mm.Mremap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.EventFd",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.EventPoll",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Pipe",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Timerfd",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Readdir",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Namei",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Locks",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Fcntl",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Ioctl",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Select",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Stat",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.Sync",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.File",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Fs.DPath",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.Dispatch",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.ExecutableSpecs",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Prelude",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Drivers.Char.Random",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Net.Socket",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Time.PosixTimers",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Time.Time",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Time.Hrtimer",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Signal",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.ReadWrite",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Fork",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Sys",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Sched.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Groups",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Kernel.Futex.Syscalls",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Mm.Madvise",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Mm.Mprotect",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Mm.Mmap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Mm.Mremap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.EventFd",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Pipe",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Timerfd",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Readdir",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Namei",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Locks",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Fcntl",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Ioctl",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Select",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Sync",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Stat",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.Open",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Fs.File",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Brk",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Hwcap",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.VaSize",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Cases.Uaccess",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Progress",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Sys.DispatchCompute",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Examples",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.Omni",
++    "Forge.Binary.Execution",
++    "LinuxProcessSemantics.EquivalenceDefinition.Measure",
++    "LinuxProcessSemantics.EquivalenceDefinition.HaltsAllowed",
++    "OssFuzzTheorems.Core.Shapes",
++    "Forge.Binary.Statements",
++    "LinuxProcessSemantics.LinuxProcessSem.Checks.SpuriousCfg",
++    "Forge.Binary.Proof",
++    "Forge.Binary.Witness",
++    "ForgeChecked.WitnessWrapper",
++    "ForgeChecked.Wrapper"
++  ],
++  "contract": {
++    "path": "spec/provenance/protocol.md",
++    "sha256": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69"
++  },
++  "end_to_end": false,
++  "format_version": 1,
++  "independent_closure_assumptions": [
++    "Corelib.Array.ArrayAxioms.array_ext",
++    "Corelib.Array.ArrayAxioms.default_set",
++    "Corelib.Array.ArrayAxioms.get_copy",
++    "Corelib.Array.ArrayAxioms.get_make",
++    "Corelib.Array.ArrayAxioms.get_out_of_bounds",
++    "Corelib.Array.ArrayAxioms.get_set_other",
++    "Corelib.Array.ArrayAxioms.get_set_same",
++    "Corelib.Array.ArrayAxioms.leb_length",
++    "Corelib.Array.ArrayAxioms.length_copy",
++    "Corelib.Array.ArrayAxioms.length_make",
++    "Corelib.Array.ArrayAxioms.length_set",
++    "Corelib.Array.PrimArray.array",
++    "Corelib.Array.PrimArray.copy",
++    "Corelib.Array.PrimArray.default",
++    "Corelib.Array.PrimArray.get",
++    "Corelib.Array.PrimArray.length",
++    "Corelib.Array.PrimArray.make",
++    "Corelib.Array.PrimArray.set",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.add",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.addc",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.addcarryc",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.addmuldiv",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.asr",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.compare",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.compares",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.div",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.diveucl",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.diveucl_21",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.divs",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.head0",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lesb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltsb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lxor",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.mod",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.mods",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.mul",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.mulc",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.subc",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.subcarryc",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.tail0",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.add_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.addc_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.addcarryc_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.addmuldiv_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.compare_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.div_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.diveucl_21_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.diveucl_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.eqb_correct",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.eqb_refl",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.head0_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.land_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.leb_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.lor_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.lsl_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.lsr_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.ltb_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.lxor_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.mod_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.mul_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.mulc_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.of_to_Z",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.sub_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.subc_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.subcarryc_def_spec",
++    "Corelib.Numbers.Cyclic.Int63.Uint63Axioms.tail0_spec",
++    "Corelib.Strings.PrimString.cat",
++    "Corelib.Strings.PrimString.compare",
++    "Corelib.Strings.PrimString.get",
++    "Corelib.Strings.PrimString.length",
++    "Corelib.Strings.PrimString.make",
++    "Corelib.Strings.PrimString.string",
++    "Corelib.Strings.PrimString.sub",
++    "Stdlib.Logic.Classical_Prop.classic",
++    "Stdlib.Logic.FunctionalExtensionality.functional_extensionality_dep",
++    "Stdlib.Reals.ClassicalDedekindReals.sig_forall_dec",
++    "Stdlib.Reals.ClassicalDedekindReals.sig_not_dec"
++  ],
++  "locked_existing_files": [
++    {
++      "path": "examples/binary/Execution.v",
++      "sha256": "6540ec35e20deed6081f3045c0944917d41124611e79e9df4daa43d257f08f8b"
++    },
++    {
++      "path": "examples/binary/Images.v",
++      "sha256": "3f22a6c9494efe2eadfb0c9be3813bd3cf0edf803d49b9598113fff50b9eb563"
++    },
++    {
++      "path": "examples/binary/Proof.v",
++      "sha256": "1b488738445a3c1208d32ee0c6f268711333b86d04123856658e5c1cb39e8663"
++    },
++    {
++      "path": "examples/binary/Statements.v",
++      "sha256": "b6fc5d989a52a2431e7ede510a7aa156062f94ef3229b3d4f5d4b42d2a5ed3ba"
++    },
++    {
++      "path": "examples/binary/Witness.v",
++      "sha256": "1544cb6f5be80e90051fde0059ed096ede95934b4067900792a74e49d0db7a83"
++    },
++    {
++      "path": "examples/binary/WitnessSpec.v",
++      "sha256": "535ebed602993c18c8499fd38ed485047f972708f93fa522b70a7461030f019f"
++    },
++    {
++      "path": "examples/binary/gcd_selftest.c",
++      "sha256": "06dfa530f6f2b6fb429842befe51e60d7d8bf05338b83c27d4e8d807612dd4bc"
++    },
++    {
++      "path": "gate/backends/__init__.py",
++      "sha256": "4f797ea3cb64ee52910fe9b9132a90b39f5144ed749e6a866098f422837f8fda"
++    },
++    {
++      "path": "gate/backends/dafny.py",
++      "sha256": "ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe"
++    },
++    {
++      "path": "gate/common.py",
++      "sha256": "06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988"
++    },
++    {
++      "path": "gate/core.py",
++      "sha256": "bf8f0a54a149c052f179e0f8754671b6b5e6f9085c17d1bdbd4a31f01dd00013"
++    },
++    {
++      "path": "gate/dependencies.py",
++      "sha256": "df8e9dafebdb87c596e4ddae8c715d93ebf7268f60f27837dd84955a5f5b11af"
++    },
++    {
++      "path": "gate/expected-audit.md",
++      "sha256": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae"
++    },
++    {
++      "path": "gate/refund.py",
++      "sha256": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb"
++    },
++    {
++      "path": "gate/refund/Bindings.dfy",
++      "sha256": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d"
++    },
++    {
++      "path": "gate/refund/hostile.ts",
++      "sha256": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a"
++    },
++    {
++      "path": "impl/Refund.dfy",
++      "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
++    },
++    {
++      "path": "package-lock.json",
++      "sha256": "c1614a9a53e2051aaf3767cb511392032a61b57be4918ec63cbc5850356a1df6"
++    },
++    {
++      "path": "package.json",
++      "sha256": "1c4da20a67bed1dcaac41045ede889715c02e0c762efbc9f2e9278408a9f0efa"
++    },
++    {
++      "path": "policy/refund.yaml",
++      "sha256": "4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83"
++    },
++    {
++      "path": "proposals/refund-decision.md",
++      "sha256": "c7b579b062a59c72881c999f5302e1ceb8a9b71ce82bd23a9a823a0a343dee64"
++    },
++    {
++      "path": "results/stage7/accepted/own/assumption-audit.json",
++      "sha256": "55a1a9e5f66b71536b84ff7e265b7c25ca155892ba27548a941ced58e1effe85"
++    },
++    {
++      "path": "results/stage7/accepted/own/evidence.json",
++      "sha256": "cdc906f980d4cbe8e489aac8be77c87c323c87f2fb0e49c74a5aa48ae1fc8f80"
++    },
++    {
++      "path": "results/stage7/accepted/own/gcd-selftest.elf",
++      "sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6"
++    },
++    {
++      "path": "results/stage8/completed/completion.json",
++      "sha256": "9235463731f1a7948a101e12cf4e3362150495e4f4e3c1dbf3558826d69d9cd8"
++    },
++    {
++      "path": "results/stage8/completed/input-identities.json",
++      "sha256": "cb11633f62b44c2328e17a1f9f202195befa86a652545e40be0dace48e9b5702"
++    },
++    {
++      "path": "results/stage8/completed/model.cjs",
++      "sha256": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda"
++    },
++    {
++      "path": "results/stage8/completed/property-evidence.json",
++      "sha256": "77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd"
++    },
++    {
++      "path": "results/stage8/completed/source-evidence.json",
++      "sha256": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86"
++    },
++    {
++      "path": "schemas/evidence.schema.json",
++      "sha256": "5113a6dc0c26c4f474ecf22bd558967ad260e4d16bb4eb017bf852ae18dc2caa"
++    },
++    {
++      "path": "schemas/policy.schema.json",
++      "sha256": "ba706f6f15c087e1c0673743717d76e1fdb02f8d2efe791611b121429954ed4d"
++    },
++    {
++      "path": "scripts/exit_stage_7.py",
++      "sha256": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544"
++    },
++    {
++      "path": "scripts/javascript_env.py",
++      "sha256": "0beb81134ed59cb41cc2feb02f188816060dace4539888c98cea55771a9a3abb"
++    },
++    {
++      "path": "scripts/stage7_build_own.py",
++      "sha256": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac"
++    },
++    {
++      "path": "scripts/stage7_identity.py",
++      "sha256": "7f9fdc9e7531ffeb0fb32e2ea7362ce87c27c9c46b03ebdf7a36202602998803"
++    },
++    {
++      "path": "scripts/stage7_own_job.py",
++      "sha256": "6c852220e8eeeac8b5c9bec533bf5ec044f68dec3f6e98d348f525da40b32b00"
++    },
++    {
++      "path": "spec/refund/RefundSpec.dfy",
++      "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
++    },
++    {
++      "path": "spec/refund/protocol.md",
++      "sha256": "5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4"
++    },
++    {
++      "path": "spec/refund/spec.lock",
++      "sha256": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57"
++    },
++    {
++      "path": "toolchain/javascript-pins.json",
++      "sha256": "4f40085726c4eb8032acd15214773cfd785667a8a45156cf4bfd6b293d811daa"
++    },
++    {
++      "path": "toolchain/pins.json",
++      "sha256": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c"
++    },
++    {
++      "path": "toolchain/requirements-stage2.txt",
++      "sha256": "3be95de3a966c4e4a5ff4ee4e233035b9fc4b5baa84862523f27fa9a16539097"
++    },
++    {
++      "path": "toolchain/stage7-own-pins.json",
++      "sha256": "7859ba012eae6575731550eb8da10e85b2c9b7ef8512f27349763f09f75e515e"
++    },
++    {
++      "path": "toolchain/stage7-pins.json",
++      "sha256": "36e6539ed8718fde4ce12888c3dd1b76f9e82013a11523b080bc47592953a16d"
++    },
++    {
++      "path": "toolchain/validator-pins.json",
++      "sha256": "4566ee79b6f939b70ed54f3d7c31fe617c1a65c5d8e36dd1894552c5352534f9"
++    },
++    {
++      "path": "ts/refund.ts",
++      "sha256": "8152c87d1f8d8f7cfd016cba9c9abd6627f49bee9a211084f1a67a6f197ec98c"
++    },
++    {
++      "path": "tsconfig.json",
++      "sha256": "a6efc17451b1a8f79516f984205bf128edf6e633bbfa1263267d88b197cc43ee"
++    }
++  ],
++  "policy": {
++    "epoch": 1,
++    "id": "forge-stage9-provenance",
++    "path": "policy/provenance.json",
++    "sha256": "9e27f627a2b1924fc2f4f86346efaa06755a2c47a366fb3437e54a105d65f22b",
++    "version": "1.0.0"
++  },
++  "theorem_assumptions": [
++    "Corelib.Array.PrimArray.array",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
++    "Corelib.Strings.PrimString.get",
++    "Corelib.Strings.PrimString.length",
++    "Corelib.Strings.PrimString.string"
++  ],
++  "upstream_input_identities": {
++    "lps/source-tree-sha256": "c69c38f381767a112d0b4d5692548369f65cbf3a73ba198f76f98310894dd4de",
++    "upstream/toolchain/allowed-axioms.txt": "8820b8fc82c03184f5822c52932531be058ca95d352195a68c530004616d5380",
++    "upstream/tracked-sha256-manifest": "52436d2401d74c3dbba702abdb73b0b3b2d517ec71e80d449176aa5b3f9ba55c"
++  },
++  "witness_assumptions": [
++    "Corelib.Array.PrimArray.array",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
++    "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
++    "Corelib.Strings.PrimString.get",
++    "Corelib.Strings.PrimString.length",
++    "Corelib.Strings.PrimString.string"
++  ]
++}

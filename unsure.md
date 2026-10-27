@@ -1635,3 +1635,52 @@ curl: (6) Could not resolve host: github.com
 - Impact: the Stage 8 EXIT requirements are complete. Mark Stage 8 DONE and
   Stage 9 CURRENT in this checkpoint, keep end_to_end=false, publish and verify
   the remote commit/tree, then stop. No Stage 9 implementation has started.
+
+## U074 — Stage 9 requires an explicit provenance trust contract
+
+- References: U073; the user's Stage 9 instruction to prepare an exact proposal
+  and stop before changing protected specifications, gates or policies.
+- Observed: public main and 68 local baseline files matched Stage 8 commit
+  80a65d46b1dbc8f3ccfd249bfd628568406c5774. The accepted own ELF is 1,240 bytes,
+  SHA-256 8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6.
+  Its existing evidence is unsigned. The existing ledger, booking and refund
+  policies do not authorize a provenance signer or define release acceptance.
+- Proposed, not approved: proposals/provenance.md binds exactly three additions
+  by manifest and patch digests. These define a GitHub Actions keyless identity,
+  pinned Cosign 3.1.4, public Sigstore TUF trust, current request/policy checks,
+  fresh producer compilation and complete independent Rocq checking, and actual
+  deployed-file observation. This is not approval to execute a new workflow.
+  Its separately approved implementation lock is a mandatory missing prerequisite;
+  unknown future gate code cannot activate this policy automatically.
+- Observed preparation: GitHub API metadata supplied Cosign release asset hashes
+  and immutable source revision 0e48502cf5ef34e2e60bbd3617aa19945712f705.
+  Official CLI source exposes exact certificate/workflow constraints and
+  established attestation commands. This is source/interface research, not
+  cryptographic verification or successful execution of those interfaces.
+  Cosign and local RISC-V QEMU executables are absent from PATH. No installation
+  was attempted. There is no hidden failed installation or passing signature.
+- Observed preparation checks: python3 proposals/provenance/check_proposal.py
+  returned 0. Its real git apply --check returned 0. The patch was not applied.
+  Forty-seven existing files and the complete 579-module audit are locked;
+  the two 13-assumption theorem lists and the 86-assumption closure list match
+  the accepted audit exactly. All 1,406 snapshotted existing files matched before
+  the documentation updates, including 30 protected files and all old Stage 7–8
+  records. Raw output and identities are in results/stage9/preparation/.
+- Uncertainty: actual OIDC issuance, certificate constraints, TUF validation,
+  fresh kernel replay in the authorized producer, signature controls, packaging
+  and deployed namespace observation have not executed. The prospective gate
+  must reject if any required capability is unavailable. Source inspection and
+  a checksum supplied by a release API do not establish tool authenticity by
+  cryptographic verification. Bootstrap distribution remains an explicit trust.
+- Limits: the proposed deployment scope is observed file materialization in a
+  started local container, not guest ELF execution, persistent process identity,
+  model-to-hardware fidelity or deployment correctness. GitHub, Sigstore, the
+  release controller and its clock/state, checker isolation, container runtime,
+  OS and hardware remain trusted. Stage 8 source proofs and finite tests remain
+  distinct; model quality is unmeasured. Signing cannot establish correctness.
+- Impact: Stage 9 remains CURRENT — blocked on exact contract approval. All six
+  required EXIT commands are NOT RUN. No protected file, signing workflow or
+  acceptance code changed. No Stage 10 work started. end_to_end=false.
+- Next check: obtain exact revision-bound approval of the three proposed files.
+  Then apply only those bytes and prepare a separate exact gate/workflow proposal.
+  Never interpret this contract decision as approval of unspecified gate code.
