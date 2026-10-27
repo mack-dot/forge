@@ -1,0 +1,13 @@
+{
+  "method": "unit_tested",
+  "result": "failed",
+  "stage8_exit": false,
+  "end_to_end": false,
+  "approved_test_sha256": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+  "callback_sha256": "f807868e3ba34b47f4aa1ad03df9bc6fc0bd131f3f2fd6eec38179a45542a589",
+  "compiled_module_sha256": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
+  "extraction": "TypeScript AST selects the exact T2 callback, expected oracle, compiled-model bridge and constants",
+  "injection": "Mutate the actual input after the real compiled model returns; require the snapshot assertion to reject",
+  "controls": [],
+  "error": "ReferenceError: rejected is not defined"
+}

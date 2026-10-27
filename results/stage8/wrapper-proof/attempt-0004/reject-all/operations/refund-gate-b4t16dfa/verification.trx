@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="959919ef-8564-4dd3-b3c3-00edde22d113" name="@Macks-MacBook-Pro-3 2026-10-27 10:40:12" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-27T10:40:12.0492360-04:00" queuing="2026-10-27T10:40:12.0492360-04:00" start="2026-10-27T10:40:10.9429530-04:00" finish="2026-10-27T10:40:13.2821880-04:00" />
+  <TestSettings name="default" id="458af235-fcec-4ff8-aede-484efb866892">
+    <Deployment runDeploymentRoot="_Macks-MacBook-Pro-3_2026-10-27_10_40_12" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="b39e2de5-95b6-4c00-af50-5663f6a7c23e" testId="ac0b8c26-b9c1-e492-868e-ba7f8fe41f75" testName="RefundSpec.Assess (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0369834" startTime="2026-10-27T10:40:12.9691620-04:00" endTime="2026-10-27T10:40:13.0072710-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b39e2de5-95b6-4c00-af50-5663f6a7c23e" />
+    <UnitTestResult executionId="5a619dbd-dab8-433a-85f6-4bd052d00af2" testId="ca11fdae-74e8-648b-f106-0c4dfc02ac71" testName="Refund.Assess (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0595789" startTime="2026-10-27T10:40:11.9360120-04:00" endTime="2026-10-27T10:40:12.0379670-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a619dbd-dab8-433a-85f6-4bd052d00af2">
+      <Output>
+        <ErrorInfo>
+          <Message>Invalid</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8b263d74-0362-4037-bec7-df6c5eb0476b" testId="556c097f-cbb7-28a5-29cc-e7806883c6d2" testName="RefundChecks.SuccessfulWitness (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0448834" startTime="2026-10-27T10:40:13.2260320-04:00" endTime="2026-10-27T10:40:13.2721530-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8b263d74-0362-4037-bec7-df6c5eb0476b" />
+    <UnitTestResult executionId="13a8c8c6-d187-4d85-baae-27d2d64b63f4" testId="71b05273-07ac-900c-5ced-596e9fe5b462" testName="Refund.Assess (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0705160" startTime="2026-10-27T10:40:11.8543490-04:00" endTime="2026-10-27T10:40:12.0337510-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="13a8c8c6-d187-4d85-baae-27d2d64b63f4" />
+    <UnitTestResult executionId="9f23ee89-bcff-439f-9b58-88bf8a43bce6" testId="4a689587-7899-ca9e-130d-972bbdbf78cb" testName="RefundChecks.Universal (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0513465" startTime="2026-10-27T10:40:13.1643730-04:00" endTime="2026-10-27T10:40:13.2175010-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f23ee89-bcff-439f-9b58-88bf8a43bce6" />
+    <UnitTestResult executionId="307233e0-3c7e-487d-9f1d-8fa5c19eb64d" testId="d4044dce-3554-ad83-ba86-3bcefddded45" testName="RefundSpec.Eligible (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0378225" startTime="2026-10-27T10:40:12.9246280-04:00" endTime="2026-10-27T10:40:12.9630060-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="307233e0-3c7e-487d-9f1d-8fa5c19eb64d" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="RefundChecks.Universal (correctness)" storage="/users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/gate/refund/bindings.dfy" id="4a689587-7899-ca9e-130d-972bbdbf78cb">
+      <Execution id="9f23ee89-bcff-439f-9b58-88bf8a43bce6" />
+      <TestMethod codeBase="/Users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/gate/refund/Bindings.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundChecks" name="Universal (correctness)" />
+    </UnitTest>
+    <UnitTest name="RefundSpec.Assess (well-formedness)" storage="/users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/spec/refund/refundspec.dfy" id="ac0b8c26-b9c1-e492-868e-ba7f8fe41f75">
+      <Execution id="b39e2de5-95b6-4c00-af50-5663f6a7c23e" />
+      <TestMethod codeBase="/Users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/spec/refund/RefundSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundSpec" name="Assess (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Refund.Assess (correctness)" storage="/users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/impl/refund.dfy" id="ca11fdae-74e8-648b-f106-0c4dfc02ac71">
+      <Execution id="5a619dbd-dab8-433a-85f6-4bd052d00af2" />
+      <TestMethod codeBase="/Users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/impl/Refund.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Refund" name="Assess (correctness)" />
+    </UnitTest>
+    <UnitTest name="RefundSpec.Eligible (well-formedness)" storage="/users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/spec/refund/refundspec.dfy" id="d4044dce-3554-ad83-ba86-3bcefddded45">
+      <Execution id="307233e0-3c7e-487d-9f1d-8fa5c19eb64d" />
+      <TestMethod codeBase="/Users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/spec/refund/RefundSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundSpec" name="Eligible (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="RefundChecks.SuccessfulWitness (correctness)" storage="/users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/gate/refund/bindings.dfy" id="556c097f-cbb7-28a5-29cc-e7806883c6d2">
+      <Execution id="8b263d74-0362-4037-bec7-df6c5eb0476b" />
+      <TestMethod codeBase="/Users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/gate/refund/Bindings.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundChecks" name="SuccessfulWitness (correctness)" />
+    </UnitTest>
+    <UnitTest name="Refund.Assess (well-formedness)" storage="/users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/impl/refund.dfy" id="71b05273-07ac-900c-5ced-596e9fe5b462">
+      <Execution id="13a8c8c6-d187-4d85-baae-27d2d64b63f4" />
+      <TestMethod codeBase="/Users/mackianni/forge/build/stage8/wrapper-proof/attempt-0004/reject-all/impl/Refund.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Refund" name="Assess (well-formedness)" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="ac0b8c26-b9c1-e492-868e-ba7f8fe41f75" executionId="b39e2de5-95b6-4c00-af50-5663f6a7c23e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca11fdae-74e8-648b-f106-0c4dfc02ac71" executionId="5a619dbd-dab8-433a-85f6-4bd052d00af2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="556c097f-cbb7-28a5-29cc-e7806883c6d2" executionId="8b263d74-0362-4037-bec7-df6c5eb0476b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="71b05273-07ac-900c-5ced-596e9fe5b462" executionId="13a8c8c6-d187-4d85-baae-27d2d64b63f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4a689587-7899-ca9e-130d-972bbdbf78cb" executionId="9f23ee89-bcff-439f-9b58-88bf8a43bce6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d4044dce-3554-ad83-ba86-3bcefddded45" executionId="307233e0-3c7e-487d-9f1d-8fa5c19eb64d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="6" executed="6" passed="5" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+</TestRun>

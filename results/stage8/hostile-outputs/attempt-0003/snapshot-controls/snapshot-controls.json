@@ -1,0 +1,167 @@
+{
+  "method": "unit_tested",
+  "result": "passed",
+  "stage8_exit": false,
+  "end_to_end": false,
+  "approved_test_sha256": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+  "callback_sha256": "f807868e3ba34b47f4aa1ad03df9bc6fc0bd131f3f2fd6eec38179a45542a589",
+  "compiled_module_sha256": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
+  "extraction": "TypeScript AST selects the exact T2 callback, expected oracle, compiled-model bridge and constants",
+  "injection": "Mutate the actual input after the real compiled model returns; require the snapshot assertion to reject",
+  "controls": [
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "Object.prototype",
+      "control": "unchanged-input",
+      "result": "accepted"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "Object.prototype",
+      "control": "context-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "Object.prototype",
+      "control": "response-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "Object.prototype",
+      "control": "context-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: [Object: null prototype] {\n-   c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "Object.prototype",
+      "control": "response-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: [Object: null prototype] {\n-   r: {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "null",
+      "control": "unchanged-input",
+      "result": "accepted"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "null",
+      "control": "context-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "null",
+      "control": "response-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: [Object: null prototype] {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "null",
+      "control": "context-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: [Object: null prototype] {\n-   c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n"
+    },
+    {
+      "context_prototype": "Object.prototype",
+      "response_prototype": "null",
+      "control": "response-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: {\n-   r: [Object: null prototype] {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "Object.prototype",
+      "control": "unchanged-input",
+      "result": "accepted"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "Object.prototype",
+      "control": "context-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "Object.prototype",
+      "control": "response-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "Object.prototype",
+      "control": "context-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: {\n-   c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "Object.prototype",
+      "control": "response-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: [Object: null prototype] {\n-   r: {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "null",
+      "control": "unchanged-input",
+      "result": "accepted"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "null",
+      "control": "context-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "null",
+      "control": "response-field",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: [Object: null prototype] {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "null",
+      "control": "context-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: {\n-   c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n"
+    },
+    {
+      "context_prototype": "null",
+      "response_prototype": "null",
+      "control": "response-prototype",
+      "result": "rejected",
+      "assertion_code": "ERR_ASSERTION",
+      "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: {\n-   r: [Object: null prototype] {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+    }
+  ],
+  "unchanged_accepted": 4,
+  "mutations_rejected": 16
+}

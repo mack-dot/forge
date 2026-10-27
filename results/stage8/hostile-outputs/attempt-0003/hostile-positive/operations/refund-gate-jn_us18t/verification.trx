@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f10764e2-c5a4-4615-b0d8-c36aa9f2d89d" name="@Macks-MacBook-Pro-3 2026-10-27 10:38:54" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-27T10:38:54.7655790-04:00" queuing="2026-10-27T10:38:54.7655800-04:00" start="2026-10-27T10:38:54.0769660-04:00" finish="2026-10-27T10:38:55.0405090-04:00" />
+  <TestSettings name="default" id="8293745b-e860-4ec8-b713-06e45d837d71">
+    <Deployment runDeploymentRoot="_Macks-MacBook-Pro-3_2026-10-27_10_38_54" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="0758f69e-0ba6-4712-ace8-07852cfa4503" testId="556c097f-cbb7-28a5-29cc-e7806883c6d2" testName="RefundChecks.SuccessfulWitness (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0264689" startTime="2026-10-27T10:38:54.9938460-04:00" endTime="2026-10-27T10:38:55.0206350-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0758f69e-0ba6-4712-ace8-07852cfa4503" />
+    <UnitTestResult executionId="47cd7cc9-11a9-435f-8046-ae0615d89edf" testId="ca11fdae-74e8-648b-f106-0c4dfc02ac71" testName="Refund.Assess (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0365173" startTime="2026-10-27T10:38:54.7087430-04:00" endTime="2026-10-27T10:38:54.7603970-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="47cd7cc9-11a9-435f-8046-ae0615d89edf" />
+    <UnitTestResult executionId="8b70c6dc-e6c6-4116-8ba4-d181a1923856" testId="71b05273-07ac-900c-5ced-596e9fe5b462" testName="Refund.Assess (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.1870837" startTime="2026-10-27T10:38:54.5102140-04:00" endTime="2026-10-27T10:38:54.7536190-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8b70c6dc-e6c6-4116-8ba4-d181a1923856" />
+    <UnitTestResult executionId="f892d92e-9ddc-4917-9bd3-77af318f00be" testId="4a689587-7899-ca9e-130d-972bbdbf78cb" testName="RefundChecks.Universal (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0348683" startTime="2026-10-27T10:38:54.9530550-04:00" endTime="2026-10-27T10:38:54.9884170-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f892d92e-9ddc-4917-9bd3-77af318f00be" />
+    <UnitTestResult executionId="f928ac85-4c29-452e-a5ab-545520a56c93" testId="d4044dce-3554-ad83-ba86-3bcefddded45" testName="RefundSpec.Eligible (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0141328" startTime="2026-10-27T10:38:54.8218240-04:00" endTime="2026-10-27T10:38:54.8362570-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f928ac85-4c29-452e-a5ab-545520a56c93" />
+    <UnitTestResult executionId="144b699c-8407-42be-8607-5a7c4c3ca55f" testId="ac0b8c26-b9c1-e492-868e-ba7f8fe41f75" testName="RefundSpec.Assess (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0209878" startTime="2026-10-27T10:38:54.8425930-04:00" endTime="2026-10-27T10:38:54.8639700-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="144b699c-8407-42be-8607-5a7c4c3ca55f" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="RefundChecks.Universal (correctness)" storage="/users/mackianni/forge/gate/refund/bindings.dfy" id="4a689587-7899-ca9e-130d-972bbdbf78cb">
+      <Execution id="f892d92e-9ddc-4917-9bd3-77af318f00be" />
+      <TestMethod codeBase="/Users/mackianni/forge/gate/refund/Bindings.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundChecks" name="Universal (correctness)" />
+    </UnitTest>
+    <UnitTest name="RefundSpec.Assess (well-formedness)" storage="/users/mackianni/forge/spec/refund/refundspec.dfy" id="ac0b8c26-b9c1-e492-868e-ba7f8fe41f75">
+      <Execution id="144b699c-8407-42be-8607-5a7c4c3ca55f" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/refund/RefundSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundSpec" name="Assess (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Refund.Assess (correctness)" storage="/users/mackianni/forge/impl/refund.dfy" id="ca11fdae-74e8-648b-f106-0c4dfc02ac71">
+      <Execution id="47cd7cc9-11a9-435f-8046-ae0615d89edf" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Refund.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Refund" name="Assess (correctness)" />
+    </UnitTest>
+    <UnitTest name="RefundSpec.Eligible (well-formedness)" storage="/users/mackianni/forge/spec/refund/refundspec.dfy" id="d4044dce-3554-ad83-ba86-3bcefddded45">
+      <Execution id="f928ac85-4c29-452e-a5ab-545520a56c93" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/refund/RefundSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundSpec" name="Eligible (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="RefundChecks.SuccessfulWitness (correctness)" storage="/users/mackianni/forge/gate/refund/bindings.dfy" id="556c097f-cbb7-28a5-29cc-e7806883c6d2">
+      <Execution id="0758f69e-0ba6-4712-ace8-07852cfa4503" />
+      <TestMethod codeBase="/Users/mackianni/forge/gate/refund/Bindings.dfy" adapterTypeName="executor://dafnyverifier/v1" className="RefundChecks" name="SuccessfulWitness (correctness)" />
+    </UnitTest>
+    <UnitTest name="Refund.Assess (well-formedness)" storage="/users/mackianni/forge/impl/refund.dfy" id="71b05273-07ac-900c-5ced-596e9fe5b462">
+      <Execution id="8b70c6dc-e6c6-4116-8ba4-d181a1923856" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Refund.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Refund" name="Assess (well-formedness)" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="556c097f-cbb7-28a5-29cc-e7806883c6d2" executionId="0758f69e-0ba6-4712-ace8-07852cfa4503" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca11fdae-74e8-648b-f106-0c4dfc02ac71" executionId="47cd7cc9-11a9-435f-8046-ae0615d89edf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="71b05273-07ac-900c-5ced-596e9fe5b462" executionId="8b70c6dc-e6c6-4116-8ba4-d181a1923856" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4a689587-7899-ca9e-130d-972bbdbf78cb" executionId="f892d92e-9ddc-4917-9bd3-77af318f00be" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d4044dce-3554-ad83-ba86-3bcefddded45" executionId="f928ac85-4c29-452e-a5ab-545520a56c93" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ac0b8c26-b9c1-e492-868e-ba7f8fe41f75" executionId="144b699c-8407-42be-8607-5a7c4c3ca55f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="6" executed="6" passed="6" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+</TestRun>

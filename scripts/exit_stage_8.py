@@ -16,6 +16,7 @@ from common import canonical, digest, read_json
 
 SOURCE_FILES = (
     'impl/Refund.dfy', 'ts/refund.ts', 'tests/refund.integration.ts', 'scripts/exit_stage_8.py',
+    'tests/refund.snapshot-controls.ts',
     'gate/refund.py', 'gate/refund/Bindings.dfy', 'gate/refund/hostile.ts',
     'gate/common.py', 'gate/core.py', 'gate/dependencies.py',
     'gate/backends/__init__.py', 'gate/backends/dafny.py', 'gate/expected-audit.md',
@@ -208,6 +209,16 @@ class Run:
             shutil.copyfile(self.work / 'supplemental.json', directory / 'report.json')
         require(process.returncode == 0, 'supplemental runtime checks failed')
         self.report['supplemental_coverage'] = read_json(directory / 'report.json')
+        snapshot_report = self.work / 'snapshot-controls.json'
+        process, _, directory = self.execute(['node', '--import', 'tsx', 'tests/refund.snapshot-controls.ts',
+            '--module', 'build/refund-generated/model.cjs', '--report', str(snapshot_report)], 'snapshot-controls')
+        for path in self.work.glob('snapshot-controls.json*'):
+            shutil.copyfile(path, directory / path.name)
+        require(process.returncode == 0, 'snapshot mutation controls failed')
+        snapshot = read_json(directory / 'snapshot-controls.json')
+        require(snapshot['result'] == 'passed' and snapshot['unchanged_accepted'] == 4 and
+                snapshot['mutations_rejected'] == 16, 'missing genuine field/prototype rejection controls')
+        self.report['snapshot_controls'] = snapshot
         original = (ROOT / 'ts/refund.ts').read_text()
         mutations = {
             'effect-bypass': original.replace('    async chunk(context, bytes, final) {',

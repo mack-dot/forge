@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 299, in main
+    {'wrapper-proof': run.wrapper, 'hostile-outputs': run.hostile, 'evidence-separation': run.separation}[args.case]()
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 217, in hostile
+    require(process.returncode == 0, 'snapshot mutation controls failed')
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 39, in require
+    raise RuntimeError(message)
+RuntimeError: snapshot mutation controls failed

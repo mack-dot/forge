@@ -207,7 +207,12 @@ async function main(): Promise<void> {
           unavailable(await adapter.decode(badWire[bad]));
         }),
       T2: fc.asyncProperty(contextArb, responseArb, async (c, r) => {
-        const before = structuredClone({ c, r });
+        // These records have only primitive fields. Preserve their prototypes
+        // as well as field values; structuredClone normalizes null prototypes.
+        const before = {
+          c: Object.assign(Object.create(Object.getPrototypeOf(c)), c),
+          r: Object.assign(Object.create(Object.getPrototypeOf(r)), r),
+        };
         assert.deepEqual(assess(c, r), expected(c, r));
         assert.deepEqual({ c, r }, before);
       }),

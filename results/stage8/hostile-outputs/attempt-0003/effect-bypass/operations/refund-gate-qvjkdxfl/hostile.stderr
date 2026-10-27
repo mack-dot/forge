@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: executor bypassed the compiled boundary
+    at execute (/Users/mackianni/forge/build/stage8/hostile-outputs/attempt-0003/effect-bypass/gate/refund/hostile.ts:135:9)
+    at Object.chunk (/Users/mackianni/forge/build/stage8/hostile-outputs/attempt-0003/effect-bypass/ts/refund.ts:128:7)
+    at <anonymous> (/Users/mackianni/forge/build/stage8/hostile-outputs/attempt-0003/effect-bypass/gate/refund/hostile.ts:150:39)
+    at async fixture (/Users/mackianni/forge/build/stage8/hostile-outputs/attempt-0003/effect-bypass/gate/refund/hostile.ts:118:5)
+    at async main (/Users/mackianni/forge/build/stage8/hostile-outputs/attempt-0003/effect-bypass/gate/refund/hostile.ts:146:7) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

@@ -1,0 +1,70 @@
+{
+  "result": "failed",
+  "method": "property_tested",
+  "model_quality": "unmeasured",
+  "generated_cases": 6010,
+  "fixture_cases": 68,
+  "runs": [
+    {
+      "claim_id": "T1",
+      "seed": 8001,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T1",
+      "seed": 8002,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T1",
+      "seed": 8003,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T2",
+      "seed": 8001,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T2",
+      "seed": 8002,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T2",
+      "seed": 8003,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T3",
+      "seed": 8001,
+      "num_runs": 10,
+      "failed": true
+    }
+  ],
+  "clock": "controlled logical monotonic clock",
+  "external_refunds": false,
+  "source_to_module_proved": false,
+  "failure": {
+    "claim_id": "T3",
+    "seed": 8001,
+    "counterexample": [
+      0,
+      {
+        "bigint": "0"
+      },
+      "duplicate_charge",
+      0
+    ],
+    "counterexample_path": "9:0:0:0",
+    "num_shrinks": 3,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      amount: 0n,\n      chargeId: 'charge-1',\n      reason: 'duplicate_charge',\n      requestId: 'request-1'\n    },\n+   {\n+     amount: 0n,\n+     chargeId: 'charge-1',\n+     reason: 'duplicate_charge',\n+     requestId: 'request-1'\n+   }\n  ]\n"
+  },
+  "error": "Error: property assertion failed: T3"
+}

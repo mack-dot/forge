@@ -1,20 +1,20 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 8 — ML BOUNDARY**
+**CURRENT: Stage 9 — PROVENANCE**
 
-This is the execution plan and decision record. Stages 0–7 are DONE. Stage 6
+This is the execution plan and decision record. Stages 0–8 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
 three-condition benchmark completed 75 baseline/candidate pairs. Both real
 EXIT commands returned 0. The source evidence and report reproduced byte for
 byte. Stage 7's upstream replay, negative control, and own-binary EXIT each
 returned 0. The exact 1,240-byte C self-test has a normal-termination proof and
 a valid-entry witness. Independent checking covered 579 modules; all 86 closure
-assumptions are permitted. Final source and ELF identities match. Stage 8 is
-CURRENT — blocked. Its approved contract and three exact gate additions are
-adopted unchanged. The wrapper-proof EXIT passed. Hostile-outputs and
-evidence-separation each returned 1 at a protected test snapshot defect.
-The final scope freeze prevents repair of that gate file. All failures remain
-archived; Stage 9 has not started.
+assumptions are permitted. Final source and ELF identities match. Stage 8's
+wrapper-proof, hostile-outputs and evidence-separation EXITs each returned 0.
+The exact approved snapshot repair retains field and prototype mutation
+rejection. Source and property-test evidence each reproduced byte for byte
+through fresh checks. All failures remain archived. Stage 9 is CURRENT;
+no Stage 9 implementation has started.
 `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
@@ -274,8 +274,8 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 5 | SPEC TOOLING | DONE |
 | 6 | SECOND DOMAIN + REUSE MEASUREMENT | DONE |
 | 7 | BINARY LAYER | DONE |
-| 8 | ML BOUNDARY | CURRENT |
-| 9 | PROVENANCE | NOT STARTED |
+| 8 | ML BOUNDARY | DONE |
+| 9 | PROVENANCE | CURRENT |
 | 10 | SHADOW MODE | NOT STARTED |
 
 ## EXIT command conventions
@@ -930,7 +930,7 @@ Completed own-binary proof:
 
 ### Stage 8 — ML BOUNDARY
 
-**Status: CURRENT — blocked by a frozen protected test snapshot**
+**Status: DONE**
 
 Wrap an LLM-backed refund suggester in verified code. Enforce refund ≤ charge,
 allowed reasons, and a safe fallback for timeout or invalid output. Treat model
@@ -943,9 +943,9 @@ checked. Tests of hostile responses supply additional testing evidence.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/exit_stage_8.py --case wrapper-proof` | The established verifier accepts the wrapper bounds and allowed outcomes. | 1, then 0 |
-| `python3 scripts/exit_stage_8.py --case hostile-outputs` | Fuzzed malicious outputs never violate bounds in the executed test corpus. | 1 |
-| `python3 scripts/exit_stage_8.py --case evidence-separation` | Evidence distinguishes proved wrapper properties, fuzz testing, and measured model quality. | 1 |
+| `python3 scripts/exit_stage_8.py --case wrapper-proof` | The established verifier accepts the wrapper bounds and allowed outcomes. | 0 — final attempt 4 |
+| `python3 scripts/exit_stage_8.py --case hostile-outputs` | Fuzzed malicious outputs never violate bounds in the executed test corpus. | 0 — final attempt 3 |
+| `python3 scripts/exit_stage_8.py --case evidence-separation` | Evidence distinguishes proved wrapper properties, fuzz testing, and measured model quality. | 0 — final attempt 2 |
 
 Record fuzz seeds, counts, and limits. Do not turn “no violations observed” into
 a universal proof. Keep application timeout behavior distinct from proof-run
@@ -1023,7 +1023,7 @@ Stop for separate exact approval of the three proposed gate additions, as the
 latest user instruction requires. See append-only U071. Stage 8 remains CURRENT;
 `end_to_end=false`. Stage 9 has not started.
 
-Stage 8 approved gate execution and frozen-scope blocker:
+Historical Stage 8 approved gate execution and frozen-scope blocker:
 
 - The user approved exactly `gate/refund.py`, `gate/refund/Bindings.dfy`, and
   `gate/refund/hostile.ts` at `d2d557e2dcd564049fbd97171b0af67659eacf81`.
@@ -1072,9 +1072,63 @@ states proof scope, finite test counts, toolchain assumptions and reproduction
 commands. See append-only U072. Stage 8 remains CURRENT — blocked;
 Stage 9 remains NOT STARTED; `end_to_end=false`.
 
+Stage 8 exact repair, final EXITs and completion:
+
+- The user approved only the exact prototype-preserving snapshot replacement
+  at `76f58de25fb5ebe305831432907e42a4210add40`. The published identities matched.
+  Both `git apply --check proposals/refund-hostile-snapshot/protected.diff`
+  and `git apply proposals/refund-hostile-snapshot/protected.diff` returned 0.
+  Applied `gate/refund/hostile.ts` SHA-256 is
+  `0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a`.
+  No other protected file changed. See
+  [the exact decision](proposals/refund-hostile-snapshot-decision.md).
+- The added unprotected assertion controls execute the exact approved T2
+  callback with the real compiled wrapper. Four unchanged ordinary/null-prototype
+  combinations passed. Sixteen genuine field/prototype mutations were rejected
+  by the snapshot assertion. No replacement assertion or proof checker is used.
+- Their first static check returned 2 for object-type narrowing; its correction
+  returned 0. Hostile attempt 2 then returned 1 for an omitted extracted helper.
+  Both errors and original source snapshots remain. Only that unprotected
+  extraction was corrected; hostile attempt 3 returned 0.
+- Final real EXIT attempts: wrapper 4 = 0, hostile 3 = 0, evidence separation
+  2 = 0. Their complete declared inputs match the current sources and their
+  before/after identities. Full exit history remains: wrapper `[1, 0, 0, 0]`,
+  hostile `[1, 1, 0]`, evidence separation `[1, 0]`.
+- All six required source/binding/witness obligations and both empty audits
+  passed. Over-limit and reject-all controls failed actual verification with
+  4 at R1/R4. The assumption escape failed the actual audit with 2. Each
+  negative gate returned 1 for the intended reason.
+- The accepted hostile suite executed 9,000 generated cases and 68 fixtures
+  with the approved seeds/counts. Supplemental tests passed 500 generated
+  cases and 23 fixtures. The assertion controls accepted 4 stable inputs and
+  rejected 16 mutations. Effect-bypass and duplicate-dispatch each failed
+  the real test process with 1 for an assertion reason; each gate returned 1.
+- Mislabeled property_tested/eval_measured evidence, wrong artifact identity,
+  invented passing-case count and changed spec identity each returned gate 1
+  for the required reason. Invented-count rejection followed fresh real checks.
+- Both accepted evidence files match three separate fresh gate runs byte for
+  byte, with matching proved-source links. Source evidence SHA-256:
+  `be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86`.
+  Property evidence SHA-256:
+  `77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd`.
+  Generated module SHA-256:
+  `d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda`.
+- All 373 earlier Stage 8 record files matched their preserved hashes. The
+  original blocked status, failed attempts, seeds, shrinks, raw output and
+  approval proposals remain unchanged. Model quality is unmeasured; no
+  passing eval_measured record or real payment execution is claimed.
+
+The [completion record](results/stage8/completed/completion.json) binds all
+final EXIT commands/codes, source identities, controls and canonical artifacts.
+The [boundary report](docs/stage8-refund.md) states the universal source
+guarantees and the finite test, compiler, parser, clock, payment and deployment
+limits. See append-only U073. Stage 8 is DONE; Stage 9 is CURRENT. Publish and
+verify this checkpoint, then stop. No Stage 9 implementation has started.
+`end_to_end=false`.
+
 ### Stage 9 — PROVENANCE
 
-**Status: NOT STARTED**
+**Status: CURRENT**
 
 Sign evidence bundles using pinned sigstore/in-toto tooling. Before allowing a
 deployment, verify the signer identity, artifact digest, and policy version.
@@ -1121,7 +1175,7 @@ assumptions. No binary, deployment, or whole-application claim is established.
 Stage 2 schema, policy, identity, and replay checks passed, including every
 Stage 1 regression. Stage 3's model-comparison checks and approved demo invocation
 also passed. Stages 4 and 5 are complete in their stage records above.
-Stages 6 and 7 are complete in their records above. Stage 8 is CURRENT.
+Stages 6–8 are complete in their records above. Stage 9 is CURRENT.
 
 Commands ran from the repository root. The required `dafny --version` invocation
 used `export PATH="$PWD/.toolchain/dafny-4.11.0/dafny:$PATH"` in that shell. Other
@@ -1204,11 +1258,11 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
 - Runtime provenance: Node and Python installer origins were not independently
   authenticated. Their checked versions and executable hashes are pinned. Keep
   the disclosed trust assumptions in `toolchain/pins.json` and `unsure.md` U015.
-- Stage 8 is CURRENT after the completed Stage 7 binary proofs. Its wrapper
-  contract and gate are approved and adopted. The wrapper-proof EXIT passes;
-  hostile-outputs and evidence-separation fail at the frozen protected snapshot
-  assertion. All failures remain archived. Deployment correctness remains
-  unproved; `end_to_end=false`. Prior measurements retain their limits.
+- Stage 8 is DONE after the exact approved snapshot repair and all three passing
+  EXITs. Source proofs, finite runtime testing and unmeasured model quality stay
+  distinct. Stage 9 is CURRENT; its implementation has not started. Deployment
+  correctness remains unproved; `end_to_end=false`. Prior measurements retain
+  their limits, and all historical failures remain archived.
 - Publication: the user created [mack-dot/forge](https://github.com/mack-dot/forge).
   The connected app confirms public visibility, the mack-dot owner, and push
   access. The earlier 404/creation blocker is resolved. Publication uses that

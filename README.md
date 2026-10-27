@@ -43,12 +43,15 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–7 are complete. Stage 8 is CURRENT and blocked.** The approved refund
-boundary passes its source-proof EXIT: universal safety, exact acceptance of
-valid proposals, and rejection with no refund intent on fallback. Both remaining
-EXITs fail at a protected test snapshot that changes a null prototype. The
-approved gate remains frozen. See the [Stage 8 record](docs/stage8-refund.md)
-for actual codes, preserved failures, finite test results and remaining checks.
+**Stages 0–8 are complete. Stage 9 is CURRENT.** The approved refund boundary
+has a universal source proof of safety, exact acceptance of valid proposals,
+and rejection with no refund intent on fallback. All three Stage 8 EXITs pass.
+The integration has separate finite testing evidence: 9,000 generated cases,
+68 fixtures, supplemental lifecycle tests, and real rejection controls for
+effect bypass and duplicate dispatch. Both evidence bundles reproduce through
+fresh checks. Model quality remains unmeasured; deployment correctness remains
+unproved. See the [Stage 8 record](docs/stage8-refund.md) for exact scope,
+commands, assumptions, evidence and preserved failures.
 
 Forge also has an independently checked termination proof for its own 1,240-byte compiled
 C self-test. Every valid execution of that exact RISC-V ELF terminates with

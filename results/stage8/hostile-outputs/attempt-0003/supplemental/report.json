@@ -1,0 +1,44 @@
+{
+  "result": "passed",
+  "method": "property_tested",
+  "fixtures": [
+    "exact-numeric-string-\"1\\n\"",
+    "exact-numeric-string-\"0\\r\"",
+    "exact-numeric-string-\"1\\r\\n\"",
+    "exact-numeric-string-\"1 \"",
+    "exact-numeric-string-\"1 \"",
+    "exact-numeric-string-\"\\t1\"",
+    "exact-numeric-string-\"1\\t\"",
+    "valid-escaped-keys-and-json-whitespace",
+    "exact-byte-cap",
+    "concurrent-terminal-calls-dispatch-once",
+    "stale-completion-after-timeout",
+    "context-and-result-copies",
+    "executor-reentry-observes-terminal-state",
+    "executor-error-never-retries",
+    "empty-stream-chunks",
+    "invalid-context-{\"chargeId\":\"\"}",
+    "invalid-context-{\"requestId\":\"\"}",
+    "invalid-context-{\"original\":\"-1\"}",
+    "invalid-context-{\"original\":\"9223372036854775808\"}",
+    "invalid-context-{\"remaining\":\"-1\"}",
+    "invalid-context-{\"remaining\":\"101\"}",
+    "invalid-context-{\"refundEnabled\":false}",
+    "invalid-context-{\"requestOpen\":false}"
+  ],
+  "runs": [
+    {
+      "seed": 8004,
+      "num_runs": 250,
+      "failed": false
+    },
+    {
+      "seed": 8005,
+      "num_runs": 250,
+      "failed": false
+    }
+  ],
+  "generated_cases": 500,
+  "model_quality": "unmeasured",
+  "end_to_end": false
+}

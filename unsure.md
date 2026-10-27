@@ -1571,3 +1571,67 @@ curl: (6) Could not resolve host: github.com
   freeze, do not apply proposals/refund-hostile-snapshot.md. A separate exact
   decision is required before that protected repair could be applied and the
   incomplete EXIT requirements and negative controls could be rerun.
+
+## U073 — Exact snapshot repair approved; all Stage 8 EXIT requirements pass
+
+- References: U072; the user's exact one-file approval at
+  76f58de25fb5ebe305831432907e42a4210add40, limited to the published
+  prototype-preserving snapshot replacement in gate/refund/hostile.ts.
+- Observed: the public commit/tree, original file, candidate, manifest and
+  patch digests matched. The real git apply dry-run and patch application each
+  returned 0. Applied SHA-256 is
+  0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a.
+  All other protected files remain unchanged. The approval and adoption records
+  are proposals/refund-hostile-snapshot-decision.md and
+  results/stage8/snapshot-repair-adoption/identity.json.
+- Observed: new unprotected controls extract the exact approved T2 callback,
+  expected oracle, compiled-model bridge and constants with TypeScript's parser.
+  Node executes that code against the actual compiled wrapper. Four unchanged
+  ordinary/null-prototype input combinations passed. Sixteen actual field or
+  prototype changes failed the exact snapshot assertion, after the real model
+  returned. No copied replacement assertion or simulated proof checker is used.
+- Preserved development failures: the new control's first type check returned 2
+  for insufficient object narrowing; the corrected check returned 0. Hostile
+  attempt 2 returned 1 because the extraction omitted the rejected helper.
+  The protected suite and supplemental checks had passed first. Correcting
+  this unprotected extraction allowed the complete hostile EXIT to pass.
+- Observed final EXITs: wrapper-proof attempt 4 returned 0; hostile-outputs
+  attempt 3 returned 0; evidence-separation attempt 2 returned 0. All declared
+  source/harness inputs matched current files and before/after snapshots.
+  Earlier wrapper attempt 3 also passed. Every previous attempt remains intact.
+- Observed proof controls: all six source, contract, arbitrary-input binding
+  and success-witness obligations passed with fresh Dafny execution and empty
+  audits. Over-limit and reject-all mutants failed verification with 4 at R1
+  and R4. The assumption escape failed the actual auditor with 2. Each negative
+  gate returned 1. The approved contract and verification options are unchanged.
+- Observed test controls: each accepted hostile-suite run executed 9,000 cases
+  and 68 fixtures using the approved seeds/counts. Supplemental tests passed
+  500 generated cases (8004/8005) and 23 fixtures. Effect-bypass and duplicate
+  dispatch each failed the actual test process with 1 for an assertion reason;
+  each gate returned 1. Counts describe finite executed tests, not a universal
+  runtime theorem or additional distinct coverage on repeated seeds.
+- Observed evidence controls: property_tested-as-proof and eval_measured-as-proof
+  were rejected by method policy with gate 1. Wrong artifact, invented case
+  count and altered spec identity each returned gate 1 for the intended reason.
+  Invented-count rejection followed fresh real checks, not cached acceptance.
+- Observed reproduction: the source and property bundles each match three fresh
+  accepted runs byte for byte. Both name the same proved source artifact where
+  linked. Source evidence SHA-256:
+  be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86.
+  Property evidence SHA-256:
+  77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd.
+  Compiled JavaScript module SHA-256:
+  d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda.
+- Records: results/stage8/completed/completion.json links actual EXIT reports,
+  codes, commands, full assumptions, case/shrink records and canonical files.
+  All 373 pre-existing Stage 8 record files matched their original hashes.
+  The old blocked status and approved proposal text remain unchanged.
+- Limits: source_proof covers the mathematical boundary, including universal
+  safety and exact acceptance. Finite property/unit tests cover executed runtime
+  scenarios. Model quality is unmeasured, with no score or passing eval_measured
+  record. Dafny/Boogie/Z3 and the host remain trusted. Compiler/parser fidelity,
+  physical deadlines, durable idempotency, cumulative refunds, actual payment
+  execution and deployed identity remain outside the universal proof.
+- Impact: the Stage 8 EXIT requirements are complete. Mark Stage 8 DONE and
+  Stage 9 CURRENT in this checkpoint, keep end_to_end=false, publish and verify
+  the remote commit/tree, then stop. No Stage 9 implementation has started.

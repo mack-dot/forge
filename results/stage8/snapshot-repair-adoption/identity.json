@@ -1,0 +1,35 @@
+{
+  "approved_commit": "76f58de25fb5ebe305831432907e42a4210add40",
+  "approved_tree": "38719a0bb834aa45e1e191dce596b334fd88b15f",
+  "change": {
+    "before_sha256": "cc3db1659761d16bb123fd984ec84ece6b58c6ec1eebe925602a9f8122987dea",
+    "bytes": 15437,
+    "candidate": "proposals/refund-hostile-snapshot/hostile.ts",
+    "operation": "modify",
+    "sha256": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+    "target": "gate/refund/hostile.ts"
+  },
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "proposals/refund-hostile-snapshot/protected.diff"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "git",
+        "apply",
+        "proposals/refund-hostile-snapshot/protected.diff"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "end_to_end": false,
+  "manifest_sha256": "98645de7678354a2892aa48ab4a7d96bcd7ca92ccd13d9b0576be9ba4d54224e",
+  "other_protected_unchanged": true,
+  "patch_sha256": "127daf49e2864495ab0651e35e54e0028ca29008f60b091ca43f4d95e27701a5"
+}
