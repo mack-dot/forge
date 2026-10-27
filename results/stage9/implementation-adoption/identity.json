@@ -1,0 +1,83 @@
+{
+  "applied_files": [
+    {
+      "path": "gate/provenance/Dockerfile",
+      "sha256": "bb0a3d3dee8865515c3b777a6799a6178d8d6c0c796d2b46d37e3fa13987b877"
+    },
+    {
+      "path": "gate/provenance/common.py",
+      "sha256": "77c068569e47885abbf4cd979f761cf6deab43ce8c5d98749764adaab919cc16"
+    },
+    {
+      "path": "scripts/exit_stage_9.py",
+      "sha256": "a4718dcb41687197d82b59044bc4bec818dbf15d128d037bc589b90488c288ef"
+    },
+    {
+      "path": "gate/provenance/implementation.lock",
+      "sha256": "6b43c19370742b02eb05c66b9a9091a6c47431998ef045a09018fa6671459daa"
+    },
+    {
+      "path": "gate/provenance/observe.py",
+      "sha256": "aea3bf21a1d0267df0e374bbcfbf3e09ff2df2e3b1fa34d16fe115bc010a6c13"
+    },
+    {
+      "path": "gate/provenance/preflight.py",
+      "sha256": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776"
+    },
+    {
+      "path": "gate/provenance/producer.py",
+      "sha256": "f3bcc1dc754a4ca423a1746215e12b09c39a7882922b338861c6470c71dd617a"
+    },
+    {
+      "path": ".github/workflows/provenance-negative.yml",
+      "sha256": "79c50d36f5951f6478ec69f72a85cd1c79414dacd3c17dfd6b170470e24ffca7"
+    },
+    {
+      "path": ".github/workflows/provenance.yml",
+      "sha256": "d2c60993d504a4353102d36189f9dd5f25b98ab3c2c73a12649fc18a087ccefd"
+    },
+    {
+      "path": "gate/provenance/release.py",
+      "sha256": "e9f61515ae14300c099f6d2179df0610fe23b5267f3f14361165e2993f039df8"
+    },
+    {
+      "path": "gate/provenance/runtime.json",
+      "sha256": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024"
+    }
+  ],
+  "approved_commit": "06b40caa6bf5fb6963756b39646413559f84c61d",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "/Users/mackianni/forge/proposals/provenance-implementation/proposed.diff"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "apply",
+        "/Users/mackianni/forge/proposals/provenance-implementation/proposed.diff"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "deployment_execution_authorized": false,
+  "end_to_end": false,
+  "existing_files_unchanged": 1446,
+  "manifest_sha256": "5ea08fb8e32d875adc1ab3bb690599602cd622a7c61223f8cc56d4c5bbe972fa",
+  "patch_sha256": "25410a1397fb5d8ea8a616359924afadabc0da64b4bc800ca3aab1f3244642b7",
+  "published_tree": "914bc59e048f075ccf7a6fbc8cdc4b51305b5cc9",
+  "result": "exact_approved_bytes_applied",
+  "runner_registration_authorized": false,
+  "scope": "exact_file_additions_only",
+  "signing_authorized": false,
+  "workflow_dispatch_authorized": false
+}

@@ -1764,3 +1764,58 @@ curl: (6) Could not resolve host: github.com
 - Next check: publish and verify this approval/proposal checkpoint, then stop
   for exact implementation/workflow approval. Actual signing and runtime checks
   remain pending, as stated in U075.
+
+## U077 — Exact implementation applied; receipt audit and runner admission block execution
+
+- References: U075, U076; proposals/provenance-implementation-decision.md;
+  docs/stage9-signing-preparation-audit.md;
+  proposals/stage9-runner-provisioning.md.
+- Approval: the user approved only the exact 11 additions published at
+  06b40caa6bf5fb6963756b39646413559f84c61d. Workflow dispatch, public Sigstore
+  signing, runner registration and deployment execution remain unauthorized.
+  The approval record is a conversation record, not a cryptographic signature.
+- Observed adoption: published proposal identities matched. Both git apply
+  --check and git apply returned 0. All 11 installed files match the approved
+  bytes and SHA-256 hashes. All 1,446 snapshotted pre-existing files were
+  unchanged at adoption. No protected implementation was repaired afterward.
+- Observed safe check: python3 scripts/check_stage9_installation.py returned 0.
+  It checked exact bytes, syntax, manual workflow structure, 60 locked files
+  and 45 upstream Python dependency files. It ran no proof or signature check.
+- Observed failure: python3 scripts/audit_stage9_receipts.py --output
+  results/stage9/implementation-adoption/receipt-audit-0001 --work
+  build/stage9-receipt-audit-0001 returned 1. The real approved receipt validator
+  did not reject invalid dependency hashes, a substituted copied ELF or a
+  missing copied ELF when the supplied manifest matched the inputs. It did
+  reject nonce mismatch (STALE_PROOF_RECEIPT) and mutation after manifest
+  creation (PROOF_RECEIPT_BYTES). Raw logs, commands, digests and all generated
+  fixtures are preserved. Historical Stage 7 inputs remain unchanged.
+- Scope: the audit fed real historical logs to the JSON validator as explicitly
+  invalid negative fixtures. No kernel, workflow, signature or deployment ran.
+  The results establish helper-level validation gaps, not a complete signed
+  release bypass. No fixture counts as accepted or fresh proof evidence.
+- Finding: signing calls the receipt validator and checks the exact canonical
+  statement and locked checkout. The validator checks only dependency-map count
+  and value length; it does not bind those values to checked dependency bytes.
+  It compares the reported ELF hash but not the actual copied ELF. Signing
+  does not rehash the downloaded packaged.elf. Earlier package extraction and
+  later file observation exist in code but remain unexecuted in Stage 9.
+- Trust limit: a receipt's new nonce does not authenticate a new kernel run.
+  Freshness relies on the approved producer job, its isolation and GitHub's
+  same-run artifact handoff. The signer does not rerun the kernel itself. Do
+  not claim complete independent validation from JSON comparisons or syntax.
+- Observed environment constraint: read-only repository metadata reports
+  owner.type=User and visibility=public. No enforced restriction to the two
+  approved workflows has been established for a dedicated runner. Labels only
+  route jobs. Organization runner-group access controls cannot be assumed for
+  this personal repository. No runner was registered or host settings changed.
+- Uncertainty: dedicated hardware, exact host OS build, workflow admission,
+  current availability of the pinned runner and network access remain untested.
+  The documented RAM/storage allocations are proposals, not measurements.
+  A repository transfer or signer-identity change is not authorized.
+- Impact: U075/U076's file-approval blocker is resolved. Stage 9 remains CURRENT
+  on the receipt gaps, runner admission and explicit execution authorization.
+  All six Stage 9 EXITs are NOT RUN. All prior failures remain. end_to_end=false.
+- Next check: review a separate exact receipt-binding repair and resolve runner
+  admission before registration or signing. Obtain explicit authorization for
+  the concrete provisioning and research operations. Preserve the approved
+  bytes until any repair is separately approved. Do not begin Stage 10.

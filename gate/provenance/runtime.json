@@ -1,0 +1,43 @@
+{
+  "actions_runner": {
+    "archive": "https://github.com/actions/runner/releases/download/v2.338.2/actions-runner-osx-arm64-2.338.2.tar.gz",
+    "platform": "osx-arm64",
+    "provisioning_authorized": false,
+    "required_label": "forge-stage9",
+    "sha256": "25a065af409ffa317ab4d5a3b614dd15fc9c40f2172bc1b35a1b1258e919a388",
+    "version": "2.338.2"
+  },
+  "builder": {
+    "buildkit_version": "v0.25.1",
+    "driver": "docker",
+    "name": "desktop-linux"
+  },
+  "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
+  "docker": {
+    "Client": {
+      "ApiVersion": "1.51",
+      "Arch": "arm64",
+      "GitCommit": "e180ab8",
+      "Os": "darwin",
+      "Version": "28.5.1"
+    },
+    "Server": {
+      "ApiVersion": "1.51",
+      "Arch": "arm64",
+      "GitCommit": "f8215cc",
+      "Os": "linux",
+      "Version": "28.5.1"
+    }
+  },
+  "docker_components": {
+    "Engine": "28.5.1",
+    "containerd": "1.7.27",
+    "docker-init": "0.19.0",
+    "runc": "1.2.5"
+  },
+  "docker_desktop": "4.48.0 (207573)",
+  "end_to_end": false,
+  "format_version": 1,
+  "kernel": "6.10.14-linuxkit",
+  "python": "3.10.11"
+}

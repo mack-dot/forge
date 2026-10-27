@@ -14,9 +14,12 @@ wrapper-proof, hostile-outputs and evidence-separation EXITs each returned 0.
 The exact approved snapshot repair retains field and prototype mutation
 rejection. Source and property-test evidence each reproduced byte for byte
 through fresh checks. All failures remain archived. Stage 9 is CURRENT;
-the exact approved provenance contract is applied. The separate implementation
-and workflow proposal awaits approval. No Stage 9 gate or workflow is active;
-signature verification and deployment have not run.
+the exact approved provenance contract and 11 implementation/workflow additions
+are applied. The safe installation check passed. A receipt-validator audit
+failed: invalid dependency hashes and substituted or missing copied ELF bytes
+were not rejected. The gate remains unchanged. Runner admission, execution
+authorization and a separately approved receipt repair remain unresolved.
+All six Stage 9 EXITs are NOT RUN; signing and deployment have not run.
 `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
@@ -1130,7 +1133,7 @@ verify this checkpoint, then stop. No Stage 9 implementation has started.
 
 ### Stage 9 — PROVENANCE
 
-**Status: CURRENT — blocked on exact implementation/workflow approval**
+**Status: CURRENT — blocked on receipt-validation gaps, runner admission and execution authorization**
 
 Sign evidence bundles using pinned sigstore/in-toto tooling. Before allowing a
 deployment, verify the signer identity, artifact digest, and policy version.
@@ -1174,7 +1177,7 @@ Preparation logs and identity snapshots are under `results/stage9/preparation/`.
 All 30 existing protected files and all old Stage 7–8 records remain unchanged.
 See U074. `end_to_end=false`.
 
-#### Approved contract adoption and current implementation proposal
+#### Approved contract adoption and implementation proposal (historical)
 
 The user approved only the three contract additions at
 `097431cf458e5c62332575b09e953224471fa64d`. The public manifest, patch and candidate
@@ -1209,6 +1212,48 @@ container build/start, workflow activation or signing occurred. Every failure
 remains preserved in `results/stage9/implementation-preparation/`. Stop for the
 next exact approval; do not change the approved contract to fit the proposed
 implementation. See U075. `end_to_end=false`.
+
+#### Approved implementation adoption and safe preparation
+
+The user approved only the exact 11 additions at
+`06b40caa6bf5fb6963756b39646413559f84c61d`, bound to the published manifest,
+patch and individual file hashes. Those bytes are applied unchanged. The
+approval explicitly excludes workflow dispatch, public Sigstore signing,
+runner registration and deployment execution. See the
+[approval record](proposals/provenance-implementation-decision.md).
+
+| Preparation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git apply --check /Users/mackianni/forge/proposals/provenance-implementation/proposed.diff` | 0 | Approved 11-file patch dry-run. |
+| `git apply /Users/mackianni/forge/proposals/provenance-implementation/proposed.diff` | 0 | Applied exactly the 11 approved additions. |
+| `python3 scripts/check_stage9_installation.py` | 0 | Exact installed bytes, syntax, manual workflow structure, 60 locked files and 45 Python dependency files. |
+| `python3 scripts/audit_stage9_receipts.py --output results/stage9/implementation-adoption/receipt-audit-0001 --work build/stage9-receipt-audit-0001` | 1 | Local real receipt-validator audit; three unexpected non-rejections. No proof, signature or deployment. |
+| `python3 results/stage9/implementation-adoption/preservation-check/check.py` | 0 | All 33 prior protected files unchanged; all 11 additions exact; append-only uncertainty history and historical audit inputs preserved; public archive contains the exact raw kernel log. |
+
+The validator accepted invalid dependency hashes and a copied ELF that was
+substituted or missing when the receipt manifest matched those inputs. It
+rejected a nonce mismatch with `STALE_PROOF_RECEIPT` and a file changed after
+manifest creation with `PROOF_RECEIPT_BYTES`. These are helper-level findings;
+they are not signed release admissions or newly executed kernel results.
+Historical logs were deliberately reused as untrusted negative fixtures.
+No fixture is accepted evidence. All commands, raw logs, identities, generated
+fixtures and the failing audit remain in `results/stage9/implementation-adoption/`.
+
+The [signing audit](docs/stage9-signing-preparation-audit.md) records the existing
+checks, missing byte bindings and trust limits. Freshness depends on the trusted
+producer job and GitHub artifact handoff; matching metadata cannot establish it
+alone. The [runner plan](proposals/stage9-runner-provisioning.md) covers isolation,
+credentials, exact pins, resource allocation, admission and teardown. Read-only
+metadata confirms a public, user-owned repository. No enforced workflow
+allowlist has been established; a runner label is insufficient.
+
+All 1,446 snapshotted prior files were unchanged at adoption. The original
+failures remain intact. No protected bytes were adjusted after application.
+The final preservation check found only ROADMAP.md and the append-only unsure.md
+changed among those prior files; the other 1,444 retain their original hashes.
+All six EXITs remain NOT RUN. No runner registration, workflow dispatch,
+Cosign execution, container build/start or fresh proof execution occurred.
+Stop at the required approval boundary. See U077. `end_to_end=false`.
 
 ### Stage 10 — SHADOW MODE
 
