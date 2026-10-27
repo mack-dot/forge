@@ -1,0 +1,27 @@
+{
+  "after_sha256": {
+    "build/refund-generated/model.cjs": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
+    "gate/refund/hostile.ts": "cc3db1659761d16bb123fd984ec84ece6b58c6ec1eebe925602a9f8122987dea",
+    "proposals/refund-hostile-snapshot/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+    "ts/refund.ts": "8152c87d1f8d8f7cfd016cba9c9abd6627f49bee9a211084f1a67a6f197ec98c"
+  },
+  "argv": [
+    "node",
+    "--import",
+    "tsx",
+    "proposals/refund-hostile-snapshot/hostile.ts",
+    "--module",
+    "build/refund-generated/model.cjs",
+    "--report",
+    "/Users/mackianni/forge/results/stage8/snapshot-proposal/attempt-0001/hostile.json"
+  ],
+  "exit_code": 0,
+  "input_sha256": {
+    "build/refund-generated/model.cjs": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
+    "gate/refund/hostile.ts": "cc3db1659761d16bb123fd984ec84ece6b58c6ec1eebe925602a9f8122987dea",
+    "proposals/refund-hostile-snapshot/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+    "ts/refund.ts": "8152c87d1f8d8f7cfd016cba9c9abd6627f49bee9a211084f1a67a6f197ec98c"
+  },
+  "protected_gate_modified": false,
+  "stage8_exit": false
+}

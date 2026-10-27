@@ -1,0 +1,67 @@
+{
+  "format_version": 1,
+  "id": "forge-refund-boundary",
+  "tiers": {
+    "critical": {
+      "artifact_kind": "source",
+      "description": "R1-R5 require actual source proof; safety and exact acceptance of every eligible proposal are mandatory.",
+      "required_claims": {
+        "R1": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "R2": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "R3": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "R4": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "R5": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        }
+      }
+    },
+    "hostile-tests": {
+      "artifact_kind": "source",
+      "description": "Finite T1-T3 integration test claims only; never authorizes an R1-R5 proof claim.",
+      "required_claims": {
+        "T1": {
+          "allowed_methods": [
+            "property_tested"
+          ],
+          "minimum_method": "property_tested"
+        },
+        "T2": {
+          "allowed_methods": [
+            "property_tested"
+          ],
+          "minimum_method": "property_tested"
+        },
+        "T3": {
+          "allowed_methods": [
+            "property_tested"
+          ],
+          "minimum_method": "property_tested"
+        }
+      }
+    }
+  },
+  "version": "1.0.0"
+}

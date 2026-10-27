@@ -1,0 +1,65 @@
+{
+  "result": "failed",
+  "method": "property_tested",
+  "model_quality": "unmeasured",
+  "generated_cases": 3002,
+  "fixture_cases": 68,
+  "runs": [
+    {
+      "claim_id": "T1",
+      "seed": 8001,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T1",
+      "seed": 8002,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T1",
+      "seed": 8003,
+      "num_runs": 1000,
+      "failed": false
+    },
+    {
+      "claim_id": "T2",
+      "seed": 8001,
+      "num_runs": 2,
+      "failed": true
+    }
+  ],
+  "clock": "controlled logical monotonic clock",
+  "external_refunds": false,
+  "source_to_module_proved": false,
+  "failure": {
+    "claim_id": "T2",
+    "seed": 8001,
+    "counterexample": [
+      {
+        "chargeId": "",
+        "requestId": "",
+        "original": {
+          "bigint": "-1"
+        },
+        "remaining": {
+          "bigint": "0"
+        },
+        "refundEnabled": false,
+        "requestOpen": false
+      },
+      {
+        "kind": "Candidate",
+        "amount": {
+          "bigint": "-1"
+        },
+        "reason": ""
+      }
+    ],
+    "counterexample_path": "1:0:0:0:0:0:0",
+    "num_shrinks": 6,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: '',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: [Object: null prototype] {\n-   r: {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n"
+  },
+  "error": "Error: property assertion failed: T2"
+}

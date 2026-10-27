@@ -1511,3 +1511,63 @@ curl: (6) Could not resolve host: github.com
   approval of those exact three additions before applying them. Then implement
   the fixed runtime adapter and EXIT harness, run all required real checks and
   rejection controls, preserve failures, and verify canonical reproduction.
+
+## U072 — Approved Stage 8 gate exposes a frozen test-snapshot blocker
+
+- References: U071; exact approval of the three gate additions at
+  d2d557e2dcd564049fbd97171b0af67659eacf81; the later instruction to freeze scope
+  and make no changes to approved contracts, policy or gate files.
+- Observed: the approved public tree, manifest, patch and candidate digests
+  matched. All three targets were absent and received the exact approved bytes.
+  All previously protected files stayed unchanged. The decision and adoption
+  records are proposals/refund-gate-decision.md and results/stage8/gate-adoption/.
+- Observed: the unprotected adapter, supplemental tests and EXIT harness were
+  implemented. Strict TypeScript checking returned 0. The adapter has no payment
+  client; its executor is supplied externally and the tests only record calls.
+- Observed failure: wrapper EXIT attempt 1 returned 1. Its positive gate and
+  actual negative verifier/auditor runs behaved correctly, but the harness
+  omitted Dafny's audit.md.expect file when looking for the assumption finding.
+  That unprotected report-reader fix was made. Full wrapper attempt 2 returned
+  0. Both complete attempts and original source snapshots remain archived.
+- Observed: six required obligations passed, including the arbitrary-input
+  binding and eligible successful witness. The over-limit mutant failed actual
+  verification with 4 at R1; reject-all failed with 4 at R4. The assumption escape
+  failed the actual auditor with 2 and an explicit Refund.Assess finding. Their
+  gate processes returned 1. No protected requirement changed.
+- Observed blocker: hostile-outputs returned 1. After 68 fixtures and 3,000
+  passing T1 cases, T2 seed 8001 failed after two cases and six shrinks. The
+  first expected-value assertion passed. Its subsequent mutation assertion
+  compared a null-prototype input record against a structuredClone snapshot
+  with Object.prototype. The raw assertion shows that prototype difference.
+- Observed: evidence-separation returned 1 at the same protected T2 assertion.
+  Its two fresh accepted source bundles were byte-identical and also matched
+  the successful wrapper EXIT's bundle. All three independently executed the
+  real Dafny proof and audits. Source artifact SHA-256:
+  de34f8f9deb55c5978b9ccf4656b91b1361d6c0600348bcae4e5abd5f127f3e5.
+  Canonical source evidence SHA-256:
+  acafe3f90623314d4389604ffbc8d99c880091ea8a28f805b255ae1a60c753fe.
+- Observed development checks: supplemental tests returned 0 for 23 fixtures
+  and 500 generated cases (seeds 8004 and 8005), covering stale responses,
+  caller/result mutation, executor reentry/failure and numeric/wire boundaries.
+  An unapplied prototype-preserving snapshot candidate, executed directly from
+  proposals/ before the final freeze, returned 0 for 9,000 cases and 68 fixtures.
+  Its diff dry-run returned 0 without application. These are finite development
+  observations, not passing Stage 8 EXITs or accepted integration evidence.
+- Unfinished: the EXIT harness has not reached effect-bypass, duplicate-dispatch,
+  fabricated/mislabeled-evidence or spec-tamper controls. It has not established
+  canonical integration evidence reproduction. Model quality is unmeasured;
+  there is no passing eval_measured record. Full results, seeds, shrinks, raw
+  output, source identities and actual codes are in results/stage8/status.json
+  and its linked attempt directories. Previous failures are preserved.
+- Interpretation: the approved test snapshot causes a false mutation report
+  for a generated input. It is not evidence of an observed refund-policy
+  violation. It remains a real rejection: neither a proposed fix nor a direct
+  candidate test run can convert the unchanged approved gate into a pass.
+- Impact: Stage 8 remains CURRENT — blocked; Stage 9 is NOT STARTED;
+  end_to_end=false. The source proof still trusts Dafny/Boogie/Z3 and the host.
+  Compilation, parsing, external clocks, durable idempotency, real payments,
+  deployment identity and model accuracy are outside its universal guarantees.
+- Next check: preserve and publish this blocked checkpoint. Under the current
+  freeze, do not apply proposals/refund-hostile-snapshot.md. A separate exact
+  decision is required before that protected repair could be applied and the
+  incomplete EXIT requirements and negative controls could be rerun.

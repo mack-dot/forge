@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--strict",
+    "--target",
+    "ES2022",
+    "--module",
+    "Node16",
+    "--moduleResolution",
+    "Node16",
+    "--esModuleInterop",
+    "--types",
+    "node",
+    "ts/refund.ts",
+    "tests/refund.integration.ts"
+  ],
+  "exit_code": 0,
+  "input_sha256": {
+    "scripts/exit_stage_8.py": "e53133ddebe695466f49ba6e5d22caed29dc1dd1e218780ecb49c7b900f94b64",
+    "tests/refund.integration.ts": "2c4b936216a8eec8bf3afce4b2bceaaf104c925893b221e8e3f5db35c4c54cae",
+    "ts/refund.ts": "8152c87d1f8d8f7cfd016cba9c9abd6627f49bee9a211084f1a67a6f197ec98c"
+  },
+  "python_syntax": "parsed",
+  "tests_executed": false
+}

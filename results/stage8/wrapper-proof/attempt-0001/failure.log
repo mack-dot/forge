@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 288, in main
+    {'wrapper-proof': run.wrapper, 'hostile-outputs': run.hostile, 'evidence-separation': run.separation}[args.case]()
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 197, in wrapper
+    require('Refund.Assess' in findings and 'assum' in findings.lower(), 'missing assumption finding')
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 38, in require
+    raise RuntimeError(message)
+RuntimeError: missing assumption finding

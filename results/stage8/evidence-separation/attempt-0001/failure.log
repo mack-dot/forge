@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 288, in main
+    {'wrapper-proof': run.wrapper, 'hostile-outputs': run.hostile, 'evidence-separation': run.separation}[args.case]()
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 237, in separation
+    first, _, directory = self.gate('repeat-first-' + tier, tier=tier)
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 106, in gate
+    require(process.returncode == expected,
+  File "/Users/mackianni/forge/scripts/exit_stage_8.py", line 38, in require
+    raise RuntimeError(message)
+RuntimeError: repeat-first-hostile-tests: expected harness exit 0, observed 1

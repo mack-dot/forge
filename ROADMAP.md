@@ -10,9 +10,11 @@ byte. Stage 7's upstream replay, negative control, and own-binary EXIT each
 returned 0. The exact 1,240-byte C self-test has a normal-termination proof and
 a valid-entry witness. Independent checking covered 579 modules; all 86 closure
 assumptions are permitted. Final source and ELF identities match. Stage 8 is
-CURRENT. Its four exact refund contract additions are approved and adopted.
-The wrapper and proposed binding passed direct development verification. Three
-new gate additions await separate exact approval; no Stage 8 EXIT has run.
+CURRENT — blocked. Its approved contract and three exact gate additions are
+adopted unchanged. The wrapper-proof EXIT passed. Hostile-outputs and
+evidence-separation each returned 1 at a protected test snapshot defect.
+The final scope freeze prevents repair of that gate file. All failures remain
+archived; Stage 9 has not started.
 `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
@@ -928,7 +930,7 @@ Completed own-binary proof:
 
 ### Stage 8 — ML BOUNDARY
 
-**Status: CURRENT — contract adopted; exact gate additions await approval**
+**Status: CURRENT — blocked by a frozen protected test snapshot**
 
 Wrap an LLM-backed refund suggester in verified code. Enforce refund ≤ charge,
 allowed reasons, and a safe fallback for timeout or invalid output. Treat model
@@ -941,9 +943,9 @@ checked. Tests of hostile responses supply additional testing evidence.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/exit_stage_8.py --case wrapper-proof` | The established verifier accepts the wrapper bounds and allowed outcomes. | NOT RUN |
-| `python3 scripts/exit_stage_8.py --case hostile-outputs` | Fuzzed malicious outputs never violate bounds in the executed test corpus. | NOT RUN |
-| `python3 scripts/exit_stage_8.py --case evidence-separation` | Evidence distinguishes proved wrapper properties, fuzz testing, and measured model quality. | NOT RUN |
+| `python3 scripts/exit_stage_8.py --case wrapper-proof` | The established verifier accepts the wrapper bounds and allowed outcomes. | 1, then 0 |
+| `python3 scripts/exit_stage_8.py --case hostile-outputs` | Fuzzed malicious outputs never violate bounds in the executed test corpus. | 1 |
+| `python3 scripts/exit_stage_8.py --case evidence-separation` | Evidence distinguishes proved wrapper properties, fuzz testing, and measured model quality. | 1 |
 
 Record fuzz seeds, counts, and limits. Do not turn “no violations observed” into
 a universal proof. Keep application timeout behavior distinct from proof-run
@@ -977,7 +979,7 @@ Historical Stage 8 contract preparation (not EXIT results; resolved below):
 - Stop for exact human contract approval. Stage 8 remains CURRENT;
   `end_to_end=false`. No Stage 9 work has started.
 
-Stage 8 contract adoption and gate preparation (not EXIT results):
+Historical Stage 8 contract adoption and gate preparation (not EXIT results):
 
 - The user approved exactly the four additions at published revision
   `e3aa546f86dc5b43ec8c754792e3db4cb413b410`, bound to its manifest and digests.
@@ -1020,6 +1022,55 @@ EXIT commands above remain NOT RUN. No Stage 8 accepted bundle is published.
 Stop for separate exact approval of the three proposed gate additions, as the
 latest user instruction requires. See append-only U071. Stage 8 remains CURRENT;
 `end_to_end=false`. Stage 9 has not started.
+
+Stage 8 approved gate execution and frozen-scope blocker:
+
+- The user approved exactly `gate/refund.py`, `gate/refund/Bindings.dfy`, and
+  `gate/refund/hostile.ts` at `d2d557e2dcd564049fbd97171b0af67659eacf81`.
+  The published candidates, manifest, patch and target digests matched. The
+  three files were adopted byte for byte. See
+  [the decision](proposals/refund-gate-decision.md) and
+  [adoption identities](results/stage8/gate-adoption/identity.json).
+- `ts/refund.ts` implements the declared parser/host interface. The unprotected
+  EXIT harness and supplemental integration tests are implemented. The strict
+  TypeScript check returned 0. No approved contract, policy or gate was edited.
+- Wrapper attempt 1 returned 1 after the actual proof and all three real
+  rejections. The reporting harness did not read the auditor's `.expect`
+  sidecar. Correcting that unprotected file selection allowed full attempt 2
+  to return 0. Both attempts, source snapshots and complete logs remain.
+- The successful wrapper EXIT checked all six required source, abstract-contract,
+  universal-binding and witness obligations. Over-limit authorization failed
+  actual verification with 4 at R1; reject-all failed with 4 at R4. The actual
+  assumption audit rejected the escape with 2. Each negative gate returned 1.
+- The hostile EXIT returned 1. Its 68 fixtures and 3,000 T1 generated cases
+  passed first. T2 seed 8001 failed after two cases and six shrinks: fast-check
+  generated a null-prototype record, while `structuredClone` normalized the
+  snapshot's prototype. Strict equality then rejected an unchanged input.
+  The compiled wrapper's expected-value assertion passed before that failure.
+- The evidence-separation EXIT returned 1 at the same T2 assertion. Its two
+  fresh source runs reproduced byte for byte. Those bytes also match the
+  successful wrapper EXIT, for three separate fresh accepted source runs.
+  Evidence SHA-256: `acafe3f90623314d4389604ffbc8d99c880091ea8a28f805b255ae1a60c753fe`.
+- Supplemental tests returned 0 for 23 fixtures and 500 generated cases, seeds
+  8004 and 8005. They cover stale delivery, caller/result mutation, concurrent
+  terminal calls, executor reentry/failure, numeric and byte boundaries, and
+  malformed/truncated bytes. These finite checks are not a Stage 8 EXIT pass.
+- A minimal prototype-preserving snapshot repair was evaluated directly from
+  `proposals/`, before the final freeze, and returned 0 for 9,000 generated cases
+  and 68 fixtures. It was never substituted into the approved gate. It supplies
+  no accepted integration bundle. Its exact diagnostic diff is in
+  [proposals/refund-hostile-snapshot.md](proposals/refund-hostile-snapshot.md).
+- The final user instruction freezes scope and forbids changes to approved gate
+  files. The repair remains unapplied. Effect-bypass, duplicate-dispatch,
+  fabricated/mislabeled-evidence and spec-tamper controls have not been reached
+  by the EXIT harness. Integration evidence reproduction remains unfinished.
+  No Stage 8 completion or passing eval_measured record is claimed.
+
+The [status record](results/stage8/status.json) links every actual EXIT attempt,
+code, input identity and archived operation. The [boundary report](docs/stage8-refund.md)
+states proof scope, finite test counts, toolchain assumptions and reproduction
+commands. See append-only U072. Stage 8 remains CURRENT — blocked;
+Stage 9 remains NOT STARTED; `end_to_end=false`.
 
 ### Stage 9 — PROVENANCE
 
@@ -1154,10 +1205,10 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
   authenticated. Their checked versions and executable hashes are pinned. Keep
   the disclosed trust assumptions in `toolchain/pins.json` and `unsure.md` U015.
 - Stage 8 is CURRENT after the completed Stage 7 binary proofs. Its wrapper
-  contract is approved and adopted. The wrapper has passed direct development
-  verification; the exact new gate additions await separate approval. All
-  Stage 8 EXITs remain NOT RUN. Deployment correctness remains unproved;
-  `end_to_end=false`. Prior measurements retain their limits.
+  contract and gate are approved and adopted. The wrapper-proof EXIT passes;
+  hostile-outputs and evidence-separation fail at the frozen protected snapshot
+  assertion. All failures remain archived. Deployment correctness remains
+  unproved; `end_to_end=false`. Prior measurements retain their limits.
 - Publication: the user created [mack-dot/forge](https://github.com/mack-dot/forge).
   The connected app confirms public visibility, the mack-dot owner, and push
   access. The earlier 404/creation blocker is resolved. Publication uses that

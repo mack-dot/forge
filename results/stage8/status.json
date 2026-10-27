@@ -1,0 +1,118 @@
+{
+  "development_checks": [
+    {
+      "exit_code": 0,
+      "report": "results/stage8/development/typecheck-0001/report.json",
+      "sha256": "88ba26cc5251f0fdc3afc698edf265cc339078173396d944f056a9743f523647",
+      "stage8_exit": false
+    },
+    {
+      "exit_code": 0,
+      "report": "results/stage8/development/supplemental-0001/report.json",
+      "sha256": "2ef64c2e35e046587e5c2a03362c2a0152358c9f589039181dad514bedbde66b",
+      "stage8_exit": false
+    },
+    {
+      "exit_code": 0,
+      "report": "results/stage8/snapshot-proposal/attempt-0001/report.json",
+      "sha256": "74255507c1aeb9c3f6b3dda37d8ff7f573aa4d4f446a57892b76c362e88b9561",
+      "stage8_exit": false
+    },
+    {
+      "exit_code": 0,
+      "report": "results/stage8/snapshot-proposal/patch-check/report.json",
+      "sha256": "5ea9b7abf3ce92f296f27f99bfd70e3466dc7ffb365fb7524bcc6abf7de26123",
+      "stage8_exit": false
+    }
+  ],
+  "end_to_end": false,
+  "exit_attempts": {
+    "evidence-separation": [
+      {
+        "exit_code": 1,
+        "protected_unchanged": true,
+        "report": "results/stage8/evidence-separation/attempt-0001/report.json",
+        "result": "failed",
+        "sha256": "07ce0f5a013d4dcd3e67423af40bb1d19d1260ee13a34a838af769bcfee88392"
+      }
+    ],
+    "hostile-outputs": [
+      {
+        "exit_code": 1,
+        "protected_unchanged": true,
+        "report": "results/stage8/hostile-outputs/attempt-0001/report.json",
+        "result": "failed",
+        "sha256": "0079c6e819eb04eca3ae1f742211392becfdaa9777e1c1aae2b955cdeac8427b"
+      }
+    ],
+    "wrapper-proof": [
+      {
+        "exit_code": 1,
+        "protected_unchanged": true,
+        "report": "results/stage8/wrapper-proof/attempt-0001/report.json",
+        "result": "failed",
+        "sha256": "962c9b5abed933f7a0c225d01f462d772d4800c5d1fe83391f1dafdc8b34d235"
+      },
+      {
+        "exit_code": 0,
+        "protected_unchanged": true,
+        "report": "results/stage8/wrapper-proof/attempt-0002/report.json",
+        "result": "passed",
+        "sha256": "09ef78634e3b8e0d2a0558916314c2a058b6c928befe3d74e01715b87ca854de"
+      }
+    ]
+  },
+  "model_quality": "unmeasured",
+  "protected_gate_repair_applied": false,
+  "source_negative_controls": [
+    {
+      "control": "over-limit",
+      "gate_exit": 1,
+      "required_claim": "R1",
+      "verifier_exit": 4
+    },
+    {
+      "control": "reject-all",
+      "gate_exit": 1,
+      "required_claim": "R4",
+      "verifier_exit": 4
+    },
+    {
+      "auditor_exit": 2,
+      "control": "assumption-escape",
+      "gate_exit": 1
+    }
+  ],
+  "source_proof": {
+    "artifact_sha256": "de34f8f9deb55c5978b9ccf4656b91b1361d6c0600348bcae4e5abd5f127f3e5",
+    "claims": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5"
+    ],
+    "evidence_file": "results/stage8/wrapper-proof/attempt-0002/source-positive/evidence.json",
+    "evidence_sha256": "acafe3f90623314d4389604ffbc8d99c880091ea8a28f805b255ae1a60c753fe",
+    "independent_fresh_gate_runs_byte_identical": 3,
+    "obligations": [
+      "Refund.Assess (correctness)",
+      "Refund.Assess (well-formedness)",
+      "RefundChecks.SuccessfulWitness (correctness)",
+      "RefundChecks.Universal (correctness)",
+      "RefundSpec.Assess (well-formedness)",
+      "RefundSpec.Eligible (well-formedness)"
+    ]
+  },
+  "stage": 8,
+  "status": "CURRENT \u2014 blocked by frozen protected test snapshot",
+  "unexecuted_required_controls": [
+    "effect-bypass",
+    "duplicate-dispatch",
+    "test-as-proof",
+    "eval-as-proof",
+    "mismatched-artifact",
+    "invented-count",
+    "spec-tamper"
+  ]
+}
