@@ -1,0 +1,29 @@
+{
+  "commands": [
+    {
+      "command": "/Users/mackianni/forge/build/stage6/controls/forbidden-assumption/.toolchain/dafny-4.11.0/dafny/dafny --version",
+      "elapsed_ns": 113717834,
+      "exit_code": 0,
+      "log": "results/stage6/development/control-assume-warning/version.log",
+      "log_sha256": "2e4243de9dcb2a6464f6e6e20031511043025167bf72bf67a6bdf0de213717ef",
+      "original_log": "build/gate-operation/version.log"
+    },
+    {
+      "command": "/Users/mackianni/forge/build/stage6/controls/forbidden-assumption/.toolchain/dafny-4.11.0/dafny/dafny audit tests/booking/SuccessfulExecution.dfy --report-format md --report-file /Users/mackianni/forge/build/stage6/controls/forbidden-assumption/build/gate-operation/audit.md --compare-report",
+      "elapsed_ns": 927669792,
+      "exit_code": 0,
+      "log": "results/stage6/development/control-assume-warning/audit.log",
+      "log_sha256": "3e5f07ae1059fcdee5f70531af46920a24d82fbf04fc7d2dcc8db37e9f8d399e",
+      "original_log": "build/gate-operation/audit.log"
+    },
+    {
+      "command": "/Users/mackianni/forge/build/stage6/controls/forbidden-assumption/.toolchain/dafny-4.11.0/dafny/dafny verify tests/booking/SuccessfulExecution.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --json-output --log-format 'trx;LogFileName=/Users/mackianni/forge/build/stage6/controls/forbidden-assumption/build/gate-operation/verification.trx'",
+      "elapsed_ns": 9191697750,
+      "exit_code": 2,
+      "log": "results/stage6/development/control-assume-warning/verify.log",
+      "log_sha256": "bd4b0a709d7ea1bd7531603bf09f8cd3ae17e46f06481cd0e953dda38e49d640",
+      "original_log": "build/gate-operation/verify.log"
+    }
+  ],
+  "stage_exit": false
+}

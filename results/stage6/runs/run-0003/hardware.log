@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/usr/sbin/system_profiler",
+    "SPHardwareDataType",
+    "-json",
+    "-detailLevel",
+    "mini"
+  ],
+  "exit_code": 0,
+  "hardware": [
+    {
+      "chip_type": "Apple M1 Pro",
+      "machine_model": "MacBookPro18,1",
+      "machine_name": "MacBook Pro",
+      "number_processors": "proc 10:0:8:2",
+      "physical_memory": "16 GB"
+    }
+  ],
+  "logical_cpu_count": 10,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "redacted_fields": "Serial numbers, UUIDs, and device identifiers omitted.",
+  "stderr": "2026-10-26 19:17:30.124 system_profiler[83400:57089378] Timed out waiting for the Activation Lock Status check\n",
+  "system_profiler_sha256": "5788af6ed4ca07cd3ab8a1fb2036a936084700aceb32d53e3269c299d85bb8c2"
+}

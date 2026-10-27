@@ -1,0 +1,20 @@
+{
+  "commands": [
+    {
+      "command": "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny audit tests/booking/SuccessfulExecution.dfy --report-format md --report-file results/stage6/development/witness2/audit.md --compare-report",
+      "elapsed_ns": 1172986917,
+      "exit_code": 0,
+      "log": "results/stage6/development/witness2/audit.log",
+      "log_sha256": "c40b7394c6b9c33baae94cdd718de528c1db1ce60d663d1601a016c2aa00d9ed"
+    },
+    {
+      "command": "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny verify tests/booking/SuccessfulExecution.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --json-output --log-format 'trx;LogFileName=/Users/mackianni/forge/results/stage6/development/witness2/verification.trx'",
+      "elapsed_ns": 10036132333,
+      "exit_code": 4,
+      "log": "results/stage6/development/witness2/verify.log",
+      "log_sha256": "e138a3eaf73b9e1d6a24fae639fcbc0f30e817a2c9cb1b5ae9eb78d621901c77"
+    }
+  ],
+  "source_sha256": "cb0b2337e35fccdf0beb607212ed0975bf9cdeadb7622097dfc7cef46a092d76",
+  "stage_exit": false
+}

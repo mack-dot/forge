@@ -43,12 +43,19 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–5 are complete. Stage 6 is current; its booking spec awaits approval.**
+**Stages 0–6 are complete. Stage 7 is current and has not started.**
 
-The [booking proposal](proposals/booking.md) defines matching, cancellation, and
-retry behavior. Its draft passed syntax and type checking only. The proposed
-benchmark compares cold verification, shared source files, and native dependency
-cache reuse. Booking proofs and benchmark results remain pending.
+The [approved booking contract](proposals/booking-decision.md) defines matching,
+cancellation, and retries. Its implementation and successful-execution trace pass
+Dafny. The new [booking gate](gate/booking.py) binds B1–B4 to exact source bytes
+and requires `source_proof`. The [reuse benchmark](docs/reuse-benchmark.md)
+completed 75 pairs. Across 25 pairs per condition, verifier process time was
+269.713 seconds cold, 271.067 with shared files, and 175.828 with native reuse,
+including every baseline. These results describe this corpus and host.
+Developer productivity and broader applicability remain unmeasured.
+
+The existing PR workflow reports ledger claims. Run the booking gate explicitly
+for B1–B4; Stage 6 does not add a booking PR-enforcement claim.
 
 The ledger demo uses Dafny 4.11.0 and bundled Z3 4.12.1. Its approved source
 refinement establishes these claims for sequential operations over mathematical
@@ -80,6 +87,7 @@ insufficient evidence methods, and unsupported proof labels.
 | Local incremental gate | Valid Apply edit checked 2 member obligations and reused 10; broken dependencies were rejected | [Local controls](results/stage4-local.json) |
 | Linux toolchain | Real installation, true-lemma acceptance, and false-lemma rejection | [Successful inventory run](https://github.com/mack-dot/forge/actions/runs/40397041174) |
 | Spec quality | Successful-execution witness checked; reject-all vacuity flagged; 8/10 valid, audit-clean mutants killed, 2 survived | [Spec-quality report](docs/spec-quality.md) |
+| Booking and reuse | B1–B4 source proofs; checked cancellation/retry trace; six rejection controls; 75 measured benchmark pairs | [Booking scope](docs/booking.md) and [measurements](docs/reuse-benchmark.md) |
 | Actual GitHub change loop | Implementation edit: 2 obligations checked, 10 reused. Approved fee spec change: 4 checked, 8 reused. Unapproved spec changes rejected; claims posted | [Fee PR](https://github.com/mack-dot/forge/pull/4) and [post-approval rejection](https://github.com/mack-dot/forge/pull/5) |
 
 All five ledger claims currently share the Apply proof obligation. The
@@ -146,6 +154,8 @@ prove the program's behavior.
 | [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks, and actual results. |
 | [docs/claims.md](docs/claims.md) | Generated claim explanations and observed behavior examples. |
 | [docs/spec-quality.md](docs/spec-quality.md) | Checked success witness, mutation results, and reproduction commands. |
+| [docs/booking.md](docs/booking.md) | Approved booking behavior, source gate, and trust boundary. |
+| [docs/reuse-benchmark.md](docs/reuse-benchmark.md) | Actual reuse measurements, setup costs, token interval, and limits. |
 | [Stage 5 logs](results/stage5/logs/index.json) | Raw checker logs, including preserved driver failures. |
 | [unsure.md](unsure.md) | Append-only findings, uncertainty, corrections, and resolutions. |
 | [docs/stage4-change-loop.md](docs/stage4-change-loop.md) | Current change-loop implementation and limits. |

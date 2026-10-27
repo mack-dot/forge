@@ -1,0 +1,42 @@
+{
+  "byte_identical": true,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "scripts/exit_stage_6.py",
+        "--case",
+        "report"
+      ],
+      "exit_code": 0,
+      "log": "results/stage6/report-replay-0.log",
+      "log_sha256": "1c6a17d3078b11232c83c8fb32d4b64025dafb16a4ed2be327b554487a3f0a3b"
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage6/report-replay/0",
+        "results/stage6/report.json"
+      ],
+      "exit_code": 0,
+      "log": "results/stage6/report-replay-1.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cmp",
+        "build/stage6/report-replay/1",
+        "docs/reuse-benchmark.md"
+      ],
+      "exit_code": 0,
+      "log": "results/stage6/report-replay-2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "exit_code": 0,
+  "output_sha256": {
+    "docs/reuse-benchmark.md": "db5a292b2d8c197b257fe6fe61441a48e7a7ca63058833d94f8c1fbbcc45dc5f",
+    "results/stage6/report.json": "8eb3070c931fdfcee1ef17ba5b8193fb289b8e67e8386b0d87b85cac184e42f0"
+  },
+  "result": "passed"
+}

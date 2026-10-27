@@ -1,0 +1,15 @@
+{
+  "command": "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 build/stage6/native-probe/Snapshot.dfy",
+  "elapsed_ns": 6112660750,
+  "exit_code": 0,
+  "input_sha256": {
+    "impl/Booking.dfy": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd",
+    "impl/Ledger.dfy": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d",
+    "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+    "spec/booking/BookingSpec.dfy": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+  },
+  "kind": "native_snapshot_preparation",
+  "log": "results/stage6/development/native-probe/snapshots.log",
+  "log_sha256": "5bb2b24a4edf0f4911fa613293468edcc4fa3a8f01c7aadc395862e3f7b82203",
+  "stage_exit": false
+}

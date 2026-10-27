@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a577ef79-18d0-4981-9514-cc6383ba4ff6" name="@Macks-MacBook-Pro-3 2026-10-26 18:55:48" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-26T18:55:48.2998870-04:00" queuing="2026-10-26T18:55:48.2998870-04:00" start="2026-10-26T18:55:47.8809730-04:00" finish="2026-10-26T18:55:49.5247140-04:00" />
+  <TestSettings name="default" id="fa04adda-a7cc-4187-a8ce-9e6b44aaa821">
+    <Deployment runDeploymentRoot="_Macks-MacBook-Pro-3_2026-10-26_18_55_48" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="9f0b0913-0717-49ef-a2b5-25b94130d3a4" testId="224e8088-4769-2fb2-8e88-9659ed33e5a9" testName="Ledger.Apply (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0656696" startTime="2026-10-26T18:55:48.6039890-04:00" endTime="2026-10-26T18:55:48.6701980-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f0b0913-0717-49ef-a2b5-25b94130d3a4" />
+    <UnitTestResult executionId="1e11ded7-9c16-48be-a1b9-25291863f5fe" testId="10842512-2007-31e6-8cdd-b5d77de5dd5c" testName="LedgerSpec.IsFreshValid (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0079732" startTime="2026-10-26T18:55:48.3530130-04:00" endTime="2026-10-26T18:55:48.3612040-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1e11ded7-9c16-48be-a1b9-25291863f5fe" />
+    <UnitTestResult executionId="b0e3c98e-91fe-42bf-9f9d-0efc0e41a6ba" testId="20ac49a4-032b-279a-6252-7f072e18fa01" testName="Booking.Apply (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0429474" startTime="2026-10-26T18:55:49.1582540-04:00" endTime="2026-10-26T18:55:49.4936900-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b0e3c98e-91fe-42bf-9f9d-0efc0e41a6ba" />
+    <UnitTestResult executionId="01b1a8e5-f712-4a53-ac56-de2812bb52bb" testId="a007135f-20d1-a306-f755-7fe559e2604a" testName="BookingSpec.IsFreshBook (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0137425" startTime="2026-10-26T18:55:48.8933580-04:00" endTime="2026-10-26T18:55:48.9073600-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="01b1a8e5-f712-4a53-ac56-de2812bb52bb" />
+    <UnitTestResult executionId="cd99ffcb-abe5-49d5-9320-06afd802102c" testId="0b11711e-e7b8-8432-0b23-f4069960e56c" testName="BookingSpec.WellFormed (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0538387" startTime="2026-10-26T18:55:48.8077420-04:00" endTime="2026-10-26T18:55:48.8620090-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cd99ffcb-abe5-49d5-9320-06afd802102c" />
+    <UnitTestResult executionId="d07a2ae4-bfe6-48ab-8f92-dcf53c83c551" testId="3d4fec6e-54e6-66e0-f136-005bc7423bd8" testName="LedgerSpec.WellFormed (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0198961" startTime="2026-10-26T18:55:48.3028240-04:00" endTime="2026-10-26T18:55:48.3230340-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d07a2ae4-bfe6-48ab-8f92-dcf53c83c551" />
+    <UnitTestResult executionId="8565eaa1-5496-4015-bb47-fc49b89646b3" testId="a6bf4b39-e705-4b54-b7b5-d06f5af28cfd" testName="BookingSpec.NoDoubleBooking (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0068469" startTime="2026-10-26T18:55:48.7807880-04:00" endTime="2026-10-26T18:55:48.7878100-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8565eaa1-5496-4015-bb47-fc49b89646b3" />
+    <UnitTestResult executionId="b5560293-5cd0-43ca-a0e6-f4d4b7419f99" testId="ebf25b10-92fa-db9f-df43-669c02c41943" testName="Ledger.TotalReplace (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0125379" startTime="2026-10-26T18:55:48.5460150-04:00" endTime="2026-10-26T18:55:48.5588380-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b5560293-5cd0-43ca-a0e6-f4d4b7419f99" />
+    <UnitTestResult executionId="ec3a4169-cd35-4c72-92f4-a4ae5f47f153" testId="88710569-b61c-b0f2-a5e6-59b929024316" testName="Booking.Least (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0287820" startTime="2026-10-26T18:55:49.0882670-04:00" endTime="2026-10-26T18:55:49.1297680-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ec3a4169-cd35-4c72-92f4-a4ae5f47f153">
+      <Output>
+        <ErrorInfo>
+          <Message>Invalid</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8c9881a6-a240-41d4-8f3e-3394ed01c7e0" testId="6a7fd8df-043c-1029-82d4-2c96227c76dd" testName="LedgerSpec.NonNegative (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0386356" startTime="2026-10-26T18:55:48.2408440-04:00" endTime="2026-10-26T18:55:48.2889870-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8c9881a6-a240-41d4-8f3e-3394ed01c7e0" />
+    <UnitTestResult executionId="0b6ceb6f-fa64-4c4e-94d2-656716426e54" testId="0350de9d-03e6-dc06-594c-534ea33a6013" testName="BookingSpec.Apply (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0394740" startTime="2026-10-26T18:55:48.9251050-04:00" endTime="2026-10-26T18:55:48.9649030-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0b6ceb6f-fa64-4c4e-94d2-656716426e54" />
+    <UnitTestResult executionId="45424f9f-9767-427f-a204-30e65f438b7a" testId="7e4ae7c9-f901-fe1e-ae83-c86f481bd48d" testName="Ledger.TotalRemove (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0280420" startTime="2026-10-26T18:55:48.5031190-04:00" endTime="2026-10-26T18:55:48.5318740-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="45424f9f-9767-427f-a204-30e65f438b7a" />
+    <UnitTestResult executionId="8840e654-818b-4566-a8c3-79caf444226b" testId="acb95fd4-a6bb-e4a2-c63b-9d05addb36db" testName="LedgerSpec.IsRetry (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0072584" startTime="2026-10-26T18:55:48.3423150-04:00" endTime="2026-10-26T18:55:48.3498250-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8840e654-818b-4566-a8c3-79caf444226b" />
+    <UnitTestResult executionId="38204ea2-8371-44be-b811-8763b7fc73ab" testId="efd962ce-3b4b-245d-d57c-84fc123322fd" testName="BookingSpec.IsFreshCancel (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0075257" startTime="2026-10-26T18:55:48.9106690-04:00" endTime="2026-10-26T18:55:48.9184330-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="38204ea2-8371-44be-b811-8763b7fc73ab" />
+    <UnitTestResult executionId="40087a22-6eee-452a-8408-e1a61e30ba4c" testId="0c6f5c33-43cf-f1e5-c50b-c41e2330e3de" testName="Ledger.Apply (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0327433" startTime="2026-10-26T18:55:48.5656220-04:00" endTime="2026-10-26T18:55:48.6701820-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40087a22-6eee-452a-8408-e1a61e30ba4c" />
+    <UnitTestResult executionId="edff1b10-154e-4e93-bb76-cfde6b4f8845" testId="2bcbd9e7-c13f-986a-4b1e-ac89598e3883" testName="LedgerSpec.Apply (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0220058" startTime="2026-10-26T18:55:48.3656050-04:00" endTime="2026-10-26T18:55:48.3878830-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="edff1b10-154e-4e93-bb76-cfde6b4f8845" />
+    <UnitTestResult executionId="3c2b054d-c19f-4499-b01a-4cb7ec563759" testId="72e7ee53-e842-f0fe-aa4a-8deffc536b1d" testName="BookingSpec.IsRetry (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0120202" startTime="2026-10-26T18:55:48.8772750-04:00" endTime="2026-10-26T18:55:48.8895650-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3c2b054d-c19f-4499-b01a-4cb7ec563759" />
+    <UnitTestResult executionId="86a7501f-36a5-4971-808e-2db219a1ee3d" testId="cc518c79-8f10-22d4-e785-3b63d9afef8f" testName="Ledger.TotalRemove (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0110856" startTime="2026-10-26T18:55:48.4882300-04:00" endTime="2026-10-26T18:55:48.5318580-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="86a7501f-36a5-4971-808e-2db219a1ee3d" />
+    <UnitTestResult executionId="466b0aea-278c-4e14-90ad-72d9e607351d" testId="adfaf741-a2e3-0fa9-5cb4-29ff49620f81" testName="LedgerSpec.Total (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0124927" startTime="2026-10-26T18:55:48.3266650-04:00" endTime="2026-10-26T18:55:48.3395110-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="466b0aea-278c-4e14-90ad-72d9e607351d" />
+    <UnitTestResult executionId="b8c97dbb-3559-44dd-a221-ea59bd421fe9" testId="c5d53bfc-75ec-2099-3388-0695340701ef" testName="Ledger.TotalReplace (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0073090" startTime="2026-10-26T18:55:48.5353540-04:00" endTime="2026-10-26T18:55:48.5588240-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b8c97dbb-3559-44dd-a221-ea59bd421fe9" />
+    <UnitTestResult executionId="2be5e75f-6c11-4493-9f45-e36d047d5b26" testId="1586ed59-c660-449c-1a0a-8eef369e36a8" testName="Booking.Apply (correctness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.2793400" startTime="2026-10-26T18:55:49.2128750-04:00" endTime="2026-10-26T18:55:49.4937070-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2be5e75f-6c11-4493-9f45-e36d047d5b26">
+      <Output>
+        <ErrorInfo>
+          <Message>Invalid</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4b3c4f3e-38b1-460a-acd5-1ddb1517160c" testId="a6d86047-0bae-2853-800a-72be6c29e2c4" testName="BookingSpec.AvailableSlots (well-formedness)" computerName="Macks-MacBook-Pro-3" duration="00:00:00.0079038" startTime="2026-10-26T18:55:48.8656200-04:00" endTime="2026-10-26T18:55:48.8737680-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b3c4f3e-38b1-460a-acd5-1ddb1517160c" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Ledger.TotalRemove (well-formedness)" storage="/users/mackianni/forge/impl/ledger.dfy" id="cc518c79-8f10-22d4-e785-3b63d9afef8f">
+      <Execution id="86a7501f-36a5-4971-808e-2db219a1ee3d" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Ledger.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Ledger" name="TotalRemove (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Ledger.TotalReplace (correctness)" storage="/users/mackianni/forge/impl/ledger.dfy" id="ebf25b10-92fa-db9f-df43-669c02c41943">
+      <Execution id="b5560293-5cd0-43ca-a0e6-f4d4b7419f99" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Ledger.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Ledger" name="TotalReplace (correctness)" />
+    </UnitTest>
+    <UnitTest name="Ledger.TotalRemove (correctness)" storage="/users/mackianni/forge/impl/ledger.dfy" id="7e4ae7c9-f901-fe1e-ae83-c86f481bd48d">
+      <Execution id="45424f9f-9767-427f-a204-30e65f438b7a" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Ledger.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Ledger" name="TotalRemove (correctness)" />
+    </UnitTest>
+    <UnitTest name="LedgerSpec.IsFreshValid (well-formedness)" storage="/users/mackianni/forge/spec/ledgerspec.dfy" id="10842512-2007-31e6-8cdd-b5d77de5dd5c">
+      <Execution id="1e11ded7-9c16-48be-a1b9-25291863f5fe" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/LedgerSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="LedgerSpec" name="IsFreshValid (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.IsFreshCancel (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="efd962ce-3b4b-245d-d57c-84fc123322fd">
+      <Execution id="38204ea2-8371-44be-b811-8763b7fc73ab" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="IsFreshCancel (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.Apply (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="0350de9d-03e6-dc06-594c-534ea33a6013">
+      <Execution id="0b6ceb6f-fa64-4c4e-94d2-656716426e54" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="Apply (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Ledger.TotalReplace (well-formedness)" storage="/users/mackianni/forge/impl/ledger.dfy" id="c5d53bfc-75ec-2099-3388-0695340701ef">
+      <Execution id="b8c97dbb-3559-44dd-a221-ea59bd421fe9" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Ledger.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Ledger" name="TotalReplace (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.WellFormed (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="0b11711e-e7b8-8432-0b23-f4069960e56c">
+      <Execution id="cd99ffcb-abe5-49d5-9320-06afd802102c" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="WellFormed (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.IsFreshBook (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="a007135f-20d1-a306-f755-7fe559e2604a">
+      <Execution id="01b1a8e5-f712-4a53-ac56-de2812bb52bb" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="IsFreshBook (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Booking.Apply (well-formedness)" storage="/users/mackianni/forge/impl/booking.dfy" id="20ac49a4-032b-279a-6252-7f072e18fa01">
+      <Execution id="b0e3c98e-91fe-42bf-9f9d-0efc0e41a6ba" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Booking.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Booking" name="Apply (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.IsRetry (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="72e7ee53-e842-f0fe-aa4a-8deffc536b1d">
+      <Execution id="3c2b054d-c19f-4499-b01a-4cb7ec563759" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="IsRetry (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Ledger.Apply (well-formedness)" storage="/users/mackianni/forge/impl/ledger.dfy" id="0c6f5c33-43cf-f1e5-c50b-c41e2330e3de">
+      <Execution id="40087a22-6eee-452a-8408-e1a61e30ba4c" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Ledger.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Ledger" name="Apply (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.NoDoubleBooking (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="a6bf4b39-e705-4b54-b7b5-d06f5af28cfd">
+      <Execution id="8565eaa1-5496-4015-bb47-fc49b89646b3" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="NoDoubleBooking (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="LedgerSpec.Total (well-formedness)" storage="/users/mackianni/forge/spec/ledgerspec.dfy" id="adfaf741-a2e3-0fa9-5cb4-29ff49620f81">
+      <Execution id="466b0aea-278c-4e14-90ad-72d9e607351d" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/LedgerSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="LedgerSpec" name="Total (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="BookingSpec.AvailableSlots (well-formedness)" storage="/users/mackianni/forge/spec/booking/bookingspec.dfy" id="a6d86047-0bae-2853-800a-72be6c29e2c4">
+      <Execution id="4b3c4f3e-38b1-460a-acd5-1ddb1517160c" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/booking/BookingSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="BookingSpec" name="AvailableSlots (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="LedgerSpec.Apply (well-formedness)" storage="/users/mackianni/forge/spec/ledgerspec.dfy" id="2bcbd9e7-c13f-986a-4b1e-ac89598e3883">
+      <Execution id="edff1b10-154e-4e93-bb76-cfde6b4f8845" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/LedgerSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="LedgerSpec" name="Apply (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Booking.Least (correctness)" storage="/users/mackianni/forge/impl/booking.dfy" id="88710569-b61c-b0f2-a5e6-59b929024316">
+      <Execution id="ec3a4169-cd35-4c72-92f4-a4ae5f47f153" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Booking.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Booking" name="Least (correctness)" />
+    </UnitTest>
+    <UnitTest name="LedgerSpec.WellFormed (well-formedness)" storage="/users/mackianni/forge/spec/ledgerspec.dfy" id="3d4fec6e-54e6-66e0-f136-005bc7423bd8">
+      <Execution id="d07a2ae4-bfe6-48ab-8f92-dcf53c83c551" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/LedgerSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="LedgerSpec" name="WellFormed (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="Booking.Apply (correctness)" storage="/users/mackianni/forge/impl/booking.dfy" id="1586ed59-c660-449c-1a0a-8eef369e36a8">
+      <Execution id="2be5e75f-6c11-4493-9f45-e36d047d5b26" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Booking.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Booking" name="Apply (correctness)" />
+    </UnitTest>
+    <UnitTest name="Ledger.Apply (correctness)" storage="/users/mackianni/forge/impl/ledger.dfy" id="224e8088-4769-2fb2-8e88-9659ed33e5a9">
+      <Execution id="9f0b0913-0717-49ef-a2b5-25b94130d3a4" />
+      <TestMethod codeBase="/Users/mackianni/forge/impl/Ledger.dfy" adapterTypeName="executor://dafnyverifier/v1" className="Ledger" name="Apply (correctness)" />
+    </UnitTest>
+    <UnitTest name="LedgerSpec.NonNegative (well-formedness)" storage="/users/mackianni/forge/spec/ledgerspec.dfy" id="6a7fd8df-043c-1029-82d4-2c96227c76dd">
+      <Execution id="8c9881a6-a240-41d4-8f3e-3394ed01c7e0" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/LedgerSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="LedgerSpec" name="NonNegative (well-formedness)" />
+    </UnitTest>
+    <UnitTest name="LedgerSpec.IsRetry (well-formedness)" storage="/users/mackianni/forge/spec/ledgerspec.dfy" id="acb95fd4-a6bb-e4a2-c63b-9d05addb36db">
+      <Execution id="8840e654-818b-4566-a8c3-79caf444226b" />
+      <TestMethod codeBase="/Users/mackianni/forge/spec/LedgerSpec.dfy" adapterTypeName="executor://dafnyverifier/v1" className="LedgerSpec" name="IsRetry (well-formedness)" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="224e8088-4769-2fb2-8e88-9659ed33e5a9" executionId="9f0b0913-0717-49ef-a2b5-25b94130d3a4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="10842512-2007-31e6-8cdd-b5d77de5dd5c" executionId="1e11ded7-9c16-48be-a1b9-25291863f5fe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="20ac49a4-032b-279a-6252-7f072e18fa01" executionId="b0e3c98e-91fe-42bf-9f9d-0efc0e41a6ba" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a007135f-20d1-a306-f755-7fe559e2604a" executionId="01b1a8e5-f712-4a53-ac56-de2812bb52bb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0b11711e-e7b8-8432-0b23-f4069960e56c" executionId="cd99ffcb-abe5-49d5-9320-06afd802102c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d4fec6e-54e6-66e0-f136-005bc7423bd8" executionId="d07a2ae4-bfe6-48ab-8f92-dcf53c83c551" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a6bf4b39-e705-4b54-b7b5-d06f5af28cfd" executionId="8565eaa1-5496-4015-bb47-fc49b89646b3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ebf25b10-92fa-db9f-df43-669c02c41943" executionId="b5560293-5cd0-43ca-a0e6-f4d4b7419f99" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="88710569-b61c-b0f2-a5e6-59b929024316" executionId="ec3a4169-cd35-4c72-92f4-a4ae5f47f153" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6a7fd8df-043c-1029-82d4-2c96227c76dd" executionId="8c9881a6-a240-41d4-8f3e-3394ed01c7e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0350de9d-03e6-dc06-594c-534ea33a6013" executionId="0b6ceb6f-fa64-4c4e-94d2-656716426e54" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7e4ae7c9-f901-fe1e-ae83-c86f481bd48d" executionId="45424f9f-9767-427f-a204-30e65f438b7a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="acb95fd4-a6bb-e4a2-c63b-9d05addb36db" executionId="8840e654-818b-4566-a8c3-79caf444226b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="efd962ce-3b4b-245d-d57c-84fc123322fd" executionId="38204ea2-8371-44be-b811-8763b7fc73ab" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0c6f5c33-43cf-f1e5-c50b-c41e2330e3de" executionId="40087a22-6eee-452a-8408-e1a61e30ba4c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2bcbd9e7-c13f-986a-4b1e-ac89598e3883" executionId="edff1b10-154e-4e93-bb76-cfde6b4f8845" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="72e7ee53-e842-f0fe-aa4a-8deffc536b1d" executionId="3c2b054d-c19f-4499-b01a-4cb7ec563759" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cc518c79-8f10-22d4-e785-3b63d9afef8f" executionId="86a7501f-36a5-4971-808e-2db219a1ee3d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="adfaf741-a2e3-0fa9-5cb4-29ff49620f81" executionId="466b0aea-278c-4e14-90ad-72d9e607351d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c5d53bfc-75ec-2099-3388-0695340701ef" executionId="b8c97dbb-3559-44dd-a221-ea59bd421fe9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1586ed59-c660-449c-1a0a-8eef369e36a8" executionId="2be5e75f-6c11-4493-9f45-e36d047d5b26" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a6d86047-0bae-2853-800a-72be6c29e2c4" executionId="4b3c4f3e-38b1-460a-acd5-1ddb1517160c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="22" executed="22" passed="20" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+</TestRun>

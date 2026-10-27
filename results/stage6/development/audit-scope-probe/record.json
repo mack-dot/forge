@@ -1,0 +1,12 @@
+{
+  "commands": [
+    {
+      "command": ".toolchain/dafny-4.11.0/dafny/dafny audit build/stage6/controls/forbidden-assumption/impl/Booking.dfy build/stage6/controls/forbidden-assumption/impl/Ledger.dfy build/stage6/controls/forbidden-assumption/tests/booking/SuccessfulExecution.dfy --report-format md --report-file results/stage6/development/audit-scope-probe/audit.md --compare-report",
+      "elapsed_ns": 1573263250,
+      "exit_code": 2,
+      "log": "results/stage6/development/audit-scope-probe/audit.log",
+      "log_sha256": "fab91ca090adaff401d346e21746a943b1f1252956959d336cdb5886aa50fe65"
+    }
+  ],
+  "stage_exit": false
+}

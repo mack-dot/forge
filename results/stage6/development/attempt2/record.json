@@ -1,0 +1,20 @@
+{
+  "commands": [
+    {
+      "command": "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny verify impl/Booking.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --json-output --log-format 'trx;LogFileName=/Users/mackianni/forge/results/stage6/development/attempt2/verification.trx'",
+      "elapsed_ns": 2818543083,
+      "exit_code": 4,
+      "log": "results/stage6/development/attempt2/verify.log",
+      "log_sha256": "5e8cff21595361db62fe4bffa4215368cfae14e12e9d2ec821a52e1761cb8f4e"
+    }
+  ],
+  "input_sha256": {
+    "impl/Booking.dfy": "2093d0087a0fb0f8b632fcd9a5387809514c0889eabbb755dfc36632da134fbe",
+    "impl/Ledger.dfy": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d",
+    "spec.lock": "32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69",
+    "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+    "spec/booking/BookingSpec.dfy": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319",
+    "spec/booking/spec.lock": "c6ff76b98ef844d08e4255938414477d21c2be2dcb7e83ae7d8165c05061b88e"
+  },
+  "stage_exit": false
+}

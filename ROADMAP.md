@@ -1,16 +1,13 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 6 — SECOND DOMAIN + REUSE MEASUREMENT**
+**CURRENT: Stage 7 — BINARY LAYER**
 
-This is the execution plan and decision record. Stages 0–5 are DONE. Stage 5
-produced claim explanations and real accept/reject examples, verified a
-non-trivial successful execution, flagged the isolated vacuous spec, and
-measured mutation kills and survivors. Both Stage 5 EXIT commands exited 0.
-The final evidence and generated documents reproduced byte for byte. Stage 6
-is CURRENT. The booking contract proposal is ready for human intent approval;
-implementation and benchmark EXIT commands have not run.
-Uncertainties and runtime-provenance limits are recorded
-in the append-only [unsure.md](unsure.md) log.
+This is the execution plan and decision record. Stages 0–6 are DONE. Stage 6
+verified the approved booking matcher and its cancellation/retry trace. The
+three-condition benchmark completed 75 baseline/candidate pairs. Both real
+EXIT commands returned 0. The source evidence and report reproduced byte for
+byte. Stage 7 is CURRENT and has not started. This run stops at the transition.
+Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
 The long-term horizon and irreducible limits live in [VISION.md](VISION.md).
 
@@ -266,8 +263,8 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 3 | TYPESCRIPT INTEGRATION | DONE |
 | 4 | CHANGE LOOP | DONE |
 | 5 | SPEC TOOLING | DONE |
-| 6 | SECOND DOMAIN + REUSE MEASUREMENT | CURRENT |
-| 7 | BINARY LAYER | NOT STARTED |
+| 6 | SECOND DOMAIN + REUSE MEASUREMENT | DONE |
+| 7 | BINARY LAYER | CURRENT |
 | 8 | ML BOUNDARY | NOT STARTED |
 | 9 | PROVENANCE | NOT STARTED |
 | 10 | SHADOW MODE | NOT STARTED |
@@ -681,46 +678,88 @@ DONE. Stage 6 is CURRENT; no Stage 6 implementation or benchmark ran in this tur
 
 ### Stage 6 — SECOND DOMAIN + REUSE MEASUREMENT
 
-**Status: CURRENT — exact booking proposal pending approval**
+**Status: DONE**
 
-The proposed behavior and exact new spec/lock additions are published in
-[proposals/booking.md](proposals/booking.md). The draft selects the lowest allowed
-free slot, cancels by booking ID, and replays historical success receipts without
-new effects. Its abstract contract passed the real Dafny resolver. No booking
-implementation, proof, or benchmark has run. The protected baseline is unchanged.
-Approval must cover the exact proposal before implementation starts.
+The user approved [the exact booking proposal](proposals/booking.md) by replying
+"go ahead". The [decision record](proposals/booking-decision.md) binds the approved
+public revision and spec/lock digests. Those bytes were applied without alteration.
 
-Build a booking matcher with four claims: no double-booking; a valid request
-gets a slot when one exists; cancellation frees the slot; retries are idempotent.
-Reuse ledger lemma modules only where their premises actually apply.
+The matcher establishes B1 no double-booking; B2 a fresh valid request gets the
+lowest allowed free slot; B3 cancellation frees exactly its target slot; and B4
+accepted retries replay their historical result without another state change.
+It reuses the checked Ledger.TotalReplace and TotalRemove lemmas for capacity sums.
+The [booking gate](gate/booking.py) uses the existing evidence schema and policy
+validator, with a new source-proof-only booking policy. Existing ledger inputs
+remain unchanged. [Behavior and scope](docs/booking.md).
 
-Compare cold verification, shared files, and dependency-graph reuse on the same
-workload and pinned environment. Count all tokens, attempts, verifier time, and
-human interventions, including failures and setup attributable to each condition.
-Record cache state, seeds, resource use, sample count, and hardware.
-
-| Planned EXIT command | Required behavior | Actual exit code |
+| EXIT command | Actual behavior | Real exit code |
 | --- | --- | --- |
-| `python3 scripts/benchmark_reuse.py` | Executes the three benchmark conditions and produces an auditable report. | NOT RUN |
-| `python3 scripts/exit_stage_6.py --case report` | Recomputes report totals from recorded runs and confirms that no extrapolation is presented. | NOT RUN |
+| `python3 scripts/benchmark_reuse.py` | Completed five repetitions of five cases under three conditions: 75 pairs. Every expected acceptance/rejection occurred. | 0 |
+| `python3 scripts/exit_stage_6.py --case report` | Recomputed measured totals, checked raw logs and source evidence, and reconciled all available runtime token categories in the stated interval. Generated the scoped report without extrapolation. | 0 |
 
-Separate reproduction of recorded totals from fresh experimental reruns.
-Any reuse benefit is a result to measure, not an assumed outcome.
+The [measured report](docs/reuse-benchmark.md), [raw experiment](results/stage6/benchmark.json),
+[source evidence](results/stage6/source-evidence.json), and [report EXIT receipt](results/stage6/report-exit-attempt1.json)
+retain exact commands, real codes, digests, and limits. The hardware was Apple M1
+Pro / MacBookPro18,1, 16 GB, with 10 reported logical CPUs and macOS 27.0.1.
+The verifier used one worker, the existing pinned Dafny/Z3 builds, resource limit
+1000000 per isolated assertion batch, and verification time limit 0.
 
-Preparation record (not an EXIT):
+| Condition | Pairs | Verifier process seconds, baseline included | Checked members, including rejected candidates | Reused members |
+| --- | ---: | ---: | ---: | ---: |
+| Cold flattened input | 25 | 269.713 | 1100 | 0 |
+| Shared files, fresh checks | 25 | 271.067 | 1100 | 0 |
+| Native dependency-graph reuse | 25 | 175.828 | 590 | 510 |
 
-| Exact command | Real exit code | Observation |
-| --- | --- | --- |
-| `.toolchain/dafny-4.11.0/dafny/dafny resolve proposals/booking/BookingSpec.dfy` | 0 | Draft parsed and type-checked; verification was not attempted. [Actual record](results/stage6/proposal/resolve-attempt1.json). |
+These are observations for this exact corpus and host. Audit, fixture setup,
+preparation failures, and development checks are recorded separately. Cached
+trace times/resource counts describe earlier work and are excluded from new
+solver-work totals. Every warm-up baseline is charged. No productivity or
+cross-project benefit is inferred. Fresh timing reruns can produce different
+numbers; reproduction of recorded totals is a separate operation.
 
-The [proposal](proposals/booking.md#stage-6-measurement-protocol) defines the
-three comparison conditions, charged setup costs, negative controls, and reporting
-limits. Complete authoring-token and transcript coverage still needs inspection;
-missing values remain unknown. See append-only `unsure.md` entries U052–U053.
+Additional real checks:
+
+- Booking implementation verification attempts returned 4, 4, and 0. The last
+  checked 99 assertion batches across 22 members. Trace attempts returned 4, 4,
+  and 0; the last checked 238 batches across 33 members. All failures are retained.
+- `python3 scripts/check_stage_6.py` first returned 1 because an audit-scope control
+  did not reject at the expected audit step. Verification still rejected the
+  forbidden assumption. The new gate was strengthened to audit each concrete
+  implementation explicitly. The final control script returned 0.
+- Final acceptance and imported-evidence replay returned 0; actual `cmp` returned
+  0. Six negative gates returned 1 for artifact mismatch, wrong method, forbidden
+  assumption, bodiless lemma, unapproved spec/lock, and changed witness. The two
+  proof-escape auditors returned 2. No rejected case wrote accepted evidence.
+- A postrun inspection matched all 450 materialized source files to the frozen
+  fixture bytes. The accepted source collection has its own canonical manifest.
+- A second report EXIT returned 0. Actual `cmp` commands returned 0 for both
+  `results/stage6/report.json` and `docs/reuse-benchmark.md`. See [replay](results/stage6/report-replay.json).
+
+The [usage record](results/stage6/accounting.json) includes all six available
+runtime categories for 76 responses in its declared interval. Total: 10146635
+tokens; input: 10041872, including 9944960 cached; output: 104763, including
+53391 reasoning output. Reported cache-write input: 0. Subcategories are not
+added again. Per-response sums match cumulative differences. Three human
+interventions and three automatic continuations are separate. Shared authoring
+is not allocated to the conditions by guess. This interval ends before report
+publication; it is not a final project bill. Local transcript events are indexed
+by hash; private instructions/reasoning and internal transport bodies are not
+published. Earlier proposal resolution and one hardware inspection have no
+isolated subprocess timing; neither was a proof run.
+
+The original syntax-only proposal check returned 0 and remains under
+[results/stage6/proposal/](results/stage6/proposal/). Preparation run-0001 returned
+1 for denied sysctl inventory; run-0002 returned 1 for a report-count error;
+run-0003 returned 0 for all 15 preflight pairs. Full run-0004 returned 0.
+See append-only `unsure.md` U054–U061 for decisions, failures, and scope.
+
+The PR workflow still reports the ledger claims; booking acceptance uses its
+explicit gate command. No new PR-enforcement guarantee is claimed. All evidence
+keeps `end_to_end=false`. Stage 7 is CURRENT; no Stage 7 command ran in this turn.
 
 ### Stage 7 — BINARY LAYER
 
-**Status: NOT STARTED**
+**Status: CURRENT — not started**
 
 Use a Docker-capable host and Theorem's published Rocq/RISC-V pipeline. Pin an
 upstream commit, image digest, semantics, and dependencies. Replay one published
@@ -823,7 +862,7 @@ assumptions. No binary, deployment, or whole-application claim is established.
 Stage 2 schema, policy, identity, and replay checks passed, including every
 Stage 1 regression. Stage 3's model-comparison checks and approved demo invocation
 also passed. Stages 4 and 5 are complete in their stage records above.
-Stage 6 is CURRENT; its exact booking proposal awaits approval.
+Stage 6 is complete in its record above. Stage 7 is CURRENT.
 
 Commands ran from the repository root. The required `dafny --version` invocation
 used `export PATH="$PWD/.toolchain/dafny-4.11.0/dafny:$PATH"` in that shell. Other
@@ -906,10 +945,9 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
 - Runtime provenance: Node and Python installer origins were not independently
   authenticated. Their checked versions and executable hashes are pinned. Keep
   the disclosed trust assumptions in `toolchain/pins.json` and `unsure.md` U015.
-- Stage 6: obtain approval of the exact [booking proposal](proposals/booking.md),
-  then implement and verify the booking matcher and run the reuse benchmark.
-  Preserve all setup/failure costs and resolve token-accounting coverage before
-  claiming complete measurements. Stage 4 real PR EXITs are complete.
+- Stage 7: run the published binary-proof pipeline on a suitable Docker host
+  when work resumes. No binary or deployment claim is established yet. Stages
+  4 and 6 EXITs are complete; their measurements retain their stated limits.
 - Publication: the user created [mack-dot/forge](https://github.com/mack-dot/forge).
   The connected app confirms public visibility, the mack-dot owner, and push
   access. The earlier 404/creation blocker is resolved. Publication uses that

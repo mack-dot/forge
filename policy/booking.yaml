@@ -1,0 +1,37 @@
+{
+  "format_version": 1,
+  "id": "forge-booking",
+  "tiers": {
+    "critical": {
+      "artifact_kind": "source",
+      "description": "Booking source requires checked B1-B4 and the full approved contract.",
+      "required_claims": {
+        "B1": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "B2": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "B3": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        },
+        "B4": {
+          "allowed_methods": [
+            "source_proof"
+          ],
+          "minimum_method": "source_proof"
+        }
+      }
+    }
+  },
+  "version": "1.0.0"
+}

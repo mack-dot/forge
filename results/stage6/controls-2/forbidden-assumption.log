@@ -1,0 +1,9 @@
+version: exit 0
+audit: exit 2
+AUDIT_REJECTED: impl/Booking.dfy(14,4): Warning: assume statement has no {:axiom} annotation
+(0,-1): Error: Given report file (/Users/mackianni/forge/build/stage6/controls-2/forbidden-assumption/build/gate-operation/audit.md) does not match text generated (and saved in /Users/mackianni/forge/build/stage6/controls-2/forbidden-assumption/build/gate-operation/audit.md.expect).
+Dafny auditor completed with 1 findings
+
+Dafny program verifier did not attempt verification
+Returning exit code DAFNY_ERROR because errors were found
+

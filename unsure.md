@@ -1025,3 +1025,171 @@ curl: (6) Could not resolve host: github.com
 - Next check after intent approval: establish measurement boundaries and inspect
   available usage provenance before executing the benchmark. Report recorded
   totals separately from fresh timing reruns. Keep end_to_end=false.
+
+## U054 — Exact booking proposal approved and applied
+
+- References: U052–U053.
+- Observed: the user replied "go ahead" to the pending exact booking-proposal
+  approval request. The proposal is frozen at public revision
+  2dee3d0546c36e5d7a3c233d722dd87c3729dd76.
+- Action: copied the approved spec and lock bytes to spec/booking/ without
+  alteration. The existing ledger spec, root lock, policy, and gate are unchanged.
+  proposals/booking-decision.md records the decision and exact digests.
+- Resolution: the Stage 6 intent-approval blocker is resolved. This is a
+  conversational approval record, not a signed attestation or proof result.
+- Open: source proofs, benchmark execution, full accounting, and both Stage 6
+  EXIT commands remain required. No later-stage work is authorized by this record.
+
+## U055 — Booking source proof passed after explicit invariant steps and assertion isolation
+
+- References: U054.
+- Observed: implementation proof attempts 1, 2, and 3 returned real Dafny codes
+  4, 4, and 0. Attempt 1 could not establish the minimum helper's bound and the
+  free-slot/active-booking equivalence. Explicit quantifier steps fixed those gaps.
+  Attempt 2 exhausted the resource budget for the combined Apply obligation.
+- Change: Dafny's established isolate_assertions annotation separates Apply's
+  assertions. The command-line solver resource limit remains 1000000 and the
+  verification time limit remains 0. The resource limit applies to each isolated
+  assertion batch; this is not a claim of a one-million-unit whole-program limit.
+- Observed: attempt 3 passed 99 assertion batches across 22 members, including
+  the actual ledger dependency. The approved booking/ledger specs and locks were
+  not weakened. No assumption or verification-bypass construct was introduced.
+- Evidence: results/stage6/development/attempt1–attempt3/ retain real codes,
+  logs, input digests, and source versions. Attempt 1 source was recovered from
+  its original applied patch and matches its recorded checker-input SHA-256.
+- Scope: source proof only. Mathematical finite maps/sets and integer reasoning
+  do not establish compiled runtime resource bounds or deployed behavior.
+
+## U056 — The complete booking trace is checked; its first two proof failures are retained
+
+- References: U055.
+- Observed: trace verification attempts 1, 2, and 3 returned 4, 4, and 0. All
+  three real audit commands returned 0 against the trusted empty audit report.
+- Attempt 1 lacked an explicit minimum-slot instantiation and exhausted resources
+  in several long-path checks. The trace was split into checked step methods.
+  Attempt 2 exposed the occupied-state existential witness needed for WellFormed.
+  A proved SingleOccupancy lemma supplies that witness; the spec stayed unchanged.
+- Observed: the final full closure passed 238 assertion batches across 33 members.
+  Its actual calls cover booking, rejection without recording an ID, cancellation,
+  reuse of that rejected ID, historical book/cancel retries, and ID conflicts.
+- Observed: the initial new booking gate exited 0, accepted B1–B4 as source_proof,
+  and wrote source-bound evidence. Its successful trace is also pinned by digest
+  before final gate replay. New booking policy requires source_proof for all four
+  claims and does not change the existing ledger policy or backend.
+- Evidence: results/stage6/development/witness1–witness3/ and gate-initial/.
+  No booking, compiler, binary, container, or deployment guarantee was inferred
+  from test labels. end_to_end=false.
+
+## U057 — Available authoring usage is recoverable from the actual runtime records
+
+- References: U053.
+- Observed: this thread's local session contains per-response token_usage_record
+  events and cumulative counters. The first export sums all six available token
+  categories across 58 responses in the declared Stage 6 interval. The sums match
+  the cumulative-counter differences exactly. No missing category was set to zero.
+- Observed checkpoint: 6535683 input tokens, including 6446080 cached input;
+  65462 output tokens, including 28657 reasoning output; 6601145 total tokens.
+  Cache-write input is reported as 0 by the runtime. Subcategories are not added
+  again. These are recorded runtime numbers, not a provider billing attestation.
+- Evidence: scripts/export_stage6_usage.py and
+  results/stage6/accounting/through-4481.json. Later exports may extend the interval
+  while preserving earlier snapshots. The original cumulative goal counter is a
+  different metric; it is not substituted for these provider-category records.
+- Observed: three user interventions in that interval: the intent approval and
+  two status requests. Three automatic goal continuations are recorded separately.
+- Limits: the available prompt/response events remain in the local session. The
+  public index exposes hashes and counts, not private instructions or reasoning.
+  This is not an export of every internal provider transport request body. The
+  cutoff excludes later activity, so it is not a final whole-project bill.
+- Next check: extend the snapshot at final reporting, reproduce its arithmetic,
+  and keep shared authoring costs separate from fixed-source verifier conditions.
+
+## U058 — Benchmark preparation failures were recorded before the full experiment
+
+- References: U055–U057.
+- Observed: preparation run-0001 exited 1 before proof pairs ran. Its sysctl
+  hardware command exited 1 with "sysctl: sysctl fmt -1 1024 1: Operation not
+  permitted". This was hardware inventory, not a failed Dafny toolchain run.
+- Resolution: the OS system_profiler command exited 0 and returned Apple M1 Pro,
+  MacBookPro18,1, 16 GB memory, and processor information. Its unrelated Activation
+  Lock-status warning is retained. The inventory driver omits serial/device IDs.
+- Observed: run-0002 exited 1 after the cold reject-all control. Dafny correctly
+  rejected three assertions inside one member. The report had incorrectly added
+  assertion errors to the member count. It now compares actual member outcomes
+  and retains the distinct assertion-error count. The checker was not changed.
+- Observed: run-0003 completed all 15 one-repeat preflight pairs with exit 0.
+  Correct variants passed; the broken shared helper and reject-all booking were
+  rejected under all three conditions for their intended assertion/postcondition.
+- Evidence: results/stage6/runs/run-0001–run-0003/ retain raw logs, codes, timing,
+  source identities, and prior driver versions. These costs remain preparation
+  records; they are not silently discarded from the reported experiment history.
+- Next check: complete the five-repeat experiment, replay source evidence, check
+  the report totals, and retain all baseline warm-up costs and native-cache limits.
+
+## U059 — An audit-scope control exposed a gap; the new booking gate now checks concrete roots
+
+- References: U056, U058.
+- Observed: the first controls run exited 1. A planted unannotated assume statement
+  produced audit 0 when only the witness entry file was passed to Dafny audit.
+  The subsequent verifier returned 2 for the missing axiom-annotation warning,
+  and the gate returned 1. It did not emit accepted evidence for the fixture.
+- Observed: a direct audit naming Booking, Ledger, and the witness returned 2 and
+  reported one finding. This established the missing audit scope. The new booking
+  gate now passes each concrete implementation as an explicit audit input.
+- Resolution: the final python3 scripts/check_stage_6.py command exited 0.
+  Correct source and imported-evidence replay both passed, and cmp returned 0.
+  All six negative gates returned 1. The assumption and bodiless-lemma cases each
+  returned audit 2 before proof verification. No negative wrote accepted evidence.
+- Evidence: results/stage6/controls/report.json preserves the failed control;
+  development/control-assume-warning/ and audit-scope-probe/ preserve real child
+  results. controls-2/report.json and controls-final.json hold the final controls.
+- Scope: the change strengthens the new audit boundary. The approved specs,
+  locks, existing ledger gate, and existing ledger policy were not weakened.
+  This resolves the audit-scope limit of the earlier U056 observations.
+
+## U060 — The full reuse experiment and recorded totals passed their real EXIT commands
+
+- References: U058–U059.
+- Observed: python3 scripts/benchmark_reuse.py exited 0 after 75 real pairs:
+  five cases, five repetitions, three conditions. Correct variants passed and
+  both invalid controls failed at the intended checker member in every condition.
+- Measurements across 25 pairs each, including baselines: cold verifier processes
+  used 269.712851166 seconds; shared files 271.066563456; native dependency reuse
+  175.827515081. Checked members were 1100, 1100, and 590 respectively. Native
+  reuse reported 510 reused members. Negative controls are included in these counts.
+- Observation: cold and shared-file layouts each used 342198540 new solver
+  resources; native reuse used 224568970. Cached historical statistics are excluded
+  from new-work totals. Shared files alone did not skip verification in this run.
+- Observed: python3 scripts/exit_stage_6.py --case report exited 0. It recomputed
+  actual totals, checked raw logs and accepted source evidence, and reconciled
+  runtime token sums. The repeated report command exited 0; both actual cmp
+  commands exited 0 for the report JSON and generated document.
+- Observed: all 450 materialized input files matched their frozen fixture bytes.
+- Evidence: results/stage6/benchmark.json, report.json, report-exit-attempt1.json,
+  report-replay.json, input-identities.json, and docs/reuse-benchmark.md.
+- Limits: these are fixed-source measurements on the recorded M1 Pro host. The
+  host was not isolated from all OS/user activity. Five repeats do not establish
+  general speedups, LLM authoring savings, or developer productivity. Fresh timing
+  reruns can differ. The native-cache assumptions from U034 remain explicit.
+
+## U061 — Stage 6 completed; accounting and integration limits remain explicit
+
+- References: U054–U060.
+- Observed: the final reporting interval contains 76 actual runtime usage records.
+  Their six-category sums match cumulative differences. Input: 10041872 tokens,
+  including 9944960 cached. Output: 104763, including 53391 reasoning. Total:
+  10146635. Reported cache-write input: 0. Subcategories are not added again.
+- Observed: three user interventions (approval and two status requests) and three
+  automatic goal continuations are separate. Failure and setup records remain in
+  the report. Shared authoring costs are not assigned to conditions by guess.
+- Limits: the token interval closes before publication, so these are not final
+  whole-project costs. Available local prompt/response events have a public hash
+  index; private instructions/reasoning and internal provider transport bodies
+  are not published. Early syntax resolution and one hardware inspection lack
+  isolated subprocess timing; neither was a proof run. No missing metric is zeroed.
+- Integration boundary: the existing PR Action still reports ledger C1–C5.
+  Booking B1–B4 acceptance uses the explicit booking gate command. No automatic
+  booking PR-enforcement guarantee is established by this stage.
+- Resolution: Stage 6 EXIT commands both ran and returned 0 with their required
+  behavior. Stage 6 is DONE; Stage 7 is CURRENT. This run stops at that transition.
+  No binary-layer work ran. Source evidence remains source_proof; end_to_end=false.

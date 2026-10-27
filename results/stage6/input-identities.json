@@ -1,0 +1,1811 @@
+{
+  "all_match_frozen_fixture_bytes": true,
+  "benchmark_sha256": "18892aa7fa93372dcde5169ee12e75568909c1dffd00bf038ceeb2562183c2d3",
+  "checked_input_files": 450,
+  "exit_code": 0,
+  "inputs": [
+    {
+      "path": "build/stage6/run-0004/1-cold-unchanged/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-unchanged/v1/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-booking_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-booking_body/v1/All.dfy",
+      "sha256": "bfea67f8d3e337e35eddd8674065b06d27996819e203b37c541029b1ed5969a0"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-helper_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-helper_body/v1/All.dfy",
+      "sha256": "276f2f1a2772115e53ed1df57e1fdbcd205529fd5829485919df5f277536ee5c"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-broken_helper/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-broken_helper/v1/All.dfy",
+      "sha256": "aea8799a9b59089e69dc85dabb210283ff2962400c0f926acc0a2a8ed4dc330c"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-reject_all/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/1-cold-reject_all/v1/All.dfy",
+      "sha256": "1f6f6f207f406ad3b0458499c4aab476e7f09d0222de5093d54701595e1485f9"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-shared_files-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/1-dependency_graph-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-shared_files-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/2-dependency_graph-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-unchanged/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-unchanged/v1/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-booking_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-booking_body/v1/All.dfy",
+      "sha256": "bfea67f8d3e337e35eddd8674065b06d27996819e203b37c541029b1ed5969a0"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-helper_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-helper_body/v1/All.dfy",
+      "sha256": "276f2f1a2772115e53ed1df57e1fdbcd205529fd5829485919df5f277536ee5c"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-broken_helper/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-broken_helper/v1/All.dfy",
+      "sha256": "aea8799a9b59089e69dc85dabb210283ff2962400c0f926acc0a2a8ed4dc330c"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-reject_all/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/2-cold-reject_all/v1/All.dfy",
+      "sha256": "1f6f6f207f406ad3b0458499c4aab476e7f09d0222de5093d54701595e1485f9"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-dependency_graph-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-unchanged/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-unchanged/v1/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-booking_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-booking_body/v1/All.dfy",
+      "sha256": "bfea67f8d3e337e35eddd8674065b06d27996819e203b37c541029b1ed5969a0"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-helper_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-helper_body/v1/All.dfy",
+      "sha256": "276f2f1a2772115e53ed1df57e1fdbcd205529fd5829485919df5f277536ee5c"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-broken_helper/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-broken_helper/v1/All.dfy",
+      "sha256": "aea8799a9b59089e69dc85dabb210283ff2962400c0f926acc0a2a8ed4dc330c"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-reject_all/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/3-cold-reject_all/v1/All.dfy",
+      "sha256": "1f6f6f207f406ad3b0458499c4aab476e7f09d0222de5093d54701595e1485f9"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/3-shared_files-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-unchanged/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-unchanged/v1/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-booking_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-booking_body/v1/All.dfy",
+      "sha256": "bfea67f8d3e337e35eddd8674065b06d27996819e203b37c541029b1ed5969a0"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-helper_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-helper_body/v1/All.dfy",
+      "sha256": "276f2f1a2772115e53ed1df57e1fdbcd205529fd5829485919df5f277536ee5c"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-broken_helper/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-broken_helper/v1/All.dfy",
+      "sha256": "aea8799a9b59089e69dc85dabb210283ff2962400c0f926acc0a2a8ed4dc330c"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-reject_all/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/4-cold-reject_all/v1/All.dfy",
+      "sha256": "1f6f6f207f406ad3b0458499c4aab476e7f09d0222de5093d54701595e1485f9"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-shared_files-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/4-dependency_graph-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-shared_files-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-unchanged/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-booking_body/v1/impl/Booking.dfy",
+      "sha256": "14b48f2c7b957dda04be3f9685df7a2835bbbf12fcb935261dc2800d5d04a343"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v1/impl/Ledger.dfy",
+      "sha256": "098e8d095b2a86bbd19578e345eba159b69e1fe598104361e57e16b817055056"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-helper_body/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v1/impl/Ledger.dfy",
+      "sha256": "7a2985ecf166a8bf6130153ad3077ba70e0ffa7678b36216e9342dded01ea354"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-broken_helper/v1/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v0/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v0/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v0/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v0/impl/Booking.dfy",
+      "sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v1/spec/LedgerSpec.dfy",
+      "sha256": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v1/spec/booking/BookingSpec.dfy",
+      "sha256": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v1/impl/Ledger.dfy",
+      "sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d"
+    },
+    {
+      "path": "build/stage6/run-0004/5-dependency_graph-reject_all/v1/impl/Booking.dfy",
+      "sha256": "e555f12beb4d819a94af1e4b63ea0ef95ca655baa0357307820a5660d35620db"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-unchanged/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-unchanged/v1/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-booking_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-booking_body/v1/All.dfy",
+      "sha256": "bfea67f8d3e337e35eddd8674065b06d27996819e203b37c541029b1ed5969a0"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-helper_body/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-helper_body/v1/All.dfy",
+      "sha256": "276f2f1a2772115e53ed1df57e1fdbcd205529fd5829485919df5f277536ee5c"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-broken_helper/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-broken_helper/v1/All.dfy",
+      "sha256": "aea8799a9b59089e69dc85dabb210283ff2962400c0f926acc0a2a8ed4dc330c"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-reject_all/v0/All.dfy",
+      "sha256": "6caf91dd32fa3db6a5da7a82cb53e2518071feeb9f939f284d55daa7dc34d720"
+    },
+    {
+      "path": "build/stage6/run-0004/5-cold-reject_all/v1/All.dfy",
+      "sha256": "1f6f6f207f406ad3b0458499c4aab476e7f09d0222de5093d54701595e1485f9"
+    }
+  ],
+  "kind": "postrun_input_identity_check",
+  "proof_claim": false,
+  "stage": 6
+}
