@@ -10,8 +10,8 @@ byte. Stage 7's upstream replay, negative control, and own-binary EXIT each
 returned 0. The exact 1,240-byte C self-test has a normal-termination proof and
 a valid-entry witness. Independent checking covered 579 modules; all 86 closure
 assumptions are permitted. Final source and ELF identities match. Stage 8 is
-CURRENT; no Stage 8 implementation or EXIT has started. This transition ends
-the run. `end_to_end=false`.
+CURRENT. Its exact refund contract proposal awaits human approval; no Stage 8
+implementation or EXIT has started. `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
 The long-term horizon and irreducible limits live in [VISION.md](VISION.md).
@@ -926,7 +926,7 @@ Completed own-binary proof:
 
 ### Stage 8 — ML BOUNDARY
 
-**Status: CURRENT — implementation and EXITs have not started**
+**Status: CURRENT — exact refund contract awaits human approval**
 
 Wrap an LLM-backed refund suggester in verified code. Enforce refund ≤ charge,
 allowed reasons, and a safe fallback for timeout or invalid output. Treat model
@@ -946,6 +946,34 @@ checked. Tests of hostile responses supply additional testing evidence.
 Record fuzz seeds, counts, and limits. Do not turn “no violations observed” into
 a universal proof. Keep application timeout behavior distinct from proof-run
 resource limits.
+
+Stage 8 contract preparation (not EXIT results):
+
+- The user requires universal safety **and** exact acceptance of every valid
+  proposal. Fallback must preserve the absence of refund side effects.
+- [proposals/refund.md](proposals/refund.md) contains the complete proposed diff
+  and explicit business choices. Four new protected files are proposed: the
+  Dafny contract, wire/lifecycle protocol, spec lock, and separate refund policy.
+  None has been applied. No implementation or refund gate has been written.
+- The proposed Assess method has no validity precondition. It must handle all
+  modeled contexts and responses, reject ineligible inputs with an empty plan,
+  and accept every eligible candidate with its exact amount/reason. A future
+  arbitrary-input binding and successful witness must prevent vacuous acceptance.
+- The current gates bind ledger and booking domains. Exact approval of this
+  contract does not authorize an unspecified future protected gate patch.
+  Such a patch must also be reviewed before application.
+- `.toolchain/dafny-4.11.0/dafny/dafny --version` returned 0 and matched the pin.
+  `.toolchain/dafny-4.11.0/dafny/dafny resolve proposals/refund/RefundSpec.dfy`
+  returned 0 and printed `Dafny program verifier did not attempt verification`.
+  This is proposal resolution only, not source proof or a Stage 8 EXIT.
+- `git apply --check proposals/refund/protected.diff` returned 0 without
+  applying the patch. The proposed policy passed structural validation with
+  pinned jsonschema 4.21.1 (Python process exit 0). This is not policy acceptance.
+- Records are in `results/stage8/proposal/`. There are no formal guarantees,
+  executed fuzz cases, model-quality scores, or Stage 8 passing EXITs yet.
+  All three EXIT commands remain NOT RUN. See append-only U070.
+- Stop for exact human contract approval. Stage 8 remains CURRENT;
+  `end_to_end=false`. No Stage 9 work has started.
 
 ### Stage 9 — PROVENANCE
 

@@ -1,0 +1,19 @@
+{
+  "actual_python_process_exit_code": 0,
+  "candidate_sha256": "4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83",
+  "command": [
+    "python3",
+    "-"
+  ],
+  "policy_accepted": false,
+  "proof_executed": false,
+  "record_note": "Exact Python stdin program retained after its observed exit 0; no proof or policy acceptance.",
+  "result": "structurally_valid",
+  "schema_sha256": "ba706f6f15c087e1c0673743717d76e1fdb02f8d2efe791611b121429954ed4d",
+  "stdin_file": "results/stage8/proposal/policy-schema/stdin.py",
+  "stdin_operation": "Load and check the pinned installed validator package versions and bytes, load schemas/policy.schema.json, and call Draft202012Validator.validate on proposals/refund/refund-policy.yaml.",
+  "stdin_sha256": "2b0f0a2b4f9478c21bbb751b81418e563298dedc72af85b75f1cce6e26419c83",
+  "validator": "jsonschema",
+  "validator_pins_sha256": "4566ee79b6f939b70ed54f3d7c31fe617c1a65c5d8e36dd1894552c5352534f9",
+  "version": "4.21.1"
+}

@@ -43,7 +43,10 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–7 are complete. Stage 8 is current and has not started.** Forge now
+**Stages 0–7 are complete. Stage 8 awaits contract approval.** The
+[refund boundary proposal](proposals/refund.md) requires universal safety,
+exact acceptance of valid proposals, and rejection with no refund intent on
+fallback. Its implementation and EXIT checks have not started. Forge now
 has an independently checked termination proof for its own 1,240-byte compiled
 C self-test. Every valid execution of that exact RISC-V ELF terminates with
 status 0 under the pinned LPS model. A checked valid-entry witness rules out

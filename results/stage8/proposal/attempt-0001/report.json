@@ -1,0 +1,27 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+        "--version"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "output_sha256": "2e4243de9dcb2a6464f6e6e20031511043025167bf72bf67a6bdf0de213717ef"
+    },
+    {
+      "command": [
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+        "resolve",
+        "proposals/refund/RefundSpec.dfy"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "output_sha256": "538eedd440944ed8acccf1fbb3ceb0715055debd1a7b13336f6fb7a5d566bd54"
+    }
+  ],
+  "proof_executed": false,
+  "source_sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+  "stage8_exits": "NOT RUN",
+  "status": "proposal_validation_only"
+}

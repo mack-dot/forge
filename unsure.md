@@ -1425,3 +1425,45 @@ curl: (6) Could not resolve host: github.com
 - Next check: publish the complete record set and stop at this transition, as
   explicitly requested. Stage 8 implementation and verification-economics
   experiments require a later run; neither was started here.
+
+
+## U070 — Stage 8 requires exact intent approval before implementation
+
+- References: U069; the user's Stage 8 instruction and follow-up requiring both
+  universal safety and complete acceptance of every valid proposal.
+- Observed: public main is ef06de72b38bb00041b4e52204880e75c4c002a9. Thirty
+  tracked instructions, schema/toolchain inputs and protected files match that
+  revision. A local snapshot covers all 31 existing protected files, including
+  local cache files. No existing approved refund contract was found.
+- Approval boundary: the user explicitly requires exact approval before changes
+  to protected specifications, policies or gate files. Prior Stage 7 permissions
+  do not approve a new reason set, numeric cap, fallback or payment policy.
+- Proposal: proposals/refund.md and proposals/refund/protected.diff define four
+  additions, with candidate bytes and digests in approval-manifest.json. None
+  is applied. Universal safety has no response-validity precondition; every
+  eligible candidate must be accepted unchanged. Rejection returns an empty
+  plan. An always-reject implementation must be rejected by the real verifier.
+- Proposed decisions: exact integer minor units through 2^63-1; a trusted
+  original/remaining balance and eligibility/open context; three exact reason
+  labels; valid zero authorizations; no-refund fallback; a strict 4096-byte JSON
+  interface; 5000 ms external deadline; terminal request/retry rules. These are
+  pending business decisions, not silently adopted policy.
+- Scope: the mathematical boundary quantifies over all modeled responses.
+  JSON parsing, generated runtime behavior, timers, one-shot delivery and effect
+  isolation need separate tested or assumed boundaries. Cumulative refunds,
+  atomic balance reservation, durable idempotency, real payment execution and
+  factual truth of model reasons are not established by this stateless source
+  contract. The Stage 7 C ELF proof does not cover the new runtime integration.
+- Observed checks: pinned Dafny version and candidate resolve returned 0.
+  Dafny explicitly did not attempt verification. Patch dry-run returned 0;
+  no patch was applied. Pinned policy-schema validation returned process exit 0.
+  These proposal checks are not Stage 8 EXIT passes or a proof.
+- Gate limitation: existing gates bind the ledger and booking contracts. This
+  proposal approves no unspecified gate implementation. Any required new gate
+  or binding patch must receive exact approval before application, as the user
+  requires. Relocating gate logic to evade that protection is not permitted.
+- Impact: Stage 8 remains CURRENT, all three EXITs are NOT RUN, no wrapper or
+  fuzzing implementation has started, no model evaluation has run, and
+  end_to_end=false. Planned fuzz counts are not actual coverage.
+- Next check: publish the exact pending contract for review and stop. Obtain
+  human approval of its precise revision before adopting its protected files.
