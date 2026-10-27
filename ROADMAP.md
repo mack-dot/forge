@@ -14,8 +14,9 @@ wrapper-proof, hostile-outputs and evidence-separation EXITs each returned 0.
 The exact approved snapshot repair retains field and prototype mutation
 rejection. Source and property-test evidence each reproduced byte for byte
 through fresh checks. All failures remain archived. Stage 9 is CURRENT;
-the exact provenance trust proposal awaits human approval. No Stage 9 gate,
-signing workflow, signature verification or deployment has started.
+the exact approved provenance contract is applied. The separate implementation
+and workflow proposal awaits approval. No Stage 9 gate or workflow is active;
+signature verification and deployment have not run.
 `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
@@ -1129,7 +1130,7 @@ verify this checkpoint, then stop. No Stage 9 implementation has started.
 
 ### Stage 9 — PROVENANCE
 
-**Status: CURRENT — blocked on exact provenance-contract approval**
+**Status: CURRENT — blocked on exact implementation/workflow approval**
 
 Sign evidence bundles using pinned sigstore/in-toto tooling. Before allowing a
 deployment, verify the signer identity, artifact digest, and policy version.
@@ -1149,7 +1150,7 @@ envelopes and external transparency records, which may contain time metadata.
 Run the established signature verifier for the actual accept/reject decision.
 Signing an unsupported claim does not make it established.
 
-#### Current preparation and approval boundary
+#### Initial trust proposal preparation (historical)
 
 The published Stage 8 base is `80a65d46b1dbc8f3ccfd249bfd628568406c5774`.
 [proposals/provenance.md](proposals/provenance.md) contains the exact proposed
@@ -1172,6 +1173,42 @@ RUN. Cosign was not installed or executed. No signature or deployment was made.
 Preparation logs and identity snapshots are under `results/stage9/preparation/`.
 All 30 existing protected files and all old Stage 7–8 records remain unchanged.
 See U074. `end_to_end=false`.
+
+#### Approved contract adoption and current implementation proposal
+
+The user approved only the three contract additions at
+`097431cf458e5c62332575b09e953224471fa64d`. The public manifest, patch and candidate
+bytes matched. The exact patch was applied. The new contract, policy and lock
+match their approved SHA-256 digests. All 1,360 snapshotted prior files remain
+unchanged at adoption. [proposals/provenance-decision.md](proposals/provenance-decision.md)
+records the approval; `results/stage9/contract-adoption/` preserves commands and
+identity checks. This did not authorize a gate, workflow, signing or deployment.
+
+[proposals/provenance-implementation.md](proposals/provenance-implementation.md)
+contains 11 exact, unapplied additions: eight protected implementation files,
+two manual workflows and the six-case EXIT harness. Its lock binds 60 files
+and 45 upstream Python dependency files. Actual signature/proof/deployment
+execution remains untested and unapproved. A dedicated pinned runner is an
+explicit, unprovisioned prerequisite; no runner registration was performed.
+
+| Preparation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git apply --check /Users/mackianni/forge/proposals/provenance/protected.diff` | 0 | Approved contract patch dry-run. |
+| `git apply /Users/mackianni/forge/proposals/provenance/protected.diff` | 0 | Applied only the three approved additions. |
+| `python3 --version` | 0 | Observed Python 3.10.11. |
+| `docker version --format '{{json .}}'` | 0 | Read-only runtime inventory. |
+| `docker buildx version` | 0 | Read-only Buildx inventory. |
+| `docker buildx inspect default --format '{{json .}}'` | 125 | Unsupported flag; original complete output preserved. |
+| `docker buildx inspect` | 0 | Supported read-only retry; Docker driver, desktop-linux, BuildKit 0.25.1. |
+| `python3 proposals/check_provenance_implementation.py` | 0 | Proposal hashes, syntax and workflow structure only. |
+| `git apply --check /Users/mackianni/forge/proposals/provenance-implementation/proposed.diff` | 0 | Implementation proposal applicability only; patch not applied. |
+
+All six Stage 9 EXITs remain NOT RUN. The preparation checks do not verify a
+signature or establish a proof. No Cosign installation, new proof execution,
+container build/start, workflow activation or signing occurred. Every failure
+remains preserved in `results/stage9/implementation-preparation/`. Stop for the
+next exact approval; do not change the approved contract to fit the proposed
+implementation. See U075. `end_to_end=false`.
 
 ### Stage 10 — SHADOW MODE
 

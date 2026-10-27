@@ -1,0 +1,26 @@
+[
+  {
+    "command": [
+      "python3",
+      "--version"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "docker",
+      "version",
+      "--format",
+      "{{json .}}"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "docker",
+      "buildx",
+      "version"
+    ],
+    "exit_code": 0
+  }
+]

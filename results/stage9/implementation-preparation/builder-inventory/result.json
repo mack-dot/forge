@@ -1,0 +1,12 @@
+{
+  "command": [
+    "docker",
+    "buildx",
+    "inspect",
+    "default",
+    "--format",
+    "{{json .}}"
+  ],
+  "exit_code": 125,
+  "build_executed": false
+}

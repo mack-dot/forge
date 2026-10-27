@@ -1,0 +1,9 @@
+{
+  "command": "python3 (inline preservation audit)",
+  "actual_exit_code": 1,
+  "failed_assertion": "sha256(prefix_before_U075 + one_added_newline) == original_unsure_sha256",
+  "reason": "The partition already retained the original final newline. The audit added one extra newline. No existing unsure.md entry was edited.",
+  "repair": "Compare the exact prefix bytes directly with the recorded original SHA-256.",
+  "stage9_exit_command": false,
+  "end_to_end": false
+}

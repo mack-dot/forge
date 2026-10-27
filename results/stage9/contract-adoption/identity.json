@@ -1,0 +1,47 @@
+{
+  "applied_files": [
+    {
+      "path": "spec/provenance/protocol.md",
+      "sha256": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69"
+    },
+    {
+      "path": "policy/provenance.json",
+      "sha256": "9e27f627a2b1924fc2f4f86346efaa06755a2c47a366fb3437e54a105d65f22b"
+    },
+    {
+      "path": "spec/provenance/spec.lock",
+      "sha256": "43610d8123ce21fdd1f9dac9469f78ad3efcb3af271a86011a18790099811a33"
+    }
+  ],
+  "approved_commit": "097431cf458e5c62332575b09e953224471fa64d",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "/Users/mackianni/forge/proposals/provenance/protected.diff"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "/Users/mackianni/forge/proposals/provenance/protected.diff"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "end_to_end": false,
+  "existing_files_unchanged": 1360,
+  "gate_workflow_signing_deployment_authorized": false,
+  "manifest_sha256": "92c56b5d36c44242a826905f2c7194052b802b7079d0d0130d686dbf885551cf",
+  "patch_sha256": "ebbbeb7e19c3b3cec846a91133e01653a53bc5bd6b95f63645a8e1ec0c338dff",
+  "published_tree": "0eec39ae5945b50a87467a3d56b1dc9069918920",
+  "result": "exact_approved_bytes_applied"
+}

@@ -1,0 +1,1344 @@
+diff --git a/gate/provenance/Dockerfile b/gate/provenance/Dockerfile
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/Dockerfile
+@@ -0,0 +1,5 @@
++FROM ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902
++COPY --chown=1000:1000 --chmod=0444 gcd-selftest.elf /opt/forge/gcd-selftest.elf
++USER 1000:1000
++WORKDIR /opt/forge
++ENTRYPOINT ["python3", "-c", "import signal; signal.pause()"]
+diff --git a/gate/provenance/common.py b/gate/provenance/common.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/common.py
+@@ -0,0 +1,185 @@
++"""Record handling and policy binding. No signature or proof semantics."""
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import re
++import subprocess
++import sys
++import urllib.request
++
++ROOT = Path(__file__).resolve().parents[2]
++HERE = Path(__file__).resolve().parent
++
++
++class Rejected(Exception):
++    def __init__(self, reason):
++        super().__init__(reason)
++        self.reason = reason
++
++
++def require(ok, reason):
++    if not ok:
++        raise Rejected(reason)
++
++
++def sha(data):
++    return hashlib.sha256(data).hexdigest()
++
++
++def digest(path):
++    return sha(Path(path).read_bytes())
++
++
++def canonical(value):
++    return (json.dumps(value, sort_keys=True, separators=(',', ':'),
++                       ensure_ascii=True, allow_nan=False) + '\n').encode()
++
++
++def parse(data):
++    def pairs(items):
++        result = {}
++        for key, value in items:
++            require(key not in result, 'DUPLICATE_JSON_KEY')
++            result[key] = value
++        return result
++    def invalid(_):
++        raise Rejected('NONFINITE_JSON_NUMBER')
++    return json.loads(data, object_pairs_hook=pairs, parse_constant=invalid)
++
++
++def read(path):
++    return parse(Path(path).read_bytes())
++
++
++def write(path, value):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_bytes(canonical(value))
++
++
++def files(directory):
++    directory = Path(directory)
++    result = {}
++    for p in sorted(directory.rglob('*')):
++        require(not p.is_symlink(), 'SYMLINK_INPUT')
++        if p.is_file():
++            result[p.relative_to(directory).as_posix()] = digest(p)
++    return result
++
++
++class Records:
++    def __init__(self, directory):
++        self.directory = Path(directory)
++        self.directory.mkdir(parents=True, exist_ok=False)
++        self.commands = []
++
++    def run(self, argv, label, *, env=None, cwd=ROOT, check=True):
++        require(re.fullmatch(r'[a-z0-9-]+', label), 'RECORD_LABEL')
++        prefix = self.directory / f'{len(self.commands):03d}-{label}'
++        invocation = {'argv': list(map(str, argv)), 'cwd': str(cwd)}
++        write(str(prefix) + '.invocation.json', invocation)
++        with open(str(prefix) + '.stdout', 'xb') as out, open(str(prefix) + '.stderr', 'xb') as err:
++            result = subprocess.run(invocation['argv'], cwd=cwd, env=env,
++                                    stdout=out, stderr=err, check=False)
++        record = {**invocation, 'exit_code': result.returncode,
++                  'stdout': Path(str(prefix) + '.stdout').name,
++                  'stderr': Path(str(prefix) + '.stderr').name,
++                  'stdout_sha256': digest(str(prefix) + '.stdout'),
++                  'stderr_sha256': digest(str(prefix) + '.stderr')}
++        self.commands.append(record)
++        write(self.directory / 'commands.json', self.commands)
++        if check:
++            require(result.returncode == 0, 'COMMAND_FAILED:' + label)
++        return result.returncode, Path(str(prefix) + '.stdout').read_bytes(), Path(str(prefix) + '.stderr').read_bytes()
++
++
++def fetch(url, records, label):
++    # HTTPS transport/JSON handling only; this does not verify a signature.
++    req = urllib.request.Request(url, headers={'Accept': 'application/vnd.github+json',
++                                               'User-Agent': 'forge-stage9'})
++    with urllib.request.urlopen(req) as response:
++        data = response.read()
++        require(response.status == 200, 'GITHUB_HTTP_STATUS')
++    (records.directory / (label + '.bytes')).write_bytes(data)
++    write(records.directory / (label + '.http.json'), {'url': url, 'http_status': 200, 'sha256': sha(data)})
++    return data
++
++
++def context(expected_lock):
++    require(re.fullmatch('[0-9a-f]{64}', expected_lock), 'IMPLEMENTATION_LOCK_DIGEST')
++    require(digest(HERE / 'implementation.lock') == expected_lock, 'UNAPPROVED_IMPLEMENTATION')
++    implementation = read(HERE / 'implementation.lock')
++    require(sys.version_info[:3] == (3, 10, 11), 'PYTHON_VERSION')
++    require(not sys.flags.optimize, 'OPTIMIZED_PYTHON_FORBIDDEN')
++    for path, expected in implementation['files'].items():
++        require(digest(ROOT / path) == expected, 'IMPLEMENTATION_INPUT:' + path)
++    policy = read(ROOT / 'policy/provenance.json')
++    lock = read(ROOT / 'spec/provenance/spec.lock')
++    for key in ('contract', 'policy'):
++        require(digest(ROOT / lock[key]['path']) == lock[key]['sha256'], 'CONTRACT_IDENTITY')
++    for item in lock['locked_existing_files']:
++        require(digest(ROOT / item['path']) == item['sha256'], 'LOCKED_INPUT:' + item['path'])
++    return policy, lock, implementation
++
++
++def clean_environment():
++    forbidden = [key for key in os.environ if key.startswith(('COSIGN_', 'SIGSTORE_', 'TUF_'))]
++    require(not forbidden, 'TRUST_ENVIRONMENT_OVERRIDE')
++    require(not any(os.environ.get(k) for k in ['LD_PRELOAD', 'DYLD_INSERT_LIBRARIES', 'PYTHONPATH',
++                                               'SSL_CERT_FILE', 'SSL_CERT_DIR']),
++            'CODE_LOADING_OVERRIDE')
++    return {key: value for key, value in os.environ.items()
++            if key in ['PATH', 'HOME', 'TMPDIR',
++                       'GITHUB_ACTIONS', 'ACTIONS_ID_TOKEN_REQUEST_URL', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN']}
++
++
++def cosign_path(policy):
++    key = {'Darwin': 'darwin', 'Linux': 'linux'}[platform.system()] + '-' + {
++        'arm64': 'arm64', 'aarch64': 'arm64', 'x86_64': 'amd64'}[platform.machine()]
++    require(key in policy['signature']['executable_sha256'], 'COSIGN_PLATFORM')
++    path = ROOT / '.toolchain/stage9/cosign'
++    require(path.is_file() and digest(path) == policy['signature']['executable_sha256'][key], 'COSIGN_PIN')
++    return path
++
++
++def repository_identity(policy, implementation, commit, records):
++    require(re.fullmatch('[0-9a-f]{40}', commit), 'EXPECTED_SOURCE_COMMIT')
++    repo = policy['signer']['repository']
++    info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository'))
++    require(info['full_name'] == repo and info['id'] == policy['signer']['repository_id']
++            and info['owner']['id'] == policy['signer']['owner_id'], 'REPOSITORY_IDENTITY')
++    for number, (path, expected) in enumerate(sorted(implementation['files'].items())):
++        raw = fetch(f'https://raw.githubusercontent.com/{repo}/{commit}/{path}', records,
++                    f'source-{number:03d}')
++        require(sha(raw) == expected, 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
++
++
++def signature(policy, bundle, blob, commit, records, *, negative_identity=None):
++    # negative_identity is only used to authenticate the wrong-signer fixture
++    # under its OWN fixed identity, never by release admission.
++    identity = policy['signer']['identity']
++    if negative_identity is not None:
++        require(negative_identity == identity.replace('provenance.yml', 'provenance-negative.yml'),
++                'TEST_IDENTITY_NOT_FIXED')
++        identity = negative_identity
++    env = clean_environment()
++    binary = cosign_path(policy)
++    records.run([binary, 'version', '--json'], 'cosign-version', env=env)
++    # An online TUF refresh must succeed before any signature verdict is used.
++    records.run([binary, 'initialize'], 'tuf-refresh', env=env)
++    cache = Path(env['HOME']) / '.sigstore/root'
++    require(cache.is_dir(), 'TUF_ARCHIVE_MISSING')
++    import shutil
++    shutil.copytree(cache, records.directory / 'validated-tuf')
++    write(records.directory / 'tuf-identities.json', files(records.directory / 'validated-tuf'))
++    argv = [binary, 'verify-blob-attestation', '--bundle', bundle,
++            '--type', policy['signature']['predicate_type'],
++            '--certificate-identity', identity,
++            '--certificate-oidc-issuer', policy['signer']['issuer'],
++            '--certificate-github-workflow-repository', policy['signer']['repository'],
++            '--certificate-github-workflow-ref', policy['signer']['ref'],
++            '--certificate-github-workflow-trigger', policy['signer']['event'],
++            '--certificate-github-workflow-sha', commit, blob]
++    return records.run(argv, 'cosign-verify', env=env, check=False)
+diff --git a/scripts/exit_stage_9.py b/scripts/exit_stage_9.py
+new file mode 100644
+--- /dev/null
++++ b/scripts/exit_stage_9.py
+@@ -0,0 +1,163 @@
++#!/usr/bin/env python3
++"""Run real Stage 9 controls. Never treat setup errors as security rejections."""
++import argparse
++import base64
++import copy
++from pathlib import Path
++import shutil
++import sys
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / 'gate/provenance'))
++from common import (Rejected, Records, canonical, context, digest, parse, read,
++                    require, signature, write)
++from release import expected_canonical
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--case', choices=['valid-bundle', 'unsigned', 'wrong-signer',
++                                          'wrong-digest', 'wrong-policy', 'deployed-identity'], required=True)
++    args = parser.parse_args()
++    parent = ROOT / 'results/stage9' / args.case
++    parent.mkdir(parents=True, exist_ok=True)
++    number = 1
++    while (parent / f'attempt-{number:04d}').exists():
++        number += 1
++    require(number <= 5, 'FIVE_ATTEMPTS_RETAINED_STOP_FOR_DIAGNOSIS')
++    attempt = parent / f'attempt-{number:04d}'
++    attempt.mkdir()
++    outer = Records(attempt / 'harness')
++    outcomes = []
++    try:
++        config = read(ROOT / '.toolchain/stage9/controller.json')
++        policy, lock, _ = context(config['implementation_sha256'])
++        candidate = Path(config['candidate']).resolve()
++        controller = Path(config['controller']).resolve()
++        request = read(Path(config['request']).resolve())
++        require(not controller.is_relative_to(candidate), 'CONTROLLER_LOCATION')
++        require(request['challenge'] == config['challenge'], 'CONTROLLER_CHALLENGE')
++        require(request['implementation_lock_sha256'] == config['implementation_sha256'], 'CONTROLLER_LOCK')
++
++        def gate(path, name, expected_code, reason=None, *, observer=None, admit=False):
++            result_dir = attempt / name
++            script = 'observe.py' if observer else 'release.py'
++            command = ['python3', str(ROOT / 'gate/provenance' / script), '--candidate', str(path),
++                       '--controller', str(controller), '--challenge', config['challenge'],
++                       '--implementation-sha256', config['implementation_sha256'], '--records', str(result_dir)]
++            if observer:
++                command += ['--case', observer]
++            if admit:
++                command += ['--admit']
++            code, _, _ = outer.run(command, name, check=False)
++            require(code == expected_code, 'UNEXPECTED_GATE_EXIT:' + name)
++            result = read(result_dir / 'result.json')
++            if reason:
++                require(result['result'] == 'rejected' and result['reason'] == reason,
++                        'WRONG_REJECTION_REASON:' + name)
++            commands_path = result_dir / ('signature/commands.json' if observer else 'commands.json')
++            commands = read(commands_path) if commands_path.exists() else []
++            checks = [c for c in commands if 'verify-blob-attestation' in c['argv']]
++            outcomes.append({'name': name, 'gate_exit_code': code, 'reason': result.get('reason'),
++                             'actual_signature_exit_codes': [c['exit_code'] for c in checks],
++                             'signature_execution': 'executed' if checks else 'not_run',
++                             'end_to_end': False})
++            return result_dir, checks
++
++        def require_signature_success(checks):
++            require(len(checks) == 1 and checks[0]['exit_code'] == 0, 'SIGNATURE_WAS_NOT_SUCCESSFUL')
++
++        def fixture(name):
++            path = attempt / ('candidate-' + name)
++            shutil.copytree(candidate, path)
++            return path
++
++        def signed_control(name, reason):
++            path = fixture(name)
++            control = path / 'controls' / name
++            shutil.copyfile(control / 'evidence.json', path / 'evidence.json')
++            shutil.copyfile(control / 'control.sigstore.json', path / 'release.sigstore.json')
++            _, checks = gate(path, name, 1, reason)
++            require_signature_success(checks)
++
++        if args.case == 'valid-bundle':
++            for name in ['verified-first', 'verified-second']:
++                _, checks = gate(candidate, name, 0)
++                require_signature_success(checks)
++            first = canonical(expected_canonical(policy, lock, config['implementation_sha256'], request['package']))
++            second = canonical(expected_canonical(policy, lock, config['implementation_sha256'], request['package']))
++            require(first == second == (candidate / 'evidence.json').read_bytes(), 'CANONICAL_REPRODUCTION_FAILED')
++            (attempt / 'canonical-evidence.json').write_bytes(first)
++            altered = fixture('altered-evidence')
++            value = read(altered / 'evidence.json')
++            value['end_to_end'] = True
++            write(altered / 'evidence.json', value)
++            _, checks = gate(altered, 'altered-evidence', 1, 'EVIDENCE_DIGEST')
++            require_signature_success(checks)
++            fabricated = fixture('fabricated-receipt')
++            receipt = read(fabricated / 'proof/receipt.json')
++            receipt['agent_reported_success'] = True
++            write(fabricated / 'proof/receipt.json', receipt)
++            _, checks = gate(fabricated, 'fabricated-receipt', 1, 'PROOF_RECEIPT_BINDING')
++            require_signature_success(checks)
++            signed_control('wrong-method', 'CLAIM_METHOD_BINDING')
++        elif args.case in ['unsigned', 'wrong-signer', 'wrong-digest']:
++            # A functioning positive check is required in this very attempt.
++            _, checks = gate(candidate, 'positive-prerequisite', 0)
++            require_signature_success(checks)
++            path = fixture(args.case)
++            if args.case == 'unsigned':
++                bundle = read(path / 'release.sigstore.json')
++                bundle['dsseEnvelope']['signatures'] = []
++                unsigned = parse(base64.b64decode(bundle['dsseEnvelope']['payload'], validate=True))
++                unsigned['predicate']['purpose'] = 'security-control'
++                bundle['dsseEnvelope']['payload'] = base64.b64encode(canonical(unsigned)).decode()
++                write(path / 'release.sigstore.json', bundle)
++                markers = ['exactly one signature is required']
++            elif args.case == 'wrong-signer':
++                shutil.copyfile(path / 'wrong-signer.sigstore.json', path / 'release.sigstore.json')
++                probe = Records(attempt / 'wrong-signer-own-identity')
++                identity = policy['signer']['identity'].replace('provenance.yml', 'provenance-negative.yml')
++                code, _, _ = signature(policy, path / 'release.sigstore.json',
++                                        ROOT / policy['release_artifact']['path'], request['expected_source_commit'],
++                                        probe, negative_identity=identity)
++                require(code == 0, 'WRONG_SIGNER_FIXTURE_NOT_AUTHENTIC')
++                markers = ['expected SAN value "' + policy['signer']['identity'] + '", got "' + identity + '"']
++            else:
++                control = path / 'controls/wrong-digest'
++                shutil.copyfile(control / 'control.sigstore.json', path / 'release.sigstore.json')
++                probe = Records(attempt / 'wrong-digest-own-artifact')
++                code, _, _ = signature(policy, path / 'release.sigstore.json', control / 'different.bin',
++                                        request['expected_source_commit'], probe)
++                require(code == 0, 'WRONG_DIGEST_FIXTURE_NOT_AUTHENTIC')
++                markers = ['provided artifact digests do not match digests in statement',
++                           'provided artifact digests does not match digests in statement',
++                           'provided artifact digest does not match any digest in statement']
++            result_dir, checks = gate(path, 'negative', 1, 'SIGNATURE_REJECTED')
++            require(len(checks) == 1 and checks[0]['exit_code'] != 0, 'CHECKER_REJECTION_NOT_EXECUTED')
++            raw = (result_dir / checks[0]['stderr']).read_text() + (result_dir / checks[0]['stdout']).read_text()
++            require(any(marker in raw for marker in markers), 'NOT_THE_INTENDED_SECURITY_REJECTION')
++        elif args.case == 'wrong-policy':
++            signed_control('wrong-policy', 'POLICY_BINDING')
++            signed_control('stale-request', 'STALE_OR_SUBSTITUTED_REQUEST')
++            signed_control('wrong-spec', 'EVIDENCE_BINDING')
++            signed_control('wrong-method', 'CLAIM_METHOD_BINDING')
++        else:
++            _, checks = gate(candidate, 'accepted-deployment', 0, observer='accepted')
++            require_signature_success(checks)
++            _, checks = gate(candidate, 'substitution', 1, 'DEPLOYED_ARTIFACT_MISMATCH', observer='substitution')
++            require_signature_success(checks)
++            gate(candidate, 'duplicate-admission', 1, 'STALE_OR_CONSUMED_REQUEST', admit=True)
++        write(attempt / 'result.json', {'case': args.case, 'result': 'passed', 'harness_exit_code': 0,
++                                      'controls': outcomes, 'end_to_end': False})
++        print('STAGE9_' + args.case.upper().replace('-', '_') + '_PASSED')
++        return 0
++    except Exception as error:
++        write(attempt / 'result.json', {'case': args.case, 'result': 'not_established', 'harness_exit_code': 1,
++                                      'reason': str(error), 'controls': outcomes, 'end_to_end': False})
++        print('STAGE9_NOT_ESTABLISHED: ' + str(error))
++        return 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementation.lock
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/implementation.lock
+@@ -0,0 +1,115 @@
++{
++  "contract_approval_commit": "097431cf458e5c62332575b09e953224471fa64d",
++  "end_to_end": false,
++  "files": {
++    ".github/workflows/provenance-negative.yml": "79c50d36f5951f6478ec69f72a85cd1c79414dacd3c17dfd6b170470e24ffca7",
++    ".github/workflows/provenance.yml": "d2c60993d504a4353102d36189f9dd5f25b98ab3c2c73a12649fc18a087ccefd",
++    "examples/binary/Execution.v": "6540ec35e20deed6081f3045c0944917d41124611e79e9df4daa43d257f08f8b",
++    "examples/binary/Images.v": "3f22a6c9494efe2eadfb0c9be3813bd3cf0edf803d49b9598113fff50b9eb563",
++    "examples/binary/Proof.v": "1b488738445a3c1208d32ee0c6f268711333b86d04123856658e5c1cb39e8663",
++    "examples/binary/Statements.v": "b6fc5d989a52a2431e7ede510a7aa156062f94ef3229b3d4f5d4b42d2a5ed3ba",
++    "examples/binary/Witness.v": "1544cb6f5be80e90051fde0059ed096ede95934b4067900792a74e49d0db7a83",
++    "examples/binary/WitnessSpec.v": "535ebed602993c18c8499fd38ed485047f972708f93fa522b70a7461030f019f",
++    "examples/binary/gcd_selftest.c": "06dfa530f6f2b6fb429842befe51e60d7d8bf05338b83c27d4e8d807612dd4bc",
++    "gate/backends/__init__.py": "4f797ea3cb64ee52910fe9b9132a90b39f5144ed749e6a866098f422837f8fda",
++    "gate/backends/dafny.py": "ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe",
++    "gate/common.py": "06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988",
++    "gate/core.py": "bf8f0a54a149c052f179e0f8754671b6b5e6f9085c17d1bdbd4a31f01dd00013",
++    "gate/dependencies.py": "df8e9dafebdb87c596e4ddae8c715d93ebf7268f60f27837dd84955a5f5b11af",
++    "gate/expected-audit.md": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae",
++    "gate/provenance/Dockerfile": "bb0a3d3dee8865515c3b777a6799a6178d8d6c0c796d2b46d37e3fa13987b877",
++    "gate/provenance/common.py": "77c068569e47885abbf4cd979f761cf6deab43ce8c5d98749764adaab919cc16",
++    "gate/provenance/observe.py": "aea3bf21a1d0267df0e374bbcfbf3e09ff2df2e3b1fa34d16fe115bc010a6c13",
++    "gate/provenance/preflight.py": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776",
++    "gate/provenance/producer.py": "f3bcc1dc754a4ca423a1746215e12b09c39a7882922b338861c6470c71dd617a",
++    "gate/provenance/release.py": "e9f61515ae14300c099f6d2179df0610fe23b5267f3f14361165e2993f039df8",
++    "gate/provenance/runtime.json": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024",
++    "gate/refund.py": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb",
++    "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
++    "gate/refund/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
++    "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
++    "package-lock.json": "c1614a9a53e2051aaf3767cb511392032a61b57be4918ec63cbc5850356a1df6",
++    "package.json": "1c4da20a67bed1dcaac41045ede889715c02e0c762efbc9f2e9278408a9f0efa",
++    "policy/provenance.json": "9e27f627a2b1924fc2f4f86346efaa06755a2c47a366fb3437e54a105d65f22b",
++    "policy/refund.yaml": "4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83",
++    "proposals/refund-decision.md": "c7b579b062a59c72881c999f5302e1ceb8a9b71ce82bd23a9a823a0a343dee64",
++    "results/stage7/accepted/own/assumption-audit.json": "55a1a9e5f66b71536b84ff7e265b7c25ca155892ba27548a941ced58e1effe85",
++    "results/stage7/accepted/own/evidence.json": "cdc906f980d4cbe8e489aac8be77c87c323c87f2fb0e49c74a5aa48ae1fc8f80",
++    "results/stage7/accepted/own/gcd-selftest.elf": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
++    "results/stage8/completed/completion.json": "9235463731f1a7948a101e12cf4e3362150495e4f4e3c1dbf3558826d69d9cd8",
++    "results/stage8/completed/input-identities.json": "cb11633f62b44c2328e17a1f9f202195befa86a652545e40be0dace48e9b5702",
++    "results/stage8/completed/model.cjs": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
++    "results/stage8/completed/property-evidence.json": "77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd",
++    "results/stage8/completed/source-evidence.json": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86",
++    "schemas/evidence.schema.json": "5113a6dc0c26c4f474ecf22bd558967ad260e4d16bb4eb017bf852ae18dc2caa",
++    "schemas/policy.schema.json": "ba706f6f15c087e1c0673743717d76e1fdb02f8d2efe791611b121429954ed4d",
++    "scripts/exit_stage_7.py": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544",
++    "scripts/exit_stage_9.py": "a4718dcb41687197d82b59044bc4bec818dbf15d128d037bc589b90488c288ef",
++    "scripts/javascript_env.py": "0beb81134ed59cb41cc2feb02f188816060dace4539888c98cea55771a9a3abb",
++    "scripts/stage7_build_own.py": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac",
++    "scripts/stage7_identity.py": "7f9fdc9e7531ffeb0fb32e2ea7362ce87c27c9c46b03ebdf7a36202602998803",
++    "scripts/stage7_own_job.py": "6c852220e8eeeac8b5c9bec533bf5ec044f68dec3f6e98d348f525da40b32b00",
++    "spec/provenance/protocol.md": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69",
++    "spec/provenance/spec.lock": "43610d8123ce21fdd1f9dac9469f78ad3efcb3af271a86011a18790099811a33",
++    "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
++    "spec/refund/protocol.md": "5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4",
++    "spec/refund/spec.lock": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57",
++    "toolchain/javascript-pins.json": "4f40085726c4eb8032acd15214773cfd785667a8a45156cf4bfd6b293d811daa",
++    "toolchain/pins.json": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c",
++    "toolchain/requirements-stage2.txt": "3be95de3a966c4e4a5ff4ee4e233035b9fc4b5baa84862523f27fa9a16539097",
++    "toolchain/stage7-own-pins.json": "7859ba012eae6575731550eb8da10e85b2c9b7ef8512f27349763f09f75e515e",
++    "toolchain/stage7-pins.json": "36e6539ed8718fde4ce12888c3dd1b76f9e82013a11523b080bc47592953a16d",
++    "toolchain/validator-pins.json": "4566ee79b6f939b70ed54f3d7c31fe617c1a65c5d8e36dd1894552c5352534f9",
++    "ts/refund.ts": "8152c87d1f8d8f7cfd016cba9c9abd6627f49bee9a211084f1a67a6f197ec98c",
++    "tsconfig.json": "a6efc17451b1a8f79516f984205bf128edf6e633bbfa1263267d88b197cc43ee"
++  },
++  "format_version": 1,
++  "implementation_lock_self_hash": "supplied independently by approved controller, never selected by candidate",
++  "python_container_dependencies": {
++    "_yaml/__init__.py": "d3801eff9a2cc5a8692476b75c165401fe308ba5d7df6811f03e97ea9eb81840",
++    "bin/idna": "52c4ae41777c85a412781768337d46d6c7a4392b2eca17ba4127a4c87a35222c",
++    "idna-3.20.dist-info/INSTALLER": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
++    "idna-3.20.dist-info/METADATA": "dbd8c14c1e4ca1e0c9824a6dbc7cbbf78884f38eb52d91148cd3025f671e4b85",
++    "idna-3.20.dist-info/RECORD": "1532c53c0f0a2e4f9cf97d5ff33c6f7275570f92acb09c32325c3a36b524a402",
++    "idna-3.20.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "idna-3.20.dist-info/WHEEL": "96a37c8d7b7f425a05386731f644adbd66ebca17c45e8236176cfe614466df9d",
++    "idna-3.20.dist-info/entry_points.txt": "ec7de718e1daa778e72c4e5eeeaed8c2bf55abc6b107b5888f9f82ff8376be1c",
++    "idna-3.20.dist-info/licenses/LICENSE.md": "1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04",
++    "idna/__init__.py": "8514c3ed53136a3596ebdf512fa487bbdd7da5a99adcaed82e0363d2c306d3af",
++    "idna/__main__.py": "e0930aeba5a3e2e2d94ca6c5fac4f72c0c4eb2be9bba283becf98e909091471c",
++    "idna/cli.py": "2e01972a25e67afdfba5d824013c01e808893916539c0db33f72f37c42b8896a",
++    "idna/codec.py": "7dff4247d75e6e265cbea1261f10d122ba9299a371429cfa018e091ec0b7602d",
++    "idna/compat.py": "4ff7995ce52dd1be5381ae7a70fc9b42ef420982b41532b599d88f6fdea76bc0",
++    "idna/core.py": "3dd4c3ffee4ff223207fac65f3812a1e6895ae8ad1e7a6ed60115768f3551520",
++    "idna/idnadata.py": "23a9a8c1d15de9c634d0bf213d779810f485083fe1b0f7e09044ad04a69cc7eb",
++    "idna/intranges.py": "838f6c70b4a4a89b4084b98e3836bb8551eb8928e66fad2d893b04a287097412",
++    "idna/package_data.py": "ae759534a3c582a00ac856cfca464a39ee8251d393208d8af06b605bc20e02a9",
++    "idna/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "idna/uts46data.py": "770e849bfa156c71828a89440a57fe9aea70735f103ae4616ee4f682e13d6c00",
++    "pyyaml-6.0.3.dist-info/INSTALLER": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
++    "pyyaml-6.0.3.dist-info/METADATA": "03c3b415ed38d09faedc49360e930769b40c58f68585e6de00e2e4916a858d34",
++    "pyyaml-6.0.3.dist-info/RECORD": "8e072d437abd32c7ead926b270b02b99b848d425c8d3d89079056adb5bab1ae7",
++    "pyyaml-6.0.3.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "pyyaml-6.0.3.dist-info/WHEEL": "0f1467590cfe2a9f7ee1ae217431ec4afd0a502dc7eec37d35b79fdfef118d75",
++    "pyyaml-6.0.3.dist-info/licenses/LICENSE": "8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4",
++    "pyyaml-6.0.3.dist-info/top_level.txt": "ae98f42153138ac02387fd6f1b709c7fdbf98e9090c00cfa703d48554e597614",
++    "yaml/__init__.py": "b19dfcc333d6a75dfd73073901164507252f271b41d3b5f7d85510033a0547a7",
++    "yaml/_yaml.cpython-312-x86_64-linux-gnu.so": "957a099a4521c1f7669306fb6f79ca63fa4b9a0b4c463f7cac833a65a5c5c0cb",
++    "yaml/composer.py": "fcaa37d16afa783594794a5ab94193dcb720f503c19ce3d59539c8311189f453",
++    "yaml/constructor.py": "90d8247da78b524c10618fd0e857f54f3d97570fe91b5c5513d024ef3faf88b0",
++    "yaml/cyaml.py": "e99ac01bd7c062f7557b614aff0d21997a06ed962ca185306a91bc0a20bbd87d",
++    "yaml/dumper.py": "3cb72d66563064ba7b5e679477046ebf89d8399d940670c8532f3e94a7cb17ea",
++    "yaml/emitter.py": "8e086d694ede170837d5b1b407b45979aff6f40762f422a65eafd08e04290a44",
++    "yaml/error.py": "021f73fada072546c4f63f8cf18a7181244ce4280b09cc15cc980b2d1176171a",
++    "yaml/events.py": "e74fd392c810884e2ea7e94aa3f57e9c1cbeb402319083d0c58e6a0e1282787c",
++    "yaml/loader.py": "5156becc8aa6905482218abf3e04869b835226db4763645fff3438fdbd5f1cdd",
++    "yaml/nodes.py": "80f28d8fca4a09d87677882bde021820d9cf39a3b11a12405226211919cf13ce",
++    "yaml/parser.py": "8a55a9e6fbe0a07146cef3990c8b45a068c3e83e369e1959ad9ca30306b4a09a",
++    "yaml/reader.py": "d1d9b38ab3a20c6e17a38d519ee412ecaf6b918df18c78956ac7c330d4ea08dc",
++    "yaml/representer.py": "22e58ff9c016f6c1ca1274b4802a926bcf78935060e1c813c5a0f021c6d143e6",
++    "yaml/resolver.py": "f4bf9561f9b89961f1503d558385fbae30d12bfed565de9bf76c33abb63620a6",
++    "yaml/scanner.py": "60433788b652690c17710460da5d91e0c753d3318fd85f5e1e42862a71f25906",
++    "yaml/serializer.py": "0a1b85826854d35863e31808f0668abfabdf33606e8f06bd8bb7761401e3edc0",
++    "yaml/tokens.py": "953408cd2570f0c83dc2fe39f7e4e388e41eeb05738aa69196a5f6ffcf6ba79e"
++  }
++}
+diff --git a/gate/provenance/observe.py b/gate/provenance/observe.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/observe.py
+@@ -0,0 +1,108 @@
++"""Observe actual deployed bytes. No guest execution or deployment proof claim."""
++import argparse
++from pathlib import Path
++import sqlite3
++
++from common import Rejected, Records, context, parse, require, sha, write
++from producer import runtime
++from release import pending, verify
++
++
++def observe(policy, request, container, records):
++    _, data, _ = records.run(['docker', 'inspect', container], 'inspect-before')
++    before = parse(data)[0]
++    require(before['Id'] == container and before['State']['Running'], 'DEPLOYMENT_NOT_RUNNING')
++    # Read through the actual running namespace, including any effective mount.
++    _, observed, _ = records.run(['docker', 'exec', '--user', '1000:1000', container,
++                                  'cat', policy['deployment']['path']], 'observed-elf')
++    _, data, _ = records.run(['docker', 'inspect', container], 'inspect-after')
++    after = parse(data)[0]
++    observation = {'container_id': container, 'path': policy['deployment']['path'],
++                   'observed_sha256': sha(observed), 'expected_sha256': request['artifact_sha256'],
++                   'actual_image': before['Image'], 'expected_image': 'sha256:' + request['package_sha256'],
++                   'mounts_before': before['Mounts'], 'mounts_after': after['Mounts'],
++                   'scope': 'deployed_file_identity', 'end_to_end': False,
++                   'riscv_execution_claimed': False, 'deployment_correctness_proved': False,
++                   'challenge': request['challenge']}
++    write(records.directory / 'observation.json', observation)
++    require(sha(observed) == policy['release_artifact']['sha256'] == request['artifact_sha256'],
++            'DEPLOYED_ARTIFACT_MISMATCH')
++    require(before['Id'] == after['Id'] and before['Image'] == after['Image']
++            and after['State']['Running'], 'DEPLOYMENT_CHANGED')
++    require(before['Image'] == 'sha256:' + request['package_sha256'], 'DEPLOYED_PACKAGE_MISMATCH')
++    require(before['Mounts'] == after['Mounts'] == [], 'DEPLOYMENT_MOUNT_OBSCURES_IDENTITY')
++    for state in [before, after]:
++        require(state['Config']['User'] == '1000:1000'
++                and state['HostConfig']['ReadonlyRootfs']
++                and state['HostConfig']['NetworkMode'] == 'none'
++                and state['HostConfig']['Privileged'] is False, 'DEPLOYMENT_ISOLATION')
++    return observation
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--candidate', type=Path, required=True)
++    p.add_argument('--controller', type=Path, required=True)
++    p.add_argument('--challenge', required=True)
++    p.add_argument('--implementation-sha256', required=True)
++    p.add_argument('--records', type=Path, required=True)
++    p.add_argument('--case', choices=['accepted', 'substitution'], required=True)
++    args = p.parse_args()
++    records = Records(args.records)
++    container = None
++    try:
++        policy, _, _ = context(args.implementation_sha256)
++        runtime(records)
++        require(not args.controller.resolve().is_relative_to(args.candidate.resolve()), 'CONTROLLER_LOCATION')
++        connection = sqlite3.connect('file:' + str(args.controller.resolve()) + '?mode=rw', uri=True)
++        try:
++            connection.execute('BEGIN IMMEDIATE')
++            if args.case == 'accepted':
++                request = pending(connection, args.challenge)
++            else:
++                # Test-only additional container for the already admitted request.
++                # It is labelled as a security fixture, never as another release.
++                row = connection.execute('SELECT request,state FROM requests WHERE challenge=?',
++                                         (args.challenge,)).fetchone()
++                require(row is not None and row[1] == 'consumed', 'NEGATIVE_REQUIRES_PRIOR_ADMISSION')
++                request = parse(row[0])
++            verification = Records(args.records / 'signature')
++            verify(args.candidate, request, args.implementation_sha256, verification)
++            if args.case == 'accepted':
++                connection.execute("UPDATE requests SET state='consumed' WHERE challenge=?", (args.challenge,))
++                connection.commit()
++            else:
++                connection.rollback()
++        finally:
++            connection.close()
++        command = ['docker', 'create', '--platform', 'linux/amd64', '--network', 'none',
++                   '--read-only', '--user', '1000:1000', '--cap-drop', 'ALL',
++                   '--security-opt', 'no-new-privileges:true', '--cpuset-cpus', '0',
++                   '--memory', '256m', '--memory-swap', '256m', '--pids-limit', '64',
++                   '--label', 'forge.stage9.role=' + args.case]
++        if args.case == 'substitution':
++            wrong = args.records.resolve() / 'substituted.elf'
++            wrong.write_bytes(b'Actual Stage 9 deployed substitution control\n')
++            wrong.chmod(0o444)
++            command += ['--mount', f'type=bind,source={wrong},target={policy["deployment"]["path"]},readonly']
++        command += ['sha256:' + request['package_sha256']]
++        _, data, _ = records.run(command, 'deployment-create')
++        container = data.decode().strip()
++        records.run(['docker', 'start', container], 'deployment-start')
++        result = observe(policy, request, container, records)
++        require(args.case == 'accepted', 'SUBSTITUTION_CONTROL_UNEXPECTEDLY_ACCEPTED')
++        write(args.records / 'result.json', {'result': 'observed_deployed_file_identity',
++                                           'observation': result, 'end_to_end': False})
++        return 0
++    except (Rejected, OSError, ValueError, KeyError, sqlite3.Error) as error:
++        write(args.records / 'result.json', {'result': 'rejected', 'reason': str(error),
++                                           'end_to_end': False})
++        return 1
++    finally:
++        if container:
++            # Stop only this invocation's idle fixture; retain its filesystem.
++            records.run(['docker', 'stop', container], 'deployment-stop', check=False)
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/preflight.py b/gate/provenance/preflight.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/preflight.py
+@@ -0,0 +1,63 @@
++"""Install/check pinned public Cosign; never sign or authorize a release here."""
++import argparse
++import os
++from pathlib import Path
++import platform
++import urllib.request
++
++from common import (ROOT, HERE, Records, context, digest, fetch, parse, read,
++                    require, sha, write)
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--implementation-sha256', required=True)
++    parser.add_argument('--producer-run')
++    args = parser.parse_args()
++    job = os.environ.get('GITHUB_JOB')
++    require(job in ['proof', 'sign', 'negative'], 'APPROVED_JOB')
++    records = Records(ROOT / ('results/stage9/producer-output/bootstrap-' + job))
++    policy, _, _ = context(args.implementation_sha256)
++    try:
++        require(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'RUNNER_PLATFORM')
++        listener = Path(os.environ['RUNNER_WORKSPACE']).parents[1] / 'bin/Runner.Listener'
++        _, version, _ = records.run([listener, '--version'], 'runner-version')
++        pins = read(HERE / 'runtime.json')
++        require(version.decode().strip() == pins['actions_runner']['version'], 'RUNNER_VERSION')
++        request = parse(os.environ['FORGE_STAGE9_REQUEST'])
++        require(os.environ['GITHUB_SHA'] == request['expected_source_commit'], 'DISPATCH_COMMIT')
++        require(Path(os.environ['FORGE_STAGE7_ROOT']).resolve() != ROOT, 'PERSISTENT_PREREQUISITES_OUTSIDE_CHECKOUT')
++        if args.producer_run:
++            require(args.producer_run.isdecimal(), 'PRODUCER_RUN_ID')
++            run = parse(fetch('https://api.github.com/repos/mack-dot/forge/actions/runs/' + args.producer_run,
++                              records, 'producer-run'))
++            require(run['conclusion'] == 'success' and run['event'] == 'workflow_dispatch'
++                    and run['head_sha'] == request['expected_source_commit']
++                    and run['path'] == '.github/workflows/provenance.yml'
++                    and run['head_branch'] == 'main'
++                    and run['repository']['id'] == policy['signer']['repository_id'], 'PRODUCER_RUN_IDENTITY')
++        binary = ROOT / '.toolchain/stage9/cosign'
++        expected = policy['signature']['executable_sha256']['darwin-arm64']
++        if not binary.exists():
++            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-darwin-arm64'
++            binary.parent.mkdir(parents=True, exist_ok=True)
++            with urllib.request.urlopen(url) as response:
++                data = response.read()
++            require(sha(data) == expected, 'COSIGN_DOWNLOAD_DIGEST')
++            staging = binary.with_suffix('.download')
++            staging.write_bytes(data)
++            staging.chmod(0o755)
++            staging.replace(binary)
++            write(records.directory / 'download.json', {'url': url, 'sha256': sha(data),
++                                                       'authentication': 'approved_digest_and_https_bootstrap'})
++        require(digest(binary) == expected, 'COSIGN_EXECUTABLE_DIGEST')
++        records.run([binary, 'version', '--json'], 'cosign-version')
++        write(records.directory / 'result.json', {'result': 'toolchain_inventory_only', 'end_to_end': False})
++        return 0
++    except Exception as error:
++        write(records.directory / 'result.json', {'result': 'blocked', 'reason': str(error), 'end_to_end': False})
++        raise
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/producer.py
+@@ -0,0 +1,306 @@
++"""Research producer/controller. All signing is performed by pinned Cosign."""
++import argparse
++import copy
++import os
++from pathlib import Path
++import re
++import secrets
++import shutil
++import sqlite3
++
++from common import (ROOT, HERE, Records, canonical, clean_environment, context, cosign_path,
++                    digest, files, parse, read, require, sha, write)
++from release import expected_canonical, validate_receipt
++
++
++def runtime(records):
++    pins = read(HERE / 'runtime.json')
++    _, output, _ = records.run(['docker', 'version', '--format', '{{json .}}'], 'docker-version')
++    value = parse(output)
++    for side in ['Client', 'Server']:
++        for key, expected in pins['docker'][side].items():
++            require(value[side][key] == expected, 'DOCKER_VERSION:' + side + ':' + key)
++    components = {c['Name']: c['Version'] for c in value['Server']['Components']}
++    require(components == pins['docker_components'], 'DOCKER_COMPONENTS')
++    require(value['Server']['KernelVersion'] == pins['kernel']
++            and value['Server']['Platform']['Name'] == 'Docker Desktop ' + pins['docker_desktop'],
++            'DOCKER_HOST_RUNTIME')
++    _, output, _ = records.run(['docker', 'buildx', 'version'], 'buildx-version')
++    require(output.decode().strip() == pins['buildx'], 'BUILDX_VERSION')
++    _, output, _ = records.run(['docker', 'buildx', 'inspect', pins['builder']['name']], 'builder-inspect')
++    text = output.decode()
++    require(re.search(r'^Driver:\s+' + re.escape(pins['builder']['driver']) + r'\s*$', text, re.M)
++            and re.search(r'^BuildKit version:\s+' + re.escape(pins['builder']['buildkit_version']) + r'\s*$', text, re.M),
++            'BUILDER_VERSION')
++
++
++def package(policy, out, records):
++    runtime(records)
++    base = policy['deployment']['base_image']
++    records.run(['docker', 'pull', '--platform', 'linux/amd64', base], 'package-base-pull')
++    _, info, _ = records.run(['docker', 'image', 'inspect', base], 'package-base-inspect')
++    base_info = parse(info)[0]
++    require(base in base_info['RepoDigests'], 'BASE_IMAGE_IDENTITY')
++    require(base_info['Architecture'] == 'amd64' and base_info['Os'] == 'linux', 'BASE_PLATFORM')
++    records.run(['docker', 'buildx', 'imagetools', 'inspect', '--raw', base], 'base-index')
++    index = parse((records.directory / records.commands[-1]['stdout']).read_bytes())
++    require(any(x['digest'] == policy['deployment']['platform_manifest']
++                and x['platform']['architecture'] == 'amd64' and x['platform']['os'] == 'linux'
++                for x in index['manifests']), 'BASE_PLATFORM_MANIFEST')
++    build = out / 'package-context'
++    build.mkdir()
++    shutil.copyfile(HERE / 'Dockerfile', build / 'Dockerfile')
++    shutil.copyfile(ROOT / policy['release_artifact']['path'], build / 'gcd-selftest.elf')
++    os.chmod(build / 'gcd-selftest.elf', 0o444)
++    os.utime(build / 'gcd-selftest.elf', (0, 0))
++    os.utime(build / 'Dockerfile', (0, 0))
++    iid = out / 'image-id.txt'
++    records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load', '--platform', 'linux/amd64',
++                 '--provenance=false', '--sbom=false', '--network=none',
++                 '--build-arg', 'SOURCE_DATE_EPOCH=0', '--iidfile', str(iid), str(build)], 'package-build')
++    image = iid.read_text().strip()
++    require(re.fullmatch('sha256:[0-9a-f]{64}', image), 'IMAGE_ID')
++    _, data, _ = records.run(['docker', 'image', 'inspect', image], 'package-inspect')
++    info = parse(data)[0]
++    require(info['Id'] == image and info['RootFS']['Type'] == 'layers', 'PACKAGE_IDENTITY')
++    # Image config ID binds all uncompressed layer digests. It is not reported
++    # as an OCI distribution-manifest digest, which a local build may not have.
++    descriptor = {'identity_kind': 'docker_image_config', 'sha256': image.removeprefix('sha256:'),
++                  'base': base, 'base_platform_manifest': policy['deployment']['platform_manifest'],
++                  'platform': 'linux/amd64', 'rootfs_diff_ids': info['RootFS']['Layers'],
++                  'recipe_sha256': digest(HERE / 'Dockerfile'),
++                  'elf_path': policy['deployment']['path'],
++                  'elf_sha256': policy['release_artifact']['sha256'],
++                  'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '
++                                   '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
++                  'end_to_end': False}
++    # Inspect bytes from a real container made from the built package.
++    _, data, _ = records.run(['docker', 'create', '--platform', 'linux/amd64', image], 'package-container')
++    container = data.decode().strip()
++    records.run(['docker', 'cp', container + ':' + policy['deployment']['path'],
++                 str(out / 'packaged.elf')], 'package-extract')
++    require(digest(out / 'packaged.elf') == policy['release_artifact']['sha256'], 'PACKAGE_ELF_MISMATCH')
++    write(out / 'package.json', descriptor)
++    return descriptor
++
++
++def replay(policy, lock, implementation, request, out, records):
++    pins = read(ROOT / 'toolchain/stage7-pins.json')
++    prepared = Path(os.environ['FORGE_STAGE7_ROOT']).resolve()
++    require(prepared.is_dir(), 'PREPARED_STAGE7_ROOT')
++    require(files(prepared / '.toolchain/stage7/pydeps') == implementation['python_container_dependencies'],
++            'UPSTREAM_PYTHON_DEPENDENCIES')
++    attempt = 'stage9-' + request['challenge']
++    name = 'forge-' + attempt
++    linux = '/work/.forge-stage7/own-proof/' + attempt
++    records.run(['docker', 'pull', '--platform', pins['platform'], pins['checker_image']], 'checker-pull')
++    command = ['docker', 'run', '--name', name, '--pull', 'never', '--platform', pins['platform'],
++               '--network', 'none', '--read-only', '--user', '1000:1000',
++               '--cpuset-cpus', '0', '--memory', '4g', '--memory-swap', '4g', '--pids-limit', '512',
++               '--ulimit', 'stack=-1:-1', '--tmpfs', '/tmp:rw,nosuid,nodev,size=256m',
++               '-e', 'HOME=/tmp', '-e', 'PYTHONPATH=/pydeps', '-e', 'PYTHONDONTWRITEBYTECODE=1',
++               '-e', 'DUNE_CACHE=disabled',
++               '--mount', 'type=volume,source=' + pins['linux_volume'] + ',target=/work',
++               '--mount', f'type=bind,source={prepared}/.toolchain/stage7/upstream/.git,target=/git-source,readonly',
++               '--mount', f'type=bind,source={prepared}/.toolchain/stage7/pydeps,target=/pydeps,readonly',
++               '--mount', f'type=bind,source={ROOT}/scripts,target=/forge-scripts,readonly',
++               '--mount', f'type=bind,source={ROOT}/examples/binary,target=/forge-program,readonly',
++               '--mount', f'type=bind,source={ROOT}/toolchain/stage7-pins.json,target=/forge-pins.json,readonly',
++               '--mount', f'type=bind,source={ROOT}/toolchain/stage7-own-pins.json,target=/forge-own-pins.json,readonly',
++               '-w', '/work', pins['checker_image'], 'python3', '/forge-scripts/stage7_own_job.py',
++               '--attempt', attempt]
++    # This always creates a new attempt. The unchanged Stage 7 job compiles both
++    # proofs/bindings and invokes upstream _rocqchk over the full closure.
++    code, _, _ = records.run(command, 'fresh-proof', check=False)
++    proof = out / 'proof'
++    proof.mkdir()
++    collect, _, _ = records.run(['docker', 'cp', name + ':' + linux, str(proof / 'linux')],
++                               'proof-collect', check=False)
++    _, state, _ = records.run(['docker', 'inspect', name], 'proof-container-state')
++    require(code == 0 and collect == 0 and not parse(state)[0]['State']['OOMKilled'], 'FRESH_PROOF_FAILED')
++    # Archive hashes of the actual .vo inputs named by real rocqchk output.
++    collector = ['python3', '-c',
++        'import pathlib,re,hashlib,json; '
++        f'p=pathlib.Path({linux!r})/"independent-kernel.log"; '
++        'paths=re.findall(r"^\\[intern (.+\\.vo) \\.\\.\\.$",p.read_text(),re.M); '
++        'print(json.dumps({n:hashlib.sha256(pathlib.Path(n).read_bytes()).hexdigest() for n in paths},sort_keys=True))']
++    command2 = command[:command.index('-w')]  # same immutable mounts and resource limits
++    command2[command2.index('--name') + 1] = name + '-closure'
++    command2 += ['-w', '/work', pins['checker_image']] + collector
++    _, closure, _ = records.run(command2, 'closure-input-hashes')
++    write(proof / 'closure-identities.json', parse(closure))
++    manifest = {'challenge': request['challenge'], 'source_commit': request['expected_source_commit'],
++                'files': files(proof), 'end_to_end': False}
++    write(proof / 'receipt.json', manifest)
++    validate_receipt(proof, policy, lock, request)
++
++
++def statement(policy, request, evidence, receipt, *, purpose='release'):
++    return {'_type': policy['signature']['statement_type'],
++            'predicateType': policy['signature']['predicate_type'],
++            'subject': [{'name': 'forge:gcd-selftest.elf', 'digest': {'sha256': policy['release_artifact']['sha256']}},
++                        {'name': 'forge:docker-image-config', 'digest': {'sha256': request['package_sha256']}}],
++            'predicate': {'purpose': purpose, 'request': request,
++                          'canonical_evidence_sha256': sha(canonical(evidence)),
++                          'proof_receipt_sha256': receipt}}
++
++
++def workflow(request, *, negative=False):
++    require(os.environ.get('GITHUB_REPOSITORY') == 'mack-dot/forge'
++            and os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
++            and os.environ.get('GITHUB_REF') == 'refs/heads/main'
++            and os.environ.get('GITHUB_SHA') == request['expected_source_commit'], 'WORKFLOW_CONTEXT')
++    filename = 'provenance-negative.yml' if negative else 'provenance.yml'
++    require(os.environ.get('GITHUB_WORKFLOW_REF') == 'mack-dot/forge/.github/workflows/' + filename
++            + '@refs/heads/main', 'WORKFLOW_IDENTITY')
++    require(os.environ.get('GITHUB_RUN_ATTEMPT') == '1', 'WORKFLOW_RERUN_REQUIRES_NEW_REQUEST')
++
++
++def request_create(args, policy, lock, implementation):
++    require(re.fullmatch('[0-9a-f]{40}', args.commit), 'SOURCE_COMMIT')
++    require(not args.controller.exists(), 'CONTROLLER_ALREADY_EXISTS')
++    args.output.mkdir(parents=True, exist_ok=False)
++    records = Records(args.output / 'commands')
++    package_info = package(policy, args.output, records)
++    request = {'expected_source_commit': args.commit,
++               'artifact_sha256': policy['release_artifact']['sha256'],
++               'package_sha256': package_info['sha256'], 'package': package_info,
++               'policy_id': policy['id'], 'policy_version': policy['version'], 'policy_epoch': policy['epoch'],
++               'policy_sha256': digest(ROOT / 'policy/provenance.json'),
++               'implementation_lock_sha256': args.implementation_sha256, 'challenge': secrets.token_hex(32)}
++    require(not args.controller.resolve().is_relative_to(args.output.resolve()), 'CONTROLLER_OUTSIDE_OUTPUT')
++    args.controller.parent.mkdir(parents=True, exist_ok=True)
++    connection = sqlite3.connect(args.controller)
++    connection.execute('CREATE TABLE requests (challenge TEXT PRIMARY KEY, request BLOB NOT NULL, state TEXT NOT NULL)')
++    connection.execute('INSERT INTO requests VALUES (?,?,?)', (request['challenge'], canonical(request), 'pending'))
++    connection.commit()
++    connection.close()
++    os.chmod(args.controller, 0o600)
++    write(args.output / 'request.json', request)
++
++
++def produce(args, policy, lock, implementation, request):
++    workflow(request)
++    args.output.mkdir(parents=True, exist_ok=True)
++    require(not any((args.output / name).exists() for name in ['commands', 'proof', 'controls', 'evidence.json']),
++            'PRODUCER_OUTPUT_ALREADY_EXISTS')
++    records = Records(args.output / 'commands')
++    package_info = package(policy, args.output, records)
++    require(package_info == request['package'], 'INDEPENDENT_PACKAGE_REPRODUCTION')
++    replay(policy, lock, implementation, request, args.output, records)
++    evidence = expected_canonical(policy, lock, args.implementation_sha256, package_info)
++    write(args.output / 'evidence.json', evidence)
++    require((args.output / 'evidence.json').read_bytes() == canonical(
++        expected_canonical(policy, lock, args.implementation_sha256, package_info)), 'CANONICAL_REPRODUCTION')
++    receipt = digest(args.output / 'proof/receipt.json')
++    write(args.output / 'statement.json', statement(policy, request, evidence, receipt))
++    write(args.output / 'request.json', request)
++    # Deliberately invalid fixtures are separate, explicitly marked artifacts.
++    # They do not become accepted evidence, even if signed by this workload.
++    controls = args.output / 'controls'
++    controls.mkdir()
++    for name in ['wrong-policy', 'wrong-method', 'stale-request', 'wrong-spec']:
++        directory = controls / name
++        directory.mkdir()
++        changed = copy.deepcopy(evidence)
++        changed_request = copy.deepcopy(request)
++        if name == 'wrong-policy':
++            changed['policy']['version'] = '0.0.0-unapproved'
++        elif name == 'wrong-method':
++            changed['evidence'][0]['method'] = 'unit_tested'
++        elif name == 'stale-request':
++            changed_request['challenge'] = '0' * 64
++        else:
++            changed['spec_lock_sha256'] = '0' * 64
++        write(directory / 'evidence.json', changed)
++        write(directory / 'statement.json', statement(policy, changed_request, changed, receipt,
++                                                       purpose='security-control'))
++    wrong = controls / 'wrong-digest'
++    wrong.mkdir()
++    (wrong / 'different.bin').write_bytes(b'Forge Stage 9 wrong artifact control\n')
++    s = statement(policy, request, evidence, receipt, purpose='security-control')
++    s['subject'][0]['digest']['sha256'] = digest(wrong / 'different.bin')
++    write(wrong / 'statement.json', s)
++    context(args.implementation_sha256)
++
++
++def sign(args, policy, lock, implementation, request):
++    workflow(request, negative=args.action == 'negative-sign')
++    require(read(args.output / 'request.json') == request, 'SIGNING_REQUEST_BINDING')
++    validate_receipt(args.output / 'proof', policy, lock, request)
++    require(read(args.output / 'evidence.json') == expected_canonical(
++        policy, lock, args.implementation_sha256, request['package']), 'SIGNING_EVIDENCE_BINDING')
++    expected = statement(policy, request, read(args.output / 'evidence.json'),
++                         digest(args.output / 'proof/receipt.json'))
++    require(read(args.output / 'statement.json') == expected, 'SIGNING_STATEMENT_BINDING')
++    records = Records(args.output / ('negative-signing' if args.action == 'negative-sign' else 'signing'))
++    env = clean_environment()
++    binary = cosign_path(policy)
++    records.run([binary, 'initialize'], 'signing-tuf-refresh', env=env)
++    shutil.copytree(Path(env['HOME']) / '.sigstore/root', records.directory / 'validated-tuf')
++    signing_statement = args.output / 'statement.json'
++    if args.action == 'negative-sign':
++        expected['predicate']['purpose'] = 'security-control'
++        signing_statement = args.output / 'wrong-signer.statement.json'
++        require(not signing_statement.exists(), 'NEGATIVE_FIXTURE_ALREADY_EXISTS')
++        write(signing_statement, expected)
++    selected = [(signing_statement, args.output / (
++        'wrong-signer.sigstore.json' if args.action == 'negative-sign' else 'release.sigstore.json'))]
++    if args.action == 'sign':
++        controls = sorted((args.output / 'controls').glob('*/statement.json'))
++        require({p.parent.name for p in controls} == {'wrong-policy', 'wrong-method', 'stale-request',
++                                                     'wrong-spec', 'wrong-digest'}, 'SIGNING_CONTROL_SET')
++        for source in controls:
++            name = source.parent.name
++            changed = copy.deepcopy(read(args.output / 'evidence.json'))
++            changed_request = copy.deepcopy(request)
++            if name == 'wrong-policy':
++                changed['policy']['version'] = '0.0.0-unapproved'
++            elif name == 'wrong-method':
++                changed['evidence'][0]['method'] = 'unit_tested'
++            elif name == 'stale-request':
++                changed_request['challenge'] = '0' * 64
++            elif name == 'wrong-spec':
++                changed['spec_lock_sha256'] = '0' * 64
++            controlled = statement(policy, changed_request, changed,
++                                   digest(args.output / 'proof/receipt.json'), purpose='security-control')
++            if name == 'wrong-digest':
++                require((source.parent / 'different.bin').read_bytes() == b'Forge Stage 9 wrong artifact control\n',
++                        'WRONG_ARTIFACT_FIXTURE')
++                controlled['subject'][0]['digest']['sha256'] = digest(source.parent / 'different.bin')
++            else:
++                require(read(source.parent / 'evidence.json') == changed, 'CONTROL_EVIDENCE')
++            require(read(source) == controlled, 'CONTROL_STATEMENT')
++            selected.append((source, source.parent / 'control.sigstore.json'))
++    for number, (source, target) in enumerate(selected):
++        # No arbitrary command, key, root, identity or statement path is accepted.
++        require(source.is_file() and not target.exists(), 'SIGNING_INPUT')
++        records.run([binary, 'attest-blob', '--yes', '--statement', source, '--bundle', target],
++                    f'sign-{number:02d}', env=env)
++    context(args.implementation_sha256)
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--action', choices=['request', 'produce', 'sign', 'negative-sign'], required=True)
++    parser.add_argument('--implementation-sha256', required=True)
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--controller', type=Path)
++    parser.add_argument('--commit')
++    args = parser.parse_args()
++    policy, lock, implementation = context(args.implementation_sha256)
++    if args.action == 'request':
++        require(args.controller is not None and args.commit is not None, 'REQUEST_ARGUMENTS')
++        request_create(args, policy, lock, implementation)
++    else:
++        request = parse(os.environ['FORGE_STAGE9_REQUEST'])
++        require(re.fullmatch('[0-9a-f]{64}', request['challenge']), 'CHALLENGE_FORMAT')
++        require(request['implementation_lock_sha256'] == args.implementation_sha256,
++                'IMPLEMENTATION_REQUEST_BINDING')
++        {'produce': produce, 'sign': sign, 'negative-sign': sign}[args.action](
++            args, policy, lock, implementation, request)
++    return 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/.github/workflows/provenance-negative.yml b/.github/workflows/provenance-negative.yml
+new file mode 100644
+--- /dev/null
++++ b/.github/workflows/provenance-negative.yml
+@@ -0,0 +1,60 @@
++name: Forge Stage 9 wrong signer control
++
++"on":
++  workflow_dispatch:
++    inputs:
++      request:
++        description: Exact original controller request JSON
++        required: true
++        type: string
++      implementation_sha256:
++        description: Separately approved implementation.lock SHA-256
++        required: true
++        type: string
++      producer_run_id:
++        description: Successful provenance run at the same exact source commit
++        required: true
++        type: string
++
++permissions:
++  contents: read
++  actions: read
++  id-token: write
++
++concurrency:
++  group: forge-stage9-wrong-signer
++  cancel-in-progress: false
++
++jobs:
++  negative:
++    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
++    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    env:
++      FORGE_STAGE9_REQUEST: ${{ inputs.request }}
++      FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
++      FORGE_STAGE9_PRODUCER_RUN: ${{ inputs.producer_run_id }}
++    steps:
++      - name: Checkout the exact dispatched main commit
++        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
++        with:
++          ref: ${{ github.sha }}
++          persist-credentials: false
++      - name: Check pins and authenticate producer run metadata
++        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --producer-run "$FORGE_STAGE9_PRODUCER_RUN"
++      - name: Retrieve the authenticated run's signed candidate
++        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
++        with:
++          name: forge-stage9-signed-${{ inputs.producer_run_id }}
++          path: results/stage9/producer-output/
++          run-id: ${{ inputs.producer_run_id }}
++          github-token: ${{ github.token }}
++      - name: Sign under this unauthorized workload identity only
++        run: python3 gate/provenance/producer.py --action negative-sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
++      - name: Preserve authentic wrong-signer bundle and failures
++        if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
++        with:
++          name: forge-stage9-negative-${{ github.run_id }}
++          path: results/stage9/producer-output/
++          include-hidden-files: true
++          if-no-files-found: error
+diff --git a/.github/workflows/provenance.yml b/.github/workflows/provenance.yml
+new file mode 100644
+--- /dev/null
++++ b/.github/workflows/provenance.yml
+@@ -0,0 +1,79 @@
++name: Forge Stage 9 provenance
++
++"on":
++  workflow_dispatch:
++    inputs:
++      request:
++        description: Exact JSON request from the independent local controller
++        required: true
++        type: string
++      implementation_sha256:
++        description: Separately approved implementation.lock SHA-256
++        required: true
++        type: string
++
++permissions:
++  contents: read
++
++concurrency:
++  group: forge-stage9-proof
++  cancel-in-progress: false
++
++jobs:
++  proof:
++    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
++    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    env:
++      FORGE_STAGE9_REQUEST: ${{ inputs.request }}
++      FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
++    steps:
++      - name: Checkout exact dispatched main commit
++        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
++        with:
++          ref: ${{ github.sha }}
++          persist-credentials: false
++      - name: Check runner and installed tool pins
++        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
++      - name: Package and run fresh independent proof checks
++        run: python3 gate/provenance/producer.py --action produce --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
++      - name: Preserve proof output and all failures
++        if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
++        with:
++          name: forge-stage9-unsigned-${{ github.run_id }}
++          path: results/stage9/producer-output/
++          include-hidden-files: true
++          if-no-files-found: error
++  sign:
++    needs: proof
++    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    permissions:
++      contents: read
++      actions: read
++      id-token: write
++    env:
++      FORGE_STAGE9_REQUEST: ${{ inputs.request }}
++      FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
++    steps:
++      - name: Checkout same exact workflow commit
++        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
++        with:
++          ref: ${{ github.sha }}
++          persist-credentials: false
++      - name: Retrieve this run's proof job output
++        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
++        with:
++          name: forge-stage9-unsigned-${{ github.run_id }}
++          path: results/stage9/producer-output/
++      - name: Check runner and installed tool pins
++        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
++      - name: Sign exact release statement and explicitly marked rejection fixtures
++        run: python3 gate/provenance/producer.py --action sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
++      - name: Preserve signed bundles and all failures
++        if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
++        with:
++          name: forge-stage9-signed-${{ github.run_id }}
++          path: results/stage9/producer-output/
++          include-hidden-files: true
++          if-no-files-found: error
+diff --git a/gate/provenance/release.py b/gate/provenance/release.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/release.py
+@@ -0,0 +1,162 @@
++"""Independent provenance admission: Cosign authenticates; policy binds bytes."""
++import argparse
++import base64
++from pathlib import Path
++import sqlite3
++
++from common import (ROOT, Rejected, Records, canonical, context, digest, files,
++                    parse, read, repository_identity, require, sha, signature, write)
++
++
++def statement_from_verified_bundle(bundle):
++    # Only decode the standard DSSE payload AFTER real Cosign succeeds.
++    # No signature bytes, certificate semantics or cryptography are implemented.
++    envelope = read(bundle)['dsseEnvelope']
++    require(envelope['payloadType'] == 'application/vnd.in-toto+json', 'PAYLOAD_TYPE')
++    return parse(base64.b64decode(envelope['payload'], validate=True))
++
++
++def expected_canonical(policy, lock, implementation_sha, package):
++    evidence = read(ROOT / policy['proof']['accepted_evidence']['path'])
++    return {'format_version': 1, 'end_to_end': False,
++            'artifact': policy['release_artifact'], 'package': package,
++            'policy': {'id': policy['id'], 'version': policy['version'], 'epoch': policy['epoch'],
++                       'sha256': digest(ROOT / 'policy/provenance.json')},
++            'contract_sha256': digest(ROOT / policy['contract']),
++            'spec_lock_sha256': digest(ROOT / policy['lock']),
++            'implementation_lock_sha256': implementation_sha,
++            'claims': evidence['claims'], 'evidence': evidence['evidence'],
++            'accepted_evidence': policy['proof']['accepted_evidence'],
++            'assumption_audit': policy['proof']['assumption_audit'],
++            'source_and_dependency_inputs': lock['locked_existing_files'],
++            'supplementary_stage8': policy['supplementary_stage8'],
++            'model_quality': 'unmeasured', 'deployment_correctness_proved': False}
++
++
++def validate_receipt(receipt_dir, policy, lock, request):
++    manifest = read(receipt_dir / 'receipt.json')
++    require(manifest['challenge'] == request['challenge']
++            and manifest['source_commit'] == request['expected_source_commit'], 'STALE_PROOF_RECEIPT')
++    for path, h in manifest['files'].items():
++        require(not Path(path).is_absolute() and '..' not in Path(path).parts, 'RECEIPT_PATH')
++        require(digest(receipt_dir / path) == h, 'PROOF_RECEIPT_BYTES')
++    require(files(receipt_dir) == {**manifest['files'], 'receipt.json': digest(receipt_dir / 'receipt.json')},
++            'PROOF_RECEIPT_FILE_SET')
++    report = read(receipt_dir / 'linux/report.json')
++    require(report['result'] == 'passed' and report['independent_rocqchk'] is True
++            and report['end_to_end'] is False, 'PROOF_NOT_ESTABLISHED')
++    require(report['artifact_sha'] == policy['release_artifact']['sha256'], 'PROOF_ARTIFACT')
++    for field in ['theorem_assumptions', 'witness_assumptions', 'independent_closure_assumptions', 'checked_modules']:
++        require(report[field] == lock[field], 'PROOF_AUDIT:' + field)
++    require(report['rocqchk_commands'][0]['exit_code'] == 0
++            and len(report['rocqchk_commands']) == 1, 'INDEPENDENT_KERNEL_EXIT')
++    require(report['rocqchk_commands'][0]['command'][:4] == ['rocqchk', '-o', '-bytecode-compiler', 'no'],
++            'INDEPENDENT_KERNEL_FLAGS')
++    require(report['valid_execution_witness'] == 'Forge.Binary.Witness.selftest_has_valid_execution_holds'
++            and report['theorem'] == 'Forge.Binary.Statements.selftest_halts', 'THEOREM_BINDING')
++    compile_names = {Path(c['command'][-1]).name for c in report['commands']
++                     if c['command'][:2] == ['rocq', 'compile'] and c['exit_code'] == 0}
++    require({'Images.v', 'Statements.v', 'Execution.v', 'Proof.v', 'WitnessSpec.v', 'Witness.v',
++             'Wrapper.v', 'WitnessWrapper.v'} <= compile_names, 'FRESH_COMPILATION_MISSING')
++    require(all(c['exit_code'] == 0 for c in report['commands']), 'PROOF_COMMAND_FAILED')
++    kernel = receipt_dir / 'linux/independent-kernel.log'
++    require(digest(kernel) == report['independent_kernel_log_sha256'], 'KERNEL_LOG_IDENTITY')
++    before = read(receipt_dir / 'linux/before/identity.json')
++    after = read(receipt_dir / 'linux/after/identity.json')
++    require(before['tracked_sha256_manifest'] == after['tracked_sha256_manifest']
++            == lock['upstream_input_identities']['upstream/tracked-sha256-manifest'], 'UPSTREAM_IDENTITY')
++    closure = read(receipt_dir / 'closure-identities.json')
++    require(len(closure) == len(lock['checked_modules']) and all(len(v) == 64 for v in closure.values()),
++            'CHECKED_CLOSURE_IDENTITIES')
++    return digest(receipt_dir / 'receipt.json')
++
++
++def verify(root, request, expected_lock, records, *, signed='release.sigstore.json'):
++    policy, lock, implementation = context(expected_lock)
++    require(request['implementation_lock_sha256'] == expected_lock, 'REQUEST_IMPLEMENTATION')
++    require(request['policy_id'] == policy['id'] and request['policy_version'] == policy['version']
++            and request['policy_epoch'] == policy['epoch']
++            and request['policy_sha256'] == digest(ROOT / 'policy/provenance.json'), 'STALE_POLICY_REQUEST')
++    require(request['artifact_sha256'] == policy['release_artifact']['sha256']
++            and request['package_sha256'] == request['package']['sha256'], 'REQUEST_ARTIFACT_BINDING')
++    bundle = root / signed
++    blob = ROOT / policy['release_artifact']['path']
++    before = files(root)
++    code, _, _ = signature(policy, bundle, blob, request['expected_source_commit'], records)
++    require(code == 0, 'SIGNATURE_REJECTED')
++    statement = statement_from_verified_bundle(bundle)
++    require(set(statement) == {'_type', 'predicateType', 'subject', 'predicate'}, 'STATEMENT_FIELDS')
++    require(statement['_type'] == policy['signature']['statement_type']
++            and statement['predicateType'] == policy['signature']['predicate_type'], 'STATEMENT_TYPE')
++    predicate = statement['predicate']
++    require(set(predicate) == {'purpose', 'request', 'canonical_evidence_sha256', 'proof_receipt_sha256'},
++            'PREDICATE_FIELDS')
++    expected_subjects = [
++        {'name': 'forge:gcd-selftest.elf', 'digest': {'sha256': policy['release_artifact']['sha256']}},
++        {'name': 'forge:docker-image-config', 'digest': {'sha256': request['package_sha256']}}]
++    require(statement['subject'] == expected_subjects, 'ARTIFACT_BINDING')
++    canonical_file = root / 'evidence.json'
++    evidence = read(canonical_file)
++    require(canonical_file.read_bytes() == canonical(evidence), 'NONCANONICAL_EVIDENCE')
++    require(predicate['canonical_evidence_sha256'] == digest(canonical_file), 'EVIDENCE_DIGEST')
++    expected = expected_canonical(policy, lock, expected_lock, request['package'])
++    require(canonical(evidence['policy']) == canonical(expected['policy']), 'POLICY_BINDING')
++    require(canonical(evidence['claims']) == canonical(expected['claims'])
++            and canonical(evidence['evidence']) == canonical(expected['evidence']), 'CLAIM_METHOD_BINDING')
++    require(canonical(evidence) == canonical(expected), 'EVIDENCE_BINDING')
++    require(canonical(predicate['request']) == canonical(request), 'STALE_OR_SUBSTITUTED_REQUEST')
++    require(predicate['proof_receipt_sha256'] == validate_receipt(root / 'proof', policy, lock, request),
++            'PROOF_RECEIPT_BINDING')
++    require(predicate['purpose'] == 'release', 'SECURITY_CONTROL_NOT_ADMISSIBLE')
++    repository_identity(policy, implementation, request['expected_source_commit'], records)
++    require(files(root) == before, 'CANDIDATE_CHANGED_DURING_VERIFICATION')
++    context(expected_lock)
++    return {'signature_exit_code': code, 'result': 'authenticated_provenance',
++            'kernel_execution_here': False, 'producer_fresh_kernel_receipt_verified': True,
++            'end_to_end': False, 'statement_sha256': sha(canonical(statement))}
++
++
++def pending(connection, challenge):
++    row = connection.execute('SELECT request,state FROM requests WHERE challenge=?', (challenge,)).fetchone()
++    require(row is not None and row[1] == 'pending', 'STALE_OR_CONSUMED_REQUEST')
++    return parse(row[0])
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--candidate', type=Path, required=True)
++    p.add_argument('--controller', type=Path, required=True)
++    p.add_argument('--challenge', required=True)
++    p.add_argument('--implementation-sha256', required=True)
++    p.add_argument('--records', type=Path, required=True)
++    p.add_argument('--admit', action='store_true')
++    args = p.parse_args()
++    records = Records(args.records)
++    try:
++        # The controller path is supplied by the operator, outside candidate data.
++        require(not args.controller.resolve().is_relative_to(args.candidate.resolve()),
++                'CONTROLLER_LOCATION')
++        connection = sqlite3.connect('file:' + str(args.controller.resolve()) + '?mode=rw', uri=True)
++        try:
++            connection.execute('BEGIN IMMEDIATE')
++            request = pending(connection, args.challenge)
++            result = verify(args.candidate, request, args.implementation_sha256, records)
++            if args.admit:
++                cursor = connection.execute("UPDATE requests SET state='consumed' WHERE challenge=? AND state='pending'",
++                                            (args.challenge,))
++                require(cursor.rowcount == 1, 'ATOMIC_ADMISSION')
++                connection.commit()
++            else:
++                connection.rollback()
++            write(args.records / 'result.json', {**result, 'admitted': args.admit})
++        finally:
++            connection.close()
++        return 0
++    except (Rejected, OSError, ValueError, KeyError, sqlite3.Error) as error:
++        write(args.records / 'result.json', {'result': 'rejected', 'reason': str(error),
++                                           'end_to_end': False, 'admitted': False})
++        return 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/runtime.json b/gate/provenance/runtime.json
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/runtime.json
+@@ -0,0 +1,43 @@
++{
++  "actions_runner": {
++    "archive": "https://github.com/actions/runner/releases/download/v2.338.2/actions-runner-osx-arm64-2.338.2.tar.gz",
++    "platform": "osx-arm64",
++    "provisioning_authorized": false,
++    "required_label": "forge-stage9",
++    "sha256": "25a065af409ffa317ab4d5a3b614dd15fc9c40f2172bc1b35a1b1258e919a388",
++    "version": "2.338.2"
++  },
++  "builder": {
++    "buildkit_version": "v0.25.1",
++    "driver": "docker",
++    "name": "desktop-linux"
++  },
++  "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
++  "docker": {
++    "Client": {
++      "ApiVersion": "1.51",
++      "Arch": "arm64",
++      "GitCommit": "e180ab8",
++      "Os": "darwin",
++      "Version": "28.5.1"
++    },
++    "Server": {
++      "ApiVersion": "1.51",
++      "Arch": "arm64",
++      "GitCommit": "f8215cc",
++      "Os": "linux",
++      "Version": "28.5.1"
++    }
++  },
++  "docker_components": {
++    "Engine": "28.5.1",
++    "containerd": "1.7.27",
++    "docker-init": "0.19.0",
++    "runc": "1.2.5"
++  },
++  "docker_desktop": "4.48.0 (207573)",
++  "end_to_end": false,
++  "format_version": 1,
++  "kernel": "6.10.14-linuxkit",
++  "python": "3.10.11"
++}

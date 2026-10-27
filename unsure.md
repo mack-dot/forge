@@ -1684,3 +1684,83 @@ curl: (6) Could not resolve host: github.com
 - Next check: obtain exact revision-bound approval of the three proposed files.
   Then apply only those bytes and prepare a separate exact gate/workflow proposal.
   Never interpret this contract decision as approval of unspecified gate code.
+
+## U075 — Contract approved exactly; separate implementation proposal is pending
+
+- References: U074; the user's exact three-file approval at
+  097431cf458e5c62332575b09e953224471fa64d, explicitly excluding gate code,
+  workflows, signing, production deployment and future protected changes.
+- Observed: public main/tree and all six frozen proposal files matched. The
+  manifest SHA-256 is 92c56b5d36c44242a826905f2c7194052b802b7079d0d0130d686dbf885551cf.
+  Both real git apply --check and application returned 0. The three installed
+  protected files match the exact approved bytes; no previous protected file
+  changed. All 1,360 snapshotted prior files matched at adoption. The approval
+  record and raw outputs are proposals/provenance-decision.md and
+  results/stage9/contract-adoption/. This is conversational approval, not a
+  cryptographic user signature or evidence of verification success.
+- Prepared, not approved: proposals/provenance-implementation.md freezes eleven
+  additions: eight protected files, two manual workflows and the EXIT harness.
+  The proposed implementation lock binds 60 input files and 45 existing pinned
+  upstream Python dependency files. No proposed target is applied. The code
+  delegates signatures to Cosign and proof checks to the unchanged published
+  Rocq pipeline; it performs identity, receipt and method-policy comparisons.
+- Proposed controls: actual authenticated wrong-signer/wrong-artifact fixtures,
+  signature absence, validly signed wrong policy/method/spec, stale challenge,
+  altered evidence, fabricated receipt, repeated admission and actual deployed
+  file substitution. Expected checker diagnostics are inspected in pinned
+  Sigstore source. An unexpected error blocks, including changed validation
+  order. No missing file, failed network request or container failure qualifies
+  as a successful security rejection. None of these controls has executed.
+- Observed inventory: Python 3.10.11, Docker client/server 28.5.1, Docker Desktop
+  4.48.0, Buildx 0.29.1-desktop.1 and BuildKit 0.25.1. The initial read-only
+  docker buildx inspect default --format '{{json .}}' returned 125 with
+  "unknown flag: --format". The supported docker buildx inspect returned 0.
+  Both attempts and full raw output are retained. No image was built or started.
+- Observed checks: Python syntax parsing/compilation, workflow YAML structure,
+  proposal digest/input checks and the real implementation-patch dry-run passed.
+  python3 proposals/check_provenance_implementation.py returned 0; its actual
+  git apply --check returned 0. These are preparation checks only. They do not
+  show that the unexecuted implementation satisfies its contract.
+- Uncertainty: the proposal needs a dedicated self-hosted macOS ARM64 runner
+  with the frozen runtime, runner 2.338.2, and the preserved Stage 7 environment.
+  No usable runner is established or registered in this preparation. Provisioning
+  and isolation remain separate operational prerequisites. Version inspection
+  alone does not authenticate a runner binary; provisioning must check the pinned
+  official archive digest. No registration token or host configuration changed.
+- Uncertainty: Cosign issuance/verification, current TUF behavior, certificate
+  diagnostics, package reproduction, fresh proof receipt transfer and actual
+  deployed-file observation remain unexecuted. The pinned native interfaces and
+  syntax checks are insufficient to mark any Stage 9 EXIT as passed. Runtime
+  incompatibilities must retain their actual errors and cannot weaken acceptance.
+- Limits: the package is identified as a Docker image config with all layer
+  diff IDs, not falsely labelled an OCI distribution manifest. The deployment
+  observation concerns actual file materialization, not RISC-V execution or
+  persistent runtime correctness. GitHub, Sigstore, the dedicated producer,
+  controller/clock/state, container runtime, OS and hardware remain trusted.
+  Source proof, kernel proof, property tests and unmeasured model quality stay
+  distinct. end_to_end=false.
+- Impact: U074's contract-approval blocker is resolved. Stage 9 remains CURRENT,
+  now blocked on the separately reviewable implementation/workflow approval.
+  All six real EXIT commands are NOT RUN. Stage 10 has not started.
+- Next check: obtain exact approval for the frozen implementation/workflow files
+  and an explicit decision on the defined research execution operations. Do not
+  provision a runner or dispatch a signing job under the prior limited approval.
+
+## U076 — Preservation audit newline error resolved without changing history
+
+- References: U075; the preparation-only preservation audit.
+- Observed: the first inline audit returned 1 at its unsure.md prefix assertion.
+  The comparison appended a newline to a prefix that already contained the
+  original final newline. Its exact stdin, actual code and traceback are retained
+  in results/stage9/implementation-preparation/preservation-attempt-0001/.
+- Observed resolution: the exact prefix through U074 matches the original
+  recorded SHA-256. The corrected audit returned 0. All 30 prior protected files
+  and 1,316 Stage 7–8 record files match; only ROADMAP.md and the append-only
+  unsure.md changed among the prior snapshot. The three approved additions match,
+  and all 11 implementation proposal targets remain absent.
+- Impact: this was an audit-script defect, not a proof or security rejection.
+  No historical uncertainty entry or failed evidence was rewritten to pass.
+  Stage 9 remains CURRENT; all six EXITs are NOT RUN; end_to_end=false.
+- Next check: publish and verify this approval/proposal checkpoint, then stop
+  for exact implementation/workflow approval. Actual signing and runtime checks
+  remain pending, as stated in U075.
