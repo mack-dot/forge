@@ -1,0 +1,1146 @@
+ossfuzz-formal-verification-proofs
+Copyright 2026 Anthropic PBC
+
+This product includes software developed at Anthropic PBC (https://www.anthropic.com/).
+
+What in this package is Anthropic's, and what is third-party
+-------------------------------------------------------------
+Anthropic's own work, licensed under the Apache License, Version 2.0 (see LICENSE) OR the MIT licence (see LICENSE-MIT), at the recipient's option — each such source and documentation file carries the header 'SPDX-License-Identifier: Apache-2.0 OR MIT', except the proof files that restate instruction words of the task's compiled programs, or transcribe or derive data from those programs, which begin with a one-line provenance comment instead, and the data and index files (JSON, CSV, the checksum list, the decoded companions), which carry no header: the proof trees (libraries/*/proofs/**, Rocq sources) — apart from the third-party object code that some proof files transcribe as data, which keeps its own licences (class 3 below), and apart from the files copied or adapted from Theorem's shared proof library (class 4 below) — the classifier source files, the model-edition descriptions, and all documentation (README, INDEX, MANIFEST, docs/, the per-library README files). The top-level statement file of each tree (AgentSubmission/Proof.v), which reproduces the theorem statements issued by Theorem, the files adapted from Theorem's shared proof library, and the model-edition diffs, which quote lines of Theorem's model sources (class 4 below), carry the same header and are offered under the same choice of licences, Theorem having confirmed in writing that its material in this package may be distributed under either.
+
+Third-party material falls in four classes:
+  1. One or more licence/notice files of each upstream open-source project, reproduced verbatim under libraries/<name>/. No other upstream source code is included, except class 2.
+  2. Three fuzz-harness source files taken unmodified from the google/oss-fuzz project (Apache-2.0).
+  3. Object code. Many proof files transcribe, as data, the RISC-V program images that the proofs are about. Those images were built by the task's authors from: the upstream library at its pinned commit; the harness; the musl C library, statically linked; LLVM's compiler-rt (the runtime library of every build and, in the AddressSanitizer builds, the AddressSanitizer runtime; the UndefinedBehaviorSanitizer builds use inline traps and no runtime) and LLVM's libunwind, both on every link line; for the C++ entry points, LLVM's libc++ and libc++abi C++ runtime, statically linked together with libunwind; and the task authors' own command-line wrapper and harness glue; for some entry points also further open-source libraries that the upstream project bundles in its tree or that its build links from the toolchain's system root, named in that library's section below. The licences of those components apply to those bytes. Some proof trees also embed the program image of this package's own input-classifier program, built from its source here with the same musl C library and LLVM compiler-rt runtime (in one tree, with compiler-rt's UndefinedBehaviorSanitizer runtime as well); the musl and LLVM notices below cover those bytes. Each proof tree's SUBMISSION.json lists the files that carry program images or code transcriptions.
+  4. Materials of Theorem, the task's authors, that the package includes or quotes — the theorem statements they issued (reproduced as issued in each tree's Proof.v), model-edition diffs quoting their model sources, module and statement names, and their shared 'Common' proof library: a set of generic Rocq lemma files (symbolic-execution tactics, process start-up, allocator and stream models — for example StepTac.v, MmapSim.v, ExitSim.v and the LibcStart start-up files) that the task image delivers for proof authors to copy into their submissions and extend. Files copied or adapted from that library appear in most trees under AgentSubmission/ (typically in a Common/ folder), and the object code of Theorem's command-line wrapper, harness adapter and C-library stand-ins is among the bytes transcribed in class 3; Theorem has confirmed in writing the licence under which its material here may be distributed (see the opening paragraph); the copyright in that material is Theorem's, and the uniform 'Copyright 2026 Anthropic PBC' header line on the adapted files covers Anthropic's modifications, not Theorem's underlying text. Other files delivered alongside that library originate in Anthropic's automated proving runs — Theorem's own sources mark them as adopted from 'the collaborators' — and are treated here as Anthropic's work.
+
+Third-party notices
+===================
+
+google/oss-fuzz — fuzz-harness source files (class 2)
+------------------------------------------------------
+Source: https://github.com/google/oss-fuzz, projects/<project>/ directory; each file is byte-identical to the copy in a public snapshot of that repository.
+Licence: Apache License, Version 2.0 — the text in the top-level LICENSE file of this package serves as its full text (the MIT option in LICENSE-MIT applies only to the files named in the opening section — Anthropic's files and the task authors' material offered with them — not to these). Each file keeps its original header unmodified:
+  libraries/bzip2/harness/bzip2_compress_target/bzip2_compress_target.c  —  Copyright 2018 Google Inc.
+  libraries/double-conversion/harness/string_to_double_fuzzer/string_to_double_fuzzer.cc  —  Copyright 2019 Google LLC
+  libraries/yajl-ruby/harness/json_fuzzer/json_fuzzer.c  —  Copyright 2018 Google Inc.
+
+musl libc (class 3 — statically linked into every program image)
+------------------------------------------------------------------
+Source: https://musl.libc.org/ — musl 1.2.6, upstream git.musl-libc.org/musl commit f21a96538f78fa8e2040831b4209b35f2fb581da, with two small patches by the task's authors. Licence: MIT. musl's COPYRIGHT file, reproduced unmodified:
+
+musl as a whole is licensed under the following standard MIT license:
+
+----------------------------------------------------------------------
+Copyright © 2005-2020 Rich Felker, et al.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+----------------------------------------------------------------------
+
+Authors/contributors include:
+
+A. Wilcox
+Ada Worcester
+Alex Dowad
+Alex Suykov
+Alexander Monakov
+Andre McCurdy
+Andrew Kelley
+Anthony G. Basile
+Aric Belsito
+Arvid Picciani
+Bartosz Brachaczek
+Benjamin Peterson
+Bobby Bingham
+Boris Brezillon
+Brent Cook
+Chris Spiegel
+Clément Vasseur
+Daniel Micay
+Daniel Sabogal
+Daurnimator
+David Carlier
+David Edelsohn
+Denys Vlasenko
+Dmitry Ivanov
+Dmitry V. Levin
+Drew DeVault
+Emil Renner Berthing
+Fangrui Song
+Felix Fietkau
+Felix Janda
+Gianluca Anzolin
+Hauke Mehrtens
+He X
+Hiltjo Posthuma
+Isaac Dunham
+Jaydeep Patil
+Jens Gustedt
+Jeremy Huntwork
+Jo-Philipp Wich
+Joakim Sindholt
+John Spencer
+Julien Ramseier
+Justin Cormack
+Kaarle Ritvanen
+Khem Raj
+Kylie McClain
+Leah Neukirchen
+Luca Barbato
+Luka Perkov
+Lynn Ochs
+M Farkas-Dyck (Strake)
+Mahesh Bodapati
+Markus Wichmann
+Masanori Ogino
+Michael Clark
+Michael Forney
+Mikhail Kremnyov
+Natanael Copa
+Nicholas J. Kain
+orc
+Pascal Cuoq
+Patrick Oppenlander
+Petr Hosek
+Petr Skocik
+Pierre Carrier
+Reini Urban
+Rich Felker
+Richard Pennington
+Ryan Fairfax
+Samuel Holland
+Segev Finer
+Shiz
+sin
+Solar Designer
+Stefan Kristiansson
+Stefan O'Rear
+Szabolcs Nagy
+Timo Teräs
+Trutz Behn
+Will Dietz
+William Haddon
+William Pitcock
+
+Portions of this software are derived from third-party works licensed
+under terms compatible with the above MIT license:
+
+The TRE regular expression implementation (src/regex/reg* and
+src/regex/tre*) is Copyright © 2001-2008 Ville Laurikari and licensed
+under a 2-clause BSD license (license text in the source files). The
+included version has been heavily modified by Rich Felker in 2012, in
+the interests of size, simplicity, and namespace cleanliness.
+
+Much of the math library code (src/math/* and src/complex/*) is
+Copyright © 1993,2004 Sun Microsystems or
+Copyright © 2003-2011 David Schultz or
+Copyright © 2003-2009 Steven G. Kargl or
+Copyright © 2003-2009 Bruce D. Evans or
+Copyright © 2008 Stephen L. Moshier or
+Copyright © 2017-2018 Arm Limited
+and labelled as such in comments in the individual source files. All
+have been licensed under extremely permissive terms.
+
+The ARM memcpy code (src/string/arm/memcpy.S) is Copyright © 2008
+The Android Open Source Project and is licensed under a two-clause BSD
+license. It was taken from Bionic libc, used on Android.
+
+The AArch64 memcpy and memset code (src/string/aarch64/*) are
+Copyright © 1999-2019, Arm Limited.
+
+The implementation of DES for crypt (src/crypt/crypt_des.c) is
+Copyright © 1994 David Burren. It is licensed under a BSD license.
+
+The implementation of blowfish crypt (src/crypt/crypt_blowfish.c) was
+originally written by Solar Designer and placed into the public
+domain. The code also comes with a fallback permissive license for use
+in jurisdictions that may not recognize the public domain.
+
+The smoothsort implementation (src/stdlib/qsort.c) is Copyright © 2011
+Lynn Ochs and is licensed under an MIT-style license.
+
+The x86_64 port was written by Nicholas J. Kain and is licensed under
+the standard MIT terms.
+
+The mips and microblaze ports were originally written by Richard
+Pennington for use in the ellcc project. The original code was adapted
+by Rich Felker for build system and code conventions during upstream
+integration. It is licensed under the standard MIT terms.
+
+The mips64 port was contributed by Imagination Technologies and is
+licensed under the standard MIT terms.
+
+The powerpc port was also originally written by Richard Pennington,
+and later supplemented and integrated by John Spencer. It is licensed
+under the standard MIT terms.
+
+All other files which have no copyright comments are original works
+produced specifically for use as part of this library, written either
+by Rich Felker, the main author of the library, or by one or more
+contibutors listed above. Details on authorship of individual files
+can be found in the git version control history of the project. The
+omission of copyright and license comments in each file is in the
+interest of source tree size.
+
+In addition, permission is hereby granted for all public header files
+(include/* and arch/*/bits/*) and crt files intended to be linked into
+applications (crt/*, ldso/dlstart.c, and arch/*/crt_arch.h) to omit
+the copyright notice and permission notice otherwise required by the
+license, and to use these files without any requirement of
+attribution. These files include substantial contributions from:
+
+Bobby Bingham
+John Spencer
+Nicholas J. Kain
+Rich Felker
+Richard Pennington
+Stefan Kristiansson
+Szabolcs Nagy
+
+all of whom have explicitly granted such permission.
+
+This file previously contained text expressing a belief that most of
+the files covered by the above exception were sufficiently trivial not
+to be subject to copyright, resulting in confusion over whether it
+negated the permissions granted in the license. In the spirit of
+permissive licensing, and of not having licensing issues being an
+obstacle to adoption, that text has been removed.
+
+LLVM runtime libraries: compiler-rt, libunwind, libc++ and libc++abi (class 3 — compiler-rt and libunwind on every program's link line, compiler-rt's AddressSanitizer runtime in the AddressSanitizer images, libc++ and libc++abi with libunwind in the C++ entry points' images)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Source: https://github.com/llvm/llvm-project (compiler-rt, libunwind, libcxx, libcxxabi), LLVM 20.1.8, the version of the toolchain that built the images. Licence, for all four: the LLVM Project's licence — 'The LLVM Project is under the Apache License v2.0 with LLVM Exceptions' (SPDX: Apache-2.0 WITH LLVM-exception), as stated at the head of compiler-rt's LICENSE.TXT. That file consists of the Apache License, Version 2.0 — the same text as the top-level LICENSE of this package — followed by the text reproduced unmodified below (the LLVM Exceptions, then compiler-rt's legacy dual licence under the University of Illinois/NCSA Open Source License and the MIT licence). The LICENSE.TXT files of libunwind, libc++ and libc++abi in the same toolchain are identical to it except that the legacy section names their own library and its MIT notice reads 'Copyright (c) 2009-2014' where compiler-rt's reads '2009-2015'; contributors are listed in the CREDITS.TXT files of compiler-rt, libc++ and libc++abi in the LLVM source tree. The AddressSanitizer runtime in these images is compiler-rt's as modified by the task's authors for their statically linked builds.
+
+---- LLVM Exceptions to the Apache 2.0 License ----
+
+As an exception, if, as a result of your compiling your source code, portions
+of this Software are embedded into an Object form of such source code, you
+may redistribute such embedded portions in such Object form without complying
+with the conditions of Sections 4(a), 4(b) and 4(d) of the License.
+
+In addition, if you combine or link compiled forms of this Software with
+software that is licensed under the GPLv2 ("Combined Software") and if a
+court of competent jurisdiction determines that the patent provision (Section
+3), the indemnity provision (Section 9) or other Section of the License
+conflicts with the conditions of the GPLv2, you may retroactively and
+prospectively choose to deem waived or otherwise exclude such Section(s) of
+the License, but only in their entirety and only with respect to the Combined
+Software.
+
+==============================================================================
+Software from third parties included in the LLVM Project:
+==============================================================================
+The LLVM Project contains third party software which is under different license
+terms. All such code will be identified clearly using at least one of two
+mechanisms:
+1) It will be in a separate directory tree with its own `LICENSE.txt` or
+   `LICENSE` file at the top containing the specific license and restrictions
+   which apply to that software, or
+2) It will contain specific license and restriction terms at the top of every
+   file.
+
+==============================================================================
+Legacy LLVM License (https://llvm.org/docs/DeveloperPolicy.html#legacy):
+==============================================================================
+
+The compiler_rt library is dual licensed under both the University of Illinois
+"BSD-Like" license and the MIT license.  As a user of this code you may choose
+to use it under either license.  As a contributor, you agree to allow your code
+to be used under both.
+
+Full text of the relevant licenses is included below.
+
+==============================================================================
+
+University of Illinois/NCSA
+Open Source License
+
+Copyright (c) 2009-2019 by the contributors listed in CREDITS.TXT
+
+All rights reserved.
+
+Developed by:
+
+    LLVM Team
+
+    University of Illinois at Urbana-Champaign
+
+    http://llvm.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal with
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimers.
+
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimers in the
+      documentation and/or other materials provided with the distribution.
+
+    * Neither the names of the LLVM Team, University of Illinois at
+      Urbana-Champaign, nor the names of its contributors may be used to
+      endorse or promote products derived from this Software without specific
+      prior written permission.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
+SOFTWARE.
+
+==============================================================================
+
+Copyright (c) 2009-2015 by the contributors listed in CREDITS.TXT
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Upstream libraries (classes 1 and 3), one section per folder under libraries/
+------------------------------------------------------------------------------
+For each: the upstream repository and pinned commit (as in MANIFEST), the licence as the reproduced licence file(s) state it, the names of those files, and the copyright notice(s) they carry. Where an upstream project ships a NOTICE file it is reproduced unmodified. 'openssl-a' and 'openssl-b' are two task problems cut from one OpenSSL checkout.
+
+boost-beast
+-----------
+Upstream: https://github.com/boostorg/boost.git at commit 4daa5786d7c5dad39df0429cb078165b3134a06f
+Licence (as stated by the licence file(s) reproduced in libraries/boost-beast/): BSL-1.0
+Licence/notice files reproduced verbatim: LICENSE_1_0.txt
+Copyright notice(s) as given in those files: (the reproduced licence file carries no copyright line; Boost sources carry per-file notices) — Boost.Beast, part of the Boost C++ Libraries
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/boost-beast/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: boost_beast); no source code of the library is included.
+Other third-party code inside this library's program images: Boost.Beast is header-only and is compiled together with other libraries of the same Boost release (among them Asio, System, SmartPtr and ThrowException/Exception), all under the Boost Software License 1.0 reproduced in LICENSE_1_0.txt.
+
+boost-json
+----------
+Upstream: https://github.com/boostorg/boost.git at commit 4daa5786d7c5dad39df0429cb078165b3134a06f
+Licence (as stated by the licence file(s) reproduced in libraries/boost-json/): BSL-1.0
+Licence/notice files reproduced verbatim: LICENSE_1_0.txt
+Copyright notice(s) as given in those files: (the reproduced licence file carries no copyright line; Boost sources carry per-file notices) — Boost.JSON, part of the Boost C++ Libraries
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/boost-json/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: boost_json); no source code of the library is included.
+Other third-party code inside this library's program images: Boost.JSON is compiled together with Boost.Container, Boost.System and Boost.ThrowException/Exception (and, where referenced, Boost.Charconv) of the same Boost release, all under the Boost Software License 1.0 reproduced in LICENSE_1_0.txt.
+Conditional notice — dlmalloc: Boost.Container at this commit embeds Doug Lea's dlmalloc 2.8.6 (libs/container/src/dlmalloc_2_8_6.c), whose header states that it was 'released to the public domain, as explained at http://creativecommons.org/publicdomain/zero/1.0/'; whether any of it is contained in the boost_json program images has not been established either way, and this notice applies only if and to the extent it is.
+
+brotli
+------
+Upstream: https://github.com/google/brotli.git at commit 8e10eeb3378f6c459dbaf033ca6727e9816afccb
+Licence (as stated by the licence file(s) reproduced in libraries/brotli/): MIT
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/brotli/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: decode_fuzzer); no source code of the library is included.
+
+bzip2
+-----
+Upstream: git://sourceware.org/git/bzip2.git at commit f5dfc96063fef2d9c5446d0733867d899ef9b942
+Licence (as stated by the licence file(s) reproduced in libraries/bzip2/): bzip2-1.0.6 (bzip2 licence, text version 1.0.8)
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: copyright (C) 1996-2019 Julian R Seward.  All rights reserved.
+Material of this project in the package: fuzz-harness source file(s) libraries/bzip2/harness/bzip2_compress_target/bzip2_compress_target.c (these particular files originate from google/oss-fuzz, see that section); object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/bzip2/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: bzip2_compress_target); no source code of the library is included apart from the harness file(s) named.
+
+cgif
+----
+Upstream: https://github.com/dloebl/cgif.git at commit b1facf77a226e971fdd9c0f2fd616ab9b03562d9
+Licence (as stated by the licence file(s) reproduced in libraries/cgif/): MIT
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2021-2026, Daniel Löbl <dloebl.2000@gmail.com>
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/cgif/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: cgif_file_fuzzer, cgif_rgb_fuzzer); no source code of the library is included.
+
+cjson
+-----
+Upstream: https://github.com/DaveGamble/cJSON.git at commit acc76239bee01d8e9c858ae2cab296704e52d916
+Licence (as stated by the licence file(s) reproduced in libraries/cjson/): MIT
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/cjson/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: cjson_read_fuzzer); no source code of the library is included.
+
+coturn
+------
+Upstream: https://github.com/coturn/coturn at commit 70ca74e0bd8300e22a179e9a7beead862763ca5c
+Licence (as stated by the licence file(s) reproduced in libraries/coturn/): BSD-3-Clause
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (C) 2011, 2012, 2013 Citrix Systems
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/coturn/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: fuzzstunclient); no source code of the library is included.
+
+double-conversion
+-----------------
+Upstream: https://github.com/google/double-conversion.git at commit 2c1eb4ff051896503ec14203e9168a8bb5fe0426
+Licence (as stated by the licence file(s) reproduced in libraries/double-conversion/): BSD-3-Clause (COPYING and LICENSE identical)
+Licence/notice files reproduced verbatim: COPYING, LICENSE
+Copyright notice(s) as given in those files: Copyright 2006-2011, the V8 project authors. All rights reserved.
+Material of this project in the package: fuzz-harness source file(s) libraries/double-conversion/harness/string_to_double_fuzzer/string_to_double_fuzzer.cc (these particular files originate from google/oss-fuzz, see that section); object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/double-conversion/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: string_to_double_fuzzer); no source code of the library is included apart from the harness file(s) named.
+
+fast_float
+----------
+Upstream: https://github.com/fastfloat/fast_float.git at commit a8a02f77480d10c5dc90d39f7b890bc1dff9c1b9
+Licence (as stated by the licence file(s) reproduced in libraries/fast_float/): Apache-2.0 OR MIT OR BSL-1.0 (three separate licence files; the choice statement itself lives in upstream README, not in these files)
+Licence/notice files reproduced verbatim: LICENSE-APACHE, LICENSE-BOOST, LICENSE-MIT
+Copyright notice(s) as given in those files: Copyright (c) 2021 The fast_float authors
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/fast_float/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: from_chars); no source code of the library is included.
+
+glaze
+-----
+Upstream: https://github.com/stephenberry/glaze at commit dce5e0f7ec572725ec369a0bc59a00eeb2270a9a
+Licence (as stated by the licence file(s) reproduced in libraries/glaze/): MIT
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2019 - present, Stephen Berry
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/glaze/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: binary_reflection); no source code of the library is included.
+
+json-c
+------
+Upstream: https://github.com/json-c/json-c.git at commit d17ad9d1863ebbf39993706140bf67847b7add0f
+Licence (as stated by the licence file(s) reproduced in libraries/json-c/): MIT (two grants)
+Licence/notice files reproduced verbatim: COPYING
+Copyright notice(s) as given in those files: Copyright (c) 2009-2012 Eric Haszlakiewicz; Copyright (c) 2004, 2005 Metaparadigm Pte Ltd
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/json-c/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: json_object_fuzzer); no source code of the library is included.
+
+jsoncons
+--------
+Upstream: https://github.com/danielaparker/jsoncons at commit af497a1c1ea9043f4ad8d799617b7d00d6676153
+Licence (as stated by the licence file(s) reproduced in libraries/jsoncons/): BSL-1.0
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright Daniel Parker 2013 - 2020.
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/jsoncons/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: fuzz_bigint, fuzz_bson_parser_max, fuzz_json_cursor, fuzz_json_encoder, fuzz_msgpack_encoder, fuzz_ubjson_encoder, fuzz_ubjson_parser_max); no source code of the library is included.
+
+leptonica
+---------
+Upstream: https://github.com/DanBloomberg/leptonica.git at commit 10bdea2f19240ffe8c931701b0b7340f41c6b256
+Licence (as stated by the licence file(s) reproduced in libraries/leptonica/): BSD-2-Clause (Leptonica's two-clause text)
+Licence/notice files reproduced verbatim: leptonica-license.txt
+Copyright notice(s) as given in those files: Copyright (C) 2001-2020 Leptonica.  All rights reserved.
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/leptonica/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: bilateral_fuzzer, colorfill_fuzzer, edge_fuzzer, fhmtgen_fuzzer, graymorph_fuzzer, grayquant_fuzzer, jpegiostub_fuzzer, kernel_fuzzer, paintcmap_fuzzer, pix_orient_fuzzer, pix1_fuzzer); no source code of the library is included.
+Other third-party code inside this library's program images: the edge_fuzzer and pix_orient_fuzzer images (not the other nine entry points) contain image-format libraries linked from the task toolchain's system root: libpng 1.6.44, zlib 1.3.1, libjpeg-turbo 3.0.4 and libtiff 4.7.2. Their notices, taken from that system root, follow.
+
+libpng 1.6.44 — PNG Reference Library License version 2; the licence section of png.h, reproduced unmodified:
+
+ * COPYRIGHT NOTICE, DISCLAIMER, and LICENSE
+ * =========================================
+ *
+ * PNG Reference Library License version 2
+ * ---------------------------------------
+ *
+ *  * Copyright (c) 1995-2024 The PNG Reference Library Authors.
+ *  * Copyright (c) 2018-2024 Cosmin Truta.
+ *  * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.
+ *  * Copyright (c) 1996-1997 Andreas Dilger.
+ *  * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
+ *
+ * The software is supplied "as is", without warranty of any kind,
+ * express or implied, including, without limitation, the warranties
+ * of merchantability, fitness for a particular purpose, title, and
+ * non-infringement.  In no event shall the Copyright owners, or
+ * anyone distributing the software, be liable for any damages or
+ * other liability, whether in contract, tort or otherwise, arising
+ * from, out of, or in connection with the software, or the use or
+ * other dealings in the software, even if advised of the possibility
+ * of such damage.
+ *
+ * Permission is hereby granted to use, copy, modify, and distribute
+ * this software, or portions hereof, for any purpose, without fee,
+ * subject to the following restrictions:
+ *
+ *  1. The origin of this software must not be misrepresented; you
+ *     must not claim that you wrote the original software.  If you
+ *     use this software in a product, an acknowledgment in the product
+ *     documentation would be appreciated, but is not required.
+ *
+ *  2. Altered source versions must be plainly marked as such, and must
+ *     not be misrepresented as being the original software.
+ *
+ *  3. This Copyright notice may not be removed or altered from any
+ *     source or altered source distribution.
+ *
+ *
+ * PNG Reference Library License version 1 (for libpng 0.5 through 1.6.35)
+ * -----------------------------------------------------------------------
+ *
+ * libpng versions 1.0.7, July 1, 2000, through 1.6.35, July 15, 2018 are
+ * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson, are
+ * derived from libpng-1.0.6, and are distributed according to the same
+ * disclaimer and license as libpng-1.0.6 with the following individuals
+ * added to the list of Contributing Authors:
+ *
+ *     Simon-Pierre Cadieux
+ *     Eric S. Raymond
+ *     Mans Rullgard
+ *     Cosmin Truta
+ *     Gilles Vollant
+ *     James Yu
+ *     Mandar Sahastrabuddhe
+ *     Google Inc.
+ *     Vadim Barkov
+ *
+ * and with the following additions to the disclaimer:
+ *
+ *     There is no warranty against interference with your enjoyment of
+ *     the library or against infringement.  There is no warranty that our
+ *     efforts or the library will fulfill any of your particular purposes
+ *     or needs.  This library is provided with all faults, and the entire
+ *     risk of satisfactory quality, performance, accuracy, and effort is
+ *     with the user.
+ *
+ * Some files in the "contrib" directory and some configure-generated
+ * files that are distributed with libpng have other copyright owners, and
+ * are released under other open source licenses.
+ *
+ * libpng versions 0.97, January 1998, through 1.0.6, March 20, 2000, are
+ * Copyright (c) 1998-2000 Glenn Randers-Pehrson, are derived from
+ * libpng-0.96, and are distributed according to the same disclaimer and
+ * license as libpng-0.96, with the following individuals added to the
+ * list of Contributing Authors:
+ *
+ *     Tom Lane
+ *     Glenn Randers-Pehrson
+ *     Willem van Schaik
+ *
+ * libpng versions 0.89, June 1996, through 0.96, May 1997, are
+ * Copyright (c) 1996-1997 Andreas Dilger, are derived from libpng-0.88,
+ * and are distributed according to the same disclaimer and license as
+ * libpng-0.88, with the following individuals added to the list of
+ * Contributing Authors:
+ *
+ *     John Bowler
+ *     Kevin Bracey
+ *     Sam Bushell
+ *     Magnus Holmgren
+ *     Greg Roelofs
+ *     Tom Tanner
+ *
+ * Some files in the "scripts" directory have other copyright owners,
+ * but are released under this license.
+ *
+ * libpng versions 0.5, May 1995, through 0.88, January 1996, are
+ * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
+ *
+ * For the purposes of this copyright and license, "Contributing Authors"
+ * is defined as the following set of individuals:
+ *
+ *     Andreas Dilger
+ *     Dave Martindale
+ *     Guy Eric Schalnat
+ *     Paul Schmidt
+ *     Tim Wegner
+ *
+ * The PNG Reference Library is supplied "AS IS".  The Contributing
+ * Authors and Group 42, Inc. disclaim all warranties, expressed or
+ * implied, including, without limitation, the warranties of
+ * merchantability and of fitness for any purpose.  The Contributing
+ * Authors and Group 42, Inc. assume no liability for direct, indirect,
+ * incidental, special, exemplary, or consequential damages, which may
+ * result from the use of the PNG Reference Library, even if advised of
+ * the possibility of such damage.
+ *
+ * Permission is hereby granted to use, copy, modify, and distribute this
+ * source code, or portions hereof, for any purpose, without fee, subject
+ * to the following restrictions:
+ *
+ *  1. The origin of this source code must not be misrepresented.
+ *
+ *  2. Altered versions must be plainly marked as such and must not
+ *     be misrepresented as being the original source.
+ *
+ *  3. This Copyright notice may not be removed or altered from any
+ *     source or altered source distribution.
+ *
+ * The Contributing Authors and Group 42, Inc. specifically permit,
+ * without fee, and encourage the use of this source code as a component
+ * to supporting the PNG file format in commercial products.  If you use
+ * this source code in a product, acknowledgment is not required but would
+ * be appreciated.
+ *
+ * END OF COPYRIGHT NOTICE, DISCLAIMER, and LICENSE.
+ *
+
+zlib 1.3.1 — the zlib licence; the header of zlib.h, reproduced unmodified:
+
+/* zlib.h -- interface of the 'zlib' general purpose compression library
+  version 1.3.1, January 22nd, 2024
+
+  Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  Jean-loup Gailly        Mark Adler
+  jloup@gzip.org          madler@alumni.caltech.edu
+
+
+  The data format used by the zlib library is described by RFCs (Request for
+  Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950
+  (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format).
+*/
+
+libjpeg-turbo 3.0.4 — covered, as its LICENSE.md states, by two compatible BSD-style licences: the IJG (Independent JPEG Group) License for the libjpeg API library (the zlib License borne by its SIMD source code being subsumed by the IJG License in that context) and the Modified (3-clause) BSD License for the TurboJPEG API library and build system. This software is based in part on the work of the Independent JPEG Group. The 'LEGAL ISSUES' section of the accompanying README.ijg, reproduced unmodified:
+
+LEGAL ISSUES
+============
+
+In plain English:
+
+1. We don't promise that this software works.  (But if you find any bugs,
+   please let us know!)
+2. You can use this software for whatever you want.  You don't have to pay us.
+3. You may not pretend that you wrote this software.  If you use it in a
+   program, you must acknowledge somewhere in your documentation that
+   you've used the IJG code.
+
+In legalese:
+
+The authors make NO WARRANTY or representation, either express or implied,
+with respect to this software, its quality, accuracy, merchantability, or
+fitness for a particular purpose.  This software is provided "AS IS", and you,
+its user, assume the entire risk as to its quality and accuracy.
+
+This software is copyright (C) 1991-2020, Thomas G. Lane, Guido Vollbeding.
+All Rights Reserved except as specified below.
+
+Permission is hereby granted to use, copy, modify, and distribute this
+software (or portions thereof) for any purpose, without fee, subject to these
+conditions:
+(1) If any part of the source code for this software is distributed, then this
+README file must be included, with this copyright and no-warranty notice
+unaltered; and any additions, deletions, or changes to the original files
+must be clearly indicated in accompanying documentation.
+(2) If only executable code is distributed, then the accompanying
+documentation must state that "this software is based in part on the work of
+the Independent JPEG Group".
+(3) Permission for use of this software is granted only if the user accepts
+full responsibility for any undesirable consequences; the authors accept
+NO LIABILITY for damages of any kind.
+
+These conditions apply to any software derived from or based on the IJG code,
+not just to the unmodified library.  If you use our work, you ought to
+acknowledge us.
+
+Permission is NOT granted for the use of any IJG author's name or company name
+in advertising or publicity relating to this software or products derived from
+it.  This software may be referred to only as "the Independent JPEG Group's
+software".
+
+We specifically permit and encourage the use of this software as the basis of
+commercial products, provided that all warranty or liability claims are
+assumed by the product vendor.
+
+and the Modified (3-clause) BSD License section of LICENSE.md (Markdown line-break tags omitted):
+
+The Modified (3-clause) BSD License
+===================================
+
+Copyright (C)2009-2023 D. R. Commander.  All Rights Reserved.
+Copyright (C)2015 Viktor Szathmáry.  All Rights Reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+- Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+- Neither the name of the libjpeg-turbo Project nor the names of its
+  contributors may be used to endorse or promote products derived from this
+  software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS",
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+libtiff 4.7.2 — the libtiff licence; the header of tiff.h, reproduced unmodified:
+
+/*
+ * Copyright (c) 1988-1997 Sam Leffler
+ * Copyright (c) 1991-1997 Silicon Graphics, Inc.
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and
+ * its documentation for any purpose is hereby granted without fee, provided
+ * that (i) the above copyright notices and this permission notice appear in
+ * all copies of the software and related documentation, and (ii) the names of
+ * Sam Leffler and Silicon Graphics may not be used in any advertising or
+ * publicity relating to the software without the specific, prior written
+ * permission of Sam Leffler and Silicon Graphics.
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
+ * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+ * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
+ */
+
+libpcap
+-------
+Upstream: https://github.com/the-tcpdump-group/libpcap.git at commit 7fc0bcd48aee89f0b09fdc1c10346fe55b386a80
+Licence (as stated by the licence file(s) reproduced in libraries/libpcap/): LICENSE file: 3-clause BSD (short form); per-file headers in pcap.c: the University of California's original 4-clause text including the Lawrence Berkeley Laboratory acknowledgement clause; pcap.h also carries a NetGroup, Politecnico di Torino notice (3-clause)
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s): the LICENSE file names no holder; the library's source files carry per-file notices. The notice at the head of pcap.c at the pinned commit, reproduced unmodified:
+
+/*
+ * Copyright (c) 1993, 1994, 1995, 1996, 1997, 1998
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by the Computer Systems
+ *	Engineering Group at Lawrence Berkeley Laboratory.
+ * 4. Neither the name of the University nor of the Laboratory may be used
+ *    to endorse or promote products derived from this software without
+ *    specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+pcap.h at the pinned commit carries the same University of California notice (years 1993-1997) and, for the remote-capture extensions from WinPcap, this further notice, reproduced unmodified:
+
+/*
+ * Remote packet capture mechanisms and extensions from WinPcap:
+ *
+ * Copyright (c) 2002 - 2003
+ * NetGroup, Politecnico di Torino (Italy)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Politecnico di Torino nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/libpcap/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: fuzz_pcap); no source code of the library is included.
+
+mbedtls
+-------
+Upstream: https://github.com/Mbed-TLS/mbedtls.git at commit 8d692f375d3b1babf1b1ee3b61d3a0579b840a71
+Licence (as stated by the licence file(s) reproduced in libraries/mbedtls/): Mbed TLS and its bundled mbedtls-framework are each dual-licensed upstream, Apache-2.0 OR GPL-2.0-or-later, at the recipient's choice — LICENSE and LICENSE.framework each state the dual licence and carry both texts. Both are included in this package under their permissive option, the Apache License, Version 2.0.
+Licence/notice files reproduced verbatim: LICENSE, LICENSE.framework (upstream framework/LICENSE: the bundled mbedtls-framework, likewise 'dual Apache-2.0 OR GPL-2.0-or-later' with both texts)
+Copyright notice(s) as given in those files: (neither reproduced file names a holder)
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/mbedtls/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: fuzz_pkcs7); no source code of the library is included.
+
+msgpack-c
+---------
+Upstream: https://github.com/msgpack/msgpack-c.git at commit a5250ecbcae1d34346c7445345774b0abbd651bc
+Licence (as stated by the licence file(s) reproduced in libraries/msgpack-c/): BSL-1.0 (+ NOTICE for bundled Boost Predef/Preprocessor, also BSL-1.0)
+Licence/notice files reproduced verbatim: COPYING, LICENSE_1_0.txt, NOTICE
+Copyright notice(s) as given in those files: Copyright (C) 2008-2015 FURUHASHI Sadayuki
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/msgpack-c/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: unpack_pack_fuzzer); no source code of the library is included.
+Upstream NOTICE (reproduced unmodified from libraries/msgpack-c/NOTICE):
+
+This product bundles Boost Predef and Boost Preprocessor.
+They are distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
+For details, see the following files:
+
+external/boost/predef
+include/msgpack/predef.h
+include/msgpack/predef/*
+
+external/boost/preprocessor
+include/msgpack/preprocessor.hpp
+include/msgpack/preprocessor/*
+
+openssl-a
+---------
+Upstream: https://github.com/openssl/openssl.git at commit 47aae188a6bdc65675ea9c2a9e770bef48a5d781
+Licence (as stated by the licence file(s) reproduced in libraries/openssl-a/): Apache-2.0
+Licence/notice files reproduced verbatim: LICENSE.txt
+Copyright notice(s) as given in those files: (the shipped Apache-2.0 text names no holder)
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/openssl-a/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: bignum, bndiv, ct, echconfiglist_parser, hashtable); no source code of the library is included.
+
+openssl-b
+---------
+Upstream: https://github.com/openssl/openssl.git at commit 47aae188a6bdc65675ea9c2a9e770bef48a5d781
+Licence (as stated by the licence file(s) reproduced in libraries/openssl-b/): Apache-2.0
+Licence/notice files reproduced verbatim: LICENSE.txt
+Copyright notice(s) as given in those files: (the shipped Apache-2.0 text names no holder)
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/openssl-b/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: pem, punycode); no source code of the library is included.
+
+pupnp
+-----
+Upstream: https://github.com/pupnp/pupnp at commit b46bc77ac9ae2ff1351d0f4ce544d97283b6e149
+Licence (as stated by the licence file(s) reproduced in libraries/pupnp/): BSD-3-Clause (COPYING and LICENSE, same words)
+Licence/notice files reproduced verbatim: COPYING, LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2000-2003 Intel Corporation / All rights reserved.
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/pupnp/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: fuzzhttp); no source code of the library is included.
+
+simdjson
+--------
+Upstream: https://github.com/simdjson/simdjson.git at commit f807de973580fb22cc0db6b3b896716684b0266c
+Licence (as stated by the licence file(s) reproduced in libraries/simdjson/): Apache-2.0 OR MIT (LICENSE + LICENSE-MIT)
+Licence/notice files reproduced verbatim: LICENSE, LICENSE-MIT
+Copyright notice(s) as given in those files: Copyright 2018-2025 The simdjson authors
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/simdjson/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: fuzz_atpointer, fuzz_dump, fuzz_dump_raw_tape, fuzz_element, fuzz_implementations, fuzz_minifyimpl, fuzz_ondemand, fuzz_parser, fuzz_print_json, fuzz_utf8); no source code of the library is included.
+Other third-party code inside this library's program images: simdjson's own tree at this commit carries, and the images contain, (a) a port of Junekey Jeon's Dragonbox shortest-round-trip algorithm in src/to_chars.cpp, used under the Boost Software License 1.0, whose notice reads:
+
+/*!
+Implements the Dragonbox algorithm for binary to decimal floating-point
+conversion (shortest round-trip representation of a double).
+
+The digit-generation core below is a self-contained port of Junekey Jeon's
+reference "simple_dragonbox" implementation, specialized to IEEE-754 binary64
+and de-templated to match simdjson's style. Only the shortest-representation
+path with the default (nearest, ties-to-even) rounding is kept.
+
+Dragonbox: https://github.com/jk-jeon/dragonbox
+Copyright 2020-2025 Junekey Jeon (and contributors).
+
+The original is dual-licensed; this port is used under the terms of the
+Boost Software License, Version 1.0 (https://www.boost.org/LICENSE_1_0.txt).
+
+For the algorithm itself see:
+[1] Junekey Jeon, "Dragonbox: A New Floating-Point Binary-to-Decimal Conversion Algorithm" (2022).
+
+The shortest decimal digits produced here are then laid out into the familiar
+printf("%g")-style text by format_buffer(), which is unchanged from the previous
+Grisu2-based implementation, so the emitted strings are identical except that
+Dragonbox always yields the (sometimes shorter) shortest representation.
+*/
+
+(As that notice says, the file retains an output-layout routine, format_buffer(), from simdjson's earlier Grisu2-based number formatter — Grisu2 code Copyright (c) 2009 Florian Loitsch, MIT License, as also carried in nlohmann/json (JSON for Modern C++); the pinned file itself carries only the notice above, and we record the lineage here as a courtesy.)
+
+(b) an instruction-set detection header, src/internal/isadetection.h, derived from Torch, under the 3-clause BSD licence, whose notice is reproduced unmodified:
+
+/* From
+https://github.com/endorno/pytorch/blob/master/torch/lib/TH/generic/simd/simd.h
+Highly modified.
+
+Copyright (c) 2016-     Facebook, Inc            (Adam Paszke)
+Copyright (c) 2014-     Facebook, Inc            (Soumith Chintala)
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou,
+Iain Melvin, Jason Weston) Copyright (c) 2006      Idiap Research Institute
+(Samy Bengio) Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert,
+Samy Bengio, Johnny Mariethoz)
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+3. Neither the names of Facebook, Deepmind Technologies, NYU, NEC Laboratories
+America and IDIAP Research Institute nor the names of its contributors may be
+   used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
+
+(c) string-view lite, include/simdjson/nonstd/string_view.hpp, under the Boost Software License 1.0:
+
+// Copyright 2017-2020 by Martin Moene
+//
+// string-view lite, a C++17-like string_view for C++98 and later.
+// For more information see https://github.com/martinmoene/string-view-lite
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+(d) simdjson's vendored copy of the fast_float number-parsing library as include/simdjson/internal/fast_float.h — per simdjson's vendoring script, fast_float 8.2.10 with every 'fast_float' name mechanically renamed 'simdjson_fast_float', a renaming that also touches the names in the file's own notice, and with accented letters in the attribution comments folded to ASCII (the file says so). That notice, as the file carries it, includes: 'Vendored from fast_float v8.2.10', the address https://github.com/fastfloat/fast_float, 'Licensed under Apache-2.0 OR MIT OR BSL-1.0, at your option.', the authors list ('simdjson_fast_float by Daniel Lemire', 'simdjson_fast_float by Joao Paulo Magalhaes', with named contributors), 'Licensed under the Apache License, Version 2.0, or the MIT License or the Boost License.', and licence notices headed 'Copyright (c) 2021 The simdjson_fast_float authors'. The fast_float project's own licence files are reproduced in libraries/fast_float/ of this package (LICENSE-APACHE, LICENSE-BOOST, LICENSE-MIT). The Boost Software License 1.0 text is reproduced in libraries/boost-beast/LICENSE_1_0.txt.
+
+skcms
+-----
+Upstream: https://skia.googlesource.com/skcms.git at commit 9c10699e8884c14c3161b7afc5996d29b6cb7845
+Licence (as stated by the licence file(s) reproduced in libraries/skcms/): BSD-3-Clause
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2018 Google Inc. All rights reserved.
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/skcms/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: fuzz_iccprofile_info); no source code of the library is included.
+
+speex
+-----
+Upstream: https://gitlab.xiph.org/xiph/speex.git at commit a1b872e6704cc5825750098ce0e0c0b4aacaef4d
+Licence (as stated by the licence file(s) reproduced in libraries/speex/): BSD-3-Clause
+Licence/notice files reproduced verbatim: COPYING
+Copyright notice(s) as given in those files: Copyright 2002-2008 Xiph.org Foundation; Copyright 2002-2008 Jean-Marc Valin; Copyright 2005-2007 Analog Devices Inc.; Copyright 2005-2008 Commonwealth Scientific and Industrial Research Organisation (CSIRO); Copyright 1993, 2002, 2006 David Rowe; Copyright 2003 EpicGames; Copyright 1992-1994 Jutta Degener, Carsten Bormann
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/speex/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: speexdec_fuzzer); no source code of the library is included.
+Other third-party code inside this library's program images: libspeex's FFT (libspeex/smallft.c) is taken from the OggVorbis codec, © 1994-2001 Xiphophorus, under the same BSD-style Xiph licence as COPYING; its header reads:
+
+/********************************************************************
+ *                                                                  *
+ * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
+ *                                                                  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2001             *
+ * by the XIPHOPHORUS Company http://www.xiph.org/                  *
+ *                                                                  *
+ ********************************************************************
+
+ function: *unnormalized* fft transform
+ last mod: $Id: smallft.c,v 1.19 2003/10/08 05:12:37 jm Exp $
+
+ ********************************************************************/
+The speexdec_fuzzer images also contain libogg 1.3.5 (the harness demultiplexes an Ogg stream), linked from the task toolchain's system root. libogg is distributed by the Xiph.Org Foundation under its 3-clause BSD licence — the same licence text as libraries/speex/COPYING with libogg's own copyright line. The header of ogg/ogg.h, reproduced unmodified:
+
+/********************************************************************
+ *                                                                  *
+ * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
+ *                                                                  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * by the Xiph.Org Foundation http://www.xiph.org/                  *
+ *                                                                  *
+ ********************************************************************
+
+ function: toplevel libogg include
+
+ ********************************************************************/
+
+libogg's COPYING, as published by Xiph.Org:
+
+Copyright (c) 2002, Xiph.org Foundation
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+- Neither the name of the Xiph.org Foundation nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+spirv-tools
+-----------
+Upstream: https://github.com/KhronosGroup/SPIRV-Tools.git at commit 47c74f488bad1136559f382ce99e8e52d7a392cd
+Licence (as stated by the licence file(s) reproduced in libraries/spirv-tools/): Apache-2.0 (canonical text)
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: (the shipped Apache-2.0 text names no holder)
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/spirv-tools/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: spvtools_binary_parser_fuzzer); no source code of the library is included.
+Other third-party code inside this library's program images: SPIRV-Tools is built with the Khronos SPIRV-Headers (external/spirv-headers in the task's tree; headers and the grammar-derived tables), whose LICENSE opens with the stanza reproduced unmodified below (its further stanzas cover files not compiled into these images):
+
+Files: All files except for those called out below.
+Copyright (c) 2015-2024 The Khronos Group Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and/or associated documentation files (the
+"Materials"), to deal in the Materials without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Materials, and to
+permit persons to whom the Materials are furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Materials.
+
+MODIFICATIONS TO THIS FILE MAY MEAN IT NO LONGER ACCURATELY REFLECTS
+KHRONOS STANDARDS. THE UNMODIFIED, NORMATIVE VERSIONS OF KHRONOS
+SPECIFICATIONS AND HEADER INFORMATION ARE LOCATED AT
+   https://www.khronos.org/registry/
+
+THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+
+tinyobjloader
+-------------
+Upstream: https://github.com/tinyobjloader/tinyobjloader at commit 45636bdcef1a4fec140346b90c0b50bf0bc3e23b
+Licence (as stated by the licence file(s) reproduced in libraries/tinyobjloader/): MIT + ISC (mapbox/earcut.hpp) + MIT (acutest test header; Python bindings)
+Licence/notice files reproduced verbatim: LICENSE, LICENSE.acutest.txt, LICENSE.mapbox (upstream mapbox/LICENSE: ISC, Copyright (c) 2015, Mapbox), LICENSE.python (upstream python/LICENSE: MIT, Copyright (c) 2012-2019 Syoyo Fujita and many contributors — Python bindings, not part of the built library)
+Copyright notice(s) as given in those files: Copyright (c) 2012-2019 Syoyo Fujita and many contributors; mapbox/earcut.hpp Copyright (c) 2015, Mapbox (ISC); acutest Copyright © 2013-2017 Martin Mitáš (MIT)
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/tinyobjloader/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: fuzz_tobj_c); no source code of the library is included.
+
+varnish
+-------
+Upstream: https://code.vinyl-cache.org/vinyl-cache/vinyl-cache at commit bc9eaf713fe9bd86fa39eee1774650e9d2386f84
+Licence (as stated by the licence file(s) reproduced in libraries/varnish/): BSD-2-Clause (explicit SPDX line)
+Licence/notice files reproduced verbatim: LICENSE
+Copyright notice(s) as given in those files: Copyright (c) 2006 Verdens Gang AS; Copyright (c) 2006-2021 Varnish Software AS; Copyright (c) 2026 The Vinyl Cache Project
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/varnish/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: esi_parse_fuzzer); no source code of the library is included.
+Other third-party code inside this library's program images: the esi_parse_fuzzer images contain code from lib/libvgz, Vinyl Cache's modified copy of the zlib library (its README: 'This is a modified version of the ZLIB 1.2.8 data compression library'; vgz.h declares ZLIB_VERSION "1.3.1.1-motley"), used for crc32/crc32_combine. zlib's notice as carried in lib/libvgz/vgz.h, reproduced unmodified:
+
+/* zlib.h -- interface of the 'zlib' general purpose compression library
+  version 1.3.1.1, January xxth, 2024
+
+  Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  Jean-loup Gailly        Mark Adler
+  jloup@gzip.org          madler@alumni.caltech.edu
+
+
+  The data format used by the zlib library is described by RFCs (Request for
+  Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950
+  (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format).
+*/
+
+and lib/libvgz/crc32.c begins with this comment, reproduced unmodified:
+
+/* crc32.c -- compute the CRC-32 of a data stream
+ * Copyright (C) 1995-2022 Mark Adler
+ * For conditions of distribution and use, see copyright notice in zlib.h
+ *
+ * This interleaved implementation of a CRC makes use of pipelined multiple
+ * arithmetic-logic units, commonly found in modern CPU cores. It is due to
+ * Kadatch and Jenkins (2010). See doc/crc-doc.1.0.pdf in this distribution.
+ */
+
+yajl-ruby
+---------
+Upstream: https://github.com/brianmario/yajl-ruby at commit 6501652d113557d976676134056aa983e7863020
+Licence (as stated by the licence file(s) reproduced in libraries/yajl-ruby/): MIT (yajl-ruby itself) + three-clause BSD-style licence of the bundled yajl 1.x C library (LICENSE.yajl), which is the code the json_fuzzer entry point exercises
+Licence/notice files reproduced verbatim: LICENSE, LICENSE.yajl (the licence header of the vendored yajl C library, extracted verbatim from ext/yajl/api/yajl_parse.h lines 1–31 at the pinned commit: three-clause BSD-style licence of yajl 1.x, Copyright 2010, Lloyd Hilaiel)
+Copyright notice(s) as given in those files: Copyright (c) 2014 Brian Lopez; bundled yajl C library (ext/yajl): Copyright 2010, Lloyd Hilaiel.
+Material of this project in the package: fuzz-harness source file(s) libraries/yajl-ruby/harness/json_fuzzer/json_fuzzer.c (these particular files originate from google/oss-fuzz, see that section); object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/yajl-ruby/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry point: json_fuzzer); no source code of the library is included apart from the harness file(s) named.
+
+zstd
+----
+Upstream: https://github.com/facebook/zstd at commit 82d322c4973d9e2968d94047a40892bc6d9a9bdf
+Licence: the reproduced files are the BSD-3-Clause text (LICENSE) and the GPL-2.0 text (COPYING); upstream Zstandard offers these as a dual licence, BSD-3-Clause OR GPL-2.0, at the recipient's choice. It is included in this package under its permissive option, the BSD-3-Clause licence.
+Licence/notice files reproduced verbatim: COPYING, LICENSE
+Copyright notice(s) as given in those files: Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+Material of this project in the package: object code of the library at the pinned commit, as compiled by the task's authors for 64-bit RISC-V Linux, transcribed as data inside proof files under libraries/zstd/proofs/ (each tree's SUBMISSION.json lists the files that carry program images or code transcriptions; entry points: fse_read_ncount, huf_decompress, simple_decompress, zstd_frame_info); no source code of the library is included.
+Other third-party code inside this library's program images: libzstd includes xxHash (lib/common/xxhash.h, 'Copyright (c) Yann Collet - Meta Platforms, Inc'), carried in the zstd tree under the same choice of licences as zstd itself (the BSD-style LICENSE or the GPLv2 COPYING, at the recipient's option) and included here under the BSD-3-Clause licence.

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "forge-stage7-own-proof-0001",
+    "python3",
+    "-c",
+    "from pathlib import Path; p=Path(\"/work/.forge-stage7/own-proof/attempt-0001/independent-kernel.log\"); print(\"\\n\".join(p.read_text().splitlines()[:14]))"
+  ],
+  "cwd": "."
+}

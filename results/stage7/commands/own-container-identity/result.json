@@ -1,0 +1,13 @@
+{
+  "command": [
+    "docker",
+    "inspect",
+    "--format",
+    "{{json .Image}} {{json .Config.Image}} {{json .Config.User}} {{json .HostConfig.ReadonlyRootfs}}",
+    "forge-stage7-own-proof-0001"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "e4303d84cd1f5f5c85a451bff00dbe7cca2ac5c0b5c639f0de0e4fc711dcd4bd",
+  "proof_verdict": "not_assessed_by_recorder"
+}

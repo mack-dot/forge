@@ -1,8 +1,9 @@
 # Stage 7: binary verification
 
-Stage 7 is in progress. The upstream replay passed with independent checking.
-The negative control also passed. The own-binary EXIT remains incomplete. The authoritative
-EXIT status is in [ROADMAP.md](../ROADMAP.md). Keep `end_to_end=false`.
+Stage 7 is DONE. The upstream replay, intended negative control, and own-binary
+EXIT each returned 0. Stage 8 is CURRENT; its implementation has not started.
+The authoritative EXIT record is in [ROADMAP.md](../ROADMAP.md).
+`end_to_end=false`.
 
 ## Pinned scope
 
@@ -121,10 +122,85 @@ its type was True instead of the required binary theorem. Post-check source
 and ELF digests match. These are rejection-test results, not another binary
 theorem.
 
-The own compiled C/Rust binary, its independent kernel check, and the final
-Stage 7 evidence bundle remain pending. No compiler
+The own C binary proof also passed; its exact scope is below. No compiler
 correctness, deployment identity, whole-service correctness, or end-to-end
-coverage follows from this setup or from the upstream example alone.
+coverage follows from either binary theorem.
+
+## Forge's exact compiled self-test
+
+The [C program and proof](../examples/binary/README.md) concern the 1,240-byte ELF
+with SHA-256 `8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6`.
+Two real clang 20.1.8 builds returned 0 and produced identical bytes. The
+compiler image, flags, linker, target, C source, and proof sources are pinned in
+[stage7-own-pins.json](../toolchain/stage7-own-pins.json).
+
+Its exact termination proposition is:
+
+```rocq
+halts_may_fail [verdict_accept] Images.program
+```
+
+For every valid LPS process input and entry, every modeled execution terminates
+normally with status 0. The environment may refuse any call that LPS permits it
+to refuse. The single-binary budget is 16 GiB, with no budget-refusal exemption.
+The program computes the fixed pair embedded in its instructions. This is not
+GCD correctness for arbitrary numerical inputs or a C source-semantics theorem.
+
+The separate `WitnessSpec.selftest_has_valid_execution` proposition requires
+an actual valid input and entry, plus the same termination property there.
+Its checked proof uses a concrete valid input and the published constructive
+image-entry lemma for this exact ELF. Image validity alone is not used as a
+substitute for the witness.
+
+The published `elf-snapshot` tool generated the image directly from the pinned
+ELF. The proof applies the published `exits_c` soundness theorem to its checked
+execution certificate with fuel 128. The resulting `must_exit_in_scfg` claim
+covers all modeled successors and normal termination; it is not bounded testing.
+Both bindings use the unchanged upstream `WRAPPER` template. The own runner
+uses the published loader, semantics, compiler, wrapper/audit functions, and
+independent `_rocqchk` path. It does not add this ELF to the upstream catalog or
+replace those components with custom semantics or a custom verifier.
+
+Actual attempt 0001 results:
+
+| Step | Actual exit code | Scope |
+| --- | --- | --- |
+| Before/after complete upstream identity | 0 / 0 | All 149,053 tracked files; case-distinct paths retained. |
+| Published core dependency build | 0 | Existing build reused; no fresh compilation logged here. |
+| Image, statement, execution proof, termination proof, witness statement and proof | 0 each | Seven fresh module compilations, including generated image. |
+| Termination and witness binding wrappers | 0 / 0 | Exact required propositions; 13 permitted primitive assumptions each. |
+| Independent `rocqchk -o -bytecode-compiler no` | 0 | All 579 dependency modules; 86 permitted closure assumptions. |
+| Complete own-proof EXIT | 0 | All audits and final source/ELF identities passed. |
+
+The full audit reports no type-in-type, unsafe fixpoints, or assumed positivity.
+All opaque dependencies in the required closure went through the real checker.
+The unchanged allowlist, full raw output, exact commands, generated sources,
+compiled objects, and before/after source manifests are retained in
+`results/stage7/own-proof/attempt-0001/`. A post-check SHA-256 inventory of all
+579 compiled dependency files is in
+`results/stage7/commands/own-compiled-dependency-identities/`; hashing is not
+another kernel check.
+
+[Canonical evidence](../results/stage7/accepted/own/evidence.json), the
+[full assumption and module audit](../results/stage7/accepted/own/assumption-audit.json),
+and the [exact ELF](../results/stage7/accepted/own/gcd-selftest.elf) are published
+together. The evidence uses the existing format-1 schema. Schema validation and
+two serializations returned 0; a real directory comparison returned 0. This is
+deterministic serialization of this actual run, not a second proof replay.
+It is unsigned research evidence, not production-policy or deployment approval.
+
+The ELF snapshot loader and `rocq-read-file` data import, prebuilt dependency
+provenance, Rocq primitives, LPS-to-machine fidelity, container execution, host
+runtime, and hardware remain trust boundaries. The theorem-specific 13
+assumptions and the closure's 86 assumptions are separate lists in the audit.
+No new axiom or relaxed assumption allowlist was introduced.
+
+On the prepared volume, run `python3 scripts/exit_stage_7.py --case own-proof`.
+The two earlier EXITs must have passed with the same pins, and the exact own ELF
+must be at `linux_binary` in the own pins. The own example README explains the
+build and fresh-volume prerequisites. A clean-host product installer is not
+claimed by this result. Per the user's stop instruction, verification-economics
+experiments remain deferred; no timing, peak-memory, or speedup claim is made.
 
 ## Public operational records
 
@@ -140,3 +216,11 @@ tar -xJf results/stage7/published/upstream-and-negative/records.tar.xz
 
 Operational logs include run paths and container metadata. They are separate
 from canonical evidence. Original local records remain in place, unchanged.
+
+The completed record set, including the own build and proof, is in
+`results/stage7/published/stage7-complete/`. Its standard tar/xz archive and index
+preserve the earlier failures as well as the final successes. Extract it with:
+
+```sh
+tar -xJf results/stage7/published/stage7-complete/records.tar.xz
+```

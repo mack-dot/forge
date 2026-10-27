@@ -1,15 +1,17 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 7 — BINARY LAYER**
+**CURRENT: Stage 8 — ML BOUNDARY**
 
-This is the execution plan and decision record. Stages 0–6 are DONE. Stage 6
+This is the execution plan and decision record. Stages 0–7 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
 three-condition benchmark completed 75 baseline/candidate pairs. Both real
 EXIT commands returned 0. The source evidence and report reproduced byte for
-byte. Stage 7 is CURRENT. Its Docker prerequisite and pinned checker startup
-now pass. The Linux checkout matches every pinned source file. The upstream
-replay with independent checking passed with exit 0. The negative control also
-passed with exit 0, after real proof-type rejections. The own-binary EXIT has not run.
+byte. Stage 7's upstream replay, negative control, and own-binary EXIT each
+returned 0. The exact 1,240-byte C self-test has a normal-termination proof and
+a valid-entry witness. Independent checking covered 579 modules; all 86 closure
+assumptions are permitted. Final source and ELF identities match. Stage 8 is
+CURRENT; no Stage 8 implementation or EXIT has started. This transition ends
+the run. `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
 The long-term horizon and irreducible limits live in [VISION.md](VISION.md).
@@ -267,8 +269,8 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 4 | CHANGE LOOP | DONE |
 | 5 | SPEC TOOLING | DONE |
 | 6 | SECOND DOMAIN + REUSE MEASUREMENT | DONE |
-| 7 | BINARY LAYER | CURRENT |
-| 8 | ML BOUNDARY | NOT STARTED |
+| 7 | BINARY LAYER | DONE |
+| 8 | ML BOUNDARY | CURRENT |
 | 9 | PROVENANCE | NOT STARTED |
 | 10 | SHADOW MODE | NOT STARTED |
 
@@ -762,7 +764,7 @@ keeps `end_to_end=false`. Stage 7 is CURRENT; no Stage 7 command ran in this tur
 
 ### Stage 7 — BINARY LAYER
 
-**Status: CURRENT — upstream replay and negative control passed; own binary pending**
+**Status: DONE — all three real EXITs passed, including independent checking**
 
 Use a Docker-capable host and Theorem's published Rocq/RISC-V pipeline. Pin an
 upstream commit, image digest, semantics, and dependencies. Replay one published
@@ -785,7 +787,7 @@ trusted base. [Upstream checking procedure](https://github.com/theorem-labs/oss-
 | --- | --- | --- |
 | `python3 scripts/exit_stage_7.py --case upstream-replay` | The pinned published pipeline, independent `rocqchk`, and assumption audit accept the upstream proof. | 0 — attempt 0003; earlier attempts 0001 and 0002 returned 1 before proof checking |
 | `python3 scripts/exit_stage_7.py --case invalid-proof` | The real checker rejects a deliberately invalid proof for the intended reason. | 0 — attempt 0001; prepared proof rejected with 1, valid True certificate compiled with 0, published binding wrapper rejected it with 1 |
-| `python3 scripts/exit_stage_7.py --case own-proof` | Own binary proof passes the pipeline, `rocqchk`, and assumption audit. | NOT RUN |
+| `python3 scripts/exit_stage_7.py --case own-proof` | Own binary proof passes the pipeline, `rocqchk`, and assumption audit. | 0 — attempt 0001; termination and valid-execution witness compiled, both binding wrappers compiled, full independent kernel check returned 0, final identities match |
 
 Record the exact container, upstream, and `rocqchk` commands and all real codes.
 Use `binary_proof` and `kernel_checked_proof` only for the scopes actually checked.
@@ -878,9 +880,53 @@ Completed upstream replay:
   archive preserves the large input manifests and raw logs as standard tar/xz.
   This is an intermediate publication, not completion of Stage 7.
 
+Completed own-binary proof:
+
+- `python3 scripts/stage7_build_own.py` returned 0. Two actual clang 20.1.8
+  compilations returned 0 and produced identical 1,240-byte RISC-V ELFs:
+  `8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6`.
+- `python3 scripts/exit_stage_7.py --case own-proof` returned 0 on attempt 0001.
+  Its nine fresh Rocq compilation commands returned 0. These cover seven
+  source modules (including the generated image) and two binding wrappers.
+  The existing core Dune build returned 0 with no module compilation logged.
+- The exact statement is `halts_may_fail [verdict_accept] Images.program`.
+  For every valid modeled input and entry, every execution terminates normally
+  with status 0. It has no memory-budget refusal exemption. The arithmetic pair
+  is fixed in this ELF; no claim covers arbitrary GCD arguments.
+- The separate `selftest_has_valid_execution` theorem proves that a valid input
+  and entry exist and satisfy that same termination property. Image validity,
+  the witness, and the universal theorem are all independently checked.
+- The unchanged published wrapper template bound both proofs to their required
+  propositions. Both theorem audits list 13 permitted primitive assumptions.
+  Real `rocqchk -o -bytecode-compiler no` returned 0 over all 579 dependency
+  modules. The official closure audit lists 86 permitted assumptions, with no
+  type-in-type, unsafe fixpoints, or assumed positivity. No allowlist changed.
+- Both full upstream source identity commands returned 0. Their manifest
+  digests match. The own ELF, C source, proof sources, and generated image inputs
+  retain their initial hashes. A separate post-check manifest hashes all 579
+  compiled dependency files; it is not another kernel execution.
+- Exact commands, raw output, versions, digests, and audits remain under
+  `results/stage7/own-proof/attempt-0001/` and `results/stage7/commands/`.
+  Canonical evidence, the complete assumption list, and the exact ELF are in
+  `results/stage7/accepted/own/`. The full records are archived for publication.
+- `python3 scripts/stage7_emit_evidence.py --attempt results/stage7/own-proof/attempt-0001 --output results/stage7/accepted/own` returned 0.
+  Repeating with `--output build/stage7/serialization-repeat` returned 0.
+  `diff -r results/stage7/accepted/own build/stage7/serialization-repeat` returned
+  0. This checks serialization, not a second proof replay.
+- `python3 gate/gate.py --schema-only results/stage7/accepted/own/evidence.json`
+  returned 0. Structural validation is separate from the actual proof checks.
+- Previous failures are preserved. No protected contract, checker semantics,
+  or acceptance policy changed. Model fidelity, ELF loading/data import,
+  kernel primitives, image provenance, host runtime, and hardware remain trusted.
+  Compiler correctness, deployment identity, and whole-service correctness
+  remain unproved. `end_to_end=false`.
+- Stage 7 is DONE; Stage 8 is CURRENT. Per the latest user instruction, stop
+  after recording and publishing this transition. Performance experiments and
+  proof-construction research remain deferred. See append-only U068–U069.
+
 ### Stage 8 — ML BOUNDARY
 
-**Status: NOT STARTED**
+**Status: CURRENT — implementation and EXITs have not started**
 
 Wrap an LLM-backed refund suggester in verified code. Enforce refund ≤ charge,
 allowed reasons, and a safe fallback for timeout or invalid output. Treat model
@@ -950,7 +996,7 @@ assumptions. No binary, deployment, or whole-application claim is established.
 Stage 2 schema, policy, identity, and replay checks passed, including every
 Stage 1 regression. Stage 3's model-comparison checks and approved demo invocation
 also passed. Stages 4 and 5 are complete in their stage records above.
-Stage 6 is complete in its record above. Stage 7 is CURRENT.
+Stages 6 and 7 are complete in their records above. Stage 8 is CURRENT.
 
 Commands ran from the repository root. The required `dafny --version` invocation
 used `export PATH="$PWD/.toolchain/dafny-4.11.0/dafny:$PATH"` in that shell. Other
@@ -1033,9 +1079,9 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
 - Runtime provenance: Node and Python installer origins were not independently
   authenticated. Their checked versions and executable hashes are pinned. Keep
   the disclosed trust assumptions in `toolchain/pins.json` and `unsure.md` U015.
-- Stage 7: run the published binary-proof pipeline on a suitable Docker host
-  when work resumes. No binary or deployment claim is established yet. Stages
-  4 and 6 EXITs are complete; their measurements retain their stated limits.
+- Stage 8 is CURRENT after the completed Stage 7 binary proofs. Its wrapper
+  specification and implementation have not started. Deployment correctness
+  remains unproved; `end_to_end=false`. Prior measurements retain their limits.
 - Publication: the user created [mack-dot/forge](https://github.com/mack-dot/forge).
   The connected app confirms public visibility, the mack-dot owner, and push
   access. The earlier 404/creation blocker is resolved. Publication uses that

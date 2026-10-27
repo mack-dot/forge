@@ -1353,3 +1353,75 @@ curl: (6) Could not resolve host: github.com
   while leaving Stage 7 CURRENT and own-proof NOT RUN. end_to_end=false.
 - Next check: pin the C source, build flags and ELF, then prove and independently
   check that own binary. Performance work follows stable acceptance.
+
+
+## U068 — Own ELF built reproducibly; valid-entry witness required
+
+- References: U067.
+- Observed: public commit 51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9 preserves
+  the upstream replay, negative control, and earlier failures. The remote tree
+  matched all 238 prepared file contents and preserved unrelated remote files.
+- Observed: own-build attempt 0001 returned 0. Both real clang compilations
+  returned 0 and produced the same 1240-byte RISC-V ELF, SHA-256
+  8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6.
+  Exact source, compiler image, clang/lld 20.1.8, flags and output are retained.
+  This is build reproducibility, not compiler correctness or a binary proof.
+- Scope: the fixed-input GCD self-test must terminate normally with status 0
+  for every valid input and entry under the pinned LPS may_fail model. The
+  numerical constants are embedded in this exact executable. No arbitrary-input
+  GCD or deployed-artifact claim follows.
+- Requirement: the user explicitly requires a valid-entry witness. The new
+  WitnessSpec states existence of a valid input and entry, together with the
+  same normal-termination property. Its proof uses the published valid input
+  and image-entry existence lemmas for this compiler-produced image. The
+  original universal termination statement and its hash are unchanged.
+- Observed: own-proof attempt 0001 is running. No own proof result is yet
+  established. Its runner and candidate sources were frozen before execution;
+  pre-witness drafts are also retained. Both theorem wrappers and the entire
+  independent dependency closure must pass with the unchanged allowlist.
+- Impact: Stage 7 remains CURRENT; end_to_end=false. The latest user direction
+  is to transition to Stage 8 and stop if all three EXITs pass. Performance and
+  proof-construction research therefore remain deferred to a later run.
+- Next check: finish the actual own-proof EXIT, including the final source and
+  ELF identity checks. Preserve failed attempts; never weaken the statement.
+
+
+## U069 — Own binary termination and non-vacuity independently checked; Stage 7 complete
+
+- References: U066, U067, U068.
+- Observed: own-proof attempt 0001's complete EXIT returned 0. The generated
+  ELF image, image validity, execution certificate, universal termination
+  theorem, witness statement and witness proof all compiled with 0. Both
+  unchanged published theorem-binding wrappers compiled with 0.
+- Observed: the real rocqchk -o -bytecode-compiler no command returned 0 over
+  the complete 579-module dependency closure. Its official audit lists 86
+  permitted assumptions and no type-in-type, unsafe fixpoints or assumed
+  positivity. Each theorem-specific audit lists 13 permitted primitive
+  assumptions. Exact names, module names, raw output and commands are retained.
+- Scope: halts_may_fail [verdict_accept] Images.program applies to the exact
+  ELF 8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6.
+  Every valid modeled execution terminates normally with status 0, without a
+  budget-refusal exemption. A separate, independently checked theorem supplies
+  a valid input and entry and the same termination property there. The original
+  universal statement hash remains unchanged; the witness is an added check.
+- Observed: both complete upstream source identity commands returned 0. Their
+  manifests match. The own ELF, C and proof sources, and generated image inputs
+  retain their initial digests. Post-check hashing of all 579 compiled dependency
+  files returned 0; this is identity evidence, not another kernel execution.
+- Observed: canonical evidence serialization returned 0 twice, directory diff
+  returned 0, and the existing JSON Schema check returned 0. No second proof
+  replay is inferred from serialization or structural validation.
+- Incidental diagnostic: a read-only docker exec inspection returned 1 because
+  the successfully completed container had already stopped. The actual EXIT
+  returned 0; the collected host logs supplied the inspection data. The failed
+  inspection is retained separately and is not a proof failure or negative test.
+- Limits: this is a fixed-input self-test, not general-input GCD correctness.
+  ELF loading/data import, published image provenance, Rocq primitives, model
+  fidelity, host runtime and hardware remain trusted. Compiler correctness,
+  deployment identity, whole-service correctness and performance gains remain
+  unproved or unmeasured. No assumption allowlist or protected file changed.
+- Impact: all three Stage 7 EXIT commands have passed. Stage 7 is DONE and
+  Stage 8 is CURRENT. end_to_end=false. All historical failures remain intact.
+- Next check: publish the complete record set and stop at this transition, as
+  explicitly requested. Stage 8 implementation and verification-economics
+  experiments require a later run; neither was started here.

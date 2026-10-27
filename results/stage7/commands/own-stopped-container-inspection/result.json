@@ -1,0 +1,17 @@
+{
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "forge-stage7-own-proof-0001",
+    "python3",
+    "-c",
+    "from pathlib import Path; p=Path(\"/work/.forge-stage7/own-proof/attempt-0001/independent-kernel.log\"); print(\"\\n\".join(p.read_text().splitlines()[:14]))"
+  ],
+  "cwd": ".",
+  "exit_code": 1,
+  "output_sha256": "ba5f05a74d2ef36142a7131cd9032aad434060592b919a70b78a8d4dfd9f06b0",
+  "proof_verdict": "not_assessed_by_inspector",
+  "capture": "Original exec_command result retained after successful EXIT; command was not rerun."
+}

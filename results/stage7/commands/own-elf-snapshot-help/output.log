@@ -1,0 +1,49 @@
+usage: elf-snapshot [-h] [--prefix PREFIX] [--namespace NAMESPACE]
+                    [--module-name MODULE_NAME] [--max-total-bytes N]
+                    [--include-stack]
+                    binary [out_path]
+
+Static ELF snapshot for RISC-V binaries (no debugger needed).
+
+positional arguments:
+  binary                Path to the RISC-V ELF binary
+  out_path              Output path for <prefix>.v (default:
+                        theories/LinuxProcessSem/<prefix>.v)
+
+options:
+  -h, --help            show this help message and exit
+  --prefix PREFIX       Prefix for generated file and definition names
+                        (default: MemImage). Use SourceMemImage /
+                        TargetMemImage for two-binary setups.
+  --namespace NAMESPACE
+                        Rocq logical namespace for shard imports (default:
+                        LinuxProcessSemantics.LinuxProcessSem)
+  --module-name MODULE_NAME
+                        If set, append a `Module <name> <: MemImage` wrapper
+                        exposing loaded_segments/init_pc/phdrs for the
+                        Equivalence functor (e.g. Source or Target).
+  --max-total-bytes N   Whole-image byte cap for this run (decimal, or 0x
+                        hex). Outranks the ELF_SNAPSHOT_MAX_TOTAL_BYTES
+                        environment variable, which outranks the built-in
+                        MAX_TOTAL_BYTES (536870912). Refused above
+                        MAX_TOTAL_BYTES_CEILING (2139095040), the largest
+                        image this toolchain can coqchk.
+  --include-stack       Include a synthetic stack segment (not yet
+                        implemented)
+
+Three other modes are dispatched before these options are parsed:
+  elf_snapshot.py --rebuild <MemImage.v> <out-binary>
+      write an ELF the kernel loads to exactly that snapshot's image
+      (rebuild_elf says what is recovered; the result is held to a
+      round trip through the parser above)
+  elf_snapshot.py --print-phdrs <binary>
+      print the binary's AT_PHDR/AT_PHENT/AT_PHNUM as `KEY VALUE`
+      lines (compare them with what a real execve gives)
+  elf_snapshot.py --verify <path>...
+      parse-check every ELF under the given files/directories and
+      write nothing (build gate; nonzero exit if any is rejected).
+      Its report names the cap it applied and which source set it.
+
+--max-total-bytes and the ELF_SNAPSHOT_MAX_TOTAL_BYTES environment
+variable apply to those three modes too, so the build gate
+verifies against the same cap the snapshot will run under.

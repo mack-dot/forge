@@ -1,0 +1,10 @@
+{
+  "command": [
+    "docker",
+    "inspect",
+    "--format",
+    "{{json .Image}} {{json .Config.Image}} {{json .Config.User}} {{json .HostConfig.ReadonlyRootfs}}",
+    "forge-stage7-own-proof-0001"
+  ],
+  "cwd": "."
+}
