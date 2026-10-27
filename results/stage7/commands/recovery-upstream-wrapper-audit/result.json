@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "forge-stage7-upstream-replay-0003",
+    "python3",
+    "-c",
+    "from pathlib import Path; import json,sys; sys.path.insert(0,\"/work/tools\"); from oft.check import wrapper_assumptions; root=Path(\"/work/.forge-stage7/upstream-replay/attempt-0003/tmp\"); logs=list(root.glob(\"oft-check-*/proof-*/wrapper.log\")); assert len(logs)==1; names=sorted(wrapper_assumptions(logs[0].read_text())); print(json.dumps({\"log\":str(logs[0]),\"assumptions\":names,\"count\":len(names),\"independent_proof_check\":\"pending\"},indent=2,sort_keys=True))"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "e6e74331d4841adffcd83da4ea77b87b8d0550643e995b2c7718905ab15cad3d",
+  "proof_verdict": "not_assessed_by_recorder"
+}

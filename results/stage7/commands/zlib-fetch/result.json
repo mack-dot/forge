@@ -1,0 +1,13 @@
+{
+  "command": [
+    "env",
+    "PYTHONPATH=../pydeps-host",
+    "./oft",
+    "fetch",
+    "zlib"
+  ],
+  "cwd": ".toolchain/stage7/upstream",
+  "exit_code": 0,
+  "output_sha256": "7808140e340e33d8fd38f7e3e849e13cd325d2c4486de13b746d8a3f8ea0bc20",
+  "proof_verdict": "not_assessed_by_recorder"
+}

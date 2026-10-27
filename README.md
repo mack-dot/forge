@@ -43,7 +43,12 @@ A proof can establish the wrong requirement if the spec misses human intent.
 
 ## What works today
 
-**Stages 0–6 are complete. Stage 7 is current and has not started.**
+**Stages 0–6 are complete. Stage 7 is in progress.** The pinned Linux checkout
+and toolchain checks pass. The upstream binary-proof replay passed both
+independent checks and its assumption audit. The negative-control run is
+complete: Rocq rejected a True certificate at the published theorem-binding
+wrapper. Forge's own binary proof remains pending. See the
+[binary verification record](docs/stage7-binary.md) for commands and limits.
 
 The [approved booking contract](proposals/booking-decision.md) defines matching,
 cancellation, and retries. Its implementation and successful-execution trace pass

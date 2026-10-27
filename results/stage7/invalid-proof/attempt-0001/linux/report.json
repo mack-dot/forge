@@ -1,0 +1,163 @@
+{
+  "artifact_sha": "4f04e95082d3e0baa9d55c72288945d99e64bb7503e39c0e644f4b38a7781af2",
+  "binding_rejection_reason": "File \"/work/.forge-stage7/invalid-proof/attempt-0001/Wrapper.v\", line 5, characters 86-133: Error: The term \"TrueCertificate.plain_halts_holds\" has type \"True\" while it is expected to have type \"Statements.plain_halts\".",
+  "binding_wrapper_sha256": "ff3e6edc95828feae5d15a34c1ab1ddb4218ae062281fe8cd0b65b61d7b657e6",
+  "case": "invalid-proof",
+  "checker_exit_code": 1,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/forge-scripts/stage7_identity.py",
+        "--commit",
+        "bf6a65114ed2e255098e213e183e83f63c2cabcc",
+        "--output",
+        "/work/.forge-stage7/invalid-proof/attempt-0001/before"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "f76f990b38b48818f64227b963020dc627f4bfd56e945a5827fa1f5c72608617"
+    },
+    {
+      "command": [
+        "rocq",
+        "--version"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "8ed104966071b18c6b4e06a4378b4dfaaf6e533db210d663b5d78dcc32a6a57c"
+    },
+    {
+      "command": [
+        "rocq",
+        "dep",
+        "-sort",
+        "-Q",
+        "/work/_build/default/theories",
+        "OssFuzzTheorems.Core",
+        "-Q",
+        "/work/_build/default/projects/zlib/checksum_fuzzer",
+        "OssFuzzTheorems.zlib.checksum_fuzzer",
+        "-Q",
+        "/work/.forge-stage7/invalid-proof/attempt-0001",
+        "ForgeNegative",
+        "/work/.forge-stage7/invalid-proof/attempt-0001/Proof.v"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "7db329d39e98e276c23d5f68deb169343d8dafa678146ed14645087fe694e3c3"
+    },
+    {
+      "command": [
+        "rocq",
+        "compile",
+        "-Q",
+        "/work/_build/default/theories",
+        "OssFuzzTheorems.Core",
+        "-Q",
+        "/work/_build/default/projects/zlib/checksum_fuzzer",
+        "OssFuzzTheorems.zlib.checksum_fuzzer",
+        "-Q",
+        "/work/.forge-stage7/invalid-proof/attempt-0001",
+        "ForgeNegative",
+        "/work/.forge-stage7/invalid-proof/attempt-0001/Proof.v"
+      ],
+      "cwd": "/work",
+      "exit_code": 1,
+      "output_sha256": "8de6aab029540dbf6a1e4524557345cc6763d4edf9bf803ef6cae2e4b3f339ec"
+    },
+    {
+      "command": [
+        "rocq",
+        "compile",
+        "-Q",
+        "/work/_build/default/theories",
+        "OssFuzzTheorems.Core",
+        "-Q",
+        "/work/_build/default/projects/zlib/checksum_fuzzer",
+        "OssFuzzTheorems.zlib.checksum_fuzzer",
+        "-Q",
+        "/work/.forge-stage7/invalid-proof/attempt-0001",
+        "ForgeNegative",
+        "/work/.forge-stage7/invalid-proof/attempt-0001/TrueCertificate.v"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "rocq",
+        "compile",
+        "-Q",
+        "/work/_build/default/theories",
+        "OssFuzzTheorems.Core",
+        "-Q",
+        "/work/_build/default/projects/zlib/checksum_fuzzer",
+        "OssFuzzTheorems.zlib.checksum_fuzzer",
+        "-Q",
+        "/work/.forge-stage7/invalid-proof/attempt-0001",
+        "ForgeNegative",
+        "/work/.forge-stage7/invalid-proof/attempt-0001/Wrapper.v"
+      ],
+      "cwd": "/work",
+      "exit_code": 1,
+      "output_sha256": "aa5188e6931127dd422ad5ae0b66efc80c7b23859e19b29c7db45cdb98d2e2ac"
+    },
+    {
+      "command": [
+        "python3",
+        "/forge-scripts/stage7_identity.py",
+        "--commit",
+        "bf6a65114ed2e255098e213e183e83f63c2cabcc",
+        "--output",
+        "/work/.forge-stage7/invalid-proof/attempt-0001/after"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "f76f990b38b48818f64227b963020dc627f4bfd56e945a5827fa1f5c72608617"
+    }
+  ],
+  "end_to_end": false,
+  "fixture_sha256": "769d392ab7f868e450d236060b0d69a2d8b4f40a2acd377426925d74672d5e68",
+  "gid": 1000,
+  "independent_rocqchk": false,
+  "pins": {
+    "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+    "checker_platform_manifest": "sha256:1b7a1e562f37e418359b646d68d9e0b69b512fa8a03188b0c35fe1ca4b3f4be2",
+    "container_gid": 1000,
+    "container_uid": 1000,
+    "cpuset": "0",
+    "dune": "3.23.0",
+    "end_to_end": false,
+    "git_container": "2.43.0",
+    "idna": "3.20",
+    "linux_volume": "forge-stage7-upstream-bf6a65114ed2",
+    "memory": "4g",
+    "memory_swap": "4g",
+    "ocaml": "4.14.3",
+    "pids_limit": 512,
+    "platform": "linux/amd64",
+    "python_container": "3.12.3",
+    "pyyaml": "6.0.3",
+    "require_upstream_rocqchk": true,
+    "rocq_core": "9.2.0",
+    "rocq_stdlib": "9.2.0",
+    "semantics_commit": "f1006fe8178338a499b5e5c41be83006c4edd058",
+    "semantics_repository": "https://github.com/theorem-labs/rocq-linux-process-semantics",
+    "upstream_binary_sha256": "4f04e95082d3e0baa9d55c72288945d99e64bb7503e39c0e644f4b38a7781af2",
+    "upstream_commit": "bf6a65114ed2e255098e213e183e83f63c2cabcc",
+    "upstream_replay": "zlib/checksum_fuzzer",
+    "upstream_repository": "https://github.com/theorem-labs/oss-verify-proofs",
+    "upstream_statement": "zlib/checksum_fuzzer/plain_halts"
+  },
+  "prepared_fixture_exit_code": 1,
+  "prepared_rejection_reason": "File \"/work/.forge-stage7/invalid-proof/attempt-0001/Proof.v\", line 8, characters 8-9: Error: The term \"I\" has type \"True\" while it is expected to have type \"Statements.plain_halts\".",
+  "result": "passed",
+  "scenario_exit_code": 0,
+  "scope": "Negative control only; Rocq rejected both I : True and a compiled True certificate as proofs of plain_halts.",
+  "true_certificate_exit_code": 0,
+  "true_certificate_sha256": "1b7dcc856336e90269407115362342e8912c4870ea1303bdda9c8beefb44f184",
+  "uid": 1000,
+  "upstream_wrapper_template_sha256": "a6a5b1bd1b46f4f17acbd38e988353f94b64f0fb7108c30327214098834ab6d0"
+}

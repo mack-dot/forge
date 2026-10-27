@@ -1,0 +1,14 @@
+{
+  "command": [
+    "docker",
+    "image",
+    "inspect",
+    "--format",
+    "{{json .}}",
+    "ghcr.io/theorem-labs/oss-fuzz-theorems-toolchain@sha256:6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "ec78f377da0da9cbcb7ba24dc0cbb248e33090e1b23e9c089f8f92ac476b9dc1",
+  "proof_verdict": "not_assessed_by_recorder"
+}

@@ -49,6 +49,56 @@ Do not rename evaluations or observations as proofs.
 
 ## Product hypothesis
 
+### Two separate research objectives
+
+**First: concrete binary evidence.** Complete Stage 7 with the published
+Rocq/RISC-V pipeline. Replay an upstream proof, require rejection of an invalid
+proof, and check an own C or Rust binary proof with `rocqchk` and the assumption
+audit. Bind each result to the exact binary and model. This is the current
+research objective. Release provenance and deployed identity remain separate
+links in the foundation; a binary theorem alone does not establish deployment
+coverage.
+
+**After Stages 0–10: agent discovery of reusable abstractions.** Investigate
+whether agents can identify, propose, prove, and use general lemmas or interfaces
+across tasks. Stage 6 demonstrated deliberate reuse of ledger lemmas in booking
+and measured the existing verifier's cache. It did not measure an autonomous
+abstraction-discovery system or establish an advantage over existing tooling.
+
+Compare the proposed discovery system with fixed specifications and equal
+resource budgets against fresh verification, the existing native cache, and
+human-selected shared lemmas. Use held-out tasks and domains. Count discovery,
+failed candidates, proof and maintenance costs, tokens, attempts, verifier work,
+and human interventions. Measure whether total cost falls while checked claim
+coverage and rejection controls remain intact. Report negative results and
+limits. Cache reuse alone cannot establish the discovery hypothesis.
+
+Agents may propose abstractions; established checkers must validate their proofs
+and the premises at each use. Discovery must not weaken protected specifications
+or introduce unchecked assumptions. This is future research, not current
+implementation scope.
+
+### First public product priorities
+
+These are the first productization priorities after the foundation. Document
+them here now; do not implement later-stage work while Stage 7 is current.
+
+1. **Installable CLI.** Provide a documented installation and a small, stable
+   command interface for checking a project and reading its evidence.
+2. **Independent replay.** Let a developer reproduce a bundle from its exact
+   inputs on a clean supported host, without the producer's cache or workspace.
+   State the shared toolchain and trust assumptions; replay does not imply an
+   independent proof kernel.
+3. **Agent skill.** Provide instructions that agents can use to propose changes,
+   respect specification approval, invoke the CLI, and report failures honestly.
+4. **Verification impact reports.** Show affected claims, checked and reused
+   obligations, assumptions, artifact identities, costs, and remaining gaps in
+   language that a developer can act on.
+
+Measure installation success, replay success, time to a first useful report,
+diagnostic usefulness, and adoption costs on real projects. These are product
+hypotheses, not results established by the existing examples.
+
 The system may benefit many engineers if it makes rigorous checks practical for
 small, important parts of ordinary applications. It must give useful diagnostics,
 keep setup and verification costs manageable, and make each evidence boundary

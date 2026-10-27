@@ -1,0 +1,31 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--pull",
+    "never",
+    "--platform",
+    "linux/amd64",
+    "--network",
+    "none",
+    "--read-only",
+    "--user",
+    "1000:1000",
+    "--cpuset-cpus",
+    "0",
+    "--memory",
+    "4g",
+    "--memory-swap",
+    "4g",
+    "--pids-limit",
+    "512",
+    "ghcr.io/theorem-labs/oss-fuzz-theorems-toolchain@sha256:6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b",
+    "clang",
+    "--version"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "3828c94d2d65972760f3dc432c04142669b354cacd2b66d3a4337b46eca18b20",
+  "proof_verdict": "not_assessed_by_recorder"
+}

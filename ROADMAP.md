@@ -6,7 +6,10 @@ This is the execution plan and decision record. Stages 0–6 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
 three-condition benchmark completed 75 baseline/candidate pairs. Both real
 EXIT commands returned 0. The source evidence and report reproduced byte for
-byte. Stage 7 is CURRENT and has not started. This run stops at the transition.
+byte. Stage 7 is CURRENT. Its Docker prerequisite and pinned checker startup
+now pass. The Linux checkout matches every pinned source file. The upstream
+replay with independent checking passed with exit 0. The negative control also
+passed with exit 0, after real proof-type rejections. The own-binary EXIT has not run.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
 The long-term horizon and irreducible limits live in [VISION.md](VISION.md).
@@ -759,7 +762,7 @@ keeps `end_to_end=false`. Stage 7 is CURRENT; no Stage 7 command ran in this tur
 
 ### Stage 7 — BINARY LAYER
 
-**Status: CURRENT — not started**
+**Status: CURRENT — upstream replay and negative control passed; own binary pending**
 
 Use a Docker-capable host and Theorem's published Rocq/RISC-V pipeline. Pin an
 upstream commit, image digest, semantics, and dependencies. Replay one published
@@ -780,8 +783,8 @@ trusted base. [Upstream checking procedure](https://github.com/theorem-labs/oss-
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/exit_stage_7.py --case upstream-replay` | Invokes the pinned published pipeline and accepts a real upstream proof. | NOT RUN |
-| `python3 scripts/exit_stage_7.py --case invalid-proof` | The real checker rejects a deliberately invalid proof for the intended reason. | NOT RUN |
+| `python3 scripts/exit_stage_7.py --case upstream-replay` | The pinned published pipeline, independent `rocqchk`, and assumption audit accept the upstream proof. | 0 — attempt 0003; earlier attempts 0001 and 0002 returned 1 before proof checking |
+| `python3 scripts/exit_stage_7.py --case invalid-proof` | The real checker rejects a deliberately invalid proof for the intended reason. | 0 — attempt 0001; prepared proof rejected with 1, valid True certificate compiled with 0, published binding wrapper rejected it with 1 |
 | `python3 scripts/exit_stage_7.py --case own-proof` | Own binary proof passes the pipeline, `rocqchk`, and assumption audit. | NOT RUN |
 
 Record the exact container, upstream, and `rocqchk` commands and all real codes.
@@ -789,6 +792,91 @@ Use `binary_proof` and `kernel_checked_proof` only for the scopes actually check
 If the host, tooling, resource needs, or proof blocks progress, report the exact
 blocker. Leave Stage 7 CURRENT and stop. A truthful blocked report is permitted;
 it is not a completed stage and does not unlock Stage 8.
+
+Stage 7 setup record (not proof EXITs):
+
+- The first `docker version` attempt returned 1 because the prior session could
+  not access the Docker socket. After the user enabled full permissions, the
+  real retry returned 0. Client and engine are 28.5.1; Docker Desktop is 4.48.0.
+- The published checker image was pulled by digest with exit 0. Its AMD64
+  platform manifest is pinned as well. An offline container with one CPU and
+  4 GiB of memory ran `rocq --version` with exit 0 (Rocq 9.2, OCaml 4.14.3),
+  and `python3 --version` with exit 0 (Python 3.12.3).
+- Git fetched upstream commit `bf6a65114ed2e255098e213e183e83f63c2cabcc`
+  with exit 0. The selected replay is `zlib/checksum_fuzzer/plain_halts`.
+  The initial macOS checkout later failed exact source identity. Linux recovery
+  and dependency installation are recorded below; proof replay remains pending.
+- Exact commands, raw output, real exit codes, and output digests are in
+  [results/stage7/commands](results/stage7/commands). The recorder makes no proof
+  verdict. These setup results do not establish binary or deployment coverage.
+- The user separated binary evidence from post-foundation abstraction-discovery
+  research. The research comparison and first public product priorities are
+  documented only in [VISION.md](VISION.md). They add no later-stage work here.
+
+Recovery record:
+
+- Attempt 0001 returned 1 before Rocq ran. The upstream tree has 110 groups of
+  names that differ only by case (222 paths). The host checkout could not retain
+  distinct bytes for them. Its original full diff remains in the attempt log.
+- The first Linux clone also returned 1: `/work/.git: Permission denied`.
+  Inspection found an ext4 volume owned by UID/GID 1000 with mode 0755, while
+  that clone ran as UID/GID 501:20. The previous `chown` command reported 0, but
+  its intended ownership was not present on the next mount. No cause for that
+  ownership reset is asserted without a separate test.
+- Recovery uses the image's existing non-root `opam` user, UID/GID 1000:1000.
+  The clone and exact checkout each returned 0. No global Docker setting,
+  privileged container, or broad host permission change was needed.
+- In attempt 0002, real Git identity commands returned 0. All 149,053 tracked
+  files (8,606,911,568 bytes) matched their upstream Git blobs. All 222 case
+  paths have distinct inodes. The selected ELF matched SHA-256
+  `4f04e95082d3e0baa9d55c72288945d99e64bb7503e39c0e644f4b38a7781af2`.
+  The installed compiler/checker and package inventory are retained.
+- Attempt 0002 returned 1 because the new recording wrapper incorrectly treated
+  the upstream shell launcher as Python. Rocq proof checking did not run. The
+  wrapper now invokes the same `oft` module, root, and environment as that
+  launcher. It observes actual subprocess return codes without replacing any
+  checker function or changing a verdict. The previous runner is archived.
+- The user's recovery instruction requires independent checking for the
+  upstream replay too. The real invocation now includes `--rocqchk`; success
+  requires both independent passes and the upstream assumption audit. Attempts
+  and command records remain separate from canonical accepted evidence.
+- In attempt 0003, the statement build and its independent `rocqchk` pass
+  returned 0. The proof library build, target proof compilation, and generated
+  binding-wrapper compilation also returned 0. The wrapper audit reports 15
+  allowed assumptions. At that checkpoint, the final independent proof check
+  was still running. The completed result is recorded below.
+- The image's 201 LPS source files match the source-tree hash in the pinned
+  upstream Dockerfile. The actual source-hash check returned 0. Tool executable
+  hashes and the wrapper's exact assumption names are retained in command
+  records. These identity and intermediate checks do not complete Stage 7.
+
+Completed upstream replay:
+
+- Attempt 0003's complete EXIT returned 0. Both independent `rocqchk` calls
+  returned 0. The full proof closure audit reports 86 allowed assumptions,
+  no type-in-type dependencies, no unsafe fixpoints, and no assumed positivity.
+- The target proof and its generated binding wrapper each compiled with exit
+  0. Its theorem-specific audit lists 15 allowed assumptions. These differ
+  from the 86 assumptions in the complete imported dependency closure.
+- The selected proof library has 407 source modules. Its Dune log records
+  407 actual module compilations. The first independent pass checked 469
+  modules; the final independent pass checked 997, including all 407 library
+  modules. Compiled-module counts are not independent-check counts.
+- Both complete source-identity commands returned 0. Before and after hashes
+  match for every tracked source file and the selected binary. The full raw
+  commands, output, audits, and input manifests remain under
+  `results/stage7/upstream-replay/attempt-0003/`.
+- The negative-control runner now tests the prepared invalid proof and a valid
+  True certificate against the unchanged upstream binding-wrapper template.
+  Its complete EXIT returned 0 on attempt 0001. Both intended rejections were
+  proof type mismatches, not infrastructure failures. Pre/post source and ELF
+  identity checks returned 0 and their digests match.
+- The next task is an own compiled C arithmetic self-test, with its exact ELF
+  checked under the published LPS semantics. No own-binary proof or EXIT has
+  run. The published compiler image was fetched by digest with exit 0.
+- All earlier failed attempts remain unchanged. The public operational-record
+  archive preserves the large input manifests and raw logs as standard tar/xz.
+  This is an intermediate publication, not completion of Stage 7.
 
 ### Stage 8 — ML BOUNDARY
 

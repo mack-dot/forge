@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/forge-scripts/stage7_trace_processes.py", line 23, in <module>
+    runpy.run_path(str(program), run_name='__main__')
+  File "<frozen runpy>", line 285, in run_path
+  File "<frozen runpy>", line 259, in _get_code_from_file
+  File "/work/oft", line 5
+    here=$(cd -- "$(dirname -- "$0")" && pwd)
+         ^
+SyntaxError: invalid syntax

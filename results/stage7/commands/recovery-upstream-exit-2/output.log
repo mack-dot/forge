@@ -1,0 +1,22 @@
+Running upstream-replay; logs in results/stage7/upstream-replay/attempt-0002
+{"command": ["python3", "/forge-scripts/stage7_identity.py", "--commit", "bf6a65114ed2e255098e213e183e83f63c2cabcc", "--output", "/work/.forge-stage7/upstream-replay/attempt-0002/before"], "cwd": "/work", "exit_code": 0, "output_sha256": "f76f990b38b48818f64227b963020dc627f4bfd56e945a5827fa1f5c72608617"}
+{"command": ["rocq", "--version"], "cwd": "/work", "exit_code": 0, "output_sha256": "8ed104966071b18c6b4e06a4378b4dfaaf6e533db210d663b5d78dcc32a6a57c"}
+{"command": ["rocqchk", "--version"], "cwd": "/work", "exit_code": 0, "output_sha256": "76cfe57b1d8b39f340957312d4293c910d1f4b36517d23992cb4639e6e69c424"}
+{"command": ["dune", "--version"], "cwd": "/work", "exit_code": 0, "output_sha256": "efd9c4ad2a32228ae2480625dc063e102827dedd15e275943e72e6e5589613fb"}
+{"command": ["python3", "--version"], "cwd": "/work", "exit_code": 0, "output_sha256": "5b3e43dc38ca01e3f5a7854ba50d4330864b0c1e0f646650b2c78cf072acc366"}
+{"command": ["git", "--version"], "cwd": "/work", "exit_code": 0, "output_sha256": "25f3602b5caaf92437be1e76b53698e8d73f14a6c71c2e91c8d5875f923ab29f"}
+{"command": ["opam", "list", "--root=/home/opam/.opam", "--switch=4.14", "--installed", "--columns=name,version", "--short"], "cwd": "/work", "exit_code": 0, "output_sha256": "8592afb34bb0c0ad5265eee9cfd34af5d487d1cb9088da9df7d13d5985776b9a"}
+{"command": ["python3", "-c", "import yaml,idna; print(yaml.__version__); print(idna.__version__)"], "cwd": "/work", "exit_code": 0, "output_sha256": "d22d7dc4f0f04c2c69b07ba32ca2b02c79499d60249a04bf78741c81a4b99e97"}
+{"command": ["python3", "/forge-scripts/stage7_trace_processes.py", "/work/.forge-stage7/upstream-replay/attempt-0002/checker-processes.jsonl", "check", "zlib/checksum_fuzzer", "--parts", "statements,proofs", "--rocqchk"], "cwd": "/work", "exit_code": 1, "output_sha256": "8f8e0ea2a89aacf52c3bd93754d1857206ff6d00f4194144f077f311532d285f"}
+Traceback (most recent call last):
+  File "/forge-scripts/stage7_trace_processes.py", line 23, in <module>
+    runpy.run_path(str(program), run_name='__main__')
+  File "<frozen runpy>", line 285, in run_path
+  File "<frozen runpy>", line 259, in _get_code_from_file
+  File "/work/oft", line 5
+    here=$(cd -- "$(dirname -- "$0")" && pwd)
+         ^
+SyntaxError: invalid syntax
+
+
+STAGE7_NOT_ESTABLISHED: container=1, inspect=0, collect=0

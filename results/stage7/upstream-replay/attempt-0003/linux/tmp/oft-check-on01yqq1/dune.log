@@ -1,0 +1,37 @@
+$ dune build --root /work --display short projects/zlib/checksum_fuzzer/Images.vo projects/zlib/checksum_fuzzer/Statements.vo projects/zlib/checksum_fuzzer/Characterise.vo
+elf-snapshot projects/zlib/checksum_fuzzer/images/Asan.v,projects/zlib/checksum_fuzzer/images/Asan_seg_000.hex,projects/zlib/checksum_fuzzer/images/Asan_seg_001.hex,projects/zlib/checksum_fuzzer/images/Asan_seg_002.hex,projects/zlib/checksum_fuzzer/images/Asan_seg_003.hex
+elf_snapshot: wrote 4 segments to Asan.v (prefix=Asan). init_pc=0x31864 phdr=0x10040/56/11
+elf-snapshot projects/zlib/checksum_fuzzer/images/AsanUbsan.v,projects/zlib/checksum_fuzzer/images/AsanUbsan_seg_000.hex,projects/zlib/checksum_fuzzer/images/AsanUbsan_seg_001.hex,projects/zlib/checksum_fuzzer/images/AsanUbsan_seg_002.hex,projects/zlib/checksum_fuzzer/images/AsanUbsan_seg_003.hex
+elf_snapshot: wrote 4 segments to AsanUbsan.v (prefix=AsanUbsan). init_pc=0x317e8 phdr=0x10040/56/11
+elf-snapshot projects/zlib/checksum_fuzzer/images/Ubsan.v,projects/zlib/checksum_fuzzer/images/Ubsan_seg_000.hex,projects/zlib/checksum_fuzzer/images/Ubsan_seg_001.hex,projects/zlib/checksum_fuzzer/images/Ubsan_seg_002.hex,projects/zlib/checksum_fuzzer/images/Ubsan_seg_003.hex
+elf_snapshot: wrote 4 segments to Ubsan.v (prefix=Ubsan). init_pc=0x13c24 phdr=0x10040/56/10
+elf-snapshot projects/zlib/checksum_fuzzer/images/Plain.v,projects/zlib/checksum_fuzzer/images/Plain_seg_000.hex,projects/zlib/checksum_fuzzer/images/Plain_seg_001.hex,projects/zlib/checksum_fuzzer/images/Plain_seg_002.hex,projects/zlib/checksum_fuzzer/images/Plain_seg_003.hex
+elf_snapshot: wrote 4 segments to Plain.v (prefix=Plain). init_pc=0x13c04 phdr=0x10040/56/10
+        rocq projects/zlib/checksum_fuzzer/.OssFuzzTheorems.zlib.theory.d
+        rocq projects/zlib/checksum_fuzzer/Distribution.{glob,vo}
+        rocq projects/zlib/checksum_fuzzer/images/Asan.{glob,vo}
+Defined Asan_seg_bytes_000 : (NestedArray.NestedArray 0 string)
+Defined Asan_seg_bytes_001 : (NestedArray.NestedArray 0 string)
+Defined Asan_seg_bytes_002 : (NestedArray.NestedArray 0 string)
+Defined Asan_seg_bytes_003 : (NestedArray.NestedArray 0 string)
+        rocq projects/zlib/checksum_fuzzer/images/AsanUbsan.{glob,vo}
+Defined AsanUbsan_seg_bytes_000 : (NestedArray.NestedArray 0 string)
+Defined AsanUbsan_seg_bytes_001 : (NestedArray.NestedArray 0 string)
+Defined AsanUbsan_seg_bytes_002 : (NestedArray.NestedArray 0 string)
+Defined AsanUbsan_seg_bytes_003 : (NestedArray.NestedArray 0 string)
+        rocq projects/zlib/checksum_fuzzer/images/Plain.{glob,vo}
+Defined Plain_seg_bytes_000 : (NestedArray.NestedArray 0 string)
+Defined Plain_seg_bytes_001 : (NestedArray.NestedArray 0 string)
+Defined Plain_seg_bytes_002 : (NestedArray.NestedArray 0 string)
+Defined Plain_seg_bytes_003 : (NestedArray.NestedArray 0 string)
+        rocq projects/zlib/checksum_fuzzer/images/Ubsan.{glob,vo}
+Defined Ubsan_seg_bytes_000 : (NestedArray.NestedArray 0 string)
+Defined Ubsan_seg_bytes_001 : (NestedArray.NestedArray 0 string)
+Defined Ubsan_seg_bytes_002 : (NestedArray.NestedArray 0 string)
+Defined Ubsan_seg_bytes_003 : (NestedArray.NestedArray 0 string)
+        rocq theories/.OssFuzzTheorems.theory.d
+        rocq theories/Images.{glob,vo}
+        rocq projects/zlib/checksum_fuzzer/Images.{glob,vo}
+        rocq theories/Shapes.{glob,vo}
+        rocq projects/zlib/checksum_fuzzer/Statements.{glob,vo}
+        rocq projects/zlib/checksum_fuzzer/Characterise.{glob,vo}

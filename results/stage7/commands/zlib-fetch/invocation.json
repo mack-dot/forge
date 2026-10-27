@@ -1,0 +1,10 @@
+{
+  "command": [
+    "env",
+    "PYTHONPATH=../pydeps-host",
+    "./oft",
+    "fetch",
+    "zlib"
+  ],
+  "cwd": ".toolchain/stage7/upstream"
+}

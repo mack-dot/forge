@@ -1,0 +1,22 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "pip",
+    "install",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--target",
+    ".toolchain/stage7/pydeps-host",
+    "--no-compile",
+    "--disable-pip-version-check",
+    "--no-input",
+    "--no-deps",
+    "-r",
+    ".toolchain/stage7/upstream/tools/oft/requirements.txt"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "ac0df70bb3ab5c7142f24fe0fb5211775e34f8f55e146c6bd87bff4d27c74385",
+  "proof_verdict": "not_assessed_by_recorder"
+}

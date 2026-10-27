@@ -6,3 +6,14 @@ __pycache__/
 build/
 TestResults/
 *.expect
+# Full Stage 7 records remain in the lossless, indexed public tar/xz archives.
+results/stage7/**/tracked-sha256.json
+results/stage7/**/tree.stdout
+results/stage7/**/tracked-before.log
+results/stage7/**/*.rocqchk.log
+results/stage7/**/*.vo
+results/stage7/**/*.glob
+results/stage7/**/*.vos
+results/stage7/**/*.vok
+results/stage7/**/.Proof.aux
+results/stage7/**/.Wrapper.aux

@@ -1,0 +1,83 @@
+{
+  "case": "upstream-replay",
+  "commands": [
+    {
+      "command": [
+        "docker",
+        "run",
+        "--name",
+        "forge-stage7-upstream-replay-0002",
+        "--pull",
+        "never",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--user",
+        "1000:1000",
+        "--cpuset-cpus",
+        "0",
+        "--memory",
+        "4g",
+        "--memory-swap",
+        "4g",
+        "--pids-limit",
+        "512",
+        "--ulimit",
+        "stack=-1:-1",
+        "-e",
+        "HOME=/tmp",
+        "-e",
+        "PYTHONPATH=/pydeps",
+        "-e",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "-e",
+        "DUNE_CACHE=disabled",
+        "--mount",
+        "type=volume,source=forge-stage7-upstream-bf6a65114ed2,target=/work",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/.toolchain/stage7/upstream/.git,target=/git-source,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/.toolchain/stage7/pydeps,target=/pydeps,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/scripts,target=/forge-scripts,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/toolchain/stage7-pins.json,target=/forge-pins.json,readonly",
+        "-w",
+        "/work",
+        "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+        "python3",
+        "/forge-scripts/stage7_job.py",
+        "--case",
+        "upstream-replay",
+        "--attempt",
+        "attempt-0002"
+      ],
+      "exit_code": 1,
+      "output_sha256": "05fc7fe1c3406b2ec471d4ae0d17b8dfbcb87fbdba7099d5509294338b7ea127"
+    },
+    {
+      "command": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "forge-stage7-upstream-replay-0002"
+      ],
+      "exit_code": 0,
+      "output_sha256": "7f196fbe1a3eca899d59a969405e4afad011d4f3df81205693b4f814e20487dc"
+    },
+    {
+      "command": [
+        "docker",
+        "cp",
+        "forge-stage7-upstream-replay-0002:/work/.forge-stage7/upstream-replay/attempt-0002",
+        "/Users/mackianni/forge/results/stage7/upstream-replay/attempt-0002/linux"
+      ],
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "end_to_end": false,
+  "result": "not_established"
+}

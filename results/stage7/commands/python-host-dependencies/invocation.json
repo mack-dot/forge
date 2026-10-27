@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "pip",
+    "install",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--target",
+    ".toolchain/stage7/pydeps-host",
+    "--no-compile",
+    "--disable-pip-version-check",
+    "--no-input",
+    "--no-deps",
+    "-r",
+    ".toolchain/stage7/upstream/tools/oft/requirements.txt"
+  ],
+  "cwd": "."
+}

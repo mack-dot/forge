@@ -1,0 +1,135 @@
+{
+  "case": "upstream-replay",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/forge-scripts/stage7_identity.py",
+        "--commit",
+        "bf6a65114ed2e255098e213e183e83f63c2cabcc",
+        "--output",
+        "/work/.forge-stage7/upstream-replay/attempt-0002/before"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "f76f990b38b48818f64227b963020dc627f4bfd56e945a5827fa1f5c72608617"
+    },
+    {
+      "command": [
+        "rocq",
+        "--version"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "8ed104966071b18c6b4e06a4378b4dfaaf6e533db210d663b5d78dcc32a6a57c"
+    },
+    {
+      "command": [
+        "rocqchk",
+        "--version"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "76cfe57b1d8b39f340957312d4293c910d1f4b36517d23992cb4639e6e69c424"
+    },
+    {
+      "command": [
+        "dune",
+        "--version"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "efd9c4ad2a32228ae2480625dc063e102827dedd15e275943e72e6e5589613fb"
+    },
+    {
+      "command": [
+        "python3",
+        "--version"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "5b3e43dc38ca01e3f5a7854ba50d4330864b0c1e0f646650b2c78cf072acc366"
+    },
+    {
+      "command": [
+        "git",
+        "--version"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "25f3602b5caaf92437be1e76b53698e8d73f14a6c71c2e91c8d5875f923ab29f"
+    },
+    {
+      "command": [
+        "opam",
+        "list",
+        "--root=/home/opam/.opam",
+        "--switch=4.14",
+        "--installed",
+        "--columns=name,version",
+        "--short"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "8592afb34bb0c0ad5265eee9cfd34af5d487d1cb9088da9df7d13d5985776b9a"
+    },
+    {
+      "command": [
+        "python3",
+        "-c",
+        "import yaml,idna; print(yaml.__version__); print(idna.__version__)"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "output_sha256": "d22d7dc4f0f04c2c69b07ba32ca2b02c79499d60249a04bf78741c81a4b99e97"
+    },
+    {
+      "command": [
+        "python3",
+        "/forge-scripts/stage7_trace_processes.py",
+        "/work/.forge-stage7/upstream-replay/attempt-0002/checker-processes.jsonl",
+        "check",
+        "zlib/checksum_fuzzer",
+        "--parts",
+        "statements,proofs",
+        "--rocqchk"
+      ],
+      "cwd": "/work",
+      "exit_code": 1,
+      "output_sha256": "8f8e0ea2a89aacf52c3bd93754d1857206ff6d00f4194144f077f311532d285f"
+    }
+  ],
+  "end_to_end": false,
+  "gid": 1000,
+  "pins": {
+    "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+    "checker_platform_manifest": "sha256:1b7a1e562f37e418359b646d68d9e0b69b512fa8a03188b0c35fe1ca4b3f4be2",
+    "container_gid": 1000,
+    "container_uid": 1000,
+    "cpuset": "0",
+    "dune": "3.23.0",
+    "end_to_end": false,
+    "git_container": "2.43.0",
+    "idna": "3.20",
+    "linux_volume": "forge-stage7-upstream-bf6a65114ed2",
+    "memory": "4g",
+    "memory_swap": "4g",
+    "ocaml": "4.14.3",
+    "pids_limit": 512,
+    "platform": "linux/amd64",
+    "python_container": "3.12.3",
+    "pyyaml": "6.0.3",
+    "require_upstream_rocqchk": true,
+    "rocq_core": "9.2.0",
+    "rocq_stdlib": "9.2.0",
+    "semantics_commit": "f1006fe8178338a499b5e5c41be83006c4edd058",
+    "semantics_repository": "https://github.com/theorem-labs/rocq-linux-process-semantics",
+    "upstream_binary_sha256": "4f04e95082d3e0baa9d55c72288945d99e64bb7503e39c0e644f4b38a7781af2",
+    "upstream_commit": "bf6a65114ed2e255098e213e183e83f63c2cabcc",
+    "upstream_replay": "zlib/checksum_fuzzer",
+    "upstream_repository": "https://github.com/theorem-labs/oss-verify-proofs",
+    "upstream_statement": "zlib/checksum_fuzzer/plain_halts"
+  },
+  "result": "not_established",
+  "uid": 1000
+}

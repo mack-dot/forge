@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "forge-stage7-upstream-replay-0003",
+    "python3",
+    "-c",
+    "from pathlib import Path; import hashlib,json,shutil; names=[\"rocq\",\"rocqchk\",\"dune\",\"elf-snapshot\",\"python3\",\"git\"]; rows=[{\"tool\":n,\"path\":shutil.which(n),\"resolved_path\":str(Path(shutil.which(n)).resolve()),\"sha256\":hashlib.sha256(Path(shutil.which(n)).read_bytes()).hexdigest()} for n in names]; print(json.dumps(rows,indent=2,sort_keys=True))"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "0511249b6b0e23c7b956437979b89cc253866ffe2208d49ea8804e9d7a9cfdca",
+  "proof_verdict": "not_assessed_by_recorder"
+}

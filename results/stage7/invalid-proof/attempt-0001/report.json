@@ -1,0 +1,90 @@
+{
+  "artifact_sha": "4f04e95082d3e0baa9d55c72288945d99e64bb7503e39c0e644f4b38a7781af2",
+  "case": "invalid-proof",
+  "checker_exit_code": 1,
+  "commands": [
+    {
+      "command": [
+        "docker",
+        "run",
+        "--name",
+        "forge-stage7-invalid-proof-0001",
+        "--pull",
+        "never",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--user",
+        "1000:1000",
+        "--cpuset-cpus",
+        "0",
+        "--memory",
+        "4g",
+        "--memory-swap",
+        "4g",
+        "--pids-limit",
+        "512",
+        "--ulimit",
+        "stack=-1:-1",
+        "-e",
+        "HOME=/tmp",
+        "-e",
+        "PYTHONPATH=/pydeps",
+        "-e",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "-e",
+        "DUNE_CACHE=disabled",
+        "--mount",
+        "type=volume,source=forge-stage7-upstream-bf6a65114ed2,target=/work",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/.toolchain/stage7/upstream/.git,target=/git-source,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/.toolchain/stage7/pydeps,target=/pydeps,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/scripts,target=/forge-scripts,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/tests/binary,target=/forge-fixtures,readonly",
+        "--mount",
+        "type=bind,source=/Users/mackianni/forge/toolchain/stage7-pins.json,target=/forge-pins.json,readonly",
+        "-w",
+        "/work",
+        "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+        "python3",
+        "/forge-scripts/stage7_negative.py",
+        "--attempt",
+        "attempt-0001"
+      ],
+      "exit_code": 0,
+      "output_sha256": "49959040595322bb08bfb127ff4fd724a72bc160cb996d4bb30d0c3b7cde5b5f"
+    },
+    {
+      "command": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "forge-stage7-invalid-proof-0001"
+      ],
+      "exit_code": 0,
+      "output_sha256": "e817ed7b0f964a41337348b986fb10fe61c3e6e4043e978bd9bcd40f7f49d2f3"
+    },
+    {
+      "command": [
+        "docker",
+        "cp",
+        "forge-stage7-invalid-proof-0001:/work/.forge-stage7/invalid-proof/attempt-0001",
+        "/Users/mackianni/forge/results/stage7/invalid-proof/attempt-0001/linux"
+      ],
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "end_to_end": false,
+  "independent_rocqchk": false,
+  "result": "passed",
+  "upstream_prerequisite": {
+    "report": "results/stage7/upstream-replay/attempt-0003/linux/report.json",
+    "sha256": "93c338464e5162438f19cac3a5ce99a770bba5e05dd7ee3172b1c6bbd87cef5e"
+  }
+}

@@ -1193,3 +1193,163 @@ curl: (6) Could not resolve host: github.com
 - Resolution: Stage 6 EXIT commands both ran and returned 0 with their required
   behavior. Stage 6 is DONE; Stage 7 is CURRENT. This run stops at that transition.
   No binary-layer work ran. Source evidence remains source_proof; end_to_end=false.
+
+
+## U062 — Docker access is restored; binary proof results remain pending
+
+- References: U002, U061.
+- Observed: the prior Stage 7 attempt ran docker version and returned 1 with
+  connect: operation not permitted for the Docker daemon socket. No file changed
+  after that toolchain failure. That diagnostic remains in the conversation.
+- Observed: the user enabled full permissions. The actual retry returned 0.
+  The pinned upstream checker image downloaded with exit 0 and ran offline
+  under Docker's linux/amd64 support on this ARM64 Mac. Rocq version and Python
+  version commands both returned 0. Raw command records are under
+  results/stage7/commands/; no proof verdict is inferred from startup.
+- Pins: upstream bf6a65114ed2e255098e213e183e83f63c2cabcc; checker index
+  sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902;
+  AMD64 manifest sha256:1b7a1e562f37e418359b646d68d9e0b69b512fa8a03188b0c35fe1ca4b3f4be2;
+  LPS commit f1006fe8178338a499b5e5c41be83006c4edd058.
+- Uncertainty: successful startup does not establish that the selected proof
+  fits this host's resource limits. The zlib checksum proof has not run here.
+- Impact: Stage 7 remains CURRENT. end_to_end=false. LPS's published scope and
+  unchecked model-to-system assumptions must remain explicit in later evidence.
+- Next check: finish the exact upstream checkout and hash-pinned dependencies;
+  replay zlib/checksum_fuzzer/plain_halts with the published checker.
+
+
+## U063 — Binary evidence and abstraction discovery are separate objectives
+
+- References: U060, U061, U062.
+- New instruction: the user prioritizes completing the binary layer first.
+  After Stages 0–10, investigate whether agents discover reusable abstractions.
+  First product priorities are an installable CLI, independent replay, an agent
+  skill, and verification impact reports. VISION.md records these directions.
+- Observed: Stage 6 reused ledger lemmas in a booking proof and measured the
+  established verifier's native cache. This establishes reuse for those cases.
+- Uncertainty: no experiment has established that an autonomous Forge discovery
+  system finds useful abstractions, reduces total cost, or beats native caching
+  or human-selected shared lemmas. Broad developer usefulness is also unmeasured.
+- Impact: do not describe cache orchestration as a demonstrated discovery
+  breakthrough. Keep discovery cost, rejected candidates, maintenance, and human
+  help in any future comparison. Keep checked claims and rejection tests fixed.
+- Next check: finish the foundation in order. Then use held-out tasks and equal
+  budgets to test discovery against the recorded baselines. No discovery system
+  or later product feature is implemented by this documentation update.
+
+
+## U064 — Linux source identity recovered; proof checking is still pending
+
+- References: U002, U062, U063.
+- Observed: the pinned upstream tree contains 110 case-collision groups and 222
+  paths. Attempt 0001 retained the host checkout's changed-byte diff and exited
+  1 before Rocq ran. Its files and all earlier Stage 7 command records remain
+  byte-identical to the recovery snapshot.
+- Observed: the Linux volume is ext4, owned by 1000:1000, mode 0755. The failed
+  clone used 501:20 and could not write there. The earlier chown returned 0, but
+  its intended owner was not present on the subsequent mount. The cause of that
+  ownership reset is not established; recovery makes no assumption about it.
+- Repair: use the existing non-root opam user (1000:1000). A fresh shared clone
+  and checkout of bf6a65114ed2e255098e213e183e83f63c2cabcc both returned 0.
+  The read-only Git object source is trusted only for its exact task-specific
+  path; no global Git/Docker setting or broad host permission changed.
+- Observed: attempt 0002 checked every tracked file against the upstream tree:
+  149053 files, 8606911568 bytes. All 222 case paths coexist as distinct inodes.
+  The selected zlib ELF matches its pinned digest. Rocq, rocqchk, dune, Python,
+  Git, opam inventory, and Python package version commands all returned 0.
+- Observed failure: attempt 0002 exited 1 because the subprocess recorder tried
+  to execute the upstream shell launcher as Python. No Rocq proof ran. The
+  corrected recorder invokes the same Python module and arguments as that
+  launcher and only observes actual subprocess return values. The previous
+  recorder and all failed output are archived under results/stage7/.
+- Requirement: the user's recovery instruction adds independent rocqchk checks
+  to upstream replay. Both independent checks and the published assumption
+  audit must complete before acceptance; --rocqchk is now in the invocation.
+- Impact: infrastructure identity is established for that run, not a binary
+  theorem. No Stage 7 EXIT has passed. end_to_end=false.
+- Next check: finish the actual upstream proof and independent checks, then the
+  invalid-proof control. Only after those pass, begin the own-binary proof.
+
+
+## U065 — Upstream proof compiled; independent proof checking remains pending
+
+- References: U062, U064.
+- Observed: attempt 0003 completed the statement build and its independent
+  rocqchk pass with exit 0. The statement closure audit reports 86 allowed
+  assumptions. The proof library build, fresh target proof compilation, and
+  generated theorem-binding wrapper compilation also returned 0.
+- Observed: the published wrapper audit reports 15 allowed assumptions. These
+  are Rocq primitive arrays, integers, and strings; classical logic; and
+  dependent functional extensionality. The exact names are retained in
+  results/stage7/commands/recovery-upstream-wrapper-audit/. This is not the
+  complete dependency-closure audit, which is still running.
+- Observed: all 201 LPS source files inside the pinned image match aggregate
+  hash c69c38f381767a112d0b4d5692548369f65cbf3a73ba198f76f98310894dd4de
+  from the pinned upstream Dockerfile. The actual hash check returned 0.
+  Tool executable hashes are also retained. Image build provenance remains
+  trusted; this source identity check is not a compiler-correctness proof.
+- Uncertainty: the final rocqchk pass has not completed. Its required result,
+  full assumption audit, and the final source-identity check remain pending.
+- Impact: no upstream-replay EXIT pass is claimed. Stage 7 remains CURRENT;
+  end_to_end=false. The negative fixture is prepared but has not run. No own
+  C/Rust binary proof work has begun.
+- Next check: finish the independent proof check and source-identity check.
+  Then run the negative control before starting the own-binary phase.
+
+
+## U066 — Upstream replay passed with full independent checking
+
+- References: U064, U065.
+- Observed: the complete upstream-replay EXIT returned 0 on attempt 0003.
+  Both independent rocqchk commands returned 0. The final dependency closure
+  reports 86 allowed assumptions and no type-in-type, unsafe fixpoints, or
+  assumed positivity. The theorem-specific wrapper audit reports 15 allowed
+  assumptions. Full raw output and exact commands remain in that attempt.
+- Observed: all 149053 tracked files and the selected ELF have identical
+  pre/post digests. The tracked SHA-256 manifest digest remains
+  52436d2401d74c3dbba702abdb73b0b3b2d517ec71e80d449176aa5b3f9ba55c.
+- Observed counts: the library has 407 source modules; its Dune log records
+  407 actual module compilations. Independent checking processed 469 modules
+  for the statements and 997 modules for the final proof closure, including
+  all 407 proof-library modules. These are distinct counts.
+- Scope: this establishes the pinned zlib plain_halts theorem under its
+  published LPS model and premises. It does not establish an own Forge binary
+  theorem, deployment correctness, or binary versions of the ledger claims.
+- Remaining work: negative-control and own-binary EXITs have not passed.
+  Stage 7 remains CURRENT and end_to_end=false.
+- Next check: require the real compiler to reject the prepared bad proof and
+  to reject a valid True certificate at the published theorem-binding wrapper.
+  Only then begin the own-binary proof.
+- New research instruction: after stable acceptance, measure construction,
+  compilation, and independent checking separately. Preserve this baseline.
+  The current run has no complete per-phase timing/peak-memory instrumentation;
+  periodic Docker samples are not peak-RSS measurements. Do not infer missing
+  timings or claim matched performance gains from this observation alone.
+
+
+## U067 — The negative binding control passed; own-binary work is now eligible
+
+- References: U066.
+- Observed: invalid-proof attempt 0001's complete EXIT returned 0. The
+  prepared fixture returned 1 because I has type True, not plain_halts.
+  A separate True certificate compiled with 0. The unchanged published
+  binding-wrapper template then returned 1 because that certificate has
+  type True instead of Statements.plain_halts. These are proof-related
+  rejections. No missing-file, permission, or container error counted as a pass.
+- Observed: pre/post source identity checks returned 0 and all source and
+  selected ELF digests match. The compiler codes remain separate from the
+  harness's successful rejection-test exit.
+- Observed: the host's Apple clang lists no RISC-V target. The published
+  compiler image 6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b
+  was pulled with exit 0. Its clang and lld version commands each returned 0
+  and report 20.1.8. No own executable has been compiled or proved yet.
+- Scope decision: use a small C arithmetic self-test with a runtime loop.
+  Its proposed claim is about the exact compiled executable under LPS, not
+  arbitrary arithmetic inputs or the source-to-binary correctness of clang.
+  The published image loader, proof helpers, wrapper audit, and independent
+  kernel check remain mandatory. No custom semantics or decoder is planned.
+- Publication: the user requested a commit and push before continuing. Publish
+  the verified upstream and negative results with all historical failures,
+  while leaving Stage 7 CURRENT and own-proof NOT RUN. end_to_end=false.
+- Next check: pin the C source, build flags and ELF, then prove and independently
+  check that own binary. Performance work follows stable acceptance.

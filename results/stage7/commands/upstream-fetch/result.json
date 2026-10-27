@@ -1,0 +1,16 @@
+{
+  "command": [
+    "git",
+    "-C",
+    ".toolchain/stage7/upstream",
+    "fetch",
+    "--depth",
+    "1",
+    "https://github.com/theorem-labs/oss-verify-proofs.git",
+    "bf6a65114ed2e255098e213e183e83f63c2cabcc"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "db69cbb4d853a6b44df636a431a9f1c60627fe0512da925bd4f2777aff8fd4f4",
+  "proof_verdict": "not_assessed_by_recorder"
+}

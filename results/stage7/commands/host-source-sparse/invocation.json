@@ -1,0 +1,14 @@
+{
+  "command": [
+    "git",
+    "-C",
+    ".toolchain/stage7/upstream",
+    "sparse-checkout",
+    "set",
+    "--no-cone",
+    "/*",
+    "!/proofs/",
+    "/proofs/zlib/"
+  ],
+  "cwd": "."
+}

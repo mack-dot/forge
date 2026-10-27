@@ -1,0 +1,30 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "pip",
+    "install",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--platform",
+    "manylinux2014_x86_64",
+    "--python-version",
+    "3.12",
+    "--implementation",
+    "cp",
+    "--abi",
+    "cp312",
+    "--target",
+    ".toolchain/stage7/pydeps",
+    "--no-compile",
+    "--disable-pip-version-check",
+    "--no-input",
+    "--no-deps",
+    "-r",
+    ".toolchain/stage7/upstream/tools/oft/requirements.txt"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "output_sha256": "1e958861a1d0c66cf976252f2c1a8984937c54807eecfb7e569db85e3afe744f",
+  "proof_verdict": "not_assessed_by_recorder"
+}
