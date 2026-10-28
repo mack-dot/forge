@@ -2513,3 +2513,22 @@ curl: (6) Could not resolve host: github.com
   are not tested; hostile-input resource exhaustion in the PR gate is not
   audited; the NOTICE legal name is unconfirmed; one-person review only.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U099 — PR gate rejected the first contributor PR for protected .github files
+
+- References: U098; results/contributor-readiness/pr14-gate-0001/.
+- Observed: PR #14 at 33d913d4… triggered proof-gate run 40743715513. gh run
+  watch --exit-status returned 1. The verify job failed at "Check exact PR
+  revisions"; the report job succeeded and posted "Forge: rejected", gate exit
+  1, C1–C5 not established, with UNAPPROVED_PROTECTED_CHANGE for
+  .github/CODEOWNERS, four issue templates and the PR template ("approval of
+  exact spec text is required; PR labels do not authorize it").
+- Observed (code): gate/incremental.py protects gate, policy, spec, toolchain,
+  schemas and .github, plus spec.lock and AGENTS.md. gate/approval.py accepts
+  only approved spec text. The rejection is correct behavior, not a defect.
+- Inference: any owner-approved change under .github/, toolchain/ or schemas/
+  (including the Stage 9 v2 workflows) will show this rejection on its PR.
+- Action: the .github files move to a separate PR for exact-byte approval;
+  PR #14 keeps only unprotected files. CONTRIBUTING.md and the readiness report
+  now state this. No gate behavior was changed.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.

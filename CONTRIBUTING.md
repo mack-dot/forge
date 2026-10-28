@@ -34,8 +34,8 @@ when the rejection really happens. Keep these apart when you report results.
 - On a PR to `main`, the proof gate runs the trusted code from `main` against
   your changes as data, with a read-only token. For first-time and outside
   contributors, a maintainer approves the run first.
-- Every change to `main` goes through a reviewed pull request. Changes to
-  trust-critical paths (see `.github/CODEOWNERS`) need code-owner review.
+- Every change to `main` goes through a pull request. Once `.github/CODEOWNERS`
+  is merged (PR #15), changes to trust-critical paths also need code-owner review.
 
 ## 4. Protected changes
 
@@ -50,6 +50,11 @@ pass. Instead:
    examples or counterexamples.
 3. The owner approves the exact bytes (by hash). Only then is the change
    applied, and the approval is recorded.
+
+The PR gate reports `UNAPPROVED_PROTECTED_CHANGE` for any pull request that
+touches `gate/`, `policy/`, `spec/`, `toolchain/`, `schemas/`, `.github/`,
+`spec.lock` or `AGENTS.md`. That rejection is expected: such a pull request
+merges only after the owner's exact-byte approval.
 
 A spec states human intent. Weakening a claim so an implementation passes is
 the one change Forge exists to prevent.
