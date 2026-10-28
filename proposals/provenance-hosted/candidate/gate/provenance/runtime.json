@@ -5,8 +5,9 @@
     "controller": {
       "builder": {
         "buildkit_version": "v0.25.1",
-        "driver": "docker",
-        "name": "desktop-linux"
+        "driver": "docker-container",
+        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
+        "name": "forge-pinned"
       },
       "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
       "docker": {
@@ -39,8 +40,9 @@
     "producer": {
       "builder": {
         "buildkit_version": "v0.25.1",
-        "driver": "docker",
-        "name": "default"
+        "driver": "docker-container",
+        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
+        "name": "forge-pinned"
       },
       "buildx": "github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5",
       "docker": {

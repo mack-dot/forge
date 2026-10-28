@@ -21,6 +21,9 @@ SETUP_PYTHON = ('      - name: Python 3.10.11 required by the gate\n'
                 '        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0\n'
                 '        with:\n'
                 '          python-version: 3.10.11\n')
+BUILDER = {'buildkit_version': 'v0.25.1', 'driver': 'docker-container',
+           'image': 'moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6',
+           'name': 'forge-pinned'}
 SEED_ENV = ('        env:\n'
             '          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed\n')
 
@@ -65,12 +68,12 @@ def policy(value):
 
 def runtime(old):
     controller = {
-        'builder': old['builder'], 'buildx': old['buildx'], 'docker': old['docker'],
+        'builder': BUILDER, 'buildx': old['buildx'], 'docker': old['docker'],
         'docker_components': old['docker_components'],
         'docker_platform': 'Docker Desktop ' + old['docker_desktop'],
         'image_store_driver': 'overlay2', 'kernel': old['kernel'], 'machine': 'arm64'}
     producer = {
-        'builder': {'buildkit_version': 'v0.25.1', 'driver': 'docker', 'name': 'default'},
+        'builder': BUILDER,
         'buildx': 'github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5',
         'docker': {side: {'ApiVersion': '1.51', 'Arch': 'amd64', 'GitCommit': commit, 'Os': 'linux',
                           'Version': '28.5.1'} for side, commit in [('Client', 'e180ab8'), ('Server', 'f8215cc')]},
@@ -122,11 +125,18 @@ def producer(text):
             and ['driver-type', 'io.containerd.snapshotter.v1'] not in info['DriverStatus'], 'IMAGE_STORE')
     _, output, _ = records.run(['docker', 'buildx', 'version'], 'buildx-version')
     require(output.decode().strip() == profile['buildx'], 'BUILDX_VERSION')
-    _, output, _ = records.run(['docker', 'buildx', 'inspect', profile['builder']['name']], 'builder-inspect')
+    # rewrite-timestamp needs BuildKit's own exporter, so both profiles use one
+    # pinned docker-container builder; the Docker driver ignores it (U093).
+    builder = profile['builder']
+    code, _, _ = records.run(['docker', 'buildx', 'inspect', builder['name']], 'builder-present', check=False)
+    if code != 0:
+        records.run(['docker', 'buildx', 'create', '--name', builder['name'], '--driver', builder['driver'],
+                     '--driver-opt', 'image=' + builder['image']], 'builder-create')
+    _, output, _ = records.run(['docker', 'buildx', 'inspect', '--bootstrap', builder['name']], 'builder-inspect')
     text = output.decode()
-    require(re.search(r'^Driver:\\s+' + re.escape(profile['builder']['driver']) + r'\\s*$', text, re.M)
-            and re.search(r'^BuildKit version:\\s+' + re.escape(profile['builder']['buildkit_version']) + r'\\s*$',
-                          text, re.M),
+    require(re.search(r'^Driver:\\s+' + re.escape(builder['driver']) + r'\\s*$', text, re.M)
+            and re.search(r'^BuildKit version:\\s+' + re.escape(builder['buildkit_version']) + r'\\s*$', text, re.M)
+            and re.search(r'^Driver Options:\\s+image="' + re.escape(builder['image']) + r'"\\s*$', text, re.M),
             'BUILDER_VERSION')
     return profile
 '''
@@ -135,10 +145,16 @@ def producer(text):
         ('import os\nfrom pathlib import Path\nimport re\n', 'import os\nfrom pathlib import Path\nimport platform\nimport re\n'),
         ('def package(policy, out, records):\n    runtime(records)\n',
          'def package(policy, out, records):\n    profile = runtime(records)\n'),
-        ("records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load',",
-         "records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'], '--load',"),
-        ("'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '",
-         "'build_command': 'docker buildx build --load --platform linux/amd64 --provenance=false '"),
+        ("    records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load', '--platform', 'linux/amd64',\n",
+         "    # Without rewrite-timestamp, directory mtimes make every build differ (U093).\n"
+         "    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'],\n"
+         "                 '--output', 'type=docker,rewrite-timestamp=true', '--platform', 'linux/amd64',\n"),
+        ("                  'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '\n"
+         "                                   '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',\n",
+         "                  'build_command': 'docker buildx build --output type=docker,rewrite-timestamp=true '\n"
+         "                                   '--platform linux/amd64 --provenance=false --sbom=false --network=none '\n"
+         "                                   '--build-arg SOURCE_DATE_EPOCH=0',\n"
+         "                  'buildkit_image': profile['builder']['image'],\n"),
         ("def workflow(request, *, negative=False):\n    require(os.environ.get('GITHUB_REPOSITORY') == 'mack-dot/forge'\n",
          "def workflow(request, *, negative=False):\n    repository = read(ROOT / 'policy/provenance.json')['signer']['repository']\n"
          "    require(os.environ.get('GITHUB_REPOSITORY') == repository\n"),

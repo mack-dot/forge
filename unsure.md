@@ -2297,3 +2297,62 @@ curl: (6) Could not resolve host: github.com
   Nothing protected is applied.
 - Next check: probe 3, a hosted dry run of the candidate that requires the hosted
   package descriptor to equal the controller descriptor.
+
+## U093 — Candidate dry run: hosted pins pass; package is not reproducible across builds
+
+- References: U083, U092; proposals/provenance-hosted/;
+  results/stage9/hosted-probe-0004/.
+- Observed: commit e0eae926… (candidate, dry-run workflow) was pushed with exit
+  0. The first dispatch returned HTTP 404 (workflow not yet registered); the
+  second returned 0, run 40724981390. watch returned 1; view and download 0.
+- Observed: on the hosted runner the candidate diff applied and all 10 files
+  matched. The candidate hosted_setup.py passed in 772 s (pinned Docker CE
+  28.5.1, containerd.io 2.4.2-3, buildx plugin 0.38.1-1; Stage 7 prerequisites).
+  The candidate preflight.py passed. The candidate package() passed runtime():
+  every producer-profile pin matched. It built config 45570f02…, not the
+  controller's f15f5bd4…, so dry_run.py rejected with
+  INDEPENDENT_PACKAGE_REPRODUCTION. replay() did not run.
+- Observed cause: the two configs differ only in the ELF layer diff_id
+  (da96748c… versus c5256282…). In both layers the ELF entry is identical
+  (mtime 0, mode 0444, 1000:1000). The parent directories opt and opt/forge
+  carry the build time as mtime (1793197975 versus 1793205219).
+- Observed (local, Mac, Docker driver, no cache): two builds with
+  --output=type=docker,rewrite-timestamp=true gave different IDs (b996c09e…,
+  dfb0f116…); the directory mtimes were again build times. The Docker driver's
+  exporter does not apply rewrite-timestamp. Config and history created times are
+  already 1970-01-01.
+- Correction: the U083 byte-identical package runs and the U092 controller run
+  reused the BuildKit cache, as U083 warned. They do not show reproducibility.
+  The approved installed gate has the same defect: any uncached rebuild by the
+  producer fails INDEPENDENT_PACKAGE_REPRODUCTION. It fails closed.
+- Impact: the candidate is not ready for approval. Stage 9 remains CURRENT. All
+  six EXITs are NOT RUN. end_to_end=false.
+- Next check: a pinned docker-container BuildKit builder with rewrite-timestamp;
+  two uncached builds must give the same ID, then cross-host equality.
+
+## U094 — Pinned BuildKit container builder makes the package reproducible locally
+
+- References: U093; proposals/provenance-hosted/ (build_candidate.py 1c44da89…,
+  probe3.yml 113653a3…); results/stage9/hosted-candidate-0002/.
+- Observed (Mac, classic store): docker buildx create --driver docker-container
+  with moby/buildkit:v0.25.1@sha256:79cc6476… returned 0; inspect showed
+  BuildKit v0.25.1 and that image. Two --no-cache builds with
+  --output=type=docker,rewrite-timestamp=true both returned 0 with the same ID
+  f584305022f2e811…. The 55 base diff_ids equal the approved list; the added
+  layers are 87095790… (ELF) and 5f70bf18… (empty). The test builder was removed.
+- Candidate update: both runtime profiles use builder forge-pinned
+  (docker-container, that image, BuildKit v0.25.1). runtime() creates it when
+  absent and checks driver, version and image. package() exports with
+  type=docker,rewrite-timestamp=true; the descriptor adds buildkit_image. New
+  diff 5593a720…, new lock f9f09a2f….
+- Observed (fresh scratch copy): git apply --check and git apply returned 0; 10
+  of 10 files match; py_compile 0; context(f9f09a2f…) 0 over 62 files;
+  context(9b10a237…) rejected UNAPPROVED_IMPLEMENTATION.
+- Observed (controller profile, new empty builder): run_package.py returned 0;
+  14 commands; builder-present returned 1 (absent, expected), builder-create 0,
+  all others 0. Config f584305022f2e811… equals the uncached test.
+  controller-descriptor.json is now 22f80a1b….
+- Uncertainty: cross-host equality (Mac arm64 versus hosted amd64 BuildKit) is
+  not yet observed.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: probe 3 again with lock f9f09a2f….

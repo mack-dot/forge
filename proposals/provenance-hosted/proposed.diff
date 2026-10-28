@@ -228,10 +228,10 @@ diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementatio
 -    "gate/provenance/preflight.py": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776",
 -    "gate/provenance/producer.py": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e",
 +    "gate/provenance/preflight.py": "6ae3ab210bbceddfd18f7e551a02cb073888374bc99db9f8401a7e52535d0b82",
-+    "gate/provenance/producer.py": "590103b6fba75186c144ad80d832a80b373d5498b8de69b60ab9b1a9c033e381",
++    "gate/provenance/producer.py": "bb889178f9d1f9e25ef08779b0f3c1bddf081c52d90a934d349d4ced644e6820",
      "gate/provenance/release.py": "1877aef9688a089fe7fee9026b08968b559044862535c6c398b0e7603a1c6d6f",
 -    "gate/provenance/runtime.json": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024",
-+    "gate/provenance/runtime.json": "f96170d87d5777537df7b13101d7159826711e1c668caa0fb47df044ee1b2c6e",
++    "gate/provenance/runtime.json": "69496b01735446c5140423aeba8e8348b37fd590c4cfb30d8d70a25283dcbbbd",
      "gate/refund.py": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb",
      "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
      "gate/refund/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
@@ -308,7 +308,7 @@ diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
  import re
  import secrets
  import shutil
-@@ -17,28 +18,42 @@
+@@ -17,28 +18,49 @@
  
  
  def runtime(records):
@@ -344,13 +344,20 @@ diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
 -    require(output.decode().strip() == pins['buildx'], 'BUILDX_VERSION')
 -    _, output, _ = records.run(['docker', 'buildx', 'inspect', pins['builder']['name']], 'builder-inspect')
 +    require(output.decode().strip() == profile['buildx'], 'BUILDX_VERSION')
-+    _, output, _ = records.run(['docker', 'buildx', 'inspect', profile['builder']['name']], 'builder-inspect')
++    # rewrite-timestamp needs BuildKit's own exporter, so both profiles use one
++    # pinned docker-container builder; the Docker driver ignores it (U093).
++    builder = profile['builder']
++    code, _, _ = records.run(['docker', 'buildx', 'inspect', builder['name']], 'builder-present', check=False)
++    if code != 0:
++        records.run(['docker', 'buildx', 'create', '--name', builder['name'], '--driver', builder['driver'],
++                     '--driver-opt', 'image=' + builder['image']], 'builder-create')
++    _, output, _ = records.run(['docker', 'buildx', 'inspect', '--bootstrap', builder['name']], 'builder-inspect')
      text = output.decode()
 -    require(re.search(r'^Driver:\s+' + re.escape(pins['builder']['driver']) + r'\s*$', text, re.M)
 -            and re.search(r'^BuildKit version:\s+' + re.escape(pins['builder']['buildkit_version']) + r'\s*$', text, re.M),
-+    require(re.search(r'^Driver:\s+' + re.escape(profile['builder']['driver']) + r'\s*$', text, re.M)
-+            and re.search(r'^BuildKit version:\s+' + re.escape(profile['builder']['buildkit_version']) + r'\s*$',
-+                          text, re.M),
++    require(re.search(r'^Driver:\s+' + re.escape(builder['driver']) + r'\s*$', text, re.M)
++            and re.search(r'^BuildKit version:\s+' + re.escape(builder['buildkit_version']) + r'\s*$', text, re.M)
++            and re.search(r'^Driver Options:\s+image="' + re.escape(builder['image']) + r'"\s*$', text, re.M),
              'BUILDER_VERSION')
 +    return profile
  
@@ -361,25 +368,31 @@ diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
      base = policy['deployment']['base_image']
      records.run(['docker', 'pull', '--platform', 'linux/amd64', base], 'package-base-pull')
      _, info, _ = records.run(['docker', 'image', 'inspect', base], 'package-base-inspect')
-@@ -58,7 +73,7 @@
+@@ -58,7 +80,9 @@
      os.utime(build / 'gcd-selftest.elf', (0, 0))
      os.utime(build / 'Dockerfile', (0, 0))
      iid = out / 'image-id.txt'
 -    records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load', '--platform', 'linux/amd64',
-+    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'], '--load', '--platform', 'linux/amd64',
++    # Without rewrite-timestamp, directory mtimes make every build differ (U093).
++    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'],
++                 '--output', 'type=docker,rewrite-timestamp=true', '--platform', 'linux/amd64',
                   '--provenance=false', '--sbom=false', '--network=none',
                   '--build-arg', 'SOURCE_DATE_EPOCH=0', '--iidfile', str(iid), str(build)], 'package-build')
      image = iid.read_text().strip()
-@@ -74,7 +89,7 @@
+@@ -74,8 +98,10 @@
                    'recipe_sha256': digest(HERE / 'Dockerfile'),
                    'elf_path': policy['deployment']['path'],
                    'elf_sha256': policy['release_artifact']['sha256'],
 -                  'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '
-+                  'build_command': 'docker buildx build --load --platform linux/amd64 --provenance=false '
-                                    '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
+-                                   '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
++                  'build_command': 'docker buildx build --output type=docker,rewrite-timestamp=true '
++                                   '--platform linux/amd64 --provenance=false --sbom=false --network=none '
++                                   '--build-arg SOURCE_DATE_EPOCH=0',
++                  'buildkit_image': profile['builder']['image'],
                    'end_to_end': False}
      package_identity(policy, image, descriptor, out, records)
-@@ -188,12 +203,13 @@
+     # Inspect bytes from a real container made from the built package.
+@@ -188,12 +214,13 @@
  
  
  def workflow(request, *, negative=False):
@@ -398,7 +411,7 @@ diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
 diff --git a/gate/provenance/runtime.json b/gate/provenance/runtime.json
 --- a/gate/provenance/runtime.json
 +++ b/gate/provenance/runtime.json
-@@ -1,43 +1,93 @@
+@@ -1,43 +1,95 @@
  {
 -  "actions_runner": {
 -    "archive": "https://github.com/actions/runner/releases/download/v2.338.2/actions-runner-osx-arm64-2.338.2.tar.gz",
@@ -427,8 +440,9 @@ diff --git a/gate/provenance/runtime.json b/gate/provenance/runtime.json
 +    "controller": {
 +      "builder": {
 +        "buildkit_version": "v0.25.1",
-+        "driver": "docker",
-+        "name": "desktop-linux"
++        "driver": "docker-container",
++        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
++        "name": "forge-pinned"
 +      },
 +      "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
 +      "docker": {
@@ -467,8 +481,9 @@ diff --git a/gate/provenance/runtime.json b/gate/provenance/runtime.json
 +    "producer": {
 +      "builder": {
 +        "buildkit_version": "v0.25.1",
-+        "driver": "docker",
-+        "name": "default"
++        "driver": "docker-container",
++        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
++        "name": "forge-pinned"
 +      },
 +      "buildx": "github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5",
 +      "docker": {

@@ -1,7 +1,8 @@
 {
   "base": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
   "base_platform_manifest": "sha256:1b7a1e562f37e418359b646d68d9e0b69b512fa8a03188b0c35fe1ca4b3f4be2",
-  "build_command": "docker buildx build --load --platform linux/amd64 --provenance=false --sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0",
+  "build_command": "docker buildx build --output type=docker,rewrite-timestamp=true --platform linux/amd64 --provenance=false --sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0",
+  "buildkit_image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
   "elf_path": "/opt/forge/gcd-selftest.elf",
   "elf_sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
   "end_to_end": false,
@@ -64,8 +65,8 @@
     "sha256:90e179d934b0bb2134e81bfb1b595975a1a7d6edebaaeb8d945eeb05e6921dc5",
     "sha256:2a40024a0d0cbe27ed00efe9e106eb62c9f9ab815240c254d9db002be83f2b05",
     "sha256:83146a225168a61b7ba44f6a29f2ad8d8c3e4b925f457b64d36a396e4a98748f",
-    "sha256:da96748c40e4b815274ac1eddc35d9779c3d45380f144894f183cd8e832ce8c5",
+    "sha256:870957905e6c1de40b621f1ae5d8c181f90ba8abe843e03f0d1e091a381c7a12",
     "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
   ],
-  "sha256": "f15f5bd4ef7c5fa32e9c22d35b209025386656e6590bea75063841748f5984c2"
+  "sha256": "f584305022f2e811c7bf346fa5d4322bc565cbb3359a8c252fcbba5a61325e16"
 }

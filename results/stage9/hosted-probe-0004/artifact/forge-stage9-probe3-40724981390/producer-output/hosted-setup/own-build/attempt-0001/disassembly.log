@@ -1,0 +1,21 @@
+
+/work/.forge-stage7/own-build/attempt-0001/gcd-selftest.elf:	file format elf64-littleriscv
+
+Disassembly of section .text:
+
+0000000000011158 <_start>:
+   11158: 42f00513     	li	a0, 0x42f
+   1115c: 1ce00593     	li	a1, 0x1ce
+   11160: 00058c63     	beqz	a1, 0x11178 <_start+0x20>
+   11164: 00058613     	mv	a2, a1
+   11168: 02b575b3     	remu	a1, a0, a1
+   1116c: 00060513     	mv	a0, a2
+   11170: fe059ae3     	bnez	a1, 0x11164 <_start+0xc>
+   11174: 0080006f     	j	0x1117c <_start+0x24>
+   11178: 00050613     	mv	a2, a0
+   1117c: feb60613     	addi	a2, a2, -0x15
+   11180: 00c03533     	snez	a0, a2
+   11184: 00151513     	slli	a0, a0, 0x1
+   11188: 05e00893     	li	a7, 0x5e
+   1118c: 00000073     	ecall
+   11190: 0000006f     	j	0x11190 <_start+0x38>

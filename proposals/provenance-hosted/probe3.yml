@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     env:
-      FORGE_STAGE9_IMPLEMENTATION: acf733086207b01e79043ebc4a8b9df54198257f8ed344313ce80d398e05fd3d
+      FORGE_STAGE9_IMPLEMENTATION: f9f09a2f9bf2d85a8f8582f6c90397435e70a4f210f3861a7973cea1b49ce4f0
       FORGE_STAGE9_REQUEST: '{"expected_source_commit": "${{ github.sha }}"}'
     steps:
       - name: Checkout exact dispatched main commit

@@ -1445,6 +1445,26 @@ candidate is in `proposals/provenance-hosted/` (diff `11ee6957…`, new lock
 
 See U092. `end_to_end=false`.
 
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git … push origin HEAD:main` | 0 | Commit `e0eae926…`: candidate and dry-run workflow. |
+| `gh workflow run stage9-candidate-dry-run.yml …` (first) | 1 | HTTP 404; workflow not yet registered. |
+| `gh workflow run stage9-candidate-dry-run.yml …` (second) | 0 | Run 40724981390. |
+| `gh run watch 40724981390 … --exit-status` | 1 | Hosted pins, setup and preflight passed; package config `45570f02…` ≠ controller `f15f5bd4…` → `INDEPENDENT_PACKAGE_REPRODUCTION`. |
+| `docker buildx build --builder desktop-linux --output=type=docker,rewrite-timestamp=true --no-cache …` (twice, Mac) | 0, 0 | Different IDs; the Docker driver ignores `rewrite-timestamp`. |
+
+Directory mtimes in the ELF layer make the package unreproducible. The
+installed gate has the same defect. See U093. `end_to_end=false`.
+
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `docker buildx build --builder <pinned docker-container BuildKit v0.25.1> --output=type=docker,rewrite-timestamp=true --no-cache …` (twice, Mac) | 0, 0 | Same ID `f5843050…`; base layers unchanged. |
+| `python3 -I proposals/provenance-hosted/build_candidate.py` | 0 | Updated candidate: diff `5593a720…`, lock `f9f09a2f…`. |
+| `git apply --check` / `git apply` (fresh scratch) | 0 / 0 | 10 of 10 files match. |
+| `run_package.py --implementation-sha256 f9f09a2f…` (scratch, Mac controller, new builder) | 0 | Config `f5843050…`. |
+
+See U094. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

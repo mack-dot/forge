@@ -43,11 +43,18 @@ def runtime(records):
             and ['driver-type', 'io.containerd.snapshotter.v1'] not in info['DriverStatus'], 'IMAGE_STORE')
     _, output, _ = records.run(['docker', 'buildx', 'version'], 'buildx-version')
     require(output.decode().strip() == profile['buildx'], 'BUILDX_VERSION')
-    _, output, _ = records.run(['docker', 'buildx', 'inspect', profile['builder']['name']], 'builder-inspect')
+    # rewrite-timestamp needs BuildKit's own exporter, so both profiles use one
+    # pinned docker-container builder; the Docker driver ignores it (U093).
+    builder = profile['builder']
+    code, _, _ = records.run(['docker', 'buildx', 'inspect', builder['name']], 'builder-present', check=False)
+    if code != 0:
+        records.run(['docker', 'buildx', 'create', '--name', builder['name'], '--driver', builder['driver'],
+                     '--driver-opt', 'image=' + builder['image']], 'builder-create')
+    _, output, _ = records.run(['docker', 'buildx', 'inspect', '--bootstrap', builder['name']], 'builder-inspect')
     text = output.decode()
-    require(re.search(r'^Driver:\s+' + re.escape(profile['builder']['driver']) + r'\s*$', text, re.M)
-            and re.search(r'^BuildKit version:\s+' + re.escape(profile['builder']['buildkit_version']) + r'\s*$',
-                          text, re.M),
+    require(re.search(r'^Driver:\s+' + re.escape(builder['driver']) + r'\s*$', text, re.M)
+            and re.search(r'^BuildKit version:\s+' + re.escape(builder['buildkit_version']) + r'\s*$', text, re.M)
+            and re.search(r'^Driver Options:\s+image="' + re.escape(builder['image']) + r'"\s*$', text, re.M),
             'BUILDER_VERSION')
     return profile
 
@@ -73,7 +80,9 @@ def package(policy, out, records):
     os.utime(build / 'gcd-selftest.elf', (0, 0))
     os.utime(build / 'Dockerfile', (0, 0))
     iid = out / 'image-id.txt'
-    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'], '--load', '--platform', 'linux/amd64',
+    # Without rewrite-timestamp, directory mtimes make every build differ (U093).
+    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'],
+                 '--output', 'type=docker,rewrite-timestamp=true', '--platform', 'linux/amd64',
                  '--provenance=false', '--sbom=false', '--network=none',
                  '--build-arg', 'SOURCE_DATE_EPOCH=0', '--iidfile', str(iid), str(build)], 'package-build')
     image = iid.read_text().strip()
@@ -89,8 +98,10 @@ def package(policy, out, records):
                   'recipe_sha256': digest(HERE / 'Dockerfile'),
                   'elf_path': policy['deployment']['path'],
                   'elf_sha256': policy['release_artifact']['sha256'],
-                  'build_command': 'docker buildx build --load --platform linux/amd64 --provenance=false '
-                                   '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
+                  'build_command': 'docker buildx build --output type=docker,rewrite-timestamp=true '
+                                   '--platform linux/amd64 --provenance=false --sbom=false --network=none '
+                                   '--build-arg SOURCE_DATE_EPOCH=0',
+                  'buildkit_image': profile['builder']['image'],
                   'end_to_end': False}
     package_identity(policy, image, descriptor, out, records)
     # Inspect bytes from a real container made from the built package.
