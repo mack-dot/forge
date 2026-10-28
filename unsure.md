@@ -2768,3 +2768,101 @@ curl: (6) Could not resolve host: github.com
   workflow could be triggered. B2, B3, v3.1 installation, public signing and any
   IP or licensing decision remain unauthorized. The test branch is not pushed.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U108 — B1 pushed: exact reviewed tree on main; no workflow activity
+
+- References: U107; results/stage9/b-prep-0001/b1-publication-manifest.json
+  (9cd45a9f…); results/stage9/b1-push-0001/.
+- Observed (pre-push): remote main e37ef2c5…; the manifest tree
+  32bfb2ddbdab146b4b8493fe94e8708c91b4adbf has 1,317 added or modified files
+  (21.2 MB, largest 4.2 MB), no deletions, no protected paths, one .github file
+  (stage9-private-dry-run-v31.yml), none of the PR #14 or #15 files, no
+  matching push-trigger paths, and no token or key patterns. Three record files
+  named package.json are Forge descriptors, not npm manifests.
+- Observed (push): git commit-tree built 993bee7bf8acb5d1e444b6a245c36272e193d4f6
+  from that exact tree with parent e37ef2c5…, author and committer
+  mack-dot <235131950+mack-dot@users.noreply.github.com> (chosen instead of the
+  SPM address because of the open ownership question). The first git push
+  returned exit 1; its error line was not captured. The second push of the same
+  commit succeeded (e37ef2c..993bee7). The remote reported 10 low-severity
+  Dependabot alerts on the default branch.
+- Observed (post-push): main is 993bee7… with tree 32bfb2dd… (equal to the
+  reviewed tree). The compare API lists 300 files (its limit) and one .github
+  change: the added workflow. The workflow is registered (id 399919898, state
+  active) and was not dispatched. No workflow run was created for 993bee7….
+- Not done: the test branch, B2, B3, v3.1 installation, signing.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U109 — B2 private dry run: trust steps pass; hosted_setup.py runs out of disk
+
+- References: U107, U108; results/stage9/b2-dry-run-0001/.
+- Authorization: the user replied "approve" to the B2 request (exactly one
+  dispatch). B3, v3.1 installation and signing remain unauthorized.
+- Observed: main was 993bee7b… and no run was in progress. gh workflow run
+  returned 0; run 40771238211 (workflow_dispatch, head 993bee7b…, "Forge Stage 9
+  private dry run v3.1 (no signing)"). No other workflow run was created during
+  or after it. The watcher saw completion after 246 s; no cancellation.
+- Observed (permissions): the job log lists GITHUB_TOKEN permissions
+  Contents: read and Metadata: read only. Runner image ubuntu-24.04
+  20261025.353.1.
+- Observed (steps): the OIDC-absence check, checkout, candidate apply,
+  hash-checked Python archive and checkout authentication (inline check and
+  bootstrap --check) all succeeded. hosted_setup.py through the bootstrap
+  failed after 225 s; preflight and the package/replay step were skipped. The
+  records show 16 commands with exit 0 (Docker key, apt, pinned Docker install,
+  upstream fetch, pip pin, macOS-path link, 45 Python packages, seed ownership),
+  then docker pull of the checker image exit 1: "failed to register layer: …
+  no space left on device".
+- Artifact: forge-stage9-private-dry-run-v31-40771238211, sha256:9a140a6d…,
+  18,633 bytes.
+- Inference (not measured): earlier probes ran while the repository was public
+  and saw 91.9 GB free; this private run's free space was not recorded. Private
+  repositories may receive smaller standard runners (fewer CPUs, less memory
+  and disk). The proof container needs 4 GiB memory and the setup needs roughly
+  25 GB of disk.
+- Impact: the trust path up to repository code is demonstrated on a hosted
+  private runner; the proof path is not. Stage 9 remains CURRENT. All six EXITs
+  are NOT RUN. end_to_end=false.
+- Next check: record disk, memory and CPUs first, reclaim unused preinstalled
+  toolchains on the disposable runner, and fail explicitly when space is too
+  small; then one more authorized dispatch.
+
+## U110 — Local Docker cleanup; v3.2 adds the runner disk fix, checked locally
+
+- References: U109; results/stage9/docker-cleanup-0001/, v32-local-checks-0001/;
+  proposals/provenance-hosted-v32/.
+- Cleanup (user: "yes" to the listed Forge leftovers): before deletion, all 7
+  target containers were in state created, never started, from Forge package
+  images f584305022f2/f15f5bd4ef7c; no other container used the target
+  images; moby/buildkit v0.24.0 was f618f93ec6d0 (digest 6eceb897…). docker rm
+  of the 7 containers returned 0; docker rmi of f15f5bd4ef7c, f584305022f2,
+  3a3b43655444, 3ab45eec8599, b996c09e7ad6, dfb0f1161801, f618f93ec6d0 and
+  d9b8c34d61a9 (ubuntu:24.04) returned 0 (13 entries deleted). Images went from
+  5.749 GB to 5.46 GB. Kept: the checker image, BuildKit v0.25.1, every volume
+  (including forge-stage7-upstream-bf6a65114ed2, 11.32 GB) and all non-Forge
+  images and containers. Local cleanup does not affect hosted runners.
+- v3.2 (unapplied, 9 files, diff 993ebd23…, lock be23ec85…): v3.1 plus a proof
+  job step that records disk, memory and CPUs and removes unused preinstalled
+  toolchains and images on the disposable runner, and a hosted_setup.py check
+  that records free space (disk.json) and rejects DISK_SPACE below 35 GB before
+  image pulls. A matching non-signing dry run is in
+  proposals/provenance-hosted-v32/private-dry-run.yml.
+- Observed (local): check_no_signing.py 0 for the v3.2 dry run and 1 for the
+  production workflow; v3.2 applied in a fresh scratch copy with 9 of 9 files
+  matching; context(be23ec85…) 0; v3.1 and installed locks rejected;
+  bootstrap --check 0; f1_controls.py 0 (9 of 9); controls.py 0 (14 of 14,
+  attacker code executed in none).
+- Not tested: the disk step and DISK_SPACE check (hosted runner only).
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U111 — Repository public again (user); B1′ authorized
+
+- References: U101, U110.
+- Decision: the user replied "approve and start i made it public so its easier
+  to get thru the research for now". Read as: B1′ (push the v3.2 proposal files,
+  the v3.2 non-signing dry-run workflow and records to main) is authorized; the
+  user changed the repository to public. B2′, B3, v3.x installation and public
+  signing remain unauthorized. No licensing or ownership decision is implied.
+- Effect: hosted runs are free and run on public-repository runners; the
+  installed verifier's unauthenticated GitHub reads work again.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.

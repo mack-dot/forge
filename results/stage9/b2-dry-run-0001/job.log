@@ -1,0 +1,252 @@
+proof	Set up job	﻿2026-10-28T21:21:20.7709659Z Current runner version: '2.338.0'
+proof	Set up job	2026-10-28T21:21:20.7724024Z ##[group]Runner Image Provisioner
+proof	Set up job	2026-10-28T21:21:20.7724601Z Hosted Compute Agent
+proof	Set up job	2026-10-28T21:21:20.7724976Z Version: 20261021.618
+proof	Set up job	2026-10-28T21:21:20.7725375Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+proof	Set up job	2026-10-28T21:21:20.7725789Z Build Date: 2026-10-21T00:45:21Z
+proof	Set up job	2026-10-28T21:21:20.7726204Z Worker ID: {f78f0c7e-6f06-4c5b-ba11-c5380663138d}
+proof	Set up job	2026-10-28T21:21:20.7726656Z Region: centralus
+proof	Set up job	2026-10-28T21:21:20.7726985Z Cloud: Azure
+proof	Set up job	2026-10-28T21:21:20.7727322Z ##[endgroup]
+proof	Set up job	2026-10-28T21:21:20.7728043Z ##[group]Operating System
+proof	Set up job	2026-10-28T21:21:20.7728429Z Ubuntu
+proof	Set up job	2026-10-28T21:21:20.7728781Z 24.04.5
+proof	Set up job	2026-10-28T21:21:20.7729116Z LTS
+proof	Set up job	2026-10-28T21:21:20.7729444Z ##[endgroup]
+proof	Set up job	2026-10-28T21:21:20.7729783Z ##[group]Runner Image
+proof	Set up job	2026-10-28T21:21:20.7730163Z Image: ubuntu-24.04
+proof	Set up job	2026-10-28T21:21:20.7730532Z Version: 20261025.353.1
+proof	Set up job	2026-10-28T21:21:20.7731119Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+proof	Set up job	2026-10-28T21:21:20.7732160Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+proof	Set up job	2026-10-28T21:21:20.7732728Z ##[endgroup]
+proof	Set up job	2026-10-28T21:21:20.7733612Z ##[group]GITHUB_TOKEN Permissions
+proof	Set up job	2026-10-28T21:21:20.7735071Z Contents: read
+proof	Set up job	2026-10-28T21:21:20.7735469Z Metadata: read
+proof	Set up job	2026-10-28T21:21:20.7735832Z ##[endgroup]
+proof	Set up job	2026-10-28T21:21:20.7736998Z Secret source: Actions
+proof	Set up job	2026-10-28T21:21:20.7737596Z Cache mode: write
+proof	Set up job	2026-10-28T21:21:20.7737977Z Prepare workflow directory
+proof	Set up job	2026-10-28T21:21:20.8144953Z Prepare all required actions
+proof	Set up job	2026-10-28T21:21:20.8192831Z Getting action download info
+proof	Set up job	2026-10-28T21:21:21.0857903Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+proof	Set up job	2026-10-28T21:21:21.1650402Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+proof	Set up job	2026-10-28T21:21:21.4268649Z Complete job name: proof
+proof	Prove that this job cannot request an OIDC token	﻿2026-10-28T21:21:21.4670460Z ##[group]Run test -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" && test -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
+proof	Prove that this job cannot request an OIDC token	2026-10-28T21:21:21.4671142Z [36;1mtest -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" && test -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"[0m
+proof	Prove that this job cannot request an OIDC token	2026-10-28T21:21:21.4688743Z shell: /usr/bin/bash -e {0}
+proof	Prove that this job cannot request an OIDC token	2026-10-28T21:21:21.4689113Z env:
+proof	Prove that this job cannot request an OIDC token	2026-10-28T21:21:21.4689506Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Prove that this job cannot request an OIDC token	2026-10-28T21:21:21.4690106Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Prove that this job cannot request an OIDC token	2026-10-28T21:21:21.4690529Z ##[endgroup]
+proof	Checkout exact dispatched main commit	﻿2026-10-28T21:21:21.4875007Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4875401Z with:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4875643Z   ref: 993bee7bf8acb5d1e444b6a245c36272e193d4f6
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4875959Z   persist-credentials: false
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4876221Z   repository: mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4878216Z   token: ***
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4878431Z   ssh-strict: true
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4878652Z   ssh-user: git
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4878866Z   clean: true
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4879093Z   sparse-checkout-cone-mode: true
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4879357Z   fetch-depth: 1
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4879574Z   fetch-tags: false
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4879800Z   show-progress: true
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4880023Z   lfs: false
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4880233Z   submodules: false
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4880466Z   set-safe-directory: true
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4880704Z env:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4881077Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4881664Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.4882093Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7055500Z Syncing repository: mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7060024Z ##[group]Getting Git version info
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7062807Z Working directory is '/home/runner/work/forge/forge'
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7064596Z [command]/usr/bin/git version
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7184505Z git version 2.56.0
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7195965Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7231335Z Temporarily overriding HOME='/home/runner/work/_temp/18404346-9d1a-4b94-b6d6-c4f43b0e027a' before making global git config changes
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7234823Z Adding repository directory to the temporary git global config as a safe directory
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7235932Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/forge/forge
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7313792Z Deleting the contents of '/home/runner/work/forge/forge'
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7315225Z ##[group]Initializing the repository
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7316177Z [command]/usr/bin/git init /home/runner/work/forge/forge
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7454172Z hint: Using 'master' as the name for the initial branch. This default branch name
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7470275Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7478368Z hint: to use in all of your new repositories, which will suppress this warning,
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7479220Z hint: call:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7479689Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7480246Z hint: 	git config --global init.defaultBranch <name>
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7480887Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7481487Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7505113Z hint: 'development'. The just-created branch can be renamed via this command:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7505733Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7506408Z hint: 	git branch -m <name>
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7507022Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7507915Z hint: Disable this message with "git config set advice.defaultBranchName false"
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7509062Z Initialized empty Git repository in /home/runner/work/forge/forge/.git/
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7510861Z [command]/usr/bin/git remote add origin https://github.com/mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7665093Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7668919Z ##[group]Disabling automatic garbage collection
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7675740Z [command]/usr/bin/git config --local gc.auto 0
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7677705Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7678436Z ##[group]Setting up auth
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7679190Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.7681545Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.8674261Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.8676213Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.8678829Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.8679909Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.8680314Z ##[group]Fetching the repository
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:21.8680941Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 993bee7bf8acb5d1e444b6a245c36272e193d4f6
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0015801Z From https://github.com/mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0024816Z  * branch            993bee7bf8acb5d1e444b6a245c36272e193d4f6 -> FETCH_HEAD
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0026957Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0027810Z ##[group]Determining the checkout info
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0028256Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0028562Z [command]/usr/bin/git sparse-checkout disable
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0080089Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0113091Z ##[group]Checking out the ref
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.0116270Z [command]/usr/bin/git checkout --progress --force 993bee7bf8acb5d1e444b6a245c36272e193d4f6
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2654917Z Note: switching to '993bee7bf8acb5d1e444b6a245c36272e193d4f6'.
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2656073Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2656450Z You are in 'detached HEAD' state. You can look around, make experimental
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2657269Z changes and commit them, and you can discard any commits you make in this
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2657832Z state without impacting any branches by switching back to a branch.
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2658249Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2658708Z If you want to create a new branch to retain commits you create, you may
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2659260Z do so (now or later) by using -c with the switch command. Example:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2659608Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2659857Z   git switch -c <new-branch-name>
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2660163Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2660398Z Or undo this operation with:
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2660671Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2660881Z   git switch -
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2661357Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2661855Z Turn off this advice by setting config variable advice.detachedHead to false
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2662351Z 
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2662735Z HEAD is now at 993bee7 Stage 9 B1: v3/v3.1 proposals, non-signing private dry-run workflow, records
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2677390Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2726305Z [command]/usr/bin/git log -1 --format=%H
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2767930Z 993bee7bf8acb5d1e444b6a245c36272e193d4f6
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2775618Z ##[group]Removing auth
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2776842Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.2810455Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.3001287Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.3031353Z http.https://github.com/.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.3060638Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.3073721Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T21:21:24.3264511Z ##[endgroup]
+proof	Apply the candidate to a copy of the checkout	﻿2026-10-28T21:21:24.3381196Z ##[group]Run C="$RUNNER_TEMP/candidate-root"
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3381442Z [36;1mC="$RUNNER_TEMP/candidate-root"[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3381644Z [36;1mcp -a "$GITHUB_WORKSPACE" "$C" && cd "$C"[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3381937Z [36;1mgit apply --check proposals/provenance-hosted-v31/proposed.diff[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3382234Z [36;1mgit apply proposals/provenance-hosted-v31/proposed.diff[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3398400Z shell: /usr/bin/bash -e {0}
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3398566Z env:
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3398815Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3399190Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Apply the candidate to a copy of the checkout	2026-10-28T21:21:24.3399457Z ##[endgroup]
+proof	Python 3.10.11 from a hash-checked archive	﻿2026-10-28T21:21:24.6496552Z ##[group]Run P="$RUNNER_TEMP/forge-python"
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6496825Z [36;1mP="$RUNNER_TEMP/forge-python"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6497029Z [36;1mA="$RUNNER_TEMP/python-3.10.11.tar.gz"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6497434Z [36;1mcurl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6497905Z [36;1mecho "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6498228Z [36;1mmkdir -p "$P" && tar -xzf "$A" -C "$P"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6498483Z [36;1mLD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6498729Z [36;1mecho "$P/bin" >> "$GITHUB_PATH"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6498933Z [36;1mecho "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6514482Z shell: /usr/bin/bash -e {0}
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6514775Z env:
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6515022Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6515408Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:24.6515664Z ##[endgroup]
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:25.4999474Z /home/runner/work/_temp/python-3.10.11.tar.gz: OK
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:27.5985372Z Looking in links: /tmp/tmp0_it1769
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:27.5987601Z Requirement already satisfied: setuptools in /home/runner/work/_temp/forge-python/lib/python3.10/site-packages (65.5.0)
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T21:21:27.5989931Z Requirement already satisfied: pip in /home/runner/work/_temp/forge-python/lib/python3.10/site-packages (23.0.1)
+proof	Authenticate the checkout before any repository code	﻿2026-10-28T21:21:27.6583761Z ##[group]Run python3 -I -S -B -c 'import hashlib, json, sys
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6584245Z [36;1mpython3 -I -S -B -c 'import hashlib, json, sys[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6584488Z [36;1mlock = open("gate/provenance/implementation.lock", "rb").read()[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6584778Z [36;1mif hashlib.sha256(lock).hexdigest() != sys.argv[1]: sys.exit("IMPLEMENTATION_LOCK")[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6585043Z [36;1mboot = open("gate/provenance/bootstrap.py", "rb").read()[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6585419Z [36;1mif hashlib.sha256(boot).hexdigest() != json.loads(lock)["files"]["gate/provenance/bootstrap.py"]: sys.exit("BOOTSTRAP_BYTES")' "$FORGE_STAGE9_IMPLEMENTATION"[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6585887Z [36;1mpython3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6604573Z shell: /usr/bin/bash -e {0}
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6604710Z env:
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6604925Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6605277Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6605534Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6605704Z ##[endgroup]
+proof	Authenticate the checkout before any repository code	2026-10-28T21:21:27.6927565Z BOOTSTRAP_VERIFIED
+proof	Candidate hosted_setup.py through the bootstrap	﻿2026-10-28T21:21:27.6973307Z ##[group]Run python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/hosted_setup.py
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6973822Z [36;1mpython3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/hosted_setup.py[0m
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6987903Z shell: /usr/bin/bash -e {0}
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6988030Z env:
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6988240Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6988570Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6988830Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6989015Z   FORGE_STAGE7_ROOT: /home/runner/work/_temp/seed
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:21:27.6989167Z ##[endgroup]
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3318358Z Traceback (most recent call last):
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3319516Z   File "/home/runner/work/_temp/candidate-root/gate/provenance/hosted_setup.py", line 111, in <module>
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3321325Z     raise SystemExit(main())
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3357981Z   File "/home/runner/work/_temp/candidate-root/gate/provenance/hosted_setup.py", line 104, in main
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3374573Z     seed(Path(os.environ['FORGE_STAGE7_ROOT']).resolve(), read(ROOT / 'toolchain/stage7-pins.json'),
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3386590Z   File "/home/runner/work/_temp/candidate-root/gate/provenance/hosted_setup.py", line 72, in seed
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3387288Z     records.run(['docker', 'pull', '--platform', stage7['platform'], image], 'image-pull')
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3388895Z   File "/home/runner/work/_temp/candidate-root/gate/provenance/common.py", line 97, in run
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3389871Z     require(result.returncode == 0, 'COMMAND_FAILED:' + label)
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3390705Z   File "/home/runner/work/_temp/candidate-root/gate/provenance/common.py", line 27, in require
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3391532Z     raise Rejected(reason)
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3391900Z common.Rejected: COMMAND_FAILED:image-pull
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T21:25:12.3443455Z ##[error]Process completed with exit code 1.
+proof	Collect records	﻿2026-10-28T21:25:12.3508162Z ##[group]Run mkdir -p probe
+proof	Collect records	2026-10-28T21:25:12.3508339Z [36;1mmkdir -p probe[0m
+proof	Collect records	2026-10-28T21:25:12.3508550Z [36;1mcp -R "$RUNNER_TEMP/candidate-root/results/stage9/producer-output" probe/ || true[0m
+proof	Collect records	2026-10-28T21:25:12.3508842Z [36;1mcp -R "$RUNNER_TEMP/candidate-root/results/stage9/dry-run" probe/ || true[0m
+proof	Collect records	2026-10-28T21:25:12.3731126Z shell: /usr/bin/bash -e {0}
+proof	Collect records	2026-10-28T21:25:12.3731297Z env:
+proof	Collect records	2026-10-28T21:25:12.3731517Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Collect records	2026-10-28T21:25:12.3731852Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Collect records	2026-10-28T21:25:12.3732225Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Collect records	2026-10-28T21:25:12.3732393Z ##[endgroup]
+proof	Collect records	2026-10-28T21:25:12.3849975Z cp: cannot stat '/home/runner/work/_temp/candidate-root/results/stage9/dry-run': No such file or directory
+proof	Preserve records	﻿2026-10-28T21:25:12.3899078Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+proof	Preserve records	2026-10-28T21:25:12.3899390Z with:
+proof	Preserve records	2026-10-28T21:25:12.3899593Z   name: forge-stage9-private-dry-run-v31-40771238211
+proof	Preserve records	2026-10-28T21:25:12.3899845Z   path: probe/
+proof	Preserve records	2026-10-28T21:25:12.3900016Z   include-hidden-files: true
+proof	Preserve records	2026-10-28T21:25:12.3900207Z   if-no-files-found: error
+proof	Preserve records	2026-10-28T21:25:12.3900394Z   compression-level: 6
+proof	Preserve records	2026-10-28T21:25:12.3900562Z   overwrite: false
+proof	Preserve records	2026-10-28T21:25:12.3900718Z env:
+proof	Preserve records	2026-10-28T21:25:12.3901022Z   FORGE_STAGE9_IMPLEMENTATION: 6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510
+proof	Preserve records	2026-10-28T21:25:12.3901519Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "993bee7bf8acb5d1e444b6a245c36272e193d4f6"}
+proof	Preserve records	2026-10-28T21:25:12.3901917Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Preserve records	2026-10-28T21:25:12.3902163Z ##[endgroup]
+proof	Preserve records	2026-10-28T21:25:12.5270465Z (node:3217) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+proof	Preserve records	2026-10-28T21:25:12.5271801Z (Use `node --trace-deprecation ...` to show where the warning was created)
+proof	Preserve records	2026-10-28T21:25:12.5607421Z With the provided path, there will be 52 files uploaded
+proof	Preserve records	2026-10-28T21:25:12.5608620Z Artifact name is valid!
+proof	Preserve records	2026-10-28T21:25:12.5609342Z Root directory input is valid!
+proof	Preserve records	2026-10-28T21:25:12.8070220Z Beginning upload of artifact content to blob storage
+proof	Preserve records	2026-10-28T21:25:12.8686287Z (node:3217) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+proof	Preserve records	2026-10-28T21:25:13.0344728Z Uploaded bytes 18633
+proof	Preserve records	2026-10-28T21:25:13.0727050Z Finished uploading artifact content to blob storage!
+proof	Preserve records	2026-10-28T21:25:13.0734593Z SHA256 digest of uploaded artifact zip is 9a140a6d763523dae741e157bb4d0aa96c4472701546a0daa99ab9454ca135fa
+proof	Preserve records	2026-10-28T21:25:13.0736403Z Finalizing artifact upload
+proof	Preserve records	2026-10-28T21:25:13.5105655Z Artifact forge-stage9-private-dry-run-v31-40771238211.zip successfully finalized. Artifact ID 12853265747
+proof	Preserve records	2026-10-28T21:25:13.5106233Z Artifact forge-stage9-private-dry-run-v31-40771238211 has been successfully uploaded! Final size is 18633 bytes. Artifact ID is 12853265747
+proof	Preserve records	2026-10-28T21:25:13.5238681Z Artifact download URL: https://github.com/mack-dot/forge/actions/runs/40771238211/artifacts/12853265747
+proof	Post Checkout exact dispatched main commit	﻿2026-10-28T21:25:13.5351052Z Post job cleanup.
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6089607Z [command]/usr/bin/git version
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6164981Z git version 2.56.0
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6232044Z Temporarily overriding HOME='/home/runner/work/_temp/9f910f8e-1d5f-4e0d-ab2c-c820e2293b02' before making global git config changes
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6233581Z Adding repository directory to the temporary git global config as a safe directory
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6237228Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/forge/forge
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6340486Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6344837Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6750017Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+proof	Post Checkout exact dispatched main commit	2026-10-28T21:25:13.6806902Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+proof	Complete job	﻿2026-10-28T21:25:13.7387380Z Cleaning up orphan processes
+proof	Complete job	2026-10-28T21:25:13.7788720Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
