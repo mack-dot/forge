@@ -1,0 +1,53 @@
+Refreshing run status every 60 seconds. Press Ctrl+C to quit.
+
+* docs/contributor-readiness Forge proof gate mack-dot/forge#14 · 40743715513
+Triggered via pull_request_target less than a minute ago
+
+JOBS
+* verify (ID 123011815373)
+  ✓ Set up job
+  * Read the trusted base revision
+  * Read the proposed revision as data
+  * Select the recorded Python version
+  * Install and authenticate the recorded toolchain bytes
+  * Check exact PR revisions with trusted code
+  * Save the real checker receipt
+  * Post Read the trusted base revision
+X docs/contributor-readiness Forge proof gate mack-dot/forge#14 · 40743715513
+Triggered via pull_request_target about 1 minute ago
+
+JOBS
+X verify in 41s (ID 123011815373)
+  ✓ Set up job
+  ✓ Read the trusted base revision
+  ✓ Read the proposed revision as data
+  ✓ Select the recorded Python version
+  ✓ Install and authenticate the recorded toolchain bytes
+  X Check exact PR revisions with trusted code
+  ✓ Save the real checker receipt
+  - Post Select the recorded Python version
+  ✓ Post Read the proposed revision as data
+  ✓ Post Read the trusted base revision
+  ✓ Complete job
+✓ report in 22s (ID 123012223805)
+  ✓ Set up job
+  ✓ Read only trusted reporting code
+  ✓ Select the reporting Python version
+  ✓ Read the report as data
+  ✓ Publish claims and a status for the checked revision
+  ✓ Post Select the reporting Python version
+  ✓ Post Read only trusted reporting code
+  ✓ Complete job
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+verify: .github#4
+
+X Process completed with exit code 1.
+verify: .github#15
+
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+report: .github#2
+
+watch exit=1
+view exit=0

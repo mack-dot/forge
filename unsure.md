@@ -2481,3 +2481,67 @@ curl: (6) Could not resolve host: github.com
   It ran on the maintainer's host in a new directory, not on a clean machine.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: v2 hosted dry run; then the user's exact-byte approval.
+
+## U098 — Contributor readiness: docs, license, settings and issues
+
+- References: U097; docs/contributor-readiness.md; results/contributor-readiness/.
+- Scope note: this is documentation and onboarding work requested by the user.
+  It is not a stage execution and changes no Stage 9 record, protected file,
+  release workflow or lock.
+- Decisions (user): Apache-2.0 ("lets do apache 2.0"); copyright holder "we can
+  say superpowermentors holds the license" (exact legal name unconfirmed);
+  follow the recommendations; "def post them" (issues).
+- Observed: quickstart in a fresh clone (quickstart-test-0002): clone,
+  download, checksum, unzip, venv, pip each 0; gate on impl/Ledger.dfy 0
+  (ACCEPTED C1–C5); gate on bugs/off_by_one.dfy 1 (VERIFICATION_REJECTED C4);
+  scripts/exit_stage_1.py --case planted-bugs 0; evidence byte-identical to
+  evidence.json (ed015ad9…). A helper's earlier run also rejected
+  retry_double, self_transfer and sneaky_assume with exit 1, and reported doc
+  gaps (no download command, host-specific checksum manifest, undocumented
+  output path rule, raw ValueError for an --evidence path outside the repo).
+- Observed: ruleset protect-main created (id 26065125, exit 0); inert ruleset
+  25915179 deleted (exit 0); effective rules on main read back as deletion,
+  non_fast_forward, required_linear_history, pull_request. Label "proposal"
+  created; issues #6–#13 created (exit 0 each).
+- Observed (audit): id-token: write only in provenance.yml (sign job) and
+  provenance-negative.yml, both workflow_dispatch only. proof-gate.yml is the
+  only pull-request trigger (pull_request_target); its check job is
+  contents: read with candidate as data and persist-credentials false; its
+  report job (pull-requests and statuses write) runs base code. No secrets,
+  variables, environments, deploy keys or webhooks; one collaborator.
+- Uncertainty: Linux quickstart, the TypeScript demo and a truly clean machine
+  are not tested; hostile-input resource exhaustion in the PR gate is not
+  audited; the NOTICE legal name is unconfirmed; one-person review only.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U099 — PR gate rejected the first contributor PR for protected .github files
+
+- References: U098; results/contributor-readiness/pr14-gate-0001/.
+- Observed: PR #14 at 33d913d4… triggered proof-gate run 40743715513. gh run
+  watch --exit-status returned 1. The verify job failed at "Check exact PR
+  revisions"; the report job succeeded and posted "Forge: rejected", gate exit
+  1, C1–C5 not established, with UNAPPROVED_PROTECTED_CHANGE for
+  .github/CODEOWNERS, four issue templates and the PR template ("approval of
+  exact spec text is required; PR labels do not authorize it").
+- Observed (code): gate/incremental.py protects gate, policy, spec, toolchain,
+  schemas and .github, plus spec.lock and AGENTS.md. gate/approval.py accepts
+  only approved spec text. The rejection is correct behavior, not a defect.
+- Inference: any owner-approved change under .github/, toolchain/ or schemas/
+  (including the Stage 9 v2 workflows) will show this rejection on its PR.
+- Action: the .github files move to a separate PR for exact-byte approval;
+  PR #14 keeps only unprotected files. CONTRIBUTING.md and the readiness report
+  now state this. No gate behavior was changed.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U100 — Copyright holder: owner's personal project
+
+- References: U098; NOTICE; proposals/license.md.
+- Decision: asked about the copyright holder, the user said "theoretically i
+  own it but i did make some of it on company time idk", then "just treat it as
+  my project tis is differnt than my engineerin loop i made at spm". NOTICE now
+  names mack-dot (GitHub handle; legal name not given) and Forge contributors,
+  instead of "Superpower Mentors".
+- Advice given, not a legal finding: employer ownership can depend on the
+  employment agreement and local law for work done on company time; the user
+  was advised to check the agreement and keep Forge work off company time.
+- Impact: none on Stage 9. All six EXITs are NOT RUN. end_to_end=false.

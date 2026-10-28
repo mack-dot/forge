@@ -1,0 +1,11 @@
+clone exit=0 | 
+mkdir exit=0 | 
+download exit=0 | 
+checksum exit=0 | .toolchain/downloads/dafny-4.11.0-arm64-macos-13.zip: OK
+unzip exit=0 | 
+venv exit=0 | 
+pip exit=0 | 
+accept exit=0 | ACCEPTED: C1 C2 C3 C4 C5; backend=dafny; tier=critical; end_to_end=false
+reject exit=1 | VERIFICATION_REJECTED: C4 not established; Dafny exit 4
+status exit=0 | 
+untracked/modified after quickstart: 1
