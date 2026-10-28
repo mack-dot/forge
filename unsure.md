@@ -2481,3 +2481,35 @@ curl: (6) Could not resolve host: github.com
   It ran on the maintainer's host in a new directory, not on a clean machine.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: v2 hosted dry run; then the user's exact-byte approval.
+
+## U098 — Contributor readiness: docs, license, settings and issues
+
+- References: U097; docs/contributor-readiness.md; results/contributor-readiness/.
+- Scope note: this is documentation and onboarding work requested by the user.
+  It is not a stage execution and changes no Stage 9 record, protected file,
+  release workflow or lock.
+- Decisions (user): Apache-2.0 ("lets do apache 2.0"); copyright holder "we can
+  say superpowermentors holds the license" (exact legal name unconfirmed);
+  follow the recommendations; "def post them" (issues).
+- Observed: quickstart in a fresh clone (quickstart-test-0002): clone,
+  download, checksum, unzip, venv, pip each 0; gate on impl/Ledger.dfy 0
+  (ACCEPTED C1–C5); gate on bugs/off_by_one.dfy 1 (VERIFICATION_REJECTED C4);
+  scripts/exit_stage_1.py --case planted-bugs 0; evidence byte-identical to
+  evidence.json (ed015ad9…). A helper's earlier run also rejected
+  retry_double, self_transfer and sneaky_assume with exit 1, and reported doc
+  gaps (no download command, host-specific checksum manifest, undocumented
+  output path rule, raw ValueError for an --evidence path outside the repo).
+- Observed: ruleset protect-main created (id 26065125, exit 0); inert ruleset
+  25915179 deleted (exit 0); effective rules on main read back as deletion,
+  non_fast_forward, required_linear_history, pull_request. Label "proposal"
+  created; issues #6–#13 created (exit 0 each).
+- Observed (audit): id-token: write only in provenance.yml (sign job) and
+  provenance-negative.yml, both workflow_dispatch only. proof-gate.yml is the
+  only pull-request trigger (pull_request_target); its check job is
+  contents: read with candidate as data and persist-credentials false; its
+  report job (pull-requests and statuses write) runs base code. No secrets,
+  variables, environments, deploy keys or webhooks; one collaborator.
+- Uncertainty: Linux quickstart, the TypeScript demo and a truly clean machine
+  are not tested; hostile-input resource exhaustion in the PR gate is not
+  audited; the NOTICE legal name is unconfirmed; one-person review only.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.

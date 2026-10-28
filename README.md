@@ -2,196 +2,147 @@
 
 **LLMs propose, checkers dispose. Humans approve intent (specs), not code.**
 
-Forge is a public research prototype for **proof-gated software changes**.
-Agents propose implementations. Established checkers decide whether the required
-claims hold. Each accepted artifact carries reproducible evidence tied to its
-exact bytes, specification, checking method, and assumptions.
+Forge is an open research prototype for **proof-gated software changes**.
+Anyone, including an AI agent, can propose an implementation. An established
+checker (Dafny, Rocq, Cosign …) decides whether the required claims hold.
+Every accepted artifact carries reproducible evidence that names the exact
+bytes, the specification, the checking method and the assumptions.
 
-The aim is to let agents change critical software components while people remain
-responsible for the behavior those components must implement.
+The goal: let agents change small, critical parts of real software, such as
+money movement, refunds, bookings or permissions, while people stay
+responsible only for *what* those parts must do.
 
-## The thesis
+## Try it in five minutes
 
-Generating code and establishing that it is acceptable are different tasks.
-An agent can produce a plausible implementation and plausible tests for the same
-mistake. Forge puts acceptance outside the proposing agent: a versioned spec
-states the requirements, a policy names acceptable evidence, and an established
-checker supplies the result.
+Tested on macOS (Apple Silicon) with Python 3.10.11. The gate refuses other
+Python versions. Every command below ran in a fresh clone with the exit code
+shown.
 
-Our working hypothesis is that this can reduce implementation review for small,
-well-specified components. We have not yet measured the productivity benefit,
-maintenance cost, or usefulness across ordinary repositories. Those measurements
-are explicit roadmap stages.
+```sh
+git clone https://github.com/mack-dot/forge.git && cd forge
 
-The first target is a critical rule inside a larger application: money movement,
-idempotent requests, booking constraints, refund limits, or permission decisions.
-UI quality, model quality, and many integration properties still need tests and
-measurements. Forge keeps those evidence types distinct.
+# 1. Pinned checker: Dafny 4.11.0 with bundled Z3 4.12.1
+mkdir -p .toolchain/downloads
+curl -fsSL -o .toolchain/downloads/dafny-4.11.0-arm64-macos-13.zip \
+  https://github.com/dafny-lang/dafny/releases/download/v4.11.0/dafny-4.11.0-arm64-macos-13.zip
+echo "c90c75e7d5db9c6ccbb7127840dfe43f0ac938b039a7ebed146d8ead383a572f  .toolchain/downloads/dafny-4.11.0-arm64-macos-13.zip" \
+  | shasum -a 256 -c                                   # exit 0: OK
+unzip -q .toolchain/downloads/dafny-4.11.0-arm64-macos-13.zip -d .toolchain/dafny-4.11.0
+
+# 2. Pinned Python packages for the gate
+python3.10 -m venv .toolchain/venv
+.toolchain/venv/bin/python -m pip install -r toolchain/requirements-stage2.txt
+
+# 3. A correct ledger is accepted
+.toolchain/venv/bin/python gate/gate.py --impl impl/Ledger.dfy --evidence build/quickstart/ledger.json
+# exit 0: ACCEPTED: C1 C2 C3 C4 C5; backend=dafny; tier=critical; end_to_end=false
+
+# 4. A ledger with an off-by-one bug is rejected
+.toolchain/venv/bin/python gate/gate.py --impl bugs/off_by_one.dfy --evidence build/quickstart/off-by-one.json
+# exit 1: VERIFICATION_REJECTED: C4 not established; Dafny exit 4
+```
+
+The rejection reason is the **last** line of the output; the lines above it
+are raw Dafny diagnostics. Try the other planted bugs in `bugs/`:
+`retry_double.dfy` (C1, C3), `self_transfer.dfy` (C1, C5) and
+`sneaky_assume.dfy` (rejected by the audit for an `assume`). Each of them
+passes a deliberately weak unit-test suite and fails the gate.
+
+Exit codes: `0` accepted, `1` rejected, `2` configuration or tool error.
+`--evidence` must be `evidence.json` or a path under `build/`. Linux uses the
+CI profile in [toolchain/linux-pins.json](toolchain/linux-pins.json)
+(installed by `toolchain/install_ci.py`); it is exercised in CI, but this
+quickstart was not run on Linux by hand.
+
+## What just happened
 
 ```mermaid
 flowchart LR
-    H[Human approves intent] --> S[Versioned specification]
-    A[Agent proposes source] --> C[Established checker]
-    S --> C
-    C --> E[Evidence tied to exact artifact]
-    E --> P[Policy gate]
-    P --> R[Accepted artifact and evidence]
+    H[Human approves intent] --> S[Versioned spec + lock]
+    A[Anyone proposes source] --> G[Gate]
+    S --> G
+    P[Policy: required claims and methods] --> G
+    G --> C[Established checker: Dafny]
+    C --> G
+    G --> E[Evidence bound to exact bytes]
 ```
 
-The acceptance result is conditional on the recorded spec and trusted base.
-A proof can establish the wrong requirement if the spec misses human intent.
+The spec [spec/LedgerSpec.dfy](spec/LedgerSpec.dfy) states five claims (C1–C5,
+below). The gate hashes the spec, the policy and your source, runs Dafny with
+pinned resource limits, audits for forbidden constructs (`assume`,
+`{:axiom}`, …) and writes an evidence bundle only if every required claim is
+established by an accepted method. In our test, `build/quickstart/ledger.json`
+was byte-identical to the committed [evidence.json](evidence.json).
 
-## What works today
-
-**Stages 0–8 are complete. Stage 9 is CURRENT.** The approved refund boundary
-has a universal source proof of safety, exact acceptance of valid proposals,
-and rejection with no refund intent on fallback. All three Stage 8 EXITs pass.
-The integration has separate finite testing evidence: 9,000 generated cases,
-68 fixtures, supplemental lifecycle tests, and real rejection controls for
-effect bypass and duplicate dispatch. Both evidence bundles reproduce through
-fresh checks. Model quality remains unmeasured; deployment correctness remains
-unproved. See the [Stage 8 record](docs/stage8-refund.md) for exact scope,
-commands, assumptions, evidence and preserved failures.
-
-Forge also has an independently checked termination proof for its own 1,240-byte compiled
-C self-test. Every valid execution of that exact RISC-V ELF terminates with
-status 0 under the pinned LPS model. A checked valid-entry witness rules out
-an empty execution domain. The complete independent check covered 579 modules.
-
-The upstream replay also passed. The negative control compiled a valid True
-certificate, then rejected it at the required binary-theorem binding. See the
-[binary verification record](docs/stage7-binary.md), [exact ELF](results/stage7/accepted/own/gcd-selftest.elf),
-[evidence](results/stage7/accepted/own/evidence.json), and
-[complete assumption audit](results/stage7/accepted/own/assumption-audit.json).
-These claims retain the stated model and trusted-base limits. Deployment
-correctness remains unproved; `end_to_end=false`.
-
-The [approved booking contract](proposals/booking-decision.md) defines matching,
-cancellation, and retries. Its implementation and successful-execution trace pass
-Dafny. The new [booking gate](gate/booking.py) binds B1–B4 to exact source bytes
-and requires `source_proof`. The [reuse benchmark](docs/reuse-benchmark.md)
-completed 75 pairs. Across 25 pairs per condition, verifier process time was
-269.713 seconds cold, 271.067 with shared files, and 175.828 with native reuse,
-including every baseline. These results describe this corpus and host.
-Developer productivity and broader applicability remain unmeasured.
-
-The existing PR workflow reports ledger claims. Run the booking gate explicitly
-for B1–B4; Stage 6 does not add a booking PR-enforcement claim.
-
-The ledger demo uses Dafny 4.11.0 and bundled Z3 4.12.1. Its approved source
-refinement establishes these claims for sequential operations over mathematical
-integers and finite maps, starting from a well-formed state:
-
-| Claim | Required behavior |
+| Claim | The ledger must … |
 | --- | --- |
-| C1 | A transfer preserves total funds. |
-| C2 | Resulting balances remain non-negative. |
-| C3 | An identical accepted retry returns `Ok` without repeating its effect. |
-| C4 | A fresh valid request terminates, debits amount plus one, credits the recipient by amount, and credits fee account `0` by one. |
-| C5 | Every other request returns `Rejected` and leaves both state maps unchanged. |
+| C1 | preserve total funds on a transfer. |
+| C2 | keep every balance non-negative. |
+| C3 | return `Ok` for an identical accepted retry without repeating its effect. |
+| C4 | on a fresh valid request, debit amount + 1, credit the recipient by the amount and credit fee account `0` by 1. |
+| C5 | return `Rejected` for every other request and leave the state unchanged. |
 
-Self-transfers are rejected. Reusing an accepted request ID with different
-arguments is rejected. Fresh transfers need account `0`, cannot use it as sender
-or recipient, and need funds for the amount plus the one-unit fee. Retries and
-rejections pay no fee. See the [approved specification](spec/LedgerSpec.dfy),
-[fee proposal](proposals/fees.md), and its [approval decision](proposals/fees-decision.md).
+## What is established today
 
-Four planted bugs pass the deliberately weak unit suite and fail the gate.
-They cover money creation, an exact-balance boundary error, a repeated transfer,
-and a forbidden assumption. The gate also rejects altered artifact identities,
-insufficient evidence methods, and unsupported proof labels.
+Each row links to its exact commands, real exit codes and preserved failures.
+"Proof" here means a machine-checked proof against the stated spec and trusted
+base, nothing more.
 
-| Artifact or check | Established scope | Record |
-| --- | --- | --- |
-| Dafny ledger source | C1–C5, `source_proof`, under recorded assumptions | [Source evidence](evidence.json) |
-| Handwritten TypeScript | 300 property runs and 4,131 state comparisons against the fee model; `tested_against_proved_model` | [Current comparison evidence](results/stage4/fee-typescript-evidence.json) |
-| Local incremental gate | Valid Apply edit checked 2 member obligations and reused 10; broken dependencies were rejected | [Local controls](results/stage4-local.json) |
-| Linux toolchain | Real installation, true-lemma acceptance, and false-lemma rejection | [Successful inventory run](https://github.com/mack-dot/forge/actions/runs/40397041174) |
-| Spec quality | Successful-execution witness checked; reject-all vacuity flagged; 8/10 valid, audit-clean mutants killed, 2 survived | [Spec-quality report](docs/spec-quality.md) |
-| Booking and reuse | B1–B4 source proofs; checked cancellation/retry trace; six rejection controls; 75 measured benchmark pairs | [Booking scope](docs/booking.md) and [measurements](docs/reuse-benchmark.md) |
-| Actual GitHub change loop | Implementation edit: 2 obligations checked, 10 reused. Approved fee spec change: 4 checked, 8 reused. Unapproved spec changes rejected; claims posted | [Fee PR](https://github.com/mack-dot/forge/pull/4) and [post-approval rejection](https://github.com/mack-dot/forge/pull/5) |
+| Area | Established | Method | Record |
+| --- | --- | --- | --- |
+| Ledger (Dafny) | C1–C5 for sequential operations over mathematical integers | `source_proof` | [evidence.json](evidence.json), [claims](docs/claims.md) |
+| Ledger (TypeScript) | 300 property runs, 4,131 state comparisons against the proved model | `tested_against_proved_model` (testing, not proof) | [fee evidence](results/stage4/fee-typescript-evidence.json) |
+| Change loop | Real PRs: implementation edit accepted; unapproved spec weakening rejected | gate on GitHub PRs | [PR #4](https://github.com/mack-dot/forge/pull/4), [PR #5](https://github.com/mack-dot/forge/pull/5) |
+| Booking | B1–B4 and a checked cancellation/retry trace | `source_proof` | [docs/booking.md](docs/booking.md) |
+| Refund boundary | Safety, exact acceptance, rejection on fallback; integration tested separately | `source_proof` + finite testing | [docs/stage8-refund.md](docs/stage8-refund.md) |
+| Compiled binary | Every valid execution of a 1,240-byte RISC-V ELF terminates with status 0 under the pinned LPS model; 579 modules independently checked | Rocq proof via Theorem's pipeline | [docs/stage7-binary.md](docs/stage7-binary.md) |
+| Spec quality | Success witness checked; 8 of 10 mutants killed, 2 survived | mutation diagnostics | [docs/spec-quality.md](docs/spec-quality.md) |
 
-All five ledger claims currently share the Apply proof obligation. The
-incremental counts describe member obligations, not five independent proofs.
-The trusted baseline is fully checked first. [Change-loop notes](docs/stage4-change-loop.md)
-describe native cache reuse, its MD5 checksum assumption, and exact replay.
-The user approved the exact fee proposal, and its implementation is merged.
-The trusted approval record binds the old and new spec/lock bytes and the frozen
-proposal revision. A later C2 edit was rejected in a real PR. All three Stage 4 EXIT commands passed in the
-[final recorded run](https://github.com/mack-dot/forge/actions/runs/40409284514).
-The original Stage 3 results remain archived separately from the current fee
-model comparisons.
+## What is **not** established
 
-[Generated claim explanations](docs/claims.md) link C1–C5 to their spec locations
-and show real accept/reject examples. The Stage 5 report keeps invalid programs
-and audit rejections separate from spec-proof kills. Its survivors include a
-an algebraic rewrite control and an added print statement: the current contracts
-do not constrain printed output. These finite diagnostics expose scope limits;
-they do not prove that the spec captures every human requirement.
+- **End to end.** All evidence keeps `end_to_end=false`. The Dafny proof does
+  not cover the compiler, generated JavaScript, handwritten TypeScript,
+  persistence, concurrency or a deployed service.
+- **Intent.** A proof shows the code meets the written spec. If the spec misses
+  what people wanted, the proof does not help. Two mutants survive spec-quality
+  checks today (for example, printed output is unconstrained).
+- **Signed releases.** Stage 9 (signed provenance) is in progress; no release
+  has been signed yet.
+- **Usefulness.** Productivity, cost and fit for ordinary repositories are
+  hypotheses. Stage 10 will measure them on real PRs.
+- **Portability.** Pins describe specific tested hosts (macOS arm64 locally,
+  Ubuntu x86_64 in CI). Other tool versions do not satisfy the gate.
 
-## Run the demo
+## How the project works
 
-First follow the [toolchain setup](toolchain/README.md) and
-[TypeScript setup](ts/README.md). The current pins describe specific tested
-environments; arbitrary local tool versions do not satisfy the gate.
-
-```sh
-python3 gate/gate.py --impl impl/Ledger.dfy --evidence evidence.json
-python3 scripts/build_model.py
-node --import tsx app/main.ts
-```
-
-The demo prints `Ok`, then `Rejected`. The supported Node loader invocation is
-the approved demo command. The earlier `tsx` CLI socket failure remains in the
-execution record.
-
-Run the negative and reproducibility controls with the commands in
-[ROADMAP.md](ROADMAP.md). A scenario can exit `0` because it observed the required
-checker rejection. Reports keep the checker, gate, and scenario exit codes
-separate.
-
-## What an evidence bundle says
-
-Each bundle names the claim, spec digest, artifact digest, method, tool version,
-result, assumptions, trusted components, producer, and reproduction command.
-The gate validates those bindings and the policy. Imported evidence must match
-a fresh checker run; valid JSON alone establishes no proof.
-
-`source_proof`, `bounded_model_checked`, `tested_against_proved_model`, and
-`unit_tested` retain their meanings. The gate never promotes a test result to a
-proof. Stronger-sounding evidence about a different property cannot satisfy a
-required claim.
-
-Current evidence keeps **`end_to_end=false`**. The Dafny source proof does not
-cover the compiler, generated JavaScript, handwritten TypeScript, persistence,
-concurrency, or a deployed application. Binary checking and deployment identity
-are later roadmap work. A signature will authenticate a bundle; it will not
-prove the program's behavior.
-
-## Follow and contribute
-
-| Document | Purpose |
+| Path | What it holds |
 | --- | --- |
-| [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks, and actual results. |
-| [docs/claims.md](docs/claims.md) | Generated claim explanations and observed behavior examples. |
-| [docs/spec-quality.md](docs/spec-quality.md) | Checked success witness, mutation results, and reproduction commands. |
-| [docs/booking.md](docs/booking.md) | Approved booking behavior, source gate, and trust boundary. |
-| [docs/reuse-benchmark.md](docs/reuse-benchmark.md) | Actual reuse measurements, setup costs, token interval, and limits. |
-| [Stage 5 logs](results/stage5/logs/index.json) | Raw checker logs, including preserved driver failures. |
-| [unsure.md](unsure.md) | Append-only findings, uncertainty, corrections, and resolutions. |
-| [docs/stage4-change-loop.md](docs/stage4-change-loop.md) | Current change-loop implementation and limits. |
-| [proposals/fees.md](proposals/fees.md) | Frozen fee intent, exact diff, content digests, and examples; see its decision record. |
-| [gate/README.md](gate/README.md) | Gate commands and rejection controls. |
-| [ts/README.md](ts/README.md) | Model compilation, property tests, and evidence boundaries. |
-| [VISION.md](VISION.md) | Long-term directions and irreducible limits. |
-| [AGENTS.md](AGENTS.md) | Instructions for agents working in this repository. |
+| `spec/`, `spec.lock` | Approved specifications and their hashes. **Protected.** |
+| `policy/` | Required claims and acceptable evidence methods. **Protected.** |
+| `gate/` | Dispatches established checkers and binds results to bytes. Never implements a verifier. **Protected.** |
+| `impl/`, `ts/`, `app/` | Implementations that are checked against the specs. |
+| `bugs/` | Planted bugs the gate must reject. |
+| `proposals/` | Exact diffs and reasons for changes to protected files. |
+| `results/` | Raw logs, commands and real exit codes for every stage. |
+| [ROADMAP.md](ROADMAP.md) | Stages 0–10, required EXIT checks and actual results. |
+| [unsure.md](unsure.md) | Append-only record of uncertainty, failures and corrections. |
 
-Work only on the CURRENT stage. Propose spec changes with an exact diff and
-plain-English reason, then wait for human intent approval. Do not weaken a spec,
-policy, or gate to pass a check. Preserve the uncertainty log and record real
-commands and exit codes. Planned work is not a passing result.
+Protected files change only through a proposal with an exact diff and a
+plain-English reason, approved by the owner on its exact bytes. Nobody
+weakens a spec, policy or gate to make a check pass.
+
+## Contribute
+
+Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the issues labelled
+`good first issue`. No special access is needed: fork, change, open a pull
+request. On pull requests to `main`, the proof gate runs the trusted code from
+`main` and reads your changes only as data, with a read-only token; a separate
+job posts the report. For outside contributors, a maintainer approves the run
+first.
+
+Security issues: see [SECURITY.md](SECURITY.md). Report privately.
 
 ## License
 
-A license has not yet been selected. Public visibility alone does not grant an
-open-source license. License selection remains an open release item.
+Apache License 2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). Third-party
+material is listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
