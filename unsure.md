@@ -2356,3 +2356,40 @@ curl: (6) Could not resolve host: github.com
   not yet observed.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: probe 3 again with lock f9f09a2f….
+
+## U095 — Candidate dry run passes: hosted package equals the controller package; fresh receipt accepted
+
+- References: U093, U094; proposals/provenance-hosted/approval-manifest.json
+  (43878f45…); results/stage9/hosted-probe-0005/.
+- Observed: commit 64a7760319016fe003ba036e1468732631ccf833 was pushed with exit
+  0. Dispatch returned 0, run 40731196167. gh run watch --exit-status returned 0;
+  view and download returned 0. Conclusion success; job 40.5 min. Artifact
+  digest sha256:5801f183… (56,513,817 bytes), expiring 2027-01-26.
+- Observed (steps): the candidate diff applied on the hosted runner and all 10
+  files matched. hosted_setup.py passed in 1,377 s. preflight.py passed (image
+  ubuntu24 20261023.334.3, kernel 6.17.0-1022-azure, recorded). package() and
+  replay() passed in 997 s.
+- Observed (package): 20 recorded commands. builder-present returned 1 (absent,
+  expected); every other command returned 0, including builder-create, build,
+  save, both proof runs and both copies. The hosted descriptor equals
+  controller-descriptor.json exactly: config f584305022f2e811…, same 57
+  diff_ids, same buildkit_image. dry_run.py's INDEPENDENT_PACKAGE_REPRODUCTION
+  check passed.
+- Observed (proof): the proof container had OOMKilled false and ExitCode 0. The
+  receipt (55beedc3…) lists 656 files; 579 closure objects. The candidate
+  validate_receipt() (release.py unchanged) accepted it. result.json
+  (0c6fd2dd…) has accepted true at expected_source_commit 64a77603….
+- Scope: a synthetic request; no statement, controller admission, signature,
+  workflow identity check or deployment. Not an EXIT result.
+- Disclosed limits for approval: hosted image version and kernel are recorded,
+  not pinned. setup-python 3.10.11 is pinned by action commit and version, not
+  by archive hash; context() checks the interpreter version. The pip command
+  runs through a macOS-path symlink to reproduce the approved bin/idna bytes.
+  The implementation lock field contract_approval_commit still names the
+  original contract approval 097431cf…. Three admins can push to main and
+  dispatch (U091).
+- Impact: all required dry-run checks pass. The candidate awaits exact-byte
+  approval. Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: the user approves or rejects the exact set (diff 5593a720…, lock
+  f9f09a2f…, 10 file hashes). Separate authorization is still required for the
+  real dispatch, public signing and deployment.

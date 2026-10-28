@@ -1465,6 +1465,18 @@ installed gate has the same defect. See U093. `end_to_end=false`.
 
 See U094. `end_to_end=false`.
 
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git … push origin HEAD:main` | 0 | Commit `64a77603…`: updated candidate and dry run. |
+| `gh workflow run stage9-candidate-dry-run.yml -R superpowermentors-1/forge --ref main` | 0 | Run 40731196167. |
+| `gh run watch 40731196167 … --exit-status` | 0 | Conclusion success, 40.5 min. |
+| `python3 gate/provenance/hosted_setup.py` (candidate, in the run) | 0 | Pinned Docker and Stage 7 prerequisites, 1,377 s. |
+| `python3 gate/provenance/preflight.py --implementation-sha256 f9f09a2f…` (candidate, in the run) | 0 | Hosted runner and Linux Cosign. |
+| `python3 proposals/provenance-hosted/dry_run.py …` (candidate, in the run) | 0 | Hosted package equals the controller package (`f5843050…`); fresh proof receipt (656 files, 579 closure objects) accepted. |
+
+The candidate is ready for exact-byte approval. It is not applied. Not an EXIT
+result. See U095. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**
