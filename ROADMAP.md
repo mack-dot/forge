@@ -1394,6 +1394,17 @@ U087. `end_to_end=false`.
 
 `main` now carries the approved repaired gate. See U088. `end_to_end=false`.
 
+#### Hosted-runner probe 2 (measurement only)
+
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git … push origin HEAD:main` | 0 | Commit `d722ecef…`: probe 2 workflow and `replay_probe.py`. |
+| `gh workflow run stage9-hosted-probe-2.yml -R mack-dot/forge --ref main` | 0 | Run 40715761881. |
+| `gh run watch 40715761881 -R mack-dot/forge --exit-status` | 1 | docker-pin job success (exact Engine 28.5.1 install); replay job failed at the volume clone (`dubious ownership`). |
+
+The 45 Python dependency files matched the lock. No proof ran. See U089.
+`end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

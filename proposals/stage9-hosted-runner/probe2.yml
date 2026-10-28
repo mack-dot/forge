@@ -99,6 +99,8 @@ jobs:
           docker volume create forge-stage7-upstream-bf6a65114ed2
       - name: Clone upstream into the volume (recorded Stage 7 commands)
         run: |
+          # On Linux the bind mount keeps real ownership; the container user is 1000:1000.
+          sudo chown -R 1000:1000 "$FORGE_STAGE7_ROOT/.toolchain/stage7/upstream/.git"
           base=(docker run --rm --pull never --platform linux/amd64 --network none --user 1000:1000 --cpuset-cpus 0 --memory 4g --memory-swap 4g --pids-limit 512 --mount type=volume,source=forge-stage7-upstream-bf6a65114ed2,target=/work --mount "type=bind,source=$FORGE_STAGE7_ROOT/.toolchain/stage7/upstream/.git,target=/git-source,readonly" -w /work ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902)
           "${base[@]}" git -c safe.directory=/git-source clone --shared --no-checkout /git-source . > probe2/volume-clone.txt 2>&1
           "${base[@]}" git checkout --detach bf6a65114ed2e255098e213e183e83f63c2cabcc > probe2/volume-checkout.txt 2>&1

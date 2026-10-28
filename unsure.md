@@ -2159,3 +2159,36 @@ curl: (6) Could not resolve host: github.com
   six EXITs are NOT RUN. end_to_end=false.
 - Next check: measure the Stage 7 prerequisite rebuild and a fresh proof on a
   hosted runner (probe 2); decide the Docker pin method; owner decision.
+
+## U089 — Probe 2 attempt 1: pins and Python packages confirmed; volume clone ownership failure
+
+- References: U087, U088; proposals/stage9-hosted-runner/probe2.yml;
+  results/stage9/hosted-probe-0002/.
+- Observed: commit d722ecef… (probe 2 and its driver) was pushed to main with
+  exit 0. Run 40715761881 concluded failure. gh run watch returned 1; view and
+  download returned 0.
+- Observed (docker-pin job, success): the runner had docker-ce and
+  docker-ce-cli 5:28.0.4 and containerd.io 2.4.1 with no Docker apt source.
+  Docker's key fingerprint was 9DC858229FC7DD38854AE2D88D81803C0EBFCD88. apt
+  update returned 0. Installing docker-ce and docker-ce-cli
+  5:28.5.1-1~ubuntu.24.04~noble returned 0. After: Engine 28.5.1, server commit
+  f8215cc and client commit e180ab8 (the same commits as the Desktop pins),
+  overlay2 classic store, buildx v0.38.0, kernel 6.17.0-1022-azure. The probe-1
+  VM had kernel 7.0.0-1017-azure, so the kernel varies across hosted VMs.
+- Observed (replay job): Python 3.10.11 and pip 25.1.1 (hash-pinned). The
+  upstream seed fetch and checkout took 125 s. The recorded pip command,
+  run through a symlink at the macOS framework path, gave 45 of 45 files equal
+  to the approved python_container_dependencies, including the bin/idna shebang.
+  Both image pulls took 178 s.
+- Observed failure: the volume clone returned non-zero with "fatal: detected
+  dubious ownership in repository at '/git-source'", although the command passes
+  -c safe.directory=/git-source. The later steps were skipped. No proof ran.
+- Inference: on Linux the bind mount keeps host ownership (runner uid 1001).
+  The container user is 1000:1000. Docker Desktop file sharing on macOS hid this
+  difference. Whether git 2.43 in the container honors -c safe.directory for the
+  local-clone upload-pack is not established.
+- Change: probe2.yml now runs sudo chown -R 1000:1000 on the seed .git before
+  the volume clone. This touches only the disposable hosted VM.
+- Impact: Docker pinning and the Python-package lock are feasible on hosted
+  runners. Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: probe 2 attempt 2.
