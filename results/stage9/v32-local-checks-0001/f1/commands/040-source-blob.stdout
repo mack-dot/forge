@@ -1,0 +1,527 @@
+{
+  "all_exit_requirements_passed": true,
+  "current_exit_records": {
+    "evidence-separation": {
+      "command": [
+        "python3",
+        "scripts/exit_stage_8.py",
+        "--case",
+        "evidence-separation"
+      ],
+      "exit_code": 0,
+      "report": "results/stage8/evidence-separation/attempt-0002/report.json",
+      "sha256": "1d819948fcf994843e9eaaa9c25c926bcd46a804620476da4647a8a8a20443ab"
+    },
+    "hostile-outputs": {
+      "command": [
+        "python3",
+        "scripts/exit_stage_8.py",
+        "--case",
+        "hostile-outputs"
+      ],
+      "exit_code": 0,
+      "report": "results/stage8/hostile-outputs/attempt-0003/report.json",
+      "sha256": "487b158cc13d613f1fde68073c2b01fb89df30240b141bc18999345428e45fe1"
+    },
+    "wrapper-proof": {
+      "command": [
+        "python3",
+        "scripts/exit_stage_8.py",
+        "--case",
+        "wrapper-proof"
+      ],
+      "exit_code": 0,
+      "report": "results/stage8/wrapper-proof/attempt-0004/report.json",
+      "sha256": "2ef786e66721546a8cca4edaac3672684c3fa166f75a41d42deeb4df7e890a78"
+    }
+  },
+  "end_to_end": false,
+  "evidence_negative_controls": [
+    {
+      "gate_exit_code": 1,
+      "name": "test-as-proof"
+    },
+    {
+      "gate_exit_code": 1,
+      "name": "eval-as-proof"
+    },
+    {
+      "gate_exit_code": 1,
+      "name": "mismatched-artifact"
+    },
+    {
+      "gate_exit_code": 1,
+      "name": "invented-count"
+    },
+    {
+      "gate_exit_code": 1,
+      "name": "spec-tamper"
+    }
+  ],
+  "historical_exit_codes": {
+    "evidence-separation": [
+      {
+        "exit_code": 1,
+        "report": "results/stage8/evidence-separation/attempt-0001/report.json"
+      },
+      {
+        "exit_code": 0,
+        "report": "results/stage8/evidence-separation/attempt-0002/report.json"
+      }
+    ],
+    "hostile-outputs": [
+      {
+        "exit_code": 1,
+        "report": "results/stage8/hostile-outputs/attempt-0001/report.json"
+      },
+      {
+        "exit_code": 1,
+        "report": "results/stage8/hostile-outputs/attempt-0002/report.json"
+      },
+      {
+        "exit_code": 0,
+        "report": "results/stage8/hostile-outputs/attempt-0003/report.json"
+      }
+    ],
+    "wrapper-proof": [
+      {
+        "exit_code": 1,
+        "report": "results/stage8/wrapper-proof/attempt-0001/report.json"
+      },
+      {
+        "exit_code": 0,
+        "report": "results/stage8/wrapper-proof/attempt-0002/report.json"
+      },
+      {
+        "exit_code": 0,
+        "report": "results/stage8/wrapper-proof/attempt-0003/report.json"
+      },
+      {
+        "exit_code": 0,
+        "report": "results/stage8/wrapper-proof/attempt-0004/report.json"
+      }
+    ]
+  },
+  "historical_status_sha256": "02aa00f1ba466e87c6e0c3bf746197dcfa99413e47b6c08af085c15e3d3f5815",
+  "integration_negative_controls": [
+    {
+      "control": "effect-bypass",
+      "failure": {
+        "active_fixture": "malformed-0",
+        "clock": "controlled logical monotonic clock",
+        "error": "AssertionError [ERR_ASSERTION]: executor bypassed the compiled boundary",
+        "external_refunds": false,
+        "fixture_cases": 0,
+        "generated_cases": 0,
+        "method": "property_tested",
+        "model_quality": "unmeasured",
+        "result": "failed",
+        "runs": [],
+        "source_to_module_proved": false
+      },
+      "gate_exit": 1,
+      "test_exit": 1
+    },
+    {
+      "control": "duplicate-dispatch",
+      "failure": {
+        "clock": "controlled logical monotonic clock",
+        "error": "Error: property assertion failed: T3",
+        "external_refunds": false,
+        "failure": {
+          "claim_id": "T3",
+          "counterexample": [
+            0,
+            {
+              "bigint": "0"
+            },
+            "duplicate_charge",
+            0
+          ],
+          "counterexample_path": "9:0:0:0",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      amount: 0n,\n      chargeId: 'charge-1',\n      reason: 'duplicate_charge',\n      requestId: 'request-1'\n    },\n+   {\n+     amount: 0n,\n+     chargeId: 'charge-1',\n+     reason: 'duplicate_charge',\n+     requestId: 'request-1'\n+   }\n  ]\n",
+          "num_shrinks": 3,
+          "seed": 8001
+        },
+        "fixture_cases": 68,
+        "generated_cases": 6010,
+        "method": "property_tested",
+        "model_quality": "unmeasured",
+        "result": "failed",
+        "runs": [
+          {
+            "claim_id": "T1",
+            "failed": false,
+            "num_runs": 1000,
+            "seed": 8001
+          },
+          {
+            "claim_id": "T1",
+            "failed": false,
+            "num_runs": 1000,
+            "seed": 8002
+          },
+          {
+            "claim_id": "T1",
+            "failed": false,
+            "num_runs": 1000,
+            "seed": 8003
+          },
+          {
+            "claim_id": "T2",
+            "failed": false,
+            "num_runs": 1000,
+            "seed": 8001
+          },
+          {
+            "claim_id": "T2",
+            "failed": false,
+            "num_runs": 1000,
+            "seed": 8002
+          },
+          {
+            "claim_id": "T2",
+            "failed": false,
+            "num_runs": 1000,
+            "seed": 8003
+          },
+          {
+            "claim_id": "T3",
+            "failed": true,
+            "num_runs": 10,
+            "seed": 8001
+          }
+        ],
+        "source_to_module_proved": false
+      },
+      "gate_exit": 1,
+      "test_exit": 1
+    }
+  ],
+  "model_quality": "unmeasured",
+  "property_artifact_sha256": "fd635acd27c472aac66a01156d1229daed48622ed9ffa44acbbaa8254483a516",
+  "property_suite": {
+    "clock": "controlled logical monotonic clock",
+    "external_refunds": false,
+    "fixture_cases": 68,
+    "generated_cases": 9000,
+    "method": "property_tested",
+    "model_quality": "unmeasured",
+    "result": "passed",
+    "runs": [
+      {
+        "claim_id": "T1",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8001
+      },
+      {
+        "claim_id": "T1",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8002
+      },
+      {
+        "claim_id": "T1",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8003
+      },
+      {
+        "claim_id": "T2",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8001
+      },
+      {
+        "claim_id": "T2",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8002
+      },
+      {
+        "claim_id": "T2",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8003
+      },
+      {
+        "claim_id": "T3",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8001
+      },
+      {
+        "claim_id": "T3",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8002
+      },
+      {
+        "claim_id": "T3",
+        "failed": false,
+        "num_runs": 1000,
+        "seed": 8003
+      }
+    ],
+    "source_to_module_proved": false
+  },
+  "published_artifacts": {
+    "hostile.json": "ac94ee87c38f7685ab29264e5ed7a72c63e9e9db1d62dc193fb45cad705bfc70",
+    "input-identities.json": "cb11633f62b44c2328e17a1f9f202195befa86a652545e40be0dace48e9b5702",
+    "model.cjs": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
+    "model.js": "44b46144b6abcf2d28b073838297fdf6dda6733dbdb23f9c712b0a16838ba750",
+    "property-evidence.json": "77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd",
+    "snapshot-controls.json": "587e1e120529d853179b74995e46a7389256c18f948a0c774f41521c54a9e5c1",
+    "source-evidence.json": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86",
+    "supplemental.json": "7e175560b7b20bcba9a5188c9c5795f6fdea62050235c22359e9c38439d68570"
+  },
+  "record_type": "stage_completion",
+  "reproduction": [
+    {
+      "byte_identical": true,
+      "evidence_sha256": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86",
+      "fresh_runs": 2,
+      "tier": "critical"
+    },
+    {
+      "byte_identical": true,
+      "evidence_sha256": "77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd",
+      "fresh_runs": 2,
+      "tier": "hostile-tests"
+    }
+  ],
+  "snapshot_controls": {
+    "approved_test_sha256": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+    "callback_sha256": "f807868e3ba34b47f4aa1ad03df9bc6fc0bd131f3f2fd6eec38179a45542a589",
+    "compiled_module_sha256": "d462e12309766d5b055715500daab5c238e9c9d06236b47577d43941c22b4dda",
+    "controls": [
+      {
+        "context_prototype": "Object.prototype",
+        "control": "unchanged-input",
+        "response_prototype": "Object.prototype",
+        "result": "accepted"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "context-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "response-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "context-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: [Object: null prototype] {\n-   c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "response-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: [Object: null prototype] {\n-   r: {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "context_prototype": "Object.prototype",
+        "control": "unchanged-input",
+        "response_prototype": "null",
+        "result": "accepted"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "context-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "response-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: [Object: null prototype] {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "context-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: [Object: null prototype] {\n-   c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "Object.prototype",
+        "control": "response-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: {\n-   r: [Object: null prototype] {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "context_prototype": "null",
+        "control": "unchanged-input",
+        "response_prototype": "Object.prototype",
+        "result": "accepted"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "context-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "response-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "context-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: {\n-   c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "response-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: [Object: null prototype] {\n-   r: {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "Object.prototype",
+        "result": "rejected"
+      },
+      {
+        "context_prototype": "null",
+        "control": "unchanged-input",
+        "response_prototype": "null",
+        "result": "accepted"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "context-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n+     original: -2n,\n-     original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n      requestOpen: false\n    },\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "response-field",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    r: [Object: null prototype] {\n+     amount: -2n,\n-     amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "context-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   c: {\n-   c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n      remaining: 0n,\n      requestId: 'request',\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      },
+      {
+        "assertion_code": "ERR_ASSERTION",
+        "context_prototype": "null",
+        "control": "response-prototype",
+        "raw_assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    c: [Object: null prototype] {\n      chargeId: 'charge',\n      original: -1n,\n      refundEnabled: false,\n...\n    },\n+   r: {\n-   r: [Object: null prototype] {\n      amount: -1n,\n      kind: 'Candidate',\n      reason: ''\n    }\n  }\n",
+        "response_prototype": "null",
+        "result": "rejected"
+      }
+    ],
+    "end_to_end": false,
+    "extraction": "TypeScript AST selects the exact T2 callback, expected oracle, compiled-model bridge and constants",
+    "injection": "Mutate the actual input after the real compiled model returns; require the snapshot assertion to reject",
+    "method": "unit_tested",
+    "mutations_rejected": 16,
+    "result": "passed",
+    "stage8_exit": false,
+    "unchanged_accepted": 4
+  },
+  "source_and_property_evidence_each_match_three_fresh_runs": true,
+  "source_artifact_sha256": "de34f8f9deb55c5978b9ccf4656b91b1361d6c0600348bcae4e5abd5f127f3e5",
+  "source_negative_controls": [
+    {
+      "control": "over-limit",
+      "gate_exit": 1,
+      "required_claim": "R1",
+      "verifier_exit": 4
+    },
+    {
+      "control": "reject-all",
+      "gate_exit": 1,
+      "required_claim": "R4",
+      "verifier_exit": 4
+    },
+    {
+      "auditor_exit": 2,
+      "control": "assumption-escape",
+      "gate_exit": 1
+    }
+  ],
+  "stage": 8,
+  "supplemental_suite": {
+    "end_to_end": false,
+    "fixtures": [
+      "exact-numeric-string-\"1\\n\"",
+      "exact-numeric-string-\"0\\r\"",
+      "exact-numeric-string-\"1\\r\\n\"",
+      "exact-numeric-string-\"1\u2028\"",
+      "exact-numeric-string-\"1\u2029\"",
+      "exact-numeric-string-\"\\t1\"",
+      "exact-numeric-string-\"1\\t\"",
+      "valid-escaped-keys-and-json-whitespace",
+      "exact-byte-cap",
+      "concurrent-terminal-calls-dispatch-once",
+      "stale-completion-after-timeout",
+      "context-and-result-copies",
+      "executor-reentry-observes-terminal-state",
+      "executor-error-never-retries",
+      "empty-stream-chunks",
+      "invalid-context-{\"chargeId\":\"\"}",
+      "invalid-context-{\"requestId\":\"\"}",
+      "invalid-context-{\"original\":\"-1\"}",
+      "invalid-context-{\"original\":\"9223372036854775808\"}",
+      "invalid-context-{\"remaining\":\"-1\"}",
+      "invalid-context-{\"remaining\":\"101\"}",
+      "invalid-context-{\"refundEnabled\":false}",
+      "invalid-context-{\"requestOpen\":false}"
+    ],
+    "generated_cases": 500,
+    "method": "property_tested",
+    "model_quality": "unmeasured",
+    "result": "passed",
+    "runs": [
+      {
+        "failed": false,
+        "num_runs": 250,
+        "seed": 8004
+      },
+      {
+        "failed": false,
+        "num_runs": 250,
+        "seed": 8005
+      }
+    ]
+  }
+}

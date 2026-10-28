@@ -1,0 +1,115 @@
+{
+  "controls": [
+    {
+      "control": "clean checkout",
+      "exit": 0,
+      "expected_exit": 0,
+      "last_line": "BOOTSTRAP_VERIFIED",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "shadow module beside the verifier",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:gate/provenance/json.py",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "shadow module in scripts",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/json.py",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "sitecustomize beside the verifier",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:gate/provenance/sitecustomize.py",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "unchecked-hash bytecode for common.py",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: BYTECODE_CACHE:gate/provenance/__pycache__",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "PYTHONPATH injection",
+      "exit": 0,
+      "expected_exit": 0,
+      "last_line": "  --admit",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "bootstrap without isolation flags",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: INTERPRETER_FLAGS: run with python3 -I -S -B",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "tampered bootstrap.py stopped by the inline check",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_BYTES",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "forged lock stopped by the inline check",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "IMPLEMENTATION_LOCK",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "changed locked file",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: LOCKED_INPUT:gate/provenance/release.py",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "unlocked script launched",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: SCRIPT_NOT_LOCKED:proposals/provenance-hosted/dry_run.py",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "file changed after an earlier passing check (check step)",
+      "exit": 0,
+      "expected_exit": 0,
+      "last_line": "BOOTSTRAP_VERIFIED",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "file changed after an earlier passing check",
+      "exit": 1,
+      "expected_exit": 1,
+      "last_line": "BOOTSTRAP_REJECTED: LOCKED_INPUT:gate/provenance/release.py",
+      "attacker_code_executed": false,
+      "pass": true
+    },
+    {
+      "control": "candidate commit with a forged lock (verifier)",
+      "observed": "IMPLEMENTATION_LOCK_AT_COMMIT",
+      "attacker_code_executed": false,
+      "pass": true
+    }
+  ],
+  "end_to_end": false
+}

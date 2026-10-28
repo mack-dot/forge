@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "stage_0_complete",
+  "platform": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "macos_version_observed": "27.0.1"
+  },
+  "dafny": {
+    "version": "4.11.0",
+    "archive": "dafny-4.11.0-arm64-macos-13.zip",
+    "url": "https://github.com/dafny-lang/dafny/releases/download/v4.11.0/dafny-4.11.0-arm64-macos-13.zip",
+    "archive_sha256": "c90c75e7d5db9c6ccbb7127840dfe43f0ac938b039a7ebed146d8ead383a572f",
+    "checksum_source": "https://github.com/dafny-lang/dafny/releases/expanded_assets/v4.11.0",
+    "executable_sha256": "5d02cbb88300aef0726e933bd6f19754960b7409a9e0e2212a5e07edd1686012",
+    "archive_checksum_verified": true,
+    "version_output": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+    "version_check_exit_code": 0,
+    "installation_verified": true
+  },
+  "z3": {
+    "source": "Dafny 4.11.0 bundled executable only",
+    "version": "4.12.1",
+    "path": ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+    "executable_sha256": "7d15df1e4ba8f60b0808dce02ec85e0dd6dac4b975231a2f7b35fe8789464208",
+    "version_output": "Z3 version 4.12.1 - 64 bit",
+    "version_check_exit_code": 0,
+    "installation_verified": true
+  },
+  "node": {
+    "version": "24.3.0",
+    "distribution_observed": "Homebrew node 24.3.0",
+    "executable_sha256": "bcc119a0264ba69e95419c10187cd11ed8550de17230c4e244d88455359243b6",
+    "version_check_exit_code": 0,
+    "installation_verified": true,
+    "distribution_checksum_verified": false
+  },
+  "python": {
+    "version": "3.10.11",
+    "distribution_observed": "macOS Python.framework 3.10",
+    "executable_sha256": "72956ad35cff7691dfed9e04c9593de825ffd5b2fa7e8bc9ae96ce9a1af65621",
+    "version_check_exit_code": 0,
+    "installation_verified": true,
+    "distribution_checksum_verified": false
+  },
+  "verification_options": [
+    "--solver-path", ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+    "--resource-limit", "1000000",
+    "--verification-time-limit", "0",
+    "--cores", "1",
+    "--verify-included-files"
+  ],
+  "proof_checks_run": true,
+  "smoke_results": {
+    "true_lemma": {"exit_code": 0, "verified": 1, "errors": 0},
+    "false_lemma": {"exit_code": 4, "verified": 0, "errors": 1}
+  },
+  "trust_assumptions": [
+    "Node and Python are preinstalled host runtimes pinned by observed version and executable digest. Their original installer archives were not independently authenticated.",
+    "The local executable checksum manifest does not cover every runtime library or operating-system component.",
+    "Dafny, its bundled runtime, Boogie, Z3, the host operating system, and hardware remain trusted components. Stage 0 does not establish application correctness."
+  ]
+}
