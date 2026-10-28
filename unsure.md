@@ -2231,3 +2231,69 @@ curl: (6) Could not resolve host: github.com
 - Next check: prepare the exact protected implementation proposal for hosted
   runners (workflows, runtime.json, producer.py, preflight.py, lock) and get
   exact-byte approval. Owner decision is still open.
+
+## U091 — Repository transferred to the superpowermentors-1 organization
+
+- References: U086, U090; policy/provenance.json signer fields;
+  results/stage9/repository-transfer-0001/.
+- Observed: the user said "cool i just transfered it". A read-only check of
+  the old API path returned full_name superpowermentors-1/forge, id 1434789853
+  (unchanged), owner id 235148649, owner type Organization, visibility public,
+  main at ad994235… (unchanged). An unauthenticated API read returned 200.
+- Observed: repository Actions enabled, allowed_actions all. The organization
+  plan is team (not free). two_factor_requirement_enabled is false. The
+  organization has 7 repositories and 3 members (mack-dot, sam-spm,
+  superpowermentorss); all three are admins on forge. Team spm has pull. Branch
+  protection on main: none. One repository ruleset ("mack") is active, but its
+  ref_name include list is empty, so it matches no branch. Reading the
+  organization Actions policy returned 403 (the token lacks admin:org).
+- Inference: the installed gate now fails closed. policy/provenance.json names
+  mack-dot/forge and owner id 235131950, so repository_identity() rejects with
+  REPOSITORY_IDENTITY, and the workflows' github.repository conditions skip
+  their jobs. No run was made to observe this.
+- Trust impact: any of the three admins can push to main and dispatch the
+  signing workflow. The contract already trusts "GitHub account/workflow
+  controls"; the set of accounts behind them has grown from one to three.
+- Uncertainty: whether the user intends this existing team organization (not a
+  new dedicated one) as the permanent signer owner. Whether sam-spm and
+  superpowermentorss are organization owners (implicit admins) is not read.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: user confirms the owner and the admin set. Then prepare one exact
+  proposal: contract/policy identity and the hosted-runner implementation.
+
+## U092 — Owner confirmed; hosted-runner and identity candidate built and checked locally
+
+- References: U090, U091; proposals/provenance-hosted/ (build_candidate.py
+  7d764783…, src/hosted_setup.py e8d5f1f6…, dry_run.py bcebe0df…, probe3.yml
+  7caa6b4f…); results/stage9/hosted-candidate-0001/.
+- Decision: the user said "yes it is i will make this under the company as i
+  work here now". superpowermentors-1/forge is the permanent signer owner. The
+  three organization admins are therefore in the trust set. This is a
+  conversation record, not approval of protected bytes.
+- Candidate (unapplied, 10 files): contract and policy name
+  superpowermentors-1/forge and owner id 235148649; policy version 2.0.0, epoch 2
+  (signer change); the predicate type URL follows the owner; spec.lock binds the
+  new hashes. runtime.json has two pinned profiles: controller (macOS Docker
+  Desktop, as before) and producer (GitHub-hosted ubuntu24, Docker CE 28.5.1,
+  containerd.io 2.4.2-3, buildx plugin 0.38.1-1, builder default). runtime()
+  checks the active profile and the classic image store. The package descriptor
+  build_command no longer names the builder. preflight checks a hosted Linux
+  runner, records (not pins) the image version and kernel, and uses Linux
+  Cosign. New hosted_setup.py installs pinned Docker and builds the Stage 7
+  prerequisites (the U090 recipe). Both workflows use ubuntu-24.04 and
+  setup-python 3.10.11. New lock acf73308… (62 files). Diff 11ee6957….
+- Observed (scratch copy): git apply --check and git apply returned 0; all 10
+  files equal the candidate bytes; py_compile returned 0; the workflows parse;
+  context(acf73308…) returned 0; context(9b10a237…) rejected with
+  UNAPPROVED_IMPLEMENTATION.
+- Observed (controller profile on the Mac, classic store): the candidate
+  package() accepted; all 12 commands returned 0; config f15f5bd4… (equal to
+  U083) with the new build_command. Descriptor saved as
+  controller-descriptor.json (04b90da4…).
+- Uncertainty: producer-profile values for runc, buildx output and BuildKit
+  under containerd.io 2.4.2-3 are not yet observed. The implementation lock's
+  contract_approval_commit field still names the original contract approval.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+  Nothing protected is applied.
+- Next check: probe 3, a hosted dry run of the candidate that requires the hosted
+  package descriptor to equal the controller descriptor.

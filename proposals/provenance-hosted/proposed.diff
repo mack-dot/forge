@@ -1,0 +1,639 @@
+diff --git a/.github/workflows/provenance-negative.yml b/.github/workflows/provenance-negative.yml
+--- a/.github/workflows/provenance-negative.yml
++++ b/.github/workflows/provenance-negative.yml
+@@ -27,8 +27,8 @@
+ 
+ jobs:
+   negative:
+-    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
+-    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    if: github.repository == 'superpowermentors-1/forge' && github.ref == 'refs/heads/main'
++    runs-on: ubuntu-24.04
+     env:
+       FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+       FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+@@ -39,7 +39,13 @@
+         with:
+           ref: ${{ github.sha }}
+           persist-credentials: false
++      - name: Python 3.10.11 required by the gate
++        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
++        with:
++          python-version: 3.10.11
+       - name: Check pins and authenticate producer run metadata
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+         run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --producer-run "$FORGE_STAGE9_PRODUCER_RUN"
+       - name: Retrieve the authenticated run's signed candidate
+         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+diff --git a/.github/workflows/provenance.yml b/.github/workflows/provenance.yml
+--- a/.github/workflows/provenance.yml
++++ b/.github/workflows/provenance.yml
+@@ -21,8 +21,9 @@
+ 
+ jobs:
+   proof:
+-    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
+-    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    if: github.repository == 'superpowermentors-1/forge' && github.ref == 'refs/heads/main'
++    runs-on: ubuntu-24.04
++    timeout-minutes: 300
+     env:
+       FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+       FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+@@ -32,9 +33,21 @@
+         with:
+           ref: ${{ github.sha }}
+           persist-credentials: false
++      - name: Python 3.10.11 required by the gate
++        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
++        with:
++          python-version: 3.10.11
++      - name: Install pinned Docker and build Stage 7 prerequisites
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
++        run: python3 gate/provenance/hosted_setup.py
+       - name: Check runner and installed tool pins
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+         run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+       - name: Package and run fresh independent proof checks
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+         run: python3 gate/provenance/producer.py --action produce --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+       - name: Preserve proof output and all failures
+         if: always()
+@@ -46,7 +59,7 @@
+           if-no-files-found: error
+   sign:
+     needs: proof
+-    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    runs-on: ubuntu-24.04
+     permissions:
+       contents: read
+       actions: read
+@@ -60,12 +73,18 @@
+         with:
+           ref: ${{ github.sha }}
+           persist-credentials: false
++      - name: Python 3.10.11 required by the gate
++        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
++        with:
++          python-version: 3.10.11
+       - name: Retrieve this run's proof job output
+         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+         with:
+           name: forge-stage9-unsigned-${{ github.run_id }}
+           path: results/stage9/producer-output/
+       - name: Check runner and installed tool pins
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+         run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+       - name: Sign exact release statement and explicitly marked rejection fixtures
+         run: python3 gate/provenance/producer.py --action sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+diff --git a/gate/provenance/hosted_setup.py b/gate/provenance/hosted_setup.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/hosted_setup.py
+@@ -0,0 +1,109 @@
++"""Prepare a fresh GitHub-hosted runner for the Stage 9 proof job.
++
++Install the pinned Docker packages and build the Stage 7 prerequisites from
++pinned sources. This never signs, never judges a proof and never deletes a
++prior attempt. Every command and its exit code is recorded.
++"""
++import os
++from pathlib import Path
++import shutil
++import sys
++import tempfile
++
++from common import ROOT, HERE, Records, context, files, read, require, write
++
++UPSTREAM = '.toolchain/stage7/upstream'
++
++
++def docker(pins, records):
++    apt = pins['docker_apt']
++    work = Path(tempfile.mkdtemp())
++    key = work / 'docker.asc'
++    records.run(['curl', '-fsSL', apt['key_url'], '-o', key], 'docker-key-fetch')
++    _, output, _ = records.run(['gpg', '--show-keys', '--with-colons', key], 'docker-key-show')
++    fingerprints = [line.split(':')[9] for line in output.decode().splitlines() if line.startswith('fpr:')]
++    require(fingerprints[:1] == [apt['key_fingerprint']], 'DOCKER_APT_KEY')
++    source = work / 'forge-docker.list'
++    source.write_text(apt['source'] + '\n')
++    records.run(['sudo', 'install', '-m', '0644', key, '/etc/apt/keyrings/forge-docker.asc'], 'docker-key-install')
++    records.run(['sudo', 'install', '-m', '0644', source, '/etc/apt/sources.list.d/forge-docker.list'],
++                'docker-source-install')
++    records.run(['sudo', 'apt-get', 'update', '-q'], 'apt-update')
++    records.run(['sudo', 'apt-get', 'install', '-y', '-q', '--allow-downgrades']
++                + [name + '=' + version for name, version in sorted(apt['packages'].items())], 'docker-install')
++    _, output, _ = records.run(['dpkg-query', '-W', '-f', '${Package}=${Version}\\n'] + sorted(apt['packages']),
++                               'docker-packages')
++    require(dict(line.split('=', 1) for line in output.decode().split()) == apt['packages'], 'DOCKER_PACKAGES')
++
++
++def seed(root, stage7, own, implementation, pins, records):
++    require(not root.exists(), 'SEED_ALREADY_EXISTS')
++    upstream = root / UPSTREAM
++    commit = stage7['upstream_commit']
++    records.run(['git', 'init', '-q', upstream], 'upstream-init')
++    records.run(['git', '-C', upstream, 'fetch', '-q', '--depth', '1', stage7['upstream_repository'] + '.git', commit],
++                'upstream-fetch')
++    records.run(['git', '-C', upstream, 'checkout', '-q', '--detach', commit], 'upstream-checkout')
++    _, head, _ = records.run(['git', '-C', upstream, 'rev-parse', 'HEAD'], 'upstream-head')
++    require(head.decode().strip() == commit, 'UPSTREAM_COMMIT')
++    pip = pins['pip']
++    requirement = Path(tempfile.mkdtemp()) / 'pip.txt'
++    requirement.write_text(f"pip=={pip['version']} --hash=sha256:{pip['sha256']}\n")
++    records.run([sys.executable, '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
++                 '-r', requirement], 'pip-pin')
++    # The approved dependency lock was made on macOS, and pip writes the
++    # interpreter path into bin/idna. Run the recorded command through that path.
++    link = Path(pins['pydeps_python_path'])
++    records.run(['sudo', 'mkdir', '-p', link.parent], 'pydeps-python-directory')
++    records.run(['sudo', 'ln', '-s', sys.executable, link], 'pydeps-python-link')
++    records.run([link, '-m', 'pip', 'install', '--require-hashes', '--only-binary=:all:', '--platform',
++                 'manylinux2014_x86_64', '--python-version', '3.12', '--implementation', 'cp', '--abi', 'cp312',
++                 '--target', '.toolchain/stage7/pydeps', '--no-compile', '--disable-pip-version-check',
++                 '--no-input', '--no-deps', '-r', UPSTREAM + '/tools/oft/requirements.txt'],
++                'python-dependencies', cwd=root)
++    require(files(root / '.toolchain/stage7/pydeps') == implementation['python_container_dependencies'],
++            'UPSTREAM_PYTHON_DEPENDENCIES')
++    uid, gid = stage7['container_uid'], stage7['container_gid']
++    # A Linux bind mount keeps host ownership; the container user must own it (U089).
++    records.run(['sudo', 'chown', '-R', f'{uid}:{gid}', upstream / '.git'], 'seed-git-owner')
++    for image in [stage7['checker_image'], own['builder_image']]:
++        records.run(['docker', 'pull', '--platform', stage7['platform'], image], 'image-pull')
++    code, _, _ = records.run(['docker', 'volume', 'inspect', stage7['linux_volume']], 'volume-absent', check=False)
++    require(code != 0, 'VOLUME_ALREADY_EXISTS')
++    records.run(['docker', 'volume', 'create', stage7['linux_volume']], 'volume-create')
++    base = ['docker', 'run', '--rm', '--pull', 'never', '--platform', stage7['platform'], '--network', 'none',
++            '--user', f'{uid}:{gid}', '--cpuset-cpus', stage7['cpuset'], '--memory', stage7['memory'],
++            '--memory-swap', stage7['memory_swap'], '--pids-limit', str(stage7['pids_limit']),
++            '--mount', 'type=volume,source=' + stage7['linux_volume'] + ',target=/work',
++            '--mount', f'type=bind,source={upstream}/.git,target=/git-source,readonly',
++            '-w', '/work', stage7['checker_image']]
++    records.run(base + ['git', '-c', 'safe.directory=/git-source', 'clone', '--shared', '--no-checkout',
++                        '/git-source', '.'], 'volume-clone')
++    records.run(base + ['git', 'checkout', '--detach', commit], 'volume-checkout')
++    # The unchanged build script numbers attempts from its own root. A staging
++    # root without prior records builds attempt-0001 in the fresh volume.
++    staging = Path(tempfile.mkdtemp())
++    for path in ['scripts/stage7_build_own.py', 'toolchain/stage7-pins.json', 'toolchain/stage7-own-pins.json',
++                 own['source']]:
++        (staging / path).parent.mkdir(parents=True, exist_ok=True)
++        shutil.copyfile(ROOT / path, staging / path)
++    records.run([sys.executable, staging / 'scripts/stage7_build_own.py'], 'own-build')
++    shutil.copytree(staging / 'results/stage7/own-build', records.directory / 'own-build')
++
++
++def main():
++    _, _, implementation = context(os.environ['FORGE_STAGE9_IMPLEMENTATION'])
++    require(os.environ.get('GITHUB_JOB') == 'proof', 'APPROVED_JOB')
++    pins = read(HERE / 'runtime.json')['profiles']['producer']
++    require(os.environ.get('RUNNER_ENVIRONMENT') == pins['runner_environment']
++            and os.environ.get('ImageOS') == pins['image_os'], 'HOSTED_RUNNER')
++    records = Records(ROOT / 'results/stage9/producer-output/hosted-setup')
++    docker(pins, records)
++    seed(Path(os.environ['FORGE_STAGE7_ROOT']).resolve(), read(ROOT / 'toolchain/stage7-pins.json'),
++         read(ROOT / 'toolchain/stage7-own-pins.json'), implementation, pins, records)
++    write(records.directory / 'result.json', {'result': 'prepared', 'end_to_end': False})
++    return 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementation.lock
+--- a/gate/provenance/implementation.lock
++++ b/gate/provenance/implementation.lock
+@@ -2,8 +2,8 @@
+   "contract_approval_commit": "097431cf458e5c62332575b09e953224471fa64d",
+   "end_to_end": false,
+   "files": {
+-    ".github/workflows/provenance-negative.yml": "79c50d36f5951f6478ec69f72a85cd1c79414dacd3c17dfd6b170470e24ffca7",
+-    ".github/workflows/provenance.yml": "d2c60993d504a4353102d36189f9dd5f25b98ab3c2c73a12649fc18a087ccefd",
++    ".github/workflows/provenance-negative.yml": "041f724fe22cfaa661547d4769247999d6c54cf4be6bc6035e6af2c287d97409",
++    ".github/workflows/provenance.yml": "41d9d79a414d65c4d830a0272f0274a925bfd59e6d1abca85ff666ea81eae0c2",
+     "examples/binary/Execution.v": "6540ec35e20deed6081f3045c0944917d41124611e79e9df4daa43d257f08f8b",
+     "examples/binary/Images.v": "3f22a6c9494efe2eadfb0c9be3813bd3cf0edf803d49b9598113fff50b9eb563",
+     "examples/binary/Proof.v": "1b488738445a3c1208d32ee0c6f268711333b86d04123856658e5c1cb39e8663",
+@@ -20,18 +20,19 @@
+     "gate/provenance/Dockerfile": "bb0a3d3dee8865515c3b777a6799a6178d8d6c0c796d2b46d37e3fa13987b877",
+     "gate/provenance/artifact-identities.json": "0f2c86a49738b5bbdf15cd00b3490347dfece5f5239a3414a46d75c212fa9718",
+     "gate/provenance/common.py": "77c068569e47885abbf4cd979f761cf6deab43ce8c5d98749764adaab919cc16",
++    "gate/provenance/hosted_setup.py": "e8d5f1f6bfcfd784807b011cbdefe620c4c6e90eb84ea0fbcab774c6b63da057",
+     "gate/provenance/observe.py": "aea3bf21a1d0267df0e374bbcfbf3e09ff2df2e3b1fa34d16fe115bc010a6c13",
+-    "gate/provenance/preflight.py": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776",
+-    "gate/provenance/producer.py": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e",
++    "gate/provenance/preflight.py": "6ae3ab210bbceddfd18f7e551a02cb073888374bc99db9f8401a7e52535d0b82",
++    "gate/provenance/producer.py": "590103b6fba75186c144ad80d832a80b373d5498b8de69b60ab9b1a9c033e381",
+     "gate/provenance/release.py": "1877aef9688a089fe7fee9026b08968b559044862535c6c398b0e7603a1c6d6f",
+-    "gate/provenance/runtime.json": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024",
++    "gate/provenance/runtime.json": "f96170d87d5777537df7b13101d7159826711e1c668caa0fb47df044ee1b2c6e",
+     "gate/refund.py": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb",
+     "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+     "gate/refund/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+     "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+     "package-lock.json": "c1614a9a53e2051aaf3767cb511392032a61b57be4918ec63cbc5850356a1df6",
+     "package.json": "1c4da20a67bed1dcaac41045ede889715c02e0c762efbc9f2e9278408a9f0efa",
+-    "policy/provenance.json": "9e27f627a2b1924fc2f4f86346efaa06755a2c47a366fb3437e54a105d65f22b",
++    "policy/provenance.json": "5033bae5b8fc7fa5dffd0d1ee43a8687026cb4c6b2b78f8ff3a0a51c0573365e",
+     "policy/refund.yaml": "4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83",
+     "proposals/refund-decision.md": "c7b579b062a59c72881c999f5302e1ceb8a9b71ce82bd23a9a823a0a343dee64",
+     "results/stage7/accepted/own/assumption-audit.json": "55a1a9e5f66b71536b84ff7e265b7c25ca155892ba27548a941ced58e1effe85",
+@@ -50,8 +51,8 @@
+     "scripts/stage7_build_own.py": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac",
+     "scripts/stage7_identity.py": "7f9fdc9e7531ffeb0fb32e2ea7362ce87c27c9c46b03ebdf7a36202602998803",
+     "scripts/stage7_own_job.py": "6c852220e8eeeac8b5c9bec533bf5ec044f68dec3f6e98d348f525da40b32b00",
+-    "spec/provenance/protocol.md": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69",
+-    "spec/provenance/spec.lock": "43610d8123ce21fdd1f9dac9469f78ad3efcb3af271a86011a18790099811a33",
++    "spec/provenance/protocol.md": "593a06a087395b03aa0de169347ddf2deca5bcd1daac34c21a4468dbc1f0495d",
++    "spec/provenance/spec.lock": "bee2c7a96507d6bece7013a1f5df48fddfe09e4fc46ef3acd22c1f4d43bdeaab",
+     "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+     "spec/refund/protocol.md": "5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4",
+     "spec/refund/spec.lock": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57",
+diff --git a/gate/provenance/preflight.py b/gate/provenance/preflight.py
+--- a/gate/provenance/preflight.py
++++ b/gate/provenance/preflight.py
+@@ -19,17 +19,21 @@
+     records = Records(ROOT / ('results/stage9/producer-output/bootstrap-' + job))
+     policy, _, _ = context(args.implementation_sha256)
+     try:
+-        require(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'RUNNER_PLATFORM')
+-        listener = Path(os.environ['RUNNER_WORKSPACE']).parents[1] / 'bin/Runner.Listener'
+-        _, version, _ = records.run([listener, '--version'], 'runner-version')
+-        pins = read(HERE / 'runtime.json')
+-        require(version.decode().strip() == pins['actions_runner']['version'], 'RUNNER_VERSION')
++        pins = read(HERE / 'runtime.json')['profiles']['producer']
++        require(platform.system() == 'Linux' and platform.machine() == pins['machine']
++                and os.environ.get('RUNNER_ENVIRONMENT') == pins['runner_environment']
++                and os.environ.get('ImageOS') == pins['image_os'], 'RUNNER_PLATFORM')
++        # GitHub updates hosted images and kernels; record them, they are not pinned.
++        write(records.directory / 'runner.json', {'image_os': os.environ['ImageOS'],
++                                                 'image_version': os.environ.get('ImageVersion'),
++                                                 'kernel': platform.release(), 'end_to_end': False})
+         request = parse(os.environ['FORGE_STAGE9_REQUEST'])
+         require(os.environ['GITHUB_SHA'] == request['expected_source_commit'], 'DISPATCH_COMMIT')
+         require(Path(os.environ['FORGE_STAGE7_ROOT']).resolve() != ROOT, 'PERSISTENT_PREREQUISITES_OUTSIDE_CHECKOUT')
+         if args.producer_run:
+             require(args.producer_run.isdecimal(), 'PRODUCER_RUN_ID')
+-            run = parse(fetch('https://api.github.com/repos/mack-dot/forge/actions/runs/' + args.producer_run,
++            runs = 'https://api.github.com/repos/' + policy['signer']['repository'] + '/actions/runs/'
++            run = parse(fetch(runs + args.producer_run,
+                               records, 'producer-run'))
+             require(run['conclusion'] == 'success' and run['event'] == 'workflow_dispatch'
+                     and run['head_sha'] == request['expected_source_commit']
+@@ -37,9 +41,9 @@
+                     and run['head_branch'] == 'main'
+                     and run['repository']['id'] == policy['signer']['repository_id'], 'PRODUCER_RUN_IDENTITY')
+         binary = ROOT / '.toolchain/stage9/cosign'
+-        expected = policy['signature']['executable_sha256']['darwin-arm64']
++        expected = policy['signature']['executable_sha256']['linux-amd64']
+         if not binary.exists():
+-            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-darwin-arm64'
++            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-linux-amd64'
+             binary.parent.mkdir(parents=True, exist_ok=True)
+             with urllib.request.urlopen(url) as response:
+                 data = response.read()
+diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
+--- a/gate/provenance/producer.py
++++ b/gate/provenance/producer.py
+@@ -3,6 +3,7 @@
+ import copy
+ import os
+ from pathlib import Path
++import platform
+ import re
+ import secrets
+ import shutil
+@@ -17,28 +18,42 @@
+ 
+ 
+ def runtime(records):
++    # The controller (macOS, Docker Desktop) and the hosted producer (Linux) use
++    # separate pinned profiles. Both must build the same image-config identity.
+     pins = read(HERE / 'runtime.json')
++    profile = pins['profiles'][{'Darwin': 'controller', 'Linux': 'producer'}[platform.system()]]
++    require(platform.machine() == profile['machine'], 'HOST_PLATFORM')
++    if 'runner_environment' in profile:
++        require(os.environ.get('RUNNER_ENVIRONMENT') == profile['runner_environment']
++                and os.environ.get('ImageOS') == profile['image_os'], 'HOSTED_RUNNER')
+     _, output, _ = records.run(['docker', 'version', '--format', '{{json .}}'], 'docker-version')
+     value = parse(output)
+     for side in ['Client', 'Server']:
+-        for key, expected in pins['docker'][side].items():
++        for key, expected in profile['docker'][side].items():
+             require(value[side][key] == expected, 'DOCKER_VERSION:' + side + ':' + key)
+     components = {c['Name']: c['Version'] for c in value['Server']['Components']}
+-    require(components == pins['docker_components'], 'DOCKER_COMPONENTS')
+-    require(value['Server']['KernelVersion'] == pins['kernel']
+-            and value['Server']['Platform']['Name'] == 'Docker Desktop ' + pins['docker_desktop'],
+-            'DOCKER_HOST_RUNTIME')
++    require(components == profile['docker_components'], 'DOCKER_COMPONENTS')
++    # Hosted kernels change between images; the producer profile records, not pins, them.
++    require(value['Server']['Platform']['Name'] == profile['docker_platform']
++            and profile['kernel'] in (None, value['Server']['KernelVersion']), 'DOCKER_HOST_RUNTIME')
++    _, output, _ = records.run(['docker', 'info', '--format', '{{json .}}'], 'docker-info')
++    info = parse(output)
++    # The image-config identity needs the classic image store (U081, U082).
++    require(info['Driver'] == profile['image_store_driver']
++            and ['driver-type', 'io.containerd.snapshotter.v1'] not in info['DriverStatus'], 'IMAGE_STORE')
+     _, output, _ = records.run(['docker', 'buildx', 'version'], 'buildx-version')
+-    require(output.decode().strip() == pins['buildx'], 'BUILDX_VERSION')
+-    _, output, _ = records.run(['docker', 'buildx', 'inspect', pins['builder']['name']], 'builder-inspect')
++    require(output.decode().strip() == profile['buildx'], 'BUILDX_VERSION')
++    _, output, _ = records.run(['docker', 'buildx', 'inspect', profile['builder']['name']], 'builder-inspect')
+     text = output.decode()
+-    require(re.search(r'^Driver:\s+' + re.escape(pins['builder']['driver']) + r'\s*$', text, re.M)
+-            and re.search(r'^BuildKit version:\s+' + re.escape(pins['builder']['buildkit_version']) + r'\s*$', text, re.M),
++    require(re.search(r'^Driver:\s+' + re.escape(profile['builder']['driver']) + r'\s*$', text, re.M)
++            and re.search(r'^BuildKit version:\s+' + re.escape(profile['builder']['buildkit_version']) + r'\s*$',
++                          text, re.M),
+             'BUILDER_VERSION')
++    return profile
+ 
+ 
+ def package(policy, out, records):
+-    runtime(records)
++    profile = runtime(records)
+     base = policy['deployment']['base_image']
+     records.run(['docker', 'pull', '--platform', 'linux/amd64', base], 'package-base-pull')
+     _, info, _ = records.run(['docker', 'image', 'inspect', base], 'package-base-inspect')
+@@ -58,7 +73,7 @@
+     os.utime(build / 'gcd-selftest.elf', (0, 0))
+     os.utime(build / 'Dockerfile', (0, 0))
+     iid = out / 'image-id.txt'
+-    records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load', '--platform', 'linux/amd64',
++    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'], '--load', '--platform', 'linux/amd64',
+                  '--provenance=false', '--sbom=false', '--network=none',
+                  '--build-arg', 'SOURCE_DATE_EPOCH=0', '--iidfile', str(iid), str(build)], 'package-build')
+     image = iid.read_text().strip()
+@@ -74,7 +89,7 @@
+                   'recipe_sha256': digest(HERE / 'Dockerfile'),
+                   'elf_path': policy['deployment']['path'],
+                   'elf_sha256': policy['release_artifact']['sha256'],
+-                  'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '
++                  'build_command': 'docker buildx build --load --platform linux/amd64 --provenance=false '
+                                    '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
+                   'end_to_end': False}
+     package_identity(policy, image, descriptor, out, records)
+@@ -188,12 +203,13 @@
+ 
+ 
+ def workflow(request, *, negative=False):
+-    require(os.environ.get('GITHUB_REPOSITORY') == 'mack-dot/forge'
++    repository = read(ROOT / 'policy/provenance.json')['signer']['repository']
++    require(os.environ.get('GITHUB_REPOSITORY') == repository
+             and os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
+             and os.environ.get('GITHUB_REF') == 'refs/heads/main'
+             and os.environ.get('GITHUB_SHA') == request['expected_source_commit'], 'WORKFLOW_CONTEXT')
+     filename = 'provenance-negative.yml' if negative else 'provenance.yml'
+-    require(os.environ.get('GITHUB_WORKFLOW_REF') == 'mack-dot/forge/.github/workflows/' + filename
++    require(os.environ.get('GITHUB_WORKFLOW_REF') == repository + '/.github/workflows/' + filename
+             + '@refs/heads/main', 'WORKFLOW_IDENTITY')
+     require(os.environ.get('GITHUB_RUN_ATTEMPT') == '1', 'WORKFLOW_RERUN_REQUIRES_NEW_REQUEST')
+ 
+diff --git a/gate/provenance/runtime.json b/gate/provenance/runtime.json
+--- a/gate/provenance/runtime.json
++++ b/gate/provenance/runtime.json
+@@ -1,43 +1,93 @@
+ {
+-  "actions_runner": {
+-    "archive": "https://github.com/actions/runner/releases/download/v2.338.2/actions-runner-osx-arm64-2.338.2.tar.gz",
+-    "platform": "osx-arm64",
+-    "provisioning_authorized": false,
+-    "required_label": "forge-stage9",
+-    "sha256": "25a065af409ffa317ab4d5a3b614dd15fc9c40f2172bc1b35a1b1258e919a388",
+-    "version": "2.338.2"
+-  },
+-  "builder": {
+-    "buildkit_version": "v0.25.1",
+-    "driver": "docker",
+-    "name": "desktop-linux"
+-  },
+-  "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
+-  "docker": {
+-    "Client": {
+-      "ApiVersion": "1.51",
+-      "Arch": "arm64",
+-      "GitCommit": "e180ab8",
+-      "Os": "darwin",
+-      "Version": "28.5.1"
++  "end_to_end": false,
++  "format_version": 2,
++  "profiles": {
++    "controller": {
++      "builder": {
++        "buildkit_version": "v0.25.1",
++        "driver": "docker",
++        "name": "desktop-linux"
++      },
++      "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
++      "docker": {
++        "Client": {
++          "ApiVersion": "1.51",
++          "Arch": "arm64",
++          "GitCommit": "e180ab8",
++          "Os": "darwin",
++          "Version": "28.5.1"
++        },
++        "Server": {
++          "ApiVersion": "1.51",
++          "Arch": "arm64",
++          "GitCommit": "f8215cc",
++          "Os": "linux",
++          "Version": "28.5.1"
++        }
++      },
++      "docker_components": {
++        "Engine": "28.5.1",
++        "containerd": "1.7.27",
++        "docker-init": "0.19.0",
++        "runc": "1.2.5"
++      },
++      "docker_platform": "Docker Desktop 4.48.0 (207573)",
++      "image_store_driver": "overlay2",
++      "kernel": "6.10.14-linuxkit",
++      "machine": "arm64"
+     },
+-    "Server": {
+-      "ApiVersion": "1.51",
+-      "Arch": "arm64",
+-      "GitCommit": "f8215cc",
+-      "Os": "linux",
+-      "Version": "28.5.1"
++    "producer": {
++      "builder": {
++        "buildkit_version": "v0.25.1",
++        "driver": "docker",
++        "name": "default"
++      },
++      "buildx": "github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5",
++      "docker": {
++        "Client": {
++          "ApiVersion": "1.51",
++          "Arch": "amd64",
++          "GitCommit": "e180ab8",
++          "Os": "linux",
++          "Version": "28.5.1"
++        },
++        "Server": {
++          "ApiVersion": "1.51",
++          "Arch": "amd64",
++          "GitCommit": "f8215cc",
++          "Os": "linux",
++          "Version": "28.5.1"
++        }
++      },
++      "docker_apt": {
++        "key_fingerprint": "9DC858229FC7DD38854AE2D88D81803C0EBFCD88",
++        "key_url": "https://download.docker.com/linux/ubuntu/gpg",
++        "packages": {
++          "containerd.io": "2.4.2-3~ubuntu.24.04~noble",
++          "docker-buildx-plugin": "0.38.1-1~ubuntu.24.04~noble",
++          "docker-ce": "5:28.5.1-1~ubuntu.24.04~noble",
++          "docker-ce-cli": "5:28.5.1-1~ubuntu.24.04~noble"
++        },
++        "source": "deb [arch=amd64 signed-by=/etc/apt/keyrings/forge-docker.asc] https://download.docker.com/linux/ubuntu noble stable"
++      },
++      "docker_components": {
++        "Engine": "28.5.1",
++        "containerd": "v2.4.2",
++        "docker-init": "0.19.0",
++        "runc": "1.5.2"
++      },
++      "docker_platform": "Docker Engine - Community",
++      "image_os": "ubuntu24",
++      "image_store_driver": "overlay2",
++      "kernel": null,
++      "machine": "x86_64",
++      "pip": {
++        "sha256": "2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af",
++        "version": "25.1.1"
++      },
++      "pydeps_python_path": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
++      "runner_environment": "github-hosted"
+     }
+   },
+-  "docker_components": {
+-    "Engine": "28.5.1",
+-    "containerd": "1.7.27",
+-    "docker-init": "0.19.0",
+-    "runc": "1.2.5"
+-  },
+-  "docker_desktop": "4.48.0 (207573)",
+-  "end_to_end": false,
+-  "format_version": 1,
+-  "kernel": "6.10.14-linuxkit",
+   "python": "3.10.11"
+ }
+diff --git a/policy/provenance.json b/policy/provenance.json
+--- a/policy/provenance.json
++++ b/policy/provenance.json
+@@ -32,7 +32,7 @@
+     "unobserved_target": "reject"
+   },
+   "end_to_end": false,
+-  "epoch": 1,
++  "epoch": 2,
+   "format_version": 1,
+   "freshness": {
+     "atomic_consume_on_admission": true,
+@@ -112,7 +112,7 @@
+     "ignore_verification_flags": "reject",
+     "in_toto_attestation_commit": "df02077bf97218a8860a5c534eff1f1381f56984",
+     "in_toto_attestation_library": "v1.2.0",
+-    "predicate_type": "https://github.com/mack-dot/forge/attestations/provenance/v1",
++    "predicate_type": "https://github.com/superpowermentors-1/forge/attestations/provenance/v1",
+     "require_authenticated_signing_time": true,
+     "require_certificate_chain": true,
+     "require_ct": true,
+@@ -126,13 +126,13 @@
+   },
+   "signer": {
+     "event": "workflow_dispatch",
+-    "identity": "https://github.com/mack-dot/forge/.github/workflows/provenance.yml@refs/heads/main",
++    "identity": "https://github.com/superpowermentors-1/forge/.github/workflows/provenance.yml@refs/heads/main",
+     "issuer": "https://token.actions.githubusercontent.com",
+     "local_key_authorization": false,
+     "numeric_id_source": "authenticated_github_api",
+-    "owner_id": 235131950,
++    "owner_id": 235148649,
+     "ref": "refs/heads/main",
+-    "repository": "mack-dot/forge",
++    "repository": "superpowermentors-1/forge",
+     "repository_id": 1434789853,
+     "wildcards": false,
+     "workflow_and_executable_inputs": "must_match_separately_approved_implementation_lock",
+@@ -177,5 +177,5 @@
+     "tuf_authorized_root_rotation": true,
+     "updates": "authenticated_by_established_tuf_client"
+   },
+-  "version": "1.0.0"
++  "version": "2.0.0"
+ }
+diff --git a/spec/provenance/protocol.md b/spec/provenance/protocol.md
+--- a/spec/provenance/protocol.md
++++ b/spec/provenance/protocol.md
+@@ -8,7 +8,7 @@
+ application correctness. Every canonical result has `end_to_end=false`.
+ 
+ The associated policy is `policy/provenance.json`. Its identifier is
+-`forge-stage9-provenance`, version `1.0.0`, epoch `1`. The lock is
++`forge-stage9-provenance`, version `2.0.0`, epoch `2`. The lock is
+ `spec/provenance/spec.lock`. A release verifier uses its independently installed,
+ approved policy and lock. Candidate bundles cannot supply replacement trust.
+ 
+@@ -23,11 +23,11 @@
+ 
+ The sole positive signer is the GitHub Actions workload identity:
+ 
+-`https://github.com/mack-dot/forge/.github/workflows/provenance.yml@refs/heads/main`
++`https://github.com/superpowermentors-1/forge/.github/workflows/provenance.yml@refs/heads/main`
+ 
+ The OIDC issuer is exactly `https://token.actions.githubusercontent.com`.
+-The repository is `mack-dot/forge`, repository ID `1434789853`, owner ID
+-`235131950`. The event is `workflow_dispatch`; the ref is `refs/heads/main`.
++The repository is `superpowermentors-1/forge`, repository ID `1434789853`, owner ID
++`235148649`. The event is `workflow_dispatch`; the ref is `refs/heads/main`.
+ No wildcard identities, local agent keys, alternate issuers, forks, pull-request
+ jobs, or user-entered certificate identities are authorized.
+ 
+@@ -115,7 +115,7 @@
+ 
+ Use the established in-toto Statement v1 and Sigstore DSSE bundle formats.
+ The statement type is `https://in-toto.io/Statement/v1`; the predicate type is
+-`https://github.com/mack-dot/forge/attestations/provenance/v1`.
++`https://github.com/superpowermentors-1/forge/attestations/provenance/v1`.
+ Use pinned Cosign `attest-blob` and `verify-blob-attestation`; do not implement
+ cryptography, signature validation, certificate validation, or proof semantics.
+ 
+diff --git a/spec/provenance/spec.lock b/spec/provenance/spec.lock
+--- a/spec/provenance/spec.lock
++++ b/spec/provenance/spec.lock
+@@ -584,7 +584,7 @@
+   ],
+   "contract": {
+     "path": "spec/provenance/protocol.md",
+-    "sha256": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69"
++    "sha256": "593a06a087395b03aa0de169347ddf2deca5bcd1daac34c21a4468dbc1f0495d"
+   },
+   "end_to_end": false,
+   "format_version": 1,
+@@ -867,11 +867,11 @@
+     }
+   ],
+   "policy": {
+-    "epoch": 1,
++    "epoch": 2,
+     "id": "forge-stage9-provenance",
+     "path": "policy/provenance.json",
+-    "sha256": "9e27f627a2b1924fc2f4f86346efaa06755a2c47a366fb3437e54a105d65f22b",
+-    "version": "1.0.0"
++    "sha256": "5033bae5b8fc7fa5dffd0d1ee43a8687026cb4c6b2b78f8ff3a0a51c0573365e",
++    "version": "2.0.0"
+   },
+   "theorem_assumptions": [
+     "Corelib.Array.PrimArray.array",

@@ -1,0 +1,181 @@
+{
+  "activation": {
+    "candidate_supplied_policy": "reject",
+    "implementation_lock": "gate/provenance/implementation.lock",
+    "missing_lock": "reject",
+    "separate_exact_human_approval_required": true
+  },
+  "canonical_evidence": {
+    "encoding": "sorted_compact_ascii_json_with_final_newline",
+    "fresh_execution_metadata": "separate",
+    "identical_explicit_inputs_require_identical_bytes": true,
+    "request_metadata": "separate",
+    "signature_metadata": "separate",
+    "timestamps": false
+  },
+  "contract": "spec/provenance/protocol.md",
+  "deployment": {
+    "actual_namespace_readback_required": true,
+    "actual_started_container_required": true,
+    "base_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+    "before_after_inspection_required": true,
+    "deployment_correctness_proved": false,
+    "environment": "isolated_local_research_container",
+    "package_file_hash_required": true,
+    "path": "/opt/forge/gcd-selftest.elf",
+    "platform": "linux/amd64",
+    "platform_manifest": "sha256:1b7a1e562f37e418359b646d68d9e0b69b512fa8a03188b0c35fe1ca4b3f4be2",
+    "riscv_execution_claimed": false,
+    "scope": "deployed_file_identity",
+    "substituted_deployed_bytes": "reject",
+    "target_obscuring_mount": "reject",
+    "unobserved_target": "reject"
+  },
+  "end_to_end": false,
+  "epoch": 2,
+  "format_version": 1,
+  "freshness": {
+    "atomic_consume_on_admission": true,
+    "candidate_defines_expected_values": false,
+    "challenge_bits": 256,
+    "challenge_origin": "trusted_controller",
+    "controller_input": [
+      "expected_source_commit",
+      "artifact_sha256",
+      "package_sha256",
+      "policy_id",
+      "policy_version",
+      "policy_epoch",
+      "policy_sha256",
+      "implementation_lock_sha256",
+      "challenge"
+    ],
+    "stale_or_consumed_request": "reject",
+    "state_loss": "reject"
+  },
+  "id": "forge-stage9-provenance",
+  "lock": "spec/provenance/spec.lock",
+  "model_quality": "unmeasured",
+  "proof": {
+    "accepted_evidence": {
+      "path": "results/stage7/accepted/own/evidence.json",
+      "sha256": "cdc906f980d4cbe8e489aac8be77c87c323c87f2fb0e49c74a5aa48ae1fc8f80"
+    },
+    "assumption_audit": {
+      "path": "results/stage7/accepted/own/assumption-audit.json",
+      "sha256": "55a1a9e5f66b71536b84ff7e265b7c25ca155892ba27548a941ced58e1effe85"
+    },
+    "assumptions_must_equal_locked_lists": true,
+    "before_after_identity_checks": true,
+    "fresh_assumption_audit": true,
+    "fresh_binding_checks": true,
+    "fresh_complete_rocqchk": true,
+    "fresh_producer_compilation": true,
+    "historical_log_only": "reject",
+    "unsigned_self_report_only": "reject"
+  },
+  "release_artifact": {
+    "bytes": 1240,
+    "kind": "binary",
+    "path": "results/stage7/accepted/own/gcd-selftest.elf",
+    "sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
+    "target": "riscv64-linux-musl"
+  },
+  "required_claims": [
+    {
+      "allowed_methods": [
+        "kernel_checked_proof"
+      ],
+      "id": "S7-OWN-TERMINATION",
+      "result": "passed",
+      "spec_ref": "examples/binary/Statements.v#selftest_halts",
+      "spec_sha": "b6fc5d989a52a2431e7ede510a7aa156062f94ef3229b3d4f5d4b42d2a5ed3ba"
+    },
+    {
+      "allowed_methods": [
+        "kernel_checked_proof"
+      ],
+      "id": "S7-OWN-VALID-EXECUTION",
+      "result": "passed",
+      "spec_ref": "examples/binary/WitnessSpec.v#selftest_has_valid_execution",
+      "spec_sha": "535ebed602993c18c8499fd38ed485047f972708f93fa522b70a7461030f019f"
+    }
+  ],
+  "security_control_fixture_may_authorize_deployment": false,
+  "signature": {
+    "environment_trust_overrides": "reject",
+    "executable_sha256": {
+      "darwin-arm64": "9f9b8cd557cf2e5b3df3373a00baa005a86b02391e3e06dd0ce37b3a1533d3a4",
+      "linux-amd64": "424e2c97d0b45fd7a6b608a87f090f35633f4c23ece5f092d48bba11aaf4bbfa"
+    },
+    "fresh_signature_verification": true,
+    "ignore_verification_flags": "reject",
+    "in_toto_attestation_commit": "df02077bf97218a8860a5c534eff1f1381f56984",
+    "in_toto_attestation_library": "v1.2.0",
+    "predicate_type": "https://github.com/superpowermentors-1/forge/attestations/provenance/v1",
+    "require_authenticated_signing_time": true,
+    "require_certificate_chain": true,
+    "require_ct": true,
+    "require_rekor_inclusion": true,
+    "sign_command": "cosign attest-blob",
+    "source_commit": "0e48502cf5ef34e2e60bbd3617aa19945712f705",
+    "statement_type": "https://in-toto.io/Statement/v1",
+    "tool": "cosign",
+    "verify_command": "cosign verify-blob-attestation",
+    "version": "3.1.4"
+  },
+  "signer": {
+    "event": "workflow_dispatch",
+    "identity": "https://github.com/superpowermentors-1/forge/.github/workflows/provenance.yml@refs/heads/main",
+    "issuer": "https://token.actions.githubusercontent.com",
+    "local_key_authorization": false,
+    "numeric_id_source": "authenticated_github_api",
+    "owner_id": 235148649,
+    "ref": "refs/heads/main",
+    "repository": "superpowermentors-1/forge",
+    "repository_id": 1434789853,
+    "wildcards": false,
+    "workflow_and_executable_inputs": "must_match_separately_approved_implementation_lock",
+    "workflow_commit": "must_equal_independent_release_request"
+  },
+  "supplementary_stage8": [
+    {
+      "claims": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "file": {
+        "path": "results/stage8/completed/source-evidence.json",
+        "sha256": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86"
+      },
+      "method": "source_proof"
+    },
+    {
+      "claims": [
+        "T1",
+        "T2",
+        "T3"
+      ],
+      "file": {
+        "path": "results/stage8/completed/property-evidence.json",
+        "sha256": "77d94ab0c41ea5c887924515f0921f6c0362c32d427b3f11d7afc79f21cbe0dd"
+      },
+      "method": "property_tested"
+    }
+  ],
+  "trust_root": {
+    "archive_validated_metadata_and_digests": true,
+    "bootstrap": "embedded_in_pinned_cosign_executable",
+    "candidate_supplied_root": "reject",
+    "current_metadata_expiration_checked": true,
+    "expired_leaf_rule": "certificate_must_be_valid_at_authenticated_signing_time",
+    "historical_offline_audit_authorizes_new_release": false,
+    "profile": "sigstore_public_good",
+    "tuf_authorized_root_rotation": true,
+    "updates": "authenticated_by_established_tuf_client"
+  },
+  "version": "2.0.0"
+}

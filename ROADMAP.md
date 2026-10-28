@@ -1416,6 +1416,35 @@ The 45 Python dependency files matched the lock. No proof ran. See U089.
 This is measurement with a synthetic request, not an EXIT result. No signing ran.
 See U090. `end_to_end=false`.
 
+#### Repository transfer (user action)
+
+The user transferred the repository to the `superpowermentors-1` organization.
+
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `gh api repos/mack-dot/forge` (redirect) | 0 | `superpowermentors-1/forge`, id 1434789853 unchanged, owner id 235148649, public. |
+| `gh api repos/superpowermentors-1/forge/collaborators` | 0 | Three admins: mack-dot, sam-spm, superpowermentorss. |
+| `gh api orgs/superpowermentors-1/actions/permissions` | 1 | HTTP 403; token lacks `admin:org`. |
+
+The installed policy still names `mack-dot/forge`, so the gate now fails closed
+until an approved identity change. See U091. `end_to_end=false`.
+
+#### Hosted-runner and identity candidate (unapplied)
+
+The user confirmed `superpowermentors-1/forge` as the permanent owner. The
+candidate is in `proposals/provenance-hosted/` (diff `11ee6957…`, new lock
+`acf73308…`, 10 files). No protected file is changed.
+
+| Check actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `python3 -I proposals/provenance-hosted/build_candidate.py` | 0 | Candidate files, lock, diff, manifest. |
+| `git apply --check` / `git apply` (scratch copy) | 0 / 0 | All 10 files equal the candidate bytes. |
+| `common.context('acf73308…')` (scratch) | 0 | 62 locked files. |
+| `common.context('9b10a237…')` (scratch) | 1 | `UNAPPROVED_IMPLEMENTATION`, as required. |
+| `run_package.py --implementation-sha256 acf73308…` (scratch, Mac controller profile) | 0 | Config `f15f5bd4…`; all 12 commands 0. |
+
+See U092. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**
