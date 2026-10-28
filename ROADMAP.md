@@ -19,6 +19,8 @@ are applied. The safe installation check passed. A receipt-validator audit
 failed: invalid dependency hashes and substituted or missing copied ELF bytes
 were not rejected. The gate remains unchanged. Runner admission, execution
 authorization and a separately approved receipt repair remain unresolved.
+An unapplied four-file integrity repair awaited exact-byte approval (U078).
+It is now approved and applied (U079).
 All six Stage 9 EXITs are NOT RUN; signing and deployment have not run.
 `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
@@ -1254,6 +1256,133 @@ changed among those prior files; the other 1,444 retain their original hashes.
 All six EXITs remain NOT RUN. No runner registration, workflow dispatch,
 Cosign execution, container build/start or fresh proof execution occurred.
 Stop at the required approval boundary. See U077. `end_to_end=false`.
+
+#### Integrity repair preparation (unapplied)
+
+A four-file repair for the three audit gaps waits for exact-byte approval. See
+the [repair proposal](proposals/provenance-integrity-repair.md). No protected
+file is changed.
+
+| Preparation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `python3 proposals/provenance-integrity-repair/fetch_base_identity.py --output results/stage9/integrity-repair-preparation/base-identity-0001` | 0 | Read-only registry fetch; base config and 55 diff_ids verified by content digest. |
+| `python3 proposals/provenance-integrity-repair/build_identities.py --reference-work build/stage9-receipt-reference-0002 --base-identity results/stage9/integrity-repair-preparation/base-identity-0001 --output proposals/provenance-integrity-repair/artifact-identities.json --report results/stage9/integrity-repair-preparation/identities-0001.json` | 0 | Approved identities cross-checked against the Stage 7 record. |
+| `python3 proposals/provenance-integrity-repair/test_integrity.py --output results/stage9/integrity-repair-preparation/tests-0001 --work build/stage9-integrity-tests-0001` | 1 | Harness defect in one package mutation; kept. |
+| `python3 proposals/provenance-integrity-repair/test_integrity.py --output results/stage9/integrity-repair-preparation/tests-0002 --work build/stage9-integrity-tests-0002` | 0 | All negatives rejected; installed validator accepted 17 of 31 receipt negatives. |
+| `python3 proposals/provenance-integrity-repair/test_integrity.py --output results/stage9/integrity-repair-preparation/tests-0003 --work build/stage9-integrity-tests-0003` | 0 | Rerun on unchanged candidate bytes; no unexpected cases. |
+| `python3 proposals/provenance-integrity-repair/build_approval.py --output results/stage9/integrity-repair-preparation/approval-0001 --scratch build/stage9-integrity-apply-0001` | 0 | Lock, diff, manifest; `git apply` checked only in a scratch copy. |
+
+Execution blockers: the runner image store (containerd versus classic), the
+untested `docker image save` layout, runner admission and execution
+authorization. All six EXITs remain NOT RUN. See U078. `end_to_end=false`.
+
+#### Approved integrity repair adoption
+
+The user approved the four exact files and the diff hash `df0bd7fb…`. The
+approval excludes runner registration, dispatch, signing and deployment.
+
+| Adoption command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git apply --check --verbose results/stage9/integrity-repair-preparation/approval-0001/proposed.diff` | 0 | Dry run of the approved patch. |
+| `git apply results/stage9/integrity-repair-preparation/approval-0001/proposed.diff` | 0 | Applied the four approved files; hashes match. |
+| `common.context('9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76')` | 0 | New lock binds 61 files. |
+| `common.context('6b43c19370742b02eb05c66b9a9091a6c47431998ef045a09018fa6671459daa')` | 1 | Old lock rejected: `UNAPPROVED_IMPLEMENTATION`. |
+| `python3 -m py_compile gate/provenance/release.py gate/provenance/producer.py` | 0 | Syntax only. |
+| `python3 scripts/check_stage9_installation.py` | 1 | Historical check for the earlier 11-file approval; replaced bytes no longer match it. Unchanged. |
+
+Records are in `results/stage9/integrity-repair-adoption/`. All six EXITs
+remain NOT RUN. See U079. `end_to_end=false`.
+
+| Post-adoption command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `python3 proposals/provenance-integrity-repair/derive_installed_test.py` | 0 | Derives `test_installed.py` from the unchanged suite by counted replacements. |
+| `python3 proposals/provenance-integrity-repair/test_installed.py --output results/stage9/integrity-repair-adoption/installed-tests-0001 --work build/stage9-integrity-installed-tests-0001` | 0 | Installed gate rejected all negatives; pre-repair baseline accepted 17 of 31 receipt negatives. No kernel, Docker, Cosign or deployment. |
+
+See U080. `end_to_end=false`.
+
+#### Image-store observation (Docker running)
+
+| Observation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `docker info --format '{{json .DriverStatus}} driver={{.Driver}}'` | 0 | `io.containerd.snapshotter.v1`: containerd image store. |
+| `docker version --format '{{.Server.Platform.Name}}'`; `docker buildx version`; `docker buildx inspect desktop-linux` | 0 | Matches the pinned Desktop 4.48.0, buildx and BuildKit v0.25.1. |
+| `python3 -I results/stage9/image-store-observation/observe.py --image redis:7-alpine --output results/stage9/image-store-observation/redis-7-alpine-0001` | 0 | Streamed save; Config path is not `blobs/sha256/<Id>`. |
+| `python3 -I results/stage9/image-store-observation/observe.py --image ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a… --output results/stage9/image-store-observation/checker-base-0001` | 0 | Config blob equals approved `base_config` `e49a3a57…`; not equal to `Id`. |
+
+Gzip layers, blob paths and diff_id binding match the gate. Under this store
+the package step fails closed. No build, container start, kernel, Cosign,
+workflow or deployment ran. See U081. `end_to_end=false`.
+
+The user chose the classic image store for the runner and switched the local
+Docker Desktop setting.
+
+| Observation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `docker info --format '{{json .DriverStatus}} driver={{.Driver}}'` | 0 | `overlay2`; no containerd snapshotter. |
+| `docker pull --platform linux/amd64 ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a…` | 0 | Pinned base pulled into the classic store. |
+| `python3 -I results/stage9/image-store-observation/observe.py --image ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a… --output results/stage9/image-store-observation/checker-base-classic-0001` | 0 | `Id` = Config = approved `base_config` `e49a3a57…`; 55 uncompressed layers match diff_ids. |
+
+The runner plan now requires the classic store. No build, container start,
+kernel, Cosign, workflow or deployment ran. See U082. `end_to_end=false`.
+
+#### Local package-step observation (classic store)
+
+The user authorized a local package build. These runs call only the installed
+`producer.package()` under the approved lock. They are not EXIT results.
+
+| Observation command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `python3 results/stage9/package-build-observation/run_package.py --implementation-sha256 9b10a237… --output results/stage9/package-build-observation/package-0001` | 0 | Lock, runtime pins, base, build, save, config identity, added layer and extracted ELF accepted; config `f15f5bd4…`. |
+| Same command with `--output …/package-0002` | 0 | `result.json`, `package.json` and `package-identity/` byte-identical to 0001 (BuildKit cache may apply). |
+
+One container was created per run and not started. Read-only GitHub checks
+found that `main` still has the pre-repair gate (lock `6b43c193…`). No runner
+was registered. No dispatch, signing or deployment ran. See U083.
+`end_to_end=false`.
+
+#### Repository visibility change (user decision)
+
+The user chose a private repository for runner admission ("go private for now").
+
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `gh api -X PATCH repos/mack-dot/forge -f visibility=private` | 0 | `visibility=private`; `id` and `owner.id` unchanged. |
+| `curl … https://api.github.com/repos/mack-dot/forge` (no token) | 0 | HTTP 404. |
+
+The installed gate fetches GitHub data without a token, so it now fails closed.
+An unapplied amendment is in
+[proposals/stage9-runner-admission.md](proposals/stage9-runner-admission.md)
+(sha256 `dfdca5d5…`). Records: `results/stage9/visibility-change-0001/`. See U084.
+`end_to_end=false`.
+
+#### Platform decision: public repository and GitHub-hosted Linux runners
+
+U085 withdrew option A: the verifier must not use the producer's token. The
+user then chose a public repository and GitHub-hosted `ubuntu-24.04` producer
+runners. The contract and policy contain no macOS or self-hosted requirement,
+so the change is implementation-level. See
+[proposals/stage9-hosted-runner.md](proposals/stage9-hosted-runner.md).
+
+| Command | Actual exit code | Scope |
+| --- | --- | --- |
+| `gh api -X PATCH repos/mack-dot/forge -f visibility=public` | NOT RUN | Denied by the Claude Code permission check; the repository is still private. |
+| `python3 -c "import yaml; yaml.safe_load(open('proposals/stage9-hosted-runner/probe.yml'))"` | 0 | Probe YAML syntax only; not pushed or dispatched. |
+
+No protected file changed. See U086. `end_to_end=false`.
+
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `gh api -X PATCH repos/mack-dot/forge -f visibility=public` (run by the user) | 0 | Public; `id` and `owner.id` unchanged; unauthenticated API read returns 200. |
+| `gh api -X PUT repos/mack-dot/forge/contents/.github/workflows/stage9-hosted-probe.yml …` | 0 | Commit `ac6dfe51…` on `main`; blob `4470a811…` equals the local probe. |
+| `gh workflow run stage9-hosted-probe.yml -R mack-dot/forge --ref main` | 0 | Run 40713187818. |
+| `gh run watch 40713187818 -R mack-dot/forge --exit-status` | 0 | Conclusion `success`. |
+| `gh run download 40713187818 -R mack-dot/forge -D results/stage9/hosted-probe-0001/artifact` | 0 | Probe records. |
+
+Probe result: ubuntu-24.04 image `20261026.354.1`, 4 CPUs, 16.7 GB RAM,
+91.9 GB free disk. Docker Engine 28.0.4 with the classic store (`overlay2`).
+The pinned checker pull took 72 s and used 3.9 GB of disk. Its `Id` equals the
+approved `base_config` `e49a3a57…`. No proof, signing or deployment ran. See
+U087. `end_to_end=false`.
 
 ### Stage 10 — SHADOW MODE
 

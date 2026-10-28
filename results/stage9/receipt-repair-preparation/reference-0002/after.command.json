@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "docker",
+    "inspect",
+    "--format",
+    "{\"id\":{{json .Id}},\"image\":{{json .Image}},\"image_ref\":{{json .Config.Image}},\"readonly\":{{json .HostConfig.ReadonlyRootfs}},\"state\":{{json .State}},\"mounts\":{{json .Mounts}}}",
+    "forge-stage7-own-proof-0001"
+  ],
+  "exit_code": 0
+}

@@ -1,0 +1,3126 @@
+{
+  "scope": "public_repository_history_at_9679265c326d8d630e54c728f307891e5d6422ab",
+  "main_commit": "9679265c326d8d630e54c728f307891e5d6422ab",
+  "main_commits": [
+    {
+      "sha": "9679265c326d8d630e54c728f307891e5d6422ab",
+      "node_id": "C_kwDOVYUn3doAKDk2NzkyNjVjMzI2ZDhkNjMwZTU0YzcyOGYzMDc4OTFlNWQ2NDIyYWI",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T16:51:14Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T16:51:14Z"
+        },
+        "message": "Apply approved Stage 9 files and preserve blocking receipt audit\n\nInstall the exact 11 additions from 06b40caa6bf5. Record file-only approval, safe checks, three receipt integrity gaps, and the dedicated-runner plan. No signing, workflow dispatch, registration or deployment. Stage 9 remains CURRENT; end_to_end=false.",
+        "tree": {
+          "sha": "2961520b1ab8219f97c08707095a61aa7d71b681",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/2961520b1ab8219f97c08707095a61aa7d71b681"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/9679265c326d8d630e54c728f307891e5d6422ab",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/9679265c326d8d630e54c728f307891e5d6422ab",
+      "html_url": "https://github.com/mack-dot/forge/commit/9679265c326d8d630e54c728f307891e5d6422ab",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/9679265c326d8d630e54c728f307891e5d6422ab/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "06b40caa6bf5fb6963756b39646413559f84c61d",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/06b40caa6bf5fb6963756b39646413559f84c61d",
+          "html_url": "https://github.com/mack-dot/forge/commit/06b40caa6bf5fb6963756b39646413559f84c61d"
+        }
+      ]
+    },
+    {
+      "sha": "06b40caa6bf5fb6963756b39646413559f84c61d",
+      "node_id": "C_kwDOVYUn3doAKDA2YjQwY2FhNmJmNWZiNjk2Mzc1NmIzOTY0NjQxMzU1OWY4NGM2MWQ",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T16:19:01Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T16:19:01Z"
+        },
+        "message": "Adopt approved Stage 9 contract and propose exact provenance implementation\n\nApply only the three approved contract additions at 097431cf. Preserve the approval record and failed preparation checks. Freeze eleven unapplied gate, workflow and EXIT-harness additions for separate review. All Stage 9 EXITs remain NOT RUN; end_to_end=false.",
+        "tree": {
+          "sha": "914bc59e048f075ccf7a6fbc8cdc4b51305b5cc9",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/914bc59e048f075ccf7a6fbc8cdc4b51305b5cc9"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/06b40caa6bf5fb6963756b39646413559f84c61d",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/06b40caa6bf5fb6963756b39646413559f84c61d",
+      "html_url": "https://github.com/mack-dot/forge/commit/06b40caa6bf5fb6963756b39646413559f84c61d",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/06b40caa6bf5fb6963756b39646413559f84c61d/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "097431cf458e5c62332575b09e953224471fa64d",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/097431cf458e5c62332575b09e953224471fa64d",
+          "html_url": "https://github.com/mack-dot/forge/commit/097431cf458e5c62332575b09e953224471fa64d"
+        }
+      ]
+    },
+    {
+      "sha": "097431cf458e5c62332575b09e953224471fa64d",
+      "node_id": "C_kwDOVYUn3doAKDA5NzQzMWNmNDU4ZTVjNjIzMzI1NzViMDllOTUzMjI0NDcxZmE2NGQ",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T15:28:24Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T15:28:24Z"
+        },
+        "message": "Propose Stage 9 provenance trust contract for exact approval\n\nFreeze three proposed protected additions for signer identity, proof-to-artifact policy, and deployed-file observation. Preserve Stage 7–8 records and all protected files. Record proposal checks only; all six Stage 9 EXIT commands remain NOT RUN.",
+        "tree": {
+          "sha": "0eec39ae5945b50a87467a3d56b1dc9069918920",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/0eec39ae5945b50a87467a3d56b1dc9069918920"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/097431cf458e5c62332575b09e953224471fa64d",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/097431cf458e5c62332575b09e953224471fa64d",
+      "html_url": "https://github.com/mack-dot/forge/commit/097431cf458e5c62332575b09e953224471fa64d",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/097431cf458e5c62332575b09e953224471fa64d/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "80a65d46b1dbc8f3ccfd249bfd628568406c5774",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/80a65d46b1dbc8f3ccfd249bfd628568406c5774",
+          "html_url": "https://github.com/mack-dot/forge/commit/80a65d46b1dbc8f3ccfd249bfd628568406c5774"
+        }
+      ]
+    },
+    {
+      "sha": "80a65d46b1dbc8f3ccfd249bfd628568406c5774",
+      "node_id": "C_kwDOVYUn3doAKDgwYTY1ZDQ2YjFkYmM4ZjNjY2ZkMjQ5YmZkNjI4NTY4NDA2YzU3NzQ",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T14:56:56Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T14:56:56Z"
+        },
+        "message": "Complete Stage 8 verified refund boundary and evidence replay\n\nApply the exact approved prototype-preserving snapshot repair. All three real EXIT commands pass, including source-proof, effect-bypass, duplicate-dispatch, mutation and evidence-method rejection controls. Preserve all failed attempts, raw logs, identities, seeds and canonical evidence.\n\nThe exact repaired assertion accepts four unchanged prototype combinations and rejects 16 real field/prototype mutations. Source and property evidence each reproduce through three fresh accepted runs. Model quality remains unmeasured; end_to_end=false.\n\nMark Stage 8 DONE and Stage 9 CURRENT. No Stage 9 implementation is included.",
+        "tree": {
+          "sha": "8cbaddb707e7121f7b55e784d03e0e5a30f78969",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/8cbaddb707e7121f7b55e784d03e0e5a30f78969"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/80a65d46b1dbc8f3ccfd249bfd628568406c5774",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/80a65d46b1dbc8f3ccfd249bfd628568406c5774",
+      "html_url": "https://github.com/mack-dot/forge/commit/80a65d46b1dbc8f3ccfd249bfd628568406c5774",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/80a65d46b1dbc8f3ccfd249bfd628568406c5774/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "76f58de25fb5ebe305831432907e42a4210add40",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/76f58de25fb5ebe305831432907e42a4210add40",
+          "html_url": "https://github.com/mack-dot/forge/commit/76f58de25fb5ebe305831432907e42a4210add40"
+        }
+      ]
+    },
+    {
+      "sha": "76f58de25fb5ebe305831432907e42a4210add40",
+      "node_id": "C_kwDOVYUn3doAKDc2ZjU4ZGUyNWZiNWViZTMwNTgzMTQzMjkwN2U0MmE0MjEwYWRkNDA",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T14:13:18Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T14:13:18Z"
+        },
+        "message": "Record Stage 8 source-proof success and frozen integration-test blocker\n\nAdopt the exact approved gate additions. Implement the unprotected refund adapter and EXIT harness. Preserve all real attempts: wrapper-proof 1 then 0; hostile-outputs 1; evidence-separation 1. Archive source rejection controls, seeded failures, raw outputs and byte-identical source replay.\n\nKeep the approved gate unchanged. Document its null-prototype snapshot defect and an unapplied diagnostic repair. Stage 8 remains CURRENT; Stage 9 has not started; end_to_end=false.",
+        "tree": {
+          "sha": "38719a0bb834aa45e1e191dce596b334fd88b15f",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/38719a0bb834aa45e1e191dce596b334fd88b15f"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/76f58de25fb5ebe305831432907e42a4210add40",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/76f58de25fb5ebe305831432907e42a4210add40",
+      "html_url": "https://github.com/mack-dot/forge/commit/76f58de25fb5ebe305831432907e42a4210add40",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/76f58de25fb5ebe305831432907e42a4210add40/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "d2d557e2dcd564049fbd97171b0af67659eacf81",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/d2d557e2dcd564049fbd97171b0af67659eacf81",
+          "html_url": "https://github.com/mack-dot/forge/commit/d2d557e2dcd564049fbd97171b0af67659eacf81"
+        }
+      ]
+    },
+    {
+      "sha": "d2d557e2dcd564049fbd97171b0af67659eacf81",
+      "node_id": "C_kwDOVYUn3doAKGQyZDU1N2UyZGNkNTY0MDQ5ZmJkOTcxNzFiMGFmNjc2NTllYWNmODE",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T12:54:18Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T12:54:18Z"
+        },
+        "message": "Adopt approved Stage 8 refund contract; propose exact verification gate\n\nApply the four approved contract additions unchanged. Preserve real development proof, audit, build and static-check records, including the failed type check. Publish a separate three-file gate proposal for exact approval. All Stage 8 EXITs remain NOT RUN; end_to_end=false.",
+        "tree": {
+          "sha": "71c87aca25fc6fa9743cee60074b3937047f4b78",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/71c87aca25fc6fa9743cee60074b3937047f4b78"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/d2d557e2dcd564049fbd97171b0af67659eacf81",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/d2d557e2dcd564049fbd97171b0af67659eacf81",
+      "html_url": "https://github.com/mack-dot/forge/commit/d2d557e2dcd564049fbd97171b0af67659eacf81",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/d2d557e2dcd564049fbd97171b0af67659eacf81/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+          "html_url": "https://github.com/mack-dot/forge/commit/e3aa546f86dc5b43ec8c754792e3db4cb413b410"
+        }
+      ]
+    },
+    {
+      "sha": "e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+      "node_id": "C_kwDOVYUn3doAKGUzYWE1NDZmODZkYzViNDNlYzhjNzU0NzkyZTNkYjRjYjQxM2I0MTA",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T06:16:21Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T06:16:21Z"
+        },
+        "message": "Propose Stage 8 refund boundary contract for exact human approval\n\nRequire universal safety and exact acceptance of every eligible proposal, with Rejected and an empty refund plan for fallback. Publish four unapplied protected-file additions, numeric/reason/wire/lifecycle decisions, scope limits and evidence requirements.\n\nDafny resolution, patch dry-run and policy schema validation returned 0; none is a proof. Keep Stage 8 CURRENT with all EXITs NOT RUN and end_to_end=false. No protected files or refund implementation changed.",
+        "tree": {
+          "sha": "2f02e0e921387be548ba4226d8f69744b7de493d",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/2f02e0e921387be548ba4226d8f69744b7de493d"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+      "html_url": "https://github.com/mack-dot/forge/commit/e3aa546f86dc5b43ec8c754792e3db4cb413b410",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/e3aa546f86dc5b43ec8c754792e3db4cb413b410/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "ef06de72b38bb00041b4e52204880e75c4c002a9",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/ef06de72b38bb00041b4e52204880e75c4c002a9",
+          "html_url": "https://github.com/mack-dot/forge/commit/ef06de72b38bb00041b4e52204880e75c4c002a9"
+        }
+      ]
+    },
+    {
+      "sha": "ef06de72b38bb00041b4e52204880e75c4c002a9",
+      "node_id": "C_kwDOVYUn3doAKGVmMDZkZTcyYjM4YmIwMDA0MWI0ZTUyMjA0ODgwZTc1YzRjMDAyYTk",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T05:41:48Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T05:41:48Z"
+        },
+        "message": "Complete Stage 7 with an independently checked proof of Forge's C ELF\n\nProve normal exit 0 for every valid modeled execution of the pinned 1,240-byte RISC-V self-test. Add and check a valid-entry witness, bind both exact propositions with the published wrapper, and independently check all 579 dependency modules. Preserve the 13 theorem-specific and 86 closure assumptions, source and ELF identities, exact commands, and historical failures.\n\nAll three Stage 7 EXITs returned 0. Publish the exact ELF, canonical evidence, and lossless indexed record archive. Mark Stage 7 DONE and Stage 8 CURRENT, with Stage 8 implementation and performance experiments deferred. Keep end_to_end=false; compiler correctness, model fidelity and deployment identity are not established.",
+        "tree": {
+          "sha": "bc19dbb89a9333089d357f7dfd3bb23f498aba2c",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/bc19dbb89a9333089d357f7dfd3bb23f498aba2c"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/ef06de72b38bb00041b4e52204880e75c4c002a9",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/ef06de72b38bb00041b4e52204880e75c4c002a9",
+      "html_url": "https://github.com/mack-dot/forge/commit/ef06de72b38bb00041b4e52204880e75c4c002a9",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/ef06de72b38bb00041b4e52204880e75c4c002a9/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9",
+          "html_url": "https://github.com/mack-dot/forge/commit/51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9"
+        }
+      ]
+    },
+    {
+      "sha": "51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9",
+      "node_id": "C_kwDOVYUn3doAKDUxZjdiNThhZTBhYWU1MGUzOTQwYzhmY2NlOGVhZjhlMTZkZmViZjk",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T04:24:54Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T04:24:54Z"
+        },
+        "message": "Recover Stage 7 and verify the upstream binary-proof boundary\n\nUse a writable case-sensitive Linux checkout under the intended non-root user. Preserve the case-collision, permission, and wrapper failures.\n\nRecord a successful pinned zlib replay with both independent Rocq checks and assumption audits. Reject the prepared invalid proof and a valid True certificate at the published theorem-binding wrapper. Retain complete raw records in a verified tar/xz archive.\n\nStage 7 remains CURRENT. Forge's own binary proof and performance study are pending; end_to_end=false.",
+        "tree": {
+          "sha": "8f4c89c3327f2f71f6e3371b905ef403c1853209",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/8f4c89c3327f2f71f6e3371b905ef403c1853209"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9",
+      "html_url": "https://github.com/mack-dot/forge/commit/51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/51f7b58ae0aae50e3940c8fcce8eaf8e16dfebf9/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf",
+          "html_url": "https://github.com/mack-dot/forge/commit/8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf"
+        }
+      ]
+    },
+    {
+      "sha": "8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf",
+      "node_id": "C_kwDOVYUn3doAKDgxNTlhNzlkMmUwYzZlMmVlYjM0NDM3NzEwODNiNWRjN2FmYWY2Y2Y",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T00:04:28Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T00:04:28Z"
+        },
+        "message": "Complete Stage 6 booking proofs and measured proof reuse\n\nAdd the approved booking contract, checked matcher and retry/cancellation trace, source evidence gate, and rejection controls. Publish all 75 benchmark pairs, retained failures, scoped token accounting, and byte-identical evidence/report replay. Record both real EXIT codes as 0 and advance the roadmap to Stage 7 without starting it.",
+        "tree": {
+          "sha": "32852b0b6182c5f23d3e3173b83b9e4dccaf1483",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/32852b0b6182c5f23d3e3173b83b9e4dccaf1483"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf",
+      "html_url": "https://github.com/mack-dot/forge/commit/8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/8159a79d2e0c6e2eeb3443771083b5dc7afaf6cf/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "2dee3d0546c36e5d7a3c233d722dd87c3729dd76",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/2dee3d0546c36e5d7a3c233d722dd87c3729dd76",
+          "html_url": "https://github.com/mack-dot/forge/commit/2dee3d0546c36e5d7a3c233d722dd87c3729dd76"
+        }
+      ]
+    },
+    {
+      "sha": "2dee3d0546c36e5d7a3c233d722dd87c3729dd76",
+      "node_id": "C_kwDOVYUn3doAKDJkZWUzZDA1NDZjMzZlNWQ3YTNjMjMzZDcyMmRkODdjMzcyOWRkNzY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:47:58Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:47:58Z"
+        },
+        "message": "Propose the Stage 6 booking contract and reuse measurement protocol\n\nPublish the exact pending spec and lock additions, actual resolver and patch-validation results, and append-only uncertainty findings. Keep Stage 6 current with both EXIT commands unrun pending intent approval.",
+        "tree": {
+          "sha": "52197ceb80ddd85807c120b81df217266c803d7e",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/52197ceb80ddd85807c120b81df217266c803d7e"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/2dee3d0546c36e5d7a3c233d722dd87c3729dd76",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/2dee3d0546c36e5d7a3c233d722dd87c3729dd76",
+      "html_url": "https://github.com/mack-dot/forge/commit/2dee3d0546c36e5d7a3c233d722dd87c3729dd76",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/2dee3d0546c36e5d7a3c233d722dd87c3729dd76/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "c5e3be0fb5188a05ea0559b63396cf7712061c2c",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/c5e3be0fb5188a05ea0559b63396cf7712061c2c",
+          "html_url": "https://github.com/mack-dot/forge/commit/c5e3be0fb5188a05ea0559b63396cf7712061c2c"
+        }
+      ]
+    },
+    {
+      "sha": "c5e3be0fb5188a05ea0559b63396cf7712061c2c",
+      "node_id": "C_kwDOVYUn3doAKGM1ZTNiZTBmYjUxODhhMDVlYTA1NTliNjMzOTZjZjc3MTIwNjFjMmM",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:38:31Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:38:31Z"
+        },
+        "message": "Complete Stage 5 spec tooling with checked witness and mutation evidence\n\nPublish generated claim documentation, finite model comparisons, vacuity diagnostics, mutation results, and preserved command logs. Record both EXIT commands and byte-identical replay; advance the roadmap to Stage 6 without starting it.",
+        "tree": {
+          "sha": "0f1df2ad58bbf4977a13df4e4a2fc19a3d0721ed",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/0f1df2ad58bbf4977a13df4e4a2fc19a3d0721ed"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/c5e3be0fb5188a05ea0559b63396cf7712061c2c",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/c5e3be0fb5188a05ea0559b63396cf7712061c2c",
+      "html_url": "https://github.com/mack-dot/forge/commit/c5e3be0fb5188a05ea0559b63396cf7712061c2c",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/c5e3be0fb5188a05ea0559b63396cf7712061c2c/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "74bbb25c0b707c335374931b85525ab4dedf2511",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/74bbb25c0b707c335374931b85525ab4dedf2511",
+          "html_url": "https://github.com/mack-dot/forge/commit/74bbb25c0b707c335374931b85525ab4dedf2511"
+        }
+      ]
+    },
+    {
+      "sha": "74bbb25c0b707c335374931b85525ab4dedf2511",
+      "node_id": "C_kwDOVYUn3doAKDc0YmJiMjVjMGI3MDdjMzM1Mzc0OTMxYjg1NTI1YWI0ZGVkZjI1MTE",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:05:52Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:05:52Z"
+        },
+        "message": "Complete Stage 4 with real approved-spec results and set Stage 5 current",
+        "tree": {
+          "sha": "43295b134226ca40bac2878cab3efabd0b400d9e",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/43295b134226ca40bac2878cab3efabd0b400d9e"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/74bbb25c0b707c335374931b85525ab4dedf2511",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/74bbb25c0b707c335374931b85525ab4dedf2511",
+      "html_url": "https://github.com/mack-dot/forge/commit/74bbb25c0b707c335374931b85525ab4dedf2511",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/74bbb25c0b707c335374931b85525ab4dedf2511/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "88057d49f9abe6cf3a701c1f388a2377108428e3",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/88057d49f9abe6cf3a701c1f388a2377108428e3",
+          "html_url": "https://github.com/mack-dot/forge/commit/88057d49f9abe6cf3a701c1f388a2377108428e3"
+        }
+      ]
+    },
+    {
+      "sha": "88057d49f9abe6cf3a701c1f388a2377108428e3",
+      "node_id": "C_kwDOVYUn3doAKDg4MDU3ZDQ5ZjlhYmU2Y2YzYTcwMWMxZjM4OGEyMzc3MTA4NDI4ZTM",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:02:17Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:02:17Z"
+        },
+        "message": "Run all Stage 4 exit checks against the approved fee PR and tamper rejection",
+        "tree": {
+          "sha": "32dbf36f6cf74acc530e012445cb950c28005622",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/32dbf36f6cf74acc530e012445cb950c28005622"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/88057d49f9abe6cf3a701c1f388a2377108428e3",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/88057d49f9abe6cf3a701c1f388a2377108428e3",
+      "html_url": "https://github.com/mack-dot/forge/commit/88057d49f9abe6cf3a701c1f388a2377108428e3",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/88057d49f9abe6cf3a701c1f388a2377108428e3/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "08cae1c59f6c1b40354851b422070a1edb4dc39d",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/08cae1c59f6c1b40354851b422070a1edb4dc39d",
+          "html_url": "https://github.com/mack-dot/forge/commit/08cae1c59f6c1b40354851b422070a1edb4dc39d"
+        }
+      ]
+    },
+    {
+      "sha": "08cae1c59f6c1b40354851b422070a1edb4dc39d",
+      "node_id": "C_kwDOVYUn3doAKDA4Y2FlMWM1OWY2YzFiNDAzNTQ4NTFiNDIyMDcwYTFlZGI0ZGMzOWQ",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T22:01:30Z"
+        },
+        "committer": {
+          "name": "GitHub",
+          "email": "noreply@github.com",
+          "date": "2026-10-26T22:01:30Z"
+        },
+        "message": "Merge approved fee spec and verified ledger change\n\nImplement the approved ledger fee with exact spec-bound evidence",
+        "tree": {
+          "sha": "1eb039f5615b94f589b7cf3551059389bc5616ac",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/1eb039f5615b94f589b7cf3551059389bc5616ac"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/08cae1c59f6c1b40354851b422070a1edb4dc39d",
+        "comment_count": 0,
+        "verification": {
+          "verified": true,
+          "reason": "valid",
+          "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJq3826CRC1aQ7uu5UhlAAA1oMQAK3mI0f8ksrN9mtPlSqUeFB4\nqu+TlxhhWrG/FUgrMcY+/LNfZXsNk8+f62lK2aZPnDQ8oZRSpYqlGlKglei6Zpdf\ni/Mamf2RwXxo87u/dY9Uyk9R4DZEFuR1PuQMgohg4oeLrpWB9v5YBPphuyXooybc\nUCGQnnv8NYis4DFFS916/OFay/2FGBOGQKIvQHdkeFkvrzHKjRvCXEsb0mGvN/nu\nDd1LwCvP5gBuTZds53Tjx0tUi7FoYF1590PVO8zzcxQxfQYdoZZTNrKcdyjNjLs4\n8AdRiKy3bJmhWdDWdoRGfGOhnI09P5K+Im5i8RI7pULzsDApiWpXoM+5SavShMaf\ndW1zYINsJut07/k2I8Jy/c1Tfx9mZ9ZZN639JGGQsTa3FLd2JcnJPD0JaZTwE20D\nGOFzX5E73d7X4f/p1T5qf4JVOu9J3IMaiJFqIXp9SzprD+n4LAH57xJpdUmmdYp2\nlFrEC6DS/Ql7p2djX/kp4fX2ZNzVmGjCFBqxREMUUR9DOeGx/53X65LsOvaHGxl6\nm4syxo82YnNXcW0tKCRoVnyGmY4vOHzj3cj5h9hAqTeCSsu3Y1fw31dbCjYZQ8o0\ntxoOK75oVhDWIISMXgq0ZiruS/8n29lcCluNMjWIsRKiThcGct43oQ2c969hu2Pt\nn38bUszWAFoDdlus4Vc/\n=yVyz\n-----END PGP SIGNATURE-----\n",
+          "payload": "tree 1eb039f5615b94f589b7cf3551059389bc5616ac\nparent 8751d3fdbc2705beaeed28a492bab983271a7b1c\nparent 0f11517d368b6a0c7d2fa78ca9d79ec563f5023c\nauthor mack-dot <mack@superpowermentors.com> 1793052090 -0400\ncommitter GitHub <noreply@github.com> 1793052090 -0400\n\nMerge approved fee spec and verified ledger change\n\nImplement the approved ledger fee with exact spec-bound evidence",
+          "verified_at": "2026-10-26T22:01:30Z"
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/08cae1c59f6c1b40354851b422070a1edb4dc39d",
+      "html_url": "https://github.com/mack-dot/forge/commit/08cae1c59f6c1b40354851b422070a1edb4dc39d",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/08cae1c59f6c1b40354851b422070a1edb4dc39d/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "web-flow",
+        "id": 19864447,
+        "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+        "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/web-flow",
+        "html_url": "https://github.com/web-flow",
+        "followers_url": "https://api.github.com/users/web-flow/followers",
+        "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+        "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+        "organizations_url": "https://api.github.com/users/web-flow/orgs",
+        "repos_url": "https://api.github.com/users/web-flow/repos",
+        "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/web-flow/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "html_url": "https://github.com/mack-dot/forge/commit/8751d3fdbc2705beaeed28a492bab983271a7b1c"
+        },
+        {
+          "sha": "0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+          "html_url": "https://github.com/mack-dot/forge/commit/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c"
+        }
+      ]
+    },
+    {
+      "sha": "0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+      "node_id": "C_kwDOVYUn3doAKDBmMTE1MTdkMzY4YjZhMGM3ZDJmYTc4Y2E5ZDc5ZWM1NjNmNTAyM2M",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:34:53Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:34:53Z"
+        },
+        "message": "Implement the approved one-unit transfer fee and preserve retry behavior",
+        "tree": {
+          "sha": "1eb039f5615b94f589b7cf3551059389bc5616ac",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/1eb039f5615b94f589b7cf3551059389bc5616ac"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+      "html_url": "https://github.com/mack-dot/forge/commit/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "html_url": "https://github.com/mack-dot/forge/commit/8751d3fdbc2705beaeed28a492bab983271a7b1c"
+        }
+      ]
+    },
+    {
+      "sha": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "node_id": "C_kwDOVYUn3doAKDg3NTFkM2ZkYmMyNzA1YmVhZWVkMjhhNDkyYmFiOTgzMjcxYTdiMWM",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:34:05Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:34:05Z"
+        },
+        "message": "Bind approved fee intent to exact spec revisions in the trusted gate",
+        "tree": {
+          "sha": "9027a64ab1d6f7c416c707ce086fef113e4dafca",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/9027a64ab1d6f7c416c707ce086fef113e4dafca"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "html_url": "https://github.com/mack-dot/forge/commit/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "648229df2d0e13e8d872e0a867ab0ce940ea8146",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/648229df2d0e13e8d872e0a867ab0ce940ea8146",
+          "html_url": "https://github.com/mack-dot/forge/commit/648229df2d0e13e8d872e0a867ab0ce940ea8146"
+        }
+      ]
+    },
+    {
+      "sha": "648229df2d0e13e8d872e0a867ab0ce940ea8146",
+      "node_id": "C_kwDOVYUn3doAKDY0ODIyOWRmMmQwZTEzZThkODcyZTBhODY3YWIwY2U5NDBlYTgxNDY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:22:14Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:22:14Z"
+        },
+        "message": "Document passing real PR checks and propose exact ledger fee intent",
+        "tree": {
+          "sha": "f1284a5de5eb308969d94cdb454ffd98319e1e12",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/f1284a5de5eb308969d94cdb454ffd98319e1e12"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/648229df2d0e13e8d872e0a867ab0ce940ea8146",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/648229df2d0e13e8d872e0a867ab0ce940ea8146",
+      "html_url": "https://github.com/mack-dot/forge/commit/648229df2d0e13e8d872e0a867ab0ce940ea8146",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/648229df2d0e13e8d872e0a867ab0ce940ea8146/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "b2906e2f64f9e1ecd364d2dced55a391f736c236",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/b2906e2f64f9e1ecd364d2dced55a391f736c236",
+          "html_url": "https://github.com/mack-dot/forge/commit/b2906e2f64f9e1ecd364d2dced55a391f736c236"
+        }
+      ]
+    },
+    {
+      "sha": "b2906e2f64f9e1ecd364d2dced55a391f736c236",
+      "node_id": "C_kwDOVYUn3doAKGIyOTA2ZTJmNjRmOWUxZWNkMzY0ZDJkY2VkNTVhMzkxZjczNmMyMzY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:17:58Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:17:58Z"
+        },
+        "message": "Record real PR proof results and execute Stage 4 acceptance checks",
+        "tree": {
+          "sha": "c301e231bcdfc2727b4dd78a528ddf4bdc8f88e7",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/c301e231bcdfc2727b4dd78a528ddf4bdc8f88e7"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/b2906e2f64f9e1ecd364d2dced55a391f736c236",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/b2906e2f64f9e1ecd364d2dced55a391f736c236",
+      "html_url": "https://github.com/mack-dot/forge/commit/b2906e2f64f9e1ecd364d2dced55a391f736c236",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/b2906e2f64f9e1ecd364d2dced55a391f736c236/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/commit/0e6d48ca008695f0c8a89965264bd62f73fbd8b2"
+        }
+      ]
+    },
+    {
+      "sha": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "node_id": "C_kwDOVYUn3doAKDBlNmQ0OGNhMDA4Njk1ZjBjOGE4OTk2NTI2NGJkNjJmNzNmYmQ4YjI",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:13:10Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:13:10Z"
+        },
+        "message": "Add trusted PR proof checks and clarify Forge's thesis and evidence limits",
+        "tree": {
+          "sha": "397b2967db98c7168a8f3fd7fe0de5bdb7f3a88a",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/397b2967db98c7168a8f3fd7fe0de5bdb7f3a88a"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "html_url": "https://github.com/mack-dot/forge/commit/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "941cdccc18d94fd7699da9a9c330bcab47b57646",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/941cdccc18d94fd7699da9a9c330bcab47b57646",
+          "html_url": "https://github.com/mack-dot/forge/commit/941cdccc18d94fd7699da9a9c330bcab47b57646"
+        }
+      ]
+    },
+    {
+      "sha": "941cdccc18d94fd7699da9a9c330bcab47b57646",
+      "node_id": "C_kwDOVYUn3doAKDk0MWNkY2NjMThkOTRmZDc2OTlkYTlhOWMzMzBiY2FiNDdiNTc2NDY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T20:43:41Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T20:43:41Z"
+        },
+        "message": "Record successful Linux CI inventory and measured toolchain pins",
+        "tree": {
+          "sha": "0649d76a1eb987bccf16b3318ae557eb6e95d72a",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/0649d76a1eb987bccf16b3318ae557eb6e95d72a"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/941cdccc18d94fd7699da9a9c330bcab47b57646",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/941cdccc18d94fd7699da9a9c330bcab47b57646",
+      "html_url": "https://github.com/mack-dot/forge/commit/941cdccc18d94fd7699da9a9c330bcab47b57646",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/941cdccc18d94fd7699da9a9c330bcab47b57646/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "bafcd92533034dc342c53688f058ab8cfbc577a6",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/bafcd92533034dc342c53688f058ab8cfbc577a6",
+          "html_url": "https://github.com/mack-dot/forge/commit/bafcd92533034dc342c53688f058ab8cfbc577a6"
+        }
+      ]
+    },
+    {
+      "sha": "bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "node_id": "C_kwDOVYUn3doAKGJhZmNkOTI1MzMwMzRkYzM0MmM1MzY4OGYwNThhYjhjZmJjNTc3YTY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T20:26:46Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T20:26:46Z"
+        },
+        "message": "Add Dafny snapshot change gate and prepare Linux CI inventory",
+        "tree": {
+          "sha": "5a9b5e48194f21b3f3d5408286b2472112a08b00",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/5a9b5e48194f21b3f3d5408286b2472112a08b00"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/bafcd92533034dc342c53688f058ab8cfbc577a6",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "html_url": "https://github.com/mack-dot/forge/commit/bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/bafcd92533034dc342c53688f058ab8cfbc577a6/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "81582071d758ee25b1890cb712e9579d012662cf",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/81582071d758ee25b1890cb712e9579d012662cf",
+          "html_url": "https://github.com/mack-dot/forge/commit/81582071d758ee25b1890cb712e9579d012662cf"
+        }
+      ]
+    },
+    {
+      "sha": "81582071d758ee25b1890cb712e9579d012662cf",
+      "node_id": "C_kwDOVYUn3doAKDgxNTgyMDcxZDc1OGVlMjViMTg5MGNiNzEyZTk1NzlkMDEyNjYyY2Y",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T19:37:05Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T19:37:05Z"
+        },
+        "message": "Record real Dafny member-selection coverage probe for Stage 4",
+        "tree": {
+          "sha": "7c5c1363be25c33c742d85d34c460033e91c79f4",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/7c5c1363be25c33c742d85d34c460033e91c79f4"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/81582071d758ee25b1890cb712e9579d012662cf",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/81582071d758ee25b1890cb712e9579d012662cf",
+      "html_url": "https://github.com/mack-dot/forge/commit/81582071d758ee25b1890cb712e9579d012662cf",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/81582071d758ee25b1890cb712e9579d012662cf/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "52a16fde7ef1269003769eaa7899e6898ab4c5e9",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/52a16fde7ef1269003769eaa7899e6898ab4c5e9",
+          "html_url": "https://github.com/mack-dot/forge/commit/52a16fde7ef1269003769eaa7899e6898ab4c5e9"
+        }
+      ]
+    },
+    {
+      "sha": "52a16fde7ef1269003769eaa7899e6898ab4c5e9",
+      "node_id": "C_kwDOVYUn3doAKDUyYTE2ZmRlN2VmMTI2OTAwMzc2OWVhYTc4OTllNjg5OGFiNGM1ZTk",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T19:08:15Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T19:08:15Z"
+        },
+        "message": "Record verified public snapshot publication in append-only findings",
+        "tree": {
+          "sha": "f9f3792b0fc340672885d3d631926c26a9a58b1c",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/f9f3792b0fc340672885d3d631926c26a9a58b1c"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/52a16fde7ef1269003769eaa7899e6898ab4c5e9",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/52a16fde7ef1269003769eaa7899e6898ab4c5e9",
+      "html_url": "https://github.com/mack-dot/forge/commit/52a16fde7ef1269003769eaa7899e6898ab4c5e9",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/52a16fde7ef1269003769eaa7899e6898ab4c5e9/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "c909a640ffaef595bf720c71e196e1706e69a9ac",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/c909a640ffaef595bf720c71e196e1706e69a9ac",
+          "html_url": "https://github.com/mack-dot/forge/commit/c909a640ffaef595bf720c71e196e1706e69a9ac"
+        }
+      ]
+    },
+    {
+      "sha": "c909a640ffaef595bf720c71e196e1706e69a9ac",
+      "node_id": "C_kwDOVYUn3doAKGM5MDlhNjQwZmZhZWY1OTViZjcyMGM3MWUxOTZlMTcwNmU2OWE5YWM",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T18:57:41Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T18:57:41Z"
+        },
+        "message": "Publish Forge stages 0–3 with reproducible evidence\n\nInclude the approved ledger spec, real Dafny proof gate, evidence schema and policy, TypeScript model comparisons, and recorded positive and negative checks. Keep source proof separate from tested integration; Stage 4 remains current.",
+        "tree": {
+          "sha": "f3807c048d66aadffa1d4eecae8e28f944a44ec4",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/f3807c048d66aadffa1d4eecae8e28f944a44ec4"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/c909a640ffaef595bf720c71e196e1706e69a9ac",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/c909a640ffaef595bf720c71e196e1706e69a9ac",
+      "html_url": "https://github.com/mack-dot/forge/commit/c909a640ffaef595bf720c71e196e1706e69a9ac",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/c909a640ffaef595bf720c71e196e1706e69a9ac/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "2f45978b18b1b84989b06453b30d696b4fcb09f0",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/2f45978b18b1b84989b06453b30d696b4fcb09f0",
+          "html_url": "https://github.com/mack-dot/forge/commit/2f45978b18b1b84989b06453b30d696b4fcb09f0"
+        }
+      ]
+    },
+    {
+      "sha": "2f45978b18b1b84989b06453b30d696b4fcb09f0",
+      "node_id": "C_kwDOVYUn3doAKDJmNDU5NzhiMThiMWI4NDk4OWIwNjQ1M2IzMGQ2OTZiNGZjYjA5ZjA",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T18:44:47Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T18:44:47Z"
+        },
+        "message": "Initialize Forge with completed-stage overview",
+        "tree": {
+          "sha": "8817ecd0915544baca714b0cb3069c8ec740eabb",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/8817ecd0915544baca714b0cb3069c8ec740eabb"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/2f45978b18b1b84989b06453b30d696b4fcb09f0",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/2f45978b18b1b84989b06453b30d696b4fcb09f0",
+      "html_url": "https://github.com/mack-dot/forge/commit/2f45978b18b1b84989b06453b30d696b4fcb09f0",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/2f45978b18b1b84989b06453b30d696b4fcb09f0/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": []
+    }
+  ],
+  "additional_branch_commits": [
+    {
+      "sha": "393f80e002c8a74e6d86c52866c0be2e40688b6f",
+      "node_id": "C_kwDOVYUn3doAKDM5M2Y4MGUwMDJjOGE3NGU2ZDg2YzUyODY2YzBiZTJlNDA2ODhiNmY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:15:35Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:15:35Z"
+        },
+        "message": "Demonstrate affected-member verification for a valid Apply edit",
+        "tree": {
+          "sha": "1e6aed44c39bf5d370566070c8e7030ebe81dcb9",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/1e6aed44c39bf5d370566070c8e7030ebe81dcb9"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/393f80e002c8a74e6d86c52866c0be2e40688b6f",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/393f80e002c8a74e6d86c52866c0be2e40688b6f",
+      "html_url": "https://github.com/mack-dot/forge/commit/393f80e002c8a74e6d86c52866c0be2e40688b6f",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/393f80e002c8a74e6d86c52866c0be2e40688b6f/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/commit/0e6d48ca008695f0c8a89965264bd62f73fbd8b2"
+        }
+      ],
+      "stats": {
+        "total": 1,
+        "additions": 1,
+        "deletions": 0
+      },
+      "files": [
+        {
+          "sha": "e37a5f20c2d51530f7027e8a3e76542d126691e4",
+          "filename": "impl/Ledger.dfy",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "blob_url": "https://github.com/mack-dot/forge/blob/393f80e002c8a74e6d86c52866c0be2e40688b6f/impl%2FLedger.dfy",
+          "raw_url": "https://github.com/mack-dot/forge/raw/393f80e002c8a74e6d86c52866c0be2e40688b6f/impl%2FLedger.dfy",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/impl%2FLedger.dfy?ref=393f80e002c8a74e6d86c52866c0be2e40688b6f",
+          "patch": "@@ -32,6 +32,7 @@ module Ledger refines LedgerSpec {\n       outcome := Ok;\n     } else if IsFreshValid(state, id, request) {\n       var debit := state.balances[request.sender] - request.amount;\n+      assert 0 <= debit;\n       TotalReplace(state.balances, request.sender, debit);\n       var debited := state.balances[request.sender := debit];\n       var credit := state.balances[request.recipient] + request.amount;"
+        }
+      ]
+    },
+    {
+      "sha": "7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+      "node_id": "C_kwDOVYUn3doAKDc5NzZlZmFlYmJlNWRmZWU4MTI4ZjQ0YjYxMGU3MWMzY2UyMWY2Y2Y",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:35:55Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:35:55Z"
+        },
+        "message": "Negative fixture: weaken C2 after exact fee intent approval",
+        "tree": {
+          "sha": "12e8077b44e4c2acfaf56c11d93f35809df608c6",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/12e8077b44e4c2acfaf56c11d93f35809df608c6"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+      "html_url": "https://github.com/mack-dot/forge/commit/7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/7976efaebbe5dfee8128f44b610e71c3ce21f6cf/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c",
+          "html_url": "https://github.com/mack-dot/forge/commit/0f11517d368b6a0c7d2fa78ca9d79ec563f5023c"
+        }
+      ],
+      "stats": {
+        "total": 16,
+        "additions": 2,
+        "deletions": 14
+      },
+      "files": [
+        {
+          "sha": "5cec0bd99817532ebd5a7489f83bb555d6d482cb",
+          "filename": "spec.lock",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 13,
+          "changes": 14,
+          "blob_url": "https://github.com/mack-dot/forge/blob/7976efaebbe5dfee8128f44b610e71c3ce21f6cf/spec.lock",
+          "raw_url": "https://github.com/mack-dot/forge/raw/7976efaebbe5dfee8128f44b610e71c3ce21f6cf/spec.lock",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/spec.lock?ref=7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+          "patch": "@@ -1,13 +1 @@\n-{\n-  \"approval\": {\n-    \"candidate_sha256\": \"2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940\",\n-    \"decision\": \"approved_as_written\",\n-    \"proposal\": \"proposals/fees.md\",\n-    \"source\": \"explicit user approval of the exact fee proposal in this task\"\n-  },\n-  \"dafny_build\": \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\",\n-  \"dafny_version\": \"4.11.0\",\n-  \"schema_version\": 1,\n-  \"spec_file\": \"spec/LedgerSpec.dfy\",\n-  \"spec_sha256\": \"2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940\"\n-}\n+{\"approval\": {\"candidate_sha256\": \"2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940\", \"decision\": \"approved_as_written\", \"proposal\": \"proposals/fees.md\", \"source\": \"explicit user approval of the exact fee proposal in this task\"}, \"dafny_build\": \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\", \"dafny_version\": \"4.11.0\", \"schema_version\": 1, \"spec_file\": \"spec/LedgerSpec.dfy\", \"spec_sha256\": \"0948f9b5a2ed6a7d1ff53efbda77adc40eb409ce3045531eed6d86deca82aeb3\"}"
+        },
+        {
+          "sha": "d7193b9ad307aed7bc147bb95bfc106244df6e11",
+          "filename": "spec/LedgerSpec.dfy",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 1,
+          "changes": 2,
+          "blob_url": "https://github.com/mack-dot/forge/blob/7976efaebbe5dfee8128f44b610e71c3ce21f6cf/spec%2FLedgerSpec.dfy",
+          "raw_url": "https://github.com/mack-dot/forge/raw/7976efaebbe5dfee8128f44b610e71c3ce21f6cf/spec%2FLedgerSpec.dfy",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/spec%2FLedgerSpec.dfy?ref=7976efaebbe5dfee8128f44b610e71c3ce21f6cf",
+          "patch": "@@ -7,7 +7,7 @@ abstract module LedgerSpec {\n     accepted: map<int, Request>)\n \n   ghost predicate NonNegative(balances: map<int, int>) {\n-    forall account | account in balances :: 0 <= balances[account]\n+    true\n   }\n \n   ghost predicate WellFormed(state: State) {"
+        }
+      ]
+    },
+    {
+      "sha": "abd148c115dc2cf0f1454fbe2682ff1112846d72",
+      "node_id": "C_kwDOVYUn3doAKGFiZDE0OGMxMTVkYzJjZjBmMTQ1NGZiZTI2ODJmZjExMTI4NDZkNzI",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:16:17Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:16:17Z"
+        },
+        "message": "Negative fixture: change a spec and its lock without intent approval",
+        "tree": {
+          "sha": "067a1b36928c0d849ac44ac01a44ba3b4fc2d626",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/067a1b36928c0d849ac44ac01a44ba3b4fc2d626"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/abd148c115dc2cf0f1454fbe2682ff1112846d72",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/abd148c115dc2cf0f1454fbe2682ff1112846d72",
+      "html_url": "https://github.com/mack-dot/forge/commit/abd148c115dc2cf0f1454fbe2682ff1112846d72",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/abd148c115dc2cf0f1454fbe2682ff1112846d72/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/commit/0e6d48ca008695f0c8a89965264bd62f73fbd8b2"
+        }
+      ],
+      "stats": {
+        "total": 16,
+        "additions": 3,
+        "deletions": 13
+      },
+      "files": [
+        {
+          "sha": "546e69ecfb4bb47288531943ce55507a76ac4962",
+          "filename": "spec.lock",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 13,
+          "changes": 14,
+          "blob_url": "https://github.com/mack-dot/forge/blob/abd148c115dc2cf0f1454fbe2682ff1112846d72/spec.lock",
+          "raw_url": "https://github.com/mack-dot/forge/raw/abd148c115dc2cf0f1454fbe2682ff1112846d72/spec.lock",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/spec.lock?ref=abd148c115dc2cf0f1454fbe2682ff1112846d72",
+          "patch": "@@ -1,13 +1 @@\n-{\n-  \"approval\": {\n-    \"candidate_sha256\": \"e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f\",\n-    \"decision\": \"approved_as_written\",\n-    \"proposal\": \"proposals/initial-ledger.md\",\n-    \"source\": \"explicit user approval in this task\"\n-  },\n-  \"dafny_build\": \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\",\n-  \"dafny_version\": \"4.11.0\",\n-  \"schema_version\": 1,\n-  \"spec_file\": \"spec/LedgerSpec.dfy\",\n-  \"spec_sha256\": \"e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f\"\n-}\n+{\"approval\": {\"candidate_sha256\": \"e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f\", \"decision\": \"approved_as_written\", \"proposal\": \"proposals/initial-ledger.md\", \"source\": \"explicit user approval in this task\"}, \"dafny_build\": \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\", \"dafny_version\": \"4.11.0\", \"schema_version\": 1, \"spec_file\": \"spec/LedgerSpec.dfy\", \"spec_sha256\": \"d6c3aa80ff23c36dadc6a60bae67e8fc382ceaaa9e97fccb6b1b10a43beb2e24\"}"
+        },
+        {
+          "sha": "1f8e6b4901cc97beea7e274e3e32e41a8732c35b",
+          "filename": "spec/LedgerSpec.dfy",
+          "status": "modified",
+          "additions": 2,
+          "deletions": 0,
+          "changes": 2,
+          "blob_url": "https://github.com/mack-dot/forge/blob/abd148c115dc2cf0f1454fbe2682ff1112846d72/spec%2FLedgerSpec.dfy",
+          "raw_url": "https://github.com/mack-dot/forge/raw/abd148c115dc2cf0f1454fbe2682ff1112846d72/spec%2FLedgerSpec.dfy",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/spec%2FLedgerSpec.dfy?ref=abd148c115dc2cf0f1454fbe2682ff1112846d72",
+          "patch": "@@ -63,3 +63,5 @@ abstract module LedgerSpec {\n     ensures (!IsRetry(state, id, request) && !IsFreshValid(state, id, request)) ==>\n       outcome == Rejected && next == state\n }\n+\n+// Unapproved spec revision."
+        }
+      ]
+    },
+    {
+      "sha": "327a33eb7e5767197d7835d3a32793de4e1dcffa",
+      "node_id": "C_kwDOVYUn3doAKDMyN2EzM2ViN2U1NzY3MTk3ZDc4MzVkM2EzMjc5M2RlNGUxZGNmZmE",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:16:29Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:16:29Z"
+        },
+        "message": "Negative fixture: attempt to weaken ledger non-negativity",
+        "tree": {
+          "sha": "244295972e250b7d5b897472991f584411463fb6",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/244295972e250b7d5b897472991f584411463fb6"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/327a33eb7e5767197d7835d3a32793de4e1dcffa",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/327a33eb7e5767197d7835d3a32793de4e1dcffa",
+      "html_url": "https://github.com/mack-dot/forge/commit/327a33eb7e5767197d7835d3a32793de4e1dcffa",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/327a33eb7e5767197d7835d3a32793de4e1dcffa/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/commit/0e6d48ca008695f0c8a89965264bd62f73fbd8b2"
+        }
+      ],
+      "stats": {
+        "total": 16,
+        "additions": 2,
+        "deletions": 14
+      },
+      "files": [
+        {
+          "sha": "b9b9f4061d39194a7a8e750a4ab7b19d6cd8c79a",
+          "filename": "spec.lock",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 13,
+          "changes": 14,
+          "blob_url": "https://github.com/mack-dot/forge/blob/327a33eb7e5767197d7835d3a32793de4e1dcffa/spec.lock",
+          "raw_url": "https://github.com/mack-dot/forge/raw/327a33eb7e5767197d7835d3a32793de4e1dcffa/spec.lock",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/spec.lock?ref=327a33eb7e5767197d7835d3a32793de4e1dcffa",
+          "patch": "@@ -1,13 +1 @@\n-{\n-  \"approval\": {\n-    \"candidate_sha256\": \"e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f\",\n-    \"decision\": \"approved_as_written\",\n-    \"proposal\": \"proposals/initial-ledger.md\",\n-    \"source\": \"explicit user approval in this task\"\n-  },\n-  \"dafny_build\": \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\",\n-  \"dafny_version\": \"4.11.0\",\n-  \"schema_version\": 1,\n-  \"spec_file\": \"spec/LedgerSpec.dfy\",\n-  \"spec_sha256\": \"e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f\"\n-}\n+{\"approval\": {\"candidate_sha256\": \"e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f\", \"decision\": \"approved_as_written\", \"proposal\": \"proposals/initial-ledger.md\", \"source\": \"explicit user approval in this task\"}, \"dafny_build\": \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\", \"dafny_version\": \"4.11.0\", \"schema_version\": 1, \"spec_file\": \"spec/LedgerSpec.dfy\", \"spec_sha256\": \"fe305545dbfaafb521de478410043c488dd09f0dc409a1472dd2c6ab12ce6975\"}"
+        },
+        {
+          "sha": "0d851c49659243cada99c393e20b2b5f3afd4a0d",
+          "filename": "spec/LedgerSpec.dfy",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 1,
+          "changes": 2,
+          "blob_url": "https://github.com/mack-dot/forge/blob/327a33eb7e5767197d7835d3a32793de4e1dcffa/spec%2FLedgerSpec.dfy",
+          "raw_url": "https://github.com/mack-dot/forge/raw/327a33eb7e5767197d7835d3a32793de4e1dcffa/spec%2FLedgerSpec.dfy",
+          "contents_url": "https://api.github.com/repos/mack-dot/forge/contents/spec%2FLedgerSpec.dfy?ref=327a33eb7e5767197d7835d3a32793de4e1dcffa",
+          "patch": "@@ -6,7 +6,7 @@ abstract module LedgerSpec {\n     accepted: map<int, Request>)\n \n   ghost predicate NonNegative(balances: map<int, int>) {\n-    forall account | account in balances :: 0 <= balances[account]\n+    true\n   }\n \n   ghost predicate WellFormed(state: State) {"
+        }
+      ]
+    }
+  ],
+  "workflow_history": [
+    {
+      "sha": "9679265c326d8d630e54c728f307891e5d6422ab",
+      "node_id": "C_kwDOVYUn3doAKDk2NzkyNjVjMzI2ZDhkNjMwZTU0YzcyOGYzMDc4OTFlNWQ2NDIyYWI",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T16:51:14Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-27T16:51:14Z"
+        },
+        "message": "Apply approved Stage 9 files and preserve blocking receipt audit\n\nInstall the exact 11 additions from 06b40caa6bf5. Record file-only approval, safe checks, three receipt integrity gaps, and the dedicated-runner plan. No signing, workflow dispatch, registration or deployment. Stage 9 remains CURRENT; end_to_end=false.",
+        "tree": {
+          "sha": "2961520b1ab8219f97c08707095a61aa7d71b681",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/2961520b1ab8219f97c08707095a61aa7d71b681"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/9679265c326d8d630e54c728f307891e5d6422ab",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/9679265c326d8d630e54c728f307891e5d6422ab",
+      "html_url": "https://github.com/mack-dot/forge/commit/9679265c326d8d630e54c728f307891e5d6422ab",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/9679265c326d8d630e54c728f307891e5d6422ab/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "06b40caa6bf5fb6963756b39646413559f84c61d",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/06b40caa6bf5fb6963756b39646413559f84c61d",
+          "html_url": "https://github.com/mack-dot/forge/commit/06b40caa6bf5fb6963756b39646413559f84c61d"
+        }
+      ]
+    },
+    {
+      "sha": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "node_id": "C_kwDOVYUn3doAKDg3NTFkM2ZkYmMyNzA1YmVhZWVkMjhhNDkyYmFiOTgzMjcxYTdiMWM",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:34:05Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:34:05Z"
+        },
+        "message": "Bind approved fee intent to exact spec revisions in the trusted gate",
+        "tree": {
+          "sha": "9027a64ab1d6f7c416c707ce086fef113e4dafca",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/9027a64ab1d6f7c416c707ce086fef113e4dafca"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "html_url": "https://github.com/mack-dot/forge/commit/8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/8751d3fdbc2705beaeed28a492bab983271a7b1c/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "648229df2d0e13e8d872e0a867ab0ce940ea8146",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/648229df2d0e13e8d872e0a867ab0ce940ea8146",
+          "html_url": "https://github.com/mack-dot/forge/commit/648229df2d0e13e8d872e0a867ab0ce940ea8146"
+        }
+      ]
+    },
+    {
+      "sha": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "node_id": "C_kwDOVYUn3doAKDBlNmQ0OGNhMDA4Njk1ZjBjOGE4OTk2NTI2NGJkNjJmNzNmYmQ4YjI",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:13:10Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T21:13:10Z"
+        },
+        "message": "Add trusted PR proof checks and clarify Forge's thesis and evidence limits",
+        "tree": {
+          "sha": "397b2967db98c7168a8f3fd7fe0de5bdb7f3a88a",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/397b2967db98c7168a8f3fd7fe0de5bdb7f3a88a"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "html_url": "https://github.com/mack-dot/forge/commit/0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "941cdccc18d94fd7699da9a9c330bcab47b57646",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/941cdccc18d94fd7699da9a9c330bcab47b57646",
+          "html_url": "https://github.com/mack-dot/forge/commit/941cdccc18d94fd7699da9a9c330bcab47b57646"
+        }
+      ]
+    },
+    {
+      "sha": "bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "node_id": "C_kwDOVYUn3doAKGJhZmNkOTI1MzMwMzRkYzM0MmM1MzY4OGYwNThhYjhjZmJjNTc3YTY",
+      "commit": {
+        "author": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T20:26:46Z"
+        },
+        "committer": {
+          "name": "mack-dot",
+          "email": "mack@superpowermentors.com",
+          "date": "2026-10-26T20:26:46Z"
+        },
+        "message": "Add Dafny snapshot change gate and prepare Linux CI inventory",
+        "tree": {
+          "sha": "5a9b5e48194f21b3f3d5408286b2472112a08b00",
+          "url": "https://api.github.com/repos/mack-dot/forge/git/trees/5a9b5e48194f21b3f3d5408286b2472112a08b00"
+        },
+        "url": "https://api.github.com/repos/mack-dot/forge/git/commits/bafcd92533034dc342c53688f058ab8cfbc577a6",
+        "comment_count": 0,
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "html_url": "https://github.com/mack-dot/forge/commit/bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "comments_url": "https://api.github.com/repos/mack-dot/forge/commits/bafcd92533034dc342c53688f058ab8cfbc577a6/comments",
+      "author": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "mack-dot",
+        "id": 235131950,
+        "node_id": "U_kgDODgPULg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/235131950?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/mack-dot",
+        "html_url": "https://github.com/mack-dot",
+        "followers_url": "https://api.github.com/users/mack-dot/followers",
+        "following_url": "https://api.github.com/users/mack-dot/following{/other_user}",
+        "gists_url": "https://api.github.com/users/mack-dot/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/mack-dot/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/mack-dot/subscriptions",
+        "organizations_url": "https://api.github.com/users/mack-dot/orgs",
+        "repos_url": "https://api.github.com/users/mack-dot/repos",
+        "events_url": "https://api.github.com/users/mack-dot/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/mack-dot/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "81582071d758ee25b1890cb712e9579d012662cf",
+          "url": "https://api.github.com/repos/mack-dot/forge/commits/81582071d758ee25b1890cb712e9579d012662cf",
+          "html_url": "https://github.com/mack-dot/forge/commit/81582071d758ee25b1890cb712e9579d012662cf"
+        }
+      ]
+    }
+  ],
+  "workflow_snapshots": [
+    {
+      "commit": "9679265c326d8d630e54c728f307891e5d6422ab",
+      "files": [
+        {
+          "name": "proof-gate.yml",
+          "path": ".github/workflows/proof-gate.yml",
+          "sha": "c505b7997a8c66ecc4807d1b8744952b160bac18",
+          "size": 3148,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/proof-gate.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+          "html_url": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/proof-gate.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/c505b7997a8c66ecc4807d1b8744952b160bac18",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/proof-gate.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/proof-gate.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/c505b7997a8c66ecc4807d1b8744952b160bac18",
+            "html": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/proof-gate.yml"
+          }
+        },
+        {
+          "name": "provenance-negative.yml",
+          "path": ".github/workflows/provenance-negative.yml",
+          "sha": "ec00ebb853caae8b23af819be9b8a4b1c1d91313",
+          "size": 2398,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/provenance-negative.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+          "html_url": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/provenance-negative.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/ec00ebb853caae8b23af819be9b8a4b1c1d91313",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/provenance-negative.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/provenance-negative.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/ec00ebb853caae8b23af819be9b8a4b1c1d91313",
+            "html": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/provenance-negative.yml"
+          }
+        },
+        {
+          "name": "provenance.yml",
+          "path": ".github/workflows/provenance.yml",
+          "sha": "dce2da9f192f14ee21a47de3b44b0b8c77ff2149",
+          "size": 3225,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/provenance.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+          "html_url": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/provenance.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/dce2da9f192f14ee21a47de3b44b0b8c77ff2149",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/provenance.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/provenance.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/dce2da9f192f14ee21a47de3b44b0b8c77ff2149",
+            "html": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/provenance.yml"
+          }
+        },
+        {
+          "name": "stage4-exits.yml",
+          "path": ".github/workflows/stage4-exits.yml",
+          "sha": "efcead380ebda3c3187c0f2a495699c556f18e3c",
+          "size": 1385,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/stage4-exits.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+          "html_url": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/stage4-exits.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/efcead380ebda3c3187c0f2a495699c556f18e3c",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/stage4-exits.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/stage4-exits.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/efcead380ebda3c3187c0f2a495699c556f18e3c",
+            "html": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/stage4-exits.yml"
+          }
+        },
+        {
+          "name": "toolchain-inventory.yml",
+          "path": ".github/workflows/toolchain-inventory.yml",
+          "sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "size": 1326,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+          "html_url": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/toolchain-inventory.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/toolchain-inventory.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=9679265c326d8d630e54c728f307891e5d6422ab",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+            "html": "https://github.com/mack-dot/forge/blob/9679265c326d8d630e54c728f307891e5d6422ab/.github/workflows/toolchain-inventory.yml"
+          }
+        }
+      ]
+    },
+    {
+      "commit": "8751d3fdbc2705beaeed28a492bab983271a7b1c",
+      "files": [
+        {
+          "name": "proof-gate.yml",
+          "path": ".github/workflows/proof-gate.yml",
+          "sha": "c505b7997a8c66ecc4807d1b8744952b160bac18",
+          "size": 3148,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/proof-gate.yml?ref=8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "html_url": "https://github.com/mack-dot/forge/blob/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/proof-gate.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/c505b7997a8c66ecc4807d1b8744952b160bac18",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/proof-gate.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/proof-gate.yml?ref=8751d3fdbc2705beaeed28a492bab983271a7b1c",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/c505b7997a8c66ecc4807d1b8744952b160bac18",
+            "html": "https://github.com/mack-dot/forge/blob/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/proof-gate.yml"
+          }
+        },
+        {
+          "name": "stage4-exits.yml",
+          "path": ".github/workflows/stage4-exits.yml",
+          "sha": "efcead380ebda3c3187c0f2a495699c556f18e3c",
+          "size": 1385,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/stage4-exits.yml?ref=8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "html_url": "https://github.com/mack-dot/forge/blob/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/stage4-exits.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/efcead380ebda3c3187c0f2a495699c556f18e3c",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/stage4-exits.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/stage4-exits.yml?ref=8751d3fdbc2705beaeed28a492bab983271a7b1c",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/efcead380ebda3c3187c0f2a495699c556f18e3c",
+            "html": "https://github.com/mack-dot/forge/blob/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/stage4-exits.yml"
+          }
+        },
+        {
+          "name": "toolchain-inventory.yml",
+          "path": ".github/workflows/toolchain-inventory.yml",
+          "sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "size": 1326,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=8751d3fdbc2705beaeed28a492bab983271a7b1c",
+          "html_url": "https://github.com/mack-dot/forge/blob/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/toolchain-inventory.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/toolchain-inventory.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=8751d3fdbc2705beaeed28a492bab983271a7b1c",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+            "html": "https://github.com/mack-dot/forge/blob/8751d3fdbc2705beaeed28a492bab983271a7b1c/.github/workflows/toolchain-inventory.yml"
+          }
+        }
+      ]
+    },
+    {
+      "commit": "0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+      "files": [
+        {
+          "name": "proof-gate.yml",
+          "path": ".github/workflows/proof-gate.yml",
+          "sha": "c505b7997a8c66ecc4807d1b8744952b160bac18",
+          "size": 3148,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/proof-gate.yml?ref=0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/blob/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/proof-gate.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/c505b7997a8c66ecc4807d1b8744952b160bac18",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/proof-gate.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/proof-gate.yml?ref=0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/c505b7997a8c66ecc4807d1b8744952b160bac18",
+            "html": "https://github.com/mack-dot/forge/blob/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/proof-gate.yml"
+          }
+        },
+        {
+          "name": "stage4-exits.yml",
+          "path": ".github/workflows/stage4-exits.yml",
+          "sha": "ac6407670ad83268c0938410e9effb2d67c6bf8d",
+          "size": 1200,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/stage4-exits.yml?ref=0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/blob/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/stage4-exits.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/ac6407670ad83268c0938410e9effb2d67c6bf8d",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/stage4-exits.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/stage4-exits.yml?ref=0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/ac6407670ad83268c0938410e9effb2d67c6bf8d",
+            "html": "https://github.com/mack-dot/forge/blob/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/stage4-exits.yml"
+          }
+        },
+        {
+          "name": "toolchain-inventory.yml",
+          "path": ".github/workflows/toolchain-inventory.yml",
+          "sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "size": 1326,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+          "html_url": "https://github.com/mack-dot/forge/blob/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/toolchain-inventory.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/toolchain-inventory.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=0e6d48ca008695f0c8a89965264bd62f73fbd8b2",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+            "html": "https://github.com/mack-dot/forge/blob/0e6d48ca008695f0c8a89965264bd62f73fbd8b2/.github/workflows/toolchain-inventory.yml"
+          }
+        }
+      ]
+    },
+    {
+      "commit": "bafcd92533034dc342c53688f058ab8cfbc577a6",
+      "files": [
+        {
+          "name": "toolchain-inventory.yml",
+          "path": ".github/workflows/toolchain-inventory.yml",
+          "sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "size": 1326,
+          "url": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=bafcd92533034dc342c53688f058ab8cfbc577a6",
+          "html_url": "https://github.com/mack-dot/forge/blob/bafcd92533034dc342c53688f058ab8cfbc577a6/.github/workflows/toolchain-inventory.yml",
+          "git_url": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+          "download_url": "https://raw.githubusercontent.com/mack-dot/forge/bafcd92533034dc342c53688f058ab8cfbc577a6/.github/workflows/toolchain-inventory.yml",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/mack-dot/forge/contents/.github/workflows/toolchain-inventory.yml?ref=bafcd92533034dc342c53688f058ab8cfbc577a6",
+            "git": "https://api.github.com/repos/mack-dot/forge/git/blobs/247229d28742ae0da7513a3d390c5fc972cb7a90",
+            "html": "https://github.com/mack-dot/forge/blob/bafcd92533034dc342c53688f058ab8cfbc577a6/.github/workflows/toolchain-inventory.yml"
+          }
+        }
+      ]
+    }
+  ],
+  "all_listed_branch_ancestry_present": true,
+  "local_signature_verification": false,
+  "authorization_for_all_past_pushes_not_established": true
+}

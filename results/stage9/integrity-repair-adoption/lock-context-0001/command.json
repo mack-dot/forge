@@ -1,0 +1,11 @@
+{
+ "argv": [
+  "python3",
+  "-c",
+  "import sys; sys.path.insert(0,'gate/provenance'); import common; p,l,i=common.context('9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76'); print('context ok', len(i['files']), 'locked files')"
+ ],
+ "cwd": "/Users/mackianni/forge",
+ "exit_code": 0,
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "stdout_sha256": "d47a614b1951f4a39912f1bf4f1ce288a30b45e62967ea9164fc5f7e502c11a3"
+}

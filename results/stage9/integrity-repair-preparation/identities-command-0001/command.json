@@ -1,0 +1,18 @@
+{
+ "argv": [
+  "python3",
+  "proposals/provenance-integrity-repair/build_identities.py",
+  "--reference-work",
+  "build/stage9-receipt-reference-0002",
+  "--base-identity",
+  "results/stage9/integrity-repair-preparation/base-identity-0001",
+  "--output",
+  "proposals/provenance-integrity-repair/artifact-identities.json",
+  "--report",
+  "results/stage9/integrity-repair-preparation/identities-0001.json"
+ ],
+ "cwd": "/Users/mackianni/forge",
+ "exit_code": 0,
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "stdout_sha256": "1835ae3b58f69d41f9e816ae0c5b2136b98e168ae284b289bdf9506db99f00b4"
+}

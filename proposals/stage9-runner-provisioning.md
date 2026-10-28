@@ -89,6 +89,7 @@ The installed [runtime pins](../gate/provenance/runtime.json),
 | Python | 3.10.11; pinned dependency file identities must match. |
 | Docker Desktop | 4.48.0 (207573); client/server 28.5.1, API 1.51; exact commits and components in runtime.json. |
 | Build tools | Buildx 0.29.1-desktop.1; Docker driver `desktop-linux`; BuildKit 0.25.1. |
+| Docker image store | Classic (`overlay2`): Desktop setting "Use containerd for pulling and storing images" off. `docker info` DriverStatus must not contain `io.containerd.snapshotter.v1`. The gate does not check this; under the containerd store the package step fails closed (U081, U082). |
 | Linux runtime | `6.10.14-linuxkit`; proof workload uses the pinned platform and image. |
 | Proof checker image | `ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902`. |
 | Proof tools | Rocq 9.2.0, OCaml 4.14.3 and the exact existing upstream/source pins; full dependency closure remains required. |
@@ -187,3 +188,27 @@ containers remain network-disabled. No public inbound service is required.
 
 No step above has run. No cost, duration, availability or successful pin
 compatibility is claimed. This plan does not authorize Stage 10 work.
+
+## Receipt-repair prerequisite
+
+The [pending four-file repair](provenance-receipt-repair.md) pins all 579 actual
+dependency objects and 22 original proof/program artifacts. Rocq embeds the
+build path in its compiled objects. The proposed producer therefore uses the
+fixed path `/work/.forge-stage7/own-proof/attempt-0001` on a newly provisioned,
+isolated Linux volume. The original Stage 7 volume already has this directory
+and must not be reused for the proposed fresh run.
+
+Build the dedicated seed from exact trusted inputs, retaining the required
+`own-build/attempt-0001` ELF but excluding prior `own-proof` outputs. Do this on
+a separate host/volume after explicit provisioning approval. Never delete or
+rename the original attempt to satisfy the precondition. The unchanged Stage 7
+job refuses an existing output directory. Keep request nonces in container
+identities and receipts. Copied dependency objects add about 59.3 MB per receipt;
+this is the measured reference size, not a peak-memory estimate.
+
+The local positive control used historical proof bytes. A fresh legitimate
+Stage 9 receipt remains mandatory after approval. Do not replace that check
+with the local positive control or change fixed digests when fresh bytes differ.
+The public-history audit found no extra author account in the 30 inspected
+commits, but public events cannot establish authorization for every past push.
+Runner admission and operations remain separately blocked.

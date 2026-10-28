@@ -1,0 +1,33 @@
+[
+  {
+    "argv": [
+      "docker",
+      "info",
+      "--format",
+      "{{json .DriverStatus}} {{.Driver}} {{.ServerVersion}}"
+    ],
+    "exit_code": 0,
+    "name": "docker-info"
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902"
+    ],
+    "exit_code": 0,
+    "name": "image-inspect"
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "save",
+      "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902"
+    ],
+    "exit_code": 0,
+    "name": "image-save",
+    "stdout": "streamed; not stored"
+  }
+]

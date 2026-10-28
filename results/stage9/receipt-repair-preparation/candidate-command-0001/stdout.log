@@ -1,0 +1,10 @@
+{"case": "historical-positive", "matched": true, "observed_rejection": null}
+{"case": "invalid-dependency-hashes", "matched": true, "observed_rejection": "DEPENDENCY_DIGEST_FORMAT"}
+{"case": "incorrect-hex-dependency-hash", "matched": true, "observed_rejection": "DEPENDENCY_DIGEST_MISMATCH"}
+{"case": "substituted-dependency-bytes", "matched": true, "observed_rejection": "PROOF_ARTIFACT_BYTES:dependencies/0000.vo"}
+{"case": "missing-dependency-bytes", "matched": true, "observed_rejection": "PROOF_REQUIRED_ARTIFACT_MISSING:dependencies/0000.vo"}
+{"case": "wrong-dependency-membership", "matched": true, "observed_rejection": "DEPENDENCY_CLOSURE_MEMBERSHIP"}
+{"case": "substituted-checked-elf", "matched": true, "observed_rejection": "PROOF_ARTIFACT_BYTES:linux/gcd-selftest.elf"}
+{"case": "missing-checked-elf", "matched": true, "observed_rejection": "PROOF_REQUIRED_ARTIFACT_MISSING:linux/gcd-selftest.elf"}
+{"case": "nonce-substitution", "matched": true, "observed_rejection": "STALE_PROOF_RECEIPT"}
+{"case": "unmanifested-mutation", "matched": true, "observed_rejection": "PROOF_RECEIPT_BYTES"}

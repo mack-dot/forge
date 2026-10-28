@@ -1,0 +1,33 @@
+[
+  {
+    "argv": [
+      "docker",
+      "info",
+      "--format",
+      "{{json .DriverStatus}} {{.Driver}} {{.ServerVersion}}"
+    ],
+    "exit_code": 0,
+    "name": "docker-info"
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "redis:7-alpine"
+    ],
+    "exit_code": 0,
+    "name": "image-inspect"
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "save",
+      "redis:7-alpine"
+    ],
+    "exit_code": 0,
+    "name": "image-save",
+    "stdout": "streamed; not stored"
+  }
+]

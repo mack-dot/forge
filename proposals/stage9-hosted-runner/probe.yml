@@ -1,0 +1,44 @@
+name: Forge Stage 9 hosted-runner probe
+
+# Measurement only. No signing, no id-token, no secrets, no proof run.
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.repository == 'mack-dot/forge'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Record host, Docker and free space
+        run: |
+          mkdir -p probe
+          {
+            echo "image_os=${ImageOS:-} image_version=${ImageVersion:-}"
+            uname -a
+            nproc
+            free -b
+            df -B1 /
+            docker version --format '{{json .}}'
+            docker info --format '{{json .DriverStatus}} driver={{.Driver}}'
+            docker buildx version
+          } > probe/host.txt 2>&1 || echo "host_record_exit=$?" >> probe/host.txt
+      - name: Pull the pinned checker image
+        run: |
+          image=ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902
+          start=$(date +%s)
+          code=0
+          docker pull --platform linux/amd64 "$image" > probe/pull.log 2>&1 || code=$?
+          echo "pull_exit=$code seconds=$(( $(date +%s) - start ))" > probe/pull-result.txt
+          docker image inspect --format '{{.Id}} {{json .RepoDigests}}' "$image" >> probe/pull-result.txt 2>&1 || true
+          df -B1 / >> probe/pull-result.txt
+      - name: Preserve probe records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-hosted-probe-${{ github.run_id }}
+          path: probe/
+          if-no-files-found: error

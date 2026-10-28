@@ -1,0 +1,63 @@
+{"case": "receipt:positive-historical-byte-control", "candidate": {"observed": "accepted", "returned": "e368c4e1425a1bb70a498b7b68e40a0ee7a85f783e25ae063ae323089abcbea6"}, "installed": "accepted"}
+{"case": "receipt:invalid-sha256-syntax-all", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT"}, "installed": "accepted"}
+{"case": "receipt:invalid-sha256-uppercase-one", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT"}, "installed": "accepted"}
+{"case": "receipt:invalid-sha256-non-string", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT"}, "installed": "exception"}
+{"case": "receipt:invalid-manifest-digest-syntax", "candidate": {"observed": "rejected", "reason": "RECEIPT_DIGEST_FORMAT"}, "installed": "rejected"}
+{"case": "receipt:incorrect-dependency-digest", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_MISMATCH"}, "installed": "accepted"}
+{"case": "receipt:missing-dependency-entry", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_CLOSURE_MEMBERSHIP"}, "installed": "rejected"}
+{"case": "receipt:missing-dependency-bytes", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_BYTES_MISSING:dependencies/home/opam/.opam/4.14/lib/coq/theories/Array/ArrayAxioms.vo"}, "installed": "accepted"}
+{"case": "receipt:extra-dependency-entry-and-bytes", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_CLOSURE_MEMBERSHIP"}, "installed": "rejected"}
+{"case": "receipt:extra-dependency-bytes-only", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_EXTRA_FILE"}, "installed": "accepted"}
+{"case": "receipt:substituted-dependency-bytes-consistent-closure", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_MISMATCH"}, "installed": "accepted"}
+{"case": "receipt:substituted-dependency-bytes-manifest-only", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_BYTES:dependencies/home/opam/.opam/4.14/lib/coq/theories/Array/ArrayAxioms.vo"}, "installed": "accepted"}
+{"case": "receipt:substituted-own-proof-object", "candidate": {"observed": "rejected", "reason": "PROOF_ARTIFACT_BYTES:linux/source/Proof.vo"}, "installed": "accepted"}
+{"case": "receipt:wrong-dependency-closure-identity", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_CLOSURE_MEMBERSHIP"}, "installed": "accepted"}
+{"case": "receipt:wrong-kernel-loaded-closure", "candidate": {"observed": "rejected", "reason": "KERNEL_DEPENDENCY_MEMBERSHIP"}, "installed": "accepted"}
+{"case": "receipt:missing-copied-elf", "candidate": {"observed": "rejected", "reason": "PROOF_REQUIRED_ARTIFACT_MISSING:linux/gcd-selftest.elf"}, "installed": "accepted"}
+{"case": "receipt:modified-copied-elf", "candidate": {"observed": "rejected", "reason": "PROOF_ARTIFACT_BYTES:linux/gcd-selftest.elf"}, "installed": "accepted"}
+{"case": "receipt:correct-manifest-malicious-extra-executable", "candidate": {"observed": "rejected", "reason": "PROOF_UNEXPECTED_EXECUTABLE:linux/payload.bin"}, "installed": "accepted"}
+{"case": "receipt:correct-manifest-unexpected-elf-name", "candidate": {"observed": "rejected", "reason": "PROOF_UNEXPECTED_ARTIFACT:linux/second.elf"}, "installed": "accepted"}
+{"case": "receipt:stale-nonce", "candidate": {"observed": "rejected", "reason": "STALE_PROOF_RECEIPT"}, "installed": "rejected"}
+{"case": "receipt:wrong-source-commit", "candidate": {"observed": "rejected", "reason": "STALE_PROOF_RECEIPT"}, "installed": "rejected"}
+{"case": "receipt:valid-receipt-replayed-different-request", "candidate": {"observed": "rejected", "reason": "STALE_PROOF_RECEIPT"}, "installed": "rejected"}
+{"case": "receipt:missing-kernel-log", "candidate": {"observed": "rejected", "reason": "KERNEL_LOG_MISSING"}, "installed": "exception"}
+{"case": "receipt:kernel-not-independent", "candidate": {"observed": "rejected", "reason": "PROOF_NOT_ESTABLISHED"}, "installed": "rejected"}
+{"case": "receipt:kernel-command-absent", "candidate": {"observed": "rejected", "reason": "INDEPENDENT_KERNEL_EXIT"}, "installed": "exception"}
+{"case": "receipt:kernel-command-changed", "candidate": {"observed": "rejected", "reason": "KERNEL_COMMAND_BINDING"}, "installed": "accepted"}
+{"case": "receipt:kernel-summary-truncated", "candidate": {"observed": "rejected", "reason": "KERNEL_ASSUMPTION_SUMMARY"}, "installed": "accepted"}
+{"case": "receipt:kernel-summary-type-in-type", "candidate": {"observed": "rejected", "reason": "KERNEL_SUMMARY"}, "installed": "accepted"}
+{"case": "receipt:unmanifested-mutation", "candidate": {"observed": "rejected", "reason": "PROOF_RECEIPT_BYTES"}, "installed": "rejected"}
+{"case": "receipt:malformed-manifest-files", "candidate": {"observed": "rejected", "reason": "PROOF_RECEIPT_FIELDS"}, "installed": "exception"}
+{"case": "receipt:malformed-report-json", "candidate": {"observed": "rejected", "reason": "PROOF_RECEIPT_MALFORMED:JSONDecodeError"}, "installed": "exception"}
+{"case": "receipt:symlink-in-receipt", "candidate": {"observed": "rejected", "reason": "SYMLINK_INPUT"}, "installed": "rejected"}
+{"case": "package:positive-synthetic-package", "candidate": {"observed": "accepted", "returned": null}}
+{"case": "package:positive-synthetic-package-gzip-layer", "candidate": {"observed": "accepted", "returned": null}}
+{"case": "package:positive-synthetic-package-extra-metadata-layer", "candidate": {"observed": "accepted", "returned": null}}
+{"case": "package:missing-packaged-elf", "candidate": {"observed": "rejected", "reason": "PACKAGED_ELF_MISSING"}}
+{"case": "package:substituted-packaged-elf", "candidate": {"observed": "rejected", "reason": "PACKAGE_MALFORMED:TypeError"}}
+{"case": "package:packaging-descriptor-rewritten", "candidate": {"observed": "rejected", "reason": "PACKAGE_DESCRIPTOR_BINDING"}}
+{"case": "package:packaging-metadata-matches-wrong-executable", "candidate": {"observed": "rejected", "reason": "PACKAGED_ELF_BYTES"}}
+{"case": "package:self-consistent-image-with-wrong-elf", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:image-without-elf", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:absent"}}
+{"case": "package:later-layer-whiteout", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:removed"}}
+{"case": "package:later-layer-symlink-ancestor", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:obscured"}}
+{"case": "package:elf-as-symlink", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:elf-wrong-mode", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:elf-wrong-owner", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:whiteout-and-file-same-layer", "candidate": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:ambiguous"}}
+{"case": "package:duplicate-layer-entry", "candidate": {"observed": "rejected", "reason": "PACKAGE_LAYER_DUPLICATE"}}
+{"case": "package:tampered-added-layer", "candidate": {"observed": "rejected", "reason": "PACKAGE_BLOB_DIGEST:blobs/sha256/827b94a13ef0ecd09c0152c8595c8948fcb5ff48012cff24b2f8a80881f43c6b"}}
+{"case": "package:extra-package-blob", "candidate": {"observed": "rejected", "reason": "PACKAGE_IDENTITY_FILE_SET"}}
+{"case": "package:changed-base-layer-identity", "candidate": {"observed": "rejected", "reason": "PACKAGE_BASE_LAYERS"}}
+{"case": "package:root-user-config", "candidate": {"observed": "rejected", "reason": "PACKAGE_RUNTIME_CONFIG"}}
+{"case": "package:zstd-layer", "candidate": {"observed": "rejected", "reason": "PACKAGE_LAYER_COMPRESSION"}}
+{"case": "package:oversized-gzip-layer", "candidate": {"observed": "rejected", "reason": "PACKAGE_LAYER_SIZE"}}
+{"case": "package:missing-package-identity", "candidate": {"observed": "rejected", "reason": "PACKAGE_MALFORMED:FileNotFoundError"}}
+{"case": "package:unsupported-identity-kind", "candidate": {"observed": "rejected", "reason": "PACKAGE_DESCRIPTOR_FIELDS"}}
+{"case": "package:package-digest-not-config-blob", "candidate": {"observed": "rejected", "reason": "PACKAGE_CONFIG_IDENTITY"}}
+{"case": "signing:positive-reaches-cosign-pin-only", "candidate": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}, "installed": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:missing-packaged-elf", "candidate": {"observed": "rejected", "reason": "PACKAGED_ELF_MISSING", "signing_outputs": []}, "installed": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:substituted-packaged-elf", "candidate": {"observed": "rejected", "reason": "PACKAGED_ELF_BYTES", "signing_outputs": []}, "installed": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:substituted-image-layer", "candidate": {"observed": "rejected", "reason": "PACKAGE_BLOB_DIGEST:blobs/sha256/827b94a13ef0ecd09c0152c8595c8948fcb5ff48012cff24b2f8a80881f43c6b", "signing_outputs": []}, "installed": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:invalid-dependency-digests", "candidate": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT", "signing_outputs": []}, "installed": {"observed": "rejected", "reason": "SIGNING_STATEMENT_BINDING", "signing_outputs": []}}
+{"accepted_proof_evidence": false, "candidate_sha256": {"artifact-identities.json": "0f2c86a49738b5bbdf15cd00b3490347dfece5f5239a3414a46d75c212fa9718", "producer.py": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e", "release.py": "1877aef9688a089fe7fee9026b08968b559044862535c6c398b0e7603a1c6d6f"}, "docker_execution": "not_run", "end_to_end": false, "exit_code": 1, "historical_inputs_unchanged": true, "installed_lock_sha256": "6b43c19370742b02eb05c66b9a9091a6c47431998ef045a09018fa6671459daa", "kernel_execution": "not_run", "scope": "local isolated validator controls; no kernel, Cosign, Docker, workflow or deployment", "signature_execution": "not_run", "unexpected": ["package:substituted-packaged-elf"], "workflow_execution": "not_run"}

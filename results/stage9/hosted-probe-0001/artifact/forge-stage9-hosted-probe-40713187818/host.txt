@@ -1,0 +1,11 @@
+image_os=ubuntu24 image_version=20261026.354.1
+Linux runnervm48cm3 7.0.0-1017-azure #17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+4
+               total        used        free      shared  buff/cache   available
+Mem:     16760344576   893186048 15324676096    39993344   878858240 15867158528
+Swap:     3221221376           0  3221221376
+Filesystem        1B-blocks        Used   Available Use% Mounted on
+/dev/root      154894188544 62981853184 91895558144  41% /
+{"Client":{"Platform":{"Name":"Docker Engine - Community"},"Version":"28.0.4","ApiVersion":"1.48","DefaultAPIVersion":"1.48","GitCommit":"b8034c0","GoVersion":"go1.23.7","Os":"linux","Arch":"amd64","BuildTime":"Tue Mar 25 15:07:16 2025","Context":"default"},"Server":{"Platform":{"Name":"Docker Engine - Community"},"Components":[{"Name":"Engine","Version":"28.0.4","Details":{"ApiVersion":"1.48","Arch":"amd64","BuildTime":"Tue Mar 25 15:07:16 2025","Experimental":"false","GitCommit":"6430e49","GoVersion":"go1.23.7","KernelVersion":"7.0.0-1017-azure","MinAPIVersion":"1.24","Os":"linux"}},{"Name":"containerd","Version":"v2.4.2","Details":{"GitCommit":"b7a25261e029d68978bbf290df0a62fc819b3c51"}},{"Name":"runc","Version":"1.5.2","Details":{"GitCommit":"v1.5.2-0-g29dd3dc2"}},{"Name":"docker-init","Version":"0.19.0","Details":{"GitCommit":"de40ad0"}}],"Version":"28.0.4","ApiVersion":"1.48","MinAPIVersion":"1.24","GitCommit":"6430e49","GoVersion":"go1.23.7","Os":"linux","Arch":"amd64","KernelVersion":"7.0.0-1017-azure","BuildTime":"2025-03-25T15:07:16.000000000+00:00"}}
+[["Backing Filesystem","extfs"],["Supports d_type","true"],["Using metacopy","false"],["Native Overlay Diff","false"],["userxattr","false"]] driver=overlay2
+github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5

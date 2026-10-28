@@ -1,0 +1,63 @@
+{"case": "receipt:positive-historical-byte-control", "repaired": {"observed": "accepted", "returned": "e368c4e1425a1bb70a498b7b68e40a0ee7a85f783e25ae063ae323089abcbea6"}, "pre_repair": "accepted"}
+{"case": "receipt:invalid-sha256-syntax-all", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT"}, "pre_repair": "accepted"}
+{"case": "receipt:invalid-sha256-uppercase-one", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT"}, "pre_repair": "accepted"}
+{"case": "receipt:invalid-sha256-non-string", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT"}, "pre_repair": "exception"}
+{"case": "receipt:invalid-manifest-digest-syntax", "repaired": {"observed": "rejected", "reason": "RECEIPT_DIGEST_FORMAT"}, "pre_repair": "rejected"}
+{"case": "receipt:incorrect-dependency-digest", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_MISMATCH"}, "pre_repair": "accepted"}
+{"case": "receipt:missing-dependency-entry", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_CLOSURE_MEMBERSHIP"}, "pre_repair": "rejected"}
+{"case": "receipt:missing-dependency-bytes", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_BYTES_MISSING:dependencies/home/opam/.opam/4.14/lib/coq/theories/Array/ArrayAxioms.vo"}, "pre_repair": "accepted"}
+{"case": "receipt:extra-dependency-entry-and-bytes", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_CLOSURE_MEMBERSHIP"}, "pre_repair": "rejected"}
+{"case": "receipt:extra-dependency-bytes-only", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_EXTRA_FILE"}, "pre_repair": "accepted"}
+{"case": "receipt:substituted-dependency-bytes-consistent-closure", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_MISMATCH"}, "pre_repair": "accepted"}
+{"case": "receipt:substituted-dependency-bytes-manifest-only", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_BYTES:dependencies/home/opam/.opam/4.14/lib/coq/theories/Array/ArrayAxioms.vo"}, "pre_repair": "accepted"}
+{"case": "receipt:substituted-own-proof-object", "repaired": {"observed": "rejected", "reason": "PROOF_ARTIFACT_BYTES:linux/source/Proof.vo"}, "pre_repair": "accepted"}
+{"case": "receipt:wrong-dependency-closure-identity", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_CLOSURE_MEMBERSHIP"}, "pre_repair": "accepted"}
+{"case": "receipt:wrong-kernel-loaded-closure", "repaired": {"observed": "rejected", "reason": "KERNEL_DEPENDENCY_MEMBERSHIP"}, "pre_repair": "accepted"}
+{"case": "receipt:missing-copied-elf", "repaired": {"observed": "rejected", "reason": "PROOF_REQUIRED_ARTIFACT_MISSING:linux/gcd-selftest.elf"}, "pre_repair": "accepted"}
+{"case": "receipt:modified-copied-elf", "repaired": {"observed": "rejected", "reason": "PROOF_ARTIFACT_BYTES:linux/gcd-selftest.elf"}, "pre_repair": "accepted"}
+{"case": "receipt:correct-manifest-malicious-extra-executable", "repaired": {"observed": "rejected", "reason": "PROOF_UNEXPECTED_EXECUTABLE:linux/payload.bin"}, "pre_repair": "accepted"}
+{"case": "receipt:correct-manifest-unexpected-elf-name", "repaired": {"observed": "rejected", "reason": "PROOF_UNEXPECTED_ARTIFACT:linux/second.elf"}, "pre_repair": "accepted"}
+{"case": "receipt:stale-nonce", "repaired": {"observed": "rejected", "reason": "STALE_PROOF_RECEIPT"}, "pre_repair": "rejected"}
+{"case": "receipt:wrong-source-commit", "repaired": {"observed": "rejected", "reason": "STALE_PROOF_RECEIPT"}, "pre_repair": "rejected"}
+{"case": "receipt:valid-receipt-replayed-different-request", "repaired": {"observed": "rejected", "reason": "STALE_PROOF_RECEIPT"}, "pre_repair": "rejected"}
+{"case": "receipt:missing-kernel-log", "repaired": {"observed": "rejected", "reason": "KERNEL_LOG_MISSING"}, "pre_repair": "exception"}
+{"case": "receipt:kernel-not-independent", "repaired": {"observed": "rejected", "reason": "PROOF_NOT_ESTABLISHED"}, "pre_repair": "rejected"}
+{"case": "receipt:kernel-command-absent", "repaired": {"observed": "rejected", "reason": "INDEPENDENT_KERNEL_EXIT"}, "pre_repair": "exception"}
+{"case": "receipt:kernel-command-changed", "repaired": {"observed": "rejected", "reason": "KERNEL_COMMAND_BINDING"}, "pre_repair": "accepted"}
+{"case": "receipt:kernel-summary-truncated", "repaired": {"observed": "rejected", "reason": "KERNEL_ASSUMPTION_SUMMARY"}, "pre_repair": "accepted"}
+{"case": "receipt:kernel-summary-type-in-type", "repaired": {"observed": "rejected", "reason": "KERNEL_SUMMARY"}, "pre_repair": "accepted"}
+{"case": "receipt:unmanifested-mutation", "repaired": {"observed": "rejected", "reason": "PROOF_RECEIPT_BYTES"}, "pre_repair": "rejected"}
+{"case": "receipt:malformed-manifest-files", "repaired": {"observed": "rejected", "reason": "PROOF_RECEIPT_FIELDS"}, "pre_repair": "exception"}
+{"case": "receipt:malformed-report-json", "repaired": {"observed": "rejected", "reason": "PROOF_RECEIPT_MALFORMED:JSONDecodeError"}, "pre_repair": "exception"}
+{"case": "receipt:symlink-in-receipt", "repaired": {"observed": "rejected", "reason": "SYMLINK_INPUT"}, "pre_repair": "rejected"}
+{"case": "package:positive-synthetic-package", "repaired": {"observed": "accepted", "returned": null}}
+{"case": "package:positive-synthetic-package-gzip-layer", "repaired": {"observed": "accepted", "returned": null}}
+{"case": "package:positive-synthetic-package-extra-metadata-layer", "repaired": {"observed": "accepted", "returned": null}}
+{"case": "package:missing-packaged-elf", "repaired": {"observed": "rejected", "reason": "PACKAGED_ELF_MISSING"}}
+{"case": "package:substituted-packaged-elf", "repaired": {"observed": "rejected", "reason": "PACKAGED_ELF_BYTES"}}
+{"case": "package:packaging-descriptor-rewritten", "repaired": {"observed": "rejected", "reason": "PACKAGE_DESCRIPTOR_BINDING"}}
+{"case": "package:packaging-metadata-matches-wrong-executable", "repaired": {"observed": "rejected", "reason": "PACKAGED_ELF_BYTES"}}
+{"case": "package:self-consistent-image-with-wrong-elf", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:image-without-elf", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:absent"}}
+{"case": "package:later-layer-whiteout", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:removed"}}
+{"case": "package:later-layer-symlink-ancestor", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:obscured"}}
+{"case": "package:elf-as-symlink", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:elf-wrong-mode", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:elf-wrong-owner", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:substituted"}}
+{"case": "package:whiteout-and-file-same-layer", "repaired": {"observed": "rejected", "reason": "PACKAGE_FILESYSTEM_ELF:ambiguous"}}
+{"case": "package:duplicate-layer-entry", "repaired": {"observed": "rejected", "reason": "PACKAGE_LAYER_DUPLICATE"}}
+{"case": "package:tampered-added-layer", "repaired": {"observed": "rejected", "reason": "PACKAGE_BLOB_DIGEST:blobs/sha256/827b94a13ef0ecd09c0152c8595c8948fcb5ff48012cff24b2f8a80881f43c6b"}}
+{"case": "package:extra-package-blob", "repaired": {"observed": "rejected", "reason": "PACKAGE_IDENTITY_FILE_SET"}}
+{"case": "package:changed-base-layer-identity", "repaired": {"observed": "rejected", "reason": "PACKAGE_BASE_LAYERS"}}
+{"case": "package:root-user-config", "repaired": {"observed": "rejected", "reason": "PACKAGE_RUNTIME_CONFIG"}}
+{"case": "package:zstd-layer", "repaired": {"observed": "rejected", "reason": "PACKAGE_LAYER_COMPRESSION"}}
+{"case": "package:oversized-gzip-layer", "repaired": {"observed": "rejected", "reason": "PACKAGE_LAYER_SIZE"}}
+{"case": "package:missing-package-identity", "repaired": {"observed": "rejected", "reason": "PACKAGE_MALFORMED:FileNotFoundError"}}
+{"case": "package:unsupported-identity-kind", "repaired": {"observed": "rejected", "reason": "PACKAGE_DESCRIPTOR_FIELDS"}}
+{"case": "package:package-digest-not-config-blob", "repaired": {"observed": "rejected", "reason": "PACKAGE_CONFIG_IDENTITY"}}
+{"case": "signing:positive-reaches-cosign-pin-only", "repaired": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}, "pre_repair": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:missing-packaged-elf", "repaired": {"observed": "rejected", "reason": "PACKAGED_ELF_MISSING", "signing_outputs": []}, "pre_repair": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:substituted-packaged-elf", "repaired": {"observed": "rejected", "reason": "PACKAGED_ELF_BYTES", "signing_outputs": []}, "pre_repair": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:substituted-image-layer", "repaired": {"observed": "rejected", "reason": "PACKAGE_BLOB_DIGEST:blobs/sha256/827b94a13ef0ecd09c0152c8595c8948fcb5ff48012cff24b2f8a80881f43c6b", "signing_outputs": []}, "pre_repair": {"observed": "rejected", "reason": "COSIGN_PIN", "signing_outputs": []}}
+{"case": "signing:invalid-dependency-digests", "repaired": {"observed": "rejected", "reason": "DEPENDENCY_DIGEST_FORMAT", "signing_outputs": []}, "pre_repair": {"observed": "rejected", "reason": "SIGNING_STATEMENT_BINDING", "signing_outputs": []}}
+{"accepted_proof_evidence": false, "candidate_sha256": {"artifact-identities.json": "0f2c86a49738b5bbdf15cd00b3490347dfece5f5239a3414a46d75c212fa9718", "producer.py": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e", "release.py": "1877aef9688a089fe7fee9026b08968b559044862535c6c398b0e7603a1c6d6f"}, "docker_execution": "not_run", "end_to_end": false, "exit_code": 0, "historical_inputs_unchanged": true, "installed_lock_sha256": "9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76", "kernel_execution": "not_run", "scope": "local isolated validator controls; no kernel, Cosign, Docker, workflow or deployment", "signature_execution": "not_run", "unexpected": [], "workflow_execution": "not_run"}

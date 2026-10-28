@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "docker",
+    "inspect",
+    "--format",
+    "{{json .State}}",
+    "forge-stage7-own-proof-0001"
+  ],
+  "exit_code": 0,
+  "scope": "read_only_existing_container_inspection"
+}

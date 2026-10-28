@@ -7,10 +7,13 @@ import re
 import secrets
 import shutil
 import sqlite3
+import tarfile
+import tempfile
 
 from common import (ROOT, HERE, Records, canonical, clean_environment, context, cosign_path,
                     digest, files, parse, read, require, sha, write)
-from release import expected_canonical, validate_receipt
+from release import (BLOB, IDENTITIES, expected_canonical, image_identity, validate_package,
+                     validate_receipt)
 
 
 def runtime(records):
@@ -74,6 +77,7 @@ def package(policy, out, records):
                   'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '
                                    '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
                   'end_to_end': False}
+    package_identity(policy, image, descriptor, out, records)
     # Inspect bytes from a real container made from the built package.
     _, data, _ = records.run(['docker', 'create', '--platform', 'linux/amd64', image], 'package-container')
     container = data.decode().strip()
@@ -84,15 +88,43 @@ def package(policy, out, records):
     return descriptor
 
 
+def package_identity(policy, image, descriptor, out, records):
+    # Transport the config and added layers, so a later job can rehash the
+    # package without this Docker store. Base layers stay bound by diff ID.
+    identity = read(IDENTITIES)['package']
+    base = len(identity['base_rootfs_diff_ids'])
+    target = out / 'package-identity'
+    with tempfile.TemporaryDirectory() as temporary:
+        archive = Path(temporary) / 'image.tar'
+        records.run(['docker', 'image', 'save', '--output', archive, image], 'package-save')
+        with tarfile.open(archive, 'r:') as tar:
+            manifest = tar.extractfile('manifest.json').read()
+            entries = parse(manifest)
+            require(isinstance(entries, list) and len(entries) == 1, 'PACKAGE_MANIFEST')
+            selected = [entries[0]['Config']] + entries[0]['Layers'][base:]
+            require(all(isinstance(name, str) and BLOB.fullmatch(name) for name in selected), 'PACKAGE_LAYER_LIST')
+            target.mkdir()
+            (target / 'manifest.json').write_bytes(manifest)
+            for name in selected:
+                (target / name).parent.mkdir(parents=True, exist_ok=True)
+                (target / name).write_bytes(tar.extractfile(name).read())
+    image_identity(target, descriptor, identity, (ROOT / policy['release_artifact']['path']).read_bytes())
+
+
 def replay(policy, lock, implementation, request, out, records):
     pins = read(ROOT / 'toolchain/stage7-pins.json')
     prepared = Path(os.environ['FORGE_STAGE7_ROOT']).resolve()
     require(prepared.is_dir(), 'PREPARED_STAGE7_ROOT')
     require(files(prepared / '.toolchain/stage7/pydeps') == implementation['python_container_dependencies'],
             'UPSTREAM_PYTHON_DEPENDENCIES')
-    attempt = 'stage9-' + request['challenge']
-    name = 'forge-' + attempt
+    # Rocq .vo bytes contain their build path. Use the approved path on a fresh
+    # isolated volume. The Stage 7 job rejects an existing attempt; never delete
+    # or reuse an old proof to satisfy this precondition.
+    receipt_identity = read(IDENTITIES)['receipt']
+    attempt = receipt_identity['attempt']
+    name = 'forge-stage9-' + request['challenge']
     linux = '/work/.forge-stage7/own-proof/' + attempt
+    require(linux == receipt_identity['attempt_root'], 'PROOF_ATTEMPT_PATH')
     records.run(['docker', 'pull', '--platform', pins['platform'], pins['checker_image']], 'checker-pull')
     command = ['docker', 'run', '--name', name, '--pull', 'never', '--platform', pins['platform'],
                '--network', 'none', '--read-only', '--user', '1000:1000',
@@ -118,17 +150,27 @@ def replay(policy, lock, implementation, request, out, records):
                                'proof-collect', check=False)
     _, state, _ = records.run(['docker', 'inspect', name], 'proof-container-state')
     require(code == 0 and collect == 0 and not parse(state)[0]['State']['OOMKilled'], 'FRESH_PROOF_FAILED')
-    # Archive hashes of the actual .vo inputs named by real rocqchk output.
-    collector = ['python3', '-c',
-        'import pathlib,re,hashlib,json; '
-        f'p=pathlib.Path({linux!r})/"independent-kernel.log"; '
-        'paths=re.findall(r"^\\[intern (.+\\.vo) \\.\\.\\.$",p.read_text(),re.M); '
-        'print(json.dumps({n:hashlib.sha256(pathlib.Path(n).read_bytes()).hexdigest() for n in paths},sort_keys=True))']
+    # Copy and hash the actual .vo inputs named by real rocqchk output.
+    collector = ['python3', '-c', '\n'.join([
+        'import hashlib, json, pathlib, re',
+        f'base = pathlib.Path({linux!r})',
+        'log = (base / "independent-kernel.log").read_text()',
+        r'paths = re.findall(r"^\[intern (.+\.vo) \.\.\.$", log, re.M)',
+        'identities = {}',
+        'for name in sorted(set(paths)):',
+        '    data = pathlib.Path(name).read_bytes()',
+        '    copy = base / "dependencies" / name.lstrip("/")',
+        '    copy.parent.mkdir(parents=True, exist_ok=True)',
+        '    copy.write_bytes(data)',
+        '    identities[name] = hashlib.sha256(data).hexdigest()',
+        'print(json.dumps(identities, sort_keys=True))'])]
     command2 = command[:command.index('-w')]  # same immutable mounts and resource limits
     command2[command2.index('--name') + 1] = name + '-closure'
     command2 += ['-w', '/work', pins['checker_image']] + collector
     _, closure, _ = records.run(command2, 'closure-input-hashes')
     write(proof / 'closure-identities.json', parse(closure))
+    records.run(['docker', 'cp', name + '-closure:' + linux + '/dependencies', str(proof / 'dependencies')],
+                'closure-input-copy')
     manifest = {'challenge': request['challenge'], 'source_commit': request['expected_source_commit'],
                 'files': files(proof), 'end_to_end': False}
     write(proof / 'receipt.json', manifest)
@@ -228,6 +270,8 @@ def sign(args, policy, lock, implementation, request):
     workflow(request, negative=args.action == 'negative-sign')
     require(read(args.output / 'request.json') == request, 'SIGNING_REQUEST_BINDING')
     validate_receipt(args.output / 'proof', policy, lock, request)
+    # Rehash the downloaded package bytes; the producer's checks are not reused.
+    validate_package(policy, request, args.output)
     require(read(args.output / 'evidence.json') == expected_canonical(
         policy, lock, args.implementation_sha256, request['package']), 'SIGNING_EVIDENCE_BINDING')
     expected = statement(policy, request, read(args.output / 'evidence.json'),

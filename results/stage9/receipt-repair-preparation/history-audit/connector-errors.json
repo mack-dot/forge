@@ -1,0 +1,16 @@
+{
+  "scope": "tool_endpoint_support_only",
+  "requests": [
+    {
+      "url": "https://api.github.com/repos/mack-dot/forge/actions/workflows/provenance.yml/runs?per_page=100",
+      "tool_error": "HTTPError: 400: GitHub Fetch URL is not an allowed public GitHub repository or search endpoint. (Response: None)",
+      "error_code": "INVALID_ARGUMENT"
+    },
+    {
+      "url": "https://api.github.com/repos/mack-dot/forge/actions/workflows/provenance-negative.yml/runs?per_page=100",
+      "tool_error": "HTTPError: 400: GitHub Fetch URL is not an allowed public GitHub repository or search endpoint. (Response: None)",
+      "error_code": "INVALID_ARGUMENT"
+    }
+  ],
+  "fallback": "read-only unauthenticated public REST GET"
+}

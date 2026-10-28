@@ -1819,3 +1819,319 @@ curl: (6) Could not resolve host: github.com
   admission before registration or signing. Obtain explicit authorization for
   the concrete provisioning and research operations. Preserve the approved
   bytes until any repair is separately approved. Do not begin Stage 10.
+
+## U078 — Integrity repair prepared unapplied; image-store identity and freshness limits remain
+
+- References: U077; docs/stage9-signing-preparation-audit.md;
+  proposals/provenance-integrity-repair.md. It supersedes the earlier unrecorded
+  draft proposals/provenance-receipt-repair.md (gaps 1–2 only), which stays
+  unchanged as history.
+- Observed: a four-file candidate (release.py, producer.py, new
+  artifact-identities.json, implementation.lock) is under
+  proposals/provenance-integrity-repair/ and results/stage9/
+  integrity-repair-preparation/approval-0001/. Nothing is applied. git apply
+  --check and git apply returned 0 only in the scratch copy
+  build/stage9-integrity-apply-0001. The protected tree hashes are equal before
+  and after.
+- Observed tests: test_integrity.py attempt 0001 returned 1. That was a harness
+  defect: a mutation helper passed write_bytes' integer as the request, and the
+  candidate rejected with PACKAGE_MALFORMED:TypeError. Attempt 0002 returned 0
+  with no unexpected cases. Results: 31 receipt negatives, 5 audit cases,
+  22 package negatives, 4 signing-path negatives and 120 seeded property cases
+  were all rejected. 4 positive controls were accepted. The bounded layer model
+  had 0 unsound acceptances in 5,652 checks. The installed validator accepted 17
+  of the 31 receipt negatives. Both attempts are kept.
+- Scope: the test fixtures are historical bytes that are explicitly untrusted,
+  plus synthetic image archives. The positive controls show only byte equality
+  with the approved identities. They are not kernel-checked proof, and they are
+  not formal verification. No kernel, Docker, Cosign, workflow or deployment ran.
+- Uncertainty: the fixed attempt-0001 path makes a relabeled historical receipt
+  acceptable by content. Freshness still relies on the producer, the fresh
+  volume, the controller and the same-run handoff (as in U077). The Stage 7
+  record shows Id == RepoDigest, which suggests the containerd store. Under that
+  store the approved docker_image_config descriptor may be false. The candidate
+  then fails closed with PACKAGE_CONFIG_IDENTITY. The docker image save layout
+  is untested because the daemon was not running. Base layers are bound only by
+  registry diff_ids. No .git directory is present, so the base commit is not
+  checked locally.
+- Impact: gaps 1–3 have a candidate repair that awaits exact-byte approval.
+  Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: user approval of the four exact hashes. Before any execution,
+  confirm the runner image store and the save format, and resolve runner
+  admission and execution authorization (U077).
+
+## U079 — Approved integrity repair applied; execution blockers unchanged
+
+- References: U077, U078; proposals/provenance-integrity-repair.md.
+- Approval: the user replied "approve" to the report that listed the four
+  exact SHA-256 hashes and the diff hash
+  df0bd7fbbae0a2680ba076038b9096cbcc87beca3d9516492a8337c1567eda5e. The
+  approval is a conversation record, not a cryptographic signature. It does
+  not authorize runner registration, workflow dispatch, signing or deployment.
+- Observed adoption: the diff hash matched before application. git apply
+  --check and git apply returned 0. The installed release.py, producer.py,
+  artifact-identities.json and implementation.lock match the approved hashes.
+  common.context with lock 9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76
+  returned 0 over 61 locked files. The old lock hash is now rejected with
+  UNAPPROVED_IMPLEMENTATION (exit 1), as expected. py_compile returned 0.
+- Observed: scripts/check_stage9_installation.py returned 1 (AssertionError at
+  its candidate byte comparison). It compares installed bytes with the earlier
+  11-file approval, which this approved repair partly replaces. The check is
+  historical and stays unchanged. Its expectations were not edited to pass.
+- Scope: no kernel, Docker, Cosign, workflow or deployment ran. Tests remain
+  the finite local controls of U078.
+- Impact: the receipt-repair blocker of U077 is resolved at the code level.
+  Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false. The
+  controller must now supply the lock hash 9b10a237….
+- Next check: confirm the runner image store and the docker image save layout.
+  Resolve runner admission. Obtain explicit execution authorization.
+
+## U080 — Adversarial suite rerun against the installed gate
+
+- References: U078, U079.
+- Gap: test_integrity.py pins the pre-adoption lock 6b43c193…, so after U079 it
+  stops at the lock check. Earlier runs tested byte-identical candidate copies,
+  not the installed gate itself.
+- Observed: derive_installed_test.py checked the hash of the unchanged
+  test_integrity.py (982bdc2f…). It applied counted exact replacements and
+  wrote test_installed.py (3c26d315…). Exit 0. The derived suite tests the
+  installed gate under the new lock 9b10a237…. It compares that gate with the
+  pre-repair approved bytes in proposals/provenance-implementation/, after it
+  checks their hashes (e9f61515…, f3bcc1dc…). Its result field candidate_sha256
+  hashes the installed gate files.
+- Observed result: test_installed.py returned 0 with no unexpected cases. The
+  repaired gate rejected 31/31 receipt negatives, 22/22 package negatives, 4/4
+  signing negatives (no signature files) and 120/120 property cases. The 4
+  positive controls were accepted. The layer model had 0 unsound acceptances.
+  The pre-repair baseline accepted 17 of 31 receipt negatives, as in U078.
+- Scope: the same local fixtures as U078. They are not kernel-checked proof
+  and not formal verification. No kernel, Docker, Cosign, workflow or
+  deployment ran. test_integrity.py and all earlier records stay unchanged.
+- Impact: post-adoption evidence now covers the installed bytes. Stage 9
+  remains CURRENT. All six EXITs are NOT RUN. end_to_end=false. The execution
+  blockers in U079 are unchanged.
+
+## U081 — Pinned Docker Desktop runtime uses the containerd store; package identity fails closed
+
+- References: U078 (items 4–5), U079, U080; proposals/provenance-integrity-repair.md
+  sections 7–8; results/stage9/image-store-observation/.
+- Observed: the local runtime matches every pin in gate/provenance/runtime.json
+  that was read: Docker Desktop 4.48.0 (207573), Engine 28.5.1, buildx
+  v0.29.1-desktop.1, builder desktop-linux, driver docker, BuildKit v0.25.1.
+  docker info reports DriverStatus driver-type=io.containerd.snapshotter.v1.
+  This is the containerd image store. The host is arm64.
+- Observed: observe.py (sha256 03e8f13e…) streamed docker image save for two
+  local images. Both runs returned 0. No archive was stored.
+  redis:7-alpine (linux/arm64, 7 layers) and the pinned checker base
+  cc9ae43a… (linux/amd64, 55 layers) had the same layout: oci-layout,
+  index.json, a one-entry manifest.json and blobs/sha256/. Config is
+  blobs/sha256/<config digest>. Layers are gzip blobs. Each blob file hash
+  equals its path name. Each gunzipped hash equals its diff_id. For the base,
+  the config blob is e49a3a57…, which equals the approved base_config.
+- Observed: for both images, the Config path does not equal blobs/sha256/<Id>.
+  Id equals the RepoDigest digest, not the config digest.
+- Inference: under this store, producer.package() fails closed. It fails at
+  PACKAGE_IDENTITY or at PACKAGE_CONFIG_IDENTITY. Which one depends on whether
+  the buildx iidfile holds the config digest or the manifest digest. That is
+  not observed, because no image was built. The other gate layout assumptions
+  (blob paths, gzip layers, diff_id binding) held for both saved images.
+- Observed: producer.runtime() checks versions and the Desktop name, but not
+  the image store. The store is a Desktop setting, not a pinned value.
+- Uncertainty: the classic-store save layout is untested on this runtime. The
+  runner host does not exist yet. Its store setting is unknown.
+- Impact: U078 item 5 (save layout) is resolved for the containerd store on
+  the pinned runtime. U078 item 4 is confirmed for that store. Stage 9 remains
+  CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: user decision. Either require the classic store on the runner
+  and observe the classic save layout, or approve a separate descriptor change
+  for the containerd store. Do not relabel the identity. Runner admission and
+  execution authorization (U077) remain open.
+
+## U082 — Classic image store chosen; pinned base save layout matches the gate
+
+- References: U081, U078 (items 4–5); proposals/stage9-runner-provisioning.md;
+  results/stage9/image-store-observation/.
+- Decision: the user chose option A ("do A"): require the classic image store
+  on the runner. The user switched the local Docker Desktop setting and said
+  it was applied. This is a conversation record, not a signature. It does not
+  authorize runner registration, dispatch, signing or deployment.
+- Observed: docker info returned 0 with driver overlay2 and no
+  io.containerd.snapshotter.v1 entry. Docker Desktop is still 4.48.0 (207573).
+- Observed: docker pull --platform linux/amd64 of the pinned checker base
+  cc9ae43a… returned 0. observe.py (sha256 03e8f13e…, unchanged) returned 0.
+  Summary sha256 8e673cdd…. Id is sha256:e49a3a57…. The Config path is
+  blobs/sha256/e49a3a57…, so Config equals Id and the approved base_config.
+  RepoDigests contains the pinned reference, which producer.package() requires.
+  All 55 layers are uncompressed blobs named by their diff_id. 54 have a tar
+  header; one is the standard 1024-byte empty layer 5f70bf18…. The layout
+  (oci-layout, index.json, one-entry manifest.json) matches U081.
+- Inference: under the classic store, the image-config identity of the gate is
+  consistent with docker image inspect and docker image save. The gate's plain
+  tar path handles uncompressed layers.
+- Not observed: no package image was built. The buildx iidfile value, the added
+  layer and the full producer path are untested. The gate does not check the
+  store; the containerd store still makes it fail closed (U081).
+- Changed: proposals/stage9-runner-provisioning.md has a new pins row that
+  requires the classic store. It is not a protected or locked file.
+- Impact: U078 items 4–5 are resolved for the base image on the pinned runtime.
+  Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: runner admission and execution authorization (U077). A local
+  package build, with explicit authorization, would test the iidfile and the
+  added layer.
+
+## U083 — Installed package step accepted locally; runner admission still blocks execution
+
+- References: U077, U081, U082; proposals/stage9-runner-provisioning.md;
+  results/stage9/package-build-observation/.
+- Authorization: the user said "make those changes for me u got all perms"
+  after a report that listed a local package build, runner admission and
+  execution authorization. This is a conversation record, not a signature.
+- Observed: run_package.py (sha256 e6c63f85…) calls clean_environment(),
+  common.context(9b10a237…) and the installed producer.package(). Runs 0001 and
+  0002 returned 0. All 11 recorded Docker commands returned 0. The descriptor has
+  config f15f5bd4…, 57 diff_ids, the 55 approved base diff_ids as a prefix, and
+  two added layers (da96748c…, 5f70bf18…). result.json (0ccd5386…),
+  package.json and package-identity/ are byte-identical across runs.
+- Scope: this is only the package step on the user's working Mac with the
+  classic store. The second build may have used the BuildKit cache, so it shows
+  stability, not a clean rebuild. Each run left one created, unstarted container.
+  No kernel, Cosign, workflow, signature or deployment ran.
+- Observed (read-only GitHub): mack-dot/forge is public, owner type User, one
+  collaborator, fork PR approval first_time_contributors, 0 runners, five
+  active workflows. main is 9679265c…. On main, implementation.lock is
+  6b43c193… (pre-repair), release.py and producer.py are the pre-repair bytes,
+  and artifact-identities.json is absent. provenance.yml matches the local file.
+  The local tree has no .git directory.
+- Observed (GitHub docs): organization runner groups need the GitHub Team plan.
+  The page does not state the plan for workflow restrictions. GitHub recommends
+  self-hosted runners only for private repositories.
+- Constraint: the approved runner plan forbids the user's working Mac, repository
+  transfer, visibility change and a widened signer policy under the present
+  approval. It requires an enforceable admission mechanism before registration.
+  A general grant of permissions does not supply dedicated hardware, and it does
+  not select an admission mechanism. No runner was registered.
+- Note: the local Docker store change (U082) was a local observation at the
+  user's request. It is not the runner configuration.
+- Impact: the package step is resolved locally. Stage 9 remains CURRENT. All
+  six EXITs are NOT RUN. end_to_end=false.
+- Next check: user selection of an admission path and of dedicated hardware.
+  Publish the approved repair to main before any dispatch.
+
+## U084 — Repository made private; installed gate's GitHub fetches now fail closed
+
+- References: U077, U083; proposals/stage9-runner-provisioning.md;
+  proposals/stage9-runner-admission.md (sha256 dfdca5d5…);
+  results/stage9/visibility-change-0001/.
+- Decision: after an explanation of the trade-offs, the user said "okay do
+  that please go private for now". This is a conversation record, not a
+  signature. It does not approve the admission amendment, a gate change,
+  hardware, registration, dispatch, signing or deployment.
+- Observed: before, visibility=public. gh api -X PATCH repos/mack-dot/forge
+  -f visibility=private returned 0. After, visibility=private, id 1434789853
+  and owner.id 235131950 (unchanged, as policy/provenance.json requires). An
+  unauthenticated GET of the repository API returned HTTP 404.
+- Observed (code): common.fetch() sends no token. repository_identity() and
+  preflight.py fetch api.github.com and raw.githubusercontent.com for this
+  repository. The policy does not pin visibility.
+- Inference: while the repository is private, the installed gate cannot pass
+  its repository-identity and source checks. It fails closed. No run was made
+  to observe this.
+- Observed: a peer session reported that the account's October GitHub Actions
+  spend reached its cap. The three hosted forge workflows run only on pull
+  requests to main, path-filtered pushes or manual dispatch. Self-hosted jobs
+  use no hosted minutes. Hosted runs in a private repository use paid minutes.
+- Uncertainty: the fork pull-request setting endpoint for private repositories
+  has not been called or verified. Earlier public publication links now
+  return 404 to anonymous readers.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: the user approves or rejects the amendment, chooses option A
+  (authenticated fetch, protected exact-byte proposal) or B (public signing
+  window), and chooses hardware. Then publish the approved repair to main.
+
+## U085 — Option A violated verifier independence; private-fetch work paused
+
+- References: U084; proposals/stage9-runner-admission.md (now sha256 abcba3b2…,
+  with a correction note; U084 recorded the earlier version);
+  spec/provenance/protocol.md lines 12–13 and 67.
+- Observed: the user asked "shouldnt the verification be independent or not?".
+  The question was correct. repository_identity() is called only by the release
+  verifier (release.py line 270). The contract requires the verifier to use its
+  own approved policy and lock; candidates cannot supply replacement trust.
+  Option A as written in U084 gave the verifier the producer workflow's token.
+  That design is withdrawn.
+- Corrected design (not prepared): the verifier uses its own read-only token on
+  the controller host. Only the producer-side check in preflight.py may use the
+  job token. exit_stage_9.py passes its full environment to release.py; Cosign
+  gets clean_environment(), which drops unknown variables.
+- Paused: the user then asked what is best for other users, an organization and
+  ease of use. No candidate bytes, scripts or protected changes were written.
+- Observed: the proof container is limited to 4 GiB memory and one CPU in the
+  approved command. policy/provenance.json already pins a linux-amd64 Cosign
+  hash. The checker image is linux/amd64.
+- Uncertainty: hosted-runner disk space, the six-hour job limit and per-run
+  Stage 7 seed setup are not measured. Plan availability of runner-group
+  workflow restrictions is not confirmed.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+  The repository is still private.
+- Next check: user decision on the runner platform, visibility and owner.
+
+## U086 — Public repository and hosted Linux runners chosen; visibility change not run
+
+- References: U077, U084, U085; proposals/stage9-hosted-runner.md (sha256
+  4ddfe0c9…); proposals/stage9-hosted-runner/probe.yml (sha256 23f0d2d4…).
+- Decision: after a recommendation, the user said "lets do that please" for a
+  public repository and GitHub-hosted Linux producer runners. The owner or
+  organization question is still open. This is a conversation record, not a
+  signature, and not approval of protected bytes.
+- Observed: the command gh api -X PATCH repos/mack-dot/forge -f
+  visibility=public did not run. The Claude Code auto-mode permission check
+  denied it ("Create Public Surface"). The repository stays private. No
+  other route was tried.
+- Observed: spec/provenance/protocol.md has no self-hosted, macOS, Darwin,
+  Docker Desktop or runner requirement. policy/provenance.json pins Cosign for
+  darwin-arm64 and linux-amd64. toolchain/stage7-pins.json names one image (the
+  checker) for linux/amd64. The proof step needs a pinned upstream clone, 45
+  locked Python dependency files and a seeded Docker volume.
+- Inference: the platform move changes implementation files only (workflows,
+  runtime.json, producer.py, preflight.py, implementation.lock). The signer
+  identity and contract stay the same while the owner stays mack-dot.
+- Uncertainty: hosted image updates versus exact Docker pins, free disk, the
+  rebuild time of the Stage 7 prerequisites and the fresh proof duration are not
+  measured. The probe is written and syntax-checked only.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+  The self-hosted runner plan and admission amendment are superseded in design.
+- Next check: the user makes the repository public. Then push and dispatch the
+  probe. Then prepare the exact implementation proposal.
+
+## U087 — Repository public again; hosted-runner probe supports the Linux design
+
+- References: U086; proposals/stage9-hosted-runner.md;
+  results/stage9/visibility-change-0002/; results/stage9/hosted-probe-0001/.
+- Observed: the user ran gh api -X PATCH repos/mack-dot/forge -f
+  visibility=public and pasted its output. A read-only check returned
+  visibility=public, id 1434789853 and owner.id 235131950. An unauthenticated
+  API read returned HTTP 200, so the installed verifier fetch works again.
+- Observed: the probe was pushed to main through the contents API (exit 0,
+  commit ac6dfe51…, parent 9679265c…). Its blob 4470a811… equals git
+  hash-object of the local file. Dispatch, watch and download returned 0. Run
+  40713187818 concluded success at head ac6dfe51…. One recording command (gh run
+  view with an invalid field "path") failed; its output is kept as
+  run-view-0001.error.txt and a corrected command returned 0.
+- Observed host: ubuntu24 image 20261026.354.1, kernel 7.0.0-1017-azure,
+  x86_64, 4 CPUs, 16,760,344,576 bytes RAM, 91,895,558,144 bytes free on /.
+  Docker Engine - Community 28.0.4, containerd v2.4.2, runc 1.5.2, buildx
+  v0.38.1. Storage driver overlay2 with no containerd snapshotter: the classic
+  image store.
+- Observed pull: exit 0 in 72 seconds; 3,866,910,720 bytes more disk used. Id
+  sha256:e49a3a57… equals the approved base_config, and RepoDigests contains the
+  pinned reference. This matches the U082 classic-store result.
+- Inference: the image-config identity design fits the hosted runner without a
+  store change. Disk and memory are sufficient for one image and the 4 GiB proof
+  container. The runtime pins must be replaced with Linux values.
+- Uncertainty: hosted images change weekly (Docker 28.0.4 here). Exact pins need
+  a pinned Docker install in the job, or a recorded exception. Rebuild time of
+  the Stage 7 prerequisites and the fresh proof duration are not measured. The
+  owner or organization question is open.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: measure the Stage 7 prerequisite rebuild and the fresh proof on a
+  hosted runner, then prepare the exact implementation proposal.

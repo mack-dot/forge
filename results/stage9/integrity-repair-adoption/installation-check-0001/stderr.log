@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/scripts/check_stage9_installation.py", line 45, in <module>
+    raise SystemExit(main())
+  File "/Users/mackianni/forge/scripts/check_stage9_installation.py", line 19, in main
+    assert p.read_bytes() == (ROOT / item['candidate']).read_bytes()
+AssertionError

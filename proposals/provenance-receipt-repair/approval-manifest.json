@@ -1,0 +1,56 @@
+{
+  "base_commit": "9679265c326d8d630e54c728f307891e5d6422ab",
+  "base_implementation_lock_sha256": "6b43c19370742b02eb05c66b9a9091a6c47431998ef045a09018fa6671459daa",
+  "changes": [
+    {
+      "before_sha256": "e9f61515ae14300c099f6d2179df0610fe23b5267f3f14361165e2993f039df8",
+      "bytes": 11813,
+      "candidate": "proposals/provenance-receipt-repair/release.py",
+      "operation": "modify",
+      "sha256": "7296431cd26b67cb9105abda37b928c9e09270bd63d46f727fbdd5472a0c0a20",
+      "target": "gate/provenance/release.py"
+    },
+    {
+      "before_sha256": "f3bcc1dc754a4ca423a1746215e12b09c39a7882922b338861c6470c71dd617a",
+      "bytes": 19354,
+      "candidate": "proposals/provenance-receipt-repair/producer.py",
+      "operation": "modify",
+      "sha256": "49bbc28de06c37ed8b5a3363ee31aef2a5603632857030800f58fd645e4a4aac",
+      "target": "gate/provenance/producer.py"
+    },
+    {
+      "before_sha256": null,
+      "bytes": 212721,
+      "candidate": "proposals/provenance-receipt-repair/receipt-identities.json",
+      "operation": "add",
+      "sha256": "b86986ce210fb16ce2f27dcbd1248ae8ca1314008ee841ee454dcad106f824c4",
+      "target": "gate/provenance/receipt-identities.json"
+    },
+    {
+      "before_sha256": "6b43c19370742b02eb05c66b9a9091a6c47431998ef045a09018fa6671459daa",
+      "bytes": 10912,
+      "candidate": "proposals/provenance-receipt-repair/implementation.lock",
+      "operation": "modify",
+      "sha256": "298c8754dcae31b3a80c87d7524f2ab87c766d07b3aaa2e7f417af06cb6a0d87",
+      "target": "gate/provenance/implementation.lock"
+    }
+  ],
+  "control_script": {
+    "path": "proposals/check_provenance_receipt_repair.py",
+    "sha256": "98495f2d5a747d07aeebad39e90f74a70dcac0186b6ee99968d912522daac365"
+  },
+  "end_to_end": false,
+  "implementation_lock_sha256": "298c8754dcae31b3a80c87d7524f2ab87c766d07b3aaa2e7f417af06cb6a0d87",
+  "new_kernel_execution": false,
+  "patch_sha256": "30435b460a34d76b1eb0e511dc71706cd33e8a36817f29d13ffaa60d6b4f16f8",
+  "protected_changes_applied": false,
+  "reference_collection": {
+    "new_kernel_execution": false,
+    "path": "results/stage9/receipt-repair-preparation/reference-0002/closure-sha256.json",
+    "sha256": "9b386410f9b31a8b5c5514027770b155bc0316a1d3af71afe02f7a8dcb61187f"
+  },
+  "runner_registration_authorized": false,
+  "signing_executed": false,
+  "status": "pending_exact_human_approval",
+  "workflow_changes": false
+}
