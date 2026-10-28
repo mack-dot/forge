@@ -1477,6 +1477,35 @@ See U094. `end_to_end=false`.
 The candidate is ready for exact-byte approval. It is not applied. Not an EXIT
 result. See U095. `end_to_end=false`.
 
+#### Trust-boundary review of the candidate (read-only)
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| 1. `contract_approval_commit` | FAIL | Names `097431cf…`, the old contract approval; the candidate replaces those bytes. |
+| 2. macOS-path link | PASS | Same checked interpreter; one pip run; 45 outputs hash-checked twice; read-only mount. |
+| 3. Identity bindings | FAIL | Internally consistent, but GitHub now reports `mack-dot/forge`, owner 235131950 (`superpowermentors-1/forge` → 301). |
+| 4. Admin access and branch rules | FAIL | Not named in the contract; one admin now; no rules or protection on `main`. |
+| 5. Hashes versus manifest | PASS | 10 of 10 files, diff `5593a720…`, published copy at `27e6044b…` equal. |
+
+The candidate is not ready for approval. See U096. `end_to_end=false`.
+
+#### v2 candidate on the `mack-dot/forge` boundary (unapplied)
+
+The user kept `mack-dot/forge`. The approved contract stays; only the
+implementation changes (7 files, diff `39c6c3d7…`, lock `30880e08…`).
+
+| Check actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| Raw fetch of `spec/provenance/protocol.md` at `097431cf…` | 1 | HTTP 404: that commit publishes `proposals/provenance/*`, not `spec/`. |
+| Contract audit against the published proposal files | 0 | Approval reference valid; contract bytes unchanged; identity matches live GitHub. |
+| `python3 -I proposals/provenance-hosted-v2/build_candidate.py` | 0 | 7 files, lock, diff, manifest. |
+| `git apply --check` / `git apply` (scratch) | 0 / 0 | 7 of 7 files match; contract unchanged. |
+| `common.context('30880e08…')` / `('9b10a237…')` (scratch) | 0 / 1 | New lock passes; old lock `UNAPPROVED_IMPLEMENTATION`. |
+| `run_package.py --implementation-sha256 30880e08…` (fresh builder) | 0 | Config `f5843050…`, descriptor identical to v1. |
+| Five `gh api` settings changes | 0 each | Vulnerability reporting, Dependabot alerts, secret scanning, fork approval, SHA pinning. |
+
+See U097. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

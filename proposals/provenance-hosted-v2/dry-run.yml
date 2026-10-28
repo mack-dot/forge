@@ -1,0 +1,72 @@
+name: Forge Stage 9 candidate dry run v2 (mack-dot)
+
+# Dry run of the unapplied hosted-runner candidate. No signing, no id-token,
+# no secrets, no release. The installed gate on main is not changed.
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    if: github.repository == 'mack-dot/forge'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    env:
+      FORGE_STAGE9_IMPLEMENTATION: 30880e082a90c612a28933e1ab3ad78daba7234e67e6222c690fa41deace5108
+      FORGE_STAGE9_REQUEST: '{"expected_source_commit": "${{ github.sha }}"}'
+    steps:
+      - name: Checkout exact dispatched main commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Python 3.10.11 required by the gate
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: 3.10.11
+      - name: Apply the candidate diff to a copy of the checkout
+        run: |
+          C="$RUNNER_TEMP/candidate-root"
+          cp -a "$GITHUB_WORKSPACE" "$C"
+          cd "$C"
+          git apply --check proposals/provenance-hosted-v2/proposed.diff
+          git apply proposals/provenance-hosted-v2/proposed.diff
+          python3 -I - <<'EOF'
+          import hashlib, json
+          m = json.load(open('proposals/provenance-hosted-v2/approval-manifest.json'))
+          bad = [p for p, v in m['files'].items() if hashlib.sha256(open(p, 'rb').read()).hexdigest() != v['new_sha256']]
+          assert not bad, bad
+          print('candidate files match', len(m['files']))
+          EOF
+      - name: Candidate hosted_setup.py
+        env:
+          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+        working-directory: ${{ runner.temp }}/candidate-root
+        run: python3 gate/provenance/hosted_setup.py
+      - name: Candidate preflight.py
+        env:
+          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+        working-directory: ${{ runner.temp }}/candidate-root
+        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+      - name: Candidate package() and replay()
+        env:
+          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+        working-directory: ${{ runner.temp }}/candidate-root
+        run: python3 proposals/provenance-hosted/dry_run.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --expected-package proposals/provenance-hosted-v2/controller-descriptor.json --output results/stage9/dry-run
+      - name: Collect records
+        if: always()
+        run: |
+          mkdir -p probe3
+          cp -R "$RUNNER_TEMP/candidate-root/results/stage9/producer-output" probe3/ || true
+          cp -R "$RUNNER_TEMP/candidate-root/results/stage9/dry-run" probe3/ || true
+          { df -B1 /; free -b; docker system df; } > probe3/resources-after.txt 2>&1 || true
+      - name: Preserve records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-dry-run-v2-${{ github.run_id }}
+          path: probe3/
+          include-hidden-files: true
+          if-no-files-found: error

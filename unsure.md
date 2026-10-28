@@ -2393,3 +2393,91 @@ curl: (6) Could not resolve host: github.com
 - Next check: the user approves or rejects the exact set (diff 5593a720…, lock
   f9f09a2f…, 10 file hashes). Separate authorization is still required for the
   real dispatch, public signing and deployment.
+
+## U096 — Trust-boundary review of the 10-file candidate: two items fail on live state
+
+- References: U091, U092, U095; proposals/provenance-hosted/approval-manifest.json
+  (43878f45…); proposals/provenance-decision.md; results/stage9/trust-review-0001/.
+- Request: the user asked for a read-only review of five items before approval.
+  No candidate byte was changed.
+- Item 1 FAIL: contract_approval_commit is 097431cf…, the public commit of the
+  original contract approval (protocol 2784bdd0…, policy 9e27f627…, spec.lock
+  43610d81…). No code reads it (context() and repository_identity() read only
+  files). The candidate replaces all three contract files but keeps the field,
+  so the lock would name an approval of contract bytes it does not use.
+- Item 2 PASS: the hosted run linked the macOS path to
+  /opt/hostedtoolcache/Python/3.10.11/x64/bin/python3, the interpreter that
+  context() checked first (hosted_setup.py:95). Only one pip process used it
+  (line 59; --require-hashes, --no-deps, --only-binary, requirements from the
+  verified upstream commit). Its 45 output files are checked against the lock
+  at hosted_setup.py:64 and producer.py:144 and are mounted read-only into the
+  proof container (producer.py:163). The link is not a proof input.
+- Item 3 FAIL (live state): inside the applied candidate the bindings agree
+  (policy, protocol text, spec.lock, implementation lock over 62 files, both
+  workflow conditions, producer.workflow(), and common.signature() passing
+  identity, issuer, repository, ref, trigger and the request commit to Cosign).
+  But GitHub now reports the repository as mack-dot/forge, id 1434789853, owner
+  id 235131950, type User; superpowermentors-1/forge returns HTTP 301. main is
+  still 27e6044b…, so the transfer back happened after that push. The candidate
+  names superpowermentors-1/forge and owner 235148649, so it would fail closed.
+  The installed policy (mack-dot/forge, 235131950) matches the live owner again.
+  The locked file proposals/refund-decision.md names mack-dot as history only.
+- Item 4 FAIL: the contract states only "GitHub account/workflow controls"; no
+  access set is named. The live repository now has one collaborator (mack-dot,
+  admin), not three. main has no effective rules (rules endpoint returns []),
+  no branch protection (HTTP 404), and ruleset "mack" matches no branch. Fork
+  pull-request approval is first_time_contributors. Acceptance soundness rests
+  on the verifier's exact-commit and lock check, not on branch rules.
+- Item 5 PASS: all 10 candidate files equal the manifest hashes; the diff hash
+  equals 5593a720…; the installed base files equal the manifest old hashes; the
+  manifest and diff published at 27e6044b… equal the local bytes.
+- Impact: the candidate must not be approved as is. Stage 9 remains CURRENT.
+  All six EXITs are NOT RUN. end_to_end=false.
+- Next check: the user states the final owner. Then generate one new approval
+  set (identity, contract_approval_commit, explicit access assumption) and rerun
+  the local checks and the hosted dry run.
+
+## U097 — Owner stays mack-dot; v2 implementation-only candidate; GitHub hardening applied
+
+- References: U096; proposals/provenance-hosted-v2/ (approval-manifest.json
+  d37d8327…, build_candidate.py d7d428dc…, dry-run.yml 74d1836b…);
+  proposals/github-ruleset/; results/stage9/rebase-mack-dot-0001/,
+  hosted-candidate-v2-0001/, github-settings-0001/.
+- Decision: the user said "yes i moved it back to mack-dot" and "Keep
+  `mack-dot/forge` as the final canonical repository". They asked for an
+  implementation-only approval set with no organization migration and no policy
+  2.0.0. U091–U095's organization candidate (v1) is superseded and kept as
+  history.
+- Observed (contract audit, contract-audit.txt): commit 097431cf… exists in
+  mack-dot/forge. It publishes the proposal files, not the spec/ paths, so a
+  raw fetch of spec/provenance/protocol.md at that commit returned 404 (first
+  attempt, kept as a failure). The published manifest (92c56b5d…) and patch
+  (ebbbeb7e…) match the decision record. Protocol, policy and spec.lock are
+  byte-equal across the published proposal, the installed files and main. The
+  installed lock binds them and names contract_approval_commit 097431cf…. The
+  policy identity matches live GitHub (mack-dot/forge, 1434789853, owner
+  235131950, User, public). U096 item 1 is resolved: the reference is valid.
+- v2 candidate (7 files, contract unchanged): runtime.json and hosted_setup.py
+  byte-equal to v1; producer.py, preflight.py and both workflows equal v1 except
+  the four organization edits (workflow() and the producer-run URL keep
+  mack-dot/forge). Diff 39c6c3d7…, lock 30880e08….
+- Observed (scratch): git apply --check and git apply 0; 7 of 7 files match;
+  contract files unchanged after apply; py_compile 0; workflow conditions name
+  mack-dot/forge; context(30880e08…) 0 over 62 files; context(9b10a237…)
+  rejected UNAPPROVED_IMPLEMENTATION. Controller package with a freshly created
+  builder: exit 0, 14 commands (builder-present 1 as expected, others 0),
+  config f584305022f2e811…, descriptor identical to v1 (22f80a1b…).
+- Settings (the user said "i want to follow the reccomendations"): private
+  vulnerability reporting, Dependabot alerts, secret scanning and push
+  protection enabled; fork pull-request workflow approval set to
+  all_external_contributors; sha_pinning_required true (all 32 action uses were
+  already SHA-pinned). Each command returned 0 and read back as set. Default
+  workflow token stays read; workflows cannot approve pull requests.
+- Not yet applied: the protect-main ruleset (it blocks direct pushes, so it
+  follows this push) and deletion of the inert ruleset 25915179.
+- Contributor readiness (started, then paused for this rebase): the clean-clone
+  quickstart passed (gate accepted impl/Ledger.dfy, exit 0; rejected all four
+  planted bugs, exit 1; evidence byte-identical to evidence.json ed015ad9…).
+  It ran on the maintainer's host in a new directory, not on a clean machine.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: v2 hosted dry run; then the user's exact-byte approval.
