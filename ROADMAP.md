@@ -1384,6 +1384,16 @@ The pinned checker pull took 72 s and used 3.9 GB of disk. Its `Id` equals the
 approved `base_config` `e49a3a57…`. No proof, signing or deployment ran. See
 U087. `end_to_end=false`.
 
+#### Checkpoint publication to `main`
+
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git … status --porcelain` (scratch clone of `main`, work tree = local root) | 0 | No path on `main` is missing locally; two ELF entries differ only in file mode. |
+| `git … -c core.fileMode=false add -A`; `commit`; `push origin HEAD:main` | 0 | Commit `70d46565…`: the four approved repair files, ROADMAP, unsure.md and 2,698 new record files (4.6 MB; no token or key patterns). |
+| `common.repository_identity(policy, implementation, '70d46565…', records)` under lock `9b10a237…` | 0 | All 61 locked files on `main` match; records in `results/stage9/publication-check-0001/`. |
+
+`main` now carries the approved repaired gate. See U088. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

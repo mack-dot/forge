@@ -2135,3 +2135,27 @@ curl: (6) Could not resolve host: github.com
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: measure the Stage 7 prerequisite rebuild and the fresh proof on a
   hosted runner, then prepare the exact implementation proposal.
+
+## U088 — Approved repaired gate published to main and checked by the gate itself
+
+- References: U079, U080, U087; results/stage9/publication-check-0001/.
+- Authorization: the user said "okay fix those please" after a report that
+  listed the pre-repair gate on main as an open item. This is a conversation
+  record, not a signature.
+- Observed: a scratch clone of main at ac6dfe51… was compared with the local
+  root, honoring .gitignore. No tracked path on main was missing locally. Six
+  tracked files differed in content: the four approved repair files, ROADMAP.md
+  and unsure.md. Two Stage 7 ELF files differed only in mode (local 755, main
+  644; same bytes 8ced2ab6…). The mode change was not committed
+  (core.fileMode=false). 2,698 untracked files (4.6 MB, largest 0.22 MB) were
+  added. A pattern scan found no GitHub token or private-key text.
+- Observed: commit 70d46565076e47accb3117e1840c3bcd64527aff (author mack-dot, as
+  in earlier commits) was pushed to main with exit 0. The installed
+  repository_identity() under lock 9b10a237… returned 0 for that commit: the
+  repository and owner IDs match, and all 61 locked files on main match.
+- Scope: this checks publication bytes only. No proof, workflow dispatch,
+  signing or deployment ran.
+- Impact: the "old gate on main" item is resolved. Stage 9 remains CURRENT. All
+  six EXITs are NOT RUN. end_to_end=false.
+- Next check: measure the Stage 7 prerequisite rebuild and a fresh proof on a
+  hosted runner (probe 2); decide the Docker pin method; owner decision.

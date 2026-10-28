@@ -1,0 +1,160 @@
+{
+  "artifact": {
+    "build_cmd": "python3 scripts/stage7_build_own.py",
+    "kind": "binary",
+    "sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6"
+  },
+  "claims": [
+    {
+      "id": "S7-OWN-TERMINATION",
+      "spec_ref": "examples/binary/Statements.v#selftest_halts",
+      "spec_sha": "b6fc5d989a52a2431e7ede510a7aa156062f94ef3229b3d4f5d4b42d2a5ed3ba",
+      "statement_plain_english": "Every valid input and entry of this exact fixed-input ELF terminates normally with status 0 under the pinned LPS may_fail model."
+    },
+    {
+      "id": "S7-OWN-VALID-EXECUTION",
+      "spec_ref": "examples/binary/WitnessSpec.v#selftest_has_valid_execution",
+      "spec_sha": "535ebed602993c18c8499fd38ed485047f972708f93fa522b70a7461030f019f",
+      "statement_plain_english": "A valid modeled input and entry exist for this exact ELF, and every execution from that entry on that input terminates normally with status 0."
+    }
+  ],
+  "end_to_end": false,
+  "evidence": [
+    {
+      "artifact_sha": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
+      "assumptions": [
+        "Corelib.Array.PrimArray.array",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
+        "Corelib.Strings.PrimString.get",
+        "Corelib.Strings.PrimString.length",
+        "Corelib.Strings.PrimString.string",
+        "The exact static RISC-V ELF is represented by the pinned published ELF snapshot loader.",
+        "Execution is within LPS f1006fe8178338a499b5e5c41be83006c4edd058 and valid_input/valid_entry, including Sv48, restricted signals/files, single-thread scope and no external interference.",
+        "The may_fail environment and source_alloc_limit (16 GiB) are those of the published model; this theorem has no budget-refusal exemption."
+      ],
+      "claim_id": "S7-OWN-TERMINATION",
+      "method": "kernel_checked_proof",
+      "producer": "Forge Stage 7 actual local checker execution; unsigned",
+      "reproduce_cmd": "python3 scripts/exit_stage_7.py --case own-proof",
+      "result": "passed",
+      "tool": "Theorem published LPS / Rocq / rocqchk",
+      "tool_version": "9.2.0",
+      "trusted_base": [
+        "Rocq 9.2.0 independent kernel and primitive implementations; OCaml 4.14.3 runtime.",
+        "Published elf-snapshot ELF-to-image translation and pinned rocq-read-file data import; no compiler-correctness theorem is claimed.",
+        "Pinned LPS model fidelity to its stated Linux/RISC-V scope, valid-input restrictions and execution assumptions.",
+        "Pinned container publisher/build provenance, Docker, AMD64 execution support, host OS and hardware.",
+        "Forge orchestration, artifact hashing, recorded commands and unsigned local evidence provenance."
+      ]
+    },
+    {
+      "artifact_sha": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
+      "assumptions": [
+        "Corelib.Array.PrimArray.array",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
+        "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
+        "Corelib.Strings.PrimString.get",
+        "Corelib.Strings.PrimString.length",
+        "Corelib.Strings.PrimString.string",
+        "The exact static RISC-V ELF is represented by the pinned published ELF snapshot loader.",
+        "Execution is within LPS f1006fe8178338a499b5e5c41be83006c4edd058 and valid_input/valid_entry, including Sv48, restricted signals/files, single-thread scope and no external interference.",
+        "The may_fail environment and source_alloc_limit (16 GiB) are those of the published model; this theorem has no budget-refusal exemption."
+      ],
+      "claim_id": "S7-OWN-VALID-EXECUTION",
+      "method": "kernel_checked_proof",
+      "producer": "Forge Stage 7 actual local checker execution; unsigned",
+      "reproduce_cmd": "python3 scripts/exit_stage_7.py --case own-proof",
+      "result": "passed",
+      "tool": "Theorem published LPS / Rocq / rocqchk",
+      "tool_version": "9.2.0",
+      "trusted_base": [
+        "Rocq 9.2.0 independent kernel and primitive implementations; OCaml 4.14.3 runtime.",
+        "Published elf-snapshot ELF-to-image translation and pinned rocq-read-file data import; no compiler-correctness theorem is claimed.",
+        "Pinned LPS model fidelity to its stated Linux/RISC-V scope, valid-input restrictions and execution assumptions.",
+        "Pinned container publisher/build provenance, Docker, AMD64 execution support, host OS and hardware.",
+        "Forge orchestration, artifact hashing, recorded commands and unsigned local evidence provenance."
+      ]
+    }
+  ],
+  "format_version": 1,
+  "source_manifest": [
+    {
+      "path": "examples/binary/Execution.v",
+      "sha256": "6540ec35e20deed6081f3045c0944917d41124611e79e9df4daa43d257f08f8b"
+    },
+    {
+      "path": "examples/binary/Images.v",
+      "sha256": "3f22a6c9494efe2eadfb0c9be3813bd3cf0edf803d49b9598113fff50b9eb563"
+    },
+    {
+      "path": "examples/binary/Proof.v",
+      "sha256": "1b488738445a3c1208d32ee0c6f268711333b86d04123856658e5c1cb39e8663"
+    },
+    {
+      "path": "examples/binary/Statements.v",
+      "sha256": "b6fc5d989a52a2431e7ede510a7aa156062f94ef3229b3d4f5d4b42d2a5ed3ba"
+    },
+    {
+      "path": "examples/binary/Witness.v",
+      "sha256": "1544cb6f5be80e90051fde0059ed096ede95934b4067900792a74e49d0db7a83"
+    },
+    {
+      "path": "examples/binary/WitnessSpec.v",
+      "sha256": "535ebed602993c18c8499fd38ed485047f972708f93fa522b70a7461030f019f"
+    },
+    {
+      "path": "examples/binary/gcd_selftest.c",
+      "sha256": "06dfa530f6f2b6fb429842befe51e60d7d8bf05338b83c27d4e8d807612dd4bc"
+    },
+    {
+      "path": "generated/images/Program.v",
+      "sha256": "87d665cf8d8668fdee572a7871eb4bfc121801a183f39bf8d8a09fb45e89a626"
+    },
+    {
+      "path": "generated/images/Program_seg_000.hex",
+      "sha256": "e7b0eb41b15f9e120b9449e50094c78c42478dec62b5687c1267db1e396a6be8"
+    },
+    {
+      "path": "generated/images/Program_seg_001.hex",
+      "sha256": "e7b0eb41b15f9e120b9449e50094c78c42478dec62b5687c1267db1e396a6be8"
+    }
+  ],
+  "trusted_input_sha256": {
+    "lps/source-tree-sha256": "c69c38f381767a112d0b4d5692548369f65cbf3a73ba198f76f98310894dd4de",
+    "scripts/exit_stage_7.py": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544",
+    "scripts/stage7_build_own.py": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac",
+    "scripts/stage7_identity.py": "7f9fdc9e7531ffeb0fb32e2ea7362ce87c27c9c46b03ebdf7a36202602998803",
+    "scripts/stage7_own_job.py": "6c852220e8eeeac8b5c9bec533bf5ec044f68dec3f6e98d348f525da40b32b00",
+    "toolchain/stage7-own-pins.json": "7859ba012eae6575731550eb8da10e85b2c9b7ef8512f27349763f09f75e515e",
+    "toolchain/stage7-pins.json": "36e6539ed8718fde4ce12888c3dd1b76f9e82013a11523b080bc47592953a16d",
+    "upstream/toolchain/allowed-axioms.txt": "8820b8fc82c03184f5822c52932531be058ca95d352195a68c530004616d5380",
+    "upstream/tracked-sha256-manifest": "52436d2401d74c3dbba702abdb73b0b3b2d517ec71e80d449176aa5b3f9ba55c"
+  },
+  "verification_options": [
+    "rocqchk -o -bytecode-compiler no; complete recursive dependency closure",
+    "unchanged upstream WRAPPER template for termination and valid-execution witness",
+    "unchanged upstream assumption allowlist and audit implementation",
+    "one CPU; 4 GiB memory; 512 processes; unlimited stack; no proof timeout",
+    "published exits_c soundness theorem with certificate fuel 128"
+  ],
+  "verified_obligations": [
+    "Forge.Binary.Statements.selftest_halts",
+    "Forge.Binary.Witness.selftest_has_valid_execution_holds",
+    "Forge.Binary.Images.program_wf"
+  ]
+}

@@ -1,0 +1,129 @@
+name: Forge Stage 9 hosted-runner probe 2
+
+# Measurement only. No signing, no id-token, no secrets, no package or release.
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-pin:
+    if: github.repository == 'mack-dot/forge'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Record installed Docker packages and apt sources
+        run: |
+          mkdir -p probe
+          { ls -l /etc/apt/sources.list.d/; grep -rh download.docker.com /etc/apt/sources.list /etc/apt/sources.list.d/ || echo "no docker apt source"; dpkg -l | grep -E 'docker|containerd|runc|moby'; } > probe/apt-before.txt 2>&1 || true
+      - name: Add Docker's apt repository with a pinned key fingerprint
+        run: |
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o docker.asc
+          fpr=$(gpg --show-keys --with-colons docker.asc | awk -F: '/^fpr/{print $10; exit}')
+          echo "key_fingerprint=$fpr" > probe/docker-key.txt
+          test "$fpr" = 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+          sudo install -m 0644 docker.asc /etc/apt/keyrings/forge-docker.asc
+          echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/forge-docker.asc] https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/forge-docker.list
+          code=0
+          sudo apt-get update -q > probe/apt-update.txt 2>&1 || code=$?
+          echo "apt_update_exit=$code" >> probe/apt-update.txt
+          apt-cache madison docker-ce docker-ce-cli containerd.io docker-buildx-plugin > probe/madison.txt 2>&1 || true
+      - name: Install one exact Docker Engine version
+        run: |
+          v='5:28.5.1-1~ubuntu.24.04~noble'
+          code=0
+          sudo apt-get install -y -q --allow-downgrades "docker-ce=$v" "docker-ce-cli=$v" > probe/install.txt 2>&1 || code=$?
+          echo "install_exit=$code" >> probe/install.txt
+          { docker version --format '{{json .}}'; docker info --format '{{json .DriverStatus}} driver={{.Driver}}'; docker buildx version; } > probe/docker-after.txt 2>&1 || true
+      - name: Preserve records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-probe2-docker-${{ github.run_id }}
+          path: probe/
+          if-no-files-found: error
+
+  replay:
+    if: github.repository == 'mack-dot/forge'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Checkout exact dispatched main commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Python 3.10.11 (required by the gate)
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: 3.10.11
+      - name: Pin pip 25.1.1 by hash
+        run: |
+          mkdir -p probe2
+          echo 'pip==25.1.1 --hash=sha256:2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af' > "$RUNNER_TEMP/pip.txt"
+          python3 -m pip install --disable-pip-version-check --require-hashes -r "$RUNNER_TEMP/pip.txt" > probe2/pip-pin.txt 2>&1
+          { python3 --version; python3 -m pip --version; } >> probe2/pip-pin.txt
+      - name: Seed upstream clone at the pinned commit
+        run: |
+          echo "FORGE_STAGE7_ROOT=$RUNNER_TEMP/seed" >> "$GITHUB_ENV"
+          U="$RUNNER_TEMP/seed/.toolchain/stage7/upstream"
+          git init -q "$U"
+          git -C "$U" fetch -q --depth 1 https://github.com/theorem-labs/oss-verify-proofs.git bf6a65114ed2e255098e213e183e83f63c2cabcc
+          git -C "$U" checkout -q --detach bf6a65114ed2e255098e213e183e83f63c2cabcc
+          test "$(git -C "$U" rev-parse HEAD)" = bf6a65114ed2e255098e213e183e83f63c2cabcc
+      - name: Python packages with the recorded Stage 7 command
+        run: |
+          L=/Library/Frameworks/Python.framework/Versions/3.10/bin
+          sudo mkdir -p "$L"
+          sudo ln -s "$(command -v python3)" "$L/python3"
+          cd "$FORGE_STAGE7_ROOT"
+          "$L/python3" -m pip install --require-hashes --only-binary=:all: --platform manylinux2014_x86_64 --python-version 3.12 --implementation cp --abi cp312 --target .toolchain/stage7/pydeps --no-compile --disable-pip-version-check --no-input --no-deps -r .toolchain/stage7/upstream/tools/oft/requirements.txt > "$GITHUB_WORKSPACE/probe2/pydeps.txt" 2>&1
+          head -1 .toolchain/stage7/pydeps/bin/idna >> "$GITHUB_WORKSPACE/probe2/pydeps.txt"
+      - name: Compare Python packages with the approved lock
+        run: |
+          python3 -I - <<'EOF' > probe2/pydeps-compare.txt
+          import json, os, sys
+          sys.path.insert(0, 'gate/provenance')
+          from common import files
+          expected = json.load(open('gate/provenance/implementation.lock'))['python_container_dependencies']
+          actual = files(os.path.join(os.environ['FORGE_STAGE7_ROOT'], '.toolchain/stage7/pydeps'))
+          diff = sorted(p for p in set(expected) | set(actual) if expected.get(p) != actual.get(p))
+          print(json.dumps({'expected': len(expected), 'actual': len(actual), 'differing': diff}, indent=2))
+          EOF
+          cat probe2/pydeps-compare.txt
+      - name: Pull images and create the volume
+        run: |
+          docker pull -q --platform linux/amd64 ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902
+          docker pull -q --platform linux/amd64 ghcr.io/theorem-labs/oss-fuzz-theorems-toolchain@sha256:6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b
+          docker volume create forge-stage7-upstream-bf6a65114ed2
+      - name: Clone upstream into the volume (recorded Stage 7 commands)
+        run: |
+          base=(docker run --rm --pull never --platform linux/amd64 --network none --user 1000:1000 --cpuset-cpus 0 --memory 4g --memory-swap 4g --pids-limit 512 --mount type=volume,source=forge-stage7-upstream-bf6a65114ed2,target=/work --mount "type=bind,source=$FORGE_STAGE7_ROOT/.toolchain/stage7/upstream/.git,target=/git-source,readonly" -w /work ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902)
+          "${base[@]}" git -c safe.directory=/git-source clone --shared --no-checkout /git-source . > probe2/volume-clone.txt 2>&1
+          "${base[@]}" git checkout --detach bf6a65114ed2e255098e213e183e83f63c2cabcc > probe2/volume-checkout.txt 2>&1
+      - name: Build the own ELF from a staging root (unchanged script)
+        run: |
+          ST="$RUNNER_TEMP/own-build-root"
+          mkdir -p "$ST/scripts" "$ST/toolchain" "$ST/examples/binary"
+          cp scripts/stage7_build_own.py "$ST/scripts/"
+          cp toolchain/stage7-pins.json toolchain/stage7-own-pins.json "$ST/toolchain/"
+          cp examples/binary/gcd_selftest.c "$ST/examples/binary/"
+          code=0
+          python3 "$ST/scripts/stage7_build_own.py" > probe2/own-build.txt 2>&1 || code=$?
+          cp -R "$ST/results/stage7/own-build" probe2/own-build-records || true
+          exit $code
+      - name: Fresh proof through the installed producer.replay()
+        run: python3 proposals/stage9-hosted-runner/replay_probe.py --implementation-sha256 9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76 --output probe2/replay
+      - name: Record resources after the run
+        if: always()
+        run: |
+          { df -B1 /; free -b; docker system df; } > probe2/resources-after.txt 2>&1 || true
+      - name: Preserve records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-probe2-replay-${{ github.run_id }}
+          path: probe2/
+          include-hidden-files: true
+          if-no-files-found: error
