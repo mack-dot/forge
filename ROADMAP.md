@@ -1506,6 +1506,66 @@ implementation changes (7 files, diff `39c6c3d7…`, lock `30880e08…`).
 
 See U097. `end_to_end=false`.
 
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `gh workflow run stage9-candidate-dry-run-v2.yml …` (first / second) | 1 / 0 | HTTP 404 (not yet registered) / run 40743117460. |
+| `gh run view 40743117460` / `gh run download …` | 0 / 0 | Success: hosted package equals the controller package (`f5843050…`); fresh receipt (656 files, 579 objects) accepted. |
+| `python3 proposals/provenance-hosted-v2/negative_controls.py --implementation-sha256 30880e08… …` (scratch, v2 applied) | 0 | 1 positive control accepted; 5 attacks rejected (`PACKAGE_CONFIG_IDENTITY` ×2, `PACKAGE_ROOTFS_BINDING`, `PACKAGE_FILESYSTEM_ELF:substituted`, `BUILDER_VERSION`). |
+
+The repository is private, so release verification fails closed (U101, U102).
+Measurements and controls only; not EXIT results. See U102, U103.
+`end_to_end=false`.
+
+#### v2 approval readiness (local, nothing pushed)
+
+| Check actually run | Actual exit code | Result |
+| --- | --- | --- |
+| Hash recomputation of the v2 manifest, diff, 7 files and lock | 0 | All match. |
+| Installed `repository_identity()` against the private repository | 3 | `HTTPError 404`: verification fails closed. |
+| F1 control: added `gate/provenance/argparse.py`, then `preflight.py` | 1 | Decoy code ran before any check (marker written). |
+| F1 control: `context('30880e08…')` with the decoy present | 0 | Lock check passed: unlisted files are not bound. |
+| Hash-checked Python archive, offline, Ubuntu 24.04 x64 container | 0 | Python 3.10.11 and bundled pip run without PyPI. |
+
+Verdict: REVISE. See U104. `end_to_end=false`.
+
+#### v3 candidate (unapplied, local)
+
+| Check actually run | Actual exit code | Result |
+| --- | --- | --- |
+| `python3 -I proposals/provenance-hosted-v3/build_candidate.py` | 0 | 8 files; diff `5d3e838f…`; lock `0215a316…` (89 files). |
+| `git apply --check` / `git apply` (fresh scratch) | 0 / 0 | 8 of 8 files match; contract unchanged. |
+| `context('0215a316…')` / v2 lock / installed lock | 0 / 1 / 1 | Only v3 passes. |
+| `python3 -B proposals/provenance-hosted-v3/f1_controls.py …` | 0 | Clean commit accepted; 6 tree attacks and 2 verifier guards rejected. |
+
+See U105. `end_to_end=false`.
+
+#### Pre-verification execution and v3.1 (unapplied, local)
+
+| Check actually run | Actual exit code | Result |
+| --- | --- | --- |
+| v3: planted `json.py`, unchecked-hash `.pyc`, `PYTHONPATH` before `release.py` | 9 / 9 / 9 | Attacker code executed in all three: F1 unresolved in v3. |
+| v3 `source_tree()` on a commit with a forged lock | 0 | Accepted (gap). |
+| `python3 -I proposals/provenance-hosted-v31/build_candidate.py` | 0 | 9 files; diff `d24ff942…`; lock `6f3aafe6…`. |
+| `git apply` (scratch) / `context('6f3aafe6…')` | 0 / 0 | 9 of 9 files match. |
+| v3 F1 controls against v3.1 | 0 | 9 of 9 pass. |
+| `python3 -B proposals/provenance-hosted-v31/controls.py …` | 0 | 14 of 14 pass; attacker code executed in none. |
+| `check_no_signing.py` on the dry run / on production workflows | 0 / 1 | No signing path / correctly flagged. |
+
+See U106. `end_to_end=false`.
+
+#### B preparation (local)
+
+| Check actually run | Actual exit code | Result |
+| --- | --- | --- |
+| `negative_controls.py --implementation-sha256 6f3aafe6…` | 0 | 1 positive, 5 attacks rejected (v3.1). |
+| v3.1 `validate_receipt()` on the hosted v2 receipt / byte flipped / other challenge | — | ACCEPTED / `PROOF_RECEIPT_BYTES` / `STALE_PROOF_RECEIPT`. |
+| Inline check and `bootstrap.py --check` with the pinned Linux Python | 0 / 0 | 48 and 78 modules, all from the archive. |
+| `bootstrap.py --check` with a planted `json.py` | 1 | Planted code did not run. |
+| `check_no_signing.py .github/workflows/stage9-private-dry-run-v31.yml` | 0 | No signing path. |
+| `b3_verify.sh … forge-verifier-nonexistent-test-item` | 3 | Stopped before any network request. |
+
+See U107. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

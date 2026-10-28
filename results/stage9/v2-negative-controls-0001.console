@@ -1,0 +1,7 @@
+{"control": "positive: pinned builder reproduces the approved package", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"control": "attack: substituted ELF presented under the approved descriptor", "expected": "PACKAGE_CONFIG_IDENTITY", "observed": "PACKAGE_CONFIG_IDENTITY", "pass": true}
+{"control": "attack: substituted ELF under a descriptor naming its own config", "expected": "PACKAGE_ROOTFS_BINDING", "observed": "PACKAGE_ROOTFS_BINDING", "pass": true}
+{"control": "attack: substituted ELF under a fully self-consistent descriptor", "expected": "PACKAGE_FILESYSTEM_ELF", "observed": "PACKAGE_FILESYSTEM_ELF:substituted", "pass": true}
+{"control": "attack: unpinned build presented under the approved descriptor", "expected": "PACKAGE_CONFIG_IDENTITY", "observed": "PACKAGE_CONFIG_IDENTITY", "pass": true}
+{"control": "attack: substituted BuildKit image under the pinned builder name", "expected": "BUILDER_VERSION", "observed": "BUILDER_VERSION", "pass": true}
+exit=0

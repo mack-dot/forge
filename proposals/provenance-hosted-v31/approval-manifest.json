@@ -1,0 +1,47 @@
+{
+  "base_lock_sha256": "9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76",
+  "contract_unchanged": true,
+  "derived_from_v3_manifest": "18b8f59b6ed32b4958985c04e82e937616b6e9a3c9363a837ac186c47477b1c8",
+  "diff_sha256": "d24ff9427762e36899da4a272c4be97bd8b2462489dacb9ff425fc653ec9f533",
+  "end_to_end": false,
+  "files": {
+    ".github/workflows/provenance-negative.yml": {
+      "new_sha256": "d8a64d2b0b3b4b9eb643cc4d57c8a73711122cee6ca3f3cb41c59d5f0101308d",
+      "old_sha256": "79c50d36f5951f6478ec69f72a85cd1c79414dacd3c17dfd6b170470e24ffca7"
+    },
+    ".github/workflows/provenance.yml": {
+      "new_sha256": "3b8852b0f0baecb4891385cc6ca23c5bbc41893edcb973ce417627439c17742b",
+      "old_sha256": "d2c60993d504a4353102d36189f9dd5f25b98ab3c2c73a12649fc18a087ccefd"
+    },
+    "gate/provenance/bootstrap.py": {
+      "new_sha256": "0e8bbf27646a215161f341175022fee36daa4320065a6fb176bfce11bd06aec7",
+      "old_sha256": null
+    },
+    "gate/provenance/common.py": {
+      "new_sha256": "2fdc4ffdad6ca4e9d99cbb55633073daa4f16aa6e9b4c763a6269e1d7d57f4f2",
+      "old_sha256": "77c068569e47885abbf4cd979f761cf6deab43ce8c5d98749764adaab919cc16"
+    },
+    "gate/provenance/hosted_setup.py": {
+      "new_sha256": "47df0e27be22a2246eccb107675e2dff93aba3122f7d67b1357d3cf9e43b52b3",
+      "old_sha256": null
+    },
+    "gate/provenance/implementation.lock": {
+      "new_sha256": "6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510",
+      "old_sha256": "9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76"
+    },
+    "gate/provenance/preflight.py": {
+      "new_sha256": "e4f40ecfbc2faed744ddb286a77abde140ef40d1fb1a7a245536a1171146cb39",
+      "old_sha256": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776"
+    },
+    "gate/provenance/producer.py": {
+      "new_sha256": "c176e5dceb05608c4ed9e2ac45bdb1842c33db2d6e05b1c590eddd9b65f68d3c",
+      "old_sha256": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e"
+    },
+    "gate/provenance/runtime.json": {
+      "new_sha256": "35586ee59fcdf3925c4f6d4a0d0ab661a4bb1bb807380c75ceb9247a1cc11e5b",
+      "old_sha256": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024"
+    }
+  },
+  "locked_files": 90,
+  "new_lock_sha256": "6f3aafe60b45897a31b6fbdc90ece068ccd4d96904bf2d43241320755b6e4510"
+}

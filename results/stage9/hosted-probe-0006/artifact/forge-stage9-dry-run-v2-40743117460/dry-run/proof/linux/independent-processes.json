@@ -1,0 +1,22 @@
+[
+  {
+    "command": [
+      "rocqchk",
+      "-o",
+      "-bytecode-compiler",
+      "no",
+      "-Q",
+      "/work/_build/default/theories",
+      "OssFuzzTheorems.Core",
+      "-Q",
+      "/work/.forge-stage7/own-proof/attempt-0001/source",
+      "Forge.Binary",
+      "-Q",
+      "/work/.forge-stage7/own-proof/attempt-0001/wrap",
+      "ForgeChecked",
+      "ForgeChecked.Wrapper",
+      "ForgeChecked.WitnessWrapper"
+    ],
+    "exit_code": 0
+  }
+]

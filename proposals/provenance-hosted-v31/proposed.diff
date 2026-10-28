@@ -1,0 +1,836 @@
+diff --git a/.github/workflows/provenance-negative.yml b/.github/workflows/provenance-negative.yml
+--- a/.github/workflows/provenance-negative.yml
++++ b/.github/workflows/provenance-negative.yml
+@@ -27,8 +27,8 @@
+ 
+ jobs:
+   negative:
+-    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
+-    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main' && vars.FORGE_SIGNING_AUTHORIZED == 'true'
++    runs-on: ubuntu-24.04
+     env:
+       FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+       FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+@@ -39,8 +39,29 @@
+         with:
+           ref: ${{ github.sha }}
+           persist-credentials: false
++      - name: Python 3.10.11 from a hash-checked archive
++        run: |
++          P="$RUNNER_TEMP/forge-python"
++          A="$RUNNER_TEMP/python-3.10.11.tar.gz"
++          curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
++          echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
++          mkdir -p "$P" && tar -xzf "$A" -C "$P"
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          echo "$P/bin" >> "$GITHUB_PATH"
++          echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
++      - name: Authenticate the checkout before any repository code
++        run: |
++          python3 -I -S -B -c 'import hashlib, json, sys
++          lock = open("gate/provenance/implementation.lock", "rb").read()
++          if hashlib.sha256(lock).hexdigest() != sys.argv[1]: sys.exit("IMPLEMENTATION_LOCK")
++          boot = open("gate/provenance/bootstrap.py", "rb").read()
++          if hashlib.sha256(boot).hexdigest() != json.loads(lock)["files"]["gate/provenance/bootstrap.py"]: sys.exit("BOOTSTRAP_BYTES")' "$FORGE_STAGE9_IMPLEMENTATION"
++          python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check
+       - name: Check pins and authenticate producer run metadata
+-        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --producer-run "$FORGE_STAGE9_PRODUCER_RUN"
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
++          FORGE_PRODUCER_GITHUB_TOKEN: ${{ github.token }}
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --producer-run "$FORGE_STAGE9_PRODUCER_RUN"
+       - name: Retrieve the authenticated run's signed candidate
+         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+         with:
+@@ -49,7 +70,7 @@
+           run-id: ${{ inputs.producer_run_id }}
+           github-token: ${{ github.token }}
+       - name: Sign under this unauthorized workload identity only
+-        run: python3 gate/provenance/producer.py --action negative-sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/producer.py --action negative-sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+       - name: Preserve authentic wrong-signer bundle and failures
+         if: always()
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+diff --git a/.github/workflows/provenance.yml b/.github/workflows/provenance.yml
+--- a/.github/workflows/provenance.yml
++++ b/.github/workflows/provenance.yml
+@@ -22,7 +22,8 @@
+ jobs:
+   proof:
+     if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
+-    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    runs-on: ubuntu-24.04
++    timeout-minutes: 300
+     env:
+       FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+       FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+@@ -32,10 +33,36 @@
+         with:
+           ref: ${{ github.sha }}
+           persist-credentials: false
++      - name: Python 3.10.11 from a hash-checked archive
++        run: |
++          P="$RUNNER_TEMP/forge-python"
++          A="$RUNNER_TEMP/python-3.10.11.tar.gz"
++          curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
++          echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
++          mkdir -p "$P" && tar -xzf "$A" -C "$P"
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          echo "$P/bin" >> "$GITHUB_PATH"
++          echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
++      - name: Authenticate the checkout before any repository code
++        run: |
++          python3 -I -S -B -c 'import hashlib, json, sys
++          lock = open("gate/provenance/implementation.lock", "rb").read()
++          if hashlib.sha256(lock).hexdigest() != sys.argv[1]: sys.exit("IMPLEMENTATION_LOCK")
++          boot = open("gate/provenance/bootstrap.py", "rb").read()
++          if hashlib.sha256(boot).hexdigest() != json.loads(lock)["files"]["gate/provenance/bootstrap.py"]: sys.exit("BOOTSTRAP_BYTES")' "$FORGE_STAGE9_IMPLEMENTATION"
++          python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check
++      - name: Install pinned Docker and build Stage 7 prerequisites
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/hosted_setup.py
+       - name: Check runner and installed tool pins
+-        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+       - name: Package and run fresh independent proof checks
+-        run: python3 gate/provenance/producer.py --action produce --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/producer.py --action produce --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+       - name: Preserve proof output and all failures
+         if: always()
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+@@ -46,7 +73,8 @@
+           if-no-files-found: error
+   sign:
+     needs: proof
+-    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
++    if: vars.FORGE_SIGNING_AUTHORIZED == 'true'
++    runs-on: ubuntu-24.04
+     permissions:
+       contents: read
+       actions: read
+@@ -60,15 +88,35 @@
+         with:
+           ref: ${{ github.sha }}
+           persist-credentials: false
++      - name: Python 3.10.11 from a hash-checked archive
++        run: |
++          P="$RUNNER_TEMP/forge-python"
++          A="$RUNNER_TEMP/python-3.10.11.tar.gz"
++          curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
++          echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
++          mkdir -p "$P" && tar -xzf "$A" -C "$P"
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          echo "$P/bin" >> "$GITHUB_PATH"
++          echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
++      - name: Authenticate the checkout before any repository code
++        run: |
++          python3 -I -S -B -c 'import hashlib, json, sys
++          lock = open("gate/provenance/implementation.lock", "rb").read()
++          if hashlib.sha256(lock).hexdigest() != sys.argv[1]: sys.exit("IMPLEMENTATION_LOCK")
++          boot = open("gate/provenance/bootstrap.py", "rb").read()
++          if hashlib.sha256(boot).hexdigest() != json.loads(lock)["files"]["gate/provenance/bootstrap.py"]: sys.exit("BOOTSTRAP_BYTES")' "$FORGE_STAGE9_IMPLEMENTATION"
++          python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check
+       - name: Retrieve this run's proof job output
+         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+         with:
+           name: forge-stage9-unsigned-${{ github.run_id }}
+           path: results/stage9/producer-output/
+       - name: Check runner and installed tool pins
+-        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
++        env:
++          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+       - name: Sign exact release statement and explicitly marked rejection fixtures
+-        run: python3 gate/provenance/producer.py --action sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
++        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/producer.py --action sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+       - name: Preserve signed bundles and all failures
+         if: always()
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+diff --git a/gate/provenance/bootstrap.py b/gate/provenance/bootstrap.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/bootstrap.py
+@@ -0,0 +1,93 @@
++"""Authenticate this checkout before any repository Python runs.
++
++Run only with an isolated interpreter, so that nothing but the standard
++library loads:
++
++    python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 HEX --check
++    python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 HEX -- SCRIPT [ARGS...]
++
++The second form re-checks, then runs a locked SCRIPT with environment paths
++removed and an empty bytecode cache. Check this file's bytes against the lock
++before running it; this file cannot vouch for itself.
++"""
++import hashlib
++import json
++import os
++import stat
++import sys
++import tempfile
++
++ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
++LOCK = 'gate/provenance/implementation.lock'
++EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
++CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
++                 '.glob', '.c', '.h', '.sh')
++
++
++def fail(reason):
++    sys.stderr.write('BOOTSTRAP_REJECTED: ' + reason + '\n')
++    raise SystemExit(1)
++
++
++def sha(path):
++    digest = hashlib.sha256()
++    with open(path, 'rb') as stream:
++        for chunk in iter(lambda: stream.read(1 << 20), b''):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def check(expected):
++    lock_path = os.path.join(ROOT, LOCK)
++    if sha(lock_path) != expected:
++        fail('IMPLEMENTATION_LOCK')
++    with open(lock_path, 'rb') as stream:
++        files = json.loads(stream.read())['files']
++    for top in EXECUTABLE_ROOTS:
++        for directory, dirnames, filenames in os.walk(os.path.join(ROOT, top), followlinks=False):
++            for name in sorted(dirnames + filenames):
++                full = os.path.join(directory, name)
++                rel = os.path.relpath(full, ROOT).replace(os.sep, '/')
++                mode = os.lstat(full).st_mode
++                if stat.S_ISLNK(mode):
++                    fail('SYMLINK:' + rel)
++                if name == '__pycache__':
++                    fail('BYTECODE_CACHE:' + rel)
++                if stat.S_ISDIR(mode) or rel == LOCK:
++                    continue
++                if not stat.S_ISREG(mode):
++                    fail('ENTRY_TYPE:' + rel)
++                if rel not in files and (rel.startswith('gate/provenance/') or rel.endswith(CODE_SUFFIXES)):
++                    fail('UNLOCKED_EXECUTABLE:' + rel)
++    for rel, expected_file in sorted(files.items()):
++        path = os.path.join(ROOT, rel)
++        if os.path.islink(path) or not os.path.isfile(path) or sha(path) != expected_file:
++            fail('LOCKED_INPUT:' + rel)
++    return files
++
++
++def main():
++    if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode):
++        fail('INTERPRETER_FLAGS: run with python3 -I -S -B')
++    args = sys.argv[1:]
++    if len(args) < 3 or args[0] != '--implementation-sha256':
++        fail('USAGE')
++    files = check(args[1])
++    if args[2:] == ['--check']:
++        print('BOOTSTRAP_VERIFIED', flush=True)
++        return 0
++    if args[2] != '--' or len(args) < 4:
++        fail('USAGE')
++    script = os.path.abspath(args[3])
++    if os.path.relpath(script, ROOT).replace(os.sep, '/') not in files:
++        fail('SCRIPT_NOT_LOCKED:' + args[3])
++    cache = tempfile.mkdtemp(prefix='forge-pycache-')
++    # Children inherit no Python path variables and use the same empty cache.
++    env = {k: v for k, v in os.environ.items() if not k.startswith('PYTHON')}
++    env.update(PYTHONPYCACHEPREFIX=cache, PYTHONDONTWRITEBYTECODE='1', PYTHONNOUSERSITE='1')
++    os.execve(sys.executable, [sys.executable, '-E', '-s', '-B', '-X', 'pycache_prefix=' + cache, script]
++              + args[4:], env)
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/common.py b/gate/provenance/common.py
+--- a/gate/provenance/common.py
++++ b/gate/provenance/common.py
+@@ -1,4 +1,5 @@
+ """Record handling and policy binding. No signature or proof semantics."""
++import base64
+ import hashlib
+ import json
+ import os
+@@ -7,6 +8,8 @@
+ import re
+ import subprocess
+ import sys
++import tempfile
++import urllib.error
+ import urllib.request
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+@@ -95,13 +98,23 @@
+         return result.returncode, Path(str(prefix) + '.stdout').read_bytes(), Path(str(prefix) + '.stderr').read_bytes()
+ 
+ 
+-def fetch(url, records, label):
++def fetch(url, records, label, *, token_name=None):
+     # HTTPS transport/JSON handling only; this does not verify a signature.
+-    req = urllib.request.Request(url, headers={'Accept': 'application/vnd.github+json',
+-                                               'User-Agent': 'forge-stage9'})
+-    with urllib.request.urlopen(req) as response:
+-        data = response.read()
+-        require(response.status == 200, 'GITHUB_HTTP_STATUS')
++    headers = {'Accept': 'application/vnd.github+json', 'User-Agent': 'forge-stage9'}
++    if token_name is not None:
++        # Each caller names its own read-only token; records never contain it.
++        token = os.environ.get(token_name, '')
++        require(re.fullmatch(r'[A-Za-z0-9_]{20,255}', token), 'GITHUB_TOKEN_REQUIRED:' + token_name)
++        headers['Authorization'] = 'Bearer ' + token
++    req = urllib.request.Request(url, headers=headers)
++    try:
++        with urllib.request.urlopen(req) as response:
++            data = response.read()
++            require(response.status == 200, 'GITHUB_HTTP_STATUS')
++    except urllib.error.HTTPError as error:
++        # Missing, invalid or under-scoped credentials end here as explicit
++        # rejections, never as accepted metadata.
++        raise Rejected('GITHUB_HTTP_STATUS:' + str(error.code)) from None
+     (records.directory / (label + '.bytes')).write_bytes(data)
+     write(records.directory / (label + '.http.json'), {'url': url, 'http_status': 200, 'sha256': sha(data)})
+     return data
+@@ -144,16 +157,67 @@
+     return path
+ 
+ 
++# Roots the sign job (gate/provenance) and the proof container (scripts,
++# examples/binary) can import or load. Code there must be locked, so an added
++# module cannot run beside approved bytes (U104, F1).
++EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
++CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
++                 '.glob', '.c', '.h', '.sh')
++
++
++def source_tree(git_dir, commit, implementation, records):
++    """Check locked bytes and reject unlocked code at an exact commit in a Git store."""
++    _, out, _ = records.run(['git', '--git-dir', git_dir, 'rev-parse', '--verify', commit + '^{commit}'],
++                            'source-commit')
++    require(out.decode().strip() == commit, 'SOURCE_COMMIT')
++    _, listing, _ = records.run(['git', '--git-dir', git_dir, 'ls-tree', '-r', '-z', '--full-tree', commit],
++                                'source-tree')
++    entries = {}
++    for item in listing.split(b'\0'):
++        if item:
++            meta, path = item.split(b'\t', 1)
++            mode, kind, obj = meta.decode().split()
++            entries[path.decode()] = (mode, kind, obj)
++    locked = implementation['files']
++    # The commit must carry exactly the verifier's own approved lock.
++    lock_entry = entries.get('gate/provenance/implementation.lock')
++    require(lock_entry is not None and lock_entry[1] == 'blob', 'IMPLEMENTATION_LOCK_AT_COMMIT')
++    _, data, _ = records.run(['git', '--git-dir', git_dir, 'cat-file', 'blob', lock_entry[2]], 'source-lock')
++    require(data == (HERE / 'implementation.lock').read_bytes(), 'IMPLEMENTATION_LOCK_AT_COMMIT')
++    for path, (mode, kind, obj) in sorted(entries.items()):
++        if path.startswith(EXECUTABLE_ROOTS) and path != 'gate/provenance/implementation.lock':
++            require(mode in ('100644', '100755') and kind == 'blob', 'SOURCE_ENTRY_TYPE:' + path)
++            require('__pycache__' not in path.split('/') and (path in locked or (
++                not path.startswith('gate/provenance/') and not path.endswith(CODE_SUFFIXES))),
++                'UNLOCKED_EXECUTABLE:' + path)
++    for path, expected in sorted(locked.items()):
++        require(path in entries and entries[path][1] == 'blob', 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
++        _, data, _ = records.run(['git', '--git-dir', git_dir, 'cat-file', 'blob', entries[path][2]], 'source-blob')
++        require(sha(data) == expected, 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
++
++
+ def repository_identity(policy, implementation, commit, records):
++    # Only the independent release verifier runs this, with its own read-only
++    # credential and its own Git store; never inside a workflow job.
++    require(os.environ.get('GITHUB_ACTIONS') != 'true', 'VERIFIER_NOT_INDEPENDENT')
+     require(re.fullmatch('[0-9a-f]{40}', commit), 'EXPECTED_SOURCE_COMMIT')
+     repo = policy['signer']['repository']
+-    info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository'))
++    info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository',
++                       token_name='FORGE_VERIFIER_GITHUB_TOKEN'))
+     require(info['full_name'] == repo and info['id'] == policy['signer']['repository_id']
+             and info['owner']['id'] == policy['signer']['owner_id'], 'REPOSITORY_IDENTITY')
+-    for number, (path, expected) in enumerate(sorted(implementation['files'].items())):
+-        raw = fetch(f'https://raw.githubusercontent.com/{repo}/{commit}/{path}', records,
+-                    f'source-{number:03d}')
+-        require(sha(raw) == expected, 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
++    # A fresh store per verification: no stale or locally altered objects.
++    git_dir = Path(tempfile.mkdtemp(prefix='forge-verifier-git-'))
++    require(not git_dir.is_relative_to(ROOT), 'VERIFIER_GIT_DIR_LOCATION')
++    records.run(['git', 'init', '-q', '--bare', git_dir], 'source-store')
++    # The credential reaches git only through the environment, never argv or records.
++    basic = base64.b64encode(('x-access-token:' + os.environ['FORGE_VERIFIER_GITHUB_TOKEN']).encode()).decode()
++    env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_CONFIG_COUNT='1',
++               GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',
++               GIT_CONFIG_VALUE_0='AUTHORIZATION: basic ' + basic)
++    records.run(['git', '--git-dir', git_dir, 'fetch', '-q', '--depth', '1',
++                 'https://github.com/' + repo + '.git', commit], 'source-fetch', env=env)
++    source_tree(git_dir, commit, implementation, records)
+ 
+ 
+ def signature(policy, bundle, blob, commit, records, *, negative_identity=None):
+diff --git a/gate/provenance/hosted_setup.py b/gate/provenance/hosted_setup.py
+new file mode 100644
+--- /dev/null
++++ b/gate/provenance/hosted_setup.py
+@@ -0,0 +1,111 @@
++"""Prepare a fresh GitHub-hosted runner for the Stage 9 proof job.
++
++Install the pinned Docker packages and build the Stage 7 prerequisites from
++pinned sources. This never signs, never judges a proof and never deletes a
++prior attempt. Every command and its exit code is recorded.
++"""
++import os
++from pathlib import Path
++import shutil
++import sys
++import tempfile
++
++from common import ROOT, HERE, Records, context, digest, files, read, require, write
++
++UPSTREAM = '.toolchain/stage7/upstream'
++
++
++def docker(pins, records):
++    apt = pins['docker_apt']
++    work = Path(tempfile.mkdtemp())
++    key = work / 'docker.asc'
++    records.run(['curl', '-fsSL', apt['key_url'], '-o', key], 'docker-key-fetch')
++    _, output, _ = records.run(['gpg', '--show-keys', '--with-colons', key], 'docker-key-show')
++    fingerprints = [line.split(':')[9] for line in output.decode().splitlines() if line.startswith('fpr:')]
++    # The exact key file, not only its first fingerprint (U104, F4).
++    require(digest(key) == apt['key_sha256'] and fingerprints[:1] == [apt['key_fingerprint']],
++            'DOCKER_APT_KEY')
++    source = work / 'forge-docker.list'
++    source.write_text(apt['source'] + '\n')
++    records.run(['sudo', 'install', '-m', '0644', key, '/etc/apt/keyrings/forge-docker.asc'], 'docker-key-install')
++    records.run(['sudo', 'install', '-m', '0644', source, '/etc/apt/sources.list.d/forge-docker.list'],
++                'docker-source-install')
++    records.run(['sudo', 'apt-get', 'update', '-q'], 'apt-update')
++    records.run(['sudo', 'apt-get', 'install', '-y', '-q', '--allow-downgrades']
++                + [name + '=' + version for name, version in sorted(apt['packages'].items())], 'docker-install')
++    _, output, _ = records.run(['dpkg-query', '-W', '-f', '${Package}=${Version}\\n'] + sorted(apt['packages']),
++                               'docker-packages')
++    require(dict(line.split('=', 1) for line in output.decode().split()) == apt['packages'], 'DOCKER_PACKAGES')
++
++
++def seed(root, stage7, own, implementation, pins, records):
++    require(not root.exists(), 'SEED_ALREADY_EXISTS')
++    upstream = root / UPSTREAM
++    commit = stage7['upstream_commit']
++    records.run(['git', 'init', '-q', upstream], 'upstream-init')
++    records.run(['git', '-C', upstream, 'fetch', '-q', '--depth', '1', stage7['upstream_repository'] + '.git', commit],
++                'upstream-fetch')
++    records.run(['git', '-C', upstream, 'checkout', '-q', '--detach', commit], 'upstream-checkout')
++    _, head, _ = records.run(['git', '-C', upstream, 'rev-parse', 'HEAD'], 'upstream-head')
++    require(head.decode().strip() == commit, 'UPSTREAM_COMMIT')
++    pip = pins['pip']
++    requirement = Path(tempfile.mkdtemp()) / 'pip.txt'
++    requirement.write_text(f"pip=={pip['version']} --hash=sha256:{pip['sha256']}\n")
++    records.run([sys.executable, '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
++                 '-r', requirement], 'pip-pin')
++    # The approved dependency lock was made on macOS, and pip writes the
++    # interpreter path into bin/idna. Run the recorded command through that path.
++    link = Path(pins['pydeps_python_path'])
++    records.run(['sudo', 'mkdir', '-p', link.parent], 'pydeps-python-directory')
++    records.run(['sudo', 'ln', '-s', sys.executable, link], 'pydeps-python-link')
++    records.run([link, '-m', 'pip', 'install', '--require-hashes', '--only-binary=:all:', '--platform',
++                 'manylinux2014_x86_64', '--python-version', '3.12', '--implementation', 'cp', '--abi', 'cp312',
++                 '--target', '.toolchain/stage7/pydeps', '--no-compile', '--disable-pip-version-check',
++                 '--no-input', '--no-deps', '-r', UPSTREAM + '/tools/oft/requirements.txt'],
++                'python-dependencies', cwd=root)
++    require(files(root / '.toolchain/stage7/pydeps') == implementation['python_container_dependencies'],
++            'UPSTREAM_PYTHON_DEPENDENCIES')
++    uid, gid = stage7['container_uid'], stage7['container_gid']
++    # A Linux bind mount keeps host ownership; the container user must own it (U089).
++    records.run(['sudo', 'chown', '-R', f'{uid}:{gid}', upstream / '.git'], 'seed-git-owner')
++    for image in [stage7['checker_image'], own['builder_image']]:
++        records.run(['docker', 'pull', '--platform', stage7['platform'], image], 'image-pull')
++    code, _, _ = records.run(['docker', 'volume', 'inspect', stage7['linux_volume']], 'volume-absent', check=False)
++    require(code != 0, 'VOLUME_ALREADY_EXISTS')
++    records.run(['docker', 'volume', 'create', stage7['linux_volume']], 'volume-create')
++    base = ['docker', 'run', '--rm', '--pull', 'never', '--platform', stage7['platform'], '--network', 'none',
++            '--user', f'{uid}:{gid}', '--cpuset-cpus', stage7['cpuset'], '--memory', stage7['memory'],
++            '--memory-swap', stage7['memory_swap'], '--pids-limit', str(stage7['pids_limit']),
++            '--mount', 'type=volume,source=' + stage7['linux_volume'] + ',target=/work',
++            '--mount', f'type=bind,source={upstream}/.git,target=/git-source,readonly',
++            '-w', '/work', stage7['checker_image']]
++    records.run(base + ['git', '-c', 'safe.directory=/git-source', 'clone', '--shared', '--no-checkout',
++                        '/git-source', '.'], 'volume-clone')
++    records.run(base + ['git', 'checkout', '--detach', commit], 'volume-checkout')
++    # The unchanged build script numbers attempts from its own root. A staging
++    # root without prior records builds attempt-0001 in the fresh volume.
++    staging = Path(tempfile.mkdtemp())
++    for path in ['scripts/stage7_build_own.py', 'toolchain/stage7-pins.json', 'toolchain/stage7-own-pins.json',
++                 own['source']]:
++        (staging / path).parent.mkdir(parents=True, exist_ok=True)
++        shutil.copyfile(ROOT / path, staging / path)
++    records.run([sys.executable, staging / 'scripts/stage7_build_own.py'], 'own-build')
++    shutil.copytree(staging / 'results/stage7/own-build', records.directory / 'own-build')
++
++
++def main():
++    _, _, implementation = context(os.environ['FORGE_STAGE9_IMPLEMENTATION'])
++    require(os.environ.get('GITHUB_JOB') == 'proof', 'APPROVED_JOB')
++    pins = read(HERE / 'runtime.json')['profiles']['producer']
++    require(os.environ.get('RUNNER_ENVIRONMENT') == pins['runner_environment']
++            and os.environ.get('ImageOS') == pins['image_os'], 'HOSTED_RUNNER')
++    records = Records(ROOT / 'results/stage9/producer-output/hosted-setup')
++    docker(pins, records)
++    seed(Path(os.environ['FORGE_STAGE7_ROOT']).resolve(), read(ROOT / 'toolchain/stage7-pins.json'),
++         read(ROOT / 'toolchain/stage7-own-pins.json'), implementation, pins, records)
++    write(records.directory / 'result.json', {'result': 'prepared', 'end_to_end': False})
++    return 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementation.lock
+--- a/gate/provenance/implementation.lock
++++ b/gate/provenance/implementation.lock
+@@ -2,8 +2,8 @@
+   "contract_approval_commit": "097431cf458e5c62332575b09e953224471fa64d",
+   "end_to_end": false,
+   "files": {
+-    ".github/workflows/provenance-negative.yml": "79c50d36f5951f6478ec69f72a85cd1c79414dacd3c17dfd6b170470e24ffca7",
+-    ".github/workflows/provenance.yml": "d2c60993d504a4353102d36189f9dd5f25b98ab3c2c73a12649fc18a087ccefd",
++    ".github/workflows/provenance-negative.yml": "d8a64d2b0b3b4b9eb643cc4d57c8a73711122cee6ca3f3cb41c59d5f0101308d",
++    ".github/workflows/provenance.yml": "3b8852b0f0baecb4891385cc6ca23c5bbc41893edcb973ce417627439c17742b",
+     "examples/binary/Execution.v": "6540ec35e20deed6081f3045c0944917d41124611e79e9df4daa43d257f08f8b",
+     "examples/binary/Images.v": "3f22a6c9494efe2eadfb0c9be3813bd3cf0edf803d49b9598113fff50b9eb563",
+     "examples/binary/Proof.v": "1b488738445a3c1208d32ee0c6f268711333b86d04123856658e5c1cb39e8663",
+@@ -19,12 +19,14 @@
+     "gate/expected-audit.md": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae",
+     "gate/provenance/Dockerfile": "bb0a3d3dee8865515c3b777a6799a6178d8d6c0c796d2b46d37e3fa13987b877",
+     "gate/provenance/artifact-identities.json": "0f2c86a49738b5bbdf15cd00b3490347dfece5f5239a3414a46d75c212fa9718",
+-    "gate/provenance/common.py": "77c068569e47885abbf4cd979f761cf6deab43ce8c5d98749764adaab919cc16",
++    "gate/provenance/bootstrap.py": "0e8bbf27646a215161f341175022fee36daa4320065a6fb176bfce11bd06aec7",
++    "gate/provenance/common.py": "2fdc4ffdad6ca4e9d99cbb55633073daa4f16aa6e9b4c763a6269e1d7d57f4f2",
++    "gate/provenance/hosted_setup.py": "47df0e27be22a2246eccb107675e2dff93aba3122f7d67b1357d3cf9e43b52b3",
+     "gate/provenance/observe.py": "aea3bf21a1d0267df0e374bbcfbf3e09ff2df2e3b1fa34d16fe115bc010a6c13",
+-    "gate/provenance/preflight.py": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776",
+-    "gate/provenance/producer.py": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e",
++    "gate/provenance/preflight.py": "e4f40ecfbc2faed744ddb286a77abde140ef40d1fb1a7a245536a1171146cb39",
++    "gate/provenance/producer.py": "c176e5dceb05608c4ed9e2ac45bdb1842c33db2d6e05b1c590eddd9b65f68d3c",
+     "gate/provenance/release.py": "1877aef9688a089fe7fee9026b08968b559044862535c6c398b0e7603a1c6d6f",
+-    "gate/provenance/runtime.json": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024",
++    "gate/provenance/runtime.json": "35586ee59fcdf3925c4f6d4a0d0ab661a4bb1bb807380c75ceb9247a1cc11e5b",
+     "gate/refund.py": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb",
+     "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+     "gate/refund/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
+@@ -44,12 +46,39 @@
+     "results/stage8/completed/source-evidence.json": "be32ef9e27fee402aefd9fab6de9cc66ceb03d1d68101d6b238364756ebd8c86",
+     "schemas/evidence.schema.json": "5113a6dc0c26c4f474ecf22bd558967ad260e4d16bb4eb017bf852ae18dc2caa",
+     "schemas/policy.schema.json": "ba706f6f15c087e1c0673743717d76e1fdb02f8d2efe791611b121429954ed4d",
++    "scripts/audit_stage9_receipts.py": "9b51aa0c91af0ff7d23f330d3434479a8ad19d64c3f2c641e5fa1e3d89d08d2c",
++    "scripts/benchmark_reuse.py": "1220fca1ebc43375da4c11af67231cb69c20a05ad7c68b7ccf463828d2d292ec",
++    "scripts/build_model.py": "5425e59435b78f21db02b95f6e3325051009e247f4000c7878f513470b64d62f",
++    "scripts/check_stage9_installation.py": "2a1f092d9901cf5d7326a4bd11d828b5aa02cb115b97f9bf0b22a6b6d4d002a1",
++    "scripts/check_stage_4_approval.py": "6d3220ccc18d99baf837bdea0bcb2cbf49ea1734142eb4c97e48d9ffb7d3a931",
++    "scripts/check_stage_4_local.py": "bf451b3b7c2c704f5ffe2b5c67540418e69d71a1bf1d444b735118ab02d942ae",
++    "scripts/check_stage_6.py": "a718d948b5c1b4d5e1de9db3c6292b69cc94444dec9ba58beb6d10bd17e361c7",
++    "scripts/collect_stage9_receipt_reference.py": "74a96dba9df7517cdbbaaa04bf7923d759d6f7e986dbff9af43acfe3de0053e4",
++    "scripts/exit_stage_1.py": "bf85637155a63f48b737c20f6efdd4e4d9047afe3e1e5a252a3d31f9bc7f807f",
++    "scripts/exit_stage_2.py": "e7497cd5e6aa453666d571aa74ef9e024f42172256e293e191a721c23e0040fa",
++    "scripts/exit_stage_3.py": "2cfa89f8f84bf9800f852fe83f0d0aab05454e28b6fd3d3b91739553d027a98f",
++    "scripts/exit_stage_4.py": "6971462e9d7b14023585a170099de85b157c7d5163f6e9253fb8a44c18c1b4d1",
++    "scripts/exit_stage_5.py": "048d8083c1e597cc81f076da1b6471acf94a9553bbc15d82bc68cd00bb69c77d",
++    "scripts/exit_stage_6.py": "7217f399a6edae0131b1e22a8692c9ec984198b04c1b3e2150cf2c7f12675352",
+     "scripts/exit_stage_7.py": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544",
++    "scripts/exit_stage_8.py": "6fbca72b078bf29d816b3e08b1cdb45cecef855635fc58127185e57e2ca2ce2f",
+     "scripts/exit_stage_9.py": "a4718dcb41687197d82b59044bc4bec818dbf15d128d037bc589b90488c288ef",
++    "scripts/export_stage6_usage.py": "deddefa05edfc672a1418ac20042853380fd3dde1ec1e0477c767efa55421444",
++    "scripts/generate_claim_docs.py": "fc7b454c88590487105013ff82cb7d255d3eb70667dcc54b077ad62f9e584950",
++    "scripts/inventory_hardware.py": "abeab328debfb5eb91b68eacf126db308748634d3f91bf7aa800fe6c2cc3f297",
+     "scripts/javascript_env.py": "0beb81134ed59cb41cc2feb02f188816060dace4539888c98cea55771a9a3abb",
++    "scripts/probe_stage_4.py": "0c5840569468c189411d77a39ee9c832cb3b69b06b341cc940a86ca5a59723b0",
++    "scripts/render_spec_report.py": "dd6f4a9c856af315ad4e8bb6fd2170af4f7ac5e87e8435092e23ceda0c94070b",
++    "scripts/stage5_tools.py": "b4b8c91223befb850748fe4f07f863065f36888620a90b3d7013842aaaeca781",
+     "scripts/stage7_build_own.py": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac",
++    "scripts/stage7_emit_evidence.py": "87ae01037039eb67add57ab0544c66ab23f3be8698e784db370ea801023dba5c",
+     "scripts/stage7_identity.py": "7f9fdc9e7531ffeb0fb32e2ea7362ce87c27c9c46b03ebdf7a36202602998803",
++    "scripts/stage7_job.py": "5fcc5a01740663adff5871dbfa66c7b51f462dd5d25adfe9569633a870436f8f",
++    "scripts/stage7_negative.py": "04c55d1a6dc0b4db8fccec99dae172255cb1c0b89d4f272efd4f190c5d8954d4",
+     "scripts/stage7_own_job.py": "6c852220e8eeeac8b5c9bec533bf5ec044f68dec3f6e98d348f525da40b32b00",
++    "scripts/stage7_pack_records.py": "e03528ca782d12ff577b1f23b5a08352f9b469d701cca66a585d3f671104e8ad",
++    "scripts/stage7_record.py": "c3a0f2759d944d2e076fd533052c4a0f1ecb25be8ad865c97343d2e052bb9103",
++    "scripts/stage7_trace_processes.py": "a6586468da2486780eebb83a72a20fa89c12aa7fcdf482c588057d43ab7e8b94",
+     "spec/provenance/protocol.md": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69",
+     "spec/provenance/spec.lock": "43610d8123ce21fdd1f9dac9469f78ad3efcb3af271a86011a18790099811a33",
+     "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+diff --git a/gate/provenance/preflight.py b/gate/provenance/preflight.py
+--- a/gate/provenance/preflight.py
++++ b/gate/provenance/preflight.py
+@@ -19,27 +19,30 @@
+     records = Records(ROOT / ('results/stage9/producer-output/bootstrap-' + job))
+     policy, _, _ = context(args.implementation_sha256)
+     try:
+-        require(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'RUNNER_PLATFORM')
+-        listener = Path(os.environ['RUNNER_WORKSPACE']).parents[1] / 'bin/Runner.Listener'
+-        _, version, _ = records.run([listener, '--version'], 'runner-version')
+-        pins = read(HERE / 'runtime.json')
+-        require(version.decode().strip() == pins['actions_runner']['version'], 'RUNNER_VERSION')
++        pins = read(HERE / 'runtime.json')['profiles']['producer']
++        require(platform.system() == 'Linux' and platform.machine() == pins['machine']
++                and os.environ.get('RUNNER_ENVIRONMENT') == pins['runner_environment']
++                and os.environ.get('ImageOS') == pins['image_os'], 'RUNNER_PLATFORM')
++        # GitHub updates hosted images and kernels; record them, they are not pinned.
++        write(records.directory / 'runner.json', {'image_os': os.environ['ImageOS'],
++                                                 'image_version': os.environ.get('ImageVersion'),
++                                                 'kernel': platform.release(), 'end_to_end': False})
+         request = parse(os.environ['FORGE_STAGE9_REQUEST'])
+         require(os.environ['GITHUB_SHA'] == request['expected_source_commit'], 'DISPATCH_COMMIT')
+         require(Path(os.environ['FORGE_STAGE7_ROOT']).resolve() != ROOT, 'PERSISTENT_PREREQUISITES_OUTSIDE_CHECKOUT')
+         if args.producer_run:
+             require(args.producer_run.isdecimal(), 'PRODUCER_RUN_ID')
+             run = parse(fetch('https://api.github.com/repos/mack-dot/forge/actions/runs/' + args.producer_run,
+-                              records, 'producer-run'))
++                              records, 'producer-run', token_name='FORGE_PRODUCER_GITHUB_TOKEN'))
+             require(run['conclusion'] == 'success' and run['event'] == 'workflow_dispatch'
+                     and run['head_sha'] == request['expected_source_commit']
+                     and run['path'] == '.github/workflows/provenance.yml'
+                     and run['head_branch'] == 'main'
+                     and run['repository']['id'] == policy['signer']['repository_id'], 'PRODUCER_RUN_IDENTITY')
+         binary = ROOT / '.toolchain/stage9/cosign'
+-        expected = policy['signature']['executable_sha256']['darwin-arm64']
++        expected = policy['signature']['executable_sha256']['linux-amd64']
+         if not binary.exists():
+-            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-darwin-arm64'
++            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-linux-amd64'
+             binary.parent.mkdir(parents=True, exist_ok=True)
+             with urllib.request.urlopen(url) as response:
+                 data = response.read()
+diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
+--- a/gate/provenance/producer.py
++++ b/gate/provenance/producer.py
+@@ -3,6 +3,7 @@
+ import copy
+ import os
+ from pathlib import Path
++import platform
+ import re
+ import secrets
+ import shutil
+@@ -17,28 +18,49 @@
+ 
+ 
+ def runtime(records):
++    # The controller (macOS, Docker Desktop) and the hosted producer (Linux) use
++    # separate pinned profiles. Both must build the same image-config identity.
+     pins = read(HERE / 'runtime.json')
++    profile = pins['profiles'][{'Darwin': 'controller', 'Linux': 'producer'}[platform.system()]]
++    require(platform.machine() == profile['machine'], 'HOST_PLATFORM')
++    if 'runner_environment' in profile:
++        require(os.environ.get('RUNNER_ENVIRONMENT') == profile['runner_environment']
++                and os.environ.get('ImageOS') == profile['image_os'], 'HOSTED_RUNNER')
+     _, output, _ = records.run(['docker', 'version', '--format', '{{json .}}'], 'docker-version')
+     value = parse(output)
+     for side in ['Client', 'Server']:
+-        for key, expected in pins['docker'][side].items():
++        for key, expected in profile['docker'][side].items():
+             require(value[side][key] == expected, 'DOCKER_VERSION:' + side + ':' + key)
+     components = {c['Name']: c['Version'] for c in value['Server']['Components']}
+-    require(components == pins['docker_components'], 'DOCKER_COMPONENTS')
+-    require(value['Server']['KernelVersion'] == pins['kernel']
+-            and value['Server']['Platform']['Name'] == 'Docker Desktop ' + pins['docker_desktop'],
+-            'DOCKER_HOST_RUNTIME')
++    require(components == profile['docker_components'], 'DOCKER_COMPONENTS')
++    # Hosted kernels change between images; the producer profile records, not pins, them.
++    require(value['Server']['Platform']['Name'] == profile['docker_platform']
++            and profile['kernel'] in (None, value['Server']['KernelVersion']), 'DOCKER_HOST_RUNTIME')
++    _, output, _ = records.run(['docker', 'info', '--format', '{{json .}}'], 'docker-info')
++    info = parse(output)
++    # The image-config identity needs the classic image store (U081, U082).
++    require(info['Driver'] == profile['image_store_driver']
++            and ['driver-type', 'io.containerd.snapshotter.v1'] not in info['DriverStatus'], 'IMAGE_STORE')
+     _, output, _ = records.run(['docker', 'buildx', 'version'], 'buildx-version')
+-    require(output.decode().strip() == pins['buildx'], 'BUILDX_VERSION')
+-    _, output, _ = records.run(['docker', 'buildx', 'inspect', pins['builder']['name']], 'builder-inspect')
++    require(output.decode().strip() == profile['buildx'], 'BUILDX_VERSION')
++    # rewrite-timestamp needs BuildKit's own exporter, so both profiles use one
++    # pinned docker-container builder; the Docker driver ignores it (U093).
++    builder = profile['builder']
++    code, _, _ = records.run(['docker', 'buildx', 'inspect', builder['name']], 'builder-present', check=False)
++    if code != 0:
++        records.run(['docker', 'buildx', 'create', '--name', builder['name'], '--driver', builder['driver'],
++                     '--driver-opt', 'image=' + builder['image']], 'builder-create')
++    _, output, _ = records.run(['docker', 'buildx', 'inspect', '--bootstrap', builder['name']], 'builder-inspect')
+     text = output.decode()
+-    require(re.search(r'^Driver:\s+' + re.escape(pins['builder']['driver']) + r'\s*$', text, re.M)
+-            and re.search(r'^BuildKit version:\s+' + re.escape(pins['builder']['buildkit_version']) + r'\s*$', text, re.M),
++    require(re.search(r'^Driver:\s+' + re.escape(builder['driver']) + r'\s*$', text, re.M)
++            and re.search(r'^BuildKit version:\s+' + re.escape(builder['buildkit_version']) + r'\s*$', text, re.M)
++            and re.search(r'^Driver Options:\s+image="' + re.escape(builder['image']) + r'"\s*$', text, re.M),
+             'BUILDER_VERSION')
++    return profile
+ 
+ 
+ def package(policy, out, records):
+-    runtime(records)
++    profile = runtime(records)
+     base = policy['deployment']['base_image']
+     records.run(['docker', 'pull', '--platform', 'linux/amd64', base], 'package-base-pull')
+     _, info, _ = records.run(['docker', 'image', 'inspect', base], 'package-base-inspect')
+@@ -58,7 +80,9 @@
+     os.utime(build / 'gcd-selftest.elf', (0, 0))
+     os.utime(build / 'Dockerfile', (0, 0))
+     iid = out / 'image-id.txt'
+-    records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load', '--platform', 'linux/amd64',
++    # Without rewrite-timestamp, directory mtimes make every build differ (U093).
++    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'],
++                 '--output', 'type=docker,rewrite-timestamp=true', '--platform', 'linux/amd64',
+                  '--provenance=false', '--sbom=false', '--network=none',
+                  '--build-arg', 'SOURCE_DATE_EPOCH=0', '--iidfile', str(iid), str(build)], 'package-build')
+     image = iid.read_text().strip()
+@@ -74,8 +98,10 @@
+                   'recipe_sha256': digest(HERE / 'Dockerfile'),
+                   'elf_path': policy['deployment']['path'],
+                   'elf_sha256': policy['release_artifact']['sha256'],
+-                  'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '
+-                                   '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
++                  'build_command': 'docker buildx build --output type=docker,rewrite-timestamp=true '
++                                   '--platform linux/amd64 --provenance=false --sbom=false --network=none '
++                                   '--build-arg SOURCE_DATE_EPOCH=0',
++                  'buildkit_image': profile['builder']['image'],
+                   'end_to_end': False}
+     package_identity(policy, image, descriptor, out, records)
+     # Inspect bytes from a real container made from the built package.
+diff --git a/gate/provenance/runtime.json b/gate/provenance/runtime.json
+--- a/gate/provenance/runtime.json
++++ b/gate/provenance/runtime.json
+@@ -1,43 +1,96 @@
+ {
+-  "actions_runner": {
+-    "archive": "https://github.com/actions/runner/releases/download/v2.338.2/actions-runner-osx-arm64-2.338.2.tar.gz",
+-    "platform": "osx-arm64",
+-    "provisioning_authorized": false,
+-    "required_label": "forge-stage9",
+-    "sha256": "25a065af409ffa317ab4d5a3b614dd15fc9c40f2172bc1b35a1b1258e919a388",
+-    "version": "2.338.2"
+-  },
+-  "builder": {
+-    "buildkit_version": "v0.25.1",
+-    "driver": "docker",
+-    "name": "desktop-linux"
+-  },
+-  "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
+-  "docker": {
+-    "Client": {
+-      "ApiVersion": "1.51",
+-      "Arch": "arm64",
+-      "GitCommit": "e180ab8",
+-      "Os": "darwin",
+-      "Version": "28.5.1"
++  "end_to_end": false,
++  "format_version": 2,
++  "profiles": {
++    "controller": {
++      "builder": {
++        "buildkit_version": "v0.25.1",
++        "driver": "docker-container",
++        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
++        "name": "forge-pinned"
++      },
++      "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
++      "docker": {
++        "Client": {
++          "ApiVersion": "1.51",
++          "Arch": "arm64",
++          "GitCommit": "e180ab8",
++          "Os": "darwin",
++          "Version": "28.5.1"
++        },
++        "Server": {
++          "ApiVersion": "1.51",
++          "Arch": "arm64",
++          "GitCommit": "f8215cc",
++          "Os": "linux",
++          "Version": "28.5.1"
++        }
++      },
++      "docker_components": {
++        "Engine": "28.5.1",
++        "containerd": "1.7.27",
++        "docker-init": "0.19.0",
++        "runc": "1.2.5"
++      },
++      "docker_platform": "Docker Desktop 4.48.0 (207573)",
++      "image_store_driver": "overlay2",
++      "kernel": "6.10.14-linuxkit",
++      "machine": "arm64"
+     },
+-    "Server": {
+-      "ApiVersion": "1.51",
+-      "Arch": "arm64",
+-      "GitCommit": "f8215cc",
+-      "Os": "linux",
+-      "Version": "28.5.1"
++    "producer": {
++      "builder": {
++        "buildkit_version": "v0.25.1",
++        "driver": "docker-container",
++        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
++        "name": "forge-pinned"
++      },
++      "buildx": "github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5",
++      "docker": {
++        "Client": {
++          "ApiVersion": "1.51",
++          "Arch": "amd64",
++          "GitCommit": "e180ab8",
++          "Os": "linux",
++          "Version": "28.5.1"
++        },
++        "Server": {
++          "ApiVersion": "1.51",
++          "Arch": "amd64",
++          "GitCommit": "f8215cc",
++          "Os": "linux",
++          "Version": "28.5.1"
++        }
++      },
++      "docker_apt": {
++        "key_fingerprint": "9DC858229FC7DD38854AE2D88D81803C0EBFCD88",
++        "key_sha256": "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570",
++        "key_url": "https://download.docker.com/linux/ubuntu/gpg",
++        "packages": {
++          "containerd.io": "2.4.2-3~ubuntu.24.04~noble",
++          "docker-buildx-plugin": "0.38.1-1~ubuntu.24.04~noble",
++          "docker-ce": "5:28.5.1-1~ubuntu.24.04~noble",
++          "docker-ce-cli": "5:28.5.1-1~ubuntu.24.04~noble"
++        },
++        "source": "deb [arch=amd64 signed-by=/etc/apt/keyrings/forge-docker.asc] https://download.docker.com/linux/ubuntu noble stable"
++      },
++      "docker_components": {
++        "Engine": "28.5.1",
++        "containerd": "v2.4.2",
++        "docker-init": "0.19.0",
++        "runc": "1.5.2"
++      },
++      "docker_platform": "Docker Engine - Community",
++      "image_os": "ubuntu24",
++      "image_store_driver": "overlay2",
++      "kernel": null,
++      "machine": "x86_64",
++      "pip": {
++        "sha256": "2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af",
++        "version": "25.1.1"
++      },
++      "pydeps_python_path": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
++      "runner_environment": "github-hosted"
+     }
+   },
+-  "docker_components": {
+-    "Engine": "28.5.1",
+-    "containerd": "1.7.27",
+-    "docker-init": "0.19.0",
+-    "runc": "1.2.5"
+-  },
+-  "docker_desktop": "4.48.0 (207573)",
+-  "end_to_end": false,
+-  "format_version": 1,
+-  "kernel": "6.10.14-linuxkit",
+   "python": "3.10.11"
+ }

@@ -1,0 +1,1 @@
+{"bypass_actors":[{"actor_id":5,"actor_type":"RepositoryRole","bypass_mode":"pull_request"}],"conditions":{"ref_name":{"exclude":[],"include":["~DEFAULT_BRANCH"]}},"enforcement":"active","id":26065125,"name":"protect-main","rules":["deletion","non_fast_forward","required_linear_history","pull_request"],"target":"branch"}

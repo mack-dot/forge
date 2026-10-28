@@ -1,0 +1,11 @@
+manifest sha256 d37d83278c17c2dba92122c71e4a53d34a5a87f88156a97977f378f1bff24585
+diff True 39c6c3d78daaa7a783b69c070878d601b697edd53f770459e36deb14afa396ae
+.github/workflows/provenance-negative.yml: candidate==True base==True 9ff09e47fef5e72666e30ce247719996dbeebbf02dc16f6c798e04b3f54745d3
+.github/workflows/provenance.yml: candidate==True base==True 11d1cd7ffd95c5cb82b7004318c51ecc7f160a53bc8a50d68ab405a3c5ba23ad
+gate/provenance/hosted_setup.py: candidate==True base==new e8d5f1f6bfcfd784807b011cbdefe620c4c6e90eb84ea0fbcab774c6b63da057
+gate/provenance/implementation.lock: candidate==True base==True 30880e082a90c612a28933e1ab3ad78daba7234e67e6222c690fa41deace5108
+gate/provenance/preflight.py: candidate==True base==True 0b9cff175e65dcd41a78b1d7841e76278338bd01f4aaddd444d7895646372226
+gate/provenance/producer.py: candidate==True base==True c176e5dceb05608c4ed9e2ac45bdb1842c33db2d6e05b1c590eddd9b65f68d3c
+gate/provenance/runtime.json: candidate==True base==True 69496b01735446c5140423aeba8e8348b37fd590c4cfb30d8d70a25283dcbbbd
+lock sha True 30880e082a90c612a28933e1ab3ad78daba7234e67e6222c690fa41deace5108
+lock binds the other 6 candidate files: True

@@ -2481,3 +2481,290 @@ curl: (6) Could not resolve host: github.com
   It ran on the maintainer's host in a new directory, not on a clean machine.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: v2 hosted dry run; then the user's exact-byte approval.
+
+## U098 — Contributor readiness: docs, license, settings and issues
+
+- References: U097; docs/contributor-readiness.md; results/contributor-readiness/.
+- Scope note: this is documentation and onboarding work requested by the user.
+  It is not a stage execution and changes no Stage 9 record, protected file,
+  release workflow or lock.
+- Decisions (user): Apache-2.0 ("lets do apache 2.0"); copyright holder "we can
+  say superpowermentors holds the license" (exact legal name unconfirmed);
+  follow the recommendations; "def post them" (issues).
+- Observed: quickstart in a fresh clone (quickstart-test-0002): clone,
+  download, checksum, unzip, venv, pip each 0; gate on impl/Ledger.dfy 0
+  (ACCEPTED C1–C5); gate on bugs/off_by_one.dfy 1 (VERIFICATION_REJECTED C4);
+  scripts/exit_stage_1.py --case planted-bugs 0; evidence byte-identical to
+  evidence.json (ed015ad9…). A helper's earlier run also rejected
+  retry_double, self_transfer and sneaky_assume with exit 1, and reported doc
+  gaps (no download command, host-specific checksum manifest, undocumented
+  output path rule, raw ValueError for an --evidence path outside the repo).
+- Observed: ruleset protect-main created (id 26065125, exit 0); inert ruleset
+  25915179 deleted (exit 0); effective rules on main read back as deletion,
+  non_fast_forward, required_linear_history, pull_request. Label "proposal"
+  created; issues #6–#13 created (exit 0 each).
+- Observed (audit): id-token: write only in provenance.yml (sign job) and
+  provenance-negative.yml, both workflow_dispatch only. proof-gate.yml is the
+  only pull-request trigger (pull_request_target); its check job is
+  contents: read with candidate as data and persist-credentials false; its
+  report job (pull-requests and statuses write) runs base code. No secrets,
+  variables, environments, deploy keys or webhooks; one collaborator.
+- Uncertainty: Linux quickstart, the TypeScript demo and a truly clean machine
+  are not tested; hostile-input resource exhaustion in the PR gate is not
+  audited; the NOTICE legal name is unconfirmed; one-person review only.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U099 — PR gate rejected the first contributor PR for protected .github files
+
+- References: U098; results/contributor-readiness/pr14-gate-0001/.
+- Observed: PR #14 at 33d913d4… triggered proof-gate run 40743715513. gh run
+  watch --exit-status returned 1. The verify job failed at "Check exact PR
+  revisions"; the report job succeeded and posted "Forge: rejected", gate exit
+  1, C1–C5 not established, with UNAPPROVED_PROTECTED_CHANGE for
+  .github/CODEOWNERS, four issue templates and the PR template ("approval of
+  exact spec text is required; PR labels do not authorize it").
+- Observed (code): gate/incremental.py protects gate, policy, spec, toolchain,
+  schemas and .github, plus spec.lock and AGENTS.md. gate/approval.py accepts
+  only approved spec text. The rejection is correct behavior, not a defect.
+- Inference: any owner-approved change under .github/, toolchain/ or schemas/
+  (including the Stage 9 v2 workflows) will show this rejection on its PR.
+- Action: the .github files move to a separate PR for exact-byte approval;
+  PR #14 keeps only unprotected files. CONTRIBUTING.md and the readiness report
+  now state this. No gate behavior was changed.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U100 — Copyright holder: owner's personal project
+
+- References: U098; NOTICE; proposals/license.md.
+- Decision: asked about the copyright holder, the user said "theoretically i
+  own it but i did make some of it on company time idk", then "just treat it as
+  my project tis is differnt than my engineerin loop i made at spm". NOTICE now
+  names mack-dot (GitHub handle; legal name not given) and Forge contributors,
+  instead of "Superpower Mentors".
+- Advice given, not a legal finding: employer ownership can depend on the
+  employment agreement and local law for work done on company time; the user
+  was advised to check the agreement and keep Forge work off company time.
+- Impact: none on Stage 9. All six EXITs are NOT RUN. end_to_end=false.
+
+## U101 — Repository private; copyright treated as SPM's; license and releases on hold
+
+- References: U098, U100; PR #14, PR #15.
+- Decision: after outside advice on employee-invention ownership, the user made
+  the repository private and said "lets just say spm owns the license for now i
+  love the company and dont wanna start anyhting". This supersedes U100's
+  personal-project holder. Read as: SPM is treated as the copyright holder; no
+  open-source license is granted. Only SPM could grant one.
+- Observed: GitHub reports visibility private; an anonymous API request returns
+  HTTP 404. The rules endpoint for main returns HTTP 403 ("Upgrade to GitHub Pro
+  or make this repository public"), so the protect-main ruleset is not enforced
+  while the repository is private on this plan.
+- Status: main has no LICENSE file. PR #14 (Apache-2.0 LICENSE, NOTICE naming
+  mack-dot) and PR #15 stay unmerged. Issues #6–#13 are no longer public.
+- Impact on Stage 9: the installed gate fetches GitHub data without a token
+  (U084), so it fails closed while private. Stage 9 is paused: no approval
+  request, dispatch or signing. The running v2 dry run (a measurement) is
+  recorded locally. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: a written agreement with SPM on ownership and licensing; then
+  update NOTICE and the license to match.
+
+## U102 — v2 dry run passes on the mack-dot/forge boundary; private repository blocks release verification
+
+- References: U097, U101; proposals/provenance-hosted-v2/;
+  results/stage9/hosted-probe-0006/ (key-hashes.txt).
+- Observed: run 40743117460 (dry-run v2, head e37ef2c5…) concluded success.
+  The first dispatch attempt returned HTTP 404 (workflow not yet registered);
+  the second returned 0. The background watcher was stopped when the user asked
+  for a read-only audit; the run was then read with gh run view (0) and gh run
+  download (0). Artifact sha256:bf75cdaa… (56,513,813 bytes).
+- Observed (steps): candidate diff applied; hosted_setup.py 426 s;
+  preflight.py 2 s (ubuntu24 20261026.354.1, kernel 7.0.0-1017-azure, recorded);
+  package() and replay() 1,561 s. 20 recorded commands: builder-present 1
+  (absent, expected), all others 0. Proof container OOMKilled false, ExitCode 0.
+  Receipt 656 files, 579 closure objects, accepted by validate_receipt().
+  The hosted package descriptor equals controller-descriptor.json exactly
+  (config f584305022f2e811…). result.json accepted true at e37ef2c5….
+- Scope: synthetic request; no statement, admission, signature or deployment.
+  Not an EXIT result.
+- Observed blocker: the repository is private (U101). Both the installed gate
+  and the v2 candidate fetch GitHub repository metadata and locked files
+  without a token (common.fetch), so release verification fails closed while
+  private. Hosted runs in a private repository use paid minutes.
+- Impact: the v2 candidate passes every required dry-run check. Stage 9 remains
+  CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: negative controls for the v2 artifact boundary (U103); then the
+  owner's exact-byte approval and the visibility decision.
+
+## U103 — Real negative controls for the v2 artifact-identity boundary
+
+- References: U093, U094, U102; proposals/provenance-hosted-v2/negative_controls.py;
+  results/stage9/v2-negative-controls-0001/ (results.json c663a679…).
+- Invariant: only a package whose image config, every layer diff_id and the
+  ELF bytes at /opt/forge/gcd-selftest.elf equal the approved descriptor and
+  the release ELF can pass package identity; only the pinned BuildKit image may
+  build it.
+- Observed: from a scratch copy with the v2 candidate applied (lock 30880e08…),
+  negative_controls.py returned 0. 28 recorded Docker commands returned 0. It
+  calls the candidate's own producer.package(), package_identity() (which runs
+  image_identity()) and runtime(), with real BuildKit builds and image saves.
+- Results: positive control ACCEPTED (pinned builder reproduced the approved
+  descriptor). Substituted ELF (one extra byte) under the approved descriptor:
+  PACKAGE_CONFIG_IDENTITY. Under a descriptor naming its own config:
+  PACKAGE_ROOTFS_BINDING. Under a fully self-consistent descriptor (own config
+  and diff_ids): PACKAGE_FILESYSTEM_ELF:substituted. Docker-driver --load build
+  without timestamp rewrite: PACKAGE_CONFIG_IDENTITY. Pinned builder name with
+  BuildKit v0.24.0 (6eceb897…): BUILDER_VERSION. The substituted builder was
+  removed afterwards; runtime() recreates the pinned one when needed.
+- Not run: the containerd image-store rejection (IMAGE_STORE) needs a Docker
+  Desktop setting change on the controller; hosted-profile negative controls
+  (HOSTED_RUNNER, Docker package pins) were not run.
+- Scope: package identity only. No signature, admission or deployment.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U104 — v2 approval readiness: REVISE; lock does not bind unlisted executable files (demonstrated)
+
+- References: U096, U102, U103; results/stage9/v2-approval-readiness-0001/.
+- Observed (hashes): all 7 v2 files equal the manifest (d37d8327…); the diff
+  is 39c6c3d7…; the 6 changed bases equal the installed bytes; the lock
+  30880e08… binds the other 6 candidate files.
+- Observed (private verifier): the installed repository_identity() against
+  mack-dot/forge main e37ef2c5… raised HTTPError 404 (harness exit 3). Release
+  verification fails closed while the repository is private; v2 does not change
+  common.py.
+- Independent review (fresh agent, read-only, no prior verdicts given):
+  F1 high — the lock hashes only listed paths; an added module or __pycache__
+  .pyc next to the gate runs before context(). F2 high — merging v2 makes the
+  sign job runnable on hosted runners; one dispatch creates public Rekor
+  entries, and the sign job does not consult the controller. F3 medium — the
+  sign job's Python comes from setup-python by version only. F4 medium —
+  hosted_setup.py checks only the first Docker key fingerprint. F5 low — some
+  identity checks are self-reported; pending requests never expire. No package
+  or ELF identity bypass and no fork or other-workflow signer path was found.
+- Observed (F1 control, scratch copy with v2): an added gate/provenance/
+  argparse.py wrote a marker and stopped preflight.py (exit 1) before context()
+  ran; context(30880e08…) with that file present returned 0 (62 locked files;
+  the extra file is not locked). Enforcement is missing; the attack succeeds.
+  The same gap exists in the installed gate.
+- Observed (F3): setup-python's archive python-3.10.11-linux-24.04-x64.tar.gz
+  (sha256 3d10b78a…) runs setup.sh, whose line 55 upgrades pip from PyPI
+  without a pin; with no network it fails (harness exit 7). Extracting the
+  hash-checked archive, LD_LIBRARY_PATH=$P/lib and ensurepip (bundled pip
+  23.0.1) worked offline (exit 0) once the runner-image libsqlite3 was present
+  (exit 127 without the library path, exit 1 without libsqlite3). python3.10
+  sha256 7ad319a3…; system OpenSSL 3.0.13, SQLite and libc stay unpinned.
+- Verdict: REVISE. Do not approve the v2 bytes as they are. Do not merge any
+  hosted provenance workflow while public signing is unauthorized.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U105 — v3 candidate: U104 corrections built and checked locally
+
+- References: U104; proposals/provenance-hosted-v3/ (build_candidate.py
+  3697e68c…, f1_controls.py c38cc3a4…, approval-manifest.json 18b8f59b…);
+  results/stage9/v3-local-checks-0001/.
+- Candidate (unapplied, 8 files; contract, policy and contract_approval_commit
+  unchanged): v2 plus F1 — repository_identity() now refuses to run inside a
+  workflow job, uses a verifier-only read-only token
+  (FORGE_VERIFIER_GITHUB_TOKEN) for repository metadata, fetches the exact
+  commit by git into a verifier-owned store outside the checkout (token only in
+  the environment), and source_tree() checks every locked byte and rejects any
+  unlocked file under gate/provenance/, any unlocked code file under scripts/ or
+  examples/binary/, any __pycache__ path, symlink or submodule; all 33
+  scripts/*.py are now locked (89 locked files). F2 — the sign and negative jobs
+  run only when repository variable FORGE_SIGNING_AUTHORIZED is 'true'. F3 —
+  a step downloads python-3.10.11-linux-24.04-x64.tar.gz, checks sha256
+  3d10b78a… before extraction, and runs the bundled ensurepip offline,
+  replacing setup-python. F4 — hosted_setup.py also requires the Docker key
+  file sha256 1500c1f5…. preflight's producer-run lookup uses the job token
+  (FORGE_PRODUCER_GITHUB_TOKEN). Diff 5d3e838f…, lock 0215a316….
+- Observed (fresh scratch): git apply --check and git apply 0; 8 of 8 files
+  match; syntax ok; workflow conditions as stated; context(0215a316…) 0;
+  context(30880e08…) and context(9b10a237…) rejected UNAPPROVED_IMPLEMENTATION.
+- Observed (f1_controls.py, exit 0): clean commit ACCEPTED; real commits with
+  gate/provenance/argparse.py, scripts/json.py, a scripts/__pycache__ .pyc and
+  gate/provenance/extra.json rejected UNLOCKED_EXECUTABLE; a changed
+  release.py rejected AUTHENTICATED_WORKFLOW_INPUT; a symlink rejected
+  SOURCE_ENTRY_TYPE; GITHUB_ACTIONS=true rejected VERIFIER_NOT_INDEPENDENT; a
+  producer token without a verifier token rejected GITHUB_TOKEN_REQUIRED.
+- Not run: the authenticated fetch from the private repository and any hosted
+  run of the v3 workflows (both need decision B); the Linux key-hash check.
+- Remaining limits: the controller's own checkout is trusted; hosted kernel and
+  system libraries are recorded, not pinned; pending requests do not expire;
+  the certificate's repository ID and run attempt are not checked by the
+  verifier; public signing still writes to the public Rekor log.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U106 — v3 leaves pre-verification execution; v3.1 authenticates before any repository code
+
+- References: U104, U105; proposals/provenance-hosted-v31/;
+  results/stage9/v3-pre-verification-0001/, v31-controls-0001/.
+- Request: the user chose to proceed toward private verification only, with no
+  approval of protected changes and no public signing.
+- Observed (v3, controller): with a planted gate/provenance/json.py,
+  release.py exited 9 and the attacker marker was written; with an
+  unchecked-hash __pycache__/common.cpython-310.pyc (common.py unchanged), exit
+  9, marker written; with PYTHONPATH set to a directory holding argparse.py,
+  exit 9, marker written. sitecustomize.py beside the script did not run.
+  v3 source_tree() accepted a commit whose implementation.lock was forged.
+  F1 is therefore unresolved in v3 (controller and producer); v3 is superseded.
+- v3.1 (unapplied, 9 files, diff d24ff942…, lock 6f3aafe6…, 90 locked files):
+  new gate/provenance/bootstrap.py, stdlib only, refuses to run without
+  -I -S -B, checks the lock hash and the exact executable file set (no unlocked
+  files, __pycache__, symlinks), and launches only locked scripts with
+  PYTHON* variables removed and an empty bytecode cache. Each workflow job
+  first checks bootstrap.py's bytes against the lock with inline Python from the
+  workflow file, then routes every repository script through bootstrap.py.
+  The verifier requires the commit's implementation.lock to equal its own,
+  uses a fresh Git store per verification, and turns HTTP errors into
+  GITHUB_HTTP_STATUS rejections.
+- Observed (v3.1, fresh scratch): git apply 0; 9 of 9 files match; context
+  6f3aafe6… 0; v3 and installed locks rejected. v3's f1_controls.py against
+  v3.1: exit 0, 9 of 9. controls.py: exit 0, 14 of 14, attacker code executed
+  in none (shadow modules, sitecustomize, unchecked-hash bytecode, missing
+  isolation flags, tampered bootstrap, forged lock, changed locked file,
+  unlocked script, change after an earlier passing check rejected with exit 1;
+  PYTHONPATH injection ran release.py --help with exit 0 and no marker; forged
+  lock in a candidate commit rejected IMPLEMENTATION_LOCK_AT_COMMIT). Missing,
+  empty, newline-injected, spaced and short credentials were rejected
+  GITHUB_TOKEN_REQUIRED before any network request.
+- Observed (non-signing dry run): check_no_signing.py returned 0
+  (NO_SIGNING_PATH) for private-dry-run.yml and 1 for both production v3.1
+  workflows (control). The dry run has only contents: read, no secrets, only
+  allowlisted pinned actions, and a first step that fails if an OIDC request URL
+  exists. Not pushed or dispatched.
+- Remaining pre-verification trust: the runner image, checkout action, bash,
+  curl, sha256sum and tar before the hash-checked Python; system libraries;
+  the controller's interpreter and operator command; a local-attacker race
+  between a bootstrap check and exec; the unlocked dry-run harness files.
+- Not run (need the user's bounded authorization): authenticated metadata and
+  git fetch with a real verifier credential; invalid (HTTP 401) and
+  under-scoped tokens; repository identity substitution against live GitHub;
+  the hosted dry run.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U107 — B preparation: package, receipt, bootstrap and isolation evidence; B1 authorized
+
+- References: U106; results/stage9/b-prep-0001/; proposals/provenance-hosted-v31/.
+- Observed (local, v3.1 code): negative_controls.py returned 0; 29 commands
+  (builder-present 1, expected; others 0); positive control ACCEPTED and 5
+  attacks rejected exactly as in U103; results.json c663a679… is byte-identical
+  to the v2 run. validate_receipt() on the hosted v2 receipt (run 40743117460):
+  ACCEPTED; with one dependency byte flipped: PROOF_RECEIPT_BYTES; with another
+  challenge: STALE_PROOF_RECEIPT.
+- Observed (local Linux container, hash-checked Python archive, no network):
+  the workflow's inline check exited 0 and loaded 48 modules, all from the
+  archive; bootstrap.py --check exited 0 (BOOTSTRAP_VERIFIED) with 78 modules,
+  all from the archive; with a planted json.py in gate/provenance and the working
+  directory, bootstrap exited 1 and the planted code did not run.
+- Observed (isolation): .github/workflows/stage9-private-dry-run-v31.yml
+  (b415d911…) equals the reviewed source; check_no_signing.py returned 0; no
+  job-level uses, environment or secrets. references; actions: checkout and
+  upload-artifact pinned by SHA. Only stage4-exits.yml and
+  toolchain-inventory.yml run on push to main, each with path filters. GitHub's
+  Dependency Graph runs at 18:05Z and 18:42Z followed settings changes.
+- Observed (B3 wrapper, b3_verify.sh): the pre-token path passed the inline and
+  bootstrap checks and stopped with exit 3 for a nonexistent Keychain item,
+  before any network request. No real credential was used.
+- Authorization: the user authorized B1 only, if the package controls passed,
+  the manifest was exact and no signing, publication, release or privileged
+  workflow could be triggered. B2, B3, v3.1 installation, public signing and any
+  IP or licensing decision remain unauthorized. The test branch is not pushed.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.

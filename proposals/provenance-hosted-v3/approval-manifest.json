@@ -1,0 +1,43 @@
+{
+  "base_lock_sha256": "9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76",
+  "contract_unchanged": true,
+  "derived_from_v2_manifest": "d37d83278c17c2dba92122c71e4a53d34a5a87f88156a97977f378f1bff24585",
+  "diff_sha256": "5d3e838fba32de08e960d46f3b28c6774dc288ea9c2086a3e8924b63b85e3c83",
+  "end_to_end": false,
+  "files": {
+    ".github/workflows/provenance-negative.yml": {
+      "new_sha256": "4b70fc3608330e8409e19f7041a3a36d0230124501cb24a6d285e515d93cce8d",
+      "old_sha256": "79c50d36f5951f6478ec69f72a85cd1c79414dacd3c17dfd6b170470e24ffca7"
+    },
+    ".github/workflows/provenance.yml": {
+      "new_sha256": "5ddbbb1348541585325832ce55a5d662ffdbfe0820743b62e0bc727a52fc5885",
+      "old_sha256": "d2c60993d504a4353102d36189f9dd5f25b98ab3c2c73a12649fc18a087ccefd"
+    },
+    "gate/provenance/common.py": {
+      "new_sha256": "2e356706ebc75402643337975ce9f2addcbe38aa288d5587823e1bb709da8eee",
+      "old_sha256": "77c068569e47885abbf4cd979f761cf6deab43ce8c5d98749764adaab919cc16"
+    },
+    "gate/provenance/hosted_setup.py": {
+      "new_sha256": "47df0e27be22a2246eccb107675e2dff93aba3122f7d67b1357d3cf9e43b52b3",
+      "old_sha256": null
+    },
+    "gate/provenance/implementation.lock": {
+      "new_sha256": "0215a3162e51d6f8585ab3d44bd0f6253aec53f76bc625515dd9881d51fb1ccc",
+      "old_sha256": "9b10a2376c6b6de46661819a528f3b4e1251f27d76ac21e071b1cfb971224a76"
+    },
+    "gate/provenance/preflight.py": {
+      "new_sha256": "e4f40ecfbc2faed744ddb286a77abde140ef40d1fb1a7a245536a1171146cb39",
+      "old_sha256": "7900f3ba073e020d84b13341fcaff6ef03417de9c4928b4bf94ac23faef49776"
+    },
+    "gate/provenance/producer.py": {
+      "new_sha256": "c176e5dceb05608c4ed9e2ac45bdb1842c33db2d6e05b1c590eddd9b65f68d3c",
+      "old_sha256": "243d4071dd6e7f7728e12d3f7498625843395afcdd883785d8c81bb7a7dfcf7e"
+    },
+    "gate/provenance/runtime.json": {
+      "new_sha256": "35586ee59fcdf3925c4f6d4a0d0ab661a4bb1bb807380c75ceb9247a1cc11e5b",
+      "old_sha256": "b267e021d249b55fe8802a4b3dc2cdfdb8ee1c336d37a3b5a7831836864ac024"
+    }
+  },
+  "locked_files": 89,
+  "new_lock_sha256": "0215a3162e51d6f8585ab3d44bd0f6253aec53f76bc625515dd9881d51fb1ccc"
+}
