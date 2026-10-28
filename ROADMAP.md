@@ -1405,6 +1405,17 @@ U087. `end_to_end=false`.
 The 45 Python dependency files matched the lock. No proof ran. See U089.
 `end_to_end=false`.
 
+| Command actually run | Actual exit code | Scope |
+| --- | --- | --- |
+| `git … push origin HEAD:main` | 0 | Commit `21851412…`: chown of the seed `.git` to 1000:1000. |
+| `gh workflow run stage9-hosted-probe-2.yml -R mack-dot/forge --ref main` | 0 | Run 40717015652. |
+| `gh run watch 40717015652 -R mack-dot/forge --exit-status` | 0 | Both jobs succeeded in 20.3 min. |
+| `python3 proposals/stage9-hosted-runner/replay_probe.py --implementation-sha256 9b10a237… --output probe2/replay` (in the run) | 0 | Fresh proof 793 s; no OOM; receipt (656 files, 579 closure objects) accepted by the installed `validate_receipt()`. |
+| `python3 $ST/scripts/stage7_build_own.py` (in the run) | 0 | Own ELF rebuilt byte-identical, `8ced2ab6…`. |
+
+This is measurement with a synthetic request, not an EXIT result. No signing ran.
+See U090. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

@@ -1,0 +1,335 @@
+[
+    {
+        "Id": "cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6",
+        "Created": "2026-10-28T15:39:09.770142073Z",
+        "Path": "python3",
+        "Args": [
+            "/forge-scripts/stage7_own_job.py",
+            "--attempt",
+            "attempt-0001"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-28T15:39:09.790091368Z",
+            "FinishedAt": "2026-10-28T15:52:20.683089916Z"
+        },
+        "Image": "sha256:e49a3a5765baf5f1828007bbf378513198364c9351bf0b9c81af4f08ed9668b8",
+        "ResolvConfPath": "/var/lib/docker/containers/cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6/hostname",
+        "HostsPath": "/var/lib/docker/containers/cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6/hosts",
+        "LogPath": "/var/lib/docker/containers/cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6/cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6-json.log",
+        "Name": "/forge-stage9-cd4422c5bbf2a61f1f053adbe8030ec26bc0434a5ec08580f8b3f14ec622ef4d",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": null,
+            "Tmpfs": {
+                "/tmp": "rw,nosuid,nodev,size=256m"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 4294967296,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 4294967296,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 512,
+            "Ulimits": [
+                {
+                    "Name": "stack",
+                    "Hard": -1,
+                    "Soft": -1
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "forge-stage7-upstream-bf6a65114ed2",
+                    "Target": "/work"
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/_temp/seed/.toolchain/stage7/upstream/.git",
+                    "Target": "/git-source",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/_temp/seed/.toolchain/stage7/pydeps",
+                    "Target": "/pydeps",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/forge/forge/scripts",
+                    "Target": "/forge-scripts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/forge/forge/examples/binary",
+                    "Target": "/forge-program",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/forge/forge/toolchain/stage7-pins.json",
+                    "Target": "/forge-pins.json",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/forge/forge/toolchain/stage7-own-pins.json",
+                    "Target": "/forge-own-pins.json",
+                    "ReadOnly": true
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "cf9bf2755a7ccd58e1b5fde3155694685e4c3195b5c3a552edd7284427db8ea6",
+                "LowerDir": "/var/lib/docker/overlay2/8f9569a47b1d450d845adbf0ad8a2b99fd628f71bf8c4d4aaadf6f1010085542-init/diff:/var/lib/docker/overlay2/d78bf420ab8dd5e6bcbbf5662edaecc6b543aa46f2c92c2c17b343e8c9cd8a88/diff:/var/lib/docker/overlay2/3a4c7e1d2b04b27fac7fbcc036fca2a32cd61c63a95ef5cfb6d70ee64ca2be92/diff:/var/lib/docker/overlay2/280224c873eb55b7f486055221c2c334743ae8a3a350b5a45d4608cb1acd02da/diff:/var/lib/docker/overlay2/d5ec27bbd3801925437be89c615ea70396938e46dd04e05b6a837c5bdb4489ce/diff:/var/lib/docker/overlay2/e2cbeb464cd71ecec568a78733760ff7fac6540caa28b67c84448eefcdf02c01/diff:/var/lib/docker/overlay2/89b8c0a39b7824bbdca6c7f909bb8370c70ab911db781f9cace7512c13fe27d7/diff:/var/lib/docker/overlay2/501978abf78212378d37784280b87f27677027fbfba28d07a3e560e21dcda0e6/diff:/var/lib/docker/overlay2/6ed2c02aded4ea50ab94b0765333beb03e7dc77e54b4384e441b37200530a427/diff:/var/lib/docker/overlay2/5605140f64fb851693d1518b3e9ee99a03ea87c1ff2e69461830d9368dfd4046/diff:/var/lib/docker/overlay2/84be860556a0ad92e74cc6cb827f2bf4258b96ccd2ba865d4ec8af444151daeb/diff:/var/lib/docker/overlay2/9ca784d71ffb5e03c16f6d893f5e0daa2ee73feb1cf52c83815f94c29f9b58da/diff:/var/lib/docker/overlay2/4afc2736f3654d9710daf0a52bc8b0e10175a421ad7a2edab516959464693498/diff:/var/lib/docker/overlay2/1a3821a32edf20aadf283a75ad4a37cb13b983c6b145498bf5fc205ddb659525/diff:/var/lib/docker/overlay2/10456af181539b79c26b64c996d90a93b293d4d7659f3dff3280ef74edb28318/diff:/var/lib/docker/overlay2/f7f7974373658e7dc8be4a9f3b295c19b37d14688bd18bb65d4377fad3e8e5af/diff:/var/lib/docker/overlay2/e39b0ec7a6b8aee52aeb3e586119d60c4f266aca72183266d72be6938e4dbc30/diff:/var/lib/docker/overlay2/9bff505ce9db18b74cbd06257a5421e6905870def6efe5a7b2ecb849ec8c9e5f/diff:/var/lib/docker/overlay2/ca49914a9bba4ba992f6baaf5760ed831d5e18d1cc05861df25013317b71b16e/diff:/var/lib/docker/overlay2/521e24331e511c9baf9efe368da5e5346dbe12d9f25d058b90115a01f15471e0/diff:/var/lib/docker/overlay2/18a7ee9bf34db1f86c09c9ff92cd039d7fd36ef5190dfd6856398d162cc8d286/diff:/var/lib/docker/overlay2/835b1bfa19638a4d6b592f07be89ae39c554063670d4614ea00980f3a006dd96/diff:/var/lib/docker/overlay2/ea93fb15a86fcb0bba8517ea6c9a94023e17661c8eae19f9bd5370a59427b0e5/diff:/var/lib/docker/overlay2/a83ece4786526c7709ee740b3af8daff0de6b5cc95f9656a4a669db8dde89b69/diff:/var/lib/docker/overlay2/c1dc8dcbbc6589d6a09c736fc82aad3004dece3d522041a6429bf795d95059ab/diff:/var/lib/docker/overlay2/3fb7a3a925b40ed07fe59f25caef7f2a42a40a2b4e07ea577bcf36fc8a8b7c0b/diff:/var/lib/docker/overlay2/b2364f4b5a31d69a8940f4b6ad1d48378ce4c1a3b3580d12478f187b1b0d3b9d/diff:/var/lib/docker/overlay2/a6a42ff5b6cef90c2c05205483bbb2e8365cdeadfb6b1e80f5ed5521ef1c1a93/diff:/var/lib/docker/overlay2/7af897d418fe596578da8e2042796cce276f849f5f43140c65009b098823a059/diff:/var/lib/docker/overlay2/1d686acf031a77ace428c99b8d1000f1524fe72f709de6b936ce0f406e7053db/diff:/var/lib/docker/overlay2/6e4d490673d890b7ed6c54e4e620c2862ad42b6fa6b3a3bbaac836096c3b8998/diff:/var/lib/docker/overlay2/8315b6d59394bb409e21e76abb49b4761bf2b7b61fa42aa3cd8015cfa2578487/diff:/var/lib/docker/overlay2/bc8a622f8d6e0c6131122e5de346b6ea1289f5f069d9337d581957b17b1400ca/diff:/var/lib/docker/overlay2/1e711dce87cf049a8a4d50d091e3fe96470be48e0855dd71c234174e74b68157/diff:/var/lib/docker/overlay2/816d16f8e23d0ebf0e40c5f4f0b451ccbbe9ccb7a3d1624c3504c0e8a4925e4a/diff:/var/lib/docker/overlay2/af3ff8a8620e3a88f0d6b38c115f058e8262bdf73d061e9896ed3e7535edc1d4/diff:/var/lib/docker/overlay2/7652347cda0b205abc7dbf35e9312a27bab15a879a2be5d11689138f58230e64/diff:/var/lib/docker/overlay2/b9809450f12485a9d770145b61c362933d29e1d05f8a19d600af2583b0bb2aeb/diff:/var/lib/docker/overlay2/6936580317f99094f118838dca5ee8cb0000627c74eddc11891e44672aab7927/diff:/var/lib/docker/overlay2/6a75820dafd4215e5ef49b64702c49116339d0897e20cd39982a09bb1f386e55/diff:/var/lib/docker/overlay2/0b2c43180178cfb001684fc1f92d3ba9030577e36f692a9f97f0e8abf2c34969/diff:/var/lib/docker/overlay2/eaca6e0629bf59a4c5a40512610eddaef4fe630bca85750b17cb105a4f174165/diff:/var/lib/docker/overlay2/1c55ba75849d750a05961d78c6e9edf4a5df5f6bed64757ff29499eedd65931c/diff:/var/lib/docker/overlay2/5ec764aa0519fce61bc72ac204e16a9c1f502c53694f03b30b3b2e0731349da9/diff:/var/lib/docker/overlay2/34a314751ac9fe20b650142e70eb63278142bd4d6e26ceb65434809da62690de/diff:/var/lib/docker/overlay2/ad7e04cd29f77e49ddf7bfd66260aae1bb923fcc8d83a7cf75cfc5af42eb4fcb/diff:/var/lib/docker/overlay2/f073239f838de229c3564f3ca4071cedd40676530f6799e496ab012100e30243/diff:/var/lib/docker/overlay2/aad0c358e304bac79228b8b02daa5bed5797e68ff548d6507b311fbba5402823/diff:/var/lib/docker/overlay2/1800b90c2c44ddfa3de14c6aeff178cb5e6f1979a9c17efa57fc83cc45a71089/diff:/var/lib/docker/overlay2/324519c4453c34ae096690b97599ecf24340032fcd7c2d0005f86f7a207b587a/diff:/var/lib/docker/overlay2/2ab4c37fc05e05f33f0d98d620512443f1a50e16ba25d5d9883103dea663d8ef/diff:/var/lib/docker/overlay2/10f95399bad7d820a25e5b4cbc428b6186d2bdbcbffb38f52a09864005ce7934/diff:/var/lib/docker/overlay2/61106663bee4a86ffd7592e2e7686b54b3bca2c76472081cad98181297306e89/diff:/var/lib/docker/overlay2/f93dc83bdafdfae81eee700e15d15d3eda3fe31d5ae9c4f2d144fc58f105e4d2/diff:/var/lib/docker/overlay2/4323f2c35b414e313b600cd92ddd1a777be64ab2d9af2c5aec1878c9fcba601a/diff:/var/lib/docker/overlay2/cda936aff0b4bfba1b189c64140599dc879b103bd972896298aeaa52c904261c/diff",
+                "MergedDir": "/var/lib/docker/overlay2/8f9569a47b1d450d845adbf0ad8a2b99fd628f71bf8c4d4aaadf6f1010085542/merged",
+                "UpperDir": "/var/lib/docker/overlay2/8f9569a47b1d450d845adbf0ad8a2b99fd628f71bf8c4d4aaadf6f1010085542/diff",
+                "WorkDir": "/var/lib/docker/overlay2/8f9569a47b1d450d845adbf0ad8a2b99fd628f71bf8c4d4aaadf6f1010085542/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/forge/forge/examples/binary",
+                "Destination": "/forge-program",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/forge/forge/toolchain/stage7-pins.json",
+                "Destination": "/forge-pins.json",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/forge/forge/toolchain/stage7-own-pins.json",
+                "Destination": "/forge-own-pins.json",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "forge-stage7-upstream-bf6a65114ed2",
+                "Source": "/var/lib/docker/volumes/forge-stage7-upstream-bf6a65114ed2/_data",
+                "Destination": "/work",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/_temp/seed/.toolchain/stage7/upstream/.git",
+                "Destination": "/git-source",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/_temp/seed/.toolchain/stage7/pydeps",
+                "Destination": "/pydeps",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/forge/forge/scripts",
+                "Destination": "/forge-scripts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "cf9bf2755a7c",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "HOME=/tmp",
+                "PYTHONPATH=/pydeps",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "DUNE_CACHE=disabled",
+                "PATH=/home/opam/.opam/4.14/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "OPAMYES=1",
+                "OPAMCONFIRMLEVEL=unsafe-yes",
+                "OPAMERRLOGLEN=0",
+                "OPAMPRECISETRACKING=1",
+                "DEBIAN_FRONTEND=noninteractive",
+                "OPAMCOLOR=never",
+                "OPAMNODEPEXTS=1",
+                "OPAMJOBS=32",
+                "OPAM_SWITCH_PREFIX=/home/opam/.opam/4.14",
+                "CAML_LD_LIBRARY_PATH=/home/opam/.opam/4.14/lib/stublibs:/home/opam/.opam/4.14/lib/ocaml/stublibs:/home/opam/.opam/4.14/lib/ocaml"
+            ],
+            "Cmd": [
+                "python3",
+                "/forge-scripts/stage7_own_job.py",
+                "--attempt",
+                "attempt-0001"
+            ],
+            "Image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+            "Volumes": null,
+            "WorkingDir": "/work",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "org.opencontainers.image.licenses": "MIT",
+                "org.opencontainers.image.title": "oss-fuzz-theorems checker",
+                "org.opencontainers.image.version": "24.04"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "33c936f48fa522b9880d3f2d4c72b700d0414bff7e2cd1fcd40ec7a18d62d605",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        }
+    }
+]

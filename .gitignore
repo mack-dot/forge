@@ -19,3 +19,10 @@ results/stage7/**/.Proof.aux
 results/stage7/**/.Wrapper.aux
 results/stage7/**/.*.aux
 results/stage7/**/independent-kernel.log
+# Full hosted-probe records stay in the GitHub Actions artifacts; digests are in artifacts.json.
+results/stage9/hosted-probe-*/artifact/**/tracked-sha256.json
+results/stage9/hosted-probe-*/artifact/**/tree.stdout
+results/stage9/hosted-probe-*/artifact/**/*.vo
+results/stage9/hosted-probe-*/artifact/**/*.glob
+results/stage9/hosted-probe-*/artifact/**/*.vos
+results/stage9/hosted-probe-*/artifact/**/*.vok

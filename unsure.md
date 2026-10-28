@@ -2192,3 +2192,42 @@ curl: (6) Could not resolve host: github.com
 - Impact: Docker pinning and the Python-package lock are feasible on hosted
   runners. Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: probe 2 attempt 2.
+
+## U090 — Probe 2 attempt 2: fresh proof on a hosted runner passes the installed receipt check
+
+- References: U089; proposals/stage9-hosted-runner/probe2.yml;
+  proposals/stage9-hosted-runner/replay_probe.py;
+  results/stage9/hosted-probe-0003/.
+- Observed: commit 2185141295ad6cca80ae2d334dbe61eff5e21f4c (ownership fix) was
+  pushed with exit 0. Run 40717015652 concluded success; watch, view and
+  download returned 0. Both jobs succeeded.
+- Observed (docker-pin): the exact Engine 28.5.1 install returned 0 again.
+- Observed (replay job, 20.3 min): seed fetch 96 s; Python packages 3 s, 45 of
+  45 equal to the lock; two pulls 143 s; volume clone and checkout 134 s; own
+  ELF build 1 s, result built_reproducibly, sha256 8ced2ab6… (equal to the
+  approved release artifact); producer.replay() 793 s.
+- Observed (replay): all six recorded commands returned 0 (pull, proof run,
+  collect, inspect, closure run, closure copy). The proof container had
+  OOMKilled false and ExitCode 0. The receipt (sha256 a13681af…) lists 656
+  files; closure-identities.json has 579 objects. The installed
+  validate_receipt() accepted it inside replay(); result.json has accepted true
+  with expected_source_commit 2185141…. Disk after: 59.9 GB free; volume
+  10.96 GB; images 9.62 GB.
+- Observed: GitHub artifact digests are
+  sha256:00c9a38c… (replay, 56,441,617 bytes) and sha256:b3b62bcd… (docker).
+  They expire on 2027-01-26. The full download is kept locally. .gitignore now
+  excludes probe .vo/.glob/.vos/.vok files and the two tree listings, as it
+  already does for Stage 7.
+- Scope: the request was synthetic (random challenge, dispatched commit). No
+  package, statement, signature, controller admission or deployment ran. This
+  is not an EXIT result. Native x86_64 .vo closure objects matched the approved
+  identities, which the receipt-repair proposal required before signing.
+- Inference: the hosted-runner design is feasible within the 6-hour limit. The
+  prerequisite recipe is: pinned Docker install, Python 3.10.11, hash-pinned
+  pip 25.1.1, the macOS-path symlink for the pip command, a depth-1 upstream
+  fetch, chown of the seed .git to 1000:1000, the recorded volume clone, and
+  the unchanged own-build script in a staging root.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: prepare the exact protected implementation proposal for hosted
+  runners (workflows, runtime.json, producer.py, preflight.py, lock) and get
+  exact-byte approval. Owner decision is still open.
