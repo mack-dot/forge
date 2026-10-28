@@ -3,7 +3,10 @@
 Decision (2026-10-28): the owner chose Apache-2.0 ("lets do apache 2.0", then
 "i just want to do what the best is for the projet"). LICENSE, NOTICE and
 THIRD_PARTY_NOTICES.md are added in the contributor-readiness pull request.
-The copyright holder's exact legal name in NOTICE is still to be confirmed.
+Copyright holder (2026-10-28): the owner said "just treat it as my project tis is
+different than my engineering loop i made at spm". NOTICE names mack-dot and
+Forge contributors. The owner was advised to check their employment agreement,
+because some work was done on company time.
 
 Original status: recommendation only. No LICENSE file is added. Public visibility does
 not grant anyone the right to use, change or share the code. The owner must

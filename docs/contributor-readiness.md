@@ -17,7 +17,7 @@ Silicon**, with the limits listed under FAIL and UNVERIFIED.
 | 1 | README: mission, verified capabilities, limits, architecture, quickstart | PASS | Every quickstart command ran in a fresh clone: checksum 0, gate on `impl/Ledger.dfy` 0 (`ACCEPTED: C1 C2 C3 C4 C5`), gate on `bugs/off_by_one.dfy` 1 (`VERIFICATION_REJECTED: C4`); clean tree afterwards. |
 | 2 | Contributor guide | PASS | `CONTRIBUTING.md`; its scenario command `scripts/exit_stage_1.py --case planted-bugs` returned 0 in the fresh clone. |
 | 3 | License | PASS | Owner chose Apache-2.0. `LICENSE` is the official text (sha256 `cfc7749b…`). `NOTICE` and `THIRD_PARTY_NOTICES.md` added; upstream MIT texts checked at the pinned commits. |
-| 3a | Copyright holder's legal name in `NOTICE` | UNVERIFIED | "Superpower Mentors" is the owner's statement; the exact legal entity name is not confirmed. Confirm before merging. |
+| 3a | Copyright holder in `NOTICE` | Owner decision | The owner treats Forge as a personal project, separate from their work at SPM; `NOTICE` names `mack-dot` and Forge contributors. Some work was done on company time; the owner was advised to check their employment agreement. Not a legal review. |
 | 4 | Security policy and reporting | PASS | `SECURITY.md`; private vulnerability reporting enabled (read back `enabled: true`). The issue chooser link to it is in PR #15. |
 | 5 | Starter issues | PASS | Eight issues, #6–#13, including two reusable proof-carrying components (#11, #12) and two protected-change proposals (#8, #9). |
 | 6 | Broken implementation rejected, corrected accepted | PASS | Four planted bugs rejected with exit 1 (C4; C1 C3; C1 C5; audit for `assume`); correct ledger accepted with exit 0; new evidence byte-identical to `evidence.json` (`ed015ad9…`). |

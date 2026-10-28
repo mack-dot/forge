@@ -2532,3 +2532,16 @@ curl: (6) Could not resolve host: github.com
   PR #14 keeps only unprotected files. CONTRIBUTING.md and the readiness report
   now state this. No gate behavior was changed.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U100 — Copyright holder: owner's personal project
+
+- References: U098; NOTICE; proposals/license.md.
+- Decision: asked about the copyright holder, the user said "theoretically i
+  own it but i did make some of it on company time idk", then "just treat it as
+  my project tis is differnt than my engineerin loop i made at spm". NOTICE now
+  names mack-dot (GitHub handle; legal name not given) and Forge contributors,
+  instead of "Superpower Mentors".
+- Advice given, not a legal finding: employer ownership can depend on the
+  employment agreement and local law for work done on company time; the user
+  was advised to check the agreement and keep Forge work off company time.
+- Impact: none on Stage 9. All six EXITs are NOT RUN. end_to_end=false.
