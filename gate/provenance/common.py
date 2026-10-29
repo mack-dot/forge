@@ -1,4 +1,5 @@
 """Record handling and policy binding. No signature or proof semantics."""
+import base64
 import hashlib
 import json
 import os
@@ -7,6 +8,8 @@ import platform
 import re
 import subprocess
 import sys
+import tempfile
+import urllib.error
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -95,13 +98,23 @@ class Records:
         return result.returncode, Path(str(prefix) + '.stdout').read_bytes(), Path(str(prefix) + '.stderr').read_bytes()
 
 
-def fetch(url, records, label):
+def fetch(url, records, label, *, token_name=None):
     # HTTPS transport/JSON handling only; this does not verify a signature.
-    req = urllib.request.Request(url, headers={'Accept': 'application/vnd.github+json',
-                                               'User-Agent': 'forge-stage9'})
-    with urllib.request.urlopen(req) as response:
-        data = response.read()
-        require(response.status == 200, 'GITHUB_HTTP_STATUS')
+    headers = {'Accept': 'application/vnd.github+json', 'User-Agent': 'forge-stage9'}
+    if token_name is not None:
+        # Each caller names its own read-only token; records never contain it.
+        token = os.environ.get(token_name, '')
+        require(re.fullmatch(r'[A-Za-z0-9_]{20,255}', token), 'GITHUB_TOKEN_REQUIRED:' + token_name)
+        headers['Authorization'] = 'Bearer ' + token
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req) as response:
+            data = response.read()
+            require(response.status == 200, 'GITHUB_HTTP_STATUS')
+    except urllib.error.HTTPError as error:
+        # Missing, invalid or under-scoped credentials end here as explicit
+        # rejections, never as accepted metadata.
+        raise Rejected('GITHUB_HTTP_STATUS:' + str(error.code)) from None
     (records.directory / (label + '.bytes')).write_bytes(data)
     write(records.directory / (label + '.http.json'), {'url': url, 'http_status': 200, 'sha256': sha(data)})
     return data
@@ -144,16 +157,67 @@ def cosign_path(policy):
     return path
 
 
+# Roots the sign job (gate/provenance) and the proof container (scripts,
+# examples/binary) can import or load. Code there must be locked, so an added
+# module cannot run beside approved bytes (U104, F1).
+EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
+CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
+                 '.glob', '.c', '.h', '.sh')
+
+
+def source_tree(git_dir, commit, implementation, records):
+    """Check locked bytes and reject unlocked code at an exact commit in a Git store."""
+    _, out, _ = records.run(['git', '--git-dir', git_dir, 'rev-parse', '--verify', commit + '^{commit}'],
+                            'source-commit')
+    require(out.decode().strip() == commit, 'SOURCE_COMMIT')
+    _, listing, _ = records.run(['git', '--git-dir', git_dir, 'ls-tree', '-r', '-z', '--full-tree', commit],
+                                'source-tree')
+    entries = {}
+    for item in listing.split(b'\0'):
+        if item:
+            meta, path = item.split(b'\t', 1)
+            mode, kind, obj = meta.decode().split()
+            entries[path.decode()] = (mode, kind, obj)
+    locked = implementation['files']
+    # The commit must carry exactly the verifier's own approved lock.
+    lock_entry = entries.get('gate/provenance/implementation.lock')
+    require(lock_entry is not None and lock_entry[1] == 'blob', 'IMPLEMENTATION_LOCK_AT_COMMIT')
+    _, data, _ = records.run(['git', '--git-dir', git_dir, 'cat-file', 'blob', lock_entry[2]], 'source-lock')
+    require(data == (HERE / 'implementation.lock').read_bytes(), 'IMPLEMENTATION_LOCK_AT_COMMIT')
+    for path, (mode, kind, obj) in sorted(entries.items()):
+        if path.startswith(EXECUTABLE_ROOTS) and path != 'gate/provenance/implementation.lock':
+            require(mode in ('100644', '100755') and kind == 'blob', 'SOURCE_ENTRY_TYPE:' + path)
+            require('__pycache__' not in path.split('/') and (path in locked or (
+                not path.startswith('gate/provenance/') and not path.endswith(CODE_SUFFIXES))),
+                'UNLOCKED_EXECUTABLE:' + path)
+    for path, expected in sorted(locked.items()):
+        require(path in entries and entries[path][1] == 'blob', 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
+        _, data, _ = records.run(['git', '--git-dir', git_dir, 'cat-file', 'blob', entries[path][2]], 'source-blob')
+        require(sha(data) == expected, 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
+
+
 def repository_identity(policy, implementation, commit, records):
+    # Only the independent release verifier runs this, with its own read-only
+    # credential and its own Git store; never inside a workflow job.
+    require(os.environ.get('GITHUB_ACTIONS') != 'true', 'VERIFIER_NOT_INDEPENDENT')
     require(re.fullmatch('[0-9a-f]{40}', commit), 'EXPECTED_SOURCE_COMMIT')
     repo = policy['signer']['repository']
-    info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository'))
+    info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository',
+                       token_name='FORGE_VERIFIER_GITHUB_TOKEN'))
     require(info['full_name'] == repo and info['id'] == policy['signer']['repository_id']
             and info['owner']['id'] == policy['signer']['owner_id'], 'REPOSITORY_IDENTITY')
-    for number, (path, expected) in enumerate(sorted(implementation['files'].items())):
-        raw = fetch(f'https://raw.githubusercontent.com/{repo}/{commit}/{path}', records,
-                    f'source-{number:03d}')
-        require(sha(raw) == expected, 'AUTHENTICATED_WORKFLOW_INPUT:' + path)
+    # A fresh store per verification: no stale or locally altered objects.
+    git_dir = Path(tempfile.mkdtemp(prefix='forge-verifier-git-'))
+    require(not git_dir.is_relative_to(ROOT), 'VERIFIER_GIT_DIR_LOCATION')
+    records.run(['git', 'init', '-q', '--bare', git_dir], 'source-store')
+    # The credential reaches git only through the environment, never argv or records.
+    basic = base64.b64encode(('x-access-token:' + os.environ['FORGE_VERIFIER_GITHUB_TOKEN']).encode()).decode()
+    env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_CONFIG_COUNT='1',
+               GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',
+               GIT_CONFIG_VALUE_0='AUTHORIZATION: basic ' + basic)
+    records.run(['git', '--git-dir', git_dir, 'fetch', '-q', '--depth', '1',
+                 'https://github.com/' + repo + '.git', commit], 'source-fetch', env=env)
+    source_tree(git_dir, commit, implementation, records)
 
 
 def signature(policy, bundle, blob, commit, records, *, negative_identity=None):
