@@ -1,0 +1,10 @@
+request-matches-controller | PASS | 
+package-binding | PASS | 
+receipt-binding | PASS | 
+evidence-expected | PASS | 
+statement-binding | PASS | 
+control receipt-file-byte-flip | expected PROOF_RECEIPT | observed PROOF_RECEIPT_BYTES | PASS
+control receipt-other-request | expected STALE_PROOF_RECEIPT | observed STALE_PROOF_RECEIPT | PASS
+control packaged-elf-byte-flip | expected PACKAGED_ELF_BYTES | observed PACKAGED_ELF_BYTES | PASS
+control package-descriptor-substituted | expected PACKAGE_DESCRIPTOR_BINDING | observed PACKAGE_DESCRIPTOR_BINDING | PASS
+receipt files 656 | non-PASS 0

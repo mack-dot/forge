@@ -1,0 +1,135 @@
+[
+ {
+  "group": "validate_package",
+  "case": "positive: real hosted package",
+  "expected": "ACCEPTED",
+  "observed": "ACCEPTED",
+  "pass": true
+ },
+ {
+  "group": "validate_package",
+  "case": "packaged.elf substituted",
+  "expected": "PACKAGED_ELF_BYTES",
+  "observed": "PACKAGED_ELF_BYTES",
+  "pass": true
+ },
+ {
+  "group": "validate_package",
+  "case": "package.json differs from request",
+  "expected": "PACKAGE_DESCRIPTOR_BINDING",
+  "observed": "PACKAGE_DESCRIPTOR_BINDING",
+  "pass": true
+ },
+ {
+  "group": "validate_package",
+  "case": "request package with another recipe",
+  "expected": "PACKAGE_DESCRIPTOR_FIELDS",
+  "observed": "PACKAGE_DESCRIPTOR_FIELDS",
+  "pass": true
+ },
+ {
+  "group": "validate_package",
+  "case": "added layer byte flipped",
+  "expected": "PACKAGE_BLOB_DIGEST:blobs/sha256/5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+  "observed": "PACKAGE_BLOB_DIGEST:blobs/sha256/5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+  "pass": true
+ },
+ {
+  "group": "validate_package",
+  "case": "extra blob in identity set",
+  "expected": "PACKAGE_IDENTITY_FILE_SET",
+  "observed": "PACKAGE_IDENTITY_FILE_SET",
+  "pass": true
+ },
+ {
+  "group": "validate_package",
+  "case": "symlinked packaged.elf",
+  "expected": "PACKAGED_ELF_MISSING",
+  "observed": "PACKAGED_ELF_MISSING",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "expected file",
+  "expected": "expected",
+  "observed": "expected",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "mode 0755",
+  "expected": "substituted",
+  "observed": "substituted",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "other bytes",
+  "expected": "substituted",
+  "observed": "substituted",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "symlink target",
+  "expected": "substituted",
+  "observed": "substituted",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "hardlink target",
+  "expected": "substituted",
+  "observed": "substituted",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "later whiteout of target",
+  "expected": "removed",
+  "observed": "removed",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "later opaque parent",
+  "expected": "removed",
+  "observed": "removed",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "later parent replaced by symlink",
+  "expected": "obscured",
+  "observed": "obscured",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "later layer substitutes bytes",
+  "expected": "substituted",
+  "observed": "substituted",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "whiteout and re-add in one layer",
+  "expected": "ambiguous",
+  "observed": "ambiguous",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "dot-slash names",
+  "expected": "expected",
+  "observed": "expected",
+  "pass": true
+ },
+ {
+  "group": "layer_effect",
+  "case": "missing parent directory entries",
+  "expected": "substituted",
+  "observed": "substituted",
+  "pass": true
+ }
+]

@@ -1,0 +1,470 @@
+{
+ "audit": "v33-audit-0001",
+ "end_to_end": false,
+ "targets": {
+  "main": "d43f5f4de55573a17f4f9cf4d41528dd159e9f2f",
+  "candidate": "fc0a40d99afa308e7cf75401dcbd569758935765",
+  "candidate_lock": "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757"
+ },
+ "constraints_kept": [
+  "no Keychain",
+  "no token (fake values only)",
+  "no dispatch",
+  "no signing",
+  "no push/PR",
+  "writes only in this directory"
+ ],
+ "checks": [
+  {
+   "id": "a00",
+   "dir": "a00-setup",
+   "title": "Candidate identity",
+   "exit_codes": {
+    "candidate-head": 0,
+    "candidate-lock-digest": 0,
+    "proposed-diff-digest": 0,
+    "apply-diff-to-main": 0,
+    "applied-tree": 0,
+    "bootstrap-check-candidate": 0,
+    "context-candidate": 0,
+    "main-lock-rejected-by-candidate": 1
+   },
+   "verdict": "PASS",
+   "claim": "HEAD fc0a40d\u2026 (parent d43f5f4\u2026), lock eb4b93db\u2026; proposed.diff applied to main gives the same tree 0fc5d98a\u2026; bootstrap --check and context() accept; main lock rejected.",
+   "limitation": "Local clone of the scratch v33-repo.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/a00-setup"
+  },
+  {
+   "id": "j-v32-v1a-ensurepip",
+   "dir": "j-v32-v1a-ensurepip",
+   "title": "V1a root ensurepip.py [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": true,
+   "markers": [
+    "V1-root-ensurepip.json"
+   ],
+   "verdict": "VULNERABLE",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-v1a-ensurepip"
+  },
+  {
+   "id": "j-v33-v1a-ensurepip",
+   "dir": "j-v33-v1a-ensurepip",
+   "title": "V1a root ensurepip.py [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 1,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-v1a-ensurepip"
+  },
+  {
+   "id": "j-v32-v1b-selfdelete",
+   "dir": "j-v32-v1b-selfdelete",
+   "title": "V1b self-deleting root ensurepip.py [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": true,
+   "markers": [
+    "V1b-self-deleting-ensurepip.json"
+   ],
+   "verdict": "VULNERABLE",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-v1b-selfdelete"
+  },
+  {
+   "id": "j-v33-v1b-selfdelete",
+   "dir": "j-v33-v1b-selfdelete",
+   "title": "V1b self-deleting root ensurepip.py [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 1,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-v1b-selfdelete"
+  },
+  {
+   "id": "j-v32-v1c-runpy",
+   "dir": "j-v32-v1c-runpy",
+   "title": "V1c root runpy.py [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": true,
+   "markers": [
+    "V1c-root-runpy.34.json",
+    "V1c-root-runpy.35.json"
+   ],
+   "verdict": "VULNERABLE",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-v1c-runpy"
+  },
+  {
+   "id": "j-v33-v1c-runpy",
+   "dir": "j-v33-v1c-runpy",
+   "title": "V1c root runpy.py [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 1,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-v1c-runpy"
+  },
+  {
+   "id": "j-v32-v2-pip",
+   "dir": "j-v32-v2-pip",
+   "title": "V2 root pip/ package (hosted_setup pip-pin) [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "03-step-hosted-setup-real": 1,
+    "04-check-then-locked-seed": 0,
+    "04b-locked-seed-without-check": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": true,
+   "markers": [
+    "V2-root-pip.json"
+   ],
+   "verdict": "VULNERABLE",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner. hosted-setup: real step stops at gpg (absent); 04 = bootstrap check then locked seed(); 04b = locked seed() without the check (isolates the -I fix); upstream replaced by a local stub.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-v2-pip"
+  },
+  {
+   "id": "j-v33-v2-pip",
+   "dir": "j-v33-v2-pip",
+   "title": "V2 root pip/ package (hosted_setup pip-pin) [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 1,
+    "03-step-hosted-setup-real": 1,
+    "04-check-then-locked-seed": 1,
+    "04b-locked-seed-without-check": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner. hosted-setup: real step stops at gpg (absent); 04 = bootstrap check then locked seed(); 04b = locked seed() without the check (isolates the -I fix); upstream replaced by a local stub.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-v2-pip"
+  },
+  {
+   "id": "j-v32-v2ns-pip-namespace",
+   "dir": "j-v32-v2ns-pip-namespace",
+   "title": "V2ns root NAMESPACE pip/ (bypass attempt of ROOT_IMPORTABLE) [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "03-step-hosted-setup-real": 1,
+    "04-check-then-locked-seed": 0,
+    "04b-locked-seed-without-check": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner. hosted-setup: real step stops at gpg (absent); 04 = bootstrap check then locked seed(); 04b = locked seed() without the check (isolates the -I fix); upstream replaced by a local stub.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-v2ns-pip-namespace"
+  },
+  {
+   "id": "j-v33-v2ns-pip-namespace",
+   "dir": "j-v33-v2ns-pip-namespace",
+   "title": "V2ns root NAMESPACE pip/ (bypass attempt of ROOT_IMPORTABLE) [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "03-step-hosted-setup-real": 1,
+    "04-check-then-locked-seed": 0,
+    "04b-locked-seed-without-check": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner. hosted-setup: real step stops at gpg (absent); 04 = bootstrap check then locked seed(); 04b = locked seed() without the check (isolates the -I fix); upstream replaced by a local stub.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-v2ns-pip-namespace"
+  },
+  {
+   "id": "j-v32-k1-kitchen",
+   "dir": "j-v32-k1-kitchen",
+   "title": "K1 pre-auth non-importable plants: .curlrc, .bashrc, namespace ensurepip/ (bypass attempt) [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-k1-kitchen"
+  },
+  {
+   "id": "j-v33-k1-kitchen",
+   "dir": "j-v33-k1-kitchen",
+   "title": "K1 pre-auth non-importable plants: .curlrc, .bashrc, namespace ensurepip/ (bypass attempt) [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-k1-kitchen"
+  },
+  {
+   "id": "j-v32-clean",
+   "dir": "j-v32-clean",
+   "title": "Clean control [main d43f5f4]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS (control)",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v32-clean"
+  },
+  {
+   "id": "j-v33-clean",
+   "dir": "j-v33-clean",
+   "title": "Clean control [candidate fc0a40d]",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "attacker_code_executed": false,
+   "markers": [],
+   "verdict": "PASS (control)",
+   "claim": "See 02-step-authenticate.stdout/stderr and markers/.",
+   "limitation": "Emulated job: ubuntu:24.04 linux/amd64 container, root, workspace = scenario commit, verbatim step bodies of that version, SIMULATED ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/j-v33-clean"
+  },
+  {
+   "id": "r06-v32",
+   "dir": "r06-root-rule-v32",
+   "title": "Root rule map: main source_tree + bootstrap",
+   "exit_codes": {
+    "root-rule-map": 0
+   },
+   "verdict": "VULNERABLE (all 24 root plants accepted)",
+   "claim": "See results.json rows.",
+   "limitation": "Local Git store.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/r06-root-rule-v32"
+  },
+  {
+   "id": "r06-v33",
+   "dir": "r06-root-rule-v33",
+   "title": "Root rule map: candidate source_tree + bootstrap",
+   "exit_codes": {
+    "root-rule-map": 0
+   },
+   "verdict": "PASS with gaps (namespace dirs, gitlinks, .zip/.egg/.pyz accepted: not importable unless on sys.path); INCONSISTENT for a directory named json.py/ (verifier ACCEPTED, bootstrap REJECTED: DoS only)",
+   "claim": ".py/.pyw/.pth/.so/__pycache__/symlink/__init__ packages at root rejected by both.",
+   "limitation": "Local Git store.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/r06-root-rule-v33"
+  },
+  {
+   "id": "m11",
+   "dir": "m11-receipt-main",
+   "title": "Receipt relabel on main (fresh re-run of c11)",
+   "exit_codes": {
+    "receipt-controls": 0
+   },
+   "verdict": "VULNERABLE (relabel and fabricated log ACCEPTED)",
+   "claim": "17/17 as designed.",
+   "limitation": "Historical hosted receipt as data.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/m11-receipt-main"
+  },
+  {
+   "id": "v4-api",
+   "dir": "v4-run-identity",
+   "title": "Public GitHub API records (unauthenticated GET)",
+   "exit_codes": {
+    "api-run-40787574980-unauthenticated": 0,
+    "api-provenance-yml-runs-unauthenticated": 0,
+    "api-run-40810179164-jobs-unauthenticated": 0,
+    "api-run-40810179164-unauthenticated": 0
+   },
+   "verdict": "DATA",
+   "claim": "Run 40787574980 = dry-run workflow; provenance.yml has one run 40810179164 at d43f5f4 (proof success, sign skipped, title \"Forge Stage 9 provenance\").",
+   "limitation": "Not dispatched by this audit.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/v4-run-identity"
+  },
+  {
+   "id": "v4-v32",
+   "dir": "v4-logic-v32",
+   "title": "Guards, git credential env, receipt (main)",
+   "exit_codes": {
+    "logic": 1
+   },
+   "verdict": "OLD BEHAVIOUR (exit 1 = expectations written for v33)",
+   "claim": "Guard misses GITHUB_ACTIONS='TRUE' and the OIDC URL; git always gets the token variable and an auth header (public fetch with a fake header -> COMMAND_FAILED:source-fetch); relabel ACCEPTED.",
+   "limitation": "fetch replaced for repository metadata.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/v4-logic-v32"
+  },
+  {
+   "id": "v4-v33",
+   "dir": "v4-logic-v33",
+   "title": "Guards, git credential env, run_identity, receipt execution (candidate)",
+   "exit_codes": {
+    "logic": 0
+   },
+   "verdict": "PASS (logic); residuals noted",
+   "claim": "Guard refuses any GITHUB_ACTIONS/OIDC URL; public fetch: no token var, no header, real git fetch ran; run_identity rejects both REAL old run records and 11 synthetic mismatches, accepts a synthetic matching record and a hypothetical tag named main; receipt relabel with an execution field passes validate_receipt (format only).",
+   "limitation": "Real GitHub API responses fed through a replaced fetch; no token; no live run with a challenge title exists.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/v4-logic-v33"
+  },
+  {
+   "id": "s17",
+   "dir": "s17-sign-gates",
+   "title": "producer.sign() pre-signing gates on relabelled historical proof",
+   "exit_codes": {
+    "v32-relabel": 0,
+    "v33-relabel-without-execution": 0,
+    "v33-relabel-with-execution": 0
+   },
+   "verdict": "main: gates pass; candidate: gates pass when execution names any run (verifier run_identity is the only binding)",
+   "claim": "AUDIT_STOP_BEFORE_SIGNING = all gates passed; Cosign never invoked (stub, no binary).",
+   "limitation": "Simulated workflow env.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/s17-sign-gates"
+  },
+  {
+   "id": "d3",
+   "dir": "d3-exit-relaunch",
+   "title": "BYPASS: exit_stage_9.py imports stdlib names from scripts/ before relaunching through bootstrap",
+   "exit_codes": {
+    "v32-documented-exit-command": 1,
+    "v33-documented-exit-command": 1,
+    "v33-flags-skip-relaunch": 1,
+    "v33-clean-control-documented-command": 1
+   },
+   "attacker_code_executed": true,
+   "verdict": "VULNERABLE (candidate and main)",
+   "claim": "Documented command \"python3 scripts/exit_stage_9.py --case unsigned\": planted scripts/argparse.py ran (sys.path[0]=scripts, saw FORGE_VERIFIER_GITHUB_TOKEN, a fake value) before bootstrap; candidate then exited 1 BOOTSTRAP_REJECTED: BYTECODE_CACHE:scripts/__pycache__ (written by that pre-relaunch import). Main: no bootstrap at all. With -E -s -B the relaunch is skipped. Clean control relaunches normally.",
+   "limitation": "Controller host (macOS Python 3.10.11); minimal controller.json.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/d3-exit-relaunch"
+  },
+  {
+   "id": "d1",
+   "dir": "d1-signature-rejected-causes",
+   "title": "D1: SIGNATURE_REJECTED from non-cryptographic Cosign failures (candidate release.py via bootstrap)",
+   "exit_codes": {
+    "bootstrap-check": 0,
+    "d1a-bundle-file-missing": 1,
+    "d1b-bundle-unparsable": 1,
+    "d1c-bundle-empty-object": 1,
+    "d1d-bundle-is-directory": 1
+   },
+   "verdict": "WEAKNESS",
+   "claim": "Missing bundle, unparsable JSON, empty object and a directory all give reason SIGNATURE_REJECTED with Cosign exit != 0, which the negative gate accepts; positive-after shows the environment works, not why the negative failed. The unsigned fixture changes payload and signatures together.",
+   "limitation": "exit_stage_9.py itself not run end to end (needs signed bundles).",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/d1-signature-rejected-causes"
+  },
+  {
+   "id": "x01",
+   "dir": "x01-root-rule-v32-harness-error",
+   "title": "Harness error",
+   "exit_codes": {
+    "root-rule-map": 1
+   },
+   "verdict": "HARNESS_ERROR",
+   "claim": "gitlink case",
+   "limitation": "",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/x01-root-rule-v32-harness-error"
+  },
+  {
+   "id": "x02",
+   "dir": "x02-root-rule-v33-harness-error",
+   "title": "Harness error",
+   "exit_codes": {
+    "root-rule-map": 1
+   },
+   "verdict": "HARNESS_ERROR",
+   "claim": "gitlink case",
+   "limitation": "",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v33-audit-0001/x02-root-rule-v33-harness-error"
+  }
+ ]
+}

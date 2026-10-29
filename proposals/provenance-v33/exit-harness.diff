@@ -1,0 +1,26 @@
+--- a/scripts/exit_stage_9.py	2026-10-27 12:34:37.682431406 -0400
++++ b/scripts/exit_stage_9.py	2026-10-28 23:27:47.470100047 -0400
+@@ -42,7 +42,10 @@
+         def gate(path, name, expected_code, reason=None, *, observer=None, admit=False):
+             result_dir = attempt / name
+             script = 'observe.py' if observer else 'release.py'
+-            command = ['python3', str(ROOT / 'gate/provenance' / script), '--candidate', str(path),
++            # Launch through the authenticated bootstrap: isolated Python, no bytecode.
++            command = ['python3', '-I', '-S', '-B', str(ROOT / 'gate/provenance/bootstrap.py'),
++                       '--implementation-sha256', config['implementation_sha256'], '--',
++                       'gate/provenance/' + script, '--candidate', str(path),
+                        '--controller', str(controller), '--challenge', config['challenge'],
+                        '--implementation-sha256', config['implementation_sha256'], '--records', str(result_dir)]
+             if observer:
+@@ -113,7 +116,10 @@
+                 unsigned['predicate']['purpose'] = 'security-control'
+                 bundle['dsseEnvelope']['payload'] = base64.b64encode(canonical(unsigned)).decode()
+                 write(path / 'release.sigstore.json', bundle)
+-                markers = ['exactly one signature is required']
++                # Cosign 3.1.4 rejects an emptied envelope at the log-inclusion check
++                # (results/stage9/cosign-offline-0001); older releases at the count check.
++                markers = ['exactly one signature is required',
++                           'failed to verify log inclusion: transparency log signature does not match']
+             elif args.case == 'wrong-signer':
+                 shutil.copyfile(path / 'wrong-signer.sigstore.json', path / 'release.sigstore.json')
+                 probe = Records(attempt / 'wrong-signer-own-identity')

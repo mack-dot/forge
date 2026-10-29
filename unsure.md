@@ -3139,3 +3139,161 @@ curl: (6) Could not resolve host: github.com
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
 - Next check: records PR merged by the owner; then a separate signing
   authorization decision.
+
+## U124 — Owner approves a no-signing rehearsal of the installed provenance.yml
+
+- References: U123.
+- Owner reply, verbatim, to the proposal of a rehearsal ("Reply 'approve
+  rehearsal'"): "do it in the cli yes u can merge them". Read as: run the
+  rehearsal through the CLI, and the agent may merge its own PRs.
+- Scope: one controller request on the Mac from a fresh clone of main
+  (d43f5f4d), one dispatch of provenance.yml on main with the installed lock
+  be23ec85. FORGE_SIGNING_AUTHORIZED stays unset, so the sign job must be
+  skipped: no OIDC token, no signature, no Rekor entry. Not included: setting
+  the variable, signing, releases, PRs #14 and #15.
+- Merge permission: the agent's attempt to write .claude/settings.local.json
+  was refused by the Claude Code classifier (Self-Modification); the owner
+  creates that file. Until then the owner merges.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: the sign job is skipped; the proof job result; the hosted
+  package equals the controller package.
+
+## U125 — No-signing rehearsal of the installed provenance.yml passed
+
+- References: U124; results/stage9/rehearsal-0001/.
+- Observed: run 40810179164 on main d43f5f4d, conclusion success, 32 min
+  (disk 2.2, setup 7.6, package and proof replay 22.3). sign job skipped;
+  token Contents read, Metadata read; no OIDC request in the log. Artifact
+  forge-stage9-unsigned-40810179164, zip sha256 34b215d3… = GitHub digest.
+- Controller-side checks (controller clone at d43f5f4d, lock be23ec85): the
+  artifact request equals the controller request and the pending DB row;
+  validate_package and validate_receipt (656 files) accept; evidence equals
+  expected_canonical; the unsigned statement equals producer.statement for
+  these digests. Controls rejected: receipt byte flip (PROOF_RECEIPT_BYTES),
+  other request (STALE_PROOF_RECEIPT), ELF byte flip (PACKAGED_ELF_BYTES),
+  substituted package descriptor (PACKAGE_DESCRIPTOR_BINDING).
+- Limits: the statement is unsigned; no Cosign, Rekor or admission ran. The
+  request stays pending; it cannot be reused for signing because a re-run
+  has run_attempt 2 (producer.py:224).
+- Impact: All six EXITs are NOT RUN. end_to_end=false.
+
+## U126 — Approval integrity: protected merges were admin overrides
+
+- References: U122, U123; proposals/approval-integrity/PROPOSAL.md;
+  results/stage9/approval-audit-0001/.
+- Observed: the agent's gh is logged in as mack-dot (owner; scopes repo,
+  workflow), so every agent PR is owner-authored and cannot be approved by the
+  owner. GitHub rule suites record result=bypass for #16, #17, #18; the
+  pull_request rule failed ("approval from someone other than the last
+  pusher"); #17 has 0 reviews. No CODEOWNERS on main. 993bee7b and e37ef2c5
+  were direct pushes. The audit script exits 1; forged-pass and
+  missing-record controls produce no false APPROVED.
+- Uncertainty: the APPROVED path is untested (no qualifying approval exists).
+  Rule-suite retention is limited; archives are needed.
+- Next check: identity separation (machine account), then CODEOWNERS by an
+  approved PR as the first positive control.
+
+## U127 — Pinned Cosign verifies public bundles; the unsigned EXIT marker is wrong
+
+- References: results/stage9/cosign-offline-0001/; proposals/provenance-v33/exit-harness.diff.
+- Observed: cosign-darwin-arm64 v3.1.4 download sha256 9f9b8cd5… = policy pin;
+  GitCommit 0e48502c = policy source_commit; installed at .toolchain/stage9/cosign
+  (ignored). With Forge's verify-blob-attestation flags on a public cli/cli
+  SLSA bundle (Fulcio public-good, Rekor entry): initialize 0, verify 0.
+  Controls: wrong identity 1 with `expected SAN value "…", got "…"`; wrong
+  blob 1 with the digest marker; emptied signatures 1 with "failed to verify
+  log inclusion: transparency log signature does not match", NOT the
+  harness marker "exactly one signature is required".
+- Impact: EXIT unsigned would end NOT_THE_INTENDED_SECURITY_REJECTION although
+  Cosign rejects correctly (D1). The fix is in scripts/ (locked): proposal only.
+- Limits: verification only; Cosign signing and Forge's own bundles untested.
+
+## U128 — Independent audit of installed v3.2: code runs before authentication
+
+- References: U106, U107, U125; results/stage9/v32-audit-0001/ (22 checks);
+  proposals/provenance-v33/.
+- Demonstrated (ubuntu:24.04 emulation, fake OIDC variables, not a hosted
+  run): V1 HIGH — provenance.yml:43,105 and provenance-negative.yml:49 run
+  `python3 -m ensurepip` with the checkout as cwd before the authentication
+  step, so a root ensurepip.py or runpy.py in the commit runs, sees the OIDC
+  request variables, and the next step still prints BOOTSTRAP_VERIFIED (c02–c04).
+  V2 HIGH — hosted_setup.py:54 runs `sys.executable -m pip` with cwd=ROOT; a
+  root pip/ package ran after bootstrap (c05). V3 MEDIUM — bootstrap and
+  source_tree inventory only gate/provenance, scripts and examples/binary, so
+  they accept the V1/V2 commits (c06). V4 MEDIUM — receipt challenge and
+  commit are labels written after the proof (producer.py:200-202); a relabelled
+  old receipt was accepted (c11), and release.py:274 claims
+  producer_fresh_kernel_receipt_verified. LOW — the verifier guard checks only
+  GITHUB_ACTIONS == 'true'; pending requests never expire.
+- Agent check: the cited lines are as described (workflow lines 43, 46, 105;
+  common.py:81 cwd=ROOT; producer.py:200-202).
+- Earlier false-pass risks: controls.py checks exit code without the reason and
+  writes bytecode without -B; earlier controls planted files only inside the
+  inventoried roots and never ran the pre-authentication step.
+- Not tested: a hosted run of V1; real OIDC minting; authenticated identity;
+  valid-bundle admission and replay; the full hosted_setup path.
+- Impact: signing under v3.2 is unsafe until V1 and V2 are fixed. Stage 9
+  remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U129 — Identity separation is not in effect for the agent
+
+- References: U126; proposals/approval-integrity/PROPOSAL.md.
+- Owner statement: "The GitHub identity separation has already been handled."
+- Permission test (2026-10-29): `gh api user` prints mack-dot (id 235131950);
+  repository permissions admin, maintain, push; collaborators: only mack-dot;
+  no pending invitation; mackiannii has only public read. .claude/settings.local.json
+  does not exist.
+- Impact: any PR the agent opens is still owner-authored; approval by review is
+  impossible and a merge would again be an OVERRIDE. The governance controls
+  that need a separate agent identity cannot run.
+- Next check: repeat the test after the owner switches the agent's credential.
+
+## U130 — v3.3 candidate repairs V1–V4, D1, D3; local controls pass
+
+- References: U127, U128; proposals/provenance-hosted-v33/;
+  results/stage9/v33-controls-0001/.
+- Candidate (not applied): 9 files, lock eb4b93db…, diff 21e1a7a4…; local
+  test commit fc0a40d9 (tree 0fc5d98a) on main d43f5f4d.
+- Repairs: -I for the three ensurepip steps, both pip children and the
+  collector; ROOT_IMPORTABLE rule in bootstrap.py and source_tree; run-name
+  carries the challenge, the receipt records run id and attempt, release.verify
+  checks the run with the GitHub API (run_identity); the claim label states the
+  GitHub execution-integrity assumption; verifier guard on any Actions marker;
+  git never gets the token variable; the EXIT harness relaunches through the
+  bootstrap and uses a positive re-check instead of error strings.
+- Observed: 43/43 controls (exploits reproduced on v3.2 behaviour, refused by
+  the candidate with the intended reason, no marker written); 14/14 v3.1 and
+  9/9 F1 controls on the candidate.
+- Not tested: a hosted run of the candidate; the positive run_identity path
+  (needs a v3.3 run with the new run-name); the authenticated token path of
+  run_identity (tests used gh api reads); Cosign-backed EXIT flows.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U131 — Re-attack found a D3 bypass in the first v3.3 fix; final candidate passes
+
+- References: U130; results/stage9/v33-audit-0001/, v33-controls-0003/;
+  proposals/provenance-hosted-v33/ (diff b432024f…, lock a809f701…).
+- Independent re-attack of candidate fc0a40d9 (emulated ubuntu jobs, fake
+  OIDC and token values): V1a/V1b/V1c and V2 ran on main and did not run on
+  the candidate (Authenticate step exit 1, ROOT_IMPORTABLE); the verifier tree
+  rule rejected every importable root plant; run_identity rejected the real
+  rehearsal and dry-run records and 11 synthetic mismatches.
+- Found: D3 HIGH — the first fix imported argparse and others before its
+  relaunch, so a planted scripts/argparse.py ran on the controller host; -E -s
+  -B skipped the relaunch. D1 — the unsigned fixture changed payload and
+  signatures together; SIGNATURE_REJECTED also covers malformed input.
+- Fixed: the harness refuses at its first statement (only sys, built in)
+  unless the bootstrap started it (flags plus the bootstrap's pycache prefix);
+  the EXIT commands in ROADMAP now launch through the bootstrap; the unsigned
+  fixture removes only the signatures; source_tree also rejects a root
+  directory with an importable name.
+- Observed: 48/48 controls on final candidate 405b453a (tree ae535888), with
+  the D3 exploit reproduced on v3.2 and refused for a direct run, an -E -s -B
+  run, a bootstrap run with the planted module, a wrong lock and a changed
+  locked file; 14/14 v3.1 and 9/9 F1 controls.
+- Residual: run_identity does not tie the signing certificate's run to the
+  receipt run; the guard can be avoided by an operator who unsets the
+  variables; a gitlink or namespace directory at the root passes both checks
+  (not importable as a regular module); hosted behaviour and the positive
+  run_identity path are untested.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.

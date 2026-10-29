@@ -1,0 +1,66 @@
+--- a/.github/workflows/provenance.yml	2026-10-28 22:44:18.720031654 -0400
++++ b/.github/workflows/provenance.yml	2026-10-28 23:46:26.025661939 -0400
+@@ -40,7 +40,7 @@
+           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+           mkdir -p "$P" && tar -xzf "$A" -C "$P"
+-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
+           echo "$P/bin" >> "$GITHUB_PATH"
+           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+       - name: Authenticate the checkout before any repository code
+@@ -102,7 +102,7 @@
+           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+           mkdir -p "$P" && tar -xzf "$A" -C "$P"
+-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
+           echo "$P/bin" >> "$GITHUB_PATH"
+           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+       - name: Authenticate the checkout before any repository code
+--- a/.github/workflows/provenance-negative.yml	2026-10-28 22:44:18.719660070 -0400
++++ b/.github/workflows/provenance-negative.yml	2026-10-28 23:46:26.025840106 -0400
+@@ -46,7 +46,7 @@
+           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+           mkdir -p "$P" && tar -xzf "$A" -C "$P"
+-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
+           echo "$P/bin" >> "$GITHUB_PATH"
+           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+       - name: Authenticate the checkout before any repository code
+--- a/gate/provenance/hosted_setup.py	2026-10-28 22:44:18.852534572 -0400
++++ b/gate/provenance/hosted_setup.py	2026-10-28 23:46:26.025993190 -0400
+@@ -51,7 +51,7 @@
+     pip = pins['pip']
+     requirement = Path(tempfile.mkdtemp()) / 'pip.txt'
+     requirement.write_text(f"pip=={pip['version']} --hash=sha256:{pip['sha256']}\n")
+-    records.run([sys.executable, '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
++    records.run([sys.executable, '-I', '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
+                  '-r', requirement], 'pip-pin')
+     # The approved dependency lock was made on macOS, and pip writes the
+     # interpreter path into bin/idna. Run the recorded command through that path.
+--- a/gate/provenance/release.py	2026-10-28 01:06:10.532852048 -0400
++++ b/gate/provenance/release.py	2026-10-28 23:46:26.026162107 -0400
+@@ -271,7 +271,8 @@
+     require(files(root) == before, 'CANDIDATE_CHANGED_DURING_VERIFICATION')
+     context(expected_lock)
+     return {'signature_exit_code': code, 'result': 'authenticated_provenance',
+-            'kernel_execution_here': False, 'producer_fresh_kernel_receipt_verified': True,
++            'kernel_execution_here': False, 'producer_receipt_labels_consistent': True,
++            'proof_freshness_bound_to_challenge': False,
+             'end_to_end': False, 'statement_sha256': sha(canonical(statement))}
+ 
+ 
+--- a/gate/provenance/common.py	2026-10-28 22:44:18.850270978 -0400
++++ b/gate/provenance/common.py	2026-10-28 23:46:26.026317690 -0400
+@@ -199,7 +199,8 @@
+ def repository_identity(policy, implementation, commit, records):
+     # Only the independent release verifier runs this, with its own read-only
+     # credential and its own Git store; never inside a workflow job.
+-    require(os.environ.get('GITHUB_ACTIONS') != 'true', 'VERIFIER_NOT_INDEPENDENT')
++    require(not os.environ.get('GITHUB_ACTIONS') and not os.environ.get('ACTIONS_ID_TOKEN_REQUEST_URL'),
++            'VERIFIER_NOT_INDEPENDENT')
+     require(re.fullmatch('[0-9a-f]{40}', commit), 'EXPECTED_SOURCE_COMMIT')
+     repo = policy['signer']['repository']
+     info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository',

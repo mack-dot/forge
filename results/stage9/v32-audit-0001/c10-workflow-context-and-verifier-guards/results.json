@@ -1,0 +1,156 @@
+[
+ {
+  "group": "workflow",
+  "case": "exact approved context",
+  "expected": "ACCEPTED",
+  "observed": "ACCEPTED",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "wrong GITHUB_REPOSITORY",
+  "expected": "WORKFLOW_CONTEXT",
+  "observed": "WORKFLOW_CONTEXT",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "wrong GITHUB_EVENT_NAME",
+  "expected": "WORKFLOW_CONTEXT",
+  "observed": "WORKFLOW_CONTEXT",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "wrong GITHUB_REF",
+  "expected": "WORKFLOW_CONTEXT",
+  "observed": "WORKFLOW_CONTEXT",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "wrong GITHUB_SHA",
+  "expected": "WORKFLOW_CONTEXT",
+  "observed": "WORKFLOW_CONTEXT",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "wrong GITHUB_WORKFLOW_REF",
+  "expected": "WORKFLOW_IDENTITY",
+  "observed": "WORKFLOW_IDENTITY",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "wrong GITHUB_RUN_ATTEMPT",
+  "expected": "WORKFLOW_RERUN_REQUIRES_NEW_REQUEST",
+  "observed": "WORKFLOW_RERUN_REQUIRES_NEW_REQUEST",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "negative action under provenance.yml identity",
+  "expected": "WORKFLOW_IDENTITY",
+  "observed": "WORKFLOW_IDENTITY",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "negative action under provenance-negative.yml identity",
+  "expected": "ACCEPTED",
+  "observed": "ACCEPTED",
+  "pass": true
+ },
+ {
+  "group": "workflow",
+  "case": "missing variables",
+  "expected": "WORKFLOW_CONTEXT",
+  "observed": "WORKFLOW_CONTEXT",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "GITHUB_ACTIONS=true",
+  "expected": "VERIFIER_NOT_INDEPENDENT",
+  "observed": "VERIFIER_NOT_INDEPENDENT",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "malformed expected commit",
+  "expected": "EXPECTED_SOURCE_COMMIT",
+  "observed": "EXPECTED_SOURCE_COMMIT",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "token absent",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "producer token only",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "malformed token: empty",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "malformed token: short",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "malformed token: hyphen",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "malformed token: newline",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "malformed token: space",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "runner-like env with GITHUB_ACTIONS unset",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "GITHUB_ACTIONS='TRUE' (case)",
+  "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN",
+  "pass": true
+ },
+ {
+  "group": "verifier",
+  "case": "well-formed FAKE token (not a credential) -> HTTP error",
+  "expected": "GITHUB_HTTP_STATUS:401",
+  "observed": "GITHUB_HTTP_STATUS:401",
+  "pass": true
+ }
+]

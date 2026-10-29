@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/github/workspace/gate/provenance/hosted_setup.py", line 117, in <module>
+    raise SystemExit(main())
+  File "/github/workspace/gate/provenance/hosted_setup.py", line 109, in main
+    docker(pins, records)
+  File "/github/workspace/gate/provenance/hosted_setup.py", line 23, in docker
+    _, output, _ = records.run(['gpg', '--show-keys', '--with-colons', key], 'docker-key-show')
+  File "/github/workspace/gate/provenance/common.py", line 87, in run
+    result = subprocess.run(invocation['argv'], cwd=cwd, env=env,
+  File "/home/runner/work/_temp/forge-python/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/home/runner/work/_temp/forge-python/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/home/runner/work/_temp/forge-python/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'gpg'
