@@ -22,6 +22,7 @@ LOCK = 'gate/provenance/implementation.lock'
 EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
 CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
                  '.glob', '.c', '.h', '.sh')
+ROOT_IMPORTABLE = ('.py', '.pyc', '.pyo', '.pyw', '.pyd', '.so', '.pth')
 
 
 def fail(reason):
@@ -37,12 +38,24 @@ def sha(path):
     return digest.hexdigest()
 
 
+def root_entries():
+    # A child started with -m or -c in the checkout has the root on sys.path, so
+    # nothing importable may live there (U128 V1-V3).
+    for name in sorted(os.listdir(ROOT)):
+        full = os.path.join(ROOT, name)
+        mode = os.lstat(full).st_mode
+        if stat.S_ISLNK(mode) or name == '__pycache__' or name.endswith(ROOT_IMPORTABLE) or (
+                stat.S_ISDIR(mode) and any(entry.startswith('__init__.') for entry in os.listdir(full))):
+            fail('ROOT_IMPORTABLE:' + name)
+
+
 def check(expected):
     lock_path = os.path.join(ROOT, LOCK)
     if sha(lock_path) != expected:
         fail('IMPLEMENTATION_LOCK')
     with open(lock_path, 'rb') as stream:
         files = json.loads(stream.read())['files']
+    root_entries()
     for top in EXECUTABLE_ROOTS:
         for directory, dirnames, filenames in os.walk(os.path.join(ROOT, top), followlinks=False):
             for name in sorted(dirnames + filenames):

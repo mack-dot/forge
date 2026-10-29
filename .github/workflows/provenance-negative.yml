@@ -46,7 +46,7 @@ jobs:
           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
           mkdir -p "$P" && tar -xzf "$A" -C "$P"
-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
+          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
           echo "$P/bin" >> "$GITHUB_PATH"
           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
       - name: Authenticate the checkout before any repository code

@@ -177,7 +177,7 @@ def replay(policy, lock, implementation, request, out, records):
     _, state, _ = records.run(['docker', 'inspect', name], 'proof-container-state')
     require(code == 0 and collect == 0 and not parse(state)[0]['State']['OOMKilled'], 'FRESH_PROOF_FAILED')
     # Copy and hash the actual .vo inputs named by real rocqchk output.
-    collector = ['python3', '-c', '\n'.join([
+    collector = ['python3', '-I', '-c', '\n'.join([
         'import hashlib, json, pathlib, re',
         f'base = pathlib.Path({linux!r})',
         'log = (base / "independent-kernel.log").read_text()',
@@ -198,6 +198,8 @@ def replay(policy, lock, implementation, request, out, records):
     records.run(['docker', 'cp', name + '-closure:' + linux + '/dependencies', str(proof / 'dependencies')],
                 'closure-input-copy')
     manifest = {'challenge': request['challenge'], 'source_commit': request['expected_source_commit'],
+                'execution': {'run_id': os.environ.get('GITHUB_RUN_ID', ''),
+                              'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT', '')},
                 'files': files(proof), 'end_to_end': False}
     write(proof / 'receipt.json', manifest)
     validate_receipt(proof, policy, lock, request)

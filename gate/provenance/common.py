@@ -163,6 +163,7 @@ def cosign_path(policy):
 EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
 CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
                  '.glob', '.c', '.h', '.sh')
+ROOT_IMPORTABLE = ('.py', '.pyc', '.pyo', '.pyw', '.pyd', '.so', '.pth')
 
 
 def source_tree(git_dir, commit, implementation, records):
@@ -185,6 +186,10 @@ def source_tree(git_dir, commit, implementation, records):
     _, data, _ = records.run(['git', '--git-dir', git_dir, 'cat-file', 'blob', lock_entry[2]], 'source-lock')
     require(data == (HERE / 'implementation.lock').read_bytes(), 'IMPLEMENTATION_LOCK_AT_COMMIT')
     for path, (mode, kind, obj) in sorted(entries.items()):
+        top, _, rest = path.partition('/')
+        # The same root rule as bootstrap.py: nothing importable at the checkout root.
+        require(top != '__pycache__' and not top.endswith(ROOT_IMPORTABLE) and (rest or mode != '120000')
+                and not (rest.startswith('__init__.') and '/' not in rest), 'ROOT_IMPORTABLE:' + top)
         if path.startswith(EXECUTABLE_ROOTS) and path != 'gate/provenance/implementation.lock':
             require(mode in ('100644', '100755') and kind == 'blob', 'SOURCE_ENTRY_TYPE:' + path)
             require('__pycache__' not in path.split('/') and (path in locked or (
@@ -199,7 +204,8 @@ def source_tree(git_dir, commit, implementation, records):
 def repository_identity(policy, implementation, commit, records):
     # Only the independent release verifier runs this, with its own read-only
     # credential and its own Git store; never inside a workflow job.
-    require(os.environ.get('GITHUB_ACTIONS') != 'true', 'VERIFIER_NOT_INDEPENDENT')
+    require(not os.environ.get('GITHUB_ACTIONS') and not os.environ.get('ACTIONS_ID_TOKEN_REQUEST_URL'),
+            'VERIFIER_NOT_INDEPENDENT')
     require(re.fullmatch('[0-9a-f]{40}', commit), 'EXPECTED_SOURCE_COMMIT')
     repo = policy['signer']['repository']
     info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository',
@@ -210,14 +216,36 @@ def repository_identity(policy, implementation, commit, records):
     git_dir = Path(tempfile.mkdtemp(prefix='forge-verifier-git-'))
     require(not git_dir.is_relative_to(ROOT), 'VERIFIER_GIT_DIR_LOCATION')
     records.run(['git', 'init', '-q', '--bare', git_dir], 'source-store')
-    # The credential reaches git only through the environment, never argv or records.
-    basic = base64.b64encode(('x-access-token:' + os.environ['FORGE_VERIFIER_GITHUB_TOKEN']).encode()).decode()
-    env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_CONFIG_COUNT='1',
-               GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',
-               GIT_CONFIG_VALUE_0='AUTHORIZATION: basic ' + basic)
+    # git never gets the token variable. It gets one header value, only for a
+    # private repository; a public fetch needs no credential.
+    env = {key: value for key, value in os.environ.items() if key != 'FORGE_VERIFIER_GITHUB_TOKEN'}
+    env['GIT_TERMINAL_PROMPT'] = '0'
+    if info['private']:
+        basic = base64.b64encode(('x-access-token:' + os.environ['FORGE_VERIFIER_GITHUB_TOKEN']).encode()).decode()
+        env.update(GIT_CONFIG_COUNT='1', GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',
+                   GIT_CONFIG_VALUE_0='AUTHORIZATION: basic ' + basic)
     records.run(['git', '--git-dir', git_dir, 'fetch', '-q', '--depth', '1',
                  'https://github.com/' + repo + '.git', commit], 'source-fetch', env=env)
     source_tree(git_dir, commit, implementation, records)
+
+
+def run_identity(policy, request, execution, records):
+    """Check with the GitHub API that the receipt's run is the run dispatched for this request.
+
+    GitHub records the run name, which carries the challenge, at dispatch, before
+    any job runs. Trust assumption: GitHub executed the locked workflow in that
+    run; Forge does not observe the runner itself.
+    """
+    repo = policy['signer']['repository']
+    run = parse(fetch('https://api.github.com/repos/' + repo + '/actions/runs/' + execution['run_id'], records,
+                      'proof-run', token_name='FORGE_VERIFIER_GITHUB_TOKEN'))
+    require(str(run['id']) == execution['run_id'] and run['run_attempt'] == 1
+            and run['path'] == '.github/workflows/provenance.yml'
+            and 'refs/heads/' + run['head_branch'] == policy['signer']['ref']
+            and run['head_sha'] == request['expected_source_commit'] and run['event'] == policy['signer']['event']
+            and run['display_title'] == 'forge-stage9 ' + request['challenge']
+            and run['repository']['id'] == policy['signer']['repository_id']
+            and run['status'] == 'completed' and run['conclusion'] == 'success', 'PROOF_RUN_IDENTITY')
 
 
 def signature(policy, bundle, blob, commit, records, *, negative_identity=None):
