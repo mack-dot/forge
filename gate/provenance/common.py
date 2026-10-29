@@ -104,7 +104,11 @@ def fetch(url, records, label, *, token_name=None):
     if token_name is not None:
         # Each caller names its own read-only token; records never contain it.
         token = os.environ.get(token_name, '')
-        require(re.fullmatch(r'[A-Za-z0-9_]{20,255}', token), 'GITHUB_TOKEN_REQUIRED:' + token_name)
+        # Tokens are opaque and vary in length (stateless installation tokens are
+        # about 520 characters). RFC 6750 token characters only: no space, quote,
+        # control character or line break can reach the request header.
+        require(20 <= len(token) <= 4096 and re.fullmatch(r'[A-Za-z0-9._~+/-]+=*', token),
+                'GITHUB_TOKEN_REQUIRED:' + token_name)
         headers['Authorization'] = 'Bearer ' + token
     req = urllib.request.Request(url, headers=headers)
     try:
