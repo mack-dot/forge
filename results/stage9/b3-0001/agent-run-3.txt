@@ -1,0 +1,7 @@
+B3 run 3 (2026-10-28), run by the agent under the owner waiver (U117). Wrapper sha256
+6190aa58972361b46e2ebc857e3d1213c5a4c895462598519f9297d444bfeeb3 (reviewed: SAFE, see wrapper-v2-review.txt).
+Preconditions: no exported TOKEN/WEAK/SHELLOPTS/BASH_ENV/PS4/BASHOPTS; clone HEAD edb729a8, clean; OUTPUT new.
+Command: env -u TOKEN -u WEAK -u SHELLOPTS -u BASH_ENV /bin/bash b3_verify.sh ~/forge-b3-check ~/forge-b3-out-3
+Output: B3: Keychain item forge-verifier-readonly is not a GitHub token: length 68, prefix other,
+  14 characters outside A-Z a-z 0-9 _, 5 of them blank
+Exit: 3. Stopped before the checkout check and any network request. OUTPUT holds only empty home/ and tmp/.

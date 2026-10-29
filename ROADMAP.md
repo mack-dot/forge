@@ -1566,6 +1566,36 @@ See U106. `end_to_end=false`.
 
 See U107. `end_to_end=false`.
 
+#### B1–B2′ (owner-authorized, measurement only)
+
+| Command actually run | Actual exit code | Result |
+| --- | --- | --- |
+| B1: `git push` of `993bee7b…` (tree `32bfb2dd…`) | 1, then 0 | First attempt: zsh refspec error; second: pushed. |
+| B2: `gh workflow run stage9-private-dry-run-v31.yml` (run 40771238211) | 0 | Run failed: `no space left on device` at the checker pull; trust steps passed. |
+| B1′: direct push / PR #16 merged by the owner | 1 / — | Ruleset requires a PR; `main` = `3670d688…`, tree `3822a938…` as reviewed. |
+| B2′: `gh workflow run stage9-private-dry-run-v32.yml` (run 40787574980) | 0 | Success: hosted package = Mac package (`f5843050…`); fresh receipt accepted; token read-only. |
+| B3 run 1 (owner): `b3_verify.sh ~/forge-b3-check ~/forge-b3-out-1` | 3 | No Keychain item `forge-verifier-readonly`; stopped before the checks and any network request. |
+| B3 run 2 (owner): `b3_verify.sh ~/forge-b3-check ~/forge-b3-out-2` | 1 | Keychain value failed the token format check before any request; wrapper crashed in `store()`; scan clean. |
+| B3 run 3 (agent, owner waiver U117): reviewed wrapper v2 `6190aa58…`, OUTPUT `~/forge-b3-out-3` | 3 | Keychain value is not a GitHub token (length 68, prefix other); stopped before any check or request. |
+| B3 run 4 (agent, owner waiver U117): wrapper v2 `6190aa58…`, OUTPUT `~/forge-b3-out-4` | 3 | Keychain value is not a GitHub token (length 4); stopped before any check or request. |
+| B3 run 5 (agent, owner waiver U117): wrapper v2 `6190aa58…`, OUTPUT `~/forge-b3-out-5` | 0 | 8/8 cases PASS; API identity read with the token matches policy; fresh store per run; no credential copy in 687 record files. |
+
+Not EXIT results. See U108–U121 and `results/stage9/b3-0001/`. `end_to_end=false`.
+
+#### v3.2 installation (owner-approved, U122)
+
+| Command actually run | Actual exit code | Result |
+| --- | --- | --- |
+| Proof gate on PR #17 (run 40807060051) | 1 | `UNAPPROVED_PROTECTED_CHANGE`: the gate approves only exact spec text, never its own code. |
+| Agent: `gh pr merge 17 --squash --admin` | — | Refused by the Claude Code classifier (Merge Without Review). |
+| Owner: `gh pr merge 17 --squash --admin --match-head-commit edb729a8…` | 0 | `main` = `d260d2a9…`, tree `1b77abd0…` = reviewed candidate. |
+| Fresh `main` clone: inline lock check; `bootstrap.py --check` | 0; 0 | Lock `be23ec85…`; `BOOTSTRAP_VERIFIED`. |
+| `common.source_tree` on `d260d2a9` / `3670d688` | 0 | ACCEPTED / `IMPLEMENTATION_LOCK_AT_COMMIT`. |
+| Local sync of the 9 files; local `bootstrap.py --check` | 1, then 0 | First: `BYTECODE_CACHE`; caches removed; then verified. |
+
+Signing stays off: no repository variables; `provenance.yml` has never run. Not EXIT results.
+See U123 and `results/stage9/v32-install-0001/`. `end_to_end=false`.
+
 ### Stage 10 — SHADOW MODE
 
 **Status: NOT STARTED**

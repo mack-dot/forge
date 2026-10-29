@@ -1,0 +1,79 @@
+name: Forge Stage 9 provenance
+
+"on":
+  workflow_dispatch:
+    inputs:
+      request:
+        description: Exact JSON request from the independent local controller
+        required: true
+        type: string
+      implementation_sha256:
+        description: Separately approved implementation.lock SHA-256
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-stage9-proof
+  cancel-in-progress: false
+
+jobs:
+  proof:
+    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
+    env:
+      FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+      FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+    steps:
+      - name: Checkout exact dispatched main commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Check runner and installed tool pins
+        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+      - name: Package and run fresh independent proof checks
+        run: python3 gate/provenance/producer.py --action produce --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+      - name: Preserve proof output and all failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-unsigned-${{ github.run_id }}
+          path: results/stage9/producer-output/
+          include-hidden-files: true
+          if-no-files-found: error
+  sign:
+    needs: proof
+    runs-on: [self-hosted, macOS, ARM64, forge-stage9]
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+      FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+    steps:
+      - name: Checkout same exact workflow commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Retrieve this run's proof job output
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: forge-stage9-unsigned-${{ github.run_id }}
+          path: results/stage9/producer-output/
+      - name: Check runner and installed tool pins
+        run: python3 gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+      - name: Sign exact release statement and explicitly marked rejection fixtures
+        run: python3 gate/provenance/producer.py --action sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+      - name: Preserve signed bundles and all failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-signed-${{ github.run_id }}
+          path: results/stage9/producer-output/
+          include-hidden-files: true
+          if-no-files-found: error

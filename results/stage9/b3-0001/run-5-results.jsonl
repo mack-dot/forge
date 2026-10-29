@@ -1,0 +1,8 @@
+{"case": "api-authenticated-exact-commit", "expected": "ACCEPTED", "result": "ACCEPTED", "verdict": "PASS"}
+{"case": "repeat-exact-commit", "expected": "ACCEPTED", "result": "ACCEPTED", "verdict": "PASS"}
+{"case": "repeat-used-a-fresh-store", "expected": true, "result": true, "verdict": "PASS"}
+{"case": "repository-identity-substitution", "expected": "REPOSITORY_IDENTITY", "result": "REPOSITORY_IDENTITY", "verdict": "PASS"}
+{"case": "wrong-commit-main", "expected": "IMPLEMENTATION_LOCK_AT_COMMIT", "result": "IMPLEMENTATION_LOCK_AT_COMMIT", "verdict": "PASS"}
+{"case": "nonexistent-commit", "expected": "COMMAND_FAILED:source-fetch", "result": "COMMAND_FAILED:source-fetch", "verdict": "PASS"}
+{"case": "bogus-token", "expected": "GITHUB_HTTP_STATUS:401", "result": "GITHUB_HTTP_STATUS:401", "verdict": "PASS"}
+{"case": "no-token", "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "result": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "verdict": "PASS"}

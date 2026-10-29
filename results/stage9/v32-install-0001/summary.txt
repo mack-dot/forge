@@ -1,0 +1,19 @@
+v3.2 installation (2026-10-29 UTC), owner-approved (U122). Not a signing authorization.
+PR #17 (head edb729a8bea278a77a1bd33451859958a4b7b3e4) squash-merged by the owner (gh pr merge --squash --admin
+  --match-head-commit edb729a8…) at 2026-10-29T02:43:51Z. The agent's own merge attempt was refused by the
+  Claude Code classifier (Merge Without Review).
+main = d260d2a94aec074f9a43c0a41a5b81b05fce2224, tree 1b77abd054f21a76cf47f1facb7436135e3eb773 (= reviewed
+  candidate tree), parent 3670d688f90acb9c00b1af36fa4cdc36d1bdb361, author mack-dot.
+Fresh clone of main: lock sha256 be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57;
+  inline lock/bootstrap check exit 0; bootstrap.py --check exit 0 (BOOTSTRAP_VERIFIED);
+  common.source_tree with the installed lock: main d260d2a9 ACCEPTED, old main 3670d688
+  IMPLEMENTATION_LOCK_AT_COMMIT (records in verifier/).
+All 9 files on main = approval-manifest new_sha256. Local copies were = old_sha256 before the sync;
+  after the sync the local lock is be23ec85, context() passes, and bootstrap --check exit 0 after removing
+  gate/provenance/__pycache__ and scripts/__pycache__ (first attempt exit 1: BYTECODE_CACHE).
+Proof gate run 40807060051 on PR #17: exit 1, UNAPPROVED_PROTECTED_CHANGE (gate/approval.py approves only
+  exact spec text; changes to workflows and gate code always fail this check; PR #16 failed the same way).
+  Not a required status check; the merge bypassed it by owner admin action.
+After the merge: no workflow run (push filters of stage4-exits.yml and toolchain-inventory.yml do not match);
+  provenance.yml has never run; repository variables: none (FORGE_SIGNING_AUTHORIZED unset).
+end_to_end=false. All six EXITs NOT RUN.

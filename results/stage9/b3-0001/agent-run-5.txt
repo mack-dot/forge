@@ -1,0 +1,14 @@
+B3 run 5 (2026-10-28), agent under the owner waiver (U117). Wrapper sha256 6190aa58972361b46e2ebc857e3d1213c5a4c895462598519f9297d444bfeeb3 (reviewed SAFE).
+Token stored by the owner with store_token.zsh (fine-grained, only mack-dot/forge, Contents+Metadata read-only, expires 2026-11-04).
+Preconditions: no exported TOKEN/WEAK/SHELLOPTS/BASH_ENV/PS4/BASHOPTS; clone HEAD edb729a8bea278a77a1bd33451859958a4b7b3e4, clean; OUTPUT new.
+Command: env -u TOKEN -u WEAK -u SHELLOPTS -u BASH_ENV /bin/bash b3_verify.sh ~/forge-b3-check ~/forge-b3-out-5
+Exit: 0. BOOTSTRAP_VERIFIED; 8/8 cases PASS (run-5-results.jsonl, sha256 e99ea33f8478f8265e5d2d95625f33ba6de80bd8d3c72216911710dd6dc4d659); wrapper scan: no credential copy.
+Independent agent checks of ~/forge-b3-out-5 (687 files):
+ - both positive cases: HTTP 200 from https://api.github.com/repos/mack-dot/forge; full_name mack-dot/forge,
+   id 1434789853, owner 235131950 = policy/provenance.json signer fields; private False.
+ - stores: forge-verifier-git-nr723ufl and -ku5xqjy1, different, both inside OUTPUT/tmp; fetch argv holds no credential;
+   invocation records hold only argv and cwd; the 4 store configs have no http or header keys.
+ - no github_pat_ string at all (not even the bogus one); no file with the base64 x-access-token prefix;
+   16 files with auth words are repository source blobs (variable names and prose only).
+Not shown: git authentication (public repository; fetch needs no token); insufficient permissions
+ (an under-scoped token cannot fail on a public repository); an injected stale API response (metadata is read live per run).

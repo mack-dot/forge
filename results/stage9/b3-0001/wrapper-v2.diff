@@ -1,0 +1,30 @@
+13a14,15
+> # Exit 3: a Keychain item is missing or does not have the GitHub token format
+> # (stopped before any network request; only counts are printed, never the value).
+23a26,35
+> shape() {  # $1 service, $2 value: the verifier's token format, checked in this shell
+>   local value=$2 pattern='^[A-Za-z0-9_]{20,255}$' bad blank prefix=other
+>   [[ $value =~ $pattern ]] && return 0
+>   bad=${value//[A-Za-z0-9_]/} blank=${value//[^[:space:]]/}
+>   [[ $value == github_pat_* ]] && prefix=github_pat_
+>   [[ $value == ghp_* ]] && prefix=ghp_
+>   echo "B3: Keychain item $1 is not a GitHub token: length ${#value}, prefix $prefix," \
+>        "${#bad} characters outside A-Z a-z 0-9 _, ${#blank} of them blank"
+>   exit 3
+> }
+24a37
+> shape "$SERVICE" "$TOKEN"
+27a41
+>   shape "$UNDERSCOPED" "$WEAK"
+82,83c96,98
+<     path = next((out / name).glob("*source-store.invocation.json"))
+<     return json.loads(path.read_text())["argv"][-1]
+---
+>     # None when the case stopped before it made a store: then this check fails.
+>     path = next((out / name).glob("*source-store.invocation.json"), None)
+>     return path and json.loads(path.read_text())["argv"][-1]
+87c102,103
+< report("repeat-used-a-fresh-store", True, store("api-authenticated-exact-commit") != store("repeat-exact-commit"))
+---
+> first, second = store("api-authenticated-exact-commit"), store("repeat-exact-commit")
+> report("repeat-used-a-fresh-store", True, None not in (first, second) and first != second)
