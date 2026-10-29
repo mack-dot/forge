@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """Run real Stage 9 controls. Never treat setup errors as security rejections."""
+import sys
+
+# Run only as a child of the authenticated bootstrap (U127 D3, U131). Refuse before
+# any import can resolve from the checkout; sys is built in.
+if not (sys.flags.ignore_environment and sys.flags.no_user_site and sys.flags.dont_write_bytecode
+        and 'forge-pycache-' in (sys.pycache_prefix or '')):
+    raise SystemExit('EXIT_SETUP_NOT_ESTABLISHED: run through gate/provenance/bootstrap.py')
 import argparse
 import base64
 import copy
@@ -42,7 +49,10 @@ def main():
         def gate(path, name, expected_code, reason=None, *, observer=None, admit=False):
             result_dir = attempt / name
             script = 'observe.py' if observer else 'release.py'
-            command = ['python3', str(ROOT / 'gate/provenance' / script), '--candidate', str(path),
+            # Launch through the authenticated bootstrap: isolated Python, no bytecode.
+            command = ['python3', '-I', '-S', '-B', str(ROOT / 'gate/provenance/bootstrap.py'),
+                       '--implementation-sha256', config['implementation_sha256'], '--',
+                       str(ROOT / 'gate/provenance' / script), '--candidate', str(path),
                        '--controller', str(controller), '--challenge', config['challenge'],
                        '--implementation-sha256', config['implementation_sha256'], '--records', str(result_dir)]
             if observer:
@@ -108,12 +118,13 @@ def main():
             path = fixture(args.case)
             if args.case == 'unsigned':
                 bundle = read(path / 'release.sigstore.json')
+                # Only the signatures change, so Cosign's rejection can come only from their absence.
                 bundle['dsseEnvelope']['signatures'] = []
-                unsigned = parse(base64.b64decode(bundle['dsseEnvelope']['payload'], validate=True))
-                unsigned['predicate']['purpose'] = 'security-control'
-                bundle['dsseEnvelope']['payload'] = base64.b64encode(canonical(unsigned)).decode()
                 write(path / 'release.sigstore.json', bundle)
-                markers = ['exactly one signature is required']
+                # Cosign 3.1.4 rejects an emptied envelope at the log-inclusion check
+                # (results/stage9/cosign-offline-0001); older releases at the count check.
+                markers = ['exactly one signature is required',
+                           'failed to verify log inclusion: transparency log signature does not match']
             elif args.case == 'wrong-signer':
                 shutil.copyfile(path / 'wrong-signer.sigstore.json', path / 'release.sigstore.json')
                 probe = Records(attempt / 'wrong-signer-own-identity')
@@ -135,8 +146,13 @@ def main():
                            'provided artifact digest does not match any digest in statement']
             result_dir, checks = gate(path, 'negative', 1, 'SIGNATURE_REJECTED')
             require(len(checks) == 1 and checks[0]['exit_code'] != 0, 'CHECKER_REJECTION_NOT_EXECUTED')
+            # Cosign decides. The same positive check must pass again right after the
+            # rejection, so the rejection comes from the mutation, not from Cosign, TUF or
+            # the network. Error text is recorded, never required (U127 D1).
+            _, after = gate(candidate, 'positive-after', 0)
+            require_signature_success(after)
             raw = (result_dir / checks[0]['stderr']).read_text() + (result_dir / checks[0]['stdout']).read_text()
-            require(any(marker in raw for marker in markers), 'NOT_THE_INTENDED_SECURITY_REJECTION')
+            outcomes[-2]['matched_known_cosign_text'] = any(marker in raw for marker in markers)
         elif args.case == 'wrong-policy':
             signed_control('wrong-policy', 'POLICY_BINDING')
             signed_control('stale-request', 'STALE_OR_SUBSTITUTED_REQUEST')

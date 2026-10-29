@@ -9,7 +9,7 @@ import sqlite3
 import tarfile
 
 from common import (ROOT, HERE, Rejected, Records, canonical, context, digest, files,
-                    parse, read, repository_identity, require, sha, signature, write)
+                    parse, read, repository_identity, require, run_identity, sha, signature, write)
 
 # Bound by the separately approved implementation lock. Expected identities
 # never come from the receipt, the package or their signature.
@@ -65,8 +65,13 @@ def validate_receipt(receipt_dir, policy, lock, request):
 def checked_receipt(receipt_dir, policy, lock, request):
     expected = read(IDENTITIES)['receipt']
     manifest = read(receipt_dir / 'receipt.json')
-    require(set(manifest) == {'challenge', 'source_commit', 'files', 'end_to_end'}
+    require(set(manifest) == {'challenge', 'source_commit', 'execution', 'files', 'end_to_end'}
             and manifest['end_to_end'] is False and isinstance(manifest['files'], dict), 'PROOF_RECEIPT_FIELDS')
+    # The run that made this receipt; verify() checks it with the GitHub API (V4).
+    execution = manifest['execution']
+    require(isinstance(execution, dict) and set(execution) == {'run_id', 'run_attempt'}
+            and re.fullmatch('[1-9][0-9]{0,19}', execution['run_id']) and execution['run_attempt'] == '1',
+            'PROOF_RECEIPT_EXECUTION')
     require(hex64(request['challenge']) and re.fullmatch('[0-9a-f]{40}', request['expected_source_commit']),
             'REQUEST_FORMAT')
     require(manifest['challenge'] == request['challenge']
@@ -268,10 +273,13 @@ def verify(root, request, expected_lock, records, *, signed='release.sigstore.js
     validate_package(policy, request, root)
     require(predicate['purpose'] == 'release', 'SECURITY_CONTROL_NOT_ADMISSIBLE')
     repository_identity(policy, implementation, request['expected_source_commit'], records)
+    run_identity(policy, request, read(root / 'proof/receipt.json')['execution'], records)
     require(files(root) == before, 'CANDIDATE_CHANGED_DURING_VERIFICATION')
     context(expected_lock)
     return {'signature_exit_code': code, 'result': 'authenticated_provenance',
-            'kernel_execution_here': False, 'producer_fresh_kernel_receipt_verified': True,
+            'kernel_execution_here': False, 'producer_receipt_labels_consistent': True,
+            'proof_run_identity_checked_with_github_api': True,
+            'freshness_trust_assumption': 'GitHub executed the locked workflow in the recorded run',
             'end_to_end': False, 'statement_sha256': sha(canonical(statement))}
 
 

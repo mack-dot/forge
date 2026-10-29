@@ -51,14 +51,15 @@ def seed(root, stage7, own, implementation, pins, records):
     pip = pins['pip']
     requirement = Path(tempfile.mkdtemp()) / 'pip.txt'
     requirement.write_text(f"pip=={pip['version']} --hash=sha256:{pip['sha256']}\n")
-    records.run([sys.executable, '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
+    # -I: a child interpreter does not inherit isolation; keep the checkout off sys.path.
+    records.run([sys.executable, '-I', '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
                  '-r', requirement], 'pip-pin')
     # The approved dependency lock was made on macOS, and pip writes the
     # interpreter path into bin/idna. Run the recorded command through that path.
     link = Path(pins['pydeps_python_path'])
     records.run(['sudo', 'mkdir', '-p', link.parent], 'pydeps-python-directory')
     records.run(['sudo', 'ln', '-s', sys.executable, link], 'pydeps-python-link')
-    records.run([link, '-m', 'pip', 'install', '--require-hashes', '--only-binary=:all:', '--platform',
+    records.run([link, '-I', '-m', 'pip', 'install', '--require-hashes', '--only-binary=:all:', '--platform',
                  'manylinux2014_x86_64', '--python-version', '3.12', '--implementation', 'cp', '--abi', 'cp312',
                  '--target', '.toolchain/stage7/pydeps', '--no-compile', '--disable-pip-version-check',
                  '--no-input', '--no-deps', '-r', UPSTREAM + '/tools/oft/requirements.txt'],
