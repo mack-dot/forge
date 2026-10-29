@@ -1,0 +1,10 @@
+B3 owner run 2 (2026-10-28, owner terminal). Wrapper sha256 69d2bd667955ff183d1929fe048fd493dd3129bc1326d45a33f9b2ad45544499.
+Command: /bin/bash ~/forge/proposals/provenance-hosted-v32/b3_verify.sh ~/forge-b3-check ~/forge-b3-out-2
+Owner output: BOOTSTRAP_VERIFIED; api-authenticated-exact-commit and repeat-exact-commit:
+  GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN (FAIL); then StopIteration in store();
+  "B3: no credential copy in records"; "B3: exit 1".
+Agent read of ~/forge-b3-out-2 (scan clean): both case folders empty, results.jsonl 2 lines.
+Finding: the Keychain value failed the verifier format check [A-Za-z0-9_]{20,255}
+  (gate/provenance/common.py:107), which runs before the HTTP request: no network request was made.
+  Which character failed is unknown (the agent does not read the credential).
+Wrapper defect: store() raised StopIteration when a case made no store, so 6 cases did not run.

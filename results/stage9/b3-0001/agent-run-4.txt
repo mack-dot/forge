@@ -1,0 +1,8 @@
+B3 run 4 (2026-10-28), agent under the owner waiver (U117). Wrapper sha256 6190aa58… (reviewed SAFE).
+Preconditions: no exported TOKEN/WEAK/SHELLOPTS/BASH_ENV/PS4/BASHOPTS; clone HEAD edb729a8, clean; OUTPUT new.
+Output: B3: Keychain item forge-verifier-readonly is not a GitHub token: length 4, prefix other,
+  0 characters outside A-Z a-z 0-9 _, 0 of them blank
+Exit: 3. Stopped before any check or network request.
+Follow-up (dummy items only, deleted): storing through `printf … | security -i` keeps the value out of argv,
+  prints nothing, stores 93 characters, and -U replaces the value. A zsh clipboard-store command with a
+  github_pat_ shape check stored a dummy token (93, shape OK) and refused "abcd" and a value with a leading space.

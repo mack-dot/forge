@@ -1,0 +1,11 @@
+Independent review of b3_verify.sh v2 (sha256 6190aa58…), fresh agent, read-only, given code and requirements only.
+High: none. Medium: none. Verdict: SAFE.
+Low (hardening, not applied; the run used the reviewed bytes):
+ L1 scan() not idempotent: a second trap scan after unset TOKEN reports clean falsely (exit stays 130).
+ L2 an inherited exported TOKEN/WEAK keeps the export flag: credential in child environments; run then fails closed (exit 1).
+ L3 security -w prints hex for values with non-printable bytes: passes shape; fails closed at HTTP 401 (exit 5); diagnosis gap.
+ L4 bash 3.2 glob ranges in en_US.UTF-8 use collation: the "outside" count can be wrong; the =~ decision is correct.
+ L5 bash -x, exported SHELLOPTS=xtrace or BASH_ENV can trace the token (also in v1). Fix: set +x.
+Answers: shape leaks nothing (builtins only; length/prefix class/counts); accepted set equals common.py:107 in
+ C, C.UTF-8, en_US.UTF-8, de_DE.UTF-8; store() cannot produce a false PASS; no path gives a false exit 0.
+Run-3 mitigation for L2/L5: no such variables exported (checked by name) and env -u on the command.

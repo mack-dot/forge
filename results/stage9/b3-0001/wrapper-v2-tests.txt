@@ -1,0 +1,13 @@
+Wrapper v2 sha256 6190aa58972361b46e2ebc857e3d1213c5a4c895462598519f9297d444bfeeb3; dummy Keychain items only (deleted after).
+bash -n: 0. Clone: local clone of ~/forge-b3-check at edb729a8.
+T1 item ' not a token ': exit 3 (format line: length 13, prefix other, 4 outside, 4 blank); OUTPUT only home/ tmp/.
+T2 item github_pat_+82xB: exit 5; all 8 cases ran; scan clean. Results:
+{"case": "api-authenticated-exact-commit", "expected": "ACCEPTED", "result": "GITHUB_HTTP_STATUS:401", "verdict": "FAIL"}
+{"case": "repeat-exact-commit", "expected": "ACCEPTED", "result": "GITHUB_HTTP_STATUS:401", "verdict": "FAIL"}
+{"case": "repeat-used-a-fresh-store", "expected": true, "result": false, "verdict": "FAIL"}
+{"case": "repository-identity-substitution", "expected": "REPOSITORY_IDENTITY", "result": "GITHUB_HTTP_STATUS:401", "verdict": "FAIL"}
+{"case": "wrong-commit-main", "expected": "IMPLEMENTATION_LOCK_AT_COMMIT", "result": "GITHUB_HTTP_STATUS:401", "verdict": "FAIL"}
+{"case": "nonexistent-commit", "expected": "COMMAND_FAILED:source-fetch", "result": "GITHUB_HTTP_STATUS:401", "verdict": "FAIL"}
+{"case": "bogus-token", "expected": "GITHUB_HTTP_STATUS:401", "result": "GITHUB_HTTP_STATUS:401", "verdict": "PASS"}
+{"case": "no-token", "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "result": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "verdict": "PASS"}
+T3 malformed under-scoped item: exit 3 before any check.

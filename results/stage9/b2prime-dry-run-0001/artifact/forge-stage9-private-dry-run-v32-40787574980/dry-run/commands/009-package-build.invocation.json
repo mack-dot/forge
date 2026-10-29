@@ -1,0 +1,1 @@
+{"argv":["docker","buildx","build","--builder","forge-pinned","--output","type=docker,rewrite-timestamp=true","--platform","linux/amd64","--provenance=false","--sbom=false","--network=none","--build-arg","SOURCE_DATE_EPOCH=0","--iidfile","results/stage9/dry-run/image-id.txt","results/stage9/dry-run/package-context"],"cwd":"/home/runner/work/_temp/candidate-root"}

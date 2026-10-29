@@ -2866,3 +2866,276 @@ curl: (6) Could not resolve host: github.com
 - Effect: hosted runs are free and run on public-repository runners; the
   installed verifier's unauthenticated GitHub reads work again.
 - Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U112 — B1′: direct push refused by the restored ruleset; PR #16 opened
+
+- References: U108, U111; results/stage9/b1prime-0001/.
+- Observed (manifest): base main 993bee7b…; tree
+  3822a938257d0510ed0268fe5a16facf74eaf61f; 505 files (9.7 MB); no deletions;
+  no protected paths; one .github file (stage9-private-dry-run-v32.yml, equal to
+  the reviewed source, check_no_signing.py 0); no PR #14 or #15 files; no
+  push-trigger matches; only unsure.md modified; no token or key patterns.
+- Observed (push 1): git commit-tree built e3c51767250d1b09100d06b6147a573a3f7a2a62
+  (tree verified). git push exit 1: "src refspec …efs/heads/main does not
+  match any". Cause: in zsh, $C:refs was read as the :r modifier. This also
+  explains the uncaptured first push failure in U108.
+- Observed (push 2, braced refspec): exit 1, "push declined due to repository
+  rule violations". With the repository public, the protect-main ruleset is
+  enforced again; main is unchanged at 993bee7b….
+- Observed: the same commit was pushed to branch stage9/b1prime-v32 (exit 0) and
+  PR #16 was opened (exit 0). The proof gate is expected to report
+  UNAPPROVED_PROTECTED_CHANGE for the .github file. A GitHub Dependency Graph
+  run started at 21:38:42Z, after the user's visibility change and before any
+  B1′ action.
+- Open: the owner merges PR #16 (squash keeps the tree). B2′ is not authorized.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U113 — B1′ complete: PR #16 merged by the owner with the reviewed tree
+
+- References: U112; results/stage9/b1prime-0001/.
+- Observed: the user ran the merge ("okay i ran it"). PR #16 state MERGED at
+  2026-10-28T21:42:34Z by mack-dot; merge commit
+  3670d688f90acb9c00b1af36fa4cdc36d1bdb361 with one parent 993bee7b… and tree
+  3822a938257d0510ed0268fe5a16facf74eaf61f, equal to the reviewed manifest tree.
+- Observed: workflow stage9-private-dry-run-v32.yml registered (id 399937849,
+  state active), not dispatched. No workflow run was created by the merge. The
+  proof gate on PR #16 (run 40773876527) concluded failure; the expected cause
+  is the protected .github input.
+- Not done: B2′, B3, v3.x installation, signing.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U114 — B2′: v3.2 dry run on a hosted runner passes end to end without signing
+
+- References: U109, U113; results/stage9/b2prime-dry-run-0001/
+  (result.json a5d607de…, receipt.json 1fe9c104…).
+- Authorization: the user replied "approve" to the B2′ request (one dispatch).
+- Observed: main was 3670d688… with no run in progress; gh workflow run 0; run
+  40787574980 (workflow_dispatch, head 3670d688…). No other workflow run was
+  created; the watcher saw completion after 1,713 s. Conclusion success. Job
+  token permissions: Contents: read, Metadata: read. Artifact sha256:c35915a1…
+  (56,513,517 bytes). The repository was public at the time (U111), so this
+  ran on a public-repository runner.
+- Observed (steps): OIDC-absence check, checkout, candidate apply,
+  hash-checked Python, checkout authentication; disk step 155 s (/ free
+  91,306,496,000 bytes before, 123,193,401,344 after); hosted_setup.py 386 s
+  (23 commands; only the expected volume-absent probe non-zero; disk.json free
+  111,798,132,736 bytes ≥ 35,000,000,000); preflight 1 s (ubuntu24
+  20261026.354.1, kernel 7.0.0-1017-azure); package() and replay() 1,137 s.
+- Observed (result): accepted true at 3670d688…; 20 commands, only the expected
+  builder-absent probe non-zero; the hosted package descriptor equals the Mac
+  controller descriptor (f584305022f2e811…); proof container OOMKilled false,
+  ExitCode 0; receipt 656 files and 579 closure objects accepted by
+  validate_receipt().
+- Scope: synthetic request; no statement, admission, signature, release or
+  deployment. Not an EXIT result. The authenticated verifier path (B3) is not
+  run.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U115 — B3 preparation: test branch pushed and verified; no-credential verifier tests
+
+- References: U114; results/stage9/b3-0001/; proposals/provenance-hosted-v32/b3_verify.sh.
+- Authorization: the user approved B3 with constraints: push only
+  test/v32-candidate, verify it, review the wrapper and its code independently,
+  test the public path without a token first, then the owner runs the
+  authenticated test; no signing, release, licensing change or installation.
+- Observed: branch test/v32-candidate =
+  edb729a8bea278a77a1bd33451859958a4b7b3e4 (tree 1b77abd0…, parent main
+  3670d688…), built from main plus the 9 v3.2 candidate blobs; branch push
+  exit 0. A fresh unauthenticated public clone showed HEAD edb729a8…, main still
+  3670d688…, exactly 9 differing paths equal to the v3.2 manifest set, each
+  with the manifest SHA-256. No workflow run was created by the branch push.
+- Observed (no credential): the installed verifier (lock 9b10a237…), with no
+  token, fetched 61 locked files from public main 3670d688… and ACCEPTED (exit
+  0). In the branch clone, bootstrap --check returned 0; the v3.2 verifier with
+  no token rejected GITHUB_TOKEN_REQUIRED and wrote no HTTP record; v3.2
+  source_tree() ACCEPTED commit edb729a8… and rejected main 3670d688… with
+  IMPLEMENTATION_LOCK_AT_COMMIT.
+- Observed (wrapper): bash -n 0; with a nonexistent Keychain item the wrapper
+  passed the inline and bootstrap checks and exited 3 before any network
+  request; with an existing output directory it exited 2.
+- Limit: while the repository is public, GitHub lets any valid token read it,
+  so an under-scoped token cannot fail; the wrapper reports that case as
+  NOT_DISCRIMINATING. Same-user processes can read another process's
+  environment on macOS; the owner should run the wrapper while no other agent
+  session is active.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U116 — B3 wrapper: independent review found credential and validity gaps; fixed in the wrapper
+
+- References: U115; proposals/provenance-hosted-v32/b3_verify.sh (sha256 69d2bd667955ff183d1929fe048fd493dd3129bc1326d45a33f9b2ad45544499).
+- Independent review (fresh agent, read-only, no prior verdict): high — the
+  leak scan passed the token and its base64 form to grep as arguments; medium —
+  a grep read error was reported as clean; credential-negative cases stop at
+  the API, and on a public repository git fetch needs no token; the "fresh
+  store" case did not check freshness; the verifier inherited the owner's shell
+  environment (SSL, git and DYLD variables, git config, netrc); low — PATH and
+  cwd lookups, Keychain prompt between checks and import, relative OUTPUT,
+  stores outside the scan, no scan on interrupt. Verdict: SAFE AFTER FIXES.
+- Wrapper fixes: scan patterns go through a pipe (grep -f <(printf …)); any
+  grep status other than 1 sets exit 4; the verifier runs in a subshell with
+  every exported variable removed, HOME and TMPDIR inside OUTPUT,
+  PATH=/usr/bin:/bin:/usr/sbin:/sbin, GIT_CONFIG_GLOBAL=/dev/null,
+  GIT_CONFIG_NOSYSTEM=1, GIT_TERMINAL_PROMPT=0 and absolute tool paths;
+  credentials are read before the checks; OUTPUT must be absolute and new;
+  git stores land inside OUTPUT; the scan also runs on INT/TERM; a new
+  repeat-used-a-fresh-store case compares the two store paths. The claim is
+  limited to: API identity read with the token, and source bytes matching the
+  commit hash.
+- Observed (no credential): bash -n 0 (bash 3.2.57); relative OUTPUT exit 2;
+  nonexistent Keychain item exit 3; existing OUTPUT exit 2. The scan function
+  run alone with a dummy string: clean directory STATUS 0, planted string 4,
+  unreadable file 4.
+- Remaining (candidate code, protected; v3.3 item): git children inherit
+  FORGE_VERIFIER_GITHUB_TOKEN in their environment; same-user processes can
+  read process environments on macOS; an under-scoped token cannot fail on a
+  public repository.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+
+## U117 — B3 runs 1–2 stopped before any request; wrapper v2; owner waives the self-run rule
+
+- References: U115, U116; results/stage9/b3-0001/owner-run-1.txt,
+  owner-run-2.txt, wrapper-v2.diff, wrapper-v2-tests.txt.
+- Run 1 (owner): exit 3, no Keychain item forge-verifier-readonly.
+- Run 2 (owner): exit 1. The Keychain value failed the verifier format check
+  [A-Za-z0-9_]{20,255} (gate/provenance/common.py:107), which runs before the
+  HTTP request, so no request was made. Then store() raised StopIteration and
+  6 cases did not run. Leak scan clean. Which character failed is unknown: the
+  agent does not read the credential.
+- Wrapper v2 (sha256 6190aa58972361b46e2ebc857e3d1213c5a4c895462598519f9297d444bfeeb3):
+  a shell format check after each Keychain read (exit 3, prints only length,
+  prefix class and counts); store() returns None, so the fresh-store case fails
+  instead of crashing. Dummy Keychain items only (deleted after): malformed
+  exit 3; well-formed bogus token exit 5 with all 8 cases run and HTTP 401;
+  malformed under-scoped item exit 3.
+- Owner waiver, verbatim: "I waive the self-run rule for B3; the agent may run
+  the wrapper." Scope: B3 only. Consequence: the token passes through a process
+  that the agent session starts; the agent still does not print, store or
+  transmit it, and the wrapper output and records are scanned for it. All
+  other B3 constraints remain, including review before any run.
+- Uncertainty: the independent review of wrapper v2 is not yet reported.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: the review verdict; then B3 run 3 with a new OUTPUT.
+
+## U118 — B3 wrapper v2 reviewed SAFE; run 3 stopped: the Keychain value is not a token
+
+- References: U117; results/stage9/b3-0001/wrapper-v2-review.txt, agent-run-3.txt.
+- Independent review of wrapper v2 (sha256 6190aa58…): no high or medium
+  findings; verdict SAFE. Five low hardening items (L1–L5) are recorded and not
+  applied, so the run used the reviewed bytes. L2 and L5 preconditions were
+  checked absent before the run and removed with env -u.
+- Run 3 (agent, under the owner waiver): exit 3. The wrapper reports the
+  Keychain value as length 68, prefix other, 14 characters outside
+  [A-Za-z0-9_], 5 of them blank. A fine-grained token is github_pat_ plus 82
+  characters (93); a classic token is ghp_ plus 36 (40). So the item holds
+  some other text. No check, request or credential use happened.
+- Uncertainty: what the stored text is; the agent does not read it. The
+  "outside" count can be inexact (L4); the decision is exact.
+- Impact: B3 is not complete. Stage 9 remains CURRENT. All six EXITs are NOT
+  RUN. end_to_end=false.
+- Next check: the owner stores the bare token; run 4 with a new OUTPUT.
+
+## U119 — A B3 credential was pasted into the agent chat; it is treated as exposed
+
+- References: U117, U118.
+- Event (2026-10-28): the owner pasted the new fine-grained token value into
+  the agent conversation instead of the Terminal. It is now in the session
+  transcript and in model input. This record does not contain it.
+- Agent action: did not use, repeat, store or run anything with the pasted
+  value. Asked the owner to regenerate the token on GitHub (this invalidates
+  the pasted value) and to store the new one through the clipboard command,
+  with the order: paste the command into Terminal first, then copy the token,
+  then press Enter (copying the command would replace the clipboard).
+- Uncertainty: until the owner regenerates or deletes it, the pasted token is
+  valid (read-only, mack-dot/forge, expires 2026-11-04).
+- Impact: B3 waits for a fresh token. Stage 9 remains CURRENT. All six EXITs
+  are NOT RUN. end_to_end=false.
+- Next check: the owner confirms regeneration; B3 run 5 with a new OUTPUT.
+
+## U120 — Owner accepts the exposed B3 token; not regenerated
+
+- References: U119.
+- Owner decision, verbatim: "just dont push to git all good we chilling".
+  The pasted token stays valid (read-only Contents and Metadata, only
+  mack-dot/forge, expires 2026-11-04).
+- Agent position: the agent still does not use the pasted value and does not
+  store it; the owner stores the token in the Keychain. No file in the
+  repository or in results contains it (prefix scan, U119).
+- Effect on B3 constraint 7 ("no credential in agent-visible output"): breached
+  by the paste, not by the wrapper or the procedure. A B3 pass shows the
+  wrapper and verifier behavior; it does not show that this token stayed
+  private.
+- Residual risk: low while the repository is public (the token reads only
+  public data); higher if the repository becomes private before 2026-11-04.
+- Next check: regenerate the token before any change of the repository to
+  private; B3 run 5 after the owner stores the token.
+
+## U121 — B3 passed (run 5): authenticated independent verification of the v3.2 candidate
+
+- References: U115–U120; results/stage9/b3-0001/agent-run-5.txt, run-5-results.jsonl.
+- Observed: wrapper v2 (reviewed SAFE) exit 0; 8/8 cases PASS: exact commit
+  accepted twice, each with a fresh store; repository identity substitution
+  rejected (REPOSITORY_IDENTITY); main rejected (IMPLEMENTATION_LOCK_AT_COMMIT);
+  nonexistent commit rejected (COMMAND_FAILED:source-fetch); bogus token
+  rejected (HTTP 401, so no anonymous fallback on the API path); no token
+  rejected before any request. No credential copy in 687 record files
+  (wrapper scan and a separate agent scan).
+- Owner constraints, status: 1 branch only, protected main untouched: met
+  (U115). 2 branch SHA and manifest: met (U115). 3 review before any run: met
+  (U116, U118). 4 public path without a token: met (U115). 5 authenticated
+  run, no fallback: met for the API path; git fetch on a public repository
+  needs no token, so git authentication is not tested. 6 substituted
+  identity, wrong commit, bogus credential: met; stale metadata: covered only
+  as a fresh Git store and a live API read, with no injected stale response;
+  insufficient permissions: not testable while the repository is public. 7 no
+  credential in argv, logs or records: met by the procedure; agent-visible
+  output breached once by the owner's paste (U119, U120).
+- Not applied: wrapper hardening L1–L5 (U118); v3.3 item, git children
+  inherit FORGE_VERIFIER_GITHUB_TOKEN.
+- Impact: B3 is complete. v3.2 is not installed. Stage 9 remains CURRENT. All
+  six EXITs are NOT RUN. end_to_end=false.
+- Next check: separate owner approval for v3.2 installation (diff 993ebd23…,
+  lock be23ec85…).
+
+## U122 — Owner approves v3.2 installation; PR from the verified test branch
+
+- References: U114, U115, U121; proposals/provenance-hosted-v32/approval-manifest.json.
+- Owner approval, verbatim, in reply to the request for v3.2 installation
+  (diff 993ebd23ab4f63426b45fed0093b69531dcabcb8176ae54906f34a3909eb83df,
+  lock be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57):
+  "and do it please". Scope: install v3.2 on main through a PR that the owner
+  merges. Not included: signing authorization, FORGE_SIGNING_AUTHORIZED,
+  releases, PRs #14 and #15, licensing or ownership.
+- Method: PR from test/v32-candidate (edb729a8, tree 1b77abd0, parent = main
+  3670d688), the exact commit verified in B3. The ruleset requires linear
+  history, so the merge is a squash; the check is tree equality.
+- Pre-merge state (observed): no repository variables (signing job skipped);
+  id-token appears only in provenance.yml and provenance-negative.yml, both
+  workflow_dispatch only; proof-gate.yml runs on pull_request_target;
+  stage4-exits.yml and toolchain-inventory.yml run on push.
+- Impact: until the merge, the installed lock stays 9b10a237. Stage 9 remains
+  CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: after the merge, main tree = 1b77abd0, main lock = be23ec85,
+  the local verifier accepts main, and no signing run starts.
+
+## U123 — v3.2 installed on main (d260d2a9); signing stays off
+
+- References: U122; results/stage9/v32-install-0001/summary.txt.
+- Observed: the owner squash-merged PR #17 pinned to head edb729a8. main =
+  d260d2a94aec074f9a43c0a41a5b81b05fce2224, tree 1b77abd0 = the B3-verified
+  tree. Lock be23ec85. Fresh clone: inline check 0, bootstrap --check 0;
+  source_tree accepts main and rejects the old main with
+  IMPLEMENTATION_LOCK_AT_COMMIT. Local copy synced (it equalled the manifest
+  old hashes); local check 0 after removing two bytecode caches.
+- Proof gate: exit 1, UNAPPROVED_PROTECTED_CHANGE. gate/approval.py can bind
+  approval only to exact spec text (spec/LedgerSpec.dfy and spec.lock). So the
+  gate cannot approve changes to its own code or workflows; the owner's
+  approval for this change exists only in U122 and the admin merge.
+- Uncertainty: no machine-checkable approval record binds this installation
+  to the owner. A future implementation-approval record (like
+  gate/approvals/*.json for spec) would close that; it is protected work and
+  needs its own approval.
+- Not shown by installation: any signed provenance. FORGE_SIGNING_AUTHORIZED
+  is unset; provenance.yml has never run.
+- Impact: Stage 9 remains CURRENT. All six EXITs are NOT RUN. end_to_end=false.
+- Next check: records PR merged by the owner; then a separate signing
+  authorization decision.

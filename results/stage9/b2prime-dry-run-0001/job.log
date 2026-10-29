@@ -1,0 +1,395 @@
+proof	Set up job	﻿2026-10-28T23:28:14.8274752Z Current runner version: '2.338.0'
+proof	Set up job	2026-10-28T23:28:14.8295987Z ##[group]Runner Image Provisioner
+proof	Set up job	2026-10-28T23:28:14.8296786Z Hosted Compute Agent
+proof	Set up job	2026-10-28T23:28:14.8297327Z Version: 20261021.618
+proof	Set up job	2026-10-28T23:28:14.8297910Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+proof	Set up job	2026-10-28T23:28:14.8298480Z Build Date: 2026-10-21T00:45:21Z
+proof	Set up job	2026-10-28T23:28:14.8299291Z Worker ID: {5cc4131a-1994-442d-9ea7-67553e84dd83}
+proof	Set up job	2026-10-28T23:28:14.8299887Z Region: centralus
+proof	Set up job	2026-10-28T23:28:14.8300320Z Cloud: Azure
+proof	Set up job	2026-10-28T23:28:14.8300736Z ##[endgroup]
+proof	Set up job	2026-10-28T23:28:14.8301946Z ##[group]Operating System
+proof	Set up job	2026-10-28T23:28:14.8302438Z Ubuntu
+proof	Set up job	2026-10-28T23:28:14.8302978Z 24.04.5
+proof	Set up job	2026-10-28T23:28:14.8303395Z LTS
+proof	Set up job	2026-10-28T23:28:14.8303889Z ##[endgroup]
+proof	Set up job	2026-10-28T23:28:14.8304361Z ##[group]Runner Image
+proof	Set up job	2026-10-28T23:28:14.8304835Z Image: ubuntu-24.04
+proof	Set up job	2026-10-28T23:28:14.8305291Z Version: 20261025.353.1
+proof	Set up job	2026-10-28T23:28:14.8306118Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+proof	Set up job	2026-10-28T23:28:14.8307916Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+proof	Set up job	2026-10-28T23:28:14.8308911Z ##[endgroup]
+proof	Set up job	2026-10-28T23:28:14.8309849Z ##[group]GITHUB_TOKEN Permissions
+proof	Set up job	2026-10-28T23:28:14.8311877Z Contents: read
+proof	Set up job	2026-10-28T23:28:14.8312407Z Metadata: read
+proof	Set up job	2026-10-28T23:28:14.8312847Z ##[endgroup]
+proof	Set up job	2026-10-28T23:28:14.8314539Z Secret source: Actions
+proof	Set up job	2026-10-28T23:28:14.8315295Z Cache mode: write
+proof	Set up job	2026-10-28T23:28:14.8315904Z Prepare workflow directory
+proof	Set up job	2026-10-28T23:28:14.8854958Z Prepare all required actions
+proof	Set up job	2026-10-28T23:28:14.8911500Z Getting action download info
+proof	Set up job	2026-10-28T23:28:15.1289013Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+proof	Set up job	2026-10-28T23:28:15.2768890Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+proof	Set up job	2026-10-28T23:28:15.5062216Z Complete job name: proof
+proof	Prove that this job cannot request an OIDC token	﻿2026-10-28T23:28:15.5579930Z ##[group]Run test -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" && test -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
+proof	Prove that this job cannot request an OIDC token	2026-10-28T23:28:15.5581092Z [36;1mtest -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" && test -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"[0m
+proof	Prove that this job cannot request an OIDC token	2026-10-28T23:28:15.5596800Z shell: /usr/bin/bash -e {0}
+proof	Prove that this job cannot request an OIDC token	2026-10-28T23:28:15.5597573Z env:
+proof	Prove that this job cannot request an OIDC token	2026-10-28T23:28:15.5598288Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Prove that this job cannot request an OIDC token	2026-10-28T23:28:15.5599550Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Prove that this job cannot request an OIDC token	2026-10-28T23:28:15.5600291Z ##[endgroup]
+proof	Checkout exact dispatched main commit	﻿2026-10-28T23:28:15.5853139Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5853890Z with:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5854325Z   ref: 3670d688f90acb9c00b1af36fa4cdc36d1bdb361
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5854848Z   persist-credentials: false
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5855352Z   repository: mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5858457Z   token: ***
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5859324Z   ssh-strict: true
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5859838Z   ssh-user: git
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5860342Z   clean: true
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5860925Z   sparse-checkout-cone-mode: true
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5861530Z   fetch-depth: 1
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5861998Z   fetch-tags: false
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5862417Z   show-progress: true
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5862830Z   lfs: false
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5863229Z   submodules: false
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5863664Z   set-safe-directory: true
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5864126Z env:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5864774Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5865738Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.5866614Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8033877Z Syncing repository: mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8035904Z ##[group]Getting Git version info
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8036884Z Working directory is '/home/runner/work/forge/forge'
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8038337Z [command]/usr/bin/git version
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8111596Z git version 2.56.0
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8127364Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8136714Z Temporarily overriding HOME='/home/runner/work/_temp/0e818794-8cf6-42d1-9053-62c05f4b07b1' before making global git config changes
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8138857Z Adding repository directory to the temporary git global config as a safe directory
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8141051Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/forge/forge
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8178336Z Deleting the contents of '/home/runner/work/forge/forge'
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8183362Z ##[group]Initializing the repository
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8186922Z [command]/usr/bin/git init /home/runner/work/forge/forge
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8273320Z hint: Using 'master' as the name for the initial branch. This default branch name
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8274705Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8275541Z hint: to use in all of your new repositories, which will suppress this warning,
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8276205Z hint: call:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8276596Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8277185Z hint: 	git config --global init.defaultBranch <name>
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8277836Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8278480Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8279603Z hint: 'development'. The just-created branch can be renamed via this command:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8280311Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8280762Z hint: 	git branch -m <name>
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8281306Z hint:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8282061Z hint: Disable this message with "git config set advice.defaultBranchName false"
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8283321Z Initialized empty Git repository in /home/runner/work/forge/forge/.git/
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8298935Z [command]/usr/bin/git remote add origin https://github.com/mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8331399Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8332619Z ##[group]Disabling automatic garbage collection
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8333659Z [command]/usr/bin/git config --local gc.auto 0
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8360039Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8361103Z ##[group]Setting up auth
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8365380Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8392755Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8751594Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.8788100Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.9000737Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.9032248Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.9033171Z ##[group]Fetching the repository
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:15.9043277Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 3670d688f90acb9c00b1af36fa4cdc36d1bdb361
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9424267Z From https://github.com/mack-dot/forge
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9425787Z  * branch            3670d688f90acb9c00b1af36fa4cdc36d1bdb361 -> FETCH_HEAD
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9430628Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9432261Z ##[group]Determining the checkout info
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9433711Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9449950Z [command]/usr/bin/git sparse-checkout disable
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9489860Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9517333Z ##[group]Checking out the ref
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:17.9520734Z [command]/usr/bin/git checkout --progress --force 3670d688f90acb9c00b1af36fa4cdc36d1bdb361
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1513567Z Note: switching to '3670d688f90acb9c00b1af36fa4cdc36d1bdb361'.
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1514465Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1514928Z You are in 'detached HEAD' state. You can look around, make experimental
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1515891Z changes and commit them, and you can discard any commits you make in this
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1516849Z state without impacting any branches by switching back to a branch.
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1517444Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1517877Z If you want to create a new branch to retain commits you create, you may
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1518985Z do so (now or later) by using -c with the switch command. Example:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1519579Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1519833Z   git switch -c <new-branch-name>
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1520193Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1520401Z Or undo this operation with:
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1520683Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1520877Z   git switch -
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1521119Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1521689Z Turn off this advice by setting config variable advice.detachedHead to false
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1522559Z 
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1523217Z HEAD is now at 3670d68 Stage 9 B1-prime: v3.2 proposal, non-signing v3.2 dry-run workflow, records (#16)
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1526182Z ##[endgroup]
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1566324Z [command]/usr/bin/git log -1 --format=%H
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1584817Z 3670d688f90acb9c00b1af36fa4cdc36d1bdb361
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1590717Z ##[group]Removing auth
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1593386Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1616386Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1780136Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1799186Z http.https://github.com/.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1805631Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1834193Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+proof	Checkout exact dispatched main commit	2026-10-28T23:28:18.1989676Z ##[endgroup]
+proof	Apply the candidate to a copy of the checkout	﻿2026-10-28T23:28:18.2108851Z ##[group]Run C="$RUNNER_TEMP/candidate-root"
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2109652Z [36;1mC="$RUNNER_TEMP/candidate-root"[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2110371Z [36;1mcp -a "$GITHUB_WORKSPACE" "$C" && cd "$C"[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2111337Z [36;1mgit apply --check proposals/provenance-hosted-v32/proposed.diff[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2112396Z [36;1mgit apply proposals/provenance-hosted-v32/proposed.diff[0m
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2123572Z shell: /usr/bin/bash -e {0}
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2124162Z env:
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2125044Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2126482Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Apply the candidate to a copy of the checkout	2026-10-28T23:28:18.2127475Z ##[endgroup]
+proof	Python 3.10.11 from a hash-checked archive	﻿2026-10-28T23:28:18.3840269Z ##[group]Run P="$RUNNER_TEMP/forge-python"
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3840667Z [36;1mP="$RUNNER_TEMP/forge-python"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3841012Z [36;1mA="$RUNNER_TEMP/python-3.10.11.tar.gz"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3841647Z [36;1mcurl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3842341Z [36;1mecho "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3842843Z [36;1mmkdir -p "$P" && tar -xzf "$A" -C "$P"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3843272Z [36;1mLD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3843712Z [36;1mecho "$P/bin" >> "$GITHUB_PATH"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3844061Z [36;1mecho "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"[0m
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3853384Z shell: /usr/bin/bash -e {0}
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3853787Z env:
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3854214Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3854874Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:18.3855299Z ##[endgroup]
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:19.2028922Z /home/runner/work/_temp/python-3.10.11.tar.gz: OK
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:21.4466228Z Looking in links: /tmp/tmpc_x0n68l
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:21.4468366Z Requirement already satisfied: setuptools in /home/runner/work/_temp/forge-python/lib/python3.10/site-packages (65.5.0)
+proof	Python 3.10.11 from a hash-checked archive	2026-10-28T23:28:21.4472777Z Requirement already satisfied: pip in /home/runner/work/_temp/forge-python/lib/python3.10/site-packages (23.0.1)
+proof	Authenticate the checkout before any repository code	﻿2026-10-28T23:28:21.5628902Z ##[group]Run python3 -I -S -B -c 'import hashlib, json, sys
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5629515Z [36;1mpython3 -I -S -B -c 'import hashlib, json, sys[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5630099Z [36;1mlock = open("gate/provenance/implementation.lock", "rb").read()[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5630768Z [36;1mif hashlib.sha256(lock).hexdigest() != sys.argv[1]: sys.exit("IMPLEMENTATION_LOCK")[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5631461Z [36;1mboot = open("gate/provenance/bootstrap.py", "rb").read()[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5632376Z [36;1mif hashlib.sha256(boot).hexdigest() != json.loads(lock)["files"]["gate/provenance/bootstrap.py"]: sys.exit("BOOTSTRAP_BYTES")' "$FORGE_STAGE9_IMPLEMENTATION"[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5633300Z [36;1mpython3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check[0m
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5648848Z shell: /usr/bin/bash -e {0}
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5649233Z env:
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5649651Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5650310Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5650805Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.5651121Z ##[endgroup]
+proof	Authenticate the checkout before any repository code	2026-10-28T23:28:21.9044137Z BOOTSTRAP_VERIFIED
+proof	Record and reclaim disk on the disposable runner	﻿2026-10-28T23:28:21.9698429Z ##[group]Run df -B1 / && nproc && free -b
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9699095Z [36;1mdf -B1 / && nproc && free -b[0m
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9699573Z [36;1msudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup \[0m
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9700265Z [36;1m  /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/powershell /usr/local/share/chromium[0m
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9700874Z [36;1mdocker image prune --all --force[0m
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9701205Z [36;1mdf -B1 /[0m
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9712504Z shell: /usr/bin/bash -e {0}
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9712771Z env:
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9713110Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9713583Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9714002Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:21.9714316Z ##[endgroup]
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:22.0764297Z Filesystem        1B-blocks        Used   Available Use% Mounted on
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:22.0764872Z /dev/root      154894188544 63570915328 91306496000  42% /
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:22.0775884Z 4
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:22.0787816Z                total        used        free      shared  buff/cache   available
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:22.0788387Z Mem:     16759308288  1276821504 14229487616    45289472  1624166400 15482486784
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:28:22.0788985Z Swap:     3221221376           0  3221221376
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3236176Z Deleted Images:
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3239933Z untagged: ghcr.io/github/gh-aw-mcpg:latest
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3240575Z untagged: ghcr.io/github/gh-aw-mcpg@sha256:9c7f242f6dec2d7d7b55d4c9e07872d59b85377c6cb3de46c915a5d1ffb91442
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3241082Z deleted: sha256:adada59dc2eb63475d1f06d3b2c975d2e50ed858007ac5283bf508391e5f7041
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3241527Z deleted: sha256:9561da157f3318daea7aecb5753fbf1b9a08f11a5aa196e4acf885d183d679ba
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3242330Z deleted: sha256:f9e4fd9ace9f49b24939125d3172311294b8db0ca6d5c3933d4553e7e38562e7
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3242817Z deleted: sha256:e7fe6216fb621a5883dafaaed72af6b4d9218ab06c7b1cf16590092393ad315c
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3243261Z deleted: sha256:ead5e88d3b34a4addd1a39e8dd4786fc6c5f06a67bfda3813ffbbf802f9020a5
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3243723Z deleted: sha256:3fccb58823e210b8e26f60e33dc6464c62c41047ac58df29df7ad85fd5f29b7f
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3244125Z deleted: sha256:076fa2779acee36fe423d7a96b35f9ee3669e369097ee039acf59e96197fcb84
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3244592Z deleted: sha256:f4be26f88c84ae4994b8f72039b3a31e4177c1676751f4e51521cb99f00ba7ee
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3245000Z deleted: sha256:3b0abdfd3c94e7bc73093f7488b4d6e7b164dfdf43193edaa6ba8df32def333a
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3245437Z deleted: sha256:afa44dee9a0a5460f9bb4c303a6a93d323ad0d0decbf8f3dddea61b2ea31a06c
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3245870Z deleted: sha256:b120877a8c6acddb44283da821e1eb98ad3ba9dba9954b6a89510661576ec1db
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3246286Z deleted: sha256:a1ab8e74cca4db0e2c77a634e30586adfd4cf1e081268545aa8b185df216d11c
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3246795Z untagged: ghcr.io/github/gh-aw-firewall/squid:latest
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3247475Z untagged: ghcr.io/github/gh-aw-firewall/squid@sha256:acc55719d3816ebba2af7393d13bc72c690ddedf4e3ec74340104e3e0bda6b4d
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3248169Z deleted: sha256:ceba3de0cc73ccb8d76055b6f4ff404a1f556c398b0c85038c5016f005d11bcb
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3249298Z deleted: sha256:37cb58e0bfb4c148b36bdd6a1e540b0b8c2f28a8f9d281f7d2e3728c86c58d61
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3249872Z deleted: sha256:f855a6188d1921e2c40b83e4db179844783988895a195abef6cf98bd73bf15b9
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3250406Z deleted: sha256:72e88ce23c556a10fc021d13dc79028d769008e14542e1639438c3788cfb736d
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3250817Z deleted: sha256:4f0183f634b4b9589f0d4ebbaa3c4fea25289e3888913b3404267afccb81751b
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3251230Z deleted: sha256:2cf336166cfb412c1393d59cec3dc02407b9a0e7c1b0e6a5dfef1b03473270a0
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3251678Z deleted: sha256:17b0094a813d97c34ca729739326189c9afdd4610bc44d121b69608ca549051f
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3252079Z deleted: sha256:8ccd9236e1fc745540569864e5e03aa2976fda968ebc44d2bfbe7a2a2cc3824c
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3252724Z untagged: ghcr.io/dependabot/dependabot-updater-core:latest
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3253219Z untagged: ghcr.io/dependabot/dependabot-updater-core@sha256:82243f9dd22d1586d11ec6719395c10e6f266cfaf338a0380d09c62873805ac8
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3253739Z deleted: sha256:dae9747fa7601367bda9ad43f082b018a2f9cebb0f7935a5fafe064248a6b4da
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3254165Z deleted: sha256:c7253a82f62ec4720821d29d60df65e893e7a4ffc9ac811f03f4937c279abe98
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3254576Z deleted: sha256:365680fd9cf56f197f968e6d78b006e88986e3e241d07abb5c6ff0e3329908cf
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3255040Z deleted: sha256:1f55ee4409bdd05c1c854571aca976c1c0589dd7a7b63aa38f844d2246546189
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3255446Z deleted: sha256:31a516031fc6790be710d70d56aa6d5b4551c66e0bac1dd2b1f9e1f087e95b06
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3255857Z deleted: sha256:b48225ea288dbbffcf8b4d12fe4ccba197b1f1e25baa69b2bf0b4d86fa1a7f9d
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3256306Z deleted: sha256:395b02aff05e991750a877f0fd1ded7d73344116ba9894c09d71aef54ef079df
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3256825Z deleted: sha256:1dece247c40cc99ca8a04639b5b9f9dcf015137529ee2b1d2c3142b4ee6a0527
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3257271Z deleted: sha256:cb812a297de2b3ddba6d515330b4b8f03c3bdf714c011fcb623930dc53cf8ec6
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3257721Z deleted: sha256:85bd9af1cf7b1e626e2d06802eee530bba05662df3dd6460aa3a776897f9f12b
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3258221Z deleted: sha256:fc2fc45fa308da0331f8b01de899f5d33e02559971a958aed5fce1e55bb7157e
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3258902Z deleted: sha256:10123147018cdd657f5d0bad237dcfb8416981375a3c26537901b2f7fad3f9cf
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3259472Z deleted: sha256:32ab39660fd51c6dc3aae486b42d42bbe8fe4c1db78eaf57bb9c21198de48a16
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3259987Z untagged: ghcr.io/github/gh-aw-firewall/agent:latest
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3260561Z untagged: ghcr.io/github/gh-aw-firewall/agent@sha256:36ffe93f119df4dde5737e96fd5fe21e93f9ed8f0851bbb8344d685747fbbd40
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3261286Z deleted: sha256:3186a9688b66b9d91073d3393300b3038738794cd249d3d39ea91c848711bbd2
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3261812Z deleted: sha256:13d96c6b715ae1620c85bad33cf70d26a04697c0585a70bf590b2b761624fc43
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3262295Z deleted: sha256:9dd2b8c488f41aff660888567a4680abcde18d9e223a92525c5f33524f4170c3
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3262825Z deleted: sha256:aeac03796855ee5826f4c436b8814404f88da31bdaa57b5906ee6878a6a20dda
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3263259Z deleted: sha256:244abb9d520184d0dadfba67e2dfeef63d797f42d27b32f6b73d5f7013ec6f5b
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3263677Z deleted: sha256:d92e07a58e5d68b7e1e2cfd1fcfe64e06bd0174a76030cf7cc6a4ae4224bc603
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3264098Z deleted: sha256:68509b84435065f8468dd7768e3bba13b7f78972b15757a14e11757ec6e5f983
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3264553Z deleted: sha256:c31e48f3793c5d0c7f2647da70118105f9d11378bb1b2480d50107d139d6a3b7
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3264990Z deleted: sha256:f4069fd2875f30a3a1ab2c5d7827d18563dd8de71fad4ceb011480278283863f
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3265419Z deleted: sha256:1db244cc94b133e32a24657884a0466e1b28de9fef1ff3a67768528706fbe900
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3265836Z deleted: sha256:b2bc318393ba5c2fe5af9cbe43bf61f2f87a029a8215c85de18852a06fc2bd18
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3266236Z deleted: sha256:bd891dba4e494311abef4baba6588b02d846c8647b376d9f9b628c33687d4b23
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3266680Z deleted: sha256:70861a2bde5b87785a951cf103a1fa5d4038d54314a2f33dba59b8c3cf40412a
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3267093Z deleted: sha256:01ffba9eff62059562aa0a1c44f7831c0146bf578db61fc1a9ce133cff975860
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3267505Z deleted: sha256:a36b3204f695601e8fb749626aaa74a75de2fb0e013f5f32de31f6621ae58a2d
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3267952Z deleted: sha256:baffd3bd877dca4dd89f919878b9f6d691c5af328d57e8e282e204972b65db63
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3268353Z deleted: sha256:0d1676edfb7a548d412000f1789d8ebcfe9c0c87e3129e3b9f7728ed4aef7409
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3269361Z deleted: sha256:0cd1ab1e638e3dfea389f0a73f0adf718c6212f75399a9793b691a430cd9f755
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3269783Z deleted: sha256:5b8fa89f2d92a7ad0326710cf73ca77058a8e1005d620bc12800e2c1a7ea9674
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3270201Z deleted: sha256:87d658d9ba914c43349164eae957dd1a18ea64435de5542b8c42dfc433dbd340
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3270713Z deleted: sha256:e1605e86b381b120e04a784c916c8694e3055e62af6d947a6f7f66520fbbbef4
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3271125Z deleted: sha256:f6e0e88dd8e11c81dba77d657b271e1ed7c33882e8f4dfaa7768cbaee94d94fc
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3271554Z untagged: ghcr.io/github/github-mcp-server:latest
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3271990Z untagged: ghcr.io/github/github-mcp-server@sha256:250bc6ce70788207608ef74cef4397230ff2e8481218da74d6093e4bd9101132
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3272481Z deleted: sha256:4d955ee421ef7194cbef8a50bfe034a27d1e682875a6e8049023ab55bf80a8ec
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3272911Z deleted: sha256:7beebe31d1d8200dde3d1d5025547bd66be6a16fb1ec36d4d6612d3c10bbe031
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3273375Z deleted: sha256:1e1cabb4a65e50fb84bc4612619b0025e4a1d06d5e38699d1e67e5a8e4f333db
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3273804Z deleted: sha256:86766d6a6e947f4a599c6e23307470f8f75732fc3d143ec1f3260e4406202bee
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3274210Z deleted: sha256:2944471a0bbdfb4985f84f8d287edb5cd982d1060589e707a6cb0cbe82cdfe89
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3274646Z deleted: sha256:5e555e7975e2202f21fb93d460d701a340ade876f3afccb70d702f1dc5ab80db
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3275059Z deleted: sha256:2a080d78a1c5e3615170178f1c6f4c726340da9d5ff2926cb66e2fd97851da9d
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3275474Z deleted: sha256:af4a114029fbf94a3cf75c5cfaa5e947019cd6faae4b800c9306ac9079363def
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3275913Z deleted: sha256:c7b875d3de914680ec64ba55be5865955ec595e7370812894ee68a502e2e8391
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3276317Z deleted: sha256:85d9b4c1ef131ee259952a35027e942f79626303ab143eff7ef00d55201bd06f
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3276717Z deleted: sha256:492c6420fd79f4cd4e761bec1e74db6044d45adb5b073a82289af68aa3162e3f
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3277150Z deleted: sha256:14b282df61c0316a80216cec27e753777da93de1d7e062072ef3b517f984fcf1
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3277559Z deleted: sha256:fdaace00fc3f072b9060f703047b30a2c14d8bde7dbbf31a396802c032923732
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3278142Z deleted: sha256:7f73eafc455b691b504d4d3c3f3c7be90e135c1d0ba4988b2cac29579cd6b567
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3278694Z deleted: sha256:32a12b65383df6b6553c8d59f691675ca1980f8cec9c51cce163c3c8f7665a41
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3279101Z deleted: sha256:5217b01660b515ac25ea055a8bd04a20790c7d6bd6085374b59b9081283911af
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3279540Z deleted: sha256:7223ea1323e8c1159ec17f07d35acc27bdd1cc2bc3ed425b44ef21dac9915db0
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3279986Z untagged: ghcr.io/github/gh-aw-firewall/api-proxy:latest
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3280458Z untagged: ghcr.io/github/gh-aw-firewall/api-proxy@sha256:e2c27ef4403bda921331fd3be5da297fd2865fcf42e2b2aba7d6b4c34073acdd
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3280977Z deleted: sha256:71caee3604972299d996a9c87483a1bb84369ff1dab8c800316d15f1cb0c9e61
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3281395Z deleted: sha256:789c2a2b2c063655a7f6c13b82934f39afeed54257138594b529489b6fcb7c94
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3281828Z deleted: sha256:14eba9f178f1e276f8a9b7664e5a803cc578f4684f72b824fec5bca635c11e75
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3282345Z deleted: sha256:c2f642dcf6292ed22153725fd7c229315fddcb23d4a5c0eb9deed9a3c4ccc0fb
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3282768Z deleted: sha256:36d1b8f9812f2f678bf4cc66132a098bde11fd0493e40c02f1354a098cd902a1
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3283190Z deleted: sha256:bfd101081e2f6c7190b29b6d498b6a5b4766a4de72a44a15f6baf12d4a4ab290
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3283598Z deleted: sha256:6c3b20d5616c1291bc7f7b8f1999c36a2bff64936edb20166c27c8f532cda710
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3284025Z deleted: sha256:2abfdf42e5895f6f43ac9be242b79f394969232c3a45752e9ab19176080824e5
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3284478Z deleted: sha256:05f7e360b5197e889cc7c4d9b24ad3aabacfda741f3d449071edfc4be67a3be6
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3284891Z deleted: sha256:746727b9775f2fb76310b9d7db58175622b85bd9dd68af0599c4445c82ce2483
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3285305Z deleted: sha256:7a3ba98e7e42c55e732a38661d60ee2de373b0896590e3bdc598097fe91fe7ae
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3285713Z deleted: sha256:060f91b0872de59eb67f7d745908a0c0caa9309f3094c9c91bf9f484a42955ca
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3286151Z deleted: sha256:f80bf75f16280363a2e032582f2fc16d27432c5f8b723df782b6bcbfb7e27924
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3286603Z deleted: sha256:9ac373ada57ffc27dcc3394207b9ad1d5c5f01c043a8a5402696532556e352da
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3287078Z deleted: sha256:2f861ab5a2cf99d08875a9f545a2471c19e91c93769c3a3cc7175c530a3970ec
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3287494Z deleted: sha256:352b00e6763d6ebaab8cb99a3bac61fc65a5a1ff5cb48d539a0c353574d7f03a
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3287903Z deleted: sha256:74d97c428c51a828f9051a7a40a53ff1fc99e54fc30323ce36760701b0b7f711
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3288159Z 
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3288267Z Total reclaimed space: 2.488GB
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3288780Z Filesystem        1B-blocks        Used    Available Use% Mounted on
+proof	Record and reclaim disk on the disposable runner	2026-10-28T23:30:56.3289169Z /dev/root      154894188544 31684009984 123193401344  21% /
+proof	Candidate hosted_setup.py through the bootstrap	﻿2026-10-28T23:30:56.3324374Z ##[group]Run python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/hosted_setup.py
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3325136Z [36;1mpython3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/hosted_setup.py[0m
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3336079Z shell: /usr/bin/bash -e {0}
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3336335Z env:
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3336724Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3337210Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3337634Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3337956Z   FORGE_STAGE7_ROOT: /home/runner/work/_temp/seed
+proof	Candidate hosted_setup.py through the bootstrap	2026-10-28T23:30:56.3338215Z ##[endgroup]
+proof	Candidate preflight.py through the bootstrap	﻿2026-10-28T23:37:22.1860809Z ##[group]Run python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.1861798Z [36;1mpython3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION"[0m
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2048126Z shell: /usr/bin/bash -e {0}
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2048458Z env:
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2048954Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2049471Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2049884Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2050228Z   FORGE_STAGE7_ROOT: /home/runner/work/_temp/seed
+proof	Candidate preflight.py through the bootstrap	2026-10-28T23:37:22.2050507Z ##[endgroup]
+proof	Candidate package() and replay() after a fresh bootstrap check	﻿2026-10-28T23:37:23.9004463Z ##[group]Run python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9005470Z [36;1mpython3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check[0m
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9006799Z [36;1mpython3 -E -s -B -X pycache_prefix="$RUNNER_TEMP/pycache" proposals/provenance-hosted/dry_run.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --expected-package proposals/provenance-hosted-v2/controller-descriptor.json --output results/stage9/dry-run[0m
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9022261Z shell: /usr/bin/bash -e {0}
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9022638Z env:
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9023223Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9023939Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9024508Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9025073Z   FORGE_STAGE7_ROOT: /home/runner/work/_temp/seed
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9025419Z ##[endgroup]
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:37:23.9231827Z BOOTSTRAP_VERIFIED
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0633978Z {
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0742815Z   "accepted": true,
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0743187Z   "end_to_end": false,
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0743504Z   "expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361",
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0743967Z   "package_sha256": "f584305022f2e811c7bf346fa5d4322bc565cbb3359a8c252fcbba5a61325e16",
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0744431Z   "scope": "candidate package() and replay() only"
+proof	Candidate package() and replay() after a fresh bootstrap check	2026-10-28T23:56:20.0744706Z }
+proof	Collect records	﻿2026-10-28T23:56:20.0783614Z ##[group]Run mkdir -p probe
+proof	Collect records	2026-10-28T23:56:20.0783919Z [36;1mmkdir -p probe[0m
+proof	Collect records	2026-10-28T23:56:20.0784260Z [36;1mcp -R "$RUNNER_TEMP/candidate-root/results/stage9/producer-output" probe/ || true[0m
+proof	Collect records	2026-10-28T23:56:20.0784731Z [36;1mcp -R "$RUNNER_TEMP/candidate-root/results/stage9/dry-run" probe/ || true[0m
+proof	Collect records	2026-10-28T23:56:20.0795575Z shell: /usr/bin/bash -e {0}
+proof	Collect records	2026-10-28T23:56:20.0795818Z env:
+proof	Collect records	2026-10-28T23:56:20.0796223Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Collect records	2026-10-28T23:56:20.0796714Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Collect records	2026-10-28T23:56:20.0797129Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Collect records	2026-10-28T23:56:20.0797450Z ##[endgroup]
+proof	Preserve records	﻿2026-10-28T23:56:20.1657981Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+proof	Preserve records	2026-10-28T23:56:20.1658363Z with:
+proof	Preserve records	2026-10-28T23:56:20.1658880Z   name: forge-stage9-private-dry-run-v32-40787574980
+proof	Preserve records	2026-10-28T23:56:20.1659219Z   path: probe/
+proof	Preserve records	2026-10-28T23:56:20.1659467Z   include-hidden-files: true
+proof	Preserve records	2026-10-28T23:56:20.1659740Z   if-no-files-found: error
+proof	Preserve records	2026-10-28T23:56:20.1660009Z   compression-level: 6
+proof	Preserve records	2026-10-28T23:56:20.1660239Z   overwrite: false
+proof	Preserve records	2026-10-28T23:56:20.1660465Z env:
+proof	Preserve records	2026-10-28T23:56:20.1660806Z   FORGE_STAGE9_IMPLEMENTATION: be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57
+proof	Preserve records	2026-10-28T23:56:20.1661372Z   FORGE_STAGE9_REQUEST: {"expected_source_commit": "3670d688f90acb9c00b1af36fa4cdc36d1bdb361"}
+proof	Preserve records	2026-10-28T23:56:20.1661820Z   LD_LIBRARY_PATH: /home/runner/work/_temp/forge-python/lib
+proof	Preserve records	2026-10-28T23:56:20.1662143Z ##[endgroup]
+proof	Preserve records	2026-10-28T23:56:20.2972721Z (node:5415) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+proof	Preserve records	2026-10-28T23:56:20.2974731Z (Use `node --trace-deprecation ...` to show where the warning was created)
+proof	Preserve records	2026-10-28T23:56:20.4420574Z With the provided path, there will be 826 files uploaded
+proof	Preserve records	2026-10-28T23:56:20.4424473Z Artifact name is valid!
+proof	Preserve records	2026-10-28T23:56:20.4425014Z Root directory input is valid!
+proof	Preserve records	2026-10-28T23:56:20.7357681Z Beginning upload of artifact content to blob storage
+proof	Preserve records	2026-10-28T23:56:21.5067277Z (node:5415) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+proof	Preserve records	2026-10-28T23:56:22.0294666Z Uploaded bytes 8388608
+proof	Preserve records	2026-10-28T23:56:22.4619761Z Uploaded bytes 16777216
+proof	Preserve records	2026-10-28T23:56:22.9230939Z Uploaded bytes 25165824
+proof	Preserve records	2026-10-28T23:56:23.4097319Z Uploaded bytes 33554432
+proof	Preserve records	2026-10-28T23:56:23.8561445Z Uploaded bytes 41943040
+proof	Preserve records	2026-10-28T23:56:24.3603513Z Uploaded bytes 50331648
+proof	Preserve records	2026-10-28T23:56:24.7262229Z Uploaded bytes 56513517
+proof	Preserve records	2026-10-28T23:56:24.7659960Z Finished uploading artifact content to blob storage!
+proof	Preserve records	2026-10-28T23:56:24.7661995Z SHA256 digest of uploaded artifact zip is c35915a172068de73971a7de0bc10b8d95d3afd5e918fd30a97a42f20d9e00c3
+proof	Preserve records	2026-10-28T23:56:24.7663705Z Finalizing artifact upload
+proof	Preserve records	2026-10-28T23:56:25.2120459Z Artifact forge-stage9-private-dry-run-v32-40787574980.zip successfully finalized. Artifact ID 12861067955
+proof	Preserve records	2026-10-28T23:56:25.2121606Z Artifact forge-stage9-private-dry-run-v32-40787574980 has been successfully uploaded! Final size is 56513517 bytes. Artifact ID is 12861067955
+proof	Preserve records	2026-10-28T23:56:25.2128010Z Artifact download URL: https://github.com/mack-dot/forge/actions/runs/40787574980/artifacts/12861067955
+proof	Post Checkout exact dispatched main commit	﻿2026-10-28T23:56:25.2427324Z Post job cleanup.
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3144912Z [command]/usr/bin/git version
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3180887Z git version 2.56.0
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3210256Z Temporarily overriding HOME='/home/runner/work/_temp/d11843d9-441b-4d06-bb53-b2ac35512e7e' before making global git config changes
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3211236Z Adding repository directory to the temporary git global config as a safe directory
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3212892Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/forge/forge
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3250001Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3289860Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3572572Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+proof	Post Checkout exact dispatched main commit	2026-10-28T23:56:25.3606134Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+proof	Complete job	﻿2026-10-28T23:56:25.4033353Z Cleaning up orphan processes
+proof	Complete job	2026-10-28T23:56:25.4445768Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

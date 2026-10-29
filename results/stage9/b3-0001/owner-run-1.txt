@@ -1,0 +1,10 @@
+B3 owner run 1 (2026-10-28, owner terminal, zsh). Credential not involved.
+Command: /bin/bash ~/forge/proposals/provenance-hosted-v32/b3_verify.sh ~/forge-b3-check ~/forge-b3-out-1
+Wrapper sha256: 69d2bd667955ff183d1929fe048fd493dd3129bc1326d45a33f9b2ad45544499
+Owner output (last lines):
+  security: SecKeychainSearchCopyNext: The specified item could not be found in the keychain.
+  B3: no Keychain item forge-verifier-readonly
+Exit: 3 (only the exit-3 branch prints this line; $? was not shown)
+Agent check after the run: ~/forge-b3-check HEAD = edb729a8bea278a77a1bd33451859958a4b7b3e4,
+  git status --porcelain --ignored empty; ~/forge-b3-out-1 holds only empty home/ and tmp/.
+Not run: checkout check, lock check, bootstrap --check, verifier cases, network requests.

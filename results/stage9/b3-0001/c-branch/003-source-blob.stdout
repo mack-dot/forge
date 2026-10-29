@@ -1,0 +1,81 @@
+name: Forge Stage 9 wrong signer control
+
+"on":
+  workflow_dispatch:
+    inputs:
+      request:
+        description: Exact original controller request JSON
+        required: true
+        type: string
+      implementation_sha256:
+        description: Separately approved implementation.lock SHA-256
+        required: true
+        type: string
+      producer_run_id:
+        description: Successful provenance run at the same exact source commit
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
+concurrency:
+  group: forge-stage9-wrong-signer
+  cancel-in-progress: false
+
+jobs:
+  negative:
+    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main' && vars.FORGE_SIGNING_AUTHORIZED == 'true'
+    runs-on: ubuntu-24.04
+    env:
+      FORGE_STAGE9_REQUEST: ${{ inputs.request }}
+      FORGE_STAGE9_IMPLEMENTATION: ${{ inputs.implementation_sha256 }}
+      FORGE_STAGE9_PRODUCER_RUN: ${{ inputs.producer_run_id }}
+    steps:
+      - name: Checkout the exact dispatched main commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Python 3.10.11 from a hash-checked archive
+        run: |
+          P="$RUNNER_TEMP/forge-python"
+          A="$RUNNER_TEMP/python-3.10.11.tar.gz"
+          curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+          echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+          mkdir -p "$P" && tar -xzf "$A" -C "$P"
+          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
+          echo "$P/bin" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+      - name: Authenticate the checkout before any repository code
+        run: |
+          python3 -I -S -B -c 'import hashlib, json, sys
+          lock = open("gate/provenance/implementation.lock", "rb").read()
+          if hashlib.sha256(lock).hexdigest() != sys.argv[1]: sys.exit("IMPLEMENTATION_LOCK")
+          boot = open("gate/provenance/bootstrap.py", "rb").read()
+          if hashlib.sha256(boot).hexdigest() != json.loads(lock)["files"]["gate/provenance/bootstrap.py"]: sys.exit("BOOTSTRAP_BYTES")' "$FORGE_STAGE9_IMPLEMENTATION"
+          python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --check
+      - name: Check pins and authenticate producer run metadata
+        env:
+          FORGE_STAGE7_ROOT: ${{ runner.temp }}/seed
+          FORGE_PRODUCER_GITHUB_TOKEN: ${{ github.token }}
+        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/preflight.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --producer-run "$FORGE_STAGE9_PRODUCER_RUN"
+      - name: Retrieve the authenticated run's signed candidate
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: forge-stage9-signed-${{ inputs.producer_run_id }}
+          path: results/stage9/producer-output/
+          run-id: ${{ inputs.producer_run_id }}
+          github-token: ${{ github.token }}
+      - name: Sign under this unauthorized workload identity only
+        run: python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" -- gate/provenance/producer.py --action negative-sign --implementation-sha256 "$FORGE_STAGE9_IMPLEMENTATION" --output results/stage9/producer-output
+      - name: Preserve authentic wrong-signer bundle and failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-stage9-negative-${{ github.run_id }}
+          path: results/stage9/producer-output/
+          include-hidden-files: true
+          if-no-files-found: error
