@@ -8,7 +8,7 @@ import re
 import sqlite3
 import tarfile
 
-from common import (ROOT, HERE, Rejected, Records, canonical, context, digest, files,
+from common import (ROOT, HERE, Rejected, Records, approved_lineage, canonical, context, digest, files,
                     parse, read, repository_identity, require, run_identity, sha, signature, write)
 
 # Bound by the separately approved implementation lock. Expected identities
@@ -274,12 +274,15 @@ def verify(root, request, expected_lock, records, *, signed='release.sigstore.js
     require(predicate['purpose'] == 'release', 'SECURITY_CONTROL_NOT_ADMISSIBLE')
     repository_identity(policy, implementation, request['expected_source_commit'], records)
     run_identity(policy, request, read(root / 'proof/receipt.json')['execution'], records)
+    lineage = approved_lineage(policy, request['expected_source_commit'], records)
     require(files(root) == before, 'CANDIDATE_CHANGED_DURING_VERIFICATION')
     context(expected_lock)
     return {'signature_exit_code': code, 'result': 'authenticated_provenance',
             'kernel_execution_here': False, 'producer_receipt_labels_consistent': True,
             'proof_run_identity_checked_with_github_api': True,
             'freshness_trust_assumption': 'GitHub executed the locked workflow in the recorded run',
+            'approved_lineage': lineage,
+            'approval_trust_assumption': 'only the owner uses the owner account',
             'end_to_end': False, 'statement_sha256': sha(canonical(statement))}
 
 
