@@ -1,0 +1,408 @@
+{
+ "audit": "v32-audit-0001",
+ "date": "2026-10-28",
+ "end_to_end": false,
+ "target": {
+  "repository": "mack-dot/forge",
+  "commit": "d43f5f4de55573a17f4f9cf4d41528dd159e9f2f",
+  "implementation_lock_sha256": "be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57"
+ },
+ "constraints_kept": [
+  "no Keychain access",
+  "no GitHub token used or searched",
+  "no workflow dispatch",
+  "no signing; Cosign only ran version/initialize/verify-blob-attestation",
+  "no push or PR",
+  "only writes under /Users/mackianni/forge are in this directory"
+ ],
+ "exit_code_note": "exit_codes are actual recorded process exit codes per label (see each commands.jsonl); drivers that print a reason exit 0 by construction.",
+ "checks": [
+  {
+   "id": "c00",
+   "dir": "c00-setup",
+   "title": "Fresh clone identity and baseline",
+   "command": "git clone https://github.com/mack-dot/forge.git <scratch>/audit-main; git log -1; shasum -a 256 gate/provenance/implementation.lock; python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 be23ec85\u2026 --check; context(be23ec85\u2026)",
+   "exit_codes": {
+    "clone-head": 0,
+    "lock-digest": 0,
+    "bootstrap-check-host": 0,
+    "context-host": 0,
+    "host-python": 0,
+    "docker-version": 0,
+    "runner-image": 0,
+    "ubuntu-base": 0
+   },
+   "verdict": "PASS",
+   "claim": "Clone HEAD is d43f5f4\u2026; lock digest is be23ec85\u2026; bootstrap --check and context() accept the clean tree on macOS Python 3.10.11.",
+   "limitation": "Host verifier only; live main was compared by public ls-remote in c09.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c00-setup"
+  },
+  {
+   "id": "c01",
+   "dir": "c01-job-clean",
+   "title": "Clean control: verbatim Python step + Authenticate step",
+   "command": "bash -e step-python.sh; bash -e step-authenticate.sh (in container, cwd=checkout)",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "verdict": "PASS",
+   "claim": "Approved tree: hash-checked Python 3.10.11 (python3.10 sha256 7ad319a3\u2026) installs; BOOTSTRAP_VERIFIED; no marker.",
+   "limitation": "Emulated GitHub job: ubuntu:24.04 linux/amd64 container (Docker Desktop, arm64 host emulation), root user, workspace = scenario checkout, verbatim step bodies from the installed workflow, SIMULATED (fake) ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner; no real OIDC token was requested.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c01-job-clean"
+  },
+  {
+   "id": "c02",
+   "dir": "c02-job-v1a-root-ensurepip",
+   "title": "V1a: root ensurepip.py runs before authentication",
+   "command": "commit adds ./ensurepip.py; then verbatim step-python.sh and step-authenticate.sh",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "verdict": "VULNERABLE",
+   "claim": "Planted repository code executed in the \"Python 3.10.11\" step (cwd=checkout, sys.path[0]=checkout) before the authentication step; it saw the OIDC request variables and a writable GITHUB_ENV/interpreter; the next step still printed BOOTSTRAP_VERIFIED (exit 0) with the file present.",
+   "limitation": "Emulated GitHub job: ubuntu:24.04 linux/amd64 container (Docker Desktop, arm64 host emulation), root user, workspace = scenario checkout, verbatim step bodies from the installed workflow, SIMULATED (fake) ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner; no real OIDC token was requested. Write-access results are as root.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c02-job-v1a-root-ensurepip"
+  },
+  {
+   "id": "c03",
+   "dir": "c03-job-v1b-self-deleting-ensurepip",
+   "title": "V1b: self-deleting pre-authentication payload",
+   "command": "commit adds ./ensurepip.py that deletes itself; verbatim steps",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "verdict": "VULNERABLE",
+   "claim": "Payload executed, removed itself (git status \" D ensurepip.py\"), then BOOTSTRAP_VERIFIED. No check-time inventory can detect a pre-authentication payload.",
+   "limitation": "Emulated GitHub job: ubuntu:24.04 linux/amd64 container (Docker Desktop, arm64 host emulation), root user, workspace = scenario checkout, verbatim step bodies from the installed workflow, SIMULATED (fake) ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner; no real OIDC token was requested.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c03-job-v1b-self-deleting-ensurepip"
+  },
+  {
+   "id": "c04",
+   "dir": "c04-job-v1c-root-runpy",
+   "title": "V1c: root runpy.py (other module names) before authentication",
+   "command": "commit adds ./runpy.py; verbatim steps",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "verdict": "VULNERABLE",
+   "claim": "runpy.py executed twice pre-authentication: in \"python3 -m ensurepip\" and in the ensurepip pip subprocess (\"-c\"). Any stdlib name imported lazily is a vector, not only ensurepip.",
+   "limitation": "Emulated GitHub job: ubuntu:24.04 linux/amd64 container (Docker Desktop, arm64 host emulation), root user, workspace = scenario checkout, verbatim step bodies from the installed workflow, SIMULATED (fake) ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner; no real OIDC token was requested.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c04-job-v1c-root-runpy"
+  },
+  {
+   "id": "c05",
+   "dir": "c05-job-v2-root-pip-after-bootstrap",
+   "title": "V2: root pip/ runs after BOOTSTRAP_VERIFIED via hosted_setup.py:54",
+   "command": "commit adds ./pip/__main__.py; verbatim steps; real step-hosted-setup.sh; locked hosted_setup.seed() via driver",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "03-step-hosted-setup-real": 1,
+    "04-locked-seed-driver": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0
+   },
+   "verdict": "VULNERABLE",
+   "claim": "No pre-auth marker; BOOTSTRAP_VERIFIED; bootstrap launched hosted_setup.py; the locked seed() ran [sys.executable,\"-m\",\"pip\",...] through Records.run (default cwd=ROOT, common.py:81), which executed the planted pip (recorded exit 97, marker parent = the -E -s -B process).",
+   "limitation": "Emulated GitHub job: ubuntu:24.04 linux/amd64 container (Docker Desktop, arm64 host emulation), root user, workspace = scenario checkout, verbatim step bodies from the installed workflow, SIMULATED (fake) ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner; no real OIDC token was requested. The real step stopped at gpg (absent in the container) before seed(); seed() was then called by a driver with the Stage 7 upstream replaced by a local stub repository (2.3 GB fetch avoided). All other inputs were the locked pins.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c05-job-v2-root-pip-after-bootstrap"
+  },
+  {
+   "id": "c06",
+   "dir": "c06-verifier-source-tree",
+   "title": "V3: verifier source_tree() inventory scope",
+   "command": "python3 -I source_tree_map.py (common.source_tree on real local commits)",
+   "exit_codes": {
+    "source-tree-map": 0
+   },
+   "verdict": "VULNERABLE (scope gap); in-scope rejections PASS",
+   "claim": "Commits with ./ensurepip.py, ./runpy.py, ./pip/, ./json.py, ./sitecustomize.py, gate/json.py, toolchain/json.py are ACCEPTED; gate/provenance, scripts and examples/binary code plants are rejected UNLOCKED_EXECUTABLE.",
+   "limitation": "Local Git store, not the authenticated GitHub fetch in repository_identity(); same function and same lock.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c06-verifier-source-tree"
+  },
+  {
+   "id": "c07",
+   "dir": "c07-controls-v31",
+   "title": "Earlier controls.py, run as found (no -B)",
+   "command": "python3 -I proposals/provenance-hosted-v31/controls.py --implementation-sha256 be23ec85\u2026 --output \u2026",
+   "exit_codes": {
+    "controls": 1
+   },
+   "verdict": "HARNESS_DEFECT",
+   "claim": "Exit 1: the \"clean checkout\" control failed with BYTECODE_CACHE:gate/provenance/__pycache__ that the harness itself wrote when importing common.py. Not a product failure.",
+   "limitation": "Shows the harness is sensitive to interpreter flags; its pass rule ignores the rejection reason.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c07-controls-v31"
+  },
+  {
+   "id": "c07b",
+   "dir": "c07b-controls-v31-no-bytecode",
+   "title": "Earlier controls.py with -B",
+   "command": "python3 -I -B proposals/provenance-hosted-v31/controls.py \u2026",
+   "exit_codes": {
+    "controls-B": 0
+   },
+   "verdict": "PASS",
+   "claim": "14 of 14 controls as designed; no attacker marker.",
+   "limitation": "Covers only gate/provenance and scripts plants and bootstrap invocations; not the workflow steps before authentication or -m/-c children.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c07b-controls-v31-no-bytecode"
+  },
+  {
+   "id": "c08",
+   "dir": "c08-f1-controls-v3",
+   "title": "Earlier f1_controls.py",
+   "command": "python3 -I proposals/provenance-hosted-v3/f1_controls.py \u2026",
+   "exit_codes": {
+    "f1-controls": 0
+   },
+   "verdict": "PASS",
+   "claim": "9 of 9 as designed (in-root plants rejected; GITHUB_ACTIONS and token guards).",
+   "limitation": "No plants outside EXECUTABLE_ROOTS.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c08-f1-controls-v3"
+  },
+  {
+   "id": "c09",
+   "dir": "c09-workflow-static",
+   "title": "Workflow triggers, permissions, gates, action pins",
+   "command": "workflow_static.py; git ls-remote (unauthenticated) for action tags and forge main; check_no_signing.py",
+   "exit_codes": {
+    "workflow-static": 0,
+    "ls-remote-checkout": 0,
+    "ls-remote-upload-artifact": 0,
+    "ls-remote-download-artifact": 0,
+    "ls-remote-forge-main": 0,
+    "check-no-signing": 1
+   },
+   "verdict": "PASS for pins/permissions; FINDING (pre-auth python -m in all 3 jobs)",
+   "claim": "Only workflow_dispatch; proof job contents:read; sign and negative jobs contents:read, actions:read, id-token:write; signing jobs gated by vars.FORGE_SIGNING_AUTHORIZED=='true'; all actions pinned to SHAs equal to tags v4.2.2/v4.6.2/v4.3.0; no ${{ }} in run bodies; persist-credentials:false; live main = d43f5f4\u2026. check_no_signing exit 1 is expected for the production files (they sign) and 0 for the v3.2 dry run.",
+   "limitation": "Repository variable value, rulesets and who can dispatch were not read (needs an authenticated admin API).",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c09-workflow-static"
+  },
+  {
+   "id": "c10",
+   "dir": "c10-workflow-context-and-verifier-guards",
+   "title": "producer.workflow() and repository_identity() guards",
+   "command": "python3 -I -B guards.py <out> --network",
+   "exit_codes": {
+    "guards": 0
+   },
+   "verdict": "PASS (as designed); LOW notes",
+   "claim": "Each wrong context variable is rejected; GITHUB_ACTIONS=true -> VERIFIER_NOT_INDEPENDENT; absent/malformed tokens -> GITHUB_TOKEN_REQUIRED before network; a fake well-formed value -> GITHUB_HTTP_STATUS:401. The independence guard refuses only the exact value \"true\".",
+   "limitation": "No real credential: the authenticated metadata fetch, the git fetch and source_tree() over a GitHub-fetched commit were not run.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c10-workflow-context-and-verifier-guards"
+  },
+  {
+   "id": "c11",
+   "dir": "c11-receipt-integrity",
+   "title": "Receipt integrity on the real hosted v3.2 receipt (run 40787574980)",
+   "command": "python3 -I -B receipt_controls.py <copy of receipt> \u2026",
+   "exit_codes": {
+    "receipt-controls": 0
+   },
+   "verdict": "PASS for byte/identity checks; VULNERABLE (V4) for freshness/source binding",
+   "claim": "17 of 17 as designed. A historical receipt whose receipt.json is rewritten to a new challenge and another commit is ACCEPTED; a fabricated kernel-log line plus a matching report digest is ACCEPTED.",
+   "limitation": "Input is a historical hosted artifact (data only); not re-produced here.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c11-receipt-integrity"
+  },
+  {
+   "id": "c12",
+   "dir": "c12-package-identity",
+   "title": "Package identity on the real hosted package",
+   "command": "python3 -I -B package_controls.py \u2026",
+   "exit_codes": {
+    "package-controls": 0
+   },
+   "verdict": "PASS",
+   "claim": "validate_package accepts the real package and rejects 6 mutations; layer_effect handles whiteouts, opaque dirs, symlinked parents, links, mode and bytes as designed.",
+   "limitation": "Synthetic layers for layer_effect units.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c12-package-identity"
+  },
+  {
+   "id": "c13",
+   "dir": "c13-package-build-controller",
+   "title": "Locked producer.package() on the controller host",
+   "command": "python3 -I -B package_build.py <out> be23ec85\u2026",
+   "exit_codes": {
+    "package-build": 0
+   },
+   "verdict": "PASS",
+   "claim": "Controller build (Docker Desktop 4.48.0) gives package sha256 f5843050\u2026, descriptor identical to the hosted producer output.",
+   "limitation": "Leaves one stopped container from \"docker create\" (locked code does not remove it).",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c13-package-build-controller"
+  },
+  {
+   "id": "c14",
+   "dir": "c14-controller-freshness",
+   "title": "Real release.py through bootstrap: controller states",
+   "command": "python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 be23ec85\u2026 -- gate/provenance/release.py --candidate \u2026 --controller \u2026 --challenge \u2026 --records \u2026 --admit",
+   "exit_codes": {
+    "cosign-download": 0,
+    "cosign-digest": 0,
+    "f1-unknown-challenge-state-before": 0,
+    "f1-unknown-challenge-release": 1,
+    "f1-unknown-challenge-state-after": 0,
+    "f2-consumed-challenge-state-before": 0,
+    "f2-consumed-challenge-release": 1,
+    "f2-consumed-challenge-state-after": 0,
+    "f3-controller-inside-candidate-state-before": 0,
+    "f3-controller-inside-candidate-release": 1,
+    "f3-controller-inside-candidate-state-after": 0,
+    "f4-controller-state-lost-state-before": 0,
+    "f4-controller-state-lost-release": 1,
+    "f4-controller-state-lost-state-after": 0,
+    "f5-pending-no-bundle-state-before": 0,
+    "f5-pending-no-bundle-release": 1,
+    "f5-pending-no-bundle-state-after": 0,
+    "f5b-write-unsigned-bundle": 0,
+    "f5b-pending-unsigned-bundle-state-before": 0,
+    "f5b-pending-unsigned-bundle-release": 1,
+    "f5b-pending-unsigned-bundle-state-after": 0,
+    "f6-stale-policy-request-state-before": 0,
+    "f6-stale-policy-request-release": 1,
+    "f6-stale-policy-request-state-after": 0,
+    "f7-other-implementation-lock-state-before": 0,
+    "f7-other-implementation-lock-release": 1,
+    "f7-other-implementation-lock-state-after": 0,
+    "f8-concurrent-admission-lock-state-before": 0,
+    "f8-concurrent-admission-lock-release": 1,
+    "f8-concurrent-admission-lock-state-after": 0,
+    "f9-github-actions-true-state-before": 0,
+    "f9-github-actions-true-release": 1,
+    "f9-github-actions-true-state-after": 0
+   },
+   "verdict": "PASS",
+   "claim": "Unknown and consumed challenges -> STALE_OR_CONSUMED_REQUEST; controller in candidate -> CONTROLLER_LOCATION; missing controller -> rejected, no file created; no bundle and unsigned bundle -> real Cosign 3.1.4 rejects (SIGNATURE_REJECTED); stale policy -> STALE_POLICY_REQUEST; other lock -> REQUEST_IMPLEMENTATION; concurrent lock -> \"database is locked\". Request state unchanged in every case. GITHUB_ACTIONS=true is refused only after Cosign (SIGNATURE_REJECTED first).",
+   "limitation": "No valid signed bundle exists (signing not allowed), so admission and consumption of a valid bundle, and replay of a consumed valid bundle, were not run. Pending requests have no expiry by design.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c14-controller-freshness"
+  },
+  {
+   "id": "c15",
+   "dir": "c15-context-lock",
+   "title": "common.context() lock checks",
+   "command": "python3 -I -B context_controls.py <checkout> <digest> (driver prints the reason, exits 0)",
+   "exit_codes": {
+    "approved-lock": 0,
+    "other-lock-digest": 0,
+    "optimized-python": 0,
+    "other-python-version": 0,
+    "changed-policy-byte": 0,
+    "changed-proof-script": 0,
+    "changed-accepted-evidence": 0,
+    "malformed-digest-uppercase": 0
+   },
+   "verdict": "PASS",
+   "claim": "Approved lock ACCEPTED; other digest UNAPPROVED_IMPLEMENTATION; uppercase digest IMPLEMENTATION_LOCK_DIGEST; -O OPTIMIZED_PYTHON_FORBIDDEN; Python 3.9.6 PYTHON_VERSION; changed policy/script/evidence bytes IMPLEMENTATION_INPUT.",
+   "limitation": "Driver exit code is 0 by construction; the verdict is the printed reason.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c15-context-lock"
+  },
+  {
+   "id": "c16",
+   "dir": "c16-request-create",
+   "title": "request_create (harness error)",
+   "command": "producer.py --action request (HOME=scratch)",
+   "exit_codes": {
+    "request-create": 1,
+    "request-create-again": 1,
+    "controller-state": 0,
+    "controller-mode": 1
+   },
+   "verdict": "HARNESS_ERROR",
+   "claim": "Docker buildx plugin not found under the scratch HOME; no request made.",
+   "limitation": "Superseded by c16b.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c16-request-create"
+  },
+  {
+   "id": "c16b",
+   "dir": "c16b-request-create",
+   "title": "request_create through bootstrap (controller)",
+   "command": "python3 -I -S -B gate/provenance/bootstrap.py \u2026 -- gate/provenance/producer.py --action request --output \u2026 --controller \u2026 --commit d43f5f4\u2026",
+   "exit_codes": {
+    "request-create": 0,
+    "request-create-again": 1,
+    "controller-state": 0,
+    "controller-mode": 0
+   },
+   "verdict": "PASS",
+   "claim": "Locked request_create built the package (sha256 f5843050\u2026, same as hosted), wrote a 64-hex challenge and one pending row (mode 0600); schema has no time column (no expiry). A second request on the same controller -> CONTROLLER_ALREADY_EXISTS (exit 1).",
+   "limitation": "Controller trust (clock, state, rollback) is assumed, not tested.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c16b-request-create"
+  },
+  {
+   "id": "c18",
+   "dir": "c18-proposed-fix-isolated-ensurepip-v1a-ensurepip",
+   "title": "Proposed fix probe: python3 -I -m ensurepip (NOT the installed workflow)",
+   "command": "step body with \"-I -m ensurepip\"; scenarios v1a and v1c",
+   "exit_codes": {
+    "00-container-start": 0,
+    "01-step-python": 0,
+    "02-step-authenticate": 0,
+    "05-python-identity": 0,
+    "06-workspace-status": 0,
+    "07-container-remove": 0,
+    "v1c:00-container-start": 0,
+    "v1c:01-step-python": 0,
+    "v1c:02-step-authenticate": 0,
+    "v1c:05-python-identity": 0,
+    "v1c:06-workspace-status": 0,
+    "v1c:07-container-remove": 0
+   },
+   "verdict": "FIX_EFFECTIVE_FOR_V1_ONLY",
+   "claim": "With -I the planted ensurepip.py and runpy.py did not run (no markers) and the step still succeeded. V2 (hosted_setup.py:54) and V3 (inventory scope) need separate fixes.",
+   "limitation": "Emulated GitHub job: ubuntu:24.04 linux/amd64 container (Docker Desktop, arm64 host emulation), root user, workspace = scenario checkout, verbatim step bodies from the installed workflow, SIMULATED (fake) ACTIONS_ID_TOKEN_REQUEST_* values. Not a GitHub-hosted runner; no real OIDC token was requested. Proposal only; not applied to the repository.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c18-proposed-fix-isolated-ensurepip-v1a-ensurepip"
+  },
+  {
+   "id": "c17",
+   "dir": "c17-sign-gates-fabricated-output",
+   "title": "V4 chain: producer.sign() pre-signing gates accept a relabelled historical proof",
+   "command": "python3 -I -B sign_gates.py <clone without cosign> <hosted dry-run> <out> be23ec85\u2026 relabel|unchanged (cosign_path replaced by a raising stub)",
+   "exit_codes": {
+    "control-unchanged-receipt": 0,
+    "attack-relabeled-receipt": 0
+   },
+   "verdict": "VULNERABLE (V4 with V1/V2)",
+   "claim": "sign() passed SIGNING_REQUEST_BINDING, validate_receipt, validate_package, SIGNING_EVIDENCE_BINDING and SIGNING_STATEMENT_BINDING for an output that reuses run 40787574980 proof bytes with only receipt.json relabelled; it stopped at the stub (AUDIT_STOP_BEFORE_SIGNING). Control with the receipt unchanged: STALE_PROOF_RECEIPT.",
+   "limitation": "Nothing was signed; Cosign was never invoked; workflow variables simulated.",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/c17-sign-gates-fabricated-output"
+  },
+  {
+   "id": "x00",
+   "dir": "x00-harness-error-zsh-no-word-split",
+   "title": "Harness error record",
+   "command": "run_job.sh with an unsplit argument",
+   "exit_codes": {
+    "00-container-start": 125,
+    "01-step-python": 1,
+    "02-step-authenticate": 125,
+    "05-python-identity": 125,
+    "06-workspace-status": 1,
+    "07-container-remove": 0
+   },
+   "verdict": "HARNESS_ERROR",
+   "claim": "Invalid container name; re-run as c03/c04.",
+   "limitation": "",
+   "raw_output": "/Users/mackianni/forge/results/stage9/v32-audit-0001/x00-harness-error-zsh-no-word-split"
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format_version": {
+      "const": 1
+    },
+    "id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "tiers": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_kind": {
+            "enum": [
+              "source",
+              "module",
+              "binary",
+              "container"
+            ]
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "required_claims": {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "allowed_methods": {
+                  "items": {
+                    "enum": [
+                      "unit_tested",
+                      "property_tested",
+                      "tested_against_proved_model",
+                      "bounded_model_checked",
+                      "eval_measured",
+                      "runtime_monitored",
+                      "source_proof",
+                      "binary_proof",
+                      "kernel_checked_proof"
+                    ]
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "minimum_method": {
+                  "enum": [
+                    "unit_tested",
+                    "property_tested",
+                    "tested_against_proved_model",
+                    "bounded_model_checked",
+                    "eval_measured",
+                    "runtime_monitored",
+                    "source_proof",
+                    "binary_proof",
+                    "kernel_checked_proof"
+                  ]
+                }
+              },
+              "required": [
+                "minimum_method",
+                "allowed_methods"
+              ],
+              "type": "object"
+            },
+            "minProperties": 1,
+            "type": "object"
+          }
+        },
+        "required": [
+          "description",
+          "artifact_kind",
+          "required_claims"
+        ],
+        "type": "object"
+      },
+      "minProperties": 1,
+      "type": "object"
+    },
+    "version": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "format_version",
+    "id",
+    "version",
+    "tiers"
+  ],
+  "type": "object"
+}

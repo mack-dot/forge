@@ -1,0 +1,14 @@
+usage: release.py [-h] --candidate CANDIDATE --controller CONTROLLER
+                  --challenge CHALLENGE --implementation-sha256
+                  IMPLEMENTATION_SHA256 --records RECORDS [--admit]
+
+Independent provenance admission: Cosign authenticates; policy binds bytes.
+
+options:
+  -h, --help            show this help message and exit
+  --candidate CANDIDATE
+  --controller CONTROLLER
+  --challenge CHALLENGE
+  --implementation-sha256 IMPLEMENTATION_SHA256
+  --records RECORDS
+  --admit

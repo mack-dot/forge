@@ -1,0 +1,9 @@
+{"group": "guard", "case": "GITHUB_ACTIONS=true", "expected": "VERIFIER_NOT_INDEPENDENT", "observed": "VERIFIER_NOT_INDEPENDENT", "pass": true}
+{"group": "guard", "case": "GITHUB_ACTIONS='TRUE'", "expected": "VERIFIER_NOT_INDEPENDENT", "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "pass": false}
+{"group": "guard", "case": "ACTIONS_ID_TOKEN_REQUEST_URL set only", "expected": "VERIFIER_NOT_INDEPENDENT", "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "pass": false}
+{"group": "guard", "case": "runner-like env without the two variables", "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "pass": true}
+{"group": "guard", "case": "token absent", "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "pass": true}
+{"group": "git-env", "case": "public repo: real unauthenticated git fetch of d43f5f4 then source_tree", "expected": "ACCEPTED", "observed": "COMMAND_FAILED:source-fetch", "pass": false}
+{"group": "git-env", "case": "private repo branch (stopped before git runs)", "expected": "AUDIT_STOP_BEFORE_GIT_FETCH", "observed": "AUDIT_STOP_BEFORE_GIT_FETCH", "pass": true}
+{"group": "receipt", "case": "original hosted receipt (no execution field)", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"group": "receipt", "case": "RELABEL to new challenge/commit (+execution naming run 40810179164 on v33)", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}

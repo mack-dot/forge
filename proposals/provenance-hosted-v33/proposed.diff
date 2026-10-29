@@ -1,0 +1,337 @@
+diff --git a/.github/workflows/provenance-negative.yml b/.github/workflows/provenance-negative.yml
+--- a/.github/workflows/provenance-negative.yml
++++ b/.github/workflows/provenance-negative.yml
+@@ -46,7 +46,7 @@
+           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+           mkdir -p "$P" && tar -xzf "$A" -C "$P"
+-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
+           echo "$P/bin" >> "$GITHUB_PATH"
+           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+       - name: Authenticate the checkout before any repository code
+diff --git a/.github/workflows/provenance.yml b/.github/workflows/provenance.yml
+--- a/.github/workflows/provenance.yml
++++ b/.github/workflows/provenance.yml
+@@ -1,4 +1,6 @@
+ name: Forge Stage 9 provenance
++# GitHub records this name at dispatch; the verifier checks it (V4).
++run-name: forge-stage9 ${{ fromJSON(inputs.request).challenge }}
+ 
+ "on":
+   workflow_dispatch:
+@@ -40,7 +42,7 @@
+           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+           mkdir -p "$P" && tar -xzf "$A" -C "$P"
+-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
+           echo "$P/bin" >> "$GITHUB_PATH"
+           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+       - name: Authenticate the checkout before any repository code
+@@ -102,7 +104,7 @@
+           curl -fsSL -o "$A" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz
+           echo "3d10b78a944ee1cf236bf09f3913d0db359d3e80954dbda6d55f447b34099bae  $A" | sha256sum -c
+           mkdir -p "$P" && tar -xzf "$A" -C "$P"
+-          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -m ensurepip --default-pip
++          LD_LIBRARY_PATH="$P/lib" "$P/bin/python3" -I -m ensurepip --default-pip
+           echo "$P/bin" >> "$GITHUB_PATH"
+           echo "LD_LIBRARY_PATH=$P/lib" >> "$GITHUB_ENV"
+       - name: Authenticate the checkout before any repository code
+diff --git a/gate/provenance/bootstrap.py b/gate/provenance/bootstrap.py
+--- a/gate/provenance/bootstrap.py
++++ b/gate/provenance/bootstrap.py
+@@ -22,6 +22,7 @@
+ EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
+ CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
+                  '.glob', '.c', '.h', '.sh')
++ROOT_IMPORTABLE = ('.py', '.pyc', '.pyo', '.pyw', '.pyd', '.so', '.pth')
+ 
+ 
+ def fail(reason):
+@@ -37,12 +38,24 @@
+     return digest.hexdigest()
+ 
+ 
++def root_entries():
++    # A child started with -m or -c in the checkout has the root on sys.path, so
++    # nothing importable may live there (U128 V1-V3).
++    for name in sorted(os.listdir(ROOT)):
++        full = os.path.join(ROOT, name)
++        mode = os.lstat(full).st_mode
++        if stat.S_ISLNK(mode) or name == '__pycache__' or name.endswith(ROOT_IMPORTABLE) or (
++                stat.S_ISDIR(mode) and any(entry.startswith('__init__.') for entry in os.listdir(full))):
++            fail('ROOT_IMPORTABLE:' + name)
++
++
+ def check(expected):
+     lock_path = os.path.join(ROOT, LOCK)
+     if sha(lock_path) != expected:
+         fail('IMPLEMENTATION_LOCK')
+     with open(lock_path, 'rb') as stream:
+         files = json.loads(stream.read())['files']
++    root_entries()
+     for top in EXECUTABLE_ROOTS:
+         for directory, dirnames, filenames in os.walk(os.path.join(ROOT, top), followlinks=False):
+             for name in sorted(dirnames + filenames):
+diff --git a/gate/provenance/common.py b/gate/provenance/common.py
+--- a/gate/provenance/common.py
++++ b/gate/provenance/common.py
+@@ -163,6 +163,7 @@
+ EXECUTABLE_ROOTS = ('gate/provenance/', 'scripts/', 'examples/binary/')
+ CODE_SUFFIXES = ('.py', '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.pth', '.v', '.vo', '.vos', '.vok',
+                  '.glob', '.c', '.h', '.sh')
++ROOT_IMPORTABLE = ('.py', '.pyc', '.pyo', '.pyw', '.pyd', '.so', '.pth')
+ 
+ 
+ def source_tree(git_dir, commit, implementation, records):
+@@ -185,6 +186,10 @@
+     _, data, _ = records.run(['git', '--git-dir', git_dir, 'cat-file', 'blob', lock_entry[2]], 'source-lock')
+     require(data == (HERE / 'implementation.lock').read_bytes(), 'IMPLEMENTATION_LOCK_AT_COMMIT')
+     for path, (mode, kind, obj) in sorted(entries.items()):
++        top, _, rest = path.partition('/')
++        # The same root rule as bootstrap.py: nothing importable at the checkout root.
++        require(top != '__pycache__' and not top.endswith(ROOT_IMPORTABLE) and (rest or mode != '120000')
++                and not (rest.startswith('__init__.') and '/' not in rest), 'ROOT_IMPORTABLE:' + top)
+         if path.startswith(EXECUTABLE_ROOTS) and path != 'gate/provenance/implementation.lock':
+             require(mode in ('100644', '100755') and kind == 'blob', 'SOURCE_ENTRY_TYPE:' + path)
+             require('__pycache__' not in path.split('/') and (path in locked or (
+@@ -199,7 +204,8 @@
+ def repository_identity(policy, implementation, commit, records):
+     # Only the independent release verifier runs this, with its own read-only
+     # credential and its own Git store; never inside a workflow job.
+-    require(os.environ.get('GITHUB_ACTIONS') != 'true', 'VERIFIER_NOT_INDEPENDENT')
++    require(not os.environ.get('GITHUB_ACTIONS') and not os.environ.get('ACTIONS_ID_TOKEN_REQUEST_URL'),
++            'VERIFIER_NOT_INDEPENDENT')
+     require(re.fullmatch('[0-9a-f]{40}', commit), 'EXPECTED_SOURCE_COMMIT')
+     repo = policy['signer']['repository']
+     info = parse(fetch('https://api.github.com/repos/' + repo, records, 'repository',
+@@ -210,14 +216,36 @@
+     git_dir = Path(tempfile.mkdtemp(prefix='forge-verifier-git-'))
+     require(not git_dir.is_relative_to(ROOT), 'VERIFIER_GIT_DIR_LOCATION')
+     records.run(['git', 'init', '-q', '--bare', git_dir], 'source-store')
+-    # The credential reaches git only through the environment, never argv or records.
+-    basic = base64.b64encode(('x-access-token:' + os.environ['FORGE_VERIFIER_GITHUB_TOKEN']).encode()).decode()
+-    env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_CONFIG_COUNT='1',
+-               GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',
+-               GIT_CONFIG_VALUE_0='AUTHORIZATION: basic ' + basic)
++    # git never gets the token variable. It gets one header value, only for a
++    # private repository; a public fetch needs no credential.
++    env = {key: value for key, value in os.environ.items() if key != 'FORGE_VERIFIER_GITHUB_TOKEN'}
++    env['GIT_TERMINAL_PROMPT'] = '0'
++    if info['private']:
++        basic = base64.b64encode(('x-access-token:' + os.environ['FORGE_VERIFIER_GITHUB_TOKEN']).encode()).decode()
++        env.update(GIT_CONFIG_COUNT='1', GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',
++                   GIT_CONFIG_VALUE_0='AUTHORIZATION: basic ' + basic)
+     records.run(['git', '--git-dir', git_dir, 'fetch', '-q', '--depth', '1',
+                  'https://github.com/' + repo + '.git', commit], 'source-fetch', env=env)
+     source_tree(git_dir, commit, implementation, records)
++
++
++def run_identity(policy, request, execution, records):
++    """Check with the GitHub API that the receipt's run is the run dispatched for this request.
++
++    GitHub records the run name, which carries the challenge, at dispatch, before
++    any job runs. Trust assumption: GitHub executed the locked workflow in that
++    run; Forge does not observe the runner itself.
++    """
++    repo = policy['signer']['repository']
++    run = parse(fetch('https://api.github.com/repos/' + repo + '/actions/runs/' + execution['run_id'], records,
++                      'proof-run', token_name='FORGE_VERIFIER_GITHUB_TOKEN'))
++    require(str(run['id']) == execution['run_id'] and run['run_attempt'] == 1
++            and run['path'] == '.github/workflows/provenance.yml'
++            and 'refs/heads/' + run['head_branch'] == policy['signer']['ref']
++            and run['head_sha'] == request['expected_source_commit'] and run['event'] == policy['signer']['event']
++            and run['display_title'] == 'forge-stage9 ' + request['challenge']
++            and run['repository']['id'] == policy['signer']['repository_id']
++            and run['status'] == 'completed' and run['conclusion'] == 'success', 'PROOF_RUN_IDENTITY')
+ 
+ 
+ def signature(policy, bundle, blob, commit, records, *, negative_identity=None):
+diff --git a/gate/provenance/hosted_setup.py b/gate/provenance/hosted_setup.py
+--- a/gate/provenance/hosted_setup.py
++++ b/gate/provenance/hosted_setup.py
+@@ -51,14 +51,15 @@
+     pip = pins['pip']
+     requirement = Path(tempfile.mkdtemp()) / 'pip.txt'
+     requirement.write_text(f"pip=={pip['version']} --hash=sha256:{pip['sha256']}\n")
+-    records.run([sys.executable, '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
++    # -I: a child interpreter does not inherit isolation; keep the checkout off sys.path.
++    records.run([sys.executable, '-I', '-m', 'pip', 'install', '--disable-pip-version-check', '--require-hashes',
+                  '-r', requirement], 'pip-pin')
+     # The approved dependency lock was made on macOS, and pip writes the
+     # interpreter path into bin/idna. Run the recorded command through that path.
+     link = Path(pins['pydeps_python_path'])
+     records.run(['sudo', 'mkdir', '-p', link.parent], 'pydeps-python-directory')
+     records.run(['sudo', 'ln', '-s', sys.executable, link], 'pydeps-python-link')
+-    records.run([link, '-m', 'pip', 'install', '--require-hashes', '--only-binary=:all:', '--platform',
++    records.run([link, '-I', '-m', 'pip', 'install', '--require-hashes', '--only-binary=:all:', '--platform',
+                  'manylinux2014_x86_64', '--python-version', '3.12', '--implementation', 'cp', '--abi', 'cp312',
+                  '--target', '.toolchain/stage7/pydeps', '--no-compile', '--disable-pip-version-check',
+                  '--no-input', '--no-deps', '-r', UPSTREAM + '/tools/oft/requirements.txt'],
+diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementation.lock
+--- a/gate/provenance/implementation.lock
++++ b/gate/provenance/implementation.lock
+@@ -2,8 +2,8 @@
+   "contract_approval_commit": "097431cf458e5c62332575b09e953224471fa64d",
+   "end_to_end": false,
+   "files": {
+-    ".github/workflows/provenance-negative.yml": "d8a64d2b0b3b4b9eb643cc4d57c8a73711122cee6ca3f3cb41c59d5f0101308d",
+-    ".github/workflows/provenance.yml": "38df2542608c9a51f89a7f94d2a0e460a4c04b401a869368a3a3c7dc0edba39e",
++    ".github/workflows/provenance-negative.yml": "31fe70e8a145b343d62a5fa2274ea611b3e1725ba0a5660e4e03a1a294dac697",
++    ".github/workflows/provenance.yml": "9b935ffcbea956851a44849cc7632b6bdcd8bf907d472d54b744a171e700f82d",
+     "examples/binary/Execution.v": "6540ec35e20deed6081f3045c0944917d41124611e79e9df4daa43d257f08f8b",
+     "examples/binary/Images.v": "3f22a6c9494efe2eadfb0c9be3813bd3cf0edf803d49b9598113fff50b9eb563",
+     "examples/binary/Proof.v": "1b488738445a3c1208d32ee0c6f268711333b86d04123856658e5c1cb39e8663",
+@@ -19,13 +19,13 @@
+     "gate/expected-audit.md": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae",
+     "gate/provenance/Dockerfile": "bb0a3d3dee8865515c3b777a6799a6178d8d6c0c796d2b46d37e3fa13987b877",
+     "gate/provenance/artifact-identities.json": "0f2c86a49738b5bbdf15cd00b3490347dfece5f5239a3414a46d75c212fa9718",
+-    "gate/provenance/bootstrap.py": "0e8bbf27646a215161f341175022fee36daa4320065a6fb176bfce11bd06aec7",
+-    "gate/provenance/common.py": "2fdc4ffdad6ca4e9d99cbb55633073daa4f16aa6e9b4c763a6269e1d7d57f4f2",
+-    "gate/provenance/hosted_setup.py": "384902faef21de59e23bde0486b9a6e8e4643c911f7087893c6ee8dc704e676e",
++    "gate/provenance/bootstrap.py": "8895a0881586dfcdf844fca8c09ec8bac662cbbc158cadb19084cfc5a5385bbf",
++    "gate/provenance/common.py": "0c963d9c1f689383e5868cf93683c23c17dd199a624146ba82a9c39544c7b893",
++    "gate/provenance/hosted_setup.py": "710b24edd7b69561c8fb951afa42c3b8f2e1e16393d4cebbb6517a08f73d6c28",
+     "gate/provenance/observe.py": "aea3bf21a1d0267df0e374bbcfbf3e09ff2df2e3b1fa34d16fe115bc010a6c13",
+     "gate/provenance/preflight.py": "e4f40ecfbc2faed744ddb286a77abde140ef40d1fb1a7a245536a1171146cb39",
+-    "gate/provenance/producer.py": "c176e5dceb05608c4ed9e2ac45bdb1842c33db2d6e05b1c590eddd9b65f68d3c",
+-    "gate/provenance/release.py": "1877aef9688a089fe7fee9026b08968b559044862535c6c398b0e7603a1c6d6f",
++    "gate/provenance/producer.py": "b7360d971b213c6b5f3659807711f3225d7dc92df0ff060ddacc3f41c80c1003",
++    "gate/provenance/release.py": "fc135970998671a81fd7589d0a0062ed13f5ec321521553bbf6549b91bdee68f",
+     "gate/provenance/runtime.json": "4ef6b8037f48030b950168330591a0319fe26ef9b46178b576ed850a7c1125f4",
+     "gate/refund.py": "da370619a34d64d1fe82bf8d4cf4d54e3d8068a2d19a36ac0192d2d322a5d4fb",
+     "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
+@@ -62,7 +62,7 @@
+     "scripts/exit_stage_6.py": "7217f399a6edae0131b1e22a8692c9ec984198b04c1b3e2150cf2c7f12675352",
+     "scripts/exit_stage_7.py": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544",
+     "scripts/exit_stage_8.py": "6fbca72b078bf29d816b3e08b1cdb45cecef855635fc58127185e57e2ca2ce2f",
+-    "scripts/exit_stage_9.py": "a4718dcb41687197d82b59044bc4bec818dbf15d128d037bc589b90488c288ef",
++    "scripts/exit_stage_9.py": "d66d598f382e83840aeb5e365a5b18af6a498efbf055264bf93a3fe658fa9611",
+     "scripts/export_stage6_usage.py": "deddefa05edfc672a1418ac20042853380fd3dde1ec1e0477c767efa55421444",
+     "scripts/generate_claim_docs.py": "fc7b454c88590487105013ff82cb7d255d3eb70667dcc54b077ad62f9e584950",
+     "scripts/inventory_hardware.py": "abeab328debfb5eb91b68eacf126db308748634d3f91bf7aa800fe6c2cc3f297",
+diff --git a/gate/provenance/producer.py b/gate/provenance/producer.py
+--- a/gate/provenance/producer.py
++++ b/gate/provenance/producer.py
+@@ -177,7 +177,7 @@
+     _, state, _ = records.run(['docker', 'inspect', name], 'proof-container-state')
+     require(code == 0 and collect == 0 and not parse(state)[0]['State']['OOMKilled'], 'FRESH_PROOF_FAILED')
+     # Copy and hash the actual .vo inputs named by real rocqchk output.
+-    collector = ['python3', '-c', '\n'.join([
++    collector = ['python3', '-I', '-c', '\n'.join([
+         'import hashlib, json, pathlib, re',
+         f'base = pathlib.Path({linux!r})',
+         'log = (base / "independent-kernel.log").read_text()',
+@@ -198,6 +198,8 @@
+     records.run(['docker', 'cp', name + '-closure:' + linux + '/dependencies', str(proof / 'dependencies')],
+                 'closure-input-copy')
+     manifest = {'challenge': request['challenge'], 'source_commit': request['expected_source_commit'],
++                'execution': {'run_id': os.environ.get('GITHUB_RUN_ID', ''),
++                              'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT', '')},
+                 'files': files(proof), 'end_to_end': False}
+     write(proof / 'receipt.json', manifest)
+     validate_receipt(proof, policy, lock, request)
+diff --git a/gate/provenance/release.py b/gate/provenance/release.py
+--- a/gate/provenance/release.py
++++ b/gate/provenance/release.py
+@@ -9,7 +9,7 @@
+ import tarfile
+ 
+ from common import (ROOT, HERE, Rejected, Records, canonical, context, digest, files,
+-                    parse, read, repository_identity, require, sha, signature, write)
++                    parse, read, repository_identity, require, run_identity, sha, signature, write)
+ 
+ # Bound by the separately approved implementation lock. Expected identities
+ # never come from the receipt, the package or their signature.
+@@ -65,8 +65,13 @@
+ def checked_receipt(receipt_dir, policy, lock, request):
+     expected = read(IDENTITIES)['receipt']
+     manifest = read(receipt_dir / 'receipt.json')
+-    require(set(manifest) == {'challenge', 'source_commit', 'files', 'end_to_end'}
++    require(set(manifest) == {'challenge', 'source_commit', 'execution', 'files', 'end_to_end'}
+             and manifest['end_to_end'] is False and isinstance(manifest['files'], dict), 'PROOF_RECEIPT_FIELDS')
++    # The run that made this receipt; verify() checks it with the GitHub API (V4).
++    execution = manifest['execution']
++    require(isinstance(execution, dict) and set(execution) == {'run_id', 'run_attempt'}
++            and re.fullmatch('[1-9][0-9]{0,19}', execution['run_id']) and execution['run_attempt'] == '1',
++            'PROOF_RECEIPT_EXECUTION')
+     require(hex64(request['challenge']) and re.fullmatch('[0-9a-f]{40}', request['expected_source_commit']),
+             'REQUEST_FORMAT')
+     require(manifest['challenge'] == request['challenge']
+@@ -268,10 +273,13 @@
+     validate_package(policy, request, root)
+     require(predicate['purpose'] == 'release', 'SECURITY_CONTROL_NOT_ADMISSIBLE')
+     repository_identity(policy, implementation, request['expected_source_commit'], records)
++    run_identity(policy, request, read(root / 'proof/receipt.json')['execution'], records)
+     require(files(root) == before, 'CANDIDATE_CHANGED_DURING_VERIFICATION')
+     context(expected_lock)
+     return {'signature_exit_code': code, 'result': 'authenticated_provenance',
+-            'kernel_execution_here': False, 'producer_fresh_kernel_receipt_verified': True,
++            'kernel_execution_here': False, 'producer_receipt_labels_consistent': True,
++            'proof_run_identity_checked_with_github_api': True,
++            'freshness_trust_assumption': 'GitHub executed the locked workflow in the recorded run',
+             'end_to_end': False, 'statement_sha256': sha(canonical(statement))}
+ 
+ 
+diff --git a/scripts/exit_stage_9.py b/scripts/exit_stage_9.py
+--- a/scripts/exit_stage_9.py
++++ b/scripts/exit_stage_9.py
+@@ -1,5 +1,12 @@
+ #!/usr/bin/env python3
+ """Run real Stage 9 controls. Never treat setup errors as security rejections."""
++import sys
++
++# Run only as a child of the authenticated bootstrap (U127 D3, U131). Refuse before
++# any import can resolve from the checkout; sys is built in.
++if not (sys.flags.ignore_environment and sys.flags.no_user_site and sys.flags.dont_write_bytecode
++        and 'forge-pycache-' in (sys.pycache_prefix or '')):
++    raise SystemExit('EXIT_SETUP_NOT_ESTABLISHED: run through gate/provenance/bootstrap.py')
+ import argparse
+ import base64
+ import copy
+@@ -42,7 +49,10 @@
+         def gate(path, name, expected_code, reason=None, *, observer=None, admit=False):
+             result_dir = attempt / name
+             script = 'observe.py' if observer else 'release.py'
+-            command = ['python3', str(ROOT / 'gate/provenance' / script), '--candidate', str(path),
++            # Launch through the authenticated bootstrap: isolated Python, no bytecode.
++            command = ['python3', '-I', '-S', '-B', str(ROOT / 'gate/provenance/bootstrap.py'),
++                       '--implementation-sha256', config['implementation_sha256'], '--',
++                       str(ROOT / 'gate/provenance' / script), '--candidate', str(path),
+                        '--controller', str(controller), '--challenge', config['challenge'],
+                        '--implementation-sha256', config['implementation_sha256'], '--records', str(result_dir)]
+             if observer:
+@@ -108,12 +118,13 @@
+             path = fixture(args.case)
+             if args.case == 'unsigned':
+                 bundle = read(path / 'release.sigstore.json')
++                # Only the signatures change, so Cosign's rejection can come only from their absence.
+                 bundle['dsseEnvelope']['signatures'] = []
+-                unsigned = parse(base64.b64decode(bundle['dsseEnvelope']['payload'], validate=True))
+-                unsigned['predicate']['purpose'] = 'security-control'
+-                bundle['dsseEnvelope']['payload'] = base64.b64encode(canonical(unsigned)).decode()
+                 write(path / 'release.sigstore.json', bundle)
+-                markers = ['exactly one signature is required']
++                # Cosign 3.1.4 rejects an emptied envelope at the log-inclusion check
++                # (results/stage9/cosign-offline-0001); older releases at the count check.
++                markers = ['exactly one signature is required',
++                           'failed to verify log inclusion: transparency log signature does not match']
+             elif args.case == 'wrong-signer':
+                 shutil.copyfile(path / 'wrong-signer.sigstore.json', path / 'release.sigstore.json')
+                 probe = Records(attempt / 'wrong-signer-own-identity')
+@@ -135,8 +146,13 @@
+                            'provided artifact digest does not match any digest in statement']
+             result_dir, checks = gate(path, 'negative', 1, 'SIGNATURE_REJECTED')
+             require(len(checks) == 1 and checks[0]['exit_code'] != 0, 'CHECKER_REJECTION_NOT_EXECUTED')
++            # Cosign decides. The same positive check must pass again right after the
++            # rejection, so the rejection comes from the mutation, not from Cosign, TUF or
++            # the network. Error text is recorded, never required (U127 D1).
++            _, after = gate(candidate, 'positive-after', 0)
++            require_signature_success(after)
+             raw = (result_dir / checks[0]['stderr']).read_text() + (result_dir / checks[0]['stdout']).read_text()
+-            require(any(marker in raw for marker in markers), 'NOT_THE_INTENDED_SECURITY_REJECTION')
++            outcomes[-2]['matched_known_cosign_text'] = any(marker in raw for marker in markers)
+         elif args.case == 'wrong-policy':
+             signed_control('wrong-policy', 'POLICY_BINDING')
+             signed_control('stale-request', 'STALE_OR_SUBSTITUTED_REQUEST')

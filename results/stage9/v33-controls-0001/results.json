@@ -1,0 +1,776 @@
+{
+  "candidate_lock": "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+  "repo_head": "fc0a40d99afa308e7cf75401dcbd569758935765",
+  "results": [
+    {
+      "control": "clean candidate",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "BOOTSTRAP_VERIFIED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_VERIFIED"
+    },
+    {
+      "control": "installed v3.2 lock refused by candidate",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "IMPLEMENTATION_LOCK",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK"
+    },
+    {
+      "control": "bootstrap: root ensurepip.py",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:ensurepip.py"
+    },
+    {
+      "control": "bootstrap: root runpy.py",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:runpy.py"
+    },
+    {
+      "control": "bootstrap: root json.py",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:json.py"
+    },
+    {
+      "control": "bootstrap: root sitecustomize.py",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:sitecustomize.py"
+    },
+    {
+      "control": "bootstrap: root pip package",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:pip"
+    },
+    {
+      "control": "bootstrap: root sourceless bytecode",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:json.pyc"
+    },
+    {
+      "control": "bootstrap: root extension module",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:json.cpython-310-darwin.so"
+    },
+    {
+      "control": "bootstrap: root pth file",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:evil.pth"
+    },
+    {
+      "control": "bootstrap: root bytecode cache",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:__pycache__"
+    },
+    {
+      "control": "bootstrap: root symlink to a package",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:json"
+    },
+    {
+      "control": "bootstrap: root data file accepted",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "BOOTSTRAP_VERIFIED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_VERIFIED"
+    },
+    {
+      "control": "bootstrap: root directory without __init__ accepted",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "BOOTSTRAP_VERIFIED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_VERIFIED"
+    },
+    {
+      "control": "v1 without -I (v3.2 behaviour)",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-m",
+        "ensurepip",
+        "--version"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": null,
+      "attacker_code_executed": true,
+      "pass": true,
+      "last_line": ""
+    },
+    {
+      "control": "v1 with -I (candidate)",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-m",
+        "ensurepip",
+        "--version"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "pip",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "pip 23.0.1"
+    },
+    {
+      "control": "v2 without -I (v3.2 behaviour)",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-m",
+        "pip",
+        "--version"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": null,
+      "attacker_code_executed": true,
+      "pass": true,
+      "last_line": ""
+    },
+    {
+      "control": "v2 with -I (candidate)",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-m",
+        "pip",
+        "--version"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "pip",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "pip 23.3.2 from /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pip (python 3.10)"
+    },
+    {
+      "control": "collector with -I in a planted cwd",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-c",
+        "import hashlib, json, pathlib, re; print(\"collector-ok\")"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "collector-ok",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "collector-ok"
+    },
+    {
+      "control": "source_tree: candidate commit",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "fc0a40d99afa308e7cf75401dcbd569758935765",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-01"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "ACCEPTED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ACCEPTED"
+    },
+    {
+      "control": "source_tree: installed main carries the old lock",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "d43f5f4de55573a17f4f9cf4d41528dd159e9f2f",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-02"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "IMPLEMENTATION_LOCK_AT_COMMIT",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "IMPLEMENTATION_LOCK_AT_COMMIT"
+    },
+    {
+      "control": "source_tree: commit with root ensurepip.py",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "a40edd891e86214cbaf7c20e8148811692eaae50",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-03"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ROOT_IMPORTABLE:ensurepip.py"
+    },
+    {
+      "control": "source_tree: commit with root pip package",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "6415588b159dd84db3f4dfdc20aaddde40816c20",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-04"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ROOT_IMPORTABLE:pip"
+    },
+    {
+      "control": "source_tree: commit with root runpy.py",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "9767dd0cf9238770bf820d59424158ffe888070e",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-05"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ROOT_IMPORTABLE:runpy.py"
+    },
+    {
+      "control": "source_tree: commit with root pth file",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "7ee9cc14ec844853b422f397d2eef9cf75990624",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-06"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ROOT_IMPORTABLE:evil.pth"
+    },
+    {
+      "control": "source_tree: commit with root bytecode cache",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "814dcb40e9d4ff16aef94d882c3e6b2222240a71",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-07"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ROOT_IMPORTABLE:__pycache__"
+    },
+    {
+      "control": "source_tree: commit with a root symlink",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/probe.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "21b7b87c117c49e25e1c6379429ac45f9b017446",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/tree-08"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "ROOT_IMPORTABLE",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ROOT_IMPORTABLE:json"
+    },
+    {
+      "control": "guard: GITHUB_ACTIONS=1 refused",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "public",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard-1"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "VERIFIER_NOT_INDEPENDENT",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "VERIFIER_NOT_INDEPENDENT {}"
+    },
+    {
+      "control": "guard: OIDC request URL refused",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "public",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard-2"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "VERIFIER_NOT_INDEPENDENT",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "VERIFIER_NOT_INDEPENDENT {}"
+    },
+    {
+      "control": "credential: public fetch gets no token and no header",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "public",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard-3"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "STOP_BEFORE_NETWORK {\"header\": false, \"token_var\": false}",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "STOP_BEFORE_NETWORK {\"header\": false, \"token_var\": false}"
+    },
+    {
+      "control": "credential: private fetch gets the header but not the token variable",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "private",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/guard-4"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "STOP_BEFORE_NETWORK {\"header\": true, \"token_var\": false}",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "STOP_BEFORE_NETWORK {\"header\": true, \"token_var\": false}"
+    },
+    {
+      "control": "harness launch form works from another cwd",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo/gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo/gate/provenance/release.py",
+        "--help"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "usage: release.py",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "  --admit"
+    },
+    {
+      "control": "harness leaves no bytecode cache",
+      "caches": [],
+      "pass": true
+    },
+    {
+      "control": "bootstrap still verifies after the harness ran",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "gate/provenance/bootstrap.py",
+        "--implementation-sha256",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "--check"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "BOOTSTRAP_VERIFIED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_VERIFIED"
+    },
+    {
+      "control": "harness without controller.json: setup error, not a verdict",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "scripts/exit_stage_9.py",
+        "--case",
+        "unsigned"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "EXIT_SETUP_NOT_ESTABLISHED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "EXIT_SETUP_NOT_ESTABLISHED: controller.json: FileNotFoundError"
+    },
+    {
+      "control": "harness relaunch refuses a wrong lock",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "scripts/exit_stage_9.py",
+        "--case",
+        "unsigned"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK"
+    },
+    {
+      "control": "harness relaunch refuses a changed locked file",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "scripts/exit_stage_9.py",
+        "--case",
+        "unsigned"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_reason": "BOOTSTRAP_REJECTED: LOCKED_INPUT",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "BOOTSTRAP_REJECTED: LOCKED_INPUT:gate/provenance/release.py"
+    },
+    {
+      "control": "v4 relabelled receipt accepted by installed v3.2 (exploit reproduced)",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4.py",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/main",
+        "be23ec85ec2d9652bd1c87f6870c0d7130862af169319af24975b941ac3b5f57",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/artifact/x/proof",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/request/request.json",
+        "v32",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4-37"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "ACCEPTED",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "ACCEPTED"
+    },
+    {
+      "control": "v4 relabelled receipt without execution refused by candidate",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/artifact/x/proof",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/request/request.json",
+        "none",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4-38"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "PROOF_RECEIPT_FIELDS",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "PROOF_RECEIPT_FIELDS"
+    },
+    {
+      "control": "v4 relabelled receipt naming the real rehearsal run",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/artifact/x/proof",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/request/request.json",
+        "candidate:40810179164:1",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4-39"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "PROOF_RUN_IDENTITY",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "PROOF_RUN_IDENTITY"
+    },
+    {
+      "control": "v4 relabelled receipt naming the B2-prime dry-run run",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/artifact/x/proof",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/request/request.json",
+        "candidate:40787574980:1",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4-40"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "PROOF_RUN_IDENTITY",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "PROOF_RUN_IDENTITY"
+    },
+    {
+      "control": "v4 relabelled receipt claiming a re-run attempt",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/artifact/x/proof",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/request/request.json",
+        "candidate:40810179164:2",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4-41"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "PROOF_RECEIPT_EXECUTION",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "PROOF_RECEIPT_EXECUTION"
+    },
+    {
+      "control": "v4 relabelled receipt naming a nonexistent run",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4.py",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/v33-repo",
+        "eb4b93dbe9b2116b4fd0a0cfd0de4eaa3694241a0352f188ec02a1ac3ede0757",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/artifact/x/proof",
+        "/Users/mackianni/forge-stage9-rehearsal-0001/request/request.json",
+        "candidate:1:1",
+        "/Users/mackianni/forge/results/stage9/v33-controls-0001/v4-42"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "expected_reason": "GITHUB_HTTP_STATUS",
+      "attacker_code_executed": false,
+      "pass": true,
+      "last_line": "GITHUB_HTTP_STATUS:gh-api-error"
+    }
+  ],
+  "end_to_end": false
+}

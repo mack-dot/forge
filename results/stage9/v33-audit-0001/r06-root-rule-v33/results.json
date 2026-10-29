@@ -1,0 +1,170 @@
+[
+ {
+  "case": "root ensurepip.py",
+  "commit": "3b64a7c49d44b17d90f58a33fa04780e359ef1b3",
+  "verifier_source_tree": "ROOT_IMPORTABLE:ensurepip.py",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:ensurepip.py"
+ },
+ {
+  "case": "root runpy.py",
+  "commit": "6c891584bfe1be0b85b526d437f69660fc061c84",
+  "verifier_source_tree": "ROOT_IMPORTABLE:runpy.py",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:runpy.py"
+ },
+ {
+  "case": "root json.py",
+  "commit": "19696dbd104f4cefaddfbb5da6efccb1a8668586",
+  "verifier_source_tree": "ROOT_IMPORTABLE:json.py",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:json.py"
+ },
+ {
+  "case": "root sitecustomize.py",
+  "commit": "ccbdb210e773af754628f85cdea2ea54d7a24a76",
+  "verifier_source_tree": "ROOT_IMPORTABLE:sitecustomize.py",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:sitecustomize.py"
+ },
+ {
+  "case": "root package pip/__init__.py",
+  "commit": "0a8da3a83c245bde578376ffb3246e70432afc68",
+  "verifier_source_tree": "ROOT_IMPORTABLE:pip",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:pip"
+ },
+ {
+  "case": "root NAMESPACE pip/__main__.py (no __init__)",
+  "commit": "b331781169db1af70f9074940fa2a1e23d706254",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root namespace pkg with submodule ns/mod.py",
+  "commit": "2cda3f3aeab36172d1d92da45158b6e67ee489e3",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root x.pyw",
+  "commit": "f47876d0f8959a2e09dc671a61a5c1fafdd09208",
+  "verifier_source_tree": "ROOT_IMPORTABLE:x.pyw",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:x.pyw"
+ },
+ {
+  "case": "root x.pth",
+  "commit": "320d70452acd751b1acf2310fb847ce8dc56c80f",
+  "verifier_source_tree": "ROOT_IMPORTABLE:x.pth",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:x.pth"
+ },
+ {
+  "case": "root x.so",
+  "commit": "5bacc01dd8f719290706007d05f0a6e478464f99",
+  "verifier_source_tree": "ROOT_IMPORTABLE:x.so",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:x.so"
+ },
+ {
+  "case": "root x.cpython-310-x86_64-linux-gnu.so",
+  "commit": "3b9a211d2907102be7b04aa51179a1f947529141",
+  "verifier_source_tree": "ROOT_IMPORTABLE:x.cpython-310-x86_64-linux-gnu.so",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:x.cpython-310-x86_64-linux-gnu.so"
+ },
+ {
+  "case": "root __pycache__/x.cpython-310.pyc",
+  "commit": "b459d1898545bc16d9ccadb847ac9a20ed8956ad",
+  "verifier_source_tree": "ROOT_IMPORTABLE:__pycache__",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:__pycache__"
+ },
+ {
+  "case": "root directory named json.py/",
+  "commit": "fd44bda343067ced2e8350e5882d7f55398766ff",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:json.py"
+ },
+ {
+  "case": "root symlink lnk -> gate",
+  "commit": "eba132ddf2a6588a6e0e7bbcc9531ea127e12079",
+  "verifier_source_tree": "ROOT_IMPORTABLE:lnk",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:lnk"
+ },
+ {
+  "case": "root gitlink (submodule) pip",
+  "commit": "9afe6b3b4a9eb222229a2287f3732d031f329e6c",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root foo.zip",
+  "commit": "b4e62cfa68f5319a81735309bbb5bf76a8b837a1",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root foo.egg",
+  "commit": "f207c29cf3a687fa969b93f69d325ec2467a5549",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root foo.pyz",
+  "commit": "873211b65a8208869b86dae52b9f765d463e308d",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root __init__.py",
+  "commit": "7fbdeca1f0d0336447a663df90facae56d1e8300",
+  "verifier_source_tree": "ROOT_IMPORTABLE:__init__.py",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:__init__.py"
+ },
+ {
+  "case": "root pkg/__init__.cpython-310-x86_64-linux-gnu.so",
+  "commit": "7f989a90b72c4eed88fee90e9f2f39eaab3b1ffd",
+  "verifier_source_tree": "ROOT_IMPORTABLE:pkg",
+  "producer_bootstrap_exit": 1,
+  "producer_bootstrap_last_line": "BOOTSTRAP_REJECTED: ROOT_IMPORTABLE:pkg"
+ },
+ {
+  "case": "nested pkg2/sub/__init__.py (not at root)",
+  "commit": "30db9c91bdb60f2bf42c7d1d10d9a8c3351af6fa",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "gate/json.py",
+  "commit": "4164bb1e73f5eb08bfe2a9d30503ab002d7a3094",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "toolchain/json.py",
+  "commit": "ae149dc76d32428a583cb30917190cd3fd2120ec",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ },
+ {
+  "case": "root .curlrc",
+  "commit": "98749731e7267e425f04fba33992fa71b18400b9",
+  "verifier_source_tree": "ACCEPTED",
+  "producer_bootstrap_exit": 0,
+  "producer_bootstrap_last_line": "BOOTSTRAP_VERIFIED"
+ }
+]

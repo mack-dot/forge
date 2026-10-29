@@ -1,0 +1,28 @@
+{"group": "guard", "case": "GITHUB_ACTIONS=true", "expected": "VERIFIER_NOT_INDEPENDENT", "observed": "VERIFIER_NOT_INDEPENDENT", "pass": true}
+{"group": "guard", "case": "GITHUB_ACTIONS='TRUE'", "expected": "VERIFIER_NOT_INDEPENDENT", "observed": "VERIFIER_NOT_INDEPENDENT", "pass": true}
+{"group": "guard", "case": "ACTIONS_ID_TOKEN_REQUEST_URL set only", "expected": "VERIFIER_NOT_INDEPENDENT", "observed": "VERIFIER_NOT_INDEPENDENT", "pass": true}
+{"group": "guard", "case": "runner-like env without the two variables", "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "pass": true}
+{"group": "guard", "case": "token absent", "expected": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "observed": "GITHUB_TOKEN_REQUIRED:FORGE_VERIFIER_GITHUB_TOKEN", "pass": true}
+{"group": "git-env", "case": "public repo: real unauthenticated git fetch of d43f5f4 then source_tree", "expected": "IMPLEMENTATION_LOCK_AT_COMMIT", "observed": "IMPLEMENTATION_LOCK_AT_COMMIT", "pass": true}
+{"group": "git-env", "case": "private repo branch (stopped before git runs)", "expected": "AUDIT_STOP_BEFORE_GIT_FETCH", "observed": "AUDIT_STOP_BEFORE_GIT_FETCH", "pass": true}
+{"group": "run_identity", "case": "REAL old dry-run record 40787574980", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "REAL old provenance.yml run 40810179164 (title = workflow name)", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC: real 40810179164 record with the matching title", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC run_attempt 2", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC other path", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC other branch", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC other head_sha", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC event push", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC title + space", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC title other challenge", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC status in_progress", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC conclusion failure", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC other repository id", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC id mismatch (receipt names another run)", "expected": "PROOF_RUN_IDENTITY", "observed": "PROOF_RUN_IDENTITY", "pass": true}
+{"group": "run_identity", "case": "SYNTHETIC tag named main (head_branch \"main\", hypothetical API value)", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"group": "receipt", "case": "original hosted receipt (no execution field)", "expected": "PROOF_RECEIPT_FIELDS", "observed": "PROOF_RECEIPT_FIELDS", "pass": true}
+{"group": "receipt", "case": "RELABEL to new challenge/commit (+execution naming run 40810179164 on v33)", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"group": "receipt", "case": "execution run_attempt 2", "expected": "PROOF_RECEIPT_EXECUTION", "observed": "PROOF_RECEIPT_EXECUTION", "pass": true}
+{"group": "receipt", "case": "execution leading-zero run_id", "expected": "PROOF_RECEIPT_EXECUTION", "observed": "PROOF_RECEIPT_EXECUTION", "pass": true}
+{"group": "receipt", "case": "execution extra key", "expected": "PROOF_RECEIPT_EXECUTION", "observed": "PROOF_RECEIPT_EXECUTION", "pass": true}
+{"group": "receipt", "case": "execution run_id as integer", "expected": "PROOF_RECEIPT_MALFORMED:TypeError", "observed": "PROOF_RECEIPT_MALFORMED:TypeError", "pass": true}

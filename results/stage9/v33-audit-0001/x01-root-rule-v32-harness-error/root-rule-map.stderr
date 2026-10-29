@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/audit-harness/root_rule_map.py", line 48, in <module>
+    git('-c', 'user.name=a', '-c', 'user.email=a@invalid', 'commit', '-qm', 'plant ' + name)
+  File "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/audit-harness/root_rule_map.py", line 13, in git
+    return subprocess.run(['git', '-C', str(B)] + list(a), capture_output=True, text=True, check=check).stdout.strip()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/audit-work2/rr-v32', '-c', 'user.name=a', '-c', 'user.email=a@invalid', 'commit', '-qm', 'plant root gitlink (submodule) pip']' returned non-zero exit status 1.

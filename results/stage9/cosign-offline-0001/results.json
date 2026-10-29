@@ -1,0 +1,161 @@
+{
+  "identity": "https://github.com/cli/cli/.github/workflows/deployment.yml@refs/heads/trunk",
+  "workflow_sha": "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+  "trigger": "workflow_dispatch",
+  "results": [
+    {
+      "name": "version",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "version",
+        "--json"
+      ],
+      "exit": 0,
+      "last_line": "}"
+    },
+    {
+      "name": "initialize",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "initialize"
+      ],
+      "exit": 0,
+      "last_line": ""
+    },
+    {
+      "name": "positive",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "verify-blob-attestation",
+        "--bundle",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/bundle.json",
+        "--type",
+        "https://slsa.dev/provenance/v1",
+        "--certificate-identity",
+        "https://github.com/cli/cli/.github/workflows/deployment.yml@refs/heads/trunk",
+        "--certificate-oidc-issuer",
+        "https://token.actions.githubusercontent.com",
+        "--certificate-github-workflow-repository",
+        "cli/cli",
+        "--certificate-github-workflow-ref",
+        "refs/heads/trunk",
+        "--certificate-github-workflow-trigger",
+        "workflow_dispatch",
+        "--certificate-github-workflow-sha",
+        "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/gh_2.103.3_macOS_arm64.zip"
+      ],
+      "exit": 0,
+      "last_line": "Verified OK"
+    },
+    {
+      "name": "unsigned",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "verify-blob-attestation",
+        "--bundle",
+        "/Users/mackianni/forge/results/stage9/cosign-offline-0001/unsigned.json",
+        "--type",
+        "https://slsa.dev/provenance/v1",
+        "--certificate-identity",
+        "https://github.com/cli/cli/.github/workflows/deployment.yml@refs/heads/trunk",
+        "--certificate-oidc-issuer",
+        "https://token.actions.githubusercontent.com",
+        "--certificate-github-workflow-repository",
+        "cli/cli",
+        "--certificate-github-workflow-ref",
+        "refs/heads/trunk",
+        "--certificate-github-workflow-trigger",
+        "workflow_dispatch",
+        "--certificate-github-workflow-sha",
+        "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/gh_2.103.3_macOS_arm64.zip"
+      ],
+      "exit": 1,
+      "forge_marker_found": false,
+      "last_line": "error during command execution: failed to verify log inclusion: transparency log signature does not match"
+    },
+    {
+      "name": "unsigned-signatures-only",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "verify-blob-attestation",
+        "--bundle",
+        "/Users/mackianni/forge/results/stage9/cosign-offline-0001/unsigned-only.json",
+        "--type",
+        "https://slsa.dev/provenance/v1",
+        "--certificate-identity",
+        "https://github.com/cli/cli/.github/workflows/deployment.yml@refs/heads/trunk",
+        "--certificate-oidc-issuer",
+        "https://token.actions.githubusercontent.com",
+        "--certificate-github-workflow-repository",
+        "cli/cli",
+        "--certificate-github-workflow-ref",
+        "refs/heads/trunk",
+        "--certificate-github-workflow-trigger",
+        "workflow_dispatch",
+        "--certificate-github-workflow-sha",
+        "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/gh_2.103.3_macOS_arm64.zip"
+      ],
+      "exit": 1,
+      "forge_marker_found": false,
+      "last_line": "error during command execution: failed to verify log inclusion: transparency log signature does not match"
+    },
+    {
+      "name": "wrong-signer",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "verify-blob-attestation",
+        "--bundle",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/bundle.json",
+        "--type",
+        "https://slsa.dev/provenance/v1",
+        "--certificate-identity",
+        "https://github.com/cli/cli/.github/workflows/deployment-negative.yml@refs/heads/trunk",
+        "--certificate-oidc-issuer",
+        "https://token.actions.githubusercontent.com",
+        "--certificate-github-workflow-repository",
+        "cli/cli",
+        "--certificate-github-workflow-ref",
+        "refs/heads/trunk",
+        "--certificate-github-workflow-trigger",
+        "workflow_dispatch",
+        "--certificate-github-workflow-sha",
+        "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/gh_2.103.3_macOS_arm64.zip"
+      ],
+      "exit": 1,
+      "forge_marker_found": false,
+      "last_line": "error during command execution: failed to verify certificate identity: no matching CertificateIdentity found, last error: expected SAN value \"https://github.com/cli/cli/.github/workflows/deployment-negative.yml@refs/heads/trunk\", got \"https://github.com/cli/cli/.github/workflows/deployment.yml@refs/"
+    },
+    {
+      "name": "wrong-digest",
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/stage9/cosign",
+        "verify-blob-attestation",
+        "--bundle",
+        "/private/tmp/claude-501/-Users-mackianni-forge/a7ed853b-cf81-4d76-be1c-b5973307c9b2/scratchpad/public-bundle2/bundle.json",
+        "--type",
+        "https://slsa.dev/provenance/v1",
+        "--certificate-identity",
+        "https://github.com/cli/cli/.github/workflows/deployment.yml@refs/heads/trunk",
+        "--certificate-oidc-issuer",
+        "https://token.actions.githubusercontent.com",
+        "--certificate-github-workflow-repository",
+        "cli/cli",
+        "--certificate-github-workflow-ref",
+        "refs/heads/trunk",
+        "--certificate-github-workflow-trigger",
+        "workflow_dispatch",
+        "--certificate-github-workflow-sha",
+        "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+        "/Users/mackianni/forge/results/stage9/cosign-offline-0001/different.bin"
+      ],
+      "exit": 1,
+      "forge_marker_found": true,
+      "last_line": "error during command execution: failed to verify signature: provided artifact digests do not match digests in statement"
+    }
+  ],
+  "end_to_end": false
+}

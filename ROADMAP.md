@@ -1145,12 +1145,15 @@ envelopes and external transparency records, which may contain time metadata.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/exit_stage_9.py --case valid-bundle` | A valid signed bundle for the intended artifact and policy passes the release check. | NOT RUN |
-| `python3 scripts/exit_stage_9.py --case unsigned` | An unsigned bundle is rejected. | NOT RUN |
-| `python3 scripts/exit_stage_9.py --case wrong-signer` | A bundle from an unauthorized signer is rejected. | NOT RUN |
-| `python3 scripts/exit_stage_9.py --case wrong-digest` | A valid signature over the wrong artifact digest is rejected. | NOT RUN |
-| `python3 scripts/exit_stage_9.py --case wrong-policy` | A bundle for an unaccepted policy version is rejected. | NOT RUN |
-| `python3 scripts/exit_stage_9.py --case deployed-identity` | Actual deployed digest matches the accepted release; a mismatch is reported and prevents a coverage claim. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case valid-bundle` | A valid signed bundle for the intended artifact and policy passes the release check. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case unsigned` | An unsigned bundle is rejected. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-signer` | A bundle from an unauthorized signer is rejected. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-digest` | A valid signature over the wrong artifact digest is rejected. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-policy` | A bundle for an unaccepted policy version is rejected. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case deployed-identity` | Actual deployed digest matches the accepted release; a mismatch is reported and prevents a coverage claim. | NOT RUN |
+
+`$LOCK` is the installed implementation lock. The harness refuses any other launch
+(U131); run the inline lock/bootstrap byte check first.
 
 Run the established signature verifier for the actual accept/reject decision.
 Signing an unsupported claim does not make it established.
@@ -1592,6 +1595,20 @@ Not EXIT results. See U108–U121 and `results/stage9/b3-0001/`. `end_to_end=fal
 | Fresh `main` clone: inline lock check; `bootstrap.py --check` | 0; 0 | Lock `be23ec85…`; `BOOTSTRAP_VERIFIED`. |
 | `common.source_tree` on `d260d2a9` / `3670d688` | 0 | ACCEPTED / `IMPLEMENTATION_LOCK_AT_COMMIT`. |
 | Local sync of the 9 files; local `bootstrap.py --check` | 1, then 0 | First: `BYTECODE_CACHE`; caches removed; then verified. |
+| Proof gate on records PR #18 (head `2ca14bdd…`); owner squash merge | 0; 0 | `main` = `d43f5f4d…`, tree `9f6bb222…` = records branch tree. No other run; no variables. |
+| Rehearsal request (U124): `producer.py --action request` from a fresh `main` clone (`d43f5f4d`) | 0 | 9 min; controller package `f584305022f2…` = B2′ package; challenge stored in the local controller. |
+| Rehearsal dispatch: `gh workflow run provenance.yml --ref main` (run 40810179164) | 0 | Conclusion success in 32 min: `proof` success, `sign` skipped; token Contents/Metadata read only. |
+| Rehearsal verification with controller code (`results/stage9/rehearsal-0001/verification.json`) | 0 | Artifact digest `34b215d3…` matches; request, package, receipt (656 files), evidence and statement bindings pass; 4/4 tamper controls rejected. |
+| `proposals/approval-integrity/audit_main_approvals.py mack-dot/forge 5` | 1 | #16, #17, #18 OVERRIDE (rule-suite bypass, 0 reviews); `993bee7b`, `e37ef2c5` direct pushes. Forged-pass and missing-record controls: no false APPROVED. |
+| Pinned Cosign 3.1.4 (darwin-arm64 `9f9b8cd5…`) on a public cli/cli SLSA bundle (`results/stage9/cosign-offline-0001`) | 0 | Verified OK with Forge's flags; wrong-signer and wrong-digest markers match; unsigned marker does not (D1). |
+| Independent adversarial audit of main `d43f5f4d` (`results/stage9/v32-audit-0001/results.json`, 22 checks) | — | V1 HIGH: root `ensurepip.py`/`runpy.py` runs before authentication in OIDC jobs (emulated). V2 HIGH: root `pip/` runs after bootstrap. V3 MEDIUM: inventory scope. V4 MEDIUM: receipt freshness is a label. Other controls pass. |
+| Permission test: `gh api user`; `gh api repos/mack-dot/forge --jq .permissions` | 0; 0 | Agent is still `mack-dot` with admin; no machine-account collaborator. Identity separation not in effect. |
+| `proposals/provenance-hosted-v33/build_candidate.py` | 0 | v3.3 candidate: 9 files, lock `eb4b93db…`, diff `21e1a7a4…`. |
+| `run_controls.py <candidate repo fc0a40d9> results/stage9/v33-controls-0001` | 0 | 43/43: V1/V2 exploits run on v3.2 behaviour and not on the candidate; V3 root rule in bootstrap and source_tree; V4 relabel accepted by v3.2, refused by the candidate; D3 relaunch; guard; credential isolation. |
+| v3.1 `controls.py -B` and v3 `f1_controls.py` on the candidate | 0; 0 | 14/14; 9/9. |
+| Independent re-attack of candidate `fc0a40d9` (`results/stage9/v33-audit-0001`) | — | V1–V3 blocked in every emulated job; V4 gate holds; new D3 bypass (imports before relaunch) and weak D1 attribution. |
+| Final candidate (lock `a809f701…`, diff `b432024f…`); `run_controls.py` → `results/stage9/v33-controls-0003` | 0 | 48/48, including the D3 exploit reproduced on v3.2 and refused four ways on the candidate. |
+| v3.1 `controls.py -B` and v3 `f1_controls.py` on the final candidate `405b453a` | 0; 0 | 14/14; 9/9. |
 
 Signing stays off: no repository variables; `provenance.yml` has never run. Not EXIT results.
 See U123 and `results/stage9/v32-install-0001/`. `end_to_end=false`.

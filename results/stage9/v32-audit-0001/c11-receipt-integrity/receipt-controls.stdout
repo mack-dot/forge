@@ -1,0 +1,17 @@
+{"case": "positive: original receipt, original request", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"case": "earlier-style control: new request, receipt unchanged", "expected": "STALE_PROOF_RECEIPT", "observed": "STALE_PROOF_RECEIPT", "pass": true}
+{"case": "ATTACK relabel: old proof outputs, receipt.json rewritten to new challenge and different commit", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"case": "ATTACK fabricated kernel log and report, digests made consistent", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"case": "flipped dependency byte", "expected": "PROOF_RECEIPT_BYTES", "observed": "PROOF_RECEIPT_BYTES", "pass": true}
+{"case": "flipped dependency byte, manifest updated", "expected": "DEPENDENCY_BYTES:dependencies/home/opam/.opam/4.14/lib/coq/theories/Array/ArrayAxioms.vo", "observed": "DEPENDENCY_BYTES:dependencies/home/opam/.opam/4.14/lib/coq/theories/Array/ArrayAxioms.vo", "pass": true}
+{"case": "extra .vo artifact", "expected": "PROOF_UNEXPECTED_ARTIFACT:linux/extra.vo", "observed": "PROOF_UNEXPECTED_ARTIFACT:linux/extra.vo", "pass": true}
+{"case": "extra dependency file", "expected": "DEPENDENCY_EXTRA_FILE", "observed": "DEPENDENCY_EXTRA_FILE", "pass": true}
+{"case": "ELF bytes at another path", "expected": "PROOF_UNEXPECTED_EXECUTABLE:linux/payload.bin", "observed": "PROOF_UNEXPECTED_EXECUTABLE:linux/payload.bin", "pass": true}
+{"case": "symlink in receipt directory", "expected": "SYMLINK_INPUT", "observed": "SYMLINK_INPUT", "pass": true}
+{"case": "unlisted extra file", "expected": "PROOF_RECEIPT_FILE_SET", "observed": "PROOF_RECEIPT_FILE_SET", "pass": true}
+{"case": "listed extra non-artifact file (allowed by design)", "expected": "ACCEPTED", "observed": "ACCEPTED", "pass": true}
+{"case": "extra manifest field", "expected": "PROOF_RECEIPT_FIELDS", "observed": "PROOF_RECEIPT_FIELDS", "pass": true}
+{"case": "path traversal key", "expected": "RECEIPT_PATH", "observed": "RECEIPT_PATH", "pass": true}
+{"case": "report result failed", "expected": "PROOF_NOT_ESTABLISHED", "observed": "PROOF_NOT_ESTABLISHED", "pass": true}
+{"case": "duplicate JSON key", "expected": "DUPLICATE_JSON_KEY", "observed": "DUPLICATE_JSON_KEY", "pass": true}
+{"case": "changed kernel command flag", "expected": "INDEPENDENT_KERNEL_FLAGS", "observed": "INDEPENDENT_KERNEL_FLAGS", "pass": true}

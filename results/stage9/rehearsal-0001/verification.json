@@ -1,0 +1,64 @@
+{
+  "run": 40810179164,
+  "head": "d43f5f4de55573a17f4f9cf4d41528dd159e9f2f",
+  "artifact_sha256": "34b215d39ceda66122907e9e098f6960ce2f4b106de51d3d558b76d1d9aa87f1",
+  "receipt_files": 656,
+  "victim": "closure-identities.json",
+  "results": [
+    {
+      "check": "request-matches-controller",
+      "claim": "hosted run used the exact controller request; challenge still pending",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "package-binding",
+      "claim": "hosted package descriptor = controller package; packaged ELF bytes = policy ELF",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "receipt-binding",
+      "claim": "proof receipt bound to challenge, source commit and every file digest",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "evidence-expected",
+      "claim": "evidence = controller-computed canonical evidence for this package",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "statement-binding",
+      "claim": "unsigned statement binds ELF, package, request, evidence and receipt digests",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "control:receipt-file-byte-flip",
+      "expected": "PROOF_RECEIPT",
+      "observed": "PROOF_RECEIPT_BYTES",
+      "verdict": "PASS"
+    },
+    {
+      "check": "control:receipt-other-request",
+      "expected": "STALE_PROOF_RECEIPT",
+      "observed": "STALE_PROOF_RECEIPT",
+      "verdict": "PASS"
+    },
+    {
+      "check": "control:packaged-elf-byte-flip",
+      "expected": "PACKAGED_ELF_BYTES",
+      "observed": "PACKAGED_ELF_BYTES",
+      "verdict": "PASS"
+    },
+    {
+      "check": "control:package-descriptor-substituted",
+      "expected": "PACKAGE_DESCRIPTOR_BINDING",
+      "observed": "PACKAGE_DESCRIPTOR_BINDING",
+      "verdict": "PASS"
+    }
+  ],
+  "end_to_end": false
+}

@@ -1,0 +1,149 @@
+{
+ "provenance.yml": {
+  "triggers": [
+   "workflow_dispatch"
+  ],
+  "top_permissions": {
+   "contents": "read"
+  },
+  "concurrency": {
+   "group": "forge-stage9-proof",
+   "cancel-in-progress": false
+  },
+  "jobs": {
+   "proof": {
+    "if": "github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'",
+    "needs": null,
+    "effective_permissions": {
+     "contents": "read"
+    },
+    "id_token_write": false,
+    "steps_before_authentication": [
+     {
+      "name": "Checkout exact dispatched main commit",
+      "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "runs_python_in_checkout_cwd": false,
+      "python_lines": []
+     },
+     {
+      "name": "Python 3.10.11 from a hash-checked archive",
+      "uses": null,
+      "runs_python_in_checkout_cwd": true,
+      "python_lines": [
+       "P=\"$RUNNER_TEMP/forge-python\"",
+       "A=\"$RUNNER_TEMP/python-3.10.11.tar.gz\"",
+       "curl -fsSL -o \"$A\" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz",
+       "LD_LIBRARY_PATH=\"$P/lib\" \"$P/bin/python3\" -m ensurepip --default-pip"
+      ]
+     }
+    ],
+    "uses": [
+     "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+     "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+    ],
+    "all_uses_sha_pinned": true,
+    "checkout_persist_credentials": [
+     false
+    ],
+    "expressions_in_run": [],
+    "secrets_referenced": false
+   },
+   "sign": {
+    "if": "vars.FORGE_SIGNING_AUTHORIZED == 'true'",
+    "needs": "proof",
+    "effective_permissions": {
+     "contents": "read",
+     "actions": "read",
+     "id-token": "write"
+    },
+    "id_token_write": true,
+    "steps_before_authentication": [
+     {
+      "name": "Checkout same exact workflow commit",
+      "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "runs_python_in_checkout_cwd": false,
+      "python_lines": []
+     },
+     {
+      "name": "Python 3.10.11 from a hash-checked archive",
+      "uses": null,
+      "runs_python_in_checkout_cwd": true,
+      "python_lines": [
+       "P=\"$RUNNER_TEMP/forge-python\"",
+       "A=\"$RUNNER_TEMP/python-3.10.11.tar.gz\"",
+       "curl -fsSL -o \"$A\" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz",
+       "LD_LIBRARY_PATH=\"$P/lib\" \"$P/bin/python3\" -m ensurepip --default-pip"
+      ]
+     }
+    ],
+    "uses": [
+     "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+     "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
+     "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+    ],
+    "all_uses_sha_pinned": true,
+    "checkout_persist_credentials": [
+     false
+    ],
+    "expressions_in_run": [],
+    "secrets_referenced": false
+   }
+  }
+ },
+ "provenance-negative.yml": {
+  "triggers": [
+   "workflow_dispatch"
+  ],
+  "top_permissions": {
+   "contents": "read",
+   "actions": "read",
+   "id-token": "write"
+  },
+  "concurrency": {
+   "group": "forge-stage9-wrong-signer",
+   "cancel-in-progress": false
+  },
+  "jobs": {
+   "negative": {
+    "if": "github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main' && vars.FORGE_SIGNING_AUTHORIZED == 'true'",
+    "needs": null,
+    "effective_permissions": {
+     "contents": "read",
+     "actions": "read",
+     "id-token": "write"
+    },
+    "id_token_write": true,
+    "steps_before_authentication": [
+     {
+      "name": "Checkout the exact dispatched main commit",
+      "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "runs_python_in_checkout_cwd": false,
+      "python_lines": []
+     },
+     {
+      "name": "Python 3.10.11 from a hash-checked archive",
+      "uses": null,
+      "runs_python_in_checkout_cwd": true,
+      "python_lines": [
+       "P=\"$RUNNER_TEMP/forge-python\"",
+       "A=\"$RUNNER_TEMP/python-3.10.11.tar.gz\"",
+       "curl -fsSL -o \"$A\" https://github.com/actions/python-versions/releases/download/3.10.11-11114431484/python-3.10.11-linux-24.04-x64.tar.gz",
+       "LD_LIBRARY_PATH=\"$P/lib\" \"$P/bin/python3\" -m ensurepip --default-pip"
+      ]
+     }
+    ],
+    "uses": [
+     "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+     "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
+     "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+    ],
+    "all_uses_sha_pinned": true,
+    "checkout_persist_credentials": [
+     false
+    ],
+    "expressions_in_run": [],
+    "secrets_referenced": false
+   }
+  }
+ }
+}
