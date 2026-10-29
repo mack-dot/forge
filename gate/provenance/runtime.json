@@ -1,43 +1,97 @@
 {
-  "actions_runner": {
-    "archive": "https://github.com/actions/runner/releases/download/v2.338.2/actions-runner-osx-arm64-2.338.2.tar.gz",
-    "platform": "osx-arm64",
-    "provisioning_authorized": false,
-    "required_label": "forge-stage9",
-    "sha256": "25a065af409ffa317ab4d5a3b614dd15fc9c40f2172bc1b35a1b1258e919a388",
-    "version": "2.338.2"
-  },
-  "builder": {
-    "buildkit_version": "v0.25.1",
-    "driver": "docker",
-    "name": "desktop-linux"
-  },
-  "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
-  "docker": {
-    "Client": {
-      "ApiVersion": "1.51",
-      "Arch": "arm64",
-      "GitCommit": "e180ab8",
-      "Os": "darwin",
-      "Version": "28.5.1"
+  "end_to_end": false,
+  "format_version": 2,
+  "profiles": {
+    "controller": {
+      "builder": {
+        "buildkit_version": "v0.25.1",
+        "driver": "docker-container",
+        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
+        "name": "forge-pinned"
+      },
+      "buildx": "github.com/docker/buildx v0.29.1-desktop.1 28f6246ff24e2c05095e8741e48c48dcb2d3b4bc",
+      "docker": {
+        "Client": {
+          "ApiVersion": "1.51",
+          "Arch": "arm64",
+          "GitCommit": "e180ab8",
+          "Os": "darwin",
+          "Version": "28.5.1"
+        },
+        "Server": {
+          "ApiVersion": "1.51",
+          "Arch": "arm64",
+          "GitCommit": "f8215cc",
+          "Os": "linux",
+          "Version": "28.5.1"
+        }
+      },
+      "docker_components": {
+        "Engine": "28.5.1",
+        "containerd": "1.7.27",
+        "docker-init": "0.19.0",
+        "runc": "1.2.5"
+      },
+      "docker_platform": "Docker Desktop 4.48.0 (207573)",
+      "image_store_driver": "overlay2",
+      "kernel": "6.10.14-linuxkit",
+      "machine": "arm64"
     },
-    "Server": {
-      "ApiVersion": "1.51",
-      "Arch": "arm64",
-      "GitCommit": "f8215cc",
-      "Os": "linux",
-      "Version": "28.5.1"
+    "producer": {
+      "builder": {
+        "buildkit_version": "v0.25.1",
+        "driver": "docker-container",
+        "image": "moby/buildkit:v0.25.1@sha256:79cc6476ab1a3371c9afd8b44e7c55610057c43e18d9b39b68e2b0c2475cc1b6",
+        "name": "forge-pinned"
+      },
+      "buildx": "github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5",
+      "docker": {
+        "Client": {
+          "ApiVersion": "1.51",
+          "Arch": "amd64",
+          "GitCommit": "e180ab8",
+          "Os": "linux",
+          "Version": "28.5.1"
+        },
+        "Server": {
+          "ApiVersion": "1.51",
+          "Arch": "amd64",
+          "GitCommit": "f8215cc",
+          "Os": "linux",
+          "Version": "28.5.1"
+        }
+      },
+      "docker_apt": {
+        "key_fingerprint": "9DC858229FC7DD38854AE2D88D81803C0EBFCD88",
+        "key_sha256": "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570",
+        "key_url": "https://download.docker.com/linux/ubuntu/gpg",
+        "packages": {
+          "containerd.io": "2.4.2-3~ubuntu.24.04~noble",
+          "docker-buildx-plugin": "0.38.1-1~ubuntu.24.04~noble",
+          "docker-ce": "5:28.5.1-1~ubuntu.24.04~noble",
+          "docker-ce-cli": "5:28.5.1-1~ubuntu.24.04~noble"
+        },
+        "source": "deb [arch=amd64 signed-by=/etc/apt/keyrings/forge-docker.asc] https://download.docker.com/linux/ubuntu noble stable"
+      },
+      "docker_components": {
+        "Engine": "28.5.1",
+        "containerd": "v2.4.2",
+        "docker-init": "0.19.0",
+        "runc": "1.5.2"
+      },
+      "docker_platform": "Docker Engine - Community",
+      "image_os": "ubuntu24",
+      "image_store_driver": "overlay2",
+      "kernel": null,
+      "machine": "x86_64",
+      "min_free_disk_bytes": 35000000000,
+      "pip": {
+        "sha256": "2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af",
+        "version": "25.1.1"
+      },
+      "pydeps_python_path": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "runner_environment": "github-hosted"
     }
   },
-  "docker_components": {
-    "Engine": "28.5.1",
-    "containerd": "1.7.27",
-    "docker-init": "0.19.0",
-    "runc": "1.2.5"
-  },
-  "docker_desktop": "4.48.0 (207573)",
-  "end_to_end": false,
-  "format_version": 1,
-  "kernel": "6.10.14-linuxkit",
   "python": "3.10.11"
 }

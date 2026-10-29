@@ -3,6 +3,7 @@ import argparse
 import copy
 import os
 from pathlib import Path
+import platform
 import re
 import secrets
 import shutil
@@ -17,28 +18,49 @@ from release import (BLOB, IDENTITIES, expected_canonical, image_identity, valid
 
 
 def runtime(records):
+    # The controller (macOS, Docker Desktop) and the hosted producer (Linux) use
+    # separate pinned profiles. Both must build the same image-config identity.
     pins = read(HERE / 'runtime.json')
+    profile = pins['profiles'][{'Darwin': 'controller', 'Linux': 'producer'}[platform.system()]]
+    require(platform.machine() == profile['machine'], 'HOST_PLATFORM')
+    if 'runner_environment' in profile:
+        require(os.environ.get('RUNNER_ENVIRONMENT') == profile['runner_environment']
+                and os.environ.get('ImageOS') == profile['image_os'], 'HOSTED_RUNNER')
     _, output, _ = records.run(['docker', 'version', '--format', '{{json .}}'], 'docker-version')
     value = parse(output)
     for side in ['Client', 'Server']:
-        for key, expected in pins['docker'][side].items():
+        for key, expected in profile['docker'][side].items():
             require(value[side][key] == expected, 'DOCKER_VERSION:' + side + ':' + key)
     components = {c['Name']: c['Version'] for c in value['Server']['Components']}
-    require(components == pins['docker_components'], 'DOCKER_COMPONENTS')
-    require(value['Server']['KernelVersion'] == pins['kernel']
-            and value['Server']['Platform']['Name'] == 'Docker Desktop ' + pins['docker_desktop'],
-            'DOCKER_HOST_RUNTIME')
+    require(components == profile['docker_components'], 'DOCKER_COMPONENTS')
+    # Hosted kernels change between images; the producer profile records, not pins, them.
+    require(value['Server']['Platform']['Name'] == profile['docker_platform']
+            and profile['kernel'] in (None, value['Server']['KernelVersion']), 'DOCKER_HOST_RUNTIME')
+    _, output, _ = records.run(['docker', 'info', '--format', '{{json .}}'], 'docker-info')
+    info = parse(output)
+    # The image-config identity needs the classic image store (U081, U082).
+    require(info['Driver'] == profile['image_store_driver']
+            and ['driver-type', 'io.containerd.snapshotter.v1'] not in info['DriverStatus'], 'IMAGE_STORE')
     _, output, _ = records.run(['docker', 'buildx', 'version'], 'buildx-version')
-    require(output.decode().strip() == pins['buildx'], 'BUILDX_VERSION')
-    _, output, _ = records.run(['docker', 'buildx', 'inspect', pins['builder']['name']], 'builder-inspect')
+    require(output.decode().strip() == profile['buildx'], 'BUILDX_VERSION')
+    # rewrite-timestamp needs BuildKit's own exporter, so both profiles use one
+    # pinned docker-container builder; the Docker driver ignores it (U093).
+    builder = profile['builder']
+    code, _, _ = records.run(['docker', 'buildx', 'inspect', builder['name']], 'builder-present', check=False)
+    if code != 0:
+        records.run(['docker', 'buildx', 'create', '--name', builder['name'], '--driver', builder['driver'],
+                     '--driver-opt', 'image=' + builder['image']], 'builder-create')
+    _, output, _ = records.run(['docker', 'buildx', 'inspect', '--bootstrap', builder['name']], 'builder-inspect')
     text = output.decode()
-    require(re.search(r'^Driver:\s+' + re.escape(pins['builder']['driver']) + r'\s*$', text, re.M)
-            and re.search(r'^BuildKit version:\s+' + re.escape(pins['builder']['buildkit_version']) + r'\s*$', text, re.M),
+    require(re.search(r'^Driver:\s+' + re.escape(builder['driver']) + r'\s*$', text, re.M)
+            and re.search(r'^BuildKit version:\s+' + re.escape(builder['buildkit_version']) + r'\s*$', text, re.M)
+            and re.search(r'^Driver Options:\s+image="' + re.escape(builder['image']) + r'"\s*$', text, re.M),
             'BUILDER_VERSION')
+    return profile
 
 
 def package(policy, out, records):
-    runtime(records)
+    profile = runtime(records)
     base = policy['deployment']['base_image']
     records.run(['docker', 'pull', '--platform', 'linux/amd64', base], 'package-base-pull')
     _, info, _ = records.run(['docker', 'image', 'inspect', base], 'package-base-inspect')
@@ -58,7 +80,9 @@ def package(policy, out, records):
     os.utime(build / 'gcd-selftest.elf', (0, 0))
     os.utime(build / 'Dockerfile', (0, 0))
     iid = out / 'image-id.txt'
-    records.run(['docker', 'buildx', 'build', '--builder', 'desktop-linux', '--load', '--platform', 'linux/amd64',
+    # Without rewrite-timestamp, directory mtimes make every build differ (U093).
+    records.run(['docker', 'buildx', 'build', '--builder', profile['builder']['name'],
+                 '--output', 'type=docker,rewrite-timestamp=true', '--platform', 'linux/amd64',
                  '--provenance=false', '--sbom=false', '--network=none',
                  '--build-arg', 'SOURCE_DATE_EPOCH=0', '--iidfile', str(iid), str(build)], 'package-build')
     image = iid.read_text().strip()
@@ -74,8 +98,10 @@ def package(policy, out, records):
                   'recipe_sha256': digest(HERE / 'Dockerfile'),
                   'elf_path': policy['deployment']['path'],
                   'elf_sha256': policy['release_artifact']['sha256'],
-                  'build_command': 'docker buildx build --builder desktop-linux --load --platform linux/amd64 --provenance=false '
-                                   '--sbom=false --network=none --build-arg SOURCE_DATE_EPOCH=0',
+                  'build_command': 'docker buildx build --output type=docker,rewrite-timestamp=true '
+                                   '--platform linux/amd64 --provenance=false --sbom=false --network=none '
+                                   '--build-arg SOURCE_DATE_EPOCH=0',
+                  'buildkit_image': profile['builder']['image'],
                   'end_to_end': False}
     package_identity(policy, image, descriptor, out, records)
     # Inspect bytes from a real container made from the built package.

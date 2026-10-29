@@ -19,27 +19,30 @@ def main():
     records = Records(ROOT / ('results/stage9/producer-output/bootstrap-' + job))
     policy, _, _ = context(args.implementation_sha256)
     try:
-        require(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'RUNNER_PLATFORM')
-        listener = Path(os.environ['RUNNER_WORKSPACE']).parents[1] / 'bin/Runner.Listener'
-        _, version, _ = records.run([listener, '--version'], 'runner-version')
-        pins = read(HERE / 'runtime.json')
-        require(version.decode().strip() == pins['actions_runner']['version'], 'RUNNER_VERSION')
+        pins = read(HERE / 'runtime.json')['profiles']['producer']
+        require(platform.system() == 'Linux' and platform.machine() == pins['machine']
+                and os.environ.get('RUNNER_ENVIRONMENT') == pins['runner_environment']
+                and os.environ.get('ImageOS') == pins['image_os'], 'RUNNER_PLATFORM')
+        # GitHub updates hosted images and kernels; record them, they are not pinned.
+        write(records.directory / 'runner.json', {'image_os': os.environ['ImageOS'],
+                                                 'image_version': os.environ.get('ImageVersion'),
+                                                 'kernel': platform.release(), 'end_to_end': False})
         request = parse(os.environ['FORGE_STAGE9_REQUEST'])
         require(os.environ['GITHUB_SHA'] == request['expected_source_commit'], 'DISPATCH_COMMIT')
         require(Path(os.environ['FORGE_STAGE7_ROOT']).resolve() != ROOT, 'PERSISTENT_PREREQUISITES_OUTSIDE_CHECKOUT')
         if args.producer_run:
             require(args.producer_run.isdecimal(), 'PRODUCER_RUN_ID')
             run = parse(fetch('https://api.github.com/repos/mack-dot/forge/actions/runs/' + args.producer_run,
-                              records, 'producer-run'))
+                              records, 'producer-run', token_name='FORGE_PRODUCER_GITHUB_TOKEN'))
             require(run['conclusion'] == 'success' and run['event'] == 'workflow_dispatch'
                     and run['head_sha'] == request['expected_source_commit']
                     and run['path'] == '.github/workflows/provenance.yml'
                     and run['head_branch'] == 'main'
                     and run['repository']['id'] == policy['signer']['repository_id'], 'PRODUCER_RUN_IDENTITY')
         binary = ROOT / '.toolchain/stage9/cosign'
-        expected = policy['signature']['executable_sha256']['darwin-arm64']
+        expected = policy['signature']['executable_sha256']['linux-amd64']
         if not binary.exists():
-            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-darwin-arm64'
+            url = 'https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-linux-amd64'
             binary.parent.mkdir(parents=True, exist_ok=True)
             with urllib.request.urlopen(url) as response:
                 data = response.read()
