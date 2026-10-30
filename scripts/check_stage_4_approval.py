@@ -2,11 +2,11 @@
 """Exercise exact approval against a v1 trusted baseline using real Dafny runs.
 
 Every tree is a complete copy of this checkout (minus untracked trees). Under the
-coverage-sound gate, an approved spec change is UNSUPPORTED (exit 3) rather than
-accepted: the booking lock pins the ledger spec and impl/Booking.dfy includes
-impl/Ledger.dfy, so their claims are not re-established by the ledger gate. The
-approval path itself is still exercised: the operation record must name the bound
-approval and list spec/LedgerSpec.dfy and spec.lock as established paths. Results go
+incremental gate, the approved fee-spec change is UNSUPPORTED (exit 3): every affected
+obligation is re-established (the candidate carries the matching evidence.json and
+booking lock), but the negative fixtures in bugs/ and the proposal copy in proposals/ include
+the spec and no obligation depends on them (UNKNOWN_DEPENDENCY). The approval path is still exercised: the
+operation record must name the bound approval and the snapshot proof must have run. Results go
 to results/stage4/approval-coverage-v2.json; historical results are never rewritten.
 """
 
@@ -40,7 +40,11 @@ def checkout(destination, toolchain):
     for pycache in destination.rglob('__pycache__'):
         shutil.rmtree(pycache)
     if toolchain:
-        (destination / '.toolchain').symlink_to(ROOT / '.toolchain', target_is_directory=True)
+        # The baseline is the trusted base for the gate: it needs the pinned toolchain and the
+        # pinned JavaScript packages that dependent obligations (ledger-model) read.
+        for name in ('.toolchain', 'node_modules'):
+            if (ROOT / name).exists():
+                (destination / name).symlink_to((ROOT / name).resolve(), target_is_directory=True)
 
 
 def main():
@@ -91,21 +95,21 @@ def main():
             assert child.returncode == expected, child.stdout + child.stderr
             evidence = baseline / 'build' / (name + '.json')
             assert not evidence.exists()
-            if expected == 1:
-                assert operation['outcome'] == 'REJECTED'
-                assert operation['error'].startswith('UNAPPROVED_PROTECTED_CHANGE:')
-            else:
+            if name in ('approved', 'approved-repeat'):
                 assert operation['outcome'] == 'UNSUPPORTED'
                 assert operation['spec_approval']['record'] == 'gate/approvals/fees-v2.json'
                 assert 'Ledger.Apply (correctness)' in operation['snapshots'][1]['checked']
-                coverage = operation['coverage']
-                assert sorted(coverage['established_paths']) == ['impl/Ledger.dfy', 'spec.lock', 'spec/LedgerSpec.dfy']
-                assert [c['path'] for c in coverage['changed']] == ['impl/Ledger.dfy', 'spec.lock', 'spec/LedgerSpec.dfy']
-                assert coverage['findings'] and all(f['reason'] == 'DEPENDENT_NOT_REESTABLISHED' for f in coverage['findings'])
-                assert any('spec/booking/spec.lock' in f['detail'] for f in coverage['findings'])
-        first = report['cases'][0]['operation']['coverage']
-        assert first == report['cases'][1]['operation']['coverage']
-        report.update(result='passed', exit_code=0, identical_coverage_records=True)
+                assert all(r['result'] == 'established' for r in operation['obligations'].values())
+                findings = operation['coverage']['findings']
+                assert findings and all(f['reason'] == 'UNKNOWN_DEPENDENCY' and f['path'] == 'spec/LedgerSpec.dfy'
+                                        and ('bugs/' in f['detail'] or 'proposals/' in f['detail']) for f in findings)
+            else:
+                assert operation['outcome'] == 'REJECTED'
+                assert operation['error'].startswith('UNAPPROVED_PROTECTED_CHANGE:')
+        first, second = (report['cases'][i]['operation'] for i in (0, 1))
+        assert (first['outcome'], first['error'][:40], first['affected_obligations']) == \
+            (second['outcome'], second['error'][:40], second['affected_obligations'])
+        report.update(result='passed', exit_code=0, identical_decisions=True)
     except (AssertionError, OSError, ValueError, KeyError) as error:
         report.update(result='failed', exit_code=1, error=str(error))
         print(str(error), file=sys.stderr)
