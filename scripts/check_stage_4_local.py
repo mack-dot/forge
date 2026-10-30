@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Real local controls for the snapshot gate; never substitutes for PR EXITs."""
+"""Real local controls for the snapshot gate; never substitutes for PR EXITs.
+
+Each candidate is a complete copy of this checkout (minus untracked trees), so the
+gate's coverage assessment sees the same change set a PR would carry. Outcomes:
+0 VERIFIED, 1 REJECTED, 2 NOT_ESTABLISHED, 3 UNSUPPORTED (ledger proof holds, but
+the change is not covered). Results go to results/stage4/local-coverage-v2.json;
+the historical results/stage4-local.json is never rewritten.
+"""
 
 import hashlib
 import json
@@ -12,18 +19,30 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / 'build/stage4-local'
-DIRECTORIES = ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github', 'impl')
+UNTRACKED = ('.git', '.toolchain', 'build', 'node_modules', 'TestResults')
+REPORT = ROOT / 'results/stage4/local-coverage-v2.json'
+OUTCOMES = {0: 'VERIFIED', 1: 'REJECTED', 2: 'NOT_ESTABLISHED', 3: 'UNSUPPORTED'}
+
+
+def copy_tree(source, target):
+    target.mkdir(parents=True)
+    for entry in sorted(source.iterdir()):
+        if entry.name in UNTRACKED or entry.name == '__pycache__':
+            continue
+        if sys.platform == 'darwin':
+            subprocess.run(['/bin/cp', '-cRp', str(entry), str(target / entry.name)], check=True)
+        elif entry.is_dir() and not entry.is_symlink():
+            shutil.copytree(entry, target / entry.name, symlinks=True,
+                            ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+        else:
+            shutil.copy2(entry, target / entry.name, follow_symlinks=False)
+    for pycache in target.rglob('__pycache__'):
+        shutil.rmtree(pycache)
 
 
 def copy_candidate(name):
     target = WORK / 'candidates' / name
-    target.mkdir(parents=True)
-    for directory in DIRECTORIES:
-        if (ROOT / directory).exists():
-            shutil.copytree(ROOT / directory, target / directory,
-                            ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-    for filename in ('spec.lock', 'AGENTS.md'):
-        shutil.copyfile(ROOT / filename, target / filename)
+    copy_tree(ROOT, target)
     return target
 
 
@@ -43,10 +62,15 @@ def run(command, log):
 def main():
     if WORK.exists():
         raise RuntimeError('Preserve existing build/stage4-local before rerunning.')
+    if REPORT.exists():
+        raise RuntimeError('Preserve existing ' + str(REPORT.relative_to(ROOT)) + ' before rerunning.')
     WORK.mkdir(parents=True)
     report = {'stage': 4, 'stage_exit': False, 'end_to_end': False, 'cases': []}
+    # name, expected gate exit, expected fresh Dafny exit (None: not run)
     cases = [
-        ('unchanged', 0, 0), ('apply-edit', 0, 0), ('apply-edit-repeat', 0, 0),
+        ('unchanged', 0, 0), ('unchanged-repeat', 0, 0),
+        ('apply-edit', 3, 0), ('apply-edit-repeat', 3, 0),
+        ('uncovered-ts', 3, None),
         ('broken-helper', 1, 4), ('helper-contract', 1, 4), ('self-transfer', 1, 4),
         ('sneaky-assume', 1, 2), ('spec-and-lock', 1, None), ('weaken-c2', 1, None),
     ]
@@ -57,6 +81,10 @@ def main():
             debit = next(line.strip() for line in implementation.read_text().splitlines()
                          if line.strip().startswith('var debit :='))
             replace_once(implementation, debit, debit + '\n      assert 0 <= debit;')
+        elif name == 'uncovered-ts':
+            replace_once(candidate / 'ts/ledger.ts',
+                         'balances.set(request.sender, debit - request.amount - 1n);',
+                         'balances.set(request.sender, debit - request.amount);')
         elif name == 'broken-helper':
             replace_once(implementation, '  {\n    TotalRemove(balances, account);',
                          '  {\n    assert false;\n    TotalRemove(balances, account);')
@@ -88,14 +116,20 @@ def main():
         print(name + ': gate exit ' + str(child.returncode), flush=True)
         case = {'name': name, 'command': command, 'gate_exit_code': child.returncode,
                 'expected_gate_exit_code': expected_gate, 'evidence_exists': evidence.exists()}
+        operation = {}
         if (run_work / 'operation.json').exists():
             operation = json.loads((run_work / 'operation.json').read_text())
+            case['outcome'] = operation.get('outcome')
             case['checker_exit_codes'] = [item['exit_code'] for item in operation['commands']]
             if 'snapshots' in operation:
                 case['snapshots'] = operation['snapshots']
+            if 'coverage' in operation:
+                case['coverage'] = operation['coverage']
         report['cases'].append(case)
         if child.returncode != expected_gate or evidence.exists() != (expected_gate == 0):
             raise RuntimeError(name + ': unexpected gate result; inspect ' + str(WORK / (name + '-gate.log')))
+        if operation.get('outcome') != OUTCOMES[expected_gate]:
+            raise RuntimeError(name + ': operation outcome differs from the exit code')
         if expected_fresh is not None:
             fresh = run([
                 '.toolchain/dafny-4.11.0/dafny/dafny', 'verify', str(implementation),
@@ -110,17 +144,30 @@ def main():
                 raise RuntimeError(name + ': unexpected full-check result')
             if name == 'sneaky-assume' and 'assume statement has no {:axiom} annotation' not in fresh.stdout:
                 raise RuntimeError('Missing expected diagnostic for the forbidden assumption')
-        if name == 'unchanged':
+        if name in ('unchanged', 'unchanged-repeat'):
             assert case['snapshots'][1]['checked_count'] == 0
             assert case['snapshots'][1]['reused_count'] == 12
+            assert case['coverage']['covered'] and case['coverage']['changed'] == []
         elif name in ('apply-edit', 'apply-edit-repeat'):
             assert case['snapshots'][1]['checked'] == [
                 'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)']
             assert case['snapshots'][1]['reused_count'] == 10
-    first = (WORK / 'apply-edit-evidence.json').read_bytes()
-    second = (WORK / 'apply-edit-repeat-evidence.json').read_bytes()
+            findings = case['coverage']['findings']
+            assert [c['path'] for c in case['coverage']['changed']] == ['impl/Ledger.dfy']
+            assert findings and all(f['reason'] == 'DEPENDENT_NOT_REESTABLISHED'
+                                    and f['path'] == 'impl/Ledger.dfy' for f in findings)
+        elif name == 'uncovered-ts':
+            assert case['snapshots'][1]['checked_count'] == 0
+            assert [c['path'] for c in case['coverage']['changed']] == ['ts/ledger.ts']
+            assert [f['reason'] for f in case['coverage']['findings']] == ['UNCOVERED_CHANGE']
+    first = (WORK / 'unchanged-evidence.json').read_bytes()
+    second = (WORK / 'unchanged-repeat-evidence.json').read_bytes()
     if first != second:
         raise RuntimeError('Evidence differs across identical input runs')
+    edits = [json.loads((WORK / ('run-' + n) / 'operation.json').read_text())['coverage']
+             for n in ('apply-edit', 'apply-edit-repeat')]
+    if edits[0] != edits[1]:
+        raise RuntimeError('Coverage records differ across identical input runs')
     recipe = json.loads(first)['evidence'][0]['reproduce_cmd']
     replay = run(shlex.split(recipe), WORK / 'exact-reproduction.log')
     report['exact_reproduction'] = {'command': recipe, 'exit_code': replay.returncode}
@@ -128,7 +175,8 @@ def main():
         raise RuntimeError('The exact saved reproduction command did not reproduce identical evidence')
     report.update({'result': 'passed', 'exit_code': 0, 'byte_identical_evidence': True,
                    'evidence_sha256': hashlib.sha256(first).hexdigest()})
-    (ROOT / 'results/stage4-local.json').write_text(json.dumps(report, sort_keys=True, indent=2) + '\n')
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
+    REPORT.write_text(json.dumps(report, sort_keys=True, indent=2) + '\n')
     print('LOCAL_CONTROLS_PASSED; real PR EXITs remain NOT RUN', flush=True)
     return 0
 

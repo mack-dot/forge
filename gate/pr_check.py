@@ -64,7 +64,7 @@ def main():
     child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, env=environment)
     (folder / 'gate.log').write_text(child.stdout + child.stderr)
     print(child.stdout + child.stderr, end='', flush=True)
-    if child.returncode not in (0, 1, 2):
+    if child.returncode not in (0, 1, 2, 3):
         raise RuntimeError('CHECKER_PROCESS_ERROR: unexpected exit ' + str(child.returncode))
     operation = read_json(work / 'operation.json')
     if operation['exit_code'] != child.returncode:
@@ -72,6 +72,11 @@ def main():
     bundle = read_json(evidence) if child.returncode == 0 else None
     if (child.returncode != 0 and evidence.exists()) or (bundle and bundle['end_to_end']):
         raise RuntimeError('RESULT_ERROR: stale evidence or unsupported coverage')
+    outcomes = {0: 'VERIFIED', 1: 'REJECTED', 2: 'NOT_ESTABLISHED', 3: 'UNSUPPORTED'}
+    if operation.get('outcome') != outcomes[child.returncode]:
+        raise RuntimeError('RESULT_ERROR: gate outcome and exit code differ')
+    if child.returncode == 0 and not operation.get('coverage', {}).get('covered'):
+        raise RuntimeError('RESULT_ERROR: exit 0 without an established coverage record')
     replay = None
     if bundle:
         # Execute the exact saved command under the same trusted environment.
@@ -91,13 +96,14 @@ def main():
         'base_sha': base_sha, 'head_sha': head_sha, 'run_id': run_id,
         'run_url': 'https://github.com/' + repository + '/actions/runs/' + str(run_id),
         'command': shlex.join(command), 'exit_code': child.returncode,
-        'result': operation['result'], 'operation': operation, 'replay': replay,
+        'result': operation['result'], 'outcome': operation['outcome'],
+        'coverage': operation.get('coverage'), 'operation': operation, 'replay': replay,
         'evidence_sha256': digest(evidence.read_bytes()) if bundle else None,
         'evidence': bundle, 'end_to_end': False,
     }
     (folder / 'receipt.json').write_bytes(canonical(receipt))
     print('FORGE_PR_RESULT ' + json.dumps({key: receipt[key] for key in
-          ('pr_number', 'base_sha', 'head_sha', 'exit_code', 'result', 'evidence_sha256')}), flush=True)
+          ('pr_number', 'base_sha', 'head_sha', 'exit_code', 'outcome', 'evidence_sha256')}), flush=True)
     # These bounded chunks retain the real receipt when a connector cannot open ZIP artifacts.
     encoded = json.dumps(receipt, sort_keys=True, separators=(',', ':'))
     for start in range(0, len(encoded), 12000):

@@ -21,6 +21,12 @@ def api(method, path, body=None):
         return json.load(response)
 
 
+def safe(value, limit=120):
+    """Render untrusted text (candidate paths) as a JSON string literal in a code span."""
+    text = json.dumps(str(value)[:limit], ensure_ascii=True)
+    return '`' + text.replace('`', '\\u0060') + '`'
+
+
 def main():
     event = read_json(Path(os.environ['GITHUB_EVENT_PATH']))
     expected = event['pull_request']
@@ -37,13 +43,22 @@ def main():
     if current['head']['sha'] != receipt['head_sha'] or current['base']['sha'] != receipt['base_sha']:
         raise RuntimeError('REPORT_STALE: PR head or base changed; a fresh check is required')
     code = receipt['exit_code']
-    if type(code) is not int or code not in (0, 1, 2) or receipt['end_to_end'] is not False:
+    if type(code) is not int or code not in (0, 1, 2, 3) or receipt['end_to_end'] is not False:
         raise RuntimeError('REPORT_FORMAT: unsupported result')
-    result = {0: 'accepted', 1: 'rejected', 2: 'error'}[code]
-    if receipt['result'] != result or receipt['operation']['exit_code'] != code:
+    outcome = {0: 'VERIFIED', 1: 'REJECTED', 2: 'NOT_ESTABLISHED', 3: 'UNSUPPORTED'}[code]
+    result = {0: 'verified', 1: 'rejected', 2: 'not_established', 3: 'unsupported'}[code]
+    if (receipt['result'] != result or receipt['outcome'] != outcome
+            or receipt['operation']['exit_code'] != code or receipt['operation']['outcome'] != outcome):
         raise RuntimeError('REPORT_FORMAT: inconsistent result')
+    coverage = receipt.get('coverage')
+    if code == 0 and not (isinstance(coverage, dict) and coverage.get('covered') is True
+                          and coverage.get('findings') == []):
+        raise RuntimeError('REPORT_FORMAT: verified without an established coverage record')
+    if code == 3 and not (isinstance(coverage, dict) and coverage.get('covered') is False
+                          and isinstance(coverage.get('findings'), list) and coverage['findings']):
+        raise RuntimeError('REPORT_FORMAT: unsupported without coverage findings')
     run_url = 'https://github.com/' + repository + '/actions/runs/' + str(run_id)
-    rows = ['<!-- forge-proof-gate -->', '**Forge: ' + result + '**', '',
+    rows = ['<!-- forge-proof-gate -->', '**Forge: ' + outcome + '**', '',
             'Revision: `' + receipt['head_sha'] + '`. Gate exit: `' + str(code) + '`.', '',
             '| Claim | Required behavior | Result | Apply proof |', '| --- | --- | --- | --- |']
     if code == 0:
@@ -62,10 +77,27 @@ def main():
         checked, reused = candidate['checked_count'], candidate['reused_count']
         if any(type(x) is not int or not 0 <= x <= 10000 for x in (checked, reused)):
             raise RuntimeError('REPORT_FORMAT: invalid obligation counts')
+        changed = coverage['changed']
+        if type(changed) is not list:
+            raise RuntimeError('REPORT_FORMAT: invalid change list')
         rows += ['', 'Candidate member obligations: **' + str(checked) + ' checked, ' + str(reused) + ' reused**.',
                  'The baseline was fully verified first. C1–C5 share the Apply obligation.',
                  'The exact saved reproduction command returned identical evidence.',
-                 'Artifact SHA-256: `' + receipt['evidence']['artifact']['sha256'] + '`.']
+                 'Artifact SHA-256: `' + receipt['evidence']['artifact']['sha256'] + '`.',
+                 'Coverage: ' + str(len(changed)) + ' changed path(s), all within the established ledger scope: '
+                 + (', '.join(safe(c['path']) for c in changed[:20]) + ('; …' if len(changed) > 20 else '')
+                    if changed else 'no change relative to the trusted base') + '.']
+    elif code == 3:
+        rows += ['| ' + claim + ' | ' + CLAIMS[claim] + ' | source_proof (ledger only) | — |' for claim in sorted(CLAIMS)]
+        findings = coverage['findings']
+        if type(findings) is not list:
+            raise RuntimeError('REPORT_FORMAT: invalid finding list')
+        rows += ['', 'The ledger claims hold, but this change is **not covered** by any established claim:']
+        rows += ['- ' + safe(f.get('reason'), 40) + ' ' + safe(f.get('path')) + ': ' + safe(f.get('detail'), 200)
+                 for f in findings[:25]]
+        if len(findings) > 25:
+            rows.append('- … and ' + str(len(findings) - 25) + ' more; see the coverage record in the checker artifact.')
+        rows.append('No acceptance was emitted. This is a statement about evidence, not a defect finding.')
     else:
         rows += ['| ' + claim + ' | ' + CLAIMS[claim] + ' | not established | — |' for claim in sorted(CLAIMS)]
         if receipt['operation'].get('error', '').startswith('UNAPPROVED_PROTECTED_CHANGE:'):
@@ -77,11 +109,15 @@ def main():
              '[Reproduction evidence and checker logs](' + run_url + ').']
     comment = api('POST', '/repos/' + repository + '/issues/' + str(number) + '/comments',
                   {'body': '\n'.join(rows)})
+    descriptions = {0: 'Verified: ledger claims established; every change covered',
+                    1: 'Rejected: a verification or policy obligation failed',
+                    2: 'Not established: the check could not finish',
+                    3: 'Unsupported: changes outside every established claim'}
     status = api('POST', '/repos/' + repository + '/statuses/' + receipt['head_sha'],
                  {'state': 'success' if code == 0 else 'failure', 'context': 'forge/proof-gate',
-                  'target_url': run_url, 'description': 'Source claims accepted' if code == 0 else 'Source claims not established'})
+                  'target_url': run_url, 'description': descriptions[code]})
     print(json.dumps({'comment_url': comment['html_url'], 'status_id': status['id'],
-                      'head_sha': receipt['head_sha'], 'result': result}), flush=True)
+                      'head_sha': receipt['head_sha'], 'outcome': outcome}), flush=True)
     return 0
 
 
