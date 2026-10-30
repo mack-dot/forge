@@ -25,7 +25,7 @@ import tempfile
 
 sys.dont_write_bytecode = True
 
-from common import ROOT, Rejected, canonical, digest, relative, read_json
+from common import ROOT, Rejected, canonical, digest, host_profile, pin_file, relative, read_json
 from approval import authorize
 import coverage
 import obligations
@@ -206,8 +206,8 @@ def run_obligations(candidate, entries, proposed_before, trusted_before, approva
         raise RuntimeError('VERIFICATION_TREE: protected manifest differs in the copy')
     verified = {'impl/Ledger.dfy'} | allowed
     context = {'protected_manifest': digest(canonical(trusted_before)),
-               'pins': digest((ROOT / 'toolchain/pins.json').read_bytes()),
-               'javascript_pins': digest((ROOT / 'toolchain/javascript-pins.json').read_bytes())}
+               'pins': digest((ROOT / pin_file('dafny')).read_bytes()),
+               'javascript_pins': digest((ROOT / pin_file('javascript')).read_bytes())}
     records = obligations.run(names, tree, ROOT, verified, entries, context, work / 'obligations',
                               ROOT / 'build/obligation-cache')
     if (coverage.inventory(tree, coverage.BASE_UNTRACKED, include_bytecode=True)[1] != entries
@@ -374,7 +374,8 @@ def check(candidate, output, work, operation, profile='local'):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--candidate', type=Path, required=True)
-    parser.add_argument('--profile', choices=('local', 'linux'), default='local')
+    parser.add_argument('--profile', choices=('local', 'linux'), default=None,
+                        help='Toolchain profile; default: the host profile (local on macOS arm64, linux on Linux x86_64)')
     parser.add_argument('--evidence', type=Path, default=Path('build/change-evidence.json'))
     parser.add_argument('--work', type=Path, help='Fresh directory under build/; otherwise allocate one')
     args = parser.parse_args()
@@ -400,7 +401,7 @@ def main():
     operation = {'stage': 4, 'stage_exit': False, 'commands': [], 'end_to_end': False}
     code = 0
     try:
-        check(candidate, output, work, operation, args.profile)
+        check(candidate, output, work, operation, args.profile or host_profile())
     except Rejected as error:
         operation.update({'result': 'rejected', 'outcome': 'REJECTED', 'error': str(error)})
         print(str(error), file=sys.stderr)

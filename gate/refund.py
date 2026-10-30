@@ -16,7 +16,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 sys.dont_write_bytecode = True
-from common import ROOT, Rejected, canonical, digest, read_json, relative
+from common import ROOT, Rejected, canonical, digest, pin_file, read_json, relative
 from dependencies import check_dependencies
 from backends import dafny
 
@@ -52,11 +52,11 @@ COMMON_INPUTS = (
     'gate/refund.py', BINDING, TEST, 'gate/common.py', 'gate/core.py',
     'gate/dependencies.py', 'gate/backends/__init__.py', 'gate/backends/dafny.py',
     'gate/expected-audit.md', 'schemas/evidence.schema.json', 'schemas/policy.schema.json',
-    'toolchain/pins.json', 'toolchain/validator-pins.json',
+    pin_file('dafny'), pin_file('validator'),
     'toolchain/requirements-stage2.txt', 'proposals/refund-decision.md',
 )
 JS_INPUTS = (
-    'scripts/javascript_env.py', 'toolchain/javascript-pins.json',
+    'scripts/javascript_env.py', pin_file('javascript'),
     'package.json', 'package-lock.json', 'tsconfig.json',
 )
 FOOTER = b'\nmodule.exports = { Refund, runtime: _dafny };\n'
@@ -84,7 +84,7 @@ def prepare():
     for name, expected in lock['dependencies'].items():
         if digest((ROOT / name).read_bytes()) != expected:
             raise Rejected('APPROVED_DEPENDENCY: ' + name + ' differs')
-    pins = read_json(ROOT / 'toolchain/pins.json')
+    pins = read_json(ROOT / pin_file('dafny'))
     if (pins['verification_options'] != dafny.OPTIONS or
             pins['dafny']['version_output'] != lock['dafny_build'] or
             lock['dafny_version'] != '4.11.0'):

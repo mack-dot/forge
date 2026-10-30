@@ -20,17 +20,17 @@ import sys
 import time
 import xml.etree.ElementTree as ET
 
-from common import ROOT, canonical, digest, read_json
+from common import PIN_FILES, ROOT, Rejected, canonical, digest, host_profile, pin_file, read_json
 
 FRAMEWORK = ('gate/gate.py', 'gate/common.py', 'gate/core.py', 'gate/dependencies.py',
              'gate/backends/__init__.py', 'schemas/evidence.schema.json', 'schemas/policy.schema.json',
-             'policy/tiers.yaml', 'toolchain/validator-pins.json', 'toolchain/requirements-stage2.txt')
+             'policy/tiers.yaml', pin_file('validator'), 'toolchain/requirements-stage2.txt')
 CORE = ('gate/common.py', 'gate/core.py', 'gate/dependencies.py', 'gate/backends/__init__.py',
-        'schemas/evidence.schema.json', 'schemas/policy.schema.json', 'toolchain/validator-pins.json',
+        'schemas/evidence.schema.json', 'schemas/policy.schema.json', pin_file('validator'),
         'toolchain/requirements-stage2.txt')
 DAFNY_INPUTS = ('gate/ContractBinding.dfy', 'gate/expected-audit.md', 'gate/backends/dafny.py',
-                'toolchain/pins.json', 'spec.lock')
-JS_INPUTS = ('scripts/javascript_env.py', 'toolchain/javascript-pins.json', 'package.json',
+                pin_file('dafny'), 'spec.lock')
+JS_INPUTS = ('scripts/javascript_env.py', pin_file('javascript'), 'package.json',
              'package-lock.json', 'tsconfig.json')
 DAFNY = '.toolchain/dafny-4.11.0/dafny/dafny'
 DAFNY_OPTIONS = ['--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1',
@@ -52,6 +52,9 @@ OBLIGATIONS = {
         'subjects': ('impl/Ledger.dfy', 'spec/LedgerSpec.dfy', 'evidence.json'),
         # Command arguments the gate reads but does not list in its bundle.
         'argument_inputs': ('evidence.json',),
+        # The committed bundle binds one host profile's pin files; on another profile it
+        # cannot reproduce and the obligation is not established (not rejected).
+        'evidence_profile_argument': 'evidence.json',
         'scope': 'committed root evidence.json reproduces from the candidate ledger source',
     },
     'ledger-model': {
@@ -87,7 +90,7 @@ OBLIGATIONS = {
         'argv': ['gate/refund.py', '--tier', 'critical', '--evidence', 'build/obligations/refund-proof.json'],
         'bundle': 'build/obligations/refund-proof.json',
         'claims': {'R1': 'source_proof', 'R2': 'source_proof', 'R3': 'source_proof', 'R4': 'source_proof', 'R5': 'source_proof'},
-        'inputs': CORE + ('gate/expected-audit.md', 'gate/backends/dafny.py', 'toolchain/pins.json',
+        'inputs': CORE + ('gate/expected-audit.md', 'gate/backends/dafny.py', pin_file('dafny'),
                           'gate/refund.py', 'gate/refund/Bindings.dfy', 'gate/refund/hostile.ts', 'policy/refund.yaml',
                                'proposals/refund-decision.md', 'spec/refund/protocol.md', 'spec/refund/spec.lock',
                                'spec/refund/RefundSpec.dfy', 'impl/Refund.dfy'),
@@ -99,7 +102,7 @@ OBLIGATIONS = {
         'argv': ['gate/refund.py', '--tier', 'hostile-tests', '--evidence', 'build/obligations/refund-tests.json'],
         'bundle': 'build/obligations/refund-tests.json',
         'claims': {'T1': 'property_tested', 'T2': 'property_tested', 'T3': 'property_tested'},
-        'inputs': CORE + JS_INPUTS + ('gate/expected-audit.md', 'gate/backends/dafny.py', 'toolchain/pins.json',
+        'inputs': CORE + JS_INPUTS + ('gate/expected-audit.md', 'gate/backends/dafny.py', pin_file('dafny'),
                                       'gate/refund.py', 'gate/refund/Bindings.dfy', 'gate/refund/hostile.ts',
                                            'policy/refund.yaml', 'proposals/refund-decision.md', 'spec/refund/protocol.md',
                                            'spec/refund/spec.lock', 'spec/refund/RefundSpec.dfy', 'impl/Refund.dfy',
@@ -122,7 +125,7 @@ OBLIGATIONS = {
         ],
         'claims': {'W': 'source_proof'},
         'inputs': ('tests/stage5/SuccessfulExecution.dfy', 'impl/Ledger.dfy', 'spec/LedgerSpec.dfy',
-                   'gate/expected-audit.md', 'toolchain/pins.json'),
+                   'gate/expected-audit.md', pin_file('dafny')),
         # The witness text is bound to the trusted base (a rewritten witness could be vacuous);
         # it is re-verified against the candidate ledger.
         'subjects': ('impl/Ledger.dfy', 'spec/LedgerSpec.dfy'),
@@ -230,12 +233,30 @@ def bundle_inputs(bundle):
     return set(bundle['trusted_input_sha256']) | {entry['path'] for entry in bundle.get('source_manifest', [])}
 
 
+def bundle_profile(bundle):
+    """The host profile whose pin files a bundle binds, or None."""
+    keys = set(bundle.get('trusted_input_sha256', {}))
+    matches = [profile for profile, files in PIN_FILES.items() if files['dafny'] in keys or files['validator'] in keys]
+    return matches[0] if len(matches) == 1 else None
+
+
 def run_one(name, tree, trusted_root, verified, work, environment, timeout):
     declaration = OBLIGATIONS[name]
     record = {'obligation': name, 'scope': declaration['scope'], 'claims': declaration['claims'],
               'declared_inputs': sorted(inputs_of(name)), 'subjects': sorted(subjects_of(name)),
               'argument_inputs': sorted(declaration.get('argument_inputs', ())), 'commands': []}
     started = time.perf_counter_ns()
+    if 'evidence_profile_argument' in declaration:
+        try:
+            committed = bundle_profile(read_json(tree / declaration['evidence_profile_argument']))
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, Rejected):
+            committed = None
+        if committed != host_profile():
+            record.update(result='not_established',
+                          reason='EVIDENCE_PROFILE: committed ' + declaration['evidence_profile_argument']
+                          + ' is bound to the ' + str(committed) + ' toolchain profile; this host is ' + host_profile(),
+                          wall_seconds=round((time.perf_counter_ns() - started) / 1e9, 3))
+            return record
     violations = binding_violations(name, tree, trusted_root, verified)
     if violations:
         record.update(result='rejected', reason='TRUSTED_INPUT_CHANGED: ' + ', '.join(violations[:8]),

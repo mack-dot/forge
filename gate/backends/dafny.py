@@ -11,7 +11,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 
-from common import ROOT, Rejected, canonical, digest, relative
+from common import PIN_FILES, ROOT, Rejected, canonical, digest, host_profile, relative
 
 
 DAFNY = ROOT / '.toolchain/dafny-4.11.0/dafny/dafny'
@@ -99,17 +99,17 @@ def failed_claims(output, ranges):
     return sorted(found)
 
 
-def prepare(impl_name, profile='local'):
+def prepare(impl_name, profile=None):
+    profile = profile or host_profile()
     implementation = (ROOT / impl_name).resolve()
     impl_name = relative(implementation)
     if implementation.parent not in (ROOT / 'impl', ROOT / 'bugs'):
         raise Rejected('SOURCE_SCOPE: Stage 1 accepts one file in impl/ or bugs/')
     if implementation.suffix != '.dfy':
         raise Rejected('SOURCE_SCOPE: the implementation must be a Dafny source file')
-    profiles = {'local': 'toolchain/pins.json', 'linux': 'toolchain/linux-pins.json'}
-    if profile not in profiles:
+    if profile not in PIN_FILES:
         raise RuntimeError('TOOLCHAIN_ERROR: unknown Dafny profile')
-    pin_path = ROOT / profiles[profile]
+    pin_path = ROOT / PIN_FILES[profile]['dafny']
     pins = json.loads(pin_path.read_text())
     lock = json.loads((ROOT / 'spec.lock').read_text())
     spec_bytes = SPEC.read_bytes()
