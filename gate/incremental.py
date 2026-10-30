@@ -4,6 +4,10 @@
 Only Dafny/Boogie choose cached verification results. This gate checks input
 identity, audit output, checker success, obligation coverage, and policy.
 The caller must obtain this checkout from a trusted revision, outside the PR.
+
+Outcomes: 0 VERIFIED (C1-C5 hold and every change is covered), 1 REJECTED,
+2 NOT_ESTABLISHED (tool or input error), 3 UNSUPPORTED (C1-C5 hold, but some
+change is not covered by a claim this check established; no evidence is written).
 """
 
 import argparse
@@ -21,6 +25,7 @@ sys.dont_write_bytecode = True
 
 from common import ROOT, Rejected, canonical, digest, relative, read_json
 from approval import authorize
+import coverage
 from dependencies import check_dependencies
 from backends import dafny
 
@@ -124,11 +129,11 @@ def trace_coverage(output):
     return snapshots
 
 
-def reproduction_input(baseline, proposed, protected, candidate):
+def reproduction_input(baseline, proposed, protected, candidate, entries):
     identity = digest(canonical({
         'baseline': {name: digest(content) for name, content in baseline.items()},
         'candidate': {name: digest(content) for name, content in proposed.items()},
-        'protected': protected,
+        'protected': protected, 'inventory': entries,
     }))
     parent = ROOT / 'build/change-inputs'
     parent.mkdir(parents=True, exist_ok=True)
@@ -137,19 +142,17 @@ def reproduction_input(baseline, proposed, protected, candidate):
         with tempfile.TemporaryDirectory(prefix='input-', dir=parent) as temporary:
             staged = Path(temporary) / 'candidate'
             staged.mkdir()
-            for name, expected in protected.items():
-                content = (candidate / name).read_bytes()
-                if digest(content) != expected:
-                    raise Rejected('INPUT_CHANGED: protected input changed before reproduction capture')
-                target = staged / name
+            # The complete candidate tree, so a replay sees the same coverage.
+            for name in sorted(entries):
+                source, target = candidate / name, staged / name
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(content)
-            for name, content in proposed.items():
-                target = staged / name
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(content)
+                if source.is_symlink():
+                    os.symlink(os.readlink(source), target)
+                else:
+                    shutil.copy2(source, target)
             staged.rename(destination)
-    if protected_manifest(destination) != protected or source_bytes(destination) != proposed:
+    if (protected_manifest(destination) != protected or source_bytes(destination) != proposed
+            or coverage.inventory(destination, ('.git',))[1] != entries):
         raise Rejected('REPRODUCTION_INPUT: saved input does not match the checked candidate')
     return destination.relative_to(ROOT).as_posix()
 
@@ -162,9 +165,12 @@ def check(candidate, output, work, operation, profile='local'):
     trusted_before = protected_manifest(ROOT)
     proposed_before = protected_manifest(candidate)
     approval = authorize(ROOT, trusted_before, proposed_before)
+    inventory = coverage.inventories(ROOT, candidate)
+    operation['spec_approval'] = approval
     baseline = source_bytes(ROOT)
     proposed = source_bytes(candidate)
-    paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve(), ROOT / 'gate/approval.py']
+    paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve(), ROOT / 'gate/approval.py',
+                                                        ROOT / 'gate/coverage.py']
     if approval:
         paths += [ROOT / approval['record'], ROOT / read_json(ROOT / approval['record'])['proposal']]
     if profile == 'linux':
@@ -222,7 +228,7 @@ def check(candidate, output, work, operation, profile='local'):
     snapshots = trace_coverage(trace)
     operation['snapshots'] = snapshots
     names = sorted(snapshots[1]['checked'] + snapshots[1]['reused'])
-    saved_input = reproduction_input(baseline, proposed, proposed_before, candidate)
+    saved_input = reproduction_input(baseline, proposed, proposed_before, candidate, inventory[2])
     reproduce = ('python3 gate/incremental.py --candidate ' + shlex.quote(saved_input)
                  + ' --evidence build/change-evidence.json')
     if profile != 'local':
@@ -258,15 +264,24 @@ def check(candidate, output, work, operation, profile='local'):
     })
     bundle = make_bundle(raw, BACKEND, policy_identity, trusted, versions, reproduce)
     validate_evidence(bundle, expected, rules, policy_identity, trusted, BACKEND)
+    # Assess coverage, then re-hash every input, so the assessment's reads are guarded.
+    assessment = coverage.assess(ROOT, candidate, *inventory, approval['approved_inputs'] if approval else {})
     if (snapshot(paths) != inputs_before or protected_manifest(ROOT) != trusted_before
-            or protected_manifest(candidate) != proposed_before or source_bytes(candidate) != proposed):
+            or protected_manifest(candidate) != proposed_before or source_bytes(candidate) != proposed
+            or coverage.inventories(ROOT, candidate) != inventory):
         raise Rejected('INPUT_CHANGED: a source or protected input changed during verification')
+    apply_status = 'checked' if 'Ledger.Apply (correctness)' in snapshots[1]['checked'] else 'reused'
+    operation['claim_apply_status'] = {claim: apply_status for claim in sorted(dafny.CLAIMS)}
+    operation['coverage'] = assessment
+    if not operation['coverage']['covered']:
+        raise coverage.Unsupported('UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but '
+                                   + str(len(operation['coverage']['findings']))
+                                   + ' coverage finding(s) remain: ' + coverage.summary(operation['coverage']))
     staged_evidence = work / 'accepted-evidence.json'
     staged_evidence.write_bytes(canonical(bundle))
     staged_evidence.replace(output)
-    apply_status = 'checked' if 'Ledger.Apply (correctness)' in snapshots[1]['checked'] else 'reused'
-    operation.update({'result': 'accepted', 'artifact_sha256': expected['artifact']['sha256'],
-                      'claim_apply_status': {claim: apply_status for claim in sorted(dafny.CLAIMS)},
+    operation.update({'result': 'verified', 'outcome': 'VERIFIED',
+                      'artifact_sha256': expected['artifact']['sha256'],
                       'evidence_sha256': digest(output.read_bytes())})
     rows = ['| Claim | Established source behavior | Apply proof |', '| --- | --- | --- |']
     statements = dafny.claim_statements(expected_state['lock']['spec_sha256'])
@@ -278,7 +293,7 @@ def check(candidate, output, work, operation, profile='local'):
         + str(snapshots[1]['reused_count']) + ' reused.\n'
         + 'The trusted baseline was fully checked first. All claims share Apply; '
           'these counts refer to member obligations, not independently isolated claims.\n')
-    print('ACCEPTED: C1 C2 C3 C4 C5; checked=' + str(snapshots[1]['checked_count'])
+    print('VERIFIED: C1 C2 C3 C4 C5; every change covered; checked=' + str(snapshots[1]['checked_count'])
           + '; reused=' + str(snapshots[1]['reused_count']) + '; end_to_end=false')
 
 
@@ -313,11 +328,15 @@ def main():
     try:
         check(candidate, output, work, operation, args.profile)
     except Rejected as error:
-        operation.update({'result': 'rejected', 'error': str(error)})
+        operation.update({'result': 'rejected', 'outcome': 'REJECTED', 'error': str(error)})
         print(str(error), file=sys.stderr)
         code = 1
+    except coverage.Unsupported as error:
+        operation.update({'result': 'unsupported', 'outcome': 'UNSUPPORTED', 'error': str(error)})
+        print(str(error), file=sys.stderr)
+        code = 3
     except (OSError, ValueError, KeyError, RuntimeError, ImportError) as error:
-        operation.update({'result': 'error', 'error': str(error)})
+        operation.update({'result': 'not_established', 'outcome': 'NOT_ESTABLISHED', 'error': str(error)})
         print(str(error), file=sys.stderr)
         code = 2
     operation['exit_code'] = code
