@@ -14,36 +14,12 @@ import stat
 import subprocess
 
 from common import digest
+import obligations
 
 # Ledger files whose correctness this gate re-establishes (spec and lock only with approval).
 LEDGER_SCOPE = ('impl/Ledger.dfy', 'spec/LedgerSpec.dfy', 'spec.lock')
 # Inputs of the ledger check that are never covered by its claims.
 LEDGER_CHECK_ONLY = ('gate/ContractBinding.dfy',)
-# Readers of ledger files that are not Dafny includes. Each entry names the code that
-# reads the file; claims built on them are not re-established by the PR gate.
-DECLARED_CONSUMERS = {
-    'impl/Ledger.dfy': (
-        ('gate/booking.py', 'the booking gate audits and verifies against this file'),
-        ('gate/backends/typescript.py', 'tested_against_proved_model claims for ts/ledger.ts use the model compiled from this file'),
-        ('scripts/build_model.py', 'builds the JavaScript model from this file'),
-        ('scripts/stage5_tools.py', 'Stage 5 witness and spec-report checks read this file'),
-        ('tests/Basic.dfy', 'imports module Ledger without an include; compiled beside this file by scripts/exit_stage_1.py'),
-        ('evidence.json', 'committed ledger evidence names the artifact that includes this file'),
-    ),
-    'spec/LedgerSpec.dfy': (
-        ('gate/booking.py', 'the booking gate pins this spec through spec/booking/spec.lock'),
-        ('gate/backends/typescript.py', 'tested_against_proved_model claims take their statements from this spec'),
-        ('scripts/build_model.py', 'checks this spec against spec.lock before building the model'),
-        ('scripts/stage5_tools.py', 'Stage 5 witness and spec-report checks read this spec'),
-        ('evidence.json', 'committed ledger evidence names the artifact that includes this file'),
-    ),
-    'spec.lock': (
-        ('gate/booking.py', 'the booking gate pins this lock through spec/booking/spec.lock'),
-        ('gate/backends/typescript.py', 'dafny.describe reads this lock for the model'),
-        ('scripts/build_model.py', 'reads the spec digest from this lock'),
-        ('scripts/stage5_tools.py', 'reads this lock'),
-    ),
-}
 # Untracked trees in a trusted checkout (see .gitignore); used only without git.
 BASE_UNTRACKED = ('.git', '.toolchain', 'build', 'node_modules', 'TestResults')
 class Unsupported(Exception):
@@ -62,7 +38,7 @@ def git(directory, *arguments):
     return child.stdout
 
 
-def listing(directory, untracked):
+def listing(directory, untracked, include_bytecode=False):
     """Tracked paths from git when present (clean tree required); otherwise every file."""
     if (directory / '.git').exists():
         if git(directory, 'status', '--porcelain=v1', '-z', '--untracked-files=no'):
@@ -78,15 +54,16 @@ def listing(directory, untracked):
             folders[:] = [f for f in folders if f not in untracked]
         links = [f for f in folders if (Path(parent) / f).is_symlink()]
         folders[:] = [f for f in folders if f not in links]
-        # Bytecode caches are build products, never inputs; any other file is inventoried.
+        # In the trusted base, bytecode caches are build products. In a candidate every file
+        # counts, so planted bytecode is an (uncovered) change.
         names += [(relative / name).as_posix() for name in files + links
-                  if not name.endswith(('.pyc', '.pyo'))]
+                  if include_bytecode or not name.endswith(('.pyc', '.pyo'))]
     return 'walk', names
 
 
-def inventory(directory, untracked):
+def inventory(directory, untracked, include_bytecode=False):
     """(method, {path: 'mode sha256'}); links are recorded by target text, never followed."""
-    method, names = listing(directory, untracked)
+    method, names = listing(directory, untracked, include_bytecode)
     result = {}
     for name in names:
         path = directory / name
@@ -103,7 +80,7 @@ def inventory(directory, untracked):
 def inventories(base, candidate):
     """Return (methods, base entries, candidate entries)."""
     base_method, before = inventory(base, BASE_UNTRACKED)
-    candidate_method, after = inventory(candidate, ('.git',))
+    candidate_method, after = inventory(candidate, ('.git',), include_bytecode=True)
     return base_method + '/' + candidate_method, before, after
 
 
@@ -129,11 +106,12 @@ def dafny_dependents(candidate, entries, targets):
         if name.endswith('.dfy') and entries[name].startswith('100'):
             for included in includes_of(name, (candidate / name).read_bytes()):
                 readers.setdefault(included, set()).add(name)
-    found, seen, pending = {}, set(targets), [(target, target) for target in targets]
+    # A reader that is itself a changed path is still a reader of the target.
+    found, seen, pending = {}, set(), [(target, target) for target in targets]
     while pending:
         current, origin = pending.pop()
         for reader in sorted(readers.get(current, ())):
-            if reader not in seen:
+            if reader not in seen and reader != origin:
                 seen.add(reader)
                 pending.append((reader, origin))
                 if reader not in LEDGER_SCOPE + LEDGER_CHECK_ONLY:
@@ -150,26 +128,69 @@ def lock_dependents(base, targets):
     return found
 
 
-def assess(base, candidate, mode, before, after, approved):
-    """Classify every change; an empty 'findings' list means full coverage."""
+def assess(base, candidate, mode, before, after, approved, records):
+    verified = {'impl/Ledger.dfy'} | set(approved)
+    """Classify every change against the obligation graph; an empty 'findings' list means full coverage.
+
+    records: obligation name -> run record (from obligations.run) for the affected obligations.
+    """
     rows = changes(before, after)
-    established = {'impl/Ledger.dfy'} | set(approved)
+    changed = [row['path'] for row in rows]
+    covered_paths = obligations.all_inputs()
+    for row in rows:
+        row['covered_by'] = sorted(name for name in ['ledger-proof'] + list(obligations.OBLIGATIONS)
+                                   if row['path'] in obligations.inputs_of(name))
     findings = [{'path': row['path'], 'reason': 'UNCOVERED_CHANGE',
-                 'detail': row['change'] + '; no claim established by this check covers it'}
-                for row in rows if row['path'] not in established]
-    covered = sorted(row['path'] for row in rows if row['path'] in established)
-    for reader, origin in sorted(dafny_dependents(candidate, after, covered).items()):
-        findings.append({'path': origin, 'reason': 'DEPENDENT_NOT_REESTABLISHED',
-                         'detail': reader + ' includes it (directly or transitively); not re-checked here'})
-    for lock, target in lock_dependents(base, covered):
-        findings.append({'path': target, 'reason': 'DEPENDENT_NOT_REESTABLISHED',
-                         'detail': lock + ' pins its digest; those claims are not re-checked here'})
-    for target in covered:
-        for reader, why in DECLARED_CONSUMERS.get(target, ()):
-            findings.append({'path': target, 'reason': 'DEPENDENT_NOT_REESTABLISHED',
-                             'detail': reader + ': ' + why})
-    return {'inventory': mode, 'changed': rows, 'established_paths': covered,
-            'findings': findings, 'covered': not findings}
+                 'detail': row['change'] + '; no obligation lists this path as an input'}
+                for row in rows if not row['covered_by']]
+    for path, names in sorted(obligations.not_reestablishable(changed, verified).items()):
+        findings.append({'path': path, 'reason': 'NOT_REESTABLISHABLE',
+                         'detail': 'bound input of ' + ', '.join(names) + ': the obligation runs this file '
+                         'as part of its harness, so a changed copy cannot be judged by it; '
+                         'the change needs a gate update under review'})
+    # A reader of a changed file must belong to an obligation that also depends on that file.
+    for reader, origin in sorted(dafny_dependents(candidate, after, changed).items()):
+        names = [name for name in ['ledger-proof'] + list(obligations.OBLIGATIONS)
+                 if reader in obligations.inputs_of(name) and origin in obligations.inputs_of(name)]
+        if not names:
+            findings.append({'path': origin, 'reason': 'UNKNOWN_DEPENDENCY',
+                             'detail': reader + ' includes it (directly or transitively); no obligation depends on both'})
+    for lock, target in lock_dependents(base, changed):
+        names = [name for name in obligations.OBLIGATIONS
+                 if lock in obligations.inputs_of(name) and target in obligations.inputs_of(name)]
+        if not names:
+            findings.append({'path': target, 'reason': 'UNKNOWN_DEPENDENCY',
+                             'detail': lock + ' pins its digest; no obligation depends on both'})
+    affected = obligations.affected(changed)
+    uncovered = any(f['reason'] in ('UNCOVERED_CHANGE', 'NOT_REESTABLISHABLE') for f in findings)
+    for name in affected:
+        if name == 'ledger-proof':
+            continue
+        record = records.get(name)
+        if record is None and uncovered:
+            continue  # obligations are not run while a change is uncovered; the finding above explains it
+        if record is None or record.get('result') != 'established':
+            findings.append({'path': name, 'reason': 'OBLIGATION_NOT_ESTABLISHED',
+                             'detail': (record or {}).get('reason', 'no record')})
+    claims = []
+    for name in ['ledger-proof'] + list(obligations.OBLIGATIONS):
+        declaration = obligations.OBLIGATIONS.get(name)
+        if name == 'ledger-proof':
+            status = 'established (fresh snapshot proof on the candidate)'
+            claim_methods = {claim: 'source_proof' for claim in ('C1', 'C2', 'C3', 'C4', 'C5')}
+            scope = 'impl/Ledger.dfy refines the approved ledger spec'
+        else:
+            claim_methods, scope = declaration['claims'], declaration['scope']
+            if name in records:
+                record = records[name]
+                status = ('established (reused: identical input digests)' if record.get('reused')
+                          else 'established (fresh run)') if record.get('result') == 'established' else record.get('result')
+            else:
+                status = 'not affected by this change (not re-run; no new claim made)'
+        claims.append({'obligation': name, 'scope': scope, 'claims': claim_methods, 'status': status,
+                       'affected': name in affected})
+    return {'inventory': mode, 'changed': rows, 'affected_obligations': affected, 'obligations': records,
+            'claims': claims, 'findings': findings, 'covered': not findings}
 
 
 def summary(result, limit=12):

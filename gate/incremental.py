@@ -5,9 +5,11 @@ Only Dafny/Boogie choose cached verification results. This gate checks input
 identity, audit output, checker success, obligation coverage, and policy.
 The caller must obtain this checkout from a trusted revision, outside the PR.
 
-Outcomes: 0 VERIFIED (C1-C5 hold and every change is covered), 1 REJECTED,
-2 NOT_ESTABLISHED (tool or input error), 3 UNSUPPORTED (C1-C5 hold, but some
-change is not covered by a claim this check established; no evidence is written).
+Outcomes: 0 VERIFIED (C1-C5 hold, every change is an input of some obligation, and
+every affected obligation was re-established on the candidate), 1 REJECTED (a proof,
+test, binding or policy obligation failed), 2 NOT_ESTABLISHED (tool or input error),
+3 UNSUPPORTED (all obligations hold, but a change or a dependency is covered by no
+obligation; no evidence is written). See proposals/incremental-verification/CONTRACT.md.
 """
 
 import argparse
@@ -26,12 +28,17 @@ sys.dont_write_bytecode = True
 from common import ROOT, Rejected, canonical, digest, relative, read_json
 from approval import authorize
 import coverage
+import obligations
 from dependencies import check_dependencies
 from backends import dafny
 
 
 PROTECTED_DIRS = ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github')
-PROTECTED_FILES = ('spec.lock', 'AGENTS.md')
+# Besides the protected trees, the files that obligations execute or that select what they
+# execute are protected: a PR cannot change the harness that tests it.
+PROTECTED_FILES = ('spec.lock', 'AGENTS.md', 'scripts/javascript_env.py', 'scripts/build_model.py',
+                   'interop/export.cjs', 'interop/model.ts', 'tests/ledger.property.ts',
+                   'tsconfig.json', 'package.json', 'package-lock.json')
 SOURCE_FILES = ('impl/Ledger.dfy', 'spec/LedgerSpec.dfy', 'gate/ContractBinding.dfy')
 OBLIGATIONS = dafny.REQUIRED_RESULTS | {
     'Ledger.TotalRemove (correctness)', 'Ledger.TotalRemove (well-formedness)',
@@ -152,9 +159,63 @@ def reproduction_input(baseline, proposed, protected, candidate, entries):
                     shutil.copy2(source, target)
             staged.rename(destination)
     if (protected_manifest(destination) != protected or source_bytes(destination) != proposed
-            or coverage.inventory(destination, ('.git',))[1] != entries):
+            or coverage.inventory(destination, ('.git',), include_bytecode=True)[1] != entries):
         raise Rejected('REPRODUCTION_INPUT: saved input does not match the checked candidate')
     return destination.relative_to(ROOT).as_posix()
+
+
+def verification_tree(candidate, entries, work):
+    """An immutable copy of the candidate with the trusted toolchain linked in; inventory must match."""
+    tree = work / 'verify'
+    if sys.platform == 'darwin':
+        subprocess.run(['/bin/cp', '-cRp', str(candidate), str(tree)], check=True)
+    else:
+        shutil.copytree(candidate, tree, symlinks=True)
+    for name in ('.git', 'build'):
+        if (tree / name).is_symlink() or (tree / name).exists():
+            (tree / name).unlink() if (tree / name).is_symlink() else shutil.rmtree(tree / name)
+    for pycache in list(tree.rglob('__pycache__')):
+        if pycache.is_dir() and not pycache.is_symlink():
+            shutil.rmtree(pycache)
+    for name in ('.toolchain', 'node_modules'):
+        if (tree / name).exists() or (tree / name).is_symlink():
+            raise Rejected('CANDIDATE_SCOPE: candidate must not carry ' + name)
+        if (ROOT / name).exists():
+            os.symlink(ROOT / name, tree / name)
+    if coverage.inventory(tree, coverage.BASE_UNTRACKED, include_bytecode=True)[1] != entries:
+        raise RuntimeError('VERIFICATION_TREE: copy differs from the candidate inventory')
+    return tree
+
+
+def run_obligations(candidate, entries, proposed_before, trusted_before, approval, affected, changed, work, operation):
+    names = [name for name in affected if name != 'ledger-proof']
+    operation['affected_obligations'] = affected
+    covered = obligations.all_inputs()
+    allowed = set(approval['approved_inputs']) if approval else set()
+    if (not names or any(path not in covered for path in changed)
+            or obligations.not_reestablishable(changed, {'impl/Ledger.dfy'} | allowed)):
+        # Nothing to re-establish, or the change is uncovered or not re-establishable: no
+        # obligation runs and nothing from the candidate executes.
+        operation['obligations'] = {}
+        return {}
+    if any(trusted_before.get(k) != proposed_before.get(k) for k in trusted_before.keys() | proposed_before.keys()
+           if k not in allowed):
+        raise Rejected('UNAPPROVED_PROTECTED_CHANGE: protected files differ before dependent obligations')
+    tree = verification_tree(candidate, entries, work)
+    if protected_manifest(tree) != proposed_before:
+        raise RuntimeError('VERIFICATION_TREE: protected manifest differs in the copy')
+    verified = {'impl/Ledger.dfy'} | allowed
+    context = {'protected_manifest': digest(canonical(trusted_before)),
+               'pins': digest((ROOT / 'toolchain/pins.json').read_bytes()),
+               'javascript_pins': digest((ROOT / 'toolchain/javascript-pins.json').read_bytes())}
+    records = obligations.run(names, tree, ROOT, verified, entries, context, work / 'obligations',
+                              ROOT / 'build/obligation-cache')
+    if (coverage.inventory(tree, coverage.BASE_UNTRACKED, include_bytecode=True)[1] != entries
+            or protected_manifest(tree) != proposed_before):
+        raise Rejected('INPUT_CHANGED: the verification tree changed while obligations ran')
+    obligations.store(records, ROOT / 'build/obligation-cache')
+    operation['obligations'] = records
+    return records
 
 
 def check(candidate, output, work, operation, profile='local'):
@@ -170,7 +231,7 @@ def check(candidate, output, work, operation, profile='local'):
     baseline = source_bytes(ROOT)
     proposed = source_bytes(candidate)
     paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve(), ROOT / 'gate/approval.py',
-                                                        ROOT / 'gate/coverage.py']
+                                                        ROOT / 'gate/coverage.py', ROOT / 'gate/obligations.py']
     if approval:
         paths += [ROOT / approval['record'], ROOT / read_json(ROOT / approval['record'])['proposal']]
     if profile == 'linux':
@@ -264,8 +325,19 @@ def check(candidate, output, work, operation, profile='local'):
     })
     bundle = make_bundle(raw, BACKEND, policy_identity, trusted, versions, reproduce)
     validate_evidence(bundle, expected, rules, policy_identity, trusted, BACKEND)
-    # Assess coverage, then re-hash every input, so the assessment's reads are guarded.
-    assessment = coverage.assess(ROOT, candidate, *inventory, approval['approved_inputs'] if approval else {})
+    # Re-establish every affected obligation inside an immutable copy of the candidate whose
+    # protected files equal the trusted base's, then assess coverage, then re-hash every input.
+    changed = [row['path'] for row in coverage.changes(inventory[1], inventory[2])]
+    affected = obligations.affected(changed)
+    records = run_obligations(candidate, inventory[2], proposed_before, trusted_before, approval,
+                              affected, changed, work, operation)
+    assessment = coverage.assess(ROOT, candidate, *inventory, approval['approved_inputs'] if approval else {}, records)
+    for name in affected:
+        record = records.get(name)
+        if record and record.get('result') == 'rejected':
+            raise Rejected('OBLIGATION_REJECTED: ' + name + ': ' + str(record.get('reason'))[:300])
+        if record and record.get('result') == 'not_established':
+            raise RuntimeError('OBLIGATION_NOT_ESTABLISHED: ' + name + ': ' + str(record.get('reason'))[:300])
     if (snapshot(paths) != inputs_before or protected_manifest(ROOT) != trusted_before
             or protected_manifest(candidate) != proposed_before or source_bytes(candidate) != proposed
             or coverage.inventories(ROOT, candidate) != inventory):
@@ -274,7 +346,7 @@ def check(candidate, output, work, operation, profile='local'):
     operation['claim_apply_status'] = {claim: apply_status for claim in sorted(dafny.CLAIMS)}
     operation['coverage'] = assessment
     if not operation['coverage']['covered']:
-        raise coverage.Unsupported('UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but '
+        raise coverage.Unsupported('UNSUPPORTED: every obligation that ran holds, but '
                                    + str(len(operation['coverage']['findings']))
                                    + ' coverage finding(s) remain: ' + coverage.summary(operation['coverage']))
     staged_evidence = work / 'accepted-evidence.json'
@@ -293,8 +365,10 @@ def check(candidate, output, work, operation, profile='local'):
         + str(snapshots[1]['reused_count']) + ' reused.\n'
         + 'The trusted baseline was fully checked first. All claims share Apply; '
           'these counts refer to member obligations, not independently isolated claims.\n')
-    print('VERIFIED: C1 C2 C3 C4 C5; every change covered; checked=' + str(snapshots[1]['checked_count'])
-          + '; reused=' + str(snapshots[1]['reused_count']) + '; end_to_end=false')
+    established = [n for n in affected if n != 'ledger-proof']
+    print('VERIFIED: C1 C2 C3 C4 C5; every change covered; re-established ' + (', '.join(established) or 'none')
+          + '; checked=' + str(snapshots[1]['checked_count']) + '; reused=' + str(snapshots[1]['reused_count'])
+          + '; end_to_end=false')
 
 
 def main():
