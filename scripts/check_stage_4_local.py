@@ -3,13 +3,16 @@
 
 Each candidate is a complete copy of this checkout (minus untracked trees), so the
 gate's coverage assessment sees the same change set a PR would carry. Outcomes:
-0 VERIFIED, 1 REJECTED, 2 NOT_ESTABLISHED, 3 UNSUPPORTED (ledger proof holds, but
-the change is not covered). Results go to results/stage4/local-coverage-v2.json;
+0 VERIFIED, 1 REJECTED, 2 NOT_ESTABLISHED, 3 UNSUPPORTED. A ledger edit whose
+committed evidence.json is not regenerated is REJECTED (the committed evidence no
+longer reproduces); the same edit with regenerated evidence is VERIFIED after the
+dependent obligations (booking, model, witness, evidence) are re-established. Results go to results/stage4/local-coverage-v2.json;
 the historical results/stage4-local.json is never rewritten.
 """
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import shlex
 import shutil
@@ -37,6 +40,24 @@ def copy_tree(source, target):
         else:
             shutil.copy2(entry, target / entry.name, follow_symlinks=False)
     for pycache in target.rglob('__pycache__'):
+        shutil.rmtree(pycache)
+
+
+def regenerate_evidence(candidate):
+    """Produce the candidate's committed evidence with the trusted gate, as a real PR would."""
+    for link in ('.toolchain', 'node_modules'):
+        if (ROOT / link).exists():
+            (candidate / link).symlink_to(ROOT / link)
+    child = subprocess.run(['python3', 'gate/gate.py', '--impl', 'impl/Ledger.dfy', '--evidence', 'evidence.json'],
+                           cwd=candidate, capture_output=True, text=True,
+                           env=dict(os.environ, PYTHONDONTWRITEBYTECODE='1'))
+    if child.returncode:
+        raise RuntimeError('evidence regeneration failed: ' + child.stdout + child.stderr)
+    for link in ('.toolchain', 'node_modules'):
+        if (candidate / link).is_symlink():
+            (candidate / link).unlink()
+    shutil.rmtree(candidate / 'build', ignore_errors=True)
+    for pycache in list(candidate.rglob('__pycache__')):
         shutil.rmtree(pycache)
 
 
@@ -69,18 +90,22 @@ def main():
     # name, expected gate exit, expected fresh Dafny exit (None: not run)
     cases = [
         ('unchanged', 0, 0), ('unchanged-repeat', 0, 0),
-        ('apply-edit', 3, 0), ('apply-edit-repeat', 3, 0),
-        ('uncovered-ts', 3, None),
+        ('apply-edit', 1, 0), ('apply-edit-repeat', 1, 0), ('apply-edit-regen', 0, 0),
+        ('uncovered-ts', 3, None), ('uncovered-docs', 3, None),
         ('broken-helper', 1, 4), ('helper-contract', 1, 4), ('self-transfer', 1, 4),
         ('sneaky-assume', 1, 2), ('spec-and-lock', 1, None), ('weaken-c2', 1, None),
     ]
     for name, expected_gate, expected_fresh in cases:
         candidate = copy_candidate(name)
         implementation = candidate / 'impl/Ledger.dfy'
-        if name in ('apply-edit', 'apply-edit-repeat'):
+        if name in ('apply-edit', 'apply-edit-repeat', 'apply-edit-regen'):
             debit = next(line.strip() for line in implementation.read_text().splitlines()
                          if line.strip().startswith('var debit :='))
             replace_once(implementation, debit, debit + '\n      assert 0 <= debit;')
+            if name == 'apply-edit-regen':
+                regenerate_evidence(candidate)
+        elif name == 'uncovered-docs':
+            (candidate / 'README.md').write_text((candidate / 'README.md').read_text() + '\nLocal control note.\n')
         elif name == 'uncovered-ts':
             replace_once(candidate / 'ts/ledger.ts',
                          'balances.set(request.sender, debit - request.amount - 1n);',
@@ -152,22 +177,33 @@ def main():
             assert case['snapshots'][1]['checked'] == [
                 'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)']
             assert case['snapshots'][1]['reused_count'] == 10
-            findings = case['coverage']['findings']
-            assert [c['path'] for c in case['coverage']['changed']] == ['impl/Ledger.dfy']
-            assert findings and all(f['reason'] == 'DEPENDENT_NOT_REESTABLISHED'
-                                    and f['path'] == 'impl/Ledger.dfy' for f in findings)
+            assert operation['error'].startswith('OBLIGATION_REJECTED: ledger-evidence:')
+            assert operation['obligations']['ledger-evidence']['result'] == 'rejected'
+        elif name == 'apply-edit-regen':
+            assert case['snapshots'][1]['checked'] == [
+                'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)']
+            assert sorted(operation['affected_obligations']) == [
+                'booking', 'ledger-evidence', 'ledger-model', 'ledger-proof', 'ledger-witness']
+            assert all(r['result'] == 'established' for r in operation['obligations'].values())
+            assert sorted(c['path'] for c in case['coverage']['changed']) == ['evidence.json', 'impl/Ledger.dfy']
         elif name == 'uncovered-ts':
+            # ts/ledger.ts is loaded into the model harness's own process, so a changed copy cannot
+            # be judged by that harness: the change is not re-establishable (UNSUPPORTED).
             assert case['snapshots'][1]['checked_count'] == 0
-            assert [c['path'] for c in case['coverage']['changed']] == ['ts/ledger.ts']
+            assert [f['reason'] for f in case['coverage']['findings']] == ['NOT_REESTABLISHABLE']
+            assert operation['obligations'] == {}
+        elif name == 'uncovered-docs':
+            assert [c['path'] for c in case['coverage']['changed']] == ['README.md']
             assert [f['reason'] for f in case['coverage']['findings']] == ['UNCOVERED_CHANGE']
     first = (WORK / 'unchanged-evidence.json').read_bytes()
     second = (WORK / 'unchanged-repeat-evidence.json').read_bytes()
     if first != second:
         raise RuntimeError('Evidence differs across identical input runs')
-    edits = [json.loads((WORK / ('run-' + n) / 'operation.json').read_text())['coverage']
+    edits = [json.loads((WORK / ('run-' + n) / 'operation.json').read_text())
              for n in ('apply-edit', 'apply-edit-repeat')]
-    if edits[0] != edits[1]:
-        raise RuntimeError('Coverage records differ across identical input runs')
+    if [(e['outcome'], e['error'][:60], e['affected_obligations']) for e in edits][0] != \
+            [(e['outcome'], e['error'][:60], e['affected_obligations']) for e in edits][1]:
+        raise RuntimeError('Decisions differ across identical input runs')
     recipe = json.loads(first)['evidence'][0]['reproduce_cmd']
     replay = run(shlex.split(recipe), WORK / 'exact-reproduction.log')
     report['exact_reproduction'] = {'command': recipe, 'exit_code': replay.returncode}
