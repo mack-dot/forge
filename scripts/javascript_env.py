@@ -3,10 +3,23 @@
 import hashlib
 import json
 from pathlib import Path
+import platform
 import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parent.parent
+# Same table as gate/common.py (kept standalone so the harness has no gate import).
+PIN_FILES = {
+    ('Darwin', 'arm64'): {'dafny': 'toolchain/pins.json', 'javascript': 'toolchain/javascript-pins.json'},
+    ('Linux', 'x86_64'): {'dafny': 'toolchain/linux-pins.json', 'javascript': 'toolchain/javascript-linux-pins.json'},
+}
+
+
+def pin_file(kind):
+    key = (platform.system(), platform.machine())
+    if key not in PIN_FILES:
+        raise RuntimeError('TOOLCHAIN_ERROR: no pinned toolchain profile for ' + '/'.join(key))
+    return PIN_FILES[key][kind]
 
 
 def digest(data):
@@ -20,7 +33,7 @@ def package_digest(folder):
 
 
 def check():
-    pins = json.loads((ROOT / 'toolchain/javascript-pins.json').read_text())
+    pins = json.loads((ROOT / pin_file('javascript')).read_text())
     node = shutil.which('node')
     if not node or digest(Path(node).read_bytes()) != pins['node_executable_sha256']:
         raise RuntimeError('JAVASCRIPT_TOOLCHAIN: Node executable differs from pin')

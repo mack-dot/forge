@@ -3,8 +3,31 @@
 import hashlib
 import json
 from pathlib import Path
+import platform
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# Toolchain pin files per host profile. 'local' is the recorded macOS arm64 host;
+# 'linux' is the pinned ubuntu-22.04 x86_64 CI profile. Any other host has no pinned
+# toolchain and every gate refuses (TOOLCHAIN_ERROR, exit 2).
+PIN_FILES = {
+    'local': {'dafny': 'toolchain/pins.json', 'validator': 'toolchain/validator-pins.json',
+              'javascript': 'toolchain/javascript-pins.json'},
+    'linux': {'dafny': 'toolchain/linux-pins.json', 'validator': 'toolchain/validator-linux-pins.json',
+              'javascript': 'toolchain/javascript-linux-pins.json'},
+}
+HOST_PROFILES = {('Darwin', 'arm64'): 'local', ('Linux', 'x86_64'): 'linux'}
+
+
+def host_profile():
+    key = (platform.system(), platform.machine())
+    if key not in HOST_PROFILES:
+        raise RuntimeError('TOOLCHAIN_ERROR: no pinned toolchain profile for ' + '/'.join(key))
+    return HOST_PROFILES[key]
+
+
+def pin_file(kind, profile=None):
+    return PIN_FILES[profile or host_profile()][kind]
 
 
 class Rejected(Exception):
