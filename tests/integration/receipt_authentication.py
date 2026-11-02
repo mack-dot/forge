@@ -105,7 +105,7 @@ def main():
 
     if args.cross_process:
         out.mkdir(parents=True, exist_ok=False)
-        run('cross-process', root.parent / 'forge-receipt-auth-fixtures-20261102/A', 1, 'CACHE_UNAUTHENTICATED')
+        run('cross-process', root.parent / (root.name + '-fixtures') / 'A', 1, 'CACHE_UNAUTHENTICATED')
         return 0
 
     out.mkdir(parents=True, exist_ok=False)
