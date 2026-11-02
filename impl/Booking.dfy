@@ -15,7 +15,7 @@ module Booking refines BookingSpec {
     var rest := values - {picked};
     if rest != {} {
       var other := Least(rest);
-      if other < value {
+      if other <= value {
         value := other;
       }
     }
