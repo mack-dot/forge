@@ -1,0 +1,80 @@
+name: Forge booking reuse experiment
+
+"on":
+  workflow_dispatch:
+    inputs:
+      booking_pr:
+        description: Approved experiment PR number (one Booking.dfy change)
+        required: true
+        type: string
+      booking_head:
+        description: Exact 40-character head approved for this dispatch
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  experiment:
+    if: github.repository == 'mack-dot/forge' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      BOOKING_PR: ${{ inputs.booking_pr }}
+      BOOKING_HEAD: ${{ inputs.booking_head }}
+    steps:
+      - name: Read the approved workflow revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          path: trusted
+          persist-credentials: false
+      - name: Select the pinned Python version
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.10.11'
+          check-latest: false
+      - name: Validate locked producer inputs before setup
+        working-directory: trusted
+        run: |
+          echo '8895a0881586dfcdf844fca8c09ec8bac662cbbc158cadb19084cfc5a5385bbf  gate/provenance/bootstrap.py' | sha256sum -c -
+          python -I -S -B gate/provenance/bootstrap.py --implementation-sha256 76b983ac279a80ab42bf15c7446ee997a2bcd9b25a003db829f7e8fb2d4b8cd9 --check
+      - name: Bind the exact booking PR
+        working-directory: trusted
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -I -B .github/experiments/booking_reuse.py --root . --out build/booking-observations --candidate ../candidate --preflight
+      - name: Read the proposed revision as data
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: mack-dot/forge
+          ref: ${{ inputs.booking_head }}
+          path: candidate
+          persist-credentials: false
+          submodules: false
+          lfs: false
+      - name: Install the pinned verifier and validator
+        working-directory: trusted
+        run: |
+          python -m venv .toolchain/ci-python
+          .toolchain/ci-python/bin/python -m pip install --disable-pip-version-check pip==25.3
+          .toolchain/ci-python/bin/python toolchain/install_ci.py
+      - name: Run real cold, warm, invalidation, and hostile cases
+        working-directory: trusted
+        run: .toolchain/ci-python/bin/python -I -B .github/experiments/booking_reuse.py --root . --out build/booking-observations --candidate ../candidate
+      - name: Preserve experiment observations, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: forge-booking-experiment-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          path: |
+            trusted/build/booking-observations/
+            trusted/build/booking-preflight.json
+            trusted/build/security-cache/
+            trusted/build/regression-*/operation.json
+            trusted/build/regression-*/obligations/
+            trusted/build/regression-*/verify/build/obligations/
+            trusted/build/*.json
