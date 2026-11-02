@@ -15,6 +15,7 @@ obligation; no evidence is written). See proposals/incremental-verification/CONT
 import argparse
 import json
 import os
+import platform
 from pathlib import Path
 import re
 import shlex
@@ -187,7 +188,7 @@ def verification_tree(candidate, entries, work):
     return tree
 
 
-def run_obligations(candidate, entries, proposed_before, trusted_before, approval, affected, changed, work, operation):
+def run_obligations(candidate, entries, proposed_before, trusted_before, approval, affected, changed, work, operation, cache):
     names = [name for name in affected if name != 'ledger-proof']
     operation['affected_obligations'] = affected
     covered = obligations.all_inputs()
@@ -207,18 +208,23 @@ def run_obligations(candidate, entries, proposed_before, trusted_before, approva
     verified = {'impl/Ledger.dfy'} | allowed
     context = {'protected_manifest': digest(canonical(trusted_before)),
                'pins': digest((ROOT / pin_file('dafny')).read_bytes()),
-               'javascript_pins': digest((ROOT / pin_file('javascript')).read_bytes())}
+               'javascript_pins': digest((ROOT / pin_file('javascript')).read_bytes()),
+               'runtime': {'system': platform.system(), 'machine': platform.machine(),
+                           'python_version': platform.python_version(),
+                           'python_sha256': digest(Path(sys.executable).read_bytes())}}
     records = obligations.run(names, tree, ROOT, verified, entries, context, work / 'obligations',
-                              ROOT / 'build/obligation-cache')
+                              cache)
     if (coverage.inventory(tree, coverage.BASE_UNTRACKED, include_bytecode=True)[1] != entries
             or protected_manifest(tree) != proposed_before):
         raise Rejected('INPUT_CHANGED: the verification tree changed while obligations ran')
-    obligations.store(records, ROOT / 'build/obligation-cache')
     operation['obligations'] = records
     return records
 
 
-def check(candidate, output, work, operation, profile='local'):
+def check(candidate, output, work, operation, profile='local', *, cache=None):
+    # New CLI processes never restore receipt authority from disk. A trusted
+    # in-process caller may share a cache; only live producer entries authorize hits.
+    cache = cache if cache is not None else work / 'obligation-cache'
     versions = check_dependencies(profile)
     from core import framework_paths, load_policy, make_bundle, snapshot, validate_evidence
 
@@ -330,7 +336,7 @@ def check(candidate, output, work, operation, profile='local'):
     changed = [row['path'] for row in coverage.changes(inventory[1], inventory[2])]
     affected = obligations.affected(changed)
     records = run_obligations(candidate, inventory[2], proposed_before, trusted_before, approval,
-                              affected, changed, work, operation)
+                              affected, changed, work, operation, cache)
     assessment = coverage.assess(ROOT, candidate, *inventory, approval['approved_inputs'] if approval else {}, records)
     for name in affected:
         record = records.get(name)
@@ -349,6 +355,7 @@ def check(candidate, output, work, operation, profile='local'):
         raise coverage.Unsupported('UNSUPPORTED: every obligation that ran holds, but '
                                    + str(len(operation['coverage']['findings']))
                                    + ' coverage finding(s) remain: ' + coverage.summary(operation['coverage']))
+    obligations.store(records, cache)
     staged_evidence = work / 'accepted-evidence.json'
     staged_evidence.write_bytes(canonical(bundle))
     staged_evidence.replace(output)
