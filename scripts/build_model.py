@@ -6,12 +6,12 @@ from pathlib import Path
 import subprocess
 import sys
 
-from javascript_env import ROOT, check, digest
+from javascript_env import ROOT, check, digest, pin_file
 
 
 def main():
     check()
-    pins = json.loads((ROOT / 'toolchain/pins.json').read_text())
+    pins = json.loads((ROOT / pin_file('dafny')).read_text())
     lock = json.loads((ROOT / 'spec.lock').read_text())
     if digest((ROOT / 'spec/LedgerSpec.dfy').read_bytes()) != lock['spec_sha256']:
         raise RuntimeError('SPEC_LOCK: changed specification')
@@ -21,7 +21,7 @@ def main():
     directory = ROOT / 'build/js'
     directory.mkdir(parents=True, exist_ok=True)
     paths = ['impl/Ledger.dfy', 'spec/LedgerSpec.dfy', 'spec.lock', 'interop/export.cjs',
-             'toolchain/pins.json', 'toolchain/javascript-pins.json', 'package-lock.json']
+             pin_file('dafny'), pin_file('javascript'), 'package-lock.json']
     before = {path: digest((ROOT / path).read_bytes()) for path in paths}
     for name in ('ledger.js', 'ledger.cjs', 'build.json'):
         (directory / name).unlink(missing_ok=True)

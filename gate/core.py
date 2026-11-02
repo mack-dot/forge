@@ -7,7 +7,7 @@ The CLI also requires a fresh backend run before accepting an imported bundle.
 from jsonschema import Draft202012Validator
 import yaml
 
-from common import ROOT, Rejected, digest, read_json, relative
+from common import ROOT, Rejected, digest, pin_file, read_json, relative
 
 
 def validate_schema(bundle):
@@ -45,7 +45,7 @@ def framework_paths():
         'gate/gate.py', 'gate/common.py', 'gate/core.py', 'gate/dependencies.py',
         'gate/backends/__init__.py', 'schemas/evidence.schema.json',
         'schemas/policy.schema.json', 'policy/tiers.yaml',
-        'toolchain/validator-pins.json', 'toolchain/requirements-stage2.txt',
+        pin_file('validator'), 'toolchain/requirements-stage2.txt',
     )]
 
 

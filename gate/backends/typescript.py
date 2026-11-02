@@ -6,7 +6,7 @@ import subprocess
 import sys
 import tempfile
 
-from common import ROOT, Rejected, canonical, digest, read_json, relative
+from common import ROOT, Rejected, canonical, digest, pin_file, read_json, relative
 from . import dafny
 
 sys.path.insert(0, str(ROOT))
@@ -30,7 +30,7 @@ def describe(impl_name):
     inputs += [ROOT / name for name in (
         'scripts/javascript_env.py', 'scripts/build_model.py', 'interop/export.cjs',
         'interop/model.ts', 'tests/ledger.property.ts', 'package.json', 'package-lock.json',
-        'tsconfig.json', 'toolchain/javascript-pins.json',
+        'tsconfig.json', pin_file('javascript'),
     )]
     return expected, inputs
 
