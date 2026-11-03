@@ -1,0 +1,39 @@
+{
+  "qemu_argv": [
+    "/runtime/qemu-riscv64-static",
+    "-cpu",
+    "rv64",
+    "-s",
+    "8388608",
+    "-g",
+    "12345",
+    "-one-insn-per-tb",
+    "-strace",
+    "-d",
+    "in_asm,cpu,fpu,page,nochain",
+    "-D",
+    "/records/instruction-trace.log",
+    "/tmp/gcd-selftest.elf"
+  ],
+  "gdb_argv": [
+    "/observer/usr/bin/gdb-multiarch",
+    "--nx",
+    "--nh",
+    "--batch",
+    "--data-directory=/observer/usr/share/gdb",
+    "-iex",
+    "set auto-load off",
+    "-iex",
+    "set debuginfod enabled off",
+    "-x",
+    "/commands.gdb"
+  ],
+  "gdb_library_path": "/observer/usr/lib/x86_64-linux-gnu",
+  "gdb_dont_write_bytecode": "1",
+  "commands_sha256": "1288a505001e2ddd3e8991e5baa871e271c0ae32e10672523e2853d4839e7a7e",
+  "elf_sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
+  "qemu_sha256": "be89e201dc6112ef101617ab575c95119ad123f80ca2b51b6c36ef218ac9df65",
+  "gdb_sha256": "0baeb299d3aa39f40ca72c3cb8ae5b15a5bd01f1995583a52cfdd7527bfffe07",
+  "scope": "New debug-observed run;not the historical trace or authoritative proof evidence",
+  "end_to_end": false
+}

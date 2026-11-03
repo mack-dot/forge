@@ -1,0 +1,83 @@
+[
+  {
+    "argv": [
+      "readelf",
+      "--program-headers",
+      "--wide",
+      "/target/gcd-selftest.elf"
+    ],
+    "actual_exit": 0
+  },
+  {
+    "argv": [
+      "dd",
+      "if=/target/gcd-selftest.elf",
+      "of=/records/expected-ro.bin",
+      "bs=1",
+      "skip=0",
+      "count=344"
+    ],
+    "actual_exit": 0
+  },
+  {
+    "argv": [
+      "dd",
+      "if=/target/gcd-selftest.elf",
+      "of=/records/expected-text.bin",
+      "bs=1",
+      "skip=344",
+      "count=60"
+    ],
+    "actual_exit": 0
+  },
+  {
+    "argv": [
+      "/observer/usr/bin/gdb-multiarch",
+      "--nx",
+      "--nh",
+      "--batch",
+      "--data-directory=/observer/usr/share/gdb",
+      "-iex",
+      "set auto-load off",
+      "-iex",
+      "set debuginfod enabled off",
+      "-x",
+      "/commands.gdb"
+    ],
+    "actual_exit": 0
+  },
+  {
+    "argv": [
+      "cmp",
+      "/records/expected-ro.bin",
+      "/records/live-load-ro.bin"
+    ],
+    "actual_exit": 0
+  },
+  {
+    "argv": [
+      "cmp",
+      "/records/expected-text.bin",
+      "/records/live-load-text.bin"
+    ],
+    "actual_exit": 0
+  },
+  {
+    "argv": [
+      "cmp",
+      "/records/expected-text.bin",
+      "/records/corrupt-live-text.bin"
+    ],
+    "actual_exit": 1
+  },
+  {
+    "argv": [
+      "readelf",
+      "--file-header",
+      "--program-headers",
+      "--wide",
+      "/records/live-vdso-page.bin"
+    ],
+    "actual_exit": 0
+  }
+]

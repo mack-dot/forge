@@ -1,0 +1,96 @@
+0x0000000000011158 in _start ()
+FORGE_ENTRY_PC=0x11158
+FORGE_ENTRY_SP=0x2aaaab2abc30
+FORGE_ENTRY_FCSR=0
+zero           0x0	0
+ra             0x0	0x0
+sp             0x2aaaab2abc30	0x2aaaab2abc30
+gp             0x0	0x0
+tp             0x0	0x0
+t0             0x0	0
+t1             0x0	0
+t2             0x0	0
+fp             0x0	0x0
+s1             0x0	0
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+a4             0x0	0
+a5             0x0	0
+a6             0x0	0
+a7             0x0	0
+s2             0x0	0
+s3             0x0	0
+s4             0x0	0
+s5             0x0	0
+s6             0x0	0
+s7             0x0	0
+s8             0x0	0
+s9             0x0	0
+s10            0x0	0
+s11            0x0	0
+t3             0x0	0
+t4             0x0	0
+t5             0x0	0
+t6             0x0	0
+pc             0x11158	0x11158 <_start>
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft4            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft5            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft6            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft7            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs0            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs1            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa0            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa1            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa2            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa3            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa4            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa5            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa6            {float = 0, double = 0}	(raw 0x0000000000000000)
+fa7            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs2            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs3            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs4            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs5            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs6            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs7            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs8            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs9            {float = 0, double = 0}	(raw 0x0000000000000000)
+fs10           {float = 0, double = 0}	(raw 0x0000000000000000)
+fs11           {float = 0, double = 0}	(raw 0x0000000000000000)
+ft8            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft9            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft10           {float = 0, double = 0}	(raw 0x0000000000000000)
+ft11           {float = 0, double = 0}	(raw 0x0000000000000000)
+fflags         0x0	NV:0 DZ:0 OF:0 UF:0 NX:0
+frm            0x0	FRM:0 [RNE (round to nearest; ties to even)]
+fcsr           0x0	NV:0 DZ:0 OF:0 UF:0 NX:0 FRM:0 [RNE (round to nearest; ties to even)]
+cycle          0x3a5945d06bc	4009693611708
+time           0x3a5945df293	4009693672083
+instret        0x3a5945e92bb	4009693713083
+priv           0x0	prv:0 [User/Application]
+3    AT_PHDR              Program headers for program    0x10040
+4    AT_PHENT             Size of program header entry   56
+5    AT_PHNUM             Number of program headers      5
+6    AT_PAGESZ            System page size               4096
+7    AT_BASE              Base address of interpreter    0x0
+8    AT_FLAGS             Flags                          0x0
+9    AT_ENTRY             Entry point of program         0x11158
+11   AT_UID               Real user ID                   1000
+12   AT_EUID              Effective user ID              1000
+13   AT_GID               Real group ID                  1000
+14   AT_EGID              Effective group ID             1000
+16   AT_HWCAP             Machine-dependent CPU capability hints 0x112d
+17   AT_CLKTCK            Frequency of times()           100
+25   AT_RANDOM            Address of 16 random bytes     0x2aaaab2abde0
+23   AT_SECURE            Boolean, was exec setuid-like? 0
+31   AT_EXECFN            File name of executable        0x2aaaab2abfe2 "/tmp/gcd-selftest.elf"
+33   AT_SYSINFO_EHDR      System-supplied DSO's ELF header 0x2aaaab2ac000
+0    AT_NULL              End of vector                  0x0
+[Inferior 1 (process 10) exited normally]
+FORGE_GUEST_EXIT=0

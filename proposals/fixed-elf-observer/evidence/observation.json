@@ -1,0 +1,38 @@
+{
+  "scope": "One new finite debug-observed execution;TESTED/OBSERVED only",
+  "qemu_exit": 0,
+  "gdb_exit": 0,
+  "held_load_bytes_matched": [
+    {
+      "part": "ro",
+      "bytes": 344,
+      "sha256": "fc4d1b4744166c66ed2f0c383815fd94c232ca3c036f41bbd7bb6461929e58a3"
+    },
+    {
+      "part": "text",
+      "bytes": 60,
+      "sha256": "abc3681a78a85d6dd01a490691f95621af177469b1c6c1b8fea70c097eb05db6"
+    }
+  ],
+  "fcsr_observed_zero": true,
+  "observed_markers": {
+    "FORGE_ENTRY_PC": "0x11158",
+    "FORGE_ENTRY_FCSR": "0",
+    "FORGE_GUEST_EXIT": "0"
+  },
+  "corrupt_capture_comparison_exit": 1,
+  "debugger_warnings": "warning: BFD: warning: system-supplied DSO at 0x2aaaab2ac000 has a corrupt string table index\n",
+  "auxv_vdso_address": {
+    "guest_vdso_address": 46912504512512,
+    "bytes_captured": 4096,
+    "source": "Existing GDB info auxv / QEMU qXfer:auxv; observation only"
+  },
+  "reservation_observed": false,
+  "lps_sparse_ledger_observed": false,
+  "old_run_hidden_state_established": false,
+  "runtime_refinement": "NOT_ESTABLISHED",
+  "authoritative_evidence_profile_approved": false,
+  "admitted": false,
+  "wall_seconds": 0.9624620419999701,
+  "end_to_end": false
+}

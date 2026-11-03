@@ -1,0 +1,2045 @@
+{
+  "etc/debuginfod/elfutils.urls": {
+    "kind": "file",
+    "sha256": "4b30e783263fea3d29fa065ca7c6448fd26a0ab1f7ef907ec2bd3497d06674f6",
+    "mode": 420
+  },
+  "etc/gdb/gdbinit": {
+    "kind": "file",
+    "sha256": "2d98fb7b65edea731b44e4a9676d06c58f31510d00a2ec5ff95127f5733ff966",
+    "mode": 420
+  },
+  "etc/ucf.conf": {
+    "kind": "file",
+    "sha256": "4b83c11baf906b8bd8612883ff856421409c4926168bdf2c2b734dcd8915d23f",
+    "mode": 420
+  },
+  "usr/bin/gcore": {
+    "kind": "file",
+    "sha256": "0d774bb0e42a60d7e9e166028d795a180bf1ebb55b3040f6c3632d12337b88f3",
+    "mode": 493
+  },
+  "usr/bin/gdb": {
+    "kind": "file",
+    "sha256": "3832cc070ae1716e322105d3b39fb398695e5f031c9d39224cf227a8c2b889f6",
+    "mode": 493
+  },
+  "usr/bin/gdb-add-index": {
+    "kind": "file",
+    "sha256": "f0618ea9b49faf6dbae47963b01ec2a908b808571af36338951bd72af1ca7f50",
+    "mode": 493
+  },
+  "usr/bin/gdb-multiarch": {
+    "kind": "file",
+    "sha256": "0baeb299d3aa39f40ca72c3cb8ae5b15a5bd01f1995583a52cfdd7527bfffe07",
+    "mode": 493
+  },
+  "usr/bin/gdbtui": {
+    "kind": "file",
+    "sha256": "5937752e2534bc31a7be247eed6521aec4cb5accf1af38d832e4dd791f480c8c",
+    "mode": 493
+  },
+  "usr/bin/lcf": {
+    "kind": "file",
+    "sha256": "0fe7cd00e0d1b4d854682742817a5e8bad08de61fd3140b8b612287b88773b2b",
+    "mode": 493
+  },
+  "usr/bin/ucf": {
+    "kind": "file",
+    "sha256": "fdbd9416b2484b3b3cd79da112510bf4ac1926bc4d21bb04efe924471a7fd1d6",
+    "mode": 493
+  },
+  "usr/bin/ucfq": {
+    "kind": "file",
+    "sha256": "b1e4a6d73b74e73ba6f1b2ff45093127a7f11b4e59443df43c008edb8e9f4cc8",
+    "mode": 493
+  },
+  "usr/bin/ucfr": {
+    "kind": "file",
+    "sha256": "f547df79dc954eb9ce4fa5fd59bc9c10292f954e0bd3222754eb15dfdada11b1",
+    "mode": 493
+  },
+  "usr/include/gdb/jit-reader.h": {
+    "kind": "file",
+    "sha256": "d127c4d66a80b1d3edc73e65fe62c63eee920b94b338fbe930ef35ab5e22edee",
+    "mode": 420
+  },
+  "usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.so": {
+    "kind": "symlink",
+    "target": "../../x86_64-linux-gnu/libpython3.12.so.1"
+  },
+  "usr/lib/x86_64-linux-gnu/glib-2.0/gio-launch-desktop": {
+    "kind": "file",
+    "sha256": "c49909fdc24fb099ce1fe9e79256c49699990ac778a982a147cf09c55f8c5356",
+    "mode": 493
+  },
+  "usr/lib/x86_64-linux-gnu/glib-2.0/gio-querymodules": {
+    "kind": "file",
+    "sha256": "996aacbea0fb67224f26d91f2c595da669e561220a73717972a6997a0a0b9426",
+    "mode": 493
+  },
+  "usr/lib/x86_64-linux-gnu/glib-2.0/glib-compile-schemas": {
+    "kind": "file",
+    "sha256": "85206a18e6dfc4f172a0017b35ea3f44d027e5acd436fac1bca8dce7af42dd19",
+    "mode": 493
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-ctf-metadata.so.1": {
+    "kind": "symlink",
+    "target": "libbabeltrace-ctf-metadata.so.1.0.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-ctf-metadata.so.1.0.0": {
+    "kind": "file",
+    "sha256": "8e24bfe1daeee04cb5a04b6a4f3c846fc24bf1ef10ee570e13673acd7ead99c3",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-ctf-text.so.1": {
+    "kind": "symlink",
+    "target": "libbabeltrace-ctf-text.so.1.0.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-ctf-text.so.1.0.0": {
+    "kind": "file",
+    "sha256": "de4a8b88283c492bb287093bcebc5503eef91e42851dc79c8d6e47c17a76e553",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-ctf.so.1": {
+    "kind": "symlink",
+    "target": "libbabeltrace-ctf.so.1.0.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-ctf.so.1.0.0": {
+    "kind": "file",
+    "sha256": "d5a30761bb7e8eadc3345ce3cfbb7567df86159b93e8e1700fd6d34505ad2e20",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-dummy.so.1": {
+    "kind": "symlink",
+    "target": "libbabeltrace-dummy.so.1.0.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-dummy.so.1.0.0": {
+    "kind": "file",
+    "sha256": "be1fed4c092f09aefcb0828d8429984aeba4d6e907be6f8128fadd1417a2524d",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-lttng-live.so.1": {
+    "kind": "symlink",
+    "target": "libbabeltrace-lttng-live.so.1.0.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace-lttng-live.so.1.0.0": {
+    "kind": "file",
+    "sha256": "aaab72768ef0d57749c33e0f288565c50ed1ffce5a08a54fd4c1f6389a86b6f4",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace.so.1": {
+    "kind": "symlink",
+    "target": "libbabeltrace.so.1.0.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libbabeltrace.so.1.0.0": {
+    "kind": "file",
+    "sha256": "5bf46ff3e0fb33f25ff7cd98c877a45dbaf423242904a7eb485173f3fed91ca6",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libdebuginfod-0.190.so": {
+    "kind": "file",
+    "sha256": "ada59231b9ce983951fdd3425ebb4c138fa473b7470d5bc9d9285a3f8687f801",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libdebuginfod.so.1": {
+    "kind": "symlink",
+    "target": "libdebuginfod-0.190.so"
+  },
+  "usr/lib/x86_64-linux-gnu/libdw-0.190.so": {
+    "kind": "file",
+    "sha256": "989dc9873f358a5af7d18d6100cf5fd66531d7990dc47d69068b3c6c96588867",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libdw.so.1": {
+    "kind": "symlink",
+    "target": "libdw-0.190.so"
+  },
+  "usr/lib/x86_64-linux-gnu/libelf-0.190.so": {
+    "kind": "file",
+    "sha256": "248c989360783cdc52f3659921de852c2efcc2097253ce58e34443f856412814",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libelf.so.1": {
+    "kind": "symlink",
+    "target": "libelf-0.190.so"
+  },
+  "usr/lib/x86_64-linux-gnu/libgio-2.0.so.0": {
+    "kind": "symlink",
+    "target": "libgio-2.0.so.0.8000.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.8000.0": {
+    "kind": "file",
+    "sha256": "373801faa40cd4eb46a40ce02bd0945b4905160a59894b600636e0fadfb78f2b",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libglib-2.0.so.0": {
+    "kind": "symlink",
+    "target": "libglib-2.0.so.0.8000.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.8000.0": {
+    "kind": "file",
+    "sha256": "448d9d271e77a7f6c4d057336df40c34b02c794f551caf8fa03b5122f25e601b",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0": {
+    "kind": "symlink",
+    "target": "libgmodule-2.0.so.0.8000.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.8000.0": {
+    "kind": "file",
+    "sha256": "1d3459ce2cd1a1fd276b08f75aa191597ece3e44bbe12ddd6bf0fe1dc8c27181",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0": {
+    "kind": "symlink",
+    "target": "libgobject-2.0.so.0.8000.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.8000.0": {
+    "kind": "file",
+    "sha256": "2bf396b14b469ca2eed46a785b3bc0bd1fd979261c6bf505bc4debdcd0a6870a",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0": {
+    "kind": "symlink",
+    "target": "libgthread-2.0.so.0.8000.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0.8000.0": {
+    "kind": "file",
+    "sha256": "c81de0bdf525f2ee0c9b4f069946a4a4ebac8eade50a11d1fb4f147c75ff36f0",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libipt.so.2": {
+    "kind": "symlink",
+    "target": "libipt.so.2.0.6"
+  },
+  "usr/lib/x86_64-linux-gnu/libipt.so.2.0.6": {
+    "kind": "file",
+    "sha256": "4763f3f4e0c4f776ec0d6bda54374c0d86bab570259501e50bc492a4fe9cf978",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libpython3.12.so.1": {
+    "kind": "symlink",
+    "target": "libpython3.12.so.1.0"
+  },
+  "usr/lib/x86_64-linux-gnu/libpython3.12.so.1.0": {
+    "kind": "file",
+    "sha256": "1021f236227334ded6d1bbbc4bb6f5d933f793d8397c969896cfbdf03ce96223",
+    "mode": 420
+  },
+  "usr/lib/x86_64-linux-gnu/libsource-highlight.so.4": {
+    "kind": "symlink",
+    "target": "libsource-highlight.so.4.0.1"
+  },
+  "usr/lib/x86_64-linux-gnu/libsource-highlight.so.4.0.1": {
+    "kind": "file",
+    "sha256": "7a73ccfb5cb9fe03ffa3710cf6fcae518af48fb71696957f5a334c802e8f42a5",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/NEWS.gz": {
+    "kind": "file",
+    "sha256": "bcae8d49f57408773a8f29efd60d31cd1ceeb2b7241255158e95f3217ab2c287",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/README.Debian": {
+    "kind": "file",
+    "sha256": "a7158a8b256ee8c05cc4c481d6de800e545b298c7196608c6feb4bd47d0d9050",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/README.gz": {
+    "kind": "file",
+    "sha256": "107362eec1c68a1b07d4f08af413fa3c8e1c8bfc81905c2fc4d672e5aff8eb23",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "73d21da546123a5dee7580f591ef789392a42827ca60bab4f6503172cbc5b909",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/check.log.gz": {
+    "kind": "file",
+    "sha256": "9886847463707ba6efb559314b5d1a09c8bef585b44a997b01f976f9e4c17680",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/ari/create-web-ari-in-src.sh": {
+    "kind": "file",
+    "sha256": "e03b19807a7e1981b4c899f065a5c5069232562b6709d0e2c25844a026b1346f",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/ari/gdb_ari.sh.gz": {
+    "kind": "file",
+    "sha256": "95fdc55ad727b3558e29357490099a593aeffa9a666f1d355284bcabee822ec9",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/ari/gdb_find.sh": {
+    "kind": "file",
+    "sha256": "a2b4f5707389013b6d60e464e10e11ccd930a203e2be42cce8a484baee59da84",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/ari/update-web-ari.sh.gz": {
+    "kind": "file",
+    "sha256": "e98981c6a128eb0bd31aa9f9db348a9494cd22f12b5fb0af963d7b8203043f17",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/cc-with-tweaks.sh.gz": {
+    "kind": "file",
+    "sha256": "1d9c8f1a619d0428f09eb1701255b008d6139fe90b2de5a959b5fe9857ff7831",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/expect-read1.c": {
+    "kind": "file",
+    "sha256": "3d7de931df3688a77c07a538a5ca801f1db8bce09ca5aea410b70f85079084da",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/expect-read1.sh": {
+    "kind": "file",
+    "sha256": "4b7b93f33f92bdce5683d32595cc276ca061fba80cf4587081d3098f49690606",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/gdb-add-index.sh.gz": {
+    "kind": "file",
+    "sha256": "0f0a99df9c551fd4b8ee6dedb9a98092f4d22e3c4bb57c825ceeb63663597c3f",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/test_pubnames_and_indexes.py.gz": {
+    "kind": "file",
+    "sha256": "506dde1cf2d469c2158039aabdacb926b5f169496289135f56a4f311d060a5b0",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/contrib/words.sh": {
+    "kind": "file",
+    "sha256": "bf47aa8e9fb95502ee25b1271db8ff134d8afaf5db8c0aa2575d372b4f12b03b",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/copyright": {
+    "kind": "file",
+    "sha256": "754a2734fed113aacaace7822ce6968ca5d0f1a5667fe0f5a886d7ed589093cd",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/refcard.dvi.gz": {
+    "kind": "file",
+    "sha256": "c236e2d793ad11bb341df344c0b63d7b27d2f095def89cf78e1b4b29e9b47f3a",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/refcard.ps.gz": {
+    "kind": "file",
+    "sha256": "25d716f339839eb98c09ec7712f4779d43603f316d9bebebbb521d5ee5b994f7",
+    "mode": 420
+  },
+  "usr/share/doc/gdb/refcard.tex.gz": {
+    "kind": "file",
+    "sha256": "252a86f62d8d6aa9bcbebb829113e1c1d3342a93dcb5685b40bcc2c3cb67514a",
+    "mode": 420
+  },
+  "usr/share/doc/gdb-multiarch": {
+    "kind": "symlink",
+    "target": "gdb"
+  },
+  "usr/share/doc/libbabeltrace1/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "fc68d7236d55afa0ebbbaa66b6c99a8a2871f100d84bdf6d6a03d99597a14f43",
+    "mode": 420
+  },
+  "usr/share/doc/libbabeltrace1/copyright": {
+    "kind": "file",
+    "sha256": "7248e28acc68570e17c71dff6b7090ba48f7f5d603982b5bcc358d2a212792b9",
+    "mode": 420
+  },
+  "usr/share/doc/libdebuginfod-common/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "d0197f6bd388bbe7a8fecdbf7e4f099aafdb5357cacf67b1356b283796aa53da",
+    "mode": 420
+  },
+  "usr/share/doc/libdebuginfod-common/copyright": {
+    "kind": "file",
+    "sha256": "657e078ed1e718b57ca839cdc38bb93196a0009488bea43cd0f429e7531530fa",
+    "mode": 420
+  },
+  "usr/share/doc/libdebuginfod1t64/changelog.Debian.gz": {
+    "kind": "symlink",
+    "target": "../libelf1t64/changelog.Debian.gz"
+  },
+  "usr/share/doc/libdebuginfod1t64/copyright": {
+    "kind": "file",
+    "sha256": "657e078ed1e718b57ca839cdc38bb93196a0009488bea43cd0f429e7531530fa",
+    "mode": 420
+  },
+  "usr/share/doc/libdw1t64/changelog.Debian.gz": {
+    "kind": "symlink",
+    "target": "../libelf1t64/changelog.Debian.gz"
+  },
+  "usr/share/doc/libdw1t64/copyright": {
+    "kind": "file",
+    "sha256": "657e078ed1e718b57ca839cdc38bb93196a0009488bea43cd0f429e7531530fa",
+    "mode": 420
+  },
+  "usr/share/doc/libelf1t64/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "655c6b2a2252e102b27f6e4d3eb7199a8888cefc7898b0bf9866ecac5e2c2ed5",
+    "mode": 420
+  },
+  "usr/share/doc/libelf1t64/copyright": {
+    "kind": "file",
+    "sha256": "657e078ed1e718b57ca839cdc38bb93196a0009488bea43cd0f429e7531530fa",
+    "mode": 420
+  },
+  "usr/share/doc/libglib2.0-0t64/NEWS.gz": {
+    "kind": "file",
+    "sha256": "c027ca9b9386bcae904c44d1486030829b2718827f1226e7b2f652789c5485d4",
+    "mode": 420
+  },
+  "usr/share/doc/libglib2.0-0t64/README.Debian": {
+    "kind": "file",
+    "sha256": "36e1c7acf1a83c0c2136d7556170563def281a14fdf389cd0a17dbfc344f492e",
+    "mode": 420
+  },
+  "usr/share/doc/libglib2.0-0t64/README.md": {
+    "kind": "file",
+    "sha256": "d65f7f841f89c2cce563cc72e030b9533a3399e59902e49dfbd5b5e1b8f1fffd",
+    "mode": 420
+  },
+  "usr/share/doc/libglib2.0-0t64/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "817dbec7020ba501d332c9c17b0122d79913c884e1ffc0dddb64c6e8517a6072",
+    "mode": 420
+  },
+  "usr/share/doc/libglib2.0-0t64/copyright": {
+    "kind": "file",
+    "sha256": "b52574b109fb876dfa71dea7a98b8aee1bb583f6aa90c327d1e4dc0a1d59f211",
+    "mode": 420
+  },
+  "usr/share/doc/libipt2/README": {
+    "kind": "file",
+    "sha256": "c9032fb711b319cf3757a0891c23d4b5babed47cfd07e3b05d83f11366c6b572",
+    "mode": 420
+  },
+  "usr/share/doc/libipt2/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "4a2e761b1e8d5855e4101182a398a16dbc15269627ed1da5c6c692d79154d769",
+    "mode": 420
+  },
+  "usr/share/doc/libipt2/copyright": {
+    "kind": "file",
+    "sha256": "26476781d1992ed84358d76ee69d2d1bcbb9dddf3182ea97179f5605561a3e8d",
+    "mode": 420
+  },
+  "usr/share/doc/libpython3.12t64": {
+    "kind": "symlink",
+    "target": "libpython3.12-stdlib"
+  },
+  "usr/share/doc/libsource-highlight-common/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "19f5defb641893643e30367f8f36920d8fdb500f85a22cd41879ed9071b48de3",
+    "mode": 420
+  },
+  "usr/share/doc/libsource-highlight-common/copyright": {
+    "kind": "file",
+    "sha256": "f8305da6853fc5ef976007d88526130c2f011ea100010fecf4c7e6100911e073",
+    "mode": 420
+  },
+  "usr/share/doc/libsource-highlight4t64/changelog.Debian.gz": {
+    "kind": "file",
+    "sha256": "d28d1f1ca8b8d0457c2f67135f3d914096a85f45b5e45834269bf606d53a5b30",
+    "mode": 420
+  },
+  "usr/share/doc/libsource-highlight4t64/copyright": {
+    "kind": "file",
+    "sha256": "f8305da6853fc5ef976007d88526130c2f011ea100010fecf4c7e6100911e073",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/changelog.gz": {
+    "kind": "file",
+    "sha256": "c96bec206c94adaf5937e286ec4161010c6ad09f29e6d53e8b6ac27f2f113da8",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/copyright": {
+    "kind": "file",
+    "sha256": "67dd4031ca283ba2f0def195329740f237e7ba30ef26e3dce3afa7f73cb62c8b",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/postinst": {
+    "kind": "file",
+    "sha256": "033359f90c2a192ea319a559b1b66a6c449a8c292e95ece8c86e198620980f8e",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/postrm": {
+    "kind": "file",
+    "sha256": "a5c87770d6d6ef2cde2a68639115f990c88d2d0959f4db6540c6377dd65f50cb",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/00README": {
+    "kind": "file",
+    "sha256": "d0f36c21a7b0ca1c5ddbc7d8f430dc71041cfb417be4ac1a25515c3b76431840",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/TODO": {
+    "kind": "file",
+    "sha256": "fdcac578dc66982455a03ec2f4b90b6bd62c5835ec193ab0e92b9626593e29b1",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/test-list": {
+    "kind": "file",
+    "sha256": "7998b695524048a56c21e26dece8a5b01d8ea0d67ccfd7520722ed7b387634c8",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/package-changed": {
+    "kind": "file",
+    "sha256": "0115268d6fc1e08f1867dd4d57cd99a7f26d5c3b868049918b85fbef87228f29",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/package-orig": {
+    "kind": "file",
+    "sha256": "cd009aea0e2ce22cb61da95b56dc0ac49688b45087e59fb80917ff274a766c1f",
+    "mode": 420
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_01": {
+    "kind": "file",
+    "sha256": "786b5f16afadf07e894676defd5c0e849176a840db7271ae9c8b7cf57e4cbbf7",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_02": {
+    "kind": "file",
+    "sha256": "16f725c56daf91fa0b516d6a6ecfafe123ce06c9105bd9ffa4a532a3c34b04ac",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_03": {
+    "kind": "file",
+    "sha256": "00dc1e06265a655ef2676d1ba0a581887e5c36ed5d5707d9e73db217ccb302f2",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_04": {
+    "kind": "file",
+    "sha256": "3c064dc542c74bacfa9e012de2e256c21d6c5c523472c1cadb008e2ca4b36654",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_05": {
+    "kind": "file",
+    "sha256": "daebc1d7926a75b6ed0a15ef1bdf50622bd64db0361874358733a381ab684fca",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_06": {
+    "kind": "file",
+    "sha256": "703725d00780aff2b40411ba0490faab8ecb02fe74c34ac22ad6a74828946f49",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_07": {
+    "kind": "file",
+    "sha256": "d59263e589b76ccf3d863000b35ecd58bce61bd78670ab1bf6e284cf72407b39",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_08": {
+    "kind": "file",
+    "sha256": "4256a3e7212f6f8cefc5e4ff36f6a3f582da2fced7849ca81f406af7b03fc366",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_09": {
+    "kind": "file",
+    "sha256": "cfdfb099ef84d25108d67f686e7b6169143de552dc76d3f0e73ed643c49d8a25",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_10": {
+    "kind": "file",
+    "sha256": "c59d45e1c2354cc664279b23b5e21c86bb9c8d7e3497c80556f88ae0db2fe6d7",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_11": {
+    "kind": "file",
+    "sha256": "87467608a5986e333cacbc0515d10e35fc1e125abea2c28e9ac73166d0698cd8",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_12": {
+    "kind": "file",
+    "sha256": "e54c98f31e9549ca326f201b84057cf0e6bfdbd05b6df0013d7d2db4d0b84210",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_13": {
+    "kind": "file",
+    "sha256": "15dd4365453120e51f829d5f06442de5ec48b79bf9f5bf3f3f437ea47fdd3a58",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_14": {
+    "kind": "file",
+    "sha256": "5d3f1d2a010765d302e96f36d79f8d26c6c9253b8e86109fe999b4b44e1a8853",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_15": {
+    "kind": "file",
+    "sha256": "c00093a3812ed87eac406655af821f4b752f4337bdb3b8f2808f6603e7ba09d7",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_16": {
+    "kind": "file",
+    "sha256": "52a0f63df55ca5eeb437a4dea274c10dbbcc7a5de223a6c0b65fb7ce67dd4bab",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_17": {
+    "kind": "file",
+    "sha256": "b44b1f0c9ec3f4adf942612611ec20acf470c249104acba8c0b46c95d37fe38c",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_18": {
+    "kind": "file",
+    "sha256": "1540cf70b029283533e459118e7b5a7fe11530ea74b12cb69944ade04f64e4fe",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_19": {
+    "kind": "file",
+    "sha256": "894d44c50ea485af002641c741453027668242f152ef0841e7f9cb349aae7738",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/tests/test_20": {
+    "kind": "file",
+    "sha256": "d72b4a27b1b109f5fa395e2488fa8c2db670cd05f2aef3a705f902ba7d7b73a5",
+    "mode": 493
+  },
+  "usr/share/doc/ucf/examples/ucf_helper_functions/testsuite": {
+    "kind": "file",
+    "sha256": "08ff928ee17c43dc677d0398544535565738871df8ba2acaeb51c31ecc68587c",
+    "mode": 493
+  },
+  "usr/share/gdb/python/gdb/FrameDecorator.py": {
+    "kind": "file",
+    "sha256": "11646ae730e5956181cf53fc242a685c21b583013f51dcfd2b06fcd06b92b7eb",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/FrameIterator.py": {
+    "kind": "file",
+    "sha256": "620419bc197a3fe11db0f89b86748525889403e0424700f836e0db3a80b4f7a0",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/__init__.py": {
+    "kind": "file",
+    "sha256": "c01263b6d63baea9ff473761104841517c77c4c28f7f4510ad4364d369f7a0be",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/__init__.py": {
+    "kind": "file",
+    "sha256": "27783e1d65081bee4c2c7e32252fc27d12d06519d7516e5b2051bd6770cc1040",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/explore.py": {
+    "kind": "file",
+    "sha256": "1f2bc04d4b87fb3a569c069be9a3648cedd965a823d0db3a1bfa2ee97de0c212",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/frame_filters.py": {
+    "kind": "file",
+    "sha256": "46e0e11a7115ab888281fceb1a5ec104f0efc1785c14e575d9f082e1c7c3a917",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/missing_debug.py": {
+    "kind": "file",
+    "sha256": "005dcac14e38f9044c733098940f5787cd341e9a76cc88671aa348da03f21a7c",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/pretty_printers.py": {
+    "kind": "file",
+    "sha256": "c40b64942d77853e66d624da598ad6c74c6df89db223d7d693bb9090ac9810ce",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/prompt.py": {
+    "kind": "file",
+    "sha256": "e3d4e6ac3aa038d82b0237f6fb37a7592628a9a4660f40f68cd4c1eb9d636011",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/type_printers.py": {
+    "kind": "file",
+    "sha256": "e867be399f6c1cc3c55f77804a73680ee813e8c4cd2849ab8b5f0afd1c73391e",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/unwinders.py": {
+    "kind": "file",
+    "sha256": "521b134f6926fc4c2886a05a390179fbdb43d4eefdb2578142e315e1c082bbf9",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/command/xmethods.py": {
+    "kind": "file",
+    "sha256": "adf84258c0d1bc8e989c405c8f8f09a95ae8247c10de56a141e82229634abcd6",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/__init__.py": {
+    "kind": "file",
+    "sha256": "dae87eaa34cc63125100e38f5a88729a858b179fe1fee69bd2115c292f5566ec",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/breakpoint.py": {
+    "kind": "file",
+    "sha256": "6f55907b3ba8e830abd471ecb47264b029865897d3926d514e8b6320075698c3",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/bt.py": {
+    "kind": "file",
+    "sha256": "bd09c37de840d1981c4696e2c8daf695c5d7f8f222bdcfa6198cfcb81d064db9",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/disassemble.py": {
+    "kind": "file",
+    "sha256": "785fdb4a6972c5f874fc32955783a713789cdec9ebcbac965f49c34c49d3ecca",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/evaluate.py": {
+    "kind": "file",
+    "sha256": "a29f9d23e60d20ee8d609459f350ae94363753edd89ca86e06d9c6c61c23949d",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/events.py": {
+    "kind": "file",
+    "sha256": "5bc6c018f76d9cbc3ea71f429f4d2e67d49abd640aa613ab45545386cb843fc9",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/frames.py": {
+    "kind": "file",
+    "sha256": "b44d624f21ef260af157a7e84f75f2d6fa0b398b1aec2b6a60bc3a155122d5e6",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/io.py": {
+    "kind": "file",
+    "sha256": "eaa0b82a02f15780b5075650ca3eb25b6c70c359c3043821e7fd1a3eb94066d0",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/launch.py": {
+    "kind": "file",
+    "sha256": "59674cb7eeffd60b653a07a64419dbe8137132cbf72bc70ea86b3e55e76d9f0e",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/locations.py": {
+    "kind": "file",
+    "sha256": "b7991071def988893292eb1cf0d89fbd47420094d1c8c334011f3106bc5a4ac6",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/memory.py": {
+    "kind": "file",
+    "sha256": "4d2352ac104edc96d05dc1cde703b06e70bc19961d515ac7e26f13ed6cf0ad47",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/modules.py": {
+    "kind": "file",
+    "sha256": "f43a37ea94f3055d0702e1095b2deb5f63dd19af578e84dd39011b22d98326f2",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/next.py": {
+    "kind": "file",
+    "sha256": "13c77dcedaf4209b5bbe24f71de72ae50bbfeda0a22b3aa5eb0b5e2f024edc8a",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/pause.py": {
+    "kind": "file",
+    "sha256": "c279bf1c7a17d5036ddba833b441f942927f34023e51ab8115d77b2af9518ce1",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/scopes.py": {
+    "kind": "file",
+    "sha256": "ce1f37bb20274a742e5a4eacb8068aac189db54887a04586ba3bf481db946632",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/server.py": {
+    "kind": "file",
+    "sha256": "e2cc0984df89e81b624940051f1076898c796d5eadb83eab96a0480bab89c9fc",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/sources.py": {
+    "kind": "file",
+    "sha256": "b073d07097c735c4c797af90fbc44612e2c29c8ac67ed57eb8472b30fef6072c",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/startup.py": {
+    "kind": "file",
+    "sha256": "be20a5a4dea30e2d33fc8886a7b7f63d246af7fea4261fe69c88d039f21e989b",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/state.py": {
+    "kind": "file",
+    "sha256": "e210c479324b2aa4ceb77f7b6bf31d4a8d9b9dc73592ac3903eaaed9d7ad6e77",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/threads.py": {
+    "kind": "file",
+    "sha256": "c51bbb71982b30e58bb423fc53044728f8877cf16449b4451858c66819eddc4a",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/typecheck.py": {
+    "kind": "file",
+    "sha256": "ec2a65c62a5fee46c4f298f7c416a207d6cffa4dfe1b23372a8f34256e0c56c6",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/dap/varref.py": {
+    "kind": "file",
+    "sha256": "f02cf7a80d8e43612e883c7811de36447bfaac2ebda442dcc514105730415be0",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/disassembler.py": {
+    "kind": "file",
+    "sha256": "4dd22a8cb734f31e6e6d643a085d74f36f1ad997a5511503801992db9244f505",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/frames.py": {
+    "kind": "file",
+    "sha256": "7167966a13099b819329cf2544ede2d7e4a9b596606efaa09d6b3ce1111c5f94",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/function/__init__.py": {
+    "kind": "file",
+    "sha256": "4eb6a64993476b459f6d131ae5a99ef819c4e255843dd7e27a35811aef03fb8f",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/function/as_string.py": {
+    "kind": "file",
+    "sha256": "b02f01e318f58b75b6442bba622e520cd35f3f11cacea0a8bb650d8769a1a943",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/function/caller_is.py": {
+    "kind": "file",
+    "sha256": "cd1b0515fe57e8f4dfcf18c39c1798eeaa69b1b876ffdd7ec68333689a53509f",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/function/strfns.py": {
+    "kind": "file",
+    "sha256": "4f1c19753880c39cd16b41dd4102cc04557fe6404687d178a2fa4ddaef99aa54",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/missing_debug.py": {
+    "kind": "file",
+    "sha256": "cd2d7841e172e19a91187f4acb8f44799fa9f8f35d04a4e58c1a158133bcb620",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/printer/__init__.py": {
+    "kind": "file",
+    "sha256": "d36910c4a4abe83601c6cda12736c805853884dfd58a0a2c18efd1eea5a86bd0",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/printer/bound_registers.py": {
+    "kind": "file",
+    "sha256": "f8747dd1270fcd58508b6c04910dca1341d454c2208c6f9eb521936392350291",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/printing.py": {
+    "kind": "file",
+    "sha256": "5a77b6dba153c44682b7fe9e756babdcfddc0ffb0f8c908345d384b6d95f7843",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/prompt.py": {
+    "kind": "file",
+    "sha256": "856b369f1f374fb4be505bf7db105a3f06bc2fbc9e3528f6d50536b2f40c0421",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/styling.py": {
+    "kind": "file",
+    "sha256": "c3e29e6002ad3813437aa8a16e77a92b2e5932c9c08873f35fe69ee8bc2bd4c2",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/types.py": {
+    "kind": "file",
+    "sha256": "a4569c3667dc763867dbe72cc4602d13b973b1489b5d12c188e7480200aae466",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/unwinder.py": {
+    "kind": "file",
+    "sha256": "00255f4c755e305fc484bc82b9ae46881a497591597efcaca4e9a8abe9c67e00",
+    "mode": 420
+  },
+  "usr/share/gdb/python/gdb/xmethod.py": {
+    "kind": "file",
+    "sha256": "988e0e0d606a8911dbc05ea8629681a2e6c7ac1547c9b4feb727364c20b26ff8",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/aarch64-linux.xml": {
+    "kind": "file",
+    "sha256": "8381489034f4dccb8e1fcf6f135bfdc91aa439c915d6dd1b7b3d71791e7b71e1",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/amd64-linux.xml": {
+    "kind": "file",
+    "sha256": "aa8d9c63c72a5e27e9daecabfc4b2c507dc9a9770a0c8998cefadd7c49046e6d",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/arm-linux.xml": {
+    "kind": "file",
+    "sha256": "1a76099ec2be0bc9958f4921e8ed207fa4f5ced6ee15eb90eba22cd8e1153c32",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/freebsd.xml": {
+    "kind": "file",
+    "sha256": "641520f0e9356282207e3148051f2897513b21185556c7b1d82517aee81de054",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/gdb-syscalls.dtd": {
+    "kind": "file",
+    "sha256": "542f41c610b9a1fd2cdabf94a9a9d07352f8d20b1605137327624bc20662ed45",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/i386-linux.xml": {
+    "kind": "file",
+    "sha256": "2b47d7615e39382932cb72dd1c3d44569857786a1abbbb7dd3415dc7bc64b775",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/loongarch-linux.xml": {
+    "kind": "file",
+    "sha256": "fab20c0effafcbd14114ca4fd9a9c7e017a99585aa021bcfb157aba5a0933b4b",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/mips-n32-linux.xml": {
+    "kind": "file",
+    "sha256": "fc9e213ef93080d72bdad9583150ca30dc39f1310406ef21ace126cab1aa71ac",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/mips-n64-linux.xml": {
+    "kind": "file",
+    "sha256": "5341c3e367f5bfe109f332e255f0fe0c5fa5ed29989ea4ced68dacdc0fe6cfe7",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/mips-o32-linux.xml": {
+    "kind": "file",
+    "sha256": "7e406e0612209f65faa2e746d6223e7e35875be777c2306f76fb87fc5176d4cf",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/netbsd.xml": {
+    "kind": "file",
+    "sha256": "70d75b8e7907b41d569ae1e64b578e93d12eaf801a810807265d7d9d0fe1e679",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/ppc-linux.xml": {
+    "kind": "file",
+    "sha256": "c69e24e05ce78fb169ab68b4e20d39b5318e755a1b4ac76218817e0597fe15d9",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/ppc64-linux.xml": {
+    "kind": "file",
+    "sha256": "362d46a98e0faeb3ff00bacddaad0c5bdab967eaa5c0fee73ef2022c32bd5a7d",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/s390-linux.xml": {
+    "kind": "file",
+    "sha256": "b8624a0cb3c02f531adf5b5079a7a326e4b58ea1a160e6d7fb0e5be67b3ad4c2",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/s390x-linux.xml": {
+    "kind": "file",
+    "sha256": "f6506cc8fafea98f603d3c528127fcacbdcb0e9a27d99464c7fd210efec8a6b9",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/sparc-linux.xml": {
+    "kind": "file",
+    "sha256": "8f3b7dbdf972455565d909a313d6bed45ac4e55487a7865ee7e2cc23d1c36fef",
+    "mode": 420
+  },
+  "usr/share/gdb/syscalls/sparc64-linux.xml": {
+    "kind": "file",
+    "sha256": "0e1572cdfd1e3acd2a48089e68413add7b97913acad268380cc05bc3c284575d",
+    "mode": 420
+  },
+  "usr/share/gdb/system-gdbinit/elinos.py": {
+    "kind": "file",
+    "sha256": "5d27913a7c12e94821450cfc51a773518043e422923f0298372afe4ba9b97733",
+    "mode": 420
+  },
+  "usr/share/gdb/system-gdbinit/wrs-linux.py": {
+    "kind": "file",
+    "sha256": "21607c0e568b42f7dc0b9223faabbb9ba43fddf37daa4cdd5c83ac5fff16c83b",
+    "mode": 420
+  },
+  "usr/share/libdebuginfod-common/debuginfod.csh": {
+    "kind": "file",
+    "sha256": "f2786235fae19c7387bb47ca88127d6bdb9781f86724b0e200578d2f1071fc38",
+    "mode": 420
+  },
+  "usr/share/libdebuginfod-common/debuginfod.sh": {
+    "kind": "file",
+    "sha256": "20bcd1cd06454a6f6c4d77486289e51a5238bf4af19fbc57061f4a8f38a64025",
+    "mode": 420
+  },
+  "usr/share/lintian/overrides/libglib2.0-0t64": {
+    "kind": "file",
+    "sha256": "248b10469ede06bfdb5e1a37da9bb317c557a7ab7f953a4eeeb8254e7b1f24db",
+    "mode": 420
+  },
+  "usr/share/lintian/overrides/libipt2": {
+    "kind": "file",
+    "sha256": "e35c03063ebd135e1c271539bd4fed0a4ced68cb2fe56b1ba9eaba6fc873c4d2",
+    "mode": 420
+  },
+  "usr/share/lintian/overrides/libpython3.12t64": {
+    "kind": "file",
+    "sha256": "e842c1749b7c61e37cbff892eb4690cb46dfebdcdbf623c98fd4ec8378f16a00",
+    "mode": 420
+  },
+  "usr/share/lintian/overrides/libsource-highlight4t64": {
+    "kind": "file",
+    "sha256": "8642683ff362b1ec9fc1c479c6c8bd229330404f67c72639b96991d3de3ac440",
+    "mode": 420
+  },
+  "usr/share/lintian/overrides/ucf": {
+    "kind": "file",
+    "sha256": "82879e9236b8d0c9c90cc79777f5af65fc213b8f7d57fc962bd5e73f8dfc5f40",
+    "mode": 420
+  },
+  "usr/share/man/man1/gcore.1.gz": {
+    "kind": "file",
+    "sha256": "82fb31213de7eb1aa82b1e564e9b9fcf46a418c8c2f1e55e089b618b1c9ae1df",
+    "mode": 420
+  },
+  "usr/share/man/man1/gdb-add-index.1.gz": {
+    "kind": "file",
+    "sha256": "b80f4f65cec63959372a90f4a5dae81b5ea65926c4ac82bbedec6949920b3363",
+    "mode": 420
+  },
+  "usr/share/man/man1/gdb.1.gz": {
+    "kind": "file",
+    "sha256": "bd2c325869b11e563a5e03d045af9237c7b9247ffab3b082aa924b956904e2bf",
+    "mode": 420
+  },
+  "usr/share/man/man1/lcf.1.gz": {
+    "kind": "file",
+    "sha256": "75e21161b8b40c6a7c180707678ec63bc54a0e6305d82f7616a25eed8e923f3f",
+    "mode": 420
+  },
+  "usr/share/man/man1/ucf.1.gz": {
+    "kind": "file",
+    "sha256": "7841bde9b6b62ec92779752772d2e44f967a3fcda36bd6707fc8f296a4143bfd",
+    "mode": 420
+  },
+  "usr/share/man/man1/ucfq.1.gz": {
+    "kind": "file",
+    "sha256": "a0c67ae8a72df570f3566a21c527d216c33bbad0b3723d912e3579a6e89be984",
+    "mode": 420
+  },
+  "usr/share/man/man1/ucfr.1.gz": {
+    "kind": "file",
+    "sha256": "f3f1dace76c31b5ae235bec36869e898da6bf49c7d0257742aef57d5ca22f2f7",
+    "mode": 420
+  },
+  "usr/share/man/man5/gdbinit.5.gz": {
+    "kind": "file",
+    "sha256": "0b5fb8fd479c6966ff079154bf11670688ce5d56f278997f080f04458d749a4f",
+    "mode": 420
+  },
+  "usr/share/man/man5/ucf.conf.5.gz": {
+    "kind": "file",
+    "sha256": "b0758a39db7e527a6c801fd175cd4b238fe4f046e9d4c676fe64dba49479f26d",
+    "mode": 420
+  },
+  "usr/share/man/man7/debuginfod-client-config.7.gz": {
+    "kind": "file",
+    "sha256": "c33180eb23d047c0b496ee6678c78edabb9194774a124d45052ba9b7a74f4def",
+    "mode": 420
+  },
+  "usr/share/source-highlight/Hello.css": {
+    "kind": "file",
+    "sha256": "42dfaf50473e061c83db0c32b64cf440f75c5c2edaa38c4cd90b2cd457e9e2f7",
+    "mode": 420
+  },
+  "usr/share/source-highlight/Hello2.css": {
+    "kind": "file",
+    "sha256": "1db43e5823e4fbc4317f52c825211015d9b021ecb056d0e61d5edb8c513b45fc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/ada.lang": {
+    "kind": "file",
+    "sha256": "531c20559835a373a42b88d5f6111da289ab7a3cd09051eab003b7b1e263e697",
+    "mode": 420
+  },
+  "usr/share/source-highlight/applescript.lang": {
+    "kind": "file",
+    "sha256": "aa42b1f46533e739a100c747c63c51a8d304cb080ebcd40e1629b8c9e6c2d1c6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/asm.lang": {
+    "kind": "file",
+    "sha256": "4e45f89c249bb6aa9a027f7b482fad2306bec9570fd707f73dbdddd6bb0a588c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/awk.lang": {
+    "kind": "file",
+    "sha256": "5900e2fc4e2671b88e7d3f35221bf73f8927d801d2bd52e94dea06694cdb6019",
+    "mode": 420
+  },
+  "usr/share/source-highlight/bat.lang": {
+    "kind": "file",
+    "sha256": "7d9c21bb8dcafad729618985f2ebe57bf312f997295b62572a7092e69c6202a6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/bib.lang": {
+    "kind": "file",
+    "sha256": "e664700bdb84eecea43e3d20d413850ef209aed6d4948441271aca50ce814e25",
+    "mode": 420
+  },
+  "usr/share/source-highlight/bison.lang": {
+    "kind": "file",
+    "sha256": "a9487cc18da872b4d641cc34e66f533b19b967258a7c0c626fe9f0df69dd7266",
+    "mode": 420
+  },
+  "usr/share/source-highlight/c.lang": {
+    "kind": "file",
+    "sha256": "5dd44e1010443f7e9647bcd7d89bb64c40a7ace62443e0cf97f8138990b1ddf6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/c_comment.lang": {
+    "kind": "file",
+    "sha256": "dd9ee48ac0d4a2e6af3ba6dd111240700d1eda67c75635f7bc4261d14dbd409a",
+    "mode": 420
+  },
+  "usr/share/source-highlight/c_preprocessor.lang": {
+    "kind": "file",
+    "sha256": "c886ffb0a706b4fbf4db4e2b0c83a888efc138863ff7ad6e42d2aee6d480665e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/c_string.lang": {
+    "kind": "file",
+    "sha256": "92c97c976b438194040d4011899ff5d438fd3e97f890c341d1b2bcaccb3170c3",
+    "mode": 420
+  },
+  "usr/share/source-highlight/caml.lang": {
+    "kind": "file",
+    "sha256": "7aec7d36a43982e6c0c4ffe0fd2c43027fae860b400f450587628af5116e581c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/changelog.lang": {
+    "kind": "file",
+    "sha256": "910109bc06fd14cde10b43774c50b9c9108e80da18203be8e6b398b3c0a2e527",
+    "mode": 420
+  },
+  "usr/share/source-highlight/clike_vardeclaration.lang": {
+    "kind": "file",
+    "sha256": "5c065477071702a980c9d77209fea66f8dcf5ab10ea133560c42c197998dc460",
+    "mode": 420
+  },
+  "usr/share/source-highlight/clipper.lang": {
+    "kind": "file",
+    "sha256": "4215a7944766b04f6b7d72053c15d3de7c3236ee7488ba6eb15c3e9525ff98ff",
+    "mode": 420
+  },
+  "usr/share/source-highlight/cobol.lang": {
+    "kind": "file",
+    "sha256": "6c7557340ee55dafb8139fb5044fc08fbe93668614725f1ef5bded7a4a82464d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/coffeescript.lang": {
+    "kind": "file",
+    "sha256": "4de019b8de77deeff45dda355e72bcbf1f18a041a9180fbf4dfc6d64261be158",
+    "mode": 420
+  },
+  "usr/share/source-highlight/conf.lang": {
+    "kind": "file",
+    "sha256": "0ab1ebd942018457583fd1a4289adcd2536c015812e846a2af65212ee5c8ebbc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/cpp.lang": {
+    "kind": "file",
+    "sha256": "b3e29d19fd6f443471f6734646ff86a0563216730b788095d18600e6eada4c41",
+    "mode": 420
+  },
+  "usr/share/source-highlight/cpp2html.css": {
+    "kind": "file",
+    "sha256": "e96631b894dd62ce9dea72c069d258d16ab49744e8e39149f286688d03b58c46",
+    "mode": 420
+  },
+  "usr/share/source-highlight/csharp.lang": {
+    "kind": "file",
+    "sha256": "7634f20d66e4bffb1a9d68479d9c181c894c20cc0d55a4c20234a3544480ece2",
+    "mode": 420
+  },
+  "usr/share/source-highlight/css.lang": {
+    "kind": "file",
+    "sha256": "8bfad5c6ed02945aa711f954625aa29d5824862326c87555bf8bde36aa729c52",
+    "mode": 420
+  },
+  "usr/share/source-highlight/css_common.outlang": {
+    "kind": "file",
+    "sha256": "caa6fca0d6bd54e9d79b978edd3cd6ec8e6f5573f19ec83f49d3c954f2d59875",
+    "mode": 420
+  },
+  "usr/share/source-highlight/d.lang": {
+    "kind": "file",
+    "sha256": "b39f0c4c7e18a7bce21ba60714baf8b84adb9d690520a68af4e3cb8da2770d03",
+    "mode": 420
+  },
+  "usr/share/source-highlight/default.css": {
+    "kind": "file",
+    "sha256": "ef48fc1e6294a0c1e201a854b1a867c0382ebf5dbb3dd0c81efe69c0cbb8799f",
+    "mode": 420
+  },
+  "usr/share/source-highlight/default.lang": {
+    "kind": "file",
+    "sha256": "b1e44e3243db9e0cd4d3e6e8062c952df1983a45a1b0a027257e2284df2eeb36",
+    "mode": 420
+  },
+  "usr/share/source-highlight/default.style": {
+    "kind": "file",
+    "sha256": "04631d10fd2de54d451c60f5e518d128f10c53cacbd68ddaebe4668435bb457c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/desktop.lang": {
+    "kind": "file",
+    "sha256": "d733f89f3526102cd19bc9ed944b63ab2c1d4ffc97abdd75a5a73fbb34d2f0e3",
+    "mode": 420
+  },
+  "usr/share/source-highlight/diff.lang": {
+    "kind": "file",
+    "sha256": "fc7f353792d69f52bbc8cfc054b7ff2fd2c5721d70b0572024b7c1bf95cc6bfc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/docbook.outlang": {
+    "kind": "file",
+    "sha256": "bb1b3807513d25ed54e0a73ad679145735e6c07cb4fa6316cada2571f6a56143",
+    "mode": 420
+  },
+  "usr/share/source-highlight/erlang.lang": {
+    "kind": "file",
+    "sha256": "9a3198f71ed6cbc646e206d190149db4774615587692b55b18064964b3ba26e8",
+    "mode": 420
+  },
+  "usr/share/source-highlight/errors.lang": {
+    "kind": "file",
+    "sha256": "bd07ad9f4cf84a7ea4b4d1168051d7e10772277ecded42a3e5265e6f2ebdd5e5",
+    "mode": 420
+  },
+  "usr/share/source-highlight/esc.outlang": {
+    "kind": "file",
+    "sha256": "227344173c7bbc0c2b369acd6c0f88cda0c1381ffb858eb55b93c2591348ff4a",
+    "mode": 420
+  },
+  "usr/share/source-highlight/esc.style": {
+    "kind": "file",
+    "sha256": "91a9aeb24a81e910ec195528a86a97b028a67d1d5971be63d0106f1fe1df1f95",
+    "mode": 420
+  },
+  "usr/share/source-highlight/esc256.outlang": {
+    "kind": "file",
+    "sha256": "0b87cc443fd71c6e6daa69715d529b9d81cf27b21ade152ab8acfb95d4669893",
+    "mode": 420
+  },
+  "usr/share/source-highlight/esc256.style": {
+    "kind": "file",
+    "sha256": "e1ee014943c181bfe21e206d93a5d820422aaf56d32dcad07ac0fc90b93b2284",
+    "mode": 420
+  },
+  "usr/share/source-highlight/extreme_comment.lang": {
+    "kind": "file",
+    "sha256": "7dc03ecd27bac86f5c96adf0a57b024f56192c4f8f7ef6ec61e21268384802e4",
+    "mode": 420
+  },
+  "usr/share/source-highlight/extreme_comment2.lang": {
+    "kind": "file",
+    "sha256": "836ce6218183d7d822eb8bbe790bd9d62457d57d02e680955f6d43570a93b633",
+    "mode": 420
+  },
+  "usr/share/source-highlight/extreme_comment3.lang": {
+    "kind": "file",
+    "sha256": "b2fd740c4eee32e6d17a531d0d5ebbec5408dff7503cf990559c9871218ff34d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/feature.lang": {
+    "kind": "file",
+    "sha256": "e372bc66ab2a557e13b933caee61850cbc1eefe4f4f3d838b6061a5ccc1834c8",
+    "mode": 420
+  },
+  "usr/share/source-highlight/fixed-fortran.lang": {
+    "kind": "file",
+    "sha256": "c2a00f04973524cd7c9d5d58e8d3c4138c6ede84288a84c1cc17119d9f285615",
+    "mode": 420
+  },
+  "usr/share/source-highlight/flex.lang": {
+    "kind": "file",
+    "sha256": "215f655af6c493e506d6bca2a4bbe56fe44610e47cfc5bf2f7cb3035b1290223",
+    "mode": 420
+  },
+  "usr/share/source-highlight/fortran.lang": {
+    "kind": "file",
+    "sha256": "0a5184e503797a8ea98535bd25cef39c1e611fae40597b66b8db8bfe3515a910",
+    "mode": 420
+  },
+  "usr/share/source-highlight/function.lang": {
+    "kind": "file",
+    "sha256": "693b321d6efe51356e812537d4a1826fb0f37be12f74ac6aab1477da8d86cd6c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/glsl.lang": {
+    "kind": "file",
+    "sha256": "5c3b1e131c4fc17815191f10ec6e3f9a9d3a07287fafdd71faa37a4332c3b39b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/go.lang": {
+    "kind": "file",
+    "sha256": "e04b2a2aed1d5d0a30c57f1f410a9e9ad968e2c99ec8ec9d6b6bcb5aa6c3eb87",
+    "mode": 420
+  },
+  "usr/share/source-highlight/groff_man.outlang": {
+    "kind": "file",
+    "sha256": "f939d9c6cc5d8416c422d0b65c952c20d711bccf780907a0f05cb131f816f6f5",
+    "mode": 420
+  },
+  "usr/share/source-highlight/groff_mm.outlang": {
+    "kind": "file",
+    "sha256": "92e52241052ce57d026d95c528d3623349ad4751c185a8acadc9a8c84379f6da",
+    "mode": 420
+  },
+  "usr/share/source-highlight/groff_mm_color.outlang": {
+    "kind": "file",
+    "sha256": "f6b014555e28d958f7aa57b1f7c6940b455602af1c6e052caa612114ebedcad7",
+    "mode": 420
+  },
+  "usr/share/source-highlight/groovy.lang": {
+    "kind": "file",
+    "sha256": "7452f4ae6f859271dd70a9d254ecf36fd2cf96755af55ae7faceab875b524674",
+    "mode": 420
+  },
+  "usr/share/source-highlight/haskell.lang": {
+    "kind": "file",
+    "sha256": "44194a5179a44ac1b550adb15c4921a14b5e625f01e024b576bd0152ed248493",
+    "mode": 420
+  },
+  "usr/share/source-highlight/haskell_literate.lang": {
+    "kind": "file",
+    "sha256": "450461156fc0ad42537ff2a26f6789a337a192c81153d5fa183b2938fef62d66",
+    "mode": 420
+  },
+  "usr/share/source-highlight/haxe.lang": {
+    "kind": "file",
+    "sha256": "2b1de86f2696e30e41a554f5a2dc12f4f6e54475c3434ccb154c47ebb2670580",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html.lang": {
+    "kind": "file",
+    "sha256": "624f242489261a27c9fa69db05c7fe7bd0da98e816efbc122247ab6fd5135217",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html.outlang": {
+    "kind": "file",
+    "sha256": "1d37116cae5e5d4ea579ae0ce9a8bdfc578b34ac55c16380c8818016c73bf71f",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html5.outlang": {
+    "kind": "file",
+    "sha256": "7dc9b3a212316a061e53959a6405933e38ce4da9f673c75ff5b1154c58e9e0fe",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html5_common.outlang": {
+    "kind": "file",
+    "sha256": "dc0f768b591a0647d1203155399d748f9ace013ce84e9700ccaf8d6306aed15c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html_common.outlang": {
+    "kind": "file",
+    "sha256": "a3e3b1a5b11775c3c6a2780d66c7392da5596d827bba1ba1aa6ffa7c10a9a727",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html_notfixed.outlang": {
+    "kind": "file",
+    "sha256": "fd4ef33a7f291b19f70b00f3bf25383a14dcbf9a7c5740a610e333dec3f48955",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html_ref.outlang": {
+    "kind": "file",
+    "sha256": "de4ecae3a0800334506405c6662a42743538f096c001709d14eef277e1b06710",
+    "mode": 420
+  },
+  "usr/share/source-highlight/html_simple.lang": {
+    "kind": "file",
+    "sha256": "3632fe6e9edfbe32dc0eb57ff67600f490b251bda05275a01bee6b213583ce20",
+    "mode": 420
+  },
+  "usr/share/source-highlight/htmlcss.outlang": {
+    "kind": "file",
+    "sha256": "bd93833ad1853596b89fbe375cd1e84a30a00d3755b351e45d9d313ac7170589",
+    "mode": 420
+  },
+  "usr/share/source-highlight/htmltable.outlang": {
+    "kind": "file",
+    "sha256": "1f9f2ff9b3cf9a73f3723f9342ac88f32d52d5954dd2aaa07eee476de1ca26fd",
+    "mode": 420
+  },
+  "usr/share/source-highlight/htmltablelinenum.outlang": {
+    "kind": "file",
+    "sha256": "6e9d547200c30d1a9bf23d947fa0623c56576fd11ebe7d69b018bc08ebea4432",
+    "mode": 420
+  },
+  "usr/share/source-highlight/ipxe.lang": {
+    "kind": "file",
+    "sha256": "829e66317cde1b3289167a44baf2d3af6c6e4333c50aa32b21b949f458de823e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/islisp.lang": {
+    "kind": "file",
+    "sha256": "e5e72d12e177a62d098779e576c50e84f85d192bee0ca9331aa1319f5c206b01",
+    "mode": 420
+  },
+  "usr/share/source-highlight/java.lang": {
+    "kind": "file",
+    "sha256": "d016f3b9b254c0387f1c9097dc0d2ba71e07ac9ea497746d3f5ee260d57d9362",
+    "mode": 420
+  },
+  "usr/share/source-highlight/javadoc.outlang": {
+    "kind": "file",
+    "sha256": "edc7dae0bdb23cd4388ba1570665eeafa25ea94ac3d2157ea2a28b388ee51cf6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/javalog.lang": {
+    "kind": "file",
+    "sha256": "87349fa73928ebd1460c77e19453430b436a37ee104b62260e493e1cd608b443",
+    "mode": 420
+  },
+  "usr/share/source-highlight/javalog.style": {
+    "kind": "file",
+    "sha256": "64945f21023b595dc079138c18a5281e7b370137b3d06ff4e0c172aa333a464e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/javascript.lang": {
+    "kind": "file",
+    "sha256": "df57d73e1de57fa2def3d0803d60160671de7d5139d4140ff1a1430b6748e463",
+    "mode": 420
+  },
+  "usr/share/source-highlight/json.lang": {
+    "kind": "file",
+    "sha256": "fa30b826ee50e9da6563e1df52f089c8c46c602bd47f2dd66b97fa0c7eafd2bf",
+    "mode": 420
+  },
+  "usr/share/source-highlight/json.style": {
+    "kind": "file",
+    "sha256": "714979d35bb0eabf0b91b92502a79b284cb1e4321de9b4ee00301b55cd293867",
+    "mode": 420
+  },
+  "usr/share/source-highlight/key_string.lang": {
+    "kind": "file",
+    "sha256": "b72e9657bf369e9e5d4ecb8443c885e5713afc09f979b3bcfa51e88e6e31bfdf",
+    "mode": 420
+  },
+  "usr/share/source-highlight/lang.map": {
+    "kind": "file",
+    "sha256": "7097147dec9fc98355ab001caab02701d987439de0cf10bc5b75a349f0f0761d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/langdef.lang": {
+    "kind": "file",
+    "sha256": "232a80e67174dd1a5f5cbc5617984a3fa3516caba303d50e632f8947effffac1",
+    "mode": 420
+  },
+  "usr/share/source-highlight/latex.lang": {
+    "kind": "file",
+    "sha256": "1015a3ec3d946a07db050fc0026508045c1898ab211c283cdb7937b21b9708ca",
+    "mode": 420
+  },
+  "usr/share/source-highlight/latex.outlang": {
+    "kind": "file",
+    "sha256": "164d0ac49ef6bea9b115e8ceeba72e9262df5d244c26c820457b29c9c517e141",
+    "mode": 420
+  },
+  "usr/share/source-highlight/latexcolor.outlang": {
+    "kind": "file",
+    "sha256": "9fd1991d51bb4cf4950b193dc73d1348ffe02dc59fd2a4c3c06b5b4abcb9678d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/ldap.lang": {
+    "kind": "file",
+    "sha256": "4bc63714b345ab94a0a8543305d727efca3e1f8bb9e22467ded281df735795d6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/lilypond.lang": {
+    "kind": "file",
+    "sha256": "109380456074fbd2013619149ee0c4684b03263b2eaf3a92c329b8d7c6a32b41",
+    "mode": 420
+  },
+  "usr/share/source-highlight/lilypond.style": {
+    "kind": "file",
+    "sha256": "84c26409c79a54382109d376f819eddcaea27ef376fae33670345356cfd7dee1",
+    "mode": 420
+  },
+  "usr/share/source-highlight/lisp.lang": {
+    "kind": "file",
+    "sha256": "e7e4927b13c52c8ebd539b00cd66e89ba0cac05b6f0b613b3d0755613df8b082",
+    "mode": 420
+  },
+  "usr/share/source-highlight/log.lang": {
+    "kind": "file",
+    "sha256": "32e98e0517a56b43bb1f26883364b76cfd4aa0ae6ae8ef9bfd1fa85305cb113d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/logtalk.lang": {
+    "kind": "file",
+    "sha256": "b23e6bcd80f85984f661701015fcb6092239214d16f6fc73614e0a83ca85e57c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/lsm.lang": {
+    "kind": "file",
+    "sha256": "a4256f3fcd3d6dc3f955c815f3e00bc5835e5c944c565284635bd1a52c04766f",
+    "mode": 420
+  },
+  "usr/share/source-highlight/lua.lang": {
+    "kind": "file",
+    "sha256": "18ddfe39ad734a1e84aa759dbf7f8ff3414d4d25a0498d2d5d8979582ee96ca5",
+    "mode": 420
+  },
+  "usr/share/source-highlight/m4.lang": {
+    "kind": "file",
+    "sha256": "a416eee0dad2937d4426208b75e866023245e477123e4024d746a2a6e7b56394",
+    "mode": 420
+  },
+  "usr/share/source-highlight/makefile.lang": {
+    "kind": "file",
+    "sha256": "2ce0af95732af7e4bb7037829110399ab95b6c87084400cba44f7dd45decf341",
+    "mode": 420
+  },
+  "usr/share/source-highlight/manifest.lang": {
+    "kind": "file",
+    "sha256": "d3b81281f6ff805968a56ee08d234759db366ab05f5e4d780edc66aaa111b89e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/mediawiki.outlang": {
+    "kind": "file",
+    "sha256": "32ae65b8eb0383fd8fc916136adddfa34d295097d35a2f35861d4ced7b33c50a",
+    "mode": 420
+  },
+  "usr/share/source-highlight/mono-alt.css": {
+    "kind": "file",
+    "sha256": "7c51378d860fbc56f5d4a7ce862650d90c6654caba9f1e799bb0a5c5656b625a",
+    "mode": 420
+  },
+  "usr/share/source-highlight/mono.css": {
+    "kind": "file",
+    "sha256": "b6d5b108d4c2c99162e8c64a0a52b03cf33457d52d5a2fb9f314b7527e4a42e8",
+    "mode": 420
+  },
+  "usr/share/source-highlight/nohilite.lang": {
+    "kind": "file",
+    "sha256": "4be25d9c4f3f235649f585d0b3b09ea017b894e453cb388c84b90c642c3bf56c",
+    "mode": 420
+  },
+  "usr/share/source-highlight/number.lang": {
+    "kind": "file",
+    "sha256": "713887b3e37527de2646f30f69bdbe392c06ab324fb97b4aa7fe94e107e18411",
+    "mode": 420
+  },
+  "usr/share/source-highlight/odf.outlang": {
+    "kind": "file",
+    "sha256": "04c2a86bab5a1d8301bdde971dcc0f771ddd1a526c64c323e46197e5718e278b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/opa.lang": {
+    "kind": "file",
+    "sha256": "4a32f4b1da6cc9ba05a12a5c428b1faa18653e5d51e4a7bf357d8c1c586fee89",
+    "mode": 420
+  },
+  "usr/share/source-highlight/outlang.lang": {
+    "kind": "file",
+    "sha256": "1bc37c95bb651686865e4032e34e72da8c00dd5b10ae7db796819f5332161189",
+    "mode": 420
+  },
+  "usr/share/source-highlight/outlang.map": {
+    "kind": "file",
+    "sha256": "675c5d16755d289e2962a985641166be4d8e56821513f307143298cb9f25dbb4",
+    "mode": 420
+  },
+  "usr/share/source-highlight/oz.lang": {
+    "kind": "file",
+    "sha256": "c86ea7dc66ebd9ea87fe48dd4478cb91f80f450e06c59292042410cbc1bcee29",
+    "mode": 420
+  },
+  "usr/share/source-highlight/pascal.lang": {
+    "kind": "file",
+    "sha256": "4cd5e25ff0736eafb590a06322431d40dce4f6cb0cf2701f79fedbd0ebb80f9f",
+    "mode": 420
+  },
+  "usr/share/source-highlight/pc.lang": {
+    "kind": "file",
+    "sha256": "9554bcecc6c00d1e48acb80c3722a1a437ca297c6d159daeda2105c85a98e0c9",
+    "mode": 420
+  },
+  "usr/share/source-highlight/perl.lang": {
+    "kind": "file",
+    "sha256": "645848e11dea8574b608ac86e491e0a26271220181b68742085f28cba1aca2f7",
+    "mode": 420
+  },
+  "usr/share/source-highlight/php.lang": {
+    "kind": "file",
+    "sha256": "e4477d1afe6fcfe6c8779afaa20afcebc615d284d3cac4860fbf7761a74f7ccf",
+    "mode": 420
+  },
+  "usr/share/source-highlight/po.lang": {
+    "kind": "file",
+    "sha256": "0127e47c8ae9e0ddc20d7a3e14bd0355501cbb21382a044c08cd40483d65c6bc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/postscript.lang": {
+    "kind": "file",
+    "sha256": "3e9aefcc3e76af782c3066219c6c21356e522678d7b99ee9b1777a33b149f40b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/prolog.lang": {
+    "kind": "file",
+    "sha256": "ec1a5f8657ff07bdf7164599ec006e01ee2e3bfcbd863eb227db7df9b5381b90",
+    "mode": 420
+  },
+  "usr/share/source-highlight/properties.lang": {
+    "kind": "file",
+    "sha256": "0f2456f0e62b748275e8cb585598f2a9feb779e49bc941690aa88d855b1339bf",
+    "mode": 420
+  },
+  "usr/share/source-highlight/proto.lang": {
+    "kind": "file",
+    "sha256": "69fc3ad5df8d12fc5e6a5095de9ee5b375f9f4dcb3e84b9fbdb7fce6ada15d6b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/python.lang": {
+    "kind": "file",
+    "sha256": "f62fbba625bd518e9074f8c960376b572c721ce5bc7ff42ea4c35d2671f87e6e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/r.lang": {
+    "kind": "file",
+    "sha256": "2aa1cd593083f8ecdcde016a8e89ba550afa4561b3cf4083d603e9f77eb04ff6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/r.style": {
+    "kind": "file",
+    "sha256": "ead0e64ed1c95954e235e821ea84cbbe37c5f228fa598481ca832468ee753bb8",
+    "mode": 420
+  },
+  "usr/share/source-highlight/ruby.lang": {
+    "kind": "file",
+    "sha256": "38ae70bedadb7f4523580321d861de60086edd3d2d62fa5a9eac9e3e2b10d097",
+    "mode": 420
+  },
+  "usr/share/source-highlight/rust.lang": {
+    "kind": "file",
+    "sha256": "175db0ddaf8d13a14cd9c400b6520ec5e1dab23a1f6f9349741a3706d3a97405",
+    "mode": 420
+  },
+  "usr/share/source-highlight/s.lang": {
+    "kind": "file",
+    "sha256": "c84df809466ba805f1f489a43a3a78a3bfa3c3ea6989d7a3ef0e42921bc1fcaf",
+    "mode": 420
+  },
+  "usr/share/source-highlight/scala.lang": {
+    "kind": "file",
+    "sha256": "94d0e53527be99212d8f61cc646fef4719853136b02b06f1efe03c7e79fe7bd9",
+    "mode": 420
+  },
+  "usr/share/source-highlight/scheme.lang": {
+    "kind": "file",
+    "sha256": "f1071335b00ded11314921321766f0f646565fd6ab0c9bede51d9b7461a0a522",
+    "mode": 420
+  },
+  "usr/share/source-highlight/script_comment.lang": {
+    "kind": "file",
+    "sha256": "9ff4764e3579cb52d7c47e532d91da9b43e9de5c757504513f873f3e956941cf",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sexp.outlang": {
+    "kind": "file",
+    "sha256": "c6ca578fd63c4478a88a1812e911fd89167fb293bf8c761c253f96c59090a602",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh.lang": {
+    "kind": "file",
+    "sha256": "dd0e1cfda0e98197429234337595601c63ff659cfe09500b0ddc119f0b284997",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_acid.css": {
+    "kind": "file",
+    "sha256": "d1542fa3bf9b7f6255830ea3d855a339e96af0f3bbeb5086c49e469444132ccd",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_berries-dark.css": {
+    "kind": "file",
+    "sha256": "cc780eede1288eaac5e9be57046539dfe3971211bdb627baddc9255d556c6ef9",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_berries-light.css": {
+    "kind": "file",
+    "sha256": "84631afbfb2f84594fbe9b3e2e27ff97144c731af6f28655cffc2d20b6457584",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_bipolar.css": {
+    "kind": "file",
+    "sha256": "a8225f6ddd24cc1e921b2ee62151c23c324b57d74d76f36af418e1b6313c9e3d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_blacknblue.css": {
+    "kind": "file",
+    "sha256": "e9a588c2067875292721730a35163dc85bdce4c95ec52b15f5250c6dd95b394d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_bright.css": {
+    "kind": "file",
+    "sha256": "f4fd618dfc6b3d63ee1cbc0369407ebcc85b33c5fd3c42a554a6146247375e47",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_contrast.css": {
+    "kind": "file",
+    "sha256": "1a80380ff16e0e9aef4476e98b118f95ea2903890f695655077899877f180b41",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_darkblue.css": {
+    "kind": "file",
+    "sha256": "45099e0438366e60352e0ca5cf4c5ebc2a753583d07b3bac6eafa7502cd98b56",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_darkness.css": {
+    "kind": "file",
+    "sha256": "58d4187c080adc1d264c9c9640645a5859c82a0ee5b91683ab707b4c7edbc3c9",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_desert.css": {
+    "kind": "file",
+    "sha256": "f37a1b9bf133f23022c79e3095f1c822ee37bfa4f86e076351ac80d5ca913fd7",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_dull.css": {
+    "kind": "file",
+    "sha256": "b744588a176826ded9246896907364251541499aefcf601acf08a0d24791855b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_easter.css": {
+    "kind": "file",
+    "sha256": "5a90edc5ad05ff4c880b52483e515571076f73eaaf433423c606e940ca12031e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_emacs.css": {
+    "kind": "file",
+    "sha256": "9184a16cc54d3324712ac9c5e7ec0f0e43a7d55dffd2a6cfbdb8f24475d5442e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_golden.css": {
+    "kind": "file",
+    "sha256": "6fef32c34c455f53050d69f91139e55cd2b65a6cefa3ae29240f7e0e52253764",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_greenlcd.css": {
+    "kind": "file",
+    "sha256": "31b220788665e6d9164921b272e4fa88b5b0b68fac3b9de9e15d76dbfa6f336b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_ide-anjuta.css": {
+    "kind": "file",
+    "sha256": "ff564fdfe85d93b70866889a079660e4c744534a5374ac8db7fb559c7a4dd3d0",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_ide-codewarrior.css": {
+    "kind": "file",
+    "sha256": "347e283a4ed835fdb0732d93702effb61dd45460d27e69ff2d824d88100afc1e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_ide-devcpp.css": {
+    "kind": "file",
+    "sha256": "8847e917e1493944e9f810473824b2b020c97932e3ef127a738966e38e472e85",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_ide-eclipse.css": {
+    "kind": "file",
+    "sha256": "fe64b67074dc056eb6ceeb42be3e09c615d0fe05bab26900d2d31748f1268ee4",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_ide-kdev.css": {
+    "kind": "file",
+    "sha256": "4a740ab5f37538f6fac067c93f88b9290e42ab4b820c0b2bbc13aa91891e04cc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_ide-msvcpp.css": {
+    "kind": "file",
+    "sha256": "acc99bb3754531e72a9b71502c2e45b3cc13c3628b3e9ac128e0a47c902888df",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_kwrite.css": {
+    "kind": "file",
+    "sha256": "bb8ef43ae9244c00caf81957c792b21626cdf354e3d960a8caf5b046937d7a98",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_matlab.css": {
+    "kind": "file",
+    "sha256": "d025f29dcafc47a56053921b997d9d6fa1922c78d9afbf33000e1b5874729ed2",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_navy.css": {
+    "kind": "file",
+    "sha256": "5af4716fb2362c06f94ffb70770255e9c5f1bc101151420e6bece2c2b04709bc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_nedit.css": {
+    "kind": "file",
+    "sha256": "66f9afc766c526713886e114399acf9ae018ec44baa6496681682068ebfc3983",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_neon.css": {
+    "kind": "file",
+    "sha256": "7c0e27aa65dcb88de7da625c60bd061c2fd31509eadbdfabe52c9d04cae583fa",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_night.css": {
+    "kind": "file",
+    "sha256": "8892187cf5849fe3f1f47d177f0bdb50ac78cf440bd44310fd3a5785aa7eeba6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_pablo.css": {
+    "kind": "file",
+    "sha256": "93649d2ece245dd52b0ae9b104c47ae0be7f3a5b918b9085be321cfccf6efd43",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_peachpuff.css": {
+    "kind": "file",
+    "sha256": "9ca02cba74208b2e4b91784ed592ba755a20fc724c495391af2aa5f218d3fe73",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_print.css": {
+    "kind": "file",
+    "sha256": "380e3fd532b66733afc2e16e7a74930d426374f7b6679828be5d038e9aa7c729",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_rand01.css": {
+    "kind": "file",
+    "sha256": "9f3ecfd1f281f72ff1e53493e5ed827bff30e30bdb86987c695b323c7a07ee7d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_the.css": {
+    "kind": "file",
+    "sha256": "cbe56dfcee4c9cdaabf45016bc32787a9a1c9e563eff1845a3e358bcb5a60ac8",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_typical.css": {
+    "kind": "file",
+    "sha256": "25bb8c5998d4b5a20f5b7f64c2f616be73ce4c57a9df2826ba43c13d8bb0a440",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_vampire.css": {
+    "kind": "file",
+    "sha256": "79928f6a4817cc7078afb98262d2847b7cef28874cc5460dd1f49dd616a8c8a7",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_vim-dark.css": {
+    "kind": "file",
+    "sha256": "50a276adf7669d1da51e60250c3edcb66662f62c1c03cd512bfc96b071d50789",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_vim.css": {
+    "kind": "file",
+    "sha256": "927c2da3ba634c5a89c34c69103d6dae3853b46127acb02776ad05985f841326",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_whatis.css": {
+    "kind": "file",
+    "sha256": "289b3c476e197d4e0c994373a880daa673fc27c49fb88a274c4316e4b799efa6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_whitengrey.css": {
+    "kind": "file",
+    "sha256": "07ec47243796760325d894769cfe3cfa115d892832349e2d3f3a61f559bd2b99",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sh_zellner.css": {
+    "kind": "file",
+    "sha256": "3c5aafd5118cfe35839efd27715d6170c7440620a2f1454adf9cdfeea0ab1f33",
+    "mode": 420
+  },
+  "usr/share/source-highlight/slang.lang": {
+    "kind": "file",
+    "sha256": "d879e5af943dee8eb2357e462114237839b25d1b88909ded56d78e2d96e85aa5",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sml.lang": {
+    "kind": "file",
+    "sha256": "a417f29cf8d4845ee0d9f0c3b8db850dc182fd281a54f0d65389a62dc77caefe",
+    "mode": 420
+  },
+  "usr/share/source-highlight/source-highlight-esc.sh": {
+    "kind": "file",
+    "sha256": "094677ff68dc67277806ece86ad7494ff2bf57261324309c53a047f9a6fa7528",
+    "mode": 493
+  },
+  "usr/share/source-highlight/spec.lang": {
+    "kind": "file",
+    "sha256": "4759bccaa99c796c3f7536d2d6a0c7162b4ba94d2cbb73509bc83fbf09142037",
+    "mode": 420
+  },
+  "usr/share/source-highlight/sql.lang": {
+    "kind": "file",
+    "sha256": "876328516dacc54ae4d2ddbffdf891e3c49c4e32f36fc29d16d7e573156617c3",
+    "mode": 420
+  },
+  "usr/share/source-highlight/src-hilite-lesspipe.sh": {
+    "kind": "file",
+    "sha256": "29ae0b0c4325454241a233b42ed401ef9b4fb3c8054e02802eeff8079d33491e",
+    "mode": 493
+  },
+  "usr/share/source-highlight/style.defaults": {
+    "kind": "file",
+    "sha256": "fef93623b01edbdc0774154852b4a6e13ce7279f2d2b58bf993cff96803524cc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/style.lang": {
+    "kind": "file",
+    "sha256": "d27107e444c4543d21fda6cf65dd31840791cbda71d30827bf99f3eeabb84465",
+    "mode": 420
+  },
+  "usr/share/source-highlight/style2.style": {
+    "kind": "file",
+    "sha256": "df6320feace637df4a37f10d93d933072fc55720423192c19a7a02104029de1b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/style3.style": {
+    "kind": "file",
+    "sha256": "43bd1947c99c34c8696d2684cd4287bf8aba4eee3e3a92824b5b64a254510979",
+    "mode": 420
+  },
+  "usr/share/source-highlight/symbols.lang": {
+    "kind": "file",
+    "sha256": "6293a7fdc5d38e8632da5faa6d7d94e44a645ccea4019c9aa4f01be7b0b9abb7",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tcl.lang": {
+    "kind": "file",
+    "sha256": "a40321b843e4df0d913978ae5c492b11bda7225e6f02fd95beb091d76a95b88b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/texinfo.lang": {
+    "kind": "file",
+    "sha256": "68f40b6f7b2f316019bcde723de495b96d971430d593e5ebbb13fcf6f947c98a",
+    "mode": 420
+  },
+  "usr/share/source-highlight/texinfo.outlang": {
+    "kind": "file",
+    "sha256": "036490152c0d856f8d59d4c6d88397d6ba6dae81c89152070589989a3fba268b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/texinfo.style": {
+    "kind": "file",
+    "sha256": "c7a53640e8e06b98088cdd04a4426ddd4aa7895b64bfd959d58945dcf1a0b539",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml.lang": {
+    "kind": "file",
+    "sha256": "1a533ccd1a90c708917942a1b03aa508eecf579078956f97a6ced5fceff9a353",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_formatting.lang": {
+    "kind": "file",
+    "sha256": "04e645fbe4b8fc3ed601da50d53e2a731c33b540486875898b791c51459982be",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_formatting_all.lang": {
+    "kind": "file",
+    "sha256": "2c967d5d375be0e2fafe568d367f1069c36cccb85ee61361e765dcb3f85a3a98",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_glue.lang": {
+    "kind": "file",
+    "sha256": "cf505766d6b2650eee0ce46badf95f8c7d633dcdbdbda91c171a315673e1342d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macrolinks.lang": {
+    "kind": "file",
+    "sha256": "7c1b2a87d7765e49c4a6493f42931e62eba4bae97f04696377a29911a0908e58",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macros.lang": {
+    "kind": "file",
+    "sha256": "71460376d5e7a21b01866737546ec7caef7e71f04135ae22dd13b77505ba9e01",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macros1.lang": {
+    "kind": "file",
+    "sha256": "21084462511c03777834984721e952d45d7e493ed224d00c11cf5cec4ab77160",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macros2.lang": {
+    "kind": "file",
+    "sha256": "0489abbca28b1bf395a58b9ea45a82c7f4e749aac36c3c7ffc22cae49f02116a",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macrosdelayed1.lang": {
+    "kind": "file",
+    "sha256": "8abc80138226ddf2e2bd80b80678bc2c8ae826a586f5a886958bc5da07e1f28d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macrosdelayed2.lang": {
+    "kind": "file",
+    "sha256": "d68f4fab80e16f48d915d6ffd930dea493a5b562feaac109777c2f1d1d11a855",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macrosdelayed3.lang": {
+    "kind": "file",
+    "sha256": "f76cb5cbbd907fda68e6dbd1dd2da681bc608e7c8940b0c0dd317aad43bc6c73",
+    "mode": 420
+  },
+  "usr/share/source-highlight/tml_macrotokens.lang": {
+    "kind": "file",
+    "sha256": "8b57aaf8d1dbfcfaf1caa706382378f498d4ba7d2f8a1e191ed3ff7874fe07e6",
+    "mode": 420
+  },
+  "usr/share/source-highlight/todo.lang": {
+    "kind": "file",
+    "sha256": "47a5aeac59ac8aa78e43ce9bbfaf1e56a4e3521e80b69c132715c93433d7952d",
+    "mode": 420
+  },
+  "usr/share/source-highlight/upc.lang": {
+    "kind": "file",
+    "sha256": "5d041dc6850c539406289e575fe0ec858269d1cf10dcd75821947a7d5b2cac96",
+    "mode": 420
+  },
+  "usr/share/source-highlight/url.lang": {
+    "kind": "file",
+    "sha256": "3251be39ec637c57473c8389411ee0f47b898e8649d6661f98556429359d1df4",
+    "mode": 420
+  },
+  "usr/share/source-highlight/vala.lang": {
+    "kind": "file",
+    "sha256": "fab0efe48054dc6301b301185bcae3a1c3733bce78d371b9cf17fae56ee33923",
+    "mode": 420
+  },
+  "usr/share/source-highlight/vbscript.lang": {
+    "kind": "file",
+    "sha256": "971085a6ba0f2a53911fd65a7f17eb0631fdf2a3c3f4c8379128b30bd242e5cc",
+    "mode": 420
+  },
+  "usr/share/source-highlight/vim.lang": {
+    "kind": "file",
+    "sha256": "c6b6ac23085f3a800018ca2a5ad3392de2f152762b3256a114cfcfd835f22177",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xhtml.css": {
+    "kind": "file",
+    "sha256": "bad4c08dd636d6d0ab3642d161342e7147a9e3153c3d53a074bd49ec3956085b",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xhtml.outlang": {
+    "kind": "file",
+    "sha256": "2c213ea74ff07ee6c3b477a597334524fb4b510eb24b0a338b721ef2faf9ce00",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xhtml_common.outlang": {
+    "kind": "file",
+    "sha256": "b7d50b163a3dd2eebddcf2daf1c90ad0636671e809b96784bdd4c6ad39274f6e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xhtml_notfixed.outlang": {
+    "kind": "file",
+    "sha256": "4333eb84aca0b720f4dc52ede300b2f4de72368852f3158824cfa0db2767f6f5",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xhtmlcss.outlang": {
+    "kind": "file",
+    "sha256": "835ba656691fafcaca4da10a7df60970b16e8346d9e4f9865ea16caf578f0ac0",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xhtmltable.outlang": {
+    "kind": "file",
+    "sha256": "747b9d0e5cb62d9f632a3e0e5958943ea727a9e638fd5dfad8f255eb843fa877",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xml.lang": {
+    "kind": "file",
+    "sha256": "20647e60c5ce080b7a857cdd879ad4b9ddca7d0c9537c85922d22d7ee2d580d3",
+    "mode": 420
+  },
+  "usr/share/source-highlight/xorg.lang": {
+    "kind": "file",
+    "sha256": "49398c40b191a1da7627be45bab6c04c341c1fbb129722bb0fb3ac387ae8740e",
+    "mode": 420
+  },
+  "usr/share/source-highlight/zsh.lang": {
+    "kind": "file",
+    "sha256": "a6eef8ab04b081604cd0b78191ddadeaeaa47a904acf9785bfb2ac78726d0cfc",
+    "mode": 420
+  },
+  "usr/share/ucf/ucf_helper_functions.sh": {
+    "kind": "file",
+    "sha256": "caa40fa4479b0bc5e2757c4bd8facec2e77fd99b08f226b05c73c9f74f8068d2",
+    "mode": 493
+  }
+}

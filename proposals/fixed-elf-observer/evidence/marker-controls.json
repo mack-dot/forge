@@ -1,0 +1,137 @@
+[
+  {
+    "case": "actual-capture",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/actual-capture.txt"
+    ],
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "stdout": "{\"FORGE_ENTRY_PC\": \"0x11158\", \"FORGE_ENTRY_FCSR\": \"0\", \"FORGE_GUEST_EXIT\": \"0\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "nonzero-fcsr",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/nonzero-fcsr.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_ENTRY_FCSR\n"
+  },
+  {
+    "case": "pc-suffix",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/pc-suffix.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_ENTRY_PC\n"
+  },
+  {
+    "case": "missing-fcsr",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/missing-fcsr.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_ENTRY_FCSR\n"
+  },
+  {
+    "case": "duplicate-zero",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/duplicate-zero.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_ENTRY_FCSR\n"
+  },
+  {
+    "case": "coordinated-zero-and-nonzero",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/coordinated-zero-and-nonzero.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_ENTRY_FCSR\n"
+  },
+  {
+    "case": "wrong-guest-exit",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/wrong-guest-exit.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_GUEST_EXIT\n"
+  },
+  {
+    "case": "zero-prefix-exit",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/zero-prefix-exit.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_GUEST_EXIT\n"
+  },
+  {
+    "case": "empty-output",
+    "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "-B",
+      "/code/marker_fields.py",
+      "/records/empty-output.txt"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "OBSERVER_MARKER_MISMATCH:FORGE_ENTRY_PC\n"
+  }
+]

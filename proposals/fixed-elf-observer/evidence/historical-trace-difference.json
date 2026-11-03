@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "diff",
+    "-u",
+    "results/campaign-runtime-projection-2026-11-02/instruction-trace.log",
+    "results/fixed-elf-observer-2026-11-03/attempt-0002/capture/instruction-trace.log"
+  ],
+  "actual_exit": 1,
+  "stdout": "--- results/campaign-runtime-projection-2026-11-02/instruction-trace.log\t2026-11-02 19:18:08.809080365 -0500\n+++ results/fixed-elf-observer-2026-11-03/attempt-0002/capture/instruction-trace.log\t2026-11-03 14:59:19.073394595 -0500\n@@ -456,4 +456,4 @@\n  f20/fs4  0000000000000000 f21/fs5  0000000000000000 f22/fs6  0000000000000000 f23/fs7  0000000000000000\n  f24/fs8  0000000000000000 f25/fs9  0000000000000000 f26/fs10 0000000000000000 f27/fs11 0000000000000000\n  f28/ft8  0000000000000000 f29/ft9  0000000000000000 f30/ft10 0000000000000000 f31/ft11 0000000000000000\n-9 exit_group(0)\n+10 exit_group(0)\n",
+  "stderr": ""
+}
