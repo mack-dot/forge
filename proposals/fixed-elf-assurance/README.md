@@ -31,7 +31,9 @@ arbitrary-input GCD correctness, or prove QEMU correct.
 | Fresh separate-process source and wrapper rebuild |0/0|Both .vo objects byte-identical |
 | Actual QEMU ELF execution |0|Same exact ELF bytes;21 instruction frames |
 | Full observed PC/GPR/FPR transition comparison |0|Published LPS `run_steps`, for arbitrary data/reservation/FCSR |
+| Independent observation-module kernel check |0|567 modules;86 permitted closure assumptions |
 | Instruction-word / intermediate-register tampering |1/1|Expected Rocq equality failures |
+| Corrupted / valid weaker proof-object identity guards |1/1|Expected held-anchor refusals before kernel launch |
 
 `Wrapper.v` uses the unchanged published binding template. `proof-context.json`
 contains exact recursive dependencies, object hashes, actual assumptions and
@@ -65,9 +67,10 @@ This is **finite projected observation conformance**. It is not a universal
 QEMU/ISA refinement theorem, complete physical-state abstraction, permission/
 loader proof or whole-service guarantee. QEMU reporting/fidelity, system-call
 behavior, host OS/hardware, published model/ELF-loader fidelity and absence of
-outside interference remain explicit trust boundaries. The comparison objects
-have real Rocq compiler acceptance; a separate full `rocqchk` for those objects
-was not run. The full569-module check above covers the termination claim.
+outside interference remain explicit trust boundaries. The observation object also passed a separate full `rocqchk`:567 actual modules
+and86 permitted closure assumptions. This checks the finite model equality in
+ObservedTransitions.v. Its kernel check did not use a typed claim-binding wrapper.
+The full569-module check above covers the separate termination claim.
 
 The old public theorem's native SP premise is still false for this observation:
 SP 0x2aaaab2abc30 is below 0x7fff80000000. This proposal never marks it valid.
@@ -129,3 +132,40 @@ was changed. Packaging PR 36 remains a separate independent-review boundary.
 
 Raw QEMU and kernel logs are stored with lossless XZ compression. Decompressed
 bytes retain the original output, including trailing spaces. No log was edited.
+
+
+## Completed observation check and object-integrity controls
+
+This revision includes observation-kernel.log.xz and observation-kernel-context.json.
+The exact observation source/object identities, actual567-member closure and86
+assumptions, permitted580-object pool, unchanged audit inputs and fresh byte-
+identical rebuild are recorded there. Context operational durations are separate
+from proof identity. The compressed log preserves every original byte.
+
+object-integrity-controls.tar.xz retains the original positive object, held
+expectation and unchanged driver, both hostile fixtures, raw logs and exact
+commands. One fixture changes one object byte. The second compiles a valid20-
+state proposition under the same module/lemma names as the required21-state
+proposition. Both guards exit1 at exactly DEPENDENCY_BYTES:/observed/ObservedTransitions.vo;
+neither starts the kernel. These are identity refusals, not semantic kernel
+rejections. The weaker proposition is compiler-valid but has a different identity.
+
+The corrupted fixture's inherited compiled-candidate flag describes its ancestor;
+its mutated bytes were not compiler-produced. The archive retains the raw flag
+and explicit correction. A second correction identifies unused inherited wrapper/
+baseline lists in the positive driver inputs. Actual closure and assumption
+outputs determine the positive result. No wrapper check is claimed for that root.
+
+The held expectation is outside candidate mounts. This does not authenticate an
+expectation supplied together with an untrusted candidate, establish durable
+provenance for the new claim or resist rewriting candidate and anchor together.
+The original receipt corruption regression remains in the existing main gate
+suite; these additional compiled-object controls do not replace it.
+
+The current trusted incremental gate classifies the original proposal snapshot
+as UNSUPPORTED(exit3), with11 uncovered proposal paths and no evidence written.
+The expanded data packet also requires a separate coverage check before
+publication. No gate/registry exception is introduced. This is a draft proposal
+for independent review, not a claim that existing CI admits the new theorem.
+The existing ordinary PR workflow may run automatically on publication; no manual
+workflow dispatch, profile activation or merge is authorized by publication.

@@ -29,17 +29,34 @@
   },
   "current_stage": null,
   "end_to_end": false,
+  "object_integrity_controls": {
+    "actual_control_matrix_exit": 0,
+    "anchor_scope": "Trusted local operator holds expected identity separately",
+    "coordinated_anchor_candidate_rewriting_resistance": false,
+    "durable_provenance_established": false,
+    "guard_exits": [
+      1,
+      1
+    ],
+    "kernel_launched_for_negatives": false,
+    "weaker_statement_compile_exit": 0
+  },
   "observation_checks": {
-    "comparison_objects_independent_full_kernel": "NOT RUN",
+    "actual_closure_assumptions": 86,
+    "actual_kernel_modules": 567,
+    "comparison_objects_independent_full_kernel": 0,
     "entry_and_word_compilation_exit": 0,
     "full_projected_transition_compilation_exit": 0,
     "implementation": "Published LPS fetch_word, init_machine_state and Omni.run_steps evaluated by pinned Rocq",
     "intermediate_register_corruption_exit": 1,
+    "kernel_log_sha256": "8d4ea9d50da50abe71e95bd7e3cbae1bf5d111228fa3b483769b660cce361482",
     "method": "tested_against_proved_model",
     "permitted_primitive_assumptions": 13,
+    "projected_trace_lemma_method": "kernel_checked_proof",
     "reservation_fcsr_quantified": true,
     "universal_runtime_refinement": false,
-    "word_corruption_exit": 1
+    "word_corruption_exit": 1,
+    "wrapper_binding_checked_for_observation_root": false
   },
   "observed_execution": {
     "classification": "TESTED",

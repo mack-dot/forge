@@ -19,12 +19,22 @@
     ],
     "count": 13,
     "end_to_end": false,
-    "new_full_independent_kernel": false,
-    "published_parser_exit": 0
+    "published_parser_exit": 0,
+    "record_scope": "Historical compiler and primitive-assumption parser execution. The subsequent full kernel check is a separate completed operation.",
+    "this_assumption_audit_performed_full_kernel_check": false
   },
   "command_note": "Placeholders identify local tested mount sources. They are not claims that an untested portable adaptation ran.",
   "compressed_trace_sha256": "2cfff4b6aefff6bfc262cb0729e6e81dc2a0c17eacb5163502b33f3592068d8b",
   "compression": "Lossless XZ; trace_sha256 refers to the original decompressed bytes",
+  "current_full_kernel_check": {
+    "actual_exit": 0,
+    "context": "observation-kernel-context.json",
+    "end_to_end": false,
+    "kernel_log_sha256": "8d4ea9d50da50abe71e95bd7e3cbae1bf5d111228fa3b483769b660cce361482",
+    "modules": 567,
+    "permitted_closure_assumptions": 86,
+    "wrapper_binding_checked_for_observation_root": false
+  },
   "end_to_end": false,
   "execution": {
     "argv": [
@@ -184,7 +194,7 @@
     }
   ],
   "new_admission": false,
-  "new_comparison_objects_independent_kernel": "NOT RUN",
+  "new_comparison_objects_independent_kernel": 0,
   "trace_sha256": "182b879d49991a5a026f527325f85f548d2b57b604c7bd159e282a3ebc399152",
   "transition_checks": [
     {
