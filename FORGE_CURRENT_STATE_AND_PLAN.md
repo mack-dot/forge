@@ -1,12 +1,14 @@
-> Local audit snapshot for review. Many `results/` and tool paths below refer to
-> the owner records workspace at `/Users/mackianni/forge`, outside this Git
-> checkout. Those records are not all included here. This document is not a
-> self-contained proof replay or authority to accept a claim.
-
 # Forge — current state and proposed path
 
 Status: 2026-11-03. CURRENT research stage: none. Stage11 is recorded complete.
 Stage12 remains unauthorized. `end_to_end=false`.
+
+Immediate priority: finish the single behavioral vertical slice in
+[VERTICAL_SLICE_STATUS.md](VERTICAL_SLICE_STATUS.md). Cross-run authenticated
+reuse, general incremental verification, real-repository benchmarks and a
+developer interface remain later research horizons. They are not prerequisites
+for this slice. The new local behavior check quantifies reservation/FCSR values;
+the physical process/Model relation and new release binding remain open.
 
 This is an audit and design proposal under [FORGE_MASTER_MISSION.md](FORGE_MASTER_MISSION.md).
 It does not approve a new specification, acceptance profile, workflow, merge,

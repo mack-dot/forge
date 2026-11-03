@@ -1,38 +1,8 @@
 # Forge: proof-gated changes
 
-**CURRENT: none — Stage 11 merged; integration remains open; Stage 12 unauthorized.**
+**CURRENT: none — Stage 11 EXITs passed on 2026-10-30 (Stage 11 merged at 4e4112c6; Linux readiness PR #30 merged at e7b5b52a; receipt repair PR #32 merged at edd9f9d9; booking workflow PR #33 merged at f9eb1cbc; hosted booking matrix and historical consumer controls passed; independent historical kernel579 and proposed memory-independent kernel569 passed; recorded21-state model conformance and its independent567-module kernel check passed; auxiliary kernel594 and composed process-prefix kernel595 passed; separate new local observer records FCSR0 and complete404-byte LOAD identity under explicit trust limits); integration EXIT NOT_ESTABLISHED; Stage 12 unauthorized; campaign awaits independent review and operational actions; proposal PR #37 published; see U252**
 
-## Current integration update — November 3, 2026
-
-Stages 0–11 have recorded completion. Stage 11 merged at `4e4112c6`; Linux
-bootstrap PR30, receipt repair PR32 and booking workflow PR33 are merged.
-Current main is `f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3`.
-
-The real [hosted booking matrix](https://github.com/mack-dot/forge/actions/runs/41523691535)
-matched all13 expected outcomes. Cold/warm/invalidation gate returns are0/0/0,
-and booking-verifier launches are1/0/1. Negative evidence cases refused for
-their intended reasons; uncovered changes returned3. This establishes the
-supported same-process experiment, not universal runtime correctness.
-
-The existing strict integration status last returned1/NOT_ESTABLISHED for
-unconfirmed archive preservation. The owner now reports a backup on another
-device. Its specific archives,integrity and restore result remain unverified;
-this statement is retained as owner attestation. Later records need their own
-preserved snapshot. Inspected effective review rules do not require passing
-checks; this is a separate administrator decision, not a proposed policy change.
-
-PR36 remains a separate upload-repair review. PR37 is a draft additional ELF
-model proposition; its hosted gate returns3/UNSUPPORTED for14 uncovered paths
-with no accepted evidence. No acceptance exception is introduced.
-
-Newer raw execution records currently live in the owner's records workspace.
-This documentation correction is not itself those records, an independent
-backup, a new proof, or an authorization to merge/sign/dispatch/deploy.
-`end_to_end=false`. No stage transition occurs through this update.
-
-## Historical Stage 9 preface (retained from the prior document)
-
-This is the execution plan and decision record. Stages 0–8 are DONE. Stage 6
+This is the execution plan and decision record. Stages 0–10 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
 three-condition benchmark completed 75 baseline/candidate pairs. Both real
 EXIT commands returned 0. The source evidence and report reproduced byte for
@@ -43,16 +13,18 @@ assumptions are permitted. Final source and ELF identities match. Stage 8's
 wrapper-proof, hostile-outputs and evidence-separation EXITs each returned 0.
 The exact approved snapshot repair retains field and prototype mutation
 rejection. Source and property-test evidence each reproduced byte for byte
-through fresh checks. All failures remain archived. Stage 9 is CURRENT;
-the exact approved provenance contract and 11 implementation/workflow additions
-are applied. The safe installation check passed. A receipt-validator audit
-failed: invalid dependency hashes and substituted or missing copied ELF bytes
-were not rejected. The gate remains unchanged. Runner admission, execution
-authorization and a separately approved receipt repair remain unresolved.
-An unapplied four-file integrity repair awaited exact-byte approval (U078).
-It is now approved and applied (U079).
-All six Stage 9 EXITs are NOT RUN; signing and deployment have not run.
-`end_to_end=false`.
+through fresh checks. All failures remain archived. Stage 9's six official
+EXITs each returned 0 under one release request (`8a6ba7f4…`) and one
+implementation lock (`5f78da21…`, v3.6, main `624c9faf`), with real Cosign
+verification of GitHub OIDC-signed bundles recorded in the public Rekor log.
+UID 1000 read the exact ELF (`8ced2ab6…`) in the running container of the
+accepted package (`d9e9fb40…`); a substituted file was rejected and the
+consumed request could not be admitted again. Residual findings F1–F4 stay
+open with stated threat-model limits (U166, U169). Stage 10 ran a frozen, internally
+authored benchmark of 51 cases (owner-approved manifest `98df0272…`): 47 matched;
+the 4 `unsupported` cases were false accepts (the ledger PR gate accepts PRs that
+change only unclaimed files); 0 false rejects; 51/51 identical decisions in the
+repeat pass (U176). `end_to_end=false`.
 Uncertainties and measurement limits remain in append-only [unsure.md](unsure.md).
 
 The long-term horizon and irreducible limits live in [VISION.md](VISION.md).
@@ -312,8 +284,9 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 6 | SECOND DOMAIN + REUSE MEASUREMENT | DONE |
 | 7 | BINARY LAYER | DONE |
 | 8 | ML BOUNDARY | DONE |
-| 9 | PROVENANCE | CURRENT |
-| 10 | SHADOW MODE | NOT STARTED |
+| 9 | PROVENANCE | DONE |
+| 10 | GATE BENCHMARK (replaces SHADOW MODE) | DONE |
+| 11 | INCREMENTAL VERIFICATION (owner-defined 2026-10-30) | DONE (EXITs passed; candidate PR awaiting review; CI shape not met) |
 
 ## EXIT command conventions
 
@@ -1165,7 +1138,7 @@ verify this checkpoint, then stop. No Stage 9 implementation has started.
 
 ### Stage 9 — PROVENANCE
 
-**Status: CURRENT — blocked on receipt-validation gaps, runner admission and execution authorization**
+**Status: DONE — all six official EXITs passed under one request and one lock (v3.6, 2026-10-29; U169)**
 
 Sign evidence bundles using pinned sigstore/in-toto tooling. Before allowing a
 deployment, verify the signer identity, artifact digest, and policy version.
@@ -1175,12 +1148,12 @@ envelopes and external transparency records, which may contain time metadata.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case valid-bundle` | A valid signed bundle for the intended artifact and policy passes the release check. | NOT RUN |
-| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case unsigned` | An unsigned bundle is rejected. | NOT RUN |
-| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-signer` | A bundle from an unauthorized signer is rejected. | NOT RUN |
-| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-digest` | A valid signature over the wrong artifact digest is rejected. | NOT RUN |
-| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-policy` | A bundle for an unaccepted policy version is rejected. | NOT RUN |
-| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case deployed-identity` | Actual deployed digest matches the accepted release; a mismatch is reported and prevents a coverage claim. | NOT RUN |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case valid-bundle` | A valid signed bundle for the intended artifact and policy passes the release check. | 0 (passed, attempt 0001, lock `5f78da21`, request `8a6ba7f4`, 2026-10-29T23:01Z). Earlier v3.5 run: 0 (U164). |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case unsigned` | An unsigned bundle is rejected. | 0 (passed, attempt 0001, same lock and request). Earlier v3.5 run: 0. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-signer` | A bundle from an unauthorized signer is rejected. | 0 (passed, attempt 0001, same lock and request). Earlier v3.5 run: 0. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-digest` | A valid signature over the wrong artifact digest is rejected. | 0 (passed, attempt 0001, same lock and request). Earlier v3.5 run: 0. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case wrong-policy` | A bundle for an unaccepted policy version is rejected. | 0 (passed, attempt 0001, same lock and request). Earlier v3.5 run: 0. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 $LOCK -- scripts/exit_stage_9.py --case deployed-identity` | Actual deployed digest matches the accepted release; a mismatch is reported and prevents a coverage claim. | 0 (passed, attempt 0001, same lock and request, run last, 2026-10-29T23:04Z). Earlier v3.5 run: 1 (`not_established`, `Permission denied` on `/opt/forge`, U164). |
 
 `$LOCK` is the installed implementation lock. The harness refuses any other launch
 (U131); run the inline lock/bootstrap byte check first.
@@ -1639,29 +1612,316 @@ Not EXIT results. See U108–U121 and `results/stage9/b3-0001/`. `end_to_end=fal
 | Independent re-attack of candidate `fc0a40d9` (`results/stage9/v33-audit-0001`) | — | V1–V3 blocked in every emulated job; V4 gate holds; new D3 bypass (imports before relaunch) and weak D1 attribution. |
 | Final candidate (lock `a809f701…`, diff `b432024f…`); `run_controls.py` → `results/stage9/v33-controls-0003` | 0 | 48/48, including the D3 exploit reproduced on v3.2 and refused four ways on the candidate. |
 | v3.1 `controls.py -B` and v3 `f1_controls.py` on the final candidate `405b453a` | 0; 0 | 14/14; 9/9. |
+| Owner said "push it": `git push` of `stage9/v33-install` (`20207fb5`, tree `ae535888`) and `stage9/records-v33` (`29ef0d94`) | 0; 0 | PR #19 (9 files = manifest) and PR #20 (records) open, BLOCKED for review; nothing merged; main still `d43f5f4d`. |
+| Owner merged #19 and #20 with the admin bypass | — | `main` = `19c4896b`; install merge `241a9def` tree `ae535888` = tested tree; lock `a809f701…`; fresh-clone `bootstrap.py --check` 0; audit: both OVERRIDE; no variables; no run after the merges. Local copy synced (check 0). |
+| v3.3 rehearsal request (U132) and `gh workflow run provenance.yml` (run 40820302652) | 0; 0 | Run name `forge-stage9 <challenge>` recorded at dispatch; success in 36 min; `sign` skipped; token Contents/Metadata read. |
+| `verify_rehearsal.py` on run 40820302652 (`results/stage9/rehearsal-0002`) | 0 | 13/13: digest, request, package, receipt, run record, evidence, statement; positive `run_identity`; relabel, foreign run, re-run, other request, byte flip rejected. |
+| Identity switch (owner-approved): invite `mackiannii` Write; accept; `gh auth logout -u mack-dot` | 0; 0; 0 | Agent = `mackiannii` (pull, push, triage; no admin); rule suites unreadable (404). |
+| Approval controls on PR #21 as the agent: self-approve; merge without approval; `--admin` merge; direct push of `policy/` to main | 1; 1; —; 1 | Refused; refused; NOT RUN (Claude Code classifier); refused by GH013, main unchanged. |
+| Owner review of PR #21 commit A `88ad9c72` (review 5698193782), read by the agent | 0 | APPROVED by `mack-dot`. |
+| Stale-approval control: agent pushes B `52cbf8cb` (adds `@mackiannii` as code owner) | 0 | GitHub dismissed review 5698193782 at B; BLOCKED, REVIEW_REQUIRED. |
+| Agent pushes C `2e3587f8` (reverts B; tree `0f757d83` = tree of A); `gh pr merge 21 --squash --match-head-commit C` with the stale approval only | 0; 1 | Refused (may be a client-side check). REST merge NOT RUN (Claude Code classifier). An earlier local revert attempt: exit 129; its push refused (non-fast-forward). |
+| Owner review of C (review 5699085293); agent `gh pr merge 21 --squash --match-head-commit 2e3587f8` | 0; 0 | Main `aac837a0` by `mackiannii` (no admin); tree = approved head tree; CODEOWNERS `d5f98954…`. |
+| `audit_main_approvals.py mack-dot/forge 7` (`approval-experiment-0001/17-audit-after-merge.jsonl`) | 1 | `aac837a0` (#21) APPROVED (inferred: non-admin merge). #16–#20 OVERRIDE, `993bee7b` UNAPPROVED: unchanged. |
+| `audit_main_approvals.py mack-dot/forge 42` (`approval-experiment-0001/20-audit-full-history.jsonl`) | 1 | 1 APPROVED (#21); 6 OVERRIDE inferred (#4, #16–#20); 35 UNAPPROVED direct pushes. Statuses unchanged. |
+| `build_admission.py` → `proposals/approval-integrity/admission-v34` (not applied) | 0 | New lock `9bf8f905…`, diff `f31a1bad…`; `common.py` `d63010fc…`, `release.py` `778cebb9…`. |
+| `lineage_controls.py` with `lineage.py` (`lineage-controls-0001`) and with candidate `common.py` (`-0002`) | 0; 0 | 17/17 each. Main `aac837a0` refused today at `19c4896b`; draft ratification 0001 admits it (simulated); 15 forged or stale variants refused. |
+| Final record (sha256 `b0f61a88…`, per-commit evidence; #4 UNCERTAIN): `lineage_controls.py` → `lineage-controls-0003` / `-0004` (candidate) | 0; 0 | 17/17 each. |
+| Ratification branch as the agent (head `0159b4d2`, one added file); `git push`; `gh pr create` | 0; 0; 0 | Push and PR #22 ran as **`mack-dot`**: the owner account became active in gh at 14:30Z (not by the agent). PR #22 is owner-authored and cannot be owner-approved. Stopped (U138). |
+| Separation checks before the corrective PR (`ratification-pr-0001/04-separation-check.txt`), read-only | 1 FAIL; 2 NOT RUN; 3 FAIL; 4 FAIL | Active gh user `mack-dot`; push helper follows it; owner keychain items reachable by the same macOS user. Not pushed (U139). |
+| Corrective PR as `mackiannii` only (owner accepted the check-4 residual): checks 1–3; `git push` of `0159b4d2`; `gh pr create`; `gh pr close 22` | 0; 0; 0; 0 | PR #23 by `mackiannii`, one file, sha256 `b0f61a88…` matches; #22 closed unmerged. Not approved, not merged (U140). |
+| Correction on PR #23 as `mackiannii`: checks 1–3; one commit `174880e8` (35 evidence fields); `git push`; controls 17/17 ×2 | 0; 0; 0; 0; 0 | File sha256 `34ae62bc…` at head; `0f11517d` = head of #4 (UNCERTAIN); 34 direct pushes; BLOCKED, REVIEW_REQUIRED; not merged (U142). |
+| Owner review of PR #23, read by the agent | 0 | Review 5699889214 APPROVED by `mack-dot` on exact head `174880e8`; CLEAN; not merged (U143). |
+| Merge of PR #23 as `mackiannii` (checks 1–3; `gh pr merge 23 --squash --match-head-commit 174880e8`) | 0 | Main `9aadcd63`; tree `dcac5503` = approved head tree; file sha256 `34ae62bc…`. |
+| `audit_main_approvals.py mack-dot/forge 43` (`ratification-pr-0002/08-audit-after-merge.jsonl`) | 1 | #23 and #21 APPROVED (inferred); 42 earlier rows unchanged. |
+| Proposed `approved_lineage` on real main (`results/stage9/lineage-real-0001`, read-only) | 0 | `9aadcd63` ACCEPTED: #23 → #21 → ratified `19c4896b`; `aac837a0` refused. Not an EXIT (U144). |
+| v3.4 candidate (main `9aadcd63` + 3 files, local `b3251278`): `bootstrap.py --check` v3.3 on main / candidate | 0; 0 | `BOOTSTRAP_VERIFIED` both. |
+| `run_controls_v34.py` → `v34-controls-0001` / `-0002` | 1; 0 | 47/48 (harness passed the v3.3 lock to the v3.2 reproduction), then 48/48 after the fix. |
+| v3.1 `controls.py -B` and v3 `f1_controls.py` in the candidate | 0; 0 | 14/14; 9/9. |
+| Wiring check of candidate `release.verify` (`v34-regression-0001/03-wiring.txt`) | 0 | 8/8. Full positive `release.verify` NOT RUN (no signed bundle). |
+| Authenticated verifier path, real urllib, stand-in token (`v34-tokenpath-0001`) | 0 | 10/10; token in 0 record files. Owner verifier token not used (U145). |
+| v3.4 install PR as `mackiannii` (checks 1–3; push `ce7b5377`; `gh pr create`) | 0; 0; 0 | PR #24: tree = tested tree `d6793b63`; 3 files; BLOCKED, review requested from `mack-dot`. Not merged. |
+| Lineage (v3.4 code, authenticated path) on PR #24 head / PR #23 branch head / main `9aadcd63` | 0 | Refused / refused / accepted (U146). |
+| Merge of PR #24 as `mackiannii` (checks 1–3; `gh pr merge 24 --squash --match-head-commit ce7b5377`) | 0 | Main `f4f8a68c`; tree `d6793b63` = tested tree; lock `9bf8f905…`; 0 variables. |
+| Fresh clone of `f4f8a68c`: inline lock check; `bootstrap.py --check` (`9bf8f905`); old lock | 0; 0; 1 | Verified; verified; `BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK`. |
+| Installed v3.4, authenticated path: `repository_identity` and `approved_lineage` on `f4f8a68c`; lineage on `19c4896b` | 0 | Accepted; accepted (#24 → #23 → #21 → `19c4896b`); refused. |
+| `audit_main_approvals.py mack-dot/forge 44` | 2; 2; 2; 1 | Three runs stopped on GitHub HTTP 503; fourth: #24 APPROVED (inferred), 43 earlier rows unchanged (U149). |
+| Local sync of v3.4 files; local `bootstrap.py --check` | 1, then 0 | `BYTECODE_CACHE`; caches removed; then verified. |
+| v3.4 rehearsal request (U150): fresh clone `f4f8a68c`, `producer.py --action request` via bootstrap (lock `9bf8f905`) | 0 | Package `f584305022f2…`; challenge `5ab0425c…`; 4.5 min. |
+| `gh workflow run provenance.yml` as `mackiannii` (run 40902238551) | 0 | Success: `proof` success (34.5 min), `sign` skipped; token Contents/Metadata read, no IdToken; artifact zip `bb0096fd…` = GitHub digest; no Sigstore bundle. |
+| `verify_rehearsal_v34.py` (`results/stage9/rehearsal-0003`) | 1, then 0 | 14/15 (harness status parser), then 15/15: digest, request, package, receipt, run record, evidence, approved lineage, override refused, statement; 5 tamper controls rejected. |
+| Real HTTPS path on run 40902238551: `run_identity`, `approved_lineage`, `repository_identity` | 0 | Accepted ×3; token in 0 record files (U151). Not an EXIT. |
+| Signing experiment (U152–U154): owner set `FORGE_SIGNING_AUTHORIZED`; request at `f4f8a68c`; R1 `provenance.yml` (run 40910241018) | 0; 0; success | `proof` and `sign` success: signed bundles uploaded (Rekor entries under `provenance.yml@refs/heads/main`). Artifacts preserved, digests match. |
+| R2 `provenance-negative.yml` (run 40916168141, `producer_run_id` 40910241018) | failure | `GITHUB_TOKEN_REQUIRED:FORGE_PRODUCER_GITHUB_TOKEN` at preflight: stateless job token (~520 chars) fails `[A-Za-z0-9_]{20,255}`; negative signing skipped; no negative Rekor entry. |
+| v3.5 token repair (`proposals/token-compat-v35`): offline token controls v3.4 / v3.5 | 0; 0 | 34/34 each; token in 0 files. Earlier: variant A 25/25 (one harness crash on NUL). |
+| v3.5 real `preflight.py` on Linux (Docker amd64, Python 3.10.11) | 0 | 10/10: v3.4 reproduces R2's error; v3.5 reaches GitHub (401 for a fake token); R1 producer path succeeds; wrong run, bad id, 404, no token refused. |
+| v3.5 regression on tree `36ee0f91`: 48 / 14 / 9 / lineage 17 | 0; 0; 0; 0 | All pass; `release.py` unchanged; independent audit: nothing blocks (U156). |
+| v3.5 PR as `mackiannii` (push to a local clone by mistake, then to GitHub) | 1; 0 | PR #25: 2 files, tree = tested tree, lock `a177cb07…`; BLOCKED for review. Not merged (U157). |
+| Owner review of PR #25; merge as `mackiannii` (`gh pr merge 25 --squash --match-head-commit 05a7ac1f`) | 0; 0 | Main `5b1b5570`; tree `36ee0f91` = tested tree; lock `a177cb07…`. |
+| Fresh clone of `5b1b5570`: lock check; `bootstrap.py --check`; old lock; lineage on main; lineage on `19c4896b` | 0; 0; 1; 0; 0 | Verified; verified; refused; accepted (#25 → #24 → #23 → #21 → ratified `19c4896b`); refused. |
+| `audit_main_approvals.py mack-dot/forge 45` | 1 | #25 APPROVED (inferred); 44 earlier rows unchanged (U159). |
+| Attempt 2 (U160): request at `5b1b5570` (lock `a177cb07`); R1 `provenance.yml` (run 40929727313) | 0; success | `proof` and `sign` success; 6 Rekor entries (release 3574048063). |
+| R2 `provenance-negative.yml` (run 40935393475, `producer_run_id` 40929727313) | success | Stateless token accepted by v3.5; R1 candidate downloaded; wrong-signer bundle signed (Rekor 3574086992). |
+| EXIT setup: fresh clone `5b1b5570`, Cosign `9f9b8cd5…`, lock and bootstrap checks, `write_controller_config.py` | 0; 0; 0; 0 | Controller row pending; candidate = R2 artifact (U162). EXITs NOT RUN. |
+| Official EXITs under v3.5 (lock `a177cb07`, request `9e1f885f`; token per U163) | 0,0,0,0,0; 1 | Five passed; `deployed-identity` `not_established` (UID 1000 cannot read the ELF; request consumed) (U164). |
+| v3.6 repro, `producer.package` ×2, deployment controls, package controls, consumption audit | 0; 0; 0; 1 then 0; 0 | Cause confirmed (`opt/forge` 0444); package `d9e9fb40…` reproducible; 13/13; 6/6 (one harness typo); 5/5 (U165). |
+| v3.6 regression on tree `6d6b2a2f`: 48 / 14 / 9 / lineage 17 / token 34 | 0; 0; 0; 0; 0 | All pass; independent review: no blocker; F1–F4 pre-existing (U166). |
+| v3.6 PR as `mackiannii` | 0 | PR #26: 2 files, tree = tested tree, lock `5f78da21…`; review requested. Not merged (U167). |
+| Owner review of PR #26 (review 5705585056, head `5867db32`); merge as `mackiannii` (`gh pr merge 26 --squash --match-head-commit 5867db32`) | 0; 0 | Main `624c9faf`; tree `6d6b2a2f` = tested tree; Dockerfile `c915c79d…`; lock `5f78da21…`. |
+| Fresh clone of `624c9faf`: lock check; `bootstrap.py --check`; old lock `a177cb07`; lineage on main; lineage on `19c4896b` | 0; 0; 1; 0; 0 | Verified; verified; refused; accepted (#26 → #25 → #24 → #23 → #21 → ratified `19c4896b`); refused. |
+| `audit_main_approvals.py mack-dot/forge 46` | 1 | #26 APPROVED (inferred); 45 earlier rows unchanged (U168). |
+| Completion run (U169): `producer.py --action request` at `624c9faf` (lock `5f78da21`), `GH_TOKEN` unset | 0 | Package `d9e9fb40…` (= SIGNING-v36.md); challenge `8a6ba7f4…`; controller row pending. |
+| R1 `provenance.yml` (run 40966460258, head `624c9faf`, title = challenge) | 0; success | `proof` 22:31:07–22:56:45Z, `sign` 22:56:47–22:57:58Z; artifacts signed `8ded75a0…`, unsigned `62a0adcc…`. |
+| R2 `provenance-negative.yml` (run 40969828051, `producer_run_id` 40966460258) | 0; success | All steps succeeded in 42 s; artifact `27e144bc…`. |
+| Download of 3 artifacts into new folders; digest check; Rekor listing | 0; 0; 0 | Digests = GitHub; 7 bundles, 7 dsse entries: 3578450049 (release), 3578452739, 3578453975, 3578456247, 3578458664, 3578462150 (`provenance.yml`), 3578489035 (`provenance-negative.yml`). Project total 20. |
+| EXIT setup: fresh clone `624c9faf`, Cosign `9f9b8cd5…`, inline lock check, `bootstrap.py --check`, `write_controller_config.py` | 0; 0; 0; 0 | Candidate = R2 artifact; request `8a6ba7f4…`; lock `5f78da21`; row pending. |
+| Six official EXITs, in order, verifier token from Keychain per U163 (`results/stage9/exits-0002/`) | 0,0,0,0,0,0 | All `passed` on attempt 0001; every gate outcome = SIGNING-v36.md; row now consumed; no file holds the token. |
 
 Signing stays off: no repository variables; `provenance.yml` has never run. Not EXIT results.
 See U123 and `results/stage9/v32-install-0001/`. `end_to_end=false`.
 
-### Stage 10 — SHADOW MODE
+That note is historical (v3.2). Signing later ran under owner authorization (U155, U160, U169).
+Stage 9 is DONE: the six official EXITs above each returned 0 under request `8a6ba7f4…` and
+lock `5f78da21…`. Limits stay: the deployment claim is file identity at observation time only
+(`deployment_correctness_proved=false`, `riscv_execution_claimed=false`); the agent ran the
+verifier on the owner's machine (U163); the Docker daemon and builder are trusted; F1–F4 stay
+open (U166, U169). `end_to_end=false`.
 
-**Status: NOT STARTED**
+### Stage 10 — GATE BENCHMARK
+
+**Status: DONE — EXIT report exit 0 on run-0002 (2026-10-30; U176)**
+
+The owner replaced the real-repository shadow study with a controlled benchmark
+(2026-10-29; [plan](proposals/stage10-benchmark.md), U171, U172). The shadow study
+stays a separate future milestone (below).
+
+Measure how Forge's unchanged gates classify a frozen corpus of PR-like changes in
+[`bench/`](bench/README.md). The owner's approval conditions:
+
+1. Forge's gate and trusted checker implementation stay unchanged.
+2. The benchmark lives in `bench/`, runs in isolation, and keeps expected outcomes
+   separately controlled.
+3. All cases, expected decisions, input artifacts and their hashes are frozen before the
+   official run (`bench/manifest.json`).
+4. The corpus includes valid alternative implementations, adversarial invalid evidence,
+   and explicit `unsupported` and `tool_failure` outcomes.
+5. Every mismatch is preserved. Expectations never change after results are seen.
+6. The report gives false accepts, false rejects, the outcome confusion table, p50/p95
+   latency, total cost and reproducibility.
+7. The report states that this is an internally authored controlled evaluation, not
+   independent generalization or a real-PR shadow study.
+8. The official run starts only after the owner approves the complete case list and the
+   manifest hash. Stage 9 evidence stays unchanged; signing stays off.
+
+| Planned EXIT command | Required behavior | Actual exit code |
+| --- | --- | --- |
+| `python3 scripts/exit_stage_10.py --case report --run results/stage10/run-0002` | Checks the frozen manifest and every bench file, requires each case to have run once in each of the two passes, and reports false accepts, false rejects, the confusion table, p50/p95 latency, total cost and pass-to-pass agreement. A second call reproduces the report byte for byte. Exit 0 means a complete, reproducible measurement, not a perfect score. | 0, then 0 (second call reproduced `report.json` `5e776f59…` and `report.md` `38dcdd37…`). The default `--run` names run-0001, which is not established (U174). |
+
+The scored result is a measurement. A false accept or false reject is a finding to
+report and adjudicate, not a reason to change a gate or a label. `end_to_end=false`.
+
+| Preparation command actually run | Actual exit code | Result |
+| --- | --- | --- |
+| `python3 -I author_cases.py <clone of 624c9faf> bench/cases` (scratch authoring script) | 0 | 51 case files; every edit anchor occurs exactly once in the base bytes. No gate or Dafny run. |
+| `python3 bench/freeze.py` | 0 | `bench/manifest.json` sha256 `98df0272…4889`; all consistency checks pass. |
+| `python3 bench/run.py --manifest bench/manifest.json --dry-run --out results/stage10/dry-run-0001 --work ~/forge-stage10-bench/dry-run-0001` | 0 | Base `624c9faf`, pins `74dcc4b8…`; sandboxed `dafny --version` 0; network probe refused; 51/51 case trees built and removed; no gate started (U172). |
+
+These are not Stage 10 EXIT results.
+
+| Official run command actually run | Actual exit code | Result |
+| --- | --- | --- |
+| `python3 bench/run.py --manifest bench/manifest.json --approved-manifest-sha256 98df0272… --out results/stage10/run-0001 --work ~/forge-stage10-bench/run-0001` | 0 | Not established: every gate stopped at its pin check (`PyYAML version differs from pin`, exit 2); host drift, not a gate result (U174). Kept unchanged. |
+| `python3 -m pip uninstall -y PyYAML` (owner choice; user-site 6.0.3 only) | 0 | Pinned PyYAML 6.0.1 loads again; `check_dependencies` passes (U175). |
+| `python3 bench/run.py … --approved-manifest-sha256 98df0272… --out results/stage10/run-0002 --work ~/forge-stage10-bench/run-0002` | 0 | 51 cases × 2 passes ran, 01:14–01:39Z; no harness error. |
+
+Results (primary pass, `results/stage10/run-0002/report.md`):
+
+| Expected class | Cases | Observed as expected | Observed otherwise |
+| --- | ---: | ---: | --- |
+| accept (3 seeds, 8 valid alternatives, 3 unchanged supplied evidence) | 14 | 14 | — |
+| defect | 8 | 8 (`VERIFICATION_REJECTED`) | — |
+| policy_reject | 11 | 11 (reason prefixes as expected) | — |
+| missing_evidence (adversarial evidence) | 10 | 10 (reason prefixes as expected) | — |
+| unsupported | 4 | 0 | 4 accepted (exit 0, `ACCEPTED: C1 C2 C3 C4 C5`, `checked=0`) |
+| tool_failure | 4 | 4 (exit 2) | — |
+
+False accepts 4 (all `unsupported`): PRs that change only `ts/ledger.ts` (fee bug),
+`app/main.ts`, a new unverified `impl/Extra.dfy`, or `ts/refund.ts` get a full ledger
+acceptance, because the PR gate checks only its own source scope and has no "no claim"
+result. False rejects 0; misclassified 0; wrong reason 0. Latency per case (primary
+pass): wall p50 3.2 s, p95 12.5 s; CPU p50 2.5 s, p95 10.4 s; total CPU 148.8 s
+(295.9 s both passes) on an Apple M1 Pro. Repeat pass: 51/51 same decisions; 18/18
+accepted evidence files byte-identical. Adjudications: none recorded. Limits: internally
+authored; not independent generalization; not a real-PR shadow study; ledger, booking
+and refund source-proof gates only. `end_to_end=false`.
+
+#### Future milestone, not scheduled: real-repository shadow study
 
 Run the gate on a real host repository's PRs in report-only mode for two actual
 weeks. Do not block merges during this experiment. Log what the gate would have
 blocked, why, and which claims and methods were involved. Distinguish an actual
 defect from missing evidence, an intentional policy rejection, and a tool failure.
+Include observation dates, sample size, human adjudication, unknown cases, and
+cost denominators. Do not simulate elapsed weeks or claim a false-positive rate
+without a defined review process and denominator. This needs its own owner
+authorization and a host repository (U170).
+
+### Stage 11 — INCREMENTAL VERIFICATION
+
+**Status: DONE on the recorded host — all three EXITs exit 0 (U190). Not met: criterion 4 for CI (dependent gates cannot run on Linux yet). The candidate is PR-stacked on PR #27 and not merged.**
+
+After PR #27 (coverage soundness, not assumed merged) the ledger PR gate is sound but
+VERIFIED is reachable only for an empty diff. Make non-empty legitimate changes
+VERIFIED by re-establishing every affected obligation from an auditable dependency
+graph derived from the gates' own declared inputs, reusing accepted evidence only when
+every relevant identity is identical, and reporting precise claim scopes. Order of
+priority: soundness, useful acceptance, performance, developer experience, economics.
 
 | Planned EXIT command | Required behavior | Actual exit code |
 | --- | --- | --- |
-| `python3 scripts/report_shadow.py` | Reads the real observation log and reports blocks, false positives, and cost per PR for the full period. | NOT RUN |
+| `python3 scripts/exit_stage_11.py --case legitimate-change --eval results/stage11/eval-0007 --baseline results/stage11/eval-pr27-0003` | A real, non-empty ledger change passes its own proof and every affected dependent obligation (booking, model, witness, committed evidence) and is VERIFIED with an exact claim-scope report. | 0 (e02 VERIFIED, four dependents re-established fresh; e04, e05 VERIFIED; e03 UNSUPPORTED by contract) |
+| `python3 scripts/exit_stage_11.py --case stale-dependency …` | A dependency change with stale evidence is REJECTED or UNSUPPORTED; uncovered code, weakened specs, stale proofs, unauthorized policies and tampered artifacts stay rejected or unsupported. | 0 (12 cases as required; e12 not constructible, excluded with a printed note) |
+| `python3 scripts/exit_stage_11.py --case report …` | Frozen fresh evaluation (cases fixed before the run) reports correct acceptances, false accepts, false rejects/unsupported, latency and cost (cold and warm), reproducibility over two runs, and the comparison with PR #27 behaviour; the original 51 cases run only as a regression suite. | 0, then 0 (byte-identical `report.json` `865f0000…`): 18 cases; match 12; false accept 0; false reject 0; 5 frozen expectations superseded by the post-freeze design change; 1 not constructible. |
 
-Include observation dates, sample size, human adjudication, unknown cases, and
-cost denominators in the operational report. Those records are separate from
-timestamp-free canonical evidence. Do not simulate elapsed weeks or claim a
-false-positive rate without a defined review process and denominator.
+Hard limits: no bypass of human approval, no signing, no change to Stage 9 or Stage 10
+evidence, protected PRs only for independently reviewable changes, stop before merge.
+`end_to_end=false`.
+
+| Step actually run | Actual exit code | Result |
+| --- | --- | --- |
+| Model `proposals/incremental-verification/model/Acceptance.dfy` (pinned Dafny) | 0 | 10 verified, 0 errors (model only). |
+| Independent adversarial review, three passes | — | 6 blockers → 1 critical → none; every exploit reproduced and closed (U183–U186). |
+| Stage 4 local / approval on the final gate | 0 / 0 | 13/13; 6/6 (`results/stage11/regression-0001/final3/`). |
+| Stage 9 controls on lock `4e9e7e54…` | 0 ×5 | 48/48, 14/14, 9/9, token 34/34, lineage 17/17 (`suites-0005/`). |
+| Frozen evaluation `eval-0007` (cases `ceec69ca…`; runner `319b65cd…`; cold + warm) | 1 (6 frozen mismatches, all design-change or unconstructible) | 0 false accepts; e02/e04/e05 VERIFIED (UNSUPPORTED under PR #27); cold wall p50 13.6 s, warm 7.4 s; 18/18 same decisions. |
+| PR #27 baseline on the same cases `eval-pr27-0003` | 1 | Every non-empty change UNSUPPORTED. |
+| Conformance of 53 recorded traces | 0 | 0 nonconforming. |
+| Aborted runs kept: eval-0001..0005, eval-0006 (superseded), eval-pr27-0001/0002 | — | Runner PATH; refund lock race; N1 fix; e12 anchor; disk full; runner deleted the real Dafny through a symlink (restored, pins verified, U188–U189). |
+| Protected PR as `mackiannii` (checks 1–3; push `a8dee75f`; `gh pr create` onto `gate/coverage-soundness-v1`) | 0 | PR #28: 8 files, tree `caaf0554` = tested tree, lock `4e9e7e54…`; stacked on PR #27; not merged (U191). |
+| Owner review check (read-only API as `mackiannii`) | 0 | PR #28 APPROVED by `mack-dot` on head `a8dee75f` (2026-10-30T13:03:32Z). PR #27 `4ab56e04`: 0 reviews, blocked. Not merged; merge needs separate authorization and #27 first (U192). |
+| Merge PR #27 as `mackiannii` (`gh pr merge 27 --squash --match-head-commit 4ab56e04`) | 0 | main `0bf31d9f`, tree = approved head tree `133cee25`; lock on main `4e2abe26…`; merged 2026-10-30T14:17:14Z after owner review 5713497921 and merge authorization (U194). |
+| Retarget PR #28 to `main` (`gh pr edit --base main`; REST PATCH) | 1; 0 | GraphQL error, then PATCH ok. Approval dismissed by ruleset; mergeable_state dirty (pre-squash parent). Rebase push not performed (permission refused); owner decision pending (U194). |
+| Replacement PR as `mackiannii` (branch from `0bf31d9f`; `cherry-pick -x a8dee75f`; tree check; `bootstrap.py --check` new / old lock; plain push; `gh pr create`; reviewer request) | 0; 0; 0; 0 / 1; 0; 0; 0 | PR #29 head `c00b85da`, tree `caaf0554` = tested tree, lock `4e9e7e54…`; recorded results apply unchanged; #28 branch untouched; not merged (U195). |
+| Owner review check on PR #29 (read-only API) | 0 | `mack-dot` APPROVED on exact head `c00b85da` (2026-10-30T14:39:01Z, review 5713886773). Not merged; awaiting separate merge authorization (U196). |
+| Merge PR #29 as `mackiannii` (`gh pr merge 29 --squash --match-head-commit c00b85da`) | 0 | main `4e4112c6`, parent `0bf31d9f`, tree `caaf0554` = tested tree; lock on main `4e9e7e54…`; merged 2026-10-30T15:22:33Z after owner review 5713886773 and merge authorization (U197). |
+
+The original 51 Stage 10 cases were rerun as a regression suite under PR #27 only; under
+Stage 11 the frozen `classes.json` does not know exit 3 and the four ledger alternatives
+would now need regenerated evidence, so that rerun is deferred and disclosed.
 
 ## Execution record
+
+### Continued integration readiness review — 2026-11-02 (no stage is CURRENT)
+
+Owner authorizes review and proposal/test preparation, not approval, merge,
+deployment, protection changes or Stage 12. See U207 and
+`proposals/linux-ci-readiness/REVIEW.md`. PR #30 remains unapproved at
+`561d2dda`; no implementation or active workflow was changed.
+
+| Command actually run / check | Actual exit code | Result |
+| --- | --- | --- |
+| `python3 results/ops-readiness/integration-2026-11-02/check_archives.py /Users/mackianni/forge-backups` | 0 | Both original archives/manifests intact; independence unestablished. |
+| `python3 proposals/linux-ci-readiness/audit_backup.py` | 0 | Actual children: intact copies 0; truncated archive 1; altered manifest 1; invalid destination 2 before SSH. |
+| Inline exact-head git blob and lock audit | 0 | 100 entries match; tracked files equal commit; workflow/admission policy unchanged. |
+| `python3 proposals/linux-ci-readiness/prepare_workflow.py` | 0 | Exact one-file Node proposal prepared, not applied. |
+| `git apply --check /Users/mackianni/forge/proposals/linux-ci-readiness/node-workflow.patch` in forge-linux | 0 | Exact preimage accepts the patch; dry check only. |
+| `git apply --check` for booking-a.patch / replay-observations.patch on their stated preimages | 0 / 0 | Both apply; no live change applied. Exact commands in proposal-validation.json. |
+| `bash -n proposals/linux-ci-readiness/node-step.sh`; replay-step.sh | 0 / 0 | Shell syntax valid; no download or setup executed. |
+| Python AST + YAML structural comparison + fixture anchor checks | 0 | Proposals parse; only intended steps differ; permissions/action refs preserved. |
+| `python3 -I -S -B proposals/linux-ci-readiness/acceptance_linux.py --help`; audit_ci_artifacts.py --help | 0 / 0 | Interfaces usable; tests themselves NOT RUN. |
+
+Effective-rule reads show required review and no configured required status in
+the visible ruleset/branch summary. Full classic protection still HTTP 403;
+administrator GET exports needed. No rule changed. Booking-only verification
+does not need Node; that first genuine run can follow #30's authorized merge.
+Linux ledger/Node/booking acceptance suites, optional observation execution,
+off-machine copy and new CI cost measurements are **NOT RUN**. No savings claim.
+Prepared tests require positive A/C, stale-dependency invalidation with current
+safe overall refusal for B, and unsupported-code refusal. Positive changed-ledger
+acceptance remains blocked on the separately approved evidence-profile design.
+
+### Linux CI integration mission — 2026-11-02 (no stage is CURRENT)
+
+Owner authorizes the existing integration path, with an explicit Phase 1 stop
+when exact-head approval is missing. Stage 12 is not authorized. See U205 and
+`results/ops-readiness/integration-2026-11-02/STATUS.md` for the scoped review,
+immutable source identities, records and prepared backup procedure.
+
+| Command actually run / observation | Actual exit code | Result |
+| --- | --- | --- |
+| `python3 results/ops-readiness/integration-2026-11-02/check_archives.py /Users/mackianni/forge-backups` | 0 | Both archive/manifests match; 10,160 files each; no mismatch. Independence not established. |
+| `tmutil destinationinfo` | 0 | No destinations configured; not a passing off-machine-backup result. |
+| `gh pr view 30 --repo mack-dot/forge --json number,url,headRefOid,baseRefOid,reviewDecision,mergeStateStatus,statusCheckRollup` | 1 initially; 0 direct; 1 redirected retry | Direct read: REVIEW_REQUIRED, BLOCKED; connection failures retained separately. |
+| Inline Python exact-commit blob/digest audit | 0 | 100 lock entries match; GitHub tree/lock match; workflow and bootstrap unchanged. source-integrity.json. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 ac883083f6326b9d017f3228966f235c1108b05f4129f81c0de8020e1c127f1a --check` in clean export of 561d2dda | 0 | BOOTSTRAP_VERIFIED. Integrity check only. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 4e9e7e54f8cf9bf5b28889a9340c6b764175efdf1a3c9d0c391eb998c81983ed --check` in same export | 1 | BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK; expected old-lock rejection. |
+| `sh -n results/ops-readiness/integration-2026-11-02/copy_backup.sh` | 0 | Procedure syntax valid; copy NOT RUN. |
+| Historical GitHub run 41125456987, logs read now | 1 (historical gate) | UNAPPROVED_PROTECTED_CHANGE; no checker commands. No new CI proof. |
+
+Connected API reads confirmed zero submitted reviews at head `561d2dda`.
+Visible ruleset requires approval; classic protection is unverified (HTTP 403).
+Separate merge authorization is absent. Stop before merge per owner mission.
+Linux ledger proof, Node workflow application, booking scenarios A/B/C, remote
+copy and cold/warm/invalidated CI measurements: **NOT RUN**. Expected outcomes
+in the mission are not passing results. No stage transition or signing change.
+Record packaging: initial manifest generation failed (own relative-path error,
+Python 1 / shasum 2); corrected manifest generation and `shasum -a 256 -c
+evidence-manifest.sha256` exited 0. No proof was run by these commands.
+
+### GitHub status check — 2026-11-02 (no stage is CURRENT)
+
+Read-only status check; no EXITs rerun and no stage transition. See U204.
+GitHub main is `4e4112c6`: #27 and #29 merged, #28 closed without merge.
+PR #30 remains at `561d2dda`, with no submitted review. GitHub's roadmap
+still says Stage 9; it does not contain the current local execution record.
+Historical Stage 11 "not merged" statements above are superseded by U197.
+
+| Command or API observation | Actual exit code | Result |
+| --- | --- | --- |
+| `git status --short --branch` | 128 | This local records directory is not a git repository (U201). |
+| `gh pr view 30 --repo mack-dot/forge --json number,url,headRefOid,reviewDecision,mergeStateStatus,statusCheckRollup` | 0 | REVIEW_REQUIRED; BLOCKED; verify FAILURE, report SUCCESS. |
+| `gh run list --repo mack-dot/forge --limit 8 --json databaseId,workflowName,event,headSha,status,conclusion,createdAt,url` | 0 | Latest run 41125456987 failed on PR #30; pull_request_target event. |
+| Connected GitHub log read: job 124302708053, run 41125456987 (historical CI result) | 1 (gate, from log) | UNAPPROVED_PROTECTED_CHANGE; dependent proofs not reached. |
+
+Next: preserve records off-machine; exact-head review of #30; then the
+separate pinned Node workflow change and a genuine booking-change CI run.
+Ledger-change CI additionally needs per-profile committed evidence.
+These are pending actions, not passing results. No GitHub writes were made.
+
+### Post-Stage-11 operational readiness (owner-authorized 2026-10-30; no stage is CURRENT)
+
+Planned steps (owner mission): verify main/lock/controller; Linux support for the dependent gates
+with pinned, independently validated toolchain; one non-empty verification case on a fresh Linux
+environment with measurements; disk/Docker audit without deleting evidence; close PR #28; report
+blocks and the smallest protected changes. Rows below record actual exit codes only.
+
+| Step | Exact command / record | Actual exit code | Result |
+| --- | --- | --- | --- |
+| Verify main, lock, controller | fresh clone `~/forge-main`; `bootstrap.py --implementation-sha256 4e9e7e54… --check`; old lock; read-only sqlite of the Stage 9 controllers | 0; 1; 0 | main `4e4112c6`, lock verified; no controller row for lock `4e9e7e54` (controller not updated, signing off) (U198). |
+| Close PR #28 | comment + `gh pr close 28` as `mackiannii` → `results/stage11/close-28-0001.txt` | 0 | closed, not merged, branch kept at `a8dee75f` (U199). |
+| Disk and Docker audit (read-only) | `du`, `docker system df -v`, `docker inspect` → `results/ops-readiness/disk-docker-audit-0001.md` | 0 | 25 GB regenerable gate scratch identified; evidence images/containers classified keep; nothing deleted (U200). |
+| Records durability check | GitHub contents API vs local tree | 0 | Stage 9 v3.4–v3.6, 10, 11, coverage-repair records local-only; 27 MB curated set (U201). |
+| Independent validation of Linux toolchain bytes | Dafny zip: CI pin = local download = GitHub release API digest `a46a9ff7…`; Node tarball: nodejs.org SHASUMS = tsinghua mirror = local `a962afad…`; Python 3.10.11 build `bin/python3.10` = pin `8cd5e3f3…`; pip 25.3 wheel = PyPI digest | 0 | all agree; record `results/ops-readiness/linux-toolchain-validation.txt`. |
+| Candidate build (clone `~/forge-linux`, branch `ops/linux-profile-v1`) | host-profile pin selection; `toolchain/javascript-linux-pins.json`; evidence.json regenerated; lock `ac883083…`; `bootstrap.py --check` new / old on clean export | 0 / 1 | head `561d2dda`, tree `4d106778`, 13 files +187 −46 (U202). |
+| macOS regression on the candidate | `scripts/check_stage_4_local.py`; `scripts/check_stage_4_approval.py` → `results/ops-readiness/stage4-*-macos-final.txt` | 0; 0 | 13/13 LOCAL_CONTROLS_PASSED; 6/6 (one earlier attempt failed on an uncommitted tree, kept). |
+| Fresh Linux verification (ubuntu-22.04 amd64 container, pinned toolchain) | `linux_run.sh verify 561d2dda` → `results/ops-readiness/linux-0001/` | 0 (container); gate exits 0,0 / 0,0 / 0,0 / 2,2 | identical, booking alt, refund alt VERIFIED cold+warm; ledger rename NOT_ESTABLISHED (EVIDENCE_PROFILE); cold median 87 s, warm 49 s; evidence identities identical (U202). |
+| Protected PR as `mackiannii` (checks 1–3; plain push; `gh pr create`) | `open_linux_pr.sh` → `results/ops-readiness/pr-open-0001.txt` | 0 | PR #30 head `561d2dda`; reviewer mack-dot requested; not merged (U202). |
+| Records backup (raw + sanitized), scanned and verified | `results/ops-readiness/backup-2026-11-01/`; archives in `~/forge-backups/` (raw `e2491743…`, sanitized `ac84dd27…`) | 0 | 10 160 files; 0 hash mismatches on re-extraction; no credential patterns; same-disk only (U203). |
+| PR #30 review package | `results/ops-readiness/pr30-review/PR30-REVIEW.md`; comment on PR #30 | 0 | lock delta 9 changed/3 added verified against tree; pins, provenance, cold/warm table, limits (U203). |
+| Deletion proposal and Linux CI steps | `DELETION-PROPOSAL.md`; `LINUX-CI-STEPS.md` | — (proposals) | 25.3 GiB Tier 1 regenerable scratch identified; nothing deleted (U203). |
+
+### Post-Stage-10 repair (owner-authorized; no stage is CURRENT)
+
+| Step | Exact command / record | Actual exit code | Result |
+| --- | --- | --- | --- |
+| Reproduce the 4 Stage 10 false accepts on the original gate | `python3 proposals/coverage-soundness/repro_original.py <base 624c9faf> <plain> results/coverage-repair/phase1-repro-0001` | 0 | All four: gate exit 0, `ACCEPTED: C1 C2 C3 C4 C5; checked=0`, evidence written (U177). |
+| Formal model | pinned `dafny verify proposals/coverage-soundness/model/Acceptance.dfy` | 0 | 8 verified, 0 errors (model only). |
+| Candidate regression (clone `~/forge-coverage-v1`, lock `4e2abe26…`) | `scripts/check_stage_4_local.py`; `scripts/check_stage_4_approval.py`; `run_controls_cov.py`; v3.1 `controls.py`; `f1_controls.py`; `token_controls.py`; `lineage_controls.py`; `bootstrap.py --check` new / old lock | 0; 0; 0; 0; 0; 0; 0; 0 / 1 | 11/11; 6/6; 48/48; 14/14; 9/9; 34/34; 17/17; verified / refused (U178). Two aborted local attempts kept (own harness errors). |
+| Held-out cases, frozen before any run | `python3 -I proposals/coverage-soundness/heldout/run_heldout.py cases.json e69611a3… …` (2 passes) | 0 | 32/32 as expected; identical decisions across passes (U178). |
+| Frozen 51-case rerun on the candidate | `python3 -I proposals/coverage-soundness/rerun_bench.py …` (2 passes) | 0 | 8 decisions changed, all to UNSUPPORTED (4 false accepts, 4 ledger alternatives); 43 identical; 51/51 across passes (U179). Frozen Stage 10 report unchanged. |
+| Conformance of recorded traces to the model | `python3 -I proposals/coverage-soundness/model/conformance.py …` | 0; 0 | 49 + 40 records, 0 nonconforming (bounded evidence). |
+| Protected PR as `mackiannii` (checks 1–3; push `4ab56e04`; `gh pr create`) | `open_coverage.sh` → `results/coverage-repair/pr-open-0001.txt` | 0 | PR #27: 7 files, tree `133cee25` = tested tree, lock `4e2abe26…`; review requested from `mack-dot`; BLOCKED. Not merged (U180). |
+
 
 Stage 0–3 EXIT checks are complete. The true arithmetic lemma was
 verified; the false arithmetic lemma was rejected for its false postcondition.
@@ -1670,7 +1930,7 @@ assumptions. No binary, deployment, or whole-application claim is established.
 Stage 2 schema, policy, identity, and replay checks passed, including every
 Stage 1 regression. Stage 3's model-comparison checks and approved demo invocation
 also passed. Stages 4 and 5 are complete in their stage records above.
-Stages 6–8 are complete in their records above. Stage 9 is CURRENT.
+Stages 6–11 are complete in their records above; the Stage 11 candidate awaits review as a PR (U190).
 
 Commands ran from the repository root. The required `dafny --version` invocation
 used `export PATH="$PWD/.toolchain/dafny-4.11.0/dafny:$PATH"` in that shell. Other
@@ -1768,3 +2028,1448 @@ result record. All Stage 2 EXIT scenarios passed on their first run.
   repository as licensed for open-source reuse. Public visibility alone does
   not supply a license.
 
+
+
+## Integration-readiness security continuation — 2026-11-02 (U208)
+
+CURRENT remains none; Stage 11 merged. Stage 12 is not authorized.
+The owner authorized receipt-authentication investigation and a proposed repair.
+The original gate accepted a corrupted receipt without executing booking proof.
+The security finding is confirmed; current GitHub main/#30 are not repaired.
+The separate three-file repair and two-file hosted experiment remain unapproved
+and unpublished. Full review and raw records: results/ops-readiness/receipt-auth-2026-11-02/STATUS.md.
+
+| Actual command / case | Exit code | Observed result |
+| --- | --- | --- |
+| `python3 -B proposals/receipt-authentication/reproduce.py --repo /Users/mackianni/forge-linux --out /private/tmp/forge-receipt-auth-original-20261102` | 1 | Security regression FAILED: genuine cold gate 0; corrupted receipt adopted by full gate 0, without fresh booking proof. |
+| `python3 -B proposals/receipt-authentication/prepare.py` | 0 | Isolated proposed repair, no change to #30. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 76b983ac279a80ab42bf15c7446ee997a2bcd9b25a003db829f7e8fb2d4b8cd9 --check` in proposed checkout | 0 | All locked inputs verified. Same command with old ac883083… lock: 1, IMPLEMENTATION_LOCK rejection. |
+| `python3 -B proposals/receipt-authentication/regression.py --root /private/tmp/forge-receipt-auth-repair-20261102 --out /private/tmp/forge-receipt-auth-regression-20261102` | 0 | Ten parent-process cases and one genuine new-process test passed their assertions. |
+| Repair A cold / B warm / C invalidated / B restored | 0 / 0 / 0 / 0 | Real proof / valid same-process reuse / real proof / valid reuse. |
+| Receipt / artifact / coordinated rewrite / stale identity / protected harness / prior process | 1 / 1 / 1 / 1 / 1 / 1 | Specific fail-closed refusals. No accepted evidence. |
+| Uncovered change | 3 | UNSUPPORTED. |
+| Exact reproduce_cmd from repair A evidence, in new interpreter; argv retained in repair-results/cli-replay.json | 0 | Fresh booking proof; byte-identical evidence; no prior-process adoption. |
+| `git apply --check` for repair.patch and booking-ci.patch in unchanged #30 checkout | 0 / 0 | Patch checks only; no application to #30. |
+| `python3 -B proposals/receipt-authentication/prepare_hosted.py`; final syntax/YAML validation | 0; 0 | Draft manual booking-only workflow and harness. No Node. |
+| Hosted harness actual local invocation (exact argv in proposal-validation.json) | 1 | Refused non-hosted execution before proof commands. |
+| `python3 results/ops-readiness/integration-2026-11-02/check_archives.py /Users/mackianni/forge-backups` | 0 | Both archives intact; 10,160 members each; independent backup unconfirmed. |
+
+Local A/B/C wall samples: 43.028 / 18.674 / 36.431 seconds. No hosted cost or
+savings claim. Cross-run receipt authentication remains unsupported; new CLI
+processes compute fresh proofs under the proposed containment. Linux/hosted
+acceptance and billed runner-minutes: NOT RUN / not measured. Existing Stage 11
+EXITs remain historical results, not validation of this repair.
+
+Blockers: exact #30 owner review (head unchanged; zero reviews); separate repair
+review/publication/merge authorization; full administrator protection exports
+(403 remains); independent backup and remote read-back; separately approved
+workflow and authorized exact-head dispatch. No signing-policy, protection,
+deployment, Stage 12 or SPM change. Stop at the approval boundary.
+
+
+U209 packaging checks: all 310 new package files match (shasum exit 0), manifest
+`1e6f0fc473c88f3c13c28cdb290175cef18f90ab5a34e92748c3941b77813009`.
+The previous 52-file integration and 28-file review manifests also pass (0, 0).
+These are local integrity checks, not independent backup or provenance admission.
+
+
+## Integration final local acceptance — 2026-11-02 (U210)
+
+CURRENT remains none. Stage 12 unauthorized.
+
+| Actual command / case | Actual exit | Result |
+| --- | --- | --- |
+| Original receipt corruption control (exact argv in finalize commands.json) | 1 | Security failure reproduced; full gate cold/corrupted both 0. |
+| Committed tests/integration/receipt_authentication.py, root /private/tmp/forge-auth-final-reviewed-20261102, output /private/tmp/forge-auth-final-reviewed-results-20261102 | 0 | All 13 acceptance cases passed. |
+| A cold / B warm / C invalidation / B restored | 0 / 0 / 0 / 0 | Actual booking launches 1 / 0 / 1 / 0. |
+| Receipt / artifact / coordinated / stale / harness / prior process / missing anchor / invalid anchor | 1 each | Specific required refusals; no accepted evidence. |
+| Uncovered file | 3 | UNSUPPORTED. |
+| Actual separate-process reproduce command | 0 | Fresh booking proof; byte-identical evidence. |
+| Main / #30 production patch dependency checks | 1 / 0 | Exact patch requires #30 first. |
+| Original archives / previous 310-file manifest | 0 / 0 | Integrity only; independent backup unconfirmed. |
+| integration_exit.py with final matrix/readiness records | 1 | NOT_ESTABLISHED: operational approvals and hosted evidence missing. |
+
+First rerun failed due to stale test-fixture path (1); preserved, corrected, and
+complete matrix rerun. Local PR head 6cfec85e3890378067cbf8142e13f8bae4cac429;
+not published. Main/#30 unchanged. Hosted matrix/measurements NOT RUN. Exact
+commands, source/evidence hashes, refusals and blockers are in
+results/ops-readiness/finalize-2026-11-02/STATUS.md and commands.json.
+Stop at publication/review/merge/dispatch authorization boundary; no Stage 12.
+
+
+U211: Final package: 343 files, all hashes checked (exit 0). Manifest SHA-256 ff8afd6a10f34c9457be4a12b952e4558a7e6241ef9916cfebbf6f7b005ba9f0. No hosted execution or stage transition.
+
+
+## Integration publication — 2026-11-02 (U212)
+
+CURRENT none; Stage 12 unauthorized. User authorized repair PR publication only.
+
+| Executed command/action | Actual result |
+| --- | --- |
+| git push exact prepared commit to new repair branch | 128; DNS failure |
+| GitHub connector publish five-file tested tree and new branch | API success; remote b24fe624, tree equals tested b3cb9c42 |
+| gh pr create stacked repair, prepared body | 1; GitHub API connection failure |
+| gh pr list repair head | 0; empty, PR not created |
+| git ls-remote repair/#30 branches | 0; b24fe624 / unchanged 561d2dda |
+
+PR creation blocked on contributor API access. Working connector is sole code
+owner; no owner-authored replacement or self-review created. Exact command and
+body retained in results/ops-readiness/publication-2026-11-02/STATUS.md.
+Prior 13-case local evidence unchanged; no new hosted result. No merge, workflow
+publication, dispatch or stage transition. Integration EXIT NOT_ESTABLISHED.
+
+
+## Repair draft publication — 2026-11-02 (U213)
+
+CURRENT none; Stage 12 unauthorized.
+
+| Executed action | Actual result |
+| --- | --- |
+| Contributor gh pr create retry | 1; API connection failure |
+| Connected GitHub create draft PR | API success: #31 |
+| Fresh PR metadata verification | Expected head b24fe624, base 561d2dda, five files, draft, unmerged |
+
+User authorized proceeding with publication. PR: https://github.com/mack-dot/forge/pull/31.
+Owner-authored draft still needs resolution of independent code-owner review;
+no self-review, merge, workflow publication or dispatch. Proof tests not rerun.
+Integration EXIT remains NOT_ESTABLISHED; operational blockers remain open.
+
+
+U214: User approval acknowledged. Fresh #30/#31 review lists are empty; heads
+unchanged and unmerged, #31 still draft. No self-approval, merge or bypass.
+Required independent GitHub reviews remain absent. No EXIT commands rerun.
+CURRENT none; Stage 12 unauthorized.
+
+
+U215: At the owner's explicit instruction, submitted APPROVE for PR #30 exact
+head 561d2dda904daf18f17a0fede93f28b502d72884. GitHub API success, review
+5740665331; fresh list confirms APPROVED by mack-dot. No proof EXIT rerun,
+merge, review bypass, PR #31 self-approval or dispatch. CURRENT none.
+
+
+## PR #30 merge and hosted protected-change refusal — 2026-11-02 (U216)
+
+CURRENT none; Stage 12 unauthorized. #30 merged at e7b5b52a after explicit
+owner approval and merge authorization. No --admin or policy change.
+
+| Executed command/case | Actual code/result |
+| --- | --- |
+| gh pr merge 30 --squash --match-head-commit 561d2dda… | 0; e7b5b52aad5d020224dd057e1019004b15dc8739 |
+| Reparent #31 unchanged tested tree onto merged main | API success; head 9a0247e9, five-file diff |
+| Real hosted trusted gate, run 41500184981 | 1; UNAPPROVED_PROTECTED_CHANGE, zero proof commands |
+| Hosted report | success; publishes rejection |
+| gh run view / gh pr view / git ls-remote | 0; final states confirmed |
+| Full classic protection endpoint | HTTP 403 |
+
+Observed job minutes: (71+50)/60 = 2.0166667, not billed cost. Booking hosted
+A/B/C and security matrix NOT RUN. PR #31 draft review/authorship blocker,
+independent backup and complete protections remain pending. Exact evidence:
+results/ops-readiness/merge-2026-11-02/STATUS.md. Integration EXIT NOT_ESTABLISHED.
+
+
+U218 contributor publication attempt: account switch 0; git push 128 (DNS),
+API ref creation 1 (connection). No replacement created. Both cached accounts
+exist; later local metadata reports owner active. Prepared contributor script
+shell syntax 0; execution NOT RUN. Missing capability is contributor write API
+access, not user authorization. No merge/dispatch/stage transition.
+
+
+## Contributor repair PR verified — 2026-11-02 (U219)
+
+CURRENT none; Stage 12 unauthorized. #32 replaces draft #31, author mackiannii,
+head 9a0247e9, five files, exact tested tree. Closed #31 without merge.
+
+| Actual command/case | Actual result |
+| --- | --- |
+| GitHub replacement/tree verification | API success; matches tested source |
+| gh pr view 32 | 0; REVIEW_REQUIRED, not draft, BLOCKED |
+| New hosted gate, run 41502156222 | 1; UNAPPROVED_PROTECTED_CHANGE; zero proof commands |
+| Close superseded #31 | API success; unmerged |
+
+No repair approval/merge, proof rerun, workflow dispatch or stage transition.
+Next boundary: exact-head owner approval and explicit repair merge authorization.
+
+
+U220: Actual owner approval of #32 verified at exact head 9a0247e9. gh pr view
+exit 0: APPROVED, MERGEABLE, UNSTABLE (old protected-change refusals). No
+merge/dispatch or proof EXIT rerun. Separate repair merge authorization pending.
+
+
+## Receipt repair merged — 2026-11-02 (U221)
+
+CURRENT none; Stage 12 unauthorized.
+
+| Executed command/case | Actual result |
+| --- | --- |
+| gh pr merge 32 --squash --match-head-commit 9a0247e9… | 0; merged edd9f9d95b315ea9985c9d892522923a457a3964 |
+| Merged tree identity | API verified b3cb9c42…, identical to tested repair |
+| Prepared booking workflow patch/syntax/permissions/pins checks | 0 |
+| New local/hosted proof matrix | NOT RUN |
+
+Next: separately authorized workflow publication/review/merge and exact booking
+CI dispatch. No signing, Node, protection or Stage 12 changes. Integration EXIT
+still requires hosted results and independent backup/protection confirmation.
+
+
+## Booking workflow publication preparation — 2026-11-02 (U222)
+
+CURRENT none; Stage 12 unauthorized. User authorized workflow PR publication.
+
+| Executed action | Actual result |
+| --- | --- |
+| Exact main/tree and two-file compare verification | API success |
+| Workflow tree/commit preparation | API success; db5b76f0, tree 624ef75c |
+| Contributor account switch | 0 |
+| Contributor API branch creation | 1; network failure, no branch |
+| Booking publication helper syntax | 0; execution NOT RUN |
+
+Prepared contributor terminal helper. It publishes only; no merge/dispatch.
+CLI restore failed under default token override; contributor remains locally
+selected until helper restores owner. No hosted verification result claimed.
+
+
+## Booking workflow PR verified — 2026-11-02 (U223)
+
+CURRENT none; Stage 12 unauthorized. Contributor PR #33 is published with exact
+prepared two-file tree; no duplicate owner-authored PR created.
+
+| Actual command/case | Result |
+| --- | --- |
+| Session publish-booking-ci.sh attempt | 1; auth switch blocked |
+| Independent GitHub PR/tree checks | API success; #33, db5b76f0, tree 624ef75c |
+| gh pr view 33 | 0; REVIEW_REQUIRED/BLOCKED |
+| Hosted trusted PR gate, run 41508999466 | 1; protected .github changes refused, zero proof commands |
+
+No workflow approval, merge or dispatch. Hosted booking matrix remains NOT RUN.
+Exact review/merge and later dispatch authorizations remain required.
+
+
+## Booking workflow installed — 2026-11-02 (U224)
+
+CURRENT none; Stage 12 unauthorized.
+
+| Executed action | Actual result |
+| --- | --- |
+| Owner-directed exact-head APPROVE #33 | API success; review 5742634728 |
+| gh pr view 33 | 0; APPROVED/MERGEABLE |
+| gh pr merge 33 --squash --match-head-commit db5b76f0… | 0; merge f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3 |
+| Merged workflow tree check | API verified 624ef75c…, approved contents unchanged |
+| Exact one-file booking demo commit prepared | API object creation; 46e5aa426bf7800df7c98c732a764337e716f6bb |
+| Booking PR / manual workflow dispatch / new proof matrix | NOT RUN |
+
+No admin override, protection change, Node/signing/cross-run reuse or stage
+transition. Next boundary: exact candidate publication and hosted dispatch
+approval. Evidence: workflow33-merge-2026-11-02/state.json.
+
+
+## First genuine hosted booking change — 2026-11-02 (U225)
+
+CURRENT none; Stage 12 unauthorized. Owner authorized PR #34 and exact dispatch.
+PR #34 candidate 46e5aa42, approved workflow/main f9eb1cbc, one file.
+
+| Executed command/case | Actual result |
+| --- | --- |
+| Publish exact booking branch and draft PR #34 | GitHub API success |
+| gh workflow run booking-reuse.yml, PR 34/head 46e5aa42 | 1; API connection failure; no manual run |
+| Automatic hosted trusted gate, run 41516908347 | 0/VERIFIED; complete coverage, booking established fresh |
+| Actual separate CLI reproduce command | 0; evidence byte-identical |
+| Artifact upload / reporting | FAILURE; invalid colon filename / artifact missing |
+| Overall PR workflow | FAILURE; not a passing pipeline |
+| Receipt reconstruction and canonical evidence SHA-256 check | 0 |
+| Artifact packaging patch preimage and filename checks | 0; fix not installed |
+| Original archives checker | 0; independent backup unconfirmed |
+| Strict integration status | 1; NOT_ESTABLISHED |
+
+Actual job elapsed sum 108 s = 1.8 job-minutes; booking obligation reports
+16.473 s; combined gate+fresh replay step 55 s. Billed cost unknown, no savings
+claim. Manual warm/invalidation/adversarial matrix NOT RUN. No Stage 12.
+Full evidence and exact identifiers: results/ops-readiness/hosted-demo-2026-11-02/STATUS.md.
+
+
+## Assurance campaign audit and safe reproduction — 2026-11-02 (U226)
+
+CURRENT none; Stage 11 merged. Stage 12 unauthorized. No stage transition.
+Source main f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3; PR 34 unchanged at
+46e5aa426bf7800df7c98c732a764337e716f6bb. No protected source change.
+Exact argv/cwd and raw records: results/campaign-audit-2026-11-02/commands.json.
+
+| Actual command / case | Actual exit | Result |
+| --- | --- | --- |
+| `python3 -B gate/gate.py --impl impl/Ledger.dfy --tier critical --check-evidence evidence.json --evidence build/campaign/ledger.json` in current-main clone | 0 | Fresh C1–C5 source proof; committed evidence matches. |
+| `python3 -B gate/booking.py --evidence build/campaign/booking.json --work build/campaign/booking-work` in current-main clone | 0 | Fresh B1–B4 source proof. |
+| Unchanged `tests/integration/receipt_authentication.py`, exact root/out in security-command.json | 0 | All 13 expected local cases; booking launches cold/warm/invalidation/restored 1/0/1/0. |
+| Altered receipt / artifact / coordinated / stale / harness / prior process / missing anchor / invalid anchor | 1 each | Expected specific refusals, no accepted evidence. |
+| Uncovered implementation | 3 | UNSUPPORTED / UNCOVERED_CHANGE. |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 76b983ac279a80ab42bf15c7446ee997a2bcd9b25a003db829f7e8fb2d4b8cd9 --check` in clean clone | 0 | BOOTSTRAP_VERIFIED. |
+| Same bootstrap after local .toolchain symlink | 1 | ROOT_IMPORTABLE:.toolchain; expected guard, no policy change. Separate clean clone rerun 0. |
+| `python3 -B gate/gate.py --schema-only results/stage7/accepted/own/evidence.json` | 0 | Structure only; not a proof. |
+| `python3 -B scripts/stage7_emit_evidence.py --attempt results/stage7/own-proof/attempt-0001 --output /private/tmp/forge-campaign-serialized-20261102` | 0 | Historical serialization only; three cmp checks 0. |
+| Frozen Stage 9 production receipt/package component audit | 0 | Bytes checked; stale challenge/wrong ELF rejected. No new crypto/admission. |
+| `file` / `objdump -f` / `objdump -d` on exact ELF | 0 / 0 / 1 | Format identified; installed disassembler lacks RISC-V target. |
+| `docker info --format '{{.ServerVersion}}'` | 1 | Socket permission denied; fresh kernel replay NOT RUN. |
+| Exact authorized `gh workflow run booking-reuse.yml` for PR 34/head 46e5aa42 | 1 | API connectivity failure; no dispatch started. |
+| Direct `gh run list` for booking-reuse.yml | 0 | Empty; full hosted matrix still NOT RUN. |
+| Existing original archive checker | 0 | Both archives intact; independent backup unconfirmed. |
+| Existing integration_exit.py with fresh local matrix and recorded readiness | 1 | NOT_ESTABLISHED; hosted/backup/protection blockers remain. |
+| `git apply --check` artifact-path repair | 0 | Patch only, not installed or published. |
+| `python3 -B results/campaign-audit-2026-11-02/validate_records.py` | 0 | Audit metadata consistent; not a custom proof checker. |
+
+Local suite 181.530 s; cold/warm/invalidation 28.319/15.945/26.704 s. No billed
+cost, matched baseline or savings claim. Historical hosted 108 s/1.8 job-minutes
+remain a failed ordinary PR workflow, not the full matrix. Binary theorem and
+historical release identity are partial; actual RISC-V execution, fresh independent
+kernel replay and source-to-JavaScript semantics remain missing. end_to_end=false.
+Report/graph/acceptance and exact next review packet are in
+results/campaign-audit-2026-11-02/ and proposals/ci-artifact-paths/APPROVAL.md.
+No new signing, publication, merge, policy, deployment, Node, SPM or Stage 12 work.
+
+U226 package integrity: 172 files checked, actual exit 0. Manifest SHA-256
+`6f66bdfb7972a5f713bfc95bbce2e507ee2fb64e75b0a177ff0bfa619042a613`.
+This is a local integrity index, not provenance authentication or independent backup.
+
+
+## Reviewable local packaging repair and runtime source audit — 2026-11-02 (U227)
+
+CURRENT none; Stage 12 unauthorized. Existing main/PR 34 identities unchanged.
+Prepared local commit 705457e069abbe399128808b1efc7242d8eaeaa1, tree
+6b711b27efcd5c22248424a44d102b0dac6ae7ce. Only the previously proposed
+ordinary PR upload path changes. No publication, approval, merge or dispatch.
+
+| Actual command / case | Actual exit / result |
+| --- | --- |
+| `git ls-remote` main / `gh pr view 34` / booking `gh run list` | 0 / 0 / 0; unchanged identities, empty manual run list. |
+| Isolated clone, patch preimage/application, `git diff --check`, exact one-file compare, local commit | 0 each; proposed workflow bytes match exactly. |
+| `git bundle verify`, fresh bundle clone, exact checkout, `git fsck --strict`, replay diff check | 0 each; local source/tree/file integrity only. |
+| curl QEMU release archive signature | 6; cannot resolve download.qemu.org. |
+| Classic protection / effective rules generic fetch | HTTP 403 / tool HTTP 400; effective controls unverified. |
+| Hosted matrix / RISC-V execution / fresh independent kernel replay | NOT RUN. |
+
+Exact argv and local bundle: results/campaign-preparation-2026-11-02/. Review
+packet: proposals/ci-artifact-paths/READY.md. It needs publication authorization;
+the existing exact hosted-dispatch authorization is not missing owner consent.
+QEMU source candidate commit 005c61c0… identified, but source authentication,
+runtime build/dependencies and executable identity remain unestablished. Its
+configure source requires Linux for linux-user; this Darwin host cannot provide
+that path. No installation or execution attempted. Backup/admin/export/access
+blockers remain; integration EXIT NOT_ESTABLISHED, end_to_end=false.
+
+U227 integrity check: actual exit 0; 12 new files and all 172 prior frozen audit
+files checked. New manifest SHA-256
+`5a16cfb4a7d54f92322f7c1349ad658f5b2e8c80f9710f26f90cd663caf1d4c7`.
+No independent backup or provenance authentication follows from this check.
+
+
+## Revalidated external blockers — 2026-11-02 (U228)
+
+CURRENT none. Stage 12 unauthorized. Previous turn made concrete preparation
+progress; the same execution/access and publication boundaries remain for a third
+consecutive goal turn. No further safe engineering step closes those boundaries.
+
+| Actual command / case | Actual exit / result |
+| --- | --- |
+| `git ls-remote` main / `gh pr view 34` | 0 / 0; identities unchanged, PR draft/unmerged. |
+| booking `gh run list`, before and after dispatch attempt | 0 / 0; both empty, no live manual run. |
+| Exact U225-authorized `gh workflow run booking-reuse.yml` | 1; API connection failure. |
+| `docker info --format '{{.ServerVersion}}'` | 1; socket operation not permitted. |
+| Classic protection API | HTTP 403; effective controls remain unverified. |
+| Backup read-back existence query | 0; expected destination-integrity.json absent, backup unconfirmed. |
+
+Goal blocked audit meets the three-turn threshold. Request status blocked;
+do not mark complete. Current source proofs/local security evidence stay recorded;
+full hosted matrix, real RISC-V execution and fresh independent kernel replay
+remain NOT RUN. Packaging commit 705457e0 is local and requires separate
+publication authority. Existing exact booking dispatch already has authorization.
+Evidence: results/campaign-preparation-2026-11-02/blocked-audit.json.
+No new stage, policy, signing, publication, merge, deployment or SPM work.
+
+
+## Hosted integration and exact-binary runtime audit — 2026-11-02 (U229)
+
+CURRENT none. Stage 12 unauthorized. Owner resumed the campaign and authorized
+publication of the exact prepared packaging repair. No stage transition occurred.
+Earlier access failures in U225–U228 remain historical. Current authoritative
+report and exact argv/cwd records: results/campaign-resume-2026-11-02/.
+
+| Actual command / execution | Actual exit / result |
+| --- | --- |
+| `gh workflow run booking-reuse.yml --repo mack-dot/forge --ref main -f booking_pr=34 -f booking_head=46e5aa426bf7800df7c98c732a764337e716f6bb` | 0; run 41523691535 succeeded on GitHub-hosted Linux. |
+| Hosted trusted 13-case harness | 0; all expected outcomes matched; cold/warm/invalidation/restored Booking launches 1/0/1/0. |
+| Hosted A / B / C / restored gate returns | 0 / 0 / 0 / 0; covered, exact evidence bound, supported reuse only. |
+| Hosted eight adversarial gate returns / uncovered return | 1 each / 3; expected refusals; no accepted evidence. |
+| `python3 -B results/campaign-resume-2026-11-02/audit_hosted.py` | 0; API/run/source/ZIP digest, proof bytes, expected reasons and launches checked. |
+| Fresh GitHub main / PR 36 reads | 0 / 0; main f9eb1cbc unchanged; PR 36 head 705457e0, OPEN, REVIEW_REQUIRED, no reviews. |
+| Classic protection / effective rules / inherited rulesets reads | 1 (HTTP 404, Branch not protected) / 0 / 0. |
+| Historical `signature_only.py` isolated new process | 0; real TUF/Cosign, 4.599941 s. Exact argv: signature-command.json. |
+| Historical `verify_historical_bundle.py` isolated new process | 0; unchanged full release.verify, 68.136261 s. Exact argv: historical-bundle-command.json. |
+| QEMU source GnuPG verification / Ubuntu package chain checks | 0 / 0; distinct authenticated versions; no source build or proof-image package install. |
+| Initial exact-ELF mounted load | 1; no guest trace; cause unknown, preserved. |
+| Exact-byte tmpfs ELF execution under pinned QEMU | 0; exit_group(0), 87.408430 s orchestration. Exact argv: riscv-copy-command.json. |
+| Existing-predicate `ObservedStack.v` real Rocq compile | 0; observed SP violates Sv48 precondition; 577.665 s. Exact argv: stack-precondition-command.json. |
+| Approved case-sensitive Stage 7 restoration | 0; exact image/source/ELF and original resource settings. |
+| `python3 scripts/exit_stage_7.py --case own-proof` | 1; container 137; inspect/collect 1/1 after disappearance; 1496.251277 s; fresh kernel result NOT_ESTABLISHED. |
+| Bounded Docker events reader | 1; reader timeout; destruction/OOM cause UNKNOWN. |
+| `python3 -B proposals/binary-proof-replay/validate.py` | 0; six bash syntax checks, inline Python AST, setup/pin/permission comparisons and git apply --check. Hosted workflow NOT RUN. |
+| `python3 -B results/campaign-resume-2026-11-02/update_assurance_graph.py` | 0; metadata only, 24 claims / 312 links; original sealed graph unchanged. Initial missing-record reference error 1 preserved separately. |
+| Existing `proposals/receipt-authentication-final/integration_exit.py` with resumed readiness | 1; NOT_ESTABLISHED, off-machine backup unconfirmed. Exact argv: integration-exit-command.json. |
+
+Hosted A/B/C times: 28.525340852 / 9.931031468 / 28.552900072 seconds.
+Summed job consumption: 198 seconds = 3.3 runner-minutes. Public standard Ubuntu
+usage reports 0 billable milliseconds, not zero computation or measured savings.
+Warm still performs outer-ledger work. It skips only the Booking verifier.
+Artifact 13179905102 ZIP SHA-256:
+372cd7781b1be493a13bbd4398cb6871cbf2effe6458810425dd25fcf49efbf1.
+
+H1 is ESTABLISHED within the supported same-process boundary. C invalidates the
+Booking helper source; no separate cross-file dependency/model/policy case ran.
+Raw Booking logs/TRX are retained; raw outer-ledger snapshot/audit/version logs
+are absent from this upload. Prior/current hosted outer evidence bytes match;
+only the earlier Booking digest survives, not its raw proof bundle.
+
+PR 36 publishes exactly 705457e0. An initial owner-authored PR 35 was closed
+unmerged and replaced with contributor-authored PR 36. No review identity was
+used to self-approve. Independent exact-head review and merge authority remain.
+The observed effective ruleset requires review but has no required status checks
+or workflows. No protection setting or acceptance rule was changed.
+
+E1 remains PARTIALLY_ESTABLISHED. Historical exact-binary proof and freshly
+verified historical release bindings do not cover the QEMU launch: initial SP
+0x2aaaab2abc30 violates the existing valid_entry premise. No fresh full independent
+kernel replay passed. No new theorem or runtime refinement is established.
+E2 and generic cross-run reuse E3 remain NOT_ESTABLISHED. Historical signed-bundle
+consumer validation passed in a new process only under its old exact lock/source.
+
+Concrete separate proposals: proposals/booking-raw-logs/REVIEW.md (retain omitted
+raw logs), proposals/binary-proof-replay/REVIEW.md (no signing/admission), and
+proposals/runtime-entry-domain/REVIEW.md (additional abstract property, NOT RUN).
+New workflow publication and subsequent dispatch need their corresponding exact
+approval; new property intent needs separate human review. Existing production
+signing and obsolete dry-run workflows were not dispatched as substitutes.
+
+Strict integration EXIT remains NOT_ESTABLISHED. Original independent archive
+backup is unconfirmed. Protection inspection is complete, but passing-check
+merge enforcement is absent; this is a separate administrator policy decision.
+No `end_to_end=true`, signing, new admission, deployment, Node, new persistent
+infrastructure, protection change, SPM change or Stage 12 work occurred.
+
+Final local record inventory: `python3 -B
+results/campaign-resume-2026-11-02/seal_records.py` returned **0**. It read back
+759 files/links, 317634383 inventory bytes. Manifest SHA-256:
+acfc18180e2e46ae4c1e9c1af9a1727b485660e64db10eb647ded69165c2c1a1.
+The first inventory attempt returned 1 on a normal runtime-package symlink before
+creating a manifest. Its record is preserved; the final inventory records link
+targets without following them. This local inventory establishes integrity only,
+not provenance authentication or independent backup. Prior sealed records were
+not rewritten. No further execution authority was inferred from an unanswered
+workflow-publication question.
+
+
+## Historical consumer controls and independent kernel recheck — 2026-11-02 (U230)
+
+CURRENT none. Stage 12 unauthorized. Previous goal turn made progress. The full
+campaign remains active and incomplete. This continuation acquired fresh remote
+proof material, executed adversarial consumer controls and started a real
+independent kernel check. No stage transition or protected source change occurred.
+
+| Actual command / execution | Actual exit / result |
+| --- | --- |
+| Fresh main and PR36 reads | 0 /0; main f9eb1cbc, PR36 exact705457e0, review-required, no reviews. |
+| Existing checker image pull | 0; exact approved digest, no source volume restoration. |
+| Locked input/source preparation | 0;579 .vo inputs,45 Python files, exact86 upstream tool/allowlist files. |
+| `gh api repos/mack-dot/forge/actions/runs/40966460258/artifacts` | 0; original signed artifact12939158560 unexpired. |
+| `gh api repos/mack-dot/forge/actions/artifacts/12939158560/zip` | 0; fresh56,645,241-byte ZIP. |
+| ZIP/API digest, safe-member/CRC and baseline byte comparison | 0; all881 file members /132,535,811 uncompressed bytes match old bundle. |
+| Initial `campaign-consumer-controls-2026-11-02/run_controls.py` | 1; harness predicted wrong ELF rejection name; verifier correctly rejected. All records retained. |
+| Corrected `campaign-consumer-controls-2026-11-02/attempt-0002/run_controls.py` | 0; all14 expected outcomes match. |
+| Corrected consumer child exits | Three0 positives/probe; eleven1 expected refusals. Nine bindings have Cosign0; two signature cases have Cosign1 and intended diagnostics. |
+| Corrected consumer raw-record audit | 0;14 cases /464 actual command-output hashes match. |
+| Consumer record `seal_records.py` | 0;12,124 files/links,2,123,171,281 inventory bytes; both attempts retained. |
+| Initial optional runtime metadata probe | 1; Rosetta path not visible inside container; no proof result affected. |
+| Revised runtime metadata observation | 0; exact Rocq/Python hashes and missing translator visibility recorded. |
+| Parent audit-tool membership and anchor recheck | 0; exact file set, no extra audit tool observed. |
+
+The exact full Docker/kernel command is in
+results/campaign-kernel-recheck-2026-11-02/attempt-0001/kernel-invocation.json.
+Actual independent `rocqchk -o -bytecode-compiler no … ForgeChecked.Wrapper
+ForgeChecked.WitnessWrapper` is **RUNNING**, with no terminal exit. It uses the
+unchanged published `_rocqchk`, exact archived .vo inputs and original resources.
+Raw logs stream to the host. Session24949 / container
+forge-archived-kernel-recheck-20261102-0001 is the existing handle to inspect;
+never restart it because a poll expires. postflight.py is NOT RUN pending a real
+terminal success. An actual process, advancing log and resource observation
+confirmed liveness; they do not prove completion.
+
+Fresh signed ZIP SHA-256:
+8ded75a093cb5d9c1e24f240c4209279b363e4d5fc3338a73a20b086c984cfb4.
+It equals the authenticated API digest and previous ZIP; all881 held bundle
+members match. This confirms off-machine storage for that historical signed
+bundle only. Original raw/sanitized archive backup and later local records remain
+unconfirmed. Source identity is historical624c9faf, lock5f78da21; never upgrade
+those identities to current main's lock or a new release.
+
+Independent review confirmed the consumer's correct isolation and all14 final
+results. The initial fixture changes packaged.elf, so unchanged release.py:160
+rejects PACKAGED_ELF_BYTES; the initial prediction RELEASE_ELF_IDENTITY referred
+to the separate trusted reference check. Correcting that expectation did not
+weaken a verifier or permanent regression. Signature-negative expectations were
+strengthened to require observed intended diagnostics. Both full positive checks
+passed in55.370986 /55.054855 seconds. These are local observations, not billed
+runner-minutes, cache savings or an independent physical-machine test.
+
+Independent kernel-driver review found no blocking defect in this intended
+certificate check, with explicit host/import-surface assumptions. Exact audit
+membership passed before launch and live; postflight requires it again. The
+recorded Rocq binary is3b432fdf…; Docker/amd64 translation, host OS/hardware and
+pinned-image publisher remain trusted. Source rebuild, new theorem, runtime
+refinement and new admission are not claimed by a future kernel pass.
+
+Consumer inventory manifest SHA-256:
+73ac8f86ed618e85b77765e8edd6bb1a0f5db3b16be3ed7f5518dbbf7e8b80a7.
+This local inventory is integrity only, not authentication or independent backup.
+Previous sealed campaign records remain unchanged. The new graph checkpoint
+retains24 claims/312 links and marks kernel completion IN_PROGRESS.
+
+Current report: results/campaign-kernel-recheck-2026-11-02/attempt-0001/STATUS.md.
+Exact reproduction notes: REPRODUCE.md in that directory. Consumer report:
+results/campaign-consumer-controls-2026-11-02/attempt-0002/STATUS.md.
+E1 remains partial because the observed QEMU SP violates valid_entry and the full
+runtime/approved assurance-contract links are absent. H1 stays established within
+its previous hosted same-process boundary. Strict integration EXIT remains
+NOT_ESTABLISHED. E2 and generic cross-run cache adoption remain NOT_ESTABLISHED.
+No new workflow publication/dispatch, approval, merge, signing, controller access,
+admission, deployment, protection change, Node, SPM or Stage 12 work occurred.
+
+
+## Independent proofs and recorded execution conformance — 2026-11-02 (U231)
+
+CURRENT none. Stage 12 unauthorized. Both real kernel sessions are terminal0.
+The full objective remains incomplete. This turn produced checked mathematical
+results and execution evidence, not a new accepted stage or admission policy.
+
+| Actual command / execution | Actual exit / result |
+| --- | --- |
+| Historical independent `rocqchk` via unchanged published audit |0;579 modules/86 permitted closure assumptions; container0/no OOM. |
+| Historical `postflight.py` |0; exact command, all inputs unchanged and audit-tool membership match. |
+| Additional initializer proposition `rocq compile` / published wrapper/audit |0 /0;13 permitted primitive assumptions; proposed claim only. |
+| Memory-independent proposition `rocq compile` / published wrapper/audit |0 /0;13 permitted primitive assumptions. |
+| Memory-independent full published `_rocqchk` |0;569 recursive modules/86 permitted closure assumptions, within exact581-object anchored pool. |
+| Memory-independent postflight |0; required two new objects included, no extra loaded dependency, before/after hashes equal, no OOM. |
+| Separate-process empty-directory theorem/wrapper rebuild |0 /0; both .vo objects byte-identical. |
+| Stronger arbitrary-register computation experiment |137; OOMKilled=true under unchanged4GiB,65.094146s; NOT_ESTABLISHED, source/log/state retained. |
+| Pinned QEMU help / debug-help |0 /1; debug-help prints usage; not a guest/proof rejection. |
+| Pinned per-instruction QEMU exact-ELF execution |0;21 preinstruction frames/13 distinct words, terminalexit_group0. |
+| Initial observation-comparison import attempt |1; wrong logical prefix, setup failure retained; no negative-control credit. |
+| Corrected Rocq entry/register/codeword equality |0; exact observed entry plus all fetched words. |
+| One-bit instruction-word corruption |1; intended equality refusal, not setup failure. |
+| Full21-frame PC/GPR/FPR projected-step equality via published `run_steps` |0; arbitrary data memory, model steps0..20. |
+| Intermediate frame4 x10-bit corruption |1; intended transition equality refusal. |
+| Extended projected equality with arbitrary reservation/FCSR |0; same21 frames; negative remains1. |
+| Published assumption parser for extended comparison |0;13 permitted primitive assumptions. |
+| Local proposal diff/apply checks and Git bundle verification |0; exact local head5bb008a1, only11 proposal files; not published. |
+| Initial proposal packaging diff check / outer preparation |2 /1; original QEMU trailing whitespace retained. Lossless log compression and final diff check0; no evidence stripped. |
+| Fresh main / PR36 / effective rules reads |0 /0 /0; mainf9eb1cbc unchanged; PR36 review-required, no reviews; no required status/workflow checks. |
+
+Historical kernel parent wall1533.486016s(driver1530.232012s). LogSHA:
+17f533b4873ea0ba11ede10140b6b1c41289402398737056862e00508e935758.
+New memory-independent parent wall1599.281454s(driver1598.600330s). LogSHA:
+413c743d3f67dbcc431f9945b862baea3ce13fe1f59f04392b70679cb1b94aaf.
+These are local Docker/amd64-emulation observations, not a native benchmark,
+billed runner usage or savings. The prior source rebuild remains failed; checking
+archived compiled certificates is not falsely reported as a source build.
+
+The exact additional source is
+proposals/runtime-state-projection/MemoryIndependent.v.proposed, SHA256:
+ffe5a677e14b5d426196b3c8e56c821f4775037855b63c2a902c2f253c7cebfc.
+It uses existing LPS semantics/soundness and arbitrary data memory. No accepted
+specification, axiom list, checker, policy, image or source baseline changed.
+A fresh process recreated theorem8462ea5a… and wrapper1fd3d856… byte for byte.
+
+The exact ELF8ced2ab6… really executed. Rocq compared all21 raw projected states
+against existing `Omni.run_steps`; no new decoder/ISA/iterator was implemented.
+The extended equality quantifies data memory/reservation/FCSR. Step21 pending
+syscall94,arg0 is model-only; actual exit_group0 is a separate observation.
+The comparison objects have compiler acceptance, not a new full standalone
+kernel replay. Universal QEMU refinement, full physical-state abstraction and
+outside-noninterference are not established by finite conformance.
+
+E3 under the campaign's actual independent-PROCESS validation definition is
+ESTABLISHED for the named historical conditional termination/witness claim and
+exact old artifact/lock. All six evidence-authentication/identity/proof/refusal
+steps ran. Generic durable receipt adoption is a separate unsolved capability
+and remains disabled. No signature was transferred to the additional claim.
+E1 remains PARTIALLY_ESTABLISHED: model proof and actual projected conformance
+exist; accepted claim/profile and new release/runtime/package bindings do not.
+The old native valid_entry SP premise is still false for this QEMU launch.
+
+The campaign already authorizes safe local investigation/tests. Earlier local-
+compile permission wording was too broad; no unanswered question became consent.
+Adopting a new specification/profile, publication, merge, signing, dispatch and
+deployment still need their corresponding exact authority. The earlier proof-
+only workflow is now optional for a hosted rebuild, not a false remaining local
+kernel blocker. It was not published or dispatched.
+
+Prepared local proposal head5bb008a1b7d40b8887d045f50eb55e54544bb76f,
+tree44c0d88af2c94978729f5e83fa71b9045e0e25a0, basef9eb1cbc… . Only11 files under
+proposals/fixed-elf-assurance/** change; no gate/workflow/schema/policy activation.
+BundleSHAab64719c4ffa6fc699f6a7558f084a9c9a4adcf6c8256427438d0e16459fb868;
+patchSHAfe98e4c68fe0006c833fbeb946834b207ca0a7ea7a08e39c54354a3818868680.
+Exact readable approval packet: proposals/runtime-state-projection/review-packet/
+README.md. Claim-intent and publication decision requested; no remote write yet.
+
+Strict integration EXIT remains NOT_ESTABLISHED: original independent archive
+backup is unconfirmed. GitHub storage of the historical signed bundle does not
+back up the original raw/sanitized archives or later local records. The observed
+missing required-check rule needs a separate administrator policy decision;
+no settings changed. PR36 needs independent exact-head review. E2 remains
+NOT_ESTABLISHED. No Node, generic cross-run adoption, signing, new admission,
+deployment, SPM change or Stage12 work occurred. end_to_end=false.
+
+
+## Independent observation kernel completion — 2026-11-02 (U232)
+
+CURRENT none. Stage12 unauthorized. Integration EXIT remains NOT_ESTABLISHED.
+No stage transition, accepted claim, gate, workflow or protection changed.
+
+| Actually executed command / operation | Actual exit / result |
+| --- | --- |
+| Read back five frozen local inventories |0;195 entries/68767020 inventory bytes unchanged. |
+| Fresh empty-directory observation-source `rocq compile` |0; .vo byte-identical,2.363891s. |
+| Published independent observation `_rocqchk` |0;567 actual recursive modules/86 permitted closure assumptions. |
+| Kernel container / `postflight.py` |0 /0; no OOM; all580 pool identities unchanged; required root included. |
+| Existing `check_archives.py /Users/mackianni/forge-backups` |0;10160 members each, no mismatch; independent backup unconfirmed. |
+| `gh api .../rules/branches/main` / `.../rulesets/26065125` |0 /0; active review rules; no required status/workflow checks. |
+| `gh api .../branches/main/protection` |1;HTTP404 classic protection absent; ruleset remains active. |
+| GitHub connector final PR34/PR36/review reads |Read succeeded; both exact heads unchanged/open; PR36 reviews empty. |
+
+Kernel parent wall1488.771601s; driver1485.525275s. Raw logSHA256:
+8d4ea9d50da50abe71e95bd7e3cbae1bf5d111228fa3b483769b660cce361482.
+These are local emulation measurements, not hosted minutes or savings. Current
+run records are results/campaign-observation-kernel-2026-11-02/attempt-0001/.
+Actual closure/assumptions determine the result. Inherited unused wrapper hash
+and old module lists are explicitly corrected; no wrapper check is claimed.
+
+This closes the separate kernel-check gap for the finite recorded trace
+comparison. Universal runtime refinement/full physical-state abstraction and
+new release/admission binding remain open. Earlier frozen packet5bb008a1 remains
+unchanged/unpublished; its pre-test NOT RUN wording is superseded by the local
+OBSERVATION-KERNEL-SUPPLEMENT.md. Its proposed statement was not changed.
+Read-only peer review found no blocker to this limited evidence statement.
+
+Previous hosted booking run41523691535 and historical proof/consumer controls
+were not rerun in this continuation. Their recorded results remain distinct.
+E1 PARTIALLY_ESTABLISHED; E2 NOT_ESTABLISHED; historical E3 independent-process
+validation ESTABLISHED only within its named old claim/artifact/lock scope.
+Generic cross-run receipt adoption remains disabled. end_to_end=false.
+
+Remaining boundaries: proposed claim/publication5bb008a1 needs its exact owner
+decision; PR36 needs independent review and separate merge authority; original
+independent backup requires an owner-selected destination and remote full
+validation; required-check policy needs an administrator decision. No reply was
+inferred. No publication, approval, merge, dispatch, signing, new admission,
+deployment, Node, SPM or Stage12 work occurred in this continuation.
+
+Final local evidence inventory/read-back returned0:44 entries,5407226 bytes.
+ManifestSHA256:cb6d04e3004d02e0a2f22a8ab166448c56d5eba970ebd612624eb02bfb87850c.
+The inventory is an integrity record, not authenticated provenance or an
+independent backup. No proof session remains running.
+
+
+## Proof-object adversarial controls — 2026-11-02 (U233)
+
+CURRENT none. Stage12 unauthorized. Previous goal turn made progress through
+an actual567-module independent kernel check. These are additional local tests;
+the positive kernel and prior hosted booking matrix were not rerun.
+
+| Actually executed command / operation | Actual exit / result |
+| --- | --- |
+| Pinned `rocq compile` for a20-state weaker proposition |0; real valid fixture, same module/lemma names. |
+| Existing driver with one-bit-corrupted root object |1; exact DEPENDENCY_BYTES:/observed/ObservedTransitions.vo. |
+| Existing driver with compiled weaker proof object |1; same exact intended identity refusal. |
+| `python3 -B results/campaign-observation-adversarial-2026-11-02/attempt-0001/run_controls.py` |0; both reason/outcome checks pass; original anchor/driver/source/object unchanged. |
+| Fresh GitHub connector main/PR36/review reads |Read succeeded; mainf9eb1cbc, PR36 head705457e0, reviews empty. |
+
+No kernel launches or OOM occurred in the negative cases. The weak fixture's
+compiler success is intentional; the held original proof-object identity rejects
+substitution of this valid but different statement. The corrupt object's generic
+compiled-candidate flag describes its ancestor only; the raw record is preserved
+and metadata-corrections.json states the distinction. Read-only independent
+review confirmed the intended refusals. It is not human/GitHub approval.
+
+Compilation elapsed4.600383s; identity refusals0.584913s/0.525794s. These are local
+orchestration measurements, not full-kernel cost, hosted minutes or savings.
+Actual commands, fixture hashes, raw logs and outcomes are in
+results/campaign-observation-adversarial-2026-11-02/attempt-0001/.
+
+This adds local held-anchor integrity evidence. It does not establish durable
+new-claim provenance or coordinated expected-anchor/candidate rewriting resistance.
+The prepared proposal5bb008a1 remains unchanged/unpublished/unapproved. No gate,
+accepted specification, policy, workflow, signing, admission, deployment, Node,
+SPM or protection changed. No cross-run receipt adoption or Stage12 started.
+
+E1 PARTIALLY_ESTABLISHED; E2 NOT_ESTABLISHED; historical E3 scoped validation
+unchanged. Integration EXIT NOT_ESTABLISHED; end_to_end=false. Next decisions
+remain exact claim/publication scope, independent PR36 review/separate merge
+authority, independent backup destination/read-back and required-check policy.
+
+
+## Native-cache measurement preparation — 2026-11-02 (U234)
+
+CURRENT none. Stage12 unauthorized. This is safe local measurement of the
+existing booking workload, not another stage or acceptance-mode installation.
+U233 evidence seal/read-back actually returned0:29 entries/258474 bytes,
+manifest60cf61cfa6efa0f844ad91c1197b36903f8e0bdce42a6c05678b8857a540479b.
+
+| Actually executed command / operation | Actual exit / result |
+| --- | --- |
+| Pinned Dafny version / modern internal help |0 /0; version4.11.0+fcb2042d… . |
+| `python3 -B .../run_pair.py` |0; full-booking witness/member coverage; native reuse observed. |
+| Two fresh Dafny commands for A |0 /0;33 members checked each;10.793149s/10.842894s. |
+| Native A→A snapshot-pair command |0;10.632152s for whole pair;33 checked then0 checked/33 reused. |
+| `python3 -B .../measure_forge.py` |0; unchanged incremental.check A/B/C, complete coverage. |
+| Forge cold / warm / invalidation gates |0 /0 /0; booking launches1/0/1; gate wall27.589211/10.510417/27.120746s. |
+| Forge isolated booking verifier work |10.193022/0/10.170594s; zero means no warm booking command; outer ledger checks still run. |
+| `python3 -B .../native_invalidation.py` |0; source C matches Forge; required members complete. |
+| Full native C / native A→C pair |0 /0;11.614398s/13.920191s; pair first33 checked, C1 checked/32 reused. |
+
+The native changed member is Booking.Least(correctness). The raw unchanged
+checker/parser chooses native dependencies; Forge supplies no custom proof
+checker. For the same changed source, Forge invalidates its complete booking
+receipt and runs the real booking verifier again. A/B evidence bytes match;
+C artifact/key/evidence differ. A/C retain238 passing TRX batches, normalizing
+into the same33 native member names. Read-only independent review confirms
+raw logs/source hashes/counts and no gate bypass. No approval follows.
+
+Exact measurements, commands, frozen source/tool identities and raw logs:
+results/campaign-native-cache-feasibility-2026-11-02/attempt-0001/STATUS.md and
+its adjacent result records. Native reused-row timings/resources remain producer
+values and are not summed as current warm work. Member names, TRX batches and
+reported assertion counts are different units. Native pairs include cold work
+and use one process; full pairs use two. Native legacy trace and Forge modern
+JSON/TRX differ. Full Forge gate adds outer ledger/binding, policy, audit and
+integrity work. Direct total-speedup comparison is invalid. One local fixed-order
+preparation sample is not a repeated benchmark or hosted cost/savings claim.
+A counterbalanced complete-acceptance-path comparison remains NOT RUN.
+
+Mainf9eb1cbc and the unpublished claim/publication packet5bb008a1 remain unchanged.
+No gate, policy, spec, workflow, provenance, admission or protection changed.
+Generic cross-run reuse remains disabled. No new signing/deployment, Node, SPM
+or Stage12. E1 PARTIALLY_ESTABLISHED; E2 NOT_ESTABLISHED; historical scoped E3
+unchanged. Integration EXIT remains NOT_ESTABLISHED; end_to_end=false. Owner
+claim/publication decision, independent PR36 review/separate merge authority,
+independent backup destination/read-back and required-check policy remain open.
+
+U234 final local seal/read-back actually returned0:50756 entries,514264438
+inventory bytes. ManifestSHA256:
+4441959026ae295a85b4b59ad976fb0663aaabf6e441c67488d52914ea057673.
+This inventories retained inputs/outputs; it does not authenticate provenance
+or establish independent backup. All proof/measurement/seal processes are terminal.
+
+
+## Owner-boundary revalidation1 — 2026-11-02 (U234 unchanged)
+
+CURRENT none. Stage12 unauthorized. Previous goal turn made progress; this
+continuation is no progress1, not a verified wait. Full objective not achieved;
+goal remains active. No additional proof/benchmark was run or counted as new work.
+
+| Read-only command / operation actually run | Actual result |
+| --- | --- |
+| GitHub main/PR34/PR36/review reads |Succeeded; mainf9eb1cbc, heads46e5aa42/705457e0, PR36 reviews empty. |
+| Exact proposal5bb008a1 GitHub commit lookup |HTTP422:No commit found; no publication confirmed. |
+| Local proposal git HEAD / status |0 /0; unchanged exact5bb008a1 and clean. |
+| Three completed proof-container inspections |0 /0 /0; all exited0; no live proof process. |
+| Expected destination-integrity.json presence |Absent; independent backup remains unconfirmed. |
+
+Evidence:results/campaign-boundary-audit-2026-11-02/attempt-0001/ . Same genuine
+boundary:exact owner claim/publication decision, independent PR36 review/separate
+merge authority, independent backup destination/read-back and required-check
+policy decision. No unanswered question, completed process or old authorization
+became a new grant. Prior passing evidence is unchanged. No protected change,
+publication, approval, merge, signing, admission, dispatch, deployment, Node,
+SPM or Stage12 action. Integration EXIT NOT_ESTABLISHED; end_to_end=false.
+First audit-recording orchestration parse failure made no file changes; corrected
+recording succeeded. No proof/test result follows from that recording error.
+
+
+## Owner-boundary revalidation2 — 2026-11-02 (U234 unchanged)
+
+CURRENT none. Stage12 unauthorized. Previous/current goal turns are no progress;
+consecutive count2. Revalidated mainf9eb1cbc, PR36 exact705457e0 open/unmerged,
+reviews empty. GitHub reads succeeded. Local proposal git HEAD/status returned
+0/0:exact5bb008a1 and clean. Expected destination-integrity.json remains absent;
+independent backup remains unconfirmed, not disproved globally. No new owner
+reply or authorization. No verifier/benchmark rerun; no live wait claimed.
+Same genuine owner claim/publication, independent review/merge, backup and
+required-check policy boundaries remain. Evidence:
+results/campaign-boundary-audit-2026-11-02/attempt-0002/ . Goal stays active;
+full objective not achieved. No protected change, publication, approval, merge,
+dispatch, signing, admission, deployment, Node, SPM or Stage12 action.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false. Prior proof evidence unchanged.
+
+
+## Owner-boundary revalidation3 — 2026-11-02 (U235)
+
+CURRENT none. Stage12 unauthorized. Three consecutive goal turns made no
+progress because the same owner-action boundary remained. No verified wait:
+all known proof processes are terminal. Full campaign objective is not achieved.
+The blocked-audit threshold is satisfied; a goal-tool blocked update follows
+this record. Its returned status is authoritative. No completion claim.
+
+| Read-only operation actually executed | Actual result |
+| --- | --- |
+| GitHub main/PR36/reviews |Succeeded; mainf9eb1cbc, PR36 head705457e0 open/unmerged, reviews empty. |
+| Local proposal git HEAD/status |0 /0; exact5bb008a1, clean. |
+| Three known proof-container inspections |0 /0 /0; no running process; earlier proof exits0. |
+| Expected backup destination-integrity.json |Absent; independent backup remains unconfirmed. |
+
+Records:results/campaign-boundary-audit-2026-11-02/attempt-0003/ . Same missing
+exact owner claim/publication decision, independent PR36 review/separate merge
+authority, independent backup destination/read-back and required-check decision.
+Prepared actionable packet:proposals/runtime-state-projection/READY.md. Earlier
+owner approvals do not become new claim/profile/publication/merge grants.
+A new grant or external-state change is required. No proof/benchmark repetition,
+new framework, protected change, self-approval, bypass, publication, merge,
+signing, admission, dispatch, deployment, Node, SPM or Stage12 occurred here.
+E1 PARTIALLY_ESTABLISHED; E2 NOT_ESTABLISHED; historical scoped E3 unchanged.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false. Existing evidence preserved.
+
+
+## Resumed draft-publication preparation — 2026-11-02 (U236)
+
+CURRENT none. Stage12 unauthorized. User resumed the goal as active. Fresh
+blocked audit; this turn makes progress, so no-progress count resets0. Resume
+is not publication/claim/policy/signing authority. Full objective unachieved.
+
+| Actually executed command / operation | Actual exit / result |
+| --- | --- |
+| Initial real gate on sparse5bb checkout |1; protected files absent on disk; setup mismatch, not intended coverage refusal. |
+| Sparse index/config/blob diagnosis |0; S flags, sparseCheckout=true, blobs present. |
+| First fetch using assumed bundle branch |128; bundle advertises HEAD; failure retained. |
+| Corrected bundle HEAD fetch / full5bb checkout / clean checks |0; complete physical checkout, exact5bb. |
+| Current incremental gate on full5bb |3;11 UNCOVERED_CHANGE paths; no evidence; every checker command0. |
+| v2 packet/raw archive read-back and Git commit/diff/bundle checks |0; source theorems unchanged; original5bb preserved. |
+| Current incremental gate on fullfc85 |3;14 uncovered proposal paths, no evidence, every existing checker command0. |
+| Both coverage-control assertions |0; exact intended unsupported status and no evidence verified. |
+| Patch-application check / Git object check / packet byte equality |0 /0 /0. |
+| Contributor role/identity preflight |Read commands0;mackiannii, push=true/admin=false; token never printed/stored. |
+| Remote proposal branch / matching PR reads |1 /0;HTTP404 branch absent, no matching open PR. |
+
+New local headfc85ecc2c7f12caa6c8991fa002410bdf78dd51d,
+treede8b0d3c97077ea52b64932ce591f5a1bd3fec02, basef9eb1cbc… . Only14
+proposals/fixed-elf-assurance/** paths change. New data include completed
+observation-kernel567/86 output/context and26 original compiled-object-integrity
+records. No new kernel pass is inferred from packaging. Actual executions stay
+in U232/U233. Independent readonly review confirms byte equality and resolved
+stale status metadata. It is not independent owner/GitHub approval.
+
+PatchSHA71054f2f984692a052bf671c8d20acf3d3667964ff5070870010454c01dab19d.
+BundleSHA2da3d5ca280218c68a299421376703b1056e14c8130460e12f47978e5aab2567.
+Prepared exact draft body/publication arguments/decision packet:
+proposals/runtime-state-projection/publication-v2/ . Original5bb artifacts remain
+unchanged. Current publication request is ONLY an exactfc85 contributor-authored
+draft, not mathematical-claim/profile adoption. The new request supersedes the
+unapproved5bb publication target. Owner response pending; no consent inferred.
+
+Current CI gate refuses these uncovered data paths. No coverage exception,
+workflow change, verified admission or merge eligibility is created. Existing
+automatic PR checks may run after authorized publication; no manual dispatch
+or hosted Rocq success is claimed. The publication plan uses an explicit GitHub
+URL because origin is local, and rechecks actor/head/base/remote state first.
+No actual push/PR creation, review, merge, signing, admission or deployment.
+
+E1 PARTIALLY_ESTABLISHED; E2 NOT_ESTABLISHED; historical scoped E3 unchanged.
+Generic cross-run reuse disabled. Original independent archive backup unconfirmed;
+required-check decision and independent PR36 review/separate merge authority
+still open. No protected source, new framework/persistent infrastructure, Node,
+SPM, branch protection or Stage12 change. Integration EXIT NOT_ESTABLISHED;
+end_to_end=false. Raw records:results/campaign-publication-readiness-2026-11-02/attempt-0001/.
+
+U236 final local inventory/read-back exits0/0. Readiness records:59 entries,
+90550 bytes, manifestSHAe17d380434c467422b4de809b53ea758d50956fa51cd845a794ae02a859115ed.
+Publication-v2 packet:23 entries,2405261 bytes,
+manifestSHA5256d59f64b998c42566386f44e8297881c6f71f6cbac37ed8036f49fd0e0667.
+These are local integrity inventories, not authenticated new-claim provenance
+or an independent backup. All preparation/check processes are terminal. Exact
+draft-publication response remains pending; goal active and not complete.
+
+
+## Resumed owner-boundary revalidation1 — 2026-11-02 (U236 unchanged)
+
+CURRENT none. Stage12 unauthorized. Previous resumed turn made real publication
+preparation progress. This continuation only revalidates the unchanged boundary:
+no progress1 in the fresh resumed audit, not a verified wait. Mainf9eb1cbc and
+PR36 head705457e0 remain unchanged/open with no reviews. GitHub reads succeed;
+exactfc85 lookup returnsHTTP422/no commit found. Local fc85 HEAD/status0/0,
+clean. Expected destination-integrity.json absent; independent backup remains
+unconfirmed. The explicit draft-publication question is unanswered; no new grant.
+No proof/benchmark repeated, no live proof process claimed, no publication,
+review, merge, dispatch, signing, admission, deployment, protection, Node, SPM
+or Stage12 action. Old blocked counter is not carried across resume/progress.
+Evidence:results/campaign-boundary-audit-2026-11-02/resumed-0001/attempt-0001/.
+Goal stays active, full objective unachieved, Integration EXIT NOT_ESTABLISHED;
+end_to_end=false. Exact current decision packet remains
+proposals/runtime-state-projection/publication-v2/READY.md. Other owner review,
+claim/profile, independent backup and required-check decisions remain separate.
+
+
+## Resumed owner-boundary revalidation2 — 2026-11-02 (U236 unchanged)
+
+CURRENT none. Stage12 unauthorized. Previous/current turns are no progress;
+fresh resumed consecutive count2, not a verified wait. Fresh GitHub reads:
+mainf9eb1cbc unchanged, PR36 head705457e0 open/unmerged/reviews empty, exactfc85
+lookupHTTP422/no commit found. Local candidate HEAD/status0/0, exactfc85 and
+clean. Expected independent-backup read-back absent; backup remains unconfirmed.
+No owner publication answer or new authority. No proof/benchmark rerun, process
+restart, publication, approval, merge, dispatch, signing, admission, deployment,
+protection, Node, SPM or Stage12 action. All prior evidence remains scoped.
+Records:results/campaign-boundary-audit-2026-11-02/resumed-0001/attempt-0002/.
+Goal stays active; full objective unachieved. Integration EXIT NOT_ESTABLISHED;
+end_to_end=false. Exact pending publication packet remains
+proposals/runtime-state-projection/publication-v2/READY.md. Other claim/profile,
+independent review/merge, backup and required-check decisions remain separate.
+
+
+## Resumed owner-boundary revalidation3 — 2026-11-02 (U237)
+
+CURRENT none. Stage12 unauthorized. U236 resumed preparation made progress;
+three subsequent resumed turns made no progress at the same owner boundary.
+Fresh audit threshold3 is satisfied; old pre-resume count is not reused.
+No verified wait, full objective not achieved. A blocked goal-tool update
+follows this record; the actual returned status is authoritative.
+
+| Actual read-only check | Actual result |
+| --- | --- |
+| GitHub main/PR36/reviews |Reads succeed; mainf9eb1cbc, PR36 head705457e0 open/unmerged/reviews empty. |
+| Exactfc85 GitHub commit lookup |HTTP422/no commit found; no publication confirmed. |
+| Local exact proposal HEAD/status |0 /0;fc85ecc2 and clean. |
+| Known proof-container inspections |0 /0 /0; no running process. |
+| Expected independent backup read-back |Absent; independent copy remains unconfirmed. |
+
+No owner publication answer. Exact sealed packet/body/publication plan remains
+proposals/runtime-state-projection/publication-v2/ . Same genuine authorization
+and independent-storage boundary; no further passing test supplies those facts.
+No proof/benchmark repetition, process restart, protected change, self-review,
+publication, merge, signing, admission, dispatch, deployment, protection, Node,
+SPM, infrastructure or Stage12 action. Raw audit evidence:
+results/campaign-boundary-audit-2026-11-02/resumed-0001/attempt-0003/ .
+E1 PARTIALLY_ESTABLISHED; E2 NOT_ESTABLISHED; historical scoped E3 unchanged.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false. Existing evidence preserved.
+
+
+## Second resumed owner-boundary audit1 — 2026-11-02 (U237 unchanged)
+
+CURRENT none. Stage12 unauthorized. User resumed goal as active again; fresh
+blocked audit, no old count carried. Previous/current turns are no progress;
+current fresh count1. This revalidation is not a verified wait or new proof.
+GitHub reads show unchanged mainf9eb1cbc and PR36 head705457e0/open/unmerged/no
+reviews. Exactfc85 lookup422/no commit found. Local HEAD/status0/0, exactfc85
+and clean. Effective main-rules read0, byte-for-JSON data equal to the last
+verified rules:deletion/non-fast-forward/linear history/PR review; no required
+status checks. No protection changes.
+
+Used Google Drive routing skill for metadata-only searches of exact raw/
+sanitized archive/manifest names and related forge-records/forge-evidence names.
+Both connector reads succeed with empty results. This does not prove absence
+outside accessible searched files. No contents fetched or uploaded; no secrets
+exposed; independent backup remains unconfirmed. Expected local remote read-back
+file remains absent. No owner publication answer or new authority arrived.
+
+Evidence:results/campaign-boundary-audit-2026-11-02/resumed-0002/attempt-0001/.
+No source, proof, acceptance, publication, review, merge, dispatch, signing,
+admission, deployment, Node, SPM, infrastructure or Stage12 action. Goal remains
+active, not complete. Integration EXIT NOT_ESTABLISHED; end_to_end=false.
+Exact pending draft publication remainsfc85ecc2 with decision packet
+proposals/runtime-state-projection/publication-v2/READY.md. Independent owner
+review/claim/profile/merge, backup and required-check decisions stay separate.
+
+
+## Second resumed owner-boundary audit2 — 2026-11-02 (U237 unchanged)
+
+CURRENT none. Stage12 unauthorized. Previous/current turns are no progress;
+fresh second-resume count2, not a verified wait. Initial PR36 metadata read had
+a transient server disconnect. Retry of the same read succeeded:PR36 head705457e0
+open/unmerged/no reviews. Mainf9eb1cbc unchanged; exactfc85 lookup422/no commit
+found. Local HEAD/status0/0, exactfc85 and clean. Expected backup read-back
+absent; latest accessible Drive searches remain empty, not global absence proof.
+No owner publication answer or new authority. No proof/benchmark rerun, process
+restart, publication, review, merge, dispatch, signing, admission, deployment,
+protection, Node, SPM, infrastructure or Stage12 action. No transient metadata
+failure was counted as a passing test or terminal proof process.
+Evidence:results/campaign-boundary-audit-2026-11-02/resumed-0002/attempt-0002/.
+Goal remains active; full objective unachieved. Integration EXIT NOT_ESTABLISHED;
+end_to_end=false. Exact pending draft-publication packet is
+proposals/runtime-state-projection/publication-v2/READY.md. Other owner claim/
+profile/review/merge, independent backup and required-check decisions stay open.
+
+
+## Second resumed owner-boundary audit3 — 2026-11-02 (U238)
+
+CURRENT none. Stage12 unauthorized. Fresh GitHub reads confirm mainf9eb1cbc,
+PR36 head705457e0/open/unmerged/no reviews. Exactfc85 lookup HTTP422/no commit
+found. Actual local git rev-parse HEAD and status --porcelain exit0/0; exact
+fc85ecc2 and clean. Expected independent-backup read-back remains absent.
+The third consecutive audit makes no progress; no proof/benchmark was rerun.
+No new publication grant arrived. The blocked threshold is satisfied; the goal
+API blocked request follows and its returned status is authoritative. This is
+not completion. Publication packet:proposals/runtime-state-projection/
+publication-v2/READY.md. Independent owner review/claim/profile/merge, backup
+and administrator required-check decisions remain separate. No publication,
+review, merge, dispatch, signing, admission, deployment, protection change,
+Node, SPM, infrastructure or Stage12 work occurred.
+Evidence:results/campaign-boundary-audit-2026-11-02/resumed-0002/attempt-0003/.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false.
+
+
+## Third resumed owner-boundary audit1 — 2026-11-03 (U238 unchanged)
+
+CURRENT none. User resumed the goal; this starts a fresh blocked audit.
+Previous/current turns are no progress. Fresh count1; no prior count carried.
+Fresh GitHub reads: mainf9eb1cbc unchanged, PR36 exact705457e0 open/unmerged
+with no reviews, exactfc85 lookup HTTP422/no commit found. Actual local
+git rev-parse HEAD/status --porcelain exit0/0; exactfc85 and clean. Expected
+independent-backup destination-integrity.json is absent; no remote confirmation.
+No new exact publication grant arrived. Campaign section0 excludes automatic
+publication authority. No running process was polled; this is not a verified
+wait. No proof/benchmark rerun or external write occurred. Existing campaign
+proof/hosted results retain their recorded scope. Publication packet remains
+proposals/runtime-state-projection/publication-v2/READY.md. Independent owner
+review/claim/profile/merge, backup and administrator required-check decisions
+remain separate. Goal stays active and unachieved at fresh audit count1.
+Evidence:results/campaign-boundary-audit-2026-11-03/resumed-0003/attempt-0001/state.json.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## Third resumed owner-boundary audit2 — 2026-11-03 (U238 unchanged)
+
+CURRENT none. Fresh GitHub reads show unchanged mainf9eb1cbc, PR36 exact
+705457e0/open/unmerged/no reviews and exactfc85 lookup422/no commit found.
+Local HEAD/status exit0/0; exactfc85 and clean. Backup destination read-back
+remains absent. No new publication decision. Previous/current turns are no
+progress; fresh resumed count2. No live process was polled, no proof rerun or
+external write occurred. Exact publication packet remains publication-v2/READY.md.
+Campaign section0 still requires the separate publication decision. Other
+independent review, claim/profile/merge, backup and required-check decisions
+remain open. Goal stays active and full objective unachieved.
+Evidence:results/campaign-boundary-audit-2026-11-03/resumed-0003/attempt-0002/.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## Third resumed owner-boundary audit3 — 2026-11-03 (U239)
+
+CURRENT none. Previous/current turns are no progress; fresh resumed count3.
+GitHub reads: unchanged mainf9eb1cbc; PR36 exact705457e0 open/unmerged/no
+reviews; exactfc85 lookup HTTP422/no commit found. Actual local HEAD/status
+commands exit0/0, exactfc85 and clean. Backup destination read-back absent.
+No new publication grant or meaningful authorized action resolves the owner
+boundary. No proof/benchmark rerun, live-process wait, source change or external
+write occurred. Three-turn blocked audit satisfied; goal API blocked request
+follows and returned status is authoritative. Full objective remains unachieved.
+Exact next decision: publication-v2/READY.md, exactfc85 contributor-authored draft
+only. Independent review/claim/profile/merge, backup and required-check decisions
+remain separate. Evidence:results/campaign-boundary-audit-2026-11-03/
+resumed-0003/attempt-0003/. Integration EXIT NOT_ESTABLISHED; end_to_end=false;
+Stage12 unauthorized.
+
+
+## Fourth resumed owner-boundary audit1 — 2026-11-03 (U239 unchanged)
+
+CURRENT none. User resumed the goal; fresh blocked audit starts at count1.
+Previous/current turns are no progress. No count carried from earlier runs.
+Fresh GitHub mainf9eb1cbc, PR36 exact705457e0 open/unmerged/reviews empty;
+exactfc85 lookup422/no commit found. Local HEAD/status exit0/0; exactfc85
+and clean. Expected independent-backup read-back remains absent. Submitted
+explicit asynchronous questions for exactfc85 draft publication and independent
+backup destination/existing copy identity. Questions accepted for display; no
+answer or authorization was received. Campaign section0 requires the separate
+publication decision. No elapsed time/preselected choice supplies consent.
+No proof rerun, live-process wait or external write. Existing evidence retains
+its scope. Exact decision packet:publication-v2/READY.md. Other independent
+review/claim/profile/merge, backup and administrator required-check decisions
+remain separate. Goal active and full objective unachieved.
+Evidence:results/campaign-boundary-audit-2026-11-03/resumed-0004/attempt-0001/.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## Fourth resumed owner-boundary audit2 — 2026-11-03 (U239 unchanged)
+
+CURRENT none. Fresh mainf9eb1cbc and PR36 exact705457e0 remain unchanged;
+PR36 open/unmerged/reviews empty. Actual local HEAD/status commands exit0/0;
+exactfc85 and clean. Expected independent-backup read-back remains absent.
+Publication and backup destination questions remain unanswered. No new grant
+or external-state change. Previous/current turns no progress; fresh count2.
+No proof/benchmark rerun, live-process wait, source change or external write.
+Goal active; objective unachieved. Exact packet:publication-v2/READY.md.
+Evidence:results/campaign-boundary-audit-2026-11-03/resumed-0004/attempt-0002/.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## Fourth resumed owner-boundary audit3 — 2026-11-03 (U240)
+
+CURRENT none. Fresh mainf9eb1cbc unchanged; PR36 exact705457e0 open/unmerged/
+reviews empty. Exactfc85 lookup422/no commit found. Actual local HEAD/status
+commands exit0/0, exactfc85 and clean. Backup destination read-back absent.
+Publication and backup questions unanswered; no new grant. Previous/current
+turns no progress; fresh resumed count3. No proof/benchmark rerun, live-process
+wait or external write. Blocked audit satisfied; goal API request follows,
+returned status authoritative. Full objective unachieved. Next owner decision
+packet:publication-v2/READY.md. Independent review/claim/profile/merge, backup
+and required-check actions remain separate. Evidence:results/campaign-boundary-
+audit-2026-11-03/resumed-0004/attempt-0003/. Integration EXIT NOT_ESTABLISHED;
+end_to_end=false; Stage12 unauthorized.
+
+
+## Focused hosted booking EXIT inspection — 2026-11-03 (U241)
+
+CURRENT none. Owner-directed inspection yielded fresh authenticated GitHub
+job/artifact metadata and a new download of artifact13179905102 from successful
+run41523691535/attempt1/job125545854178. ZIP SHA372cd778… matches fresh API
+and preserved archive. No new hosted run or verifier execution occurred.
+
+Actual commands:
+- python3 -B results/hosted-booking-exit-review-2026-11-03/attempt-0001/audit_hosted.py
+  ->0;13 expected hosted cases; cold/warm/invalidation/restored launches1/0/1/0.
+- python3 -B proposals/receipt-authentication-final/integration_exit.py
+  --local-results results/campaign-audit-2026-11-02/security
+  --readiness results/campaign-resume-2026-11-02/readiness.json
+  --output results/hosted-booking-exit-review-2026-11-03/attempt-0001/integration-exit.json
+  ->1;NOT_ESTABLISHED; sole false predicate off_machine_backup_confirmed.
+- Raw retained Booking log/TRX inspection ->0; cold/invalidation each238
+  verified/0errors and238 Passed TRX results. This is evidence inspection.
+
+H1 hosted booking matrix ESTABLISHED under same-process trust boundary. No
+failing booking acceptance case; no source fix warranted. Smallest remaining
+operation is independent archive transfer/read-back after owner supplies a
+private host or existing copy. Transfer NOT RUN; no readiness field changed.
+Proof-report upload PR36 exact705457e0 remains open/unmerged and separate;
+successful booking upload does not test that repair. No approval/merge/dispatch
+or policy/protection change. Required-check enforcement gap remains separate
+from protection inspection. Outer-ledger raw log retention and helper-only C
+invalidation limits remain explicit. Evidence and exact commands in
+results/hosted-booking-exit-review-2026-11-03/attempt-0001/. Full campaign
+unachieved; integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## Exact prepared proposal publication — 2026-11-03 (U242)
+
+CURRENT none. Owner explicitly approved commit/push of prepared work. Existing
+clean commitfc85ecc2c7f12caa6c8991fa002410bdf78dd51d already contained the14
+proposal files. Fresh exact-head/base/actor/role/hash/packet/scope checks passed;
+git diff --check f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3 HEAD ->0.
+
+Actual publication commands (existing contributor credential selected only in
+subprocess environment; not recorded):
+- git -C /private/tmp/forge-e1-publication-v2-20261102
+  -c credential.helper= -c 'credential.helper=!gh auth git-credential'
+  push https://mackiannii@github.com/mack-dot/forge.git
+  fc85ecc2c7f12caa6c8991fa002410bdf78dd51d:refs/heads/proposal/fixed-elf-assurance
+  ->0; remote exact-head read-back0. No force.
+- gh pr create --repo mack-dot/forge --base main
+  --head proposal/fixed-elf-assurance --draft
+  --title 'Propose a termination claim for the fixed RISC-V ELF'
+  --body-file /Users/mackianni/forge/proposals/runtime-state-projection/publication-v2/pr-body.md
+  ->0; https://github.com/mack-dot/forge/pull/37 .
+- gh pr view returned0; OPEN/draft, headfc85/basef9, author mackiannii,
+  merge state BLOCKED. Independent connector read confirms identity/state.
+
+Main remainsf9eb1cbc. No new empty/replacement commit. No approval, merge,
+manual dispatch, claim/profile activation, signing, admission or deployment.
+Filtered automatic-run query empty at read time; no fresh hosted result claimed.
+The historical local coverage result remains3/UNSUPPORTED14 uncovered paths.
+Publication is complete; independent review and later exact authorizations stay
+separate. PR36 upload repair and backup confirmation remain separate. No backup
+copy or readiness change. Evidence:results/elf-proposal-publication-2026-11-03/
+attempt-0001/. Full campaign unachieved; integration EXIT NOT_ESTABLISHED;
+end_to_end=false; Stage12 unauthorized.
+
+
+## Live PR37 status — 2026-11-03 (U243)
+
+CURRENT none. Fresh mainf9, PR37 exactfc85 draft/unmerged/no reviews, PR36
+exact705457e0 open/unmerged. Actual PR37 verify job126044039402 in run41672433464
+executes the Linux incremental gate and exits3/UNSUPPORTED,14 uncovered proposal
+paths, no accepted evidence. Full receipt reconstructed from contiguous log
+chunks; source/head/base validated. Report job SUCCESS does not override that
+refusal. The event-filtered commit workflow query is empty despite this actual
+run; full PR checks/logs are authoritative. No new gate change or dispatch.
+This is expected fail-closed coverage behavior, not admission of the new claim.
+Next boundary remains independent proposed-claim/profile review; no coverage
+exception, self-approval or merge. H1 booking evidence remains scoped and passed;
+strict integration's last actual1 is unconfirmed backup. Evidence:results/
+elf-proposal-publication-2026-11-03/attempt-0001/{status-followup,hosted-pr37-receipt}.json.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## PR37 assumption review — 2026-11-03 (U244)
+
+CURRENT none. Exactfc85 reviewed technically and by independent agent. No source
+defect found within its stated abstract-model scope; no owner/GitHub approval.
+Actual identity audit0, HEAD/status0/0; two exact theorem inputs and five copied
+published LPS source hashes match held records. No expensive checker rerun.
+Actual command python3 -B proposals/receipt-authentication-final/integration_exit.py
+--local-results results/campaign-audit-2026-11-02/security
+--readiness results/campaign-resume-2026-11-02/readiness.json
+--output results/pr37-assumption-review-2026-11-03/attempt-0001/integration-exit.json
+->1/NOT_ESTABLISHED; off_machine_backup_confirmed remains false.
+Technical gap remains concrete VM/loader/guest-exit to LPS mapping: register
+projection and modeled94/0 do not establish every runtime assumption. Exact
+canonical-state/no-lazy premises remain explicit. No new theorem/profile,
+coverage exception, publication, merge, dispatch or signing/deployment. PR36
+remains separate. Evidence:results/pr37-assumption-review-2026-11-03/attempt-0001/.
+Integration EXIT NOT_ESTABLISHED; end_to_end=false; Stage12 unauthorized.
+
+
+## Master mission / assumption checkpoint — 2026-11-03 (U245,U246)
+
+CURRENT none. Stage12 unauthorized. Exact new owner mission saved in
+FORGE_MASTER_MISSION.md; first7 audit/planning deliverables in
+FORGE_CURRENT_STATE_AND_PLAN.md. No future stage or policy was activated.
+
+| Actual check | Exit | Exact argv/output record under results/*-2026-11-03/ |
+| --- | ---: | --- |
+| Existing initializer and unchanged-theorem instantiation |0|fixed-elf-assumption-matrix/attempt-0001/formal-instantiation/positive-command.json|
+| False lazy / halted premise |1/1|same directory negative-lazy/negative-halted command records|
+| Pinned readelf ELF inspection |0|fixed-elf-assumption-matrix/attempt-0001/elf-header-command.json|
+| Local raw/sanitized archives,10160members each |0|fixed-elf-assumption-matrix/attempt-0001/local-archive-integrity-command.json|
+| Existing strict integration EXIT |1|fixed-elf-assumption-matrix/attempt-0001/strict-integration-exit-command.json;backup false|
+| Aggregate accounting normalization |137/OOM|runtime-accounting-feasibility/attempt-0001/result.json;4GiB unchanged|
+|21 separate instruction facts / empty-accounting helper |0|runtime-access-one-step,decomposition,batch command records|
+| Combined proof initial / corrected |1/0|runtime-access-batch attempts0001/0002;tactic-focus failure preserved|
+| WrongRange intended negative |0,expected1|Invalid oracle;preserved,not passing refusal|
+| Pending boundary / false post-ecall pendingNone |0/1|runtime-pending-boundary/attempt-0001 positive/negative-command.json|
+| Published4-root assumption inventory |0|runtime-access-assumptions/attempt-0001/result.json;13 existing names|
+|100-file held lock/input identity |0|master-mission-audit/attempt-0001/source-and-trust-surface.json|
+| Read-only effective-rule/ruleset administrator exports |0|master-mission-audit/attempt-0001 command records;classic404/CLI1|
+| Proposed README/ROADMAP patch application check |0|proposals/current-status-docs/validation.json;not applied/published|
+
+Exact strict command:python3 -B proposals/receipt-authentication-final/integration_exit.py
+--local-results results/campaign-audit-2026-11-02/security
+--readiness results/campaign-resume-2026-11-02/readiness.json
+--output results/fixed-elf-assumption-matrix-2026-11-03/attempt-0001/integration-exit.json
+returned1/NOT_ESTABLISHED,sole false predicate off_machine_backup_confirmed.
+No readiness value changed. Newer evidence needs a separate preserved snapshot.
+
+Matrix84rows includes all8machinefields,quantified/model premises,21 pinned-
+SCOPE items and exact13/86 historical trust lists. Source/object identities
+unchanged. Decomposed model-prefix proofs and pending boundary are locally
+type-checked,not full physical-state/loader/syscall correspondence. Raw CPU
+iteration is not process dispatch. New full recursive independent kernel and
+new QEMU run NOT RUN. Invalid extra-step oracle and all failures preserved.
+
+Fresh mainf9 and PR34/36/37 heads unchanged/unmerged. PR37 still draft/no
+reviews; its recorded hosted gate3 refuses14 uncovered paths. Main's stale
+Stage9 preface and differing README are documented; narrow2-file doc correction
+is a proposal only. Existing review rules lack required status/workflow checks;
+no protection mutation or bypass. Independent archive copy/restore unconfirmed;
+empty accessible Drive searches are not global absence proof. No spec/theorem/
+policy weakening,axiom,new framework,Node,SPM,approval/merge,dispatch,signing,
+admission or deployment. Goal remains active and full mission unachieved.
+Integration EXIT NOT_ESTABLISHED;end_to_end=false.
+
+
+## Fixed-ELF auxiliary kernel and connection obligations — 2026-11-03 (U247)
+
+CURRENT none. Original termination theorem and its premises unchanged.
+Stage12 unauthorized;end_to_end=false.
+
+| Actual command/check | Exit | Result |
+| --- | ---: | --- |
+| python3 -B results/runtime-auxiliary-kernel-2026-11-03/attempt-0001/run.py |0|Published recursive kernel0,594 modules,86 permitted closure assumptions;container0,no OOM|
+| python3 -B results/runtime-auxiliary-kernel-2026-11-03/attempt-0001/postflight.py |0|Exact inputs/root closure/invocation checked;no new assumptions|
+| python3 -B results/ops-readiness/integration-2026-11-02/check_archives.py /Users/mackianni/forge-backups |0|10160 members/archive,zero mismatches;local integrity only|
+| Existing strict integration command below |1|NOT_ESTABLISHED;off_machine_backup_confirmed=false|
+
+Exact strict command:python3 -B proposals/receipt-authentication-final/integration_exit.py
+--local-results results/campaign-audit-2026-11-02/security
+--readiness results/campaign-resume-2026-11-02/readiness.json
+--output results/fixed-elf-assumption-matrix-2026-11-03/attempt-0002/final-integration-exit.json
+
+Kernel argv and actual subprocess exits:results/runtime-auxiliary-kernel-2026-11-03/
+attempt-0001/{kernel-invocation.json,kernel-command.json,kernel-output/independent-processes.json}.
+Kernel log SHAad90c2208bcabb509cb98aa842ea84ccf962bc4aec1e26cee8eee85991c45768.
+Actual kernel wall1415.391444559s;outer1418.698787666s. Local,new process on same
+machine;not hosted cost or independent physical-machine reproduction. Existing
+published checker,recursive checking,UID1000,oneCPU,4GiB and networknone retained.
+No source recompilation or new QEMU run in this replay. Existing failures stay
+preserved,including137/OOM and invalid extra-step oracle expected1/actual0.
+
+This closes independent checking for the new21-step access/accounting,pending-
+request guard and initializer obligations. It does not close physical state,
+ROM/loading,concrete Model mapping,syscall/exit or QEMU/Linux/observer fidelity.
+The84-row matrix retains its historical checkpoint;the current follow-up and
+C1-C7 minimal obligations are in results/fixed-elf-assumption-matrix-2026-11-03/
+attempt-0002/{STATUS.md,CONNECTION_OBLIGATIONS.md}. Newer observations cannot
+retroactively establish unrecorded hidden state in the historical launch.
+
+Fresh GitHub mainf9eb1cbc;PR37 exactfc85ecc2 remains draft/open/unmerged,no
+reviews. No acceptance-profile/coverage exception or theorem change. PR36 stays
+separate. Backup independent-copy/read-back/storage/restore remains unconfirmed;
+no readiness value changed. Required status/workflow checks remain absent in
+exported rules,no protection change. No publication,approval,merge,dispatch,
+signing,admission,deployment,Node,SPM or Stage12 work. Next authorized technical
+action:existing process-transition composition and justified entry-state relation.
+Integration EXIT and full executable correctness remain NOT_ESTABLISHED.
+
+
+## Process-prefix composition and debug-observer supplement — 2026-11-03 (U248)
+
+CURRENT none;Stage12 unauthorized;end_to_end=false. Original theorem unchanged.
+
+| Actual command/check | Exit | Record |
+| --- | ---: | --- |
+| python3 -B results/runtime-process-prefix-2026-11-03/attempt-0001/compile_case.py positive |1|First proof list-index inference failure;preserved|
+| python3 -B results/runtime-process-prefix-2026-11-03/attempt-0002/compile_case.py positive |0|Existing21-step process-prefix composition|
+| python3 -B results/runtime-process-prefix-2026-11-03/attempt-0002/compile_case.py negative-halted |1|Intended Some0-versus-None guard refusal|
+| Fresh ProcessPrefix source rebuild and byte comparison |0/0|runtime-process-prefix/rebuild-0001;object39edf12f...|
+| Published direct-assumption audit |0|runtime-process-prefix-assumptions/attempt-0001;same13 names|
+| Exact Ubuntu source acquisition/extraction/full signed-source-chain replay |0/0/0|qemu-source-assumption-audit/attempt-0002;no source build|
+| Pinned GDB package acquisition/unpack/version |0|fixed-elf-observer/attempt-0001;15.1-1ubuntu1~24.04.1|
+| Exact observer metadata controls |0|fixed-elf-observer/attempt-0002/marker-controls-command.json;9 cases|
+| Repaired local observer/QEMU/GDB |0/0/0|fixed-elf-observer/attempt-0002/capture-command.json and capture/commands.json|
+| Complete344+60 LOAD read-back comparisons / corrupt capture |0/0 /1|Actual cmp commands;held ELF digest checked|
+| Whole raw trace / exact pre-exit prefix comparison |1 /0|Only final process-ID-bearing exit line differs;458 lines retained|
+| Existing strict integration EXIT |1|fixed-elf-assumption-matrix/attempt-0003/integration-exit-command.json;backup false|
+
+Full new independent kernel:RUNNING at this checkpoint,session41686/container
+forge-process-prefix-kernel-20261103-0001;no exit claimed. The previous594-module
+check remains a separate completed operation. No kernel restart or limit change.
+Exact Docker/tool argv,stdout/stderr,identities and results are in records above.
+Source acquisition firstAPT100/outer1 and compile-dispatch preflight1 were
+operational errors,not proof refusals;both original records remain preserved.
+
+New GDB run observes FCSR0 and complete held ELF LOAD identity. Its pre-exit
+CPU/register/mapping trace prefix matches old literals. Guest auxv identifies
+new-run vDSO page2aaaab2ac000. Reservation/Model ledger remain unobserved;new
+measurements do not establish historical hidden state. GDB string-table and
+readelf .dynamic diagnostics remain explicit;zero readelf exit is not full
+vDSO validity. Neither finite observation nor authenticated source establishes
+QEMU/Linux/LPS refinement. Initial observer prefix-check bug has a preserved
+counterexample and exact-field repair;hosted receipt tests are unchanged.
+
+All100 accepted locked files unchanged. Source-only local review packet has
+36 members/28proof sources;not standalone or authenticated authority. No
+publication,approval,merge,policy/protection change,dispatch,signing,admission,
+deployment,Node,SPM or new service/framework. PR37 remainsfc85 draft/unreviewed.
+Strict integration remainsNOT_ESTABLISHED with backup unconfirmed;no destination
+or independent read-back supplied. Current84-row inventory plus run-specific
+updates:results/fixed-elf-assumption-matrix-2026-11-03/attempt-0003/STATUS.md.
+Full physical correspondence and the full master mission remain unachieved.
+
+
+## Completed prefix kernel / strict observer-content replay — 2026-11-03 (U249)
+
+CURRENT none;Stage12 unauthorized;end_to_end=false. U248's kernel RUNNING
+checkpoint is superseded by the following actual terminal result.
+
+| Actual command/check | Exit | Evidence |
+| --- | ---: | --- |
+| python3 -B results/runtime-process-prefix-kernel-2026-11-03/attempt-0001/run.py |0|Published recursive rocqchk0,595 modules,86 permitted assumptions;container0,no OOM|
+| python3 -B results/runtime-process-prefix-kernel-2026-11-03/attempt-0001/postflight.py |0|Exact frozen tool/source/object identities and root/closure membership|
+| Complete observer publisher/package/used-tree replay,first |1|fixed-elf-observer/attempt-0002/producer-chain-command.json;22 generated bytecode files rejected|
+| Same strict replay,fresh read-only package tree |0|producer-chain-readonly-command.json;2 signatures,4 indices,13 archives,413 members|
+| Corrected read-only observer / QEMU / GDB |0/0/0|fixed-elf-observer/attempt-0003/capture-command.json and capture/commands.json|
+| Post-execution observer member comparison |0|attempt-0003/producer-after-command.json;413 authenticated members,no caches|
+| Complete LOAD comparisons / corrupt text control |0/0 /1|attempt-0003/capture/commands.json;404 bytes held ELF identity|
+| Current versus prior debugger raw trace |0|attempt-0003/prior-debug-trace-comparison.json;historical raw PID difference remains1|
+| Local raw/sanitized archive/member check |0|assumption-matrix/attempt-0003/local-archive-integrity-command.json;10160members each|
+| Strict integration EXIT,last actual rerun |1|assumption-matrix/attempt-0003/integration-exit-command.json;backup false|
+
+Kernel log SHA1876758495c140fb397af0dc349530c6aaafab8e46bb5c5aad39928120b5b0d9.
+Actual kernel wall1658.714140672s;outer1659.407074542s. Independent process on
+same machine,not a hosted performance result. Original theorem/premises intact.
+Process-prefix model composition and source/object reproducibility established;
+complete actual entry/Model relation,runtime refinement and canonical reservation
+remain unestablished. Current new-run FCSR0/LOAD404/auxv observations do not
+establish historical hidden values. vDSO tool diagnostics are not proof passes.
+
+The generated-bytecode failure is preserved,not ignored:413 signed-package
+members matched but22 extra files came from the first writable version probe.
+Fresh extraction,read-only execution and disabled bytecode writes restore exact
+publisher-content identity. No old files deleted,matcher weakened,proof receipt
+adopted or accepted profile changed. Publisher authentication is not correctness.
+
+Unpublished41-member/28-proof-source read-only-observer packet SHA
+2c97ed61e3a817afd4de9094682852d312491c9a5f8306834484a323ad2a3414.
+Original36-member packet preserved. Base dependencies remain external;clean-
+machine replay NOT RUN. Claim boundary and review proposal are concrete;no
+publication,approval,merge,dispatch,signing,admission or deployment.100 locked
+inputs unchanged,PR37 exactfc85 draft/unreviewed,PR36 separate. Independent
+backup/read-back/storage/restore unconfirmed. No Node,SPM,framework,infrastructure
+service,protection change or Stage12. Strict integration remainsNOT_ESTABLISHED;
+full executable correctness and full master mission remain unachieved.
+
+
+## Goal-controller read-back — 2026-11-03 (U250)
+
+Two actual get_goal readbacks report blocked for the master objective. No
+update_goal call occurred in this turn;cause UNKNOWN. This corrects U249 goal-
+active wording only. Current turn made concrete progress;kernel595/86 and
+observer-content/capture results retain their exact scope. Full mission remains
+unachieved;safe local preparation remains. No complete/pause/status mutation,
+stage transition,authority grant or policy change. CURRENT none;Stage12
+unauthorized;end_to_end=false. Evidence:assumption-matrix/attempt-0003/
+goal-controller-readback.json.
+
+
+## Owner resume / other-device backup report / local commits — 2026-11-03 (U251)
+
+CURRENT none;Stage12 unauthorized;end_to_end=false. Owner authorizes continued
+readiness work and local commits,and reports an existing backup on another
+ device. That is owner attestation;archive identity/remote hashes/restore are
+not yet independently verified. A concise contents/location question is pending.
+
+| Actual operation | Exit | Result |
+| --- | ---: | --- |
+| Local documentation commit |0|3934b4e24ddc576b0e08e1512756f1b18d79dda2;4 files|
+| Local observer/evidence commit |0|e60b97b697a6f78f0ca347054e17d2a72d7ad7b5;38 files|
+| Final Git whitespace checks |0/0|Raw readelf log losslessly packed;original unchanged|
+| Committed source/archive/raw-log readback |0|Frozen archive/kernel identities match;both worktrees clean|
+| Trusted inventory/registry coverage preflight |3/3|4/38 uncovered paths;proof execution NOT RUN|
+| Git bundle create/verify |0/0|Both full local branch histories;private local staging|
+| Local bundle clone-restore/fsck |0/0|Separate object database;observer blob matches|
+| Existing strict integration status |1|Owner copy reported;exact archive validation still pending|
+
+Exact Git/Docker/Python argv,outputs and metadata:results/owner-resume-commit-
+2026-11-03/attempt-0001/. No full proof/debugger rerun was needed for unchanged
+packing inputs. New commits are local,not pushed/merged. Mainf9 and PR37fc85
+unchanged;PR36 independent. No protected source,policy,workflow,branch setting,
+authoritative profile,signing,admission or deployment change. Original proof
+premises and all declared runtime gaps remain. Initial whitespace errors2
+are retained;formatting corrections do not alter word/proof/evidence content.
+
+Stable private handoff file:/Users/mackianni/forge-backups/
+forge-readiness-commits-2026-11-03.bundle,SHA
+f9ad6a46f892b204ea12b38bea12b971e0e4dc72e7b50f5dd0ec0fe5ee9a4ee6.
+Its local restoration passed;it excludes original raw/sanitized archives and
+external proof/runtime pools. Off-machine transfer/restore NOT RUN. The owner's
+existing-other-device report is preserved without inventing independent tests.
+Full master mission remains unachieved;integration status NOT_ESTABLISHED.
+
+
+## Immediate behavioral vertical slice — 2026-11-03 (U252)
+
+CURRENT none;Stage12 unauthorized;end_to_end=false. Existing mission retained.
+The immediate target is one approved behavior through the exact executable,
+justified concrete/abstract correspondence,authenticated provenance and
+independent admission. Cross-run reuse,benchmarks and UI are later horizons.
+Full audit and shortest path:VERTICAL_SLICE_STATUS.md.
+
+| Actual command / execution | Actual exit / result |
+| --- | --- |
+| `python3 -B results/vertical-slice-audit-2026-11-03/attempt-0001/compile_cases.py positive` |0;exact loop pairs,GCD21,and modeled exit0 with arbitrary reservation/FCSR|
+| Same dispatcher `negative` |1;intended21-versus22 proof type mismatch|
+| Same dispatcher `audit` |0;fully qualified Print Assumptions|
+| Published parser in existing pinned Linux image |0;13 permitted direct names,subset of prior86|
+| Pinned Python3.10.11 `-I -S -B .../audit_identities.py` |0;39 held host proof objects/28 sources match;old policy excludes execution|
+| `python3 -B .../admission_controls.py` |0;child consumer0/1/1,real Cosign0/0/0;unsigned scope upgrades reject EVIDENCE_DIGEST|
+| `python3 -B .../finish_audit.py` |0;actual records and intended outcomes checked|
+| Existing strict integration status |1;only off_machine_backup_confirmed false;owner reports copy,archive validation pending|
+
+Initial host parser1(Linux YAML extension unavailable on macOS) and Linux short-
+name input1 are preserved. Fully qualified output corrected metadata only. No
+new axioms,parser change,policy weakening or tool installation. New Behavior.v
+source5a230c7e...;objectf1d3b7e2.... New full independent recursive kernel NOT RUN;
+previous kernel569/567/595 results remain historical. No new hosted execution.
+
+Physical Model relation and actual exit_group boundary remain unestablished.
+Existing policy authenticates the file,not execution. New exact statement/
+profile approval,fresh bound provenance and independent release admission remain
+required. PR37fc85 unapproved/draft/unmerged;PR36 remains separate. Mainf9
+unchanged. No protected source/workflow/protection/signing/admission change.
