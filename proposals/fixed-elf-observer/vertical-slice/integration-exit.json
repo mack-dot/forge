@@ -1,0 +1,24 @@
+{
+  "blockers": [
+    "off_machine_backup_confirmed"
+  ],
+  "checks": {
+    "hosted_adversarial_rejections": true,
+    "hosted_cold_verified": true,
+    "hosted_invalidation": true,
+    "hosted_reproducibility_and_provenance": true,
+    "hosted_runtime_and_job_minutes_recorded": true,
+    "hosted_safe_warm_reuse": true,
+    "local_adversarial_matrix": true,
+    "observed_safe_local_reuse": true,
+    "off_machine_backup_confirmed": false,
+    "pr30_explicit_merge_authorization": true,
+    "pr30_independent_approval": true,
+    "protections_verified": true,
+    "repair_approved_and_merged": true
+  },
+  "end_to_end": false,
+  "integration_exit": "NOT_ESTABLISHED",
+  "release_admission": false,
+  "stage_transition_authorized": false
+}

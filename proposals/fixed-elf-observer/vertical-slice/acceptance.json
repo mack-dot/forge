@@ -1,0 +1,147 @@
+{
+  "actual_exit": 0,
+  "direct_assumption_count": 13,
+  "end_to_end": false,
+  "full_new_independent_kernel": "NOT RUN",
+  "historical_consumer_cases": [
+    {
+      "actual_cosign_exit": 0,
+      "actual_exit": 0,
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/check_bundle.py",
+        "/Users/mackianni/forge-stage9-signing-0003/artifacts/r1-signed/x",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/consumer-runs/historical-positive"
+      ],
+      "case": "historical-positive",
+      "evidence_sha256": "82daab8e04bc3d71f4cfae32cf081abf3dee4f46477d6576855fb0d75baa090c",
+      "expected_exit": 0,
+      "result": {
+        "admitted": false,
+        "approval_trust_assumption": "only the owner uses the owner account",
+        "approved_lineage": {
+          "approved_merges": [
+            {
+              "approved_head": "5867db322e0ddaa0aee9a2a047c65a0941d61f5b",
+              "commit": "624c9fafccd3badaa6a9dd582ae33f1204fb1e3a",
+              "pull": 26,
+              "review": 5705585056
+            },
+            {
+              "approved_head": "05a7ac1f1dbf23c9dae1f8c5a9cf0016abc25aa0",
+              "commit": "5b1b557037f4daaecb5e34f15ae69745f68f1e3f",
+              "pull": 25,
+              "review": 5702213130
+            },
+            {
+              "approved_head": "ce7b537753be7857f5d586f95b777ef9c4b871fc",
+              "commit": "f4f8a68c1e226c5ac45d8336598cd6b9e021298a",
+              "pull": 24,
+              "review": 5700119180
+            },
+            {
+              "approved_head": "174880e85fef7e84d48870a7d6dbf6228bc9c6bd",
+              "commit": "9aadcd63083b5cd9311d67c22e13ab137185db6a",
+              "pull": 23,
+              "review": 5699889214
+            },
+            {
+              "approved_head": "2e3587f8a17305b5a7f246735ba24596c9d4ed3c",
+              "commit": "aac837a00db4fd5b126a3819449d098d4fcda7ae",
+              "pull": 21,
+              "review": 5699085293
+            }
+          ],
+          "ratified_baseline": "19c4896ba78cc9e41bbadaf8c804b8e74af20125",
+          "source_commit": "624c9fafccd3badaa6a9dd582ae33f1204fb1e3a"
+        },
+        "controller_read": false,
+        "cross_run_cache_adopted": false,
+        "deployed": false,
+        "end_to_end": false,
+        "freshness_trust_assumption": "GitHub executed the locked workflow in the recorded run",
+        "gate_exit_code": 0,
+        "kernel_execution_here": false,
+        "producer_receipt_labels_consistent": true,
+        "proof_run_identity_checked_with_github_api": true,
+        "result": "authenticated_provenance",
+        "signature_exit_code": 0,
+        "signed": false,
+        "statement_sha256": "95561671f430be20db5cb87fcb61baa683355903946adcf18c3bd422855cace8"
+      },
+      "signature_sha256": "cd2a87db8dd780cb1231533dfc214315b8611950d3cc27c94bb77444ed8c5a2a",
+      "wall_seconds": 54.89423012500629
+    },
+    {
+      "actual_cosign_exit": 0,
+      "actual_exit": 1,
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/check_bundle.py",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/fixtures/unsigned-execution-upgrade",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/consumer-runs/unsigned-execution-upgrade"
+      ],
+      "case": "unsigned-execution-upgrade",
+      "evidence_sha256": "76a3eef973827ecc25d00f64a689438e3f2a6b27888a2dfe2800d38c8f31038c",
+      "expected_exit": 1,
+      "result": {
+        "admitted": false,
+        "controller_read": false,
+        "cross_run_cache_adopted": false,
+        "deployed": false,
+        "end_to_end": false,
+        "gate_exit_code": 1,
+        "reason": "EVIDENCE_DIGEST",
+        "result": "rejected",
+        "signed": false
+      },
+      "signature_sha256": "cd2a87db8dd780cb1231533dfc214315b8611950d3cc27c94bb77444ed8c5a2a",
+      "wall_seconds": 3.8814474169921596
+    },
+    {
+      "actual_cosign_exit": 0,
+      "actual_exit": 1,
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/check_bundle.py",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/fixtures/unsigned-correspondence-upgrade",
+        "/Users/mackianni/forge/results/vertical-slice-audit-2026-11-03/attempt-0001/consumer-runs/unsigned-correspondence-upgrade"
+      ],
+      "case": "unsigned-correspondence-upgrade",
+      "evidence_sha256": "5ef4a5e5b312749d08d1c65570355bfcd5b52d336949af9c26b817e0329a852c",
+      "expected_exit": 1,
+      "result": {
+        "admitted": false,
+        "controller_read": false,
+        "cross_run_cache_adopted": false,
+        "deployed": false,
+        "end_to_end": false,
+        "gate_exit_code": 1,
+        "reason": "EVIDENCE_DIGEST",
+        "result": "rejected",
+        "signed": false
+      },
+      "signature_sha256": "cd2a87db8dd780cb1231533dfc214315b8611950d3cc27c94bb77444ed8c5a2a",
+      "wall_seconds": 3.8633524590113666
+    }
+  ],
+  "local_behavior_compilation": 0,
+  "new_hosted_execution": "NOT RUN",
+  "new_release_admission": "NOT RUN",
+  "published_assumption_parser": 0,
+  "stage_transition": false,
+  "strict_integration_blockers": [
+    "off_machine_backup_confirmed"
+  ],
+  "strict_integration_exit": 1,
+  "wrong_result_rejection": 1
+}

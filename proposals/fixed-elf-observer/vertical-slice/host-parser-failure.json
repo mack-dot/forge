@@ -1,0 +1,8 @@
+{
+  "argv": ["/Library/Frameworks/Python.framework/Versions/3.10/bin/python3", "-I", "-S", "-B", "results/vertical-slice-audit-2026-11-03/attempt-0001/audit_identities.py"],
+  "actual_exit": 1,
+  "error": "AttributeError: module 'yaml' has no attribute 'CSafeLoader'",
+  "scope": "Importing Linux-pinned Python dependencies on macOS; no proof or admission failure",
+  "next_check": "Run the unchanged published parser in the existing pinned Linux checker",
+  "end_to_end": false
+}
