@@ -10,6 +10,34 @@ exact bytes, specification, checking method, and assumptions.
 The aim is to let agents change critical software components while people remain
 responsible for the behavior those components must implement.
 
+## Current integration status — November 3, 2026
+
+Stage 11 is merged. No research stage is active; Stage 12 is unauthorized.
+The [hosted Linux booking experiment](https://github.com/mack-dot/forge/actions/runs/41523691535)
+matched all 13 expected outcomes: cold/warm/invalidation gate codes 0/0/0,
+with booking-verifier launches 1/0/1. Warm reuse is limited to the same trusted
+producer process. Cross-run receipt adoption remains disabled.
+
+[PR #37](https://github.com/mack-dot/forge/pull/37) is a draft additional
+fixed-ELF model claim. Its [hosted gate](https://github.com/mack-dot/forge/actions/runs/41672433464)
+returns 3/UNSUPPORTED for 14 uncovered proposal paths and emits no accepted
+evidence. This is fail-closed coverage behavior, not approval of the new claim.
+The [PR #36 upload repair](https://github.com/mack-dot/forge/pull/36) remains
+a separate review boundary.
+
+The owner reports a backup on another device. Its archive identity, integrity
+and restore status have not been independently checked. The last strict
+integration status remains NOT_ESTABLISHED; no readiness field was changed
+from that statement alone. The original archive procedure also does not cover
+all later local records. Review requirements and verification enforcement
+are separate: the latest inspected effective rules require review but do not
+require passing status checks. No branch-protection change is proposed here.
+
+Stage-specific descriptions below retain their historical scope. Model proofs,
+finite execution observations, authenticated provenance and deployed-file identity
+are separate claims. Full executable/deployment correctness remains unestablished;
+all current evidence keeps `end_to_end=false`.
+
 ## The thesis
 
 Generating code and establishing that it is acceptable are different tasks.
@@ -164,9 +192,11 @@ required claim.
 
 Current evidence keeps **`end_to_end=false`**. The Dafny source proof does not
 cover the compiler, generated JavaScript, handwritten TypeScript, persistence,
-concurrency, or a deployed application. Binary checking and deployment identity
-are later roadmap work. A signature will authenticate a bundle; it will not
-prove the program's behavior.
+concurrency, or a deployed application. The fixed Stage 7 ELF has a conditional model theorem. Historical Stage 9
+records establish authenticated provenance, replay controls and a narrow deployed-
+file identity observation. Those records do not establish full runtime or
+deployment correctness. A signature authenticates its bound statement and
+artifacts; it does not prove program behavior.
 
 ## Follow and contribute
 

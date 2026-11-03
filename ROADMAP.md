@@ -1,6 +1,36 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 9 — PROVENANCE**
+**CURRENT: none — Stage 11 merged; integration remains open; Stage 12 unauthorized.**
+
+## Current integration update — November 3, 2026
+
+Stages 0–11 have recorded completion. Stage 11 merged at `4e4112c6`; Linux
+bootstrap PR30, receipt repair PR32 and booking workflow PR33 are merged.
+Current main is `f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3`.
+
+The real [hosted booking matrix](https://github.com/mack-dot/forge/actions/runs/41523691535)
+matched all13 expected outcomes. Cold/warm/invalidation gate returns are0/0/0,
+and booking-verifier launches are1/0/1. Negative evidence cases refused for
+their intended reasons; uncovered changes returned3. This establishes the
+supported same-process experiment, not universal runtime correctness.
+
+The existing strict integration status last returned1/NOT_ESTABLISHED for
+unconfirmed archive preservation. The owner now reports a backup on another
+device. Its specific archives,integrity and restore result remain unverified;
+this statement is retained as owner attestation. Later records need their own
+preserved snapshot. Inspected effective review rules do not require passing
+checks; this is a separate administrator decision, not a proposed policy change.
+
+PR36 remains a separate upload-repair review. PR37 is a draft additional ELF
+model proposition; its hosted gate returns3/UNSUPPORTED for14 uncovered paths
+with no accepted evidence. No acceptance exception is introduced.
+
+Newer raw execution records currently live in the owner's records workspace.
+This documentation correction is not itself those records, an independent
+backup, a new proof, or an authorization to merge/sign/dispatch/deploy.
+`end_to_end=false`. No stage transition occurs through this update.
+
+## Historical Stage 9 preface (retained from the prior document)
 
 This is the execution plan and decision record. Stages 0–8 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
