@@ -1,0 +1,17 @@
+{
+  "scope": "Read-only source inspection errors; no proof/native execution",
+  "observations": [
+    {
+      "actual_shell_exit": 1,
+      "error": "zsh: no matches found for HOL/tools-poly/*Script* glob"
+    },
+    {
+      "actual_shell_exit": 0,
+      "error": "sed audit.sml absent; later commands in the same inspection succeeded"
+    },
+    {
+      "actual_shell_exit": 0,
+      "error": "sed dependency-snapshot.json absent; actual file is dependency-io-snapshot.json"
+    }
+  ]
+}

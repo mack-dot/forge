@@ -1,0 +1,44 @@
+[
+  {
+    "name": "trailing_newline",
+    "expected_model_error": "refund: trailing input",
+    "expected_stdout": "",
+    "process_exit_contract": "NOT_ESTABLISHED",
+    "native_execution": "NOT_RUN"
+  },
+  {
+    "name": "second_request",
+    "expected_model_error": "refund: trailing input",
+    "expected_stdout": "",
+    "process_exit_contract": "NOT_ESTABLISHED",
+    "native_execution": "NOT_RUN"
+  },
+  {
+    "name": "unclosed_expression",
+    "expected_model_error": "refund: invalid S-expression",
+    "expected_stdout": "",
+    "process_exit_contract": "NOT_ESTABLISHED",
+    "native_execution": "NOT_RUN"
+  },
+  {
+    "name": "empty_input",
+    "expected_model_error": "refund: invalid S-expression",
+    "expected_stdout": "",
+    "process_exit_contract": "NOT_ESTABLISHED",
+    "native_execution": "NOT_RUN"
+  },
+  {
+    "name": "missing_fields",
+    "expected_model_error": "dest9: Expected length 9, received length 0",
+    "expected_stdout": "",
+    "process_exit_contract": "NOT_ESTABLISHED",
+    "native_execution": "NOT_RUN"
+  },
+  {
+    "name": "invalid_integer",
+    "expected_model_error": "to_int: fromString failed",
+    "expected_stdout": "",
+    "process_exit_contract": "NOT_ESTABLISHED",
+    "native_execution": "NOT_RUN"
+  }
+]

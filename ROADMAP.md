@@ -7,6 +7,47 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U271; includes U272 fixtures)
+
+The proposed refund program now has a checked whole-program source theorem.
+Its exact main binding and initialized library state are checked through the
+published CakeML bridge. Canonical requests produce all six modeled result
+fields under explicit stdin, command-line and filesystem premises. This is not
+a native executable claim. CURRENT none; M1 open; Stage12 unauthorized;
+end_to_end=false. The original method and wrapper remain unchanged.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `run_whole.py whole-0001` | 0 | Three own theorems; 12 published dependencies built |
+| Substituted main entry | 1 | Required namespace-binding refusal; no accepted export |
+| `run_whole.py whole-repeat` / `run_whole_controls.py` | 0/0 | Six identical exports; intended refusal checked |
+| `run_closure.py` / `dependency_snapshot.py` / `readback_whole.py` | 0/0/0 | 243 nodes, 242 theory file sets, 42 exported tags; four foundation axioms |
+| Fixture packet import readback | 0 | 300 files match local commit32e3613d; no native run |
+| I/O recovery bundle create / verify / restore / fsck | 0/0/0/0 | cb68edf7 and 116 files restored locally; not off-machine evidence |
+
+[Whole-program theorem and exact evidence](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md).
+[Separate checked native fixtures](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md).
+Whole source37d623cc; repeated data52b94fa4. The first build took
+737.2824473340006 local seconds, including dependencies. This is not a hosted
+benchmark. The wrong-entry proof fails on
+`SOME refund_dispatch_v = SOME refund_main_v`. Prior failures remain preserved.
+
+Next: finish the existing unsigned ARM64 compiler invocation on refund_prog_def.
+Record: `results/refund-arm8-compile-2026-11-04/attempt-0001/compile-0001/`.
+At this checkpoint it is IN_PROGRESS; no numeric terminal exit exists. Require
+exact code/data/configuration identities, reproduction and compiler-correctness
+composition. Then bind the assembled artifact and runtime to modeled premises.
+Do not infer a passing refund compilation from successful dependency builds.
+
+Unicode/source/model binding, malformed-input whole-program behavior, resource
+limits, installation and physical I/O remain open. Imported DISK_THM hashes do
+not authenticate a producer or replace a full upstream replay. Modeled Success
+and proof-checker exits are not native process-status guarantees. Native refund
+execution, hosted measurements and new admission remain NOT RUN. Independent
+review and off-machine archive hash/restore remain open. U269 local signing
+authority stays with its separate audit task. No signing, publication, merge,
+dispatch, protected adoption or deployment ran here. M2–M4 remain later work.
+
 ## Active mission update — 2026-11-04 (U270)
 
 Modeled stdin/stdout and error contracts now pass for the proposed refund
@@ -4028,3 +4069,29 @@ These are source/record checks, not native execution or new kernel replay.
 Full-program/compiler, concrete runtime and native controls remain open.
 Earlier no-signing observations remain historical; this approval is narrowly
 scoped and does not authorize release admission or Stage12.
+
+
+## Independent native-fixture checkpoint — 2026-11-04 (U272)
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The frozen native fixture expectations now have direct HOL evaluation evidence.
+This is separate from the original task's whole-program/compiler work.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Initial direct HOL batch | 1 |Default-heap intLib loading failure; preserved |
+| Explicit pinned-heap batch / repeat | 0/0 |22 typed cases;44 identical serialized files |
+| Initial control preparation / missing-script dispatch | 1/1 |Infrastructure failures; no accepted negative |
+| Corrected preparation / malformed batch | 0/0 |Six exact model error cases |
+| Wrong expected amount / swapped expected IDs | 1/1 |Required EQT_ELIM refusals |
+| First / corrected closure inspection | 1/0 |Qualifier error fixed;229 theory nodes |
+| Fixture/dependency readback / committed readback | 0/0 |228 theory file sets;300 committed files checked |
+
+[Exact fixture evidence and trust limits](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md).
+Local unsigned unpublished commit32e3613da6edc070d373101986c0bdfeb826f5c8.
+All50 frozen protected paths and mission bytes match. Every failure remains.
+Next: bind the exact arm8 compiler outputs to the final native artifact and
+run the frozen28 input cases. Native execution is NOT RUN in this audit.
+The real I/O relation, error-path/process-status bridge, installation/resource
+premises and independent assurance remain open. U269's limited local signature
+approval remains; no signature, release signing, deployment or Stage12 ran.

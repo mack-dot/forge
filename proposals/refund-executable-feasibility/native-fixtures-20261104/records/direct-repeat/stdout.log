@@ -1,0 +1,1105 @@
+FIXTURE_THEOREM eligible_return:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (T,40,
+   implode
+     (MAP CHR
+        [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+   implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+   implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)
+FIXTURE_THEOREM eligible_return:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1))
+FIXTURE_THEOREM eligible_return:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES eligible_return:stdin 59
+FIXTURE_THEOREM eligible_return:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)) =
+  "(refund-result-v1 True 40 returned_item charge-1 request-1 1)"
+FIXTURE_BYTES eligible_return:stdout 61
+FIXTURE_THEOREM eligible_duplicate:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 40
+    (implode
+       (MAP CHR
+          [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97; 114;
+           103; 101])) =
+  (T,40,
+   implode
+     (MAP CHR
+        [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97; 114;
+         103; 101]),implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+   implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)
+FIXTURE_THEOREM eligible_duplicate:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97;
+                 114; 103; 101])))) =
+  INR
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97;
+              114; 103; 101]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1))
+FIXTURE_THEOREM eligible_duplicate:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97;
+                 114; 103; 101])))) =
+  "(charge-1 request-1 100 60 True True True 40 duplicate_charge)"
+FIXTURE_BYTES eligible_duplicate:stdin 62
+FIXTURE_THEOREM eligible_duplicate:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97;
+              114; 103; 101]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)) =
+  "(refund-result-v1 True 40 duplicate_charge charge-1 request-1 1)"
+FIXTURE_BYTES eligible_duplicate:stdout 64
+FIXTURE_THEOREM eligible_service:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 40
+    (implode
+       (MAP CHR
+          [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100; 101;
+           108; 105; 118; 101; 114; 101; 100])) =
+  (T,40,
+   implode
+     (MAP CHR
+        [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100; 101;
+         108; 105; 118; 101; 114; 101; 100]),
+   implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+   implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)
+FIXTURE_THEOREM eligible_service:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95;
+                 100; 101; 108; 105; 118; 101; 114; 101; 100])))) =
+  INR
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100;
+              101; 108; 105; 118; 101; 114; 101; 100]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1))
+FIXTURE_THEOREM eligible_service:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95;
+                 100; 101; 108; 105; 118; 101; 114; 101; 100])))) =
+  "(charge-1 request-1 100 60 True True True 40 service_not_delivered)"
+FIXTURE_BYTES eligible_service:stdin 67
+FIXTURE_THEOREM eligible_service:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100;
+              101; 108; 105; 118; 101; 114; 101; 100]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)) =
+  "(refund-result-v1 True 40 service_not_delivered charge-1 request-1 1)"
+FIXTURE_BYTES eligible_service:stdout 69
+FIXTURE_THEOREM eligible_zero:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 0
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (T,0,
+   implode
+     (MAP CHR
+        [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+   implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+   implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)
+FIXTURE_THEOREM eligible_zero:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 0
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (T,0,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1))
+FIXTURE_THEOREM eligible_zero:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 0
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True True True 0 returned_item)"
+FIXTURE_BYTES eligible_zero:stdin 58
+FIXTURE_THEOREM eligible_zero:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,0,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)) =
+  "(refund-result-v1 True 0 returned_item charge-1 request-1 1)"
+FIXTURE_BYTES eligible_zero:stdout 60
+FIXTURE_THEOREM eligible_maximum:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+    9223372036854775807 9223372036854775807 T T T 9223372036854775807
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (T,9223372036854775807,
+   implode
+     (MAP CHR
+        [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+   implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+   implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)
+FIXTURE_THEOREM eligible_maximum:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+          9223372036854775807 9223372036854775807 T T T 9223372036854775807
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (T,9223372036854775807,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1))
+FIXTURE_THEOREM eligible_maximum:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+          9223372036854775807 9223372036854775807 T T T 9223372036854775807
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 9223372036854775807 9223372036854775807 True True True 9223372036854775807 returned_item)"
+FIXTURE_BYTES eligible_maximum:stdin 109
+FIXTURE_THEOREM eligible_maximum:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,9223372036854775807,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]),
+        implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]),1)) =
+  "(refund-result-v1 True 9223372036854775807 returned_item charge-1 request-1 1)"
+FIXTURE_BYTES eligible_maximum:stdout 78
+FIXTURE_THEOREM unicode_ids:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [196; 128]))
+    (implode (MAP CHR [244; 143; 191; 191])) 100 60 T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (T,40,
+   implode
+     (MAP CHR
+        [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+   implode (MAP CHR [196; 128]),implode (MAP CHR [244; 143; 191; 191]),1)
+FIXTURE_THEOREM unicode_ids:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request (implode (MAP CHR [196; 128]))
+          (implode (MAP CHR [244; 143; 191; 191])) 100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [196; 128]),implode (MAP CHR [244; 143; 191; 191]),1))
+FIXTURE_THEOREM unicode_ids:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request (implode (MAP CHR [196; 128]))
+          (implode (MAP CHR [244; 143; 191; 191])) 100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(\196\128 \244\143\191\191 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES unicode_ids:stdin 48
+FIXTURE_THEOREM unicode_ids:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [196; 128]),implode (MAP CHR [244; 143; 191; 191]),1)) =
+  "(refund-result-v1 True 40 returned_item \196\128 \244\143\191\191 1)"
+FIXTURE_BYTES unicode_ids:stdout 50
+FIXTURE_THEOREM nul_id:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [0]))
+    (implode
+       (MAP CHR [114; 101; 113; 117; 101; 115; 116; 0; 116; 97; 105; 108]))
+    100 60 T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (T,40,
+   implode
+     (MAP CHR
+        [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+   implode (MAP CHR [0]),
+   implode
+     (MAP CHR [114; 101; 113; 117; 101; 115; 116; 0; 116; 97; 105; 108]),1)
+FIXTURE_THEOREM nul_id:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request (implode (MAP CHR [0]))
+          (implode
+             (MAP CHR
+                [114; 101; 113; 117; 101; 115; 116; 0; 116; 97; 105; 108]))
+          100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [0]),
+        implode
+          (MAP CHR [114; 101; 113; 117; 101; 115; 116; 0; 116; 97; 105; 108]),
+        1))
+FIXTURE_THEOREM nul_id:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request (implode (MAP CHR [0]))
+          (implode
+             (MAP CHR
+                [114; 101; 113; 117; 101; 115; 116; 0; 116; 97; 105; 108]))
+          100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(\"\^@\" \"request\^@tail\" 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES nul_id:stdin 59
+FIXTURE_THEOREM nul_id:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [0]),
+        implode
+          (MAP CHR [114; 101; 113; 117; 101; 115; 116; 0; 116; 97; 105; 108]),
+        1)) =
+  "(refund-result-v1 True 40 returned_item \"\^@\" \"request\^@tail\" 1)"
+FIXTURE_BYTES nul_id:stdout 61
+FIXTURE_THEOREM escaped_ids:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [97; 10; 34; 92; 98]))
+    (implode (MAP CHR [9; 40; 41; 13])) 100 60 T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (T,40,
+   implode
+     (MAP CHR
+        [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+   implode (MAP CHR [97; 10; 34; 92; 98]),implode (MAP CHR [9; 40; 41; 13]),1)
+FIXTURE_THEOREM escaped_ids:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request (implode (MAP CHR [97; 10; 34; 92; 98]))
+          (implode (MAP CHR [9; 40; 41; 13])) 100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [97; 10; 34; 92; 98]),
+        implode (MAP CHR [9; 40; 41; 13]),1))
+FIXTURE_THEOREM escaped_ids:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request (implode (MAP CHR [97; 10; 34; 92; 98]))
+          (implode (MAP CHR [9; 40; 41; 13])) 100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(\"a\\n\\\"\\\\b\" \"\\t()\r\" 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES escaped_ids:stdin 59
+FIXTURE_THEOREM escaped_ids:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (T,40,
+        implode
+          (MAP CHR
+             [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]),
+        implode (MAP CHR [97; 10; 34; 92; 98]),
+        implode (MAP CHR [9; 40; 41; 13]),1)) =
+  "(refund-result-v1 True 40 returned_item \"a\\n\\\"\\\\b\" \"\\t()\r\" 1)"
+FIXTURE_BYTES escaped_ids:stdout 61
+FIXTURE_THEOREM empty_charge:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR []))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM empty_charge:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request (implode (MAP CHR []))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM empty_charge:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request (implode (MAP CHR []))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(\"\" request-1 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES empty_charge:stdin 53
+FIXTURE_THEOREM empty_charge:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES empty_charge:stdout 37
+FIXTURE_THEOREM empty_request:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [])) 100 60 T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM empty_request:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [])) 100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM empty_request:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [])) 100 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 \"\" 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES empty_request:stdin 52
+FIXTURE_THEOREM empty_request:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES empty_request:stdout 37
+FIXTURE_THEOREM negative_amount:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T (-1)
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM negative_amount:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T (-1)
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM negative_amount:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T (-1)
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True True True ~1 returned_item)"
+FIXTURE_BYTES negative_amount:stdin 59
+FIXTURE_THEOREM negative_amount:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES negative_amount:stdout 37
+FIXTURE_THEOREM over_remaining:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 61
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM over_remaining:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 61
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM over_remaining:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 61
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True True True 61 returned_item)"
+FIXTURE_BYTES over_remaining:stdin 59
+FIXTURE_THEOREM over_remaining:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES over_remaining:stdout 37
+FIXTURE_THEOREM original_over_money:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+    9223372036854775808 60 T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM original_over_money:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+          9223372036854775808 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM original_over_money:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+          9223372036854775808 60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 9223372036854775808 60 True True True 40 returned_item)"
+FIXTURE_BYTES original_over_money:stdin 75
+FIXTURE_THEOREM original_over_money:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES original_over_money:stdout 37
+FIXTURE_THEOREM remaining_over_original:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 101 T
+    T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM remaining_over_original:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          101 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM remaining_over_original:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          101 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 101 True True True 40 returned_item)"
+FIXTURE_BYTES remaining_over_original:stdin 60
+FIXTURE_THEOREM remaining_over_original:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES remaining_over_original:stdout 37
+FIXTURE_THEOREM disabled:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 F
+    T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM disabled:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 F T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM disabled:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 F T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 False True True 40 returned_item)"
+FIXTURE_BYTES disabled:stdin 60
+FIXTURE_THEOREM disabled:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES disabled:stdout 37
+FIXTURE_THEOREM closed_request:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    F T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM closed_request:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T F T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM closed_request:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T F T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True False True 40 returned_item)"
+FIXTURE_BYTES closed_request:stdin 60
+FIXTURE_THEOREM closed_request:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES closed_request:stdout 37
+FIXTURE_THEOREM noncandidate:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T F 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM noncandidate:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T F 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM noncandidate:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T F 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True True False 40 returned_item)"
+FIXTURE_BYTES noncandidate:stdin 60
+FIXTURE_THEOREM noncandidate:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES noncandidate:stdout 37
+FIXTURE_THEOREM negative_remaining:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 (-1)
+    T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM negative_remaining:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          (-1) T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM negative_remaining:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          (-1) T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 ~1 True True True 40 returned_item)"
+FIXTURE_BYTES negative_remaining:stdin 59
+FIXTURE_THEOREM negative_remaining:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES negative_remaining:stdout 37
+FIXTURE_THEOREM unapproved_reason:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 40 (implode (MAP CHR [111; 116; 104; 101; 114])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM unapproved_reason:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40 (implode (MAP CHR [111; 116; 104; 101; 114])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM unapproved_reason:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40 (implode (MAP CHR [111; 116; 104; 101; 114])))) =
+  "(charge-1 request-1 100 60 True True True 40 other)"
+FIXTURE_BYTES unapproved_reason:stdin 51
+FIXTURE_THEOREM unapproved_reason:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES unapproved_reason:stdout 37
+FIXTURE_THEOREM reason_suffix:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109; 0;
+           101; 118; 105; 108])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM reason_suffix:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109; 0; 101; 118; 105; 108])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM reason_suffix:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109; 0; 101; 118; 105; 108])))) =
+  "(charge-1 request-1 100 60 True True True 40 \"returned_item\^@evil\")"
+FIXTURE_BYTES reason_suffix:stdin 66
+FIXTURE_THEOREM reason_suffix:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES reason_suffix:stdout 37
+FIXTURE_THEOREM unbounded_positive:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100 60 T
+    T T
+    115792089237316195423570985008687907853269984665640564039457584007913129639936
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM unbounded_positive:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T
+          115792089237316195423570985008687907853269984665640564039457584007913129639936
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM unbounded_positive:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49])) 100
+          60 T T T
+          115792089237316195423570985008687907853269984665640564039457584007913129639936
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 100 60 True True True 115792089237316195423570985008687907853269984665640564039457584007913129639936 returned_item)"
+FIXTURE_BYTES unbounded_positive:stdin 135
+FIXTURE_THEOREM unbounded_positive:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES unbounded_positive:stdout 37
+FIXTURE_THEOREM unbounded_negative:fields
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_fields (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+    (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+    (-115792089237316195423570985008687907853269984665640564039457584007913129639936)
+    60 T T T 40
+    (implode
+       (MAP CHR
+          [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) =
+  (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)
+FIXTURE_THEOREM unbounded_negative:wire
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+          (-115792089237316195423570985008687907853269984665640564039457584007913129639936)
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  INR
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0))
+FIXTURE_THEOREM unbounded_negative:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (sexp_to_string
+       (refund_request
+          (implode (MAP CHR [99; 104; 97; 114; 103; 101; 45; 49]))
+          (implode (MAP CHR [114; 101; 113; 117; 101; 115; 116; 45; 49]))
+          (-115792089237316195423570985008687907853269984665640564039457584007913129639936)
+          60 T T T 40
+          (implode
+             (MAP CHR
+                [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+                 109])))) =
+  "(charge-1 request-1 ~115792089237316195423570985008687907853269984665640564039457584007913129639936 60 True True True 40 returned_item)"
+FIXTURE_BYTES unbounded_negative:stdin 135
+FIXTURE_THEOREM unbounded_negative:stdout
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (refund_render_fields
+       (F,0,implode (MAP CHR []),implode (MAP CHR []),implode (MAP CHR []),0)) =
+  "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+FIXTURE_BYTES unbounded_negative:stdout 37
+FIXTURE_BATCH_COMPLETE 22
+/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/fixtures.sml:109: warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

@@ -8069,3 +8069,114 @@ curl: (6) Could not resolve host: github.com
   Exact claim/profile review and independent-copy archive hashes/restore remain
   open. GitHub was not refreshed. No protected adoption, publication, merge,
   dispatch, release signing or deployment ran. M2–M4 remain later priorities.
+
+
+## U272 — Frozen native wire fixtures checked through direct HOL evaluation
+
+- References:U262,U263,U267,U269,U270. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. U271 is reserved by the original task for
+  its separate whole-program checkpoint. No earlier entry was changed.
+- The22 frozen fixture expectations now have fresh kernel evaluation evidence.
+  The documented HOL run interface with the explicit pinned CakeML heap returns0.
+  It checks the existing refund_fields and refund_run_wire definitions and
+  evaluates the published serializer to44 exact typed input/output files.
+  No new refund predicate, codec, verifier, machine model or axiom was introduced.
+- The initial direct run returned1 while loading intLib at TAUT_PROVE without
+  the explicit CakeML heap. Its source and diagnostics remain preserved. The
+  earlier Holmake EPERM attempts1/1 remain unresolved as build-driver runs.
+  No denied operation was rerouted through another task; no permission or
+  temporary-path implementation changed. The direct interface ran in this
+  thread with the same filesystem restrictions.
+- Six malformed-wire checks return0:trailing newline, second request, unclosed
+  expression, empty stream, missing fields and invalid integer. Each has an exact
+  model error equality and input-byte equality. Native error status is unproved.
+- Wrong expected amount and swapped expected caller IDs each return1 at EQT_ELIM
+  before any fixture theorem marker. These are the intended claim refusals.
+  The positive repeat returns0 and all44 typed files are byte-identical.
+  There are100 first-pass evaluation theorems:88 typed and12 malformed.
+- Control preparation first returned1 because its text split selected the ML
+  assignment. An incorrectly continued dependent dispatch returned1 for an
+  absent script, without starting HOL. Both are preserved infrastructure errors,
+  not accepted negatives. Corrected preparation returned0. Closure inspection
+  first returned1 for an unqualified hyp name; corrected Thm.hyp inspection0.
+- Independent closure and hash readback0 checks229 nodes,228 disk-theory file
+  sets,36 wire-theory tags and the four existing HOL foundation axioms. DISK_THM
+  remains explicit. This does not independently replay every imported source or
+  authenticate a producer. Fixture materialization and host execution remain
+  trust dependencies. The complete Unicode source proof did not rerun.
+- Packet:proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md.
+  Raw:results/refund-native-audit-2026-11-04/attempt-0003/.
+  Typed batch source7f73ec35; pinned heap36f7c254; pinned HOL executable736c669e.
+  Local unsigned unpublished commit32e3613da6edc070d373101986c0bdfeb826f5c8.
+  Committed readback0 checks300 files. All50 protected paths and mission bytes
+  match; the original516530-byte uncertainty prefix remains intact.
+- Impact: fixed native inputs and expected bytes now have model proof evidence.
+  No refund native compile result, link, signature or execution is established
+  by this audit. U269's limited local ad-hoc signature permission remains.
+- Next check: bind exact compiler bytes/data/configuration and generated assembly
+  to the native artifact, then execute these frozen cases with captured streams
+  and statuses. Preserve resource, installation, physical I/O, whole-program
+  error-path, Unicode/model and independent assurance gaps. No Stage12, release
+  signing, deployment, protected adoption or publication is authorized.
+
+
+## U271 — Whole-program refund source theorem checked and reproduced
+
+- References:U267,U270,U272. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. U272 was appended first by the separate audit task; its
+  position and bytes remain intact. This entry closes a source-semantics link.
+- run_whole.py whole-0001 returns0. The existing prove_sem_thm bridge checks
+  declaration initialization, the actual refund_main namespace binding, the
+  unchanged initial FFI and required library references. It accepts three
+  exported theorems. Twelve published dependencies also build successfully.
+- refund_semantics applies to the exact refund_prog declarations. Preconditions
+  are stdin_content equal to the canonical nine-field request serialization,
+  wfcl cl, wfFS fs and STD_streams fs. Its sem_satisfies conclusion is modeled
+  Terminate Success with an extracted filesystem equal to consumed stdin plus
+  the complete rendered six-field refund result appended to stdout.
+- Every typed model request remains covered, including authorized and rejected
+  results. No eligibility premise or numeric bound was added. Model byte strings
+  and integers remain unbounded. The full Unicode/source/model assurance binding
+  is still open. The stateless decision does not perform actual bank operations.
+- Replacing the bridge entry with refund_dispatch while retaining refund_main_v
+  fails1 on SOME refund_dispatch_v = SOME refund_main_v. No mutant theory is
+  accepted. The driver verifies that the intended entry check ran. This is not
+  an infrastructure failure or a native process status.
+- The positive repeat returns0. All six exported files are identical. The
+  control dispatcher returns0. Whole source SHA256:
+  37d623cc2437f391d4a0e72afcc72ed0b541e82f985dc5a2dfbe73a29e3ef4d0.
+  Repeated theory data SHA256:
+  52b94fa448fa6de315cab80251ed5cdf46184a576e9478644b374e8071b19ded.
+- Fresh closure import, dependency snapshot and readback return0/0/0. There are
+  243 nodes,242 disk-theory file sets and42 exported theorem tags. The inspected
+  tags have no hypotheses and only DISK_THM imports. The four existing foundation
+  axioms remain SELECT_AX,INFINITY_AX,ETA_AX,BOOL_CASES_AX. Hashing imports does
+  not authenticate their producer or independently replay every upstream source.
+- First build elapsed737.2824473340006 local seconds, including dependencies.
+  No hosted measurement or performance improvement is inferred. All earlier
+  unsuccessful diagnostics and proof attempts remain preserved.
+- Local recovery create/verify/restore/fsck return0/0/0/0. The restored bundle
+  has exact commit cb68edf783ac249089999151df5821a90239b26d and116 checked files.
+  Bundle SHA25615d842a4d333e34e4b895e6383ef5d095192826c26e9e854f6639f5c04d08b6d.
+  This is same-machine recovery, not an independently verified off-machine copy.
+- The separate U272 fixture packet matches all300 files in local commit
+  32e3613da6edc070d373101986c0bdfeb826f5c8; import readback0. It supplies tested
+  inputs and kernel-checked expectations, not a native behavioral theorem.
+- The existing in-logic ARM64 compiler is now running on exact refund_prog_def.
+  Record:results/refund-arm8-compile-2026-11-04/attempt-0001/compile-0001/.
+  Its terminal result is IN_PROGRESS at this checkpoint. No successful refund
+  compile, machine-code identity or linked executable is claimed. No new compiler,
+  decoder, verifier, semantics or axiom was introduced.
+- Next check: complete that exact invocation, then inspect its actual theorem,
+  byte/data/configuration identities, reproduction and compiler-correctness
+  composition. Preserve resource-limit behavior, installation, FFI and OS premises.
+  The whole-program malformed-input path remains separate from POSTe. Logical
+  Success and checker exit codes do not prove POSIX termination/status.
+- Evidence:proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md;
+  raw results/refund-stdio-composition-2026-11-04/attempt-0001/. Original approved
+  method and wrapper remain unchanged. Native execution, hosted refund tests and
+  new admission remain NOT RUN. M1 and strict integration EXIT remain open.
+- Independent exact-claim/profile review and off-machine archive hash/restore
+  remain unresolved. GitHub was not refreshed. U269 limited local signing stays
+  with the separate audit task. No protected adoption, publication, merge,
+  dispatch, release signing or deployment ran here. M2–M4 remain later priorities.

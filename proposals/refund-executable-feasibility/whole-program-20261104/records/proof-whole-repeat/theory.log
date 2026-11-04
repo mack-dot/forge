@@ -1,0 +1,62 @@
+<<HOL message: Created theory "forge_refundWholeProg">>
+Loading translation: forge_refundStdioProg ... done.
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWholeProg)>>
+Saved theorem _______ "refund_whole_prog_spec"
+Saved theorem _______ "refund_request_whole_prog_spec"
+prove_sem_thm: collecting declarations ____________ 0.3 seconds
+prove_sem_thm: instantiating main theorem _________ 0.3 seconds
+prove_sem_thm: removing snocs from code ___________ 0.8 seconds
+prove_sem_thm: defining refund_prog _______________ 1.0 seconds
+prove_sem_thm: using nsLookup for refund_main in env Adding nsLookup representation thms for 602 consts [forge_refundStdioProg_env, forge_refundWireProg_env_13, ..., SexpProg_env]
+ 12.2 seconds
+prove_sem_thm: proving ffi is unchanged ___________ 0.0 seconds
+prove_sem_thm: checking refs are basis refs _______ 0.2 seconds
+prove_sem_thm: done
+Saved theorem _______ "refund_semantics"
+FORGE_THEOREM refund_whole_prog_spec
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+  whole_prog_spec refund_main_v cl fs NONE
+    ($= (add_stdout (fastForwardFD fs 0) output))
+FORGE_THEOREM refund_request_whole_prog_spec
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ⇒
+  whole_prog_spec refund_main_v cl fs NONE
+    ($=
+       (add_stdout (fastForwardFD fs 0)
+          (refund_render_fields
+             (refund_fields charge request original remaining enabled opened
+                candidate amount reason))))
+FORGE_THEOREM refund_semantics
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧
+         extract_fs ext (cl,fs) io_events =
+         SOME
+           (add_stdout (fastForwardFD fs 0)
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason))))
+Exporting theory "forge_refundWholeProg" ... done.
+Theory "forge_refundWholeProg" took 19.0s to build

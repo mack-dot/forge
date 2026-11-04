@@ -1,0 +1,23 @@
+<<HOL message: Created theory "forge_refundWholeProg">>
+Loading translation: forge_refundStdioProg ... done.
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWholeProg)>>
+Saved theorem _______ "refund_whole_prog_spec"
+Saved theorem _______ "refund_request_whole_prog_spec"
+prove_sem_thm: collecting declarations ____________ 0.4 seconds
+prove_sem_thm: instantiating main theorem _________ 0.1 seconds
+prove_sem_thm: removing snocs from code ___________ 0.3 seconds
+prove_sem_thm: defining refund_prog _______________ 0.8 seconds
+prove_sem_thm: using nsLookup for refund_dispatch in env Adding nsLookup representation thms for 602 consts [forge_refundStdioProg_env, forge_refundWireProg_env_13, ..., SexpProg_env]
+Proof of 
+
+nsLookup forge_refundStdioProg_env.v (Short «refund_dispatch») =
+SOME refund_main_v
+
+failed.
+error in quse /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWholeProg_experiment/forge_refundWholeProgScript.sml : HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+First unsolved sub-goal is
+
+SOME refund_dispatch_v = SOME refund_main_v
+
+error in load /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWholeProg_experiment/forge_refundWholeProgScript : HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Uncaught exception at /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/1/Tactical.sml:120: HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})

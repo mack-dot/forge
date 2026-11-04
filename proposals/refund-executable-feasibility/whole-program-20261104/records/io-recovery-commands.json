@@ -1,0 +1,85 @@
+[
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "actual_exit": 0,
+    "stdout": "cb68edf783ac249089999151df5821a90239b26d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "bundle",
+      "create",
+      "/Users/mackianni/forge-backups/forge-refund-stdio-2026-11-04.bundle",
+      "refs/heads/docs/integration-readiness-20261103"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "bundle",
+      "verify",
+      "/Users/mackianni/forge-backups/forge-refund-stdio-2026-11-04.bundle"
+    ],
+    "actual_exit": 0,
+    "stdout": "The bundle contains this ref:\ncb68edf783ac249089999151df5821a90239b26d refs/heads/docs/integration-readiness-20261103\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\n",
+    "stderr": "/Users/mackianni/forge-backups/forge-refund-stdio-2026-11-04.bundle is okay\n"
+  },
+  {
+    "argv": [
+      "git",
+      "clone",
+      "--bare",
+      "/Users/mackianni/forge-backups/forge-refund-stdio-2026-11-04.bundle",
+      "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-stdio-restore-xfxwea__/restored.git"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "Cloning into bare repository '/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-stdio-restore-xfxwea__/restored.git'...\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-stdio-restore-xfxwea__/restored.git",
+      "fsck",
+      "--full",
+      "--no-dangling"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "notice: HEAD points to an unborn branch (ElectraIOS)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-stdio-restore-xfxwea__/restored.git",
+      "rev-parse",
+      "refs/heads/docs/integration-readiness-20261103"
+    ],
+    "actual_exit": 0,
+    "stdout": "cb68edf783ac249089999151df5821a90239b26d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "diff-tree",
+      "--no-commit-id",
+      "--name-only",
+      "-r",
+      "cb68edf783ac249089999151df5821a90239b26d"
+    ],
+    "actual_exit": 0,
+    "stdout": "FORGE_MISSION_STATUS.md\nROADMAP.md\nproposals/refund-executable-feasibility/native-audit-followup-20261104/REPORT.md\nproposals/refund-executable-feasibility/native-audit-followup-20261104/manifest.json\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/certified-library-readback.json\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/cfNormaliseLib.sml\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/ld-help-command.json\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/ld-help.stderr\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/ld-help.stdout\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/ld-signature-manual-excerpt.txt\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/local-signing-authorization.json\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/observed-construct-0003.log\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/raw-method.ast.txt\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/readback_certified.py\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/static-audit.json\nproposals/refund-executable-feasibility/native-audit-followup-20261104/records/temp-path-source-audit.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md\nproposals/refund-executable-feasibility/stdio-contract-20261104/SHA256.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/closure-io-command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/closure-io-readback.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/closure-io.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/closure-io.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/stdio-substituted-input/dispatch.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/stdio-substituted-input/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/stdio-suppressed-output/dispatch.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/stdio-suppressed-output/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/wire-accepted-trailing-error/dispatch.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/wire-accepted-trailing-error/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/wire-suppressed-exception/dispatch.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/wire-suppressed-exception/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/wire-swapped-response-ids/dispatch.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/controls/wire-swapped-response-ids/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/dependency-io-snapshot.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/dependency_io_snapshot.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0005-command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0005.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0005.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0006-command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0006.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0006.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0007-command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0007.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0007.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0008-command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0008.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/diagnostic-0008.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/inspected-upstream-sources.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/io-readback.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/native-audit-import.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/native-shared-tracker-update.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/preflight.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.cachekey\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.dat\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.sig\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.ui\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.uo\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/objects/forge_refundStdioProgTheory.cachekey\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/objects/forge_refundStdioProgTheory.dat\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/objects/forge_refundStdioProgTheory.sig\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/objects/forge_refundStdioProgTheory.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/objects/forge_refundStdioProgTheory.ui\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/objects/forge_refundStdioProgTheory.uo\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-repeat/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-substituted-input/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-substituted-input/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-substituted-input/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-substituted-input/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-suppressed-output/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-suppressed-output/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-suppressed-output/forge_refundStdioProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-suppressed-output/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-accepted-trailing-error/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-accepted-trailing-error/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-accepted-trailing-error/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-accepted-trailing-error/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.cachekey\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.dat\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.sig\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.ui\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.uo\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-suppressed-exception/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-suppressed-exception/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-suppressed-exception/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-suppressed-exception/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-swapped-response-ids/build.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-swapped-response-ids/command.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-swapped-response-ids/forge_refundWireProgScript.sml\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-swapped-response-ids/theory.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/readback_io.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/run_closure_io.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/run_diagnostic.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/run_stdio.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/run_stdio_controls.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/run_wire.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/run_wire_controls.py\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/stdio-acceptance-matrix.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/stdio-repeat-dispatch.log\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/wire-acceptance-matrix.json\nproposals/refund-executable-feasibility/stdio-contract-20261104/records/wire-repeat-dispatch.log\nunsure.md\n",
+    "stderr": ""
+  }
+]

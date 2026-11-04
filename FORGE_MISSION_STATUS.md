@@ -17,13 +17,47 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checkpoint: **U270 — modeled I/O checked; five mutations refused**.
+Latest source-proof checkpoint: **U271 — whole-program source behavior checked**.
+Separate fixture checkpoint: **U272 — frozen wire expectations checked**.
+The [whole-program report](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md)
+records the exact theorem, entry conditions, commands, hashes and failed control.
+The proof and repeat pass. All six exported files match byte for byte. Replacing
+the required main function fails at the exact namespace binding. Fresh closure
+inspection covers 243 theory nodes and the four existing foundation axioms.
+This establishes conditional source semantics. It does not establish native behavior.
+
+| Current check | Actual exit | Evidence boundary |
+| --- | --- | --- |
+| Whole-program proof / repeat | 0/0 | Complete modeled output for every canonical typed request |
+| Wrong entry / control matrix | 1/0 | Required binding refusal; no accepted mutant export |
+| Closure / dependency snapshot / readback | 0/0/0 | 243 nodes, 242 file sets, 42 exported tags; imported objects remain explicit |
+| Fixture packet identity check | 0 | 300 files match local commit32e3613d; no human review inferred |
+| Local recovery bundle / restore / fsck | 0/0/0 | Restores cb68edf7 on this machine; not an independent backup |
+
+**Next:** finish the running unsigned ARM64 compiler build for the exact
+`refund_prog_def`. Record its real exit code and code/data/configuration identities.
+Then require reproduction and the existing compiler-correctness relation before
+binding a linked artifact to the frozen native controls. Current invocation:
+`results/refund-arm8-compile-2026-11-04/attempt-0001/compile-0001/`.
+Its final result is **IN_PROGRESS**, not a successful compilation.
+
+Keep the complete Unicode/source/model relation, malformed-input whole-program
+path, resource bounds, code installation, runtime and physical I/O explicit.
+Native execution, hosted refund measurements and new admission remain **NOT RUN**.
+The [fixture packet](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md)
+supplies checked test inputs and expected bytes, not a universal native theorem.
+The separate audit task retains its limited local signing authority from U269.
+Independent claim/profile review and exact off-machine archive hash/restore
+remain open. Publication, protected adoption, release signing, merge and dispatch
+require their corresponding authorization. M1 and integration EXIT remain open.
+
+Previous checkpoint: **U270 — modeled I/O checked; five mutations refused**.
 The [I/O contract record](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md)
 contains the full output/error contracts, exact commands, five required theorem
 failures and byte-identical wire/I/O repeats. Fresh closure inspection covers230
 nodes with the same four foundation axioms. All30 frozen inputs remain unchanged.
 
-**Next:** complete the running whole-program source-semantics build, then check
+**Next at U270:** complete the running whole-program source-semantics build, then check
 entry substitution and reproduction. Its final result is not established at
 this checkpoint. Native compilation/execution and new admission remain NOT RUN.
 Keep Unicode, resource, installation, physical I/O and runtime premises explicit.
@@ -38,7 +72,7 @@ wire/dispatcher theorems checked locally. No I/O theory was exported. The new
 wire repeat, adversarial controls and closure audit remain `NOT RUN`.
 Saved evidence and 30 unchanged protected inputs were checked for this update.
 
-**Next:** inspect the saved third `refund_main_valid` goal. Identify the remaining
+**Next at U268:** inspect the saved third `refund_main_valid` goal. Identify the remaining
 premise before another build. Then complete I/O, adversarial controls, positive
 reproduction and the whole-program/compiler relation. Native execution remains
 `NOT RUN`. The full mission and all prior failed results remain preserved.
@@ -86,7 +120,9 @@ is separate. Neither establishes native refund behavior. Publication has not run
 | Proposed alternative library method | LOCALLY_VALIDATED; not adopted | [Complete contract](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md); all nine typed inputs and six result fields; original-method relation and CF frame contract checked |
 | Proposed wire dispatcher | LOCALLY_VALIDATED | [Wire/I/O controls](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md); strict refusal, all six fields, three mutations and identical repeat |
 | Proposed modeled I/O | LOCALLY_VALIDATED; not adopted | [I/O contract](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md); exact stdout and exception contracts, two mutations and identical repeat |
-| Whole-program initialization and source semantics | IN_PROGRESS | Published bridge build started; no final result at U270. Original wrapper remains unchanged |
+| Whole-program initialization and source semantics | LOCALLY_VALIDATED; not adopted | [Whole-program proof](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md); exact main, initialization, canonical input and complete modeled output; wrong-entry refusal and identical repeat |
+| Exact ARM64 compile theorem | IN_PROGRESS | Existing in-logic compiler runs on refund_prog_def; no final result at U271 |
+| Frozen native fixture expectations | LOCALLY_VALIDATED | [Fixture proof](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md); 22 typed cases, six malformed inputs, exact bytes and two refusal controls; native execution NOT RUN |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
@@ -106,9 +142,9 @@ The new route uses the existing translator's checked function relation instead.
 It does not assume that normalization preserves behavior. Its explicit relation
 covers the original method's complete output for every typed model input.
 It is not arbitrary contextual equivalence or an adopted wrapper replacement.
-The U270 modeled I/O contracts now pass and reproduce. Next: finish the
-whole-program initialization/source-semantics bridge. Keep all input, output
-and refusal obligations. Native compilation and execution remain NOT RUN. M1 is open.
+The U270 modeled I/O contracts and U271 whole-program source theorem now pass
+and reproduce. The unsigned ARM64 compiler build is running. Keep all input,
+output and refusal obligations. Native execution remains NOT RUN. M1 is open.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
 | Recorded executed check, U267 | Actual exit | Boundary |
@@ -165,11 +201,11 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: complete the running whole-program bridge and check
-its exact entry binding. The wire and modeled I/O contracts now pass, including
-their controls and repeats. The original wrapper remains
-unchanged. Then establish the whole-program compiler entry relation and physical
-input/output boundary. The full Unicode/UTF-8 source
+Next authorized action: complete the running ARM64 compiler build and inspect
+its actual theorem and output identities. The whole-program source theorem,
+wire and modeled I/O contracts pass, including their controls and repeats.
+The original wrapper remains unchanged. Then establish compiler correctness
+and the physical input/output boundary. The full Unicode/UTF-8 source
 representation now passes. A particular model caller initializes and returns
 all six values correctly for every typed model input. The exact native artifact,
 runtime correspondence and admission binding remain open. Preserve the full
@@ -487,3 +523,24 @@ local commit3c5bb8ca, preserves the approval scope and candidate identity/contro
 readback0. It does not constitute fresh independent kernel replay or release
 admission. Whole-program/compiler, native runtime and actual executable controls
 remain open. Native process exit codes require their own checked bridge.
+
+
+## Independent native fixture evidence — U272
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+[Fixture report](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md).
+
+| Check | Actual exit | Scope |
+| --- | --- | --- |
+| Pinned direct HOL batch / repeat | 0/0 |22 typed cases and44 identical byte files |
+| Malformed-wire batch | 0 |Six exact error cases; no native exit claim |
+| Wrong expected amount / swapped IDs | 1/1 |Required proof refusals |
+| Corrected closure / record readback | 0/0 |229 nodes,228 theory file sets, four foundation axioms |
+| Committed packet readback | 0 |300 files at32e3613d; local, unsigned, unpublished |
+
+Initial library loading1, control preparation1, absent-script dispatch1 and
+closure qualifier1 remain preserved. The standard direct HOL route does not
+resolve or erase the earlier Holmake permission failures. No native executable
+control or signature has run. Next: exact arm8 compiler/artifact binding, then
+captured native I/O controls. Keep all runtime, resource, Unicode/model,
+error-status and independent-assurance gaps explicit.

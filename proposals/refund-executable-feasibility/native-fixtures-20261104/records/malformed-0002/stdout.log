@@ -1,0 +1,132 @@
+FIXTURE_THEOREM trailing_newline:error
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (implode
+       (MAP CHR
+          [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+           101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32; 84; 114;
+           117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 52;
+           48; 32; 114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+           109; 41; 10])) =
+  INL
+    (implode
+       (MAP CHR
+          [114; 101; 102; 117; 110; 100; 58; 32; 116; 114; 97; 105; 108; 105;
+           110; 103; 32; 105; 110; 112; 117; 116]))
+FIXTURE_THEOREM trailing_newline:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (implode
+       (MAP CHR
+          [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+           101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32; 84; 114;
+           117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 52;
+           48; 32; 114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+           109; 41; 10])) =
+  "(charge-1 request-1 100 60 True True True 40 returned_item)\n"
+FIXTURE_BYTES trailing_newline:stdin 60
+FIXTURE_THEOREM second_request:error
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (implode
+       (MAP CHR
+          [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+           101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32; 84; 114;
+           117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 52;
+           48; 32; 114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+           109; 41; 32; 40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101;
+           113; 117; 101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32;
+           84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101;
+           32; 52; 48; 32; 114; 101; 116; 117; 114; 110; 101; 100; 95; 105;
+           116; 101; 109; 41])) =
+  INL
+    (implode
+       (MAP CHR
+          [114; 101; 102; 117; 110; 100; 58; 32; 116; 114; 97; 105; 108; 105;
+           110; 103; 32; 105; 110; 112; 117; 116]))
+FIXTURE_THEOREM second_request:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (implode
+       (MAP CHR
+          [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+           101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32; 84; 114;
+           117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 52;
+           48; 32; 114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101;
+           109; 41; 32; 40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101;
+           113; 117; 101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32;
+           84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101;
+           32; 52; 48; 32; 114; 101; 116; 117; 114; 110; 101; 100; 95; 105;
+           116; 101; 109; 41])) =
+  "(charge-1 request-1 100 60 True True True 40 returned_item) (charge-1 request-1 100 60 True True True 40 returned_item)"
+FIXTURE_BYTES second_request:stdin 119
+FIXTURE_THEOREM unclosed_expression:error
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire (implode (MAP CHR [40])) =
+  INL
+    (implode
+       (MAP CHR
+          [114; 101; 102; 117; 110; 100; 58; 32; 105; 110; 118; 97; 108; 105;
+           100; 32; 83; 45; 101; 120; 112; 114; 101; 115; 115; 105; 111; 110]))
+FIXTURE_THEOREM unclosed_expression:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode (implode (MAP CHR [40])) = "("
+FIXTURE_BYTES unclosed_expression:stdin 1
+FIXTURE_THEOREM empty_input:error
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire (implode (MAP CHR [])) =
+  INL
+    (implode
+       (MAP CHR
+          [114; 101; 102; 117; 110; 100; 58; 32; 105; 110; 118; 97; 108; 105;
+           100; 32; 83; 45; 101; 120; 112; 114; 101; 115; 115; 105; 111; 110]))
+FIXTURE_THEOREM empty_input:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode (implode (MAP CHR [])) = ""
+FIXTURE_BYTES empty_input:stdin 0
+FIXTURE_THEOREM missing_fields:error
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire (implode (MAP CHR [40; 41])) =
+  INL
+    (implode
+       (MAP CHR
+          [100; 101; 115; 116; 57; 58; 32; 69; 120; 112; 101; 99; 116; 101;
+           100; 32; 108; 101; 110; 103; 116; 104; 32; 57; 44; 32; 114; 101;
+           99; 101; 105; 118; 101; 100; 32; 108; 101; 110; 103; 116; 104; 32;
+           48]))
+FIXTURE_THEOREM missing_fields:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode (implode (MAP CHR [40; 41])) = "()"
+FIXTURE_BYTES missing_fields:stdin 2
+FIXTURE_THEOREM invalid_integer:error
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ refund_run_wire
+    (implode
+       (MAP CHR
+          [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+           101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32; 84; 114;
+           117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 110;
+           111; 116; 45; 97; 110; 45; 105; 110; 116; 101; 103; 101; 114; 32;
+           114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109;
+           41])) =
+  INL
+    (implode
+       (MAP CHR
+          [116; 111; 95; 105; 110; 116; 58; 32; 102; 114; 111; 109; 83; 116;
+           114; 105; 110; 103; 32; 102; 97; 105; 108; 101; 100]))
+FIXTURE_THEOREM invalid_integer:stdin
+FIXTURE_ORACLES DISK_THM
+FIXTURE_STATEMENT ⊢ explode
+    (implode
+       (MAP CHR
+          [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+           101; 115; 116; 45; 49; 32; 49; 48; 48; 32; 54; 48; 32; 84; 114;
+           117; 101; 32; 84; 114; 117; 101; 32; 84; 114; 117; 101; 32; 110;
+           111; 116; 45; 97; 110; 45; 105; 110; 116; 101; 103; 101; 114; 32;
+           114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109;
+           41])) =
+  "(charge-1 request-1 100 60 True True True not-an-integer returned_item)"
+FIXTURE_BYTES invalid_integer:stdin 71
+MALFORMED_BATCH_COMPLETE 6
+/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/malformed.sml:34: warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.
