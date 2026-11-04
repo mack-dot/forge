@@ -7,6 +7,50 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U264)
+
+Published SexpProg source replay completed. The exact wrapper's tuple patterns
+now have checked matching proofs. Its control-flow coverage remains incomplete:
+removing the actual trailing-input guard still passes. The required refusal
+remains1; the wrapper matrix fails1. No native refund executable or whole-program
+claim is established. CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `Holmake --no-cache -j 2 SexpProgTheory.uo` | 0 |62 theories rebuilt;2267.0141792919894 local proof-build seconds |
+| Initial/corrected Sexp identity readback | 1/0 | Ambiguous basename resolved using actual built object and source directory |
+| `run_program.py program-0001` / `program-0002` | 1/0 | Translation setup fixed; second attempt constructs declarations only |
+| `run_program.py program-0003` / `program-0004` | 0/0 | Nested pattern fixed; actual input/output pattern theorems checked |
+| Flat-input / swapped-output wrapper mutations | 1/1 | Intended theorem failures |
+| Removed-tail-check wrapper mutation | **0; required1** | **Coverage gap; not a successful negative control** |
+| `run_program.py program-repeat` | 0 | Six byte-identical exports |
+| `run_program_controls.py` | **1** | Matrix correctly retains the unmet refusal requirement |
+| `run_heap.py heap-0003` / `heap-0004` / `heap-0005` | 1/1/1 | Helper failures, then interrupted broad evaluation; five attempts total, route stopped |
+| `run_method.py method-0003` / `method-0004` | 1/1 | Boolean reference/frame obligation unresolved; four attempts total |
+| Saved-record/identity validation | 0 |30 protected inputs unchanged; failed matrix and repeat identities confirmed |
+| Separate runtime-object builds | 0/0 | Identical C objects; no linked refund executable |
+| Separate fixture proof attempts | 1/1 | Permission errors before proof; no rerouted execution or accepted fixture result |
+
+[Exact wrapper commands, hashes and failure records](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md).
+[Separate native audit](proposals/refund-executable-feasibility/native-audit-20261104/REPORT.md).
+Raw records remain in `results/refund-native-io-2026-11-04/attempt-0001/`.
+This checkpoint validates saved results and updates Markdown. It does not rerun
+the listed proof commands or refresh GitHub. Prior results and failed attempts
+remain preserved. SexpProg IN_PROGRESS below is the earlier U263 observation.
+
+Next authorized check, NOT RUN: prove that the actual wrapper continuation
+rejects a nonempty remainder. Require the same tail-guard mutation to fail for
+that theorem. Then complete library framing and whole-program I/O. No native
+compiler or application execution, hosted refund run, signing or admission ran.
+Independent claim/profile review and off-machine archive hash/restore remain open.
+
+Documentation preservation checks for U264: stored-record validation0;19 local
+links and the520368-byte prior journal prefix checked0. Staged whole-packet
+whitespace check2 reports original raw logs and proof-source whitespace. Those
+bytes remain unchanged. The authored Markdown whitespace check returns0.
+Exact records: `native-checkpoint-docs-validation.json` and
+`native-docs-commit-commands.json` in the raw directory above.
+
 ## Active mission update — 2026-11-04 (U263)
 
 Refund wire inputs now have a checked full-domain parsing/field relation to the

@@ -1,0 +1,24 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refundProgTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundProg_experiment", "actual_exit": 1, "wall_seconds": 71.79536704201018, "source_sha256": "0c19a3ed4ee4f8b864b07416fb65c87332a1d26bffdb25342eb7849146dd3ce6", "native_refund_claim": false, "end_to_end": false, "object_sha256": {}}
+reason
+ in
+   pmatch (merge_env forge_refundProg_env_9 init_env).c refs
+     refund_handler_output_pattern
+     (refund_expected_tuple charge request original remaining enabled opened
+        candidate amount reason) [] =
+   Match
+     [(«intent_count»,Litv (IntLit (if ok then 1 else 0)));
+      («approved_request»,Litv (StrLit (if ok then request else «»)));
+      («approved_charge»,Litv (StrLit (if ok then charge else «»)));
+      («approved_reason»,Litv (StrLit (if ok then reason else «»)));
+      («approved_amount»,Litv (IntLit (if ok then amount else 0)));
+      («ok»,Boolv ok)]
+ 
+ failed.
+ First unsolved sub-goal is
+ 
+ F
+ 
+ Tactic failure proving "refund_result_bindings"; heap saved to forge_refundProg.refund_result_bindings.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundProg.refund_result_bindings.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundProg_experiment/.hol/logs/forge_refundProgTheory
+

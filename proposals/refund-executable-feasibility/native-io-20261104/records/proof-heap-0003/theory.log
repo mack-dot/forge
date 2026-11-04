@@ -1,0 +1,10 @@
+<<HOL message: Created theory "forge_refund_heap">>
+Saved theorem _______ "store_lookup_prefix"
+Saved theorem _______ "store_assign_prefix"
+Proof of 
+
+store_lookup (LENGTH prefix) (prefix ++ suffix) = store_lookup 0 suffix
+
+failed.
+Tactic failure proving "store_lookup_prefix_zero"; heap saved to forge_refund_heap.store_lookup_prefix_zero.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_heap.store_lookup_prefix_zero.dumpedheap

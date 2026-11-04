@@ -1,0 +1,22 @@
+<<HOL message: Created theory "forge_refund_heap">>
+Saved theorem _______ "store_lookup_prefix"
+Saved theorem _______ "store_assign_prefix"
+Saved theorem _______ "store_lookup_prefix_zero"
+Proof of 
+
+store_assign (LENGTH prefix) value (prefix ++ suffix) =
+OPTION_MAP ($++ prefix) (store_assign 0 value suffix)
+
+failed.
+First unsolved sub-goal is
+
+(if 0 < LENGTH suffix ∧ store_v_same_type (HD suffix) value then
+   SOME (prefix ++ suffix❲0 ↦ value❳)
+ else NONE) =
+OPTION_MAP ($++ prefix)
+  (if 0 < LENGTH suffix ∧ store_v_same_type (HD suffix) value then
+     SOME suffix❲0 ↦ value❳
+   else NONE)
+
+Tactic failure proving "store_assign_prefix_zero"; heap saved to forge_refund_heap.store_assign_prefix_zero.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_heap.store_assign_prefix_zero.dumpedheap

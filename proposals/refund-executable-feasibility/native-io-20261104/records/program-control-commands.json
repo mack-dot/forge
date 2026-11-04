@@ -1,0 +1,54 @@
+{
+  "actual_exit": 1,
+  "commands": [
+    {
+      "name": "program-flat-input",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/run_program.py",
+        "program-flat-input",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/negative-program-flat-input/forge_refundProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "required_negative_exit": 1
+    },
+    {
+      "name": "program-swapped-output",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/run_program.py",
+        "program-swapped-output",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/negative-program-swapped-output/forge_refundProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "required_negative_exit": 1
+    },
+    {
+      "name": "program-no-tail-check",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/run_program.py",
+        "program-no-tail-check",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/negative-program-no-tail-check/forge_refundProgScript.sml"
+      ],
+      "actual_exit": 0,
+      "required_negative_exit": 1
+    },
+    {
+      "name": "program-repeat",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-native-io-2026-11-04/attempt-0001/run_program.py",
+        "program-repeat"
+      ],
+      "actual_exit": 0,
+      "required_negative_exit": 0
+    }
+  ],
+  "end_to_end": false,
+  "scope": "Partial wrapper proofs; no native execution or whole-program assurance"
+}

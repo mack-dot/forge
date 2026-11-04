@@ -1,0 +1,500 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 567 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> OK..
+1 subgoal:
+val it =
+   
+   cf_let (SOME «v0») (cf_ref (Var (Short «v0»)))
+     (cf_let (SOME «v1») (cf_ref (Var (Short «v1»)))
+        (cf_let (SOME «v2») (cf_ref (Var (Short «v2»)))
+           (cf_let (SOME «v3») (cf_ref (Var (Short «v3»)))
+              (cf_let (SOME «v4») (cf_ref (Var (Short «v4»)))
+                 (cf_let (SOME «v5») (cf_ref (Var (Short «v5»)))
+                    (cf_let (SOME «v6») (cf_ref (Var (Short «v6»)))
+                       (cf_let (SOME «v7») (cf_ref (Var (... ... )))
+                          (cf_let (... ... ) (cf_ref (... ... ))
+                             (... ... (... ... ) (... ... (... ... )))))))))))
+     (extend_env_rec [«dfy_Refund»] [refund_method_library_v]
+        [«v8»; «v7»; «v6»; «v5»; «v4»; «v3»; «v2»; «v1»; ... ]
+        [Litv (StrLit [0;1;34mreason[0m); Litv (IntLit [0;1;34mamount[0m); Boolv [0;1;34mcandidate[0m;
+         Boolv [0;1;34mopened[0m; Boolv [0;1;34menabled[0m; Litv (IntLit [0;1;34mremaining[0m);
+         Litv (IntLit [0;1;34moriginal[0m); Litv (... ... ); ... ... ]
+        (merge_env forge_refundMethodProg_env init_env)) emp
+     (POSTv [0;32manswer[0m.
+        &([0;32manswer[0m =
+         refund_expected_tuple [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+           [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m))
+   
+   : proof
+val ts = [fn, fn, fn, fn, fn, fn, fn, fn, fn, fn, fn, fn, fn, fn, fn]:
+   (term list * term, thm) gentactic list
+STEP 0
+OK..
+1 subgoal:
+STEP 1
+OK..
+1 subgoal:
+STEP 2
+OK..
+1 subgoal:
+STEP 3
+OK..
+1 subgoal:
+STEP 4
+OK..
+HOL_ERR (at Tactical.THEN1: first subgoal not solved by second tactic)
+cf_let (SOME «v4») (cf_ref (Var (Short «v4»)))
+  (cf_let (SOME «v5») (cf_ref (Var (Short «v5»)))
+     (cf_let (SOME «v6») (cf_ref (Var (Short «v6»)))
+        (cf_let (SOME «v7») (cf_ref (Var (Short «v7»)))
+           (cf_let (SOME «v8») (cf_ref (Var (Short «v8»)))
+              (cf_let (SOME «v9») (cf_ref (Lit (IntLit 0)))
+                 (cf_let (SOME «v10») (cf_ref (Lit (IntLit 0)))
+                    (cf_let (SOME «v11») (cf_ref (Lit (IntLit 0)))
+                       (cf_let (SOME «v12») (cf_ref (Lit (IntLit 0)))
+                          (cf_let (SOME «v13») (cf_ref (Lit (IntLit 0)))
+                             (cf_let (SOME «v14») (cf_ref (Lit (IntLit 0)))
+                                (cf_handle
+                                   (cf_let NONE
+                                      (cf_match
+                                         (Let (SOME « l»)
+                                            (Let (SOME « l»)
+                                               (App Opderef
+                                                  [Var (Short «v0»)])
+                                               (Let (SOME « r»)
+                                                  (Lit (StrLit «»))
+                                                  (If
+                                                     (App Equality
+                                                        [Var (Short « l»);
+                                                         Var (Short « r»)])
+                                                     False True)))
+                                            (Log Andalso (Var (Short « l»))
+                                               (Let (SOME « l»)
+                                                  (Let (SOME « l»)
+                                                     (App Opderef
+                                                        [Var (Short «v1»)])
+                                                     (Let (SOME « r»)
+                                                        (Lit (StrLit «»))
+                                                        (If
+                                                           (App Equality
+                                                              [Var
+                                                                 (Short « l»);
+                                                               Var
+                                                                 (Short « r»)])
+                                                           False True)))
+                                                  (Log Andalso
+                                                     (Var (Short « l»))
+                                                     (Let (SOME « l»)
+                                                        (App Opderef
+                                                           [Var (Short «v4»)])
+                                                        (Log Andalso
+                                                           (Var (Short « l»))
+                                                           (Let (SOME « l»)
+                                                              (App Opderef
+                                                                 [Var
+                                                                    (Short
+                                                                       «v5»)])
+                                                              (Log Andalso
+                                                                 (Var
+                                                                    (Short
+                                                                       « l»))
+                                                                 (Let
+                                                                    (SOME
+                                                                       « l»)
+                                                                    (Let
+                                                                       (SOME
+                                                                          « l»)
+                                                                       (Lit
+                                                                          (IntLit
+                                                                             0))
+                                                                       (App
+                                                                          (Test
+                                                                             (Compare
+                                                                                Leq)
+                                                                             IntT)
+                                                                          [Var
+                                                                             (Short
+                                                                                « l»);
+                                                                           App
+                                                                             Opderef
+                                                                             [Var
+                                                                                (Short
+                                                                                   «v2»)]]))
+                                                                    (Log
+                                                                       Andalso
+                                                                       (Var
+                                                                          (Short
+                                                                             « l»))
+                                                                       (Let
+                                                                          (SOME
+                                                                             « l»)
+                                                                          (Let
+                                                                             (SOME
+                                                                                « l»)
+                                                                             (App
+                                                                                Opderef
+                                                                                [Var
+                                                                                   (Short
+                                                                                      «v2»)])
+                                                                             (App
+                                                                                (Test
+                                                                                   (Compare
+                                                                                      Leq)
+                                                                                   IntT)
+                                                                                [Var
+                                                                                   (Short
+                                                                                      « l»);
+                                                                                 Lit
+                                                                                   (IntLit
+                                                                                      9223372036854775807)]))
+                                                                          (Log
+                                                                             Andalso
+                                                                             (Var
+                                                                                (Short
+                                                                                   « l»))
+                                                                             (Let
+                                                                                (SOME
+                                                                                   « l»)
+                                                                                (Let
+                                                                                   (SOME
+                                                                                      « l»)
+                                                                                   (Lit
+                                                                                      (IntLit
+                                                                                         0))
+                                                                                   (App
+                                                                                      (Test
+                                                                                         (Compare
+                                                                                            Leq)
+                                                                                         IntT)
+                                                                                      [Var
+                                                                                         (Short
+                                                                                            « l»);
+                                                                                       App
+                                                                                         Opderef
+                                                                                         [Var
+                                                                                            (Short
+                                                                                               «v3»)]]))
+                                                                                (Log
+                                                                                   Andalso
+                                                                                   (Var
+                                                                                      (Short
+                                                                                         « l»))
+                                                                                   (Let
+                                                                                      (SOME
+                                                                                         « l»)
+                                                                                      (Let
+                                                                                         (SOME
+                                                                                            « l»)
+                                                                                         (App
+                                                                                            Opderef
+                                                                                            [Var
+                                                                                               (Short
+                                                                                                  «v3»)])
+                                                                                         (App
+                                                                                            (Test
+                                                                                               (Compare
+                                                                                                  Leq)
+                                                                                               IntT)
+                                                                                            [Var
+                                                                                               (Short
+                                                                                                  « l»);
+                                                                                             App
+                                                                                               Opderef
+                                                                                               [Var
+                                                                                                  (Short
+                                                                                                     «v2»)]]))
+                                                                                      (Log
+                                                                                         Andalso
+                                                                                         (Var
+                                                                                            (Short
+                                                                                               « l»))
+                                                                                         (Let
+                                                                                            (SOME
+                                                                                               « l»)
+                                                                                            (App
+                                                                                               Opderef
+                                                                                               [Var
+                                                                                                  (Short
+                                                                                                     «v6»)])
+                                                                                            (Log
+                                                                                               Andalso
+                                                                                               (Var
+                                                                                                  (Short
+                                                                                                     « l»))
+                                                                                               (Let
+                                                                                                  (SOME
+                                                                                                     « l»)
+                                                                                                  (Let
+                                                                                                     (SOME
+                                                                                                        « l»)
+                                                                                                     (Lit
+                                                                                                        (IntLit
+                                                                                                           0))
+                                                                                                     (App
+                                                                                                        (Test
+                                                                                                           (Compare
+                                                                                                              Leq)
+                                                                                                           IntT)
+                                                                                                        [Var
+                                                                                                           (Short
+                                                                                                              « l»);
+                                                                                                         App
+                                                                                                           Opderef
+                                                                                                           [Var
+                                                                                                              (Short
+                                                                                                                 «v7»)]]))
+                                                                                                  (Log
+                                                                                                     Andalso
+                                                                                                     (Var
+                                                                                                        (Short
+                                                                                                           « l»))
+                                                                                                     (Let
+                                                                                                        (SOME
+                                                                                                           « l»)
+                                                                                                        (Let
+                                                                                                           (SOME
+                                                                                                              « l»)
+                                                                                                           (App
+                                                                                                              Opderef
+                                                                                                              [Var
+                                                                                                                 (Short
+                                                                                                                    «v7»)])
+                                                                                                           (App
+                                                                                                              (Test
+                                                                                                                 (Compare
+                                                                                                                    Leq)
+                                                                                                                 IntT)
+                                                                                                              [Var
+                                                                                                                 (Short
+                                                                                                                    « l»);
+                                                                                                               App
+                                                                                                                 Opderef
+                                                                                                                 [Var
+                                                                                                                    (Short
+                                                                                                                       «v3»)]]))
+                                                                                                        (Log
+                                                                                                           Andalso
+                                                                                                           (Var
+                                                                                                              (Short
+                                                                                                                 « l»))
+                                                                                                           (Let
+                                                                                                              (SOME
+                                                                                                                 « l»)
+                                                                                                              (Let
+                                                                                                                 (SOME
+                                                                                                                    « l»)
+                                                                                                                 (Let
+                                                                                                                    (SOME
+                                                                                                                       « l»)
+                                                                                                                    (App
+                                                                                                                       Opderef
+                                                                                                                       [Var
+                                                                                                                          (Short
+                                                                                                                             «v8»)])
+                                                                                                                    (App
+                                                                                                                       Equality
+                                                                                                                       [Var
+                                                                                                                          (Short
+                                                                                                                             « l»);
+                                                                                                                        Lit
+                                                                                                                          (StrLit
+                                                                                                                             «duplicate_charge»)]))
+                                                                                                                 (Log
+                                                                                                                    Orelse
+                                                                                                                    (Var
+                                                                                                                       (Short
+                                                                                                                          « l»))
+                                                                                                                    (Let
+                                                                                                                       (SOME
+                                                                                                                          « l»)
+                                                                                                                       (Let
+                                                                                                                          (SOME
+                                                                                                                             « l»)
+                                                                                                                          (App
+                                                                                                                             Opderef
+                                                                                                                             [Var
+                                                                                                                                (Short
+                                                                                                                                   «v8»)])
+                                                                                                                          (App
+                                                                                                                             Equality
+                                                                                                                             [Var
+                                                                                                                                (Short
+                                                                                                                                   « l»);
+                                                                                                                              Lit
+                                                                                                                                (StrLit
+                                                                                                                                   «service_not_delivered»)]))
+                                                                                                                       (Log
+                                                                                                                          Orelse
+                                                                                                                          (Var
+                                                                                                                             (Short
+                                                                                                                                « l»))
+                                                                                                                          (Let
+                                                                                                                             (SOME
+                                                                                                                                « l»)
+                                                                                                                             (Let
+                                                                                                                                (SOME
+                                                                                                                                   « l»)
+                                                                                                                                (App
+                                                                                                                                   Opderef
+                                                                                                                                   [Var
+                                                                                                                                      (Short
+                                                                                                                                         «v8»)])
+                                                                                                                                (App
+                                                                                                                                   Equality
+                                                                                                                                   [Var
+                                                                                                                                      (Short
+                                                                                                                                         « l»);
+                                                                                                                                    Lit
+                                                                                                                                      (StrLit
+                                                                                                                                         «returned_item»)]))
+                                                                                                                             (Log
+                                                                                                                                Orelse
+                                                                                                                                (Var
+                                                                                                                                   (Short
+                                                                                                                                      « l»))
+                                                                                                                                False))))))
+                                                                                                              (Log
+                                                                                                                 Andalso
+                                                                                                                 (Var
+                                                                                                                    (Short
+                                                                                                                       « l»))
+                                                                                                                 True))))))))))))))))))))))))
+                                         [(Pvar « 0»,
+                                           cf_let NONE
+                                             (cf_assign (Var (Short «v9»))
+                                                (Var (Short « 0»)))
+                                             (cf_con NONE []))])
+                                      (cf_let NONE
+                                         (cf_if
+                                            (App Opderef [Var (Short «v9»)])
+                                            (cf_match
+                                               (Tuple
+                                                  [Lit (IntLit 1);
+                                                   App Opderef
+                                                     [Var (Short «v1»)];
+                                                   App Opderef
+                                                     [Var (Short «v0»)];
+                                                   App Opderef
+                                                     [Var (Short «v8»)];
+                                                   App Opderef
+                                                     [Var (Short «v7»)]])
+                                               [(Pcon NONE
+                                                   [Pvar « 4»; Pvar « 3»;
+                                                    Pvar « 2»; Pvar « 1»;
+                                                    Pvar « 0»],
+                                                 cf_let NONE
+                                                   (cf_assign
+                                                      (Var (Short «v10»))
+                                                      (Var (Short « 0»)))
+                                                   (cf_let NONE
+                                                      (cf_assign
+                                                         (Var (Short «v11»))
+                                                         (Var (Short « 1»)))
+                                                      (cf_let NONE
+                                                         (cf_assign
+                                                            (Var
+                                                               (Short «v12»))
+                                                            (Var (Short « 2»)))
+                                                         (cf_let NONE
+                                                            (cf_assign
+                                                               (Var
+                                                                  (Short
+                                                                     «v13»))
+                                                               (Var
+                                                                  (Short « 3»)))
+                                                            (cf_let NONE
+                                                               (cf_assign
+                                                                  (Var
+                                                                     (Short
+                                                                        «v14»))
+                                                                  (Var
+                                                                     (Short
+                                                                        « 4»)))
+                                                               (cf_con NONE
+                                                                  []))))))])
+                                            (cf_match
+                                               (Tuple
+                                                  [Lit (IntLit 0);
+                                                   Lit (StrLit «»);
+                                                   Lit (StrLit «»);
+                                                   Lit (StrLit «»);
+                                                   Lit (IntLit 0)])
+                                               [(Pcon NONE
+                                                   [Pvar « 4»; Pvar « 3»;
+                                                    Pvar « 2»; Pvar « 1»;
+                                                    Pvar « 0»],
+                                                 cf_let NONE
+                                                   (cf_assign
+                                                      (Var (Short «v10»))
+                                                      (Var (Short « 0»)))
+                                                   (cf_let NONE
+                                                      (cf_assign
+                                                         (Var (Short «v11»))
+                                                         (Var (Short « 1»)))
+                                                      (cf_let NONE
+                                                         (cf_assign
+                                                            (Var
+                                                               (Short «v12»))
+                                                            (Var (Short « 2»)))
+                                                         (cf_let NONE
+                                                            (cf_assign
+                                                               (Var
+                                                                  (Short
+                                                                     «v13»))
+                                                               (Var
+                                                                  (Short « 3»)))
+                                                            (cf_let NONE
+                                                               (cf_assign
+                                                                  (Var
+                                                                     (Short
+                                                                        «v14»))
+                                                                  (Var
+                                                                     (Short
+                                                                        « 4»)))
+                                                               (cf_con NONE
+                                                                  []))))))]))
+                                         (cf_raise
+                                            (Con (SOME (Short «Return»)) []))))
+                                   [(Pcon (SOME (Short «Return»)) [],
+                                     cf_con NONE
+                                       [App Opderef [Var (Short «v9»)];
+                                        App Opderef [Var (Short «v10»)];
+                                        App Opderef [Var (Short «v11»)];
+                                        App Opderef [Var (Short «v12»)];
+                                        App Opderef [Var (Short «v13»)];
+                                        App Opderef [Var (Short «v14»)]])])))))))))))
+  (extend_env_rec [«dfy_Refund»] [refund_method_library_v]
+     [«v8»; «v7»; «v6»; «v5»; «v4»; «v3»; «v2»; «v1»; «v0»]
+     [Litv (StrLit reason); Litv (IntLit amount); Boolv candidate;
+      Boolv opened; Boolv enabled; Litv (IntLit remaining);
+      Litv (IntLit original); Litv (StrLit request); Litv (StrLit charge)]
+     (merge_env forge_refundMethodProg_env init_env) with
+   v :=
+     nsBind «v3» v3
+       (nsBind «v2» v2
+          (nsBind «v1» v1
+             (nsBind «v0» v0
+                (extend_env_rec [«dfy_Refund»] [refund_method_library_v]
+                   [«v8»; «v7»; «v6»; «v5»; «v4»; «v3»; «v2»; «v1»; «v0»]
+                   [Litv (StrLit reason); Litv (IntLit amount);
+                    Boolv candidate; Boolv opened; Boolv enabled;
+                    Litv (IntLit remaining); Litv (IntLit original);
+                    Litv (StrLit request); Litv (StrLit charge)]
+                   (merge_env forge_refundMethodProg_env init_env)).v))))
+  (v0 ~~> Litv (StrLit charge) * v1 ~~> Litv (StrLit request) *
+   v2 ~~> Litv (IntLit original) * v3 ~~> Litv (IntLit remaining))
+  (POSTv answer.
+     &(answer =
+      refund_expected_tuple charge request original remaining enabled opened
+        candidate amount reason))
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

@@ -1,0 +1,95 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 381 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val it = (): unit
+⊢ refund_handle_v =
+  Recclosure (merge_env forge_refundProg_env_9 init_env)
+    [(«refund_handle»,«se»,
+      Let (SOME « v0»)
+        (App Opapp [Var (Short «refund_decode»); Var (Short «se»)])
+        (Mat (Var (Short « v0»))
+           [(Pcon (SOME (Short «Inl»)) [Pvar «msg»],
+             Let (SOME « v1») (Con (SOME (Short «Fail»)) [Var (Short «msg»)])
+               (Raise (Var (Short « v1»))));
+            (Pcon (SOME (Short «Inr»))
+               [Pcon NONE
+                  [Pvar «charge»;
+                   Pcon NONE
+                     [Pvar «request»;
+                      Pcon NONE
+                        [Pvar «original»;
+                         Pcon NONE
+                           [Pvar «remaining»;
+                            Pcon NONE
+                              [Pvar «enabled»;
+                               Pcon NONE
+                                 [Pvar «opened»;
+                                  Pcon NONE
+                                    [Pvar «candidate»;
+                                     Pcon NONE [Pvar «amount»; Pvar «reason»]]]]]]]]],
+             Let (SOME « v2»)
+               (App Opapp
+                  [App Opapp
+                     [App Opapp
+                        [App Opapp
+                           [App Opapp
+                              [App Opapp
+                                 [App Opapp
+                                    [App Opapp
+                                       [App Opapp
+                                          [Var (Short «dfy_Refund»);
+                                           Var (Short «reason»)];
+                                        Var (Short «amount»)];
+                                     Var (Short «candidate»)];
+                                  Var (Short «opened»)];
+                               Var (Short «enabled»)];
+                            Var (Short «remaining»)]; Var (Short «original»)];
+                      Var (Short «request»)]; Var (Short «charge»)])
+               (Mat (Var (Short « v2»))
+                  [(Pcon NONE
+                      [Pvar «ok»; Pvar «approved_amount»;
+                       Pvar «approved_reason»; Pvar «approved_charge»;
+                       Pvar «approved_request»; Pvar «intent_count»],
+                    Let (SOME « v3»)
+                      (App Opapp
+                         [App Opapp
+                            [App Opapp
+                               [App Opapp
+                                  [App Opapp
+                                     [App Opapp
+                                        [Var (Short «refund_response»);
+                                         Var (Short «ok»)];
+                                      Var (Short «approved_amount»)];
+                                   Var (Short «approved_reason»)];
+                                Var (Short «approved_charge»)];
+                             Var (Short «approved_request»)];
+                          Var (Short «intent_count»)])
+                      (App Opapp
+                         [Var (Long «Sexp» (Short «toString»));
+                          Var (Short « v3»)]))]))]))] «refund_handle»
+⊢ (SEXP_TYPE -->
+   SUM_TYPE STRING_TYPE
+     (PAIR_TYPE STRING_TYPE
+        (PAIR_TYPE STRING_TYPE
+           (PAIR_TYPE INT
+              (PAIR_TYPE INT
+                 (PAIR_TYPE BOOL
+                    (PAIR_TYPE BOOL
+                       (PAIR_TYPE BOOL (PAIR_TYPE INT STRING_TYPE)))))))))
+    refund_decode refund_decode_v
+⊢ (∀a b x_2_x2_1_ v.
+     SUM_TYPE a b (INR x_2_x2_1_) v ⇔
+     ∃v2_1. v = Conv (SOME (TypeStamp «Inr» 4)) [v2_1] ∧ b x_2_x2_1_ v2_1) ∧
+  ∀a b x_1_x1_1_ v.
+    SUM_TYPE a b (INL x_1_x1_1_) v ⇔
+    ∃v1_1. v = Conv (SOME (TypeStamp «Inl» 4)) [v1_1] ∧ a x_1_x1_1_ v1_1
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

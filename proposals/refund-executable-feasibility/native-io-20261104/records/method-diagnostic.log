@@ -1,0 +1,41 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 567 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> OK..
+1 subgoal:
+val it =
+   
+   cf_let (SOME «v0») (cf_ref (Var (Short «v0»)))
+     (cf_let (SOME «v1») (cf_ref (Var (Short «v1»)))
+        (cf_let (SOME «v2») (cf_ref (Var (Short «v2»)))
+           (cf_let (SOME «v3») (cf_ref (Var (Short «v3»)))
+              (cf_let (SOME «v4») (cf_ref (Var (Short «v4»)))
+                 (cf_let (SOME «v5») (cf_ref (Var (Short «v5»)))
+                    (cf_let (SOME «v6») (cf_ref (Var (Short «v6»)))
+                       (cf_let (SOME «v7») (cf_ref (Var (... ... )))
+                          (cf_let (... ... ) (cf_ref (... ... ))
+                             (... ... (... ... ) (... ... (... ... )))))))))))
+     (extend_env_rec [«dfy_Refund»] [refund_method_library_v]
+        [«v8»; «v7»; «v6»; «v5»; «v4»; «v3»; «v2»; «v1»; ... ]
+        [Litv (StrLit [0;1;34mreason[0m); Litv (IntLit [0;1;34mamount[0m); Boolv [0;1;34mcandidate[0m;
+         Boolv [0;1;34mopened[0m; Boolv [0;1;34menabled[0m; Litv (IntLit [0;1;34mremaining[0m);
+         Litv (IntLit [0;1;34moriginal[0m); Litv (... ... ); ... ... ]
+        (merge_env forge_refundMethodProg_env init_env)) emp
+     (POSTv [0;32manswer[0m.
+        &([0;32manswer[0m =
+         refund_expected_tuple [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+           [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m))
+   
+   : proof
+OK..
+Exception- HOL_ERR (at cfLetAutoLib.xlet_auto: Not handled yet) raised
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

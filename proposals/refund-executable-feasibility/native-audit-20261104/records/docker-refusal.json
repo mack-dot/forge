@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "docker",
+    "image",
+    "ls",
+    "--no-trunc",
+    "--format",
+    "{{.Repository}}:{{.Tag}} {{.ID}}"
+  ],
+  "actual_exit": 1,
+  "stderr": "permission denied while trying to connect to the Docker daemon socket at unix:///Users/mackianni/.docker/run/docker.sock: connect: operation not permitted",
+  "classification": "INFRASTRUCTURE_REFUSAL",
+  "linux_execution": "NOT_RUN"
+}

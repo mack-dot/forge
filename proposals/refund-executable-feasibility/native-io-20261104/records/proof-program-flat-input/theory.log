@@ -1,0 +1,79 @@
+<<HOL message: Created theory "forge_refundProg">>
+Loading translation: SexpProg ... done.
+Translating bind
+Adding nsLookup representation thms for 586 consts [SexpProg_env_37, TextIOProg_env_76, ..., SexpProg_env]
+Saved theorem _______ "nsLookup_forge_refundProg_env_pfun_eqs"
+Saved theorem _______ "bind_v_thm"
+Translating to_mlstring
+Adding nsLookup representation thms for [forge_refundProg_env]
+Saved theorem _______ "nsLookup_forge_refundProg_env_0_pfun_eqs"
+Saved theorem _______ "to_mlstring_v_thm"
+Translating to_bool
+Adding nsLookup representation thms for [forge_refundProg_env_0]
+Saved theorem _______ "nsLookup_forge_refundProg_env_1_pfun_eqs"
+Saved theorem _______ "to_bool_v_thm"
+Translating to_int
+Adding nsLookup representation thms for [forge_refundProg_env_1]
+Saved theorem _______ "nsLookup_forge_refundProg_env_2_pfun_eqs"
+Saved theorem _______ "to_int_v_thm"
+Translating dest_expr
+Adding nsLookup representation thms for [forge_refundProg_env_2]
+Saved theorem _______ "nsLookup_forge_refundProg_env_3_pfun_eqs"
+Saved theorem _______ "dest_expr_v_thm"
+Translating dest_fail
+Adding nsLookup representation thms for [forge_refundProg_env_3]
+Adding nsLookup representation thms for [init_env]
+Saved theorem _______ "nsLookup_forge_refundProg_env_4_pfun_eqs"
+Saved theorem _______ "dest_fail_v_thm"
+Translating dest9
+Adding nsLookup representation thms for [forge_refundProg_env_4]
+Saved theorem _______ "nsLookup_forge_refundProg_env_5_pfun_eqs"
+Saved theorem _______ "dest9_v_thm"
+Translating refund_decode
+Adding nsLookup representation thms for [forge_refundProg_env_5]
+Saved theorem _______ "nsLookup_forge_refundProg_env_6_pfun_eqs"
+Saved theorem _______ "refund_decode_v_thm"
+Translating refund_response
+Adding nsLookup representation thms for [forge_refundProg_env_6]
+Saved theorem _______ "nsLookup_forge_refundProg_env_7_pfun_eqs"
+Saved theorem _______ "refund_response_v_thm"
+Saved theorem _______ "nsLookup_forge_refundProg_env_8_pfun_eqs"
+Saved theorem _______ "nsLookup_forge_refundProg_env_9_pfun_eqs"
+Saved theorem _______ "nsLookup_forge_refundProg_env_10_pfun_eqs"
+Saved theorem _______ "nsLookup_forge_refundProg_env_11_pfun_eqs"
+Saved definition ____ "refund_library_program_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundProg)>>
+Adding nsLookup representation thms for 5 consts [forge_refundProg_env_11, forge_refundProg_env_10, ..., forge_refundProg_env_7]
+Saved theorem _______ "refund_sum_constructors_bound"
+Saved definition ____ "refund_executable_program_def"
+Saved theorem _______ "refund_entry_call"
+Saved definition ____ "refund_handler_input_pattern_def"
+Saved definition ____ "refund_handler_output_pattern_def"
+Proof of 
+
+SUM_TYPE STRING_TYPE
+  (PAIR_TYPE STRING_TYPE
+     (PAIR_TYPE STRING_TYPE
+        (PAIR_TYPE INT
+           (PAIR_TYPE INT
+              (PAIR_TYPE BOOL
+                 (PAIR_TYPE BOOL (PAIR_TYPE BOOL (PAIR_TYPE INT STRING_TYPE))))))))
+  (INR
+     (charge,request,original,remaining,enabled,opened,candidate,amount,
+      reason)) dv ⇒
+pmatch (merge_env forge_refundProg_env_9 init_env).c refs
+  refund_handler_input_pattern dv [] =
+Match
+  [(«reason»,Litv (StrLit reason)); («amount»,Litv (IntLit amount));
+   («candidate»,Boolv candidate); («opened»,Boolv opened);
+   («enabled»,Boolv enabled); («remaining»,Litv (IntLit remaining));
+   («original»,Litv (IntLit original)); («request»,Litv (StrLit request));
+   («charge»,Litv (... ... ))]
+
+failed.
+First unsolved sub-goal is
+
+F
+
+Tactic failure proving "refund_decoder_bindings"; heap saved to forge_refundProg.refund_decoder_bindings.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundProg.refund_decoder_bindings.dumpedheap

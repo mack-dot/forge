@@ -1,0 +1,20 @@
+<<HOL message: Created theory "forge_refundMethodProg">>
+Loading translation: mlbasicsProg ... done.
+Saved theorem _______ "nsLookup_forge_refundMethodProg_env_pfun_eqs"
+Saved theorem _______ "nsLookup_forge_refundMethodProg_env_0_pfun_eqs"
+Adding nsLookup representation thms for 222 consts [forge_refundMethodProg_env_0, forge_refundMethodProg_env, ..., StringProg_env]
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundMethodProg)>>
+Proof of 
+
+app p refund_method_library_v
+  [Litv (StrLit reason); Litv (IntLit amount); Boolv candidate; Boolv opened;
+   Boolv enabled; Litv (IntLit remaining); Litv (IntLit original);
+   Litv (StrLit request); Litv (StrLit charge)] emp
+  (POSTv answer.
+     &(answer =
+      refund_expected_tuple charge request original remaining enabled opened
+        candidate amount reason))
+
+failed.
+Tactic failure proving "refund_method_library_spec"; heap saved to forge_refundMethodProg.refund_method_library_spec.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundMethodProg.refund_method_library_spec.dumpedheap

@@ -1,0 +1,486 @@
+[
+  {
+    "name": "eligible_return",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "40",
+      "reason": "returned_item",
+      "charge": "charge-1",
+      "request": "request-1",
+      "count": "1"
+    }
+  },
+  {
+    "name": "eligible_duplicate",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "duplicate_charge"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "40",
+      "reason": "duplicate_charge",
+      "charge": "charge-1",
+      "request": "request-1",
+      "count": "1"
+    }
+  },
+  {
+    "name": "eligible_service",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "service_not_delivered"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "40",
+      "reason": "service_not_delivered",
+      "charge": "charge-1",
+      "request": "request-1",
+      "count": "1"
+    }
+  },
+  {
+    "name": "eligible_zero",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "0",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "0",
+      "reason": "returned_item",
+      "charge": "charge-1",
+      "request": "request-1",
+      "count": "1"
+    }
+  },
+  {
+    "name": "eligible_maximum",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "9223372036854775807",
+      "remaining": "9223372036854775807",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "9223372036854775807",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "9223372036854775807",
+      "reason": "returned_item",
+      "charge": "charge-1",
+      "request": "request-1",
+      "count": "1"
+    }
+  },
+  {
+    "name": "unicode_ids",
+    "inputs": {
+      "charge": "\u0100",
+      "request": "\udbff\udfff",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "40",
+      "reason": "returned_item",
+      "charge": "\u0100",
+      "request": "\udbff\udfff",
+      "count": "1"
+    }
+  },
+  {
+    "name": "nul_id",
+    "inputs": {
+      "charge": "\u0000",
+      "request": "request\u0000tail",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "40",
+      "reason": "returned_item",
+      "charge": "\u0000",
+      "request": "request\u0000tail",
+      "count": "1"
+    }
+  },
+  {
+    "name": "escaped_ids",
+    "inputs": {
+      "charge": "a\n\"\\b",
+      "request": "\t()\r",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": true,
+      "amount": "40",
+      "reason": "returned_item",
+      "charge": "a\n\"\\b",
+      "request": "\t()\r",
+      "count": "1"
+    }
+  },
+  {
+    "name": "empty_charge",
+    "inputs": {
+      "charge": "",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "empty_request",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "negative_amount",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "-1",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "over_remaining",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "61",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "original_over_money",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "9223372036854775808",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "remaining_over_original",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "101",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "disabled",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": false,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "closed_request",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": false,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "noncandidate",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": false,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "negative_remaining",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "-1",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "unapproved_reason",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "other"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "reason_suffix",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item\u0000evil"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "unbounded_positive",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "100",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "115792089237316195423570985008687907853269984665640564039457584007913129639936",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  },
+  {
+    "name": "unbounded_negative",
+    "inputs": {
+      "charge": "charge-1",
+      "request": "request-1",
+      "original": "-115792089237316195423570985008687907853269984665640564039457584007913129639936",
+      "remaining": "60",
+      "enabled": true,
+      "opened": true,
+      "candidate": true,
+      "amount": "40",
+      "reason": "returned_item"
+    },
+    "expected": {
+      "ok": false,
+      "amount": "0",
+      "reason": "",
+      "charge": "",
+      "request": "",
+      "count": "0"
+    }
+  }
+]

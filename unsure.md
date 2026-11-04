@@ -7652,3 +7652,72 @@ curl: (6) Could not resolve host: github.com
   method, then compile the same program through the pinned native backend.
   Preserve resource-limit, FFI, assembler, loader and host assumptions. Native
   execution and new admission remain NOT RUN. M2–M4 remain subsequent work.
+
+
+## U264 — Wrapper tuple checks pass, but its actual tail guard lacks proof coverage
+
+- References:U260–U263. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. This entry preserves completed local preparation and a
+  failed coverage control. It does not authorize a native claim or new policy.
+- Published SexpProg source replay completed0:62 theories rebuilt, local wall
+  time2267.0141792919894 seconds. Initial identity inspection failed1 because
+  two pinned trees contain typeSoundScript.sml. The corrected inspection uses
+  the actual built object and logged source directory; exit0. No failed
+  manifest was accepted. This is parser/library proof replay, not refund I/O.
+- The wrapper uses published Sexp.inputSexp, then TextIO.inputAll on the same
+  stream, and requires an empty remainder. It invokes the exact generated
+  refund method and formats the same six fields. No custom codec or axiom.
+  Source presence of this guard does not prove execution enforces it.
+- Found an actual calling-convention mismatch: the translated input decoder
+  returns nested pairs, while the generated method returns a flat six-tuple.
+  Program-0002 constructs declarations but retains the wrong flat input pattern.
+  Program-0003 fixes that pattern. Program-0004 checks actual pattern bindings
+  through the published translator predicates and pmatch semantics. It also
+  checks constructor availability and the final main-call declaration. Those
+  selected theorems do not prove reachability, invocation or complete I/O.
+- Program attempts0001/0002/0003/0004 return1/0/0/0. The first lacks explicit
+  decoder translation. The final/repeat0/0 produce six byte-identical exports.
+  Final source SHA25644ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22;
+  data SHA256ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d.
+- Original flat-input mutation fails1 at refund_decoder_bindings. Swapped
+  caller-output bindings fail1 at refund_result_bindings. Both logs contain
+  the intended unsolved F. Neither has an accepted final theory export.
+- SECURITY/ASSURANCE COVERAGE FINDING: replacing only `if rest = "" then`
+  with `if true then` returns0 and exports a theory. Required negative exit
+  remains1. The complete wrapper control matrix returns1. Preserve the actual
+  mutant, exported objects and failure; do not relabel it as a passing negative
+  test. The pure schema suffix theorem in U263 does not cover actual wrapper
+  control flow. No native admission is enabled, so this is not a claimed
+  production admission counterexample. The proposed assurance remains incomplete.
+- Generic-heap EVAL attempts1–5 all failed1. Attempts1/2/5 were manually
+  interrupted, child signal2; attempts3/4 failed helper proofs. No accepted
+  general-heap theorem; do not run a sixth attempt of the same route.
+  Method/frame attempts1–4 all failed1. Explicit framing reaches allocations
+  0–3; Boolean reference allocation4 remains open. Only one further complete
+  attempt remains for that same proof. Failures are not successful controls.
+- Separate native audit packet has46 checked members. The unchanged pinned
+  runtime C source compiles twice0/0 to identical ARM64 objects. These retain
+  unresolved symbols; no refund executable exists. Docker inventory1 and two
+  fixture-proof attempts1/1 failed on permissions before execution/proof. No
+  redirected execution, permission bypass or accepted fixture result occurred.
+  Existing compiler resource-limit, installed-image, FFI and host premises remain.
+- This documentation checkpoint rechecked exact stored sources, object hashes,
+  repeat equality, intended failure reasons and the uncaught mutation:exit0.
+  It confirms the matrix is1; it does not rerun or repair that matrix. Thirty
+  frozen owner inputs remain unchanged; upstream tracked source diffs remain0.
+  No complete wrapper closure audit or new independent human review has run.
+  Stored theorem hashes do not establish producer authenticity by themselves.
+- Records:proposals/refund-executable-feasibility/native-io-20261104/ and sibling
+  native-audit-20261104/. Raw sources, logs, all attempts and saved proof heaps
+  remain in results/refund-native-io-2026-11-04/attempt-0001/. Earlier schema
+  packet and all journal bytes remain unchanged. No proof or failure was deleted.
+- Next smallest authorized check: prove the actual wrapper continuation refuses
+  a nonempty remainder using existing CakeML semantics, with explicit state and
+  environment premises. Require the unchanged guard mutation to fail at that
+  theorem. This check is NOT RUN. Then compose method framing and published I/O
+  rules; retain source/model, resource, runtime and installed-byte obligations.
+- The owner reports a copy on another device. Exact archive hashes and restore
+  on that copy remain unverified. GitHub state was not refreshed here. Native
+  refund execution, hosted measurements and new admission remain NOT RUN.
+  Publication, protected adoption, merge, dispatch, signing and deployment still
+  require their corresponding authority and independent review. M2–M4 deferred.

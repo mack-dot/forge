@@ -1,0 +1,61 @@
+{
+  "actual_exit": 0,
+  "commands": [
+    {
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-arch",
+        "arm64",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-O2",
+        "-MD",
+        "-MF",
+        "basis_ffi.d",
+        "-c",
+        "basis_ffi.c",
+        "-o",
+        "basis_ffi.o"
+      ],
+      "cwd": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0001/runtime-build-0002",
+      "actual_exit": 0,
+      "source_sha256": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+      "clang_sha256": "4c458256bcdf913774de1bb4a37768244d3b41f32ad55afb2dfec3432f46f4fe",
+      "sdk_settings_sha256": "58a133735f0a55a624a1703067059f6e78925e51725ec6e1f966072e142c9c42",
+      "scope": "Unchanged published C runtime object only",
+      "native_refund_proved": false,
+      "end_to_end": false,
+      "object_sha256": "74f9efbf5132301386c2656638f826e6e5fec2593e99d406aa9618851dc94a55"
+    },
+    {
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-arch",
+        "arm64",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-O2",
+        "-MD",
+        "-MF",
+        "basis_ffi.d",
+        "-c",
+        "basis_ffi.c",
+        "-o",
+        "basis_ffi.o"
+      ],
+      "cwd": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0001/runtime-repeat-0002",
+      "actual_exit": 0,
+      "source_sha256": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+      "clang_sha256": "4c458256bcdf913774de1bb4a37768244d3b41f32ad55afb2dfec3432f46f4fe",
+      "sdk_settings_sha256": "58a133735f0a55a624a1703067059f6e78925e51725ec6e1f966072e142c9c42",
+      "scope": "Unchanged published C runtime object only",
+      "native_refund_proved": false,
+      "end_to_end": false,
+      "object_sha256": "74f9efbf5132301386c2656638f826e6e5fec2593e99d406aa9618851dc94a55"
+    }
+  ],
+  "objects_identical": true,
+  "classification": "BUILD_REPRODUCED_NOT_BEHAVIOR_PROVED",
+  "native_refund_proved": false,
+  "end_to_end": false
+}

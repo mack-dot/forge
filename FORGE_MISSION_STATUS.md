@@ -17,10 +17,12 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Parent checked model-caller record: local commit
-`96bea8465767f999b11c7f9b0efda212c6e26a15`.
-It contains the model-caller proof and its controls. It is unpublished.
-The newer UTF-8 source proof is linked below. It adds no native executable claim.
+Latest checkpoint: **U264 — wrapper control-flow coverage remains open**.
+Parent local commit: `48fee9f4109bb771cda72ae0ccc25205f556b1be`.
+The new [wrapper record](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md)
+preserves the partial proof, exact identities, failed control and next check.
+The [runtime audit](proposals/refund-executable-feasibility/native-audit-20261104/REPORT.md)
+is separate. Neither establishes native refund behavior. Publication has not run.
 
 | Required assurance link | Tracked status | Evidence or completion condition |
 | --- | --- | --- |
@@ -29,19 +31,40 @@ The newer UTF-8 source proof is linked below. It adds no native executable claim
 | Exact generated expression and modeled caller | LOCALLY_VALIDATED | [Compiler relation](proposals/refund-executable-feasibility/compiler-relation-20261104/REPORT.md) and [caller proof](proposals/refund-executable-feasibility/caller-20261104/REPORT.md); all six fields checked |
 | Full Unicode representation | LOCALLY_VALIDATED at source | [UTF-8 proof](proposals/refund-executable-feasibility/unicode-20261104/REPORT.md) preserves emptiness, exact reasons and ID round trips; native/model assurance binding remains open |
 | Complete wire schema and model input/output binding | LOCALLY_VALIDATED at model level | [Schema proof](proposals/refund-executable-feasibility/io-schema-20261104/REPORT.md); full consumption, round trips and four adversarial controls |
+| Actual wrapper input/output tuple patterns | LOCALLY_VALIDATED for matching only | [Wrapper proof](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md); nested decoder pairs and flat method result checked; six identical repeat exports |
+| Actual wrapper control flow and library heap/frame | NOT_ESTABLISHED | Removing the tail check still passes the partial proof; control matrix exit1; method/frame attempts remain failed |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
 | New authenticated claim and independent admission | NOT_ESTABLISHED | Independently review the exact claim/profile and authorize provenance/admission; historical signatures do not cover it |
 | Operational readiness | NOT_ESTABLISHED | Validate exact archives and a restore on the independent copy; confirm effective protections at the relevant approval boundary |
 
-The wire-schema model proof now passes. It composes the published parser and
-typed field projections, preserves the full domain and rejects trailing input.
-The next check is the generated method’s library heap/frame contract, followed
-by the existing whole-program I/O and native compiler proofs. SexpProg source
-replay was in progress at the U263 checkpoint. Do not add a custom codec or
-restrict legitimate inputs. The schema result alone does not finish M1.
+The wire-schema model proof passes. Published SexpProg source replay has now
+completed with exit0. The wrapper patterns pass, but its actual control flow
+is not covered: replacing the trailing-input guard with `true` still exits0
+when the required negative exit is1. The matrix correctly returns1. Keep this
+finding open. A pure schema theorem does not prove actual stdin rejection.
+
+Next: prove the actual wrapper continuation rejects a nonempty remainder and
+rerun that unchanged mutation. Then complete the generated method's library
+heap/frame and whole-program I/O proofs. Do not add a custom codec or restrict
+legitimate inputs. Native compilation and execution remain NOT RUN. M1 is open.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
+
+| Latest executed check | Actual exit | Boundary |
+| --- | --- | --- |
+| Published SexpProg source replay | 0 |62 theories rebuilt; not refund native correctness |
+| Wrapper pattern proof / repeat | 0/0 | Six identical exports; control-flow claim absent |
+| Flat-input / swapped-output controls | 1/1 | Intended pattern theorems fail |
+| Removed-tail-check control | **0; required1** | **Failed negative control; preserve as a coverage blocker** |
+| Wrapper control matrix | **1** | No unsafe claim promotion |
+| Generic-heap proof attempts | 1 each;5 attempts | Route stopped; no accepted theorem |
+| Method/frame proof attempts | 1 each;4 attempts | Boolean reference allocation unresolved; one attempt remains |
+| Saved-record and source-hash validation | 0 | Confirms actual results and30 unchanged protected inputs; no proof rerun |
+
+Exact command argv, logs and hashes are in the wrapper packet. Final/repeat
+wrapper source SHA256: `44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22`.
+Hosted refund measurements and new provenance/admission remain NOT RUN.
 
 ## Current decision
 
@@ -60,7 +83,8 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: establish the physical input/output and whole-program
+Next authorized action: close the actual wrapper's missing tail-guard proof,
+then establish its library heap/frame, physical input/output and whole-program
 compiler entry relation for the same method. The full Unicode/UTF-8 source
 representation now passes. A particular model caller initializes and returns
 all six values correctly for every typed model input. The exact native artifact,

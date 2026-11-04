@@ -1,0 +1,14 @@
+{
+  "owner": "root current task",
+  "scope": "Published parser, typed refund schema adapter, same generated method, whole-program I/O proof",
+  "native_target": "arm8 / Darwin arm64, using pinned published Apple export; native compiler build NOT RUN",
+  "published_parser_rebuild": "SexpProgTheory.uo live session 46530",
+  "end_to_end": false,
+  "dependency_builds": "SexpProg live; disjoint schema proof passed, dry-run established only sexp_to_dafny and own theory were rebuilt",
+  "schema_source": "forge_refund_ioScript.sml",
+  "schema_acceptance": "schema-acceptance.json",
+  "request": "S-expression Expr of charge,request,original,remaining,enabled,opened,candidate,amount,reason; published Atom integer/bool/string conversions; full consumption required",
+  "response": "Expr of refund-result-v1,ok,amount,reason,charge,request,intent_count",
+  "native_compiler_started": false,
+  "native_input_strategy": "Sexp.inputSexp stream followed by TextIO.inputAll on the same stream; require rest=\"\" before method/output. This uses public verified library functions, keeps original strict-consumption schema, and avoids translating private parse internals. Whole-program CF proof remains open."
+}

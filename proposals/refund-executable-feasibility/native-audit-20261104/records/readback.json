@@ -1,0 +1,238 @@
+{
+  "actual_exit": 0,
+  "classification": "SAVED_RECORD_IDENTITY_CHECK_ONLY",
+  "protected_files_unchanged": 50,
+  "mission_unchanged": true,
+  "prior_uncertainty_bytes_unchanged": 516530,
+  "upstream": [
+    {
+      "path": "basis/SexpProgScript.sml",
+      "sha256": "4190a359adf34f708b5b90fd1ba7b5604bd6fc011791b0088d257e1bc9ab285d",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:basis/SexpProgScript.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "basis/basis_ffi.c",
+      "sha256": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:basis/basis_ffi.c"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "basis/pure/mlsexpScript.sml",
+      "sha256": "c940680a8103b90b2bb2d7c49edc225bda87411aa793544ce576e8eec50c07ef",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:basis/pure/mlsexpScript.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "compiler/backend/arm8/arm8_configScript.sml",
+      "sha256": "1337ed30a4cf3661a4b995228164ff920ea872ba903190bc99f66abfbdc5eabc",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:compiler/backend/arm8/arm8_configScript.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "compiler/backend/arm8/export_arm8Script.sml",
+      "sha256": "be6387eb786e20bfaa4bda338009565e1c90d37c32834520a3585e6f13e74634",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:compiler/backend/arm8/export_arm8Script.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "compiler/backend/exportScript.sml",
+      "sha256": "cd7decb61c5a2dbb1ca65a5f4b4ad3191d4ddf42ea1d7b7ce63f399e8609e7ff",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:compiler/backend/exportScript.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "compiler/backend/proofs/backendProofScript.sml",
+      "sha256": "380ee3fad6c7b316f057510e1505844f23af58c21eb4f27533aa089030b61e89",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:compiler/backend/proofs/backendProofScript.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "compiler/backend/semantics/targetSemScript.sml",
+      "sha256": "3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:compiler/backend/semantics/targetSemScript.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "compiler/bootstrap/compilation/x64/Makefile",
+      "sha256": "aa395bf9e563a0c4e72951b8d3c1d2d121f9f6b2ea92b0123e26758fff50e367",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:compiler/bootstrap/compilation/x64/Makefile"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "cv_translator/eval_cake_compileLib.sml",
+      "sha256": "f7cad8e868f933dd00032f8b974fa737eb4647be1f5cef5b0463e41a1a3e24ff",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:cv_translator/eval_cake_compileLib.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "cv_translator/eval_cake_compile_arm8Lib.sml",
+      "sha256": "cc3e5aa7a1b45d0d922861eed240ababc5dfeaed9dd5d1d52b3f4cccdd1bdd1a",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:cv_translator/eval_cake_compile_arm8Lib.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "semantics/proofs/semanticsPropsScript.sml",
+      "sha256": "9e7ab53bcdfe36ff161ff7aded9662eba88d6e1df02e282c2ebbdde3742e7ba3",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+        "show",
+        "cd9155694c16831373ab695a670794f23282ed62:semantics/proofs/semanticsPropsScript.sml"
+      ],
+      "actual_exit": 0
+    }
+  ],
+  "runtime_commands": [
+    {
+      "case": "runtime-build-0001",
+      "actual_exit": 1,
+      "record_sha256": "85010f2095799458a0da13dea1c2a8e32555973c9b022a74df08490ee31e614b"
+    },
+    {
+      "case": "runtime-build-0002",
+      "actual_exit": 0,
+      "record_sha256": "7e89ad519e05b4f3c9f7f5aaab0f22ed3ab9c3716b214602775523355f8ce4e6"
+    },
+    {
+      "case": "runtime-repeat-0002",
+      "actual_exit": 0,
+      "record_sha256": "391e4e1dbe6d74acadbd193915c655f2e386c83636f9a0efe4f60865a132d66a"
+    }
+  ],
+  "runtime_source_and_headers": 108,
+  "runtime_objects_identical": true,
+  "prepared_corpus_count": 22,
+  "corpus_attempts": [
+    {
+      "case": "corpus-0001",
+      "actual_exit": 1,
+      "classification": "BUILD_DRIVER_REFUSED_BEFORE_PROOF"
+    },
+    {
+      "case": "corpus-0002",
+      "actual_exit": 1,
+      "classification": "BUILD_DRIVER_REFUSED_BEFORE_PROOF"
+    }
+  ],
+  "corpus_model_check": "NOT_ESTABLISHED",
+  "io_source_sha256": "9a6e51a5c840d751ad793f8fa99e4162e76c96e8a975a7c0bd21d3c88a7af59f",
+  "io_exports": {
+    "forge_refund_ioTheory.ui": "4ef5b30074b78ffa47f937a1e665c0f86d64c4b1eacb162f22ecf7ce8e0691f5",
+    "forge_refund_ioTheory.uo": "82f875da703adab3ccb836cac94a68568b8c3ab8f41b21fad6e3693cf08ebb72",
+    "forge_refund_ioTheory.sml": "1c73bf95261bb4d349e53f2b574135a0fbd502aff18d8829eea7c9bd83276a55",
+    "forge_refund_ioTheory.dat": "d9e7f1b77932f7e8c476e4a7230601f6b6cbe722a27764035e07ca01ea7becec",
+    "forge_refund_ioTheory.sig": "916c2294f744e366a8a5a45f40b66e3d39b697d0c8724e181204f8613590cf7d",
+    "forge_refund_ioTheory.cachekey": "418b56ff3b097aaec6b0c377025f13f3a6964fd329a4dd953bab838a37e1fd20"
+  },
+  "io_recorded_positive_exits": [
+    0,
+    0
+  ],
+  "io_recorded_controls": [
+    {
+      "case": "swapped-input",
+      "actual_exit": 1,
+      "failing_theorem": "refund_schema_roundtrip",
+      "log_sha256": "267e3f3e8d15b9932101bcd4c7df96d79990a68e6802c1fdb31e5f71a5706678"
+    },
+    {
+      "case": "swapped-output",
+      "actual_exit": 1,
+      "failing_theorem": "refund_response_roundtrip",
+      "log_sha256": "ea1dc636938d3e8edbcc50fde763f4e7b10c37540158235d03b3a3f7b57e9c71"
+    },
+    {
+      "case": "nonnegative-coercion",
+      "actual_exit": 1,
+      "failing_theorem": "refund_schema_roundtrip",
+      "log_sha256": "03ed20922917c3656ac041d9553bffd01a5ecc430e820ddece784d6059e59022"
+    },
+    {
+      "case": "ignored-tail",
+      "actual_exit": 1,
+      "failing_theorem": "refund_trailing_input_rejected",
+      "log_sha256": "4cf33277698ef631873b0dc281dd4c03feed49b30320f1497de5fdff4c8d2dc3"
+    }
+  ],
+  "io_recorded_closure_nodes": 159,
+  "io_recorded_theorems": 12,
+  "io_recorded_foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "fresh_independent_kernel_replay": "NOT_RUN",
+  "native_refund_execution": "NOT_RUN",
+  "compiler_theorem_instantiation": "NOT_RUN",
+  "native_runtime_correspondence": "NOT_ESTABLISHED",
+  "end_to_end": false
+}
