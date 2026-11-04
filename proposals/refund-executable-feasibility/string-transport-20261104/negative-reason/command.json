@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+    "verify",
+    "Transport.dfy",
+    "--solver-path",
+    "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+    "--resource-limit",
+    "1000000",
+    "--verification-time-limit",
+    "0",
+    "--cores",
+    "1",
+    "--verify-included-files",
+    "--unicode-char=true"
+  ],
+  "cwd": "/Users/mackianni/forge/results/refund-unicode-bridge-2026-11-04/negative-reason",
+  "actual_exit": 4,
+  "sources": {
+    "FlatCore.dfy": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d",
+    "Transport.dfy": "11995fb7991b3cac5d8b38f82a537054825565be26778a54241afe1731d310f3",
+    "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+    "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+  },
+  "tool_sha256": "5d02cbb88300aef0726e933bd6f19754960b7409a9e0e2212a5e07edd1686012",
+  "solver_sha256": "7d15df1e4ba8f60b0808dce02ec85e0dd6dac4b975231a2f7b35fe8789464208",
+  "scope": "Conditional source representation transport only",
+  "concrete_codec_proved": false,
+  "native_refund_proved": false,
+  "end_to_end": false
+}

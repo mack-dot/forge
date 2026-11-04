@@ -1,0 +1,7 @@
+Transport.dfy(46,25): Error: assertion might not hold
+   |
+46 |     assert ok ==> charge == context.chargeId; // Intentionally unproved.
+   |                          ^^
+
+
+Dafny program verifier finished with 8 verified, 1 error

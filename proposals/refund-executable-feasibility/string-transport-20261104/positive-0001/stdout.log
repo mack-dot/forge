@@ -1,0 +1,18 @@
+Transport.dfy(32,15): Warning: unusual indentation in right-hand operand of ==> (which ends at line 34, column 45); do you perhaps need parentheses?
+   |
+32 |     ensures ok ==> response.Candidate? && amount == response.amount &&
+   |                ^^^
+
+Transport.dfy(35,16): Warning: unusual indentation in right-hand operand of ==> (which ends at line 36, column 33); do you perhaps need parentheses?
+   |
+35 |     ensures !ok ==> amount == 0 && reason == "" && charge == "" &&
+   |                 ^^^
+
+Transport.dfy(47,14): Warning: unusual indentation in right-hand operand of ==> (which ends at line 48, column 69); do you perhaps need parentheses?
+   |
+47 |     assert ok ==> originalPlan ==
+   |               ^^^
+
+
+Dafny program verifier finished with 9 verified, 0 errors
+Compilation failed because warnings were found and --allow-warnings is false

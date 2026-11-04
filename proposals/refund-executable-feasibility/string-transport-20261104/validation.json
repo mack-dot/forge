@@ -1,0 +1,39 @@
+{
+  "actual_exit": 0,
+  "cases": {
+    "positive-0001": {
+      "actual_exit": 2,
+      "reason_matched": true
+    },
+    "positive-0002": {
+      "actual_exit": 0,
+      "reason_matched": true
+    },
+    "repeat-0001": {
+      "actual_exit": 0,
+      "reason_matched": true
+    },
+    "negative-charge-empty": {
+      "actual_exit": 4,
+      "reason_matched": true
+    },
+    "negative-reason": {
+      "actual_exit": 4,
+      "reason_matched": true
+    },
+    "negative-original-id": {
+      "actual_exit": 4,
+      "reason_matched": true
+    }
+  },
+  "repeat_sources_identical": true,
+  "repeat_verifier_output_identical": true,
+  "audit_exit": 0,
+  "protected_input_count": 50,
+  "protected_inputs_unchanged": true,
+  "prior_unsure_prefix_unchanged": true,
+  "concrete_codec_proved": false,
+  "native_refund_proved": false,
+  "scope": "Conditional source representation transport",
+  "end_to_end": false
+}
