@@ -1,0 +1,17 @@
+{
+  "pid": 56629,
+  "process": "56629 56334 04:21 /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol --gcthreads=1 run --holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/sigobj/holmake_not_interactive.uo /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment/forge_refundNormProgScript.uo -e   check that export_theory call exists, and that new_theory\\012  call is of the right name -c /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment/forge_refundNormProgTheory.sml -c /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment/forge_refundNormProgTheory.sig -c /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment/forge_refundNormProgTheory.dat",
+  "signal": 2,
+  "reason": "Manual diagnostic interruption after exact input preparation; candidate normalization did not return. No success or behavior conclusion.",
+  "last_log": "<<HOL message: Created theory \"forge_refundNormProg\">>\nFORGE_PREPARE_INPUT\nFORGE_INPUT_READY\n",
+  "sample_command": [
+    "/usr/bin/sample",
+    "56629",
+    "1",
+    "1",
+    "-file",
+    "results/refund-normalised-method-2026-11-04/attempt-0001/construct-0002.sample.txt"
+  ],
+  "sample_actual_exit": 0,
+  "end_to_end": false
+}

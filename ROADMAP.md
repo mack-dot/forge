@@ -7,6 +7,37 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U266)
+
+The Markdown tracker now records the incomplete candidate preparation and the
+next check. No new behavioral proof or native artifact is established. CURRENT
+none; M1 open; Stage12 unauthorized; end_to_end=false. The full mission and all
+prior evidence remain preserved.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `run.py construct` / `run.py construct-0002` | 1/1 | Manual SIGINT, child signal2 each; no accepted candidate or theory |
+| Diagnostic `/usr/bin/sample 56629 1 1 -file ...` | 0 | Stack sample preserved; precise normalizer cause unresolved |
+| Initial / corrected `validate_records.py` | 1/0 | Manifest filename corrected;30 protected inputs and329 prior packet members checked |
+
+Exact commands, identities and limits:
+[candidate preparation record](proposals/refund-executable-feasibility/normalisation-20261104/REPORT.md).
+Raw records: `results/refund-normalised-method-2026-11-04/attempt-0001/`.
+The second attempt reaches exact input preparation but not the marker after
+`cfNormaliseLib.normalise_decl`. Manual interruption is not a behavioral
+rejection or evidence of impossibility. Two construction attempts are preserved.
+No prior failure or journal entry was rewritten. Pinned HOL/CakeML tracked
+sources and the actual wrapper remain unchanged. GitHub was not refreshed.
+
+Next authorized check, NOT RUN: localize the incomplete normalizer call using
+existing operations. Then independently prove any completed candidate's full
+result and its observable-result relation to the original method. Library
+heap/frame, complete I/O, exact native artifact and runtime correspondence
+remain open. New provenance/admission and hosted refund measurements are NOT RUN.
+Independent claim/profile review and off-machine archive hash/restore remain
+open. M2–M4 remain subsequent work. Local records do not authorize publication,
+protected adoption, merge, dispatch, signing or deployment.
+
 ## Active mission update — 2026-11-04 (U265)
 
 The actual wrapper guard now has a conditional rejection theorem, bound to its

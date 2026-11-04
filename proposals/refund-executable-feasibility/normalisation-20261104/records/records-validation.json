@@ -1,0 +1,68 @@
+{
+  "actual_exit": 0,
+  "purpose": "Saved-record and identity validation only",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/mackianni/forge/results/refund-normalised-method-2026-11-04/attempt-0001/validate_records.py"
+  ],
+  "attempts": {
+    "construct": {
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+        "--no-cache",
+        "-j",
+        "2",
+        "forge_refundNormProgTheory.uo"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment",
+      "actual_exit": 1,
+      "wall_seconds": 184.03520208300324,
+      "source_sha256": "a41d9fe995463ec2248c153f3cbd5c896d326ba5455cb092c81d3acd91a99cc2",
+      "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22",
+      "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d",
+      "object_sha256": {},
+      "end_to_end": false,
+      "native_refund_claim": false
+    },
+    "construct-0002": {
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+        "--no-cache",
+        "-j",
+        "2",
+        "forge_refundNormProgTheory.uo"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment",
+      "actual_exit": 1,
+      "wall_seconds": 269.4683468750154,
+      "source_sha256": "501afdae1901aad193b9d288ed41c70d88602647b0c0b6f6bda8462e4f57c9ff",
+      "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22",
+      "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d",
+      "object_sha256": {},
+      "end_to_end": false,
+      "native_refund_claim": false
+    }
+  },
+  "protected_input_count": 30,
+  "checked_packets": {
+    "tail-guard-20261104": 142,
+    "native-io-20261104": 141,
+    "native-audit-20261104": 46
+  },
+  "toolchain": {
+    "cakeml": {
+      "head": "cd9155694c16831373ab695a670794f23282ed62",
+      "tracked_diff_exit": 0
+    },
+    "HOL": {
+      "head": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+      "tracked_diff_exit": 0
+    }
+  },
+  "mission_sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c",
+  "prior_journal_bytes": 530818,
+  "candidate_constructed": false,
+  "behavior_established": false,
+  "end_to_end": false
+}

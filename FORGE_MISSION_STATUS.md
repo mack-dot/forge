@@ -17,8 +17,12 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checkpoint: **U265 — conditional guard and actual prefix binding checked**.
-Parent local commit: `57cd895877d62bb22e0b02a33533b92261d41681`.
+Latest checkpoint: **U266 — candidate preparation incomplete; evidence preserved**.
+Parent local commit: `1afd924b206d05949319de3881c09f2a618ef728`.
+The [normalization attempt record](proposals/refund-executable-feasibility/normalisation-20261104/REPORT.md)
+preserves two interrupted runs and their exact inputs. Neither produced an
+accepted candidate or behavioral proof. The current bottleneck remains the
+complete library method and I/O contract, followed by native correspondence.
 The new [guard/prefix record](proposals/refund-executable-feasibility/tail-guard-20261104/REPORT.md)
 preserves exact theorems, controls, failures and the checked CF applicability gap.
 The prior [wrapper record](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md)
@@ -51,14 +55,26 @@ heap/frame contract and the accepted-output path are still unproved.
 
 The kernel also establishes a precise obstacle: the raw generated method's
 match input cannot satisfy the CF rule's value premise. The bundled normalizer
-is explicitly unverified. Next: use it only as a candidate transformation and
-independently prove the complete result of its exact output, with a checked
-observable-result relation to the original method. Do not assume preservation
-or narrow the contract. Normalization, native compilation and native execution
-remain NOT RUN. M1 is open.
+is explicitly unverified. Its candidate-construction attempts now return1/1
+after manual interruptions; no output theory was exported. The second run
+completed exact input preparation, then remained inside the normalizer call.
+Next: localize that incomplete call using existing operations. Any completed
+candidate still requires its full-result proof and a checked observable-result
+relation to the original method. Do not assume preservation or narrow the
+contract. Native compilation and execution remain NOT RUN. M1 is open.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
-| Latest executed check | Actual exit | Boundary |
+| Latest executed check, U266 | Actual exit | Boundary |
+| --- | --- | --- |
+| Candidate construction / instrumented construction | 1/1 | Manual SIGINT; no accepted AST, theory or behavior claim |
+| Diagnostic process sample | 0 | No precise internal cause established |
+| Initial / corrected record validation | 1/0 | Manifest filename fixed;30 protected inputs and329 prior packet members unchanged |
+
+These checks do not rerun the prior proof matrix. Exact commands, sources and
+failure records are in the linked normalization packet. No new assurance link
+is complete. The mission and previous uncertainty entries remain unchanged.
+
+| Recorded proof check, U265 | Actual exit | Boundary |
 | --- | --- | --- |
 | Guard attempts0001/0002/0003 | 1/1/1 | Two manual interruptions and one wrong theory qualifier preserved |
 | Guard proof / repeat | 0/0 | Six identical exports; explicit clock/environment conditions |

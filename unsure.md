@@ -7792,3 +7792,48 @@ curl: (6) Could not resolve host: github.com
   Owner-reported off-machine backup still needs exact archive hashes and restore.
   GitHub state was not refreshed. No protected adoption, publication, merge,
   dispatch, signing or deployment. M2–M4 remain subsequent work.
+
+
+## U266 — Candidate normalization incomplete; Markdown tracking checkpoint
+
+- References:U261,U264,U265. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner requested durable Markdown tracking. The full
+  mission remains byte-identical to the attachment. FORGE_MISSION_STATUS.md
+  remains the entry point; ROADMAP.md records actual outcomes.
+- The published normalizer was invoked only to construct an untrusted candidate.
+  No correctness of normalization was assumed. Attempts construct and
+  construct-0002 return1/1 after manual SIGINT, child signal2 each. Neither
+  exports a candidate AST or accepted theory. This is incomplete preparation,
+  not a behavioral counterexample or proof that construction is impossible.
+- The second attempt replaces broad evaluation with exact method-definition
+  rewriting and adds progress markers. FORGE_INPUT_READY is observed;
+  FORGE_NORMALISED_AST_READY is absent. The incomplete operation is the call to
+  cfNormaliseLib.normalise_decl. A process sample returns0 but does not identify
+  a named internal ML subroutine. Exact cause remains unresolved.
+- First sourcea41d9fe995463ec2248c153f3cbd5c896d326ba5455cb092c81d3acd91a99cc2;
+  second501afdae1901aad193b9d288ed41c70d88602647b0c0b6f6bda8462e4f57c9ff.
+  Local incomplete-run elapsed durations184.03520208300324 and269.4683468750154
+  seconds are recorded observations, not proof or hosted performance results.
+- Initial record validation fails1 on the separate native packet's manifest
+  filename. Its source/error remain preserved. Corrected validation returns0:
+ 30 protected owner inputs, the original wrapper source/data and329 prior
+  packet members match. HOL/CakeML tracked diffs return0. No source claim changed.
+- Previous guard/prefix proofs and the original uncaught mutation remain intact.
+  This checkpoint adds no completed assurance link. Old generic-heap attempts
+  remain five; old raw CF attempts remain four, with their applicability obstacle.
+  Candidate construction has two incomplete attempts. Do not reset these counts
+  or repeatedly retry the unchanged failure.
+- Next check, NOT RUN: localize the incomplete operation using the published
+  transform's existing operations. If it produces a candidate, independently
+  prove all six return fields for the full model domain and the observable-result
+  relation to the original method. Then close library framing and whole-program
+  I/O. Do not adopt the candidate solely because construction succeeds.
+- Packet:proposals/refund-executable-feasibility/normalisation-20261104/.
+  Raw:results/refund-normalised-method-2026-11-04/attempt-0001/. Sources, actual
+  argv, logs, exits and interruption records are preserved. Hashes alone do not
+  authenticate their producer. The actual wrapper and method remain unchanged.
+- Native refund execution, hosted measurements and new admission are NOT RUN.
+  The owner reports an independent-device copy; exact archive hash/restore
+  remains unverified. GitHub controls were not refreshed. Independent review,
+  protected adoption, publication, merge, dispatch, signing and deployment retain
+  their existing boundaries. M2–M4 remain subsequent work.
