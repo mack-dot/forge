@@ -1,0 +1,12 @@
+{
+  "source": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/dafny-standard-library-source/Source/DafnyStandardLibraries/src/Std/Unicode/UnicodeStringsWithUnicodeChar.dfy",
+  "sha256": "aa1a21cff8b835b28ace3f395b1ac71070c74d5c838ce6cdbb876bbb2b964452",
+  "included": false,
+  "findings": [
+    {
+      "line": 27,
+      "text": "    assume {:axiom} c as int as bv24 < 0x11_0000 as bv24;"
+    }
+  ],
+  "reason": "Upstream explicit axiom excluded. New CharScalar/ScalarCast proofs discharge the required relation without it."
+}

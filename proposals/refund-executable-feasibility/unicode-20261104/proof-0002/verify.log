@@ -1,0 +1,13 @@
+UnicodeRelation.dfy(19,4): Error: Verification out of resource (RefundUnicode.CharScalar)
+   |
+19 |     assert (c as int as bv24) as int == c as int;
+   |     ^^^^^^
+
+UnicodeRelation.dfy(32,81): Error: Verification out of resource (RefundUnicode.ScalarRoundTrip)
+   |
+32 |     ensures U.DecodeMinimalWellFormedCodeUnitSubsequence(U.EncodeScalarValue(v)) == v
+   |                                                                                  ^^
+
+
+Dafny program verifier finished with 1355 verified, 0 errors, 2 out of resource
+Results File: /Users/mackianni/forge/results/refund-unicode-2026-11-04/attempt-0001/proof-0002/verification.csv

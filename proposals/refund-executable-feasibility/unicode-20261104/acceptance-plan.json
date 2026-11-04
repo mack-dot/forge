@@ -1,0 +1,26 @@
+{
+  "claim": "Full approved refund behavior is invariant under the published UTF-8 representation, including exact caller identities; no new input restriction.",
+  "positive": [
+    "Every Dafny Unicode character maps losslessly to the published ScalarValue type without an axiom",
+    "Existing published UTF-8 decode reverses encode for all scalar sequences",
+    "Representation preserves empty strings and the three exact ASCII reason strings",
+    "Encoded-byte caller IDs round-trip; unchanged full refund decisions and plans"
+  ],
+  "negative": [
+    "Naive low-byte truncation retains the existing U+0100 counterexample",
+    "Substituted caller ID must fail the unchanged identity claim",
+    "Over-limit refund input must remain rejected after representation"
+  ],
+  "acceptance": [
+    "All included concrete library implementations and local obligations verify with pinned Dafny/Z3",
+    "No included assume/axiom/verify-false bypass",
+    "Fresh positive reproduction agrees; actual command exits retained",
+    "Negative controls must fail at their intended assertion, not parse/resource/infrastructure errors"
+  ],
+  "limits": [
+    "This is a representation proof, not native executable proof",
+    "Dafny/Boogie/Z3 trusted; HOL transfer and native input/output require separate evidence",
+    "No policy adoption, signing, admission, publication, merge, deployment or Stage12"
+  ],
+  "end_to_end": false
+}

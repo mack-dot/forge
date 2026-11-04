@@ -1,0 +1,13 @@
+UnicodeRelation.dfy(249,2): Error: a postcondition could not be proved on this return path
+    |
+249 |   {
+    |   ^
+
+UnicodeRelation.dfy(247,59): Related location: this is the postcondition that could not be proved
+    |
+247 |     ensures !ok ==> (amount == 0 && reason == "" && charge == "" &&
+    |                                                            ^^
+
+
+Dafny program verifier finished with 1425 verified, 1 error
+Results File: /Users/mackianni/forge/results/refund-unicode-2026-11-04/attempt-0001/proof-substituted-id/verification.csv

@@ -1,0 +1,12 @@
+Transport.dfy(42,4): Error: assertion might not hold
+   |
+42 |     assert ok <==> originalDecision.Authorized?;
+   |     ^^^^^^
+
+Transport.dfy(43,25): Error: assertion might not hold
+   |
+43 |     assert ok ==> reason == response.reason;
+   |                          ^^
+
+
+Dafny program verifier finished with 8 verified, 2 errors

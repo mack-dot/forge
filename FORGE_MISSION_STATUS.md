@@ -17,26 +17,27 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checked research record: local commit
+Parent checked model-caller record: local commit
 `96bea8465767f999b11c7f9b0efda212c6e26a15`.
 It contains the model-caller proof and its controls. It is unpublished.
-This tracking update adds no new theorem or executable result.
+The newer UTF-8 source proof is linked below. It adds no native executable claim.
 
 | Required assurance link | Tracked status | Evidence or completion condition |
 | --- | --- | --- |
 | Approved refund R1–R5 and source equivalence | LOCALLY_VALIDATED | [Source report](proposals/refund-executable-feasibility/README.md); full approved domain retained |
 | Full return behavior in the published model | LOCALLY_VALIDATED | [Model proof](proposals/refund-executable-feasibility/verified-backend-20261104/REPORT.md); byte strings, mathematical integers and explicit trusted base |
 | Exact generated expression and modeled caller | LOCALLY_VALIDATED | [Compiler relation](proposals/refund-executable-feasibility/compiler-relation-20261104/REPORT.md) and [caller proof](proposals/refund-executable-feasibility/caller-20261104/REPORT.md); all six fields checked |
-| Full Unicode representation | NOT_ESTABLISHED; next | Preserve empty/nonempty strings, exact reason equality and caller-ID round trips; retain the U+0100 truncation refusal |
+| Full Unicode representation | LOCALLY_VALIDATED at source | [UTF-8 proof](proposals/refund-executable-feasibility/unicode-20261104/REPORT.md) preserves emptiness, exact reasons and ID round trips; native/model assurance binding remains open |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
 | New authenticated claim and independent admission | NOT_ESTABLISHED | Independently review the exact claim/profile and authorize provenance/admission; historical signatures do not cover it |
 | Operational readiness | NOT_ESTABLISHED | Validate exact archives and a restore on the independent copy; confirm effective protections at the relevant approval boundary |
 
-The next experiment must use established representation infrastructure. Do not
-add a custom decoder or restrict legitimate Unicode inputs. A successful model
-representation check alone will not establish native I/O or finish M1.
+The next experiment must use established native compilation and I/O proofs.
+Check the published S-expression parser and its I/O theorem. Do not add a custom
+decoder or restrict legitimate Unicode inputs. The source representation result
+alone does not establish native I/O or finish M1.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
 ## Current decision
@@ -56,12 +57,12 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: establish the full Unicode/byte representation and
-input/output boundary for the same refund method. A particular model caller now
-initializes and returns all six values correctly for every typed model input.
-This uses the generated method wrapper and published semantics. The native
-caller, exact executable and admission binding remain open. Preserve the full
-Unicode domain; upstream modeled `Print` does not prove observable output.
+Next authorized action: establish the physical input/output and whole-program
+compiler entry relation for the same method. The full Unicode/UTF-8 source
+representation now passes. A particular model caller initializes and returns
+all six values correctly for every typed model input. The exact native artifact,
+runtime correspondence and admission binding remain open. Preserve the full
+domain; upstream modeled `Print` does not prove observable output.
 
 Detailed claim, source hashes, commands and boundaries:
 [M1 experiment report](proposals/refund-executable-feasibility/README.md).
@@ -84,6 +85,15 @@ New caller result:
 Universal model-caller proof/repeat0/0; swapped IDs/missing argument1/1 for
 the intended failures. Standard primitive initialization plus explicit typed
 input bindings now produces the correct tuple. Native input decoding is open.
+
+New source representation result:
+[UTF-8 transport proof](proposals/refund-executable-feasibility/unicode-20261104/REPORT.md).
+All Unicode strings map injectively to published UTF-8 byte representations.
+Empty strings, approved reason equality and ID round trips are checked. The
+full refund source behavior is preserved under this relation. Final/repeat0/0;
+accepted-ID substitution, over-limit authorization and original truncation4/4/4.
+The received conditional transport source was reverified with the library.
+This is Dafny/Boogie/Z3 source verification, not a new HOL or native theorem.
 
 ## Milestone completion ledger
 
@@ -140,7 +150,8 @@ establish approval. No review, merge or workflow operation was performed.
 | Stage9 signed release/admission | TESTED, historical | Authenticates its original artifact and claim; does not authorize the new refund claim |
 | Refund body to CakeML expression | LOCALLY_VALIDATED | Exact compilation equality and six output fields checked under explicit state/environment premises; retained unchanged |
 | Exact generated method and model caller | LOCALLY_VALIDATED | Primitive state/constructors and typed input bindings are explicit; fixed call returns all six values for every typed model input; negative controls and repeat pass |
-| Refund binary/runtime correspondence | NOT_ESTABLISHED | Full Unicode relation, checked calling/output interface, exact native artifact and runtime binding remain open |
+| Refund Unicode/UTF-8 source relation | LOCALLY_VALIDATED | Full-domain representation, inverse, exact reasons and source refund transport checked; no upstream wrapper axiom imported |
+| Refund binary/runtime correspondence | NOT_ESTABLISHED | Checked physical calling/output interface, exact native artifact, source/model assurance binding and runtime relation remain open |
 | Refund acceptance profile and release chain | NOT_ESTABLISHED | Need exact reviewed claim, checker, artifact/environment binding and authorized independent admission |
 
 Hosted run [41523691535](https://github.com/mack-dot/forge/actions/runs/41523691535)
@@ -242,6 +253,27 @@ interface remain unverified. Clock32 is model fuel, not a runtime bound.
 The full approved Unicode contract remains unchanged. No restricted-domain
 replacement, policy adoption, publication or release occurred.
 
+## Current Unicode source checks
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| Character/scalar attempts0001–0004 | 4/4/4/4 | Resource failures preserved |
+| Character/scalar attempt0005 | 0 | No-axiom conversion and scalar inverse checked |
+| Sequence attempts0001/0002 | 4/0 | Explicit sequence types/map facts close the new obligations |
+| Transport attempts0001/0002 | 4/0 | Full representation premises discharged |
+| Final / fresh repeat | 0/0 |1426 assertion batches;30 identical input files and identical symbol outcomes |
+| Unconditional / accepted-only ID substitution | 4/4 | Rejected output / accepted caller identity fail at the respective postcondition |
+| False over-limit authorization / original truncation | 4/4 | Exact intended assertions refused |
+| Dafny audit / acceptance readback | 0/0 | Zero findings; negative reasons checked |
+| Local raw archive validation | 0 |848 members checked; no off-machine claim |
+
+The approved Unicode domain remains intact. Source proof SHA256:
+`804504ef807d5c67ffaef7e11581ebe523f807c48af069d3c9ff5f5305f91990`.
+The existing UTF-8 algorithms are unchanged. The axiom-bearing upstream
+character wrapper is excluded; new checked lemmas supply the needed relation.
+No protected source or policy changed. Native and hosted refund results remain
+NOT RUN. Exact logs and trust limits are in the linked UTF-8 packet.
+
 ## Evidence record requirements
 
 Every experiment must record source revision, approved contract and assumptions,
@@ -308,6 +340,12 @@ interfaces remain open. Parent compiler record commit77ab7003 is local only.
 Rechecked the saved mission identity and local research records. Clarified which
 GitHub observations are historical and which caller premises remain open.
 No new proof, hosted execution, publication or admission ran in this update.
+
+2026-11-04: Checked the full Unicode/UTF-8 source relation and composed it with
+the unchanged refund behavior. Preserved resource/proof failures and the first
+substitution diagnostic. The targeted accepted-ID attack now fails the correct
+identity postcondition. Final/repeat0/0; audit0; independent native/model binding
+and release admission remain open. Separate transport record:73728c2, local only.
 
 
 ### Mission tracking preservation — actual local results

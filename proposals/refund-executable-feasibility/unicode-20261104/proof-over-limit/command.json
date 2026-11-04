@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+    "verify",
+    "UnicodeRelation.dfy",
+    "--solver-path",
+    "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+    "--resource-limit",
+    "1000000",
+    "--verification-time-limit",
+    "0",
+    "--cores",
+    "1",
+    "--verify-included-files",
+    "--bprint",
+    "translated.bpl",
+    "--log-format",
+    "csv;LogFileName=verification.csv"
+  ],
+  "cwd": "/Users/mackianni/forge/results/refund-unicode-2026-11-04/attempt-0001/proof-over-limit",
+  "actual_exit": 4,
+  "wall_seconds": 35.06397158297477,
+  "source_sha256": "c53735689ba2b41ecc821a850c9c64163a9f060e071ff529de1aed41689c2029",
+  "end_to_end": false
+}

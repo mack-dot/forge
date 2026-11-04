@@ -1,0 +1,5 @@
+(set-option :rlimit 1000000)
+(declare-const n Int)
+(assert (and (<= 0 n) (< n 16777216)))
+(assert (not (= (bv2int ((_ int2bv 24) n)) n)))
+(check-sat)

@@ -1,0 +1,13 @@
+UnicodeRelation.dfy(10,8): Error: Verification out of resource (RefundUnicode.CharScalar)
+   |
+10 |   lemma CharScalar(c: char)
+   |         ^^^^^^^^^^
+
+UnicodeRelation.dfy(27,8): Error: Verification out of resource (RefundUnicode.ScalarRoundTrip)
+   |
+27 |   lemma ScalarRoundTrip(v: B.ScalarValue)
+   |         ^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 1345 verified, 0 errors, 2 out of resource
+Results File: /Users/mackianni/forge/results/refund-unicode-2026-11-04/attempt-0001/proof-0001/verification.csv

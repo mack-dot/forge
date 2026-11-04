@@ -7525,3 +7525,76 @@ curl: (6) Could not resolve host: github.com
   mistake a model representation theorem for native I/O or executable proof.
 - Documentation check records:
   results/mission-tracking-2026-11-04/attempt-0001/.
+
+
+## U262 — Full-domain UTF-8 source representation and refund transport checked
+
+- References:U257,U258,U259,U260,U261. The previous turn completed the requested
+  Markdown tracking update atbcf3ac2. This turn closes the source-level Unicode
+  representation obligation. It does not close native executable correspondence.
+  CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- Existing Dafny4.11 UTF-8 library found in the installed release. Exact source
+  fetched atfcb2042d6d043a2634f0854338c08feeaaaf4ae2; clone/checkout0/0. The
+  upstream UnicodeStringsWithUnicodeChar wrapper contains an explicit axiom.
+  It is excluded. Selected24 unchanged source files contain no bypass scan match;
+  full included-source verification and Dafny audit0/zero findings ran.
+- New source proofs establish character-to-scalar identity without that axiom,
+  scalar/sequence inverse through the existing UTF-8 decoder, byte-valued output,
+  encoding injectivity, empty/nonempty equivalence, ASCII identity and exact
+  allowed-reason equivalence. StringRoundTrip and ByteViewIdentity connect actual
+  encoded bytes to recovered source characters. No new codec algorithm, verifier,
+  machine semantics or axiom. Helper functions project existing types only.
+- RefundUtf8Transport.Equivalent has no input precondition. All mathematical
+  integers, Unicode strings and response constructors remain. The approved
+  eligibility, amount, reason and count are preserved; encoded caller IDs are
+  copied exactly and have the checked inverse relation. No bank effect occurs.
+- Received conditional transport source from separate local work. Its exact
+  record commit is73728c2efa94b452637dfd10f36546f6f8a08d23. Original result:
+  positive/repeat0/0, three intended controls4/4/4, initial warning-as-error2.
+  This run reverified that source and the unchanged approved implementation/spec
+  together with the concrete representation proof. No result was accepted solely
+  on the other task's report. Its conditional theorem alone was insufficient.
+- Character/scalar attempts0001/0002 resource-exhausted4/4. Split scalar proof
+  passed in0003/0004, but the integer helper still exhausted resources: both
+  complete runs4/4. Attempt0005 passed0 after isolating the integer lemma and
+  adding the modular arithmetic fact. No sixth attempt of the failing proof.
+- Sequence attempt0001 failed4 with inferred subset constraints and a missing
+  map projection; explicit types/facts give0002=0. Transport0001 failed4 from
+  reason-proof resource exhaustion and retained indentation warnings; isolated
+  proof obligations and parentheses give0002=0. Claims and domain unchanged.
+- Final/repeat0/0:1426 assertion batches each, all included inputs checked.
+  Thirty source files are byte-identical; symbol/outcome sets match. Raw timing
+  CSVs are not byte-identical proof certificates. Local proof wall times:
+  33.995498125 and32.948114625 seconds. No application/hosted savings claim.
+- Final proof source SHA256:
+  804504ef807d5c67ffaef7e11581ebe523f807c48af069d3c9ff5f5305f91990.
+  Dafny/Boogie/Z3 and host remain trusted. No new independent kernel certificate,
+  native artifact, protected checker profile or authenticated admission exists.
+- Original U+0100 truncation test retained byte for byte; fresh exit4 at the
+  intended false identity assertion. Over-limit authorization claim fails4 at
+  assert ok for amount61/remaining60. Unconditional ID substitution fails4 at
+  rejected empty-charge output; preserved, not counted as the accepted-ID test.
+  A separate accepted-only substitution fails4 at charge=Encoded(context.chargeId).
+  Exact diagnostic/exit checks pass0. No test requirement was weakened.
+- Translation-only diagnostic0 checked zero symbols and is not proof evidence.
+  Raw pinned Z3 cast diagnostic0/unsat is not the source proof. Final acceptance
+  comes from complete Dafny executions. All resource failures remain explicit.
+- Thirty frozen owner-workspace inputs unchanged0. Pinned upstream tracked diff
+  unchanged. Main tracked diff unchanged; an untracked .toolchain symlink points
+  to the owner toolchain and was left intact. No protected changes, publication,
+  review, merge, dispatch, signing, admission or deployment.
+- Local raw archive validation0:848 members,19105354bytes,0600. SHA256
+  c7abfc881e446d080969bc0a7d62d57a15528c7a8b121cdef9c608880dc838c2.
+  Raw sources, translations and logs remain. The owner's separate-device backup
+  still needs exact archive hashes and a restore test; this new archive is not
+  assumed copied there.
+- Evidence:results/refund-unicode-2026-11-04/attempt-0001/ and
+  proposals/refund-executable-feasibility/unicode-20261104/. The separate
+  string-transport-20261104 packet retains its own exact source and controls.
+- Next check: bind the same method to whole-program native compilation and I/O.
+  Inspected existing mlsexp.fromString_sexp_to_string and SexpProg.inputSexp_spec
+  as a parser/I/O route. Refund application of those proofs has NOT RUN. Check
+  primitive initialization, input/output relation, installed machine bytes and
+  resource-limit/runtime premises. Do not narrow strings or integers to fit a
+  fixed-width helper. Native/model assurance binding, independent profile review
+  and new provenance/admission remain open. Hosted refund metrics NOT RUN.

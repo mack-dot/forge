@@ -7,6 +7,41 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U262)
+
+The complete approved Unicode input domain now has a checked source-level
+UTF-8 representation for refund. Published encoding/decoding, empty strings,
+exact reasons and caller-ID round trips are checked without the upstream
+character wrapper's axiom. The same approved refund decisions and represented
+outputs are preserved. This does not prove native I/O or an exact executable.
+CURRENT none; M1 open; Stage12 unauthorized; `end_to_end=false`.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `run.py 0001` / `0002` / `0003` / `0004` | 4/4/4/4 | Resource failures preserved; no partial run accepted |
+| `run.py 0005` | 0 | Character conversion and scalar round-trip checked; all included library sources verified |
+| `run.py sequence-0001` / `sequence-0002` | 4/0 | Inferred subset/projection failures fixed without changing the claim |
+| `run.py transport-0001` / `transport-0002` | 4/0 | Reason proof split; full string relation and source transport checked |
+| `run.py final` / `repeat` | 0/0 |1426 assertion batches each;30 exact input files and symbol outcomes match |
+| `run.py substituted-id ...` | 4 | Unconditional attack violates rejected empty-charge output; retained |
+| `run.py accepted-id ...` | 4 | Targeted attack violates accepted caller-charge identity |
+| `run.py over-limit ...` / `truncation ...` | 4/4 | False authorization and original U+0100 truncation claim refused |
+| Pinned Dafny audit / acceptance readback | 0/0 | Zero audit findings; exact refusal reasons checked |
+| Original-input postflight | 0 |30 frozen owner-workspace files unchanged |
+| Local archive validation | 0 |848 file members checked; independent copy still unverified |
+
+Exact commands, source/library identities, failed attempts and trust limits:
+[UTF-8 source report](proposals/refund-executable-feasibility/unicode-20261104/REPORT.md).
+The independently prepared conditional transport record is local commit
+`73728c2efa94b452637dfd10f36546f6f8a08d23`; this run also reverified its source.
+Raw results: `results/refund-unicode-2026-11-04/attempt-0001/`.
+
+Next: bind the same method to whole-program native compilation and checked I/O.
+Inspect existing `mlsexp`/`SexpProg` parsing and I/O proofs for full byte strings
+and integers. Preserve compiler entry, resource-limit and environment premises.
+Refund native execution, hosted measurements and new admission are NOT RUN.
+Independent claim/profile review and off-machine hash/restore remain open.
+
 ## Tracking update — 2026-11-04 (U261)
 
 The owner requested a durable Markdown record. The full mission remains in

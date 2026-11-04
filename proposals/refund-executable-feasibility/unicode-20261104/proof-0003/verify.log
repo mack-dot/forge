@@ -1,0 +1,13 @@
+UnicodeRelation.dfy(18,6): Error: Verification out of resource (RefundUnicode.Int24RoundTrip)
+   |
+18 |       assert n as bv24 == ((n - 1) as bv24) + 1;
+   |       ^^^^^^
+
+UnicodeRelation.dfy(19,6): Error: Verification out of resource (RefundUnicode.Int24RoundTrip)
+   |
+19 |       assert (((n - 1) as bv24) + 1) as int == n;
+   |       ^^^^^^
+
+
+Dafny program verifier finished with 1391 verified, 0 errors, 2 out of resource
+Results File: /Users/mackianni/forge/results/refund-unicode-2026-11-04/attempt-0001/proof-0003/verification.csv

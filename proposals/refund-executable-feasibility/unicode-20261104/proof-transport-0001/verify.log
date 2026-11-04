@@ -1,0 +1,18 @@
+UnicodeRelation.dfy(209,15): Warning: unusual indentation in right-hand operand of ==> (which ends at line 211, column 59); do you perhaps need parentheses?
+    |
+209 |     ensures ok ==> response.Candidate? && amount == response.amount &&
+    |                ^^^
+
+UnicodeRelation.dfy(212,16): Warning: unusual indentation in right-hand operand of ==> (which ends at line 213, column 33); do you perhaps need parentheses?
+    |
+212 |     ensures !ok ==> amount == 0 && reason == "" && charge == "" &&
+    |                 ^^^
+
+UnicodeRelation.dfy(184,8): Error: Verification out of resource (RefundUnicode.SameReasons)
+    |
+184 |   lemma SameReasons(s: string)
+    |         ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 1414 verified, 0 errors, 1 out of resource
+Results File: /Users/mackianni/forge/results/refund-unicode-2026-11-04/attempt-0001/proof-transport-0001/verification.csv
