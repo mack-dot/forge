@@ -1,0 +1,42 @@
+{
+  "argv": [
+    "/opt/homebrew/bin/gh",
+    "attestation",
+    "verify",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst",
+    "--bundle",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst.jsonl",
+    "--repo",
+    "llvm/llvm-project",
+    "--cert-identity",
+    "https://github.com/llvm/llvm-project/.github/workflows/release-binaries.yml@refs/tags/llvmorg-23.1.5",
+    "--source-ref",
+    "refs/tags/llvmorg-23.1.5",
+    "--source-digest",
+    "392dfff97d29b59d77e5cac6d4b6ef2585fe7117",
+    "--signer-digest",
+    "392dfff97d29b59d77e5cac6d4b6ef2585fe7117",
+    "--deny-self-hosted-runners",
+    "--format",
+    "json"
+  ],
+  "actual_exit": 0,
+  "wall_seconds": 6.347703542007366,
+  "github_cli_sha256": "abc4a820c3f423c17902feba71f8af9ae73c2b20559d117bac628d4cb53f3416",
+  "expectations": {
+    "tag": "llvmorg-23.1.5",
+    "commit": "392dfff97d29b59d77e5cac6d4b6ef2585fe7117",
+    "source_ref": "refs/tags/llvmorg-23.1.5",
+    "certificate_identity": "https://github.com/llvm/llvm-project/.github/workflows/release-binaries.yml@refs/tags/llvmorg-23.1.5",
+    "expected_repository": "llvm/llvm-project",
+    "basis": "Official repository tag and frozen workflow sources, independent of artifact statement",
+    "workflow_sha256": {
+      "release-tasks.yml": "051000d7621fb4bda0aba5262fc57c3622e410c63a9acbd6357c59581604eb7f",
+      "release-binaries.yml": "b3ac6d4372a04266866282f696e204d8cdabb50c1dd5f5576328426a705c05d8"
+    },
+    "acceptance_policy_change": false
+  },
+  "observer_execution": "NOT RUN",
+  "forge_release_authentication": "NOT_ESTABLISHED",
+  "end_to_end": false
+}

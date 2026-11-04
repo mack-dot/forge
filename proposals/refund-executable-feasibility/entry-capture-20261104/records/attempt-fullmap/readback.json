@@ -1,0 +1,99 @@
+{
+  "actual_exit": 0,
+  "native_exit": 0,
+  "debugger_exit": 0,
+  "all_34_recorded_registers_unchanged_before_resume": true,
+  "registers": {
+    "x0": 4300243152,
+    "x1": 496542679040,
+    "x2": 496811114496,
+    "x3": 497079549952,
+    "x4": 0,
+    "x5": 0,
+    "x6": 1,
+    "x7": 1,
+    "x8": 4300406800,
+    "x9": 496811114496,
+    "x10": 497079549952,
+    "x11": 4378395136,
+    "x12": 0,
+    "x13": 512,
+    "x14": 4378395072,
+    "x15": 4,
+    "x16": 18446744073709551601,
+    "x17": 8392260976,
+    "x18": 0,
+    "x19": 268435456,
+    "x20": 268435456,
+    "x21": 6166656656,
+    "x22": 6166656832,
+    "x23": 8362662000,
+    "x24": 8362661984,
+    "x25": 6166657016,
+    "x26": 1,
+    "x27": 65535,
+    "x28": 4302323712,
+    "fp": 6166656480,
+    "lr": 4300379596,
+    "sp": 6166656464,
+    "pc": 4300243152,
+    "cpsr": 2147487744
+  },
+  "vm_region_count": 203,
+  "observed_heap_stack_regions": [
+    {
+      "start": 496542679040,
+      "end": 496676896768,
+      "permissions": "rw-"
+    },
+    {
+      "start": 496676896768,
+      "end": 496811114496,
+      "permissions": "rw-"
+    },
+    {
+      "start": 496811114496,
+      "end": 496945332224,
+      "permissions": "rw-"
+    },
+    {
+      "start": 496945332224,
+      "end": 497079549952,
+      "permissions": "rw-"
+    }
+  ],
+  "observed_heap_stack_bytes": 536870912,
+  "observed_vm_rw_coverage_complete": true,
+  "comparisons": {
+    "loaded-code.bin": {
+      "argv": [
+        "/usr/bin/cmp",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-fullmap/loaded-code.bin",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/loaded-code.bin"
+      ],
+      "actual_exit": 0,
+      "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb"
+    },
+    "loaded-bitmaps.bin": {
+      "argv": [
+        "/usr/bin/cmp",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-fullmap/loaded-bitmaps.bin",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/loaded-bitmaps.bin"
+      ],
+      "actual_exit": 0,
+      "sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76"
+    },
+    "native.stdout": {
+      "argv": [
+        "/usr/bin/cmp",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-fullmap/native.stdout",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/native.stdout"
+      ],
+      "actual_exit": 0,
+      "sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee"
+    }
+  },
+  "scope": "Finite LLDB VM-map observation and arithmetic; not a proof of physical memory, kernel semantics, or installed relation",
+  "complete_installed_relation": "NOT_ESTABLISHED",
+  "end_to_end": false
+}

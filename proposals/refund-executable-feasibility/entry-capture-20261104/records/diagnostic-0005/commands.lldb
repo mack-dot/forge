@@ -1,0 +1,5 @@
+log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0005/module-symbol.log lldb module symbol dyld mmap
+log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0005/dwarf-map.log dwarf map
+target create --no-dependents /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+image list -b
+target modules dump symtab /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund

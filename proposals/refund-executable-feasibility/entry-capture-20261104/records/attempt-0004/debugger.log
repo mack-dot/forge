@@ -1,0 +1,220 @@
+(lldb) command source -s 0 '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/commands.lldb'
+Executing commands in '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/commands.lldb'.
+(lldb) version
+lldb version 23.1.5 (https://github.com/llvm/llvm-project revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117)
+  clang revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117
+  llvm revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117
+(lldb) settings set target.inherit-env false
+(lldb) settings set target.disable-aslr false
+(lldb) settings set target.skip-prologue false
+(lldb) settings set target.require-hardware-breakpoint true
+(lldb) settings set target.env-vars LANG=C LC_ALL=C CML_HEAP_SIZE=256 CML_STACK_SIZE=256
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+Current executable set to '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund' (arm64).
+(lldb) breakpoint set --hardware --address 0x1000040d0 --shlib refund
+Breakpoint 1: where = refund`cml__Init_0, address = 0x00000001000040d0
+(lldb) breakpoint list --verbose
+Current breakpoints:
+1: address = refund[0x00000001000040d0]
+    1.1: 
+      module = /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+      symbol = cml__Init_0
+      address = refund[0x00000001000040d0]
+      resolved = false
+      hardware = false
+      hit count = 0   
+
+
+(lldb) process launch --stdin /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/wire/eligible_duplicate.stdin --stdout /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/native.stdout --stderr /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/native.stderr
+Process 8217 launched: '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund' (arm64)
+Process 8217 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+       frame #0: 0x00000001025d00d0 refund`cml__Init_0
+refund`cml__Init_0:
+->  0x1025d00d0 <+0>:  orr    x30, x3, x3
+    0x1025d00d4 <+4>:  sub    x30, x30, x1
+    0x1025d00d8 <+8>:  lsr    x30, x30, #4
+    0x1025d00dc <+12>: lsl    x30, x30, #3
+(lldb) process status
+Process 8217 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+       frame #0: 0x00000001025d00d0 refund`cml__Init_0
+refund`cml__Init_0:
+->  0x1025d00d0 <+0>:  orr    x30, x3, x3
+    0x1025d00d4 <+4>:  sub    x30, x30, x1
+    0x1025d00d8 <+8>:  lsr    x30, x30, #4
+    0x1025d00dc <+12>: lsl    x30, x30, #3
+(lldb) breakpoint list --verbose
+Current breakpoints:
+1: address = refund[0x00000001000040d0]
+    1.1: 
+      module = /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+      symbol = cml__Init_0
+      address = 0x00000001025d00d0
+      resolved = true
+      hardware = true
+      hit count = 1   
+
+
+(lldb) settings show target.require-hardware-breakpoint
+target.require-hardware-breakpoint (boolean) = true
+(lldb) register read x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+    x0 = 0x00000001025d00d0  refund`cml__Init_0
+    x1 = 0x0000007492400000
+    x2 = 0x00000074a2400000
+    x3 = 0x00000074b2400000
+    x4 = 0x0000000000000000
+    x5 = 0x0000000000000000
+    x6 = 0x0000000000000001
+    x7 = 0x0000000000000001
+    x8 = 0x00000001025f8010  cml_stackend
+    x9 = 0x00000074a2400000
+   x10 = 0x00000074b2400000
+   x11 = 0x0000000102a4c200
+   x12 = 0x0000000000000000
+   x13 = 0x0000000000000200
+   x14 = 0x0000000102a4c1c0
+   x15 = 0x0000000000000004
+   x16 = 0xfffffffffffffff1
+   x17 = 0x00000001f437bd70
+   x18 = 0x0000000000000000
+   x19 = 0x0000000010000000
+   x20 = 0x0000000010000000
+   x21 = 0x000000016d833690
+   x22 = 0x000000016d833740
+   x23 = 0x00000001f2741870  dyld`vm_page_mask
+   x24 = 0x00000001f2741860  dyld`mach_task_self_
+   x25 = 0x000000016d8337f8
+   x26 = 0x0000000000000001
+   x27 = 0x000000000000ffff
+   x28 = 0x0000000102af8000
+    fp = 0x000000016d8335e0
+    lr = 0x00000001025f15cc  refund`main + 136
+    sp = 0x000000016d8335d0
+    pc = 0x00000001025d00d0  refund`cml__Init_0
+  cpsr = 0x80001000
+(lldb) memory read --force --binary --outfile /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-code.bin --size 1 --count 130436 $pc
+130436 bytes written to '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-code.bin'
+(lldb) memory read --binary --outfile /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/heap-header.bin --size 1 --count 40 $x1
+40 bytes written to '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/heap-header.bin'
+(lldb) memory read --format hex --size 8 --count 5 $x1
+0x7492400000: 0x00000001025f8018 0x00000001025fcf30
+0x7492400010: 0x00000001025fcf30 0x00000001025efe54
+0x7492400020: 0x00000001025f0000
+(lldb) expression --allow-jit false -- *(unsigned long long *)$x1
+(unsigned long long) $3 = 4334780440
+(lldb) memory read --force --binary --outfile /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-bitmaps.bin --size 1 --count 20248 $0
+20248 bytes written to '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-bitmaps.bin'
+(lldb) memory region $pc
+[0x00000001025cc000-0x00000001025f4000) r-x __TEXT
+Modified memory (dirty) page list provided, 0 entries.
+(lldb) memory region $x1
+[0x0000007492400000-0x000000749a400000) rw-
+Modified memory (dirty) page list provided, 1 entries.
+Dirty pages: 0x7492400000.
+(lldb) memory region $x2
+[0x00000074a2400000-0x00000074aa400000) rw-
+Modified memory (dirty) page list provided, 0 entries.
+(lldb) memory region $x3
+[0x00000074b2400000-0x000000758e000000) ---
+(lldb) memory region $0
+[0x00000001025cc000-0x00000001025f4000) r-x __TEXT
+Modified memory (dirty) page list provided, 0 entries.
+(lldb) image list
+[  0] 5BC31322-6FFB-3F8C-8ECE-14B4C92E95BB 0x00000001025cc000 /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund 
+[  1] D341DDCB-7969-3A9C-8E03-0CF4751398A9 0x000000018c80e000 /usr/lib/dyld 
+[  2] 4FDC9AA6-B344-37FE-B8C6-A4C94A038F57 0x000000019d826000 /usr/lib/libSystem.B.dylib 
+[  3] 41C99F45-C5E6-39DB-B1F2-A1BEA9D242A4 0x000000019d7de000 /usr/lib/system/libcommonCrypto.dylib 
+[  4] DFB5CE7F-A36E-36AA-BECE-1392D3D43607 0x000000019d807000 /usr/lib/system/libcompiler_rt.dylib 
+[  5] 72D95AF9-BF5E-3A84-81A6-BCC5BDB99857 0x000000019d7fc000 /usr/lib/system/libcopyfile.dylib 
+[  6] 807AA6C9-5D8A-3CA5-B4CE-FACE5296EF6A 0x000000018c948000 /usr/lib/system/libcorecrypto.dylib 
+[  7] 022BF08F-0B3A-3225-9E65-16D1553CE90D 0x000000018ca53000 /usr/lib/system/libdispatch.dylib 
+[  8] 62863BCA-DD60-3D32-A9DB-89099BA6F3D7 0x000000018c7e7000 /usr/lib/system/libdyld.dylib 
+[  9] 50DEADEC-3E99-3519-AFC3-4A3FEB3F14C3 0x000000019d7c1000 /usr/lib/system/libmacho.dylib 
+[ 10] 5EC997EF-3ADA-360B-9FCD-5F940C83FA4E 0x000000019d817000 /usr/lib/system/libkeymgr.dylib 
+[ 11] 7FD4AE22-86EF-382B-83F5-ADF9336C1160 0x000000019caa8000 /usr/lib/system/libquarantine.dylib 
+[ 12] E6E6DFCF-6B2C-3F30-A59D-816CAB1190CE 0x000000019d814000 /usr/lib/system/libremovefile.dylib 
+[ 13] B4D449B7-A821-3A9A-8019-E917B291F10A 0x00000001933dd000 /usr/lib/system/libsystem_asl.dylib 
+[ 14] 6F304731-D95D-3501-B4AD-F2934F7F2446 0x000000018c8ce000 /usr/lib/system/libsystem_blocks.dylib 
+[ 15] FBA7B23E-AA60-3A90-9AA4-A7A2E0AD63EE 0x000000018ca9d000 /usr/lib/system/libsystem_c.dylib 
+[ 16] 1E8022D4-5A37-3A7A-8936-603E6FA88358 0x000000019d80b000 /usr/lib/system/libsystem_collections.dylib 
+[ 17] F3EB66A7-7A24-3AE5-B6E8-9A37BB00F119 0x000000019aebf000 /usr/lib/system/libsystem_configuration.dylib 
+[ 18] 08A57205-555D-3792-8931-9D5B585AF326 0x000000019986c000 /usr/lib/system/libsystem_containermanager.dylib 
+[ 19] 57248E07-11A5-3857-918E-4A3A63B69FE8 0x000000019d1ba000 /usr/lib/system/libsystem_coreservices.dylib 
+[ 20] 4E66C888-993C-3E6A-A8DA-A949C01C5B67 0x0000000190d7e000 /usr/lib/system/libsystem_darwin.dylib 
+[ 21] 61264923-2AA5-3658-B8C4-550C71E9D4B3 0x00000002b9a91000 /usr/lib/system/libsystem_darwindirectory.dylib 
+[ 22] DE22096F-1E5B-3D6E-8164-771582DD6391 0x000000019d818000 /usr/lib/system/libsystem_dnssd.dylib 
+[ 23] EDDE8E9C-A2CF-3931-BBB3-321CB852EB30 0x00000002b9a95000 /usr/lib/system/libsystem_eligibility.dylib 
+[ 24] 20C1CAB2-1F13-3426-8146-9CAE9FF2A33D 0x000000018ca9a000 /usr/lib/system/libsystem_featureflags.dylib 
+[ 25] BC387AEB-1CEF-3513-92D7-D7F913596711 0x000000018cc26000 /usr/lib/system/libsystem_info.dylib 
+[ 26] A3FB340F-3ED5-30F4-8B64-9D5860F64D35 0x000000019d782000 /usr/lib/system/libsystem_m.dylib 
+[ 27] 2339CB57-FE5A-3154-A206-A76059C749EB 0x000000018c9fd000 /usr/lib/system/libsystem_malloc.dylib 
+[ 28] 22E1D190-486F-324F-ABA4-F36AB841BFE9 0x0000000193335000 /usr/lib/system/libsystem_networkextension.dylib 
+[ 29] 58FD36D8-37A7-311C-80F2-8E64DD8710CF 0x00000001911d8000 /usr/lib/system/libsystem_notify.dylib 
+[ 30] 1E892B56-092E-3832-BDE3-DCE356D7A4FA 0x000000019aec4000 /usr/lib/system/libsystem_sandbox.dylib 
+[ 31] 7138ED99-7AA0-34EA-B35B-20EF6ADB1EED 0x00000002b9aa0000 /usr/lib/system/libsystem_sanitizers.dylib 
+[ 32] DE037464-4C5D-3E96-A33F-2A4557CC6A20 0x000000019d811000 /usr/lib/system/libsystem_secinit.dylib 
+[ 33] F63BF418-8F75-34A4-AAF1-8CAF2B9B6A05 0x000000018cbd0000 /usr/lib/system/libsystem_kernel.dylib 
+[ 34] 080E4444-A0FB-3913-9756-4E470015F32F 0x000000018cc1c000 /usr/lib/system/libsystem_platform.dylib 
+[ 35] 5A1828C3-CBC2-3B85-BD07-C8ED10021A41 0x000000018cc0f000 /usr/lib/system/libsystem_pthread.dylib 
+[ 36] 60EE7884-9F4E-3184-A6AC-FA40A7A0297D 0x00000001954d4000 /usr/lib/system/libsystem_symptoms.dylib 
+[ 37] B48A8E3E-A12A-3342-8321-428B555E965E 0x000000018c928000 /usr/lib/system/libsystem_trace.dylib 
+[ 38] 6AE48824-EC44-3A8C-B501-BE57DBE892E7 0x00000002b9aaa000 /usr/lib/system/libsystem_trial.dylib 
+[ 39] 3070AB81-B082-39E8-8A00-EF88DDE9AC47 0x000000019d7eb000 /usr/lib/system/libunwind.dylib 
+[ 40] 0791121F-B5FC-3F84-BF04-115E86D2D882 0x000000018c8d2000 /usr/lib/system/libxpc.dylib 
+[ 41] A21743EE-6E1C-3E74-97EA-7AF793DE4BDF 0x000000018cbb6000 /usr/lib/libc++abi.dylib 
+[ 42] C0680DF6-9900-3C29-A071-95A031686EF8 0x000000018c78c000 /usr/lib/libobjc.A.dylib 
+[ 43] E359944B-D230-33F9-A04E-0C3B17C3326E 0x00000002b90a2000 /usr/lib/libRosetta.dylib 
+[ 44] BD27A84B-C9AE-3282-BBEA-3B6119837B5A 0x00000001a4388000 /usr/lib/objc/libobjcMsgSend2.dylib 
+[ 45] 1E9BA4AA-B5DA-3CF3-80AC-4B880049573F 0x000000018cb20000 /usr/lib/libc++.1.dylib 
+[ 46] 41179EDE-DC97-3BBE-8848-6400D12C1436 0x0000000194388000 /usr/lib/objc/libobjcMsgSend.dylib 
+[ 47] 80BAE197-E285-3F6E-A1EE-B77FE37D7E5D 0x000000019d821000 /usr/lib/system/libcache.dylib 
+[ 48] 9BC523A3-E167-3F6C-8CAE-0F3EBA671791 0x00000001c4388000 /usr/lib/objc/libobjcMsgSend6.dylib 
+[ 49] E05CB08C-E956-36FA-8967-AE8E346A8D2C 0x00000001ec388000 /usr/lib/objc/libobjcMsgSend11.dylib 
+[ 50] 3913A71C-B29A-3AEA-820B-BEC40AC1861A 0x00000001bc388000 /usr/lib/objc/libobjcMsgSend5.dylib 
+[ 51] A6153BF5-622B-3B01-81B6-F64A365EF613 0x00000001b4388000 /usr/lib/objc/libobjcMsgSend4.dylib 
+[ 52] BBF95357-BEBF-3D89-8900-2BBB14A667C5 0x000000018c7dc000 /usr/lib/libsharedcache.dylib 
+[ 53] B40D9B2A-E1EE-37ED-8004-711A1F263DE1 0x000000019c388000 /usr/lib/objc/libobjcMsgSend1.dylib 
+[ 54] C0860D68-DDFC-3BD7-8B06-DB0645CBBED4 0x00000001ac388000 /usr/lib/objc/libobjcMsgSend3.dylib 
+[ 55] 10AB03AA-FF1F-3FDC-9DFB-BFC40042C501 0x0000000214388000 /usr/lib/objc/libobjcMsgSend12.dylib 
+[ 56] 3E041BAD-A8E8-3069-B741-78CD1A45B176 0x00000001d4388000 /usr/lib/objc/libobjcMsgSend8.dylib 
+[ 57] 7C995666-2B2D-3284-AA0A-EBF7C922838E 0x000000022c388000 /usr/lib/objc/libobjcMsgSend15.dylib 
+[ 58] 07B4CF85-251B-301B-832B-20B315A59E19 0x000000023c388000 /usr/lib/objc/libobjcMsgSend17.dylib 
+[ 59] ABF53427-FA6F-3D0D-8F9D-7AD795CA5C92 0x000000021c388000 /usr/lib/objc/libobjcMsgSend13.dylib 
+[ 60] 85A60286-5DE3-32BA-B18C-2A498B065C88 0x0000000264388000 /usr/lib/objc/libobjcMsgSend22.dylib 
+[ 61] 5452A0D2-6B19-39BE-ADDD-80B7BCDE3A98 0x000000026c388000 /usr/lib/objc/libobjcMsgSend23.dylib 
+[ 62] 94BBF2D6-722B-350D-8557-4D25A8E8D53A 0x0000000274388000 /usr/lib/objc/libobjcMsgSend24.dylib 
+[ 63] 35481387-5A8E-3AE4-86A6-94CEB3CC8726 0x000000027c388000 /usr/lib/objc/libobjcMsgSend25.dylib 
+[ 64] 43E575B7-04DB-3999-A633-1A3B638BA6E3 0x0000000244388000 /usr/lib/objc/libobjcMsgSend18.dylib 
+[ 65] 9A844C46-A6DA-34D4-8EBF-2AD775C30684 0x0000000224388000 /usr/lib/objc/libobjcMsgSend14.dylib 
+[ 66] 678186C0-8EAD-3B35-8CBB-00285B41E4A0 0x00000001e4388000 /usr/lib/objc/libobjcMsgSend10.dylib 
+[ 67] 736F4D85-76F7-3B28-8D87-C07E8F7A0EF4 0x000000024c388000 /usr/lib/objc/libobjcMsgSend19.dylib 
+[ 68] 74E67C8B-6BCA-3184-A18E-A97F370052C6 0x0000000254388000 /usr/lib/objc/libobjcMsgSend20.dylib 
+[ 69] B6C0E14B-53AE-3E22-9ED5-1729C49F46F2 0x0000000234388000 /usr/lib/objc/libobjcMsgSend16.dylib 
+[ 70] CC0D732F-98E7-3888-9E15-70984DA2FB04 0x000000025c388000 /usr/lib/objc/libobjcMsgSend21.dylib 
+[ 71] 346E0484-48FA-369B-8A64-93B5F5341CFE 0x00000002cc388000 /usr/lib/objc/libobjcMsgSend33.dylib 
+[ 72] 6A31F809-BCBE-3E01-A367-E91FDACCE324 0x00000002d4388000 /usr/lib/objc/libobjcMsgSend34.dylib 
+[ 73] 0D309D58-D576-3E5D-AD4B-6D55AB491702 0x00000002c4388000 /usr/lib/objc/libobjcMsgSend32.dylib 
+[ 74] 34A67969-21A0-39D6-BB81-8FDA5A2409DB 0x00000001dc388000 /usr/lib/objc/libobjcMsgSend9.dylib 
+[ 75] 09BA7B97-7DF7-3C7F-932A-B6847662FC49 0x00000002a4388000 /usr/lib/objc/libobjcMsgSend28.dylib 
+[ 76] 36D5BA3F-2139-30B0-8558-556764BE9813 0x00000002ac388000 /usr/lib/objc/libobjcMsgSend29.dylib 
+[ 77] 9F05564A-9D12-372C-98FC-E9F0E6BE4F04 0x00000002b4388000 /usr/lib/objc/libobjcMsgSend30.dylib 
+[ 78] 0985E20F-78C3-3466-A2B2-DBB95F7104A3 0x00000002bc388000 /usr/lib/objc/libobjcMsgSend31.dylib 
+[ 79] 248B7BCE-5B4C-34C7-A340-43D5228628C5 0x00000001cc388000 /usr/lib/objc/libobjcMsgSend7.dylib 
+[ 80] 9E0C8664-E7F4-39D1-AAFC-BD92B255E4E8 0x0000000294388000 /usr/lib/objc/libobjcMsgSend26.dylib 
+[ 81] FD424935-55A9-3650-955A-EED3441A1D19 0x000000029c388000 /usr/lib/objc/libobjcMsgSend27.dylib 
+(lldb) register read x0 x1 x2 x3 fp lr sp pc cpsr
+    x0 = 0x00000001025d00d0  refund`cml__Init_0
+    x1 = 0x0000007492400000
+    x2 = 0x00000074a2400000
+    x3 = 0x00000074b2400000
+    fp = 0x000000016d8335e0
+    lr = 0x00000001025f15cc  refund`main + 136
+    sp = 0x000000016d8335d0
+    pc = 0x00000001025d00d0  refund`cml__Init_0
+  cpsr = 0x80001000
+(lldb) process continue
+Process 8217 resuming
+Process 8217 exited with status = 0 (0x00000000)
+(lldb) process status
+Process 8217 exited with status = 0 (0x00000000) 

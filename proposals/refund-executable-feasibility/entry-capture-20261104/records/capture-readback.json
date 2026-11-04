@@ -1,0 +1,272 @@
+{
+  "actual_exit": 0,
+  "scope": "Finite observations and exact byte identity only",
+  "observations": {
+    "attempt-0005": {
+      "debugger_exit": 0,
+      "native_exit": 0,
+      "registers_at_entry": {
+        "x0": 4302618832,
+        "x1": 537076432896,
+        "x2": 537344868352,
+        "x3": 537613303808,
+        "x4": 0,
+        "x5": 0,
+        "x6": 1,
+        "x7": 1,
+        "x8": 4302782480,
+        "x9": 537344868352,
+        "x10": 537613303808,
+        "x11": 4380082688,
+        "x12": 0,
+        "x13": 512,
+        "x14": 4380082624,
+        "x15": 4,
+        "x16": 18446744073709551601,
+        "x17": 8392260976,
+        "x18": 0,
+        "x19": 268435456,
+        "x20": 268435456,
+        "x21": 6164280976,
+        "x22": 6164281152,
+        "x23": 8362662000,
+        "x24": 8362661984,
+        "x25": 6164281336,
+        "x26": 1,
+        "x27": 65535,
+        "x28": 4307501056,
+        "fp": 6164280800,
+        "lr": 4302755276,
+        "sp": 6164280784,
+        "pc": 4302618832,
+        "cpsr": 2147487744
+      },
+      "registers_rechecked_before_resume": {
+        "x0": 4302618832,
+        "x1": 537076432896,
+        "x2": 537344868352,
+        "x3": 537613303808,
+        "fp": 6164280800,
+        "lr": 4302755276,
+        "sp": 6164280784,
+        "pc": 4302618832,
+        "cpsr": 2147487744
+      },
+      "loaded_module_base": 4302602240,
+      "heap_header_pointers": [
+        4302782488,
+        4302802736,
+        4302802736,
+        4302749268,
+        4302749696
+      ],
+      "header_word_reader": {
+        "argv": [
+          "/usr/bin/od",
+          "-An",
+          "-tx8",
+          "-v",
+          "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/heap-header.bin"
+        ],
+        "actual_exit": 0,
+        "stdout": "                                        100774018                               100778f30\n                                        100778f30                               10076be54\n                                        10076c000                                \n\n"
+      },
+      "comparisons": {
+        "loaded-code.bin": {
+          "argv": [
+            "/usr/bin/cmp",
+            "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/loaded-code.bin",
+            "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/compiled-extraction/code.bin"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb"
+        },
+        "loaded-bitmaps.bin": {
+          "argv": [
+            "/usr/bin/cmp",
+            "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/loaded-bitmaps.bin",
+            "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/expected-bitmaps.bin"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76"
+        },
+        "native.stdout": {
+          "argv": [
+            "/usr/bin/cmp",
+            "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0005/native.stdout",
+            "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/wire/eligible_duplicate.stdout"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee"
+        }
+      },
+      "derived_scalar_relationships": {
+        "pc_matches_loaded_file_entry": true,
+        "pc_4_byte_aligned": true,
+        "sp_16_byte_aligned": true,
+        "entry_x0_equals_pc": true,
+        "heap_stack_bounds_ordered": true,
+        "heap_stack_boundaries_word_aligned": true,
+        "heap_stack_span_at_least_1024_words": true,
+        "bitmap_bound_is_2531_words": true,
+        "extra_data_words_observed_zero": true,
+        "code_end_matches_pc_plus_130436": true,
+        "code_buffer_bound_ordered_without_wrap": true,
+        "bitmap_interval_disjoint_from_heap_stack": true
+      },
+      "code_buffer_bytes_observed": 428,
+      "system_control_registers": "UNOBSERVED",
+      "complete_installed_relation": "NOT_ESTABLISHED",
+      "universal_concrete_model_correspondence": "NOT_ESTABLISHED",
+      "observer_producer_authentication": "NOT_ESTABLISHED",
+      "end_to_end": false
+    },
+    "attempt-repeat": {
+      "debugger_exit": 0,
+      "native_exit": 0,
+      "registers_at_entry": {
+        "x0": 4378099920,
+        "x1": 499193479168,
+        "x2": 499461914624,
+        "x3": 499730350080,
+        "x4": 0,
+        "x5": 0,
+        "x6": 1,
+        "x7": 1,
+        "x8": 4378263568,
+        "x9": 499461914624,
+        "x10": 499730350080,
+        "x11": 4456481280,
+        "x12": 0,
+        "x13": 512,
+        "x14": 4456481216,
+        "x15": 4,
+        "x16": 18446744073709551601,
+        "x17": 8392260976,
+        "x18": 0,
+        "x19": 268435456,
+        "x20": 268435456,
+        "x21": 6088799888,
+        "x22": 6088800064,
+        "x23": 8362662000,
+        "x24": 8362661984,
+        "x25": 6088800248,
+        "x26": 1,
+        "x27": 65535,
+        "x28": 4379901952,
+        "fp": 6088799712,
+        "lr": 4378236364,
+        "sp": 6088799696,
+        "pc": 4378099920,
+        "cpsr": 2147487744
+      },
+      "registers_rechecked_before_resume": {
+        "x0": 4378099920,
+        "x1": 499193479168,
+        "x2": 499461914624,
+        "x3": 499730350080,
+        "fp": 6088799712,
+        "lr": 4378236364,
+        "sp": 6088799696,
+        "pc": 4378099920,
+        "cpsr": 2147487744
+      },
+      "loaded_module_base": 4378083328,
+      "heap_header_pointers": [
+        4378263576,
+        4378283824,
+        4378283824,
+        4378230356,
+        4378230784
+      ],
+      "header_word_reader": {
+        "argv": [
+          "/usr/bin/od",
+          "-An",
+          "-tx8",
+          "-v",
+          "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-repeat/heap-header.bin"
+        ],
+        "actual_exit": 0,
+        "stdout": "                                        104f70018                               104f74f30\n                                        104f74f30                               104f67e54\n                                        104f68000                                \n\n"
+      },
+      "comparisons": {
+        "loaded-code.bin": {
+          "argv": [
+            "/usr/bin/cmp",
+            "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-repeat/loaded-code.bin",
+            "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/compiled-extraction/code.bin"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb"
+        },
+        "loaded-bitmaps.bin": {
+          "argv": [
+            "/usr/bin/cmp",
+            "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-repeat/loaded-bitmaps.bin",
+            "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/expected-bitmaps.bin"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76"
+        },
+        "native.stdout": {
+          "argv": [
+            "/usr/bin/cmp",
+            "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-repeat/native.stdout",
+            "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/wire/eligible_duplicate.stdout"
+          ],
+          "actual_exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee"
+        }
+      },
+      "derived_scalar_relationships": {
+        "pc_matches_loaded_file_entry": true,
+        "pc_4_byte_aligned": true,
+        "sp_16_byte_aligned": true,
+        "entry_x0_equals_pc": true,
+        "heap_stack_bounds_ordered": true,
+        "heap_stack_boundaries_word_aligned": true,
+        "heap_stack_span_at_least_1024_words": true,
+        "bitmap_bound_is_2531_words": true,
+        "extra_data_words_observed_zero": true,
+        "code_end_matches_pc_plus_130436": true,
+        "code_buffer_bound_ordered_without_wrap": true,
+        "bitmap_interval_disjoint_from_heap_stack": true
+      },
+      "code_buffer_bytes_observed": 428,
+      "system_control_registers": "UNOBSERVED",
+      "complete_installed_relation": "NOT_ESTABLISHED",
+      "universal_concrete_model_correspondence": "NOT_ESTABLISHED",
+      "observer_producer_authentication": "NOT_ESTABLISHED",
+      "end_to_end": false
+    }
+  },
+  "corrupted_observation_control": {
+    "argv": [
+      "/usr/bin/cmp",
+      "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/capture-controls/altered-code.bin",
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/compiled-extraction/code.bin"
+    ],
+    "actual_exit": 1,
+    "stdout": "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/capture-controls/altered-code.bin /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/compiled-extraction/code.bin differ: char 1, line 1\n",
+    "stderr": "",
+    "mutant_sha256": "dd8e8782a2c7a2f208c67a37a87fafe506eeb54194ffaf0ada9205a8cb2774ab",
+    "mutant_execution": "NOT RUN"
+  },
+  "historical_substituted_bitmap_comparison_exit": 1,
+  "observer_source_reproduced": true,
+  "distinct_observed_load_addresses": true,
+  "end_to_end": false
+}

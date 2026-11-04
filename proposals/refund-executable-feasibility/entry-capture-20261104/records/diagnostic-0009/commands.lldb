@@ -1,0 +1,5 @@
+settings set target.preload-symbols false
+log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0009/module-symbol.log lldb module symbol dyld mmap
+target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+image list -v
+target modules dump symtab /usr/lib/dyld

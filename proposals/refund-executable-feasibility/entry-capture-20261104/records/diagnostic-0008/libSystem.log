@@ -1,0 +1,3 @@
+(lldb) log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0008/libSystem-symbols.log lldb module symbol mmap
+(lldb) target create --no-dependents /usr/lib/libSystem.B.dylib
+error: '/usr/lib/libSystem.B.dylib' does not exist

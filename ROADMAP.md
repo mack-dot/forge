@@ -7,6 +7,39 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U283)
+
+Exact loaded refund code and bitmaps now match the HOL-derived payloads in
+three accepted local captures. CURRENT none; M1 open; Stage12 unauthorized;
+end_to_end=false. These observations do not establish a universal native theorem.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Installed debugger file-only / dependency diagnostics | 0 / child -10 | File parses; dependency-symbol loading crashes; failures retained |
+| Official observer archive/bundle download | 0/0 | Exact release hashes; isolated local tool directory |
+| Upstream gh attestation verification / wrong-source control | 0/1 | Exact tag, source and signer; intended identity refusal |
+| Initial decompressor/listing / corrected listing and extraction | 1/0;0/0;0/0 | Explicit1GiB decoder window; first failure retained |
+| New debugger target-open diagnostic | 0 | Exact native file and dependencies load |
+| Attempt0004 debugger / bitmap comparison | 0/1 | Native exits0; wrong temporary-pointer capture refused |
+| Corrected capture / identical-source repeat / full-map supplement | 0/0/0 | Each native process exits0 with exact fixture stdout |
+| validate_captures.py / full-map readback | 0/0 | Nine positive byte comparisons0; code/bitmap identities and scalar observations |
+| Corrupted captured-code comparison | 1 | Intended difference; mutant never executed |
+| Frozen-input and compiler-process readback | 0 |30 inputs unchanged; original proof remains live, no terminal result |
+
+[Exact commands, provenance, observations and remaining premises](proposals/refund-executable-feasibility/entry-capture-20261104/REPORT.md).
+The accepted captures use resolved hardware breakpoints. Loaded code130436 bytes
+and bitmaps2531 words match. Full-map observation covers512MiB heap/stack in four
+rw- regions and rechecks all34 named registers unchanged before resume. Different
+ASLR addresses do not change payload bytes. No executable rebuild/signing occurs.
+Upstream observer provenance does not authenticate local Forge evidence.
+
+Next: finish original run_behavior.py0001repeat; inspect its actual theorem, then
+require binding controls/reproduction. Keep source/model, physical control state,
+universal runtime/FFI/resources/exit, independent replay/review, new admission and
+off-machine restore open. Separate tasks retain their own records and authority.
+No Stage12, protected change, publication, merge, dispatch or deployment ran.
+Integration EXIT remains NOT_ESTABLISHED.
+
 ## Active mission update — 2026-11-04 (U279)
 
 The Markdown tracker now gives the ordered next actions and their completion

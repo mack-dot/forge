@@ -1,0 +1,427 @@
+(lldb) version
+lldb version 23.1.5 (https://github.com/llvm/llvm-project revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117)
+  clang revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117
+  llvm revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+Current executable set to '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund' (arm64).
+(lldb) image list
+[  0] 5BC31322-6FFB-3F8C-8ECE-14B4C92E95BB 0x0000000100000000 /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund 
+[  1] 4FDC9AA6-B344-37FE-B8C6-A4C94A038F57 0x000000019149e000 /usr/lib/libSystem.B.dylib 
+[  2] D341DDCB-7969-3A9C-8E03-0CF4751398A9 0x0000000180486000 /usr/lib/dyld 
+[  3] DFB5CE7F-A36E-36AA-BECE-1392D3D43607 0x000000019147f000 /usr/lib/system/libcompiler_rt.dylib 
+[  4] 5EC997EF-3ADA-360B-9FCD-5F940C83FA4E 0x000000019148f000 /usr/lib/system/libkeymgr.dylib 
+[  5] E6E6DFCF-6B2C-3F30-A59D-816CAB1190CE 0x000000019148c000 /usr/lib/system/libremovefile.dylib 
+[  6] B4D449B7-A821-3A9A-8019-E917B291F10A 0x0000000187055000 /usr/lib/system/libsystem_asl.dylib 
+[  7] 7FD4AE22-86EF-382B-83F5-ADF9336C1160 0x0000000190720000 /usr/lib/system/libquarantine.dylib 
+[  8] 807AA6C9-5D8A-3CA5-B4CE-FACE5296EF6A 0x00000001805c0000 /usr/lib/system/libcorecrypto.dylib 
+[  9] 41C99F45-C5E6-39DB-B1F2-A1BEA9D242A4 0x0000000191456000 /usr/lib/system/libcommonCrypto.dylib 
+[ 10] 022BF08F-0B3A-3225-9E65-16D1553CE90D 0x00000001806cb000 /usr/lib/system/libdispatch.dylib 
+[ 11] 4E66C888-993C-3E6A-A8DA-A949C01C5B67 0x00000001849f6000 /usr/lib/system/libsystem_darwin.dylib 
+[ 12] 72D95AF9-BF5E-3A84-81A6-BCC5BDB99857 0x0000000191474000 /usr/lib/system/libcopyfile.dylib 
+[ 13] 6F304731-D95D-3501-B4AD-F2934F7F2446 0x0000000180546000 /usr/lib/system/libsystem_blocks.dylib 
+[ 14] 62863BCA-DD60-3D32-A9DB-89099BA6F3D7 0x000000018045f000 /usr/lib/system/libdyld.dylib 
+[ 15] DE22096F-1E5B-3D6E-8164-771582DD6391 0x0000000191490000 /usr/lib/system/libsystem_dnssd.dylib 
+[ 16] 1E8022D4-5A37-3A7A-8936-603E6FA88358 0x0000000191483000 /usr/lib/system/libsystem_collections.dylib 
+[ 17] F3EB66A7-7A24-3AE5-B6E8-9A37BB00F119 0x000000018eb37000 /usr/lib/system/libsystem_configuration.dylib 
+[ 18] 08A57205-555D-3792-8931-9D5B585AF326 0x000000018d4e4000 /usr/lib/system/libsystem_containermanager.dylib 
+[ 19] 57248E07-11A5-3857-918E-4A3A63B69FE8 0x0000000190e32000 /usr/lib/system/libsystem_coreservices.dylib 
+[ 20] 50DEADEC-3E99-3519-AFC3-4A3FEB3F14C3 0x0000000191439000 /usr/lib/system/libmacho.dylib 
+[ 21] 61264923-2AA5-3658-B8C4-550C71E9D4B3 0x00000002ad709000 /usr/lib/system/libsystem_darwindirectory.dylib 
+[ 22] 20C1CAB2-1F13-3426-8146-9CAE9FF2A33D 0x0000000180712000 /usr/lib/system/libsystem_featureflags.dylib 
+[ 23] FBA7B23E-AA60-3A90-9AA4-A7A2E0AD63EE 0x0000000180715000 /usr/lib/system/libsystem_c.dylib 
+[ 24] BC387AEB-1CEF-3513-92D7-D7F913596711 0x000000018089e000 /usr/lib/system/libsystem_info.dylib 
+[ 25] 7138ED99-7AA0-34EA-B35B-20EF6ADB1EED 0x00000002ad718000 /usr/lib/system/libsystem_sanitizers.dylib 
+[ 26] A3FB340F-3ED5-30F4-8B64-9D5860F64D35 0x00000001913fa000 /usr/lib/system/libsystem_m.dylib 
+[ 27] 2339CB57-FE5A-3154-A206-A76059C749EB 0x0000000180675000 /usr/lib/system/libsystem_malloc.dylib 
+[ 28] 22E1D190-486F-324F-ABA4-F36AB841BFE9 0x0000000186fad000 /usr/lib/system/libsystem_networkextension.dylib 
+[ 29] 58FD36D8-37A7-311C-80F2-8E64DD8710CF 0x0000000184e50000 /usr/lib/system/libsystem_notify.dylib 
+[ 30] 1E892B56-092E-3832-BDE3-DCE356D7A4FA 0x000000018eb3c000 /usr/lib/system/libsystem_sandbox.dylib 
+[ 31] 3070AB81-B082-39E8-8A00-EF88DDE9AC47 0x0000000191463000 /usr/lib/system/libunwind.dylib 
+[ 32] DE037464-4C5D-3E96-A33F-2A4557CC6A20 0x0000000191489000 /usr/lib/system/libsystem_secinit.dylib 
+[ 33] 080E4444-A0FB-3913-9756-4E470015F32F 0x0000000180894000 /usr/lib/system/libsystem_platform.dylib 
+[ 34] F63BF418-8F75-34A4-AAF1-8CAF2B9B6A05 0x0000000180848000 /usr/lib/system/libsystem_kernel.dylib 
+[ 35] 60EE7884-9F4E-3184-A6AC-FA40A7A0297D 0x000000018914c000 /usr/lib/system/libsystem_symptoms.dylib 
+[ 36] B48A8E3E-A12A-3342-8321-428B555E965E 0x00000001805a0000 /usr/lib/system/libsystem_trace.dylib 
+[ 37] 5A1828C3-CBC2-3B85-BD07-C8ED10021A41 0x0000000180887000 /usr/lib/system/libsystem_pthread.dylib 
+[ 38] 6AE48824-EC44-3A8C-B501-BE57DBE892E7 0x00000002ad722000 /usr/lib/system/libsystem_trial.dylib 
+[ 39] EDDE8E9C-A2CF-3931-BBB3-321CB852EB30 0x00000002ad70d000 /usr/lib/system/libsystem_eligibility.dylib 
+[ 40] 0791121F-B5FC-3F84-BF04-115E86D2D882 0x000000018054a000 /usr/lib/system/libxpc.dylib 
+[ 41] A21743EE-6E1C-3E74-97EA-7AF793DE4BDF 0x000000018082e000 /usr/lib/libc++abi.dylib 
+(lldb) help memory read
+Read from the memory of the current target process.
+
+Syntax: memory read <cmd-options> <address-expression> [<address-expression>]
+
+Command Options Usage:
+  memory read [-r] [-f <format>] [-c <count>] [-G <gdb-format>] [-s <byte-size>] [-l <number-per-line>] [-o <filename>] <address-expression> [<address-expression>]
+  memory read [-br] [-f <format>] [-c <count>] [-s <byte-size>] [-o <filename>] <address-expression> [<address-expression>]
+  memory read [-AFLORTr] -t <name> [-f <format>] [-c <count>] [-G <gdb-format>] [-E <count>] [-o <filename>] [-d <none>] [-S <boolean>] [-D <count>] [-P <count>] [-Y[<count>]] [-V <boolean>] [-Z <count>] <address-expression> [<address-expression>]
+  memory read -t <name> [-x <source-language>] <address-expression> [<address-expression>]
+
+       -A ( --show-all-children )
+            Ignore the upper bound on the number of children to show.
+
+       -D <count> ( --depth <count> )
+            Set the max recurse depth when dumping aggregate types (default is
+            infinity).
+
+       -E <count> ( --offset <count> )
+            How many elements of the specified type to skip before starting to
+            display data.
+
+       -F ( --flat )
+            Display results in a flat format that uses expression paths for
+            each variable or member.
+
+       -G <gdb-format> ( --gdb-format <gdb-format> )
+            Specify a format using a GDB format specifier string.
+
+       -L ( --location )
+            Show variable location information.
+
+       -O ( --object-description )
+            Display using a language-specific description API, if possible.
+
+       -P <count> ( --ptr-depth <count> )
+            The number of pointers to be traversed when dumping values (default
+            is zero).
+
+       -R ( --raw-output )
+            Don't use formatting options.
+
+       -S <boolean> ( --synthetic-type <boolean> )
+            Show the object obeying its synthetic provider, if available.
+
+       -T ( --show-types )
+            Show variable types when dumping values.
+
+       -V <boolean> ( --validate <boolean> )
+            Show results of type validators.
+
+       -Y[<count>] ( --no-summary-depth=[<count>] )
+            Set the depth at which omitting summary information stops (default
+            is 1).
+
+       -Z <count> ( --element-count <count> )
+            Treat the result of the expression as if its type is an array of
+            this many values.
+
+       -b ( --binary )
+            If true, memory will be saved as binary. If false, the memory is
+            saved as an ASCII dump that uses the format, size, count and number
+            per line settings.
+
+       -c <count> ( --count <count> )
+            The number of total items to display.
+
+       -d <none> ( --dynamic-type <none> )
+            Show the object as its full dynamic type, not its static type, if
+            available.
+            Values: no-dynamic-values | run-target | no-run-target
+
+       -f <format> ( --format <format> )
+            Specify a format to be used for display.
+
+       -l <number-per-line> ( --num-per-line <number-per-line> )
+            The number of items per line to display.
+
+       -o <filename> ( --outfile <filename> )
+            Specify a path for capturing command output.
+
+       -r ( --force )
+            Necessary if reading over target.max-memory-read-size bytes.
+
+       -s <byte-size> ( --size <byte-size> )
+            The size in bytes to use when displaying with the selected format.
+
+       -t <name> ( --type <name> )
+            The name of a type to view memory as.
+
+       -x <source-language> ( --language <source-language> )
+            The language of the type to view memory as.
+
+       --show-tags
+            Include memory tags in output (does not apply to binary output).
+
+       --append-outfile
+            Append to the file specified with '--outfile <path>'.
+     
+     This command takes options and free-form arguments.  If your arguments
+     resemble option specifiers (i.e., they start with a - or --), you must use
+     ' -- ' between the end of the command options and the beginning of the
+     arguments.
+(lldb) help breakpoint set
+Sets a breakpoint or set of breakpoints in the executable.
+
+Syntax: breakpoint set <cmd-options>
+
+Command Options Usage:
+  breakpoint set [-DHd] -l <linenum> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-u <column>] [-f <filename>] [-m <boolean>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -a <address-expression> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-s <shlib-name>]
+  breakpoint set [-DHd] -n <function-name> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -F <fullname> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -S <selector> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -M <method> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -r <regular-expression> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -b <function-name> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-ADHd] -p <regular-expression> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-f <filename>] [-m <boolean>] [-s <shlib-name>] [-X <function-name>]
+  breakpoint set [-DHd] -E <source-language> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-h <boolean>] [-w <boolean>]
+  breakpoint set [-DHd] -P <python-class> [-k <none>] [-v <none>] [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-f <filename>] [-s <shlib-name>]
+  breakpoint set [-DHd] -y <linespec> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-m <boolean>] [-s <shlib-name>] [-K <boolean>]
+
+       -A ( --all-files )
+            All files are searched for source pattern matches.
+
+       -C <command> ( --command <command> )
+            A command to run when the breakpoint is hit, can be provided more
+            than once, the commands will be run in left-to-right order.
+
+       -D ( --dummy-breakpoints )
+            Act on Dummy breakpoints - i.e. breakpoints set before a file is
+            provided, which prime new targets.
+
+       -E <source-language> ( --language-exception <source-language> )
+            Set the breakpoint on exceptions thrown by the specified language
+            (without options, on throw but not catch.)
+
+       -F <fullname> ( --fullname <fullname> )
+            Set the breakpoint by fully qualified function names. For C++ this
+            means namespaces and all arguments, and for Objective-C this means
+            a full function prototype with class and selector.  Can be repeated
+            multiple times to make one breakpoint for multiple names.
+
+       -G <boolean> ( --auto-continue <boolean> )
+            The breakpoint will auto-continue after running its commands.
+
+       -H ( --hardware )
+            Require the breakpoint to use hardware breakpoints.
+
+       -K <boolean> ( --skip-prologue <boolean> )
+            Skip the prologue if the breakpoint is at the beginning of a
+            function. If not set the target.skip-prologue setting is used.
+
+       -L <source-language> ( --language <source-language> )
+            Specifies the Language to use when interpreting the breakpoint's
+            expression (note: currently only implemented for setting
+            breakpoints on identifiers). If not set the target.language setting
+            is used.
+
+       -M <method> ( --method <method> )
+            Set the breakpoint by C++ method names.  Can be repeated multiple
+            times to make one breakpoint for multiple methods.
+
+       -N <breakpoint-name> ( --breakpoint-name <breakpoint-name> )
+            Adds this to the list of names for this breakpoint.
+
+       -P <python-class> ( --script-class <python-class> )
+            The name of the class that will manage a scripted breakpoint.
+
+       -R <address> ( --address-slide <address> )
+            Add the specified offset to whatever address(es) the breakpoint
+            resolves to. At present this applies the offset directly as given,
+            and doesn't try to align it to instruction boundaries.
+
+       -S <selector> ( --selector <selector> )
+            Set the breakpoint by Objective-C selector name.  Can be repeated
+            multiple times to make one breakpoint for multiple Selectors.
+
+       -T <thread-name> ( --thread-name <thread-name> )
+            The breakpoint stops only for the thread whose thread name matches
+            this argument.
+
+       -X <function-name> ( --source-regexp-function <function-name> )
+            When used with '-p' limits the source regex to source contained in
+            the named functions.  Can be repeated multiple times.
+
+       -Y <source-language> ( --condition-language <source-language> )
+            Specifies the Language to use when executing the breakpoint's
+            condition expression.
+
+       -a <address-expression> ( --address <address-expression> )
+            Set the breakpoint at the specified address.  If the address maps
+            uniquely to a particular binary, then the address will be converted
+            to a
+            fileaddress,
+            so that the breakpoint will track that binary+offset no matter
+            where the binary eventually loads.  Alternately, if you also
+            specify the module - with the -s option - then the address will be
+            treated as a file address in that module, and resolved accordingly.
+            Again, this will allow lldb to track that offset on subsequent
+            reloads.  The module need not have been loaded at the time you
+            specify this breakpoint, and will get resolved when the module is
+            loaded.
+
+       -b <function-name> ( --basename <function-name> )
+            Set the breakpoint by function basename (C++ namespaces and
+            arguments will be ignored).  Can be repeated multiple times to make
+            one breakpoint for multiple symbols.
+
+       -c <expr> ( --condition <expr> )
+            The breakpoint stops only if this condition expression evaluates to
+            true.
+
+       -d ( --disable )
+            Disable the breakpoint.
+
+       -f <filename> ( --file <filename> )
+            Specifies the source file in which to set this breakpoint.  Note,
+            by default lldb only looks for files that are #included if they use
+            the standard include file extensions.  To set breakpoints on
+            .c/.cpp/.m/.mm files that are #included, set
+            target.inline-breakpoint-strategy to
+            always.
+
+       -h <boolean> ( --on-catch <boolean> )
+            Set the breakpoint on exception catch.
+
+       -i <count> ( --ignore-count <count> )
+            Set the number of times this breakpoint is skipped before stopping.
+
+       -k <none> ( --structured-data-key <none> )
+            The key for a key/value pair passed to the implementation of a
+            scripted breakpoint.  Pairs can be specified more than once.
+
+       -l <linenum> ( --line <linenum> )
+            Specifies the line number on which to set this breakpoint.
+
+       -m <boolean> ( --move-to-nearest-code <boolean> )
+            Move breakpoints to nearest code. If not set the
+            target.move-to-nearest-code setting is used.
+
+       -n <function-name> ( --name <function-name> )
+            Set the breakpoint by function name.  Can be repeated multiple
+            times to make one breakpoint for multiple names.
+
+       -o <boolean> ( --one-shot <boolean> )
+            The breakpoint is deleted the first time it causes a stop.
+
+       -p <regular-expression> ( --source-pattern-regexp <regular-expression> )
+            Set the breakpoint by specifying a regular expression which is
+            matched against the source text in a source file or files specified
+            with the -f can be specified more than once.  If no source files
+            are specified, uses the current
+            default
+            source
+            file.
+            If you want to match against all source files, pass the
+            --all-files
+            option.
+
+       -q <queue-name> ( --queue-name <queue-name> )
+            The breakpoint stops only for threads in the queue whose name is
+            given by this argument.
+
+       -r <regular-expression> ( --func-regex <regular-expression> )
+            Set the breakpoint by function name, evaluating a
+            regular-expression to find the function name(s).
+
+       -s <shlib-name> ( --shlib <shlib-name> )
+            Set the breakpoint only in this shared library.  Can repeat this
+            option multiple times to specify multiple shared libraries.
+
+       -t <thread-id> ( --thread-id <thread-id> )
+            The breakpoint stops only for the thread whose TID matches this
+            argument.  The token 'current' resolves to the current thread's ID.
+
+       -u <column> ( --column <column> )
+            Specifies the column number on which to set this breakpoint.
+
+       -v <none> ( --structured-data-value <none> )
+            The value for the previous key in the pair passed to the
+            implementation of a scripted breakpoint.  Pairs can be specified
+            more than once.
+
+       -w <boolean> ( --on-throw <boolean> )
+            Set the breakpoint on exception throw.
+
+       -x <thread-index> ( --thread-index <thread-index> )
+            The breakpoint stops only for the thread whose index matches this
+            argument.
+
+       -y <linespec> ( --joint-specifier <linespec> )
+            A specifier in the form filename:line[:column] for setting file &
+            line breakpoints.
+(lldb) help process launch
+Launch the executable in the debugger. If no run-args are specified, the
+arguments from target.run-args are used.
+
+Syntax: process launch <cmd-options> [<run-args>]
+
+Command Options Usage:
+  process launch [-Mms] [-a <arch>] [-A <boolean>] [-E <none>] [-P <plugin>] [-c[<filename>]] [-e <filename>] [-i <filename>] [-o <filename>] [-w <directory>] [-C <python-class>] [-k <none>] [-v <none>] [<run-args>]
+  process launch [-Mmst] [-a <arch>] [-A <boolean>] [-E <none>] [-P <plugin>] [-c[<filename>]] [-w <directory>] [-C <python-class>] [-k <none>] [-v <none>] [<run-args>]
+  process launch [-Mmns] [-a <arch>] [-A <boolean>] [-E <none>] [-P <plugin>] [-c[<filename>]] [-w <directory>] [-C <python-class>] [-k <none>] [-v <none>] [<run-args>]
+  process launch [-Mms] [-a <arch>] [-A <boolean>] [-E <none>] [-P <plugin>] [-X <boolean>] [-w <directory>] [-C <python-class>] [-k <none>] [-v <none>] [<run-args>]
+
+       -A <boolean> ( --disable-aslr <boolean> )
+            Set whether to disable address space layout randomization when
+            launching a process.
+
+       -C <python-class> ( --script-class <python-class> )
+            The name of the class that will manage a scripted process.
+
+       -E <none> ( --environment <none> )
+            Specify an environment variable name/value string (--environment
+            NAME=VALUE). Can be specified multiple times for subsequent
+            environment entries.
+
+       -M ( --memory-tagging )
+            Set whether to explicitly enable memory tagging when launching the
+            process.  Requires hardware support.  (Only supported on Darwin.)
+
+       -P <plugin> ( --plugin <plugin> )
+            Name of the process plugin you want to use.
+
+       -X <boolean> ( --shell-expand-args <boolean> )
+            Set whether to shell expand arguments to the process when
+            launching.
+
+       -a <arch> ( --arch <arch> )
+            Set the architecture for the process to launch when ambiguous.
+
+       -c[<filename>] ( --shell=[<filename>] )
+            Run the process in a shell (not supported on all platforms).
+
+       -e <filename> ( --stderr <filename> )
+            Redirect stderr for the process to <filename>.
+
+       -i <filename> ( --stdin <filename> )
+            Redirect stdin for the process to <filename>.
+
+       -k <none> ( --structured-data-key <none> )
+            The key for a key/value pair passed to the implementation of a
+            scripted process.  Pairs can be specified more than once.
+
+       -m ( --stop-at-user-entry )
+            Stop at the user entry point when launching a process. For C based
+            languages this will be the 'main' function, but this might differ
+            for other languages.
+
+       -n ( --no-stdio )
+            Do not set up for terminal I/O to go to running process.
+
+       -o <filename> ( --stdout <filename> )
+            Redirect stdout for the process to <filename>.
+
+       -s ( --stop-at-entry )
+            Stop at the entry point of the program when launching a process.
+
+       -t ( --tty )
+            Start the process in a terminal (not supported on all platforms).
+
+       -v <none> ( --structured-data-value <none> )
+            The value for the previous key in the pair passed to the
+            implementation of a scripted process.  Pairs can be specified more
+            than once.
+
+       -w <directory> ( --working-dir <directory> )
+            Set the current working directory to <path> when running the
+            inferior. This option applies only to the current `process launch`
+            invocation. If `target.launch-working-dir` is set and this option
+            is given, the value of this option will be used instead of the
+            setting.
+     
+     This command takes options and free-form arguments.  If your arguments
+     resemble option specifiers (i.e., they start with a - or --), you must use
+     ' -- ' between the end of the command options and the beginning of the
+     arguments.

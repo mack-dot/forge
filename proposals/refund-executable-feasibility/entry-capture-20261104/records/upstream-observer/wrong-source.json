@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/opt/homebrew/bin/gh",
+    "attestation",
+    "verify",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst",
+    "--bundle",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst.jsonl",
+    "--repo",
+    "llvm/llvm-project",
+    "--cert-identity",
+    "https://github.com/llvm/llvm-project/.github/workflows/release-binaries.yml@refs/tags/llvmorg-23.1.5",
+    "--source-ref",
+    "refs/tags/llvmorg-23.1.5",
+    "--source-digest",
+    "092dfff97d29b59d77e5cac6d4b6ef2585fe7117",
+    "--signer-digest",
+    "392dfff97d29b59d77e5cac6d4b6ef2585fe7117",
+    "--deny-self-hosted-runners",
+    "--format",
+    "json"
+  ],
+  "actual_exit": 1,
+  "wall_seconds": 3.7048189169727266,
+  "expected": "Reject wrong upstream source identity",
+  "end_to_end": false
+}

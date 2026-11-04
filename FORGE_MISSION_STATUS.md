@@ -17,7 +17,31 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-## Current action list — U279
+## Current proof and observation status — U283
+
+[Loaded-entry evidence](proposals/refund-executable-feasibility/entry-capture-20261104/REPORT.md)
+now records three accepted captures. Loaded code and bitmap bytes match HOL
+artifacts; each process returns the expected fixture output and exits0. Hardware
+breakpoints are confirmed after launch. All34 recorded register values match
+before/after the full-map inspection. Four adjacent rw- VM regions cover the
+512MiB heap/stack span. These are finite observations, not complete correspondence.
+
+| Priority | Smallest next action | Current evidence and remaining condition |
+| --- | --- | --- |
+| 1 | Finish the existing compiler behavior invocation | Runner47209/Holmake47239 live; no terminal theorem; inspect actual premises, then controls/reproduction |
+| 2 | Connect applicable source/model and runtime conditions | Entry payloads and scalar bounds observed; full Unicode/model, physical control state, FFI/OS, resources and exit relations remain open |
+| 3 | Preserve and complete the separate exception branch | Its own proof/export work remains separate; do not infer whole-program error or native exit from an application lemma |
+| 4 | Independently replay and review the exact complete claim | Full-chain replay and approved new assumption/profile still required |
+| 5 | Bind authenticated Forge evidence and operational readiness | Upstream debugger provenance alone is insufficient; new admission authority and independent-copy hash/restore remain open |
+
+All previous failures remain: three old debugger launch crashes, later read-only
+crash diagnostics, a bitmap-address capture error and decoder-window failure.
+The corrected capture source reproduces; altered captured code and wrong upstream
+source identity are refused. No global tool installation or new service was added.
+No protected policy change, executable rebuild or signing occurred.
+M1 and strict integration EXIT remain NOT_ESTABLISHED. `end_to_end=false`.
+
+## Historical action list — U279
 
 The immediate objective remains one complete refund executable assurance chain.
 The fixed RISC-V ELF is supporting evidence. M2 admission, M3 reuse and M4

@@ -1,0 +1,200 @@
+(lldb) settings list plugin
+
+'plugin' variables:
+
+
+'plugin.dynamic-loader' variables:
+
+
+'plugin.dynamic-loader.darwin-kernel' variables:
+
+  load-kexts -- Automatically loads kext images when attaching to a kernel.
+  scan-type  -- Control how many reads lldb will make while searching for a
+                Darwin kernel on attach.
+
+'plugin.dynamic-loader.darwin' variables:
+
+
+'plugin.dynamic-loader.darwin.experimental' variables:
+
+  enable-parallel-image-load -- Load images in parallel.
+
+'plugin.jit-loader' variables:
+
+
+'plugin.jit-loader.gdb' variables:
+
+  enable -- Enable GDB's JIT compilation interface (default: enabled on all
+            platforms except macOS)
+
+'plugin.object-file' variables:
+
+
+'plugin.object-file.pe-coff' variables:
+
+  abi        -- ABI to use when loading a PE/COFF module. This configures the
+                C++ ABI used, which affects things like the handling of class
+                layout. Accepted values are: `msvc` for the MSVC ABI, `gnu` for
+                the MinGW / Itanium ABI, and `default` to follow the default
+                target if it is a Windows triple or use the MSVC ABI by default.
+  module-abi -- A mapping of ABI override to use for specific modules. The
+                module name is matched by its file name with extension. These
+                versions are checked in sequence: exact, lowercase, exact with
+                '.debug' suffix stripped, lowercase with '.debug' suffix
+                stripped. Accepted values are: `msvc` for the MSVC ABI, `gnu`
+                for the MinGW / Itanium ABI, and `default` to follow the
+                default target if it is a Windows triple or use the MSVC ABI by
+                default.
+
+'plugin.process' variables:
+
+
+'plugin.process.kdp-remote' variables:
+
+  packet-timeout -- Specify the default packet timeout in seconds.
+
+'plugin.process.gdb-remote' variables:
+
+  packet-timeout           -- Specify the default packet timeout in seconds.
+  target-definition-file   -- The file that provides the description for remote
+                              target registers.
+  use-g-packet-for-reading -- Specify if the server should use 'g' packets to
+                              read registers.
+  use-libraries-svr4       -- If true, the libraries-svr4 feature will be used
+                              to get a hold of the process's loaded modules.
+                              This setting is only effective if lldb was build
+                              with xml support.
+
+'plugin.symbol-file' variables:
+
+
+'plugin.symbol-file.dwarf' variables:
+
+  ignore-file-indexes -- Ignore indexes present in the object files and always
+                         index DWARF manually.
+
+'plugin.symbol-locator' variables:
+
+
+'plugin.symbol-locator.debuginfod' variables:
+
+  server-urls -- An ordered list of Debuginfod server URLs to query for
+                 symbols. This defaults to the contents of the DEBUGINFOD_URLS
+                 environment variable.
+  cache-path  -- The path where symbol files should be cached. This defaults to
+                 LLDB's system cache location.
+  timeout     -- Timeout (in seconds) for requests made to a DEBUGINFOD server.
+                 A value of zero means we use the debuginfod default timeout:
+                 DEBUGINFOD_TIMEOUT if the environment variable is set and 90
+                 seconds otherwise.
+
+'plugin.structured-data' variables:
+
+
+'plugin.structured-data.darwin-log' variables:
+
+  auto-enable-options -- Specify the options to 'plugin structured-data
+                         darwin-log enable' that should be applied when
+                         automatically enabling logging on startup/attach.
+  enable-on-startup   -- Enable Darwin os_log collection when debugged process
+                         is launched or attached.
+
+'plugin.typesystem' variables:
+
+
+'plugin.typesystem.clang' variables:
+
+  experimental-redecl-completion -- Use redeclarations to complete Clang types.
+                                    Experimental setting.
+(lldb) settings list target.process
+
+'target.process' variables:
+
+  detach-keeps-stopped                 -- If true, detach will attempt to keep
+                                          the process stopped.
+  disable-language-runtime-unwindplans -- If true, language runtime
+                                          augmented/overidden backtraces will
+                                          not be used when printing a stack
+                                          trace.
+  disable-memory-cache                 -- Disable reading and caching of memory
+                                          in fixed-size units.
+  extra-startup-command                -- A list containing extra commands
+                                          understood by the particular process
+                                          plugin used.  For instance, to turn
+                                          on debugserver logging set this to
+                                          'QSetLogging:bitmask=LOG_DEFAULT;'
+  follow-fork-mode                     -- Debugger's behavior upon fork or
+                                          vfork.
+  highmem-virtual-addressable-bits     -- The number of bits used for
+                                          addressing high memory, when it
+                                          differs from low memory in the same
+                                          Process. When this is non-zero,
+                                          target.process.virtual-addressable-bit
+                                          s will be the value for low memory
+                                          (0x000... addresses) and this setting
+                                          will be the value for high memory
+                                          (0xfff... addresses). When this is
+                                          zero,
+                                          target.process.virtual-addressable-bit
+                                          s applies to all addresses. It is
+                                          very uncommon to use this setting.
+  ignore-breakpoints-in-expressions    -- If true, breakpoints will be ignored
+                                          during expression evaluation.
+  interrupt-timeout                    -- The time in seconds to wait for an
+                                          interrupt succeed in stopping the
+                                          target.
+  memory-cache-line-size               -- The memory cache line size
+  python-os-plugin-path                -- A path to a python OS plug-in module
+                                          file that contains a
+                                          OperatingSystemPlugIn class.
+  run-all-threads                      -- If true, stepping operations will run
+                                          all threads.  This is equivalent to
+                                          setting the run-mode option to
+                                          'all-threads'.
+  stop-on-exec                         -- If true, stop when the inferior
+                                          exec's.
+  stop-on-sharedlibrary-events         -- If true, stop when a shared library
+                                          is loaded or unloaded.
+  unwind-on-error-in-expressions       -- If true, errors in expression
+                                          evaluation will unwind the stack back
+                                          to the state before the call.
+  utility-expression-timeout           -- The time in seconds to wait for
+                                          LLDB-internal utility expressions.
+  virtual-addressable-bits             -- The number of bits used for
+                                          addressing. If the value is 39, then
+                                          bits 0..38 are used for addressing.
+                                          The default value of 0 means
+                                          unspecified.
+  optimization-warnings                -- If true, warn when stopped in code
+                                          that is optimized where stepping and
+                                          variable availability may not behave
+                                          as expected.
+  toolchain-mismatch-warnings          -- If true, warn when stopped in code
+                                          that was compiled by a Swift compiler
+                                          different from the one embedded in
+                                          LLDB.
+  unsupported-language-warnings        -- If true, warn when stopped in code
+                                          that is written in a source language
+                                          that LLDB does not support.
+
+'target.process.thread' variables:
+
+  trace-thread           -- If true, this thread will single-step and log
+                            execution.
+  max-backtrace-depth    -- Maximum number of frames to backtrace.
+  step-avoid-libraries   -- A list of libraries that source stepping won't stop
+                            in.
+  step-avoid-regexp      -- A regular expression defining functions step-in
+                            won't stop in.
+  step-in-avoid-nodebug  -- If true, step-in will not stop in functions with no
+                            debug information.
+  step-out-avoid-nodebug -- If true, when step-in/step-out/step-over leave the
+                            current frame, they will continue to step out till
+                            they come to a function with debug information.
+                            Passing a frame argument to step-out will override
+                            this option.
+
+'target.process.experimental' variables:
+
+  os-plugin-reports-all-threads -- Set to False if your Python OS Plugin
+                                   doesn't report all threads on each stop.

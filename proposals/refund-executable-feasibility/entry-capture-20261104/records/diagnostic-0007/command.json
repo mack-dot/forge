@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb",
+    "--no-lldbinit",
+    "--batch",
+    "-o",
+    "log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0007/module-symbol.log lldb module symbol dyld mmap",
+    "-o",
+    "target create --no-dependents /usr/lib/dyld",
+    "-o",
+    "target modules dump symtab /usr/lib/dyld"
+  ],
+  "actual_exit": 0,
+  "wall_seconds": 0.3977219999942463,
+  "dyld_sha256": "be8904b70f95adeb9d244308ca470f939bb89bd32a9b1b05e3f65ac92579e226",
+  "native_execution": "NOT RUN",
+  "end_to_end": false
+}

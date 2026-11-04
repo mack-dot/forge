@@ -1,0 +1,39 @@
+(lldb) command source -s 0 '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0011/commands.lldb'
+Executing commands in '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0011/commands.lldb'.
+(lldb) log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0011/module-symbol.log lldb module symbol dyld mmap
+(lldb) target create --no-dependents /usr/lib/dyld
+Current executable set to '/usr/lib/dyld' (arm64e).
+(lldb) image list
+[  0] D341DDCB-7969-3A9C-8E03-0CF4751398A9 0x0000000000000000 /usr/lib/dyld 
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+LLDB diagnostics will be written to /var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/diagnostics-ce0108
+Please include the directory content when filing a bug report
+PLEASE submit a bug report to  and include the crash report from ~/Library/Logs/DiagnosticReports/.
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+0  lldb                     0x00000001044d9bf0 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) + 56
+1  lldb                     0x00000001044d844c llvm::sys::RunSignalHandlers() + 112
+2  lldb                     0x00000001044da50c SignalHandler(int) + 320
+3  libsystem_platform.dylib 0x000000018cc20144 _sigtramp + 56
+4  LLDB                     0x00000001199fbce4 ObjectFileMachO::ParseSymtab(lldb_private::Symtab&) + 3768
+5  LLDB                     0x00000001197b7120 void std::__1::__call_once_proxy[abi:nn190102]<std::__1::tuple<lldb_private::ObjectFile::GetSymtab()::$_0&&>>(void*) + 128
+6  libc++.1.dylib           0x000000018cb2245c std::__1::__call_once(unsigned long volatile&, void*, void (*)(void*)) + 196
+7  LLDB                     0x00000001197b5880 lldb_private::ObjectFile::GetSymtab() + 96
+8  LLDB                     0x0000000119aa464c lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::InitOSO() + 172
+9  LLDB                     0x0000000119aa5054 lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateNumCompileUnits() + 20
+10 LLDB                     0x00000001197beef4 lldb_private::SymbolFileCommon::GetNumCompileUnits() + 64
+11 LLDB                     0x0000000119aa5010 lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateAbilities() + 28
+12 LLDB                     0x00000001195e92e0 lldb_private::SymbolFileCommon::GetAbilities() + 48
+13 LLDB                     0x00000001197bebcc lldb_private::SymbolFile::FindPlugin(std::__1::shared_ptr<lldb_private::ObjectFile>) + 284
+14 LLDB                     0x00000001197c4a08 lldb_private::SymbolVendor::AddSymbolFileRepresentation(std::__1::shared_ptr<lldb_private::ObjectFile> const&) + 96
+15 LLDB                     0x000000011960747c SymbolVendorMacOSX::CreateInstance(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*) + 1856
+16 LLDB                     0x00000001197c47e8 lldb_private::SymbolVendor::FindPlugin(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*) + 60
+17 LLDB                     0x00000001196d4a64 lldb_private::Module::GetSymbolFile(bool, lldb_private::Stream*) + 948
+18 LLDB                     0x00000001196d6d14 lldb_private::Module::PreloadSymbols() + 48
+19 LLDB                     0x00000001198471cc lldb_private::Target::GetOrCreateModule(lldb_private::ModuleSpec const&, bool, lldb_private::Status*) + 1680
+20 LLDB                     0x0000000119850bf4 std::__1::__function::__func<std::__1::__bind<lldb_private::Target::SetExecutableModule(std::__1::shared_ptr<lldb_private::Module>&, lldb_private::LoadDependentFiles)::$_0&, lldb_private::FileSpec const&>, std::__1::allocator<std::__1::__bind<lldb_private::Target::SetExecutableModule(std::__1::shared_ptr<lldb_private::Module>&, lldb_private::LoadDependentFiles)::$_0&, lldb_private::FileSpec const&>>, void ()>::operator()() + 160
+21 LLDB                     0x00000001196216bc std::__1::__deferred_assoc_state<void, std::__1::__async_func<std::__1::function<void ()>>>::__execute() + 36
+22 libc++.1.dylib           0x000000018cb481f4 std::__1::__assoc_sub_state::wait() + 56
+23 LLDB                     0x000000011e8a4968 llvm::StdThreadPool::processTasks(llvm::ThreadPoolTaskGroup*) + 768
+24 LLDB                     0x000000011e8a5254 void* llvm::thread::ThreadProxy<std::__1::tuple<llvm::StdThreadPool::grow(int)::$_0>>(void*) + 124
+25 libsystem_pthread.dylib  0x000000018cc15d00 _pthread_start + 136
+26 libsystem_pthread.dylib  0x000000018cc10cec thread_start + 8

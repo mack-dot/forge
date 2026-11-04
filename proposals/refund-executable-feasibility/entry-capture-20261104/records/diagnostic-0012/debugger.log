@@ -1,0 +1,9 @@
+(lldb) version
+lldb-1700.0.9.502
+Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+(lldb) log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0012/module-symbol.log lldb module symbol dyld mmap
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+PLEASE submit a bug report to  and include the crash report from ~/Library/Logs/DiagnosticReports/.
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+LLDB diagnostics will be written to /var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/diagnostics-78b472
+Please include the directory content when filing a bug report

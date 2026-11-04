@@ -1,0 +1,17 @@
+{
+  "actual_exit": 0,
+  "frozen_inputs_checked": 30,
+  "mission_unchanged": true,
+  "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "compiler_query_argv": [
+    "ps",
+    "-p",
+    "47209,47239",
+    "-o",
+    "pid=,ppid=,etime=,stat=,comm="
+  ],
+  "compiler_query_exit": 0,
+  "compiler_processes": "47209  5515 01:08:14 Ss   /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python\n47239 47209 01:08:13 S    /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake\n",
+  "behavior_terminal_record_present": false,
+  "end_to_end": false
+}

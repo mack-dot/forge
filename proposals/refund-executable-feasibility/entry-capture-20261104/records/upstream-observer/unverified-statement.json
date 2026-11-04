@@ -1,0 +1,54 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "LLVM-23.1.5-macOS-ARM64.tar.xz",
+      "digest": {
+        "sha256": "aba592b4a15e8f90c634c5367b51ec8418b8bcd2829865db331a17dc9418dcff"
+      }
+    },
+    {
+      "name": "LLVM-23.1.5-macOS-ARM64.tar.zst",
+      "digest": {
+        "sha256": "503de30ef90311e0b143623801b19af2250adac6d69faed65ad0051170202e3b"
+      }
+    }
+  ],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://actions.github.io/buildtypes/workflow/v1",
+      "externalParameters": {
+        "workflow": {
+          "ref": "refs/tags/llvmorg-23.1.5",
+          "repository": "https://github.com/llvm/llvm-project",
+          "path": ".github/workflows/release-tasks.yml"
+        }
+      },
+      "internalParameters": {
+        "github": {
+          "event_name": "push",
+          "repository_id": "75821432",
+          "repository_owner_id": "17149993",
+          "runner_environment": "github-hosted"
+        }
+      },
+      "resolvedDependencies": [
+        {
+          "uri": "git+https://github.com/llvm/llvm-project@refs/tags/llvmorg-23.1.5",
+          "digest": {
+            "gitCommit": "392dfff97d29b59d77e5cac6d4b6ef2585fe7117"
+          }
+        }
+      ]
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://github.com/llvm/llvm-project/.github/workflows/release-binaries.yml@refs/tags/llvmorg-23.1.5"
+      },
+      "metadata": {
+        "invocationId": "https://github.com/llvm/llvm-project/actions/runs/41619638772/attempts/1"
+      }
+    }
+  }
+}

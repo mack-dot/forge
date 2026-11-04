@@ -1,0 +1,43 @@
+{
+  "commands": {
+    "libSystem": {
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb",
+        "--no-lldbinit",
+        "--batch",
+        "-o",
+        "log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0008/libSystem-symbols.log lldb module symbol mmap",
+        "-o",
+        "target create --no-dependents /usr/lib/libSystem.B.dylib",
+        "-o",
+        "target modules dump symtab /usr/lib/libSystem.B.dylib"
+      ],
+      "actual_exit": 1,
+      "wall_seconds": 0.18697520799469203
+    },
+    "dyld-arches": {
+      "argv": [
+        "/usr/bin/lipo",
+        "-info",
+        "/usr/lib/dyld"
+      ],
+      "actual_exit": 0,
+      "wall_seconds": 2.195699292002246
+    },
+    "plugin-help": {
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb",
+        "--no-lldbinit",
+        "--batch",
+        "-o",
+        "settings list plugin",
+        "-o",
+        "settings list target.process"
+      ],
+      "actual_exit": 0,
+      "wall_seconds": 0.18297783401794732
+    }
+  },
+  "native_execution": "NOT RUN",
+  "end_to_end": false
+}

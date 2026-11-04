@@ -1,0 +1,38 @@
+{
+  "commands": {
+    "loaded-code": {
+      "argv": [
+        "/usr/bin/cmp",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-code.bin",
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/compiled-extraction/code.bin"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "loaded-bitmaps": {
+      "argv": [
+        "/usr/bin/cmp",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-bitmaps.bin",
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/expected-bitmaps.bin"
+      ],
+      "actual_exit": 1,
+      "stdout": "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/loaded-bitmaps.bin /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/expected-bitmaps.bin differ: char 1, line 1\n",
+      "stderr": ""
+    },
+    "stdout": {
+      "argv": [
+        "/usr/bin/cmp",
+        "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0004/native.stdout",
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/wire/eligible_duplicate.stdout"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "capture_acceptance": "NOT_ESTABLISHED",
+  "reason": "Expression result is $3, but bitmap read references $0. Code and output match; bitmap claim is refused.",
+  "native_process_exit": 0,
+  "end_to_end": false
+}

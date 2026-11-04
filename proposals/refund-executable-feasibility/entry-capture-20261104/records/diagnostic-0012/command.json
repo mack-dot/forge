@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/Library/Developer/CommandLineTools/usr/bin/lldb",
+    "--no-lldbinit",
+    "--batch",
+    "-o",
+    "version",
+    "-o",
+    "log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0012/module-symbol.log lldb module symbol dyld mmap",
+    "-o",
+    "target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund",
+    "-o",
+    "image list"
+  ],
+  "actual_exit": -10,
+  "wall_seconds": 0.6338956250110641,
+  "native_execution": "NOT RUN",
+  "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "debugger_sha256": "89c7d02af88f43932a4481027df291ebb38f53e2cd058e0bc876f53553e68ece",
+  "available_framework_sha256": {
+    "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB": "cd25cf9bd198520ddfbf019f1db8997dbd2bd64290a29dfaaabc6a74e59ef1ef",
+    "/Library/Developer/CommandLineTools/Library/PrivateFrameworks/LLDB.framework/Versions/A/LLDB": "b58f1465b0f9b13fc1464e63150f793d1d449a97c485c65050e3c20c0ccba826"
+  },
+  "rationale": "Existing command-line-tools framework differs in bytes despite the same reported LLDB version. Read-only diagnostic; no installation.",
+  "end_to_end": false
+}

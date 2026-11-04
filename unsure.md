@@ -8542,3 +8542,67 @@ curl: (6) Could not resolve host: github.com
   is not rerouted here. Full source/Unicode/model binding, independent final-chain
   replay, exact review, authenticated new admission and independent-copy archive
   hash/restore remain open. Integration EXIT is NOT_ESTABLISHED; M2–M4 stay later.
+
+
+## U283 — Authenticated observer records exact loaded refund payloads; runtime proof stays open
+
+- References:U271,U275–U279. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Previous goal turn made progress by preserving U279 and its
+  local commit923267d. This turn obtains concrete loaded-entry observations.
+- Read-only diagnosis shows the existing LLDB can parse the exact native file
+  without dependencies, exit0, but crashes with SIGBUS child-10 while reading
+  dependency symbols. The alternate installed debugger also fails. No native
+  execution occurs in these diagnostic commands. Unsupported image-list option1
+  and missing on-disk libSystem path1 remain preserved. The exact upstream bug
+  is not proved; no system binary, library or debugger is patched.
+- The official LLVM23.1.5 archive and bundle download0/0 and match release hashes.
+  Existing gh attestation verify returns0 with exact repository, certificate
+  identity, tag, source commit and signer commit392dfff97d29b59d77e5cac6d4b6ef2585fe7117.
+  Wrong source digest returns1 with the required SourceRepositoryDigest mismatch.
+  This authenticates the upstream observer package, not Forge's local captures
+  or a release. No signing policy changes. Only observer binaries/library are
+  extracted into a separate local tool directory; no global installation/service.
+- Initial zstd decompression returns1: the archive needs a1GiB window rather than
+  the default128MiB. Tar's exit0 is not accepted. With the reported explicit
+  memory limit, listing0/0 and selected extraction0/0 pass. All failed records
+  remain. The authenticated upstream debugger opens file and dependencies, exit0.
+- Attempt0004 launcher0 observes native exit0 and matching loaded code/output,
+  but bitmap cmp returns1. LLDB allocated expression result$3 while the command
+  read$0. This complete capture is refused. Attempt0005 binds a named pointer;
+  it, its identical-source repeat and the full-map supplement each exit0 with
+  native exit0, exact fixture stdout and empty stderr. No binary rebuild/signing.
+- validate_captures.py returns0. Six standard cmp commands return0; one-byte
+  captured-code corruption returns1 with the intended difference. The mutant
+  never executes. The earlier substituted bitmap failure is kept. Full-map
+  readback0 adds three payload/output comparisons0 and confirms all34 recorded
+  register values unchanged before resume. These are observations, not proofs.
+- Native SHA256b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8
+  remains unchanged. Each accepted capture reads130436 code bytes matching
+  3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb
+  and20248 bitmap bytes matching
+  68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76.
+  Hardware breakpoint is resolved/true/hit1 after launch. The initial unresolved
+  breakpoint's hardware=false field is retained; it is not the running state.
+- PC equals loaded module base+0x40d0. PC/SP alignment, ordered word-aligned
+  heap/stack bounds, bitmap size/disjointness and five header-pointer arithmetic
+  relations are derived from recorded values. Code-buffer span is428 bytes.
+  Full-map LLDB output lists203 VM regions; four adjacent rw- regions cover
+  536870912 heap/stack bytes. Code is r-x and bitmaps rw-. Unread contents and the
+  complete good_init_state/installed relation are still NOT_ESTABLISHED.
+- All34 named values are x0–x30, SP, PC and CPSR. Physical control-register state,
+  complete arm8_ok, source/Unicode/model binding, universal FFI/OS/interference,
+  resource sufficiency and native exit refinement remain open. Dependency UUIDs
+  and addresses are observed metadata, not loaded-byte closure or loader proof.
+  ASLR addresses differ; payload bytes and fixture streams reproduce. Observer
+  effects and its correctness stay explicit trust boundaries. No broad speedup.
+- Packet:proposals/refund-executable-feasibility/entry-capture-20261104/REPORT.md.
+  Raw:results/refund-entry-observation-2026-11-04/. The older failed packet remains
+  unchanged. All30 frozen inputs and the full mission remain unchanged.
+- Fresh process query0 confirms original behavior runner47209/Holmake47239 live.
+  No terminal behavioral theorem is claimed. Next: finish that invocation, inspect
+  exact conclusion/premises, then binding controls and reproduction. Preserve the
+  separate exception branch's work; do not duplicate or reroute it. Independent
+  final-chain replay/review, new Forge provenance/admission and exact off-machine
+  archive hash/restore remain open. Integration EXIT is NOT_ESTABLISHED. M2–M4
+  remain later priorities. No protected change, publication, merge, dispatch,
+  release signing, admission, deployment or Stage12 occurred.

@@ -1,0 +1,54 @@
+(lldb) command source -s 0 '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0009/commands.lldb'
+Executing commands in '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0009/commands.lldb'.
+(lldb) settings set target.preload-symbols false
+(lldb) log enable -f /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0009/module-symbol.log lldb module symbol dyld mmap
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+LLDB diagnostics will be written to /var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/diagnostics-e9247c
+Please include the directory content when filing a bug report
+PLEASE submit a bug report to  and include the crash report from ~/Library/Logs/DiagnosticReports/.
+Stack dump:
+0.	Program arguments: /Applications/Xcode.app/Contents/Developer/usr/bin/lldb --no-lldbinit --batch --source /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/diagnostic-0009/commands.lldb
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+0  lldb                     0x000000010491dbf0 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) + 56
+1  lldb                     0x000000010491c44c llvm::sys::RunSignalHandlers() + 112
+2  lldb                     0x000000010491e50c SignalHandler(int) + 320
+3  libsystem_platform.dylib 0x000000018cc20144 _sigtramp + 56
+4  LLDB                     0x0000000119dc7ce4 ObjectFileMachO::ParseSymtab(lldb_private::Symtab&) + 3768
+5  LLDB                     0x0000000119b83120 void std::__1::__call_once_proxy[abi:nn190102]<std::__1::tuple<lldb_private::ObjectFile::GetSymtab()::$_0&&>>(void*) + 128
+6  libc++.1.dylib           0x000000018cb2245c std::__1::__call_once(unsigned long volatile&, void*, void (*)(void*)) + 196
+7  LLDB                     0x0000000119b81880 lldb_private::ObjectFile::GetSymtab() + 96
+8  LLDB                     0x0000000119e7064c lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::InitOSO() + 172
+9  LLDB                     0x0000000119e71054 lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateNumCompileUnits() + 20
+10 LLDB                     0x0000000119b8aef4 lldb_private::SymbolFileCommon::GetNumCompileUnits() + 64
+11 LLDB                     0x0000000119e71010 lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateAbilities() + 28
+12 LLDB                     0x00000001199b52e0 lldb_private::SymbolFileCommon::GetAbilities() + 48
+13 LLDB                     0x0000000119b8abcc lldb_private::SymbolFile::FindPlugin(std::__1::shared_ptr<lldb_private::ObjectFile>) + 284
+14 LLDB                     0x0000000119b90a08 lldb_private::SymbolVendor::AddSymbolFileRepresentation(std::__1::shared_ptr<lldb_private::ObjectFile> const&) + 96
+15 LLDB                     0x00000001199d347c SymbolVendorMacOSX::CreateInstance(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*) + 1856
+16 LLDB                     0x0000000119b907e8 lldb_private::SymbolVendor::FindPlugin(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*) + 60
+17 LLDB                     0x0000000119aa0a64 lldb_private::Module::GetSymbolFile(bool, lldb_private::Stream*) + 948
+18 LLDB                     0x0000000119dd9bb8 lldb_private::PlatformDarwin::LocateExecutableScriptingResources(lldb_private::Target*, lldb_private::Module&, lldb_private::Stream&) + 140
+19 LLDB                     0x0000000119aa3264 lldb_private::Module::LoadScriptingResourceInTarget(lldb_private::Target*, lldb_private::Status&, lldb_private::Stream&) + 144
+20 LLDB                     0x0000000119c102a4 lldb_private::Target::ModulesDidLoad(lldb_private::ModuleList&) + 192
+21 LLDB                     0x0000000119c10150 lldb_private::Target::SetExecutableModule(std::__1::shared_ptr<lldb_private::Module>&, lldb_private::LoadDependentFiles) + 964
+22 LLDB                     0x0000000119c230ec lldb_private::TargetList::CreateTargetInternal(lldb_private::Debugger&, llvm::StringRef, lldb_private::ArchSpec const&, lldb_private::LoadDependentFiles, std::__1::shared_ptr<lldb_private::Platform>&, std::__1::shared_ptr<lldb_private::Target>&) + 2016
+23 LLDB                     0x0000000119c224dc lldb_private::TargetList::CreateTargetInternal(lldb_private::Debugger&, llvm::StringRef, llvm::StringRef, lldb_private::LoadDependentFiles, lldb_private::OptionGroupPlatform const*, std::__1::shared_ptr<lldb_private::Target>&) + 3896
+24 LLDB                     0x0000000119c21514 lldb_private::TargetList::CreateTarget(lldb_private::Debugger&, llvm::StringRef, llvm::StringRef, lldb_private::LoadDependentFiles, lldb_private::OptionGroupPlatform const*, std::__1::shared_ptr<lldb_private::Target>&) + 120
+25 LLDB                     0x0000000119f5b04c CommandObjectTargetCreate::DoExecute(lldb_private::Args&, lldb_private::CommandReturnObject&) + 528
+26 LLDB                     0x0000000119b3c810 lldb_private::CommandObjectParsed::Execute(char const*, lldb_private::CommandReturnObject&) + 700
+27 LLDB                     0x0000000119b32f04 lldb_private::CommandInterpreter::HandleCommand(char const*, lldb_private::LazyBool, lldb_private::CommandReturnObject&, bool) + 3420
+28 LLDB                     0x0000000119b36ae0 lldb_private::CommandInterpreter::IOHandlerInputComplete(lldb_private::IOHandler&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>&) + 852
+29 LLDB                     0x0000000119a7e6bc lldb_private::IOHandlerEditline::Run() + 320
+30 LLDB                     0x0000000119a60be0 lldb_private::Debugger::RunIOHandlerSync(std::__1::shared_ptr<lldb_private::IOHandler> const&) + 112
+31 LLDB                     0x0000000119b3422c lldb_private::CommandInterpreter::HandleCommandsFromFile(lldb_private::FileSpec&, lldb_private::CommandInterpreterRunOptions const&, lldb_private::CommandReturnObject&) + 1488
+32 LLDB                     0x0000000119f17328 CommandObjectCommandsSource::DoExecute(lldb_private::Args&, lldb_private::CommandReturnObject&) + 584
+33 LLDB                     0x0000000119b3c810 lldb_private::CommandObjectParsed::Execute(char const*, lldb_private::CommandReturnObject&) + 700
+34 LLDB                     0x0000000119b32f04 lldb_private::CommandInterpreter::HandleCommand(char const*, lldb_private::LazyBool, lldb_private::CommandReturnObject&, bool) + 3420
+35 LLDB                     0x0000000119b36ae0 lldb_private::CommandInterpreter::IOHandlerInputComplete(lldb_private::IOHandler&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>&) + 852
+36 LLDB                     0x0000000119a7e6bc lldb_private::IOHandlerEditline::Run() + 320
+37 LLDB                     0x0000000119a609dc lldb_private::Debugger::RunIOHandlers() + 128
+38 LLDB                     0x0000000119b38280 lldb_private::CommandInterpreter::RunCommandInterpreter(lldb_private::CommandInterpreterRunOptions&) + 196
+39 LLDB                     0x0000000119755764 lldb::SBDebugger::RunCommandInterpreter(lldb::SBCommandInterpreterRunOptions const&) + 112
+40 lldb                     0x0000000104907914 Driver::MainLoop() + 2028
+41 lldb                     0x0000000104908574 main + 2016
+42 dyld                     0x000000018c83fe80 start + 6688

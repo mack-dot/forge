@@ -1,0 +1,50 @@
+[
+  {
+    "argv": [
+      "/usr/bin/curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--output",
+      "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst.jsonl",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst.jsonl"
+    ],
+    "actual_exit": 0,
+    "wall_seconds": 0.306748917006189,
+    "expected": {
+      "id": 705803995,
+      "name": "LLVM-23.1.5-macOS-ARM64.tar.zst.jsonl",
+      "size": 11135,
+      "digest": "sha256:961b20e89b54952add75ab7a3a565de1db1e300b546cceb091ade31afe21d671",
+      "browser_download_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst.jsonl"
+    },
+    "bytes": 11135,
+    "sha256": "961b20e89b54952add75ab7a3a565de1db1e300b546cceb091ade31afe21d671",
+    "identity_matches": true
+  },
+  {
+    "argv": [
+      "/usr/bin/curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--output",
+      "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst"
+    ],
+    "actual_exit": 0,
+    "wall_seconds": 145.35630933300126,
+    "expected": {
+      "id": 705801926,
+      "name": "LLVM-23.1.5-macOS-ARM64.tar.zst",
+      "size": 870686518,
+      "digest": "sha256:503de30ef90311e0b143623801b19af2250adac6d69faed65ad0051170202e3b",
+      "browser_download_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst"
+    },
+    "bytes": 870686518,
+    "sha256": "503de30ef90311e0b143623801b19af2250adac6d69faed65ad0051170202e3b",
+    "identity_matches": true
+  }
+]

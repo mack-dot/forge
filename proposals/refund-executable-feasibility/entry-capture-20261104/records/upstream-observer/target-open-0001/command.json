@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/observer/LLVM-23.1.5-macOS-ARM64/bin/lldb",
+    "--no-lldbinit",
+    "--batch",
+    "-o",
+    "version",
+    "-o",
+    "target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund",
+    "-o",
+    "image list",
+    "-o",
+    "help memory read",
+    "-o",
+    "help breakpoint set",
+    "-o",
+    "help process launch"
+  ],
+  "actual_exit": 0,
+  "wall_seconds": 2.814730290992884,
+  "debugger_sha256": "33eff00615b4cd5629f29626a4472c631c2d4dacec86178371c49929b46b9287",
+  "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "native_execution": "NOT RUN",
+  "end_to_end": false
+}

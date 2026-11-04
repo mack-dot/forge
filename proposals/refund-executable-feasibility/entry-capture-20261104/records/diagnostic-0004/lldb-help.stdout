@@ -1,0 +1,656 @@
+(lldb) settings list target
+
+'target' variables:
+
+  arg0                                         -- The first argument passed to
+                                                  the program in the argument
+                                                  array which can be different
+                                                  from the executable itself.
+  auto-apply-fixits                            -- Automatically apply fix-it
+                                                  hints to expressions.
+  auto-import-clang-modules                    -- Automatically load Clang
+                                                  modules referred to by the
+                                                  program.
+  auto-install-main-executable                 -- Always install the main
+                                                  executable when connected to
+                                                  a remote platform.
+  auto-source-map-relative                     -- Automatically deduce source
+                                                  path mappings based on source
+                                                  file breakpoint resolution.
+                                                  It only deduces source
+                                                  mapping if source file
+                                                  breakpoint request is using
+                                                  full path and if the debug
+                                                  info contains relative paths.
+  breakpoints-use-platform-avoid-list          -- Consult the platform module
+                                                  avoid list when setting
+                                                  non-module specific
+                                                  breakpoints.
+  clang-module-search-paths                    -- List of directories to be
+                                                  searched when locating
+                                                  modules for Clang.
+  debug-file-search-paths                      -- List of directories to be
+                                                  searched when locating debug
+                                                  symbol files. See also
+                                                  symbols.enable-external-lookup
+                                                  .
+  debug-utility-expression                     -- Enable debugging of
+                                                  LLDB-internal utility
+                                                  expressions.
+  default-arch                                 -- Default architecture to
+                                                  choose, when there's a choice.
+  detach-on-error                              -- debugserver will detach
+                                                  (rather than killing) a
+                                                  process if it loses
+                                                  connection with lldb.
+  disable-aslr                                 -- Disable Address Space Layout
+                                                  Randomization (ASLR)
+  disable-stdio                                -- Disable stdin/stdout for
+                                                  process (e.g. for a GUI
+                                                  application)
+  disassembly-cpu                              -- Override the CPU for
+                                                  disassembling. Takes the same
+                                                  values as the -mcpu clang
+                                                  flag.
+  disassembly-features                         -- Specify additional CPU
+                                                  features for disassembling.
+  x86-disassembly-flavor                       -- The default disassembly
+                                                  flavor to use for x86 or
+                                                  x86-64 targets.
+  display-expression-in-crashlogs              -- Expressions that crash will
+                                                  show up in crash logs if the
+                                                  host system supports
+                                                  executable specific crash log
+                                                  strings and this setting is
+                                                  set to true.
+  display-recognized-arguments                 -- Show recognized arguments in
+                                                  variable listings by default.
+  display-runtime-support-values               -- If true, LLDB will show
+                                                  variables that are meant to
+                                                  support the operation of a
+                                                  language's runtime support.
+  objc-dynamic-class-extractor                 -- Configure how LLDB parses
+                                                  dynamic Objective-C class
+                                                  metadata. By default LLDB
+                                                  will choose the most
+                                                  appropriate method for the
+                                                  target OS.
+  enable-synthetic-value                       -- Should synthetic values be
+                                                  used by default whenever
+                                                  available.
+  enable-trampoline-support                    -- Enable trampoline support in
+                                                  LLDB. Trampoline support
+                                                  includes stepping through
+                                                  trampolines directly to their
+                                                  targets, stepping out of
+                                                  trampolines directly to their
+                                                  callers, and automatically
+                                                  filtering out trampolines as
+                                                  possible breakpoint locations
+                                                  when set by name.
+  env-vars                                     -- A list of user provided
+                                                  environment variables to be
+                                                  passed to the executable's
+                                                  environment, and their values.
+  error-path                                   -- The file/path to be used by
+                                                  the executable program for
+                                                  writing its standard error.
+  exec-search-paths                            -- Executable search paths to
+                                                  use when locating executable
+                                                  files whose paths don't match
+                                                  the local file system.
+  expr-alloc-address                           -- Start address within the
+                                                  process address space of
+                                                  memory allocation for
+                                                  expression evaluation.
+  expr-alloc-align                             -- Alignment for each memory
+                                                  allocation for expression
+                                                  evaluation.
+  expr-alloc-size                              -- Amount of memory in bytes to
+                                                  allocate for expression
+                                                  evaluation.
+  expr-error-limit                             -- The maximum amount of errors
+                                                  to emit while parsing an
+                                                  expression. A value of 0
+                                                  means to always continue
+                                                  parsing if possible.
+  expr-prefix                                  -- Path to a file containing
+                                                  expressions to be prepended
+                                                  to all expressions.
+  hex-immediate-style                          -- Which style to use for
+                                                  printing hexadecimal
+                                                  disassembly values.
+  import-std-module                            -- Import the 'std' C++ module
+                                                  to improve expression parsing
+                                                  involving  C++ standard
+                                                  library types.
+  inherit-env                                  -- Inherit the environment from
+                                                  the process that is running
+                                                  LLDB.
+  inherit-tcc                                  -- Inherit the TCC permissions
+                                                  from the inferior's parent
+                                                  instead of making the process
+                                                  itself responsible.
+  inline-breakpoint-strategy                   -- The strategy to use when
+                                                  settings breakpoints by file
+                                                  and line. Breakpoint
+                                                  locations can end up being
+                                                  inlined by the compiler, so
+                                                  that a compile unit 'a.c'
+                                                  might contain an inlined
+                                                  function from another source
+                                                  file. Usually this is limited
+                                                  to breakpoint locations from
+                                                  inlined functions from header
+                                                  or other include files, or
+                                                  more accurately
+                                                  non-implementation source
+                                                  files. Sometimes code might
+                                                  #include implementation files
+                                                  and cause inlined breakpoint
+                                                  locations in inlined
+                                                  implementation files. Always
+                                                  checking for inlined
+                                                  breakpoint locations can be
+                                                  expensive (memory and time),
+                                                  so if you have a project with
+                                                  many headers and find that
+                                                  setting breakpoints is slow,
+                                                  then you can change this
+                                                  setting to headers. This
+                                                  setting allows you to control
+                                                  exactly which strategy is
+                                                  used when setting file and
+                                                  line breakpoints.
+  input-path                                   -- The file/path to be used by
+                                                  the executable program for
+                                                  reading its standard input.
+  language                                     -- The language to use when
+                                                  interpreting expressions
+                                                  entered in commands.
+  load-cwd-lldbinit                            -- Allow LLDB to .lldbinit files
+                                                  from the current directory
+                                                  automatically.
+  load-script-from-symbol-file                 -- Allow LLDB to load scripting
+                                                  resources embedded in symbol
+                                                  files when available.
+  max-children-count                           -- Maximum number of children to
+                                                  expand in any level of depth.
+  max-children-depth                           -- Maximum depth to expand
+                                                  children.
+  max-memory-read-size                         -- Maximum number of bytes that
+                                                  'memory read' will fetch
+                                                  before --force must be
+                                                  specified.
+  max-string-summary-length                    -- Maximum number of characters
+                                                  to show when using %s in
+                                                  summary strings.
+  max-zero-padding-in-float-format             -- The maximum number of zeroes
+                                                  to insert when displaying a
+                                                  very small float before
+                                                  falling back to scientific
+                                                  notation.
+  memory-module-load-level                     -- Loading modules from memory
+                                                  can be slow as reading the
+                                                  symbol tables and other data
+                                                  can take a long time
+                                                  depending on your connection
+                                                  to the debug target. This
+                                                  setting helps users control
+                                                  how much information gets
+                                                  loaded when loading modules
+                                                  from memory.'complete' is the
+                                                  default value for this
+                                                  setting which will load all
+                                                  sections and symbols by
+                                                  reading them from memory
+                                                  (slowest, most accurate).
+                                                  'partial' will load sections
+                                                  and attempt to find function
+                                                  bounds without downloading
+                                                  the symbol table (faster,
+                                                  still accurate, missing
+                                                  symbol names). 'minimal' is
+                                                  the fastest setting and will
+                                                  load section data with no
+                                                  symbols, but should rarely be
+                                                  used as stack frames in these
+                                                  memory regions will be
+                                                  inaccurate and not provide
+                                                  any context (fastest). 
+  move-to-nearest-code                         -- Move breakpoints to nearest
+                                                  code.
+  notify-about-fixits                          -- Print the fixed expression
+                                                  text.
+  output-path                                  -- The file/path to be used by
+                                                  the executable program for
+                                                  writing its standard output.
+  prefer-dynamic-value                         -- Should printed values be
+                                                  shown as their dynamic value.
+  preload-symbols                              -- Enable loading of symbol
+                                                  tables before they are needed.
+  require-hardware-breakpoint                  -- Require all breakpoints to be
+                                                  hardware breakpoints.
+  retries-with-fixits                          -- Maximum number of attempts to
+                                                  fix an expression with Fix-Its
+  run-args                                     -- A list containing all the
+                                                  arguments to be passed to the
+                                                  executable when it is run.
+                                                  Note that this does NOT
+                                                  include the argv[0] which is
+                                                  in target.arg0.
+  sdk-path                                     -- The path to the SDK used to
+                                                  build the current target.
+  save-jit-objects-dir                         -- If specified, the directory
+                                                  to save intermediate object
+                                                  files generated by the LLVM
+                                                  JIT
+  show-hex-variable-values-with-leading-zeroes -- Whether to display leading
+                                                  zeroes when printing variable
+                                                  values in hex format.
+  skip-prologue                                -- Skip function prologues when
+                                                  setting breakpoints by name.
+  source-map                                   -- Source path remappings apply
+                                                  substitutions to the paths of
+                                                  source files, typically
+                                                  needed to debug from a
+                                                  different host than the one
+                                                  that built the target.  The
+                                                  source-map property consists
+                                                  of an array of pairs, the
+                                                  first element is a path
+                                                  prefix, and the second is its
+                                                  replacement.  The syntax is
+                                                  `prefix1 replacement1 prefix2
+                                                  replacement2...`.  The pairs
+                                                  are checked in order, the
+                                                  first prefix that matches is
+                                                  used, and that prefix is
+                                                  substituted with the
+                                                  replacement.  A common
+                                                  pattern is to use source-map
+                                                  in conjunction with the clang
+                                                  -fdebug-prefix-map flag.  In
+                                                  the build, use
+                                                  `-fdebug-prefix-map=/path/to/b
+                                                  uild_dir=.` to rewrite the
+                                                  host specific build directory
+                                                  to `.`.  Then for debugging,
+                                                  use `settings set
+                                                  target.source-map .
+                                                  /path/to/local_dir` to
+                                                  convert `.` to a valid local
+                                                  path.
+  swift-auto-import-frameworks                 -- Automatically import all
+                                                  frameworks and dynamic
+                                                  libraries that are autolinked
+                                                  by Swift modules in the
+                                                  target.
+  swift-clang-override-options                 -- Specify CCC_OVERRIDE_OPTIONS
+                                                  for ClangImporter flags.
+  swift-extra-clang-flags                      -- Additional -Xcc flags to be
+                                                  passed to the Swift
+                                                  ClangImporter.
+  swift-framework-search-paths                 -- List of directories to be
+                                                  searched when locating
+                                                  frameworks for Swift.
+  swift-module-search-paths                    -- List of directories to be
+                                                  searched when locating
+                                                  modules for Swift.
+  trap-handler-names                           -- A list of trap handler
+                                                  function names, e.g. a common
+                                                  Unix user process one is
+                                                  _sigtramp.
+  unset-env-vars                               -- A list of environment
+                                                  variable names to be unset in
+                                                  the inferior's environment.
+                                                  This is most useful to unset
+                                                  some host environment
+                                                  variables when
+                                                  target.inherit-env is true.
+                                                  target.env-vars takes
+                                                  precedence over
+                                                  target.unset-env-vars.
+  use-all-compiler-flags                       -- Try to use compiler flags for
+                                                  all modules when setting up
+                                                  the Swift expression parser,
+                                                  not just the main executable.
+  use-fast-stepping                            -- Use a fast stepping algorithm
+                                                  based on running from branch
+                                                  to branch rather than
+                                                  instruction single-stepping.
+  use-hex-immediates                           -- Show immediates in
+                                                  disassembly as hexadecimal.
+
+'target.experimental' variables:
+
+  inject-local-vars                    -- If true, inject local variables
+                                          explicitly into the expression text.
+                                          This will fix symbol resolution when
+                                          there are name collisions between
+                                          ivars and local variables. But it can
+                                          make expressions run much more slowly.
+  ptrauth-jit-codgen                   -- If true, jit codegen on arm64e
+                                          targets will have pointer
+                                          authentication enabled
+  swift-allow-explicit-modules         -- Allows explicit module flags to be
+                                          passed through to ClangImporter.
+  swift-discover-implicit-search-paths -- Discover implicit search paths from
+                                          all implicitly imported Swift modules
+                                          and make them available to the
+                                          expression context. A Swift module
+                                          built with
+                                          -serialize-debugging-options can
+                                          contain additional search paths which
+                                          are discovered as the module is
+                                          imported. This optiondoes an eager
+                                          import of all modules first to make
+                                          sure all implicit search paths are
+                                          availableto the expression evaluator.
+                                          If the build system registers all
+                                          Swift modules with the linker
+                                          (Darwin: via -add_ast_path, Other
+                                          platforms: -module-wrap), turning
+                                          this on is not necessary.
+  swift-enable-bare-slash-regex        -- Passes the -enable-bare-slash-regex
+                                          compiler flag to the swift compiler.
+  swift-pcm-validation                 -- Enable validation when loading Clang
+                                          PCM files (-fvalidate-pch,
+                                          -fmodules-check-relocated).
+  swift-plugin-server-for-path         -- A dictionary of plugin paths as keys
+                                          and swift-plugin-server binaries as
+                                          values
+  swift-read-metadata-from-dsym        -- Read Swift reflection metadata from
+                                          the dsym instead of the process when
+                                          possible
+  swift-read-metadata-from-file-cache  -- Read Swift reflection metadata from
+                                          the file cache instead of the process
+                                          when possible
+  swift-use-reflection-symbols         -- if true, optimize the loading of
+                                          Swift reflection metadata by making
+                                          use of available symbols.
+
+'target.process' variables:
+
+  detach-keeps-stopped                 -- If true, detach will attempt to keep
+                                          the process stopped.
+  disable-language-runtime-unwindplans -- If true, language runtime
+                                          augmented/overidden backtraces will
+                                          not be used when printing a stack
+                                          trace.
+  disable-memory-cache                 -- Disable reading and caching of memory
+                                          in fixed-size units.
+  extra-startup-command                -- A list containing extra commands
+                                          understood by the particular process
+                                          plugin used.  For instance, to turn
+                                          on debugserver logging set this to
+                                          'QSetLogging:bitmask=LOG_DEFAULT;'
+  follow-fork-mode                     -- Debugger's behavior upon fork or
+                                          vfork.
+  highmem-virtual-addressable-bits     -- The number of bits used for
+                                          addressing high memory, when it
+                                          differs from low memory in the same
+                                          Process. When this is non-zero,
+                                          target.process.virtual-addressable-bit
+                                          s will be the value for low memory
+                                          (0x000... addresses) and this setting
+                                          will be the value for high memory
+                                          (0xfff... addresses). When this is
+                                          zero,
+                                          target.process.virtual-addressable-bit
+                                          s applies to all addresses. It is
+                                          very uncommon to use this setting.
+  ignore-breakpoints-in-expressions    -- If true, breakpoints will be ignored
+                                          during expression evaluation.
+  interrupt-timeout                    -- The time in seconds to wait for an
+                                          interrupt succeed in stopping the
+                                          target.
+  memory-cache-line-size               -- The memory cache line size
+  python-os-plugin-path                -- A path to a python OS plug-in module
+                                          file that contains a
+                                          OperatingSystemPlugIn class.
+  run-all-threads                      -- If true, stepping operations will run
+                                          all threads.  This is equivalent to
+                                          setting the run-mode option to
+                                          'all-threads'.
+  stop-on-exec                         -- If true, stop when the inferior
+                                          exec's.
+  stop-on-sharedlibrary-events         -- If true, stop when a shared library
+                                          is loaded or unloaded.
+  unwind-on-error-in-expressions       -- If true, errors in expression
+                                          evaluation will unwind the stack back
+                                          to the state before the call.
+  utility-expression-timeout           -- The time in seconds to wait for
+                                          LLDB-internal utility expressions.
+  virtual-addressable-bits             -- The number of bits used for
+                                          addressing. If the value is 39, then
+                                          bits 0..38 are used for addressing.
+                                          The default value of 0 means
+                                          unspecified.
+  optimization-warnings                -- If true, warn when stopped in code
+                                          that is optimized where stepping and
+                                          variable availability may not behave
+                                          as expected.
+  toolchain-mismatch-warnings          -- If true, warn when stopped in code
+                                          that was compiled by a Swift compiler
+                                          different from the one embedded in
+                                          LLDB.
+  unsupported-language-warnings        -- If true, warn when stopped in code
+                                          that is written in a source language
+                                          that LLDB does not support.
+
+'target.process.thread' variables:
+
+  trace-thread           -- If true, this thread will single-step and log
+                            execution.
+  max-backtrace-depth    -- Maximum number of frames to backtrace.
+  step-avoid-libraries   -- A list of libraries that source stepping won't stop
+                            in.
+  step-avoid-regexp      -- A regular expression defining functions step-in
+                            won't stop in.
+  step-in-avoid-nodebug  -- If true, step-in will not stop in functions with no
+                            debug information.
+  step-out-avoid-nodebug -- If true, when step-in/step-out/step-over leave the
+                            current frame, they will continue to step out till
+                            they come to a function with debug information.
+                            Passing a frame argument to step-out will override
+                            this option.
+
+'target.process.experimental' variables:
+
+  os-plugin-reports-all-threads -- Set to False if your Python OS Plugin
+                                   doesn't report all threads on each stop.
+(lldb) settings list symbols
+
+'symbols' variables:
+
+  auto-download                        -- On macOS, automatically download
+                                          symbols with dsymForUUID (or an
+                                          equivalent script/binary) for
+                                          relevant images in the debug session.
+  clang-modules-cache-path             -- The path to the clang modules cache
+                                          directory (-fmodules-cache-path).
+  enable-background-lookup             -- Alias for backward compatibility:
+                                          when enabled this is the equivalent
+                                          to 'symbols.auto-download background'.
+  enable-external-lookup               -- Control the use of external tools and
+                                          repositories to locate symbol files.
+                                          Directories listed in
+                                          target.debug-file-search-paths and
+                                          directory of the executable are
+                                          always checked first for separate
+                                          debug info files. Then depending on
+                                          this setting: On macOS, Spotlight
+                                          would be also used to locate a
+                                          matching .dSYM bundle based on the
+                                          UUID of the executable. On NetBSD,
+                                          directory /usr/libdata/debug would be
+                                          also searched. On platforms other
+                                          than NetBSD directory /usr/lib/debug
+                                          would be also searched. If all other
+                                          methods fail there may be
+                                          symbol-locator plugins that, if
+                                          configured properly, will also
+                                          attempt to acquire symbols. The
+                                          debuginfod plugin defaults to the
+                                          DEGUFINFOD_URLS environment variable
+                                          which is configurable through the
+                                          'plugin.symbol-locator.debuginfod.serv
+                                          er_urls' setting.
+  enable-lldb-index-cache              -- Enable caching for debug sessions in
+                                          LLDB. LLDB can cache data for each
+                                          module for improved performance in
+                                          subsequent debug sessions.
+  enable-swift-metadata-cache          -- Enable caching for Swift reflection
+                                          metadata in LLDB.
+  lldb-index-cache-expiration-days     -- The expiration time in days for a
+                                          file. When a file hasn't been
+                                          accessed for the specified amount of
+                                          days, it is removed from the cache. A
+                                          value of 0 disables the
+                                          expiration-based pruning.
+  lldb-index-cache-max-byte-size       -- The maximum size for the LLDB index
+                                          cache directory in bytes. A value
+                                          over the amount of available space on
+                                          the disk will be reduced to the
+                                          amount of available space. A value of
+                                          0 disables the absolute size-based
+                                          pruning.
+  lldb-index-cache-max-percent         -- The maximum size for the cache
+                                          directory in terms of percentage of
+                                          the available space on the disk. Set
+                                          to 100 to indicate no limit, 50 to
+                                          indicate that the cache size will not
+                                          be left over half the available disk
+                                          space. A value over 100 will be
+                                          reduced to 100. A value of 0 disables
+                                          the percentage size-based pruning.
+  lldb-index-cache-path                -- The path to the LLDB index cache
+                                          directory.
+  load-on-demand                       -- Enable on demand symbol loading in
+                                          LLDB. LLDB will load debug info on
+                                          demand for each module based on
+                                          various conditions (e.g. matched
+                                          breakpoint, resolved stack frame
+                                          addresses and matched global
+                                          variables/function symbols in symbol
+                                          table) to improve performance. Please
+                                          refer to docs/use/ondemand.rst for
+                                          details.
+  swift-enable-ast-context             -- Enable instantiating Swift AST
+                                          contexts.
+  swift-enable-cxx-interop             -- Passes the -enable-cxx-interop flag
+                                          to the swift compiler.
+  swift-enable-full-dwarf-debugging    -- Read full debug information from
+                                          DWARF for Swift debugging. By default
+                                          LLDB will use DWARF debug information
+                                          if it cannot use reflection metadata.
+  swift-load-conformances              -- Resolve type alias via the
+                                          conformance section. Disabled for
+                                          performance reasons
+  swift-metadata-cache-expiration-days -- The expiration time in days for a
+                                          Swift reflection cache file. When a
+                                          file hasn't been accessed for the
+                                          specified amount of days, it is
+                                          removed from the cache. A value of 0
+                                          disables the expiration-based pruning.
+  swift-metadata-cache-max-byte-size   -- The maximum size for LLDB's Swift
+                                          reflection cache directory in bytes.
+                                          A value over the amount of available
+                                          space on the disk will be reduced to
+                                          the amount of available space. A
+                                          value of 0 disables the absolute
+                                          size-based pruning.
+  swift-metadata-cache-path            -- The path to LLDB's Swift reflection
+                                          cache directory.
+  swift-module-loading-mode            -- The module loading mode to use when
+                                          loading modules for Swift.
+  swift-validate-typesystem            -- Validate all Swift typesystem
+                                          queries. Used for testing an
+                                          asserts-enabled LLDB only.
+  debug-info-symlink-paths             -- Debug info path which should be
+                                          resolved while parsing, relative to
+                                          the host filesystem.
+  use-swift-clangimporter              -- Reconstruct Clang module dependencies
+                                          from headers when debugging Swift code
+  use-swift-dwarfimporter              -- Reconstruct Clang module dependencies
+                                          from DWARF when debugging Swift code
+(lldb) log list
+Logging categories for 'kdp-remote':
+  all - all available logging categories
+  default - default set of logging categories
+  async - log asynchronous activity
+  break - log breakpoints
+  comm - log communication activity
+  data-long - log memory bytes for memory reads and writes for all transactions
+  data-short - log memory bytes for memory reads and writes for short transactions only
+  memory - log memory reads and writes
+  packets - log gdb remote packets
+  process - log process events and activities
+  step - log step related activities
+  thread - log thread events and activities
+  watch - log watchpoint related activities
+Logging categories for 'gdb-remote':
+  all - all available logging categories
+  default - default set of logging categories
+  async - log asynchronous activity
+  break - log breakpoints
+  comm - log communication activity
+  packets - log gdb remote packets
+  memory - log memory reads and writes
+  data-short - log memory bytes for memory reads and writes for short transactions only
+  data-long - log memory bytes for memory reads and writes for all transactions
+  process - log process events and activities
+  step - log step related activities
+  thread - log thread events and activities
+  watch - log watchpoint related activities
+Logging categories for 'dwarf':
+  all - all available logging categories
+  default - default set of logging categories
+  comp - log struct/union/class type completions
+  info - log the parsing of .debug_info
+  line - log the parsing of .debug_line
+  lookups - log any lookups that happen by name, regex, or address
+  map - log insertions of object files into DWARF debug maps
+  split - log split DWARF related activities
+Logging categories for 'swift':
+  all - all available logging categories
+  default - default set of logging categories
+  health - log all messages related to lldb Swift operational health
+Logging categories for 'lldb':
+  all - all available logging categories
+  default - default set of logging categories
+  api - log API calls and return values
+  ast - log AST
+  break - log breakpoints
+  commands - log command argument parsing
+  comm - log communication activities
+  conn - log connection details
+  demangle - log mangled names to catch demangler crashes
+  dyld - log shared library related activities
+  event - log broadcaster, listener and event queue activities
+  expr - log expressions
+  formatters - log data formatters related activities
+  host - log host activities
+  jit - log JIT events in the target
+  language - log language runtime events
+  mmap - log mmap related activities
+  module - log module activities such as when modules are created, destroyed, replaced, and more
+  object - log object construction/destruction for important objects
+  os - log OperatingSystem plugin related activities
+  platform - log platform events and activities
+  process - log process events and activities
+  script - log events about the script interpreter
+  state - log private and public process state changes
+  step - log step related activities
+  symbol - log symbol related issues and warnings
+  system-runtime - log system runtime events
+  target - log target events and activities
+  temp - log internal temporary debug messages
+  thread - log thread events and activities
+  types - log type system related activities
+  unwind - log stack unwind activities
+  watch - log watchpoint related activities
+  on-demand - log symbol on-demand related activities
+  source - log source related activities
+  trace - log tracing related activities

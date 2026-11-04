@@ -1,0 +1,27 @@
+{
+  "decompress_argv": [
+    "/opt/homebrew/bin/zstd",
+    "--memory=1024MB",
+    "-dc",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/LLVM-23.1.5-macOS-ARM64.tar.zst"
+  ],
+  "decompress_exit": 0,
+  "extract_argv": [
+    "/usr/bin/tar",
+    "-xf",
+    "-",
+    "-C",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-entry-lldb-23.1.5/observer",
+    "--no-same-owner",
+    "--no-same-permissions",
+    "LLVM-23.1.5-macOS-ARM64/bin/lldb",
+    "LLVM-23.1.5-macOS-ARM64/bin/lldb-argdumper",
+    "LLVM-23.1.5-macOS-ARM64/bin/debugserver",
+    "LLVM-23.1.5-macOS-ARM64/lib/liblldb.dylib",
+    "LLVM-23.1.5-macOS-ARM64/lib/liblldb.23.1.dylib",
+    "LLVM-23.1.5-macOS-ARM64/lib/liblldb.23.1.5.dylib"
+  ],
+  "extract_exit": 0,
+  "wall_seconds": 8.414290249987971,
+  "end_to_end": false
+}
