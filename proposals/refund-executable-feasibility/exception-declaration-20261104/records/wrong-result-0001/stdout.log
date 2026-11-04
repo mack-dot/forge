@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundRejectDirect">>
+Proof of 
+
+Decls env1 st1 prog env2 st2 ⇒
+lookup_var «refund_main» env2 = SOME refund_main_v ⇒
+app p refund_main_v [Conv NONE []] P (POSTe exn. Q exn) ⇒
+SPLIT (st2heap p st2) (h1,h2) ∧ P h1 ⇒
+∃st3 exn.
+  (∃ck1 ck2.
+     evaluate_dec_list (st1 with clock := ck1) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE [])
+             (App Opapp [Var (Short «refund_main»); Unit])) prog) =
+     (st3 with clock := ck2,Rval env2)) ∧
+  ∃h3 h4. SPLIT3 (st2heap p st3) (h3,h2,h4) ∧ Q exn h3
+
+failed.

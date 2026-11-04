@@ -8606,3 +8606,54 @@ curl: (6) Could not resolve host: github.com
   archive hash/restore remain open. Integration EXIT is NOT_ESTABLISHED. M2–M4
   remain later priorities. No protected change, publication, merge, dispatch,
   release signing, admission, deployment or Stage12 occurred.
+
+
+## U282 — Exception declaration theorem proved and imported; whole-program lift remains open
+
+- References:U271,U272,U274,U276,U278,U279,U283. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. This ID was reserved before U283;
+  this entry is appended after it without changing existing journal bytes.
+- Exact residual inspection confirms that fs reverses the supplied SYM equation
+  back to SOME(env,exp)=do_opapp[...]. Direct SUBST1_TAC o SYM closes both the
+  declaration and heap branches of the unchanged refund_call_main_exception.
+  The observed cause is simplification context. No new semantic premise,
+  environment invariant, axiom or input restriction is introduced. No semantic
+  counterexample was found; broader native correspondence remains unproved.
+- U272 already records successful direct HOL checks under these permissions.
+  This work uses that existing interface and pinned tools without changing the
+  sandbox, redirecting a denied operation or rerunning the denied Holmake command.
+  U278's Holmake EPERM remains unexplained and preserved. No-action inspection0
+  reports commands only. The original five failures and subsequent attempts
+  retain their counts and records; each correction has a concrete diagnosis.
+- Direct checks return1/1/0: missing batch namespace, unresolved branch, then
+  accepted unchanged full theorem. Intermediate residual diagnostic returns0.
+  Passing direct source SHA256
+  eca8a571f14f73828d25eb1dae14d0fa18833dcd6e6997dcbddc4774ebc5523e.
+- Fresh standard-heap export first fails1 on unqualified constants. Exact
+  qualification then yields0. Repeat yields0 with four identical exports.
+  Neither successful export uses the failed diagnostic heap. A wrong normal
+  result instead of Rerr(Rraise exn) fails1 at the declaration branch, with no
+  accepted export. All failed sources/stdout/stderr/commands remain preserved.
+- New theorem:forge_refundRejectDirectTheory.refund_call_main_exception.
+  Export source94f931b6e6ac0d14c5b27b86a887b8f9059dc5c1e9e602cca09a7d3f6433435e;
+  datae6a9062d763b0f049f75633e61633554e6e35a7b9e7e376d9cc6efd42d673760.
+- Separate import first fails1 because physical artifact paths duplicate
+  .hol/objs under the HOL virtual loader. Documented virtual paths yield0.
+  It checks aconv against the exact required statement, zero hypotheses,
+  zero explicitly tagged axioms and only DISK_THM. Closure244 nodes, with the
+  same four bool foundation axioms. No clean independent upstream replay follows.
+- readback.py returns0:1454 prior dependency files, four identical own exports,
+  both failed heaps,50 protected paths, frozen mission and native executable
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8 unchanged.
+  Exploratory hol help run exits1 as an unsupported CLI form; no proof evidence.
+- Packet:proposals/refund-executable-feasibility/exception-declaration-20261104/REPORT.md.
+  Raw:results/refund-native-audit-2026-11-04/attempt-0006/. Existing native tests
+  and compilation were not repeated. U283's observations do not prove all runtime
+  premises. The original compiler behavior run retains its existing owner.
+- Next smallest experiment: prove separately that the exact exceptional
+  evaluate_dec_list result gives deterministic Terminate Success plus the
+  RTC call_FFI_rel relation; then compose the accepted declaration theorem.
+  Logical Success is not an OS exit-code theorem. All-oracle semantics, initialized
+  stdio error behavior, source/model binding, physical runtime/FFI/resources/exit
+  and clean independent complete-chain replay remain open. No protected change,
+  native rebuild, signing, deployment or Stage12 occurred.

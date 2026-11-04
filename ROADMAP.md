@@ -7,6 +7,29 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U282)
+
+The unchanged exception declaration theorem is now PROVED, replayed and imported.
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Direct exact theorem checks | 1/1/0 | Namespace failure; residual branch; then both branches proved |
+| Residual simplification diagnostic | 0 | fs reorients equation; direct substitution resolves it |
+| Fresh standard-heap export / repeat | 1/0/0 | Qualified constants after first failure; four identical exports |
+| Wrong normal-result control | 1 | Required declaration proof fails; no accepted export |
+| Exported-theory import | 1/0 | Virtual-path correction; exact statement and244-node closure checked |
+| readback.py | 0 |1454 prior files, two failed heaps,50 protected paths and native identity unchanged |
+
+[Exact theorem, failures, hashes and assurance matrix](proposals/refund-executable-feasibility/exception-declaration-20261104/REPORT.md).
+The existing direct HOL interface works with unchanged tools and permissions.
+The earlier Holmake EPERM remains preserved and unexplained. The theorem adds no
+new premise or axiom. Fresh replay still trusts this host and cached parents.
+Next: exceptional evaluation to deterministic source semantics and FFI relation,
+then all pointer oracles and initialized stdio. Logical Success does not establish
+OS exit0. Physical native correspondence and clean independent replay stay open.
+No native rebuild, signing, protected change, deployment or Stage12 occurred.
+
 ## Active mission update — 2026-11-04 (U283)
 
 Exact loaded refund code and bitmaps now match the HOL-derived payloads in

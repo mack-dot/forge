@@ -1,0 +1,8 @@
+{
+  "actual_exit": 0,
+  "evidence": "diagnostic-rewrite/stdout.log shows fs restores SOME(env,exp)=do_opapp after explicit SYM assumption",
+  "change": "Use existing SUBST1_TAC on SYM directly in goal; then same simplification",
+  "statement_unchanged": true,
+  "source_sha256": "eca8a571f14f73828d25eb1dae14d0fa18833dcd6e6997dcbddc4774ebc5523e",
+  "end_to_end": false
+}

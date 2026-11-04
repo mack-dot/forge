@@ -30,7 +30,7 @@ before/after the full-map inspection. Four adjacent rw- VM regions cover the
 | --- | --- | --- |
 | 1 | Finish the existing compiler behavior invocation | Runner47209/Holmake47239 live; no terminal theorem; inspect actual premises, then controls/reproduction |
 | 2 | Connect applicable source/model and runtime conditions | Entry payloads and scalar bounds observed; full Unicode/model, physical control state, FFI/OS, resources and exit relations remain open |
-| 3 | Preserve and complete the separate exception branch | Its own proof/export work remains separate; do not infer whole-program error or native exit from an application lemma |
+| 3 | Complete the exception source semantics | U282 declaration theorem PROVED; next prove modeled behavior, FFI trace and initialized stdio; native exit remains separate |
 | 4 | Independently replay and review the exact complete claim | Full-chain replay and approved new assumption/profile still required |
 | 5 | Bind authenticated Forge evidence and operational readiness | Upstream debugger provenance alone is insufficient; new admission authority and independent-copy hash/restore remain open |
 
@@ -65,7 +65,21 @@ preserved diagnostic error1. The native executable and30 frozen inputs match.
 The live compiler has no terminal proof result. Strict integration EXIT remains
 NOT_ESTABLISHED. `end_to_end=false`; no Stage12 or policy change is authorized.
 
-Latest proof diagnosis: **U278 — lookup lemma proved; full repair blocked by EPERM**.
+Latest proof result: **U282 — exception declaration theorem PROVED**.
+The [declaration report](proposals/refund-executable-feasibility/exception-declaration-20261104/REPORT.md)
+records the unchanged theorem, direct substitution diagnosis and all failures.
+Fresh standard-heap proof/repeat/import return0/0/0. Four exports match. The
+wrong normal-result control fails1. The imported closure has244 nodes and the
+four existing bool foundation axioms;1454 prior dependency files match.
+No new semantic premise or axiom was added. U278's denied Holmake invocation
+remains preserved; the already-used direct HOL interface checks the theorem.
+
+**Next:** lift the exception declaration result to deterministic source semantics
+and its FFI relation. Then establish all pointer oracles and initialized stdio.
+Whole-program error, physical native execution and independent complete-chain
+replay remain NOT_ESTABLISHED. `end_to_end=false`.
+
+Previous proof diagnosis: **U278 — lookup lemma proved; full repair blocked by EPERM**.
 The [focused exception report](proposals/refund-executable-feasibility/exception-focused-20261104/REPORT.md)
 records the exact remaining case expression and its unused equality. A standalone
 universal HOL lemma passes0. The full repaired statement is unchanged, but its

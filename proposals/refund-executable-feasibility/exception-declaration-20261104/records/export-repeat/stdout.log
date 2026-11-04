@@ -1,0 +1,21 @@
+<<HOL message: Created theory "forge_refundRejectDirect">>
+Saved theorem _______ "refund_call_main_exception"
+EXPORTED_REFUND_CALL_MAIN_EXCEPTION
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var «refund_main» env2 = SOME refund_main_v ⇒
+  app p refund_main_v [Conv NONE []] P (POSTe exn. Q exn) ⇒
+  SPLIT (st2heap p st2) (h1,h2) ∧ P h1 ⇒
+  ∃st3 exn.
+    (∃ck1 ck2.
+       evaluate_dec_list (st1 with clock := ck1) env1
+         (SNOC
+            (Dlet NoLocs (Pcon NONE [])
+               (App Opapp [Var (Short «refund_main»); Unit])) prog) =
+       (st3 with clock := ck2,Rerr (Rraise exn))) ∧
+    ∃h3 h4. SPLIT3 (st2heap p st3) (h3,h2,h4) ∧ Q exn h3
+EXPORTED_ORACLES DISK_THM
+EXPORTED_HYPOTHESES 0
+EXPORTED_TAGGED_AXIOMS 0
+Exporting theory "forge_refundRejectDirect" ... done.
+Theory "forge_refundRejectDirect" took 2.3s to build
+DIRECT_EXPORT_COMPLETE
