@@ -1,0 +1,30 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "git",
+    "diff",
+    "--exit-code",
+    "--",
+    "basis/basis_ffi.c",
+    "basis/basis_ffiScript.sml",
+    "basis/fsFFIScript.sml",
+    "basis/fsFFIPropsScript.sml",
+    "compiler/backend/semantics/targetSemScript.sml",
+    "compiler/backend/arm8/proofs/arm8_configProofScript.sml"
+  ],
+  "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+  "pins": {
+    "cakeml": "cd9155694c16831373ab695a670794f23282ed62",
+    "HOL": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3"
+  },
+  "source_sha256": {
+    "basis/basis_ffi.c": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+    "basis/basis_ffiScript.sml": "74862cf9782eaca3cf07d4c4e9aa08305947800973fc0e5077cdff9a148948db",
+    "basis/fsFFIScript.sml": "ed0e73e7612bfca88f3109cc0d400e0fb5bd0579b752f0f6d1a7bceed073fe18",
+    "basis/fsFFIPropsScript.sml": "96ad37c7382a8509d049736c9304e576b8be322324a47fabf3c2d6e9955111ce",
+    "compiler/backend/semantics/targetSemScript.sml": "3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422",
+    "compiler/backend/arm8/proofs/arm8_configProofScript.sml": "35bde5d213496bcc25cb454f47bfc0949ac42b1e1eb15e32525c2082d7496973"
+  },
+  "new_semantics": "NONE",
+  "end_to_end": false
+}

@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+    "run",
+    "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/import-audit/preload.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0006/export-0002/forge_refundRejectDirectTheory.sig",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0006/export-0002/forge_refundRejectDirectTheory.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/stdio-0003/forge_refundRejectSemanticsTheory.sig",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/stdio-0003/forge_refundRejectSemanticsTheory.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/import-audit/audit.sml"
+  ],
+  "cwd": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/import-audit",
+  "required_statement_unchanged": true,
+  "expected_theorems": [
+    "refund_raise_determ",
+    "refund_exception_determ",
+    "refund_evaluate_dec_list_clock_result",
+    "refund_semantics_dec_list_determ_terminate_unique",
+    "refund_semantics_dec_list_all_terminate",
+    "refund_exception_semantics",
+    "refund_error_stdio_semantics"
+  ],
+  "audit_source_sha256": "562b25dad843c196ad9eec1c4eed7edc69b275b0c03aa72ad36ad29056653a0b",
+  "scope": "Fresh standard-heap import through HOL virtual artifact paths; no proof cache independence claim",
+  "end_to_end": false
+}

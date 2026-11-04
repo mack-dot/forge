@@ -1,0 +1,9 @@
+word_list: PARSED
+Don't expect to find a ) in this position after a <|
+at frag 0 row 0 col 25 and on frag 0 row 0, between cols 2 and 3.
+small_record: HOL_ERR (HOL_ERROR {message = "Don't expect to find a ) in this position after a <|\nat frag 0 row 0 col 25 and on frag 0 row 0, between cols 2 and 3.\n", origins = [{origin_function = "Absyn", origin_structure = "Absyn", source_location = Loc (LocP (0, 0, 2), LocP (0, 0, 3))}]})
+spaced_small_record: PARSED
+Don't expect to find a ) in this position after a ;
+at frag 0 row 0 col 542 and at frag 0 row 0 col 518.
+original_filesystem: HOL_ERR (HOL_ERROR {message = "Don't expect to find a ) in this position after a ;\nat frag 0 row 0 col 542 and at frag 0 row 0 col 518.\n", origins = [{origin_function = "Absyn", origin_structure = "Absyn", source_location = Loc (LocP (0, 0, 518), LocP (0, 0, 518))}]})
+spaced_filesystem: PARSED

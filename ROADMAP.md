@@ -7,6 +7,58 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U285)
+
+Two native captures now record full FFI buffers and call returns for the same
+exact refund executable. CURRENT none; M1 open; Stage12 unauthorized;
+end_to_end=false. Finite observations do not prove universal runtime behavior.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| FFI discovery / complete capture / identical-source repeat | 0/0/0 | Three reads, one write, cml_exit(0); actual process exits0 |
+| validate_observations.py | 0 |38 byte comparisons0; exact return PCs, x19–x28 and SP preserved per call |
+| First HOL model check | 1 | Record annotation parse error; no accepted theorem |
+| Focused parser diagnostic | 0 | Reproduces error; exact spacing correction parses |
+| Corrected HOL model check | IN_PROGRESS | Original child91810 live; no terminal result |
+| Model tampering controls / proof reproduction | NOT RUN | Positive model result required first |
+| Six pinned source identity/diff checks | 0 | Existing semantics and runtime sources unchanged |
+| U284 committed packet import | 0 |115 file hashes checked; no source-proof rerun |
+| Original compiler behavior proof | IN_PROGRESS | Runner47209/Holmake47239 remain live |
+
+[Exact observations, commands, pending model checks and limits](proposals/refund-executable-feasibility/ffi-observation-20261104/REPORT.md).
+The loaded code matches before native exit as well as at entry. Full buffers
+agree between captures; ASLR addresses differ. Return breakpoints are hardware.
+Full memory frames, physical state, universal FFI/OS/interference/resources/exit,
+source/model binding, clean independent replay/review and new admission stay open.
+Poll the existing checks; do not duplicate them. Keep U284 source work separate.
+Independent-copy hashes and restore remain unverified. Integration EXIT remains
+NOT_ESTABLISHED. No protected change, publication, signing, merge or dispatch ran.
+
+## Active mission update — 2026-11-04 (U284)
+
+The refund exception contract now has a checked all-oracle source-behavior
+theorem with the full modeled event trace and exceptional heap postcondition.
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Deterministic exception/FFI lift | 0 | Exact final events and modeled FFI relation |
+| Source semantics builds | 1/1/0 | State-theorem namespace; rule application; then complete export |
+| Clock diagnostics / stdio diagnostic | 1/0;0 | Interface error preserved; exact residuals inspected |
+| Positive source replay | 0 | Four byte-identical exports |
+| Wrong empty-trace substitution | 1 | Required theorem refused; no accepted export |
+| Fresh theory import / readback.py | 0/0 | Seven theorems;245-node closure;1458 parent files and50 protected paths checked |
+| Local unsigned packet commit / Git blob readback | 0/0 | acadb09945cda234d79fe1911df0f7d86541d620;115 exact files; no publication |
+
+[Theorem, premises, failures, identities and assurance matrix](proposals/refund-executable-feasibility/exception-semantics-20261104/REPORT.md).
+The theorem retains declaration, lookup, input/error and initial heap premises.
+Logical Success is not OS exit0. Four existing foundation axioms are visible;
+logic/kernel/loader/host and imported proof-data trust remain. Same-host proof
+and import do not establish clean independent complete-chain replay.
+Next: basis event extraction and exact refund_prog initialization composition.
+The precise planned lemma is NOT RUN. Physical native I/O/resources/exit remain
+open. No native rebuild, signing, protected change, deployment or Stage12 ran.
+
 ## Active mission update — 2026-11-04 (U282)
 
 The unchanged exception declaration theorem is now PROVED, replayed and imported.

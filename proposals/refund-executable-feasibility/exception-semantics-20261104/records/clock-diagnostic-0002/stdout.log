@@ -1,0 +1,20 @@
+OK..
+1 subgoal:
+DIAG_HYP s2 with clock := ck1 + s2.clock = s1 with clock := ck2 + s1.clock
+DIAG_HYP evaluate_dec_list (st with clock := ck1 + ck2) env prog =
+(s1 with clock := ck2 + s1.clock,r1)
+DIAG_HYP evaluate_dec_list (st with clock := ck2) env prog = (s2,r1)
+DIAG_HYP r1 ≠ Rerr (Rabort Rtimeout_error)
+DIAG_HYP evaluate_dec_list (st with clock := ck1) env prog = (s1,r1)
+DIAG_GOAL s1.ffi = s2.ffi
+UNQUALIFIED_STATE_EQUALITY ⊢ ∀s1 s2.
+    s1 = s2 ⇔
+    s1.tenv = s2.tenv ∧ s1.type_ids = s2.type_ids ∧ s1.sem_st = s2.sem_st ∧
+    s1.sem_env = s2.sem_env
+SEMANTIC_PRIMITIVE_STATE_EQUALITY ⊢ ∀s1 s2.
+    s1 = s2 ⇔
+    s1.clock = s2.clock ∧ s1.refs = s2.refs ∧ s1.ffi = s2.ffi ∧
+    s1.next_type_stamp = s2.next_type_stamp ∧
+    s1.next_exn_stamp = s2.next_exn_stamp ∧ s1.eval_state = s2.eval_state ∧
+    s1.ptr_eq_oracle = s2.ptr_eq_oracle
+DIAGNOSTIC_COMPLETE

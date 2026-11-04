@@ -8657,3 +8657,113 @@ curl: (6) Could not resolve host: github.com
   stdio error behavior, source/model binding, physical runtime/FFI/resources/exit
   and clean independent complete-chain replay remain open. No protected change,
   native rebuild, signing, deployment or Stage12 occurred.
+
+
+## U284 — Refund exception contract connected to all modeled source behaviors
+
+- References:U270,U271,U274,U278,U282,U283. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. The owner expressly requested the
+  exception/source/event correspondence with unchanged approved specification
+  and trace. The preceding goal turn and this turn make proof progress.
+- New forge_refundRejectSemanticsTheory.refund_error_stdio_semantics is checked.
+  Under the exact Decls, main lookup, stdin_content=SOME text,
+  refund_run_wire(implode text)=INL err, heap split and STDIO premises, the
+  source behavior set is nonempty and every behavior has Terminate Success
+  st3.ffi.io_events, the RTC call_FFI_rel relation, and a separated final heap
+  satisfying Fail_exn err and STDIO(fastForwardFD fs0). All pointer-equality
+  oracles are covered. No event is deleted, replaced or weakened in the theorem.
+- Success is the logical outcome constructor derived from Rerr(Rraise exn).
+  It does not mean normal ML return or establish OS exit0. The six substantive
+  premises remain in the theorem. Zero explicit hypotheses does not mean that
+  these implication premises have been discharged for the native executable.
+- Deterministic evaluation/FFI lift exports0. First all-oracle build fails1 in
+  a clock uniqueness lemma. First diagnostic fails1 from a quotation-interface
+  error; corrected diagnostic0 exposes exact clock-adjusted state equality.
+  Unqualified state_component_equality refers to the wrong state record.
+  Explicit semanticPrimitivesTheory qualification fixes the unchanged lemma.
+- Next build fails1 at the final drule_all application after generic all-oracle
+  results check. Diagnostic0 shows the exact error application contract and
+  original premises are present. Instantiating only P and Q explicitly and
+  applying metis checks the same target, exit0. The internal assertion cause
+  remains unestablished. All prior errors and the Context.snapshot warning stay
+  in their original logs. No upstream theory or proof machinery was changed.
+- Final source68c4f9bbf6537d1ea9f5afcd8980e1302779e3adcddd542e5f1eea96228e7655;
+  datacfb0f1aa475e4c08a4f490cef6b0d187c7ac274f06e6cf9e6925da2615f215d0.
+  Positive replay0 yields four byte-identical exports. Replacing only the final
+  required event list with[] fails1 at refund_error_stdio_semantics, with no
+  accepted export. This is a binding control, not a universal refutation proof.
+- Fresh standard-heap import0 compares the final statement with its first
+  frozen version. Seven new theorems have zero explicit hypotheses, zero tagged
+  axioms and only DISK_THM. Closure245 nodes retains bool.SELECT_AX,
+  bool.INFINITY_AX,bool.ETA_AX,bool.BOOL_CASES_AX. Three existing local helper
+  statements/proofs are replayed in this proposal because they are not exported.
+- readback.py returns0:1458 parent files, four identical own exports,50 protected
+  paths, mission and native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8
+  unchanged. Logic/kernel, Poly/ML, loader, host and cached proof-data trust
+  remain. This is not independent clean replay of the complete chain.
+- Packet:proposals/refund-executable-feasibility/exception-semantics-20261104/REPORT.md.
+  Raw:results/refund-native-audit-2026-11-04/attempt-0007/. The complete statement,
+  premise audit, hashes, failures, closure and next exact obligation are retained.
+- Smallest remaining source obligation: relate the same final events to
+  extract_fs ext(cl,fs) using the basis FFI and STDIO heap, then discharge the
+  exact refund_prog initialization/prefix/lookup/heap premises. The planned
+  lemma in NEXT-OBLIGATION.md is NOT RUN. Unavailable-stdin behavior, full
+  source/model binding, physical runtime/FFI/resources/exit, independent complete
+  replay/review and operational assurance remain open. No native rebuild,
+  test rerun, signing, protected change, deployment or Stage12 ran in this work.
+
+
+## U285 — Native FFI buffers and call returns observed; model check remains live
+
+- References:U271,U275,U277,U283,U284. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. Previous turn made progress by committing
+  exact observation and exception-declaration records at bfe8e3ac and17896ad4.
+- New finite observation uses the unchanged native executable
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8
+  and the frozen62-byte eligible request. Discovery0 records three reads, one
+  write and cml_exit. No open or close call is observed in this fixture.
+- Two complete captures return0/0; each native process exits0 with the exact
+ 64-byte expected stdout and empty stderr. Each call records the complete
+  configuration and data arrays before and after its native function. Temporary
+  return breakpoints are hardware breakpoints. Each return PC equals saved LR,
+  x19–x28 are preserved and SP is unchanged and aligned. This is finite evidence.
+- validate_observations.py returns0 with38 standard cmp results0. Both runs have
+  the same captured buffers, loaded code, bitmaps and FFI stub bytes. Code also
+  matches the HOL-derived payload immediately before exit. ASLR addresses differ.
+  Raw header pointers and address logs are not claimed byte-identical.
+- The same authenticated upstream LLDB and existing pinned Apple debugserver
+  are used. JIT remains disabled for pointer expressions. No helper is injected,
+  no executable is rebuilt or signed, and no new framework/service is introduced.
+  Upstream observer authentication does not authenticate local Forge evidence.
+- A new HOL check requires four exact basis_ffi_oracle equations for these
+  captured calls and the frozen stdin/stdout. It uses existing fsFFI semantics,
+  four transfer-choice entries4096, arbitrary remaining stream ns and command
+  line cl. It does not assume this model witness equals the entire physical OS.
+- An unexecuted print-string draft is preserved after an escape correction.
+  The first actual HOL invocation fails1 at a record type annotation, before
+  any theorem checks. Focused parser diagnostic0 reproduces that error and
+  confirms the required lexical spacing. The second invocation changes only
+  spacing and output location. Original child91810 remains live with no terminal
+  record or accepted export at this checkpoint. It is not counted as passing.
+- Altered returned-read byte and substituted write-descriptor controls are
+  prepared but NOT RUN. Reproduction and independent model-theorem import are
+  NOT RUN. First require the real positive result. Do not weaken expectations.
+- Six pinned source identities are checked and tracked diffs0. CakeML stays
+  cd9155694c16831373ab695a670794f23282ed62; HOL stays
+  9783a49979c94c401ff8c0e51b2eefae7ea95ae3. The original compiler behavior
+  runner47209/Holmake47239 remain live and continue through upstream dependencies.
+  Neither live check has a terminal behavioral conclusion at this checkpoint.
+- Packet:proposals/refund-executable-feasibility/ffi-observation-20261104/REPORT.md.
+  Raw:results/refund-ffi-observation-2026-11-04/. All failed sources and logs stay.
+  U284's independently recorded source-semantics packet is imported from local
+  commitacadb09945cda234d79fe1911df0f7d86541d620 after115 file-hash checks0;
+  this import does not rerun its proofs. Its source work remains separate.
+- Next: poll both actual live handles; inspect terminal conclusions, then run
+  model corruption controls, proof reproduction and closure checks if positive.
+  Complete source initialization and full source/model/runtime obligations.
+  Whole-memory frames, physical ARM state, universal C/POSIX/interference,
+  resource sufficiency and native exit refinement remain unproved. Independent
+  full-chain replay/review, new Forge provenance/admission and exact independent
+  backup hashes/restore remain open. Integration EXIT is NOT_ESTABLISHED.
+  No protected adoption, publication, merge, dispatch, release signing, admission,
+  deployment or Stage12 occurred. No hosted timing or savings claim is made.

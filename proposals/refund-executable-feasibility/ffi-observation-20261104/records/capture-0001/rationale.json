@@ -1,0 +1,13 @@
+{
+  "observed_call_order": [
+    "read",
+    "read",
+    "read",
+    "write",
+    "cml_exit"
+  ],
+  "discovery_record_sha256": "99d841a245407cb764244c68e04aa20f9fb75f7b36b76156e5aa4af39318d025",
+  "capture": "Exact pre/post buffers and callee-saved registers at one-shot hardware return breakpoint",
+  "native_calls_are_observations_not_universal_refinement": true,
+  "end_to_end": false
+}

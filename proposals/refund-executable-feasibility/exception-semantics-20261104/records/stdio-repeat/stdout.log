@@ -1,0 +1,99 @@
+<<HOL message: Created theory "forge_refundRejectSemantics">>
+Saved theorem _______ "refund_raise_determ"
+Saved theorem _______ "refund_exception_determ"
+Saved theorem _______ "refund_evaluate_dec_list_clock_result"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRejectSemantics)>>
+Saved theorem _______ "refund_semantics_dec_list_determ_terminate_unique"
+Saved theorem _______ "refund_semantics_dec_list_all_terminate"
+Saved theorem _______ "refund_exception_semantics"
+Saved theorem _______ "refund_error_stdio_semantics"
+CHECKED_THEOREM refund_raise_determ
+⊢ evaluate_dec_list (st with clock := ck1) env prog =
+  (st' with clock := ck2,Rerr (Rraise exn)) ⇒
+  semantics_dec_list_determ st env prog (Terminate Success st'.ffi.io_events) ∧
+  call_FFI_rel꙳ st.ffi st'.ffi
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_exception_determ
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var «refund_main» env2 = SOME refund_main_v ⇒
+  app p refund_main_v [Conv NONE []] P (POSTe exn. Q exn) ⇒
+  SPLIT (st2heap p st2) (h1,h2) ∧ P h1 ⇒
+  ∃st3 exn.
+    semantics_dec_list_determ st1 env1
+      (SNOC
+         (Dlet NoLocs (Pcon NONE [])
+            (App Opapp [Var (Short «refund_main»); Unit])) prog)
+      (Terminate Success st3.ffi.io_events) ∧
+    (∃h3 h4. SPLIT3 (st2heap p st3) (h3,h2,h4) ∧ Q exn h3) ∧
+    call_FFI_rel꙳ st1.ffi st3.ffi
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_evaluate_dec_list_clock_result
+⊢ evaluate_dec_list (st with clock := ck1) env prog = (s1,r1) ∧
+  r1 ≠ Rerr (Rabort Rtimeout_error) ∧
+  evaluate_dec_list (st with clock := ck2) env prog = (s2,r2) ∧
+  r2 ≠ Rerr (Rabort Rtimeout_error) ⇒
+  s1.ffi = s2.ffi ∧ r1 = r2
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_semantics_dec_list_determ_terminate_unique
+⊢ semantics_dec_list_determ st env prog (Terminate outcome io) ∧
+  semantics_dec_list_determ st env prog behavior ⇒
+  behavior = Terminate outcome io
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_semantics_dec_list_all_terminate
+⊢ (∀po. ∃outcome io.
+     semantics_dec_list_determ (st with ptr_eq_oracle := po) env prog
+       (Terminate outcome io) ∧ R (Terminate outcome io)) ⇒
+  semantics_dec_list st env prog ≠ ∅ ∧
+  ∀behavior. semantics_dec_list st env prog behavior ⇒ R behavior
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_exception_semantics
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var «refund_main» env2 = SOME refund_main_v ⇒
+  app p refund_main_v [Conv NONE []] P (POSTe exn. Q exn) ⇒
+  SPLIT (st2heap p st2) (h1,h2) ∧ P h1 ⇒
+  sem_satisfies
+    (semantics_dec_list st1 env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE [])
+             (App Opapp [Var (Short «refund_main»); Unit])) prog))
+    (λbehavior.
+       ∃st3 exn.
+         behavior = Terminate Success st3.ffi.io_events ∧
+         (∃h3 h4. SPLIT3 (st2heap p st3) (h3,h2,h4) ∧ Q exn h3) ∧
+         call_FFI_rel꙳ st1.ffi st3.ffi)
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_error_stdio_semantics
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var «refund_main» env2 = SOME refund_main_v ⇒
+  stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ⇒
+  SPLIT (st2heap p st2) (h1,h2) ∧ STDIO fs h1 ⇒
+  sem_satisfies
+    (semantics_dec_list st1 env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE [])
+             (App Opapp [Var (Short «refund_main»); Unit])) prog))
+    (λbehavior.
+       ∃st3 exn.
+         behavior = Terminate Success st3.ffi.io_events ∧
+         (∃h3 h4.
+            SPLIT3 (st2heap p st3) (h3,h2,h4) ∧
+            (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+         call_FFI_rel꙳ st1.ffi st3.ffi)
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+Exporting theory "forge_refundRejectSemantics" ... done.
+Theory "forge_refundRejectSemantics" took 5.4s to build
+EXCEPTION_SEMANTICS_COMPLETE

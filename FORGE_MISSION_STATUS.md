@@ -17,7 +17,22 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-## Current proof and observation status — U283
+## Current native FFI checkpoint — U285
+
+[Two complete native captures and model-check status](proposals/refund-executable-feasibility/ffi-observation-20261104/REPORT.md).
+Both captures return the expected output and exit0. All38 byte comparisons pass.
+Each observed read/write returns to its saved address and preserves x19–x28/SP.
+These are finite observations; the complete runtime relation remains unproved.
+
+**Next:** poll existing model checker91810 and compiler proof47239. Both are live;
+neither has a terminal proof result. The first model attempt failed1 on syntax.
+The corrected attempt preserves the required equations. Its two negative controls,
+reproduction and independent import remain NOT RUN. Do not start duplicate jobs.
+Keep U284's source-event/initialization work separate. Complete-chain replay,
+review, new provenance/admission and exact off-machine restore remain open.
+M1 and strict integration EXIT remain NOT_ESTABLISHED. `end_to_end=false`.
+
+## Entry-state checkpoint — U283
 
 [Loaded-entry evidence](proposals/refund-executable-feasibility/entry-capture-20261104/REPORT.md)
 now records three accepted captures. Loaded code and bitmap bytes match HOL
@@ -30,7 +45,7 @@ before/after the full-map inspection. Four adjacent rw- VM regions cover the
 | --- | --- | --- |
 | 1 | Finish the existing compiler behavior invocation | Runner47209/Holmake47239 live; no terminal theorem; inspect actual premises, then controls/reproduction |
 | 2 | Connect applicable source/model and runtime conditions | Entry payloads and scalar bounds observed; full Unicode/model, physical control state, FFI/OS, resources and exit relations remain open |
-| 3 | Complete the exception source semantics | U282 declaration theorem PROVED; next prove modeled behavior, FFI trace and initialized stdio; native exit remains separate |
+| 3 | Complete concrete exception initialization and event replay | U284 all-oracle error/STDIO/event theorem PROVED under explicit premises; basis extraction and exact refund_prog initialization remain |
 | 4 | Independently replay and review the exact complete claim | Full-chain replay and approved new assumption/profile still required |
 | 5 | Bind authenticated Forge evidence and operational readiness | Upstream debugger provenance alone is insufficient; new admission authority and independent-copy hash/restore remain open |
 
@@ -65,7 +80,21 @@ preserved diagnostic error1. The native executable and30 frozen inputs match.
 The live compiler has no terminal proof result. Strict integration EXIT remains
 NOT_ESTABLISHED. `end_to_end=false`; no Stage12 or policy change is authorized.
 
-Latest proof result: **U282 — exception declaration theorem PROVED**.
+Latest proof result: **U284 — error contract to all modeled source behaviors PROVED**.
+The [source semantics report](proposals/refund-executable-feasibility/exception-semantics-20261104/REPORT.md)
+retains the exact event trace, FFI transition relation, exception value and
+consumed-stdin postcondition for every pointer oracle. The declaration, lookup,
+input/error and initial heap premises remain explicit. Logical Success is not
+OS exit0. The final proof, replay and fresh import return0/0/0; four exports match.
+An incorrect empty-trace target fails1. The closure has245 nodes, seven checked
+theorems and four existing foundation axioms;1458 parent files match.
+
+**Next at U284:** prove the [basis event extraction obligation](proposals/refund-executable-feasibility/exception-semantics-20261104/records/NEXT-OBLIGATION.md)
+and discharge exact refund_prog initialization. That experiment is NOT RUN.
+Physical runtime/FFI/resources/exit and independent complete-chain replay stay
+NOT_ESTABLISHED. No approved specification or trace requirement changed.
+
+Previous proof result: **U282 — exception declaration theorem PROVED**.
 The [declaration report](proposals/refund-executable-feasibility/exception-declaration-20261104/REPORT.md)
 records the unchanged theorem, direct substitution diagnosis and all failures.
 Fresh standard-heap proof/repeat/import return0/0/0. Four exports match. The

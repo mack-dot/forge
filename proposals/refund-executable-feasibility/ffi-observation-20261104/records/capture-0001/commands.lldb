@@ -1,0 +1,113 @@
+version
+settings set target.inherit-env false
+settings set target.disable-aslr false
+settings set target.skip-prologue false
+settings set target.require-hardware-breakpoint true
+settings set target.env-vars LANG=C LC_ALL=C CML_HEAP_SIZE=256 CML_STACK_SIZE=256
+target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+breakpoint set --hardware --address 0x1000040d0 --shlib refund
+breakpoint list --verbose
+process launch --stdin /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/wire/eligible_duplicate.stdin --stdout /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/native.stdout --stderr /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/native.stderr
+process status
+breakpoint list --verbose
+settings show target.require-hardware-breakpoint
+register read x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/loaded-code.bin --size 1 --count 130436 $pc
+memory read --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/heap-header.bin --size 1 --count 40 $x1
+memory read --format hex --size 8 --count 5 $x1
+expression --allow-jit false -- unsigned long long $forge_bitmap = *(unsigned long long *)$x1
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/loaded-bitmaps.bin --size 1 --count 20248 $forge_bitmap
+memory region $pc
+memory region $x1
+memory region $x2
+memory region $x3
+memory region $forge_bitmap
+image list
+register read x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/loaded-stubs.bin --size 1 --count 96 '$pc-96'
+breakpoint delete 1
+expression --allow-jit false -- unsigned long long $forge_entry = $pc
+breakpoint set --hardware --address 0x100025170 --shlib refund
+breakpoint set --hardware --address 0x1000251e0 --shlib refund
+breakpoint set --hardware --address 0x100025260 --shlib refund
+breakpoint set --hardware --address 0x100025098 --shlib refund
+breakpoint set --hardware --address 0x100025464 --shlib refund
+breakpoint list --verbose
+process continue
+expression --allow-jit false -- (unsigned long long)0
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+expression --allow-jit false -- unsigned long long $forge_conf = $x0
+expression --allow-jit false -- unsigned long long $forge_clen = $x1
+expression --allow-jit false -- unsigned long long $forge_data = $x2
+expression --allow-jit false -- unsigned long long $forge_alen = $x3
+expression --allow-jit false -- unsigned long long $forge_return = $lr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-00-conf-before.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-00-data-before.bin $forge_data '$forge_data+$forge_alen'
+breakpoint set --hardware --one-shot true --address $forge_return
+breakpoint list --verbose
+process continue
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-00-conf-after.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-00-data-after.bin $forge_data '$forge_data+$forge_alen'
+process continue
+expression --allow-jit false -- (unsigned long long)1
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+expression --allow-jit false -- $forge_conf = $x0
+expression --allow-jit false -- $forge_clen = $x1
+expression --allow-jit false -- $forge_data = $x2
+expression --allow-jit false -- $forge_alen = $x3
+expression --allow-jit false -- $forge_return = $lr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-01-conf-before.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-01-data-before.bin $forge_data '$forge_data+$forge_alen'
+breakpoint set --hardware --one-shot true --address $forge_return
+breakpoint list --verbose
+process continue
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-01-conf-after.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-01-data-after.bin $forge_data '$forge_data+$forge_alen'
+process continue
+expression --allow-jit false -- (unsigned long long)2
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+expression --allow-jit false -- $forge_conf = $x0
+expression --allow-jit false -- $forge_clen = $x1
+expression --allow-jit false -- $forge_data = $x2
+expression --allow-jit false -- $forge_alen = $x3
+expression --allow-jit false -- $forge_return = $lr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-02-conf-before.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-02-data-before.bin $forge_data '$forge_data+$forge_alen'
+breakpoint set --hardware --one-shot true --address $forge_return
+breakpoint list --verbose
+process continue
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-02-conf-after.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-02-data-after.bin $forge_data '$forge_data+$forge_alen'
+process continue
+expression --allow-jit false -- (unsigned long long)3
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+expression --allow-jit false -- $forge_conf = $x0
+expression --allow-jit false -- $forge_clen = $x1
+expression --allow-jit false -- $forge_data = $x2
+expression --allow-jit false -- $forge_alen = $x3
+expression --allow-jit false -- $forge_return = $lr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-03-conf-before.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-03-data-before.bin $forge_data '$forge_data+$forge_alen'
+breakpoint set --hardware --one-shot true --address $forge_return
+breakpoint list --verbose
+process continue
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-03-conf-after.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/call-03-data-after.bin $forge_data '$forge_data+$forge_alen'
+process continue
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+breakpoint list --verbose
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/capture-0001/code-before-exit.bin --size 1 --count 130436 $forge_entry
+process continue
+process status

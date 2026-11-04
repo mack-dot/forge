@@ -1,0 +1,16 @@
+<<HOL message: Created theory "forge_refundRejectSemantics">>
+Saved theorem _______ "refund_raise_determ"
+Saved theorem _______ "refund_exception_determ"
+Proof of 
+
+evaluate_dec_list (st with clock := ck1) env prog = (s1,r1) ∧
+r1 ≠ Rerr (Rabort Rtimeout_error) ∧
+evaluate_dec_list (st with clock := ck2) env prog = (s2,r2) ∧
+r2 ≠ Rerr (Rabort Rtimeout_error) ⇒
+s1.ffi = s2.ffi ∧ r1 = r2
+
+failed.
+First unsolved sub-goal is
+
+s1.ffi = s2.ffi
+

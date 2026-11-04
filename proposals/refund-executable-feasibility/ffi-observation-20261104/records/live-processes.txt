@@ -1,0 +1,5 @@
+  PID  PPID  ELAPSED      TIME  %CPU STAT COMMAND
+47209  5515 01:33:52   0:00.11   0.0 Ss   /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python -B results/refund-arm8-compile-2026-11-04/attempt-0001/run_behavior.py 0001 repeat
+47239 47209 01:33:51   1:15.43   0.0 S    /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake --no-cache -j 2 forge_refundArm8ProofTheory.uo
+91808  5515    06:09   0:00.10   0.0 Ss   /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python -B results/refund-ffi-observation-2026-11-04/run_model_check.py positive-0002
+91810 91808    06:09   4:00.03  57.9 R    /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol run --holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap /Users/mackianni/forge/results/refund-ffi-observation-2026-11-04/model-positive-0002/check.sml

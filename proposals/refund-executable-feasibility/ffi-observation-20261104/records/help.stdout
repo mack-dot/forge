@@ -1,0 +1,463 @@
+(lldb) help breakpoint command add
+Add LLDB commands to a breakpoint, to be executed whenever the breakpoint is
+hit.  The commands added to the breakpoint replace any commands previously
+added to it.  If no breakpoint is specified, adds the commands to the last
+created breakpoint.
+
+Syntax: breakpoint command add <cmd-options> [<breakpt-id>]
+
+Command Options Usage:
+  breakpoint command add [-D] [-o <one-line-command>] [-s <script-language>] [-e <boolean>] [<breakpt-id>]
+  breakpoint command add [-D] -F <python-function> [-s <script-language>] [-e <boolean>] [-k <none>] [-v <none>] [<breakpt-id>]
+
+       -D ( --dummy-breakpoints )
+            Sets Dummy breakpoints - i.e. breakpoints set before a file is
+            provided, which prime new targets.
+
+       -F <python-function> ( --python-function <python-function> )
+            The name of the function that will manage a breakpoint command.
+
+       -e <boolean> ( --stop-on-error <boolean> )
+            Specify whether breakpoint command execution should terminate on
+            error.
+
+       -k <none> ( --structured-data-key <none> )
+            The key for a key/value pair passed to the implementation of a
+            breakpoint command.  Pairs can be specified more than once.
+
+       -o <one-line-command> ( --one-liner <one-line-command> )
+            Specify a one-line breakpoint command inline. Be sure to surround
+            it with quotes.
+
+       -s <script-language> ( --script-type <script-language> )
+            Specify the language for the commands - if none is specified, the
+            lldb command interpreter will be used.
+            Values: command | python | lua | default
+
+       -v <none> ( --structured-data-value <none> )
+            The value for the previous key in the pair passed to the
+            implementation of a breakpoint command.  Pairs can be specified
+            more than once.
+
+General information about entering breakpoint commands
+------------------------------------------------------
+
+This command will prompt for commands to be executed when the specified
+breakpoint is hit.  Each command is typed on its own line following the '> '
+prompt until 'DONE' is entered.
+
+Syntactic errors may not be detected when initially entered, and many malformed
+commands can silently fail when executed.  If your breakpoint commands do not
+appear to be executing, double-check the command syntax.
+
+Note: You may enter any debugger command exactly as you would at the debugger
+prompt.  There is no limit to the number of commands supplied, but do NOT enter
+more than one command per line.
+
+Special information about PYTHON breakpoint commands
+----------------------------------------------------
+
+You may enter either one or more lines of Python, including function
+definitions or calls to functions that will have been imported by the time the
+code executes.  Single line breakpoint commands will be interpreted 'as is'
+when the breakpoint is hit.  Multiple lines of Python will be wrapped in a
+generated function, and a call to the function will be attached to the
+breakpoint.
+
+This auto-generated function is passed in three arguments:
+
+    frame:  an lldb.SBFrame object for the frame which hit breakpoint.
+
+    bp_loc: an lldb.SBBreakpointLocation object that represents the breakpoint
+    location that was hit.
+
+    dict:   the python session dictionary hit.
+
+When specifying a python function with the --python-function option, you need
+to supply the function name prepended by the module name:
+
+    --python-function myutils.breakpoint_callback
+
+The function itself must have either of the following prototypes:
+
+def breakpoint_callback(frame, bp_loc, internal_dict):
+  # Your code goes here
+
+or:
+
+def breakpoint_callback(frame, bp_loc, extra_args, internal_dict):
+  # Your code goes here
+
+The arguments are the same as the arguments passed to generated functions as
+described above.  In the second form, any -k and -v pairs provided to the
+command will be packaged into a SBDictionary in an SBStructuredData and passed
+as the extra_args parameter. 
+
+Note that the global variable 'lldb.frame' will NOT be updated when this
+function is called, so be sure to use the 'frame' argument. The 'frame'
+argument can get you to the thread via frame.GetThread(), the thread can get
+you to the process via thread.GetProcess(), and the process can get you back to
+the target via process.GetTarget()->
+
+Important Note: As Python code gets collected into functions, access to global
+variables requires explicit scoping using the 'global' keyword.  Be sure to use
+correct Python syntax, including indentation, when entering Python breakpoint
+commands.
+
+Example Python one-line breakpoint command:
+
+(lldb) breakpoint command add -s python 1
+Enter your Python command(s). Type 'DONE' to end.
+def function (frame, bp_loc, internal_dict):
+    """frame: the lldb.SBFrame for the location at which you stopped
+       bp_loc: an lldb.SBBreakpointLocation for the breakpoint location
+       information
+       internal_dict: an LLDB support object not to be used"""
+    print("Hit this breakpoint!")
+    DONE
+
+As a convenience, this also works for a short Python one-liner:
+
+(lldb) breakpoint command add -s python 1 -o 'import time;
+print(time.asctime())'
+(lldb) run
+Launching '.../a.out'  (x86_64)
+(lldb) Fri Sep 10 12:17:45 2010
+Process 21778 Stopped
+* thread #1: tid = 0x2e03, 0x0000000100000de8 a.out`c + 7 at main.c:39, stop
+reason = breakpoint 1.1, queue = com.apple.main-thread
+  36
+  37   	int c(int val)
+  38   	{
+  39 ->	    return val + 3;
+  40   	}
+  41
+  42   	int main (int argc, char const *argv[])
+
+Example multiple line Python breakpoint command:
+
+(lldb) breakpoint command add -s p 1
+Enter your Python command(s). Type 'DONE' to end.
+def function (frame, bp_loc, internal_dict):
+    """frame: the lldb.SBFrame for the location at which you stopped
+       bp_loc: an lldb.SBBreakpointLocation for the breakpoint location
+       information
+       internal_dict: an LLDB support object not to be used"""
+    global bp_count
+    bp_count = bp_count + 1
+    print("Hit this breakpoint " + repr(bp_count) + " times!")
+    DONE
+
+In this case, since there is a reference to a global variable, 'bp_count', you
+will also need to make sure 'bp_count' exists and is initialized:
+
+(lldb) script
+>>> bp_count = 0
+>>> quit()
+
+Your Python code, however organized, can optionally return a value.  If the
+returned value is False, that tells LLDB not to stop at the breakpoint to which
+the code is associated. Returning anything other than False, or even returning
+None, or even omitting a return statement entirely, will cause LLDB to stop.
+
+Final Note: A warning that no breakpoint command was generated when there are
+no syntax errors may indicate that a function was declared but never called.
+     
+     This command takes options and free-form arguments.  If your arguments
+     resemble option specifiers (i.e., they start with a - or --), you must use
+     ' -- ' between the end of the command options and the beginning of the
+     arguments.
+(lldb) help breakpoint set
+Sets a breakpoint or set of breakpoints in the executable.
+
+Syntax: breakpoint set <cmd-options>
+
+Command Options Usage:
+  breakpoint set [-DHd] -l <linenum> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-u <column>] [-f <filename>] [-m <boolean>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -a <address-expression> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-s <shlib-name>]
+  breakpoint set [-DHd] -n <function-name> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -F <fullname> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -S <selector> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -M <method> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -r <regular-expression> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-DHd] -b <function-name> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-f <filename>] [-L <source-language>] [-s <shlib-name>] [-K <boolean>]
+  breakpoint set [-ADHd] -p <regular-expression> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-f <filename>] [-m <boolean>] [-s <shlib-name>] [-X <function-name>]
+  breakpoint set [-DHd] -E <source-language> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-h <boolean>] [-w <boolean>]
+  breakpoint set [-DHd] -P <python-class> [-k <none>] [-v <none>] [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-N <breakpoint-name>] [-f <filename>] [-s <shlib-name>]
+  breakpoint set [-DHd] -y <linespec> [-G <boolean>] [-C <command>] [-c <expr>] [-Y <source-language>] [-i <count>] [-o <boolean>] [-q <queue-name>] [-t <thread-id>] [-x <thread-index>] [-T <thread-name>] [-R <address>] [-N <breakpoint-name>] [-m <boolean>] [-s <shlib-name>] [-K <boolean>]
+
+       -A ( --all-files )
+            All files are searched for source pattern matches.
+
+       -C <command> ( --command <command> )
+            A command to run when the breakpoint is hit, can be provided more
+            than once, the commands will be run in left-to-right order.
+
+       -D ( --dummy-breakpoints )
+            Act on Dummy breakpoints - i.e. breakpoints set before a file is
+            provided, which prime new targets.
+
+       -E <source-language> ( --language-exception <source-language> )
+            Set the breakpoint on exceptions thrown by the specified language
+            (without options, on throw but not catch.)
+
+       -F <fullname> ( --fullname <fullname> )
+            Set the breakpoint by fully qualified function names. For C++ this
+            means namespaces and all arguments, and for Objective-C this means
+            a full function prototype with class and selector.  Can be repeated
+            multiple times to make one breakpoint for multiple names.
+
+       -G <boolean> ( --auto-continue <boolean> )
+            The breakpoint will auto-continue after running its commands.
+
+       -H ( --hardware )
+            Require the breakpoint to use hardware breakpoints.
+
+       -K <boolean> ( --skip-prologue <boolean> )
+            Skip the prologue if the breakpoint is at the beginning of a
+            function. If not set the target.skip-prologue setting is used.
+
+       -L <source-language> ( --language <source-language> )
+            Specifies the Language to use when interpreting the breakpoint's
+            expression (note: currently only implemented for setting
+            breakpoints on identifiers). If not set the target.language setting
+            is used.
+
+       -M <method> ( --method <method> )
+            Set the breakpoint by C++ method names.  Can be repeated multiple
+            times to make one breakpoint for multiple methods.
+
+       -N <breakpoint-name> ( --breakpoint-name <breakpoint-name> )
+            Adds this to the list of names for this breakpoint.
+
+       -P <python-class> ( --script-class <python-class> )
+            The name of the class that will manage a scripted breakpoint.
+
+       -R <address> ( --address-slide <address> )
+            Add the specified offset to whatever address(es) the breakpoint
+            resolves to. At present this applies the offset directly as given,
+            and doesn't try to align it to instruction boundaries.
+
+       -S <selector> ( --selector <selector> )
+            Set the breakpoint by Objective-C selector name.  Can be repeated
+            multiple times to make one breakpoint for multiple Selectors.
+
+       -T <thread-name> ( --thread-name <thread-name> )
+            The breakpoint stops only for the thread whose thread name matches
+            this argument.
+
+       -X <function-name> ( --source-regexp-function <function-name> )
+            When used with '-p' limits the source regex to source contained in
+            the named functions.  Can be repeated multiple times.
+
+       -Y <source-language> ( --condition-language <source-language> )
+            Specifies the Language to use when executing the breakpoint's
+            condition expression.
+
+       -a <address-expression> ( --address <address-expression> )
+            Set the breakpoint at the specified address.  If the address maps
+            uniquely to a particular binary, then the address will be converted
+            to a
+            fileaddress,
+            so that the breakpoint will track that binary+offset no matter
+            where the binary eventually loads.  Alternately, if you also
+            specify the module - with the -s option - then the address will be
+            treated as a file address in that module, and resolved accordingly.
+            Again, this will allow lldb to track that offset on subsequent
+            reloads.  The module need not have been loaded at the time you
+            specify this breakpoint, and will get resolved when the module is
+            loaded.
+
+       -b <function-name> ( --basename <function-name> )
+            Set the breakpoint by function basename (C++ namespaces and
+            arguments will be ignored).  Can be repeated multiple times to make
+            one breakpoint for multiple symbols.
+
+       -c <expr> ( --condition <expr> )
+            The breakpoint stops only if this condition expression evaluates to
+            true.
+
+       -d ( --disable )
+            Disable the breakpoint.
+
+       -f <filename> ( --file <filename> )
+            Specifies the source file in which to set this breakpoint.  Note,
+            by default lldb only looks for files that are #included if they use
+            the standard include file extensions.  To set breakpoints on
+            .c/.cpp/.m/.mm files that are #included, set
+            target.inline-breakpoint-strategy to
+            always.
+
+       -h <boolean> ( --on-catch <boolean> )
+            Set the breakpoint on exception catch.
+
+       -i <count> ( --ignore-count <count> )
+            Set the number of times this breakpoint is skipped before stopping.
+
+       -k <none> ( --structured-data-key <none> )
+            The key for a key/value pair passed to the implementation of a
+            scripted breakpoint.  Pairs can be specified more than once.
+
+       -l <linenum> ( --line <linenum> )
+            Specifies the line number on which to set this breakpoint.
+
+       -m <boolean> ( --move-to-nearest-code <boolean> )
+            Move breakpoints to nearest code. If not set the
+            target.move-to-nearest-code setting is used.
+
+       -n <function-name> ( --name <function-name> )
+            Set the breakpoint by function name.  Can be repeated multiple
+            times to make one breakpoint for multiple names.
+
+       -o <boolean> ( --one-shot <boolean> )
+            The breakpoint is deleted the first time it causes a stop.
+
+       -p <regular-expression> ( --source-pattern-regexp <regular-expression> )
+            Set the breakpoint by specifying a regular expression which is
+            matched against the source text in a source file or files specified
+            with the -f can be specified more than once.  If no source files
+            are specified, uses the current
+            default
+            source
+            file.
+            If you want to match against all source files, pass the
+            --all-files
+            option.
+
+       -q <queue-name> ( --queue-name <queue-name> )
+            The breakpoint stops only for threads in the queue whose name is
+            given by this argument.
+
+       -r <regular-expression> ( --func-regex <regular-expression> )
+            Set the breakpoint by function name, evaluating a
+            regular-expression to find the function name(s).
+
+       -s <shlib-name> ( --shlib <shlib-name> )
+            Set the breakpoint only in this shared library.  Can repeat this
+            option multiple times to specify multiple shared libraries.
+
+       -t <thread-id> ( --thread-id <thread-id> )
+            The breakpoint stops only for the thread whose TID matches this
+            argument.  The token 'current' resolves to the current thread's ID.
+
+       -u <column> ( --column <column> )
+            Specifies the column number on which to set this breakpoint.
+
+       -v <none> ( --structured-data-value <none> )
+            The value for the previous key in the pair passed to the
+            implementation of a scripted breakpoint.  Pairs can be specified
+            more than once.
+
+       -w <boolean> ( --on-throw <boolean> )
+            Set the breakpoint on exception throw.
+
+       -x <thread-index> ( --thread-index <thread-index> )
+            The breakpoint stops only for the thread whose index matches this
+            argument.
+
+       -y <linespec> ( --joint-specifier <linespec> )
+            A specifier in the form filename:line[:column] for setting file &
+            line breakpoints.
+(lldb) help memory read
+Read from the memory of the current target process.
+
+Syntax: memory read <cmd-options> <address-expression> [<address-expression>]
+
+Command Options Usage:
+  memory read [-r] [-f <format>] [-c <count>] [-G <gdb-format>] [-s <byte-size>] [-l <number-per-line>] [-o <filename>] <address-expression> [<address-expression>]
+  memory read [-br] [-f <format>] [-c <count>] [-s <byte-size>] [-o <filename>] <address-expression> [<address-expression>]
+  memory read [-AFLORTr] -t <name> [-f <format>] [-c <count>] [-G <gdb-format>] [-E <count>] [-o <filename>] [-d <none>] [-S <boolean>] [-D <count>] [-P <count>] [-Y[<count>]] [-V <boolean>] [-Z <count>] <address-expression> [<address-expression>]
+  memory read -t <name> [-x <source-language>] <address-expression> [<address-expression>]
+
+       -A ( --show-all-children )
+            Ignore the upper bound on the number of children to show.
+
+       -D <count> ( --depth <count> )
+            Set the max recurse depth when dumping aggregate types (default is
+            infinity).
+
+       -E <count> ( --offset <count> )
+            How many elements of the specified type to skip before starting to
+            display data.
+
+       -F ( --flat )
+            Display results in a flat format that uses expression paths for
+            each variable or member.
+
+       -G <gdb-format> ( --gdb-format <gdb-format> )
+            Specify a format using a GDB format specifier string.
+
+       -L ( --location )
+            Show variable location information.
+
+       -O ( --object-description )
+            Display using a language-specific description API, if possible.
+
+       -P <count> ( --ptr-depth <count> )
+            The number of pointers to be traversed when dumping values (default
+            is zero).
+
+       -R ( --raw-output )
+            Don't use formatting options.
+
+       -S <boolean> ( --synthetic-type <boolean> )
+            Show the object obeying its synthetic provider, if available.
+
+       -T ( --show-types )
+            Show variable types when dumping values.
+
+       -V <boolean> ( --validate <boolean> )
+            Show results of type validators.
+
+       -Y[<count>] ( --no-summary-depth=[<count>] )
+            Set the depth at which omitting summary information stops (default
+            is 1).
+
+       -Z <count> ( --element-count <count> )
+            Treat the result of the expression as if its type is an array of
+            this many values.
+
+       -b ( --binary )
+            If true, memory will be saved as binary. If false, the memory is
+            saved as an ASCII dump that uses the format, size, count and number
+            per line settings.
+
+       -c <count> ( --count <count> )
+            The number of total items to display.
+
+       -d <none> ( --dynamic-type <none> )
+            Show the object as its full dynamic type, not its static type, if
+            available.
+            Values: no-dynamic-values | run-target | no-run-target
+
+       -f <format> ( --format <format> )
+            Specify a format to be used for display.
+
+       -l <number-per-line> ( --num-per-line <number-per-line> )
+            The number of items per line to display.
+
+       -o <filename> ( --outfile <filename> )
+            Specify a path for capturing command output.
+
+       -r ( --force )
+            Necessary if reading over target.max-memory-read-size bytes.
+
+       -s <byte-size> ( --size <byte-size> )
+            The size in bytes to use when displaying with the selected format.
+
+       -t <name> ( --type <name> )
+            The name of a type to view memory as.
+
+       -x <source-language> ( --language <source-language> )
+            The language of the type to view memory as.
+
+       --show-tags
+            Include memory tags in output (does not apply to binary output).
+
+       --append-outfile
+            Append to the file specified with '--outfile <path>'.
+     
+     This command takes options and free-form arguments.  If your arguments
+     resemble option specifiers (i.e., they start with a - or --), you must use
+     ' -- ' between the end of the command options and the beginning of the
+     arguments.

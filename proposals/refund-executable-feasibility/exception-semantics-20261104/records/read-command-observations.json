@@ -1,0 +1,22 @@
+{
+  "scope": "Read-only shell observations; not proof results",
+  "records": [
+    {
+      "command": "rg signatures with Cartesian path brace expansion",
+      "actual_exit": 2,
+      "reason": "Some expanded files do not exist; valid signature matches returned"
+    },
+    {
+      "command": "rg proofManager glob",
+      "actual_exit": 1,
+      "reason": "zsh no matches found; no command execution"
+    },
+    {
+      "command": "ps -axo ... | rg ... | tail",
+      "shell_pipeline_exit": 0,
+      "ps_result": "operation not permitted; ps exit not separately captured",
+      "action": "No escalation or retry"
+    }
+  ],
+  "end_to_end": false
+}

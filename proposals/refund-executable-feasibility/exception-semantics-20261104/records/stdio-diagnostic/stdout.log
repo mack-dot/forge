@@ -1,0 +1,80 @@
+<<HOL message: Created theory "forge_refundRejectSemantics">>
+Saved theorem _______ "refund_raise_determ"
+Saved theorem _______ "refund_exception_determ"
+Saved theorem _______ "refund_evaluate_dec_list_clock_result"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRejectSemantics)>>
+Saved theorem _______ "refund_semantics_dec_list_determ_terminate_unique"
+Saved theorem _______ "refund_semantics_dec_list_all_terminate"
+Saved theorem _______ "refund_exception_semantics"
+SOURCE_ERROR_CONTRACT ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTe exn. &Fail_exn err exn * STDIO (fastForwardFD fs 0))
+DIAG_STEP strip
+OK..
+1 subgoal:
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap p st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 st1 prog env2 st2
+DIAG_GOAL sem_satisfies
+  (semantics_dec_list st1 env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap p st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳ st1.ffi st3.ffi)
+DIAG_STEP app-subgoal
+OK..
+1 subgoal:
+DIAG_HYP app p refund_main_v [Conv NONE []] (STDIO fs)
+  (POSTe exn. &Fail_exn err exn * STDIO (fastForwardFD fs 0))
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap p st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 st1 prog env2 st2
+DIAG_GOAL sem_satisfies
+  (semantics_dec_list st1 env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap p st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳ st1.ffi st3.ffi)
+DIAG_STEP drule-all
+OK..
+DIAG_EXCEPTION HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+DIAG_STOP drule-all
+DIAG_HYP app p refund_main_v [Conv NONE []] (STDIO fs)
+  (POSTe exn. &Fail_exn err exn * STDIO (fastForwardFD fs 0))
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap p st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 st1 prog env2 st2
+DIAG_GOAL sem_satisfies
+  (semantics_dec_list st1 env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap p st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳ st1.ffi st3.ffi)
+DIAGNOSTIC_COMPLETE

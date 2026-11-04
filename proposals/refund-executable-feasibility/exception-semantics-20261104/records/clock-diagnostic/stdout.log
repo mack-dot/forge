@@ -1,0 +1,20 @@
+/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/clock-diagnostic/diagnose-clock.sml:9: error: Type error in function application.
+   Function: g : term quotation -> proofs
+   Argument:
+      (
+      Parse.Term
+      [
+         QUOTE
+         " (*#loc 9 14*)\n  evaluate_dec_list (st with clock := ck1) env prog = (s1,r1) \226\136\167\n  r1 \226\137\160 Rerr (Rabort Rtimeout_error) \226\136\167\n  evaluate_dec_list (st with clock := ck2) env prog = (s2,r2) \226\136\167\n  r2 \226\137\160 Rerr (Rabort Rtimeout_error) \226\135\146\n  s1.ffi = s2.ffi \226\136\167 r1 = r2"
+         ]) : term
+   Reason:
+      Can't unify term frag list (*In Basis*) with
+         term (*Created from opaque signature*) (Different type constructors)
+Found near
+  g
+  (
+  Parse.Term
+  [
+     QUOTE
+     " (*#loc 9 14*)\n  evaluate_dec_list (st with clock := ck1) env prog = (s1,r1) \226\136\167\n  r1 \226\137\160 Rerr (Rabort Rtimeout_error) \226\136\167\n  evaluate_dec_list (st with clock := ck2) env prog = (s2,r2) \226\136\167\n  r2 \226\137\160 Rerr (Rabort Rtimeout_error) \226\135\146\n  s1.ffi = s2.ffi \226\136\167 r1 = r2"
+     ])
