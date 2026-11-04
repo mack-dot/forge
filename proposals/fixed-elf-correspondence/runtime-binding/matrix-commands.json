@@ -1,0 +1,235 @@
+[
+  {
+    "name": "valid-record",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/bound-baseline/runtime/capture"
+    ],
+    "actual_exit": 0,
+    "expected_exit": 0,
+    "expected_reason": null,
+    "wall_seconds": 0.05513204200542532
+  },
+  {
+    "name": "actual-changed-entry",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/changed-entry/capture"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "TRACE_IDENTITY_MISMATCH",
+    "wall_seconds": 0.03742508401046507
+  },
+  {
+    "name": "changed-trace",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/changed-trace"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "TRACE_IDENTITY_MISMATCH",
+    "wall_seconds": 0.04468062499654479
+  },
+  {
+    "name": "extra-trace",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/extra-trace"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "TRACE_IDENTITY_MISMATCH",
+    "wall_seconds": 0.06839925001258962
+  },
+  {
+    "name": "missing-trace",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/missing-trace"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "MISSING_OR_LINKED_INPUT:instruction-trace.log",
+    "wall_seconds": 0.04300029101432301
+  },
+  {
+    "name": "changed-load",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/changed-load"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "LOAD_IDENTITY_MISMATCH:text",
+    "wall_seconds": 0.04287591701722704
+  },
+  {
+    "name": "stale-elf",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/stale-elf"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "EXECUTION_IDENTITY_MISMATCH:elf_sha256",
+    "wall_seconds": 0.03597829199861735
+  },
+  {
+    "name": "changed-harness",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/changed-harness"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "EXECUTION_IDENTITY_MISMATCH:commands_sha256",
+    "wall_seconds": 0.03817933300160803
+  },
+  {
+    "name": "missing-command",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/missing-command"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "EXECUTION_COMMAND_MISMATCH",
+    "wall_seconds": 0.036489541991613805
+  },
+  {
+    "name": "parent-nonzero",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/parent-nonzero"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "PARENT_EXIT_NOT_ZERO",
+    "wall_seconds": 0.0362933749856893
+  },
+  {
+    "name": "parent-false",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/parent-false"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "PARENT_EXIT_NOT_ZERO",
+    "wall_seconds": 0.03566733398474753
+  },
+  {
+    "name": "observer-killed",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/observer-killed"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "OBSERVER_TERMINATED_OR_UNKNOWN",
+    "wall_seconds": 0.05230379098793492
+  },
+  {
+    "name": "scope-upgrade",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/test_capture.py",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/scope-upgrade"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "UNAUTHORIZED_SCOPE_UPGRADE",
+    "wall_seconds": 0.042712291004136205
+  },
+  {
+    "name": "missing-anchor",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/run_bound_observation.py",
+      "--runtime-packet",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/missing-anchor",
+      "--out",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/missing-anchor-out"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "MISSING_OR_LINKED_INPUT:MANIFEST.json",
+    "wall_seconds": 0.04044245800469071
+  },
+  {
+    "name": "coordinated-packet",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/run_bound_observation.py",
+      "--runtime-packet",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/coordinated-packet",
+      "--out",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/controls/coordinated-out"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "PACKET_ANCHOR_MISMATCH",
+    "wall_seconds": 0.04493012500461191
+  },
+  {
+    "name": "existing-output",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-I",
+      "-B",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/run_bound_observation.py",
+      "--runtime-packet",
+      "/Users/mackianni/forge/results/executable-correspondence-2026-11-03/attempt-0001/runtime-packet",
+      "--out",
+      "/Users/mackianni/forge/results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/bound-baseline"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "expected_reason": "FileExistsError",
+    "wall_seconds": 0.042459707998204976
+  }
+]

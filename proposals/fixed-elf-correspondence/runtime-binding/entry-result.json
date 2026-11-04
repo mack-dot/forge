@@ -1,0 +1,14 @@
+{
+  "actual_exit": 0,
+  "baseline_qemu_exit": 0,
+  "changed_entry_qemu_exit": 0,
+  "original_observer_exit_for_changed_entry": 0,
+  "baseline_trace_sha256": "526c4a2107262bd8624cc19e9762fa4875d536e0b7697324a1a2b468bdf9ed49",
+  "changed_trace_sha256": "cb4aa0c00230e4654ee0daf1704b302e5d9cd6e7042e4f006687375aa5085aa8",
+  "original_gdb_script_sha256": "1288a505001e2ddd3e8991e5baa871e271c0ae32e10672523e2853d4839e7a7e",
+  "control_gdb_script_sha256": "72323a94f1d71ece6de566c867048fcd5eaf08efe39eb80e71f0674aa1d1f702",
+  "entry_control": "Set a0 to 1 before the initial capture; ELF overwrites a0 before computation.",
+  "finding": "Successful observation/exit0 alone does not establish the exact initializer or trace identity.",
+  "old_observer_claim_scope": "Finite observation only; it did not claim theorem applicability.",
+  "end_to_end": false
+}
