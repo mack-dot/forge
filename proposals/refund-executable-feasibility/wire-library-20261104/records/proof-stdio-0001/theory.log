@@ -1,0 +1,15 @@
+<<HOL message: Created theory "forge_refundStdioProg">>
+Loading translation: forge_refundWireProg ... done.
+Saved theorem _______ "nsLookup_forge_refundStdioProg_env_pfun_eqs"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStdioProg)>>
+Adding nsLookup representation thms for 602 consts [forge_refundStdioProg_env, forge_refundWireProg_env_13, ..., SexpProg_env]
+Adding nsLookup representation thms for [init_env]
+Proof of 
+
+stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+app p refund_main_v [Conv NONE []] (STDIO fs)
+  (POSTv v. &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+
+failed.
+Tactic failure proving "refund_main_valid"; heap saved to forge_refundStdioProg.refund_main_valid.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundStdioProg.refund_main_valid.dumpedheap

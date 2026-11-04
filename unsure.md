@@ -7902,3 +7902,59 @@ curl: (6) Could not resolve host: github.com
   still needs exact archive hashes and restore. GitHub was not refreshed.
   No publication, merge, dispatch, signing, admission or deployment occurred.
   M2–M4 remain subsequent work. No performance improvement is claimed.
+
+
+## U268 — Wire dispatcher proof checked; I/O attempts and tracking checkpoint preserved
+
+- References:U261,U264–U267. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner requested durable Markdown tracking. The complete
+  mission remains byte-identical. FORGE_MISSION_STATUS.md remains the entry point.
+- Saved wire-0001 returns0 and exports seven theorems: valid request computation,
+  six-field response round-trip, decoder-error preservation, trailing-input and
+  malformed-input refusal, and dispatcher return/error CF application contracts.
+  The existing parser, serializer and translator are reused. No model-domain
+  restriction, changed refund rule, custom verifier or new semantics was added.
+- Source417b69d41a58da1ab3831e25cc3cf4ec6db7c0fcafd8af50be0caf9fd2306fb9;
+  data17482ed974f856688298b957aee8d5155b5d56e2a104bbe3ec2a02056a690ae1.
+  This proves modeled byte-string behavior, not full Unicode/native binding.
+  The original wrapper/method remain unchanged. No replacement was adopted.
+- Stdio attempts0001/0002/0003 return1/1/1, each at refund_main_valid with no
+  accepted I/O export. First used wrong quoted constructor case. Second fixes
+  None/Some but leaves the read-rule proof incomplete. Third supplies a diagnosed
+  existential witness and unfolds string representation, yet still fails.
+  Exact remaining third-attempt subgoal is unresolved. Three full attempts remain
+  on record; do not reset the count or repeat the unchanged failure blindly.
+- Diagnostic exits1/1/1/0 remain. The third has a theorem-instantiation type
+  problem. The fourth inspects intermediate goals only. Its exit0 is not a
+  complete proof, accepted I/O theory or native execution result.
+- Latest failed I/O source17813e63c2a6f122aa82a4c9e408bc15e09c944ed44208736bb509dc6c0f59c1.
+  New wire repeat, tamper controls and closure audit are NOT RUN. Earlier library
+  controls do not cover the new dispatcher. Imported objects remain an explicit
+  trust boundary. Hashes alone do not authenticate a producer.
+- Checkpoint readback0 validates saved source/object hashes, exact numeric exits,
+  seven theorem markers,30 frozen owner inputs and unchanged original wrapper.
+  Pinned CakeML/HOL tracked diffs remain0. No proof command was rerun for this
+  Markdown checkpoint. Raw failed proof heaps remain; no evidence was deleted.
+- Saved GitHub mainf9eb1cbc252b28c80e5dfe2774da71bc35a31bd3; PR34 draft head
+ 46e5aa426bf7800df7c98c732a764337e716f6bb; PR36 head705457e069abbe399128808b1efc7242d8eaeaa1;
+  PR37 draft headfc85ecc2c7f12caa6c8991fa002410bdf78dd51d. All open and unmerged.
+  Reviews were not fetched; no approval is inferred. PR34 remains a demonstration;
+  PR36 stays separate from research work. No remote mutation occurred.
+- Effective-rule/list/detail reads0/0/0 expose active ruleset26065125. It requires
+  one review, code-owner review, last-push approval, stale-review dismissal and
+  resolved threads, plus deletion/non-fast-forward protection and linear history.
+  No required status-check/workflow rule appears in the returned effective set.
+  Classic protection returnsHTTP404/exit1; this does not negate the active ruleset.
+  Bypass permissions were observed but not used. No governance setting changed.
+- Next check: inspect the saved third I/O proof goal before another build. Then
+  prove complete modeled output/refusal, check targeted mutations and reproduce
+  the exact positive exports. Whole-program/compiler entry, native artifact,
+  Unicode binding and runtime/environment correspondence remain later open links.
+- Packet:proposals/refund-executable-feasibility/wire-library-20261104/.
+  Raw:results/refund-wire-library-2026-11-04/attempt-0001/. Sources, commands,
+  all failures and copied small evidence files are preserved. No new independent
+  human review, authenticated claim profile, native execution or admission.
+- Off-machine exact archive hashes and restore remain unverified despite the
+  owner's reported copy. Hosted refund measurements are NOT RUN. No protected
+  adoption, publication, merge, dispatch, signing or deployment ran. M2–M4 remain
+  later work. M1 and integration EXIT remain NOT_ESTABLISHED.

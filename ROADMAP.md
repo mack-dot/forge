@@ -7,6 +7,39 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U268)
+
+The Markdown tracker now includes the completed wire proof and the unfinished
+I/O composition. CURRENT none; M1 open; Stage 12 unauthorized; end_to_end=false.
+This checkpoint validates saved execution records. It does not rerun the proofs.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `run.py wire-0001` | 0 | Seven strict wire/dispatcher theorems; six exports |
+| `run_stdio.py stdio-0001/0002/0003` | 1/1/1 | All fail at refund_main_valid; no accepted I/O theory |
+| Saved HOL diagnostics 1/2/3/4 | 1/1/1/0 | Last diagnostic inspects goals only; not a proof pass |
+| `readback.py` | 0 | Saved exits, sources, exports, 30 frozen inputs and unchanged upstream sources checked |
+| `validate_checkpoint.py` | 0 | 45 packet members, 28 local links and the unchanged 538930-byte journal prefix checked |
+| Effective rules / ruleset list / ruleset details | 0/0/0 | Read-only exports obtained; review controls visible |
+| Classic branch-protection endpoint | 1 | HTTP 404; active ruleset remains applicable |
+
+[Exact claims, commands and open checks](proposals/refund-executable-feasibility/wire-library-20261104/REPORT.md).
+Raw records: `results/refund-wire-library-2026-11-04/attempt-0001/`.
+Wire source417b69d4; theory data17482ed9; latest failed I/O source17813e63.
+The new wire repeat, adversarial controls and closure audit are NOT RUN.
+The successful diagnostic does not establish stdin/stdout behavior.
+
+Next authorized check: inspect the saved third I/O goal. Identify the remaining
+premise before another build. Then finish I/O, controls and reproduction before
+whole-program/compiler composition. Native refund execution, hosted refund
+measurements and new admission remain NOT RUN. No claim or policy was weakened.
+
+Saved GitHub mainf9eb1cbc; PRs34/36/37 open and unmerged. Review objects were not
+fetched. Effective rules require independent review controls; no required check
+or workflow rule appears in that returned set. No bypass or settings change ran.
+Independent-copy archive hash/restore remains unverified. No protected adoption,
+publication, merge, dispatch, signing, admission or deployment ran. M2–M4 stay later.
+
 ## Active mission update — 2026-11-04 (U267)
 
 A separate full-contract library implementation now has a checked relation to

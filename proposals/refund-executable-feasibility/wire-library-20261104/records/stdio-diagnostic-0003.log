@@ -1,0 +1,22 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 589 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> <<HOL message: inventing new type variable names: 'a>>
+<<HOL message: inventing new type variable names: 'a>>
+<<HOL message: inventing new type variable names: 'a>>
+<<HOL message: inventing new type variable names: 'a>>
+Exception- HOL_ERR (at Drule.ISPECL: can't type-instantiate input theorem)
+   raised
+poly: : error: Value or constructor (steps) has not been declared
+Found near
+  (List.app (fn (...) => (...)) steps)
+  handle exn => (print ((... ^ ...) ^ "\n"); print (... ^ ...); ... ...)
+Static Errors

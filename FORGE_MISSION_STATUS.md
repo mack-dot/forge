@@ -17,7 +17,35 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checkpoint: **U267 — proposed full library contract checked and reproduced**.
+Latest checkpoint: **U268 — wire dispatcher checked; I/O proof incomplete**.
+Parent local commit: `9b9747c6e3c7523b330898370a9ebba144ff9a2a`.
+The [wire/I/O record](proposals/refund-executable-feasibility/wire-library-20261104/REPORT.md)
+preserves the successful wire build and all three failed I/O builds. Seven
+wire/dispatcher theorems checked locally. No I/O theory was exported. The new
+wire repeat, adversarial controls and closure audit remain `NOT RUN`.
+Saved evidence and 30 unchanged protected inputs were checked for this update.
+
+**Next:** inspect the saved third `refund_main_valid` goal. Identify the remaining
+premise before another build. Then complete I/O, adversarial controls, positive
+reproduction and the whole-program/compiler relation. Native execution remains
+`NOT RUN`. The full mission and all prior failed results remain preserved.
+
+| Latest saved check, U268 | Actual exit | Meaning |
+| --- | --- | --- |
+| `run.py wire-0001` | 0 | Strict wire computation and dispatcher proofs; six exports |
+| `run_stdio.py stdio-0001/0002/0003` | 1/1/1 | I/O proof incomplete; no accepted export |
+| HOL diagnostics 1/2/3/4 | 1/1/1/0 | Last result inspects subgoals only |
+| `readback.py` | 0 | Saved records, identities and 30 frozen inputs checked now; no proof rerun |
+| Effective rules / ruleset list / ruleset details | 0/0/0 | Saved read-only exports expose required review controls |
+| Classic branch-protection endpoint | 1 | HTTP 404; active ruleset still applies |
+
+The saved effective rules require one review, code-owner review, last-push
+approval, stale-review dismissal and resolved threads. They contain no required
+status-check or workflow rule. No setting or bypass was used. Main remains
+`f9eb1cbc` in this snapshot; PRs 34/36/37 are open and unmerged. Review objects
+were not fetched. Independent backup hash/restore remains unverified.
+
+Previous checkpoint: **U267 — proposed full library contract checked and reproduced**.
 Parent local commit: `341afa16e43b3783be3ac39136dfe403b35926a9`.
 The [certified-library proposal](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md)
 uses the existing translator. It proves the complete six-field result's relation
@@ -43,12 +71,13 @@ is separate. Neither establishes native refund behavior. Publication has not run
 | Actual wrapper input/output tuple patterns | LOCALLY_VALIDATED for matching only | [Wrapper proof](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md); nested decoder pairs and flat method result checked; six identical repeat exports |
 | Actual rejection guard and prefix namespace | LOCALLY_VALIDATED, conditional | [Guard/prefix proof](proposals/refund-executable-feasibility/tail-guard-20261104/REPORT.md); nonempty remainder raises the required error and preserves references/FFI under explicit entry conditions; guard removal and binding substitution refused |
 | Proposed alternative library method | LOCALLY_VALIDATED; not adopted | [Complete contract](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md); all nine typed inputs and six result fields; original-method relation and CF frame contract checked |
-| Actual wrapper and whole-program I/O | NOT_ESTABLISHED | Original raw method's framing remains open; the new proposal needs its own checked input/output composition and calling-convention binding |
+| Proposed wire dispatcher | LOCALLY_VALIDATED; further checks pending | [Wire proof](proposals/refund-executable-feasibility/wire-library-20261104/REPORT.md); seven theorems, strict refusal and all six fields; repeat, new controls and closure audit NOT RUN |
+| Actual wrapper and whole-program I/O | NOT_ESTABLISHED | Three proposed I/O builds failed; localize the third saved goal. No I/O theory or adopted wrapper replacement |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
 | New authenticated claim and independent admission | NOT_ESTABLISHED | Independently review the exact claim/profile and authorize provenance/admission; historical signatures do not cover it |
-| Operational readiness | NOT_ESTABLISHED | Validate exact archives and a restore on the independent copy; confirm effective protections at the relevant approval boundary |
+| Operational readiness | NOT_ESTABLISHED | Effective rules visible in saved U268 export; exact independent-copy archive hashes and restore still missing; refresh controls at the relevant approval boundary |
 
 The actual guard now has a conditional rejection theorem. Its unchanged
 guard-removal mutation fails1. The actual main-call prefix and its namespace
@@ -63,12 +92,12 @@ The new route uses the existing translator's checked function relation instead.
 It does not assume that normalization preserves behavior. Its explicit relation
 covers the original method's complete output for every typed model input.
 It is not arbitrary contextual equivalence or an adopted wrapper replacement.
-Next: compose this library contract with the strict wire schema and published
-I/O rules. Keep all input, output and refusal obligations. Native compilation
+The U268 wire composition now passes locally. Next: inspect and close the
+remaining I/O proof goal. Keep all input, output and refusal obligations. Native compilation
 and execution remain NOT RUN. M1 is open.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
-| Latest executed check, U267 | Actual exit | Boundary |
+| Recorded executed check, U267 | Actual exit | Boundary |
 | --- | --- | --- |
 | Third normalization diagnostic | 1 | Manual SIGINT after annotation removal; no accepted candidate |
 | Library attempts0001–0004 / final | 1/1/1/1 / 0 | Import and Boolean representation proof failures preserved; complete final contract checked |
@@ -122,9 +151,10 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: compose the proposed complete library contract with
-strict input decoding, exact output formatting and published I/O rules. Prove
-the actual proposed wrapper's refusal behavior. The original wrapper remains
+Next authorized action: inspect the saved third I/O proof goal, then close
+the remaining premise using the published I/O rules. The strict wire dispatcher
+now passes locally; its new controls and repeat remain pending. Prove the
+proposed I/O wrapper's refusal behavior. The original wrapper remains
 unchanged. Then establish the whole-program compiler entry relation and physical
 input/output boundary. The full Unicode/UTF-8 source
 representation now passes. A particular model caller initializes and returns

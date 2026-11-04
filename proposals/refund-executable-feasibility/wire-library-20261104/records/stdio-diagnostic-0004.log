@@ -1,0 +1,142 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 589 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> OK..
+1 subgoal:
+val it =
+   
+    0.  stdin_content [0;1;34mfs[0m = SOME [0;1;34mtext[0m
+    1.  refund_run_wire (implode [0;1;34mtext[0m) = INR [0;1;34moutput[0m
+   ------------------------------------
+        cf_let (SOME « v0») (cf_con (SOME (Short «None»)) [])
+          (cf_let (SOME « v1»)
+             (cf_app [0;1;34mp[0m (Var (Long «TextIO» (Short «inputAllFrom»)))
+                [Var (Short « v0»)])
+             (cf_match (Var (Short « v1»))
+                [(Pcon (SOME (Short «None»)) [],
+                  cf_let (SOME « v2»)
+                    (cf_con (SOME (Short «Fail»))
+                       [Lit (StrLit «refund: stdin unavailable»)])
+                    (cf_raise (Var (Short « v2»))));
+                 (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+                  cf_let (SOME « v3»)
+                    (cf_app [0;1;34mp[0m (Var (Short «refund_dispatch»))
+                       [Var (Short «wire»)])
+                    (cf_app [0;1;34mp[0m (Var (Long «TextIO» (Short «print»)))
+                       [Var (Short « v3»)]))]))
+          (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+             [Conv NONE []] (merge_env forge_refundWireProg_env_13 init_env))
+          (STDIO [0;1;34mfs[0m)
+          (POSTv [0;32mv[0m.
+             &UNIT_TYPE () [0;32mv[0m * STDIO (add_stdout (fastForwardFD [0;1;34mfs[0m 0) [0;1;34moutput[0m))
+   
+   : proof
+OK..
+1 subgoal:
+val it =
+   
+    0.  stdin_content [0;1;34mfs[0m = SOME [0;1;34mtext[0m
+    1.  refund_run_wire (implode [0;1;34mtext[0m) = INR [0;1;34moutput[0m
+    2.  OPTION_TYPE FILENAME NONE [0;1;34mv[0m
+   ------------------------------------
+        cf_let (SOME « v1»)
+          (cf_app [0;1;34mp[0m (Var (Long «TextIO» (Short «inputAllFrom»)))
+             [Var (Short « v0»)])
+          (cf_match (Var (Short « v1»))
+             [(Pcon (SOME (Short «None»)) [],
+               cf_let (SOME « v2»)
+                 (cf_con (SOME (Short «Fail»))
+                    [Lit (StrLit «refund: stdin unavailable»)])
+                 (cf_raise (Var (Short « v2»))));
+              (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+               cf_let (SOME « v3»)
+                 (cf_app [0;1;34mp[0m (Var (Short «refund_dispatch»))
+                    [Var (Short «wire»)])
+                 (cf_app [0;1;34mp[0m (Var (Long «TextIO» (Short «print»)))
+                    [Var (Short « v3»)]))])
+          (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+             [Conv NONE []] (merge_env forge_refundWireProg_env_13 init_env) with
+           v :=
+             nsBind « v0» [0;1;34mv[0m
+               (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                  [Conv NONE []]
+                  (merge_env forge_refundWireProg_env_13 init_env)).v)
+          (STDIO [0;1;34mfs[0m)
+          (POSTv [0;32mv[0m.
+             &UNIT_TYPE () [0;32mv[0m * STDIO (add_stdout (fastForwardFD [0;1;34mfs[0m 0) [0;1;34moutput[0m))
+   
+   : proof
+OK..
+2 subgoals:
+val it =
+   
+    0.  stdin_content fs = SOME text
+    1.  refund_run_wire (implode text) = INR output
+    2.  OPTION_TYPE FILENAME NONE v
+    3.  OPTION_TYPE STRING_TYPE (SOME (implode text)) v'
+   ------------------------------------
+        cf_match (Var (Short « v1»))
+          [(Pcon (SOME (Short «None»)) [],
+            cf_let (SOME « v2»)
+              (cf_con (SOME (Short «Fail»))
+                 [Lit (StrLit «refund: stdin unavailable»)])
+              (cf_raise (Var (Short « v2»))));
+           (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+            cf_let (SOME « v3»)
+              (cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)])
+              (cf_app p (Var (Long «TextIO» (Short «print»)))
+                 [Var (Short « v3»)]))]
+          (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+             [Conv NONE []] (merge_env forge_refundWireProg_env_13 init_env) with
+           v :=
+             nsBind « v1» v'
+               (nsBind « v0» v
+                  (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                     [Conv NONE []]
+                     (merge_env forge_refundWireProg_env_13 init_env)).v))
+          (STDIO (fastForwardFD fs 0))
+          (POSTv v.
+             &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+   
+    0.  stdin_content [0;1;34mfs[0m = SOME [0;1;34mtext[0m
+    1.  refund_run_wire (implode [0;1;34mtext[0m) = INR [0;1;34moutput[0m
+    2.  OPTION_TYPE FILENAME NONE [0;1;34mv[0m
+   ------------------------------------
+        cf_app [0;1;34mp[0m (Var (Long «TextIO» (Short «inputAllFrom»)))
+          [Var (Short « v0»)]
+          (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+             [Conv NONE []] (merge_env forge_refundWireProg_env_13 init_env) with
+           v :=
+             nsBind « v0» [0;1;34mv[0m
+               (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                  [Conv NONE []]
+                  (merge_env forge_refundWireProg_env_13 init_env)).v)
+          (STDIO [0;1;34mfs[0m)
+          (POSTv [0;32mv[0m.
+             &OPTION_TYPE STRING_TYPE (SOME (implode [0;1;34mtext[0m)) [0;32mv[0m *
+             STDIO (fastForwardFD [0;1;34mfs[0m 0))
+
+2 subgoals
+   : proof
+OK..
+1 subgoal:
+val it =
+   
+    0.  stdin_content [0;1;34mfs[0m = SOME [0;1;34mtext[0m
+    1.  refund_run_wire (implode [0;1;34mtext[0m) = INR [0;1;34moutput[0m
+    2.  OPTION_TYPE FILENAME NONE [0;1;34mv[0m
+   ------------------------------------
+        ∃[0;32mTYPE[0m. OPTION_TYPE [0;32mTYPE[0m NONE [0;1;34mv[0m
+   
+   : proof
+FORGE_OPEN_GOAL ∃TYPE. OPTION_TYPE TYPE NONE v
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.
