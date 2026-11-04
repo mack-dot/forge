@@ -7493,3 +7493,35 @@ curl: (6) Could not resolve host: github.com
   control. Then connect the same method to native compilation/calling or I/O.
   No generic CLI/cache/infrastructure. Native artifact and authorized independent
   admission remain open. No Stage12 or end-to-end correctness claim.
+
+
+## U261 — Durable mission checklist and historical-state labels
+
+- References:U257,U258,U259,U260. The owner requested a Markdown tracking
+  record. FORGE_MISSION.md remains the byte-exact mission. The existing
+  FORGE_MISSION_STATUS.md now starts with the remaining assurance links and
+  their completion conditions. No research scope or acceptance rule changed.
+- Preflight exit0: the mission matches its original attachment. The four
+  baseline records match the clean docs worktree at96bea8465767f999b11c7f9b0efda212c6e26a15.
+  Evidence readback exit0:72 caller-packet manifest entries and12 local links
+  checked. Historical positive/repeat0/0 and negative1/1 records agree. These
+  checks establish local record integrity, not fresh proof execution or producer
+  authentication. Prior failed attempts remain unchanged.
+- The tracker now labels GitHub data as the recorded inspection snapshot.
+  No remote refresh, review, approval, merge, dispatch or publication occurred.
+  It distinguishes the earlier generic compiler premises from the later
+  checked model caller. Native input/output remains unproved.
+- A limited local source search found HOL's portableML UTF8 implementation.
+  Reading that implementation does not establish a verified Unicode relation.
+  No applicable UTF8 theorem was identified by this search; this is not a claim
+  that none exists. The rule against a custom decoder remains in force.
+- Impact: M1 remains open. Full Unicode representation, exact executable and
+  runtime binding, independent claim/profile review and new admission remain
+  unresolved. The owner's independent backup still needs exact hash/restore
+  validation. Stage12 remains unauthorized;end_to_end=false.
+- Next check: use established representation infrastructure to prove the
+  full-domain relation needed by refund. Preserve empty strings, exact ASCII
+  reason equality and caller IDs. Retain the U+0100 truncation control. Do not
+  mistake a model representation theorem for native I/O or executable proof.
+- Documentation check records:
+  results/mission-tracking-2026-11-04/attempt-0001/.

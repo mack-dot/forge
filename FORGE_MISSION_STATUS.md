@@ -9,6 +9,36 @@ Active milestone: **M1 — executable behavioral correctness**.
 This tracker uses the new mission's M1–M4 definitions. Older roadmap milestone
 labels remain historical and must not be treated as the current priority order.
 
+## Start here
+
+Use this file for the current decision and unfinished work. Keep the full
+instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
+[ROADMAP.md](ROADMAP.md), and unresolved findings in [unsure.md](unsure.md).
+Update these records after each experiment. Link each completed item to its
+evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
+
+Latest checked research record: local commit
+`96bea8465767f999b11c7f9b0efda212c6e26a15`.
+It contains the model-caller proof and its controls. It is unpublished.
+This tracking update adds no new theorem or executable result.
+
+| Required assurance link | Tracked status | Evidence or completion condition |
+| --- | --- | --- |
+| Approved refund R1–R5 and source equivalence | LOCALLY_VALIDATED | [Source report](proposals/refund-executable-feasibility/README.md); full approved domain retained |
+| Full return behavior in the published model | LOCALLY_VALIDATED | [Model proof](proposals/refund-executable-feasibility/verified-backend-20261104/REPORT.md); byte strings, mathematical integers and explicit trusted base |
+| Exact generated expression and modeled caller | LOCALLY_VALIDATED | [Compiler relation](proposals/refund-executable-feasibility/compiler-relation-20261104/REPORT.md) and [caller proof](proposals/refund-executable-feasibility/caller-20261104/REPORT.md); all six fields checked |
+| Full Unicode representation | NOT_ESTABLISHED; next | Preserve empty/nonempty strings, exact reason equality and caller-ID round trips; retain the U+0100 truncation refusal |
+| Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
+| Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
+| Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
+| New authenticated claim and independent admission | NOT_ESTABLISHED | Independently review the exact claim/profile and authorize provenance/admission; historical signatures do not cover it |
+| Operational readiness | NOT_ESTABLISHED | Validate exact archives and a restore on the independent copy; confirm effective protections at the relevant approval boundary |
+
+The next experiment must use established representation infrastructure. Do not
+add a custom decoder or restrict legitimate Unicode inputs. A successful model
+representation check alone will not establish native I/O or finish M1.
+M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
+
 ## Current decision
 
 Selected feasibility target: the existing refund decision component and its
@@ -82,12 +112,15 @@ M3/M4, general caching, interface work and new infrastructure remain deferred.
 | Issue decisive feasibility verdict | BLOCKED_BY_CORRESPONDENCE | Source equivalence is checked; compiler/binary/runtime relation is missing |
 | Connect sufficient M1 evidence to M2 | NOT RUN | Requires corresponding exact approvals and fresh authorized provenance |
 
-## Current repository and supporting evidence
+## Recorded repository snapshot and supporting evidence
 
-Live main: `f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3`.
+Main at the recorded GitHub inspection:
+`f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3`.
 Tree: `624ef75c46cdd260b39308763cfdf27ed8ba99e5`.
+The documentation update did not refresh GitHub. These identities and PR states
+are recorded observations, not a claim about the current remote state.
 
-| PR | Exact head | Current state |
+| PR | Recorded exact head | State at inspection |
 | --- | --- | --- |
 | [34](https://github.com/mack-dot/forge/pull/34) | `46e5aa426bf7800df7c98c732a764337e716f6bb` | Draft, open, unmerged; historical booking experiment candidate |
 | [36](https://github.com/mack-dot/forge/pull/36) | `705457e069abbe399128808b1efc7242d8eaeaa1` | Open, unmerged; keep upload repair separate |
@@ -179,10 +212,11 @@ packet. All durations are local observations. Hosted refund metrics are NOT RUN.
 | Initial input postflight | 1 | Compared the owner baseline against a different Git worktree; error retained |
 | Postflight against original owner workspace | 0 |30 frozen inputs unchanged |
 
-Remaining premises: the initializer and CakeML state satisfy `state_rel`; the
+Premises of this earlier conditional theorem: the initializer and CakeML state satisfy `state_rel`; the
 environments satisfy `env_rel`. They include clocks, heap/reference mapping,
 namespace entries, constructor stamps and callable closures. The proof does
-not construct a complete caller yet. It returns through the internal compiler
+not itself construct a complete caller. The later caller theorem below checks
+a particular model caller directly. Both use the internal compiler
 Return convention. Observable API behavior and physical process exit are open.
 All results are local. No hosted refund, signing or admission command ran.
 
@@ -269,6 +303,11 @@ typed model inputs. Preserved one incomplete proof and one manual interruption.
 Swapped IDs and missing binding each fail1; valid proof/repeat0/0. Exact caller
 and return behavior are now checked in the model. Full Unicode and native
 interfaces remain open. Parent compiler record commit77ab7003 is local only.
+
+2026-11-04: Added the compact assurance-link checklist requested by the owner.
+Rechecked the saved mission identity and local research records. Clarified which
+GitHub observations are historical and which caller premises remain open.
+No new proof, hosted execution, publication or admission ran in this update.
 
 
 ### Mission tracking preservation — actual local results

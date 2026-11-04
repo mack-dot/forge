@@ -7,6 +7,26 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Tracking update — 2026-11-04 (U261)
+
+The owner requested a durable Markdown record. The full mission remains in
+[FORGE_MISSION.md](FORGE_MISSION.md). The compact assurance-link checklist is
+at the start of [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). It names
+the evidence, completion conditions, open gaps and approval boundaries.
+CURRENT none; M1 open; Stage12 unauthorized; `end_to_end=false`.
+
+| Executed documentation check | Actual exit | Observation |
+| --- | --- | --- |
+| `python3 -B -` mission/worktree preflight | 0 | Mission matches the original attachment; four records match the clean docs worktree at96bea846 |
+| `python3 -B -` evidence/link readback | 0 |72 caller-packet manifest entries and12 local links checked; recorded positive/negative exits agree |
+
+Records: `results/mission-tracking-2026-11-04/attempt-0001/`.
+These are document and identity checks. No proof or hosted experiment reran.
+Remote repository state was not refreshed. Prior results below remain recorded
+executions. The next proof gap is full Unicode representation, followed by
+native input/output, exact executable/runtime correspondence and new admission.
+Independent backup hash/restore and review requirements remain open.
+
 ## Active mission update — 2026-11-04 (U260)
 
 The exact generated refund method now has a universal result theorem for a
