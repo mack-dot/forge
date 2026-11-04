@@ -1,0 +1,21 @@
+<<HOL message: Created theory "forge_refund_io">>
+Saved definition ____ "refund_request_def"
+Saved definition ____ "refund_decode_def"
+Saved definition ____ "refund_decode_wire_def"
+Saved theorem _______ "refund_schema_roundtrip"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refund_io)>>
+Saved theorem _______ "refund_stream_parse"
+Saved theorem _______ "refund_wire_roundtrip"
+Proof of 
+
+rest ≠ "" ∧ parse (explode wire) = INR (se,rest) ⇒
+refund_decode_wire wire = INL «refund: trailing input»
+
+failed.
+First unsolved sub-goal is
+
+rest ≠ "" ∧ parse (explode wire) = INR (se,rest) ⇒
+refund_decode se = INL «refund: trailing input»
+
+Tactic failure proving "refund_trailing_input_rejected"; heap saved to forge_refund_io.refund_trailing_input_rejected.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_io.refund_trailing_input_rejected.dumpedheap

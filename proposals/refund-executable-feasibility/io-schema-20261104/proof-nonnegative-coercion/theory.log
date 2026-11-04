@@ -1,0 +1,19 @@
+<<HOL message: Created theory "forge_refund_io">>
+Saved definition ____ "refund_request_def"
+Saved definition ____ "refund_decode_def"
+Saved definition ____ "refund_decode_wire_def"
+Proof of 
+
+refund_decode
+  (refund_request charge request original remaining enabled opened candidate
+     amount reason) =
+INR
+  (charge,request,original,remaining,enabled,opened,candidate,amount,reason)
+
+failed.
+First unsolved sub-goal is
+
+0 ≤ original
+
+Tactic failure proving "refund_schema_roundtrip"; heap saved to forge_refund_io.refund_schema_roundtrip.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_io.refund_schema_roundtrip.dumpedheap

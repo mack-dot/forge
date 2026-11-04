@@ -1,0 +1,35 @@
+{
+  "actual_exit": 0,
+  "positive_exit": 0,
+  "repeat_exit": 0,
+  "identical_exports": 6,
+  "source_sha256": "9a6e51a5c840d751ad793f8fa99e4162e76c96e8a975a7c0bd21d3c88a7af59f",
+  "negatives": {
+    "swapped-input": {
+      "actual_exit": 1,
+      "failed_theorem": "refund_schema_roundtrip",
+      "reason": "request = charge",
+      "log_sha256": "267e3f3e8d15b9932101bcd4c7df96d79990a68e6802c1fdb31e5f71a5706678"
+    },
+    "ignored-tail": {
+      "actual_exit": 1,
+      "failed_theorem": "refund_trailing_input_rejected",
+      "reason": "refund_decode se = INL",
+      "log_sha256": "4cf33277698ef631873b0dc281dd4c03feed49b30320f1497de5fdff4c8d2dc3"
+    },
+    "nonnegative-coercion": {
+      "actual_exit": 1,
+      "failed_theorem": "refund_schema_roundtrip",
+      "reason": "0 \u2264 original",
+      "log_sha256": "03ed20922917c3656ac041d9553bffd01a5ecc430e820ddece784d6059e59022"
+    },
+    "swapped-output": {
+      "actual_exit": 1,
+      "failed_theorem": "refund_response_roundtrip",
+      "reason": "request = charge",
+      "log_sha256": "ea1dc636938d3e8edbcc50fde763f4e7b10c37540158235d03b3a3f7b57e9c71"
+    }
+  },
+  "native_claim": false,
+  "end_to_end": false
+}

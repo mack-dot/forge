@@ -7598,3 +7598,57 @@ curl: (6) Could not resolve host: github.com
   resource-limit/runtime premises. Do not narrow strings or integers to fit a
   fixed-width helper. Native/model assurance binding, independent profile review
   and new provenance/admission remain open. Hosted refund metrics NOT RUN.
+
+
+## U263 — Refund wire schema preserves the full model input and output domain
+
+- References:U258–U262. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. This is local executable-integration preparation.
+- The proposed adapter composes existing mlsexp parsing, dest9/dest7 and typed
+  string/Boolean/integer projections. No codec algorithm, machine semantics,
+  verifier, checker or axiom was introduced. Every mathematical integer and
+  finite byte string has a representation. The U262 full Unicode source relation
+  remains separate from the HOL/native assurance binding.
+- Found that upstream mlsexp.fromString ignores the unconsumed suffix. The
+  proposal instead uses published parse and rejects any nonempty remainder.
+  It also proves refusal of malformed syntax, missing fields, wrong field types
+  and malformed integers. No input-domain precondition was added to refund.
+- Twelve own theorems establish complete input parsing/field round trips,
+  composition with the same generated-method model-caller result, output
+  field/parser round trips and the listed refusals. Native stdin/stdout and the
+  library heap/frame contract are not implied by these theorems.
+- Actual schema commands:0001=1 (proof-file syntax);0002=0;
+  full-0001=1 (HOL constant-name collision);full-0002=0;repeat=0.
+  The failed source attempts remain intact. The final/repeat six export files
+  are byte-identical. Four controlled alterations fail1 each for the intended
+  theorem: swapped input identity; ignored trailing data; forbidden conversion
+  to nonnegative integers; swapped output identity. Exact reason check0.
+- Source SHA256:9a6e51a5c840d751ad793f8fa99e4162e76c96e8a975a7c0bd21d3c88a7af59f.
+  Theory data SHA256:d9e7f1b77932f7e8c476e4a7230601f6b6cbe722a27764035e07ca01ea7becec.
+- Fresh HOL inspection0:159 theory nodes,12 own theorems, zero own hypotheses.
+  Four prior HOL foundation axioms remain explicit. DISK_THM imports are not
+  self-authenticating proof certificates. No new independent human review.
+- Separate generic-heap EVAL attempts were manually interrupted: wrapper1/1,
+  child signal2/2. Their unbounded symbolic expansion is not an accepted proof
+  or a counterexample to the refund rules. The published CF rules are the next
+  route for reference allocation and framing. Method setup attempt1 failed at
+  an untyped empty AST list; attempt2 reached the generated method but xlet_auto
+  does not handle cf_ref. Both failures remain; explicit xlet/xref is next.
+- Published SexpProg replay was still running at this checkpoint. No completed
+  library I/O, native executable or compiled behavioral theorem is claimed.
+  The intended local target is the pinned arm8 Apple export on Darwin arm64.
+  The separate native audit reports runtime-object build reproduction, which
+  is not a refund executable or runtime correctness proof.
+- Thirty owner-workspace input hashes remain unchanged0. No protected input,
+  workflow, review, merge, publication, signing, admission or deployment change.
+- Immutable schema packet:proposals/refund-executable-feasibility/io-schema-20261104/.
+  Raw commands, failures and incomplete native work:
+  results/refund-native-io-2026-11-04/attempt-0001/.
+- Completed-result recovery archive:forge-refund-io-schema-2026-11-04-0001.tar.gz,
+  SHA256f2e8dc3b7e49ebbc6ab067c4c1f7f2a81bd6d08e3d9a865f551ba2da01e5a2fe,
+  100286976bytes,173 members,0600; full member hash validation0. Live Sexp
+  build outputs were excluded. Independent archive hashes/restore remain open.
+- Next: use the published CF reference and I/O rules for this exact generated
+  method, then compile the same program through the pinned native backend.
+  Preserve resource-limit, FFI, assembler, loader and host assumptions. Native
+  execution and new admission remain NOT RUN. M2–M4 remain subsequent work.

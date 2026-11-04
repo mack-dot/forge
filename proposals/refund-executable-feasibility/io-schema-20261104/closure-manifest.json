@@ -1,0 +1,644 @@
+{
+  "actual_exit": 0,
+  "theory_count": 159,
+  "parents": {
+    "forge_refund_io": [
+      "forge_refund_call",
+      "sexp_to_dafny"
+    ],
+    "mlsexp": [
+      "mlstring"
+    ],
+    "sexp_to_dafny": [
+      "result_monad",
+      "dafny_ast",
+      "mlsexp",
+      "mlint"
+    ],
+    "forge_refund": [
+      "dafny_evaluate"
+    ],
+    "result_monad": [
+      "mlstring"
+    ],
+    "dafny_to_cakeml": [
+      "ast",
+      "result_monad",
+      "dafny_ast",
+      "mlint"
+    ],
+    "balanced_map": [
+      "comparison",
+      "alist"
+    ],
+    "oset": [
+      "balanced_map"
+    ],
+    "FormalLang": [
+      "hol"
+    ],
+    "charset": [
+      "words",
+      "comparison"
+    ],
+    "regexp": [
+      "mergesort",
+      "container",
+      "charset",
+      "FormalLang"
+    ],
+    "regexp_map": [
+      "regexp",
+      "oset"
+    ],
+    "vec_map": [
+      "alist"
+    ],
+    "regexp_compiler": [
+      "vec_map",
+      "regexp_map"
+    ],
+    "mlvector": [
+      "mllist",
+      "regexp_compiler"
+    ],
+    "mlint": [
+      "mlvector",
+      "mlstring"
+    ],
+    "dafny_freshen": [
+      "dafny_ast",
+      "mlint"
+    ],
+    "dafny_misc": [
+      "misc"
+    ],
+    "dafny_ast": [
+      "mlstring"
+    ],
+    "dafny_semanticPrimitives": [
+      "dafny_ast"
+    ],
+    "dafnyProps": [
+      "dafny_semanticPrimitives"
+    ],
+    "dafny_evaluate": [
+      "dafnyProps"
+    ],
+    "dafny_evaluateProps": [
+      "dafny_evaluate",
+      "dafny_misc"
+    ],
+    "dafny_freshenProof": [
+      "dafny_evaluateProps",
+      "dafny_freshen"
+    ],
+    "evaluateProps": [
+      "semanticPrimitivesProps",
+      "evaluate"
+    ],
+    "dafny_to_cakemlProof": [
+      "evaluateProps",
+      "dafny_freshenProof",
+      "dafny_to_cakeml"
+    ],
+    "forge_refund_compile": [
+      "dafny_to_cakemlProof",
+      "forge_refund"
+    ],
+    "lexer_fun": [
+      "tokens",
+      "location"
+    ],
+    "gram": [
+      "lexer_fun",
+      "grammar"
+    ],
+    "tokens": [
+      "mlstring"
+    ],
+    "tokenUtils": [
+      "tokens",
+      "grammar"
+    ],
+    "cmlPtreeConversion": [
+      "tokenUtils",
+      "gram",
+      "ast"
+    ],
+    "evaluate": [
+      "semanticPrimitives"
+    ],
+    "primTypes": [
+      "typeSystem",
+      "evaluate"
+    ],
+    "semantics": [
+      "primTypes",
+      "cmlPtreeConversion"
+    ],
+    "location": [
+      "hol"
+    ],
+    "grammar": [
+      "finite_map",
+      "location"
+    ],
+    "peg": [
+      "grammar"
+    ],
+    "pegexec": [
+      "peg"
+    ],
+    "state_transformer": [
+      "hol"
+    ],
+    "semanticPrimitivesProps": [
+      "namespaceProps",
+      "semanticPrimitives"
+    ],
+    "fpSem": [
+      "ast"
+    ],
+    "ffi": [
+      "mlstring"
+    ],
+    "semanticPrimitives": [
+      "ffi",
+      "fpSem"
+    ],
+    "typeSystem": [
+      "semanticPrimitives"
+    ],
+    "mergesort": [
+      "sorting"
+    ],
+    "mllist": [
+      "mergesort",
+      "misc"
+    ],
+    "mlstring": [
+      "mllist"
+    ],
+    "set_sep": [
+      "words"
+    ],
+    "tailrec": [
+      "hol"
+    ],
+    "prog": [
+      "tailrec",
+      "set_sep"
+    ],
+    "alignment": [
+      "words"
+    ],
+    "address": [
+      "alignment",
+      "prog"
+    ],
+    "lprefix_lub": [
+      "llist"
+    ],
+    "integer_word": [
+      "words",
+      "Omega"
+    ],
+    "gcd": [
+      "divides"
+    ],
+    "int_arith": [
+      "integer",
+      "gcd"
+    ],
+    "cooper": [
+      "int_arith"
+    ],
+    "integer": [
+      "normalizer",
+      "hol"
+    ],
+    "intReduce": [
+      "integer"
+    ],
+    "Omega": [
+      "intReduce",
+      "cooper"
+    ],
+    "intreal": [
+      "real",
+      "Omega"
+    ],
+    "normalizer": [
+      "arithmetic"
+    ],
+    "hrat": [
+      "hol"
+    ],
+    "hreal": [
+      "hrat"
+    ],
+    "realax": [
+      "hreal",
+      "normalizer"
+    ],
+    "real_arith": [
+      "realax"
+    ],
+    "real": [
+      "real_arith"
+    ],
+    "RealFieldContext": [
+      "real"
+    ],
+    "binary_ieee": [
+      "RealFieldContext",
+      "intreal",
+      "words"
+    ],
+    "machine_ieee": [
+      "binary_ieee"
+    ],
+    "poset": [
+      "pairToolsContext"
+    ],
+    "fixedPoint": [
+      "pred_set",
+      "poset"
+    ],
+    "llist": [
+      "hol"
+    ],
+    "path": [
+      "llist",
+      "fixedPoint"
+    ],
+    "toto": [
+      "string"
+    ],
+    "comparison": [
+      "toto"
+    ],
+    "bag": [
+      "hol"
+    ],
+    "container": [
+      "finite_map",
+      "bag"
+    ],
+    "sorting": [
+      "hol"
+    ],
+    "finite_map": [
+      "sorting"
+    ],
+    "alist": [
+      "finite_map"
+    ],
+    "sptree": [
+      "alist",
+      "logroot"
+    ],
+    "bitstring": [
+      "words"
+    ],
+    "numeral_bit": [
+      "bit"
+    ],
+    "iterate": [
+      "permutes"
+    ],
+    "fcp": [
+      "iterate",
+      "hol"
+    ],
+    "sum_num": [
+      "hol"
+    ],
+    "logroot": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "bit": [
+      "logroot"
+    ],
+    "numposrep": [
+      "rich_list",
+      "bit"
+    ],
+    "ternaryComparisons": [
+      "hol"
+    ],
+    "string": [
+      "ternaryComparisons"
+    ],
+    "ASCIInumbers": [
+      "string",
+      "numposrep"
+    ],
+    "words": [
+      "ASCIInumbers",
+      "sum_num",
+      "fcp",
+      "numeral_bit"
+    ],
+    "blast": [
+      "words"
+    ],
+    "byte": [
+      "blast",
+      "bitstring"
+    ],
+    "ConseqConv": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "quantHeuristics": [
+      "ConseqConv",
+      "list"
+    ],
+    "patternMatches": [
+      "rich_list",
+      "quantHeuristics"
+    ],
+    "EnumTypeContext": [
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While",
+      "pairToolsContext"
+    ],
+    "ordinalBasic": [
+      "cardinalityCore"
+    ],
+    "bnfInitial": [
+      "ordinalBasic"
+    ],
+    "permutes": [
+      "pred_set",
+      "hurdUtilsContext"
+    ],
+    "hurdUtilsContext": [
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While",
+      "pairToolsContext"
+    ],
+    "divides": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "While": [
+      "arithmetic",
+      "option"
+    ],
+    "NumConvContext": [
+      "arithmetic"
+    ],
+    "cv": [
+      "numeral"
+    ],
+    "BoolconvContext": [
+      "marker"
+    ],
+    "reduce": [
+      "arithmetic"
+    ],
+    "SubAndCondContext": [
+      "marker"
+    ],
+    "one": [
+      "mesonLibContext",
+      "Canon_Port_Context",
+      "boolSimpsContext",
+      "InductiveDefinitionContext",
+      "canonContext"
+    ],
+    "sum": [
+      "pair"
+    ],
+    "option": [
+      "sum",
+      "one"
+    ],
+    "pairToolsContext": [
+      "pair"
+    ],
+    "quotient": [
+      "normalFormsContext",
+      "folToolsContext",
+      "folMappingContext",
+      "mesonLibContext",
+      "Canon_Port_Context",
+      "InductiveDefinitionContext"
+    ],
+    "pair": [
+      "relation",
+      "quotient"
+    ],
+    "InductiveDefinitionContext": [
+      "marker"
+    ],
+    "Canon_Port_Context": [
+      "sat",
+      "combin"
+    ],
+    "mesonLibContext": [
+      "sat",
+      "marker"
+    ],
+    "folMappingContext": [
+      "sat",
+      "marker"
+    ],
+    "folToolsContext": [
+      "normalForms"
+    ],
+    "sat": [
+      "bool"
+    ],
+    "canonContext": [
+      "sat",
+      "combin"
+    ],
+    "combin": [
+      "marker"
+    ],
+    "boolSimpsContext": [
+      "combin"
+    ],
+    "normalForms": [
+      "marker"
+    ],
+    "normalFormsContext": [
+      "normalForms",
+      "boolSimpsContext",
+      "canonContext"
+    ],
+    "relation": [
+      "normalFormsContext",
+      "folToolsContext",
+      "folMappingContext",
+      "mesonLibContext",
+      "Canon_Port_Context",
+      "InductiveDefinitionContext"
+    ],
+    "min": [],
+    "bool": [
+      "min"
+    ],
+    "marker": [
+      "bool"
+    ],
+    "num": [
+      "marker"
+    ],
+    "prim_rec": [
+      "num",
+      "relation"
+    ],
+    "arithmetic": [
+      "prim_rec",
+      "pair"
+    ],
+    "numeral": [
+      "arithmetic"
+    ],
+    "basicSize": [
+      "numeral",
+      "pairToolsContext",
+      "option"
+    ],
+    "numpair": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "pred_set": [
+      "numpair",
+      "divides"
+    ],
+    "set_relation": [
+      "pred_set",
+      "hurdUtilsContext"
+    ],
+    "wellorder": [
+      "set_relation"
+    ],
+    "cardinalityCore": [
+      "wellorder",
+      "permutes"
+    ],
+    "bnfPrelims": [
+      "cardinalityCore"
+    ],
+    "bnfFixBNF": [
+      "bnfPrelims",
+      "bnfInitial"
+    ],
+    "bnfMutual": [
+      "bnfFixBNF"
+    ],
+    "list": [
+      "bnfMutual",
+      "EnumTypeContext"
+    ],
+    "rich_list": [
+      "list"
+    ],
+    "indexedLists": [
+      "rich_list"
+    ],
+    "hol": [
+      "indexedLists",
+      "patternMatches"
+    ],
+    "res_quan": [
+      "hol"
+    ],
+    "misc": [
+      "res_quan",
+      "byte",
+      "sptree",
+      "container",
+      "comparison",
+      "path",
+      "machine_ieee",
+      "integer_word",
+      "lprefix_lub",
+      "address"
+    ],
+    "namespace": [
+      "misc"
+    ],
+    "ast": [
+      "namespace",
+      "mlstring"
+    ],
+    "namespaceProps": [
+      "ast"
+    ],
+    "typeSoundInvariants": [
+      "namespaceProps",
+      "typeSystem"
+    ],
+    "typeSysProps": [
+      "typeSoundInvariants",
+      "semanticPrimitivesProps"
+    ],
+    "primSemEnv": [
+      "typeSysProps",
+      "state_transformer",
+      "pegexec",
+      "semantics"
+    ],
+    "forge_refund_call": [
+      "primSemEnv",
+      "forge_refund_compile"
+    ]
+  },
+  "foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "own_theorems": [
+    "FORGE_TAG refund_wrong_type_rejected oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_wire_roundtrip oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_wire_model_result oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_trailing_input_rejected oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_stream_parse oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_schema_roundtrip oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_response_roundtrip oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_response_parse oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_parser_failure_rejected oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_missing_field_rejected oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_bad_integer_rejected oracles=DISK_THM axioms= hypotheses=0",
+    "FORGE_TAG refund_appended_request_rejected oracles=DISK_THM axioms= hypotheses=0"
+  ]
+}

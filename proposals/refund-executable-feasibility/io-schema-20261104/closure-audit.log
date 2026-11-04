@@ -1,0 +1,269 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 379 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val it = (): unit
+val closure =
+   ["forge_refund_io", "mlsexp", "sexp_to_dafny", "forge_refund",
+    "result_monad", "dafny_to_cakeml", "balanced_map", "oset", "FormalLang",
+    "charset", "regexp", "regexp_map", "vec_map", "regexp_compiler",
+    "mlvector", "mlint", "dafny_freshen", "dafny_misc", "dafny_ast",
+    "dafny_semanticPrimitives", "dafnyProps", "dafny_evaluate",
+    "dafny_evaluateProps", "dafny_freshenProof", "evaluateProps",
+    "dafny_to_cakemlProof", "forge_refund_compile", "lexer_fun", "gram",
+    "tokens", "tokenUtils", "cmlPtreeConversion", "evaluate", "primTypes",
+    "semantics", "location", "grammar", "peg", "pegexec",
+    "state_transformer", "semanticPrimitivesProps", "fpSem", "ffi",
+    "semanticPrimitives", "typeSystem", "mergesort", "mllist", "mlstring",
+    "set_sep", "tailrec", "prog", "alignment", "address", "lprefix_lub",
+    "integer_word", "gcd", "int_arith", "cooper", "integer", "intReduce",
+    "Omega", "intreal", "normalizer", "hrat", "hreal", "realax",
+    "real_arith", "real", "RealFieldContext", "binary_ieee", "machine_ieee",
+    "poset", "fixedPoint", "llist", "path", "toto", "comparison", "bag",
+    "container", "sorting", "finite_map", "alist", "sptree", "bitstring",
+    "numeral_bit", "iterate", "fcp", "sum_num", "logroot", "bit",
+    "numposrep", "ternaryComparisons", "string", "ASCIInumbers", "words",
+    "blast", "byte", "ConseqConv", "quantHeuristics", "patternMatches", ...]:
+   string list
+FORGE_PARENT forge_refund_io:forge_refund_call,sexp_to_dafny
+FORGE_PARENT mlsexp:mlstring
+FORGE_PARENT sexp_to_dafny:result_monad,dafny_ast,mlsexp,mlint
+FORGE_PARENT forge_refund:dafny_evaluate
+FORGE_PARENT result_monad:mlstring
+FORGE_PARENT dafny_to_cakeml:ast,result_monad,dafny_ast,mlint
+FORGE_PARENT balanced_map:comparison,alist
+FORGE_PARENT oset:balanced_map
+FORGE_PARENT FormalLang:hol
+FORGE_PARENT charset:words,comparison
+FORGE_PARENT regexp:mergesort,container,charset,FormalLang
+FORGE_PARENT regexp_map:regexp,oset
+FORGE_PARENT vec_map:alist
+FORGE_PARENT regexp_compiler:vec_map,regexp_map
+FORGE_PARENT mlvector:mllist,regexp_compiler
+FORGE_PARENT mlint:mlvector,mlstring
+FORGE_PARENT dafny_freshen:dafny_ast,mlint
+FORGE_PARENT dafny_misc:misc
+FORGE_PARENT dafny_ast:mlstring
+FORGE_PARENT dafny_semanticPrimitives:dafny_ast
+FORGE_PARENT dafnyProps:dafny_semanticPrimitives
+FORGE_PARENT dafny_evaluate:dafnyProps
+FORGE_PARENT dafny_evaluateProps:dafny_evaluate,dafny_misc
+FORGE_PARENT dafny_freshenProof:dafny_evaluateProps,dafny_freshen
+FORGE_PARENT evaluateProps:semanticPrimitivesProps,evaluate
+FORGE_PARENT dafny_to_cakemlProof:evaluateProps,dafny_freshenProof,dafny_to_cakeml
+FORGE_PARENT forge_refund_compile:dafny_to_cakemlProof,forge_refund
+FORGE_PARENT lexer_fun:tokens,location
+FORGE_PARENT gram:lexer_fun,grammar
+FORGE_PARENT tokens:mlstring
+FORGE_PARENT tokenUtils:tokens,grammar
+FORGE_PARENT cmlPtreeConversion:tokenUtils,gram,ast
+FORGE_PARENT evaluate:semanticPrimitives
+FORGE_PARENT primTypes:typeSystem,evaluate
+FORGE_PARENT semantics:primTypes,cmlPtreeConversion
+FORGE_PARENT location:hol
+FORGE_PARENT grammar:finite_map,location
+FORGE_PARENT peg:grammar
+FORGE_PARENT pegexec:peg
+FORGE_PARENT state_transformer:hol
+FORGE_PARENT semanticPrimitivesProps:namespaceProps,semanticPrimitives
+FORGE_PARENT fpSem:ast
+FORGE_PARENT ffi:mlstring
+FORGE_PARENT semanticPrimitives:ffi,fpSem
+FORGE_PARENT typeSystem:semanticPrimitives
+FORGE_PARENT mergesort:sorting
+FORGE_PARENT mllist:mergesort,misc
+FORGE_PARENT mlstring:mllist
+FORGE_PARENT set_sep:words
+FORGE_PARENT tailrec:hol
+FORGE_PARENT prog:tailrec,set_sep
+FORGE_PARENT alignment:words
+FORGE_PARENT address:alignment,prog
+FORGE_PARENT lprefix_lub:llist
+FORGE_PARENT integer_word:words,Omega
+FORGE_PARENT gcd:divides
+FORGE_PARENT int_arith:integer,gcd
+FORGE_PARENT cooper:int_arith
+FORGE_PARENT integer:normalizer,hol
+FORGE_PARENT intReduce:integer
+FORGE_PARENT Omega:intReduce,cooper
+FORGE_PARENT intreal:real,Omega
+FORGE_PARENT normalizer:arithmetic
+FORGE_PARENT hrat:hol
+FORGE_PARENT hreal:hrat
+FORGE_PARENT realax:hreal,normalizer
+FORGE_PARENT real_arith:realax
+FORGE_PARENT real:real_arith
+FORGE_PARENT RealFieldContext:real
+FORGE_PARENT binary_ieee:RealFieldContext,intreal,words
+FORGE_PARENT machine_ieee:binary_ieee
+FORGE_PARENT poset:pairToolsContext
+FORGE_PARENT fixedPoint:pred_set,poset
+FORGE_PARENT llist:hol
+FORGE_PARENT path:llist,fixedPoint
+FORGE_PARENT toto:string
+FORGE_PARENT comparison:toto
+FORGE_PARENT bag:hol
+FORGE_PARENT container:finite_map,bag
+FORGE_PARENT sorting:hol
+FORGE_PARENT finite_map:sorting
+FORGE_PARENT alist:finite_map
+FORGE_PARENT sptree:alist,logroot
+FORGE_PARENT bitstring:words
+FORGE_PARENT numeral_bit:bit
+FORGE_PARENT iterate:permutes
+FORGE_PARENT fcp:iterate,hol
+FORGE_PARENT sum_num:hol
+FORGE_PARENT logroot:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT bit:logroot
+FORGE_PARENT numposrep:rich_list,bit
+FORGE_PARENT ternaryComparisons:hol
+FORGE_PARENT string:ternaryComparisons
+FORGE_PARENT ASCIInumbers:string,numposrep
+FORGE_PARENT words:ASCIInumbers,sum_num,fcp,numeral_bit
+FORGE_PARENT blast:words
+FORGE_PARENT byte:blast,bitstring
+FORGE_PARENT ConseqConv:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT quantHeuristics:ConseqConv,list
+FORGE_PARENT patternMatches:rich_list,quantHeuristics
+FORGE_PARENT EnumTypeContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+FORGE_PARENT ordinalBasic:cardinalityCore
+FORGE_PARENT bnfInitial:ordinalBasic
+FORGE_PARENT permutes:pred_set,hurdUtilsContext
+FORGE_PARENT hurdUtilsContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+FORGE_PARENT divides:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT While:arithmetic,option
+FORGE_PARENT NumConvContext:arithmetic
+FORGE_PARENT cv:numeral
+FORGE_PARENT BoolconvContext:marker
+FORGE_PARENT reduce:arithmetic
+FORGE_PARENT SubAndCondContext:marker
+FORGE_PARENT one:mesonLibContext,Canon_Port_Context,boolSimpsContext,InductiveDefinitionContext,canonContext
+FORGE_PARENT sum:pair
+FORGE_PARENT option:sum,one
+FORGE_PARENT pairToolsContext:pair
+FORGE_PARENT quotient:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+FORGE_PARENT pair:relation,quotient
+FORGE_PARENT InductiveDefinitionContext:marker
+FORGE_PARENT Canon_Port_Context:sat,combin
+FORGE_PARENT mesonLibContext:sat,marker
+FORGE_PARENT folMappingContext:sat,marker
+FORGE_PARENT folToolsContext:normalForms
+FORGE_PARENT sat:bool
+FORGE_PARENT canonContext:sat,combin
+FORGE_PARENT combin:marker
+FORGE_PARENT boolSimpsContext:combin
+FORGE_PARENT normalForms:marker
+FORGE_PARENT normalFormsContext:normalForms,boolSimpsContext,canonContext
+FORGE_PARENT relation:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+FORGE_PARENT min:
+FORGE_PARENT bool:min
+FORGE_PARENT marker:bool
+FORGE_PARENT num:marker
+FORGE_PARENT prim_rec:num,relation
+FORGE_PARENT arithmetic:prim_rec,pair
+FORGE_PARENT numeral:arithmetic
+FORGE_PARENT basicSize:numeral,pairToolsContext,option
+FORGE_PARENT numpair:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT pred_set:numpair,divides
+FORGE_PARENT set_relation:pred_set,hurdUtilsContext
+FORGE_PARENT wellorder:set_relation
+FORGE_PARENT cardinalityCore:wellorder,permutes
+FORGE_PARENT bnfPrelims:cardinalityCore
+FORGE_PARENT bnfFixBNF:bnfPrelims,bnfInitial
+FORGE_PARENT bnfMutual:bnfFixBNF
+FORGE_PARENT list:bnfMutual,EnumTypeContext
+FORGE_PARENT rich_list:list
+FORGE_PARENT indexedLists:rich_list
+FORGE_PARENT hol:indexedLists,patternMatches
+FORGE_PARENT res_quan:hol
+FORGE_PARENT misc:res_quan,byte,sptree,container,comparison,path,machine_ieee,integer_word,lprefix_lub,address
+FORGE_PARENT namespace:misc
+FORGE_PARENT ast:namespace,mlstring
+FORGE_PARENT namespaceProps:ast
+FORGE_PARENT typeSoundInvariants:namespaceProps,typeSystem
+FORGE_PARENT typeSysProps:typeSoundInvariants,semanticPrimitivesProps
+FORGE_PARENT primSemEnv:typeSysProps,state_transformer,pegexec,semantics
+FORGE_PARENT forge_refund_call:primSemEnv,forge_refund_compile
+FORGE_CLOSURE_AXIOM bool.SELECT_AX
+FORGE_CLOSURE_AXIOM bool.INFINITY_AX
+FORGE_CLOSURE_AXIOM bool.ETA_AX
+FORGE_CLOSURE_AXIOM bool.BOOL_CASES_AX
+FORGE_TAG refund_wrong_type_rejected oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_wrong_type_rejected ⊢ refund_decode
+    (Expr
+       [Expr []; Atom «r»; Atom «100»; Atom «60»; Atom «True»; Atom «True»;
+        Atom «True»; Atom «40»; Atom «duplicate_charge»]) =
+  INL «to_mlstring: Was not Atom»
+FORGE_TAG refund_wire_roundtrip oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_wire_roundtrip ⊢ refund_decode_wire
+    (sexp_to_string
+       (refund_request charge request original remaining enabled opened
+          candidate amount reason)) =
+  INR
+    (charge,request,original,remaining,enabled,opened,candidate,amount,reason)
+FORGE_TAG refund_wire_model_result oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_wire_model_result ⊢ case
+    refund_wire_model ffi
+      (sexp_to_string
+         (refund_request charge request original remaining enabled opened
+            candidate amount reason))
+  of
+    NONE => F
+  | SOME result =>
+    case SND result of
+      Rval env =>
+        nsLookup env.v (Short «answer») =
+        SOME
+          (refund_expected_tuple charge request original remaining enabled
+             opened candidate amount reason) ∧ (FST result).ffi = ffi
+    | Rerr err => F
+FORGE_TAG refund_trailing_input_rejected oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_trailing_input_rejected ⊢ rest ≠ "" ∧ parse (explode wire) = INR (se,rest) ⇒
+  refund_decode_wire wire = INL «refund: trailing input»
+FORGE_TAG refund_stream_parse oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_stream_parse ⊢ parse
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) =
+  INR
+    (refund_request charge request original remaining enabled opened
+       candidate amount reason,"")
+FORGE_TAG refund_schema_roundtrip oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_schema_roundtrip ⊢ refund_decode
+    (refund_request charge request original remaining enabled opened
+       candidate amount reason) =
+  INR
+    (charge,request,original,remaining,enabled,opened,candidate,amount,reason)
+FORGE_TAG refund_response_roundtrip oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_response_roundtrip ⊢ refund_response_fields
+    (refund_response ok amount reason charge request intent_count) =
+  INR (ok,amount,reason,charge,request,intent_count)
+FORGE_TAG refund_response_parse oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_response_parse ⊢ parse
+    (explode
+       (sexp_to_string
+          (refund_response ok amount reason charge request intent_count))) =
+  INR (refund_response ok amount reason charge request intent_count,"")
+FORGE_TAG refund_parser_failure_rejected oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_parser_failure_rejected ⊢ refund_decode_wire «(» = INL «refund: invalid S-expression»
+FORGE_TAG refund_missing_field_rejected oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_missing_field_rejected ⊢ refund_decode (Expr []) = INL «dest9: Expected length 9, received length 0»
+FORGE_TAG refund_bad_integer_rejected oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_bad_integer_rejected ⊢ refund_decode
+    (Expr
+       [Atom «c»; Atom «r»; Atom «not-an-integer»; Atom «60»; Atom «True»;
+        Atom «True»; Atom «True»; Atom «40»; Atom «duplicate_charge»]) =
+  INL «to_int: fromString failed»
+FORGE_TAG refund_appended_request_rejected oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_appended_request_rejected ⊢ refund_decode_wire «(c r 100 60 True True True 40 duplicate_charge) (evil)» =
+  INL «refund: trailing input»
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

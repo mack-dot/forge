@@ -1,0 +1,29 @@
+<<HOL message: Created theory "forge_refund_io">>
+Saved definition ____ "refund_request_def"
+Saved definition ____ "refund_decode_def"
+Saved definition ____ "refund_decode_wire_def"
+Saved theorem _______ "refund_schema_roundtrip"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refund_io)>>
+Saved theorem _______ "refund_stream_parse"
+Saved theorem _______ "refund_wire_roundtrip"
+Saved theorem _______ "refund_trailing_input_rejected"
+Saved definition ____ "refund_wire_model_def"
+Saved theorem _______ "refund_wire_model_result"
+Saved theorem _______ "refund_missing_field_rejected"
+Saved theorem _______ "refund_wrong_type_rejected"
+Saved theorem _______ "refund_bad_integer_rejected"
+Saved definition ____ "refund_response_def"
+Saved definition ____ "refund_response_fields_def"
+Proof of 
+
+refund_response_fields
+  (refund_response ok amount reason charge request intent_count) =
+INR (ok,amount,reason,charge,request,intent_count)
+
+failed.
+First unsolved sub-goal is
+
+request = charge ∧ charge = request
+
+Tactic failure proving "refund_response_roundtrip"; heap saved to forge_refund_io.refund_response_roundtrip.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_io.refund_response_roundtrip.dumpedheap

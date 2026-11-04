@@ -1,0 +1,15 @@
+<<HOL message: Created theory "forge_refund_io">>
+Saved definition ____ "refund_request_def"
+Saved definition ____ "refund_decode_def"
+Saved definition ____ "refund_decode_wire_def"
+Saved theorem _______ "refund_schema_roundtrip"
+Saved theorem _______ "refund_wire_roundtrip"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refund_io)>>
+Saved theorem _______ "refund_stream_parse"
+Saved definition ____ "refund_wire_model_def"
+Saved theorem _______ "refund_wire_model_result"
+error in quse /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_io_experiment/forge_refund_ioScript.sml : Fail "Static Errors"
+error in load /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_io_experiment/forge_refund_ioScript : Fail "Static Errors"
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_io_experiment/forge_refund_ioScript.sml:94:1-8: parse error: expected 'QED'
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_io_experiment/forge_refund_ioScript.sml:92: error: Value or constructor (QED) has not been declared Found near EVAL_TAC QED
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"

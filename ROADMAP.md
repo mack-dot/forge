@@ -7,6 +7,31 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U263)
+
+Refund wire inputs now have a checked full-domain parsing/field relation to the
+same generated method's model result. Output fields also round-trip. Trailing
+input is explicitly refused; no refund precondition was added. This is not a
+native I/O or executable theorem. CURRENT none; M1 open; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `run.py 0001` / `0002` | 1/0 | Proof-file syntax corrected; input/model relation checked |
+| `run.py full-0001` / `full-0002` | 1/0 | HOL name collision corrected;12 own theorems checked |
+| Four schema alteration checks | 1 each | Swapped fields, ignored suffix and domain narrowing refused for intended reasons |
+| `run.py repeat` / acceptance readback | 0/0 | Six identical exports; all refusal reasons checked |
+| Fresh HOL closure inspection | 0 |159 nodes; four existing foundation axioms explicit |
+| `run_heap.py heap-0001` / `heap-0002` | 1/1 | Manual SIGINT; child signal2 each; no heap theorem accepted |
+| `run_method.py method-0001` / `method-0002` | 1/1 | AST-list type error, then unsupported automatic ref tactic; preserved |
+| Original-input postflight / archive validation | 0/0 |30 unchanged inputs;173 archived members checked |
+
+[Schema proof and exact commands](proposals/refund-executable-feasibility/io-schema-20261104/REPORT.md).
+Raw records: `results/refund-native-io-2026-11-04/attempt-0001/`.
+Published SexpProg replay is IN_PROGRESS at this checkpoint; no final exit yet.
+Next: explicit CF reference/frame proof, whole-program I/O and pinned arm8
+native compilation. Native execution/admission and hosted measurements NOT RUN.
+Independent review and off-machine hash/restore remain open. Stage12 unauthorized.
+
 ## Active mission update — 2026-11-04 (U262)
 
 The complete approved Unicode input domain now has a checked source-level

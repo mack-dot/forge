@@ -1,0 +1,128 @@
+<<HOL message: Created theory "forge_refund_io">>
+Saved definition ____ "refund_request_def"
+Saved definition ____ "refund_decode_def"
+Saved definition ____ "refund_decode_wire_def"
+Saved theorem _______ "refund_schema_roundtrip"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refund_io)>>
+Saved theorem _______ "refund_stream_parse"
+Saved theorem _______ "refund_wire_roundtrip"
+Saved theorem _______ "refund_trailing_input_rejected"
+Saved definition ____ "refund_wire_model_def"
+Saved theorem _______ "refund_wire_model_result"
+Saved theorem _______ "refund_missing_field_rejected"
+Saved theorem _______ "refund_wrong_type_rejected"
+Saved theorem _______ "refund_bad_integer_rejected"
+Saved definition ____ "refund_response_def"
+Saved definition ____ "refund_response_fields_def"
+Saved theorem _______ "refund_response_roundtrip"
+Saved theorem _______ "refund_response_parse"
+Saved theorem _______ "refund_appended_request_rejected"
+Saved theorem _______ "refund_parser_failure_rejected"
+FORGE_THEOREM refund_wrong_type_rejected
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode
+    (Expr
+       [Expr []; Atom «r»; Atom «100»; Atom «60»; Atom «True»; Atom «True»;
+        Atom «True»; Atom «40»; Atom «duplicate_charge»]) =
+  INL «to_mlstring: Was not Atom»
+FORGE_THEOREM refund_wire_roundtrip
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode_wire
+    (sexp_to_string
+       (refund_request charge request original remaining enabled opened
+          candidate amount reason)) =
+  INR
+    (charge,request,original,remaining,enabled,opened,candidate,amount,reason)
+FORGE_THEOREM refund_wire_model_result
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ case
+    refund_wire_model ffi
+      (sexp_to_string
+         (refund_request charge request original remaining enabled opened
+            candidate amount reason))
+  of
+    NONE => F
+  | SOME result =>
+    case SND result of
+      Rval env =>
+        nsLookup env.v (Short «answer») =
+        SOME
+          (refund_expected_tuple charge request original remaining enabled
+             opened candidate amount reason) ∧ (FST result).ffi = ffi
+    | Rerr err => F
+FORGE_THEOREM refund_trailing_input_rejected
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ rest ≠ "" ∧ parse (explode wire) = INR (se,rest) ⇒
+  refund_decode_wire wire = INL «refund: trailing input»
+FORGE_THEOREM refund_stream_parse
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ parse
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) =
+  INR
+    (refund_request charge request original remaining enabled opened
+       candidate amount reason,"")
+FORGE_THEOREM refund_schema_roundtrip
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode
+    (refund_request charge request original remaining enabled opened
+       candidate amount reason) =
+  INR
+    (charge,request,original,remaining,enabled,opened,candidate,amount,reason)
+FORGE_THEOREM refund_response_roundtrip
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_response_fields
+    (refund_response ok amount reason charge request intent_count) =
+  INR (ok,amount,reason,charge,request,intent_count)
+FORGE_THEOREM refund_response_parse
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ parse
+    (explode
+       (sexp_to_string
+          (refund_response ok amount reason charge request intent_count))) =
+  INR (refund_response ok amount reason charge request intent_count,"")
+FORGE_THEOREM refund_parser_failure_rejected
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode_wire «(» = INL «refund: invalid S-expression»
+FORGE_THEOREM refund_missing_field_rejected
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode (Expr []) = INL «dest9: Expected length 9, received length 0»
+FORGE_THEOREM refund_bad_integer_rejected
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode
+    (Expr
+       [Atom «c»; Atom «r»; Atom «not-an-integer»; Atom «60»; Atom «True»;
+        Atom «True»; Atom «True»; Atom «40»; Atom «duplicate_charge»]) =
+  INL «to_int: fromString failed»
+FORGE_THEOREM refund_appended_request_rejected
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_decode_wire «(c r 100 60 True True True 40 duplicate_charge) (evil)» =
+  INL «refund: trailing input»
+Exporting theory "forge_refund_io" ... done.
+Theory "forge_refund_io" took 1.0s to build

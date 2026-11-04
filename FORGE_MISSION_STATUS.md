@@ -28,16 +28,19 @@ The newer UTF-8 source proof is linked below. It adds no native executable claim
 | Full return behavior in the published model | LOCALLY_VALIDATED | [Model proof](proposals/refund-executable-feasibility/verified-backend-20261104/REPORT.md); byte strings, mathematical integers and explicit trusted base |
 | Exact generated expression and modeled caller | LOCALLY_VALIDATED | [Compiler relation](proposals/refund-executable-feasibility/compiler-relation-20261104/REPORT.md) and [caller proof](proposals/refund-executable-feasibility/caller-20261104/REPORT.md); all six fields checked |
 | Full Unicode representation | LOCALLY_VALIDATED at source | [UTF-8 proof](proposals/refund-executable-feasibility/unicode-20261104/REPORT.md) preserves emptiness, exact reasons and ID round trips; native/model assurance binding remains open |
+| Complete wire schema and model input/output binding | LOCALLY_VALIDATED at model level | [Schema proof](proposals/refund-executable-feasibility/io-schema-20261104/REPORT.md); full consumption, round trips and four adversarial controls |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
 | New authenticated claim and independent admission | NOT_ESTABLISHED | Independently review the exact claim/profile and authorize provenance/admission; historical signatures do not cover it |
 | Operational readiness | NOT_ESTABLISHED | Validate exact archives and a restore on the independent copy; confirm effective protections at the relevant approval boundary |
 
-The next experiment must use established native compilation and I/O proofs.
-Check the published S-expression parser and its I/O theorem. Do not add a custom
-decoder or restrict legitimate Unicode inputs. The source representation result
-alone does not establish native I/O or finish M1.
+The wire-schema model proof now passes. It composes the published parser and
+typed field projections, preserves the full domain and rejects trailing input.
+The next check is the generated method’s library heap/frame contract, followed
+by the existing whole-program I/O and native compiler proofs. SexpProg source
+replay was in progress at the U263 checkpoint. Do not add a custom codec or
+restrict legitimate inputs. The schema result alone does not finish M1.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
 ## Current decision

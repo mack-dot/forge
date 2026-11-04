@@ -1,0 +1,25 @@
+<<HOL message: Created theory "forge_refund_io">>
+Saved definition ____ "refund_request_def"
+Saved definition ____ "refund_decode_def"
+Saved definition ____ "refund_decode_wire_def"
+Saved theorem _______ "refund_schema_roundtrip"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refund_io)>>
+Saved theorem _______ "refund_stream_parse"
+Saved theorem _______ "refund_wire_roundtrip"
+Saved theorem _______ "refund_trailing_input_rejected"
+Saved definition ____ "refund_wire_model_def"
+Saved theorem _______ "refund_wire_model_result"
+Saved theorem _______ "refund_missing_field_rejected"
+Saved theorem _______ "refund_wrong_type_rejected"
+Saved theorem _______ "refund_bad_integer_rejected"
+Saved definition ____ "refund_response_def"
+Saved definition ____ "refund_response_fields_def"
+
+Exception raised at Q.store_thm_at:
+at Preterm.type-analysis: on line 142, characters 74-78:
+  
+Type error in function application.
+  Function: refund_response ok amount reason charge request :int -> sexp
+  Argument: count :num -> num -> bool
+  Reason: Attempt to unify different type operators: integer$int and min$fun
+
