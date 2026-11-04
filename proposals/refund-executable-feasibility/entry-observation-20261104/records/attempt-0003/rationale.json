@@ -1,0 +1,7 @@
+{
+  "previous_result": "attempt-0002 child-10/launcher246 during dynamic-loader attach; stack contains PlatformDarwin::LocateExecutableScriptingResources and Module::LoadScriptingResourceInTarget calling the same failing Mach-O symbol parser",
+  "change": "Disable automatic scripting-resource discovery with existing target.load-script-from-symbol-file=false. Keep address-based hardware breakpoint, no eager symbols, exact executable, frozen input and own explicitly imported observer.",
+  "unchanged_artifact": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "scope": "Observer setup only; no new semantics, signing, binary modification or proof weakening",
+  "end_to_end": false
+}

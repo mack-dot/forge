@@ -1,0 +1,29 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 600 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val lookup_result =
+   ⊢ SOME ([0;1;34menv[0m,[0;1;34mexp[0m) = do_opapp [[0;1;34mfv[0m; Conv NONE []] ∧
+     evaluate [0;1;34mst[0m [0;1;34menv[0m [[0;1;34mexp[0m] = ([0;1;34mst'[0m,[0;1;34mr[0m) ⇒
+     (case do_opapp [[0;1;34mfv[0m; Conv NONE []] of
+        NONE => ([0;1;34mst[0m,Rerr (Rabort Rtype_error))
+      | SOME ([0;32menv'[0m,[0;32me[0m) => evaluate [0;1;34mst[0m [0;32menv'[0m [[0;32me[0m]) = ([0;1;34mst'[0m,[0;1;34mr[0m): thm
+val axs = []: string list
+val ors = ["DISK_THM"]: string list
+FOCUSED_THEOREM lookup_result
+⊢ SOME (env,exp) = do_opapp [fv; Conv NONE []] ∧
+  evaluate st env [exp] = (st',r) ⇒
+  (case do_opapp [fv; Conv NONE []] of
+     NONE => (st,Rerr (Rabort Rtype_error))
+   | SOME (env',e) => evaluate st env' [e]) = (st',r)
+FOCUSED_ORACLES DISK_THM
+FOCUSED_HYPOTHESES 0
+FOCUSED_AXIOMS 0
+FOCUSED_LOOKUP_COMPLETE

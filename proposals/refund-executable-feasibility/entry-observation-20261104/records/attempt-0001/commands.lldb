@@ -1,0 +1,13 @@
+version
+settings set target.inherit-env false
+settings set target.disable-aslr false
+settings set target.skip-prologue false
+settings set target.env-vars LANG=C LC_ALL=C CML_HEAP_SIZE=256 CML_STACK_SIZE=256
+target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+command script import /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/entry_observer.py
+breakpoint set --hardware --skip-prologue false --name cake_main
+process launch --stdin /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0003/wire/eligible_duplicate.stdin --stdout /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/native.stdout --stderr /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/native.stderr
+forge-entry-observe
+breakpoint list --verbose
+process continue
+forge-entry-finish

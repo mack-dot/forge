@@ -8448,3 +8448,97 @@ curl: (6) Could not resolve host: github.com
   off-machine archive hash/restore remain open. No protected adoption, publication,
   merge, dispatch, release signing, admission or deployment ran. M1 and integration
   EXIT remain NOT_ESTABLISHED. M2–M4 remain later priorities.
+
+
+## U278 — Exception lookup obstruction isolated; repaired theory blocked before proof
+
+- References:U274,U276,U277. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The preceding goal turn made progress. The latest owner
+  instruction permits a separately justified changed approach after the five
+  failed exception checks. It does not permit blind retries or weaker claims.
+- The prepared focused declaration-branch diagnostic returns0 as inspection.
+  Every individual old rewrite completes, but the final case do_opapp expression
+  remains. Its assumptions already supply SOME(env,exp)=do_opapp[...] and the
+  exact evaluation result. The old branch therefore does not close. This is
+  an observed unused equality orientation, not a semantic counterexample.
+- A separate generic lookup_result lemma returns0 through the existing HOL
+  kernel. Explicit SYM of that equality, then simplification, proves the case
+  result for any supplied evaluation result. DISK_THM, zero explicit hypotheses
+  and zero explicitly tagged axioms; imported-kernel/heap trust remains.
+  Source SHA256591f0b814a3e013af9947124da351b8361692ef0897d46d8f1fb236c39a219de.
+  This is a universal lemma. It does not prove the full exception statement.
+- FOCUSED-REPAIR.md records the concrete changed approach before the full repair
+  invocation. The required refund_call_main_exception statement is unchanged.
+  A separate forge_refundRejectFocused theory adds the explicit orientation at
+  the observed branch, preserving all original failed sources and heap paths.
+  Source SHA2560c6f989eeb0632bb4942f5161e73e1d94701b41d0b42dd0c51c4d826cef0026a.
+- run_focused.py0001 returns1 before checking that theorem. After the Linking
+  theory-builder message, Holmake reports SysErr("Operation not permitted",
+  SOME EPERM). There is no Created theory message and no accepted export.
+  The failed invocation is recorded as full attempt6 under the justified changed
+  approach. The old five checks are not reset or deleted. This is an execution
+  permission failure, not a refutation or proof of the proposed correction.
+- Source-only inspection checks pinned HOL BuildCommand.sml/Holmake_tools.sml
+  and Poly/ML basicio.cpp. The log does not identify the denied syscall or path.
+  A temporary-directory cause remains NOT_ESTABLISHED. No toolchain patch,
+  escalation, permission bypass, alternate-task reroute or further retry ran.
+- Readback0 checks the new records, unchanged required statement, both original
+  failed heap hashes,50 protected files, mission and exact native executable
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Native builds and56 runs were not repeated. The new standalone lemma has not
+  been independently replayed from a clean source environment.
+- Packet:proposals/refund-executable-feasibility/exception-focused-20261104/REPORT.md.
+  Raw:results/refund-native-audit-2026-11-04/attempt-0005/. All diagnostic outputs,
+  sources, builder logs, actual exits and source inspection hashes are retained.
+- Next smallest action: identify/resolve the denied builder operation within an
+  authorized environment without changing proof machinery. Then check the exact
+  frozen repaired source once. Do not retry due only to elapsed time. If it passes,
+  require reproduction and a wrong-result negative control before composing the
+  source-level whole-program error and FFI trace. No native status follows yet.
+- The existing compiler behavior build remains owned by its separate task; this
+  checkpoint establishes no terminal result for it. Full source-to-HOL, physical
+  CPU/loaded state, runtime/FFI/OS/resource/exit correspondence, dynamic-library
+  identity and clean independent final-chain replay remain open. No protected
+  adoption, new axiom, valid-input restriction, signing, publication, admission,
+  deployment or Stage12 work occurred. M1 and integration EXIT remain open.
+
+
+## U279 — Entry observer fails in LLDB; current actions preserved in Markdown
+
+- References:U275,U276,U277,U278. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner requested a durable Markdown tracker. The existing
+  FORGE_MISSION_STATUS.md now lists ordered actions and completion evidence.
+- Entry attempts0001/0002/0003 each record actual LLDB child exit -10 (SIGBUS),
+  propagated by the Python runner as launcher246. No accepted entry-observation
+  or target-exit JSON exists. These are observer failures, not successful security
+  refusals or native behavioral counterexamples. All failed sources/logs remain.
+- Attempt1 fails during target creation. Its existing private OS report shows
+  ObjectFileMachO::ParseSymtab through DWARF debug-map symbol loading. A target-open
+  diagnostic with preload-symbols=false returns0 but performs no native execution.
+  Attempts2/3 use numeric hardware breakpoints; both fail during dynamic-loader
+  attach. Attempt3 also disables automatic symbol-script loading. No unchanged
+  fourth retry ran. Exact defective parser input remains NOT_ESTABLISHED.
+- Initial saved-record readback returns1 because the first debugger log lacks
+  symbolic frames. Corrected readback_0002.py returns0 using that attempt's existing
+  OS diagnostic, whose raw hashes are checked. It verifies all three saved command
+  records, source/debugger identities, unchanged native executable, mission and
+  30 frozen inputs. The failed readback source and exact reason remain preserved.
+- Fresh process query0 finds no live matching target. This does not establish its
+  exit status. Fresh compiler process query0 confirms original runner47209 and
+  Holmake47239 live; no terminal behavior theorem record exists. No proof rerun,
+  duplicate compilation, executable rebuild or signing occurs in this checkpoint.
+- Exact native SHA256 remains
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  No PC/register, code/bitmap load, heap-header or mapping observation completed.
+  Physical system registers remain UNOBSERVED; universal runtime/FFI/OS/resource
+  and exit correspondence remain open. File identity is not loading semantics.
+- Packet:proposals/refund-executable-feasibility/entry-observation-20261104/REPORT.md.
+  Raw:results/refund-entry-observation-2026-11-04/. Raw OS diagnostics stay local
+  and private; their hashes and reduced diagnostic are included in the packet.
+- Next: finish the original compiler behavior run, inspect exact conclusion and
+  premises, then require binding controls/reproduction. Isolate the debugger's
+  symbol-loading failure before a different observer attempt. Do not alter or
+  re-sign the executable to bypass that failure. U278's separate denied builder
+  is not rerouted here. Full source/Unicode/model binding, independent final-chain
+  replay, exact review, authenticated new admission and independent-copy archive
+  hash/restore remain open. Integration EXIT is NOT_ESTABLISHED; M2–M4 stay later.

@@ -1,0 +1,33 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "1", "forge_refundRejectFocusedTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundRejectFocused_experiment", "actual_exit": 1, "prior_failed_checks": 5, "changed_approach": "Explicit orientation justified by diagnostic branch and checked lookup_result lemma", "wall_seconds": 22.878085709002335, "source_sha256": "0c6f989eeb0632bb4942f5161e73e1d94701b41d0b42dd0c51c4d826cef0026a", "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22", "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d", "object_sha256": {}, "verified_library_source_sha256": "2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632", "verified_library_data_sha256": "5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a", "wire_source_sha256": "417b69d41a58da1ab3831e25cc3cf4ec6db7c0fcafd8af50be0caf9fd2306fb9", "wire_data_sha256": "17482ed974f856688298b957aee8d5155b5d56e2a104bbe3ec2a02056a690ae1", "stdio_source_sha256": "6f7aa17a5c671d83c94d2726932a7757083e30ee5508cce64f667f43138e0a68", "stdio_data_sha256": "8971cd15449d1edbd0836aaba9f7339cd3a3da01268103cccd317d4df8054255", "end_to_end": false, "native_refund_claim": false}
+entheory)/compilation[0m
+Holmake: Scanning [1m$(opentheory)/compilation/ag32[0m
+Holmake: Scanning [1m$(opentheory)/compilation/ag32/proofs[0m
+Holmake: Scanning [1m$(opentheory)/compilation/proofs[0m
+Holmake: Scanning [1m$(pseudo_bool)/array[0m
+Holmake: Scanning [1m$(pseudo_bool)/array/compilation[0m
+Holmake: Scanning [1m$(pseudo_bool)/array/compilation/proofs[0m
+Holmake: Scanning [1m$(pseudo_bool)/array/compilation/proofsARM8[0m
+Holmake: Scanning [1m$(pseudo_bool)/cnf_encoding[0m
+Holmake: Scanning [1m$(pseudo_bool)/cnf_encoding/array[0m
+Holmake: Scanning [1m$(pseudo_bool)/cnf_encoding/array/compilation[0m
+Holmake: Scanning [1m$(pseudo_bool)/cnf_encoding/array/compilation/proofs[0m
+Holmake: Scanning [1m$(pseudo_bool)/cp_encoding[0m
+Holmake: Scanning [1m$(pseudo_bool)/cp_encoding/array[0m
+Holmake: Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation[0m
+Holmake: Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation/proofs[0m
+Holmake: Scanning [1m$(pseudo_bool)/graph_encoding[0m
+Holmake: Scanning [1m$(pseudo_bool)/graph_encoding/array[0m
+Holmake: Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation[0m
+Holmake: Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation/proofs[0m
+Holmake: Scanning [1m$(sat_encodings)/case_studies[0m
+Holmake: Scanning [1m$(sat_encodings)/demo[0m
+Holmake: Scanning [1m$(sat_encodings)/translation[0m
+Holmake: Scanning [1m$(sat_encodings)/translation/compilation[0m
+Holmake: Scanning [1m$(scpog_checker)/array[0m
+Holmake: Scanning [1m$(scpog_checker)/array/compilation[0m
+Holmake: Scanning [1m$(scpog_checker)/array/compilation/proofs[0m
+Holmake: Scanned 333 directories
+Holmake: Building 1 theory file
+Holmake: Linking /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundRejectFocused_experiment/forge_refundRejectFocusedScript.uo to produce theory-builder executable
+Holmake: Exception: SysErr ("Operation not permitted", SOME EPERM)
+

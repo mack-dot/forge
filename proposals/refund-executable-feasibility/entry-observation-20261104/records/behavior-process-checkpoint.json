@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "ps",
+    "-p",
+    "47209,47239",
+    "-o",
+    "pid=,ppid=,etime=,stat=,comm="
+  ],
+  "query_exit": 0,
+  "stdout": "47209  5515 40:38 Ss   /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python\n47239 47209 40:37 S    /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake\n",
+  "terminal_record_present": false,
+  "end_to_end": false,
+  "proof_exit": "IN_PROGRESS"
+}

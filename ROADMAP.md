@@ -7,6 +7,58 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U279)
+
+The Markdown tracker now gives the ordered next actions and their completion
+evidence. CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The native entry observation remains NOT_ESTABLISHED after three debugger
+crashes. The existing compiler behavior invocation remains live.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Entry observation run.py attempts0001/0002/0003 | child -10/-10/-10; launcher246 each | SIGBUS inside LLDB; no accepted entry or target-exit record |
+| Target-open diagnostic | 0 | Exact file opens with eager symbols disabled; no native execution |
+| Initial readback.py / corrected readback_0002.py | 1/0 | First log has no symbols; existing OS diagnostic supplies them; all failures retained |
+| Exact-target process query | 0 | No matching target remains; native exit status NOT_RECORDED |
+| Existing compiler runner/Holmake query | 0 | Both live; no terminal proof exit; no duplicate invocation |
+
+[Exact observer failures and identities](proposals/refund-executable-feasibility/entry-observation-20261104/REPORT.md).
+The correction changes only saved-record inspection. It executes no proof or
+native program. Executableb8ed5ec2, mission and30 frozen inputs are unchanged.
+Raw OS diagnostics stay private; their hashes and diagnostic summary remain.
+No universal loaded-state, FFI, resource or exit guarantee follows from these
+checks. Complete the live proof, then inspect its actual conclusion and controls.
+Isolate the debugger failure before another launch. U278's denied exception
+builder remains on its separate branch; no reroute occurred. Independent replay,
+review, new provenance/admission and exact off-machine restore remain open.
+No rebuild, signing, protected adoption, publication, merge or dispatch ran here.
+Integration EXIT remains NOT_ESTABLISHED. All prior evidence is retained.
+
+## Active mission update — 2026-11-04 (U278)
+
+The exception diagnosis identifies a remaining do_opapp case whose result is
+already in the hypotheses with the reverse equality orientation. A standalone
+HOL lemma proves the needed rewrite. The full repaired theorem remains unproved:
+Holmake exits1 with EPERM before checking it. CURRENT none; M1 open;
+Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Focused branch diagnostic | 0 | Existing rewrites leave the exact lookup case unresolved |
+| Standalone lookup_result lemma | 0 | Universal HOL lemma; DISK_THM; no explicit hypotheses or tagged axioms |
+| `run_focused.py 0001` | 1 | Operation not permitted after builder-link message; no theorem export |
+| Saved-record/protected-input readback | 0 | Statement, two old heaps, native executable and50 protected files unchanged |
+| Local unsigned packet commit / blob readback | 0/0 | d0445513afae513bfd1fbbe830adde4f65419331;33 exact files; no publication |
+
+[Exact residual goal, checked lemma, repair and error](proposals/refund-executable-feasibility/exception-focused-20261104/REPORT.md).
+The full invocation is attempt6 under the owner's separately justified changed
+approach permission. All five earlier failures remain. No retry or reroute
+followed EPERM. Its denied syscall/path remain NOT_ESTABLISHED.
+Next: resolve that operation within an authorized environment, then check the
+same frozen repaired source. The existing compiler behavior run stays separate.
+Whole-program error, runtime/FFI/OS/resource and independent replay gaps remain.
+No native rebuild, signing, protected change, deployment or Stage12 ran.
+
 ## Active mission update — 2026-11-04 (U277)
 
 The compiler closure audit now passes. The complete runtime premise matrix

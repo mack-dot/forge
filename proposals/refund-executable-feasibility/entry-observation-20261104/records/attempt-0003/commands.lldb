@@ -1,0 +1,12 @@
+version
+settings set target.preload-symbols false
+settings set target.load-script-from-symbol-file false
+settings set target.inherit-env false
+settings set target.disable-aslr false
+settings set target.skip-prologue false
+settings set target.require-hardware-breakpoint true
+target create --no-dependents /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+command script import /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0003/entry_observer.py
+forge-entry-begin
+forge-entry-observe
+forge-entry-resume

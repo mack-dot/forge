@@ -17,7 +17,44 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest compiler audit: **U277 — closure checked; runtime premises mapped**.
+## Current action list — U279
+
+The immediate objective remains one complete refund executable assurance chain.
+The fixed RISC-V ELF is supporting evidence. M2 admission, M3 reuse and M4
+usability remain later priorities. This checklist records completion criteria;
+it does not grant approval or mark future commands as executed.
+
+| Order | Next action | Current state | Completion evidence required |
+| --- | --- | --- | --- |
+| 1 | Finish the existing compiler behavior proof | IN_PROGRESS; runner47209 and Holmake47239 confirmed live | Actual terminal exit, exact theorem and every premise; then binding controls and reproducible exports |
+| 2 | Resolve the concrete entry-observation failure | NOT_ESTABLISHED; three LLDB crashes, child -10 each | Isolate symbol-parser failure before another launch; preserve exact executable; capture and validate loaded state |
+| 3 | Complete the exception proof on its separate branch | BLOCKED by builder EPERM; U278 | Identify and resolve the denied operation without bypass, then check the frozen repaired source |
+| 4 | Close or explicitly bound the remaining correspondence gaps | NOT_ESTABLISHED | Full source/Unicode/model relation, installed memory, runtime/FFI/OS, resources and exit; no silent domain restriction |
+| 5 | Independently replay and review the complete claim | NOT RUN for the complete chain | Clean replay, exact dependency closure, negative controls and independent claim/profile review |
+| 6 | Complete operational and admission requirements | NOT_ESTABLISHED | Independent-copy archive hashes plus restore; authorized new provenance and admission; refresh protections at approval boundary |
+
+[Latest observation report](proposals/refund-executable-feasibility/entry-observation-20261104/REPORT.md)
+preserves the failed commands, numeric exits, identities and limitations.
+No entry state or native process exit was recorded. A target-open diagnostic
+passes0, but it executes no target. Saved-record readback passes0 after one
+preserved diagnostic error1. The native executable and30 frozen inputs match.
+The live compiler has no terminal proof result. Strict integration EXIT remains
+NOT_ESTABLISHED. `end_to_end=false`; no Stage12 or policy change is authorized.
+
+Latest proof diagnosis: **U278 — lookup lemma proved; full repair blocked by EPERM**.
+The [focused exception report](proposals/refund-executable-feasibility/exception-focused-20261104/REPORT.md)
+records the exact remaining case expression and its unused equality. A standalone
+universal HOL lemma passes0. The full repaired statement is unchanged, but its
+builder exits1 before theorem checking with Operation not permitted. No theory
+export exists. All five prior failed checks and both heaps remain preserved.
+
+**Next:** identify/resolve the denied builder operation within an authorized
+environment, then check the frozen repaired source. Do not retry without that
+change. The separate compiler behavior run retains its existing owner.
+`end_to_end=false`. Native, whole-program error and independent replay claims
+remain incomplete. No native rebuild, signing or protected change occurred.
+
+Previous compiler audit: **U277 — closure checked; runtime premises mapped**.
 The [detailed premise matrix](proposals/refund-executable-feasibility/arm8-assurance-audit-20261104/REPORT.md)
 records every direct entry, memory, FFI, interference, resource and exit condition
 of the proposed compiler composition. Fresh imported closure inspection passes0:

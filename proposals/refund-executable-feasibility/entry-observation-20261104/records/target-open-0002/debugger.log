@@ -1,0 +1,5 @@
+(lldb) settings set target.preload-symbols false
+(lldb) target create --no-dependents /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+Current executable set to '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund' (arm64).
+(lldb) image list -b
+[  0] refund

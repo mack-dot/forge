@@ -1,0 +1,53 @@
+(lldb) command source -s 0 '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0003/commands.lldb'
+Executing commands in '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0003/commands.lldb'.
+(lldb) version
+lldb-1700.0.9.502
+Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+(lldb) settings set target.preload-symbols false
+(lldb) settings set target.load-script-from-symbol-file false
+(lldb) settings set target.inherit-env false
+(lldb) settings set target.disable-aslr false
+(lldb) settings set target.skip-prologue false
+(lldb) settings set target.require-hardware-breakpoint true
+(lldb) target create --no-dependents /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+Current executable set to '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund' (arm64).
+(lldb) command script import /Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0003/entry_observer.py
+(lldb) forge-entry-begin
+LLDB diagnostics will be written to /var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/diagnostics-440664
+Please include the directory content when filing a bug report
+PLEASE submit a bug report to  and include the crash report from ~/Library/Logs/DiagnosticReports/.
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+0  lldb                     0x0000000102dd1bf0 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) + 56
+1  lldb                     0x0000000102dd044c llvm::sys::RunSignalHandlers() + 112
+2  lldb                     0x0000000102dd250c SignalHandler(int) + 320
+3  libsystem_platform.dylib 0x000000018cc20144 _sigtramp + 56
+4  LLDB                     0x000000011823bce4 ObjectFileMachO::ParseSymtab(lldb_private::Symtab&) + 3768
+5  LLDB                     0x0000000117ff7120 void std::__1::__call_once_proxy[abi:nn190102]<std::__1::tuple<lldb_private::ObjectFile::GetSymtab()::$_0&&>>(void*) + 128
+6  libc++.1.dylib           0x000000018cb2245c std::__1::__call_once(unsigned long volatile&, void*, void (*)(void*)) + 196
+7  LLDB                     0x0000000117ff5880 lldb_private::ObjectFile::GetSymtab() + 96
+8  LLDB                     0x00000001182e464c lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::InitOSO() + 172
+9  LLDB                     0x00000001182e5054 lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateNumCompileUnits() + 20
+10 LLDB                     0x0000000117ffeef4 lldb_private::SymbolFileCommon::GetNumCompileUnits() + 64
+11 LLDB                     0x00000001182e5010 lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateAbilities() + 28
+12 LLDB                     0x0000000117e292e0 lldb_private::SymbolFileCommon::GetAbilities() + 48
+13 LLDB                     0x0000000117ffebcc lldb_private::SymbolFile::FindPlugin(std::__1::shared_ptr<lldb_private::ObjectFile>) + 284
+14 LLDB                     0x0000000118004a08 lldb_private::SymbolVendor::AddSymbolFileRepresentation(std::__1::shared_ptr<lldb_private::ObjectFile> const&) + 96
+15 LLDB                     0x0000000117e4747c SymbolVendorMacOSX::CreateInstance(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*) + 1856
+16 LLDB                     0x00000001180047e8 lldb_private::SymbolVendor::FindPlugin(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*) + 60
+17 LLDB                     0x0000000117f14a64 lldb_private::Module::GetSymbolFile(bool, lldb_private::Stream*) + 948
+18 LLDB                     0x0000000117f169fc lldb_private::Module::FindSymbolsWithNameAndType(lldb_private::ConstString, lldb::SymbolType, lldb_private::SymbolContextList&) + 60
+19 LLDB                     0x0000000117f1a9cc lldb_private::ModuleList::FindSymbolsWithNameAndType(lldb_private::ConstString, lldb::SymbolType, lldb_private::SymbolContextList&) const + 392
+20 LLDB                     0x0000000118278db4 lldb_private::process_gdb_remote::GDBRemoteCommunicationClient::ServeSymbolLookups(lldb_private::Process*) + 612
+21 LLDB                     0x0000000118084760 lldb_private::Target::ModulesDidLoad(lldb_private::ModuleList&) + 1404
+22 LLDB                     0x0000000117e5ee94 lldb_private::DynamicLoaderDarwin::AddModulesUsingPreloadedModules(std::__1::vector<std::__1::pair<lldb_private::DynamicLoaderDarwin::ImageInfo, std::__1::shared_ptr<lldb_private::Module>>, std::__1::allocator<std::__1::pair<lldb_private::DynamicLoaderDarwin::ImageInfo, std::__1::shared_ptr<lldb_private::Module>>>>&) + 1380
+23 LLDB                     0x0000000117e58858 DynamicLoaderMacOS::DoInitialImageFetch() + 544
+24 LLDB                     0x0000000117e5a87c lldb_private::DynamicLoaderDarwin::DidAttach() + 112
+25 LLDB                     0x00000001180473a8 lldb_private::Process::CompleteAttach() + 1816
+26 LLDB                     0x0000000118046c64 lldb_private::Process::AttachCompletionHandler::PerformAction(std::__1::shared_ptr<lldb_private::Event>&) + 500
+27 LLDB                     0x00000001180453b4 lldb_private::Process::HandlePrivateEvent(std::__1::shared_ptr<lldb_private::Event>&) + 220
+28 LLDB                     0x0000000118049fc0 lldb_private::Process::RunPrivateStateThread(bool) + 1552
+29 LLDB                     0x0000000118052958 std::__1::__function::__func<lldb_private::Process::StartPrivateStateThread(bool)::$_0, std::__1::allocator<lldb_private::Process::StartPrivateStateThread(bool)::$_0>, void* ()>::operator()() + 24
+30 LLDB                     0x0000000117f7fd68 lldb_private::HostNativeThreadBase::ThreadCreateTrampoline(void*) + 132
+31 LLDB                     0x000000011836ebc8 lldb_private::HostThreadMacOSX::ThreadCreateTrampoline(void*) + 32
+32 libsystem_pthread.dylib  0x000000018cc15d00 _pthread_start + 136
+33 libsystem_pthread.dylib  0x000000018cc10cec thread_start + 8

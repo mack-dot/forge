@@ -1,0 +1,8 @@
+{
+  "parent_failure": "attempt-0001: LLDB child-10/launcher246 at eager Mach-O debug-map symbol parsing, before launch",
+  "supporting_check": "target-open-0002 returns0 with eager symbols disabled; exact executable unchanged",
+  "change": "Use established LLDB address APIs and the exact nm-observed cake_main file address0x1000040d0. Require hardware breakpoint; avoid optional symbol expansion and console frame formatting. No binary modification, re-signing, missing-data acceptance or protection change.",
+  "scope": "Finite debugger observation only; no new verifier or machine semantics",
+  "expected_outcome": "NOT RUN; must collect actual entry state or report failure",
+  "end_to_end": false
+}

@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb",
+    "--no-lldbinit",
+    "--batch",
+    "-o",
+    "settings set target.preload-symbols false",
+    "-o",
+    "target create --no-dependents /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund",
+    "-o",
+    "image list -b"
+  ],
+  "actual_exit": 0,
+  "wall_seconds": 3.5253292089910246,
+  "executable_unchanged": true,
+  "native_execution": "NOT RUN",
+  "end_to_end": false
+}

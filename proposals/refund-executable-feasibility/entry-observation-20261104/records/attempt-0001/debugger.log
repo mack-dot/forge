@@ -1,0 +1,14 @@
+(lldb) command source -s 0 '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/commands.lldb'
+Executing commands in '/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/commands.lldb'.
+(lldb) version
+lldb-1700.0.9.502
+Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+(lldb) settings set target.inherit-env false
+(lldb) settings set target.disable-aslr false
+(lldb) settings set target.skip-prologue false
+(lldb) settings set target.env-vars LANG=C LC_ALL=C CML_HEAP_SIZE=256 CML_STACK_SIZE=256
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+LLDB diagnostics will be written to /var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/diagnostics-05f9ca
+Please include the directory content when filing a bug report
+PLEASE submit a bug report to  and include the crash report from ~/Library/Logs/DiagnosticReports/.
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):

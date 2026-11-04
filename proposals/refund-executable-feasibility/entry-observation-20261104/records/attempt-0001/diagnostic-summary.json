@@ -1,0 +1,118 @@
+{
+  "process_name": "lldb",
+  "exception": {
+    "codes": "0x0000000000000002, 0x00000001eff99d48",
+    "rawCodes": [
+      2,
+      8321080648
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGBUS",
+    "subtype": "KERN_PROTECTION_FAILURE at 0x00000001eff99d48"
+  },
+  "termination": {
+    "flags": 1024,
+    "code": 10,
+    "namespace": "SIGNAL",
+    "indicator": "Bus error: 10",
+    "byProc": "exc handler",
+    "byPid": 23885
+  },
+  "faulting_thread_frames": [
+    {
+      "symbol": "lldb_private::DataExtractor::GetULEB128(unsigned long long*) const",
+      "symbolLocation": 48,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "ObjectFileMachO::ParseSymtab(lldb_private::Symtab&)",
+      "symbolLocation": 3768,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "void std::__1::__call_once_proxy[abi:nn190102]<std::__1::tuple<lldb_private::ObjectFile::GetSymtab()::$_0&&>>(void*)",
+      "symbolLocation": 128,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "std::__1::__call_once(unsigned long volatile&, void*, void (*)(void*))",
+      "symbolLocation": 196,
+      "image": "libc++.1.dylib"
+    },
+    {
+      "symbol": "lldb_private::ObjectFile::GetSymtab()",
+      "symbolLocation": 96,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::InitOSO()",
+      "symbolLocation": 172,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateNumCompileUnits()",
+      "symbolLocation": 20,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::SymbolFileCommon::GetNumCompileUnits()",
+      "symbolLocation": 64,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::plugin::dwarf::SymbolFileDWARFDebugMap::CalculateAbilities()",
+      "symbolLocation": 28,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::SymbolFileCommon::GetAbilities()",
+      "symbolLocation": 48,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::SymbolFile::FindPlugin(std::__1::shared_ptr<lldb_private::ObjectFile>)",
+      "symbolLocation": 284,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::SymbolVendor::AddSymbolFileRepresentation(std::__1::shared_ptr<lldb_private::ObjectFile> const&)",
+      "symbolLocation": 96,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "SymbolVendorMacOSX::CreateInstance(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*)",
+      "symbolLocation": 1856,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::SymbolVendor::FindPlugin(std::__1::shared_ptr<lldb_private::Module> const&, lldb_private::Stream*)",
+      "symbolLocation": 60,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::Module::GetSymbolFile(bool, lldb_private::Stream*)",
+      "symbolLocation": 948,
+      "image": "LLDB"
+    },
+    {
+      "symbol": "lldb_private::Module::PreloadSymbols()",
+      "symbolLocation": 48,
+      "image": "LLDB"
+    }
+  ],
+  "raw_records": [
+    {
+      "source": "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/diagnostics-05f9ca/diagnostics.log",
+      "copy": "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/private-diagnostics/diagnostics.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/Users/mackianni/Library/Logs/DiagnosticReports/lldb-2026-11-04-172036.ips",
+      "copy": "/Users/mackianni/forge/results/refund-entry-observation-2026-11-04/attempt-0001/private-diagnostics/lldb-2026-11-04-172036.ips",
+      "sha256": "d3dcd7fddb102665cfa1d49f4bfe86e28f9eec3ace5c14f2e23d0fe222b99919",
+      "bytes": 37457
+    }
+  ],
+  "redaction": "Only crash cause and faulting symbols shown. Full OS reports retained locally with mode0600; not copied to proposal."
+}
