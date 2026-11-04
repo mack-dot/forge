@@ -1,0 +1,99 @@
+{
+  "actual_exit": 0,
+  "cases": [
+    {
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+        "verify",
+        "Bridge.dfy",
+        "--solver-path",
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+        "--resource-limit",
+        "1000000",
+        "--verification-time-limit",
+        "0",
+        "--cores",
+        "1",
+        "--verify-included-files"
+      ],
+      "cwd": "/Users/mackianni/forge/results/mission-m1-feasibility-2026-11-04/attempt-0001/flat-bridge/repeat-0001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "expected_reason_matched": true,
+      "wall_seconds": 1.3586272499815095,
+      "source_sha256": {
+        "FlatCore.dfy": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d",
+        "Bridge.dfy": "ee11d3ca9299f748deb8485dc20a2219bef93d883b4f4f6d9952f6f839d4e299",
+        "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+        "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+      },
+      "stdout_sha256": "28820ede5d359d3b66117f84a8772671997388a3721c3c9c3ca5fe4c64e9643f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "end_to_end": false,
+      "same_sources_as_original": true,
+      "same_verifier_output_as_original": true
+    },
+    {
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+        "verify",
+        "Bridge.dfy",
+        "--solver-path",
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+        "--resource-limit",
+        "1000000",
+        "--verification-time-limit",
+        "0",
+        "--cores",
+        "1",
+        "--verify-included-files"
+      ],
+      "cwd": "/Users/mackianni/forge/results/mission-m1-feasibility-2026-11-04/attempt-0001/flat-bridge/over-limit-0001",
+      "expected_exit": 4,
+      "actual_exit": 4,
+      "expected_reason_matched": true,
+      "wall_seconds": 1.2357001670170575,
+      "source_sha256": {
+        "FlatCore.dfy": "4c952c815db78717f0c2872e24e801d97c906986562b2c24412bbaa2a309b0d9",
+        "Bridge.dfy": "ee11d3ca9299f748deb8485dc20a2219bef93d883b4f4f6d9952f6f839d4e299",
+        "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+        "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+      },
+      "stdout_sha256": "5d89832341276069e6843a512e78a3d7871f996e9933088c38bdbd1c19d77ab1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "end_to_end": false
+    },
+    {
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+        "verify",
+        "Bridge.dfy",
+        "--solver-path",
+        "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+        "--resource-limit",
+        "1000000",
+        "--verification-time-limit",
+        "0",
+        "--cores",
+        "1",
+        "--verify-included-files"
+      ],
+      "cwd": "/Users/mackianni/forge/results/mission-m1-feasibility-2026-11-04/attempt-0001/flat-bridge/reject-all-0001",
+      "expected_exit": 4,
+      "actual_exit": 4,
+      "expected_reason_matched": true,
+      "wall_seconds": 1.2333311249967664,
+      "source_sha256": {
+        "FlatCore.dfy": "06721517199c4824e788464b00bc69c3e2698a49ce80bf6db817218f1d842f17",
+        "Bridge.dfy": "ee11d3ca9299f748deb8485dc20a2219bef93d883b4f4f6d9952f6f839d4e299",
+        "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+        "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+      },
+      "stdout_sha256": "5d89832341276069e6843a512e78a3d7871f996e9933088c38bdbd1c19d77ab1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "end_to_end": false
+    }
+  ],
+  "claim": "Source representation checks only; no compiled artifact established.",
+  "end_to_end": false
+}

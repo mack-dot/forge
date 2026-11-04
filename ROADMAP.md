@@ -1,6 +1,49 @@
 # Forge: proof-gated changes
 
-**CURRENT: none — Stage 11 EXITs passed on 2026-10-30 (Stage 11 merged at 4e4112c6; Linux readiness PR #30 merged at e7b5b52a; receipt repair PR #32 merged at edd9f9d9; booking workflow PR #33 merged at f9eb1cbc; hosted booking matrix and historical consumer controls passed; independent historical kernel579 and proposed memory-independent kernel569 passed; recorded21-state model conformance and its independent567-module kernel check passed; auxiliary kernel594 and composed process-prefix kernel595 passed; separate new local observer records FCSR0 and complete404-byte LOAD identity under explicit trust limits); integration EXIT NOT_ESTABLISHED; Stage 12 unauthorized; campaign awaits independent review and operational actions; proposal PR #37 published; see U252**
+**CURRENT: none — Stage 11 EXITs passed on 2026-10-30 (Stage 11 merged at 4e4112c6; Linux readiness PR #30 merged at e7b5b52a; receipt repair PR #32 merged at edd9f9d9; booking workflow PR #33 merged at f9eb1cbc; hosted booking matrix and historical consumer controls passed; independent historical kernel579 and proposed memory-independent kernel569 passed; recorded21-state model conformance and its independent567-module kernel check passed; auxiliary kernel594 and composed process-prefix kernel595 passed; separate new local observer records FCSR0 and complete404-byte LOAD identity under explicit trust limits); integration EXIT NOT_ESTABLISHED; Stage 12 unauthorized; campaign awaits independent review and operational actions; proposal PR #37 published; fresh fixed-behavior and modeled-exit kernel597 passed; see U254**
+
+Active mission: [FORGE_MISSION.md](FORGE_MISSION.md). Track its current M1–M4
+requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediate
+priority is a real component's executable behavioral claim. The fixed-ELF GCD
+work is supporting evidence. This introduces no new repository stage or authority.
+
+## Active mission update — 2026-11-04 (U257)
+
+The complete owner mission is preserved byte for byte in FORGE_MISSION.md.
+The linked tracker owns current M1–M4 status. The older stage and milestone
+records below remain historical. CURRENT none; Stage12 unauthorized.
+
+Selected feasibility target: the existing full refund R1–R5 contract, with no
+new precondition or restricted input domain. Actual local source equivalence
+passes. Exact compiled-refund behavior remains BLOCKED_BY_CORRESPONDENCE.
+No new protected acceptance profile, publication or release is authorized here.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Full mission byte/hash comparison | 0 | 32046bytes; SHA2567bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c |
+| `python3 -B scripts/exit_stage_8.py --case wrapper-proof` | 0 | Fresh approved source check; source0; over-limit/reject-all gate1 and verifier4; assumption-escape gate1; protected inputs unchanged |
+| Pinned Dafny `verify Bridge.dfy --solver-path .../z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files` | 0 | New universal primitive-field source relation;7verified,0errors |
+| Same verification in fresh directory | 0 | Same sources and byte-identical positive verifier output |
+| Body mutation: remove amount upper bound | 4 | Expected unproved postcondition |
+| Body mutation: always reject | 4 | Expected unproved postcondition |
+| `python3 -B results/mission-m1-feasibility-2026-11-04/attempt-0001/flat-bridge/run_controls.py` | 0 | Three child outcomes and reasons checked explicitly |
+| Initial new audit command | 2 | Missing expected report; harness failure preserved |
+| Audit with existing zero-findings baseline | 0 | Zero findings; source and rules unchanged |
+
+Raw commands, hashes, source snapshots, failure output and repeat records:
+[refund feasibility packet](proposals/refund-executable-feasibility/README.md).
+Canonical working records: results/mission-m1-feasibility-2026-11-04/attempt-0001/.
+Original wrapper report: results/stage8/wrapper-proof/attempt-0005/report.json.
+
+Live main remainsf9eb1cbc; PR34/36/37 remain open/unmerged. The actual held
+booking artifact matches the current GitHub digest. Historical hosted
+cold/warm/invalidation exits0/0/0, verifier launches1/0/1;13/13 expected outcomes.
+This is a fresh inspection of the November2 run, not a new hosted execution.
+No billed runner-minute measurement or performance improvement is inferred.
+
+Next authorized check: inspect and reproduce an established verified compilation
+path for the full refund representations. No compiled-refund proof, new hosted
+run or new admission has run. M1–M4 remain open; end_to_end=false.
 
 This is the execution plan and decision record. Stages 0–10 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
@@ -3473,3 +3516,88 @@ Existing policy authenticates the file,not execution. New exact statement/
 profile approval,fresh bound provenance and independent release admission remain
 required. PR37fc85 unapproved/draft/unmerged;PR36 remains separate. Mainf9
 unchanged. No protected source/workflow/protection/signing/admission change.
+
+Local audit commits under the existing owner grant (U253):docs9b0a678e and
+observer supplementc8e87fd0,actual commit0/0;no push. Initial dispatcher1 and
+whitespace2 preserved. Final whitespace0 and committed blob readback0. Raw
+negative log is losslessly gzip-packed in Git;source/proof/output bytes unchanged.
+Postflight0 verifies86 published tool files/45 Python dependencies,main tracked
+diff0 and original unsure prefix. These review commits do not activate any
+claim/profile or replace missing correspondence/provenance/admission evidence.
+
+
+## Executable correspondence closure — 2026-11-03 (U254)
+
+CURRENT none; Stage12 unauthorized; end_to_end=false. Detailed evidence and
+exact argv: results/executable-correspondence-2026-11-03/attempt-0001/REPORT.md.
+Verdict PARTIALLY_ESTABLISHED. The full behavioral kernel gap from U252 is closed.
+Complete physical refinement, new claim approval/provenance/admission remain open.
+
+| Actual command / child execution | Exit | Actual result |
+| --- | ---: | --- |
+| `python3 -B .../prepare_and_check.py` |0|Fresh Behavior/ExitBridge compile0/0; complete recursive kernel0;597 modules,86 assumptions |
+| `python3 -B .../observe_controls.py` |0|Baseline guest/parent0;404 LOAD bytes; injected-register guest2 and observer1 expected |
+| `python3 -B .../recheck_controls.py` |0|ExitBridge identical rebuild0; wrong-GCD/halt1/1 expected;9 marker cases matched |
+| `python3 -B .../identity_controls.py` |0|Corrupt proof/substituted ELF1/1 expected before execution |
+| Relocated `replay-packet/replay.py --rebuild-only` |0|Two identical objects; full recursive check not repeated here |
+| Relocated `runtime-packet/replay.py` |0|Fresh producer/baseline/postidentity0; original worktrees not mounted |
+| Host Python3.10 tar extraction |1|Unsupported data-filter argument; failure preserved |
+| Pinned Python3.12.3 extraction with same data filter |0|No filter removed or installation |
+| `python3 -B .../operational_audit.py` |0|Read-only effective rules obtained; classic protection HTTP404 child1; no required checks |
+| Original archive validation / `restore_existing_backup.py` |0/0|10160 members each; local restore only |
+| Existing strict integration status |1|Only off_machine_backup_confirmed false; owner report retained |
+| `python3 -B .../finalize.py` |0|Actual records agree; end_to_end=false |
+
+The new bridge source4aeaf560... / objectb433ae9a... makes the existing modeled
+exit event explicit. Result21 is the fixed1071/462 GCD in intermediate a0.
+Parent wait confirms physical exit0 in this run; GDB notification alone cannot.
+No universal QEMU/Linux refinement or physical progress proof is claimed.
+
+The exact conditional claim/profile and unapplied spec patch are prepared for
+review. PR37fc85 stays draft/unreviewed; mainf9 unchanged; PR36 separate. No
+publication, signing, admission, merge or dispatch. Required external backup
+hash/restore test awaits the existing copy's location. Local packet relocation
+and archive restore are not an off-machine verification. All old failures remain.
+
+
+Local preservation for U254 (U255), under the owner's explicit commit grant:
+
+| Actual operation | Exit | Result |
+| --- | ---: | --- |
+| Correspondence supplement commit |0|`0d0cdcee801401f620ad643fb36154a312332e54`;25 proposal files |
+| Documentation commit |0|`6fd95ff32096dfc7cd2c99abc4cede1224ce531e`;2 status files |
+| Final staged whitespace checks |0/0|No proof or raw evidence normalization |
+| Committed file/archive readback |0|24 files and313 raw members; exact kernel/proof bytes |
+| Git object checks / main tracked diff |0/0/0|Both worktrees clean; protected source unchanged |
+| New private local bundle create / verify |0/0|SHA256 `d8aa9f1620da36e3681a38636b3ed5874a0397cba867256b15459a01425c6188` |
+| New bundle clone restore / object check |0/0|Exact heads and both committed archives recovered |
+
+New private bundle: `/Users/mackianni/forge-backups/forge-correspondence-commits-2026-11-03.bundle`.
+This is same-machine recovery, not the pending independent archive restore.
+The70MB runtime packet stays separately preserved. Independent review and exact
+claim/profile adoption are the next boundaries. No publication/merge/dispatch/
+signing/admission/deployment. Stage12 unauthorized; end_to_end=false.
+
+
+## Exact fresh-observation binding — 2026-11-04 (U256)
+
+CURRENT none; Stage12 unauthorized; end_to_end=false. Overall PARTIALLY_ESTABLISHED.
+Existing model proof and prior kernel597/86 are unchanged. The new wrapper closes
+an execution-to-trace identity integration gap; it does not prove QEMU/Linux refinement.
+
+| Actual command / operation | Exit | Result |
+| --- | ---: | --- |
+| `python3 -B .../entry_experiment.py` |0|Actual entry a0=1 still exits0; trace differs |
+| `python3 -I -B .../run_bound_observation.py --runtime-packet ... --out .../bound-final` |0|Fresh observer and full exact trace/LOAD binding;6.806320625 local seconds |
+| `python3 -B .../test_matrix.py` |0|16 cases match; one positive0,15 required refusals1 |
+| Real changed-entry record comparison |1|Expected TRACE_IDENTITY_MISMATCH despite actual QEMU exit0 |
+| Held proof-source postflight |0|30 sources unchanged; new kernel NOT RUN |
+| Local continuation / standalone review commits |0/0|`945499592c33a3a84f205c0ccf68c4088c3d6d8b` / `8125552117589b1c1274c48982fce37ae2f33415` |
+| Committed readback |0|38 files and996 raw records; exact final wrapper bytes |
+| Local bundle create / verify / restore / fsck |0/0/0/0|Private same-device recovery only |
+| Existing strict integration EXIT |1|Independent archive hash/restore unverified |
+
+Exact commands and evidence:results/fixed-elf-runtime-binding-2026-11-04/attempt-0001/.
+Standalone draft head81255521 has40 proposal files and no active protected changes.
+Publication approval is pending; no push/merge/dispatch/signing/admission performed.
+Physical correspondence assumptions and exact claim/profile adoption remain open.

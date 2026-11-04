@@ -1,0 +1,4655 @@
+{
+  "zip": "results/hosted-booking-exit-review-2026-11-03/attempt-0001/hosted-artifact.zip",
+  "zip_sha256": "372cd7781b1be493a13bbd4398cb6871cbf2effe6458810425dd25fcf49efbf1",
+  "matches_current_github_artifact_digest": true,
+  "data": {
+    "booking-observations/summary.json": {
+      "cross_process_rejection": true,
+      "cross_run_reuse_enabled": false,
+      "hosted_execution": true,
+      "hosted_security_acceptance": true,
+      "main_process_cases": 12,
+      "performance_improvement_claimed": false
+    },
+    "booking-observations/results.json": [
+      {
+        "acceptance_passed": true,
+        "actual_exit": 0,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 1,
+        "cache_hit": false,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": "83b60e8e07a98fe3ea9a13252e907465f0a6280b72e3c2a84432a06b5858f494",
+        "expected_exit": 0,
+        "expensive_booking_verification_executed": true,
+        "fresh_booking_gate_log": true,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+          "claim_apply_status": {
+            "C1": "reused",
+            "C2": "reused",
+            "C3": "reused",
+            "C4": "reused",
+            "C5": "reused"
+          },
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-A-cold/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-A-cold/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-A-cold/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-A-cold/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-A-cold/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-A-cold/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-A-cold/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-A-cold/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-A-cold/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-A-cold/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-A-cold/snapshots.log"
+            }
+          ],
+          "coverage": {
+            "affected_obligations": [
+              "ledger-proof",
+              "booking"
+            ],
+            "changed": [
+              {
+                "change": "modified",
+                "covered_by": [
+                  "booking"
+                ],
+                "path": "impl/Booking.dfy"
+              }
+            ],
+            "claims": [
+              {
+                "affected": true,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-proof",
+                "scope": "impl/Ledger.dfy refines the approved ledger spec",
+                "status": "established (fresh snapshot proof on the candidate)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-evidence",
+                "scope": "committed root evidence.json reproduces from the candidate ledger source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "tested_against_proved_model",
+                  "C2": "tested_against_proved_model",
+                  "C3": "tested_against_proved_model",
+                  "C4": "tested_against_proved_model",
+                  "C5": "tested_against_proved_model"
+                },
+                "obligation": "ledger-model",
+                "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": true,
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "obligation": "booking",
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "status": "established (fresh run)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "R1": "source_proof",
+                  "R2": "source_proof",
+                  "R3": "source_proof",
+                  "R4": "source_proof",
+                  "R5": "source_proof"
+                },
+                "obligation": "refund-proof",
+                "scope": "refund boundary source proof",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "T1": "property_tested",
+                  "T2": "property_tested",
+                  "T3": "property_tested"
+                },
+                "obligation": "refund-tests",
+                "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "W": "source_proof"
+                },
+                "obligation": "ledger-witness",
+                "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              }
+            ],
+            "covered": true,
+            "findings": [],
+            "inventory": "git/git",
+            "obligations": {
+              "booking": {
+                "argument_inputs": [],
+                "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+                "backend": "dafny-booking",
+                "cache_key": "37d942091341136292707f64f124ba52ee3f1742746d36135eb71a2315f46d86",
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "commands": [
+                  {
+                    "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                    "exit_code": 0,
+                    "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                    "log": "booking-0.log"
+                  }
+                ],
+                "declared_inputs": [
+                  "gate/ContractBinding.dfy",
+                  "gate/backends/__init__.py",
+                  "gate/backends/dafny.py",
+                  "gate/booking-coverage.json",
+                  "gate/booking.py",
+                  "gate/common.py",
+                  "gate/core.py",
+                  "gate/dependencies.py",
+                  "gate/expected-audit.md",
+                  "gate/gate.py",
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "policy/booking.yaml",
+                  "policy/tiers.yaml",
+                  "proposals/booking-decision.md",
+                  "schemas/evidence.schema.json",
+                  "schemas/policy.schema.json",
+                  "spec.lock",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "spec/booking/spec.lock",
+                  "tests/booking/SuccessfulExecution.dfy",
+                  "toolchain/linux-pins.json",
+                  "toolchain/requirements-stage2.txt",
+                  "toolchain/validator-linux-pins.json"
+                ],
+                "evidence_sha256": "e03b17d58c4939b7ea256f060893dc97a8b35624d61456d59b727f970dd49757",
+                "obligation": "booking",
+                "result": "established",
+                "reused": false,
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "subjects": [
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "tests/booking/SuccessfulExecution.dfy"
+                ],
+                "wall_seconds": 16.266
+              }
+            }
+          },
+          "end_to_end": false,
+          "evidence_sha256": "83b60e8e07a98fe3ea9a13252e907465f0a6280b72e3c2a84432a06b5858f494",
+          "exit_code": 0,
+          "obligations": {
+            "booking": {
+              "argument_inputs": [],
+              "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+              "backend": "dafny-booking",
+              "cache_key": "37d942091341136292707f64f124ba52ee3f1742746d36135eb71a2315f46d86",
+              "claims": {
+                "B1": "source_proof",
+                "B2": "source_proof",
+                "B3": "source_proof",
+                "B4": "source_proof"
+              },
+              "commands": [
+                {
+                  "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                  "exit_code": 0,
+                  "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                  "log": "booking-0.log"
+                }
+              ],
+              "declared_inputs": [
+                "gate/ContractBinding.dfy",
+                "gate/backends/__init__.py",
+                "gate/backends/dafny.py",
+                "gate/booking-coverage.json",
+                "gate/booking.py",
+                "gate/common.py",
+                "gate/core.py",
+                "gate/dependencies.py",
+                "gate/expected-audit.md",
+                "gate/gate.py",
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "policy/booking.yaml",
+                "policy/tiers.yaml",
+                "proposals/booking-decision.md",
+                "schemas/evidence.schema.json",
+                "schemas/policy.schema.json",
+                "spec.lock",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "spec/booking/spec.lock",
+                "tests/booking/SuccessfulExecution.dfy",
+                "toolchain/linux-pins.json",
+                "toolchain/requirements-stage2.txt",
+                "toolchain/validator-linux-pins.json"
+              ],
+              "evidence_sha256": "e03b17d58c4939b7ea256f060893dc97a8b35624d61456d59b727f970dd49757",
+              "obligation": "booking",
+              "result": "established",
+              "reused": false,
+              "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+              "subjects": [
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "tests/booking/SuccessfulExecution.dfy"
+              ],
+              "wall_seconds": 16.266
+            }
+          },
+          "outcome": "VERIFIED",
+          "result": "verified",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-A-cold/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python",
+              "gate/booking.py",
+              "--evidence",
+              "build/obligations/booking.json",
+              "--work",
+              "build/obligations/booking-work"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted/build/regression-A-cold/verify",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "A-cold",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 28.525340852
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 0,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": true,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": "83b60e8e07a98fe3ea9a13252e907465f0a6280b72e3c2a84432a06b5858f494",
+        "expected_exit": 0,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+          "claim_apply_status": {
+            "C1": "reused",
+            "C2": "reused",
+            "C3": "reused",
+            "C4": "reused",
+            "C5": "reused"
+          },
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-B-warm/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-B-warm/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-B-warm/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-B-warm/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-B-warm/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-B-warm/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-B-warm/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-B-warm/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-B-warm/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-B-warm/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-B-warm/snapshots.log"
+            }
+          ],
+          "coverage": {
+            "affected_obligations": [
+              "ledger-proof",
+              "booking"
+            ],
+            "changed": [
+              {
+                "change": "modified",
+                "covered_by": [
+                  "booking"
+                ],
+                "path": "impl/Booking.dfy"
+              }
+            ],
+            "claims": [
+              {
+                "affected": true,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-proof",
+                "scope": "impl/Ledger.dfy refines the approved ledger spec",
+                "status": "established (fresh snapshot proof on the candidate)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-evidence",
+                "scope": "committed root evidence.json reproduces from the candidate ledger source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "tested_against_proved_model",
+                  "C2": "tested_against_proved_model",
+                  "C3": "tested_against_proved_model",
+                  "C4": "tested_against_proved_model",
+                  "C5": "tested_against_proved_model"
+                },
+                "obligation": "ledger-model",
+                "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": true,
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "obligation": "booking",
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "status": "established (reused: identical input digests)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "R1": "source_proof",
+                  "R2": "source_proof",
+                  "R3": "source_proof",
+                  "R4": "source_proof",
+                  "R5": "source_proof"
+                },
+                "obligation": "refund-proof",
+                "scope": "refund boundary source proof",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "T1": "property_tested",
+                  "T2": "property_tested",
+                  "T3": "property_tested"
+                },
+                "obligation": "refund-tests",
+                "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "W": "source_proof"
+                },
+                "obligation": "ledger-witness",
+                "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              }
+            ],
+            "covered": true,
+            "findings": [],
+            "inventory": "git/git",
+            "obligations": {
+              "booking": {
+                "argument_inputs": [],
+                "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+                "backend": "dafny-booking",
+                "cache_key": "37d942091341136292707f64f124ba52ee3f1742746d36135eb71a2315f46d86",
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "commands": [
+                  {
+                    "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                    "exit_code": 0,
+                    "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                    "log": "booking-0.log"
+                  }
+                ],
+                "declared_inputs": [
+                  "gate/ContractBinding.dfy",
+                  "gate/backends/__init__.py",
+                  "gate/backends/dafny.py",
+                  "gate/booking-coverage.json",
+                  "gate/booking.py",
+                  "gate/common.py",
+                  "gate/core.py",
+                  "gate/dependencies.py",
+                  "gate/expected-audit.md",
+                  "gate/gate.py",
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "policy/booking.yaml",
+                  "policy/tiers.yaml",
+                  "proposals/booking-decision.md",
+                  "schemas/evidence.schema.json",
+                  "schemas/policy.schema.json",
+                  "spec.lock",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "spec/booking/spec.lock",
+                  "tests/booking/SuccessfulExecution.dfy",
+                  "toolchain/linux-pins.json",
+                  "toolchain/requirements-stage2.txt",
+                  "toolchain/validator-linux-pins.json"
+                ],
+                "evidence_sha256": "e03b17d58c4939b7ea256f060893dc97a8b35624d61456d59b727f970dd49757",
+                "obligation": "booking",
+                "result": "established",
+                "reuse_provenance": {
+                  "cross_run_authenticated": false,
+                  "files_sha256": "23b6b842ef113671ddfd86d3113c2c311c9549c1a893ef07beeef623ab578eeb",
+                  "receipt_sha256": "d6a3b2253dd012336374e3aa5b21c3fd456aad02c8650d867a99bb69631d207b",
+                  "scope": "same_trusted_process"
+                },
+                "reused": true,
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "subjects": [
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "tests/booking/SuccessfulExecution.dfy"
+                ],
+                "wall_seconds": 16.266
+              }
+            }
+          },
+          "end_to_end": false,
+          "evidence_sha256": "83b60e8e07a98fe3ea9a13252e907465f0a6280b72e3c2a84432a06b5858f494",
+          "exit_code": 0,
+          "obligations": {
+            "booking": {
+              "argument_inputs": [],
+              "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+              "backend": "dafny-booking",
+              "cache_key": "37d942091341136292707f64f124ba52ee3f1742746d36135eb71a2315f46d86",
+              "claims": {
+                "B1": "source_proof",
+                "B2": "source_proof",
+                "B3": "source_proof",
+                "B4": "source_proof"
+              },
+              "commands": [
+                {
+                  "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                  "exit_code": 0,
+                  "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                  "log": "booking-0.log"
+                }
+              ],
+              "declared_inputs": [
+                "gate/ContractBinding.dfy",
+                "gate/backends/__init__.py",
+                "gate/backends/dafny.py",
+                "gate/booking-coverage.json",
+                "gate/booking.py",
+                "gate/common.py",
+                "gate/core.py",
+                "gate/dependencies.py",
+                "gate/expected-audit.md",
+                "gate/gate.py",
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "policy/booking.yaml",
+                "policy/tiers.yaml",
+                "proposals/booking-decision.md",
+                "schemas/evidence.schema.json",
+                "schemas/policy.schema.json",
+                "spec.lock",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "spec/booking/spec.lock",
+                "tests/booking/SuccessfulExecution.dfy",
+                "toolchain/linux-pins.json",
+                "toolchain/requirements-stage2.txt",
+                "toolchain/validator-linux-pins.json"
+              ],
+              "evidence_sha256": "e03b17d58c4939b7ea256f060893dc97a8b35624d61456d59b727f970dd49757",
+              "obligation": "booking",
+              "result": "established",
+              "reuse_provenance": {
+                "cross_run_authenticated": false,
+                "files_sha256": "23b6b842ef113671ddfd86d3113c2c311c9549c1a893ef07beeef623ab578eeb",
+                "receipt_sha256": "d6a3b2253dd012336374e3aa5b21c3fd456aad02c8650d867a99bb69631d207b",
+                "scope": "same_trusted_process"
+              },
+              "reused": true,
+              "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+              "subjects": [
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "tests/booking/SuccessfulExecution.dfy"
+              ],
+              "wall_seconds": 16.266
+            }
+          },
+          "outcome": "VERIFIED",
+          "result": "verified",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-warm/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "B-warm",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 9.931031468
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-receipt/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-receipt/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-receipt/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-receipt/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-receipt/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-receipt/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-receipt/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-receipt/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-receipt/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-receipt/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-receipt/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_RECEIPT_INTEGRITY: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-receipt/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-receipt",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 8.742398211
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-missing-anchor/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-missing-anchor/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-missing-anchor/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-missing-anchor/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_UNAUTHENTICATED: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-missing-anchor/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-missing-anchor",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 8.640854819
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-invalid-anchor/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-invalid-anchor/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-invalid-anchor/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-invalid-anchor/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_RECEIPT_INTEGRITY: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-invalid-anchor/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-invalid-anchor",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 8.542446701
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-artifact/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-artifact/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-artifact/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-artifact/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-artifact/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-artifact/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-artifact/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-artifact/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-artifact/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-artifact/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-artifact/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_ARTIFACT_INTEGRITY: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-artifact/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-artifact",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 8.569740188
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-coherent-rewrite/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-coherent-rewrite/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-coherent-rewrite/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-coherent-rewrite/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_RECEIPT_INTEGRITY: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-coherent-rewrite/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-coherent-rewrite",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 8.483198597
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 0,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 1,
+        "cache_hit": false,
+        "candidate_booking_sha256": "30f3f9799ceb2c23cf95b9084e003baa35b6aa9961c8bfd2a3d0166fa9fcc045",
+        "candidate_commit": "b12f50bfbc925da03d780121e2ebce9f6cdbc61f",
+        "candidate_kind": "unpublished hosted fixture commit",
+        "candidate_source_identity": "ab47ba198fb3e2d7525ee8c0cdca49db4e0d998ab551178010a9b66f944d5149",
+        "evidence_sha256": "56d0b818a1bb8b6e32163662b20ab5887f677227fae1df476e5c6b19e8d66c6a",
+        "expected_exit": 0,
+        "expensive_booking_verification_executed": true,
+        "fresh_booking_gate_log": true,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+          "claim_apply_status": {
+            "C1": "reused",
+            "C2": "reused",
+            "C3": "reused",
+            "C4": "reused",
+            "C5": "reused"
+          },
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-C-invalidation/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-C-invalidation/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-C-invalidation/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-C-invalidation/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-C-invalidation/snapshots.log"
+            }
+          ],
+          "coverage": {
+            "affected_obligations": [
+              "ledger-proof",
+              "booking"
+            ],
+            "changed": [
+              {
+                "change": "modified",
+                "covered_by": [
+                  "booking"
+                ],
+                "path": "impl/Booking.dfy"
+              }
+            ],
+            "claims": [
+              {
+                "affected": true,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-proof",
+                "scope": "impl/Ledger.dfy refines the approved ledger spec",
+                "status": "established (fresh snapshot proof on the candidate)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-evidence",
+                "scope": "committed root evidence.json reproduces from the candidate ledger source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "tested_against_proved_model",
+                  "C2": "tested_against_proved_model",
+                  "C3": "tested_against_proved_model",
+                  "C4": "tested_against_proved_model",
+                  "C5": "tested_against_proved_model"
+                },
+                "obligation": "ledger-model",
+                "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": true,
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "obligation": "booking",
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "status": "established (fresh run)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "R1": "source_proof",
+                  "R2": "source_proof",
+                  "R3": "source_proof",
+                  "R4": "source_proof",
+                  "R5": "source_proof"
+                },
+                "obligation": "refund-proof",
+                "scope": "refund boundary source proof",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "T1": "property_tested",
+                  "T2": "property_tested",
+                  "T3": "property_tested"
+                },
+                "obligation": "refund-tests",
+                "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "W": "source_proof"
+                },
+                "obligation": "ledger-witness",
+                "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              }
+            ],
+            "covered": true,
+            "findings": [],
+            "inventory": "git/git",
+            "obligations": {
+              "booking": {
+                "argument_inputs": [],
+                "artifact_sha256": "d78b141046d8f7c63eee89c981832a5a329d547061b3a37b513e8d92704132f4",
+                "backend": "dafny-booking",
+                "cache_key": "ad313909cede92a84e289810efa1a7c602bea2059eee253b4381f8a3d01f4ee8",
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "commands": [
+                  {
+                    "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                    "exit_code": 0,
+                    "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                    "log": "booking-0.log"
+                  }
+                ],
+                "declared_inputs": [
+                  "gate/ContractBinding.dfy",
+                  "gate/backends/__init__.py",
+                  "gate/backends/dafny.py",
+                  "gate/booking-coverage.json",
+                  "gate/booking.py",
+                  "gate/common.py",
+                  "gate/core.py",
+                  "gate/dependencies.py",
+                  "gate/expected-audit.md",
+                  "gate/gate.py",
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "policy/booking.yaml",
+                  "policy/tiers.yaml",
+                  "proposals/booking-decision.md",
+                  "schemas/evidence.schema.json",
+                  "schemas/policy.schema.json",
+                  "spec.lock",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "spec/booking/spec.lock",
+                  "tests/booking/SuccessfulExecution.dfy",
+                  "toolchain/linux-pins.json",
+                  "toolchain/requirements-stage2.txt",
+                  "toolchain/validator-linux-pins.json"
+                ],
+                "evidence_sha256": "8f045a7eb07e8e05473bfb6d0521d8116259884e61e19aa138ed1598cddcca00",
+                "obligation": "booking",
+                "result": "established",
+                "reused": false,
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "subjects": [
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "tests/booking/SuccessfulExecution.dfy"
+                ],
+                "wall_seconds": 16.151
+              }
+            }
+          },
+          "end_to_end": false,
+          "evidence_sha256": "56d0b818a1bb8b6e32163662b20ab5887f677227fae1df476e5c6b19e8d66c6a",
+          "exit_code": 0,
+          "obligations": {
+            "booking": {
+              "argument_inputs": [],
+              "artifact_sha256": "d78b141046d8f7c63eee89c981832a5a329d547061b3a37b513e8d92704132f4",
+              "backend": "dafny-booking",
+              "cache_key": "ad313909cede92a84e289810efa1a7c602bea2059eee253b4381f8a3d01f4ee8",
+              "claims": {
+                "B1": "source_proof",
+                "B2": "source_proof",
+                "B3": "source_proof",
+                "B4": "source_proof"
+              },
+              "commands": [
+                {
+                  "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                  "exit_code": 0,
+                  "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                  "log": "booking-0.log"
+                }
+              ],
+              "declared_inputs": [
+                "gate/ContractBinding.dfy",
+                "gate/backends/__init__.py",
+                "gate/backends/dafny.py",
+                "gate/booking-coverage.json",
+                "gate/booking.py",
+                "gate/common.py",
+                "gate/core.py",
+                "gate/dependencies.py",
+                "gate/expected-audit.md",
+                "gate/gate.py",
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "policy/booking.yaml",
+                "policy/tiers.yaml",
+                "proposals/booking-decision.md",
+                "schemas/evidence.schema.json",
+                "schemas/policy.schema.json",
+                "spec.lock",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "spec/booking/spec.lock",
+                "tests/booking/SuccessfulExecution.dfy",
+                "toolchain/linux-pins.json",
+                "toolchain/requirements-stage2.txt",
+                "toolchain/validator-linux-pins.json"
+              ],
+              "evidence_sha256": "8f045a7eb07e8e05473bfb6d0521d8116259884e61e19aa138ed1598cddcca00",
+              "obligation": "booking",
+              "result": "established",
+              "reused": false,
+              "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+              "subjects": [
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "tests/booking/SuccessfulExecution.dfy"
+              ],
+              "wall_seconds": 16.151
+            }
+          },
+          "outcome": "VERIFIED",
+          "result": "verified",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python",
+              "gate/booking.py",
+              "--evidence",
+              "build/obligations/booking.json",
+              "--work",
+              "build/obligations/booking-work"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted/build/regression-C-invalidation/verify",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "C-invalidation",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 28.552900072
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "30f3f9799ceb2c23cf95b9084e003baa35b6aa9961c8bfd2a3d0166fa9fcc045",
+        "candidate_commit": "b12f50bfbc925da03d780121e2ebce9f6cdbc61f",
+        "candidate_kind": "unpublished hosted fixture commit",
+        "candidate_source_identity": "ab47ba198fb3e2d7525ee8c0cdca49db4e0d998ab551178010a9b66f944d5149",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-stale-identity/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-stale-identity/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-stale-identity/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-stale-identity/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_RECEIPT_INTEGRITY: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-stale-identity/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/C",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-stale-identity",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 9.026288575
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 3,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "4ffcc54130d57ad17aae08210e26da351a0e3c1f",
+        "candidate_kind": "unpublished hosted fixture commit",
+        "candidate_source_identity": "4f0ab5d6c5069992df94d525a440387c2ac17c67d34553f435630c76dfb65f1e",
+        "evidence_sha256": null,
+        "expected_exit": 3,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "claim_apply_status": {
+            "C1": "reused",
+            "C2": "reused",
+            "C3": "reused",
+            "C4": "reused",
+            "C5": "reused"
+          },
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-D-uncovered/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-uncovered/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-D-uncovered/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-D-uncovered/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-D-uncovered/snapshots.log"
+            }
+          ],
+          "coverage": {
+            "affected_obligations": [
+              "ledger-proof",
+              "booking"
+            ],
+            "changed": [
+              {
+                "change": "modified",
+                "covered_by": [
+                  "booking"
+                ],
+                "path": "impl/Booking.dfy"
+              },
+              {
+                "change": "added",
+                "covered_by": [],
+                "path": "impl/Extra.dfy"
+              }
+            ],
+            "claims": [
+              {
+                "affected": true,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-proof",
+                "scope": "impl/Ledger.dfy refines the approved ledger spec",
+                "status": "established (fresh snapshot proof on the candidate)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-evidence",
+                "scope": "committed root evidence.json reproduces from the candidate ledger source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "tested_against_proved_model",
+                  "C2": "tested_against_proved_model",
+                  "C3": "tested_against_proved_model",
+                  "C4": "tested_against_proved_model",
+                  "C5": "tested_against_proved_model"
+                },
+                "obligation": "ledger-model",
+                "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": true,
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "obligation": "booking",
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "R1": "source_proof",
+                  "R2": "source_proof",
+                  "R3": "source_proof",
+                  "R4": "source_proof",
+                  "R5": "source_proof"
+                },
+                "obligation": "refund-proof",
+                "scope": "refund boundary source proof",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "T1": "property_tested",
+                  "T2": "property_tested",
+                  "T3": "property_tested"
+                },
+                "obligation": "refund-tests",
+                "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "W": "source_proof"
+                },
+                "obligation": "ledger-witness",
+                "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              }
+            ],
+            "covered": false,
+            "findings": [
+              {
+                "detail": "added; no obligation lists this path as an input",
+                "path": "impl/Extra.dfy",
+                "reason": "UNCOVERED_CHANGE"
+              }
+            ],
+            "inventory": "git/git",
+            "obligations": {}
+          },
+          "end_to_end": false,
+          "error": "UNSUPPORTED: every obligation that ran holds, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Extra.dfy (added; no obligation lists this path as an input)",
+          "exit_code": 3,
+          "obligations": {},
+          "outcome": "UNSUPPORTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-D-uncovered/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/uncovered",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-uncovered",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 9.125844191
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "80a45d232418a18d451abbf16a53b27b92dd175c",
+        "candidate_kind": "unpublished hosted fixture commit",
+        "candidate_source_identity": "274b3b9a4b51d8c7688b4385f759f2f7ad0f9fa0b98f51b855fa2d34b7a701b1",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "commands": [],
+          "end_to_end": false,
+          "error": "UNAPPROVED_PROTECTED_CHANGE: gate/booking.py; approval of exact spec text is required; PR labels do not authorize it",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/harness",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/harness",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted/build/booking-fixtures/harness",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "D-harness",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 0.048721174
+      },
+      {
+        "acceptance_passed": true,
+        "actual_exit": 0,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": true,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": "83b60e8e07a98fe3ea9a13252e907465f0a6280b72e3c2a84432a06b5858f494",
+        "expected_exit": 0,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+          "claim_apply_status": {
+            "C1": "reused",
+            "C2": "reused",
+            "C3": "reused",
+            "C4": "reused",
+            "C5": "reused"
+          },
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-B-restored-valid/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-B-restored-valid/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-B-restored-valid/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-B-restored-valid/snapshots.log"
+            }
+          ],
+          "coverage": {
+            "affected_obligations": [
+              "ledger-proof",
+              "booking"
+            ],
+            "changed": [
+              {
+                "change": "modified",
+                "covered_by": [
+                  "booking"
+                ],
+                "path": "impl/Booking.dfy"
+              }
+            ],
+            "claims": [
+              {
+                "affected": true,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-proof",
+                "scope": "impl/Ledger.dfy refines the approved ledger spec",
+                "status": "established (fresh snapshot proof on the candidate)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "source_proof",
+                  "C2": "source_proof",
+                  "C3": "source_proof",
+                  "C4": "source_proof",
+                  "C5": "source_proof"
+                },
+                "obligation": "ledger-evidence",
+                "scope": "committed root evidence.json reproduces from the candidate ledger source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "C1": "tested_against_proved_model",
+                  "C2": "tested_against_proved_model",
+                  "C3": "tested_against_proved_model",
+                  "C4": "tested_against_proved_model",
+                  "C5": "tested_against_proved_model"
+                },
+                "obligation": "ledger-model",
+                "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": true,
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "obligation": "booking",
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "status": "established (reused: identical input digests)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "R1": "source_proof",
+                  "R2": "source_proof",
+                  "R3": "source_proof",
+                  "R4": "source_proof",
+                  "R5": "source_proof"
+                },
+                "obligation": "refund-proof",
+                "scope": "refund boundary source proof",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "T1": "property_tested",
+                  "T2": "property_tested",
+                  "T3": "property_tested"
+                },
+                "obligation": "refund-tests",
+                "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              },
+              {
+                "affected": false,
+                "claims": {
+                  "W": "source_proof"
+                },
+                "obligation": "ledger-witness",
+                "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+                "status": "not affected by this change (not re-run; no new claim made)"
+              }
+            ],
+            "covered": true,
+            "findings": [],
+            "inventory": "git/git",
+            "obligations": {
+              "booking": {
+                "argument_inputs": [],
+                "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+                "backend": "dafny-booking",
+                "cache_key": "37d942091341136292707f64f124ba52ee3f1742746d36135eb71a2315f46d86",
+                "claims": {
+                  "B1": "source_proof",
+                  "B2": "source_proof",
+                  "B3": "source_proof",
+                  "B4": "source_proof"
+                },
+                "commands": [
+                  {
+                    "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                    "exit_code": 0,
+                    "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                    "log": "booking-0.log"
+                  }
+                ],
+                "declared_inputs": [
+                  "gate/ContractBinding.dfy",
+                  "gate/backends/__init__.py",
+                  "gate/backends/dafny.py",
+                  "gate/booking-coverage.json",
+                  "gate/booking.py",
+                  "gate/common.py",
+                  "gate/core.py",
+                  "gate/dependencies.py",
+                  "gate/expected-audit.md",
+                  "gate/gate.py",
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "policy/booking.yaml",
+                  "policy/tiers.yaml",
+                  "proposals/booking-decision.md",
+                  "schemas/evidence.schema.json",
+                  "schemas/policy.schema.json",
+                  "spec.lock",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "spec/booking/spec.lock",
+                  "tests/booking/SuccessfulExecution.dfy",
+                  "toolchain/linux-pins.json",
+                  "toolchain/requirements-stage2.txt",
+                  "toolchain/validator-linux-pins.json"
+                ],
+                "evidence_sha256": "e03b17d58c4939b7ea256f060893dc97a8b35624d61456d59b727f970dd49757",
+                "obligation": "booking",
+                "result": "established",
+                "reuse_provenance": {
+                  "cross_run_authenticated": false,
+                  "files_sha256": "23b6b842ef113671ddfd86d3113c2c311c9549c1a893ef07beeef623ab578eeb",
+                  "receipt_sha256": "d6a3b2253dd012336374e3aa5b21c3fd456aad02c8650d867a99bb69631d207b",
+                  "scope": "same_trusted_process"
+                },
+                "reused": true,
+                "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+                "subjects": [
+                  "impl/Booking.dfy",
+                  "impl/Ledger.dfy",
+                  "spec/LedgerSpec.dfy",
+                  "spec/booking/BookingSpec.dfy",
+                  "tests/booking/SuccessfulExecution.dfy"
+                ],
+                "wall_seconds": 16.266
+              }
+            }
+          },
+          "end_to_end": false,
+          "evidence_sha256": "83b60e8e07a98fe3ea9a13252e907465f0a6280b72e3c2a84432a06b5858f494",
+          "exit_code": 0,
+          "obligations": {
+            "booking": {
+              "argument_inputs": [],
+              "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+              "backend": "dafny-booking",
+              "cache_key": "37d942091341136292707f64f124ba52ee3f1742746d36135eb71a2315f46d86",
+              "claims": {
+                "B1": "source_proof",
+                "B2": "source_proof",
+                "B3": "source_proof",
+                "B4": "source_proof"
+              },
+              "commands": [
+                {
+                  "argv": "/home/runner/work/forge/forge/trusted/.toolchain/ci-python/bin/python gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+                  "exit_code": 0,
+                  "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+                  "log": "booking-0.log"
+                }
+              ],
+              "declared_inputs": [
+                "gate/ContractBinding.dfy",
+                "gate/backends/__init__.py",
+                "gate/backends/dafny.py",
+                "gate/booking-coverage.json",
+                "gate/booking.py",
+                "gate/common.py",
+                "gate/core.py",
+                "gate/dependencies.py",
+                "gate/expected-audit.md",
+                "gate/gate.py",
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "policy/booking.yaml",
+                "policy/tiers.yaml",
+                "proposals/booking-decision.md",
+                "schemas/evidence.schema.json",
+                "schemas/policy.schema.json",
+                "spec.lock",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "spec/booking/spec.lock",
+                "tests/booking/SuccessfulExecution.dfy",
+                "toolchain/linux-pins.json",
+                "toolchain/requirements-stage2.txt",
+                "toolchain/validator-linux-pins.json"
+              ],
+              "evidence_sha256": "e03b17d58c4939b7ea256f060893dc97a8b35624d61456d59b727f970dd49757",
+              "obligation": "booking",
+              "result": "established",
+              "reuse_provenance": {
+                "cross_run_authenticated": false,
+                "files_sha256": "23b6b842ef113671ddfd86d3113c2c311c9549c1a893ef07beeef623ab578eeb",
+                "receipt_sha256": "d6a3b2253dd012336374e3aa5b21c3fd456aad02c8650d867a99bb69631d207b",
+                "scope": "same_trusted_process"
+              },
+              "reused": true,
+              "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+              "subjects": [
+                "impl/Booking.dfy",
+                "impl/Ledger.dfy",
+                "spec/LedgerSpec.dfy",
+                "spec/booking/BookingSpec.dfy",
+                "tests/booking/SuccessfulExecution.dfy"
+              ],
+              "wall_seconds": 16.266
+            }
+          },
+          "outcome": "VERIFIED",
+          "result": "verified",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-B-restored-valid/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "B-restored-valid",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 9.784144014
+      }
+    ],
+    "booking-observations/cross-process/results.json": [
+      {
+        "acceptance_passed": true,
+        "actual_exit": 1,
+        "billed_runner_minutes": null,
+        "booking_process_launch_count": 0,
+        "cache_hit": null,
+        "candidate_booking_sha256": "94d91156d2464dfecc3c8292ebe32541e49ccb9bc8e3d4bb597bc442badd32e2",
+        "candidate_commit": "46e5aa426bf7800df7c98c732a764337e716f6bb",
+        "candidate_kind": "GitHub PR head",
+        "candidate_source_identity": "e7318a3b14020e00a970a1e520e39cd7857b747a329a93ccf07afcdf26e447ff",
+        "evidence_sha256": null,
+        "expected_exit": 1,
+        "expensive_booking_verification_executed": false,
+        "fresh_booking_gate_log": false,
+        "hosted_execution": true,
+        "operation": {
+          "affected_obligations": [
+            "ledger-proof",
+            "booking"
+          ],
+          "commands": [
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny --version",
+              "exit_code": 0,
+              "log": "build/regression-cross-process/version.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-cross-process/v0/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-cross-process/v0/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-cross-process/audit-0.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-cross-process/audit-0.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny audit /home/runner/work/forge/forge/trusted/build/regression-cross-process/v1/impl/Ledger.dfy /home/runner/work/forge/forge/trusted/build/regression-cross-process/v1/gate/ContractBinding.dfy --report-format md --report-file /home/runner/work/forge/forge/trusted/build/regression-cross-process/audit-1.md --compare-report",
+              "exit_code": 0,
+              "log": "build/regression-cross-process/audit-1.log"
+            },
+            {
+              "command": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 /home/runner/work/forge/forge/trusted/build/regression-cross-process/Snapshot.dfy",
+              "exit_code": 0,
+              "log": "build/regression-cross-process/snapshots.log"
+            }
+          ],
+          "end_to_end": false,
+          "error": "CACHE_UNAUTHENTICATED: booking",
+          "exit_code": 1,
+          "outcome": "REJECTED",
+          "snapshots": [
+            {
+              "checked": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "checked_count": 12,
+              "reused": [],
+              "reused_count": 0
+            },
+            {
+              "checked": [],
+              "checked_count": 0,
+              "reused": [
+                "Ledger.Apply (correctness)",
+                "Ledger.Apply (well-formedness)",
+                "Ledger.TotalRemove (correctness)",
+                "Ledger.TotalRemove (well-formedness)",
+                "Ledger.TotalReplace (correctness)",
+                "Ledger.TotalReplace (well-formedness)",
+                "LedgerSpec.Apply (well-formedness)",
+                "LedgerSpec.IsFreshValid (well-formedness)",
+                "LedgerSpec.IsRetry (well-formedness)",
+                "LedgerSpec.NonNegative (well-formedness)",
+                "LedgerSpec.Total (well-formedness)",
+                "LedgerSpec.WellFormed (well-formedness)"
+              ],
+              "reused_count": 12
+            }
+          ],
+          "spec_approval": null,
+          "stage_exit": false
+        },
+        "process_launches": [
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/trusted",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "--version"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/v0/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/v0/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/audit-0.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "audit",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/v1/impl/Ledger.dfy",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/v1/gate/ContractBinding.dfy",
+              "--report-format",
+              "md",
+              "--report-file",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/audit-1.md",
+              "--compare-report"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny",
+              "/compile:0",
+              "/verifySnapshots:1",
+              "/trace",
+              "/rlimit:1000000",
+              "/timeLimit:0",
+              "/vcsCores:1",
+              "/verifyAllModules",
+              "/proverOpt:PROVER_PATH=/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+              "/home/runner/work/forge/forge/trusted/build/regression-cross-process/Snapshot.dfy"
+            ],
+            "cwd": "/home/runner/work/forge/forge/trusted",
+            "executable": "/home/runner/work/forge/forge/trusted/.toolchain/dafny-4.11.0/dafny/dafny"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-c",
+              "core.fsmonitor=false",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "rev-parse",
+              "HEAD"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "status",
+              "--porcelain=v1",
+              "-z",
+              "--untracked-files=no"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          },
+          {
+            "argv": [
+              "git",
+              "-c",
+              "core.fsmonitor=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "-C",
+              "/home/runner/work/forge/forge/candidate",
+              "ls-files",
+              "-z"
+            ],
+            "cwd": "None",
+            "executable": "git"
+          }
+        ],
+        "scenario": "cross-process",
+        "summed_github_runner_minutes": null,
+        "wall_seconds": 8.594762186
+      }
+    ]
+  }
+}

@@ -1,5 +1,10 @@
 # Forge — current state and proposed path
 
+Current mission and milestone definitions are now in [FORGE_MISSION.md](FORGE_MISSION.md)
+and [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The older plan below is
+preserved as history. Its milestone numbering and GCD-first ordering do not
+override the new component-first M1 priority. No previous evidence is discarded.
+
 Status: 2026-11-03. CURRENT research stage: none. Stage11 is recorded complete.
 Stage12 remains unauthorized. `end_to_end=false`.
 
