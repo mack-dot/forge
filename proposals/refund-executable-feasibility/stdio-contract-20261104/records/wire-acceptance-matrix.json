@@ -1,0 +1,68 @@
+{
+  "actual_exit": 0,
+  "results": [
+    {
+      "case": "wire-swapped-response-ids",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_wire.py",
+        "wire-swapped-response-ids",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/controls/wire-swapped-response-ids/forge_refundWireProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "theorem": "refund_render_fields_roundtrip",
+      "intended_reason": true,
+      "accepted_export": false,
+      "passed": true
+    },
+    {
+      "case": "wire-accepted-trailing-error",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_wire.py",
+        "wire-accepted-trailing-error",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/controls/wire-accepted-trailing-error/forge_refundWireProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "theorem": "refund_run_wire_decode_error",
+      "intended_reason": true,
+      "accepted_export": false,
+      "passed": true
+    },
+    {
+      "case": "wire-suppressed-exception",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_wire.py",
+        "wire-suppressed-exception",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/controls/wire-suppressed-exception/forge_refundWireProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "theorem": "refund_dispatch_error",
+      "intended_reason": true,
+      "accepted_export": false,
+      "passed": true
+    },
+    {
+      "case": "wire-repeat",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_wire.py",
+        "wire-repeat"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "same_exports": true,
+      "passed": true
+    }
+  ],
+  "end_to_end": false,
+  "scope": "Local HOL proof controls; not native or hosted execution"
+}

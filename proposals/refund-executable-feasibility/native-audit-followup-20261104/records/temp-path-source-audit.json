@@ -1,0 +1,43 @@
+{
+  "actual_exit": 0,
+  "classification": "STATIC_CAUSE_HYPOTHESIS_NOT_SYSCALL_TRACE",
+  "upstream_files": [
+    {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/tools/Holmake/core/HM_Cachekey.sml",
+      "sha256": "41948bf331e7587108f2b7032eeb69d21273a9df12ac5e67125d1656030d92e0",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:tools/Holmake/core/HM_Cachekey.sml"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml/libpolyml/basicio.cpp",
+      "sha256": "91764edd0af2da87afd6f219d438d8793795485ee3f82c0a62ec7f64653d4f64",
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:libpolyml/basicio.cpp"
+      ],
+      "actual_exit": 0
+    }
+  ],
+  "sdk_header": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_stdio.h",
+  "sdk_header_sha256": "4b4cd0b2b9f470546f530b7a23f454ffe9be659762bd4bbbfc24319713022b5c",
+  "observations": [
+    "HOL cache-key computation calls OS.FileSys.tmpName even when remote cache use is disabled",
+    "Pinned PolyML implements tmpName using P_tmpdir when that macro is defined",
+    "Installed SDK defines P_tmpdir as /var/tmp/",
+    "This thread writable roots exclude /private/var/tmp"
+  ],
+  "inference": "The build-driver permission failure may be temporary-file creation outside permitted roots. Exact failing syscall has not been captured.",
+  "command_retried": false,
+  "permissions_changed": false,
+  "tool_sources_changed": false,
+  "end_to_end": false
+}

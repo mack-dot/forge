@@ -1,0 +1,37 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refundStdioProgTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundStdioProg_experiment", "actual_exit": 1, "wall_seconds": 91.41353683298803, "source_sha256": "e9deb8789884aa615fe5a7420baa23a040d462626063609fd2f9a705121949c0", "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22", "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d", "object_sha256": {}, "verified_library_source_sha256": "2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632", "verified_library_data_sha256": "5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a", "wire_source_sha256": "417b69d41a58da1ab3831e25cc3cf4ec6db7c0fcafd8af50be0caf9fd2306fb9", "wire_data_sha256": "17482ed974f856688298b957aee8d5155b5d56e2a104bbe3ec2a02056a690ae1", "end_to_end": false, "native_refund_claim": false}
+)/cp_encoding/array[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/graph_encoding[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation/proofs[0m
+Scanning [1m$(sat_encodings)/case_studies[0m
+Scanning [1m$(sat_encodings)/demo[0m
+Scanning [1m$(sat_encodings)/translation[0m
+Scanning [1m$(sat_encodings)/translation/compilation[0m
+Scanning [1m$(scpog_checker)/array[0m
+Scanning [1m$(scpog_checker)/array/compilation[0m
+Scanning [1m$(scpog_checker)/array/compilation/proofs[0m
+Scanned 328 directories
+Building 1 theory file
+Starting work on forge_refundStdioProgTheory
+forge_refundStdioProgTheory                                (65s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refundStdioProgTheory (status 1)
+ <<HOL message: Created theory "forge_refundStdioProg">>
+ Loading translation: forge_refundWireProg ... done.
+ Saved theorem _______ "nsLookup_forge_refundStdioProg_env_pfun_eqs"
+ <<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStdioProg)>>
+ Adding nsLookup representation thms for 602 consts [forge_refundStdioProg_env, forge_refundWireProg_env_13, ..., SexpProg_env]
+ Proof of 
+ 
+ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+ app p refund_main_v [Conv NONE []] (STDIO fs)
+   (POSTv v. &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+ 
+ failed.
+ Tactic failure proving "refund_main_valid"; heap saved to forge_refundStdioProg.refund_main_valid.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundStdioProg.refund_main_valid.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundStdioProg_experiment/.hol/logs/forge_refundStdioProgTheory
+

@@ -1,0 +1,55 @@
+{
+  "actual_exit": 0,
+  "classification": "SAVED_RECORD_IDENTITY_AND_STATEMENT_REVIEW_ONLY",
+  "source_sha256": "2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632",
+  "positive_repeat_actual_exits": [
+    0,
+    0
+  ],
+  "identical_exports": {
+    "forge_refundCertifiedProgTheory.sig": "26f92c544332d6e149b6018c092566d8e136761c8495a40b22c9aa467c4a5a65",
+    "forge_refundCertifiedProgTheory.dat": "5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a",
+    "forge_refundCertifiedProgTheory.uo": "a1d7051d7e6dc29fae0e07d9248bc2140b3840bb8e14f7ed59aae492aec05d68",
+    "forge_refundCertifiedProgTheory.ui": "8b2eba7b62df7f74482365fc33344cd7e5e3c8bdab3ae7bb4fdd46437d3ed323",
+    "forge_refundCertifiedProgTheory.cachekey": "7937d7e5069bcbb94f26752881f877bd10421d12fa93def2b9e42c6d812882ed",
+    "forge_refundCertifiedProgTheory.sml": "581363d47b34752c8aed3b7ae3ec2f82ac9a621447e27328f61c1fa94ddc0216"
+  },
+  "controls": [
+    {
+      "case": "altered-amount",
+      "actual_exit": 1,
+      "failing_theorem": "refund_fields_original_method",
+      "source_sha256": "c38d5852bef7b9a4bf91642bc397a2d80b7411b66360dcad9e83ce4ef629158b",
+      "log_sha256": "fc2371fb9b0817f53ee772d4f4069964d0a2aa3b51567e8ae0fe06bab42b72b3"
+    },
+    {
+      "case": "swapped-wrapper-ids",
+      "actual_exit": 1,
+      "failing_theorem": "refund_verified_spec",
+      "source_sha256": "1693602b73655b32be68a14a4dd4cfa66c193939772cef87e3d71b094bf91d0a",
+      "log_sha256": "04d655539842580b549793678e93be75ffa6afe740bde97fb89c4944ef4a2778"
+    }
+  ],
+  "recorded_dependency_nodes": 192,
+  "recorded_tags": [
+    "refund_verified_spec oracles=DISK_THM axioms= hypotheses=0",
+    "refund_fields_v_thm oracles=DISK_THM axioms= hypotheses=0",
+    "refund_fields_original_method oracles=DISK_THM axioms= hypotheses=0",
+    "nsLookup_forge_refundCertifiedProg_env_pfun_eqs oracles=DISK_THM axioms= hypotheses=0",
+    "nsLookup_forge_refundCertifiedProg_env_1_pfun_eqs oracles=DISK_THM axioms= hypotheses=0",
+    "nsLookup_forge_refundCertifiedProg_env_0_pfun_eqs oracles=DISK_THM axioms= hypotheses=0",
+    "eligible_v_thm oracles=DISK_THM axioms= hypotheses=0"
+  ],
+  "recorded_foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "independent_kernel_replay": "NOT_RUN",
+  "protected_paths_unchanged": 50,
+  "prior_journal_bytes_unchanged": 516530,
+  "integration_obligation": "Candidate returns nested PAIR_TYPE; old raw method and wrapper use a flat six-field tuple. Actual wrapper must preserve all six field positions with a checked adapter or nested pattern.",
+  "native_refund_execution": "NOT_RUN",
+  "end_to_end": false
+}

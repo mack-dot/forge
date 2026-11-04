@@ -1,0 +1,535 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 392 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val it = (): unit
+val closure =
+   ["forge_refundStdioProg", "binary_ieeeProps", "ArrayProg", "mlmap",
+    "MapProg", "mlset", "SetProg", "HashtableProg", "CommandLineProg",
+    "DoubleProg", "IntProg", "typeDecToPP", "mlprettyprinter",
+    "PrettyPrinterProg", "primeFactor", "schneiderUtilsContext",
+    "intExtension", "frac", "rat", "mlrat", "RatProg", "CharProg",
+    "Word64Prog", "Word8Prog", "Word8ArrayProg", "Word8ArrayProof",
+    "MarshallingProg", "TextIOProg", "Marshalling", "fsFFI", "fsFFIProps",
+    "ml_monadBase", "ml_monad_translatorBase", "ml_monad_translator",
+    "cfMonad", "TextIOProof", "SexpProg", "std_prelude", "cfDiv",
+    "cfLetAuto", "cfTactics", "cfFFIType", "temporal", "cmlPEG",
+    "lexer_impl", "cfHeapsBase", "ml_optimise", "weakening", "typeSound",
+    "semanticsProps", "alist_tree", "evaluate_dec", "ml_prog",
+    "ml_translator", "ml_pmatch", "cfHeaps", "cfStore", "cfNormalise",
+    "cfApp", "cf", "xcf", "cfMain", "mloption", "RuntimeProg", "OptionProg",
+    "ListProg", "VectorProg", "StringProg", "mlbasicsProg", "mlsexp",
+    "sexp_to_dafny", "forge_refund", "result_monad", "dafny_to_cakeml",
+    "balanced_map", "oset", "FormalLang", "charset", "regexp", "regexp_map",
+    "vec_map", "regexp_compiler", "mlvector", "mlint", "dafny_freshen",
+    "dafny_misc", "dafny_ast", "dafny_semanticPrimitives", "dafnyProps",
+    "dafny_evaluate", "dafny_evaluateProps", "dafny_freshenProof",
+    "evaluateProps", "dafny_to_cakemlProof", "forge_refund_compile",
+    "lexer_fun", "gram", "tokens", "tokenUtils", "cmlPtreeConversion", ...]:
+   string list
+FORGE_PARENT forge_refundStdioProg:forge_refundWireProg
+FORGE_PARENT binary_ieeeProps:binary_ieee
+FORGE_PARENT ArrayProg:Word8ArrayProg
+FORGE_PARENT mlmap:balanced_map,misc
+FORGE_PARENT MapProg:mlmap,ArrayProg
+FORGE_PARENT mlset:balanced_map,misc
+FORGE_PARENT SetProg:mlset,MapProg
+FORGE_PARENT HashtableProg:SetProg
+FORGE_PARENT CommandLineProg:HashtableProg
+FORGE_PARENT DoubleProg:CommandLineProg,binary_ieeeProps
+FORGE_PARENT IntProg:mlbasicsProg
+FORGE_PARENT typeDecToPP:ast,mlint
+FORGE_PARENT mlprettyprinter:mlint
+FORGE_PARENT PrettyPrinterProg:mlprettyprinter,typeDecToPP,IntProg
+FORGE_PARENT primeFactor:bag,gcd
+FORGE_PARENT schneiderUtilsContext:hol
+FORGE_PARENT intExtension:schneiderUtilsContext,Omega
+FORGE_PARENT frac:intExtension
+FORGE_PARENT rat:frac,primeFactor
+FORGE_PARENT mlrat:mlint,rat
+FORGE_PARENT RatProg:mlrat,PrettyPrinterProg
+FORGE_PARENT CharProg:RatProg
+FORGE_PARENT Word64Prog:CharProg
+FORGE_PARENT Word8Prog:Word64Prog
+FORGE_PARENT Word8ArrayProg:Word8Prog
+FORGE_PARENT Word8ArrayProof:Word8ArrayProg
+FORGE_PARENT MarshallingProg:Word8ArrayProof,Marshalling,DoubleProg
+FORGE_PARENT TextIOProg:MarshallingProg
+FORGE_PARENT Marshalling:misc
+FORGE_PARENT fsFFI:cfHeapsBase,Marshalling
+FORGE_PARENT fsFFIProps:fsFFI
+FORGE_PARENT ml_monadBase:semanticPrimitives
+FORGE_PARENT ml_monad_translatorBase:ml_monadBase,cfLetAuto
+FORGE_PARENT ml_monad_translator:ml_monad_translatorBase
+FORGE_PARENT cfMonad:ml_monad_translator
+FORGE_PARENT TextIOProof:cfMonad,fsFFIProps,TextIOProg
+FORGE_PARENT SexpProg:mlsexp,TextIOProof
+FORGE_PARENT std_prelude:ml_pmatch,ml_optimise
+FORGE_PARENT cfDiv:std_prelude,xcf,cfTactics
+FORGE_PARENT cfLetAuto:xcf,cfTactics
+FORGE_PARENT cfTactics:cf
+FORGE_PARENT cfFFIType:mlstring
+FORGE_PARENT temporal:prog
+FORGE_PARENT cmlPEG:tokenUtils,gram,pegexec
+FORGE_PARENT lexer_impl:lexer_fun
+FORGE_PARENT cfHeapsBase:lexer_impl,cmlPEG,temporal,ml_prog,cfFFIType
+FORGE_PARENT ml_optimise:ml_translator
+FORGE_PARENT weakening:typeSysProps
+FORGE_PARENT typeSound:weakening,primSemEnv,evaluateProps
+FORGE_PARENT semanticsProps:typeSound
+FORGE_PARENT alist_tree:alist
+FORGE_PARENT evaluate_dec:evaluateProps,alist_tree
+FORGE_PARENT ml_prog:evaluate_dec,semanticsProps
+FORGE_PARENT ml_translator:ml_prog,mlint
+FORGE_PARENT ml_pmatch:ml_translator
+FORGE_PARENT cfHeaps:ml_pmatch,ml_optimise,cfHeapsBase
+FORGE_PARENT cfStore:cfHeaps
+FORGE_PARENT cfNormalise:cfStore
+FORGE_PARENT cfApp:cfNormalise
+FORGE_PARENT cf:cfApp
+FORGE_PARENT xcf:cf
+FORGE_PARENT cfMain:xcf,cfTactics
+FORGE_PARENT mloption:misc
+FORGE_PARENT RuntimeProg:mloption,cfMain,cfLetAuto,cfDiv
+FORGE_PARENT OptionProg:RuntimeProg
+FORGE_PARENT ListProg:OptionProg
+FORGE_PARENT VectorProg:ListProg
+FORGE_PARENT StringProg:VectorProg
+FORGE_PARENT mlbasicsProg:StringProg
+FORGE_PARENT mlsexp:mlstring
+FORGE_PARENT sexp_to_dafny:result_monad,dafny_ast,mlsexp,mlint
+FORGE_PARENT forge_refund:dafny_evaluate
+FORGE_PARENT result_monad:mlstring
+FORGE_PARENT dafny_to_cakeml:ast,result_monad,dafny_ast,mlint
+FORGE_PARENT balanced_map:comparison,alist
+FORGE_PARENT oset:balanced_map
+FORGE_PARENT FormalLang:hol
+FORGE_PARENT charset:words,comparison
+FORGE_PARENT regexp:mergesort,container,charset,FormalLang
+FORGE_PARENT regexp_map:regexp,oset
+FORGE_PARENT vec_map:alist
+FORGE_PARENT regexp_compiler:vec_map,regexp_map
+FORGE_PARENT mlvector:mllist,regexp_compiler
+FORGE_PARENT mlint:mlvector,mlstring
+FORGE_PARENT dafny_freshen:dafny_ast,mlint
+FORGE_PARENT dafny_misc:misc
+FORGE_PARENT dafny_ast:mlstring
+FORGE_PARENT dafny_semanticPrimitives:dafny_ast
+FORGE_PARENT dafnyProps:dafny_semanticPrimitives
+FORGE_PARENT dafny_evaluate:dafnyProps
+FORGE_PARENT dafny_evaluateProps:dafny_evaluate,dafny_misc
+FORGE_PARENT dafny_freshenProof:dafny_evaluateProps,dafny_freshen
+FORGE_PARENT evaluateProps:semanticPrimitivesProps,evaluate
+FORGE_PARENT dafny_to_cakemlProof:evaluateProps,dafny_freshenProof,dafny_to_cakeml
+FORGE_PARENT forge_refund_compile:dafny_to_cakemlProof,forge_refund
+FORGE_PARENT lexer_fun:tokens,location
+FORGE_PARENT gram:lexer_fun,grammar
+FORGE_PARENT tokens:mlstring
+FORGE_PARENT tokenUtils:tokens,grammar
+FORGE_PARENT cmlPtreeConversion:tokenUtils,gram,ast
+FORGE_PARENT evaluate:semanticPrimitives
+FORGE_PARENT primTypes:typeSystem,evaluate
+FORGE_PARENT semantics:primTypes,cmlPtreeConversion
+FORGE_PARENT location:hol
+FORGE_PARENT grammar:finite_map,location
+FORGE_PARENT peg:grammar
+FORGE_PARENT pegexec:peg
+FORGE_PARENT state_transformer:hol
+FORGE_PARENT semanticPrimitivesProps:namespaceProps,semanticPrimitives
+FORGE_PARENT fpSem:ast
+FORGE_PARENT ffi:mlstring
+FORGE_PARENT semanticPrimitives:ffi,fpSem
+FORGE_PARENT typeSystem:semanticPrimitives
+FORGE_PARENT mergesort:sorting
+FORGE_PARENT mllist:mergesort,misc
+FORGE_PARENT mlstring:mllist
+FORGE_PARENT set_sep:words
+FORGE_PARENT tailrec:hol
+FORGE_PARENT prog:tailrec,set_sep
+FORGE_PARENT alignment:words
+FORGE_PARENT address:alignment,prog
+FORGE_PARENT lprefix_lub:llist
+FORGE_PARENT integer_word:words,Omega
+FORGE_PARENT gcd:divides
+FORGE_PARENT int_arith:integer,gcd
+FORGE_PARENT cooper:int_arith
+FORGE_PARENT integer:normalizer,hol
+FORGE_PARENT intReduce:integer
+FORGE_PARENT Omega:intReduce,cooper
+FORGE_PARENT intreal:real,Omega
+FORGE_PARENT normalizer:arithmetic
+FORGE_PARENT hrat:hol
+FORGE_PARENT hreal:hrat
+FORGE_PARENT realax:hreal,normalizer
+FORGE_PARENT real_arith:realax
+FORGE_PARENT real:real_arith
+FORGE_PARENT RealFieldContext:real
+FORGE_PARENT binary_ieee:RealFieldContext,intreal,words
+FORGE_PARENT machine_ieee:binary_ieee
+FORGE_PARENT poset:pairToolsContext
+FORGE_PARENT fixedPoint:pred_set,poset
+FORGE_PARENT llist:hol
+FORGE_PARENT path:llist,fixedPoint
+FORGE_PARENT toto:string
+FORGE_PARENT comparison:toto
+FORGE_PARENT bag:hol
+FORGE_PARENT container:finite_map,bag
+FORGE_PARENT sorting:hol
+FORGE_PARENT finite_map:sorting
+FORGE_PARENT alist:finite_map
+FORGE_PARENT sptree:alist,logroot
+FORGE_PARENT bitstring:words
+FORGE_PARENT numeral_bit:bit
+FORGE_PARENT iterate:permutes
+FORGE_PARENT fcp:iterate,hol
+FORGE_PARENT sum_num:hol
+FORGE_PARENT logroot:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT bit:logroot
+FORGE_PARENT numposrep:rich_list,bit
+FORGE_PARENT ternaryComparisons:hol
+FORGE_PARENT string:ternaryComparisons
+FORGE_PARENT ASCIInumbers:string,numposrep
+FORGE_PARENT words:ASCIInumbers,sum_num,fcp,numeral_bit
+FORGE_PARENT blast:words
+FORGE_PARENT byte:blast,bitstring
+FORGE_PARENT ConseqConv:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT quantHeuristics:ConseqConv,list
+FORGE_PARENT patternMatches:rich_list,quantHeuristics
+FORGE_PARENT EnumTypeContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+FORGE_PARENT ordinalBasic:cardinalityCore
+FORGE_PARENT bnfInitial:ordinalBasic
+FORGE_PARENT permutes:pred_set,hurdUtilsContext
+FORGE_PARENT hurdUtilsContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+FORGE_PARENT divides:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT While:arithmetic,option
+FORGE_PARENT NumConvContext:arithmetic
+FORGE_PARENT cv:numeral
+FORGE_PARENT BoolconvContext:marker
+FORGE_PARENT reduce:arithmetic
+FORGE_PARENT SubAndCondContext:marker
+FORGE_PARENT one:mesonLibContext,Canon_Port_Context,boolSimpsContext,InductiveDefinitionContext,canonContext
+FORGE_PARENT sum:pair
+FORGE_PARENT option:sum,one
+FORGE_PARENT pairToolsContext:pair
+FORGE_PARENT quotient:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+FORGE_PARENT pair:relation,quotient
+FORGE_PARENT InductiveDefinitionContext:marker
+FORGE_PARENT Canon_Port_Context:sat,combin
+FORGE_PARENT mesonLibContext:sat,marker
+FORGE_PARENT folMappingContext:sat,marker
+FORGE_PARENT folToolsContext:normalForms
+FORGE_PARENT sat:bool
+FORGE_PARENT canonContext:sat,combin
+FORGE_PARENT combin:marker
+FORGE_PARENT boolSimpsContext:combin
+FORGE_PARENT normalForms:marker
+FORGE_PARENT normalFormsContext:normalForms,boolSimpsContext,canonContext
+FORGE_PARENT relation:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+FORGE_PARENT min:
+FORGE_PARENT bool:min
+FORGE_PARENT marker:bool
+FORGE_PARENT num:marker
+FORGE_PARENT prim_rec:num,relation
+FORGE_PARENT arithmetic:prim_rec,pair
+FORGE_PARENT numeral:arithmetic
+FORGE_PARENT basicSize:numeral,pairToolsContext,option
+FORGE_PARENT numpair:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT pred_set:numpair,divides
+FORGE_PARENT set_relation:pred_set,hurdUtilsContext
+FORGE_PARENT wellorder:set_relation
+FORGE_PARENT cardinalityCore:wellorder,permutes
+FORGE_PARENT bnfPrelims:cardinalityCore
+FORGE_PARENT bnfFixBNF:bnfPrelims,bnfInitial
+FORGE_PARENT bnfMutual:bnfFixBNF
+FORGE_PARENT list:bnfMutual,EnumTypeContext
+FORGE_PARENT rich_list:list
+FORGE_PARENT indexedLists:rich_list
+FORGE_PARENT hol:indexedLists,patternMatches
+FORGE_PARENT res_quan:hol
+FORGE_PARENT misc:res_quan,byte,sptree,container,comparison,path,machine_ieee,integer_word,lprefix_lub,address
+FORGE_PARENT namespace:misc
+FORGE_PARENT ast:namespace,mlstring
+FORGE_PARENT namespaceProps:ast
+FORGE_PARENT typeSoundInvariants:namespaceProps,typeSystem
+FORGE_PARENT typeSysProps:typeSoundInvariants,semanticPrimitivesProps
+FORGE_PARENT primSemEnv:typeSysProps,state_transformer,pegexec,semantics
+FORGE_PARENT forge_refund_call:primSemEnv,forge_refund_compile
+FORGE_PARENT forge_refund_io:forge_refund_call,sexp_to_dafny
+FORGE_PARENT forge_refundCertifiedProg:forge_refund_io,mlbasicsProg
+FORGE_PARENT forge_refundWireProg:forge_refundCertifiedProg,SexpProg
+FORGE_CLOSURE_AXIOM bool.SELECT_AX
+FORGE_CLOSURE_AXIOM bool.INFINITY_AX
+FORGE_CLOSURE_AXIOM bool.ETA_AX
+FORGE_CLOSURE_AXIOM bool.BOOL_CASES_AX
+FORGE_TAG forge_refundWireProg.to_mlstring_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.to_mlstring_v_thm ⊢ (SEXP_TYPE --> SUM_TYPE STRING_TYPE STRING_TYPE) to_mlstring to_mlstring_v
+FORGE_TAG forge_refundWireProg.to_int_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.to_int_v_thm ⊢ (SEXP_TYPE --> SUM_TYPE STRING_TYPE INT) to_int to_int_v
+FORGE_TAG forge_refundWireProg.to_bool_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.to_bool_v_thm ⊢ (SEXP_TYPE --> SUM_TYPE STRING_TYPE BOOL) to_bool to_bool_v
+FORGE_TAG forge_refundWireProg.refund_run_wire_valid oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_run_wire_valid ⊢ refund_run_wire
+    (sexp_to_string
+       (refund_request charge request original remaining enabled opened
+          candidate amount reason)) =
+  INR
+    (refund_render_fields
+       (refund_fields charge request original remaining enabled opened
+          candidate amount reason))
+FORGE_TAG forge_refundWireProg.refund_run_wire_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_run_wire_v_thm ⊢ (STRING_TYPE --> SUM_TYPE STRING_TYPE STRING_TYPE) refund_run_wire
+    refund_run_wire_v
+FORGE_TAG forge_refundWireProg.refund_run_wire_trailing oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_run_wire_trailing ⊢ rest ≠ "" ∧ parse (explode wire) = INR (se,rest) ⇒
+  refund_run_wire wire = INL «refund: trailing input»
+FORGE_TAG forge_refundWireProg.refund_run_wire_malformed oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_run_wire_malformed ⊢ parse (explode wire) = INL err ⇒
+  refund_run_wire wire = INL «refund: invalid S-expression»
+FORGE_TAG forge_refundWireProg.refund_run_wire_decode_error oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_run_wire_decode_error ⊢ refund_decode_wire wire = INL err ⇒ refund_run_wire wire = INL err
+FORGE_TAG forge_refundWireProg.refund_response_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_response_v_thm ⊢ (BOOL --> INT --> STRING_TYPE --> STRING_TYPE --> STRING_TYPE --> INT -->
+   SEXP_TYPE) refund_response refund_response_v
+FORGE_TAG forge_refundWireProg.refund_render_fields_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_render_fields_v_thm ⊢ (PAIR_TYPE BOOL
+     (PAIR_TYPE INT
+        (PAIR_TYPE STRING_TYPE
+           (PAIR_TYPE STRING_TYPE (PAIR_TYPE STRING_TYPE INT)))) -->
+   STRING_TYPE) refund_render_fields refund_render_fields_v
+FORGE_TAG forge_refundWireProg.refund_render_fields_roundtrip oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_render_fields_roundtrip ⊢ parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+  INR (refund_response ok a r c q n,"") ∧
+  refund_response_fields (refund_response ok a r c q n) = INR (ok,a,r,c,q,n)
+FORGE_TAG forge_refundWireProg.refund_fields_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_fields_v_thm ⊢ (STRING_TYPE --> STRING_TYPE --> INT --> INT --> BOOL --> BOOL --> BOOL -->
+   INT --> STRING_TYPE -->
+   PAIR_TYPE BOOL
+     (PAIR_TYPE INT
+        (PAIR_TYPE STRING_TYPE
+           (PAIR_TYPE STRING_TYPE (PAIR_TYPE STRING_TYPE INT)))))
+    refund_fields refund_fields_v
+FORGE_TAG forge_refundWireProg.refund_dispatch_valid oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_dispatch_valid ⊢ refund_run_wire wire = INR output ⇒
+  app p refund_dispatch_v [Litv (StrLit wire)] emp
+    (POSTv v. &STRING_TYPE output v)
+FORGE_TAG forge_refundWireProg.refund_dispatch_error oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_dispatch_error ⊢ refund_run_wire wire = INL err ⇒
+  app p refund_dispatch_v [Litv (StrLit wire)] emp
+    (POSTe exn. &Fail_exn err exn)
+FORGE_TAG forge_refundWireProg.refund_decode_wire_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_decode_wire_v_thm ⊢ (STRING_TYPE -->
+   SUM_TYPE STRING_TYPE
+     (PAIR_TYPE STRING_TYPE
+        (PAIR_TYPE STRING_TYPE
+           (PAIR_TYPE INT
+              (PAIR_TYPE INT
+                 (PAIR_TYPE BOOL
+                    (PAIR_TYPE BOOL
+                       (PAIR_TYPE BOOL (PAIR_TYPE INT STRING_TYPE)))))))))
+    refund_decode_wire refund_decode_wire_v
+FORGE_TAG forge_refundWireProg.refund_decode_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.refund_decode_v_thm ⊢ (SEXP_TYPE -->
+   SUM_TYPE STRING_TYPE
+     (PAIR_TYPE STRING_TYPE
+        (PAIR_TYPE STRING_TYPE
+           (PAIR_TYPE INT
+              (PAIR_TYPE INT
+                 (PAIR_TYPE BOOL
+                    (PAIR_TYPE BOOL
+                       (PAIR_TYPE BOOL (PAIR_TYPE INT STRING_TYPE)))))))))
+    refund_decode refund_decode_v
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env.c = nsLookup_Mod1 SexpProg_env_37.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env.v = nsLookup_Mod1 SexpProg_env_37.v ∧
+  nsLookup_Short forge_refundWireProg_env.c =
+  nsLookup_Short SexpProg_env_37.c ∧
+  nsLookup_Short forge_refundWireProg_env.v =
+  option_choice_f (ALOOKUP [(«bind»,bind_v)])
+    (nsLookup_Short SexpProg_env_37.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_9_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_9_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_9.c =
+  nsLookup_Mod1 forge_refundWireProg_env_8.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_9.v =
+  nsLookup_Mod1 forge_refundWireProg_env_8.v ∧
+  nsLookup_Short forge_refundWireProg_env_9.c =
+  nsLookup_Short forge_refundWireProg_env_8.c ∧
+  nsLookup_Short forge_refundWireProg_env_9.v =
+  option_choice_f (ALOOKUP [(«refund_fields»,refund_fields_v)])
+    (nsLookup_Short forge_refundWireProg_env_8.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_8_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_8_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_8.c =
+  nsLookup_Mod1 forge_refundWireProg_env_7.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_8.v =
+  nsLookup_Mod1 forge_refundWireProg_env_7.v ∧
+  nsLookup_Short forge_refundWireProg_env_8.c =
+  nsLookup_Short forge_refundWireProg_env_7.c ∧
+  nsLookup_Short forge_refundWireProg_env_8.v =
+  option_choice_f (ALOOKUP [(«eligible»,eligible_v)])
+    (nsLookup_Short forge_refundWireProg_env_7.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_7_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_7_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_7.c =
+  nsLookup_Mod1 forge_refundWireProg_env_6.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_7.v =
+  nsLookup_Mod1 forge_refundWireProg_env_6.v ∧
+  nsLookup_Short forge_refundWireProg_env_7.c =
+  nsLookup_Short forge_refundWireProg_env_6.c ∧
+  nsLookup_Short forge_refundWireProg_env_7.v =
+  option_choice_f (ALOOKUP [(«refund_decode_wire»,refund_decode_wire_v)])
+    (nsLookup_Short forge_refundWireProg_env_6.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_6_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_6_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_6.c =
+  nsLookup_Mod1 forge_refundWireProg_env_5.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_6.v =
+  nsLookup_Mod1 forge_refundWireProg_env_5.v ∧
+  nsLookup_Short forge_refundWireProg_env_6.c =
+  nsLookup_Short forge_refundWireProg_env_5.c ∧
+  nsLookup_Short forge_refundWireProg_env_6.v =
+  option_choice_f (ALOOKUP [(«refund_decode»,refund_decode_v)])
+    (nsLookup_Short forge_refundWireProg_env_5.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_5_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_5_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_5.c =
+  nsLookup_Mod1 forge_refundWireProg_env_4.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_5.v =
+  nsLookup_Mod1 forge_refundWireProg_env_4.v ∧
+  nsLookup_Short forge_refundWireProg_env_5.c =
+  nsLookup_Short forge_refundWireProg_env_4.c ∧
+  nsLookup_Short forge_refundWireProg_env_5.v =
+  option_choice_f (ALOOKUP [(«dest9»,dest9_v)])
+    (nsLookup_Short forge_refundWireProg_env_4.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_4_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_4_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_4.c =
+  nsLookup_Mod1 forge_refundWireProg_env_3.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_4.v =
+  nsLookup_Mod1 forge_refundWireProg_env_3.v ∧
+  nsLookup_Short forge_refundWireProg_env_4.c =
+  nsLookup_Short forge_refundWireProg_env_3.c ∧
+  nsLookup_Short forge_refundWireProg_env_4.v =
+  option_choice_f (ALOOKUP [(«dest_fail»,dest_fail_v)])
+    (nsLookup_Short forge_refundWireProg_env_3.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_3_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_3_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_3.c =
+  nsLookup_Mod1 forge_refundWireProg_env_2.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_3.v =
+  nsLookup_Mod1 forge_refundWireProg_env_2.v ∧
+  nsLookup_Short forge_refundWireProg_env_3.c =
+  nsLookup_Short forge_refundWireProg_env_2.c ∧
+  nsLookup_Short forge_refundWireProg_env_3.v =
+  option_choice_f (ALOOKUP [(«dest_expr»,dest_expr_v)])
+    (nsLookup_Short forge_refundWireProg_env_2.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_2_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_2_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_2.c =
+  nsLookup_Mod1 forge_refundWireProg_env_1.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_2.v =
+  nsLookup_Mod1 forge_refundWireProg_env_1.v ∧
+  nsLookup_Short forge_refundWireProg_env_2.c =
+  nsLookup_Short forge_refundWireProg_env_1.c ∧
+  nsLookup_Short forge_refundWireProg_env_2.v =
+  option_choice_f (ALOOKUP [(«to_int»,to_int_v)])
+    (nsLookup_Short forge_refundWireProg_env_1.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_1_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_1_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_1.c =
+  nsLookup_Mod1 forge_refundWireProg_env_0.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_1.v =
+  nsLookup_Mod1 forge_refundWireProg_env_0.v ∧
+  nsLookup_Short forge_refundWireProg_env_1.c =
+  nsLookup_Short forge_refundWireProg_env_0.c ∧
+  nsLookup_Short forge_refundWireProg_env_1.v =
+  option_choice_f (ALOOKUP [(«to_bool»,to_bool_v)])
+    (nsLookup_Short forge_refundWireProg_env_0.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_13_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_13_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_13.c =
+  nsLookup_Mod1 forge_refundWireProg_env_12.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_13.v =
+  nsLookup_Mod1 forge_refundWireProg_env_12.v ∧
+  nsLookup_Short forge_refundWireProg_env_13.c =
+  nsLookup_Short forge_refundWireProg_env_12.c ∧
+  nsLookup_Short forge_refundWireProg_env_13.v =
+  option_choice_f (ALOOKUP [(«refund_dispatch»,refund_dispatch_v)])
+    (nsLookup_Short forge_refundWireProg_env_12.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_12_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_12_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_12.c =
+  nsLookup_Mod1 forge_refundWireProg_env_11.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_12.v =
+  nsLookup_Mod1 forge_refundWireProg_env_11.v ∧
+  nsLookup_Short forge_refundWireProg_env_12.c =
+  nsLookup_Short forge_refundWireProg_env_11.c ∧
+  nsLookup_Short forge_refundWireProg_env_12.v =
+  option_choice_f (ALOOKUP [(«refund_run_wire»,refund_run_wire_v)])
+    (nsLookup_Short forge_refundWireProg_env_11.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_11_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_11_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_11.c =
+  nsLookup_Mod1 forge_refundWireProg_env_10.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_11.v =
+  nsLookup_Mod1 forge_refundWireProg_env_10.v ∧
+  nsLookup_Short forge_refundWireProg_env_11.c =
+  nsLookup_Short forge_refundWireProg_env_10.c ∧
+  nsLookup_Short forge_refundWireProg_env_11.v =
+  option_choice_f (ALOOKUP [(«refund_render_fields»,refund_render_fields_v)])
+    (nsLookup_Short forge_refundWireProg_env_10.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_10_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_10_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_10.c =
+  nsLookup_Mod1 forge_refundWireProg_env_9.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_10.v =
+  nsLookup_Mod1 forge_refundWireProg_env_9.v ∧
+  nsLookup_Short forge_refundWireProg_env_10.c =
+  nsLookup_Short forge_refundWireProg_env_9.c ∧
+  nsLookup_Short forge_refundWireProg_env_10.v =
+  option_choice_f (ALOOKUP [(«refund_response»,refund_response_v)])
+    (nsLookup_Short forge_refundWireProg_env_9.v)
+FORGE_TAG forge_refundWireProg.nsLookup_forge_refundWireProg_env_0_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.nsLookup_forge_refundWireProg_env_0_pfun_eqs ⊢ nsLookup_Mod1 forge_refundWireProg_env_0.c =
+  nsLookup_Mod1 forge_refundWireProg_env.c ∧
+  nsLookup_Mod1 forge_refundWireProg_env_0.v =
+  nsLookup_Mod1 forge_refundWireProg_env.v ∧
+  nsLookup_Short forge_refundWireProg_env_0.c =
+  nsLookup_Short forge_refundWireProg_env.c ∧
+  nsLookup_Short forge_refundWireProg_env_0.v =
+  option_choice_f (ALOOKUP [(«to_mlstring»,to_mlstring_v)])
+    (nsLookup_Short forge_refundWireProg_env.v)
+FORGE_TAG forge_refundWireProg.eligible_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.eligible_v_thm ⊢ (STRING_TYPE --> STRING_TYPE --> INT --> INT --> BOOL --> BOOL --> BOOL -->
+   INT --> STRING_TYPE --> BOOL) eligible eligible_v
+FORGE_TAG forge_refundWireProg.dest_fail_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.dest_fail_v_thm ⊢ (NUM --> LIST_TYPE b --> SUM_TYPE STRING_TYPE a) dest_fail dest_fail_v
+FORGE_TAG forge_refundWireProg.dest_expr_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.dest_expr_v_thm ⊢ (SEXP_TYPE --> SUM_TYPE STRING_TYPE (LIST_TYPE SEXP_TYPE)) dest_expr
+    dest_expr_v
+FORGE_TAG forge_refundWireProg.dest9_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.dest9_v_thm ⊢ (LIST_TYPE a -->
+   SUM_TYPE STRING_TYPE
+     (PAIR_TYPE a
+        (PAIR_TYPE a
+           (PAIR_TYPE a
+              (PAIR_TYPE a
+                 (PAIR_TYPE a (PAIR_TYPE a (PAIR_TYPE a (PAIR_TYPE a a)))))))))
+    dest9 dest9_v
+FORGE_TAG forge_refundWireProg.bind_v_thm oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundWireProg.bind_v_thm ⊢ (SUM_TYPE a c --> (c --> SUM_TYPE a b) --> SUM_TYPE a b) monad_bind bind_v
+FORGE_TAG forge_refundStdioProg.refund_main_valid oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundStdioProg.refund_main_valid ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+FORGE_TAG forge_refundStdioProg.refund_main_error oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundStdioProg.refund_main_error ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTe exn. &Fail_exn err exn * STDIO (fastForwardFD fs 0))
+FORGE_TAG forge_refundStdioProg.nsLookup_forge_refundStdioProg_env_pfun_eqs oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT forge_refundStdioProg.nsLookup_forge_refundStdioProg_env_pfun_eqs ⊢ nsLookup_Mod1 forge_refundStdioProg_env.c =
+  nsLookup_Mod1 forge_refundWireProg_env_13.c ∧
+  nsLookup_Mod1 forge_refundStdioProg_env.v =
+  nsLookup_Mod1 forge_refundWireProg_env_13.v ∧
+  nsLookup_Short forge_refundStdioProg_env.c =
+  nsLookup_Short forge_refundWireProg_env_13.c ∧
+  nsLookup_Short forge_refundStdioProg_env.v =
+  option_choice_f (ALOOKUP [(«refund_main»,refund_main_v)])
+    (nsLookup_Short forge_refundWireProg_env_13.v)
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

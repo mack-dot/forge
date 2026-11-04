@@ -1,0 +1,229 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 589 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val showgoals = fn: unit -> unit
+val step = fn: string -> tactic -> unit
+FORGE_STEP enter
+OK..
+1 subgoal:
+FORGE_STEP_OK enter
+val it = (): unit
+FORGE_STEP none
+OK..
+1 subgoal:
+FORGE_STEP_OK none
+val it = (): unit
+FORGE_STEP read
+OK..
+1 subgoal:
+FORGE_STEP_OK read
+val it = (): unit
+FORGE_STEP representations
+OK..
+1 subgoal:
+FORGE_STEP_OK representations
+val it = (): unit
+<<HOL message: inventing new type variable names: 'a>>
+FORGE_STEP match
+OK..
+1 subgoal:
+FORGE_STEP_OK match
+val it = (): unit
+FORGE_STEP dispatch-let
+OK..
+2 subgoals:
+FORGE_STEP_OK dispatch-let
+val it = (): unit
+FORGE_STEP dispatch-app
+OK..
+
+Goal proved.
+ [..]
+⊢ cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)]
+    (extend_env
+       (REVERSE (pat_bindings (Pcon (SOME (Short «Some»)) [Pvar «wire»])))
+       [Litv (StrLit (implode text))]
+       (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+          (merge_env forge_refundWireProg_env_13 init_env) with
+        v :=
+          nsBind « v1»
+            (Conv (SOME (TypeStamp «Some» 2)) [Litv (StrLit (implode text))])
+            (nsBind « v0» (Conv (SOME (TypeStamp «None» 2)) [])
+               (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                  [Conv NONE []]
+                  (merge_env forge_refundWireProg_env_13 init_env)).v)))
+    (STDIO (fastForwardFD fs 0))
+    (POSTv v. &STRING_TYPE output v * STDIO (fastForwardFD fs 0))
+
+Remaining subgoals:
+FORGE_STEP_OK dispatch-app
+val it = (): unit
+FORGE_STEP print
+OK..
+
+Goal proved.
+ [.]
+⊢ cf_app p (Var (Long «TextIO» (Short «print»))) [Var (Short « v3»)]
+    (extend_env
+       (REVERSE (pat_bindings (Pcon (SOME (Short «Some»)) [Pvar «wire»])))
+       [Litv (StrLit (implode text))]
+       (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+          (merge_env forge_refundWireProg_env_13 init_env) with
+        v :=
+          nsBind « v1»
+            (Conv (SOME (TypeStamp «Some» 2)) [Litv (StrLit (implode text))])
+            (nsBind « v0» (Conv (SOME (TypeStamp «None» 2)) [])
+               (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                  [Conv NONE []]
+                  (merge_env forge_refundWireProg_env_13 init_env)).v)) with
+     v :=
+       nsBind « v3» v
+         (extend_env
+            (REVERSE
+               (pat_bindings (Pcon (SOME (Short «Some»)) [Pvar «wire»])))
+            [Litv (StrLit (implode text))]
+            (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+               [Conv NONE []]
+               (merge_env forge_refundWireProg_env_13 init_env) with
+             v :=
+               nsBind « v1»
+                 (Conv (SOME (TypeStamp «Some» 2))
+                    [Litv (StrLit (implode text))])
+                 (nsBind « v0» (Conv (SOME (TypeStamp «None» 2)) [])
+                    (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                       [Conv NONE []]
+                       (merge_env forge_refundWireProg_env_13 init_env)).v))).
+         v) (STDIO (fastForwardFD fs 0))
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+
+Goal proved.
+ [..]
+⊢ cf_let (SOME « v3»)
+    (cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)])
+    (cf_app p (Var (Long «TextIO» (Short «print»))) [Var (Short « v3»)])
+    (extend_env
+       (REVERSE (pat_bindings (Pcon (SOME (Short «Some»)) [Pvar «wire»])))
+       [Litv (StrLit (implode text))]
+       (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+          (merge_env forge_refundWireProg_env_13 init_env) with
+        v :=
+          nsBind « v1»
+            (Conv (SOME (TypeStamp «Some» 2)) [Litv (StrLit (implode text))])
+            (nsBind « v0» (Conv (SOME (TypeStamp «None» 2)) [])
+               (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+                  [Conv NONE []]
+                  (merge_env forge_refundWireProg_env_13 init_env)).v)))
+    (STDIO (fastForwardFD fs 0))
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+
+Goal proved.
+ [..]
+⊢ cf_match (Var (Short « v1»))
+    [(Pcon (SOME (Short «None»)) [],
+      cf_let (SOME « v2»)
+        (cf_con (SOME (Short «Fail»))
+           [Lit (StrLit «refund: stdin unavailable»)])
+        (cf_raise (Var (Short « v2»))));
+     (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+      cf_let (SOME « v3»)
+        (cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)])
+        (cf_app p (Var (Long «TextIO» (Short «print»))) [Var (Short « v3»)]))]
+    (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+       (merge_env forge_refundWireProg_env_13 init_env) with
+     v :=
+       nsBind « v1»
+         (Conv (SOME (TypeStamp «Some» 2)) [Litv (StrLit (implode text))])
+         (nsBind « v0» (Conv (SOME (TypeStamp «None» 2)) [])
+            (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+               [Conv NONE []]
+               (merge_env forge_refundWireProg_env_13 init_env)).v))
+    (STDIO (fastForwardFD fs 0))
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+
+Goal proved.
+ [....]
+⊢ cf_match (Var (Short « v1»))
+    [(Pcon (SOME (Short «None»)) [],
+      cf_let (SOME « v2»)
+        (cf_con (SOME (Short «Fail»))
+           [Lit (StrLit «refund: stdin unavailable»)])
+        (cf_raise (Var (Short « v2»))));
+     (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+      cf_let (SOME « v3»)
+        (cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)])
+        (cf_app p (Var (Long «TextIO» (Short «print»))) [Var (Short « v3»)]))]
+    (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+       (merge_env forge_refundWireProg_env_13 init_env) with
+     v :=
+       nsBind « v1» v'
+         (nsBind « v0» v
+            (extend_env_rec [«refund_main»] [refund_main_v] [«u»]
+               [Conv NONE []]
+               (merge_env forge_refundWireProg_env_13 init_env)).v))
+    (STDIO (fastForwardFD fs 0))
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+
+Goal proved.
+ [...]
+⊢ cf_let (SOME « v1»)
+    (cf_app p (Var (Long «TextIO» (Short «inputAllFrom»)))
+       [Var (Short « v0»)])
+    (cf_match (Var (Short « v1»))
+       [(Pcon (SOME (Short «None»)) [],
+         cf_let (SOME « v2»)
+           (cf_con (SOME (Short «Fail»))
+              [Lit (StrLit «refund: stdin unavailable»)])
+           (cf_raise (Var (Short « v2»))));
+        (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+         cf_let (SOME « v3»)
+           (cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)])
+           (cf_app p (Var (Long «TextIO» (Short «print»)))
+              [Var (Short « v3»)]))])
+    (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+       (merge_env forge_refundWireProg_env_13 init_env) with
+     v :=
+       nsBind « v0» v
+         (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+            (merge_env forge_refundWireProg_env_13 init_env)).v) (STDIO fs)
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+
+Goal proved.
+ [..]
+⊢ cf_let (SOME « v0») (cf_con (SOME (Short «None»)) [])
+    (cf_let (SOME « v1»)
+       (cf_app p (Var (Long «TextIO» (Short «inputAllFrom»)))
+          [Var (Short « v0»)])
+       (cf_match (Var (Short « v1»))
+          [(Pcon (SOME (Short «None»)) [],
+            cf_let (SOME « v2»)
+              (cf_con (SOME (Short «Fail»))
+                 [Lit (StrLit «refund: stdin unavailable»)])
+              (cf_raise (Var (Short « v2»))));
+           (Pcon (SOME (Short «Some»)) [Pvar «wire»],
+            cf_let (SOME « v3»)
+              (cf_app p (Var (Short «refund_dispatch»)) [Var (Short «wire»)])
+              (cf_app p (Var (Long «TextIO» (Short «print»)))
+                 [Var (Short « v3»)]))]))
+    (extend_env_rec [«refund_main»] [refund_main_v] [«u»] [Conv NONE []]
+       (merge_env forge_refundWireProg_env_13 init_env)) (STDIO fs)
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+FORGE_STEP_OK print
+val it = (): unit
+Exception- HOL_ERR (at goalStack.top_goals: no goals) raised
+Exception- HOL_ERR (at goalStack.top_goals: no goals) raised
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

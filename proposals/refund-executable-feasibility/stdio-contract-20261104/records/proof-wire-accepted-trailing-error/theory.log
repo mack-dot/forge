@@ -1,0 +1,16 @@
+<<HOL message: Created theory "forge_refundWireProg">>
+Saved definition ____ "refund_render_fields_def"
+Saved definition ____ "refund_run_wire_def"
+Saved theorem _______ "refund_run_wire_valid"
+Saved theorem _______ "refund_render_fields_roundtrip"
+Proof of 
+
+refund_decode_wire wire = INL err ⇒ refund_run_wire wire = INL err
+
+failed.
+First unsolved sub-goal is
+
+refund_decode_wire wire = INL err ⇒ err ≠ «refund: trailing input»
+
+Tactic failure proving "refund_run_wire_decode_error"; heap saved to forge_refundWireProg.refund_run_wire_decode_error.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundWireProg.refund_run_wire_decode_error.dumpedheap

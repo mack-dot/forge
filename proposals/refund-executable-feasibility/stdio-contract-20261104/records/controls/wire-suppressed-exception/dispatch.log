@@ -1,0 +1,35 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refundWireProgTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWireProg_experiment", "actual_exit": 1, "wall_seconds": 85.60581241600448, "source_sha256": "2893b994044d1e4533b6a72b33b333503ce4b026642d7d854340cc4e29bc5fe5", "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22", "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d", "object_sha256": {}, "verified_library_source_sha256": "2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632", "verified_library_data_sha256": "5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a", "end_to_end": false, "native_refund_claim": false}
+WireProg_env_8, forge_refundWireProg_env_7]
+ Saved theorem _______ "nsLookup_forge_refundWireProg_env_9_pfun_eqs"
+ Saved theorem _______ "refund_fields_v_thm"
+ Translating refund_response
+ Adding nsLookup representation thms for [forge_refundWireProg_env_9]
+ Saved theorem _______ "nsLookup_forge_refundWireProg_env_10_pfun_eqs"
+ Saved theorem _______ "refund_response_v_thm"
+ Translating refund_render_fields
+ Adding nsLookup representation thms for [forge_refundWireProg_env_10]
+ Saved theorem _______ "nsLookup_forge_refundWireProg_env_11_pfun_eqs"
+ Saved theorem _______ "refund_render_fields_v_thm"
+ Translating refund_run_wire
+ Adding nsLookup representation thms for [forge_refundWireProg_env_11]
+ Saved theorem _______ "nsLookup_forge_refundWireProg_env_12_pfun_eqs"
+ Saved theorem _______ "refund_run_wire_v_thm"
+ Saved theorem _______ "nsLookup_forge_refundWireProg_env_13_pfun_eqs"
+ <<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWireProg)>>
+ Adding nsLookup representation thms for [forge_refundWireProg_env_13, forge_refundWireProg_env_12]
+ Using translator specification refund_run_wire_v_thm from theory forge_refundWireProg
+ Post condition: POSTv v. emp * &SUM_TYPE STRING_TYPE STRING_TYPE (INR output) v
+ Saved theorem _______ "refund_dispatch_valid"
+ Using translator specification refund_run_wire_v_thm from theory forge_refundWireProg
+ Post condition: POSTv v. emp * &SUM_TYPE STRING_TYPE STRING_TYPE (INL err) v
+ Proof of 
+ 
+ refund_run_wire wire = INL err ⇒
+ app p refund_dispatch_v [Litv (StrLit wire)] emp
+   (POSTe exn. &Fail_exn err exn)
+ 
+ failed.
+ Tactic failure proving "refund_dispatch_error"; heap saved to forge_refundWireProg.refund_dispatch_error.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundWireProg.refund_dispatch_error.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWireProg_experiment/.hol/logs/forge_refundWireProgTheory
+

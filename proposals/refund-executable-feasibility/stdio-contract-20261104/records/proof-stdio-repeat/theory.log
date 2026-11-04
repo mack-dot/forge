@@ -1,0 +1,24 @@
+<<HOL message: Created theory "forge_refundStdioProg">>
+Loading translation: forge_refundWireProg ... done.
+Saved theorem _______ "nsLookup_forge_refundStdioProg_env_pfun_eqs"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStdioProg)>>
+Adding nsLookup representation thms for 602 consts [forge_refundStdioProg_env, forge_refundWireProg_env_13, ..., SexpProg_env]
+Saved theorem _______ "refund_main_valid"
+Saved theorem _______ "refund_main_error"
+FORGE_THEOREM refund_main_valid
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+FORGE_THEOREM refund_main_error
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTe exn. &Fail_exn err exn * STDIO (fastForwardFD fs 0))
+Exporting theory "forge_refundStdioProg" ... done.
+Theory "forge_refundStdioProg" took 12.7s to build

@@ -1,0 +1,52 @@
+{
+  "actual_exit": 0,
+  "results": [
+    {
+      "case": "stdio-suppressed-output",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_stdio.py",
+        "stdio-suppressed-output",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/controls/stdio-suppressed-output/forge_refundStdioProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "theorem": "refund_main_valid",
+      "intended_reason": true,
+      "accepted_export": false,
+      "passed": true
+    },
+    {
+      "case": "stdio-substituted-input",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_stdio.py",
+        "stdio-substituted-input",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/controls/stdio-substituted-input/forge_refundStdioProgScript.sml"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "theorem": "refund_main_valid",
+      "intended_reason": true,
+      "accepted_export": false,
+      "passed": true
+    },
+    {
+      "case": "stdio-repeat",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-stdio-composition-2026-11-04/attempt-0001/run_stdio.py",
+        "stdio-repeat"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "same_exports": true,
+      "passed": true
+    }
+  ],
+  "end_to_end": false,
+  "scope": "Local HOL proof controls; not native or hosted execution"
+}

@@ -1,0 +1,82 @@
+<<HOL message: Created theory "forge_refundWireProg">>
+Saved definition ____ "refund_render_fields_def"
+Saved definition ____ "refund_run_wire_def"
+Saved theorem _______ "refund_run_wire_valid"
+Saved theorem _______ "refund_render_fields_roundtrip"
+Saved theorem _______ "refund_run_wire_decode_error"
+Saved theorem _______ "refund_run_wire_trailing"
+Saved theorem _______ "refund_run_wire_malformed"
+Loading translation: SexpProg ... done.
+Translating bind
+Adding nsLookup representation thms for 586 consts [SexpProg_env_37, TextIOProg_env_76, ..., SexpProg_env]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_pfun_eqs"
+Saved theorem _______ "bind_v_thm"
+Translating to_mlstring
+Adding nsLookup representation thms for [forge_refundWireProg_env]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_0_pfun_eqs"
+Saved theorem _______ "to_mlstring_v_thm"
+Translating to_bool
+Adding nsLookup representation thms for [forge_refundWireProg_env_0]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_1_pfun_eqs"
+Saved theorem _______ "to_bool_v_thm"
+Translating to_int
+Adding nsLookup representation thms for [forge_refundWireProg_env_1]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_2_pfun_eqs"
+Saved theorem _______ "to_int_v_thm"
+Translating dest_expr
+Adding nsLookup representation thms for [forge_refundWireProg_env_2]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_3_pfun_eqs"
+Saved theorem _______ "dest_expr_v_thm"
+Translating dest_fail
+Adding nsLookup representation thms for [forge_refundWireProg_env_3]
+Adding nsLookup representation thms for [init_env]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_4_pfun_eqs"
+Saved theorem _______ "dest_fail_v_thm"
+Translating dest9
+Adding nsLookup representation thms for [forge_refundWireProg_env_4]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_5_pfun_eqs"
+Saved theorem _______ "dest9_v_thm"
+Translating refund_decode
+Adding nsLookup representation thms for [forge_refundWireProg_env_5]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_6_pfun_eqs"
+Saved theorem _______ "refund_decode_v_thm"
+Translating refund_decode_wire
+Adding nsLookup representation thms for [forge_refundWireProg_env_6]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_7_pfun_eqs"
+Saved theorem _______ "refund_decode_wire_v_thm"
+Translating eligible
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_8_pfun_eqs"
+Saved theorem _______ "eligible_v_thm"
+Translating refund_fields
+Adding nsLookup representation thms for [forge_refundWireProg_env_8, forge_refundWireProg_env_7]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_9_pfun_eqs"
+Saved theorem _______ "refund_fields_v_thm"
+Translating refund_response
+Adding nsLookup representation thms for [forge_refundWireProg_env_9]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_10_pfun_eqs"
+Saved theorem _______ "refund_response_v_thm"
+Translating refund_render_fields
+Adding nsLookup representation thms for [forge_refundWireProg_env_10]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_11_pfun_eqs"
+Saved theorem _______ "refund_render_fields_v_thm"
+Translating refund_run_wire
+Adding nsLookup representation thms for [forge_refundWireProg_env_11]
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_12_pfun_eqs"
+Saved theorem _______ "refund_run_wire_v_thm"
+Saved theorem _______ "nsLookup_forge_refundWireProg_env_13_pfun_eqs"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWireProg)>>
+Adding nsLookup representation thms for [forge_refundWireProg_env_13, forge_refundWireProg_env_12]
+Using translator specification refund_run_wire_v_thm from theory forge_refundWireProg
+Post condition: POSTv v. emp * &SUM_TYPE STRING_TYPE STRING_TYPE (INR output) v
+Saved theorem _______ "refund_dispatch_valid"
+Using translator specification refund_run_wire_v_thm from theory forge_refundWireProg
+Post condition: POSTv v. emp * &SUM_TYPE STRING_TYPE STRING_TYPE (INL err) v
+Proof of 
+
+refund_run_wire wire = INL err ⇒
+app p refund_dispatch_v [Litv (StrLit wire)] emp
+  (POSTe exn. &Fail_exn err exn)
+
+failed.
+Tactic failure proving "refund_dispatch_error"; heap saved to forge_refundWireProg.refund_dispatch_error.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundWireProg.refund_dispatch_error.dumpedheap

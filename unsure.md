@@ -7958,3 +7958,114 @@ curl: (6) Could not resolve host: github.com
   owner's reported copy. Hosted refund measurements are NOT RUN. No protected
   adoption, publication, merge, dispatch, signing or deployment ran. M2–M4 remain
   later work. M1 and integration EXIT remain NOT_ESTABLISHED.
+
+
+## U269 — Local native-signing scope approved; independent library audit recorded
+
+- References:U264,U267,U268. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. This checkpoint changes one local action boundary only.
+- The installed linker manual states that Apple Silicon binaries receive an
+  ad-hoc signature by default; -no_adhoc_codesign disables that step. Apple
+  Platform Security documents the native arm64 signature requirement. The
+  official search result was available; direct page fetch returned HTTP429.
+  No link or signing action was used to test this requirement.
+- After the resumed audit thread explained that the prior no-signing instruction
+  blocks the native route, the owner replied exactly: i approve. That thread
+  acknowledged approval only for the local ad-hoc signature needed to execute
+  the eventual macOS arm64 refund artifact. Release signing, publication,
+  deployment, protected changes and Stage12 remain unauthorized. No signing
+  has run. The approval does not establish artifact correctness or admission.
+- Approval source thread:01a1a730-e1f4-7d02-b06e-46b82d817f5f. The original task's
+  attempt to retrieve that exchange failed. The resumed thread therefore owns
+  the eventual local linking/signing/executable controls; the compiler/proof
+  work can prepare unsigned output. Conversation authorization is not a signed
+  release-approval artifact. Exact scope is preserved in local-signing-authorization.json.
+- Independent saved-record audit0 confirms candidate source2ef6fd80, six
+  identical positive/repeat exports0/0, intended altered-amount and swapped-ID
+  refusals1/1,192 recorded theory nodes and four existing foundation axioms.
+  This is a hash/statement review, not a new independent kernel replay.
+- Candidate outputs use nested pairs; the old method uses a flat six-field
+  tuple. Their wire integration must retain all field positions. No old tuple
+  proof transfers automatically. The source semantics also distinguishes
+  logical termination from a POSIX process exit status. Native error-code claims
+  need an explicit bridge; checker refusal codes are not application exits.
+- Static normalizer inspection identifies duplicate traversal of logical right
+  operands and growing fresh-name scans as a plausible stall cause. No measured
+  attribution or complexity theorem is claimed. The alternative certified
+  library does not establish the old normalizer's correctness.
+- Static build-driver inspection identifies a likely permission cause: HOL
+  cache-key computation calls PolyML tmpName, and the installed SDK defines
+  P_tmpdir as /var/tmp, outside this thread's writable roots. The exact denied
+  syscall remains untraced. No fixture retry, permission bypass or tool-source
+  change occurred. The prior EPERM failures1/1 remain unresolved.
+- Own read-only ld -help query returned1 for an unsupported option; retained.
+  Source/manual and candidate readbacks returned0. Follow-up packet commit and
+  14-file committed readback returned0/0. Commit
+  3c5bb8ca822d2078e85c2f2533f1191b62efd8f9 is local, unsigned and unpublished.
+- Evidence:proposals/refund-executable-feasibility/native-audit-followup-20261104/REPORT.md
+  and results/refund-native-audit-2026-11-04/attempt-0002/. All50 frozen protected
+  paths and the mission bytes match; prior516530 journal bytes remain intact.
+- Impact: local signature permission is resolved in the resumed thread. Native
+  executable correctness, actual controls and independent correspondence remain
+  unestablished. Next: finish the whole-program and error-path bridge, compile
+  the exact program, and bind its final artifact hash to native controls. Keep
+  end_to_end=false until the complete required relation is independently checked.
+
+
+## U270 — Proposed modeled I/O contracts and five adversarial controls pass
+
+- References:U267–U269. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The prior turn committed a5e974b5 with exact unfinished I/O
+  evidence. This turn closes the modeled I/O application link, not native execution.
+- Saved-goal diagnostics0005/0006/0007/0008 return1/1/0/0. Unfolding the existing
+  option relation removes an incompatible witness. Published computation tactics
+  discharge the concrete constructor-pattern obligations. All failed diagnostics
+  and post-completion goal-inspection errors remain. They are not accepted exports.
+- Full I/O attempt0004 returns0. refund_main_valid proves exact modeled stdout
+  after consuming stdin when the wire result is INR output. refund_main_error
+  proves Fail err with consumed input and otherwise unchanged STDIO when the
+  result is INL err. Both retain the explicit stdin-content premise.
+- The repair changes proof tactics only. No rule, program behavior, semantics,
+  axiom or domain was weakened. Original wrapper and generated method unchanged.
+  Complete Unicode/source/native binding remains open. No actual bank operation
+  follows from the stateless refund decision and intent-count result.
+- I/O source6f7aa17a5c671d83c94d2726932a7757083e30ee5508cce64f667f43138e0a68;
+  data8971cd15449d1edbd0836aaba9f7339cd3a3da01268103cccd317d4df8054255.
+  Wire source417b69d4 and data17482ed9 remain exact. Both fresh positive repeats
+  return0 and each reproduces all six exports byte for byte.
+- Swapped response IDs fail1 at refund_render_fields_roundtrip. Accepting the
+  trailing-input error fails1 at refund_run_wire_decode_error. Suppressing the
+  dispatcher exception fails1 at refund_dispatch_error. Wire control runner0
+  explicitly checks all three reasons and the repeat. No accepted mutant export.
+- Suppressing output and substituting a named file for stdin each fail1 at
+  refund_main_valid. I/O control runner0 checks both reasons and the repeat.
+  These checker failures are not application process exit codes.
+- readback_io.py0 checks all five refusals, identities, original wrapper and30
+  frozen inputs. Pinned HOL/CakeML tracked diffs0. Fresh closure import0 covers230
+  nodes and39 exported theorem tags with zero hypotheses and only DISK_THM tags.
+  SELECT_AX,INFINITY_AX,ETA_AX,BOOL_CASES_AX remain the four foundation axioms.
+  Dependency snapshot0 hashes229 theory file sets and the kernel/heap. min is the
+  kernel seed. This is not a replay of every upstream source or human review.
+- Eight inspected upstream sources match their pinned blobs0. The published
+  semantics Success label is not a POSIX status theorem; modeled Rraise can
+  satisfy its termination classification. Native status/stdout/stderr require
+  actual controls and their own explicit runtime relation. No exit1 is inferred.
+- Separate follow-up audit3c5bb8ca is copied and verified0,14 files. U269 and its
+  exact shared-doc append remain intact. Its thread owns eventual local linking,
+  ad-hoc signing and executable controls under that thread's owner approval.
+  This task prepares unsigned proof/compiler work. No signing or native run occurred.
+- The separately started whole-program source bridge is IN_PROGRESS at this
+  checkpoint. run_whole.py whole-0001 has no completed numeric exit yet. Published
+  library dependencies build first. Do not infer a passing whole-program theorem
+  from the application contracts or from successful dependency builds.
+- Next check: finish that exact live build; localize any actual failure. Require
+  an entry-substitution control and positive reproduction, then bind the exact
+  program to the existing arm8 compiler. Preserve source initialization, resource,
+  code installation, FFI, Unicode and concrete runtime premises explicitly.
+- Packet:proposals/refund-executable-feasibility/stdio-contract-20261104/.
+  Raw:results/refund-stdio-composition-2026-11-04/attempt-0001/. All prior attempts,
+  heaps and evidence remain. Imported object hashes do not authenticate a producer.
+- Native execution, hosted refund measurements and new admission remain NOT RUN.
+  Exact claim/profile review and independent-copy archive hashes/restore remain
+  open. GitHub was not refreshed. No protected adoption, publication, merge,
+  dispatch, release signing or deployment ran. M2–M4 remain later priorities.

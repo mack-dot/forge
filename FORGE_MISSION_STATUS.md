@@ -17,7 +17,20 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checkpoint: **U268 — wire dispatcher checked; I/O proof incomplete**.
+Latest checkpoint: **U270 — modeled I/O checked; five mutations refused**.
+The [I/O contract record](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md)
+contains the full output/error contracts, exact commands, five required theorem
+failures and byte-identical wire/I/O repeats. Fresh closure inspection covers230
+nodes with the same four foundation axioms. All30 frozen inputs remain unchanged.
+
+**Next:** complete the running whole-program source-semantics build, then check
+entry substitution and reproduction. Its final result is not established at
+this checkpoint. Native compilation/execution and new admission remain NOT RUN.
+Keep Unicode, resource, installation, physical I/O and runtime premises explicit.
+Modeled exceptions and checker exit codes do not establish native exit status.
+U269 preserves the separate audit thread's local signing approval and its limits.
+
+Previous checkpoint: **U268 — wire dispatcher checked; I/O proof incomplete**.
 Parent local commit: `9b9747c6e3c7523b330898370a9ebba144ff9a2a`.
 The [wire/I/O record](proposals/refund-executable-feasibility/wire-library-20261104/REPORT.md)
 preserves the successful wire build and all three failed I/O builds. Seven
@@ -71,8 +84,9 @@ is separate. Neither establishes native refund behavior. Publication has not run
 | Actual wrapper input/output tuple patterns | LOCALLY_VALIDATED for matching only | [Wrapper proof](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md); nested decoder pairs and flat method result checked; six identical repeat exports |
 | Actual rejection guard and prefix namespace | LOCALLY_VALIDATED, conditional | [Guard/prefix proof](proposals/refund-executable-feasibility/tail-guard-20261104/REPORT.md); nonempty remainder raises the required error and preserves references/FFI under explicit entry conditions; guard removal and binding substitution refused |
 | Proposed alternative library method | LOCALLY_VALIDATED; not adopted | [Complete contract](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md); all nine typed inputs and six result fields; original-method relation and CF frame contract checked |
-| Proposed wire dispatcher | LOCALLY_VALIDATED; further checks pending | [Wire proof](proposals/refund-executable-feasibility/wire-library-20261104/REPORT.md); seven theorems, strict refusal and all six fields; repeat, new controls and closure audit NOT RUN |
-| Actual wrapper and whole-program I/O | NOT_ESTABLISHED | Three proposed I/O builds failed; localize the third saved goal. No I/O theory or adopted wrapper replacement |
+| Proposed wire dispatcher | LOCALLY_VALIDATED | [Wire/I/O controls](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md); strict refusal, all six fields, three mutations and identical repeat |
+| Proposed modeled I/O | LOCALLY_VALIDATED; not adopted | [I/O contract](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md); exact stdout and exception contracts, two mutations and identical repeat |
+| Whole-program initialization and source semantics | IN_PROGRESS | Published bridge build started; no final result at U270. Original wrapper remains unchanged |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
@@ -92,9 +106,9 @@ The new route uses the existing translator's checked function relation instead.
 It does not assume that normalization preserves behavior. Its explicit relation
 covers the original method's complete output for every typed model input.
 It is not arbitrary contextual equivalence or an adopted wrapper replacement.
-The U268 wire composition now passes locally. Next: inspect and close the
-remaining I/O proof goal. Keep all input, output and refusal obligations. Native compilation
-and execution remain NOT RUN. M1 is open.
+The U270 modeled I/O contracts now pass and reproduce. Next: finish the
+whole-program initialization/source-semantics bridge. Keep all input, output
+and refusal obligations. Native compilation and execution remain NOT RUN. M1 is open.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
 | Recorded executed check, U267 | Actual exit | Boundary |
@@ -151,10 +165,9 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: inspect the saved third I/O proof goal, then close
-the remaining premise using the published I/O rules. The strict wire dispatcher
-now passes locally; its new controls and repeat remain pending. Prove the
-proposed I/O wrapper's refusal behavior. The original wrapper remains
+Next authorized action: complete the running whole-program bridge and check
+its exact entry binding. The wire and modeled I/O contracts now pass, including
+their controls and repeats. The original wrapper remains
 unchanged. Then establish the whole-program compiler entry relation and physical
 input/output boundary. The full Unicode/UTF-8 source
 representation now passes. A particular model caller initializes and returns
@@ -459,3 +472,18 @@ SHA256 `d68852a498467f02fb1c8a6b841f60742da46a723b133546c00ee66688e237c1`.
 24404340bytes; mode0600. Restored commit and mission bytes matched.
 This is local recovery, not verification of the owner's off-machine copy.
 Command records: `results/mission-m1-feasibility-2026-11-04/attempt-0001/`.
+
+
+### Local native execution approval and independent audit — U269
+
+The owner approved the local ad-hoc signature required to run the eventual
+macOS arm64 refund executable in the resumed audit thread. That thread owns
+local linking/signing and native controls under this approval. Release signing,
+publication, deployment, protected changes and Stage12 remain unauthorized.
+No native signing or execution has run; end_to_end=false.
+
+[Follow-up audit](proposals/refund-executable-feasibility/native-audit-followup-20261104/REPORT.md),
+local commit3c5bb8ca, preserves the approval scope and candidate identity/control
+readback0. It does not constitute fresh independent kernel replay or release
+admission. Whole-program/compiler, native runtime and actual executable controls
+remain open. Native process exit codes require their own checked bridge.

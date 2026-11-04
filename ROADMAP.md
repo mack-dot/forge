@@ -7,6 +7,40 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U270)
+
+Modeled stdin/stdout and error contracts now pass for the proposed refund
+wrapper. Wire and I/O exports reproduce exactly. Five targeted mutations fail
+at their required theorems. CURRENT none; M1 open; Stage12 unauthorized;
+end_to_end=false. The original generated method and wrapper remain unchanged.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Saved-goal diagnostics0005/0006/0007/0008 | 1/1/0/0 | Witness and constructor computation localized; diagnostic results are not theory exports |
+| `run_stdio.py stdio-0004` | 0 | Complete modeled output and exception contracts checked |
+| Wire swapped IDs / accepted trailing error / suppressed exception | 1/1/1 | Intended theorem failures; no accepted export |
+| `run_wire_controls.py` / wire repeat | 0/0 | Three refusal reasons and six identical exports |
+| I/O suppressed output / substituted input | 1/1 | Intended failures at refund_main_valid |
+| `run_stdio_controls.py` / I/O repeat | 0/0 | Two refusal reasons and six identical exports |
+| `readback_io.py` | 0 | Five reasons, exact identities and30 frozen inputs checked |
+| Fresh I/O closure / dependency snapshot / closure readback | 0/0/0 |230 nodes,229 theory file sets,39 exported tags without hypotheses; four foundation axioms |
+| Existing native-audit packet import | 0 |14 exact files from3c5bb8ca; no proof/signing/native run |
+
+[Exact claims, commands and boundaries](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md).
+Raw: `results/refund-stdio-composition-2026-11-04/attempt-0001/`.
+I/O source6f7aa17a; repeated data8971cd15. Prior failures remain preserved.
+Imported DISK_THM, Unicode/model binding and physical I/O remain explicit limits.
+Checker refusal1 is not a native process exit1; modeled exceptions do not prove
+POSIX exit status. Independent-copy archive hash/restore and exact review remain open.
+
+Next: complete the separately running `run_whole.py whole-0001` source-semantics
+build. At this checkpoint it is IN_PROGRESS, with no final exit code. It first
+builds published library dependencies. Then require entry-substitution refusal
+and positive reproduction before compiling the exact program through arm8.
+No native compiler result, native execution, hosted refund measurements or new
+admission is established. U269's local signing approval stays with its audit
+thread. No signing, publication, merge, dispatch or protected adoption ran here.
+
 ## Active mission update — 2026-11-04 (U268)
 
 The Markdown tracker now includes the completed wire proof and the unfinished
@@ -3972,3 +4006,25 @@ SHA256 `d68852a498467f02fb1c8a6b841f60742da46a723b133546c00ee66688e237c1`.
 24404340bytes; mode0600. Restored commit and mission bytes matched.
 This is local recovery, not verification of the owner's off-machine copy.
 Command records: `results/mission-m1-feasibility-2026-11-04/attempt-0001/`.
+
+
+## Native audit and local execution authorization — U269
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The owner approved only the local ad-hoc signature required for the eventual
+macOS arm64 refund executable in the resumed audit thread. That thread owns the
+local link/sign/run actions. Release signing, publication, deployment and
+protected changes remain unauthorized. No native signature or execution ran.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Installed ld -help | 1 | Unsupported option; preserved |
+| Pinned source/manual checks | 0 | Linker default and candidate-normalizer/temp-path observations recorded |
+| readback_certified.py | 0 | Exact source, six repeated exports and two intended refusal reasons checked |
+| Local follow-up commit /14-file readback | 0/0 |3c5bb8ca; unsigned, unpublished; clean worktree |
+
+[Exact scope and remaining gaps](proposals/refund-executable-feasibility/native-audit-followup-20261104/REPORT.md).
+These are source/record checks, not native execution or new kernel replay.
+Full-program/compiler, concrete runtime and native controls remain open.
+Earlier no-signing observations remain historical; this approval is narrowly
+scoped and does not authorize release admission or Stage12.

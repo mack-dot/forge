@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundWireProg">>
+Saved definition ____ "refund_render_fields_def"
+Saved definition ____ "refund_run_wire_def"
+Saved theorem _______ "refund_run_wire_valid"
+Proof of 
+
+parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+INR (refund_response ok a r c q n,"") ∧
+refund_response_fields (refund_response ok a r c q n) = INR (ok,a,r,c,q,n)
+
+failed.
+First unsolved sub-goal is
+
+refund_response ok a r q c n = refund_response ok a r c q n
+
+Tactic failure proving "refund_render_fields_roundtrip"; heap saved to forge_refundWireProg.refund_render_fields_roundtrip.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundWireProg.refund_render_fields_roundtrip.dumpedheap
