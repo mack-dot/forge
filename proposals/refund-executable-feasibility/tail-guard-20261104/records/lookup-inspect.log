@@ -1,0 +1,67 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 383 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val it = (): unit
+val it = (): unit
+val main_value =
+   “Recclosure (merge_env forge_refundProg_env_10 init_env)
+      [(«refund_main»,«u»,
+        Let (SOME « v0») Unit
+          (Let (SOME «stream»)
+             (App Opapp
+                [Var (Long «TextIO» (Short «openStdIn»)); Var (Short « v0»)])
+             (Let (SOME «se»)
+                (App Opapp
+                   [Var (Long «Sexp» (Short «inputSexp»));
+                    Var (Short «stream»)])
+                (Let (SOME «rest»)
+                   (App Opapp
+                      [Var (Long «TextIO» (Short «inputAll»));
+                       Var (Short «stream»)])
+                   (Let (SOME « v1»)
+                      (App Opapp
+                         [App Opapp [Var (Short «=»); Var (Short «rest»)];
+                          Lit (StrLit «»)])
+                      (If (Var (Short « v1»))
+                         (Let (SOME « v2»)
+                            (App Opapp
+                               [Var (Short «refund_handle»);
+                                Var (Short «se»)])
+                            (App Opapp
+                               [Var (Long «TextIO» (Short «print»));
+                                Var (Short « v2»)]))
+                         (Let (SOME « v3»)
+                            (Con (SOME (Short «Fail»))
+                               [Lit (StrLit «refund: trailing input»)])
+                            (Raise (Var (Short « v3»))))))))))] «refund_main»”:
+   term
+val main_env = “merge_env forge_refundProg_env_10 init_env”: term
+Adding nsLookup representation thms for 598 consts [forge_refundProg_env_10, forge_refundProg_env_9, ..., SexpProg_env]
+val eql =
+   ⊢ nsLookup (merge_env forge_refundProg_env_10 init_env).v (Short «=») =
+     SOME eq_v: thm
+val fail =
+   ⊢ nsLookup (merge_env forge_refundProg_env_10 init_env).c (Short «Fail») =
+     SOME (LENGTH [Atapp [] (Short «string»)],ExnStamp 4): thm
+EQ_LOOKUP ⊢ nsLookup (merge_env forge_refundProg_env_10 init_env).v (Short «=») =
+  SOME eq_v
+FAIL_LOOKUP ⊢ nsLookup (merge_env forge_refundProg_env_10 init_env).c (Short «Fail») =
+  SOME (LENGTH [Atapp [] (Short «string»)],ExnStamp 4)
+FAIL_PRED ⊢ ∀s v.
+    Fail_exn s v ⇔ ∃sv. v = Conv (SOME (ExnStamp 4)) [sv] ∧ STRING_TYPE s sv
+val eqconst = “eq_v”: term
+val detail = {Name = "eq_v", Thy = "mlbasicsProg", Ty = “:[0;36mv[0m”}:
+   {Name: string, Thy: string, Ty: hol_type}
+EQ_VALUE ⊢ eq_v =
+  Closure (merge_env mlbasicsProg_env_9 init_env) «v1»
+    (Fun «v2» (App Equality [Var (Short «v1»); Var (Short «v2»)]))
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

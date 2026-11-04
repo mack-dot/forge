@@ -1,0 +1,24 @@
+<<HOL message: Created theory "forge_refundEntry">>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved theorem _______ "refund_tail_rejects_in_env"
+Saved definition ____ "refund_main_call_env_def"
+Saved theorem _______ "single_recursive_call"
+Saved theorem _______ "refund_actual_main_prefix"
+Saved definition ____ "refund_actual_prefix_env_def"
+Adding nsLookup representation thms for 598 consts [forge_refundProg_env_10, forge_refundProg_env_9, ..., SexpProg_env]
+Proof of 
+
+nsLookup (refund_actual_prefix_env stream se rest).v (Short «rest») =
+SOME (Litv (StrLit rest)) ∧
+nsLookup (refund_actual_prefix_env stream se rest).v (Short «=») = SOME eq_v ∧
+nsLookup (refund_actual_prefix_env stream se rest).c (Short «Fail») =
+SOME (1,ExnStamp 4)
+
+failed.
+First unsolved sub-goal is
+
+rest = «»
+
+Tactic failure proving "refund_actual_prefix_lookups"; heap saved to forge_refundEntry.refund_actual_prefix_lookups.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundEntry.refund_actual_prefix_lookups.dumpedheap

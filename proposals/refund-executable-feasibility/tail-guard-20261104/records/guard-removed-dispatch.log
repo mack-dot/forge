@@ -1,0 +1,52 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refundGuardTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundGuard_experiment", "actual_exit": 1, "wall_seconds": 31.315234000008786, "source_sha256": "e64a19a8ea3f63fc4c6a4f1c1d045bdc630756866cc16940c8c80ff57189aad2", "parent_source_sha256": "f429b0150b6caadd13e17d578c46fd9c0c5ea3f048ef23be7b2dc2e84b6fa1e1", "parent_data_sha256": "daef2aa220bb6e2f7482f6939b68f9dff75e040148ca7a6cc0c764fd2144877e", "object_sha256": {}, "end_to_end": false, "native_refund_claim": false}
+ «refund: trailing input» exn ∧ final.refs = initial.refs ∧
+   final.ffi = initial.ffi
+ | (final,Rerr (Rabort v11)) => F
+ 
+ failed.
+ First unsolved sub-goal is
+ 
+ case
+   case
+     case
+       nsLookup (merge_env forge_refundProg_env_10 init_env).v (Short «true»)
+     of
+       NONE => (initial with clock := 32,Rerr (Rabort Rtype_error))
+     | SOME v => (initial with clock := 32,Rval [v])
+   of
+     (st',Rval v) =>
+       (case
+          if HD v = Conv (SOME (TypeStamp «True» bool_type_num)) [] then
+            SOME
+              (Let (SOME « v1»)
+                 (App Opapp [Var (Short «refund_handle»); Var (Short «se»)])
+                 (App Opapp
+                    [Var (Long «TextIO» (Short «print»)); Var (Short « v1»)]))
+          else if HD v = Conv (SOME (TypeStamp «False» bool_type_num)) [] then
+            SOME
+              (Let (SOME « v2»)
+                 (Con (SOME (Short «Fail»))
+                    [Lit (StrLit «refund: trailing input»)])
+                 (Raise (Var (Short « v2»))))
+          else NONE
+        of
+          NONE => (st',Rerr (Rabort Rtype_error))
+        | SOME e =>
+          evaluate st'
+            (merge_env forge_refundProg_env_10 init_env with
+             v :=
+               nsBind «rest» (Litv (StrLit rest))
+                 (nsBind «se» se
+                    (merge_env forge_refundProg_env_10 init_env).v)) [e])
+   | (st',Rerr v8) => (st',Rerr v8)
+ of
+   (final,Rval v6) => F
+ | (final,Rerr (Rraise exn)) =>
+   exn = Conv (SOME (ExnStamp 4)) [Litv (StrLit «refund: trailing input»)] ∧
+   final.refs = initial.refs ∧ final.ffi = initial.ffi
+ | (final,Rerr (Rabort v11)) => F
+ 
+ Tactic failure proving "refund_tail_rejects"; heap saved to forge_refundGuard.refund_tail_rejects.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundGuard.refund_tail_rejects.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundGuard_experiment/.hol/logs/forge_refundGuardTheory
+

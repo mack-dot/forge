@@ -1,0 +1,53 @@
+{
+  "actual_exit": 0,
+  "commands": [
+    {
+      "name": "parent-mutant",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/run_parent.py",
+        "parent-mutant",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/parent-mutant/forge_refundProgScript.sml"
+      ],
+      "actual_exit": 0,
+      "required_exit": 0
+    },
+    {
+      "name": "guard-removed",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/run.py",
+        "guard-removed"
+      ],
+      "actual_exit": 1,
+      "required_exit": 1
+    },
+    {
+      "name": "parent-restored",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/run_parent.py",
+        "parent-restored",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/parent-positive/forge_refundProgScript.sml"
+      ],
+      "actual_exit": 0,
+      "required_exit": 0
+    },
+    {
+      "name": "guard-repeat",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/run.py",
+        "repeat"
+      ],
+      "actual_exit": 0,
+      "required_exit": 0
+    }
+  ],
+  "end_to_end": false,
+  "scope": "Conditional guard theorem; whole-program behavior remains open"
+}

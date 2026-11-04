@@ -1,0 +1,15 @@
+load "forge_refundProgTheory";
+load "ml_progLib";
+open HolKernel Parse boolLib bossLib forge_refundProgTheory;
+val _ = Globals.max_print_depth := 50;
+val main_value = rhs (concl refund_main_v_def);
+val main_env = hd (snd (strip_comb main_value));
+val eql = ml_progLib.nsLookup_conv ``nsLookup (^main_env).v (Short «=»)``;
+val fail = ml_progLib.nsLookup_conv ``nsLookup (^main_env).c (Short «Fail»)``;
+val _ = print ("EQ_LOOKUP " ^ Parse.thm_to_string eql ^ "\n");
+val _ = print ("FAIL_LOOKUP " ^ Parse.thm_to_string fail ^ "\n");
+val _ = print ("FAIL_PRED " ^ Parse.thm_to_string mlbasicsProgTheory.Fail_exn_def ^ "\n");
+val eqconst = rand (rhs (concl eql));
+val detail = dest_thy_const eqconst;
+val _ = print ("EQ_VALUE " ^ Parse.thm_to_string (DB.fetch (#Thy detail) (#Name detail ^ "_def")) ^ "\n");
+OS.Process.exit OS.Process.success;

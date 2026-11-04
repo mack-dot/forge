@@ -1,0 +1,43 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refundEntryTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundEntry_experiment", "actual_exit": 1, "wall_seconds": 31.717542375001358, "source_sha256": "a0769a60e0bead0fe3e75aee773408aa2180689fb6485d26b6e16f2328c98451", "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22", "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d", "object_sha256": {}, "end_to_end": false, "native_refund_claim": false}
+ncoding/array[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation/proofs[0m
+Scanning [1m$(sat_encodings)/case_studies[0m
+Scanning [1m$(sat_encodings)/demo[0m
+Scanning [1m$(sat_encodings)/translation[0m
+Scanning [1m$(sat_encodings)/translation/compilation[0m
+Scanning [1m$(scpog_checker)/array[0m
+Scanning [1m$(scpog_checker)/array/compilation[0m
+Scanning [1m$(scpog_checker)/array/compilation/proofs[0m
+Scanned 324 directories
+Building 1 theory file
+Starting work on forge_refundEntryTheory
+forge_refundEntryTheory                                    (22s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refundEntryTheory (status 1)
+ <<HOL message: Created theory "forge_refundEntry">>
+ <<HOL message: mk_functional: 
+   pattern completion has added 1 clause to the original specification.>>
+ Saved theorem _______ "refund_tail_rejects_in_env"
+ Saved definition ____ "refund_main_call_env_def"
+ Saved theorem _______ "single_recursive_call"
+ Saved theorem _______ "refund_actual_main_prefix"
+ Saved definition ____ "refund_actual_prefix_env_def"
+ Adding nsLookup representation thms for 598 consts [forge_refundProg_env_10, forge_refundProg_env_9, ..., SexpProg_env]
+ Proof of 
+ 
+ nsLookup (refund_actual_prefix_env stream se rest).v (Short «rest») =
+ SOME (Litv (StrLit rest)) ∧
+ nsLookup (refund_actual_prefix_env stream se rest).v (Short «=») = SOME eq_v ∧
+ nsLookup (refund_actual_prefix_env stream se rest).c (Short «Fail») =
+ SOME (1,ExnStamp 4)
+ 
+ failed.
+ First unsolved sub-goal is
+ 
+ rest = «»
+ 
+ Tactic failure proving "refund_actual_prefix_lookups"; heap saved to forge_refundEntry.refund_actual_prefix_lookups.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundEntry.refund_actual_prefix_lookups.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundEntry_experiment/.hol/logs/forge_refundEntryTheory
+

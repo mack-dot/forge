@@ -7721,3 +7721,74 @@ curl: (6) Could not resolve host: github.com
   refund execution, hosted measurements and new admission remain NOT RUN.
   Publication, protected adoption, merge, dispatch, signing and deployment still
   require their corresponding authority and independent review. M2–M4 deferred.
+
+
+## U265 — Actual guard rejection and prefix bindings checked; direct CF obstacle established
+
+- References:U260–U264. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Previous goal turn made progress through local commit57cd895.
+- The actual refund_main continuation is extracted from its checked declaration.
+  Using existing CakeML evaluate rules, refund_tail_rejects proves that every
+  nonempty remainder raises Fail "refund: trailing input", preserving modeled
+  references and FFI under explicit environment and clock32 entry conditions.
+  The theorem does not execute stdin, prove the accepted path or establish a
+  native process guarantee. No input-domain restriction or new axiom was added.
+- Guard attempts0001/0002 were manually interrupted during broad expansion:
+  dispatcher1/1, child signal2/2. Attempt0003 failed1 on a wrong theory qualifier.
+  Attempt0004 passed0 after using published namespace conversions and semantic
+  rewriting. Initial declaration inspection1 is also preserved; corrected exact
+  equality/error lookup inspection0. No incomplete run became accepted evidence.
+- The exact old guard-removal mutation still builds the old partial program0.
+  The unchanged new guard theorem now fails1 at refund_tail_rejects, with no
+  accepted export. Original U264 actual0 remains preserved. Parent restoration0
+  reproduces all six original exports; guard repeat0 reproduces its six exports.
+  The four-outcome guard dispatcher returns0. This is formal refusal, not a
+  hosted or native counterexample execution.
+- The entry supplement proves the actual unit-call prefix shape, its full
+  namespace after the prefix returns values, the required lookups and rejection
+  in that namespace. Stream, parsed value and nonempty remainder remain explicit
+  returned-value premises. Clock32 is a model budget, not wall time. Additional
+  prefix bindings cannot silently replace the required remainder/equality/error
+  bindings. Full stream/heap composition and physical input delivery remain open.
+- Entry attempt0001 manually interrupted1, child signal2, during closure expansion.
+  Attempt0002 passes0 using a checked general single-recursive-call lemma. A
+  mutation binds rest to empty instead of the actual remainder: expected1 at
+  refund_actual_prefix_lookups, unsolved rest=empty. Entry repeat0 has six identical
+  exports. Its control dispatcher0 checks both actual outcomes.
+- Guard source e64a19a8ea3f63fc4c6a4f1c1d045bdc630756866cc16940c8c80ff57189aad2;
+  data4e94b435a244814c62fe87730a1fdea5b716e31fc1b21c7165d5f3a7df4c244d.
+  Entry source669b13bbb65cd7004bf6bab437d955f09c6cafccfdd8ffd3e40b3e0b2797d9ff;
+  data4bbd481738df083a0fd905b7ded5a6dc8508b51c44222f612b84d7f8ed06844e.
+  Parent source44ac5c9e and dataecda3e2a remain exact and unchanged.
+- Fresh HOL inspection0 covers231 loaded theory nodes and eight own theorems,
+  zero own hypotheses. SELECT_AX, INFINITY_AX, ETA_AX and BOOL_CASES_AX remain
+  the four explicit foundation axioms. Imported DISK_THM is not self-authenticating.
+  No new independent human review or accepted provenance profile exists.
+- A separate exact-method applicability proof and repeat return0/0, six identical
+  exports. The first raw match discriminant has exp2v env discriminant=NONE for
+  every environment. Thus the cf_match SOME-value premise is impossible there.
+  This is not a refund behavioral violation. Resolving Boolean allocation alone
+  would not finish the direct CF proof. Preserve the four failed raw-method
+  attempts; do not spend a fifth on the same unaddressed applicability problem.
+- Pinned cfNormaliseLib source explicitly says its normalization is unverified.
+  The API returns syntax; the old full_normalise_correct text is commented out.
+  Four inspected upstream files match their pinned Git blobs0. The transform
+  has NOT RUN. Do not assume it preserves the old generated-method theorem.
+  Applicability sourceaef2ded5f125be31c99abad57e51769dee271d2ee260302941f5336d89ec04db;
+  data1212f1830466a2756de7fe9de19e175d7153c3cc29acbd2de1a135e26afb54da.
+- Next authorized experiment: use the published normalizer only as an untrusted
+  candidate transformation. Independently prove the complete refund result for
+  its exact output and a checked observable-result relation to the original
+  method. No narrower domain, changed rule, unchecked equivalence or new verifier.
+  If the relation cannot be proved, keep it unestablished. Native compilation
+  must use the same sufficiently checked program; no replacement toy target.
+- Records:proposals/refund-executable-feasibility/tail-guard-20261104/ and
+  results/refund-tail-guard-2026-11-04/attempt-0001/. All previous packets, logs,
+  attempts and proof heaps remain. Thirty frozen owner inputs and tracked upstream
+  source trees are unchanged0. The actual wrapper/method source is unchanged.
+- M1 remains NOT_ESTABLISHED. Library method/heap, prefix I/O, accepted output,
+  full source/model binding, exact native artifact and runtime premises remain.
+  New admission/provenance, hosted refund metrics and native execution are NOT RUN.
+  Owner-reported off-machine backup still needs exact archive hashes and restore.
+  GitHub state was not refreshed. No protected adoption, publication, merge,
+  dispatch, signing or deployment. M2–M4 remain subsequent work.

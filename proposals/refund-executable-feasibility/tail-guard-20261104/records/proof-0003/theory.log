@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundGuard">>
+Adding nsLookup representation thms for 598 consts [forge_refundProg_env_10, forge_refundProg_env_9, ..., SexpProg_env]
+Saved definition ____ "refund_tail_expr_def"
+Saved definition ____ "refund_tail_env_def"
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundGuard_experiment/forge_refundGuardScript.sml:42: error: Value or constructor (getOpClass_def) has not been declared in structure astTheory
+Found near
+  [
+     refund_tail_expr_def,
+     refund_tail_env_def,
+     evaluateTheory.evaluate_def,
+     evaluateTheory.fix_clock_def,
+     evaluateTheory.dec_clock_def,
+     ...
+error in quse /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundGuard_experiment/forge_refundGuardScript.sml : Fail "Static Errors"
+error in load /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundGuard_experiment/forge_refundGuardScript : Fail "Static Errors"
+     ]
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"

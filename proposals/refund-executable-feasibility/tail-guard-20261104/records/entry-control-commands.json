@@ -1,0 +1,29 @@
+{
+  "actual_exit": 0,
+  "commands": [
+    {
+      "name": "prefix-rest-substitution",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/run_entry.py",
+        "prefix-rest-substitution",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/negative-prefix-rest/forge_refundEntryScript.sml"
+      ],
+      "actual_exit": 1,
+      "required_exit": 1
+    },
+    {
+      "name": "entry-repeat",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-tail-guard-2026-11-04/attempt-0001/run_entry.py",
+        "entry-repeat"
+      ],
+      "actual_exit": 0,
+      "required_exit": 0
+    }
+  ],
+  "end_to_end": false
+}

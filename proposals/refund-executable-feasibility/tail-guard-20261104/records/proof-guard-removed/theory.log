@@ -1,0 +1,64 @@
+<<HOL message: Created theory "forge_refundGuard">>
+Adding nsLookup representation thms for 598 consts [forge_refundProg_env_10, forge_refundProg_env_9, ..., SexpProg_env]
+Saved definition ____ "refund_tail_expr_def"
+Saved definition ____ "refund_tail_env_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Proof of 
+
+rest ≠ «» ⇒
+case
+  evaluate (initial with clock := 32) (refund_tail_env rest se)
+    [refund_tail_expr]
+of
+  (final,Rval v6) => F
+| (final,Rerr (Rraise exn)) =>
+  Fail_exn «refund: trailing input» exn ∧ final.refs = initial.refs ∧
+  final.ffi = initial.ffi
+| (final,Rerr (Rabort v11)) => F
+
+failed.
+First unsolved sub-goal is
+
+case
+  case
+    case
+      nsLookup (merge_env forge_refundProg_env_10 init_env).v (Short «true»)
+    of
+      NONE => (initial with clock := 32,Rerr (Rabort Rtype_error))
+    | SOME v => (initial with clock := 32,Rval [v])
+  of
+    (st',Rval v) =>
+      (case
+         if HD v = Conv (SOME (TypeStamp «True» bool_type_num)) [] then
+           SOME
+             (Let (SOME « v1»)
+                (App Opapp [Var (Short «refund_handle»); Var (Short «se»)])
+                (App Opapp
+                   [Var (Long «TextIO» (Short «print»)); Var (Short « v1»)]))
+         else if HD v = Conv (SOME (TypeStamp «False» bool_type_num)) [] then
+           SOME
+             (Let (SOME « v2»)
+                (Con (SOME (Short «Fail»))
+                   [Lit (StrLit «refund: trailing input»)])
+                (Raise (Var (Short « v2»))))
+         else NONE
+       of
+         NONE => (st',Rerr (Rabort Rtype_error))
+       | SOME e =>
+         evaluate st'
+           (merge_env forge_refundProg_env_10 init_env with
+            v :=
+              nsBind «rest» (Litv (StrLit rest))
+                (nsBind «se» se
+                   (merge_env forge_refundProg_env_10 init_env).v)) [e])
+  | (st',Rerr v8) => (st',Rerr v8)
+of
+  (final,Rval v6) => F
+| (final,Rerr (Rraise exn)) =>
+  exn = Conv (SOME (ExnStamp 4)) [Litv (StrLit «refund: trailing input»)] ∧
+  final.refs = initial.refs ∧ final.ffi = initial.ffi
+| (final,Rerr (Rabort v11)) => F
+
+Tactic failure proving "refund_tail_rejects"; heap saved to forge_refundGuard.refund_tail_rejects.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundGuard.refund_tail_rejects.dumpedheap

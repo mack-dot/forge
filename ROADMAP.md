@@ -7,6 +7,41 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U265)
+
+The actual wrapper guard now has a conditional rejection theorem, bound to its
+actual main-call prefix and namespace. Both guard removal and remainder-binding
+substitution fail as required. Prefix stream execution, library method behavior,
+accepted output and native compilation remain open. CURRENT none; M1 open;
+Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Initial declaration / exact lookup inspection | 1/0 | Wrong predicate qualifier preserved; actual equality/error binding checked |
+| `run.py 0001` / `0002` / `0003` | 1/1/1 | Two manual interruptions, then wrong theory qualifier; no accepted theory |
+| `run.py 0004` / `run.py repeat` | 0/0 | Guard rejection theorem; six identical exports |
+| Mutated parent / guard against unchanged mutation | 0/1 | Old partial proof still passes; new guard obligation fails |
+| Parent restoration / `run_controls.py` | 0/0 | Exact original exports restored; four child expectations match |
+| `run_entry.py entry-0001` / `entry-0002` | 1/0 | Closure expansion interrupted; generic call lemma and actual prefix checked |
+| Remainder-binding substitution / entry repeat | 1/0 | Intended `rest = empty` proof failure; six identical positive exports |
+| `run_entry_controls.py` | 0 | Both required outcomes checked |
+| `run_gap.py cf-gap` / `cf-gap-repeat` | 0/0 | Exact raw match expression cannot satisfy the CF value premise |
+| Fresh HOL closure / record and source postflight | 0/0 |231 nodes, eight own theorems, four foundation axioms;30 inputs unchanged |
+
+[Exact claims, source identities and commands](proposals/refund-executable-feasibility/tail-guard-20261104/REPORT.md).
+Raw records: `results/refund-tail-guard-2026-11-04/attempt-0001/`.
+The U264 uncaught mutation and all earlier failures remain unchanged. The new
+result is conditional model behavior, not actual stdin or native execution.
+
+The direct CF route has a checked applicability obstacle beyond its earlier
+Boolean-allocation failure. The published normalizer is explicitly unverified;
+its output cannot inherit the old theorem. Next authorized experiment, NOT RUN:
+produce a candidate with that existing transform, then independently prove its
+complete refund result and relation to the original method. Preserve the full
+contract; no assumed normalization correctness. The actual method is unchanged.
+No native compiler/run, hosted refund measurement, publication, signing or new
+admission occurred. Independent review and off-machine hash/restore remain open.
+
 ## Active mission update — 2026-11-04 (U264)
 
 Published SexpProg source replay completed. The exact wrapper's tuple patterns
