@@ -7,6 +7,38 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U274)
+
+The attempted exception-to-main lemma remains NOT_ESTABLISHED. Five checks
+failed: three source builds and two saved-goal diagnostics. No theorem export
+was accepted. Stop retries on this lemma under the existing limit. The earlier
+whole-program theorem for canonical requests remains unchanged. CURRENT none;
+M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Exception `run.py 0001` | 1 | Missing direct theorem imports |
+| Exception `run.py 0002` | 1 | Required lemma unproved; failed heap preserved |
+| Saved-goal diagnostics0001/0002 | 1/1 | Renaming fails; exact exception and heap hypotheses retained |
+| Exception `run.py 0003` | 1 | Required lemma still unproved after using the observed variable |
+| Saved-failure and parent readback | 0 | Five failures, two heaps, exact whole-program exports and30 frozen inputs checked |
+
+[Exact failed commands, sources and remaining relationship](proposals/refund-executable-feasibility/exception-bridge-20261104/REPORT.md).
+These are failed positive attempts, not successful security controls. New
+negative controls and reproduction are NOT RUN. The last batch log does not
+identify its final failing tactic. Both diagnostic heaps remain preserved.
+No implementation, semantics, axiom, input domain or required result changed.
+
+The independent compiler run remains live in session60920. Published compiler
+dependencies and cake_compile_heap have passed; the actual refund compile has
+started. Its terminal result is not yet established at this checkpoint. Next:
+finish that exact run, inspect its theorem/artifact identities, and execute the
+prepared correctness composition when its preconditions hold. Preserve the
+separate rejection gap. No native behavior, authenticated admission, hosted
+refund measurement or integration EXIT is established by this checkpoint.
+Review, full Unicode/source/model binding, runtime/resource premises and exact
+off-machine restore remain open. No publication, signing, merge or dispatch ran.
+
 ## Active mission update — 2026-11-04 (U273)
 
 The ARM64 compiler invocation is still live. Fresh exec-session60920 polls and

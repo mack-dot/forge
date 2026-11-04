@@ -1,0 +1,52 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 599 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val showgoals = fn: unit -> unit
+val step = fn: string -> tactic -> unit
+FORGE_STEP app
+OK..
+1 subgoal:
+FORGE_STEP_OK app
+val it = (): unit
+FORGE_STEP heap
+OK..
+1 subgoal:
+FORGE_STEP_OK heap
+val it = (): unit
+FORGE_STEP post
+OK..
+1 subgoal:
+FORGE_STEP_OK post
+val it = (): unit
+FORGE_STEP result
+OK..
+1 subgoal:
+FORGE_STEP_OK result
+val it = (): unit
+FORGE_STEP name
+OK..
+FORGE_STEP_FAILED name
+FORGE_HYP evaluate_to_heap st2 env exp p heap (Exn v)
+FORGE_HYP Q v h_f
+FORGE_HYP SOME (env,exp) = do_opapp [refund_main_v; Conv NONE []]
+FORGE_HYP SPLIT3 heap (h_f,h2,h_g)
+FORGE_HYP P h1
+FORGE_HYP SPLIT (st2heap p st2) (h1,h2)
+FORGE_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+FORGE_HYP Decls env1 st1 prog env2 st2
+FORGE_OPEN_GOAL ∃st3 exn.
+  (∃ck1 ck2.
+     evaluate_dec_list (st1 with clock := ck1) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE [])
+             (App Opapp [Var (Short «refund_main»); Unit])) prog) =
+     (st3 with clock := ck2,Rerr (Rraise exn))) ∧
+  ∃h3 h4. SPLIT3 (st2heap p st3) (h3,h2,h4) ∧ Q exn h3

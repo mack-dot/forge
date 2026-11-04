@@ -8229,3 +8229,51 @@ curl: (6) Could not resolve host: github.com
 - No native execution, hosted refund measurements, protected adoption, release
   signing, publication, merge, dispatch or deployment ran here. All earlier
   entries and failed experiments remain intact. M2–M4 remain later priorities.
+
+
+## U274 — Exception-to-main proof remains unestablished after five checks
+
+- References:U270,U271,U273. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The preceding turn made progress and verified the live
+  compiler. This turn attempts a missing rejection link without changing code.
+- Existing refund_main_error proves a POSTe Fail exception and the consumed-input
+  STDIO state. Normal whole-program helpers require POSTv. The proposed
+  refund_call_main_exception lemma must connect the actual main declaration call
+  to evaluate_dec_list returning Rerr(Rraise exn), preserving its heap postcondition.
+  Declaration, namespace and heap premises remain explicit.
+- run.py0001 returns1 before proof because direct theorem imports are missing.
+  run.py0002 returns1 at the required lemma after imports are supplied. No accepted
+  export. Its failed heap is preserved. Diagnostic0001 returns1 at name renaming.
+  Diagnostic0002 returns1 at that same step and prints evaluate_to_heap(...,Exn v)
+  and Q v h_f. Both diagnostic failures remain exact records.
+- run.py0003 removes renaming and uses the observed v. It still returns1 with no
+  accepted export. The batch log does not identify the last failing tactic.
+  The second failed heap remains preserved. The required statement is unchanged.
+- These are five unsuccessful checks:three source builds and two saved-goal
+  diagnostics. Stop further attempts on this lemma under the existing limit.
+  They are failed positive checks, not passing negative controls. New adversarial
+  controls and positive reproduction are NOT RUN. The goal is not weakened or
+  silently replaced by a normal-return statement.
+- Final attempted source SHA256:
+  c9fb9137abfa8e614e76b39ed117d9558ef8d9e6a045904514544144524e9421.
+  Saved-failure readback0 verifies all five records, both heap hashes,30 frozen
+  inputs and all six unchanged whole-program exports. This integrity result does
+  not establish the attempted theorem or authenticate a producer.
+- The earlier source theorem for all canonical typed requests is still intact:
+  source37d623cc and data52b94fa4. Existing wire and application-level rejection
+  proofs are not invalidated. No implementation, input domain, required output,
+  machine semantics or axiom changed. No native exit code follows from this work.
+- Packet:proposals/refund-executable-feasibility/exception-bridge-20261104/REPORT.md.
+  Raw:results/refund-exception-bridge-2026-11-04/attempt-0001/. Large heaps remain
+  at the paths and hashes recorded in failure-heaps.json, without duplication
+  into the proposal. All prior failure records and journal bytes remain intact.
+- The independent compiler job is still live in session60920. Its published
+  dependencies and cake_compile_heap have passed; actual refund compilation
+  has begun. No completed refund compile or native result is claimed here.
+  Next: finish that exact invocation, inspect exact theorem/artifact bindings,
+  and run the prepared compiler-correctness composition when its preconditions
+  hold. Preserve the exception-to-whole-program gap separately.
+- Full Unicode/source/model and runtime correspondence, resource premises,
+  independent claim/profile review, authenticated admission and off-machine
+  archive hash/restore remain unresolved. No signing, protected adoption,
+  publication, merge, dispatch or deployment ran. M2–M4 remain later priorities.

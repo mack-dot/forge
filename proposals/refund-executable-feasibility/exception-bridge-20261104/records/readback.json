@@ -1,0 +1,52 @@
+{
+  "actual_exit": 0,
+  "scope": "Saved failure and parent identity readback only",
+  "failed_checks": [
+    {
+      "check": "build-0001",
+      "actual_exit": 1,
+      "source_sha256": "1088235e30e16795f7c3fd9ef1b5ba55c0aafa8758a4c4aeb69f669e149c4ee0",
+      "accepted_exports": false
+    },
+    {
+      "check": "build-0002",
+      "actual_exit": 1,
+      "source_sha256": "52dc91705d2edd17c3e59d593142e91115eb4626bf609638fea42bd661cb02b9",
+      "accepted_exports": false
+    },
+    {
+      "check": "build-0003",
+      "actual_exit": 1,
+      "source_sha256": "c9fb9137abfa8e614e76b39ed117d9558ef8d9e6a045904514544144524e9421",
+      "accepted_exports": false
+    },
+    {
+      "check": "diagnostic-0001",
+      "actual_exit": 1,
+      "failure_step": "name",
+      "accepted_exports": false
+    },
+    {
+      "check": "diagnostic-0002",
+      "actual_exit": 1,
+      "failure_step": "name",
+      "accepted_exports": false
+    }
+  ],
+  "checks_count": 5,
+  "positive_exception_theorem": "NOT_ESTABLISHED",
+  "new_negative_controls": "NOT RUN",
+  "repeat": "NOT RUN",
+  "attempt_limit_reached": true,
+  "parent_whole_source_sha256": "37d623cc2437f391d4a0e72afcc72ed0b541e82f985dc5a2dfbe73a29e3ef4d0",
+  "parent_whole_object_sha256": {
+    "forge_refundWholeProgTheory.cachekey": "7a84829a19c28d0883e78b59f0e15294f249189cff1731760452a559e6642839",
+    "forge_refundWholeProgTheory.dat": "52b94fa448fa6de315cab80251ed5cdf46184a576e9478644b374e8071b19ded",
+    "forge_refundWholeProgTheory.sig": "08a4a5c7da14795df5f874772e44b0578ca88a745c4ea53ca54924da01229b7c",
+    "forge_refundWholeProgTheory.sml": "a38571184d97be82df10a9d07cfadf3fd6935acaf85211df68999a25fc31e495",
+    "forge_refundWholeProgTheory.ui": "262314f8cb97a1d87c9fe5e0c87ca72e9808cdd775bc901998628f9a0d8f183b",
+    "forge_refundWholeProgTheory.uo": "5fefb01811bb6701d6bee8f56ef99a141dbcc48269d4cade7e8c59162f341b84"
+  },
+  "frozen_inputs_checked": 30,
+  "end_to_end": false
+}

@@ -17,7 +17,15 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest execution checkpoint: **U273 — ARM64 compile confirmed live**.
+Latest exception checkpoint: **U274 — attempted main-call rejection proof failed**.
+The [failure packet](proposals/refund-executable-feasibility/exception-bridge-20261104/REPORT.md)
+preserves three failed builds and two failed saved-goal diagnostics. No new
+theorem is accepted. Stop retries on that lemma under the existing five-check
+limit. The canonical-input source theorem is unchanged. The ARM64 compiler
+dependencies and heap have passed; the actual refund compile is now running.
+Its terminal result and native behavior are not established yet.
+
+Earlier execution checkpoint: **U273 — ARM64 compile confirmed live**.
 The [compiler checkpoint](proposals/refund-executable-feasibility/arm8-compiler-preparation-20261104/REPORT.md)
 preserves live-process evidence, the prepared correctness composition and exact
 remaining premises. The compile has no terminal exit yet. The behavior proof
