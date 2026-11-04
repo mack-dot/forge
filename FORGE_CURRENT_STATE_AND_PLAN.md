@@ -487,3 +487,33 @@ product implementation is authorized by this document.
 Full mission outcome remains UNESTABLISHED. The first seven requested planning
 deliverables are present here; their proposed implementations and benchmarks
 are not represented as completed work.
+
+
+
+## Immediate-slice execution supplement — U252/U253
+
+The exact current six-link audit and shortest path are in
+[VERTICAL_SLICE_STATUS.md](VERTICAL_SLICE_STATUS.md). New modeled arithmetic and
+arbitrary-reservation/FCSR checks compiled0;the incorrect22 result was rejected1.
+The historical signed consumer passed0;unsigned execution/correspondence upgrades
+failed1/1 after real Cosign0. Full new-root recursive checking is NOT RUN.
+Local documentation commit9b0a678e and review supplementc8e87fd0 remain unpushed.
+No accepted claim/profile changed. Mainf9 and PR37fc85 remain unchanged.
+
+
+## New executable correspondence result — U254
+
+The fresh full recursive independent replay passed597 modules with exactly the
+same86 allowed assumptions. Behavior and explicit ExitEv0 proofs rebuilt byte
+for byte. This supersedes the earlier new-root NOT RUN status, without changing
+the historical record. The new runtime observation matches21 frames and404 LOAD
+bytes. Parent process exit is0. Register interference produces exit2 and refusal1.
+
+The precise field matrix, replay evidence and inactive approval packet are in
+results/executable-correspondence-2026-11-03/attempt-0001/REPORT.md and its linked
+CORRESPONDENCE.md. Overall PARTIALLY_ESTABLISHED; end_to_end=false. Full physical
+state refinement and new authenticated release admission remain unestablished.
+The next boundary is exact conditional claim/profile and independent source
+review. No Stage12, accepted-policy change, publication, merge or dispatch.
+The owner reports an off-machine backup. Its exact hashes/restore remain NOT RUN;
+fresh local restore0 does not close strict integration EXIT1.

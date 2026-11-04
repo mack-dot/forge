@@ -106,3 +106,21 @@ status checks/workflows were configured. No protection settings changed.
 Immediate vertical slice: **NOT_ESTABLISHED**. Strict integration:
 **NOT_ESTABLISHED**. New hosted execution, new authenticated runtime claim and new
 release admission: **NOT RUN**. Do not start Stage12 or claim end-to-end correctness.
+
+
+## New executable correspondence result — U254
+
+The fresh full recursive independent replay passed597 modules with exactly the
+same86 allowed assumptions. Behavior and explicit ExitEv0 proofs rebuilt byte
+for byte. This supersedes the earlier new-root NOT RUN status, without changing
+the historical record. The new runtime observation matches21 frames and404 LOAD
+bytes. Parent process exit is0. Register interference produces exit2 and refusal1.
+
+The precise field matrix, replay evidence and inactive approval packet are in
+results/executable-correspondence-2026-11-03/attempt-0001/REPORT.md and its linked
+CORRESPONDENCE.md. Overall PARTIALLY_ESTABLISHED; end_to_end=false. Full physical
+state refinement and new authenticated release admission remain unestablished.
+The next boundary is exact conditional claim/profile and independent source
+review. No Stage12, accepted-policy change, publication, merge or dispatch.
+The owner reports an off-machine backup. Its exact hashes/restore remain NOT RUN;
+fresh local restore0 does not close strict integration EXIT1.
