@@ -1,0 +1,20 @@
+<<HOL message: Created theory "forge_refund_compile">>
+Saved definition ____ "refund_cml_def"
+Saved theorem _______ "refund_compilation"
+Saved theorem _______ "refund_static"
+Saved theorem _______ "refund_model_return"
+Saved theorem _______ "refund_statement_evaluation"
+Saved theorem _______ "refund_compiler_relation"
+Saved definition ____ "cml_has_local_def"
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_compile_experiment/forge_refund_compileScript.sml:70: error: Value or constructor (read_local_def) has not been declared
+Found near
+  [
+     state_rel_def,
+     read_local_def,
+     locals_rel_def,
+     CaseEq "option",
+     cml_has_local_def
+     ]
+error in quse /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_compile_experiment/forge_refund_compileScript.sml : Fail "Static Errors"
+error in load /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_compile_experiment/forge_refund_compileScript : Fail "Static Errors"
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"

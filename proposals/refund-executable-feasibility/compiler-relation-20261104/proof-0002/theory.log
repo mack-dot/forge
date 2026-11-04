@@ -1,0 +1,37 @@
+<<HOL message: Created theory "forge_refund_compile">>
+Saved definition ____ "refund_cml_def"
+Saved theorem _______ "refund_compilation"
+Saved theorem _______ "refund_static"
+Saved theorem _______ "refund_model_return"
+Saved theorem _______ "refund_statement_evaluation"
+Saved theorem _______ "refund_compiler_relation"
+FORGE_THEOREM refund_compilation
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ from_stmt refund_body 0 = INR refund_cml
+FORGE_THEOREM refund_static
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ is_fresh_stmt refund_body ∧ (∀names. no_shadow names refund_body) ∧
+  no_assert_stmt refund_body
+FORGE_THEOREM refund_compiler_relation
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ state_rel m l
+    (refund_initial h charge request original remaining enabled opened
+       candidate amount reason) t env_cml ∧ env_rel env_dfy env_cml ⇒
+  ∃ck t' m' r_cml.
+    evaluate (t with clock := t.clock + ck) env_cml [refund_cml] = (t',r_cml) ∧
+    store_preserve (FRANGE m) 0 t.refs t'.refs ∧
+    state_rel m' l
+      (FST
+         (evaluate_stmt
+            (refund_initial h charge request original remaining enabled
+               opened candidate amount reason) env_dfy refund_body)) t'
+      env_cml ∧ cml_state_preserved t t' ∧ m ⊑ m' ∧
+    is_extension t.refs m m' ∧ stmt_res_rel (Rstop Sret) r_cml
+Exporting theory "forge_refund_compile" ... done.
+Theory "forge_refund_compile" took 0.31724s to build

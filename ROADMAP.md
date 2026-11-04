@@ -7,7 +7,37 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
-## Active mission update — 2026-11-04 (U258)
+## Active mission update — 2026-11-04 (U259)
+
+The exact refund body now has a checked conditional behavioral relation to its
+generated CakeML expression. This is not a native executable theorem. CURRENT
+none; Stage12 unauthorized; M1 open; `end_to_end=false`.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `python3 -B run.py 0001` | 1 | Static proof left a quantified trivial goal; preserved |
+| `python3 -B run.py 0002` | 0 | Exact compiler relation and static premises checked |
+| `python3 -B run.py 0003` / `0004` | 1/1 | Projection name error and unresolved value substitution; retained |
+| `python3 -B run.py 0005` / `final` | 0/0 | Six CakeML output fields established under explicit entry premises |
+| `python3 -B run.py substitution negative-compiled-substitution/forge_refund_compileScript.sml` | 1 | Expected refusal at exact compilation equality |
+| `python3 -B run.py repeat` / acceptance comparison | 0/0 | Fresh source execution; six byte-identical exports; negative reason checked |
+| Fresh HOL closure/theorem inspection | 0 |139 theory nodes; nine own theorems; four foundation axioms retained |
+| Initial original-input postflight | 1 | Wrong comparison worktree; preserved bookkeeping failure |
+| Postflight using original owner workspace | 0 |30 frozen source/input hashes unchanged |
+| Parent model/report local commit and124-file readback | 0/0 | Commitd0269c05; no publication |
+
+Exact commands and limits:
+[compiler relation report](proposals/refund-executable-feasibility/compiler-relation-20261104/REPORT.md).
+Raw results: `results/refund-compiler-relation-2026-11-04/attempt-0001/`.
+
+Next authorized check: construct the checked method entry/calling environment
+and caller-visible returned tuple using the existing published proof. The
+current theorem retains `state_rel` and `env_rel` as premises. Full Unicode
+transfer, observable interface, native artifact and new admission remain open.
+No hosted refund execution or performance measurement has run. Off-machine
+archive identity/restore and independent acceptance review remain separate.
+
+## Prior mission update — 2026-11-04 (U258)
 
 The full refund contract remains the M1 target. This new local experiment
 checks refund behavior in the published HOL4 Dafny model. It does not yet

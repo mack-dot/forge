@@ -26,11 +26,12 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: apply the published Dafny-to-CakeML compiler relation
-to the exact refund body now checked in HOL4. The upstream compiler proof replay
-returned0. Its application to refund is still open. Preserve the full Unicode
-domain through a justified representation relation and use a checked calling
-or I/O interface. Upstream modeled `Print` does not establish observable output.
+Next authorized action: use the published method/calling proof to construct
+an applicable entry and return interface for refund. The body-to-CakeML relation
+and all six output fields now pass under explicit state/environment premises.
+Those premises still need a checked caller. Preserve the full Unicode domain
+through a justified representation relation. Upstream modeled `Print` does not
+establish observable output. Native artifact and admission binding remain open.
 
 Detailed claim, source hashes, commands and boundaries:
 [M1 experiment report](proposals/refund-executable-feasibility/README.md).
@@ -41,6 +42,12 @@ The guard and complete return result pass in the published Dafny model for
 arbitrary integers and byte strings. Both implementation violations are refused.
 A fresh rebuild produces six byte-identical exports. The approved Unicode
 contract is unchanged and is not yet connected to this model or native code.
+
+New compiler relation:
+[conditional behavioral proof](proposals/refund-executable-feasibility/compiler-relation-20261104/REPORT.md).
+Exact compilation equality, static premises and six CakeML output values are
+checked. Final proof/repeat0/0; substituted compiled expression1 for the intended
+equality failure. This is a conditional model theorem, not native correctness.
 
 ## Milestone completion ledger
 
@@ -92,7 +99,8 @@ establish approval. No review, merge or workflow operation was performed.
 | Fixed GCD executable model theorem | LOCALLY_VALIDATED, historical | Exact old ELF and kernel replay records retained; not a refund theorem or full QEMU/Linux correspondence |
 | Hosted authenticated booking reuse | TESTED, historical | Actual authorized run and 13 cases; same-process reuse only; no cross-run claim |
 | Stage9 signed release/admission | TESTED, historical | Authenticates its original artifact and claim; does not authorize the new refund claim |
-| Refund compiler/binary/runtime correspondence | NOT_ESTABLISHED | Published compiler proof replay passed; application to refund, full Unicode relation, exact native artifact and runtime relation remain open |
+| Refund body to CakeML expression | LOCALLY_VALIDATED | Exact compilation equality and six output fields checked under explicit state/environment premises; caller construction remains open |
+| Refund binary/runtime correspondence | NOT_ESTABLISHED | Full Unicode relation, checked calling/output interface, exact native artifact and runtime binding remain open |
 | Refund acceptance profile and release chain | NOT_ESTABLISHED | Need exact reviewed claim, checker, artifact/environment binding and authorized independent admission |
 
 Hosted run [41523691535](https://github.com/mack-dot/forge/actions/runs/41523691535)
@@ -123,7 +131,7 @@ No compiled refund proof, hosted refund execution or new admission ran.
 The exact commands, raw outputs and hashes are in the linked experiment packet.
 These checks do not complete a repository stage or M1.
 
-## Current backend checks
+## Backend checks
 
 | Command/check | Actual exit | Result |
 | --- | --- | --- |
@@ -141,7 +149,7 @@ These checks do not complete a repository stage or M1.
 The model theorem covers arbitrary integers and byte strings. It is one
 sub-obligation toward the full approved Unicode contract, not a replacement
 contract. The manually constructed AST still needs a checked representation
-relation. The upstream compiler theorem has not yet been applied to this body.
+relation. The later compiler result below applies to this exact model body.
 No native executable behavior or new authenticated admission is established.
 The imported HOL foundation axioms are SELECT_AX, INFINITY_AX, ETA_AX and
 BOOL_CASES_AX. No new axiom was introduced. This experimental checker and
@@ -149,6 +157,27 @@ closure are not adopted into Forge's protected acceptance policy.
 
 Detailed records and reproduction instructions are in the linked backend
 packet. All durations are local observations. Hosted refund metrics are NOT RUN.
+
+## Current compiler-relation checks
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| `run.py 0001` | 1 | Static proof left a trivial quantified goal; preserved |
+| `run.py 0002` | 0 | Exact compiler relation checked |
+| `run.py 0003` / `0004` | 1/1 | Projection name error and unresolved substitutions; preserved |
+| `run.py 0005` / `final` | 0/0 | All six fields transferred; final source removes an unused bound variable |
+| `run.py substitution ...` | 1 | Compiled-expression substitution refused at equality proof |
+| `run.py repeat` / acceptance comparison | 0/0 | Fresh theorem execution; six identical exports; intended refusal checked |
+| HOL closure inspection | 0 |139 theory nodes; nine own theorems; same four explicit foundation axioms |
+| Initial input postflight | 1 | Compared the owner baseline against a different Git worktree; error retained |
+| Postflight against original owner workspace | 0 |30 frozen inputs unchanged |
+
+Remaining premises: the initializer and CakeML state satisfy `state_rel`; the
+environments satisfy `env_rel`. They include clocks, heap/reference mapping,
+namespace entries, constructor stamps and callable closures. The proof does
+not construct a complete caller yet. It returns through the internal compiler
+Return convention. Observable API behavior and physical process exit are open.
+All results are local. No hosted refund, signing or admission command ran.
 
 ## Evidence record requirements
 
@@ -199,6 +228,12 @@ Selected refund for the next correspondence experiment. M1–M4 remain open.
 two implementation violations, fresh proof reproduction and imported assumptions.
 Replayed the published compiler theorem. Recorded the Unicode and observable
 output gaps. The next implementation step is the exact refund compiler relation.
+
+2026-11-04: Applied the compiler theorem to the exact refund body and transferred
+all six result fields. Final source/repeat0/0; substituted expression refused1.
+Recorded139-node closure and preserved all failed attempts. Entry/calling, full
+Unicode, native and admission obligations remain open. Parent report commit:
+`d0269c051390ffe76b41ba1e522568870f3a4f83`, local and unpublished.
 
 
 ### Mission tracking preservation — actual local results

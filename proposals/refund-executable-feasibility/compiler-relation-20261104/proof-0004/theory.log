@@ -1,0 +1,76 @@
+<<HOL message: Created theory "forge_refund_compile">>
+Saved definition ____ "refund_cml_def"
+Saved theorem _______ "refund_compilation"
+Saved theorem _______ "refund_static"
+Saved theorem _______ "refund_model_return"
+Saved theorem _______ "refund_statement_evaluation"
+Saved theorem _______ "refund_compiler_relation"
+Saved definition ____ "cml_has_local_def"
+Saved theorem _______ "related_local"
+Saved definition ____ "refund_cml_outputs_def"
+Saved theorem _______ "refund_output_names_fresh"
+Proof of 
+
+state_rel m l
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)) t env_cml ⇒
+refund_cml_outputs l t env_cml charge request original remaining enabled
+  opened candidate amount reason
+
+failed.
+First unsolved sub-goal is
+
+cml_has_local l t env_cml «v9»
+  (Boolv
+     (eligible charge request original remaining enabled opened candidate
+        amount reason)) ∧
+cml_has_local l t env_cml «v10»
+  (Litv
+     (IntLit
+        (if
+           eligible charge request original remaining enabled opened
+             candidate amount reason
+         then
+           amount
+         else 0))) ∧
+cml_has_local l t env_cml «v11»
+  (Litv
+     (StrLit
+        (if
+           eligible charge request original remaining enabled opened
+             candidate amount reason
+         then
+           reason
+         else «»))) ∧
+cml_has_local l t env_cml «v12»
+  (Litv
+     (StrLit
+        (if
+           eligible charge request original remaining enabled opened
+             candidate amount reason
+         then
+           charge
+         else «»))) ∧
+cml_has_local l t env_cml «v13»
+  (Litv
+     (StrLit
+        (if
+           eligible charge request original remaining enabled opened
+             candidate amount reason
+         then
+           request
+         else «»))) ∧
+cml_has_local l t env_cml «v14»
+  (Litv
+     (IntLit
+        (if
+           eligible charge request original remaining enabled opened
+             candidate amount reason
+         then
+           1
+         else 0)))
+
+Tactic failure proving "refund_fields_transfer"; heap saved to forge_refund_compile.refund_fields_transfer.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_compile.refund_fields_transfer.dumpedheap

@@ -7386,3 +7386,53 @@ curl: (6) Could not resolve host: github.com
   body/expression; discharge freshness, no-shadowing and no-assertion conditions.
   Then preserve full Unicode, checked output/calling, native identity and approved
   admission obligations. M1–M4 remain open; no publication or policy adoption.
+
+
+## U259 — Exact refund body-to-CakeML behavior checked under explicit entry relations
+
+- References:U257,U258. CURRENT none; Stage12 unauthorized; end_to_end=false.
+  Full refund R1–R5 remains the target. This closes a model/compiler
+  sub-obligation; it does not establish native or full Unicode correspondence.
+- Applied the actual published correct_from_stmt theorem to the exact refund
+  body and generated CakeML expression. Kernel-checked compilation equality
+  binds the expression. Freshness, no shadowing and no assertions are discharged.
+  A checked projection transfers all six output fields into CakeML model
+  references and namespace entries. No new semantics/verifier/axiom introduced.
+- forge_refund_compile.refund_compiled_behavior explicitly requires state_rel
+  for the initial states and env_rel for the environments. It establishes a
+  finite modeled execution, correct six values, internal Return convention and
+  cml_state_preserved. It does not construct a complete caller, prove physical
+  termination or establish externally observable output. These remain open.
+- Actual run0001 returned1 on a trivial quantified static goal;0002 returned0
+  for the compiler relation. Added projection attempt0003 returned1 on an
+  unqualified theorem name;0004 returned1 with unsubstituted value equalities.
+  Qualified reference and proof substitution repair gave0005 exit0. No theorem
+  premise, source behavior or expected test outcome was weakened. Final source
+  removes an unused existential variable; final/repeat0/0, six identical exports.
+- New substitution control replaces only the compiled expression with Unit,
+  while keeping translator, source and required equality fixed. Actual exit1
+  at refund_compilation; expected reason matched, no accepted exports. Controls
+  and byte-comparison exit0. Prior amount/reject-all controls stay unchanged.
+- Final proof source17e6b07f69faacb9a6b68e4b538c7f817e7927467fde908809df514bed923f3d;
+  theorem data c422a03764add97460c4280b3aab8015a30be9f4338402b12d27807d9dcf4b25.
+  Fresh closure inspection0:139 nodes, nine own theorems, no missing parent or
+  artifact. Same four foundation axioms SELECT_AX/INFINITY_AX/ETA_AX/BOOL_CASES_AX.
+  DISK_THM with zero explicit hypotheses does not erase conditional premises.
+  Fresh local source replay, not candidate data or hashes, supplies checking.
+- Postflight initially returned1 because the owner baseline was compared to
+  the separate main Git worktree. Six gate/script paths differ there. Retained
+  error record; corrected original-workspace check0 with all30 frozen hashes
+  unchanged. Main Git and CakeML tracked diffs are clean. No source changed.
+- Parent model/report commitd0269c051390ffe76b41ba1e522568870f3a4f83 returned0;
+  exact124-file committed readback0, worktree clean, no publication. New raw
+  archive has100 members checked0,38757739bytes,mode0600,SHA256
+  ff3e243b043e7bfc148dd3704564b77319b7af3f91efdbc1123712fb209cca7a.
+  Failed proof heaps remain in that archive and original local records.
+- Evidence:results/refund-compiler-relation-2026-11-04/attempt-0001/;
+  proposals/refund-executable-feasibility/compiler-relation-20261104/.
+  No new hosted verification, signing, review, publication, merge or admission.
+  Owner-reported independent archive copy still needs exact hashes/restore.
+- Next check: use the published method/calling proof to construct and prove an
+  applicable initial state/environment and caller-visible return tuple. Preserve
+  full Unicode representation, native/runtime and independent admission gaps.
+  M1–M4 stay open. No protected profile adoption or acceptance policy change.

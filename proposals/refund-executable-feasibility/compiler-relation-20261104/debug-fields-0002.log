@@ -1,0 +1,1107 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 557 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> OK..
+1 subgoal:
+val it =
+   
+    0.  state_rel [0;1;34mm[0m [0;1;34ml[0m
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)) [0;1;34mt[0m
+          [0;1;34menv_cml[0m
+    1.  SND
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body) = Rstop Sret
+    2.  (FST
+           (evaluate_stmt
+              (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                 [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).heap = [0;1;34mh[0m
+    3.  read_local
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+          «v9» =
+        SOME
+          (BoolV
+             (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m))
+    4.  read_local
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+          «v10» =
+        SOME
+          (IntV
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mamount[0m
+              else 0))
+    5.  read_local
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+          «v11» =
+        SOME
+          (StrV
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mreason[0m
+              else «»))
+    6.  read_local
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+          «v12» =
+        SOME
+          (StrV
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mcharge[0m
+              else «»))
+    7.  read_local
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+          «v13» =
+        SOME
+          (StrV
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mrequest[0m
+              else «»))
+    8.  read_local
+          (FST
+             (evaluate_stmt
+                (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                   [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+          «v14» =
+        SOME
+          (IntV
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                1
+              else 0))
+    9.  is_fresh «v9»
+   10.  is_fresh «v10»
+   11.  is_fresh «v11»
+   12.  is_fresh «v12»
+   13.  is_fresh «v13»
+   14.  is_fresh «v14»
+   15.  [0;1;34mcml_v[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                1
+              else 0))
+   16.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v[0m
+   17.  [0;1;34mcml_v'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mrequest[0m
+              else «»))
+   18.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'[0m
+   19.  [0;1;34mcml_v''[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mcharge[0m
+              else «»))
+   20.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v''[0m
+   21.  [0;1;34mcml_v'³'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mreason[0m
+              else «»))
+   22.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'³'[0m
+   23.  [0;1;34mcml_v'⁴'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mamount[0m
+              else 0))
+   24.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'⁴'[0m
+   25.  [0;1;34mcml_v'⁵'[0m =
+        Boolv
+          (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+             [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m)
+   26.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'⁵'[0m
+   27.  [0;1;34mcml_v'⁶'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                1
+              else 0))
+   28.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v'⁶'[0m
+   29.  [0;1;34mcml_v'⁷'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mrequest[0m
+              else «»))
+   30.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'⁷'[0m
+   31.  [0;1;34mcml_v'⁸'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mcharge[0m
+              else «»))
+   32.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v'⁸'[0m
+   33.  [0;1;34mcml_v'⁹'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mreason[0m
+              else «»))
+   34.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'⁹'[0m
+   35.  [0;1;34mcml_v'¹⁰'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mamount[0m
+              else 0))
+   36.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'¹⁰'[0m
+   37.  [0;1;34mcml_v'¹¹'[0m =
+        Boolv
+          (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+             [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m)
+   38.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'¹¹'[0m
+   39.  [0;1;34mcml_v'¹²'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                1
+              else 0))
+   40.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v'¹²'[0m
+   41.  [0;1;34mcml_v'¹³'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mrequest[0m
+              else «»))
+   42.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'¹³'[0m
+   43.  [0;1;34mcml_v'¹⁴'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mcharge[0m
+              else «»))
+   44.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v'¹⁴'[0m
+   45.  [0;1;34mcml_v'¹⁵'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mreason[0m
+              else «»))
+   46.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'¹⁵'[0m
+   47.  [0;1;34mcml_v'¹⁶'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mamount[0m
+              else 0))
+   48.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'¹⁶'[0m
+   49.  [0;1;34mcml_v'¹⁷'[0m =
+        Boolv
+          (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+             [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m)
+   50.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'¹⁷'[0m
+   51.  [0;1;34mcml_v'¹⁸'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                1
+              else 0))
+   52.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v'¹⁸'[0m
+   53.  [0;1;34mcml_v'¹⁹'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mrequest[0m
+              else «»))
+   54.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'¹⁹'[0m
+   55.  [0;1;34mcml_v'²⁰'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mcharge[0m
+              else «»))
+   56.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v'²⁰'[0m
+   57.  [0;1;34mcml_v'²¹'[0m =
+        Litv
+          (StrLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mreason[0m
+              else «»))
+   58.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'²¹'[0m
+   59.  [0;1;34mcml_v'²²'[0m =
+        Litv
+          (IntLit
+             (if
+                eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                  [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+              then
+                [0;1;34mamount[0m
+              else 0))
+   60.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'²²'[0m
+   61.  [0;1;34mcml_v'²³'[0m =
+        Boolv
+          (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+             [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m)
+   62.  cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'²³'[0m
+   ------------------------------------
+        cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9»
+          (Boolv
+             (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m)) ∧
+        cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10»
+          (Litv
+             (IntLit
+                (if
+                   eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                     [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+                 then
+                   [0;1;34mamount[0m
+                 else 0))) ∧
+        cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11»
+          (Litv
+             (StrLit
+                (if
+                   eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                     [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+                 then
+                   [0;1;34mreason[0m
+                 else «»))) ∧
+        cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12»
+          (Litv
+             (StrLit
+                (if
+                   eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                     [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+                 then
+                   [0;1;34mcharge[0m
+                 else «»))) ∧
+        cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13»
+          (Litv
+             (StrLit
+                (if
+                   eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                     [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+                 then
+                   [0;1;34mrequest[0m
+                 else «»))) ∧
+        cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14»
+          (Litv
+             (IntLit
+                (if
+                   eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                     [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+                 then
+                   1
+                 else 0)))
+   
+   : proof
+val asl =
+   [“cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'²³'[0m”,
+    “[0;1;34mcml_v'²³'[0m =
+     Boolv
+       (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m [0;1;34mcandidate[0m
+          [0;1;34mamount[0m [0;1;34mreason[0m)”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'²²'[0m”,
+    “[0;1;34mcml_v'²²'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mamount[0m
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'²¹'[0m”,
+    “[0;1;34mcml_v'²¹'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mreason[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v'²⁰'[0m”,
+    “[0;1;34mcml_v'²⁰'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mcharge[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'¹⁹'[0m”,
+    “[0;1;34mcml_v'¹⁹'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mrequest[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v'¹⁸'[0m”,
+    “[0;1;34mcml_v'¹⁸'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             1
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'¹⁷'[0m”,
+    “[0;1;34mcml_v'¹⁷'[0m =
+     Boolv
+       (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m [0;1;34mcandidate[0m
+          [0;1;34mamount[0m [0;1;34mreason[0m)”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'¹⁶'[0m”,
+    “[0;1;34mcml_v'¹⁶'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mamount[0m
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'¹⁵'[0m”,
+    “[0;1;34mcml_v'¹⁵'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mreason[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v'¹⁴'[0m”,
+    “[0;1;34mcml_v'¹⁴'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mcharge[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'¹³'[0m”,
+    “[0;1;34mcml_v'¹³'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mrequest[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v'¹²'[0m”,
+    “[0;1;34mcml_v'¹²'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             1
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'¹¹'[0m”,
+    “[0;1;34mcml_v'¹¹'[0m =
+     Boolv
+       (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m [0;1;34mcandidate[0m
+          [0;1;34mamount[0m [0;1;34mreason[0m)”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'¹⁰'[0m”,
+    “[0;1;34mcml_v'¹⁰'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mamount[0m
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'⁹'[0m”,
+    “[0;1;34mcml_v'⁹'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mreason[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v'⁸'[0m”,
+    “[0;1;34mcml_v'⁸'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mcharge[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'⁷'[0m”,
+    “[0;1;34mcml_v'⁷'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mrequest[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v'⁶'[0m”,
+    “[0;1;34mcml_v'⁶'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             1
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9» [0;1;34mcml_v'⁵'[0m”,
+    “[0;1;34mcml_v'⁵'[0m =
+     Boolv
+       (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m [0;1;34mcandidate[0m
+          [0;1;34mamount[0m [0;1;34mreason[0m)”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10» [0;1;34mcml_v'⁴'[0m”,
+    “[0;1;34mcml_v'⁴'[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mamount[0m
+           else 0))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11» [0;1;34mcml_v'³'[0m”,
+    “[0;1;34mcml_v'³'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mreason[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12» [0;1;34mcml_v''[0m”,
+    “[0;1;34mcml_v''[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mcharge[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13» [0;1;34mcml_v'[0m”,
+    “[0;1;34mcml_v'[0m =
+     Litv
+       (StrLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mrequest[0m
+           else «»))”, “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14» [0;1;34mcml_v[0m”,
+    “[0;1;34mcml_v[0m =
+     Litv
+       (IntLit
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             1
+           else 0))”, “is_fresh «v14»”, “is_fresh «v13»”, “is_fresh «v12»”,
+    “is_fresh «v11»”, “is_fresh «v10»”, “is_fresh «v9»”,
+    “read_local
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+       «v14» =
+     SOME
+       (IntV
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             1
+           else 0))”,
+    “read_local
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+       «v13» =
+     SOME
+       (StrV
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mrequest[0m
+           else «»))”,
+    “read_local
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+       «v12» =
+     SOME
+       (StrV
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mcharge[0m
+           else «»))”,
+    “read_local
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+       «v11» =
+     SOME
+       (StrV
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mreason[0m
+           else «»))”,
+    “read_local
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals
+       «v10» =
+     SOME
+       (IntV
+          (if
+             eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+               [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+           then
+             [0;1;34mamount[0m
+           else 0))”,
+    “read_local
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).locals «v9» =
+     SOME
+       (BoolV
+          (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+             [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m))”,
+    “(FST
+        (evaluate_stmt
+           (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+              [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)).heap = [0;1;34mh[0m”,
+    “SND
+       (evaluate_stmt
+          (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+             [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body) = Rstop Sret”,
+    “state_rel [0;1;34mm[0m [0;1;34ml[0m
+       (FST
+          (evaluate_stmt
+             (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m
+                [0;1;34mopened[0m [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m refund_body)) [0;1;34mt[0m [0;1;34menv_cml[0m”]:
+   term list
+val g =
+   “cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v9»
+      (Boolv
+         (eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m [0;1;34mcandidate[0m
+            [0;1;34mamount[0m [0;1;34mreason[0m)) ∧
+    cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v10»
+      (Litv
+         (IntLit
+            (if
+               eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                 [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+             then
+               [0;1;34mamount[0m
+             else 0))) ∧
+    cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v11»
+      (Litv
+         (StrLit
+            (if
+               eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                 [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+             then
+               [0;1;34mreason[0m
+             else «»))) ∧
+    cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v12»
+      (Litv
+         (StrLit
+            (if
+               eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                 [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+             then
+               [0;1;34mcharge[0m
+             else «»))) ∧
+    cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v13»
+      (Litv
+         (StrLit
+            (if
+               eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                 [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+             then
+               [0;1;34mrequest[0m
+             else «»))) ∧
+    cml_has_local [0;1;34ml[0m [0;1;34mt[0m [0;1;34menv_cml[0m «v14»
+      (Litv
+         (IntLit
+            (if
+               eligible [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+                 [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m
+             then
+               1
+             else 0)))”: term
+cml_has_local l t env_cml «v9» cml_v'²³'
+---
+cml_v'²³' =
+Boolv
+  (eligible charge request original remaining enabled opened candidate amount
+     reason)
+---
+cml_has_local l t env_cml «v10» cml_v'²²'
+---
+cml_v'²²' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        amount
+      else 0))
+---
+cml_has_local l t env_cml «v11» cml_v'²¹'
+---
+cml_v'²¹' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        reason
+      else «»))
+---
+cml_has_local l t env_cml «v12» cml_v'²⁰'
+---
+cml_v'²⁰' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        charge
+      else «»))
+---
+cml_has_local l t env_cml «v13» cml_v'¹⁹'
+---
+cml_v'¹⁹' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        request
+      else «»))
+---
+cml_has_local l t env_cml «v14» cml_v'¹⁸'
+---
+cml_v'¹⁸' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        1
+      else 0))
+---
+cml_has_local l t env_cml «v9» cml_v'¹⁷'
+---
+cml_v'¹⁷' =
+Boolv
+  (eligible charge request original remaining enabled opened candidate amount
+     reason)
+---
+cml_has_local l t env_cml «v10» cml_v'¹⁶'
+---
+cml_v'¹⁶' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        amount
+      else 0))
+---
+cml_has_local l t env_cml «v11» cml_v'¹⁵'
+---
+cml_v'¹⁵' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        reason
+      else «»))
+---
+cml_has_local l t env_cml «v12» cml_v'¹⁴'
+---
+cml_v'¹⁴' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        charge
+      else «»))
+---
+cml_has_local l t env_cml «v13» cml_v'¹³'
+---
+cml_v'¹³' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        request
+      else «»))
+---
+cml_has_local l t env_cml «v14» cml_v'¹²'
+---
+cml_v'¹²' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        1
+      else 0))
+---
+cml_has_local l t env_cml «v9» cml_v'¹¹'
+---
+cml_v'¹¹' =
+Boolv
+  (eligible charge request original remaining enabled opened candidate amount
+     reason)
+---
+cml_has_local l t env_cml «v10» cml_v'¹⁰'
+---
+cml_v'¹⁰' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        amount
+      else 0))
+---
+cml_has_local l t env_cml «v11» cml_v'⁹'
+---
+cml_v'⁹' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        reason
+      else «»))
+---
+cml_has_local l t env_cml «v12» cml_v'⁸'
+---
+cml_v'⁸' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        charge
+      else «»))
+---
+cml_has_local l t env_cml «v13» cml_v'⁷'
+---
+cml_v'⁷' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        request
+      else «»))
+---
+cml_has_local l t env_cml «v14» cml_v'⁶'
+---
+cml_v'⁶' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        1
+      else 0))
+---
+cml_has_local l t env_cml «v9» cml_v'⁵'
+---
+cml_v'⁵' =
+Boolv
+  (eligible charge request original remaining enabled opened candidate amount
+     reason)
+---
+cml_has_local l t env_cml «v10» cml_v'⁴'
+---
+cml_v'⁴' =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        amount
+      else 0))
+---
+cml_has_local l t env_cml «v11» cml_v'³'
+---
+cml_v'³' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        reason
+      else «»))
+---
+cml_has_local l t env_cml «v12» cml_v''
+---
+cml_v'' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        charge
+      else «»))
+---
+cml_has_local l t env_cml «v13» cml_v'
+---
+cml_v' =
+Litv
+  (StrLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        request
+      else «»))
+---
+cml_has_local l t env_cml «v14» cml_v
+---
+cml_v =
+Litv
+  (IntLit
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        1
+      else 0))
+---
+is_fresh «v14»
+---
+is_fresh «v13»
+---
+is_fresh «v12»
+---
+is_fresh «v11»
+---
+is_fresh «v10»
+---
+is_fresh «v9»
+---
+read_local
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)).locals «v14» =
+SOME
+  (IntV
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        1
+      else 0))
+---
+read_local
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)).locals «v13» =
+SOME
+  (StrV
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        request
+      else «»))
+---
+read_local
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)).locals «v12» =
+SOME
+  (StrV
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        charge
+      else «»))
+---
+read_local
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)).locals «v11» =
+SOME
+  (StrV
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        reason
+      else «»))
+---
+read_local
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)).locals «v10» =
+SOME
+  (IntV
+     (if
+        eligible charge request original remaining enabled opened candidate
+          amount reason
+      then
+        amount
+      else 0))
+---
+read_local
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)).locals «v9» =
+SOME
+  (BoolV
+     (eligible charge request original remaining enabled opened candidate
+        amount reason))
+---
+(FST
+   (evaluate_stmt
+      (refund_initial h charge request original remaining enabled opened
+         candidate amount reason) env refund_body)).heap = h
+---
+SND
+  (evaluate_stmt
+     (refund_initial h charge request original remaining enabled opened
+        candidate amount reason) env refund_body) = Rstop Sret
+---
+state_rel m l
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body)) t env_cml
+---
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

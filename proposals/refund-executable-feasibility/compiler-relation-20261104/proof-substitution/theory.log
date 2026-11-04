@@ -1,0 +1,9 @@
+<<HOL message: Created theory "forge_refund_compile">>
+Saved definition ____ "refund_cml_def"
+Proof of 
+
+from_stmt refund_body 0 = INR refund_cml
+
+failed.
+Tactic failure proving "refund_compilation"; heap saved to forge_refund_compile.refund_compilation.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_compile.refund_compilation.dumpedheap

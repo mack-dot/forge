@@ -1,0 +1,234 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 375 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val it = (): unit
+val closure =
+   ["forge_refund_compile", "forge_refund", "result_monad",
+    "dafny_to_cakeml", "balanced_map", "oset", "FormalLang", "charset",
+    "regexp", "regexp_map", "vec_map", "regexp_compiler", "mlvector",
+    "mlint", "dafny_freshen", "dafny_misc", "dafny_ast",
+    "dafny_semanticPrimitives", "dafnyProps", "dafny_evaluate",
+    "dafny_evaluateProps", "dafny_freshenProof", "evaluate", "fpSem", "ffi",
+    "semanticPrimitives", "mergesort", "mllist", "mlstring", "set_sep",
+    "tailrec", "prog", "alignment", "address", "lprefix_lub", "integer_word",
+    "gcd", "int_arith", "cooper", "integer", "intReduce", "Omega", "intreal",
+    "normalizer", "hrat", "hreal", "realax", "real_arith", "real",
+    "RealFieldContext", "binary_ieee", "machine_ieee", "poset", "fixedPoint",
+    "llist", "path", "toto", "comparison", "bag", "container", "sorting",
+    "finite_map", "alist", "sptree", "bitstring", "numeral_bit", "iterate",
+    "fcp", "sum_num", "logroot", "bit", "numposrep", "ternaryComparisons",
+    "string", "ASCIInumbers", "words", "blast", "byte", "ConseqConv",
+    "quantHeuristics", "patternMatches", "EnumTypeContext", "ordinalBasic",
+    "bnfInitial", "permutes", "hurdUtilsContext", "divides", "While",
+    "NumConvContext", "cv", "BoolconvContext", "reduce", "SubAndCondContext",
+    "one", "sum", "option", "pairToolsContext", "quotient", "pair",
+    "InductiveDefinitionContext", ...]: string list
+FORGE_PARENT forge_refund_compile:dafny_to_cakemlProof,forge_refund
+FORGE_PARENT forge_refund:dafny_evaluate
+FORGE_PARENT result_monad:mlstring
+FORGE_PARENT dafny_to_cakeml:ast,result_monad,dafny_ast,mlint
+FORGE_PARENT balanced_map:comparison,alist
+FORGE_PARENT oset:balanced_map
+FORGE_PARENT FormalLang:hol
+FORGE_PARENT charset:words,comparison
+FORGE_PARENT regexp:mergesort,container,charset,FormalLang
+FORGE_PARENT regexp_map:regexp,oset
+FORGE_PARENT vec_map:alist
+FORGE_PARENT regexp_compiler:vec_map,regexp_map
+FORGE_PARENT mlvector:mllist,regexp_compiler
+FORGE_PARENT mlint:mlvector,mlstring
+FORGE_PARENT dafny_freshen:dafny_ast,mlint
+FORGE_PARENT dafny_misc:misc
+FORGE_PARENT dafny_ast:mlstring
+FORGE_PARENT dafny_semanticPrimitives:dafny_ast
+FORGE_PARENT dafnyProps:dafny_semanticPrimitives
+FORGE_PARENT dafny_evaluate:dafnyProps
+FORGE_PARENT dafny_evaluateProps:dafny_evaluate,dafny_misc
+FORGE_PARENT dafny_freshenProof:dafny_evaluateProps,dafny_freshen
+FORGE_PARENT evaluate:semanticPrimitives
+FORGE_PARENT fpSem:ast
+FORGE_PARENT ffi:mlstring
+FORGE_PARENT semanticPrimitives:ffi,fpSem
+FORGE_PARENT mergesort:sorting
+FORGE_PARENT mllist:mergesort,misc
+FORGE_PARENT mlstring:mllist
+FORGE_PARENT set_sep:words
+FORGE_PARENT tailrec:hol
+FORGE_PARENT prog:tailrec,set_sep
+FORGE_PARENT alignment:words
+FORGE_PARENT address:alignment,prog
+FORGE_PARENT lprefix_lub:llist
+FORGE_PARENT integer_word:words,Omega
+FORGE_PARENT gcd:divides
+FORGE_PARENT int_arith:integer,gcd
+FORGE_PARENT cooper:int_arith
+FORGE_PARENT integer:normalizer,hol
+FORGE_PARENT intReduce:integer
+FORGE_PARENT Omega:intReduce,cooper
+FORGE_PARENT intreal:real,Omega
+FORGE_PARENT normalizer:arithmetic
+FORGE_PARENT hrat:hol
+FORGE_PARENT hreal:hrat
+FORGE_PARENT realax:hreal,normalizer
+FORGE_PARENT real_arith:realax
+FORGE_PARENT real:real_arith
+FORGE_PARENT RealFieldContext:real
+FORGE_PARENT binary_ieee:RealFieldContext,intreal,words
+FORGE_PARENT machine_ieee:binary_ieee
+FORGE_PARENT poset:pairToolsContext
+FORGE_PARENT fixedPoint:pred_set,poset
+FORGE_PARENT llist:hol
+FORGE_PARENT path:llist,fixedPoint
+FORGE_PARENT toto:string
+FORGE_PARENT comparison:toto
+FORGE_PARENT bag:hol
+FORGE_PARENT container:finite_map,bag
+FORGE_PARENT sorting:hol
+FORGE_PARENT finite_map:sorting
+FORGE_PARENT alist:finite_map
+FORGE_PARENT sptree:alist,logroot
+FORGE_PARENT bitstring:words
+FORGE_PARENT numeral_bit:bit
+FORGE_PARENT iterate:permutes
+FORGE_PARENT fcp:iterate,hol
+FORGE_PARENT sum_num:hol
+FORGE_PARENT logroot:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT bit:logroot
+FORGE_PARENT numposrep:rich_list,bit
+FORGE_PARENT ternaryComparisons:hol
+FORGE_PARENT string:ternaryComparisons
+FORGE_PARENT ASCIInumbers:string,numposrep
+FORGE_PARENT words:ASCIInumbers,sum_num,fcp,numeral_bit
+FORGE_PARENT blast:words
+FORGE_PARENT byte:blast,bitstring
+FORGE_PARENT ConseqConv:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT quantHeuristics:ConseqConv,list
+FORGE_PARENT patternMatches:rich_list,quantHeuristics
+FORGE_PARENT EnumTypeContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+FORGE_PARENT ordinalBasic:cardinalityCore
+FORGE_PARENT bnfInitial:ordinalBasic
+FORGE_PARENT permutes:pred_set,hurdUtilsContext
+FORGE_PARENT hurdUtilsContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+FORGE_PARENT divides:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT While:arithmetic,option
+FORGE_PARENT NumConvContext:arithmetic
+FORGE_PARENT cv:numeral
+FORGE_PARENT BoolconvContext:marker
+FORGE_PARENT reduce:arithmetic
+FORGE_PARENT SubAndCondContext:marker
+FORGE_PARENT one:mesonLibContext,Canon_Port_Context,boolSimpsContext,InductiveDefinitionContext,canonContext
+FORGE_PARENT sum:pair
+FORGE_PARENT option:sum,one
+FORGE_PARENT pairToolsContext:pair
+FORGE_PARENT quotient:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+FORGE_PARENT pair:relation,quotient
+FORGE_PARENT InductiveDefinitionContext:marker
+FORGE_PARENT Canon_Port_Context:sat,combin
+FORGE_PARENT mesonLibContext:sat,marker
+FORGE_PARENT folMappingContext:sat,marker
+FORGE_PARENT folToolsContext:normalForms
+FORGE_PARENT sat:bool
+FORGE_PARENT canonContext:sat,combin
+FORGE_PARENT combin:marker
+FORGE_PARENT boolSimpsContext:combin
+FORGE_PARENT normalForms:marker
+FORGE_PARENT normalFormsContext:normalForms,boolSimpsContext,canonContext
+FORGE_PARENT relation:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+FORGE_PARENT min:
+FORGE_PARENT bool:min
+FORGE_PARENT marker:bool
+FORGE_PARENT num:marker
+FORGE_PARENT prim_rec:num,relation
+FORGE_PARENT arithmetic:prim_rec,pair
+FORGE_PARENT numeral:arithmetic
+FORGE_PARENT basicSize:numeral,pairToolsContext,option
+FORGE_PARENT numpair:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+FORGE_PARENT pred_set:numpair,divides
+FORGE_PARENT set_relation:pred_set,hurdUtilsContext
+FORGE_PARENT wellorder:set_relation
+FORGE_PARENT cardinalityCore:wellorder,permutes
+FORGE_PARENT bnfPrelims:cardinalityCore
+FORGE_PARENT bnfFixBNF:bnfPrelims,bnfInitial
+FORGE_PARENT bnfMutual:bnfFixBNF
+FORGE_PARENT list:bnfMutual,EnumTypeContext
+FORGE_PARENT rich_list:list
+FORGE_PARENT indexedLists:rich_list
+FORGE_PARENT hol:indexedLists,patternMatches
+FORGE_PARENT res_quan:hol
+FORGE_PARENT misc:res_quan,byte,sptree,container,comparison,path,machine_ieee,integer_word,lprefix_lub,address
+FORGE_PARENT namespace:misc
+FORGE_PARENT ast:namespace,mlstring
+FORGE_PARENT namespaceProps:ast
+FORGE_PARENT semanticPrimitivesProps:namespaceProps,semanticPrimitives
+FORGE_PARENT evaluateProps:semanticPrimitivesProps,evaluate
+FORGE_PARENT dafny_to_cakemlProof:evaluateProps,dafny_freshenProof,dafny_to_cakeml
+FORGE_CLOSURE_AXIOM bool.SELECT_AX
+FORGE_CLOSURE_AXIOM bool.INFINITY_AX
+FORGE_CLOSURE_AXIOM bool.ETA_AX
+FORGE_CLOSURE_AXIOM bool.BOOL_CASES_AX
+FORGE_TAG related_local oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT related_local ⊢ read_local s.locals name = SOME dfy_v ∧ state_rel m l s t env ∧
+  is_fresh name ⇒
+  ∃cml_v. val_rel m dfy_v cml_v ∧ cml_has_local l t env name cml_v
+FORGE_TAG refund_static oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_static ⊢ is_fresh_stmt refund_body ∧ (∀names. no_shadow names refund_body) ∧
+  no_assert_stmt refund_body
+FORGE_TAG refund_statement_evaluation oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_statement_evaluation ⊢ evaluate_stmt
+    (refund_initial h charge request original remaining enabled opened
+       candidate amount reason) env refund_body =
+  (FST
+     (evaluate_stmt
+        (refund_initial h charge request original remaining enabled opened
+           candidate amount reason) env refund_body),Rstop Sret)
+FORGE_TAG refund_output_names_fresh oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_output_names_fresh ⊢ is_fresh «v9» ∧ is_fresh «v10» ∧ is_fresh «v11» ∧ is_fresh «v12» ∧
+  is_fresh «v13» ∧ is_fresh «v14»
+FORGE_TAG refund_model_return oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_model_return ⊢ SND
+    (evaluate_stmt
+       (refund_initial h charge request original remaining enabled opened
+          candidate amount reason) env refund_body) = Rstop Sret
+FORGE_TAG refund_fields_transfer oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_fields_transfer ⊢ state_rel m l
+    (FST
+       (evaluate_stmt
+          (refund_initial h charge request original remaining enabled opened
+             candidate amount reason) env refund_body)) t env_cml ⇒
+  refund_cml_outputs l t env_cml charge request original remaining enabled
+    opened candidate amount reason
+FORGE_TAG refund_compiler_relation oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_compiler_relation ⊢ state_rel m l
+    (refund_initial h charge request original remaining enabled opened
+       candidate amount reason) t env_cml ∧ env_rel env_dfy env_cml ⇒
+  ∃ck t' m' r_cml.
+    evaluate (t with clock := t.clock + ck) env_cml [refund_cml] = (t',r_cml) ∧
+    store_preserve (FRANGE m) 0 t.refs t'.refs ∧
+    state_rel m' l
+      (FST
+         (evaluate_stmt
+            (refund_initial h charge request original remaining enabled
+               opened candidate amount reason) env_dfy refund_body)) t'
+      env_cml ∧ cml_state_preserved t t' ∧ m ⊑ m' ∧
+    is_extension t.refs m m' ∧ stmt_res_rel (Rstop Sret) r_cml
+FORGE_TAG refund_compiled_behavior oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_compiled_behavior ⊢ state_rel m l
+    (refund_initial h charge request original remaining enabled opened
+       candidate amount reason) t env_cml ∧ env_rel env_dfy env_cml ⇒
+  ∃ck t' r_cml.
+    evaluate (t with clock := t.clock + ck) env_cml [refund_cml] = (t',r_cml) ∧
+    stmt_res_rel (Rstop Sret) r_cml ∧ cml_state_preserved t t' ∧
+    refund_cml_outputs l t' env_cml charge request original remaining enabled
+      opened candidate amount reason
+FORGE_TAG refund_compilation oracles=DISK_THM axioms= hypotheses=0
+FORGE_STATEMENT refund_compilation ⊢ from_stmt refund_body 0 = INR refund_cml
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.
