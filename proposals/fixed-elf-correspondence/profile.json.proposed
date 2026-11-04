@@ -1,0 +1,44 @@
+{
+  "acceptance_policy_modified": false,
+  "actual_closure_sha256": "8fd8997cc05a2e2402d1e7c01d369e1b15951123f97d2568a755fe2480176464",
+  "assumption_list_sha256": "4e4901ddd2038bf1312872bbaf2db52bb99172266eed78c69a5ad19fa5775e47",
+  "behavior_object_sha256": "f1d3b7e22f0ba9f40607f555c7fc15b85fdf84598bc1a5b6d47d7f1a33af8cca",
+  "behavior_source_sha256": "5a230c7e1b99652e720fbe134c383a66247a0f08f460ea98546f136831a731aa",
+  "bridge_object_sha256": "b433ae9a1f2f12554e2cc5527c8382829b880355094fa0d4174834386f7f01ee",
+  "bridge_source_sha256": "4aeaf5603a9f24bac0a98647438019e256d16f1b727fb241decc3c50313229af",
+  "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+  "closure_assumptions": 86,
+  "contract_sha256": "9682ab675149a9f6482931f411a1a46477fb22ea0bdfe2ed638b082f18bc9e72",
+  "elf_sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6",
+  "end_to_end": false,
+  "gdb_sha256": "0baeb299d3aa39f40ca72c3cb8ae5b15a5bd01f1995583a52cfdd7527bfffe07",
+  "kernel_modules": 597,
+  "new_authoritative_producer_receipt": null,
+  "observed_runtime_host": {
+    "container_platform": "linux/amd64",
+    "docker": "28.5.1",
+    "host_translation_verified": false,
+    "kernel_version": "6.10.14-linuxkit",
+    "server_architecture": "arm64"
+  },
+  "observed_trace_sha256": "526c4a2107262bd8624cc19e9762fa4875d536e0b7697324a1a2b468bdf9ed49",
+  "proof_packet_sha256": "3ae40b4c538928cc4b8c3bb2d4a01f6d771c0c464f2d139e93046cf7291bd4ac",
+  "qemu_sha256": "be89e201dc6112ef101617ab575c95119ad123f80ca2b51b6c36ef218ac9df65",
+  "runtime_conditions": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6"
+  ],
+  "runtime_packet_sha256": "55eec1b9063b6982c23acf6d8d6624dbbc85fabe9e1fed191c070e57ffc37912",
+  "status": "PROPOSED_NOT_ACTIVE",
+  "theorem_names": [
+    "ForgeSlice.Behavior.fixed_pair_gcd",
+    "ForgeSlice.Behavior.exact_loop_pairs",
+    "ForgeSlice.Behavior.loop_result_is_fixed_pair_gcd",
+    "ForgeSlice.Behavior.observed_machine_must_exit_zero",
+    "ForgeExitBridge.ExitBridge.fixed_behavior_and_model_exit_holds"
+  ]
+}
