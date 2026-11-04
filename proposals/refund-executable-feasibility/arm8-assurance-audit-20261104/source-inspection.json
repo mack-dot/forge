@@ -1,0 +1,94 @@
+{
+  "actual_exit": 0,
+  "upstream_source_files": {
+    "compiler/backend/proofs/backendProofScript.sml": {
+      "sha256": "380ee3fad6c7b316f057510e1505844f23af58c21eb4f27533aa089030b61e89",
+      "bytes": 200563,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "compiler/backend/semantics/targetSemScript.sml": {
+      "sha256": "3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422",
+      "bytes": 23068,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "compiler/backend/arm8/proofs/arm8_configProofScript.sml": {
+      "sha256": "35bde5d213496bcc25cb454f47bfc0949ac42b1e1eb15e32525c2082d7496973",
+      "bytes": 3029,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "compiler/backend/arm8/arm8_configScript.sml": {
+      "sha256": "1337ed30a4cf3661a4b995228164ff920ea872ba903190bc99f66abfbdc5eabc",
+      "bytes": 2225,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "compiler/encoders/arm8/arm8_targetScript.sml": {
+      "sha256": "b6431d3a3f51a3059aa4144d5868a2a64a2c1681106b159c67d726e610bac388",
+      "bytes": 15623,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "compiler/encoders/asm/asmPropsScript.sml": {
+      "sha256": "a12637104eda161e6d6a9c03ca5d1687b3a9a41e7e2daa0b3fffe55ac04527cb",
+      "bytes": 15441,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "semantics/proofs/semanticsPropsScript.sml": {
+      "sha256": "9e7ab53bcdfe36ff161ff7aded9662eba88d6e1df02e282c2ebbdde3742e7ba3",
+      "bytes": 10959,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "basis/basis_ffiScript.sml": {
+      "sha256": "74862cf9782eaca3cf07d4c4e9aa08305947800973fc0e5077cdff9a148948db",
+      "bytes": 47023,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "basis/basis_ffi.c": {
+      "sha256": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+      "bytes": 25389,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "basis/CommandLineProofScript.sml": {
+      "sha256": "dc2716086bd982f316caf928fe649e3871e47863c09203544dade7c510591f4d",
+      "bytes": 12541,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "basis/clFFIScript.sml": {
+      "sha256": "fba113362cc8b7d943002433f9e398b94f6e0a0759cc4957e8436c49d9ba1e5c",
+      "bytes": 2876,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "basis/fsFFIPropsScript.sml": {
+      "sha256": "96ad37c7382a8509d049736c9304e576b8be322324a47fabf3c2d6e9955111ce",
+      "bytes": 51871,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    },
+    "basis/TextIOProofScript.sml": {
+      "sha256": "383fc86c4ebcf198f6ce9bb33b049a7e7b43cd08d2da0574d3b3fdb85cc420b7",
+      "bytes": 320332,
+      "commit": "cd9155694c16831373ab695a670794f23282ed62"
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code",
+        "--"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+      "actual_exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code",
+        "--"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+      "actual_exit": 0
+    }
+  ],
+  "scope": "Pinned-source and record identities only. No semantic premise discharged.",
+  "end_to_end": false
+}

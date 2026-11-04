@@ -7,6 +7,71 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U277)
+
+The compiler closure audit now passes. The complete runtime premise matrix
+preserves every unresolved relation. CURRENT none; M1 open; Stage12 unauthorized;
+end_to_end=false. The previous goal turn made progress.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Initial closure audit | child−15; launcher241 | Interrupted expanded-term display; incomplete diagnostic |
+| `run_closure_0002.py` | 0 |10 own tags, four foundation axioms, no explicit hypotheses |
+| `dependency_snapshot_0002.py` / closure readback | 0/0 |378 nodes;377 theory file sets; imported DISK_THM remains explicit |
+| Dependency byte readback | 0 |2265 files unchanged; not a full source replay |
+| Initial source collector / `collect_sources.py` | 1/0 | Record basename collision preserved;13 pinned sources checked after correction |
+| HOL / CakeML tracked source diffs | 0/0 | Unchanged |
+| Native identity readback | 0 | Both file slices match HOL-derived code/data; saved mutation refusals1/1 |
+| Live behavior runner / Holmake process query | 0 | Original run remains live; no terminal proof exit |
+
+[Exact results and assumption-to-evidence matrix](proposals/refund-executable-feasibility/arm8-assurance-audit-20261104/REPORT.md).
+Changing audit output did not alter proofs, assumptions or acceptance rules.
+The published ARM state predicate requires EL0,E0E=false,SA0=false,TBI0=false,
+TBI1=false,NoException and aligned PC. Physical system-register evidence is
+absent. Successful file comparisons and finite native tests do not supply it.
+The generic compiler theorem permits Resource_limit_hit with output prefixes.
+The full-domain is_safe_for_space/read_limits obligations remain open.
+
+Next: finish the existing run_behavior.py0001repeat invocation, inspect its actual
+conclusion and premises, then check bindings and reproduction. U276's separate
+native/exception work and all prior failures remain preserved. Loaded-state,
+source/Unicode/model, FFI/OS/resource/exit relations, clean independent replay,
+exact review, new provenance/admission and off-machine restore remain open.
+No protected adoption, publication, merge, dispatch, release signing, new native
+execution or deployment ran here. Strict integration EXIT is NOT_ESTABLISHED.
+M2–M4 remain later priorities.
+
+## Active mission update — 2026-11-04 (U276)
+
+Two exact native builds and both28-case execution runs pass. All56 processes
+exit0. Both files contain the130436 code bytes and2531 bitmap words extracted
+through HOL. These checks establish finite observations and file identities.
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `link_native.py` | 0 | Two local builds; same executableb8ed5ec2; signatures verified |
+| `run_native.py` first / repeat | 0/0 |22 typed outputs each match; six malformed cases each exit0 with no output |
+| HOL extraction first / corrected | 130/0 | Interrupted expanded-term formatting preserved; corrected named-term extraction passes |
+| `compare_native_identity.py` | 0 | Exact code/bitmap slices in both files;311 system hash checks |
+| Fresh copied-file signatures / one-byte mutant digest and signature | 0/0;1/1 | Intended mutation refusal; mutant never executed |
+| Inspection-only exception trace | 0 | Two residual goals recorded; no theorem export or new full build |
+| `check_chain_inputs.py` | 0 |2727 identities;2262 closure files;108 runtime dependencies;50 protected files unchanged |
+| Full packet / authored-file whitespace checks | 2/0 | Copied upstream/log trailing blank lines preserved; authored files pass |
+| Local unsigned packet commit / Git blob readback | 0/0 | bab1bbe06b40c674f543f792219ad0bd7d292626;421 exact files; no publication |
+
+[Assurance matrix, exact hashes, premise audit and smallest next experiment](proposals/refund-executable-feasibility/native-execution-20261104/REPORT.md).
+The new trace isolates the final declaration-call and heap obligations. It does
+not identify the exact failing tactic inside the declaration branch. A focused
+rewrite trace is prepared NOT RUN; do not repeat the full failed strategy.
+Compiler behavior composition remains IN_PROGRESS in its existing task.
+
+Load-time library identity, concrete installed memory, FFI/OS transport,
+resource sufficiency, native error/exit behavior and full source-to-HOL binding
+remain NOT_ESTABLISHED. Clean independent final-chain replay is NOT RUN.
+No protected change, release signing, deployment, publication or Stage12 ran.
+The earlier U269 local ad hoc signing approval covers these native files only.
+
 ## Active mission update — 2026-11-04 (U275)
 
 The exact ARM64 compilation and repeat pass. Six exported theory files and

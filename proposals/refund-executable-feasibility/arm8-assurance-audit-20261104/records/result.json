@@ -1,0 +1,40 @@
+{
+  "actual_exit": 0,
+  "builds": [
+    {
+      "build": "native-build-0001",
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "code_file_offset": 16592,
+      "bitmap_file_offset": 180248,
+      "code_bytes": 130436,
+      "bitmap_words": 2531,
+      "code_sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+      "bitmap_sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+      "signature_verify_actual_exit": 0,
+      "code_matches_hol": true,
+      "bitmaps_match_hol": true
+    },
+    {
+      "build": "native-repeat-0001",
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "code_file_offset": 16592,
+      "bitmap_file_offset": 180248,
+      "code_bytes": 130436,
+      "bitmap_words": 2531,
+      "code_sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+      "bitmap_sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+      "signature_verify_actual_exit": 0,
+      "code_matches_hol": true,
+      "bitmaps_match_hol": true
+    }
+  ],
+  "checked_files": 311,
+  "mutant_sha256": "7ff596b01f4cc97207835ae6419e86d85cea80df20c737853e9fe1e37f624a09",
+  "mutated_file_offset": 16592,
+  "mutant_digest_actual_exit": 1,
+  "mutant_signature_actual_exit": 1,
+  "system_hash_actual_exit": 0,
+  "scope": "Exact file-byte identity; standard-tool metadata and signature checks. No loader or execution proof.",
+  "independent_environment": false,
+  "end_to_end": false
+}

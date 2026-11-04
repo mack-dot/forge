@@ -1,0 +1,36 @@
+{
+  "actual_exit": 0,
+  "saved_command_checks": [
+    {
+      "record": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/copy-0-codesign-verify.json",
+      "sha256": "6b4d1f855e2d68a6f1b570c0e42e1ca74c0111a929d44a917f61e0bf0687a68c",
+      "actual_exit": 0
+    },
+    {
+      "record": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/copy-1-codesign-verify.json",
+      "sha256": "1c18a1fc41b92c477a6836c630ba0ab7b90ac1d453ed0ae26c1f82f4859bdeb2",
+      "actual_exit": 0
+    },
+    {
+      "record": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/mutant-shasum.json",
+      "sha256": "7e52f6cb9ad910fa1e58e481047f300cff3f06185c6ba585c1f83d1ddf4ac9c6",
+      "actual_exit": 1
+    },
+    {
+      "record": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/mutant-codesign.json",
+      "sha256": "c43dc067df499a391c2eab49e56513f8324a9bbf01b66486f95e3e46869bb794",
+      "actual_exit": 1
+    },
+    {
+      "record": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/identity-0001/chain-shasum.json",
+      "sha256": "931261ce553e7665c40f990822828c516949124c0748d1cba5b1fdc58ead7098",
+      "actual_exit": 0
+    }
+  ],
+  "code_sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+  "bitmap_sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+  "exact_native_builds_checked": 2,
+  "source": "Readback of separate native-audit executions; no new signing, native execution or independent source replay here.",
+  "scope": "File-byte correspondence only; runtime loading/state and behavior remain unproved.",
+  "end_to_end": false
+}

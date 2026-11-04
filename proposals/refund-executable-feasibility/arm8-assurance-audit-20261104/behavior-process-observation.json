@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "ps",
+    "-p",
+    "47209,47239",
+    "-o",
+    "pid,ppid,etime,pcpu,args"
+  ],
+  "actual_exit": 0,
+  "stdout": "  PID  PPID ELAPSED  %CPU ARGS\n47209  5515   17:24   0.0 /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python -B results/refund-arm8-compile-2026-11-04/attempt-0001/run_behavior.py 0001 repeat\n47239 47209   17:23   0.2 /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake --no-cache -j 2 forge_refundArm8ProofTheory.uo\n",
+  "compiler_behavior_terminal_exit": null,
+  "scope": "Live process confirmation; not a proof pass."
+}

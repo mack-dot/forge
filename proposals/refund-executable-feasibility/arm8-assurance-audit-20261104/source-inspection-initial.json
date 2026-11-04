@@ -1,0 +1,10 @@
+{
+  "actual_exit": 1,
+  "operation": "Initial pinned-source packet collection",
+  "failure": "AssertionError: two different command.json records had the same destination basename. Original partial copies remain preserved. No proof was executed.",
+  "affected_paths": [
+    "results/refund-arm8-compile-2026-11-04/attempt-0001/compile-repeat/command.json",
+    "results/refund-native-audit-2026-11-04/attempt-0004/extraction-0002/command.json"
+  ],
+  "repair": "Keep source-relative record subdirectories."
+}

@@ -1,0 +1,26 @@
+{
+  "compiler_record": "/Users/mackianni/forge/results/refund-arm8-compile-2026-11-04/attempt-0001/compile-0001/command.json",
+  "compiler_record_sha256": "de429f56846636936d0390786e93fb0cdeaa6384d146096fd642535adc4389f6",
+  "assembly_sha256": "4c750e4f9ecf75ff1f0bf5af7bfbdd0600ee2ca0e1564fcadc299db55c3a1757",
+  "runtime_object_sha256": "74f9efbf5132301386c2656638f826e6e5fec2593e99d406aa9618851dc94a55",
+  "linker_sha256": "648a8aac7f6f829a42305d24dddd7a3cfa48ee0bd9d4e7ec1ded5c51edea372b",
+  "local_ad_hoc_signature_approval": {
+    "source_thread": "01a1a730-e1f4-7d02-b06e-46b82d817f5f",
+    "user_message_verbatim": "i approve",
+    "immediate_context": "Assistant explained that the installed linker signs Apple Silicon executables by default, native arm64 execution requires a signature, and the prior no-signing instruction blocks that route.",
+    "acknowledged_scope": "Local ad hoc signing required to run the eventual macOS arm64 refund executable",
+    "approval_kind": "Conversation authorization for local execution preparation; not authenticated release admission",
+    "release_signing_authorized": false,
+    "publication_authorized": false,
+    "deployment_authorized": false,
+    "protected_changes_authorized": false,
+    "stage12_authorized": false,
+    "signing_performed": false,
+    "native_refund_execution": "NOT_RUN",
+    "end_to_end": false
+  },
+  "signing_scope": "Local Apple arm64 ad hoc signature only, as approved in U269",
+  "link_status": "NOT_RUN",
+  "native_execution": "NOT_RUN",
+  "end_to_end": false
+}

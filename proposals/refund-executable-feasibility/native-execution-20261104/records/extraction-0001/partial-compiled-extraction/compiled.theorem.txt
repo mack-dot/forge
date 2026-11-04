@@ -1,0 +1,6 @@
+⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info) ∧
+  ffis = ffinames_to_string_list (the [] info.lab_conf.ffi_names) ∧
+  syms = info.symbols ∧ LENGTH code = 130436 ∧ LENGTH data = 2531 ∧
+  info.lab_conf.shmem_extra = [] ∧ prog_syntax_ok refund_prog ∧
+  conf = encode_backend_config info

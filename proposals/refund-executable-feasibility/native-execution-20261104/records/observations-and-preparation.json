@@ -1,0 +1,30 @@
+{
+  "scope": "Inspection failures and prepared extraction; not native results",
+  "observations": [
+    {
+      "command": "combined file/disk inspection followed by ps -axo pid,ppid,%cpu,rss,etime,comm",
+      "actual_shell_exit": 127,
+      "failure": "operation not permitted: ps",
+      "effect": "No process status established; no retry of denied ps operation"
+    },
+    {
+      "tool": "write_stdin",
+      "session_id": 60920,
+      "actual_exit": null,
+      "tool_error": "Unknown process id 60920",
+      "effect": "Original-task session is not visible here; does not establish termination and no restart was attempted"
+    },
+    {
+      "command": "rg with guessed HOL/src/word source path",
+      "individual_search_error": 2,
+      "actual_shell_exit": 0,
+      "effect": "Missing path; later read-only commands succeeded"
+    }
+  ],
+  "compiled_extraction_source_sha256": "f77b88ae93e4fd0c6285c71e73f97b6ab5ebd53b9717c65fbefa0398eb812522",
+  "compiled_extraction": "NOT_RUN",
+  "linking": "NOT_RUN",
+  "signing": "NOT_RUN",
+  "native_execution": "NOT_RUN",
+  "end_to_end": false
+}

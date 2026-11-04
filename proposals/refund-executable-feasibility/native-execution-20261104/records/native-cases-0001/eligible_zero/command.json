@@ -1,0 +1,27 @@
+{
+  "case": "eligible_zero",
+  "kind": "typed",
+  "argv": [
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+  ],
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "CML_HEAP_SIZE": "256",
+    "CML_STACK_SIZE": "256"
+  },
+  "actual_exit": 0,
+  "timed_out": false,
+  "spawn_error": null,
+  "wall_seconds": 0.007005666004261002,
+  "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "stdin_sha256": "0fe57039151564e9de1f18893786feda19381d4aff32d32ceef1d269ce03e748",
+  "stdout_sha256": "2ef78d6f608c3f70e9f7b4f10e3a05c48f0d0edea6d3eaed3c6f7194facd2fff",
+  "expected_stdout_sha256": "2ef78d6f608c3f70e9f7b4f10e3a05c48f0d0edea6d3eaed3c6f7194facd2fff",
+  "stdout_matches_model": true,
+  "observation_check_passed": true,
+  "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+  "contract_control_verdict": "OBSERVATION_MATCH",
+  "end_to_end": false
+}

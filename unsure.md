@@ -8325,3 +8325,126 @@ curl: (6) Could not resolve host: github.com
   restore remain open. M1 and integration EXIT are not established. No protected
   adoption, publication, merge, dispatch, release signing, admission or deployment
   ran here. M2–M4 remain later priorities.
+
+
+## U276 — Native file bytes and execution records checked; physical correspondence remains open
+
+- References:U262,U267,U268,U269,U270,U271,U272,U274,U275. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. The latest owner objective
+  requires complete independently checkable specification-to-native execution,
+  explicit trust boundaries and a claim matrix. It permits a separately justified
+  diagnostic approach after the five exception failures, not blind full retries.
+- Actual native link driver0 builds twice. Both assemble/link/signature checks
+  return0. The two complete ad hoc signed executables are byte-identical:
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Local signature authority is the earlier U269 approval. It is not release
+  signing authority or producer authentication. No release or deployment ran.
+- Both native test drivers return0. Each observes22 typed inputs and six malformed
+  inputs. All56 processes exit0; all stderr is empty. All44 typed outputs match
+  HOL-derived expected bytes. The12 malformed observations have empty stdout;
+  they do not establish a native rejection or process-exit contract. All84 stream
+  pairs reproduce. Tests use256MiB heap and stack; these are not proven bounds.
+- Extraction0001 is manually interrupted while printing an expanded CV term;
+  dispatcher130 is observed; child exit is NOT_RECORDED. Its source/log/partial
+  theorem remain. Extraction0002 uses kernel-checked rewrites to named code/data
+  constants and returns0. It derives130436 code bytes and2531 bitmap numerals
+  with DISK_THM, no explicit hypotheses or axiom tags. No compiler rerun occurred.
+- Native identity comparison0 checks both exact file slices using fresh nm/otool
+  metadata: code offset16592, SHA256
+  3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb;
+  bitmap offset180248, SHA256
+  68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76.
+  Fresh copied-file signature checks0/0. System SHA readback0 checks311 files.
+  A one-byte code mutant fails shasum1 and codesign1 at intended integrity
+  diagnostics. The mutant is never executed or signed. This is file identity,
+  not a proof of loaded memory, C compilation, linking semantics or OS behavior.
+- Chain-input readback0 checks2727 files, including2262 compiler closure files,
+  108 runtime dependencies,56 native records,16 pinned upstream sources and50
+  unchanged protected files. The mission and earlier journal prefix match.
+  Compiler closure inspection reports378 nodes/377 theory file sets,10 own tags,
+  DISK_THM and four existing bool foundation axioms. Fresh import and hashes are
+  not independent replay or producer authentication. Source/tool pins are kept.
+- The linker plan and direct objects are bound. Current named implicit linker
+  libraries are hashed. The actual linker file-read closure and loaded dyld
+  shared-cache bytes were not captured. Full load-time identity remains open.
+- The exact compile_correct premise audit retains source environment/non-Fail,
+  backend/machine configuration, installed code/bitmap/memory/FFI conditions,
+  initialization, interference and resource limits. File bytes discharge none
+  of the remaining concrete loaded-state witnesses. The generic theorem permits
+  resource-limit trace prefixes. No safe-for-space theorem for all valid inputs
+  or complete physical I/O/exit correspondence exists here.
+- All five original exception failures were inspected and rehashed. One new
+  inspection-only trace0 runs under a recorded change-of-approach justification.
+  It exports no theorem and makes no new full-lemma attempt. App/POSTe reduction,
+  clock steps and witnesses complete. Residual goals are the actual declaration
+  call returning Rerr(Rraise v), and its heap postcondition. Existing hypotheses
+  supply the latter's apparent witnesses; that final proof is not claimed.
+  The first failing tactic inside the declaration branch is still unlocalized.
+  Both original heap hashes remain unchanged; the required lemma remains open.
+- Next smallest experiment, prepared NOT RUN: next-branch-inspection.sml applies
+  only the first residual branch's clock witnesses and individual existing
+  declaration/evaluation rewrites, printing the goal after each. Stop at first
+  failure/residual expression. Determine environment, clock or Rraise propagation
+  mismatch before any separately justified focused proof. Do not rerun the full
+  five-attempt strategy. No specification or proof machinery change is proposed.
+- The separate compiler behavior composition remains live, building published
+  dependencies; no terminal result is claimed at this checkpoint. Its closure
+  inspection has completed. Complete that existing invocation without a duplicate.
+  Full Unicode/source-to-HOL binding and runtime/loader proofs remain separate.
+  Clean independent final-chain replay is NOT RUN because that chain is incomplete.
+- Evidence and complete PROVED/TESTED/ASSUMED/NOT_ESTABLISHED matrix:
+  proposals/refund-executable-feasibility/native-execution-20261104/REPORT.md.
+  Raw:results/refund-native-audit-2026-11-04/attempt-0004/. Historical preparation
+  and NOT_RUN fields remain historical; later executed records supersede them.
+  Prior failures remain intact. No protected change, new axiom, input restriction,
+  publication, admission, release signing, deployment or Stage12 action occurred.
+
+
+## U277 — Compiler closure checked; physical entry and resource premises remain open
+
+- References:U271,U274,U275,U276. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The preceding turn completed compiler reproduction/readback
+  and committed0e680aaa. This turn closes the pending compiler closure inspection.
+- The original closure audit is stopped with SIGTERM during pretty printing of
+  expanded refund_prog_cv_eq. Child exit−15; launcher241. Its complete partial
+  log, source and interruption request are preserved. This is an incomplete
+  diagnostic, not a failed behavioral proof or a successful security control.
+- run_closure_0002.py changes only displayed statements. It returns0 after all10
+  own export tags:DISK_THM, zero explicit hypotheses, no explicit tagged axioms.
+  The closure has378 nodes and the four existing bool foundation axioms.
+  dependency_snapshot_0002.py and closure readback return0/0 for377 file sets
+  plus min. Separate readback0 confirms2265 files unchanged. Imports and hashes
+  are not full source replay, authenticated provenance or independent review.
+- Initial source collection returns1 because two command.json records share a
+  destination basename. Partial copies remain. Corrected collect_sources.py0
+  preserves their subdirectories;13 inspected sources match CakeMLcd915569.
+  HOL/CakeML tracked diffs0/0. No proof, semantics or runtime implementation changes.
+- Native-byte readback0 rechecks U276's exact executable slices and saved
+  integrity commands. Both files contain130436 HOL-derived bytes and2531 bitmap
+  words. The code and bitmap SHA256s are3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb
+  and68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76.
+  Saved code-mutation digest/signature exits1/1 have their intended reasons.
+  No new signing or native execution occurs here. File identity is not loading.
+- The detailed matrix retains source entry, target configuration, registers,
+  memory/data/bitmap/code-buffer conditions, FFI/installation, interference,
+  resources and exit. arm8_ok specifically requires EL0,E0E=false,SA0=false,
+  TBI0=false,TBI1=false,NoException and4-byte-aligned PC. Physical system-register
+  values are unobserved. Passing native fixtures do not prove these premises;
+  no contrary hardware value is asserted either.
+- compile_correct permits Resource_limit_hit with I/O prefixes. Stronger
+  is_safe_for_space and read_limits premises remain unproved for the full source
+  domain. Do not substitute256MiB tests or silently adopt a narrower contract.
+  A proposed resource-conditional profile requires exact review before adoption.
+- Packet:proposals/refund-executable-feasibility/arm8-assurance-audit-20261104/REPORT.md.
+  Raw:results/refund-runtime-premises-2026-11-04/attempt-0001/ and the existing
+  refund-arm8-compile attempt. Source guard detected U276's concurrent Markdown
+  update before any write. Its entire journal entry and native packet are retained.
+- Next: finish the same run_behavior.py0001repeat process. Fresh process query0
+  confirms runner47209/Holmake47239 live; the behavior theorem has no terminal
+  result yet. Then inspect the conclusion, test bindings and reproduce. U276's
+  separately justified exception diagnosis remains separate; no blind sixth
+  full-lemma retry runs here. Full source/Unicode/model, loaded-state and runtime
+  relations, independent clean replay, exact review, new provenance/admission and
+  off-machine archive hash/restore remain open. No protected adoption, publication,
+  merge, dispatch, release signing, admission or deployment ran. M1 and integration
+  EXIT remain NOT_ESTABLISHED. M2–M4 remain later priorities.

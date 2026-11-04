@@ -1,0 +1,114 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 600 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val showgoals = fn: unit -> unit
+val finish = fn: string -> 'a
+val step = fn: string -> tactic -> unit
+DIAG_STEP app
+OK..
+1 subgoal:
+DIAG_STEP_OK app
+val it = (): unit
+DIAG_STEP heap
+OK..
+1 subgoal:
+DIAG_STEP_OK heap
+val it = (): unit
+DIAG_STEP post
+OK..
+1 subgoal:
+DIAG_STEP_OK post
+val it = (): unit
+DIAG_STEP result
+OK..
+1 subgoal:
+DIAG_STEP_OK result
+val it = (): unit
+DIAG_STEP eval
+OK..
+1 subgoal:
+DIAG_STEP_OK eval
+val it = (): unit
+DIAG_STEP clock-app
+OK..
+1 subgoal:
+DIAG_STEP_OK clock-app
+val it = (): unit
+DIAG_STEP clock-prefix
+OK..
+1 subgoal:
+DIAG_STEP_OK clock-prefix
+val it = (): unit
+DIAG_STEP strip
+OK..
+1 subgoal:
+DIAG_STEP_OK strip
+val it = (): unit
+DIAG_STEP state-witness
+OK..
+1 subgoal:
+DIAG_STEP_OK state-witness
+val it = (): unit
+DIAG_STEP exception-witness
+OK..
+1 subgoal:
+DIAG_STEP_OK exception-witness
+val it = (): unit
+DIAG_STEP conjunction
+OK..
+2 subgoals:
+DIAG_STEP_OK conjunction
+val it = (): unit
+DIAG_STOP before-main-call-branch
+DIAG_HYP evaluate (st2 with clock := ck + ck2) env [exp] =
+(st' with clock := ck2 + st'.clock,Rerr (Rraise v))
+DIAG_HYP evaluate_dec_list (st1 with clock := ck + (ck1 + 1)) env1 prog =
+(st2 with clock := ck + (ck2 + 1),Rval env2)
+DIAG_HYP evaluate_dec_list (st1 with clock := ck1) env1 prog =
+(st2 with clock := ck2,Rval env2)
+DIAG_HYP st2heap p st' = heap
+DIAG_HYP st'.next_exn_stamp = st2.next_exn_stamp
+DIAG_HYP st'.next_type_stamp = st2.next_type_stamp
+DIAG_HYP evaluate (st2 with clock := ck) env [exp] = (st',Rerr (Rraise v))
+DIAG_HYP Q v h_f
+DIAG_HYP SOME (env,exp) = do_opapp [refund_main_v; Conv NONE []]
+DIAG_HYP SPLIT3 heap (h_f,h2,h_g)
+DIAG_HYP P h1
+DIAG_HYP SPLIT (st2heap p st2) (h1,h2)
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP EVERY no_ptr_eq_dec prog
+DIAG_HYP st1.clock = st2.clock
+DIAG_GOAL ∃ck1 ck2.
+  evaluate_dec_list (st1 with clock := ck1) env1
+    (SNOC
+       (Dlet NoLocs (Pcon NONE [])
+          (App Opapp [Var (Short «refund_main»); Unit])) prog) =
+  (st' with clock := ck2,Rerr (Rraise v))
+DIAG_HYP evaluate (st2 with clock := ck + ck2) env [exp] =
+(st' with clock := ck2 + st'.clock,Rerr (Rraise v))
+DIAG_HYP evaluate_dec_list (st1 with clock := ck + (ck1 + 1)) env1 prog =
+(st2 with clock := ck + (ck2 + 1),Rval env2)
+DIAG_HYP evaluate_dec_list (st1 with clock := ck1) env1 prog =
+(st2 with clock := ck2,Rval env2)
+DIAG_HYP st2heap p st' = heap
+DIAG_HYP st'.next_exn_stamp = st2.next_exn_stamp
+DIAG_HYP st'.next_type_stamp = st2.next_type_stamp
+DIAG_HYP evaluate (st2 with clock := ck) env [exp] = (st',Rerr (Rraise v))
+DIAG_HYP Q v h_f
+DIAG_HYP SOME (env,exp) = do_opapp [refund_main_v; Conv NONE []]
+DIAG_HYP SPLIT3 heap (h_f,h2,h_g)
+DIAG_HYP P h1
+DIAG_HYP SPLIT (st2heap p st2) (h1,h2)
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP EVERY no_ptr_eq_dec prog
+DIAG_HYP st1.clock = st2.clock
+DIAG_GOAL ∃h3 h4. SPLIT3 (st2heap p st') (h3,h2,h4) ∧ Q v h3
+DIAG_INSPECTION_ONLY_NO_THEOREM_EXPORT

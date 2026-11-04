@@ -17,7 +17,47 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checkpoint: **U275 — exact ARM64 compilation reproduced**.
+Latest compiler audit: **U277 — closure checked; runtime premises mapped**.
+The [detailed premise matrix](proposals/refund-executable-feasibility/arm8-assurance-audit-20261104/REPORT.md)
+records every direct entry, memory, FFI, interference, resource and exit condition
+of the proposed compiler composition. Fresh imported closure inspection passes0:
+378 nodes,377 theory file sets,10 own tags and four foundation axioms. A separate
+readback confirms2265 files unchanged. This is not a full independent replay.
+The initial interrupted audit remains preserved.
+
+**Next for this proof branch:** finish the original compiler behavior build,
+then inspect its exact conclusion and run binding controls/reproduction.
+The process remains live; no terminal proof exit is available. Physical ARM
+control registers, loaded-state installation, universal runtime contracts and
+full-domain resource sufficiency remain NOT_ESTABLISHED. The generic compiler
+theorem permits resource-limit output prefixes. The exception diagnostic branch
+below remains separate; no blind sixth full-lemma retry is authorized.
+
+Previous native checkpoint: **U276 — exact native file payload and execution evidence checked**.
+The [assurance matrix](proposals/refund-executable-feasibility/native-execution-20261104/REPORT.md)
+classifies each claim as PROVED, TESTED, ASSUMED or NOT_ESTABLISHED. It retains
+all compiler/runtime premises and exact hashes. `end_to_end=false`.
+
+| Latest check | Actual exit | Evidence boundary |
+| --- | --- | --- |
+| Native link driver / two28-case drivers | 0;0/0 | Same exact signed file;56 finite executions, all exit0 |
+| Corrected HOL extraction / embedded byte comparison | 0/0 |130436 code bytes and2531 bitmap words match both files |
+| Fresh signature checks / code-byte mutation controls | 0/0;1/1 | Local integrity checks; no producer authentication |
+| Chain-input readback | 0 |2727 files;378-node compiler closure;108 runtime inputs;50 protected files unchanged |
+| Exception inspection | 0 | Residual declaration/heap goals only; no accepted theorem |
+
+**Next smallest check:** trace the remaining declaration branch one existing
+rewrite at a time. The exact prepared script is NOT RUN. Preserve U274's five
+failures; no new full-lemma attempt is authorized by the diagnostic itself.
+Finish the separate already-live compiler behavior composition without duplication.
+
+**Blockers:** concrete loaded-state installation, actual linker/dyld dependency
+identity, FFI/OS input/output and exit refinement, resource sufficiency, exception
+whole-program behavior and full source-to-HOL binding. Clean independent replay
+of the complete chain remains NOT RUN. Existing same-host copies/imports do not
+satisfy that independence requirement. Stage12 stays unauthorized.
+
+Previous checkpoint: **U275 — exact ARM64 compilation reproduced**.
 The [compiler record](proposals/refund-executable-feasibility/arm8-compile-20261104/REPORT.md)
 contains the actual equation, commands, complete hashes and open premises.
 The compile and repeat both exit0. Six exported files and the assembly match.

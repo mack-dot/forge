@@ -1,0 +1,23 @@
+{
+  "actual_exit": 0,
+  "classification": "STATIC_PINNED_SOURCE_REVIEW_NOT_NEW_PROOF",
+  "files": {
+    "compiler/backend/semantics/targetSemScript.sml": "3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422",
+    "compiler/backend/arm8/proofs/arm8_configProofScript.sml": "35bde5d213496bcc25cb454f47bfc0949ac42b1e1eb15e32525c2082d7496973",
+    "compiler/backend/arm8/export_arm8Script.sml": "be6387eb786e20bfaa4bda338009565e1c90d37c32834520a3585e6f13e74634",
+    "basis/basis_ffi.c": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1"
+  },
+  "findings": [
+    "targetSem machine evaluation at halt_pc returns Halt Success exactly when ptr_reg contains0; otherwise Resource_limit_hit.",
+    "is_arm8_machine_config sets ptr_reg=0.",
+    "The default arm8 exporter sends cake_exit through a branch to cml_exit.",
+    "The C runtime implements cml_exit(arg) with exit(arg)."
+  ],
+  "remaining": [
+    "The model halts at halt_pc; it does not prove the subsequent physical assembly/C/OS execution.",
+    "Bind actual exported/linked halt address, instruction bytes, ABI argument, C compilation and OS exit semantics.",
+    "The ordinary compiler theorem still permits resource-limit behavior and partial output."
+  ],
+  "native_exit_status_proved": false,
+  "end_to_end": false
+}
