@@ -1,0 +1,87 @@
+# Fixed RISC-V ELF: conditional execution correspondence
+
+Status: proposed and inactive. No accepted policy or specification is replaced.
+Stage12 is unauthorized. Preserve end_to_end=false until a complete separately
+approved assurance chain supports a stronger, precisely scoped claim.
+
+## Artifact and behavior
+
+The only artifact is the1240-byte ELF with SHA256
+8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6.
+Numerical inputs are fixed at1071 and462. The formal functional result is21 in
+register a0 after15 modeled instructions, before the program selects exit status.
+It is neither an arbitrary-input GCD specification nor an external output21 claim.
+
+Require the exact statements in ForgeSlice.Behavior and the proved proposition
+ForgeExitBridge.ExitBridge.fixed_behavior_and_model_exit, established by
+ForgeExitBridge.ExitBridge.fixed_behavior_and_model_exit_holds. Preserve the original
+theorems and the explicit m_halted=None and m_vm_lazy=[] premises. The latter is
+an LPS allocation ledger, not physical demand paging. Reservation, FCSR and data
+memory remain universally quantified in the new behavioral theorem.
+
+The accepted proof method remains kernel_checked_proof. Require fresh source
+compilation, exact statement/binding checks, byte-identical object reproduction,
+full independent recursive Rocq checking, exact dependency membership and bytes,
+and the complete approved assumption list. No skipped dependency, axiom change,
+historical pass flag or untrusted producer summary may satisfy those requirements.
+
+## Four assurance claims
+
+A: model behavior under its exact formal entry conditions.
+B: one exact runtime execution and its complete recorded relevant observations.
+C: a finite projected embedding using the published LPS machine/process relations.
+D: the corresponding observed behavior; any universal physical guarantee is
+conditional on the separately reviewed runtime and progress assumptions.
+
+A and B do not automatically imply full C or universal D. State explicitly when
+C is only a finite projected relation. Never label it complete machine-state or
+Linux/QEMU refinement. Do not promote runtime observations to kernel proofs.
+
+## Required runtime relation and trust
+
+Bind actual ELF and LOAD-byte identity; PC; all initial GPR/FPR values; SP;
+relevant mapping/permission observations; pending syscall interpretation;
+relevant data accesses; syscall number94 and status0; and actual parent exit.
+The held frame sequence is indexed0..20. The result is in frame15 at PC11174.
+The final PRE-ecall frame is at PC1118c. The modeled post-ecall pending request
+is distinct from a dispatch or physical exit.
+
+Retain these reviewed trust conditions without marking them proved:
+T1 checker/kernel/primitives/image-import soundness and expected-anchor authenticity;
+T2 applicability of the entry abstraction and remaining Model premises;
+T3 faithful execution/capture of the used instruction sequence and noninterference;
+T4 faithful QEMU dispatch, Linux exit_group and host parent-wait interpretation;
+T5 observer/runtime/VM/host translation/hardware fidelity and required progress;
+T6 authorized producer, source, review, signature and admission binding.
+
+GDB's exit notification is insufficient by itself: the inspected QEMU source
+emits it during pre-exit cleanup before the host syscall. Require the actual
+parent return code and explicit confirmation that the observer did not kill or
+terminate the guest process. Unexpected status, signal, changed inputs, missing
+records or unsupported correspondence must fail closed.
+
+If another host produces a different entry state or trace, recapture and check
+applicability. Do not substitute the recorded local SP into a new hosted run.
+Unobserved irrelevant memory may remain abstract only where the exact formal
+proof supports that abstraction. A chosen init_model is not an observation of
+physical Linux state. Keep the vDSO diagnostics and source/runtime trust limits.
+
+## Provenance and admission
+
+Bind the approved contract, statements, proof objects, actual checked closure,
+assumptions, ELF, source revision, checker and runtime profile, observer inputs,
+raw trace, relevant memory reads and actual result to the existing authenticated
+producer mechanism. Trusted expected identities must be outside candidate data.
+Require fresh authorized execution in the approved environment before claiming
+that producer produced the observation. Do not merely sign copied local summaries.
+
+The existing Stage9 signature covers its historical release only. The existing
+deployed_file_identity scope and riscv_execution_claimed=false remain unchanged
+until an exact protected implementation/profile diff is reviewed and authorized.
+Preserve exact canonical evidence, claim/method checks, source/run authorization,
+signature verification, trusted controller freshness and atomic replay rejection.
+No candidate-supplied digest or passing established flag proves provenance.
+
+Human intent/profile review, independent source review, publication, merge,
+workflow dispatch, signing, admission and deployment remain separate boundaries.
+Adopting this document alone authorizes none of those execution operations.

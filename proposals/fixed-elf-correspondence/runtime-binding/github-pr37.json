@@ -1,0 +1,44 @@
+{
+  "pr": {
+    "url": "https://github.com/mack-dot/forge/pull/37",
+    "number": 37,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "The recorded QEMU launch has a stack pointer outside the accepted Stage7 theorem's entry domain. This draft proposes an additional abstract-model termination claim for the same fixed ELF. It includes the completed local proof checks and integrity controls for independent review. The proposed claim and acceptance profile remain unapproved.\n\nExact head: `fc85ecc2c7f12caa6c8991fa002410bdf78dd51d`.\nBase: `f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3`.\nOnly14 files under `proposals/fixed-elf-assurance/**` change. The theorem sources are unchanged from the earlier local snapshot5bb008a1. That snapshot remains in the commit history.\n\nThe claim concerns normal exit0 for ELF SHA256 `8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6`, under the stated LPS initializer/model assumptions and arbitrary data memory. It does not establish arbitrary-input GCD correctness, universal QEMU refinement, or a new authorized release/runtime binding.\n\nRecorded local validation:\n\n| Check | Actual exit | Scope |\n| --- | --- | --- |\n| Termination theorem and published wrapper kernel check |0|569 modules;86 permitted closure assumptions. |\n| Recorded observation-module kernel check |0|567 modules;86 permitted closure assumptions; finite21-state equality. |\n| Fresh theorem/wrapper and observation-object rebuilds |0|Objects reproduced byte for byte. |\n| Weaker statement fixture compilation |0|Valid20-state proposition under the same module/lemma names. |\n| Corrupt / weaker proof-object identity guards |1/1|Exact held-anchor refusal before kernel launch. |\n| Current trusted incremental gate on this proposal |3|UNSUPPORTED;14 uncovered proposal paths; no verification evidence written. |\n\nThe source packet contains the raw lossless-compressed kernel/runtime logs, actual dependency and assumption closures, and the26-member integrity-control archive. Inherited metadata flags have explicit corrections. The integrity anchor is a separately held local expectation; this does not establish durable provenance for an untrusted candidate-supplied expectation. The earlier signature authenticates the old release, not this new statement or runtime package.\n\nThe existing ordinary PR workflow may run automatically on publication. This draft adds no gate obligation or coverage exception. Its expected uncovered-change refusal must remain visible. Existing CI does not certify or admit the proposed theorem. The upload repair in PR36 remains a separate review boundary.\n\nPublication is for draft review only. Intent adoption, any protected acceptance-profile change, independent exact-head review, merge, manual workflow execution, signing, admission and deployment retain separate authorization boundaries. `end_to_end=false`. Stage12 remains unauthorized. Node integration and generic cross-run receipt adoption stay disabled.\n",
+    "title": "Propose a termination claim for the fixed RISC-V ELF",
+    "base": "main",
+    "base_sha": "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+    "head": "proposal/fixed-elf-assurance",
+    "head_sha": "fc85ecc2c7f12caa6c8991fa002410bdf78dd51d",
+    "head_repo_id": 1434789853,
+    "head_repo_full_name": "mack-dot/forge",
+    "merge_commit_sha": "977eeb2351c35d027dfcb92d1f14acb8ae8ed48c",
+    "user": {
+      "login": "mackiannii",
+      "name": "mackiannii",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/143109898?v=4",
+      "id": 143109898
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-11-03T16:16:04Z",
+    "updated_at": "2026-11-03T16:17:21Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 2,
+    "changed_files": 14,
+    "additions": 3162,
+    "deletions": 0,
+    "display_url": "https://github.com/mack-dot/forge/pull/37",
+    "display_title": "Propose a termination claim for the fixed RISC-V ELF"
+  },
+  "reviews": {
+    "reviews": []
+  },
+  "read_only": true
+}
