@@ -1,0 +1,109 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refund_callTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment", "actual_exit": 1, "wall_seconds": 71.97653945899219, "source_sha256": "555998f1e30ab9b04b8231bc7e1c42c1d8b9bb9309efbe7358b38d0738be44a0", "native_refund_claim": false, "end_to_end": false, "object_sha256": {}}
+ry[0m
+Scanning [1m$(CAKEMLDIR)/tutorial[0m
+Scanning [1m$(CAKEMLDIR)/unverified[0m
+Scanning [1m$(CAKEMLDIR)/unverified/front-end[0m
+Scanning [1m$(CAKEMLDIR)/unverified/hol-light-syntax[0m
+Scanning [1m$(CAKEMLDIR)/unverified/ocaml-syntax[0m
+Scanning [1m$(CAKEMLDIR)/unverified/ocaml-syntax/lib[0m
+Scanning [1m$(CAKEMLDIR)/unverified/ocaml-syntax/tests[0m
+Scanning [1m$(CAKEMLDIR)/unverified/reg_alloc[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/arm8[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/x64[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/x64[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/x64/32[0m
+Scanning [1m$(candle_overloading)/ml_checker[0m
+Scanning [1m$(candle_overloading)/ml_kernel[0m
+Scanning [1m$(candle_overloading)/monadic[0m
+Scanning [1m$(candle_overloading)/semantics[0m
+Scanning [1m$(candle_overloading)/syntax[0m
+Scanning [1m$(cnf)/array[0m
+Scanning [1m$(cnf)/dist[0m
+Scanning [1m$(cnf)/dist/array[0m
+Scanning [1m$(cnf)/dist/array/compilation[0m
+Scanning [1m$(cnf)/dist/array/compilation/proofs[0m
+Scanning [1m$(cnf)/lrup[0m
+Scanning [1m$(cnf)/lrup/array[0m
+Scanning [1m$(cnf)/lrup/array/compilation[0m
+Scanning [1m$(cnf)/lrup/array/compilation/proofs[0m
+Scanning [1m$(cnf)/xlrup[0m
+Scanning [1m$(cnf)/xlrup/array[0m
+Scanning [1m$(cnf)/xlrup/array/compilation[0m
+Scanning [1m$(cnf)/xlrup/array/compilation/proofs[0m
+Scanning [1m$(hwmcc_checker)/compilation[0m
+Scanning [1m$(hwmcc_checker)/compilation/proofs[0m
+Scanning [1m$(hwmcc_checker)/examples[0m
+Scanning [1m$(hwmcc_checker)/translation[0m
+Scanning [1m$(lpr_checker)/array[0m
+Scanning [1m$(lpr_checker)/array/compilation[0m
+Scanning [1m$(lpr_checker)/array/compilation/proofs[0m
+Scanning [1m$(lpr_checker)/array/compilation/proofsARM8[0m
+Scanning [1m$(opentheory)/compilation[0m
+Scanning [1m$(opentheory)/compilation/ag32[0m
+Scanning [1m$(opentheory)/compilation/ag32/proofs[0m
+Scanning [1m$(opentheory)/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/array[0m
+Scanning [1m$(pseudo_bool)/array/compilation[0m
+Scanning [1m$(pseudo_bool)/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/array/compilation/proofsARM8[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding/array[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/cp_encoding[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/graph_encoding[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation/proofs[0m
+Scanning [1m$(sat_encodings)/case_studies[0m
+Scanning [1m$(sat_encodings)/demo[0m
+Scanning [1m$(sat_encodings)/translation[0m
+Scanning [1m$(sat_encodings)/translation/compilation[0m
+Scanning [1m$(scpog_checker)/array[0m
+Scanning [1m$(scpog_checker)/array/compilation[0m
+Scanning [1m$(scpog_checker)/array/compilation/proofs[0m
+Scanned 316 directories
+Building 1 theory file
+Starting work on forge_refund_callTheory
+forge_refund_callTheory                                    (52s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refund_callTheory (status 1)
+ <<HOL message: Created theory "forge_refund_call">>
+ Saved definition ____ "refund_method_def"
+ Saved definition ____ "refund_method_cml_def"
+ Saved theorem _______ "refund_method_compilation"
+ Saved definition ____ "refund_call_def"
+ Saved definition ____ "refund_program_def"
+ Saved definition ____ "refund_argument_env_def"
+ Saved definition ____ "refund_expected_tuple_def"
+ Saved theorem _______ "concrete_bool_tests"
+ Proof of 
+ 
+ let
+   result =
+     evaluate_decs (FST (THE (prim_sem_env ffi)) with clock := 32)
+       (refund_argument_env ffi charge request original remaining enabled
+          opened candidate amount reason) refund_program
+ in
+   case SND result of
+     Rval env =>
+       nsLookup env.v (Short «answer») =
+       SOME
+         (refund_expected_tuple charge request original remaining enabled
+            opened candidate amount reason) ∧ (FST result).ffi = ffi
+   | Rerr err => F
+ 
+ failed.
+ First unsolved sub-goal is
+ 
+ request = charge ∧ charge = request
+ 
+ Tactic failure proving "refund_caller_returns"; heap saved to forge_refund_call.refund_caller_returns.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refund_call.refund_caller_returns.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment/.hol/logs/forge_refund_callTheory
+

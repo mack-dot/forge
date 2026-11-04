@@ -1,0 +1,1257 @@
+{
+  "actual_exit": 0,
+  "theory_count": 156,
+  "parents": {
+    "forge_refund_call": [
+      "primSemEnv",
+      "forge_refund_compile"
+    ],
+    "forge_refund": [
+      "dafny_evaluate"
+    ],
+    "result_monad": [
+      "mlstring"
+    ],
+    "dafny_to_cakeml": [
+      "ast",
+      "result_monad",
+      "dafny_ast",
+      "mlint"
+    ],
+    "balanced_map": [
+      "comparison",
+      "alist"
+    ],
+    "oset": [
+      "balanced_map"
+    ],
+    "FormalLang": [
+      "hol"
+    ],
+    "charset": [
+      "words",
+      "comparison"
+    ],
+    "regexp": [
+      "mergesort",
+      "container",
+      "charset",
+      "FormalLang"
+    ],
+    "regexp_map": [
+      "regexp",
+      "oset"
+    ],
+    "vec_map": [
+      "alist"
+    ],
+    "regexp_compiler": [
+      "vec_map",
+      "regexp_map"
+    ],
+    "mlvector": [
+      "mllist",
+      "regexp_compiler"
+    ],
+    "mlint": [
+      "mlvector",
+      "mlstring"
+    ],
+    "dafny_freshen": [
+      "dafny_ast",
+      "mlint"
+    ],
+    "dafny_misc": [
+      "misc"
+    ],
+    "dafny_ast": [
+      "mlstring"
+    ],
+    "dafny_semanticPrimitives": [
+      "dafny_ast"
+    ],
+    "dafnyProps": [
+      "dafny_semanticPrimitives"
+    ],
+    "dafny_evaluate": [
+      "dafnyProps"
+    ],
+    "dafny_evaluateProps": [
+      "dafny_evaluate",
+      "dafny_misc"
+    ],
+    "dafny_freshenProof": [
+      "dafny_evaluateProps",
+      "dafny_freshen"
+    ],
+    "evaluateProps": [
+      "semanticPrimitivesProps",
+      "evaluate"
+    ],
+    "dafny_to_cakemlProof": [
+      "evaluateProps",
+      "dafny_freshenProof",
+      "dafny_to_cakeml"
+    ],
+    "forge_refund_compile": [
+      "dafny_to_cakemlProof",
+      "forge_refund"
+    ],
+    "lexer_fun": [
+      "tokens",
+      "location"
+    ],
+    "gram": [
+      "lexer_fun",
+      "grammar"
+    ],
+    "tokens": [
+      "mlstring"
+    ],
+    "tokenUtils": [
+      "tokens",
+      "grammar"
+    ],
+    "cmlPtreeConversion": [
+      "tokenUtils",
+      "gram",
+      "ast"
+    ],
+    "evaluate": [
+      "semanticPrimitives"
+    ],
+    "primTypes": [
+      "typeSystem",
+      "evaluate"
+    ],
+    "semantics": [
+      "primTypes",
+      "cmlPtreeConversion"
+    ],
+    "location": [
+      "hol"
+    ],
+    "grammar": [
+      "finite_map",
+      "location"
+    ],
+    "peg": [
+      "grammar"
+    ],
+    "pegexec": [
+      "peg"
+    ],
+    "state_transformer": [
+      "hol"
+    ],
+    "semanticPrimitivesProps": [
+      "namespaceProps",
+      "semanticPrimitives"
+    ],
+    "fpSem": [
+      "ast"
+    ],
+    "ffi": [
+      "mlstring"
+    ],
+    "semanticPrimitives": [
+      "ffi",
+      "fpSem"
+    ],
+    "typeSystem": [
+      "semanticPrimitives"
+    ],
+    "mergesort": [
+      "sorting"
+    ],
+    "mllist": [
+      "mergesort",
+      "misc"
+    ],
+    "mlstring": [
+      "mllist"
+    ],
+    "set_sep": [
+      "words"
+    ],
+    "tailrec": [
+      "hol"
+    ],
+    "prog": [
+      "tailrec",
+      "set_sep"
+    ],
+    "alignment": [
+      "words"
+    ],
+    "address": [
+      "alignment",
+      "prog"
+    ],
+    "lprefix_lub": [
+      "llist"
+    ],
+    "integer_word": [
+      "words",
+      "Omega"
+    ],
+    "gcd": [
+      "divides"
+    ],
+    "int_arith": [
+      "integer",
+      "gcd"
+    ],
+    "cooper": [
+      "int_arith"
+    ],
+    "integer": [
+      "normalizer",
+      "hol"
+    ],
+    "intReduce": [
+      "integer"
+    ],
+    "Omega": [
+      "intReduce",
+      "cooper"
+    ],
+    "intreal": [
+      "real",
+      "Omega"
+    ],
+    "normalizer": [
+      "arithmetic"
+    ],
+    "hrat": [
+      "hol"
+    ],
+    "hreal": [
+      "hrat"
+    ],
+    "realax": [
+      "hreal",
+      "normalizer"
+    ],
+    "real_arith": [
+      "realax"
+    ],
+    "real": [
+      "real_arith"
+    ],
+    "RealFieldContext": [
+      "real"
+    ],
+    "binary_ieee": [
+      "RealFieldContext",
+      "intreal",
+      "words"
+    ],
+    "machine_ieee": [
+      "binary_ieee"
+    ],
+    "poset": [
+      "pairToolsContext"
+    ],
+    "fixedPoint": [
+      "pred_set",
+      "poset"
+    ],
+    "llist": [
+      "hol"
+    ],
+    "path": [
+      "llist",
+      "fixedPoint"
+    ],
+    "toto": [
+      "string"
+    ],
+    "comparison": [
+      "toto"
+    ],
+    "bag": [
+      "hol"
+    ],
+    "container": [
+      "finite_map",
+      "bag"
+    ],
+    "sorting": [
+      "hol"
+    ],
+    "finite_map": [
+      "sorting"
+    ],
+    "alist": [
+      "finite_map"
+    ],
+    "sptree": [
+      "alist",
+      "logroot"
+    ],
+    "bitstring": [
+      "words"
+    ],
+    "numeral_bit": [
+      "bit"
+    ],
+    "iterate": [
+      "permutes"
+    ],
+    "fcp": [
+      "iterate",
+      "hol"
+    ],
+    "sum_num": [
+      "hol"
+    ],
+    "logroot": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "bit": [
+      "logroot"
+    ],
+    "numposrep": [
+      "rich_list",
+      "bit"
+    ],
+    "ternaryComparisons": [
+      "hol"
+    ],
+    "string": [
+      "ternaryComparisons"
+    ],
+    "ASCIInumbers": [
+      "string",
+      "numposrep"
+    ],
+    "words": [
+      "ASCIInumbers",
+      "sum_num",
+      "fcp",
+      "numeral_bit"
+    ],
+    "blast": [
+      "words"
+    ],
+    "byte": [
+      "blast",
+      "bitstring"
+    ],
+    "ConseqConv": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "quantHeuristics": [
+      "ConseqConv",
+      "list"
+    ],
+    "patternMatches": [
+      "rich_list",
+      "quantHeuristics"
+    ],
+    "EnumTypeContext": [
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While",
+      "pairToolsContext"
+    ],
+    "ordinalBasic": [
+      "cardinalityCore"
+    ],
+    "bnfInitial": [
+      "ordinalBasic"
+    ],
+    "permutes": [
+      "pred_set",
+      "hurdUtilsContext"
+    ],
+    "hurdUtilsContext": [
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While",
+      "pairToolsContext"
+    ],
+    "divides": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "While": [
+      "arithmetic",
+      "option"
+    ],
+    "NumConvContext": [
+      "arithmetic"
+    ],
+    "cv": [
+      "numeral"
+    ],
+    "BoolconvContext": [
+      "marker"
+    ],
+    "reduce": [
+      "arithmetic"
+    ],
+    "SubAndCondContext": [
+      "marker"
+    ],
+    "one": [
+      "mesonLibContext",
+      "Canon_Port_Context",
+      "boolSimpsContext",
+      "InductiveDefinitionContext",
+      "canonContext"
+    ],
+    "sum": [
+      "pair"
+    ],
+    "option": [
+      "sum",
+      "one"
+    ],
+    "pairToolsContext": [
+      "pair"
+    ],
+    "quotient": [
+      "normalFormsContext",
+      "folToolsContext",
+      "folMappingContext",
+      "mesonLibContext",
+      "Canon_Port_Context",
+      "InductiveDefinitionContext"
+    ],
+    "pair": [
+      "relation",
+      "quotient"
+    ],
+    "InductiveDefinitionContext": [
+      "marker"
+    ],
+    "Canon_Port_Context": [
+      "sat",
+      "combin"
+    ],
+    "mesonLibContext": [
+      "sat",
+      "marker"
+    ],
+    "folMappingContext": [
+      "sat",
+      "marker"
+    ],
+    "folToolsContext": [
+      "normalForms"
+    ],
+    "sat": [
+      "bool"
+    ],
+    "canonContext": [
+      "sat",
+      "combin"
+    ],
+    "combin": [
+      "marker"
+    ],
+    "boolSimpsContext": [
+      "combin"
+    ],
+    "normalForms": [
+      "marker"
+    ],
+    "normalFormsContext": [
+      "normalForms",
+      "boolSimpsContext",
+      "canonContext"
+    ],
+    "relation": [
+      "normalFormsContext",
+      "folToolsContext",
+      "folMappingContext",
+      "mesonLibContext",
+      "Canon_Port_Context",
+      "InductiveDefinitionContext"
+    ],
+    "min": [],
+    "bool": [
+      "min"
+    ],
+    "marker": [
+      "bool"
+    ],
+    "num": [
+      "marker"
+    ],
+    "prim_rec": [
+      "num",
+      "relation"
+    ],
+    "arithmetic": [
+      "prim_rec",
+      "pair"
+    ],
+    "numeral": [
+      "arithmetic"
+    ],
+    "basicSize": [
+      "numeral",
+      "pairToolsContext",
+      "option"
+    ],
+    "numpair": [
+      "basicSize",
+      "SubAndCondContext",
+      "reduce",
+      "BoolconvContext",
+      "cv",
+      "NumConvContext",
+      "While"
+    ],
+    "pred_set": [
+      "numpair",
+      "divides"
+    ],
+    "set_relation": [
+      "pred_set",
+      "hurdUtilsContext"
+    ],
+    "wellorder": [
+      "set_relation"
+    ],
+    "cardinalityCore": [
+      "wellorder",
+      "permutes"
+    ],
+    "bnfPrelims": [
+      "cardinalityCore"
+    ],
+    "bnfFixBNF": [
+      "bnfPrelims",
+      "bnfInitial"
+    ],
+    "bnfMutual": [
+      "bnfFixBNF"
+    ],
+    "list": [
+      "bnfMutual",
+      "EnumTypeContext"
+    ],
+    "rich_list": [
+      "list"
+    ],
+    "indexedLists": [
+      "rich_list"
+    ],
+    "hol": [
+      "indexedLists",
+      "patternMatches"
+    ],
+    "res_quan": [
+      "hol"
+    ],
+    "misc": [
+      "res_quan",
+      "byte",
+      "sptree",
+      "container",
+      "comparison",
+      "path",
+      "machine_ieee",
+      "integer_word",
+      "lprefix_lub",
+      "address"
+    ],
+    "namespace": [
+      "misc"
+    ],
+    "ast": [
+      "namespace",
+      "mlstring"
+    ],
+    "namespaceProps": [
+      "ast"
+    ],
+    "typeSoundInvariants": [
+      "namespaceProps",
+      "typeSystem"
+    ],
+    "typeSysProps": [
+      "typeSoundInvariants",
+      "semanticPrimitivesProps"
+    ],
+    "primSemEnv": [
+      "typeSysProps",
+      "state_transformer",
+      "pegexec",
+      "semantics"
+    ]
+  },
+  "axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "tags": [
+    "refund_method_compilation oracles=DISK_THM axioms= hypotheses=0",
+    "refund_caller_returns oracles=DISK_THM axioms= hypotheses=0",
+    "concrete_bool_tests oracles=DISK_THM axioms= hypotheses=0"
+  ],
+  "theory_artifacts": {
+    "forge_refund_call": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment/.hol/objs/forge_refund_callTheory.dat",
+      "sha256": "d756c352edb5dee390d9004976a07ecd25d16cacf7b2aac7dec467ab19f996cd"
+    },
+    "forge_refund": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_experiment/.hol/objs/forge_refundTheory.dat",
+      "sha256": "8001b59be234763706df25ba09a194d707ff04d147c7e103621f6e5e04d85cd9"
+    },
+    "result_monad": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/.hol/objs/result_monadTheory.dat",
+      "sha256": "d7b8c5b17bd9944a9275328c7e37b1365311ceeef8aab7027d2c235c9974d4a6"
+    },
+    "dafny_to_cakeml": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/.hol/objs/dafny_to_cakemlTheory.dat",
+      "sha256": "7140a481a24addbe3b217c4ff9217f02c066067dc8fb4da27c6690e3777f1666"
+    },
+    "balanced_map": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/data-structures/balanced_bst/.hol/objs/balanced_mapTheory.dat",
+      "sha256": "869ed658c9988d7a17247f5182714fb504ea6787a3f9117b26e888b7f252765a"
+    },
+    "oset": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/data-structures/balanced_bst/.hol/objs/osetTheory.dat",
+      "sha256": "bb16d7389f169a01bc04a48dbe4ef1e3b41e6d36b40802e674b0094b85fb13bc"
+    },
+    "FormalLang": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/.hol/objs/FormalLangTheory.dat",
+      "sha256": "6ced27fa6b52abef5152ed7a61260366de2d9a10f915b264ed03a4803b3f9ca6"
+    },
+    "charset": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/regular/.hol/objs/charsetTheory.dat",
+      "sha256": "26df2a4cf43614646d35c17e4cac024ed87e6869cddba18398da275b39dc5207"
+    },
+    "regexp": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/regular/.hol/objs/regexpTheory.dat",
+      "sha256": "2e3e7e24e5d92e1082f2cd3c707f0d7b776a50b3417d4d75d2f44542a904b6a6"
+    },
+    "regexp_map": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/regular/.hol/objs/regexp_mapTheory.dat",
+      "sha256": "936669b3e635855deb91b209fcaa8d0a23e0b53bb8ecb35ac72bb9f4aa775766"
+    },
+    "vec_map": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/regular/.hol/objs/vec_mapTheory.dat",
+      "sha256": "333c43082ababe9a204679ca32e6ae3f0a01c3c56ff70f0c5a3fd76d73d1ef5b"
+    },
+    "regexp_compiler": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/regular/.hol/objs/regexp_compilerTheory.dat",
+      "sha256": "bb330597242559de29f1b82ce5b4b96e253e8305d36446b4f5b9aac27ef6df19"
+    },
+    "mlvector": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/pure/.hol/objs/mlvectorTheory.dat",
+      "sha256": "fafd6d46b208687dd0bb898b43a1daecf677ed48473f3a381b175d746c3180e6"
+    },
+    "mlint": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/pure/.hol/objs/mlintTheory.dat",
+      "sha256": "90ec190269319f6aaf55cca88e35ae6481c61c49e43f1292cb05c2b39f850326"
+    },
+    "dafny_freshen": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/.hol/objs/dafny_freshenTheory.dat",
+      "sha256": "8a03d33ee235ae8717f80203565ff27dac829ac512cde448ad303b4e2e9f8d43"
+    },
+    "dafny_misc": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/.hol/objs/dafny_miscTheory.dat",
+      "sha256": "4db83585bc8aca513dcead795219e8e83f1433aa7e3178513f1ddf461b342e2a"
+    },
+    "dafny_ast": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/.hol/objs/dafny_astTheory.dat",
+      "sha256": "90c397d8fa46447a3a9c245d480ad56d6542ebf66631ca07525e8ac6248ae721"
+    },
+    "dafny_semanticPrimitives": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/semantics/.hol/objs/dafny_semanticPrimitivesTheory.dat",
+      "sha256": "fc5820d1810627e32056580c965178e067af55a956c88e4e242cebc6a25a9746"
+    },
+    "dafnyProps": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/semantics/.hol/objs/dafnyPropsTheory.dat",
+      "sha256": "74d974eaaccab204a6bd984dce02144231c08aa5ca0fced19b397a2b8d17fd40"
+    },
+    "dafny_evaluate": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/semantics/.hol/objs/dafny_evaluateTheory.dat",
+      "sha256": "03a5ac2752d268b108fbd08508ff0f3517d42c46a9b749fa6eb8b0ba5741147b"
+    },
+    "dafny_evaluateProps": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/semantics/.hol/objs/dafny_evaluatePropsTheory.dat",
+      "sha256": "f60fd5d0aa338e7fa65c7cf09bf42bba42ef8cf61b7ab756807db19622f7d412"
+    },
+    "dafny_freshenProof": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/proofs/.hol/objs/dafny_freshenProofTheory.dat",
+      "sha256": "c5dc5c18d552c9de7d492d7a2b267d2a2d326356485d3040fad6665131e6b7b9"
+    },
+    "evaluateProps": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/proofs/.hol/objs/evaluatePropsTheory.dat",
+      "sha256": "aec2fe86bf7d0d4e1a4b5e7f659f7c356fe41a825fbba41a3fb58dc83eb3aad5"
+    },
+    "dafny_to_cakemlProof": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/proofs/.hol/objs/dafny_to_cakemlProofTheory.dat",
+      "sha256": "594cba54d5443ae9ebab3275e926550aff6ad0442e8e7fb3460ccc8509175d08"
+    },
+    "forge_refund_compile": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_compile_experiment/.hol/objs/forge_refund_compileTheory.dat",
+      "sha256": "c422a03764add97460c4280b3aab8015a30be9f4338402b12d27807d9dcf4b25"
+    },
+    "lexer_fun": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/lexer_funTheory.dat",
+      "sha256": "54a47d5afce642b7a81640217a753bedc62f1a4a17e76396733c4104bc18e724"
+    },
+    "gram": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/gramTheory.dat",
+      "sha256": "05c2c93300878b08671abab2a7bb40971e8840d226c8e33b1a2143126b5ffe8c"
+    },
+    "tokens": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/tokensTheory.dat",
+      "sha256": "e723daaebc7553a133e03f543cbf6015f9059100683afe529acc1f0054d41441"
+    },
+    "tokenUtils": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/tokenUtilsTheory.dat",
+      "sha256": "d989ca6a389d2c1649f28904b6adc1205ebc945cd27ec6683a401116d68c6288"
+    },
+    "cmlPtreeConversion": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/cmlPtreeConversionTheory.dat",
+      "sha256": "d4b40a23ab93a7d2a03288f3c076d4f92cfaa40b5c37a371b0570bb4182e8da1"
+    },
+    "evaluate": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/evaluateTheory.dat",
+      "sha256": "05e661ad0e21ecea548e6645d79a7cb7cdb86cf051724635df63e794b287ef98"
+    },
+    "primTypes": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/primTypesTheory.dat",
+      "sha256": "916592d382a560023db9b2a351b5b280f20947a6ce66e05c8d4f688f48fc6c49"
+    },
+    "semantics": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/semanticsTheory.dat",
+      "sha256": "f649a2373d5450c08bf350cff5dbb4ce5287a89e8f33b649ba7bf9b924da25a0"
+    },
+    "location": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/context-free/.hol/objs/locationTheory.dat",
+      "sha256": "8b6fc7906717c1f21cf296ec1c87790d0c811202915cb3ef6037b6300489ba25"
+    },
+    "grammar": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/context-free/.hol/objs/grammarTheory.dat",
+      "sha256": "25bb315957926e815562cfb66a7777331484ae9a1170315e58c4f8ea99669a1b"
+    },
+    "peg": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/context-free/.hol/objs/pegTheory.dat",
+      "sha256": "5d2135fa6ad0510b424e846cabca1bbdd28d7f6111ec3bcbaf14db95c6494055"
+    },
+    "pegexec": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/formal-languages/context-free/.hol/objs/pegexecTheory.dat",
+      "sha256": "0bf469cf1d3ce26b1a6c13f6ab7952fa1b03ef2788c864772bc9c14b6e23d500"
+    },
+    "state_transformer": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/monad/more_monads/.hol/objs/state_transformerTheory.dat",
+      "sha256": "e22a88e87d88eec4a596ff77f98767f9c016eba91191c4d42c88cf19927022c1"
+    },
+    "semanticPrimitivesProps": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/proofs/.hol/objs/semanticPrimitivesPropsTheory.dat",
+      "sha256": "9ab47fd224f0501ca35d5b7c1eaf09d667f7ee229e955cedf8c73fecafbccf71"
+    },
+    "fpSem": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/fpSemTheory.dat",
+      "sha256": "ca8486a6cf27c2b188d04f576eac8f1736f9c4bcc94300b721f1fe68df2fac08"
+    },
+    "ffi": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/ffi/.hol/objs/ffiTheory.dat",
+      "sha256": "86b6566b9513e0d6b333000a451508e595d8f79d4095f9a8ae49e3a86223fda5"
+    },
+    "semanticPrimitives": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/semanticPrimitivesTheory.dat",
+      "sha256": "5d61ea44048872ad80e0a189eb42a4a99da34040138a38320b6f5edc36fa7e9e"
+    },
+    "typeSystem": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/typeSystemTheory.dat",
+      "sha256": "1b16cec7e316034c1bb90f44d77fd2929c296adcdb7dce3527aff03eb008fbdc"
+    },
+    "mergesort": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/sort/.hol/objs/mergesortTheory.dat",
+      "sha256": "c0378b095289509a7fa00273e4573bda0cb9a5922964420078827e6fd7ae53b7"
+    },
+    "mllist": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/pure/.hol/objs/mllistTheory.dat",
+      "sha256": "7577f3f7d2df3ba893b968e2ff98fe244129fe00f44fdab4a4254578afddee9e"
+    },
+    "mlstring": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/pure/.hol/objs/mlstringTheory.dat",
+      "sha256": "7bd4224fd2686e4a7261dabcccb825112cdf915e241e5db571f684d3690f5418"
+    },
+    "set_sep": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/machine-code/hoare-triple/.hol/objs/set_sepTheory.dat",
+      "sha256": "c543dbba2c200138e4f2320a8fd843a5225466e6bd2660f053fd0ffb02832150"
+    },
+    "tailrec": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/machine-code/hoare-triple/.hol/objs/tailrecTheory.dat",
+      "sha256": "332b63a91b4e0e350d4dfc736cb1738f4a556f66043c868a883dc11b9af75bf2"
+    },
+    "prog": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/machine-code/hoare-triple/.hol/objs/progTheory.dat",
+      "sha256": "a1fa0b242dc45c01243aad8d750898b119679979cbe218c111379b3f586cfbdd"
+    },
+    "alignment": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/alignmentTheory.dat",
+      "sha256": "6c03d68534a94e4ff7d54b7153a416baa2aa1334b19e44e5291f49e3da2cba6d"
+    },
+    "address": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/machine-code/hoare-triple/.hol/objs/addressTheory.dat",
+      "sha256": "89aad5ada115d938302c039cb248af8a5357b862ce438427ceff0be30340ad7f"
+    },
+    "lprefix_lub": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/pl-semantics/lprefix_lub/.hol/objs/lprefix_lubTheory.dat",
+      "sha256": "cf6dfe403f5f596b476a26642cd8dd455d8ebb2bbef3d1496e1a677a0ffd0ac4"
+    },
+    "integer_word": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/integer/.hol/objs/integer_wordTheory.dat",
+      "sha256": "3b07b0e23d7508f2d262361b134c3525381b6ab3dae21dc5645e986656500d1f"
+    },
+    "gcd": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/extra_theories/.hol/objs/gcdTheory.dat",
+      "sha256": "ab4bc968dfe4be9ddec750c175554a3ea50898586e78fb875e92d391b8218ee2"
+    },
+    "int_arith": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/integer/.hol/objs/int_arithTheory.dat",
+      "sha256": "33ed133eb4e603f92d177319640ec84d0e7bc080a28797add6c3f6c0ea65f2b5"
+    },
+    "cooper": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/integer/.hol/objs/cooperTheory.dat",
+      "sha256": "3113ed57cc21df828c3198509855f5ad2d2a688373df76ef94d2ee24119b052e"
+    },
+    "integer": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/integer/.hol/objs/integerTheory.dat",
+      "sha256": "79d12d00a00a261cc9e527beb57e878e0bec8596480bfd626332caecb5c73177"
+    },
+    "intReduce": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/integer/.hol/objs/intReduceTheory.dat",
+      "sha256": "7080ff8af61ba92d1deade5fe3e705842a8d4b62aaf3d023890d20339c2de51d"
+    },
+    "Omega": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/integer/.hol/objs/OmegaTheory.dat",
+      "sha256": "b2e959608739fdb5ec8875543b30718fbc86536c8308c69403956542f9a9dc44"
+    },
+    "intreal": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/intrealTheory.dat",
+      "sha256": "00cc77e83b54b8f2bb474686e894e4d9d33d1c38519b380abc88517d7db4aaff"
+    },
+    "normalizer": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/reduce/src/.hol/objs/normalizerTheory.dat",
+      "sha256": "bbe95c02d377d66e9044ae2ea36dd5aac4635bc72c6174a973f16c42269b8f23"
+    },
+    "hrat": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/hratTheory.dat",
+      "sha256": "735a61ff88d2851ffd5c6aa15adca9491d46962d1d6671efdc10dcad99378531"
+    },
+    "hreal": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/hrealTheory.dat",
+      "sha256": "d38ac64e1a7e5ded4ba6b33367324bc94d4d681750ce0581ac1ad542bbfe3b56"
+    },
+    "realax": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/realaxTheory.dat",
+      "sha256": "b109586404237ae08b76aaf1edabc3190e94bc5eacd91cfd481b31a6f25802ff"
+    },
+    "real_arith": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/real_arithTheory.dat",
+      "sha256": "a4c46ab2e21106aed9c3baa90f0b80c13447d35b553b9ae905f7a095b12b17a3"
+    },
+    "real": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/realTheory.dat",
+      "sha256": "8c996c44fde4feeb12726d856c3a1a8cc906bffca24b0e6d380b79c58dece09e"
+    },
+    "RealFieldContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/real/.hol/objs/RealFieldContextTheory.dat",
+      "sha256": "521fb24b740c16e349bc040b8a5ec0a90c2bf69e68b2783d74811b8473c14a87"
+    },
+    "binary_ieee": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/floating-point/.hol/objs/binary_ieeeTheory.dat",
+      "sha256": "38b5dcf7402aca82c04d353acf648eab94646738762b0b3fab361ae8aecc4479"
+    },
+    "machine_ieee": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/floating-point/.hol/objs/machine_ieeeTheory.dat",
+      "sha256": "7676a901e456b38485f461eb623e578dedab429e0d85071954b74812f87c7ba9"
+    },
+    "poset": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coretypes/.hol/objs/posetTheory.dat",
+      "sha256": "695f0da7fa1ca67658abee7b7cc05f56f716b2ed6cc85b1efeabb2b5d2ec31c7"
+    },
+    "fixedPoint": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/fixedPointTheory.dat",
+      "sha256": "8327c406d25370f22d5f29288ff093ebc9afdbce01dd588092dfaaaa7d9bd80c"
+    },
+    "llist": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coalgebras/.hol/objs/llistTheory.dat",
+      "sha256": "97fd17bdb2241673bd62df549ec3d2d4dc2f1165be2366af66715547658cf41c"
+    },
+    "path": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coalgebras/.hol/objs/pathTheory.dat",
+      "sha256": "e8f8f333bbc4fca16b7eac30d2333c4a11d7241f63ded24c17ec6da6b9c70afa"
+    },
+    "toto": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/finite_maps/.hol/objs/totoTheory.dat",
+      "sha256": "88eadc4888d697ed1d83f36ab0ff135efa501e6bd0d136e9415e6ca9ab0f1d10"
+    },
+    "comparison": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/finite_maps/.hol/objs/comparisonTheory.dat",
+      "sha256": "0a81dc6d17fca2827604548b78cd9415851d16e94d7fa68f099e40a4b8c1fd37"
+    },
+    "bag": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/bag/.hol/objs/bagTheory.dat",
+      "sha256": "e6fd2ccecd1fad58dde998294f060417a0d9c6140c1f3ff802d5945c4c604684"
+    },
+    "container": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/finite_maps/.hol/objs/containerTheory.dat",
+      "sha256": "c011eeabda9c8a3d81dd13b8a0d9a49e98b31ac9076d3a93897a4bf79f08c794"
+    },
+    "sorting": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/sort/.hol/objs/sortingTheory.dat",
+      "sha256": "b1d5a129f505e73fe568e4b80430c24c39ad223cec6726c4a963543e3dad3134"
+    },
+    "finite_map": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/finite_maps/.hol/objs/finite_mapTheory.dat",
+      "sha256": "582d80e88f2321c25a07324e0236be62eb6c5fa19f8c72b5bbefca2ae3073161"
+    },
+    "alist": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/finite_maps/.hol/objs/alistTheory.dat",
+      "sha256": "021013410b02cec5d0cdb0bd29b6e71e0592574615faa246ad37b3b8f1d8d16a"
+    },
+    "sptree": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/finite_maps/.hol/objs/sptreeTheory.dat",
+      "sha256": "77bc1d52a99f06bb6284f6ae4815a3e11f2be564fd1ccb9d9562f815d6966fc3"
+    },
+    "bitstring": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/bitstringTheory.dat",
+      "sha256": "b486e8b486d60ea00041193d29e2480c0b2704173e34635f611c892459e14122"
+    },
+    "numeral_bit": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/extra_theories/.hol/objs/numeral_bitTheory.dat",
+      "sha256": "57a4b40ce7f1a4b400625cca7873ca5d148bef1f29a539c120bede94e79a7df7"
+    },
+    "iterate": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/iterateTheory.dat",
+      "sha256": "bb9f9fbe145d25ab9e815329901b2bfa88ece405c1048cbda3685eab87aa766f"
+    },
+    "fcp": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/fcpTheory.dat",
+      "sha256": "86a33b895e300880f572a011626242f9acdcbc7d53539f7c4b6f1ad0526ccfde"
+    },
+    "sum_num": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/sum_numTheory.dat",
+      "sha256": "e1c153da80f783649973108843fc1936c7f171fd86b5d97db5f01752e91a259c"
+    },
+    "logroot": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/extra_theories/.hol/objs/logrootTheory.dat",
+      "sha256": "0896a585a832d198e0d5f6542edd655c975fd0772e85fabbcca74681498fea91"
+    },
+    "bit": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/extra_theories/.hol/objs/bitTheory.dat",
+      "sha256": "9b36d3c1995e6c9a7c5db7433e33397f4c332f9799753311dc10e44cffe909a8"
+    },
+    "numposrep": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/list/src/.hol/objs/numposrepTheory.dat",
+      "sha256": "b4642723fb37f307796ecd55fd995a564e73541874f83c0ceae176f72295feb3"
+    },
+    "ternaryComparisons": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/sort/.hol/objs/ternaryComparisonsTheory.dat",
+      "sha256": "1a902b7dd1d316231f0cca7daaa36b3d9b129c903d714dcbe02b1c667445f4b5"
+    },
+    "string": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/string/.hol/objs/stringTheory.dat",
+      "sha256": "b9ebfe445272a97c535e67b82af35987488d99d469e477ef9a3b7e8b38d16a7f"
+    },
+    "ASCIInumbers": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/string/.hol/objs/ASCIInumbersTheory.dat",
+      "sha256": "b640d2b0174c6b13c15a23fcb98af62282b10cd6114f17ecd830a122d4c0c7f6"
+    },
+    "words": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/wordsTheory.dat",
+      "sha256": "13c02c0d7d06f0b84c1b8f48ae49888b5addbab0b904ad1bd3b7c07b78483184"
+    },
+    "blast": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/blastTheory.dat",
+      "sha256": "f36cf10cb2d6e6a202aef5faf3ac8d6261e7a5fc520a0273d12b781de04f91bc"
+    },
+    "byte": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/n-bit/.hol/objs/byteTheory.dat",
+      "sha256": "f26290b629d91298a75e83c5cc990cee95867fa8d5cf9781f08436a6aa71e900"
+    },
+    "ConseqConv": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/quantHeuristics/.hol/objs/ConseqConvTheory.dat",
+      "sha256": "4c8411ad1f0059cb38fb8476d19e580617a04a2789d2d977c2bb34e14e49666a"
+    },
+    "quantHeuristics": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/quantHeuristics/.hol/objs/quantHeuristicsTheory.dat",
+      "sha256": "1fc1c28cfcef590e8cd53f30aa243f406fccd4fcd4f89fa628aba2684cd3d1e0"
+    },
+    "patternMatches": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pattern_matches/.hol/objs/patternMatchesTheory.dat",
+      "sha256": "4024208ff1469577777b0e3b6c2f13395adfe59f1588c374d8e4788a1a4d3cbc"
+    },
+    "EnumTypeContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/datatype/.hol/objs/EnumTypeContextTheory.dat",
+      "sha256": "b8c99e365f319dccc620de6d39f3fd117dc2b0eb2d7df06a5b8c3272d976da2e"
+    },
+    "ordinalBasic": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/ordinalBasicTheory.dat",
+      "sha256": "dd2e8fd31269193bf0341f3e79a3c48c55045206a46127abdc9cb82d325233ae"
+    },
+    "bnfInitial": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/datatype/.hol/objs/bnfInitialTheory.dat",
+      "sha256": "5a3bc34e24e453d788dcbc63650a8fbbdb09abd2b10f7f4f7b9d6a615fd6698b"
+    },
+    "permutes": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/permutesTheory.dat",
+      "sha256": "43a14687bedb58e886b632078cfdfd380568111518f383565709d34f23f8bf7d"
+    },
+    "hurdUtilsContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/hurdUtilsContextTheory.dat",
+      "sha256": "4177593a6e644b8757bf9b73ea830ad596b3c83e356479df84ee7cdc403498d7"
+    },
+    "divides": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/extra_theories/.hol/objs/dividesTheory.dat",
+      "sha256": "21a1472db60ace8530e85088b4d46222f03bda99124855f33abd67cd5dc4a2b7"
+    },
+    "While": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/WhileTheory.dat",
+      "sha256": "b2e78bb13769d2d2c7ea78f9111d4aa4471930471131d1658493f021152f6d3f"
+    },
+    "NumConvContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/NumConvContextTheory.dat",
+      "sha256": "45ab49ef474637726c449a4505635c045b66b9c82fa7985ea61d38b2e03bfcb8"
+    },
+    "cv": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/cvTheory.dat",
+      "sha256": "92f194ddf2aecb35eea373b116ddfb8498a8fc34f06124650a9705a999af2fa1"
+    },
+    "BoolconvContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/reduce/src/.hol/objs/BoolconvContextTheory.dat",
+      "sha256": "2f5ee5f09485c21918674bad4a90f213a450a7ef94465809971297dff75ad688"
+    },
+    "reduce": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/reduce/src/.hol/objs/reduceTheory.dat",
+      "sha256": "05346c4040c46d112c4489e54058754f3ebee7c90d02f03b84e5f2750d7c0fba"
+    },
+    "SubAndCondContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/arith/src/.hol/objs/SubAndCondContextTheory.dat",
+      "sha256": "1ed141ba886cde5c350bc0ba8113c7f0ff1590367b74c1945c1b0433805c5e90"
+    },
+    "one": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coretypes/.hol/objs/oneTheory.dat",
+      "sha256": "c5f8b64d43985d0f581808af4ebf501fb983a72a40acf6baba67fe70e57a5035"
+    },
+    "sum": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coretypes/.hol/objs/sumTheory.dat",
+      "sha256": "9bf4eac8263e53b9683fd16083aba4a2c970d28c5347c7b4447c8b19ed67e48a"
+    },
+    "option": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coretypes/.hol/objs/optionTheory.dat",
+      "sha256": "c5b11dacacbf1ab5d30a26a6a2a0effd6ee92383199ca5776ef9d6cb39539584"
+    },
+    "pairToolsContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coretypes/.hol/objs/pairToolsContextTheory.dat",
+      "sha256": "c117706e3e1945ee2f171cd0fb82e3f4a43afd802a3db6df812f4f28fca7f804"
+    },
+    "quotient": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/quotient/src/.hol/objs/quotientTheory.dat",
+      "sha256": "f845994b54d25f9c476e30ab9fcdcbc30cca8d3c3e5c5b4b3ae976d6ffc66847"
+    },
+    "pair": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/coretypes/.hol/objs/pairTheory.dat",
+      "sha256": "7a45ce9e81b58607346168b6a940cfe9d9b4469262112d114c1e45347eed3830"
+    },
+    "InductiveDefinitionContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/IndDef/.hol/objs/InductiveDefinitionContextTheory.dat",
+      "sha256": "665e4db9564e65efccd1af5f5a3200f550ae79be622023fecadaa729ed58bf08"
+    },
+    "Canon_Port_Context": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/meson/src/.hol/objs/Canon_Port_ContextTheory.dat",
+      "sha256": "fdcfa3958471e61883e90055fd72ac7808e19672794824c9a22fda0369bcb90b"
+    },
+    "mesonLibContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/meson/src/.hol/objs/mesonLibContextTheory.dat",
+      "sha256": "d0eb9e72b780aebc159cb568b59ade6fb878ffc96a9b10a4b5f8ef80e68565a0"
+    },
+    "folMappingContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/metis/.hol/objs/folMappingContextTheory.dat",
+      "sha256": "952a8e69383092e3a8a2de9dff2f7918e30a0768c836a2685df92ad71c31a568"
+    },
+    "folToolsContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/metis/.hol/objs/folToolsContextTheory.dat",
+      "sha256": "5b07b21956aa21eab6ea23ed4313c0d6a51ff10cfae205cfbd7460198b570ee0"
+    },
+    "sat": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/HolSat/.hol/objs/satTheory.dat",
+      "sha256": "c23f61fcafbcbc40b1c89b80141a7dbab6d2c4a04d820451d876e43108e80ad2"
+    },
+    "canonContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/refute/.hol/objs/canonContextTheory.dat",
+      "sha256": "d89c4ae79f64ea5393fcfa92b8850ade9d744ec76a55bb2f4be2bb97f03f06e2"
+    },
+    "combin": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/combin/.hol/objs/combinTheory.dat",
+      "sha256": "2ec2aa120ed9008ff5a04f5d6d05fd3528dafa89eccec22216e0d5980b29b242"
+    },
+    "boolSimpsContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/simp/src/.hol/objs/boolSimpsContextTheory.dat",
+      "sha256": "d66662bda24ba11e3dc3d2763b6ef3472f5bfe2e37bc9d7bd1da9811f2e78a48"
+    },
+    "normalForms": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/metis/.hol/objs/normalFormsTheory.dat",
+      "sha256": "5db42f2302f68ad943c3181e676290083311f6403097bc04502b253bfecd41f4"
+    },
+    "normalFormsContext": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/metis/.hol/objs/normalFormsContextTheory.dat",
+      "sha256": "6d76ffef368ff782e74fe5a69aaa262f5c98e4df235d5c6d8ff63ecdac9a1486"
+    },
+    "relation": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/relation/.hol/objs/relationTheory.dat",
+      "sha256": "a4e1a6d9067afc86d88ac53d7b56006525613ace3b06f3f2676037543575d8e2"
+    },
+    "bool": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/bool/.hol/objs/boolTheory.dat",
+      "sha256": "4be8fcae9d1f162f4e3f150c5bc864fe486e5272d1026883f0016f06dccecb0e"
+    },
+    "marker": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/marker/.hol/objs/markerTheory.dat",
+      "sha256": "b9993aca3e003e877fda63b55cef48647325218536f48c46552e923bec56293a"
+    },
+    "num": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/numTheory.dat",
+      "sha256": "65889b20383ddded0de07c24bb168fc72617b9538cdf34df5cbc21c56b42defb"
+    },
+    "prim_rec": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/prim_recTheory.dat",
+      "sha256": "810abcb0a67af9b1403918d6302cf36022542fbebc15c03f0f07490d87d9d093"
+    },
+    "arithmetic": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/arithmeticTheory.dat",
+      "sha256": "4dc632d5079b8cf948bd618a594788717e245e262eb28d99bcd87c8b1b3deef9"
+    },
+    "numeral": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/numeralTheory.dat",
+      "sha256": "e0a5abf347731ae002ac58f232a85c933401e1ada8387f7b81618b2474a1aeef"
+    },
+    "basicSize": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/theories/.hol/objs/basicSizeTheory.dat",
+      "sha256": "840b8ca2e024eca70a6310e3556733b089c6fc1dbe984e956199df428a5e4fea"
+    },
+    "numpair": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/extra_theories/.hol/objs/numpairTheory.dat",
+      "sha256": "fa04bee8449a2868ede5863c16006fd8042a130854e8ab09e5cf8c5029a77f64"
+    },
+    "pred_set": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/pred_setTheory.dat",
+      "sha256": "07644063b8fd3c5d35ee07207c5033efb03bdfff5a7d26c6b058709c077b81cc"
+    },
+    "set_relation": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/set_relationTheory.dat",
+      "sha256": "3e1689274dfc04abd7e9675927fc340c51452d7040521d645b1e7b134d122388"
+    },
+    "wellorder": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/wellorderTheory.dat",
+      "sha256": "e52d41ff4b4fdc9deee8db31ec01dd5c489e23150748956d074ddb29b9a673e0"
+    },
+    "cardinalityCore": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/pred_set/src/.hol/objs/cardinalityCoreTheory.dat",
+      "sha256": "7f20efc558b0c85012fa5a8647c3c5e32cff89f4b41fc1f3fcbd39a04d230a49"
+    },
+    "bnfPrelims": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/datatype/.hol/objs/bnfPrelimsTheory.dat",
+      "sha256": "8693a2392557342cbfd2f348f073d3e775afc5d74afdca5f56363b7f2c1a4093"
+    },
+    "bnfFixBNF": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/datatype/.hol/objs/bnfFixBNFTheory.dat",
+      "sha256": "156d9b6614a0ff4f1638f3d4f0bcd6c5571cbf987f2f7be61b3ed0b8fec3f910"
+    },
+    "bnfMutual": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/datatype/.hol/objs/bnfMutualTheory.dat",
+      "sha256": "e0720cf2f2e512f151b1113132ce7ea6f5c5aa90989aa3ce2a5ddd236c220e15"
+    },
+    "list": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/list/src/.hol/objs/listTheory.dat",
+      "sha256": "d7895076caae7c4349280f5f1783bc1a37edfe88bee320a061a9172539f187d2"
+    },
+    "rich_list": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/list/src/.hol/objs/rich_listTheory.dat",
+      "sha256": "9cc6560207724d98f548a4d9b12358279808c05993260394bd52ed796075e5d6"
+    },
+    "indexedLists": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/list/src/.hol/objs/indexedListsTheory.dat",
+      "sha256": "73148c1f8b5080c289afe9e2dfe76a929d5dcc97739374478b4fbde8219d3c42"
+    },
+    "hol": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/boss/.hol/objs/holTheory.dat",
+      "sha256": "5c13c5ae15116dacafc64dd0068b61e47cbf1712f761448ea2f8e0a6967a8802"
+    },
+    "res_quan": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/res_quan/src/.hol/objs/res_quanTheory.dat",
+      "sha256": "31ac0396bc75d8a14a533bfab3202aca0070fa89bccc957f89f0b39da402f452"
+    },
+    "misc": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/.hol/objs/miscTheory.dat",
+      "sha256": "c43c1c2c35b8b9a60d250ebb260ec141692ffadab3b543d647b267e5499d0383"
+    },
+    "namespace": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/namespaceTheory.dat",
+      "sha256": "39c423fee11ff74aa83ca6c7262cd724819f32d58d06d5c620dd57a58b0078c0"
+    },
+    "ast": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/.hol/objs/astTheory.dat",
+      "sha256": "bc5a178b4225cb094edbf8e98fea05692a818dde447bb02dba0aeacb74b382af"
+    },
+    "namespaceProps": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/proofs/.hol/objs/namespacePropsTheory.dat",
+      "sha256": "518fae618349a2fc568ec9b583a280fcb2cd08180c55d6f7a209ae77c80576e3"
+    },
+    "typeSoundInvariants": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/proofs/.hol/objs/typeSoundInvariantsTheory.dat",
+      "sha256": "4e58462b445d9194525f7a78193f38c5c1436bf150a651664988cc0661bd6b4e"
+    },
+    "typeSysProps": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/proofs/.hol/objs/typeSysPropsTheory.dat",
+      "sha256": "dcf84fd5d799dd79fe7796346e5022980bac7bcc0b089843dd2d0ccfc9379c59"
+    },
+    "primSemEnv": {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/proofs/.hol/objs/primSemEnvTheory.dat",
+      "sha256": "7ba90226cc8cc693d4c826d24bda16b218d98ff745d8e36154a10422ae625066"
+    }
+  },
+  "builtin_theories": {
+    "min": {
+      "reason": "Built-in kernel theory, sealed in Term.sml; TheoryPP excludes it from disk theory imports.",
+      "source_sha256": {
+        "src/0/Type.sml": "c05264e5f5f3f3647c112d75028a834b8a110652d8f22cd02460f0e8133b72af",
+        "src/0/Term.sml": "09a4b023825677cf48f70baabe4852e3346c2ada3823d5d54bac34cc6d532cc7",
+        "src/postkernel/Theory.sml": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+        "src/postkernel/TheoryPP.sml": "52562eb8b2250e91f1afd4410661b6abba2e7274708b536e2178517998c70bbf"
+      }
+    }
+  },
+  "unresolved": [],
+  "scope": "Imported closure of locally rebuilt source proof; no candidate-data authentication"
+}

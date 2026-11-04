@@ -1,0 +1,27 @@
+{
+  "scope": "Exact generated refund method and fixed model caller; no native or Unicode transfer claim",
+  "required_cases": [
+    {
+      "name": "universal_caller_return",
+      "expected_exit": 0,
+      "requirement": "For every typed model input, initialize from standard primitive state and return all six expected values with unchanged FFI"
+    },
+    {
+      "name": "swapped_caller_ids",
+      "expected_exit": 1,
+      "requirement": "Swapping caller charge/request arguments must fail the original return-value theorem"
+    },
+    {
+      "name": "missing_caller_argument",
+      "expected_exit": 1,
+      "requirement": "Missing required argument binding must fail the original return-value theorem"
+    },
+    {
+      "name": "fresh_replay",
+      "expected_exit": 0,
+      "requirement": "Execute the source again and compare all six exported files"
+    }
+  ],
+  "expected_is_not_actual": true,
+  "end_to_end": false
+}

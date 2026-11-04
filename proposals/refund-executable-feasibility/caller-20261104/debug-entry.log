@@ -1,0 +1,28 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 559 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> ⊢ (let
+     result =
+       evaluate_decs (FST (THE (prim_sem_env ffi)) with clock := 32)
+         (refund_argument_env ffi «charge-A» «request-B» 100 60 T T T 40
+            «returned_item») refund_program
+   in
+     case SND result of
+       Rval env => INR (nsLookup env.v (Short «answer»))
+     | Rerr err => INL err) =
+  INR
+    (SOME
+       (Conv NONE
+          [Conv (SOME (TypeStamp «True» 0)) []; Litv (IntLit 40);
+           Litv (StrLit «returned_item»); Litv (StrLit «charge-A»);
+           Litv (StrLit «request-B»); Litv (IntLit 1)]))
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

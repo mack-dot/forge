@@ -7,7 +7,40 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
-## Active mission update — 2026-11-04 (U259)
+## Active mission update — 2026-11-04 (U260)
+
+The exact generated refund method now has a universal result theorem for a
+fixed model caller. The caller constructs primitive state/constructors and
+typed input bindings, invokes the method and returns all six required values.
+This does not establish a native ABI, input decoder or exact executable.
+CURRENT none; Stage12 unauthorized; M1 remains open; `end_to_end=false`.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| `python3 -B run.py 0001` | 1 | Universal proof incomplete; failed conditional-Boolean case retained |
+| Concrete valid-call diagnostic through HOL EVAL | 0 | Exact tuple returned for one example; not universal acceptance |
+| `python3 -B run.py 0002` | 1 | Manual SIGINT of broad rewrite; child signal2; no proof accepted |
+| `python3 -B run.py 0003` | 0 | Universal caller/result theorem; narrow Boolean equalities proved in HOL |
+| `python3 -B run.py swapped-ids negative-swapped-ids/forge_refund_callScript.sml` | 1 | Expected refusal: request/charge identity equality unproved |
+| `python3 -B run.py missing-argument negative-missing-argument/forge_refund_callScript.sml` | 1 | Expected refusal: missing argument makes return claim false |
+| `python3 -B run.py repeat` / acceptance comparison | 0/0 | Fresh source execution; six identical exports; negative reasons checked |
+| Fresh HOL closure inspection | 0 |156 theory nodes; three own theorems; four foundation axioms explicit |
+| Original-input postflight | 0 |30 frozen owner-workspace inputs unchanged |
+| Local raw-archive member hash validation | 0 |70 members checked; off-machine validation remains open |
+
+Exact commands and claim limits:
+[model caller report](proposals/refund-executable-feasibility/caller-20261104/REPORT.md).
+Raw records: `results/refund-caller-2026-11-04/attempt-0001/`.
+
+Next authorized check: establish the full Unicode/byte representation and
+input/output relation without restricting the approved domain. Preserve empty
+strings, exact ASCII reason equality and caller-ID round trips. The U+0100
+control still forbids low-byte truncation. Then connect the same method to the
+existing native compiler and calling/I/O infrastructure. No new generic tooling.
+No hosted refund execution, signing or admission has run. Off-machine backup
+hash/restore validation and independent claim/profile review remain separate.
+
+## Prior mission update — 2026-11-04 (U259)
 
 The exact refund body now has a checked conditional behavioral relation to its
 generated CakeML expression. This is not a native executable theorem. CURRENT

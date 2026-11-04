@@ -1,0 +1,37 @@
+{
+  "actual_exit": 0,
+  "positive_exit": 0,
+  "repeat_exit": 0,
+  "six_exports_byte_identical": true,
+  "negative_cases": [
+    {
+      "case": "swapped-ids",
+      "actual_exit": 1,
+      "reason_matched": true,
+      "reason": "request = charge \u2227 charge = request",
+      "accepted_exports": false,
+      "source_sha256": "555998f1e30ab9b04b8231bc7e1c42c1d8b9bb9309efbe7358b38d0738be44a0"
+    },
+    {
+      "case": "missing-argument",
+      "actual_exit": 1,
+      "reason_matched": true,
+      "reason": "\nF\n",
+      "accepted_exports": false,
+      "source_sha256": "427913b37b2b1a74fc9a75d92d723eaa9ef132e39599b0dfa83633b28f2f77be"
+    }
+  ],
+  "source_sha256": "081becc8f43334e716d8d7657c65740394d554e812ded8bdc169bffac2c022fe",
+  "object_sha256": {
+    "forge_refund_callTheory.sml": "1c2b0cbb8392750ca7882bda384e34e89c01db3fa6b85b08b63d26be89bbb625",
+    "forge_refund_callTheory.ui": "fb03eadbf4820d9716fd1c84e9d796a8faa6ccad14ed0be6615f4138b8a7aad3",
+    "forge_refund_callTheory.uo": "6176eef15b9bee931f8dfce863fb00e031715a1a11fdb5ef5829734147b0d2b2",
+    "forge_refund_callTheory.cachekey": "e61cdfd571ec4d5697bd77d3025bdee666a986ab0a9a3f6422800752c026f854",
+    "forge_refund_callTheory.dat": "d756c352edb5dee390d9004976a07ecd25d16cacf7b2aac7dec467ab19f996cd",
+    "forge_refund_callTheory.sig": "ba0615db50693cae67e2f60adf76795d157818ea052414b2ba8f6dbe71aec791"
+  },
+  "claim": "All typed model inputs return the required tuple from the explicitly constructed model caller",
+  "native_refund_claim": false,
+  "unicode_transfer_established": false,
+  "end_to_end": false
+}

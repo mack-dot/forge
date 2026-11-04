@@ -1,0 +1,111 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 559 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> OK..
+14 subgoals:
+val asl =
+   [“(if [0;1;34mreason[0m = «returned_item» then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) ≠
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34mreason[0m = «returned_item» then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) ≠
+     Conv (SOME (TypeStamp «False» 0)) []”,
+    “(if [0;1;34mreason[0m = «service_not_delivered» then
+        Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «False» 0)) []”,
+    “(if [0;1;34mreason[0m = «duplicate_charge» then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «False» 0)) []”,
+    “(if [0;1;34mamount[0m ≤ [0;1;34mremaining[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if 0 ≤ [0;1;34mamount[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34mcandidate[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34mremaining[0m ≤ [0;1;34moriginal[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if 0 ≤ [0;1;34mremaining[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34moriginal[0m ≤ 9223372036854775807 then
+        Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if 0 ≤ [0;1;34moriginal[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34mopened[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34menabled[0m then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «True» 0)) []”,
+    “(if [0;1;34mrequest[0m = «» then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «False» 0)) []”,
+    “(if [0;1;34mcharge[0m = «» then Conv (SOME (TypeStamp «True» 0)) []
+      else Conv (SOME (TypeStamp «False» 0)) []) =
+     Conv (SOME (TypeStamp «False» 0)) []”]: term list
+val g = “F”: term
+FORGE_DEBUG_BEGIN
+ASSUMPTION (if reason = «returned_item» then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) ≠
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if reason = «returned_item» then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) ≠
+Conv (SOME (TypeStamp «False» 0)) []
+ASSUMPTION (if reason = «service_not_delivered» then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «False» 0)) []
+ASSUMPTION (if reason = «duplicate_charge» then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «False» 0)) []
+ASSUMPTION (if amount ≤ remaining then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if 0 ≤ amount then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if candidate then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if remaining ≤ original then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if 0 ≤ remaining then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if original ≤ 9223372036854775807 then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if 0 ≤ original then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if opened then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if enabled then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «True» 0)) []
+ASSUMPTION (if request = «» then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «False» 0)) []
+ASSUMPTION (if charge = «» then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+Conv (SOME (TypeStamp «False» 0)) []
+GOAL F
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

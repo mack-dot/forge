@@ -26,12 +26,12 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: use the published method/calling proof to construct
-an applicable entry and return interface for refund. The body-to-CakeML relation
-and all six output fields now pass under explicit state/environment premises.
-Those premises still need a checked caller. Preserve the full Unicode domain
-through a justified representation relation. Upstream modeled `Print` does not
-establish observable output. Native artifact and admission binding remain open.
+Next authorized action: establish the full Unicode/byte representation and
+input/output boundary for the same refund method. A particular model caller now
+initializes and returns all six values correctly for every typed model input.
+This uses the generated method wrapper and published semantics. The native
+caller, exact executable and admission binding remain open. Preserve the full
+Unicode domain; upstream modeled `Print` does not prove observable output.
 
 Detailed claim, source hashes, commands and boundaries:
 [M1 experiment report](proposals/refund-executable-feasibility/README.md).
@@ -48,6 +48,12 @@ New compiler relation:
 Exact compilation equality, static premises and six CakeML output values are
 checked. Final proof/repeat0/0; substituted compiled expression1 for the intended
 equality failure. This is a conditional model theorem, not native correctness.
+
+New caller result:
+[entry and returned-tuple proof](proposals/refund-executable-feasibility/caller-20261104/REPORT.md).
+Universal model-caller proof/repeat0/0; swapped IDs/missing argument1/1 for
+the intended failures. Standard primitive initialization plus explicit typed
+input bindings now produces the correct tuple. Native input decoding is open.
 
 ## Milestone completion ledger
 
@@ -99,7 +105,8 @@ establish approval. No review, merge or workflow operation was performed.
 | Fixed GCD executable model theorem | LOCALLY_VALIDATED, historical | Exact old ELF and kernel replay records retained; not a refund theorem or full QEMU/Linux correspondence |
 | Hosted authenticated booking reuse | TESTED, historical | Actual authorized run and 13 cases; same-process reuse only; no cross-run claim |
 | Stage9 signed release/admission | TESTED, historical | Authenticates its original artifact and claim; does not authorize the new refund claim |
-| Refund body to CakeML expression | LOCALLY_VALIDATED | Exact compilation equality and six output fields checked under explicit state/environment premises; caller construction remains open |
+| Refund body to CakeML expression | LOCALLY_VALIDATED | Exact compilation equality and six output fields checked under explicit state/environment premises; retained unchanged |
+| Exact generated method and model caller | LOCALLY_VALIDATED | Primitive state/constructors and typed input bindings are explicit; fixed call returns all six values for every typed model input; negative controls and repeat pass |
 | Refund binary/runtime correspondence | NOT_ESTABLISHED | Full Unicode relation, checked calling/output interface, exact native artifact and runtime binding remain open |
 | Refund acceptance profile and release chain | NOT_ESTABLISHED | Need exact reviewed claim, checker, artifact/environment binding and authorized independent admission |
 
@@ -158,7 +165,7 @@ closure are not adopted into Forge's protected acceptance policy.
 Detailed records and reproduction instructions are in the linked backend
 packet. All durations are local observations. Hosted refund metrics are NOT RUN.
 
-## Current compiler-relation checks
+## Compiler-relation checks
 
 | Command/check | Actual exit | Result |
 | --- | --- | --- |
@@ -178,6 +185,28 @@ namespace entries, constructor stamps and callable closures. The proof does
 not construct a complete caller yet. It returns through the internal compiler
 Return convention. Observable API behavior and physical process exit are open.
 All results are local. No hosted refund, signing or admission command ran.
+
+## Current caller checks
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| `run.py 0001` | 1 | Universal proof incomplete; inconsistent conditional-Boolean case retained |
+| Concrete valid-call diagnostic | 0 | Correct example tuple; does not replace universal proof |
+| `run.py 0002` | 1 | Manually interrupted broad rewrite; child signal2; not an accepted result |
+| `run.py 0003` | 0 | Universal method/caller result proved with narrow checked Boolean equalities |
+| `run.py swapped-ids ...` | 1 | Caller ID equality obligation fails |
+| `run.py missing-argument ...` | 1 | Missing input binding makes the return claim false |
+| `run.py repeat` / acceptance comparison | 0/0 | Actual replay; all six exported files identical; refusal reasons checked |
+| Fresh HOL closure inspection | 0 |156 theory nodes; three own theorems; same four foundation axioms |
+| Original-input postflight | 0 |30 owner-workspace hashes unchanged |
+
+This caller theorem checks the generated method and explicit initialization
+directly in the existing semantics. It does not prove the earlier generic
+`env_rel` premise for arbitrary callers. Its fixed program receives typed
+values in a constructed namespace. A physical input decoder and native calling
+interface remain unverified. Clock32 is model fuel, not a runtime bound.
+The full approved Unicode contract remains unchanged. No restricted-domain
+replacement, policy adoption, publication or release occurred.
 
 ## Evidence record requirements
 
@@ -234,6 +263,12 @@ all six result fields. Final source/repeat0/0; substituted expression refused1.
 Recorded139-node closure and preserved all failed attempts. Entry/calling, full
 Unicode, native and admission obligations remain open. Parent report commit:
 `d0269c051390ffe76b41ba1e522568870f3a4f83`, local and unpublished.
+
+2026-11-04: Checked the generated refund method and a fixed model caller for all
+typed model inputs. Preserved one incomplete proof and one manual interruption.
+Swapped IDs and missing binding each fail1; valid proof/repeat0/0. Exact caller
+and return behavior are now checked in the model. Full Unicode and native
+interfaces remain open. Parent compiler record commit77ab7003 is local only.
 
 
 ### Mission tracking preservation — actual local results

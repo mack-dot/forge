@@ -1,0 +1,32 @@
+<<HOL message: Created theory "forge_refund_call">>
+Saved definition ____ "refund_method_def"
+Saved definition ____ "refund_method_cml_def"
+Saved theorem _______ "refund_method_compilation"
+Saved definition ____ "refund_call_def"
+Saved definition ____ "refund_program_def"
+Saved definition ____ "refund_argument_env_def"
+Saved definition ____ "refund_expected_tuple_def"
+Saved theorem _______ "concrete_bool_tests"
+Proof of 
+
+let
+  result =
+    evaluate_decs (FST (THE (prim_sem_env ffi)) with clock := 32)
+      (refund_argument_env ffi charge request original remaining enabled
+         opened candidate amount reason) refund_program
+in
+  case SND result of
+    Rval env =>
+      nsLookup env.v (Short «answer») =
+      SOME
+        (refund_expected_tuple charge request original remaining enabled
+           opened candidate amount reason) ∧ (FST result).ffi = ffi
+  | Rerr err => F
+
+failed.
+First unsolved sub-goal is
+
+F
+
+Tactic failure proving "refund_caller_returns"; heap saved to forge_refund_call.refund_caller_returns.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund_call.refund_caller_returns.dumpedheap

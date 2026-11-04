@@ -7436,3 +7436,60 @@ curl: (6) Could not resolve host: github.com
   applicable initial state/environment and caller-visible return tuple. Preserve
   full Unicode representation, native/runtime and independent admission gaps.
   M1–M4 stay open. No protected profile adoption or acceptance policy change.
+
+
+## U260 — Generated refund method and explicit model caller return the full tuple
+
+- References:U257,U258,U259. Previous goal turn was progress: exact compiler
+  relation and reproduction committed77ab7003. This run closes another model
+  sub-obligation. CURRENT none;Stage12 unauthorized;M1 open;end_to_end=false.
+- The published compiler generates the exact nine-input/six-output method
+  from the checked refund_body. New refund_method_compilation proves exact
+  equality. Fixed model program declares Return/method, invokes it with typed
+  inputs from a constructed namespace, catches Return and exposes answer.
+- New forge_refund_call.refund_caller_returns checks this initialization/call
+  directly through published evaluate_decs. For every typed model input and
+  arbitrary FFI state it returns all six expected fields and preserves FFI.
+  No generic state_rel/env_rel premise remains in this new theorem. It does
+  not assert the earlier generic env_rel holds for all callers. It proves
+  desired behavior independently for this explicit caller. No new semantics.
+- Domain remains arbitrary model integers/booleans/byte strings. The complete
+  approved Unicode domain is still the target; its representation relation is
+  open. Inputs are namespace values, not fixed examples embedded in the caller
+  AST. Physical input decoding/native calling are not established. Clock32 is
+  sufficient model fuel, not a latency/memory/physical-termination bound.
+- Actual attempt0001 exit1 after15 dependency theories built. It retained an
+  impossible conditional-Boolean case. Concrete valid-call EVAL diagnostic0
+  returns expected tuple; not a replacement universal proof. Debug inspection0
+  exposed the inconsistent assumptions. Attempt0002 exit1 after operator SIGINT
+  (child signal2,331.425340333seconds) of broad conditional distribution. This
+  was not a proof failure counterexample or successful negative control.
+- Two narrow Boolean equalities are proved by cases; program and required
+  theorem unchanged. Attempt0003 exit0,74.594393292local seconds. Repeat0,
+  69.620541958seconds; six exact exported files match. Source SHA256
+  081becc8f43334e716d8d7657c65740394d554e812ded8bdc169bffac2c022fe;
+  theorem datad756c352edb5dee390d9004976a07ecd25d16cacf7b2aac7dec467ab19f996cd.
+- Adversarial caller argument swap exit1 with unsolved request=charge and
+  charge=request. Missing arg0 binding exit1 with false return goal. Both fail
+  the unchanged refund_caller_returns; no accepted exports. Reasons and exact
+  byte reproduction checked0. Prior body/compiler controls remain unchanged.
+- Fresh closure inspection0:156 theory nodes, three own theorems, no missing
+  parent/artifact. Same four HOL foundation axioms SELECT_AX,INFINITY_AX,ETA_AX,
+  BOOL_CASES_AX. Own tags DISK_THM/zero explicit hypotheses. Trusted source
+  replay and imported builds, not self-reported candidate hashes, supply checking.
+- Owner-workspace30 frozen input hashes unchanged0. Main Git and pinned CakeML
+  tracked diffs remain clean. No protected code, spec, policy or workflow changed.
+  No publication, merge, dispatch, signing, admission or deployment. Hosted
+  refund tests/measurements NOT RUN; no savings claim from local proof duration.
+- Raw70-member archive validated0;57327554bytes;mode0600;SHA256
+  9bf52f6acfeea2bdddce7b98c329b59618b2f5bc1a8ebfa7f313431aeb897727.
+  Three failed-proof heaps are retained there and in original local paths.
+  Owner-reported off-machine backup remains unvalidated for exact hashes/restore.
+- Evidence:results/refund-caller-2026-11-04/attempt-0001/ and
+  proposals/refund-executable-feasibility/caller-20261104/. Exact commands,
+  failures, theorem statements, source/object hashes and reproduction recorded.
+- Next check: establish full Unicode/byte representation preserving empty IDs,
+  ASCII reason equality and caller-ID round trips; retain the U+0100 negative
+  control. Then connect the same method to native compilation/calling or I/O.
+  No generic CLI/cache/infrastructure. Native artifact and authorized independent
+  admission remain open. No Stage12 or end-to-end correctness claim.
