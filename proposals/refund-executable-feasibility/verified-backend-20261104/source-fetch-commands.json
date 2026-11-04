@@ -1,0 +1,251 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "--quiet"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "remote",
+      "add",
+      "origin",
+      "https://github.com/polyml/polyml.git"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "fetch",
+      "--depth=1",
+      "origin",
+      "4557554077078decce4ce5f90da00a713cfc32e4"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "From https://github.com/polyml/polyml\n * branch            4557554077078decce4ce5f90da00a713cfc32e4 -> FETCH_HEAD\n"
+  },
+  {
+    "argv": [
+      "git",
+      "checkout",
+      "--quiet",
+      "--detach",
+      "4557554077078decce4ce5f90da00a713cfc32e4"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "4557554077078decce4ce5f90da00a713cfc32e4\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD^{tree}"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "190217a8d58ef06a6ec327e35c8470313d51b7e5\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "fsck",
+      "--full"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "--quiet"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "remote",
+      "add",
+      "origin",
+      "https://github.com/HOL-Theorem-Prover/HOL.git"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "fetch",
+      "--depth=1",
+      "origin",
+      "9783a49979c94c401ff8c0e51b2eefae7ea95ae3"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "From https://github.com/HOL-Theorem-Prover/HOL\n * branch            9783a49979c94c401ff8c0e51b2eefae7ea95ae3 -> FETCH_HEAD\n"
+  },
+  {
+    "argv": [
+      "git",
+      "checkout",
+      "--quiet",
+      "--detach",
+      "9783a49979c94c401ff8c0e51b2eefae7ea95ae3"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD^{tree}"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "29cad92945bc239c6389d991c6ae6b3ead1f6da3\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "fsck",
+      "--full"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "--quiet"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "remote",
+      "add",
+      "origin",
+      "https://github.com/CakeML/cakeml.git"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "fetch",
+      "--depth=1",
+      "origin",
+      "cd9155694c16831373ab695a670794f23282ed62"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "From https://github.com/CakeML/cakeml\n * branch            cd9155694c16831373ab695a670794f23282ed62 -> FETCH_HEAD\n"
+  },
+  {
+    "argv": [
+      "git",
+      "checkout",
+      "--quiet",
+      "--detach",
+      "cd9155694c16831373ab695a670794f23282ed62"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "cd9155694c16831373ab695a670794f23282ed62\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD^{tree}"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "fda479738d1902849e80a90b5cf93298c04c36d8\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "fsck",
+      "--full"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

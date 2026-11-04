@@ -1,0 +1,33 @@
+<<HOL message: Created theory "forge_refund">>
+Saved definition ____ "refund_guard_def"
+Saved definition ____ "refund_body_def"
+Saved definition ____ "eligible_def"
+Saved definition ____ "refund_initial_def"
+Saved theorem _______ "refund_guard_value"
+Proof of 
+
+let
+  initial =
+    refund_initial h charge request original remaining enabled opened
+      candidate amount reason;
+  result = evaluate_stmt initial env refund_body;
+  final = FST result;
+  ok =
+    eligible charge request original remaining enabled opened candidate
+      amount reason
+in
+  SND result = Rstop Sret ∧ final.heap = h ∧
+  read_local final.locals «v9» = SOME (BoolV ok) ∧
+  read_local final.locals «v10» = SOME (IntV (if ok then amount else 0)) ∧
+  read_local final.locals «v11» = SOME (StrV (if ok then reason else «»)) ∧
+  read_local final.locals «v12» = SOME (StrV (if ok then charge else «»)) ∧
+  read_local final.locals «v13» = SOME (StrV (if ok then request else «»)) ∧
+  read_local final.locals «v14» = SOME (IntV (if ok then 1 else 0))
+
+failed.
+First unsolved sub-goal is
+
+F
+
+Tactic failure proving "refund_full_result"; heap saved to forge_refund.refund_full_result.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund.refund_full_result.dumpedheap

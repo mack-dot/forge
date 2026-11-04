@@ -1,0 +1,46 @@
+[
+  {
+    "argv": [
+      "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+      "verify",
+      "Witness.dfy",
+      "--solver-path",
+      "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+      "--resource-limit",
+      "1000000",
+      "--verification-time-limit",
+      "0",
+      "--cores",
+      "1",
+      "--verify-included-files"
+    ],
+    "cwd": "/Users/mackianni/forge/results/refund-verified-backend-2026-11-04/attempt-0001/unicode-witness-0002",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "expected_reason_matched": true,
+    "wall_seconds": 1.370363082998665,
+    "source_sha256": "2fd98f035d938f5163dea17fd6b69b7ce7c66c38fbb3c7de72000e5feebabd41"
+  },
+  {
+    "argv": [
+      "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny",
+      "verify",
+      "Truncation.dfy",
+      "--solver-path",
+      "/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+      "--resource-limit",
+      "1000000",
+      "--verification-time-limit",
+      "0",
+      "--cores",
+      "1",
+      "--verify-included-files"
+    ],
+    "cwd": "/Users/mackianni/forge/results/refund-verified-backend-2026-11-04/attempt-0001/unicode-witness-0002",
+    "expected_exit": 4,
+    "actual_exit": 4,
+    "expected_reason_matched": true,
+    "wall_seconds": 0.8105459999933373,
+    "source_sha256": "d8ce95cdfbc286a348b7b5b186fd0353c3ab29963a4179579edd9c2496164db5"
+  }
+]

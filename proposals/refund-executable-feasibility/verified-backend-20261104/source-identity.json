@@ -1,0 +1,101 @@
+{
+  "actual_exit": 0,
+  "source_repositories": [
+    {
+      "name": "polyml",
+      "commit": "4557554077078decce4ce5f90da00a713cfc32e4",
+      "tree": "190217a8d58ef06a6ec327e35c8470313d51b7e5",
+      "remote": "https://github.com/polyml/polyml.git"
+    },
+    {
+      "name": "HOL",
+      "commit": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+      "tree": "29cad92945bc239c6389d991c6ae6b3ead1f6da3",
+      "remote": "https://github.com/HOL-Theorem-Prover/HOL.git"
+    },
+    {
+      "name": "cakeml",
+      "commit": "cd9155694c16831373ab695a670794f23282ed62",
+      "tree": "fda479738d1902849e80a90b5cf93298c04c36d8",
+      "remote": "https://github.com/CakeML/cakeml.git"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "README.md",
+      "sha256": "1baf74661d26113361d6f675b6d28d4eacddaf39ff247d8a4196b9744ff9ece3",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "build-instructions.sh",
+      "sha256": "7ea19557d33c516a7e50ad50cf0e5f28a8ea2424f9454951f86a3df6302aab9d",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/Holmakefile",
+      "sha256": "072b7dfba4199e4165b7d8619c5e69609c5253e8331e19bb2682ac611642c471",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/README.md",
+      "sha256": "6c3825be70dc813fcddf124221c5e64431bbd468b13032eb6ab789c3e655f194",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/compilation/Holmakefile",
+      "sha256": "587641b627ceb27749831085416be4765cbef3aeb15ffe04e94075161bf13a53",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/compilation/dafny_compilerCompileScript.sml",
+      "sha256": "a2707530bde2879fc8247bb7cc7308849ba3849103ee6cd3e17e1d1f6658d8e9",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/dafny_astScript.sml",
+      "sha256": "3bd7bfa4057e7f7155d2c310186c1634deaf0b75cf4eab3fd663c8221718db46",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/dafny_compilerScript.sml",
+      "sha256": "04410c6e111d117984d2c225221d2e4dbcb84c3e6fb469a5e66e6f4e3f3ebc4f",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/examples/README.md",
+      "sha256": "f980fa0dbb2f34247efe7452a358e6a2bfa04db9a5bf7d70b4366ec0b401225f",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/examples/dafny_compiler.py",
+      "sha256": "8ee6f396f42ab6def5f1026e12ef753e73b23fa3f96bdf5453d9aa8b0a54da3a",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/proofs/dafny_compilerProofScript.sml",
+      "sha256": "db7b8a9c9210e6675a3db031317e27f3b9091feadc76e2d0a783956806b57f40",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/proofs/dafny_to_cakemlProofScript.sml",
+      "sha256": "99fe81671d2d20385a0fdbd6f698186a83b5f5677eecf83aa7606d2117c1d681",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/semantics/dafny_evaluateScript.sml",
+      "sha256": "cd13fb94dbd8f8db9bb409d31f3eb415ba29ba9c2ea0573aa2e54207dbcfcab4",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/semantics/dafny_semanticPrimitivesScript.sml",
+      "sha256": "af000d06296151eb7748f47b1147d806a37ffb74cde8c30da0ecc038e3d28f43",
+      "matches_git_checkout": true
+    },
+    {
+      "path": "compiler/dafny/vcg/examples/dafny_vcg_exampleScript.sml",
+      "sha256": "f27e4333a62d897972a8c6f3b0588b07c059f4e854458a66d5fba8cc8feb63db",
+      "matches_git_checkout": true
+    }
+  ],
+  "accepted_forge_toolchain": false
+}

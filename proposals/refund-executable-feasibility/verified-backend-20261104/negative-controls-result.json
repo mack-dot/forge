@@ -1,0 +1,20 @@
+{
+  "actual_exit": 0,
+  "cases": [
+    {
+      "case": "attempt-negative-bound",
+      "actual_exit": 1,
+      "reason_matched": true,
+      "reason": "amount \u2264 remaining",
+      "accepted_proof_outputs": false
+    },
+    {
+      "case": "attempt-negative-reject",
+      "actual_exit": 1,
+      "reason_matched": true,
+      "reason": "\nF\n",
+      "accepted_proof_outputs": false
+    }
+  ],
+  "scope": "Published model semantics; not native machine-code verification"
+}

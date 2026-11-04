@@ -1,0 +1,35 @@
+Making install in libpolyml
+ /opt/homebrew/bin/gmkdir -p '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib'
+ /bin/sh ../libtool   --mode=install /opt/homebrew/bin/ginstall -c   libpolyml.la '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib'
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libpolyml.16.dylib /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.16.dylib
+libtool: install: (cd /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib && { ln -s -f libpolyml.16.dylib libpolyml.dylib || { rm -f libpolyml.dylib && ln -s libpolyml.16.dylib libpolyml.dylib; }; })
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libpolyml.lai /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libpolyml.a /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.a
+libtool: install: chmod 644 /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.a
+libtool: install: ranlib /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.a
+ /opt/homebrew/bin/gmkdir -p '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/pkgconfig'
+ /opt/homebrew/bin/ginstall -c -m 644 polyml.pc '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/pkgconfig'
+Making install in libpolymain
+ /opt/homebrew/bin/gmkdir -p '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib'
+ /bin/sh ../libtool   --mode=install /opt/homebrew/bin/ginstall -c   libpolymain.la '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib'
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libpolymain.lai /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolymain.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libpolymain.a /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolymain.a
+libtool: install: chmod 644 /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolymain.a
+libtool: install: ranlib /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolymain.a
+make[2]: Nothing to be done for `install-data-am'.
+Making install in .
+ /opt/homebrew/bin/gmkdir -p '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin'
+  /bin/sh ./libtool   --mode=install /opt/homebrew/bin/ginstall -c polyimport poly '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin'
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/polyimport /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/polyimport
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/poly /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly
+ /opt/homebrew/bin/gmkdir -p '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin'
+ /opt/homebrew/bin/ginstall -c polyc '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin'
+ /opt/homebrew/bin/gmkdir -p '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/share/man/man1'
+ /opt/homebrew/bin/ginstall -c -m 644 poly.1 polyimport.1 polyc.1 '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/share/man/man1'
+Making install in modules
+Making install in IntInfAsInt
+/opt/homebrew/bin/gmkdir -p /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/polyml/modules
+/opt/homebrew/bin/ginstall -c -m 644 IntInfAsInt /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/polyml/modules
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.

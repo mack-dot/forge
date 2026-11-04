@@ -1,0 +1,24 @@
+<<HOL message: Created theory "forge_refund">>
+Saved definition ____ "refund_guard_def"
+Saved definition ____ "refund_body_def"
+Saved definition ____ "eligible_def"
+Saved definition ____ "refund_initial_def"
+Proof of 
+
+evaluate_exp
+  (refund_initial h charge request original remaining enabled opened
+     candidate amount reason) env refund_guard =
+(refund_initial h charge request original remaining enabled opened candidate
+   amount reason,
+ Rval
+   (BoolV
+      (eligible charge request original remaining enabled opened candidate
+         amount reason)))
+
+failed.
+First unsolved sub-goal is
+
+amount ≤ remaining
+
+Tactic failure proving "refund_guard_value"; heap saved to forge_refund.refund_guard_value.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund.refund_guard_value.dumpedheap

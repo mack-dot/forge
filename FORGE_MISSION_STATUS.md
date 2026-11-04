@@ -26,13 +26,21 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: check the published verified Dafny-to-CakeML pipeline's
-exact source, supported representations and reproducible build path against this
-full contract. Check integer, string and input/output semantics before choosing
-that route. Do not treat ordinary Dafny compilation as verified compilation.
+Next authorized action: apply the published Dafny-to-CakeML compiler relation
+to the exact refund body now checked in HOL4. The upstream compiler proof replay
+returned0. Its application to refund is still open. Preserve the full Unicode
+domain through a justified representation relation and use a checked calling
+or I/O interface. Upstream modeled `Print` does not establish observable output.
 
 Detailed claim, source hashes, commands and boundaries:
 [M1 experiment report](proposals/refund-executable-feasibility/README.md).
+
+New backend results:
+[HOL4 experiment report](proposals/refund-executable-feasibility/verified-backend-20261104/REPORT.md).
+The guard and complete return result pass in the published Dafny model for
+arbitrary integers and byte strings. Both implementation violations are refused.
+A fresh rebuild produces six byte-identical exports. The approved Unicode
+contract is unchanged and is not yet connected to this model or native code.
 
 ## Milestone completion ledger
 
@@ -54,7 +62,7 @@ M3/M4, general caching, interface work and new infrastructure remain deferred.
 | Preserve and read the mission | DONE; exit0 | `results/mission-m1-feasibility-2026-11-04/attempt-0001/mission-preservation.json` |
 | Inspect current main, PR34/36/37 and hosted booking run41523691535 | DONE | Live main and PR identities refreshed; held artifact hash matches live GitHub digest; historical results inspected |
 | Audit ledger/refund/booking specifications and implementation | Source audit DONE; backend audit OPEN | Refund source gate rerun: exit0; protected inputs unchanged |
-| Compare established executable-verification routes | IN PROGRESS | Verified Dafny/CakeML publication found; exact artifact and representation support still need checks |
+| Compare established executable-verification routes | IN PROGRESS | Exact CakeML/HOL4/PolyML sources pinned; tools built; model proof passes; Unicode and observable-output boundaries identified |
 | Select target and freeze the exact claim | DONE for feasibility | Full approved refund R1–R5; no new input restriction; no new acceptance profile |
 | Run the smallest component feasibility experiment | DONE: source step only | Primitive-field implementation equals original decision and intent for every typed input; Dafny exit0 |
 | Run negative and reproducibility controls | DONE for source step | Repeat0, over-limit4, always-reject4; expected proof errors; identical positive output |
@@ -79,11 +87,12 @@ establish approval. No review, merge or workflow operation was performed.
 | --- | --- | --- |
 | Original refund source contract | LOCALLY_VALIDATED | Fresh Dafny/Z3 source proof and existing rejection controls passed; compiler and runtime remain outside this proof |
 | Primitive-field refund equivalence | LOCALLY_VALIDATED | Every typed input maps to the same decision and intent; Dafny/Boogie/Z3 remain trusted; no independent kernel certificate |
+| Refund behavior in published HOL4 Dafny model | LOCALLY_VALIDATED | Guard, six returned fields and unchanged modeled heap; arbitrary integers and byte strings; fresh source replay and negative controls passed; Unicode and native transfer remain open |
 | Ledger and booking source claims | LOCALLY_VALIDATED, historical | Existing source evidence retained; not a new executable theorem or new source replay in this iteration |
 | Fixed GCD executable model theorem | LOCALLY_VALIDATED, historical | Exact old ELF and kernel replay records retained; not a refund theorem or full QEMU/Linux correspondence |
 | Hosted authenticated booking reuse | TESTED, historical | Actual authorized run and 13 cases; same-process reuse only; no cross-run claim |
 | Stage9 signed release/admission | TESTED, historical | Authenticates its original artifact and claim; does not authorize the new refund claim |
-| Refund compiler/binary/runtime correspondence | NOT_ESTABLISHED | No selected verified backend, exact compiled artifact or checked runtime relation yet |
+| Refund compiler/binary/runtime correspondence | NOT_ESTABLISHED | Published compiler proof replay passed; application to refund, full Unicode relation, exact native artifact and runtime relation remain open |
 | Refund acceptance profile and release chain | NOT_ESTABLISHED | Need exact reviewed claim, checker, artifact/environment binding and authorized independent admission |
 
 Hosted run [41523691535](https://github.com/mack-dot/forge/actions/runs/41523691535)
@@ -96,7 +105,7 @@ All 13 acceptance cases matched, including uncovered-change exit3 and
 prior-process receipt exit1. These records contain no billed runner-minute
 measurement. They do not establish a performance improvement or M3 for refund.
 
-## Executed checks in this iteration
+## Prior source checks
 
 | Command/check | Actual exit | Result |
 | --- | --- | --- |
@@ -113,6 +122,33 @@ measurement. They do not establish a performance improvement or M3 for refund.
 No compiled refund proof, hosted refund execution or new admission ran.
 The exact commands, raw outputs and hashes are in the linked experiment packet.
 These checks do not complete a repository stage or M1.
+
+## Current backend checks
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| Pinned Poly/ML and HOL4 local builds | 0 | Isolated tools built from exact source commits |
+| Initial Unicode witness/control | 2/2 | Parser failures preserved; not passing negative controls |
+| Corrected Unicode witness/truncation control | 0/4 | Full domain includes U+0100; low-byte identity claim rejected |
+| HOL refund full-result attempts0001/0002 | 1/1 | Incomplete proof states preserved |
+| HOL refund attempt0003 / fresh repeat | 0/0 | Guard and full modeled return checked; six identical exports |
+| Removed-bound / always-reject model controls | 1/1 | Intended theorem failures; reason checks0 |
+| Imported closure audit | 0 |112 theory nodes, four explicit HOL foundation axioms |
+| Published Dafny-to-CakeML compiler proof replay | 0 | Actual source replay;267.9495331249782 local seconds |
+| Frozen input hash postflight | 0 |30 original inputs unchanged |
+| Local raw-archive validation | 0 |118 members checked; independent copy remains unverified |
+
+The model theorem covers arbitrary integers and byte strings. It is one
+sub-obligation toward the full approved Unicode contract, not a replacement
+contract. The manually constructed AST still needs a checked representation
+relation. The upstream compiler theorem has not yet been applied to this body.
+No native executable behavior or new authenticated admission is established.
+The imported HOL foundation axioms are SELECT_AX, INFINITY_AX, ETA_AX and
+BOOL_CASES_AX. No new axiom was introduced. This experimental checker and
+closure are not adopted into Forge's protected acceptance policy.
+
+Detailed records and reproduction instructions are in the linked backend
+packet. All durations are local observations. Hosted refund metrics are NOT RUN.
 
 ## Evidence record requirements
 
@@ -158,3 +194,23 @@ This is progress toward durable tracking, not mission or milestone completion.
 the approved refund proof. Checked full source representation equivalence,
 repeatability and two adversarial controls. Preserved the audit harness failure.
 Selected refund for the next correspondence experiment. M1–M4 remain open.
+
+2026-11-04: Built the pinned published tools. Checked refund model behavior,
+two implementation violations, fresh proof reproduction and imported assumptions.
+Replayed the published compiler theorem. Recorded the Unicode and observable
+output gaps. The next implementation step is the exact refund compiler relation.
+
+
+### Mission tracking preservation — actual local results
+
+Local commit: `118b3d4d331ce513c92e1de3ee2cd9298572aa48` on
+`docs/integration-readiness-20261103`. Commit exit0; staged whitespace check0;
+committed readback0 for the exact mission and45 packet files; worktree clean.
+The commit is local and unpublished. No research stage completed.
+
+Local recovery bundle create/verify/clone-restore/fsck each returned0:
+`/Users/mackianni/forge-backups/forge-mission-2026-11-04.bundle`.
+SHA256 `d68852a498467f02fb1c8a6b841f60742da46a723b133546c00ee66688e237c1`.
+24404340bytes; mode0600. Restored commit and mission bytes matched.
+This is local recovery, not verification of the owner's off-machine copy.
+Command records: `results/mission-m1-feasibility-2026-11-04/attempt-0001/`.

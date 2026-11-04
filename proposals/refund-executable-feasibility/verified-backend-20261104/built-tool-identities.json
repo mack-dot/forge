@@ -1,0 +1,60 @@
+{
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "tool_files": [
+    {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly",
+      "resolved_path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly",
+      "sha256": "021caa8d48d1bc969e464faf59b374a81425454163f101a61ba579e086defd26",
+      "bytes": 10085752
+    },
+    {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+      "resolved_path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+      "sha256": "ea3c5b3278570063a430059e17fc46e07baa2f514c59131f2cb319db98328d8b",
+      "bytes": 2992168
+    },
+    {
+      "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+      "resolved_path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+      "sha256": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+      "bytes": 25179120
+    },
+    {
+      "path": "/opt/homebrew/opt/gmp/lib/libgmp.dylib",
+      "resolved_path": "/opt/homebrew/Cellar/gmp/6.3.0/lib/libgmp.10.dylib",
+      "sha256": "1bb9184824b82f40bd50279634290d6cbdf9c1a371c045c7b10815e7955cd696",
+      "bytes": 452816
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "sw_vers"
+      ],
+      "actual_exit": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "clang",
+        "--version"
+      ],
+      "actual_exit": 0,
+      "stdout": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "otool",
+        "-L",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly"
+      ],
+      "actual_exit": 0,
+      "stdout": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly:\n\t/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.16.dylib (compatibility version 17.0.0, current version 17.0.0)\n\t/opt/homebrew/opt/gmp/lib/libgmp.10.dylib (compatibility version 16.0.0, current version 16.0.0)\n\t/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1900.180.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1351.0.0)\n",
+      "stderr": ""
+    }
+  ],
+  "production_toolchain_changed": false,
+  "existing_gmp_version": "6.3.0"
+}

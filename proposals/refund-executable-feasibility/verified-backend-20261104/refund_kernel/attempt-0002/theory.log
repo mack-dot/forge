@@ -1,0 +1,448 @@
+<<HOL message: Created theory "forge_refund">>
+Saved definition ____ "refund_guard_def"
+Saved definition ____ "refund_body_def"
+Saved definition ____ "eligible_def"
+Saved definition ____ "refund_initial_def"
+Saved theorem _______ "refund_guard_value"
+Proof of 
+
+let
+  initial =
+    refund_initial h charge request original remaining enabled opened
+      candidate amount reason;
+  result = evaluate_stmt initial env refund_body;
+  final = FST result;
+  ok =
+    eligible charge request original remaining enabled opened candidate
+      amount reason
+in
+  SND result = Rstop Sret ∧ final.heap = h ∧
+  read_local final.locals «v9» = SOME (BoolV ok) ∧
+  read_local final.locals «v10» = SOME (IntV (if ok then amount else 0)) ∧
+  read_local final.locals «v11» = SOME (StrV (if ok then reason else «»)) ∧
+  read_local final.locals «v12» = SOME (StrV (if ok then charge else «»)) ∧
+  read_local final.locals «v13» = SOME (StrV (if ok then request else «»)) ∧
+  read_local final.locals «v14» = SOME (IntV (if ok then 1 else 0))
+
+failed.
+First unsolved sub-goal is
+
+SND
+  (case
+     assign_values
+       <|clock := 0;
+         locals :=
+           [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+            («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+            («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+            («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+            («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+            («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+         heap := h; locals_old := []; heap_old := []; locals_prev := [];
+         heap_prev := []|> env [VarLhs «v9»] [BoolV F]
+   of
+     (st₁,Rcont) =>
+       (case
+          case
+            case
+              case ALOOKUP st₁.locals «v9» of NONE => NONE | SOME ov => ov
+            of
+              NONE => (st₁,Rerr Rfail)
+            | SOME v => (st₁,Rval v)
+          of
+            (st₁,v1) =>
+              exp_result_CASE v1
+                (λtst'.
+                   option_CASE
+                     (do_cond tst'
+                        (Assign
+                           [(VarLhs «v10»,ExpRhs (Var «v7»));
+                            (VarLhs «v11»,ExpRhs (Var «v8»));
+                            (VarLhs «v12»,ExpRhs (Var «v0»));
+                            (VarLhs «v13»,ExpRhs (Var «v1»));
+                            (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                        (Assign
+                           [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                            (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                            (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                            (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                            (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                     (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                (λerr. (st₁,Rstop (Serr err)))
+        of
+          (st₁,Rcont) => (st₁,Rstop Sret)
+        | (st₁,Rstop stp) => (st₁,Rstop stp))
+   | (st₁,Rstop stp) => (st₁,Rstop stp)) = Rstop Sret ∧
+(FST
+   (case
+      assign_values
+        <|clock := 0;
+          locals :=
+            [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+             («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+             («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+             («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+             («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+             («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+          heap := h; locals_old := []; heap_old := []; locals_prev := [];
+          heap_prev := []|> env [VarLhs «v9»] [BoolV F]
+    of
+      (st₁,Rcont) =>
+        (case
+           case
+             case
+               case ALOOKUP st₁.locals «v9» of NONE => NONE | SOME ov => ov
+             of
+               NONE => (st₁,Rerr Rfail)
+             | SOME v => (st₁,Rval v)
+           of
+             (st₁,v1) =>
+               exp_result_CASE v1
+                 (λtst'.
+                    option_CASE
+                      (do_cond tst'
+                         (Assign
+                            [(VarLhs «v10»,ExpRhs (Var «v7»));
+                             (VarLhs «v11»,ExpRhs (Var «v8»));
+                             (VarLhs «v12»,ExpRhs (Var «v0»));
+                             (VarLhs «v13»,ExpRhs (Var «v1»));
+                             (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                         (Assign
+                            [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                             (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                             (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                             (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                             (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                      (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                 (λerr. (st₁,Rstop (Serr err)))
+         of
+           (st₁,Rcont) => (st₁,Rstop Sret)
+         | (st₁,Rstop stp) => (st₁,Rstop stp))
+    | (st₁,Rstop stp) => (st₁,Rstop stp))).heap = h ∧
+(case
+   ALOOKUP
+     (FST
+        (case
+           assign_values
+             <|clock := 0;
+               locals :=
+                 [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+                  («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+                  («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+                  («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+                  («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+                  («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+               heap := h; locals_old := []; heap_old := [];
+               locals_prev := []; heap_prev := []|> env [VarLhs «v9»]
+             [BoolV F]
+         of
+           (st₁,Rcont) =>
+             (case
+                case
+                  case
+                    case ALOOKUP st₁.locals «v9» of
+                      NONE => NONE
+                    | SOME ov => ov
+                  of
+                    NONE => (st₁,Rerr Rfail)
+                  | SOME v => (st₁,Rval v)
+                of
+                  (st₁,v1) =>
+                    exp_result_CASE v1
+                      (λtst'.
+                         option_CASE
+                           (do_cond tst'
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Var «v7»));
+                                  (VarLhs «v11»,ExpRhs (Var «v8»));
+                                  (VarLhs «v12»,ExpRhs (Var «v0»));
+                                  (VarLhs «v13»,ExpRhs (Var «v1»));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                                  (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                           (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                      (λerr. (st₁,Rstop (Serr err)))
+              of
+                (st₁,Rcont) => (st₁,Rstop Sret)
+              | (st₁,Rstop stp) => (st₁,Rstop stp))
+         | (st₁,Rstop stp) => (st₁,Rstop stp))).locals «v9»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (BoolV F) ∧
+(case
+   ALOOKUP
+     (FST
+        (case
+           assign_values
+             <|clock := 0;
+               locals :=
+                 [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+                  («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+                  («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+                  («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+                  («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+                  («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+               heap := h; locals_old := []; heap_old := [];
+               locals_prev := []; heap_prev := []|> env [VarLhs «v9»]
+             [BoolV F]
+         of
+           (st₁,Rcont) =>
+             (case
+                case
+                  case
+                    case ALOOKUP st₁.locals «v9» of
+                      NONE => NONE
+                    | SOME ov => ov
+                  of
+                    NONE => (st₁,Rerr Rfail)
+                  | SOME v => (st₁,Rval v)
+                of
+                  (st₁,v1) =>
+                    exp_result_CASE v1
+                      (λtst'.
+                         option_CASE
+                           (do_cond tst'
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Var «v7»));
+                                  (VarLhs «v11»,ExpRhs (Var «v8»));
+                                  (VarLhs «v12»,ExpRhs (Var «v0»));
+                                  (VarLhs «v13»,ExpRhs (Var «v1»));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                                  (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                           (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                      (λerr. (st₁,Rstop (Serr err)))
+              of
+                (st₁,Rcont) => (st₁,Rstop Sret)
+              | (st₁,Rstop stp) => (st₁,Rstop stp))
+         | (st₁,Rstop stp) => (st₁,Rstop stp))).locals «v10»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (IntV 0) ∧
+(case
+   ALOOKUP
+     (FST
+        (case
+           assign_values
+             <|clock := 0;
+               locals :=
+                 [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+                  («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+                  («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+                  («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+                  («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+                  («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+               heap := h; locals_old := []; heap_old := [];
+               locals_prev := []; heap_prev := []|> env [VarLhs «v9»]
+             [BoolV F]
+         of
+           (st₁,Rcont) =>
+             (case
+                case
+                  case
+                    case ALOOKUP st₁.locals «v9» of
+                      NONE => NONE
+                    | SOME ov => ov
+                  of
+                    NONE => (st₁,Rerr Rfail)
+                  | SOME v => (st₁,Rval v)
+                of
+                  (st₁,v1) =>
+                    exp_result_CASE v1
+                      (λtst'.
+                         option_CASE
+                           (do_cond tst'
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Var «v7»));
+                                  (VarLhs «v11»,ExpRhs (Var «v8»));
+                                  (VarLhs «v12»,ExpRhs (Var «v0»));
+                                  (VarLhs «v13»,ExpRhs (Var «v1»));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                                  (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                           (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                      (λerr. (st₁,Rstop (Serr err)))
+              of
+                (st₁,Rcont) => (st₁,Rstop Sret)
+              | (st₁,Rstop stp) => (st₁,Rstop stp))
+         | (st₁,Rstop stp) => (st₁,Rstop stp))).locals «v11»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (StrV «») ∧
+(case
+   ALOOKUP
+     (FST
+        (case
+           assign_values
+             <|clock := 0;
+               locals :=
+                 [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+                  («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+                  («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+                  («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+                  («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+                  («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+               heap := h; locals_old := []; heap_old := [];
+               locals_prev := []; heap_prev := []|> env [VarLhs «v9»]
+             [BoolV F]
+         of
+           (st₁,Rcont) =>
+             (case
+                case
+                  case
+                    case ALOOKUP st₁.locals «v9» of
+                      NONE => NONE
+                    | SOME ov => ov
+                  of
+                    NONE => (st₁,Rerr Rfail)
+                  | SOME v => (st₁,Rval v)
+                of
+                  (st₁,v1) =>
+                    exp_result_CASE v1
+                      (λtst'.
+                         option_CASE
+                           (do_cond tst'
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Var «v7»));
+                                  (VarLhs «v11»,ExpRhs (Var «v8»));
+                                  (VarLhs «v12»,ExpRhs (Var «v0»));
+                                  (VarLhs «v13»,ExpRhs (Var «v1»));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                                  (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                           (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                      (λerr. (st₁,Rstop (Serr err)))
+              of
+                (st₁,Rcont) => (st₁,Rstop Sret)
+              | (st₁,Rstop stp) => (st₁,Rstop stp))
+         | (st₁,Rstop stp) => (st₁,Rstop stp))).locals «v12»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (StrV «») ∧
+(case
+   ALOOKUP
+     (FST
+        (case
+           assign_values
+             <|clock := 0;
+               locals :=
+                 [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+                  («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+                  («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+                  («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+                  («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+                  («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+               heap := h; locals_old := []; heap_old := [];
+               locals_prev := []; heap_prev := []|> env [VarLhs «v9»]
+             [BoolV F]
+         of
+           (st₁,Rcont) =>
+             (case
+                case
+                  case
+                    case ALOOKUP st₁.locals «v9» of
+                      NONE => NONE
+                    | SOME ov => ov
+                  of
+                    NONE => (st₁,Rerr Rfail)
+                  | SOME v => (st₁,Rval v)
+                of
+                  (st₁,v1) =>
+                    exp_result_CASE v1
+                      (λtst'.
+                         option_CASE
+                           (do_cond tst'
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Var «v7»));
+                                  (VarLhs «v11»,ExpRhs (Var «v8»));
+                                  (VarLhs «v12»,ExpRhs (Var «v0»));
+                                  (VarLhs «v13»,ExpRhs (Var «v1»));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                                  (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                           (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                      (λerr. (st₁,Rstop (Serr err)))
+              of
+                (st₁,Rcont) => (st₁,Rstop Sret)
+              | (st₁,Rstop stp) => (st₁,Rstop stp))
+         | (st₁,Rstop stp) => (st₁,Rstop stp))).locals «v13»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (StrV «») ∧
+(case
+   ALOOKUP
+     (FST
+        (case
+           assign_values
+             <|clock := 0;
+               locals :=
+                 [(«v0»,SOME (StrV «»)); («v1»,SOME (StrV request));
+                  («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+                  («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+                  («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+                  («v8»,SOME (StrV reason)); («v9»,NONE); («v10»,NONE);
+                  («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)];
+               heap := h; locals_old := []; heap_old := [];
+               locals_prev := []; heap_prev := []|> env [VarLhs «v9»]
+             [BoolV F]
+         of
+           (st₁,Rcont) =>
+             (case
+                case
+                  case
+                    case ALOOKUP st₁.locals «v9» of
+                      NONE => NONE
+                    | SOME ov => ov
+                  of
+                    NONE => (st₁,Rerr Rfail)
+                  | SOME v => (st₁,Rval v)
+                of
+                  (st₁,v1) =>
+                    exp_result_CASE v1
+                      (λtst'.
+                         option_CASE
+                           (do_cond tst'
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Var «v7»));
+                                  (VarLhs «v11»,ExpRhs (Var «v8»));
+                                  (VarLhs «v12»,ExpRhs (Var «v0»));
+                                  (VarLhs «v13»,ExpRhs (Var «v1»));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 1)))])
+                              (Assign
+                                 [(VarLhs «v10»,ExpRhs (Lit (IntL 0)));
+                                  (VarLhs «v11»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v12»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v13»,ExpRhs (Lit (StrL «»)));
+                                  (VarLhs «v14»,ExpRhs (Lit (IntL 0)))]))
+                           (st₁,Rstop (Serr Rfail)) (evaluate_stmt st₁ env))
+                      (λerr. (st₁,Rstop (Serr err)))
+              of
+                (st₁,Rcont) => (st₁,Rstop Sret)
+              | (st₁,Rstop stp) => (st₁,Rstop stp))
+         | (st₁,Rstop stp) => (st₁,Rstop stp))).locals «v14»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (IntV 0)
+
+Tactic failure proving "refund_full_result"; heap saved to forge_refund.refund_full_result.dumpedheap.
+Resume with: bin/hol --holstate=forge_refund.refund_full_result.dumpedheap

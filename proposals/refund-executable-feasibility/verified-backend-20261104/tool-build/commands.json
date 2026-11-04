@@ -1,0 +1,81 @@
+[
+  {
+    "label": "poly-configure",
+    "argv": [
+      "./configure",
+      "--prefix=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install",
+      "--enable-intinf-as-int",
+      "--with-gmp"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "wall_seconds": 28.3261496250052,
+    "log_sha256": "9972a205aa6bf5874c1336e4ccb8fa5e54a0e3c01322ac3a6d18b1d7468e0fe6"
+  },
+  {
+    "label": "poly-make",
+    "argv": [
+      "make",
+      "-j2"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "wall_seconds": 150.50359100001515,
+    "log_sha256": "0508de818bcba74f6305796063391823b507183fd52d83219b7c50c475638a24"
+  },
+  {
+    "label": "poly-compiler",
+    "argv": [
+      "make",
+      "compiler"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "wall_seconds": 7.111917125002947,
+    "log_sha256": "90f40b906f8151ca228a4aca2a5f5ed010187fc51f0b149a92640f4ae434d08e"
+  },
+  {
+    "label": "poly-install",
+    "argv": [
+      "make",
+      "install"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+    "actual_exit": 0,
+    "wall_seconds": 0.8703220410097856,
+    "log_sha256": "5e701711dc869179ec542fa8ebc52fc23f0d337ef17192fed881c874273e1274"
+  },
+  {
+    "label": "poly-version",
+    "argv": [
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly",
+      "--version"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104",
+    "actual_exit": 0,
+    "wall_seconds": 0.15007412500563078,
+    "log_sha256": "aa5f15d1ec38c7628cc0da9c14deee2021d5443635a892586700319530ca0b07"
+  },
+  {
+    "label": "hol-configure",
+    "argv": [
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly",
+      "--script",
+      "tools/smart-configure.sml"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "wall_seconds": 20.97274950001156,
+    "log_sha256": "582a6589908953666eb2236848ee1538bff25ef347faccfc19693ab2df2d9cfb"
+  },
+  {
+    "label": "hol-build",
+    "argv": [
+      "bin/build"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+    "actual_exit": 0,
+    "wall_seconds": 669.9677449169976,
+    "log_sha256": "56ff5435fe57b6f9159b3c7c7a14c7e821df081bd9a3a5ae062cfdac8e074191"
+  }
+]

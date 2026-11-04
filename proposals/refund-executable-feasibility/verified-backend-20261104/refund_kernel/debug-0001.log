@@ -1,0 +1,31 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 555 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> ⊢ (∀st env. assign_values st env [] [] = (st,Rcont)) ∧
+  (∀vs v st₀ lhss lhs env.
+     assign_values st₀ env (lhs::lhss) (v::vs) =
+     case assign_value st₀ env lhs v of
+       (st₁,Rcont) => assign_values st₁ env lhss vs
+     | (st₁,Rstop stp) => (st₁,Rstop stp)) ∧
+  (∀v13 v12 st env.
+     assign_values st env [] (v12::v13) = (st,Rstop (Serr Rfail))) ∧
+  ∀v9 v8 st env. assign_values st env (v8::v9) [] = (st,Rstop (Serr Rfail))
+val it = (): unit
+⊢ assign_values (init_state 0) env [VarLhs «v9»] [BoolV F] =
+  (<|clock := 0; locals := []; heap := []; locals_old := []; heap_old := [];
+     locals_prev := []; heap_prev := []|>,Rstop (Serr Rfail))
+val it = (): unit
+⊢ assign_values (init_state 0) env [VarLhs «v9»] [BoolV F] =
+  (<|clock := 0; locals := []; heap := []; locals_old := []; heap_old := [];
+     locals_prev := []; heap_prev := []|>,Rstop (Serr Rfail))
+val it = (): unit
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.

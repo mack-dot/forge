@@ -1,0 +1,391 @@
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
+Making all in libpolyml
+make[2]: Nothing to be done for `all'.
+Making all in libpolymain
+make[2]: Nothing to be done for `all'.
+Making all in .
+make[2]: Nothing to be done for `all-am'.
+Making all in modules
+Making all in IntInfAsInt
+make[3]: Nothing to be done for `all'.
+make[3]: Nothing to be done for `all-am'.
+./poly --intIsIntInf --error-exit < bootstrap/Stage6.sml
+Poly/ML 5.9.2 Release (Git version v5.9.2)
+******Bootstrap stage 6 of 7******
+val it = (): unit
+val it = (): unit
+Making MLCompiler
+Making Address
+Created structure Address
+Created signature AddressSig
+Making Misc
+Created structure Misc
+Making HashTable
+Created structure HashTable
+Making UniversalTable
+Created structure UniversalTable
+Making StretchArray
+Created structure StretchArray
+Created structure Boot
+Making Initialise
+Making INITIALISE_
+Making LEXSIG
+Created signature LEXSIG
+Making TYPETREESIG
+Created signature TYPETREESIG
+Making STRUCTVALSIG
+Created signature STRUCTVALSIG
+Making VALUEOPSSIG
+Created signature VALUEOPSSIG
+Making CODETREE
+Making BUILTINS
+Created signature BUILTINS
+Making FOREIGNCALL
+Created signature FOREIGNCALL
+Created signature CODETREE
+Making EXPORTTREESIG
+Created signature EXPORTTREESIG
+Making DATATYPEREPSIG
+Created signature DATATYPEREPSIG
+Making TYPEIDCODESIG
+Created signature TYPEIDCODESIG
+Making MAKESIG
+Created signature MAKESIG
+Making DEBUG
+Created signature DEBUG
+Making DEBUGGER
+Created signature DEBUGGER
+Making PRETTY
+Created signature PRETTY
+Making PRINTTABLESIG
+Created signature PRINTTABLESIG
+Created functor INITIALISE_
+Making Lex
+Making LEX_
+Making SymbolsSig
+Created signature SymbolsSig
+Created functor LEX_
+Making Pretty
+Created structure Pretty
+Making Symbols
+Created structure Symbols
+Making Debug
+Created structure Debug
+Created structure Lex
+Making TypeTree
+Making TYPE_TREE
+Created functor TYPE_TREE
+Making StructVals
+Making STRUCT_VALS
+Created functor STRUCT_VALS
+Making CodeTree
+Making CodetreeFunctions
+Making BASECODETREE
+Created signature BASECODETREE
+Making CODETREEFUNCTIONS
+Created signature CODETREEFUNCTIONS
+Created functor CodetreeFunctions
+Making BaseCodeTree
+Making BackendIntermediateCode
+Making BACKENDINTERMEDIATECODE
+Created signature BACKENDINTERMEDIATECODE
+Created structure BackendIntermediateCode
+Created structure BaseCodeTree
+Making StronglyConnected
+Created structure StronglyConnected
+Making CodetreeStaticLinkAndCases
+Making GENCODE
+Created signature GENCODE
+Making CODEGENTREE
+Created signature CODEGENTREE
+Created functor CodetreeStaticLinkAndCases
+Making GCode
+Making Arm64Code
+Making Arm64Assembly
+Making CODEARRAY
+Created signature CODEARRAY
+Making ARM64ASSEMBLY
+Created signature ARM64ASSEMBLY
+Created functor Arm64Assembly
+Making CodeArray
+Created structure CodeArray
+Making Arm64PreAssembly
+Making ARM64PREASSEMBLY
+Created signature ARM64PREASSEMBLY
+Created functor Arm64PreAssembly
+Making Arm64ForeignCall
+Created functor Arm64ForeignCall
+Making Arm64ICode
+Making ARM64ICODE
+Created signature ARM64ICODE
+Created functor Arm64ICode
+Making Arm64IdentifyReferences
+Making INTSET
+Created signature INTSET
+Making ARM64IDENTIFYREFERENCES
+Created signature ARM64IDENTIFYREFERENCES
+Created functor Arm64IdentifyReferences
+Making IntSet
+Created structure IntSet
+Making Arm64PushRegisters
+Making ARM64PUSHREGISTERS
+Created signature ARM64PUSHREGISTERS
+Created functor Arm64PushRegisters
+Making Arm64ICodeOptimise
+Making ARM64ICODEOPTIMISE
+Created signature ARM64ICODEOPTIMISE
+Created functor Arm64ICodeOptimise
+Making Arm64AllocateRegisters
+Making ARM64ALLOCATEREGISTERS
+Created signature ARM64ALLOCATEREGISTERS
+Created functor Arm64AllocateRegisters
+Making Arm64ICodeToArm64Code
+Making ARM64ICODEGENERATE
+Created signature ARM64ICODEGENERATE
+Created functor Arm64ICodeToArm64Code
+Making Arm64ICodeTransform
+Making ARM64ICODETRANSFORM
+Created signature ARM64ICODETRANSFORM
+Created functor Arm64ICodeTransform
+Making Arm64CodetreeToICode
+Created functor Arm64CodetreeToICode
+Created structure Arm64Code
+Created structure GCode
+Making CodetreeLambdaLift
+Created functor CodetreeLambdaLift
+Making CodetreeCodegenConstantFunctions
+Created functor CodetreeCodegenConstantFunctions
+Making CodetreeRemoveRedundant
+Created functor CodetreeRemoveRedundant
+Making CodetreeSimplifier
+Created functor CodetreeSimplifier
+Making CodetreeOptimiser
+Created functor CodetreeOptimiser
+Making CodeTreeConstruction
+Created functor CodeTreeConstruction
+Created structure CodeTree
+Created structure StructVals
+Making Utilities
+Making UTILITIES_
+Created functor UTILITIES_
+Created structure Utilities
+Making ExportTreeStruct
+Making ExportTree
+Created functor ExportTree
+Created structure ExportTreeStruct
+Created structure TypeTree
+Making ValueOps
+Making VALUE_OPS
+Making COPIERSIG
+Created signature COPIERSIG
+Created functor VALUE_OPS
+Making PrintTable
+Making PRINT_TABLE
+Created functor PRINT_TABLE
+Created structure PrintTable
+Making CopierStruct
+Making COPIER
+Created functor COPIER
+Created structure CopierStruct
+Making TypeIDCodeStruct
+Making TYPEIDCODE
+Created functor TYPEIDCODE
+Created structure TypeIDCodeStruct
+Making DatatypeRep
+Making DATATYPE_REP
+Created functor DATATYPE_REP
+Created structure DatatypeRep
+Created structure ValueOps
+Making Make
+Making MAKE_
+Making COMPILERBODYSIG
+Created signature COMPILERBODYSIG
+Created functor MAKE_
+Making CompilerBody
+Making COMPILER_BODY
+Making STRUCTURESSIG
+Created signature STRUCTURESSIG
+Created functor COMPILER_BODY
+Making SymSet
+Making SymsetSig
+Created signature SymsetSig
+Created structure SymSet
+Making Structures
+Making STRUCTURES_
+Making PARSETREESIG
+Created signature PARSETREESIG
+Making SIGNATURESSIG
+Created signature SIGNATURESSIG
+Created functor STRUCTURES_
+Making ParseTree
+Making BASE_PARSE_TREE
+Making BaseParseTreeSig
+Created signature BaseParseTreeSig
+Created functor BASE_PARSE_TREE
+Making Debugger
+Making DEBUGGER_
+Created functor DEBUGGER_
+Created structure Debugger
+Making PRINT_PARSETREE
+Making PrintParsetreeSig
+Created signature PrintParsetreeSig
+Created functor PRINT_PARSETREE
+Making EXPORT_PARSETREE
+Making ExportParsetreeSig
+Created signature ExportParsetreeSig
+Created functor EXPORT_PARSETREE
+Making TYPECHECK_PARSETREE
+Making TypeCheckParsetreeSig
+Created signature TypeCheckParsetreeSig
+Created functor TYPECHECK_PARSETREE
+Making MATCH_COMPILER
+Making MatchCompilerSig
+Created signature MatchCompilerSig
+Created functor MATCH_COMPILER
+Making CODEGEN_PARSETREE
+Making CodegenParsetreeSig
+Created signature CodegenParsetreeSig
+Created functor CODEGEN_PARSETREE
+Making PARSE_TREE
+Created functor PARSE_TREE
+Created structure ParseTree
+Making SignaturesStruct
+Making SIGNATURES
+Created functor SIGNATURES
+Created structure SignaturesStruct
+Created structure Structures
+Making ParseDec
+Making PARSE_DEC
+Created functor PARSE_DEC
+Making Skips
+Making SKIPS_
+Created functor SKIPS_
+Created structure Skips
+Making ParseType
+Making PARSE_TYPE
+Created functor PARSE_TYPE
+Created structure ParseType
+Created structure ParseDec
+Created structure CompilerBody
+Making CompilerVersion
+Created structure CompilerVersion
+Created structure Make
+Created structure Initialise
+Created structure MLCompiler
+Use: bootstrap/Stage7.sml
+******Bootstrap stage 7 of 7******
+Use: basis/build.sml
+Use: basis/InitialBasis.ML
+Use: basis/Universal.ML
+Use: basis/General.sml
+Use: basis/LibrarySupport.sml
+Use: basis/PolyMLException.sml
+Use: basis/Option.sml
+Use: basis/ListSignature.sml
+Use: basis/List.sml
+Use: basis/VectorOperations.sml
+Use: basis/PolyVectorOperations.sml
+Use: basis/VectorSliceOperations.sml
+Use: basis/MONO_VECTOR.sml
+Use: basis/MONO_VECTOR_SLICE.sml
+Use: basis/MONO_ARRAY.sml
+Use: basis/MONO_ARRAY_SLICE.sml
+Use: basis/StringSignatures.sml
+Use: basis/String.sml
+Use: basis/INTEGER.sml
+Use: basis/Int.sml
+Use: basis/IntAsLargeInt.sml
+Use: basis/Int63.sml
+Use: basis/WordSignature.sml
+Use: basis/LargeWord.sml
+Use: basis/VectorSignature.sml
+Use: basis/VectorSliceSignature.sml
+Use: basis/Vector.sml
+Use: basis/ArraySignature.sml
+Use: basis/ArraySliceSignature.sml
+Use: basis/Array.sml
+Use: basis/Text.sml
+Use: basis/Bool.sml
+Use: basis/ListPair.sml
+Use: basis/Word32In64.sml
+Use: basis/Word16.sml
+Use: basis/Word8.sml
+Use: basis/IntInf.sml
+Use: basis/Int32.sml
+Use: basis/Word8Array.sml
+Use: basis/Byte.sml
+Use: basis/BoolArray.sml
+Use: basis/IntArray.sml
+Use: basis/RealArray.sml
+Use: basis/IEEE_REAL.sml
+Use: basis/IEEEReal.sml
+Use: basis/MATH.sig
+Use: basis/RealNumbersAsBits.ML
+Use: basis/RealToDecimalConversion.ML
+Use: basis/REAL.sig
+Use: basis/Real.sml
+Use: basis/Time.sml
+Use: basis/DATE.sig
+Use: basis/Date.sml
+Use: basis/Thread.sml
+Use: basis/ThreadLib.sml
+Use: basis/Timer.sml
+Use: basis/CommandLine.sml
+Use: basis/ExnPrinter.sml
+Use: basis/ForeignConstants.sml
+Use: basis/ForeignMemory.sml
+Use: basis/Foreign.sml
+Use: basis/IO.sml
+Use: basis/OS.sml
+Use: basis/PRIM_IO.sml
+Use: basis/PrimIO.sml
+Use: basis/LibraryIOSupport.sml
+Use: basis/STREAM_IO.sml
+Use: basis/BasicStreamIO.sml
+Use: basis/IMPERATIVE_IO.sml
+Use: basis/ImperativeIO.sml
+Use: basis/TextIO.sml
+Use: basis/BinIO.sml
+Use: basis/Socket.sml
+Use: basis/NetProtDB.sml
+Use: basis/NetServDB.sml
+Use: basis/GenericSock.sml
+Use: basis/INetSock.sml
+Use: basis/INet6Sock.sml
+Use: basis/PackReal.sml
+Use: basis/PackReal32Tagged.sml
+Use: basis/PackWord.sml
+Use: basis/Array2Signature.sml
+Use: basis/Array2.sml
+Use: basis/IntArray2.sml
+Use: basis/SML90.sml
+Use: basis/Weak.sml
+Use: basis/Signal.sml
+Use: basis/BIT_FLAGS.sml
+Use: basis/SingleAssignment.sml
+Use: basis/Posix.sml
+Use: basis/Unix.sml
+Use: basis/UnixSock.sml
+Use: basis/HashArray.ML
+Use: basis/UniversalArray.ML
+Use: basis/PrettyPrinter.sml
+Use: basis/ASN1.sml
+Use: basis/Statistics.ML
+Use: basis/InitialPolyML.ML
+Use: basis/FinalPolyML.sml
+Use: basis/TopLevelPolyML.sml
+******Writing object code******
+/Applications/Xcode.app/Contents/Developer/usr/bin/make
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
+Making all in libpolyml
+make[3]: Nothing to be done for `all'.
+Making all in libpolymain
+make[3]: Nothing to be done for `all'.
+Making all in .
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -O3  -L/opt/homebrew/opt/gmp/lib -Wl,-rpath,/opt/homebrew/opt/gmp/lib -o poly  polyexport.o  libpolymain/libpolymain.la libpolyml/libpolyml.la  -lgmp -lstdc++ 
+libtool: link: gcc -O3 -Wl,-rpath -Wl,/opt/homebrew/opt/gmp/lib -o .libs/poly polyexport.o  -L/opt/homebrew/opt/gmp/lib libpolymain/.libs/libpolymain.a libpolyml/.libs/libpolyml.dylib -lgmp -lstdc++
+ld: warning: no platform load command found in '/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml/polyexport.o', assuming: macOS
+Making all in modules
+Making all in IntInfAsInt
+echo "use \"./ROOT.sml\";" | ../../poly -q -error-exit
+make[4]: Nothing to be done for `all-am'.

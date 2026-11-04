@@ -1,0 +1,7 @@
+Truncation.dfy(5,4): Error: assertion might not hold
+  |
+5 |     assert narrowed == c; // Deliberately false. Must not be accepted as a bridge.
+  |     ^^^^^^
+
+
+Dafny program verifier finished with 0 verified, 1 error

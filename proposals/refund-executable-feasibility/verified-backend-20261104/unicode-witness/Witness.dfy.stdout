@@ -1,0 +1,16 @@
+Witness.dfy(5,35): Error: \u escape sequences are not permitted when Unicode chars are enabled
+  |
+5 |     var context := R.ChargeContext("\u0100", "request-1", 100, 60, true, true);
+  |                                    ^^^^^^^^
+
+Witness.dfy(7,12): Error: \u escape sequences are not permitted when Unicode chars are enabled
+  |
+7 |     assert ('\u0100' as int) == 256;
+  |             ^^^^^^^^
+
+Witness.dfy(9,29): Error: \u escape sequences are not permitted when Unicode chars are enabled
+  |
+9 |     assert plan == [R.Intent("\u0100", "request-1", 40, "returned_item")];
+  |                              ^^^^^^^^
+
+3 parse errors detected in Witness.dfy

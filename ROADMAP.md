@@ -7,7 +7,41 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
-## Active mission update — 2026-11-04 (U257)
+## Active mission update — 2026-11-04 (U258)
+
+The full refund contract remains the M1 target. This new local experiment
+checks refund behavior in the published HOL4 Dafny model. It does not yet
+connect the approved Unicode source domain to a native refund executable.
+CURRENT none; Stage12 unauthorized; `end_to_end=false`.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Pinned Poly/ML configure/build/compiler/install | 0/0/0/0 | Isolated experiment prefix; no production pin changed |
+| Pinned HOL4 smart-configure / `bin/build` | 0/0 | Real local tool build |
+| Initial Unicode witness/control | 2/2 | Invalid escape syntax; failures preserved |
+| Corrected Dafny Unicode witness / low-byte equality control | 0/4 | Legitimate U+0100 input retained; false truncation equality refused |
+| `python3 run_kernel.py 0001` / `0002` | 1/1 | Full-result proof incomplete; failed proof states retained |
+| `python3 run_kernel.py 0003` | 0 | Guard, all six output fields, normal modeled return and unchanged heap |
+| `python3 run_kernel.py negative-bound ...` / `negative-reject ...` | 1/1 | Expected proof failures; reasons and absent accepted output checked |
+| Negative-control result check | 0 | Both violations refused for the intended reason |
+| `python3 run_kernel.py repeat-0001` / object comparison | 0/0 | Fresh proof execution; all six exports byte-identical |
+| HOL theorem and imported-closure audit | 0 |112 theory nodes; four HOL foundation axioms explicitly retained |
+| `Holmake --no-cache -j 2 dafny_to_cakemlProofTheory.uo` | 0 | Actual published compiler-proof replay;267.9495331249782 local seconds |
+| Original-input postflight | 0 |30 frozen inputs unchanged |
+| Local raw-archive member hash validation | 0 |118 members checked; not off-machine verification |
+
+Exact commands, source hashes, full logs, failed attempts and trust limits:
+[verified-backend report](proposals/refund-executable-feasibility/verified-backend-20261104/REPORT.md).
+Raw records: `results/refund-verified-backend-2026-11-04/attempt-0001/`.
+
+Next authorized check: instantiate the published compiler relation for the
+checked refund body and exact generated CakeML expression. Discharge its
+freshness, no-shadowing and no-assertion premises. Preserve the remaining full
+Unicode representation, calling/I/O, native-artifact and admission obligations.
+No compiled-refund theorem, hosted refund run or new admission has completed.
+Owner-reported off-machine backup still needs exact hash and restore validation.
+
+## Prior mission update — 2026-11-04 (U257)
 
 The complete owner mission is preserved byte for byte in FORGE_MISSION.md.
 The linked tracker owns current M1–M4 status. The older stage and milestone
@@ -3601,3 +3635,18 @@ Exact commands and evidence:results/fixed-elf-runtime-binding-2026-11-04/attempt
 Standalone draft head81255521 has40 proposal files and no active protected changes.
 Publication approval is pending; no push/merge/dispatch/signing/admission performed.
 Physical correspondence assumptions and exact claim/profile adoption remain open.
+
+
+### Mission tracking preservation — actual local results
+
+Local commit: `118b3d4d331ce513c92e1de3ee2cd9298572aa48` on
+`docs/integration-readiness-20261103`. Commit exit0; staged whitespace check0;
+committed readback0 for the exact mission and45 packet files; worktree clean.
+The commit is local and unpublished. No research stage completed.
+
+Local recovery bundle create/verify/clone-restore/fsck each returned0:
+`/Users/mackianni/forge-backups/forge-mission-2026-11-04.bundle`.
+SHA256 `d68852a498467f02fb1c8a6b841f60742da46a723b133546c00ee66688e237c1`.
+24404340bytes; mode0600. Restored commit and mission bytes matched.
+This is local recovery, not verification of the owner's off-machine copy.
+Command records: `results/mission-m1-feasibility-2026-11-04/attempt-0001/`.

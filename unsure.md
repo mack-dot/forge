@@ -7334,3 +7334,55 @@ curl: (6) Could not resolve host: github.com
 - Next check: inspect the established verified compilation implementation and
   its integer/string/input/output relation against the complete refund domain.
   Do not count source equivalence, paper claims or old GCD proof as M1 completion.
+
+
+## U258 — Published refund model checked; full Unicode and executable transfer remain open
+
+- References:U257,U254. CURRENT none; Stage12 unauthorized; end_to_end=false.
+  Full approved refund R1–R5 remains the M1 target. No restricted-domain
+  replacement, protected acceptance change or new release is authorized here.
+- Built isolated pinned Poly/ML5.9.2 at4557554077078decce4ce5f90da00a713cfc32e4,
+  HOL4 at9783a49979c94c401ff8c0e51b2eefae7ea95ae3 and CakeML source at
+  cd9155694c16831373ab695a670794f23282ed62. Actual configure/build/compiler/
+  install and HOL configure/build each returned0. No production pin changed.
+- Actual Dafny Unicode witness0 confirms an eligible U+0100 identifier is
+  preserved. Deliberately false low-byte identity check4 fails at the intended
+  assertion. Earlier escaped-character syntax checks2/2 remain archived as
+  harness failures, not passing security controls. No upstream defect inferred.
+- New program AST uses the published HOL4 Dafny semantics. Exact guard and
+  complete six-field result, normal modeled return and unchanged heap are
+  checked for arbitrary integers and byte strings. Manual AST-to-approved
+  Unicode-source correspondence is not established. No new semantics or axiom.
+- Full-result attempts0001/0002 each returned1 with unresolved computation.
+  Proof-tactic correction in0003 returned0 without changing the statement or
+  implementation. Removing the amount bound and always rejecting each produce
+  intended theorem failure1. Reason/output checks0. Fresh original replay0;
+  all six exported files are byte-identical; comparison0. Failures retained.
+- Final source SHA256381eeac200322362afc5436db742aed3714c72bb39cd70363336f7b7ac525dd9;
+  theorem data8001b59be234763706df25ba09a194d707ff04d147c7e103621f6e5e04d85cd9.
+  Theorems:forge_refund.refund_guard_value and refund_full_result. Fresh closure
+  audit0 records112 imported theory nodes, no unresolved parent edge and builtin
+  min identity. Complete imports include bool.SELECT_AX, INFINITY_AX, ETA_AX,
+  BOOL_CASES_AX. Both own theorems have DISK_THM tags and zero explicit hypotheses.
+  Exported data and matching content hashes are not authenticated provenance.
+- Published dafny_to_cakemlProof replay returned0,267.9495331249782 local seconds.
+  Applying its correct_from_stmt relation to refund is still NOT RUN. The tools'
+  trusted base and four foundation axioms require an exact independently reviewed
+  profile before acceptance. No native refund artifact or runtime claim exists.
+- Source audit found two explicit boundaries: HOL mlstring has 8-bit characters;
+  modeled Dafny Print has no I/O effect. Preserve the full approved Unicode
+  domain and prove an encoding/calling relation. Printed agreement cannot supply
+  the missing observable-output theorem. Do not narrow legitimate inputs.
+- Original30 input hashes remain unchanged; postflight0. Private raw archive
+  holds118 members, all read and hashed; validation0; SHA256
+  ea050c65ebc3f61f760671da0a340a6ceb65fd9b529a359a97ee5ce112d18de4.
+  Four failed-proof debug heaps remain in that archive and original local paths.
+  Owner-reported off-machine copy still lacks exact archive/restore validation.
+- Evidence:results/refund-verified-backend-2026-11-04/attempt-0001/; durable
+  packet proposals/refund-executable-feasibility/verified-backend-20261104/.
+  Current tracker and ROADMAP contain actual exits and unresolved requirements.
+  Hosted refund verification and performance measurements remain NOT RUN.
+- Next check: instantiate the published compiler relation for the exact refund
+  body/expression; discharge freshness, no-shadowing and no-assertion conditions.
+  Then preserve full Unicode, checked output/calling, native identity and approved
+  admission obligations. M1–M4 remain open; no publication or policy adoption.

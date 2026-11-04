@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "rg",
+    "-n",
+    "new_axiom|CHEAT_TAC|\\bcheat\\b|mk_oracle_thm",
+    "compiler/dafny",
+    "--glob",
+    "*.sml"
+  ],
+  "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+  "actual_search_exit": 1,
+  "matches": "",
+  "errors": "",
+  "scope": "Source scan only; theorem-tag and checked dependency audit pending"
+}

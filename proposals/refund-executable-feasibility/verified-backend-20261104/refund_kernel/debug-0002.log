@@ -1,0 +1,45 @@
+
+---------------------------------------------------------------------
+     HOL4 [Trindemossen 2 (stdknl, built Wed Nov 04 10:48:18 2026)]
+
+     For introductory HOL help, type: help "hol";
+     To exit type <Control>-D
+---------------------------------------------------------------------
+** Load path (see loadPath variable) now contains 555 entries
+** after consulting Holmakefiles and any holproject.toml
+
+[In non-standard heap: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap]
+> val tm =
+   “assign_values
+      (refund_initial [0;1;34mh[0m [0;1;34mcharge[0m [0;1;34mrequest[0m [0;1;34moriginal[0m [0;1;34mremaining[0m [0;1;34menabled[0m [0;1;34mopened[0m
+         [0;1;34mcandidate[0m [0;1;34mamount[0m [0;1;34mreason[0m) [0;1;34menv[0m [VarLhs «v9»] [BoolV F]”: term
+⊢ assign_values
+    (refund_initial h charge request original remaining enabled opened
+       candidate amount reason) env [VarLhs «v9»] [BoolV F] =
+  (<|clock := 0;
+     locals :=
+       [(«v0»,SOME (StrV charge)); («v1»,SOME (StrV request));
+        («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+        («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+        («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+        («v8»,SOME (StrV reason)); («v9»,SOME (BoolV F)); («v10»,NONE);
+        («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)]; heap := h;
+     locals_old := []; heap_old := []; locals_prev := []; heap_prev := []|>,
+   Rcont)
+val it = (): unit
+⊢ assign_values
+    (refund_initial h charge request original remaining enabled opened
+       candidate amount reason) env [VarLhs «v9»] [BoolV F] =
+  (<|clock := 0;
+     locals :=
+       [(«v0»,SOME (StrV charge)); («v1»,SOME (StrV request));
+        («v2»,SOME (IntV original)); («v3»,SOME (IntV remaining));
+        («v4»,SOME (BoolV enabled)); («v5»,SOME (BoolV opened));
+        («v6»,SOME (BoolV candidate)); («v7»,SOME (IntV amount));
+        («v8»,SOME (StrV reason)); («v9»,SOME (BoolV F)); («v10»,NONE);
+        («v11»,NONE); («v12»,NONE); («v13»,NONE); («v14»,NONE)]; heap := h;
+     locals_old := []; heap_old := []; locals_prev := []; heap_prev := []|>,
+   Rcont)
+val it = (): unit
+poly: : warning: The type of (it) contains a free type variable. Setting it to a unique
+   monotype.
