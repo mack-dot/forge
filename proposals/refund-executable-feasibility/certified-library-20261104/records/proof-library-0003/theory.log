@@ -1,0 +1,47 @@
+<<HOL message: Created theory "forge_refundCertifiedProg">>
+Saved definition ____ "refund_fields_def"
+Saved theorem _______ "refund_fields_original_method"
+Loading translation: mlbasicsProg ... done.
+Translating eligible
+Saved theorem _______ "nsLookup_forge_refundCertifiedProg_env_pfun_eqs"
+Saved theorem _______ "eligible_v_thm"
+Translating refund_fields
+Adding nsLookup representation thms for 221 consts [forge_refundCertifiedProg_env, mlbasicsProg_env_26, ..., StringProg_env]
+Saved theorem _______ "nsLookup_forge_refundCertifiedProg_env_0_pfun_eqs"
+Saved theorem _______ "refund_fields_v_thm"
+Saved theorem _______ "nsLookup_forge_refundCertifiedProg_env_1_pfun_eqs"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundCertifiedProg)>>
+Adding nsLookup representation thms for [forge_refundCertifiedProg_env_1, forge_refundCertifiedProg_env_0]
+Using translator specification refund_fields_v_thm from theory forge_refundCertifiedProg
+Proof of 
+
+app p refund_verified_v
+  [Litv (StrLit charge); Litv (StrLit request); Litv (IntLit original);
+   Litv (IntLit remaining); Boolv enabled; Boolv opened; Boolv candidate;
+   Litv (IntLit amount); Litv (StrLit reason)] emp
+  (POSTv v.
+     &PAIR_TYPE BOOL
+       (PAIR_TYPE INT
+          (PAIR_TYPE STRING_TYPE
+             (PAIR_TYPE STRING_TYPE (PAIR_TYPE STRING_TYPE INT))))
+       (refund_fields charge request original remaining enabled opened
+          candidate amount reason) v)
+
+failed.
+First unsolved sub-goal is
+
+(if enabled then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+(if enabled then Conv (SOME (TypeStamp «True» bool_type_num)) []
+ else Conv (SOME (TypeStamp «False» bool_type_num)) []) ∧
+(if opened then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+(if opened then Conv (SOME (TypeStamp «True» bool_type_num)) []
+ else Conv (SOME (TypeStamp «False» bool_type_num)) []) ∧
+(if candidate then Conv (SOME (TypeStamp «True» 0)) []
+ else Conv (SOME (TypeStamp «False» 0)) []) =
+if candidate then Conv (SOME (TypeStamp «True» bool_type_num)) []
+else Conv (SOME (TypeStamp «False» bool_type_num)) []
+
+Tactic failure proving "refund_verified_spec"; heap saved to forge_refundCertifiedProg.refund_verified_spec.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundCertifiedProg.refund_verified_spec.dumpedheap

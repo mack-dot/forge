@@ -7837,3 +7837,68 @@ curl: (6) Could not resolve host: github.com
   remains unverified. GitHub controls were not refreshed. Independent review,
   protected adoption, publication, merge, dispatch, signing and deployment retain
   their existing boundaries. M2–M4 remain subsequent work.
+
+
+## U267 — Full library result and original-method relation checked through existing translation
+
+- References:U260,U262–U266. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Previous goal turn saved an exact incomplete-operation
+  checkpoint at341afa16. This turn adds a checked library link, not a native claim.
+- Third normalization construction is manually interrupted1, child signal2.
+  Exact input preparation and annotation stripping completed. Normalization did
+  not return. Exact raw-method inspection returns0. Three construction attempts
+  are now preserved. The source's duplicated right-operand traversal and repeated
+  fresh-name scans may explain the stall; that cause is not profiled or proved.
+- Alternative local route uses the existing CakeML translator to produce code
+  and a translation theorem for the complete refund_fields function. It retains
+  the existing eligible predicate, mathematical integers, arbitrary model byte
+  strings and all nine typed inputs. All six result fields remain required.
+  No bounded toy example, new codec, verifier, semantics or axiom was introduced.
+- refund_fields_original_method proves the complete returned-field relation to
+  the unchanged generated method under its existing primitive caller and clock32.
+  It maps the new HOL nested product to the original flat CakeML result tuple.
+  This is an output relation for that caller, not arbitrary contextual equivalence.
+- refund_verified_spec proves the exact proposed library call under the published
+  CF application judgment with emp ownership and full result representation.
+  Its frame guarantees apply to this new implementation. It does not repair the
+  old raw-method proof or the old wrapper. No request eligibility precondition
+  was added. The stateless decision and intent count do not execute a payment.
+- Library attempts0001–0004 return1/1/1/1: missing direct imports, unresolved
+  Boolean representation, folded Boolean type stamp, then wrong theory qualifier.
+  These are proof/setup failures, not behavioral counterexamples. Attempt0005
+  returns0. The positive source remains2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632.
+- Altering the approved amount to amount+1 fails1 at refund_fields_original_method.
+  Swapping charge/request in the actual new wrapper call fails1 at
+  refund_verified_spec. Neither exports an accepted theory. run_controls.py0
+  checks these exact reasons and positive repeat0. All six positive exports are
+  byte-identical; theory data5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a.
+- Fresh HOL import/inspection returns0:192 theory nodes, seven own theorem tags,
+  zero own hypotheses, only DISK_THM import tags. The closure retains SELECT_AX,
+  INFINITY_AX, ETA_AX and BOOL_CASES_AX. This is not replay of every upstream
+  source, independent human review or authenticated producer verification.
+- Saved-record readback0 confirms actual outcomes, source/object identities,
+  30 frozen owner inputs and unchanged original wrapper source/data. Tracked
+  HOL/CakeML source diffs remain0 at the recorded pins. No protected source changed.
+- Dependency snapshot attempts1/2 return1/1 on loader source-location and kernel
+  module classification mistakes. Both failed scripts/errors remain. Final0
+  follows existing loader records and hashes191 theory file sets plus the HOL
+  executable and CakeML heap. min is the explicit kernel seed. A file digest
+  identifies bytes; it does not authorize an evidence producer.
+- The actual old wrapper remains unchanged. The proposed function uses forward
+  argument order and a nested return product. Its adoption needs a checked
+  adapter or replacement wrapper. Existing Unicode source results remain; their
+  complete binding to this exact program and native I/O remains unestablished.
+- Next authorized experiment, NOT RUN: compose this complete library contract
+  with the existing strict wire decoder, response schema and TextIO rules.
+  Prove actual proposed-wrapper output and malformed/trailing-input refusal.
+  Then bind the same whole program to the exact compiler result and its entry,
+  resource, FFI and runtime premises. Do not replace full proof with fixtures.
+- Packet:proposals/refund-executable-feasibility/certified-library-20261104/.
+  Raw:results/refund-certified-library-2026-11-04/attempt-0001/ and
+  results/refund-normalised-method-2026-11-04/attempt-0002/. Earlier failures and
+  proof heaps remain. No native executable, hosted refund run or new admission.
+- M1 remains NOT_ESTABLISHED. The exact implementation/claim/profile still needs
+  independent review before protected adoption. Owner-reported off-machine copy
+  still needs exact archive hashes and restore. GitHub was not refreshed.
+  No publication, merge, dispatch, signing, admission or deployment occurred.
+  M2–M4 remain subsequent work. No performance improvement is claimed.

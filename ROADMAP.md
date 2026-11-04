@@ -7,6 +7,42 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U267)
+
+A separate full-contract library implementation now has a checked relation to
+the unchanged generated method and a CF application theorem. It uses the
+existing CakeML translator. It preserves all nine model inputs and all six
+result fields. The old wrapper is unchanged; the new implementation is not
+adopted. CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Method inspection / `run.py construct-0003` | 0/1 | Annotation removal completed; normalization manually interrupted, child signal2 |
+| `run.py library-0001` through `library-0004` | 1/1/1/1 | Missing imports, Boolean representation and wrong theory qualifier failures preserved |
+| `run.py library-0005` | 0 | Full result relation and library application contract checked |
+| Altered-amount / swapped-wrapper-ID controls | 1/1 | Required refusal at the intended theorems; no accepted exports |
+| `run.py repeat` / `run_controls.py` | 0/0 | Six identical exports; explicit acceptance matrix passes |
+| Fresh HOL closure inspection / `readback.py` | 0/0 | 192 theory nodes, seven own theorem tags, four foundation axioms;30 frozen inputs unchanged |
+| Dependency snapshot attempts1/2/final | 1/1/0 | Loader-path and kernel-module classification fixed;191 theory file sets and kernel/heap hashes captured |
+
+[Exact claims, commands, failures and identities](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md).
+Raw records: `results/refund-certified-library-2026-11-04/attempt-0001/` and
+`results/refund-normalised-method-2026-11-04/attempt-0002/`.
+The positive theorem source is2ef6fd80; repeated theory data is5ffd9d6f.
+Imported DISK_THM remains explicit. The fresh closure inspection is not a replay
+of every upstream source or independent human review. No new axiom was added.
+
+Next authorized check, NOT RUN: compose this library contract with the existing
+strict wire schema and published I/O proofs. Prove the proposed wrapper's
+complete accepted output and malformed/trailing-input refusal. The old raw CF
+and normalization failures remain preserved. Do not assume arbitrary contextual
+equivalence or silently replace the old wrapper's calling convention.
+Native compilation, execution, hosted refund measurements and new admission
+remain NOT RUN. Unicode/model binding, compiler/runtime premises, exact claim
+review and off-machine archive hash/restore remain open. GitHub was not refreshed.
+No protected adoption, publication, merge, dispatch, signing or deployment ran.
+M2–M4 remain subsequent work.
+
 ## Active mission update — 2026-11-04 (U266)
 
 The Markdown tracker now records the incomplete candidate preparation and the

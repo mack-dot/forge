@@ -1,0 +1,24 @@
+<<HOL message: Created theory "forge_refundCertifiedProg">>
+Saved definition ____ "refund_fields_def"
+Saved theorem _______ "refund_fields_original_method"
+Loading translation: mlbasicsProg ... done.
+Translating eligible
+Saved theorem _______ "nsLookup_forge_refundCertifiedProg_env_pfun_eqs"
+Saved theorem _______ "eligible_v_thm"
+Translating refund_fields
+Adding nsLookup representation thms for 221 consts [forge_refundCertifiedProg_env, mlbasicsProg_env_26, ..., StringProg_env]
+Saved theorem _______ "nsLookup_forge_refundCertifiedProg_env_0_pfun_eqs"
+Saved theorem _______ "refund_fields_v_thm"
+Saved theorem _______ "nsLookup_forge_refundCertifiedProg_env_1_pfun_eqs"
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml:63: error: Value or constructor (bool_type_num_def) has not been declared in structure primTypesTheory
+Found near
+  [
+     ml_translatorTheory.STRING_TYPE_def,
+     ml_translatorTheory.INT_def,
+     ml_translatorTheory.BOOL_def,
+   error in quse /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml : Fail "Static Errors"
+error in load /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript : Fail "Static Errors"
+  semanticPrimitivesTheory.Boolv_def,
+     primTypesTheory.bool_type_num_def
+     ]
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"

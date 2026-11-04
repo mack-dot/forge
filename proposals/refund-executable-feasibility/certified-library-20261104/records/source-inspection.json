@@ -1,0 +1,13 @@
+{
+  "purpose": "Exact source references for translator, application rule, Boolean identity and incomplete normalization; static inspection only",
+  "files": {
+    "cakeml/translator/ml_translatorLib.sml": "973b79f36f873cd0024450beeaf1d5c5d676cc537667644cd9033f3146f28bc7",
+    "cakeml/characteristic/cfAppLib.sml": "458a17e6f4e7349ec1280527d272ffa2f62d4dfeb3baf3408b91c0e5cb335284",
+    "cakeml/characteristic/cfAppScript.sml": "f939f4ae8b8a9b1c27fc21770ad42f3667eef0a319b532b0b25979c98c88086c",
+    "cakeml/characteristic/cfNormaliseLib.sml": "b37e2a863ea37a8785de508e73e6d783c5dd39bfa20ce50c5ba0649527645ff1",
+    "cakeml/semantics/semanticPrimitivesScript.sml": "22a37cfb7e76cd3891ae48eadd822013b4862b64158ab123d377e8ff772c4af8"
+  },
+  "normalizer_observation": "Third attempt completes strip_annot_decl; normalise_decl does not return before manual interruption.",
+  "normalizer_inference": "norm Log can traverse a non-value RHS twice; the generated guard nests such RHS terms. Duplicate traversal and fresh-name scans may explain the incomplete call. No complexity proof or ML profiling establishes the exact cause.",
+  "end_to_end": false
+}

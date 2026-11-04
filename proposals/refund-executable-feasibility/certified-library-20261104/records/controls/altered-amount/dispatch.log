@@ -1,0 +1,41 @@
+{"argv": ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake", "--no-cache", "-j", "2", "forge_refundCertifiedProgTheory.uo"], "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment", "actual_exit": 1, "wall_seconds": 52.34806083299918, "source_sha256": "c38d5852bef7b9a4bf91642bc397a2d80b7411b66360dcad9e83ce4ef629158b", "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22", "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d", "object_sha256": {}, "end_to_end": false, "native_refund_claim": false}
+ [Boolv (... ... remaining enabled opened candidate amount reason);
+            Litv
+              (IntLit (if ... ... candidate amount reason then amount else 0));
+            Litv (StrLit (if ... ... amount reason then reason else «»));
+            Litv (StrLit (if ... ... reason then charge else «»));
+            Litv (StrLit (if ... ... then request else «»));
+            Litv (IntLit (if ... then ... else ... ))]) ∧
+      (FST
+         (evaluate_decs (FST (THE (prim_sem_env ffi)) with clock := 32)
+            (... ... remaining enabled opened candidate amount reason)
+            refund_program)).ffi = ffi
+  | Rerr err => F) ⇒
+ case
+   SND
+     (evaluate_decs (FST (THE (prim_sem_env ffi)) with clock := 32)
+        (... ... charge request original remaining enabled opened candidate
+           amount reason) refund_program)
+ of
+   Rval env =>
+     nsLookup env.v (Short «answer») =
+     SOME
+       (Conv NONE
+          [Boolv (... ... remaining enabled opened candidate amount reason);
+           Litv
+             (IntLit
+                (if ... ... candidate amount reason then amount + 1 else 0));
+           Litv (StrLit (if ... ... amount reason then reason else «»));
+           Litv (StrLit (if ... ... reason then charge else «»));
+           Litv (StrLit (if ... ... then request else «»));
+           Litv (IntLit (if ... then ... else ... ))]) ∧
+     (FST
+        (evaluate_decs (FST (THE (prim_sem_env ffi)) with clock := 32)
+           (... ... remaining enabled opened candidate amount reason)
+           refund_program)).ffi = ffi
+ | Rerr err => F
+ 
+ Tactic failure proving "refund_fields_original_method"; heap saved to forge_refundCertifiedProg.refund_fields_original_method.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundCertifiedProg.refund_fields_original_method.dumpedheap
+ Full log: /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/.hol/logs/forge_refundCertifiedProgTheory
+

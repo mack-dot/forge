@@ -17,12 +17,15 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest checkpoint: **U266 — candidate preparation incomplete; evidence preserved**.
-Parent local commit: `1afd924b206d05949319de3881c09f2a618ef728`.
-The [normalization attempt record](proposals/refund-executable-feasibility/normalisation-20261104/REPORT.md)
-preserves two interrupted runs and their exact inputs. Neither produced an
-accepted candidate or behavioral proof. The current bottleneck remains the
-complete library method and I/O contract, followed by native correspondence.
+Latest checkpoint: **U267 — proposed full library contract checked and reproduced**.
+Parent local commit: `341afa16e43b3783be3ac39136dfe403b35926a9`.
+The [certified-library proposal](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md)
+uses the existing translator. It proves the complete six-field result's relation
+to the original method and a library application contract. Two new mutations
+are refused. A repeat produces six identical exports. The proposal is not
+adopted into the actual wrapper. Complete I/O and native correspondence remain open.
+The [earlier normalization record](proposals/refund-executable-feasibility/normalisation-20261104/REPORT.md)
+and the third diagnostic in the new packet preserve all incomplete attempts.
 The new [guard/prefix record](proposals/refund-executable-feasibility/tail-guard-20261104/REPORT.md)
 preserves exact theorems, controls, failures and the checked CF applicability gap.
 The prior [wrapper record](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md)
@@ -39,7 +42,8 @@ is separate. Neither establishes native refund behavior. Publication has not run
 | Complete wire schema and model input/output binding | LOCALLY_VALIDATED at model level | [Schema proof](proposals/refund-executable-feasibility/io-schema-20261104/REPORT.md); full consumption, round trips and four adversarial controls |
 | Actual wrapper input/output tuple patterns | LOCALLY_VALIDATED for matching only | [Wrapper proof](proposals/refund-executable-feasibility/native-io-20261104/REPORT.md); nested decoder pairs and flat method result checked; six identical repeat exports |
 | Actual rejection guard and prefix namespace | LOCALLY_VALIDATED, conditional | [Guard/prefix proof](proposals/refund-executable-feasibility/tail-guard-20261104/REPORT.md); nonempty remainder raises the required error and preserves references/FFI under explicit entry conditions; guard removal and binding substitution refused |
-| Library heap/frame and whole-program I/O | NOT_ESTABLISHED | Prefix stream execution and accepted-result path remain open; exact raw match expression cannot satisfy the direct CF value premise |
+| Proposed alternative library method | LOCALLY_VALIDATED; not adopted | [Complete contract](proposals/refund-executable-feasibility/certified-library-20261104/REPORT.md); all nine typed inputs and six result fields; original-method relation and CF frame contract checked |
+| Actual wrapper and whole-program I/O | NOT_ESTABLISHED | Original raw method's framing remains open; the new proposal needs its own checked input/output composition and calling-convention binding |
 | Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
@@ -53,18 +57,30 @@ new proof theories reproduce six identical exports each. The earlier U264
 matrix failure remains a historical record. Actual stdin execution, the method
 heap/frame contract and the accepted-output path are still unproved.
 
-The kernel also establishes a precise obstacle: the raw generated method's
-match input cannot satisfy the CF rule's value premise. The bundled normalizer
-is explicitly unverified. Its candidate-construction attempts now return1/1
-after manual interruptions; no output theory was exported. The second run
-completed exact input preparation, then remained inside the normalizer call.
-Next: localize that incomplete call using existing operations. Any completed
-candidate still requires its full-result proof and a checked observable-result
-relation to the original method. Do not assume preservation or narrow the
-contract. Native compilation and execution remain NOT RUN. M1 is open.
+The raw method's CF obstacle remains. Three normalization attempts were
+interrupted. The third completed annotation removal but not normalization.
+The new route uses the existing translator's checked function relation instead.
+It does not assume that normalization preserves behavior. Its explicit relation
+covers the original method's complete output for every typed model input.
+It is not arbitrary contextual equivalence or an adopted wrapper replacement.
+Next: compose this library contract with the strict wire schema and published
+I/O rules. Keep all input, output and refusal obligations. Native compilation
+and execution remain NOT RUN. M1 is open.
 M2 follows sufficient M1 evidence. M3/M4 stay deferred. Stage12 remains unauthorized.
 
-| Latest executed check, U266 | Actual exit | Boundary |
+| Latest executed check, U267 | Actual exit | Boundary |
+| --- | --- | --- |
+| Third normalization diagnostic | 1 | Manual SIGINT after annotation removal; no accepted candidate |
+| Library attempts0001–0004 / final | 1/1/1/1 / 0 | Import and Boolean representation proof failures preserved; complete final contract checked |
+| Altered amount / swapped wrapper IDs | 1/1 | Required theorem failures; no accepted exports |
+| Positive repeat / control dispatcher | 0/0 | Six identical exports and both refusal reasons checked |
+| Fresh closure inspection / saved-record readback | 0/0 | 192 theory nodes, four foundation axioms;30 frozen inputs unchanged |
+| Dependency snapshot attempts1/2/final | 1/1/0 | Loader-location mistakes fixed;191 theory file sets plus kernel/heap identities recorded |
+
+These are local proof and identity checks. No native or hosted experiment ran.
+The new proposal needs independent review and an approved assurance binding.
+
+| Recorded checks, U266 | Actual exit | Boundary |
 | --- | --- | --- |
 | Candidate construction / instrumented construction | 1/1 | Manual SIGINT; no accepted AST, theory or behavior claim |
 | Diagnostic process sample | 0 | No precise internal cause established |
@@ -106,10 +122,11 @@ controls. No compiled refund artifact has a checked behavioral guarantee yet.
 The full domain remains mathematical integers, finite strings and every response
 constructor, with no new precondition. This is not a bounded toy replacement.
 
-Next authorized action: establish the complete library method contract through
-an applicable existing proof rule. Any normalized candidate needs direct
-behavioral proof and a checked relation to the original method. Then establish
-physical input/output and the whole-program compiler entry relation. The full Unicode/UTF-8 source
+Next authorized action: compose the proposed complete library contract with
+strict input decoding, exact output formatting and published I/O rules. Prove
+the actual proposed wrapper's refusal behavior. The original wrapper remains
+unchanged. Then establish the whole-program compiler entry relation and physical
+input/output boundary. The full Unicode/UTF-8 source
 representation now passes. A particular model caller initializes and returns
 all six values correctly for every typed model input. The exact native artifact,
 runtime correspondence and admission binding remain open. Preserve the full

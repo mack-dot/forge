@@ -1,0 +1,12 @@
+load "forge_refund_callTheory";
+load "astSyntax";
+open HolKernel Parse boolLib bossLib forge_refund_callTheory;
+val _ = Globals.max_print_depth := 1000;
+val tm = rhs (concl refund_method_cml_def);
+val rendered = Parse.term_to_string tm;
+val _ = print ("RAW_PRINT_BYTES " ^ Int.toString (String.size rendered) ^ "\n");
+val output = TextIO.openOut "/Users/mackianni/forge/results/refund-normalised-method-2026-11-04/attempt-0002/raw-method.ast.txt";
+val _ = TextIO.output (output, rendered ^ "\n");
+val _ = TextIO.closeOut output;
+val _ = TextIO.flushOut TextIO.stdOut;
+OS.Process.exit OS.Process.success;

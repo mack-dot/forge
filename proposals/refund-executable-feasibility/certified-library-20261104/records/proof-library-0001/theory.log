@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundCertifiedProg">>
+Saved definition ____ "refund_fields_def"
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml:35: error: Value or constructor (refund_caller_returns) has not been declared
+Found near
+  Q.store_thm_at
+  (
+  DB_dtype.mkloc
+  (
+     "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml"
+     ,
+     ...
+     )) ("refund_fields_original_method", [... ...], fn ...) HOLctxt
+error in quse /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml : Fail "Static Errors"
+error in load /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript : Fail "Static Errors"
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml:36: error: Value or constructor (refund_expected_tuple_def) has not been declared
+Found near [refund_fields_def, refund_expected_tuple_def, LET_THM]
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
