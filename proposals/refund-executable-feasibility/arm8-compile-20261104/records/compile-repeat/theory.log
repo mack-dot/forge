@@ -1,0 +1,55 @@
+<<HOL message: Created theory "forge_refundArm8Compile">>
+eval_cake: config EVAL-ed --- Wed Nov 04 16:43:25 2026
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+Able to translate: refund_progeval_cake: cv_trans_deep_embedding prog_def finished --- Wed Nov 04 16:43:30 2026
+eval_cake: about to run cv_eval on to_livesets_def --- Wed Nov 04 16:43:30 2026
+Translating input to a cv term.
+Took 0.0 seconds.
+Looking for relevant cv code equations.
+Took 0.1 seconds.
+Found 1346 cv code equations to use.
+Calling cv_compute.
+Took 2.7 seconds.
+eval_cake: cv_eval to_livesets finished --- Wed Nov 04 16:43:34 2026
+eval_cake: external register allocation finished --- Wed Nov 04 16:44:05 2026
+Saved theorem _______ "temp_oracle_cv_eq"
+Saved theorem _______ "temp_oracle_cv_thm"
+Able to translate: temp_oracleeval_cake: cv_trans_deep_embedding oracle_def finished --- Wed Nov 04 16:44:20 2026
+eval_cake: about to run cv_eval_raw on complie_cake_def --- Wed Nov 04 16:44:20 2026
+Translating input to a cv term.
+Took 0.0 seconds.
+Looking for relevant cv code equations.
+Took 0.2 seconds.
+Found 1835 cv code equations to use.
+Calling cv_compute.
+Took 6.5 seconds.
+eval_cake: cv_eval_raw complie_cake_def finished --- Wed Nov 04 16:44:28 2026
+eval_cake: to_pair evaluation finished --- Wed Nov 04 16:44:28 2026
+eval_cake: abbrevations for result defined --- Wed Nov 04 16:44:31 2026
+eval_cake: new_spec run on result --- Wed Nov 04 16:44:32 2026
+eval_cake: about to run cv_compute on export --- Wed Nov 04 16:44:32 2026
+eval_cake: cv_compute on export finished --- Wed Nov 04 16:44:35 2026
+Writing cv to file: refund.S
+eval_cake: theory tidy up finished --- Wed Nov 04 16:44:35 2026
+Saved theorem _______ "refund_arm8_compiled"
+FORGE_THEOREM refund_arm8_compiled
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ backend$compile arm8_target$arm8_config
+    (backend$set_oracle arm8_config$arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info) ∧
+  ffis =
+  backend$ffinames_to_string_list
+    (the []
+       (lab_to_target$recordtype.config.seldef.ffi_names
+          (backend$recordtype.config.seldef.lab_conf info))) ∧
+  syms = backend$recordtype.config.seldef.symbols info ∧
+  LENGTH code = 130436 ∧ LENGTH data = 2531 ∧
+  lab_to_target$recordtype.config.seldef.shmem_extra
+    (backend$recordtype.config.seldef.lab_conf info) = [] ∧
+  prog_syntax_ok refund_prog ∧
+  conf = backend_enc_dec$encode_backend_config info
+Exporting theory "forge_refundArm8Compile" ... done.
+Theory "forge_refundArm8Compile" took 1m21s to build

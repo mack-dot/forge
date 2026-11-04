@@ -1,0 +1,767 @@
+{
+  "actual_exit": 0,
+  "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "cases": [
+    {
+      "case": "eligible_return",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.1461361669935286,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "40077b5f12512a5bb9afa3dab5a30e39671e4e54f398c7f693f6670a5f14af81",
+      "stdout_sha256": "3bc5a0e5cf42800ac46c0922273a35ab5361ce5368e16ae5894317ef410366cf",
+      "expected_stdout_sha256": "3bc5a0e5cf42800ac46c0922273a35ab5361ce5368e16ae5894317ef410366cf",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "eligible_duplicate",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005817958008265123,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "7b450385073cc30d774749b240a8eb8252bfb9ba89b9af62d0f1e1435297c84f",
+      "stdout_sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee",
+      "expected_stdout_sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "eligible_service",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005670291982823983,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "0f7959bcd4b6dc466e81f2a60741a4f8c640096e2e8f17dc945468a8747a07fc",
+      "stdout_sha256": "5633cc6c68128b6885d301e255bd1c5f76127560e89dbd3ecbb0b62ff1b45d4f",
+      "expected_stdout_sha256": "5633cc6c68128b6885d301e255bd1c5f76127560e89dbd3ecbb0b62ff1b45d4f",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "eligible_zero",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.008895125007256866,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "0fe57039151564e9de1f18893786feda19381d4aff32d32ceef1d269ce03e748",
+      "stdout_sha256": "2ef78d6f608c3f70e9f7b4f10e3a05c48f0d0edea6d3eaed3c6f7194facd2fff",
+      "expected_stdout_sha256": "2ef78d6f608c3f70e9f7b4f10e3a05c48f0d0edea6d3eaed3c6f7194facd2fff",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "eligible_maximum",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005109916004585102,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "a6845c0b4fb4ca1dd9c39b36020907397b855d8d516e4a890aa8fcacd953d743",
+      "stdout_sha256": "a5662ce23207d02c78eb186cc521f9b8ab1ebf2809c0dd8fadd5af49f3260bea",
+      "expected_stdout_sha256": "a5662ce23207d02c78eb186cc521f9b8ab1ebf2809c0dd8fadd5af49f3260bea",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "unicode_ids",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.008590417011873797,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "ddaeab045a54c6377a2f3dc581fc7ac3299282edcdb64bea7d60ad353b8f22eb",
+      "stdout_sha256": "0ba48f82e62e836fcfec177ad9e2c51ce4c34c9720dcb825bdec61496ce4f940",
+      "expected_stdout_sha256": "0ba48f82e62e836fcfec177ad9e2c51ce4c34c9720dcb825bdec61496ce4f940",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "nul_id",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.006625708017963916,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "06038e865f210d13801d078bdd0cb13b723200c40f5581f75442aecf8b45dfd9",
+      "stdout_sha256": "abb73953e77361f8667835694fe5f3147069e6d3757d1d22f7777eecd8d5b1f9",
+      "expected_stdout_sha256": "abb73953e77361f8667835694fe5f3147069e6d3757d1d22f7777eecd8d5b1f9",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "escaped_ids",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.008194082998670638,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "fe0491afc4678fa57f85e8767a4192e5d288588a0958e5874b975d2ae8ab566d",
+      "stdout_sha256": "f9be8b63f5730615ceb705328b57daf5f400ba457e4a0ce1c7c1df872b288de9",
+      "expected_stdout_sha256": "f9be8b63f5730615ceb705328b57daf5f400ba457e4a0ce1c7c1df872b288de9",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "empty_charge",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.004596791986841708,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "b96df16981be382116da3748a916e3247740bb03b422425f9f665709d8340b3e",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "empty_request",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.010781416000099853,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "0cde1a616c6b2c18fd8dfe882dbab87fa8ebe3344fd8e211653c941ec437cc5f",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "negative_amount",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.009015999996336177,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "046af4a94cac8bc5a007b0d6dea94a783f92f1afc581fd5d1b3042ed43ab670f",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "over_remaining",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005471750017022714,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "b364664781ebd43acc40180010466b2fb15bd55c82bf6538ef3237292a10d925",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "original_over_money",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.009202499990351498,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "32276b4bc2f80353a778a692f02e83b66279d641fbaf2749b2b7eaffba3209ac",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "remaining_over_original",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.0073973750113509595,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "1466c5751d40730abeff806f1a28eb3b68869e6175e303cb83c3d5bd9da802e4",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "disabled",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005321375007042661,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "48daa3a3193e83e59c5e783c0ebc1dce891a3b9e55776e3dd79b98e605990604",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "closed_request",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.007576458010589704,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "8f5ea1d72c3c28592fd9258c6fbc66094884eab0b9de8e8722fa327e7f838d7a",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "noncandidate",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.0058401660062372684,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "0edf5d2a1e2d22e0bc1fd6436c3ed10695daf08d45cc2d6254b7f597afa3fa8a",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "negative_remaining",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.012791542016202584,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "5cbc4831a17c1a7ba3c337d08742bc10d9aebbcf4abbf1e0bd3fd8510e79e1a6",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "unapproved_reason",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.008578415989177302,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "35f9051c458fa45d3fdbb194f6c67d6217fde4a1cec440c6e036de9f8870ac00",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "reason_suffix",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.008721291000256315,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "122643a351a6a5238a2556ddc895085132d58e803ddbe9dae63118de239bb5e6",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "unbounded_positive",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.00903045799350366,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "c99e4d3b6237535079b79258a8cd0390d93cd335d18c0ccfb2d94bcdddb5f77d",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "unbounded_negative",
+      "kind": "typed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005494832992553711,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "58a4ea5dcc33ec8f7934e2d503a22ff0b2a7d9cc55cb8bb54776e921c00da079",
+      "stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "expected_stdout_sha256": "7cd14083ec8cefafb475e637b3e94c8b4126b91241745982237e2dcb29b53a23",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "TEST_EXPECTATION_0_NOT_PROOF",
+      "contract_control_verdict": "OBSERVATION_MATCH",
+      "end_to_end": false
+    },
+    {
+      "case": "trailing_newline",
+      "kind": "malformed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005322292010532692,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "a65e37f00205011e34d2bccfe10cc6d9200419a39569896bb1023996974caab9",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "NOT_ESTABLISHED",
+      "contract_control_verdict": "INCOMPLETE_NO_NATIVE_ERROR_CONTRACT",
+      "end_to_end": false
+    },
+    {
+      "case": "second_request",
+      "kind": "malformed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.008774334011832252,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "3ae6c9fa156143f700d64d6419e48a52a7344cd88382a4d578e2e00973de9feb",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "NOT_ESTABLISHED",
+      "contract_control_verdict": "INCOMPLETE_NO_NATIVE_ERROR_CONTRACT",
+      "end_to_end": false
+    },
+    {
+      "case": "unclosed_expression",
+      "kind": "malformed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.005979665991617367,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "32ebb1abcc1c601ceb9c4e3c4faba0caa5b85bb98c4f1e6612c40faa528a91c9",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "NOT_ESTABLISHED",
+      "contract_control_verdict": "INCOMPLETE_NO_NATIVE_ERROR_CONTRACT",
+      "end_to_end": false
+    },
+    {
+      "case": "empty_input",
+      "kind": "malformed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.007458333013346419,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "NOT_ESTABLISHED",
+      "contract_control_verdict": "INCOMPLETE_NO_NATIVE_ERROR_CONTRACT",
+      "end_to_end": false
+    },
+    {
+      "case": "missing_fields",
+      "kind": "malformed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.0068254590150900185,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "NOT_ESTABLISHED",
+      "contract_control_verdict": "INCOMPLETE_NO_NATIVE_ERROR_CONTRACT",
+      "end_to_end": false
+    },
+    {
+      "case": "invalid_integer",
+      "kind": "malformed",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-repeat-0001/refund"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "CML_HEAP_SIZE": "256",
+        "CML_STACK_SIZE": "256"
+      },
+      "actual_exit": 0,
+      "timed_out": false,
+      "spawn_error": null,
+      "wall_seconds": 0.01314979197923094,
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "stdin_sha256": "0db919b40e353abc0bee76ffcd4fcd1d74f4699be7380c52eaea9e02c64d8cf2",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_matches_model": true,
+      "observation_check_passed": true,
+      "process_exit_contract": "NOT_ESTABLISHED",
+      "contract_control_verdict": "INCOMPLETE_NO_NATIVE_ERROR_CONTRACT",
+      "end_to_end": false
+    }
+  ],
+  "observed_case_count": 28,
+  "expected_case_count": 28,
+  "scope": "Actual native pipe observations only; malformed process-exit proof remains open",
+  "native_contract_validation": "INCOMPLETE",
+  "end_to_end": false
+}

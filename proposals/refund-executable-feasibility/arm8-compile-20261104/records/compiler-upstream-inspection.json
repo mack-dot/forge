@@ -1,0 +1,45 @@
+{
+  "actual_exit": 0,
+  "cakeml_commit": "cd9155694c16831373ab695a670794f23282ed62",
+  "source_sha256": {
+    "examples/compilation/x64/proofs/helloProofScript.sml": "09f2d4d18f7d343c07749fe0fd3f39f47a9898429d273ada51b0324d19a4d0c3",
+    "compiler/bootstrap/compilation/arm8/64/proofs/arm8BootstrapProofScript.sml": "2f4747806e060944029a032e2a0c227f307153bcacd2054b8e012c9ff05581ac",
+    "compiler/backend/arm8/proofs/arm8_configProofScript.sml": "35bde5d213496bcc25cb454f47bfc0949ac42b1e1eb15e32525c2082d7496973",
+    "compiler/backend/proofs/backendProofScript.sml": "380ee3fad6c7b316f057510e1505844f23af58c21eb4f27533aa089030b61e89",
+    "compiler/backend/semantics/targetSemScript.sml": "3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422",
+    "semantics/proofs/semanticsPropsScript.sml": "9e7ab53bcdfe36ff161ff7aded9662eba88d6e1df02e282c2ebbdde3742e7ba3",
+    "cv_translator/eval_cake_compileLib.sml": "f7cad8e868f933dd00032f8b974fa737eb4647be1f5cef5b0463e41a1a3e24ff",
+    "cv_translator/eval_cake_compile_arm8Lib.sml": "cc3e5aa7a1b45d0d922861eed240ababc5dfeaed9dd5d1d52b3f4cccdd1bdd1a",
+    "cv_translator/Holmakefile": "e8b7655402f857ccc6b84773cfc2f098371fb4f0d01c73c93f34760c4bd8df69"
+  },
+  "tracked_diffs": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "scope": "Existing source inspection; not proof execution",
+  "end_to_end": false
+}

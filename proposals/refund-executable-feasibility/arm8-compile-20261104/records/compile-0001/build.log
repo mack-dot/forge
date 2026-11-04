@@ -1,0 +1,603 @@
+Executing /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/asl-equiv/.hol_preexec:
+  HOLORIG=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment [ -d "armv8.6-asl-snapshot" ] || ./get-armv8.6-hol-snapshot
+Scanning [1m$(HOLDIR)/src/TeX[0m
+Scanning [1m$(HOLDIR)/src/bag[0m
+Scanning [1m$(HOLDIR)/src/sort[0m
+Scanning [1m$(HOLDIR)/src/string[0m
+Scanning [1m$(HOLDIR)/src/n-bit[0m
+Scanning [1m$(HOLDIR)/src/res_quan/src[0m
+Scanning [1m$(HOLDIR)/src/finite_maps[0m
+Scanning [1m$(HOLDIR)/src/transfer[0m
+Scanning [1m$(HOLDIR)/src/pred_set/src/more_theories[0m
+Scanning [1m$(HOLDIR)/src/coalgebras[0m
+Scanning [1m$(HOLDIR)/examples/pl-semantics/lprefix_lub[0m
+Scanning [1m$(HOLDIR)/src/integer[0m
+Scanning [1m$(HOLDIR)/src/rational[0m
+Scanning [1m$(HOLDIR)/src/num/theories/cv_compute/automation[0m
+Scanning [1m$(HOLDIR)/src/algebra/base[0m
+Scanning [1m$(HOLDIR)/src/algebra/construction[0m
+Scanning [1m$(HOLDIR)/src/algebra[0m
+Scanning [1m$(HOLDIR)/src/hol88[0m
+Scanning [1m$(HOLDIR)/src/real[0m
+Scanning [1m$(HOLDIR)/examples/formal-languages[0m
+Scanning [1m$(HOLDIR)/src/search[0m
+Scanning [1m$(HOLDIR)/examples/machine-code/hoare-triple[0m
+Scanning [1m$(HOLDIR)/src/floating-point[0m
+Scanning [1m$(HOLDIR)/src/monad/more_monads[0m
+Scanning [1m$(HOLDIR)/src/update[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/common[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/lib[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm8/asl-equiv/armv8.6-asl-snapshot/A64_ISA_v86A/lib/lem[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm8/asl-equiv/armv8.6-asl-snapshot/A64_ISA_v86A/lib/sail[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm8/asl-equiv/armv8.6-asl-snapshot/A64_ISA_v86A[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm8/model[0m
+Scanning [1m$(HOLDIR)/examples/machine-code/decompiler[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm8/step[0m
+Scanning [1m$(CAKEMLDIR)/basis[0m
+Scanning [1m$(CAKEMLDIR)/basis/pure[0m
+Scanning [1m$(CAKEMLDIR)/candle[0m
+Scanning [1m$(CAKEMLDIR)/candle/parser[0m
+Scanning [1m$(CAKEMLDIR)/candle/prover[0m
+Scanning [1m$(CAKEMLDIR)/candle/prover/compute[0m
+Scanning [1m$(CAKEMLDIR)/candle/set-theory[0m
+Scanning [1m$(CAKEMLDIR)/candle/standard[0m
+Scanning [1m$(CAKEMLDIR)/candle/standard/ml_kernel[0m
+Scanning [1m$(CAKEMLDIR)/candle/standard/monadic[0m
+Scanning [1m$(CAKEMLDIR)/candle/standard/semantics[0m
+Scanning [1m$(CAKEMLDIR)/candle/standard/syntax[0m
+Scanning [1m$(CAKEMLDIR)/candle/standard/syntax/little_theories[0m
+Scanning [1m$(CAKEMLDIR)/candle/syntax-lib[0m
+Scanning [1m$(CAKEMLDIR)/characteristic[0m
+Scanning [1m$(CAKEMLDIR)/characteristic/examples[0m
+Scanning [1m$(CAKEMLDIR)/compiler[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/reg_alloc[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/semantics[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/asm[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/riscv/step[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/riscv[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/riscv/prog[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/riscv/proofs[0m
+Scanning [1m$(CAKEMLDIR)/misc[0m
+Scanning [1m$(CAKEMLDIR)/semantics[0m
+Scanning [1m$(CAKEMLDIR)/semantics/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/San[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/ag32[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/ag32/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/arm7[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/arm7/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/arm8[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/arm8/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/arm8_asl[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/cv_compute[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/gc[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/mips[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/mips/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/pattern_matching[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/reg_alloc/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/riscv[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/riscv/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/serialiser[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/tests[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/x64[0m
+Scanning [1m$(CAKEMLDIR)/compiler/backend/x64/proofs[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/x64/64[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/x64/64[0m
+Scanning [1m$(CAKEMLDIR)/compiler/benchmarks/cakeml_benchmarks/cakeml[0m
+Scanning [1m$(CAKEMLDIR)/compiler/benchmarks/mlton_benchmarks/cakeml[0m
+Scanning [1m$(CAKEMLDIR)/compiler/benchmarks[0m
+Scanning [1m$(CAKEMLDIR)/compiler/benchmarks/cakeml_benchmarks[0m
+Scanning [1m$(CAKEMLDIR)/compiler/benchmarks/cakeml_benchmarks/ocaml[0m
+Scanning [1m$(CAKEMLDIR)/compiler/benchmarks/mlton_benchmarks[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/ag32[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/ag32/32[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/ag32/32/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/arm8[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/32[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/arm8/64[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/arm8/64[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/arm8/64/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/32[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/32/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/64[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/64/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/bootstrap/translation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/compilation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/examples[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/examples/output[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_native_corpus_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundCertifiedProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundWireProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundStdioProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundWholeProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/cv_translator[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundArm8Compile_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundCfGap_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundGuard_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundEntry_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundMethodProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundNormProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_call_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_compile_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_heap_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_io_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/semantics[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/translation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/vcg[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/vcg/examples[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/ag32[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/ag32/proofs[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm/step[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/arm7[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm/prog[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/arm7/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/arm8[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/arm8/prog[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/arm8/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/arm8_asl[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/arm8_asl/proofs[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/mips/step[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/mips[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/mips/prog[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/mips/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/monadic_enc[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/tests[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/x64/step[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/x64[0m
+Scanning [1m$(HOLDIR)/examples/l3-machine-code/x64/prog[0m
+Scanning [1m$(CAKEMLDIR)/compiler/encoders/x64/proofs[0m
+Scanning [1m$(HOLDIR)/examples/algorithms/unification/triangular[0m
+Scanning [1m$(HOLDIR)/src/transfer/examples[0m
+Scanning [1m$(HOLDIR)/examples/algorithms/unification/triangular/first-order[0m
+Scanning [1m$(HOLDIR)/examples/algorithms/unification/triangular/first-order/compilation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/inference[0m
+Scanning [1m$(CAKEMLDIR)/compiler/inference/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/inference/tests[0m
+Scanning [1m$(CAKEMLDIR)/compiler/parsing[0m
+Scanning [1m$(CAKEMLDIR)/compiler/parsing/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/parsing/tests[0m
+Scanning [1m$(CAKEMLDIR)/compiler/printing[0m
+Scanning [1m$(CAKEMLDIR)/compiler/printing/test[0m
+Scanning [1m$(CAKEMLDIR)/compiler/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/repl[0m
+Scanning [1m$(CAKEMLDIR)/compiler/scheme[0m
+Scanning [1m$(CAKEMLDIR)/compiler/scheme/compilation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/scheme/examples[0m
+Scanning [1m$(CAKEMLDIR)/compiler/scheme/proofs[0m
+Scanning [1m$(CAKEMLDIR)/compiler/scheme/translation[0m
+Scanning [1m$(CAKEMLDIR)/compiler/scheme/unverified[0m
+Scanning [1m$(CAKEMLDIR)/developers[0m
+Scanning [1m$(CAKEMLDIR)/developers/bin[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/AES[0m
+Scanning [1m$(HOLDIR)/src/real/analysis[0m
+Scanning [1m$(HOLDIR)/src/probability[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/DES[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/IDEA[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/Keccak[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/MARS[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/MD5[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/RC6[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/MD[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/RIPEMD[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/SHA-1[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/SHA-2[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/Serpent/Bitslice[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/Serpent/Reference[0m
+Scanning [1m$(HOLDIR)/src/emit[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/TEA[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/TWOFISH[0m
+Scanning [1m$(HOLDIR)/examples/Crypto[0m
+Scanning [1m$(CAKEMLDIR)/examples[0m
+Scanning [1m$(CAKEMLDIR)/examples/compilation[0m
+Scanning [1m$(CAKEMLDIR)/examples/compilation/ag32[0m
+Scanning [1m$(CAKEMLDIR)/examples/compilation/ag32/proofs[0m
+Scanning [1m$(CAKEMLDIR)/examples/compilation/x64[0m
+Scanning [1m$(CAKEMLDIR)/examples/compilation/x64/proofs[0m
+Scanning [1m$(CAKEMLDIR)/examples/deflate[0m
+Scanning [1m$(CAKEMLDIR)/examples/deflate/translation[0m
+Scanning [1m$(CAKEMLDIR)/examples/deflate/translation/compilation[0m
+Scanning [1m$(CAKEMLDIR)/examples/deflate/translation/compilation/tests[0m
+Scanning [1m$(CAKEMLDIR)/examples/flover[0m
+Scanning [1m$(CAKEMLDIR)/examples/flover/Infra[0m
+Scanning [1m$(CAKEMLDIR)/examples/flover/semantics[0m
+Scanning [1m$(CAKEMLDIR)/examples/template[0m
+Scanning [1m$(CAKEMLDIR)/examples/template/compilation[0m
+Scanning [1m$(CAKEMLDIR)/examples/template/translation[0m
+Scanning [1m$(CAKEMLDIR)/examples/vipr[0m
+Scanning [1m$(CAKEMLDIR)/examples/vipr/compilation[0m
+Scanning [1m$(CAKEMLDIR)/pancake[0m
+Scanning [1m$(CAKEMLDIR)/pancake/parser[0m
+Scanning [1m$(CAKEMLDIR)/pancake/semantics[0m
+Scanning [1m$(CAKEMLDIR)/pancake/decompiler[0m
+Scanning [1m$(CAKEMLDIR)/pancake/decompiler/examples[0m
+Scanning [1m$(CAKEMLDIR)/pancake/proofs[0m
+Scanning [1m$(CAKEMLDIR)/pancake/static_checker[0m
+Scanning [1m$(CAKEMLDIR)/pancake/temp[0m
+Scanning [1m$(CAKEMLDIR)/profiler[0m
+Scanning [1m$(CAKEMLDIR)/semantics/alt_semantics[0m
+Scanning [1m$(CAKEMLDIR)/semantics/alt_semantics/proofs[0m
+Scanning [1m$(CAKEMLDIR)/semantics/ffi[0m
+Scanning [1m$(CAKEMLDIR)/translator[0m
+Scanning [1m$(CAKEMLDIR)/translator/monadic[0m
+Scanning [1m$(CAKEMLDIR)/translator/monadic/examples[0m
+Scanning [1m$(CAKEMLDIR)/translator/monadic/monad_base[0m
+Scanning [1m$(CAKEMLDIR)/translator/okasaki-examples[0m
+Scanning [1m$(HOLDIR)/examples/Crypto/RSA[0m
+Scanning [1m$(HOLDIR)/examples/miller/ho_prover[0m
+Scanning [1m$(HOLDIR)/examples/miller/subtypes[0m
+Scanning [1m$(HOLDIR)/examples/miller/formalize[0m
+Scanning [1m$(HOLDIR)/examples/miller/groups[0m
+Scanning [1m$(HOLDIR)/examples/probability/legacy[0m
+Scanning [1m$(HOLDIR)/examples/miller/prob[0m
+Scanning [1m$(HOLDIR)/examples/miller/miller[0m
+Scanning [1m$(CAKEMLDIR)/translator/other-examples[0m
+Scanning [1m$(CAKEMLDIR)/translator/other-examples/auxiliary[0m
+Scanning [1m$(CAKEMLDIR)/tutorial[0m
+Scanning [1m$(CAKEMLDIR)/unverified[0m
+Scanning [1m$(CAKEMLDIR)/unverified/front-end[0m
+Scanning [1m$(CAKEMLDIR)/unverified/hol-light-syntax[0m
+Scanning [1m$(CAKEMLDIR)/unverified/ocaml-syntax[0m
+Scanning [1m$(CAKEMLDIR)/unverified/ocaml-syntax/lib[0m
+Scanning [1m$(CAKEMLDIR)/unverified/ocaml-syntax/tests[0m
+Scanning [1m$(CAKEMLDIR)/unverified/reg_alloc[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/arm8[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/export/x64[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/x64[0m
+Scanning [1m$(CAKEMLDIR)/unverified/sexpr-bootstrap/x64/32[0m
+Scanning [1m$(candle_overloading)/ml_checker[0m
+Scanning [1m$(candle_overloading)/ml_kernel[0m
+Scanning [1m$(candle_overloading)/monadic[0m
+Scanning [1m$(candle_overloading)/semantics[0m
+Scanning [1m$(candle_overloading)/syntax[0m
+Scanning [1m$(cnf)/array[0m
+Scanning [1m$(cnf)/dist[0m
+Scanning [1m$(cnf)/dist/array[0m
+Scanning [1m$(cnf)/dist/array/compilation[0m
+Scanning [1m$(cnf)/dist/array/compilation/proofs[0m
+Scanning [1m$(cnf)/lrup[0m
+Scanning [1m$(cnf)/lrup/array[0m
+Scanning [1m$(cnf)/lrup/array/compilation[0m
+Scanning [1m$(cnf)/lrup/array/compilation/proofs[0m
+Scanning [1m$(cnf)/xlrup[0m
+Scanning [1m$(cnf)/xlrup/array[0m
+Scanning [1m$(cnf)/xlrup/array/compilation[0m
+Scanning [1m$(cnf)/xlrup/array/compilation/proofs[0m
+Scanning [1m$(hwmcc_checker)/compilation[0m
+Scanning [1m$(hwmcc_checker)/compilation/proofs[0m
+Scanning [1m$(hwmcc_checker)/examples[0m
+Scanning [1m$(hwmcc_checker)/translation[0m
+Scanning [1m$(lpr_checker)/array[0m
+Scanning [1m$(lpr_checker)/array/compilation[0m
+Scanning [1m$(lpr_checker)/array/compilation/proofs[0m
+Scanning [1m$(lpr_checker)/array/compilation/proofsARM8[0m
+Scanning [1m$(opentheory)/compilation[0m
+Scanning [1m$(opentheory)/compilation/ag32[0m
+Scanning [1m$(opentheory)/compilation/ag32/proofs[0m
+Scanning [1m$(opentheory)/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/array[0m
+Scanning [1m$(pseudo_bool)/array/compilation[0m
+Scanning [1m$(pseudo_bool)/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/array/compilation/proofsARM8[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding/array[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/cnf_encoding/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/cp_encoding[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/cp_encoding/array/compilation/proofs[0m
+Scanning [1m$(pseudo_bool)/graph_encoding[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation[0m
+Scanning [1m$(pseudo_bool)/graph_encoding/array/compilation/proofs[0m
+Scanning [1m$(sat_encodings)/case_studies[0m
+Scanning [1m$(sat_encodings)/demo[0m
+Scanning [1m$(sat_encodings)/translation[0m
+Scanning [1m$(sat_encodings)/translation/compilation[0m
+Scanning [1m$(scpog_checker)/array[0m
+Scanning [1m$(scpog_checker)/array/compilation[0m
+Scanning [1m$(scpog_checker)/array/compilation/proofs[0m
+Scanned 330 directories
+Building 125 theory files
+Starting work on spt_closureTheory
+Starting work on utilsLibSupportTheory
+Finished $(HOLDIR)/examples/machine-code/hoare-triple                  (0.000s) 
+spt_closureTheory            $(HOLDIR)/examples/algorithms  (1s)  [↓124]     OK
+Starting work on arm8Theory
+Finished $(HOLDIR)/examples/algorithms [#theories: 1]                  (1.829s) 
+Finished $(HOLDIR)/examples/l3-machine-code/lib                        (0.000s) 
+utilsLibSupportTheory $(HOLDIR)/.../l3-machine-code/common  (2s)  [↓123]     OK
+Starting work on decompilerLibSupportTheory
+Finished $(HOLDIR)/examples/l3-machine-code/common [#theories: 1]      (2.823s) 
+decompilerLibSupportTheory        $(HOLDIR)/.../decompiler  (1s)  [↓122]     OK
+Starting work on l3-heap
+Finished $(HOLDIR)/examples/machine-code/decompiler [#theories: 1]     (1.994s) 
+l3-heap                 $(HOLDIR)/examples/l3-machine-code (10s)             OK
+Finished $(HOLDIR)/examples/l3-machine-code                           (10.480s) 
+Starting work on x64Theory
+arm8Theory   $(HOLDIR)/examples/l3-machine-code/arm8/model (12s)  [↓121]     OK
+Starting work on arm8-heap
+Finished $(HOLDIR)/examples/l3-machine-code/arm8/model [#theories: 1] (12.619s) 
+arm8-heap     $(HOLDIR)/examples/l3-machine-code/arm8/step  (8s)             OK
+Starting work on arm8_stepTheory
+arm8_stepTheory    $(HOLDIR)/.../l3-machine-code/arm8/step  (3s)  [↓120]     OK
+Starting work on multiwordTheory
+Finished $(HOLDIR)/examples/l3-machine-code/arm8/step [#theories: 1]  (11.896s) 
+x64Theory     $(HOLDIR)/examples/l3-machine-code/x64/model (16s)  [↓119]     OK
+Starting work on basis_cvTheory
+Finished $(HOLDIR)/examples/l3-machine-code/x64/model [#theories: 1]  (16.321s) 
+basis_cvTheory                     $(CAKEMLDIR)/basis/pure  (5s)  [↓118]     OK
+Starting work on db_varsTheory
+Finished $(CAKEMLDIR)/basis/pure [#theories: 1]                        (5.181s) 
+db_varsTheory                $(CAKEMLDIR)/compiler/backend  (2s)  [↓117]     OK
+Starting work on jsonLangTheory
+jsonLangTheory               $(CAKEMLDIR)/compiler/backend  (3s)  [↓116]     OK
+Starting work on source_dceTheory
+multiwordTheory  $(HOLDIR)/examples/machine-code/multiword (16s)  [↓115]     OK
+Starting work on mc_multiwordTheory
+source_dceTheory             $(CAKEMLDIR)/compiler/backend  (4s)  [↓114]     OK
+Starting work on source_letTheory
+source_letTheory             $(CAKEMLDIR)/compiler/backend  (3s)  [↓113]     OK
+Starting work on source_lift_constsTheory
+source_lift_constsTheory     $(CAKEMLDIR)/compiler/backend  (7s)  [↓112]     OK
+Starting work on source_to_sourceTheory
+source_to_sourceTheory       $(CAKEMLDIR)/compiler/backend  (2s)  [↓111]     OK
+Starting work on exportTheory
+mc_multiwordTheory    $(HOLDIR)/.../machine-code/multiword (23s)  [↓110]     OK
+Starting work on parmoveTheory
+Finished $(HOLDIR)/examples/machine-code/multiword [#theories: 2]     (39.308s) 
+exportTheory                 $(CAKEMLDIR)/compiler/backend  (3s)  [↓109]     OK
+Starting work on asmTheory
+Finished $(CAKEMLDIR)/unverified/reg_alloc                             (0.000s) 
+asmTheory               $(CAKEMLDIR)/compiler/encoders/asm  (9s)  [↓108]     OK
+Starting work on backend_commonTheory
+backend_commonTheory         $(CAKEMLDIR)/compiler/backend  (4s)  [↓107]     OK
+Starting work on closLangTheory
+parmoveTheory      $(CAKEMLDIR)/compiler/backend/reg_alloc (20s)  [↓106]     OK
+Starting work on stackLangTheory
+closLangTheory               $(CAKEMLDIR)/compiler/backend  (4s)  [↓105]     OK
+Starting work on bviTheory
+stackLangTheory              $(CAKEMLDIR)/compiler/backend  (4s)  [↓104]     OK
+bviTheory                    $(CAKEMLDIR)/compiler/backend  (3s)  [↓103]     OK
+Starting work on dataLangTheory
+Starting work on bvi_inlineTheory
+dataLangTheory               $(CAKEMLDIR)/compiler/backend  (3s)  [↓102]     OK
+Starting work on data_liveTheory
+data_liveTheory              $(CAKEMLDIR)/compiler/backend  (8s)  [↓101]     OK
+Starting work on data_simpTheory
+data_simpTheory              $(CAKEMLDIR)/compiler/backend  (3s)  [↓100]     OK
+Starting work on data_spaceTheory
+bvi_inlineTheory             $(CAKEMLDIR)/compiler/backend (19s)   [↓99]     OK
+Starting work on bvi_letTheory
+data_spaceTheory             $(CAKEMLDIR)/compiler/backend  (6s)   [↓98]     OK
+Starting work on bvi_to_dataTheory
+bvi_letTheory                $(CAKEMLDIR)/compiler/backend  (4s)   [↓97]     OK
+Starting work on bvi_tailrecTheory
+bvi_to_dataTheory            $(CAKEMLDIR)/compiler/backend (28s)   [↓96]     OK
+Starting work on bvi_tmcTheory
+bvi_tailrecTheory            $(CAKEMLDIR)/compiler/backend (32s)   [↓95]     OK
+Starting work on bvlTheory
+bvi_tmcTheory                $(CAKEMLDIR)/compiler/backend  (6s)   [↓94]     OK
+Starting work on clos_annotateTheory
+bvlTheory                    $(CAKEMLDIR)/compiler/backend  (3s)   [↓93]     OK
+Starting work on bvl_constTheory
+clos_annotateTheory          $(CAKEMLDIR)/compiler/backend  (5s)   [↓92]     OK
+Starting work on bvl_jumpTheory
+bvl_jumpTheory               $(CAKEMLDIR)/compiler/backend  (3s)   [↓91]     OK
+Starting work on clos_callTheory
+clos_callTheory              $(CAKEMLDIR)/compiler/backend  (6s)   [↓90]     OK
+Starting work on clos_fvsTheory
+clos_fvsTheory               $(CAKEMLDIR)/compiler/backend  (4s)   [↓89]     OK
+Starting work on clos_letopTheory
+clos_letopTheory             $(CAKEMLDIR)/compiler/backend  (5s)   [↓88]     OK
+Starting work on clos_opTheory
+bvl_constTheory              $(CAKEMLDIR)/compiler/backend (31s)   [↓87]     OK
+clos_opTheory                $(CAKEMLDIR)/compiler/backend (14s)   [↓86]     OK
+Starting work on bvl_handleTheory
+Starting work on clos_ticksTheory
+clos_ticksTheory             $(CAKEMLDIR)/compiler/backend  (3s)   [↓85]     OK
+Starting work on clos_knownTheory
+bvl_handleTheory             $(CAKEMLDIR)/compiler/backend (20s)   [↓84]     OK
+Starting work on bvl_inlineTheory
+clos_knownTheory             $(CAKEMLDIR)/compiler/backend (19s)   [↓83]     OK
+Starting work on clos_mtiTheory
+bvl_inlineTheory             $(CAKEMLDIR)/compiler/backend  (5s)   [↓82]     OK
+Starting work on bvl_to_bviTheory
+clos_mtiTheory               $(CAKEMLDIR)/compiler/backend  (4s)   [↓81]     OK
+Starting work on clos_numberTheory
+clos_numberTheory            $(CAKEMLDIR)/compiler/backend  (3s)   [↓80]     OK
+Starting work on clos_to_bvlTheory
+bvl_to_bviTheory             $(CAKEMLDIR)/compiler/backend (51s)   [↓79]     OK
+Starting work on wordLangTheory
+clos_to_bvlTheory            $(CAKEMLDIR)/compiler/backend (53s)   [↓78]     OK
+Starting work on clos_interpTheory
+wordLangTheory               $(CAKEMLDIR)/compiler/backend  (7s)   [↓77]     OK
+Starting work on word_bignumTheory
+word_bignumTheory            $(CAKEMLDIR)/compiler/backend  (9s)   [↓76]     OK
+Starting work on word_depthTheory
+clos_interpTheory            $(CAKEMLDIR)/compiler/backend (18s)   [↓75]     OK
+Starting work on word_cseTheory
+word_depthTheory             $(CAKEMLDIR)/compiler/backend  (6s)   [↓74]     OK
+Starting work on word_simpTheory
+word_cseTheory               $(CAKEMLDIR)/compiler/backend  (5s)   [↓73]     OK
+Starting work on word_removeTheory
+word_removeTheory            $(CAKEMLDIR)/compiler/backend  (8s)   [↓72]     OK
+Starting work on word_unreachTheory
+word_simpTheory              $(CAKEMLDIR)/compiler/backend (16s)   [↓71]     OK
+Starting work on word_instTheory
+word_unreachTheory           $(CAKEMLDIR)/compiler/backend  (5s)   [↓70]     OK
+Starting work on flatLangTheory
+flatLangTheory               $(CAKEMLDIR)/compiler/backend  (5s)   [↓69]     OK
+Starting work on flat_to_closTheory
+flat_to_closTheory           $(CAKEMLDIR)/compiler/backend  (8s)   [↓68]     OK
+Starting work on labLangTheory
+labLangTheory                $(CAKEMLDIR)/compiler/backend  (3s)   [↓67]     OK
+Starting work on lab_filterTheory
+lab_filterTheory             $(CAKEMLDIR)/compiler/backend  (2s)   [↓66]     OK
+Starting work on lab_to_targetTheory
+word_instTheory              $(CAKEMLDIR)/compiler/backend (24s)   [↓65]     OK
+Starting work on displayLangTheory
+lab_to_targetTheory          $(CAKEMLDIR)/compiler/backend  (5s)   [↓64]     OK
+Starting work on flat_ticksTheory
+displayLangTheory            $(CAKEMLDIR)/compiler/backend  (3s)   [↓63]     OK
+Starting work on presLangTheory
+flat_ticksTheory             $(CAKEMLDIR)/compiler/backend  (3s)   [↓62]     OK
+Starting work on stack_namesTheory
+stack_namesTheory            $(CAKEMLDIR)/compiler/backend  (8s)   [↓61]     OK
+Starting work on stack_removeTheory
+presLangTheory               $(CAKEMLDIR)/compiler/backend (12s)   [↓60]     OK
+Starting work on word_to_stackTheory
+stack_removeTheory           $(CAKEMLDIR)/compiler/backend  (4s)   [↓59]     OK
+Starting work on asmSemTheory
+word_to_stackTheory          $(CAKEMLDIR)/compiler/backend  (7s)   [↓58]     OK
+Starting work on source_cvTheory
+asmSemTheory            $(CAKEMLDIR)/compiler/encoders/asm  (8s)   [↓57]     OK
+Starting work on asmPropsTheory
+source_cvTheory              $(CAKEMLDIR)/semantics/proofs  (6s)   [↓56]     OK
+Starting work on export_arm8Theory
+Finished $(CAKEMLDIR)/semantics/proofs [#theories: 1]                  (6.357s) 
+export_arm8Theory       $(CAKEMLDIR)/compiler/backend/arm8 (13s)   [↓55]     OK
+Starting work on pattern_commonTheory
+asmPropsTheory          $(CAKEMLDIR)/compiler/encoders/asm (17s)   [↓54]     OK
+Starting work on num_list_enc_decTheory
+Finished $(CAKEMLDIR)/compiler/encoders/asm [#theories: 3]            (36.009s) 
+pattern_commonTheory     $(CAKEMLDIR)/.../pattern_matching (12s)   [↓53]     OK
+Starting work on pattern_semanticsTheory
+num_list_enc_decTheory $(CAKEMLDIR)/.../backend/serialiser (14s)   [↓52]     OK
+Starting work on num_tree_enc_decTheory
+pattern_semanticsTheory  $(CAKEMLDIR)/.../pattern_matching (15s)   [↓51]     OK
+Starting work on pattern_exhTheory
+num_tree_enc_decTheory $(CAKEMLDIR)/.../backend/serialiser (13s)   [↓50]     OK
+Starting work on export_x64Theory
+export_x64Theory         $(CAKEMLDIR)/compiler/backend/x64 (13s)   [↓49]     OK
+Starting work on arm8_targetTheory
+pattern_exhTheory        $(CAKEMLDIR)/.../pattern_matching (16s)   [↓48]     OK
+Starting work on pattern_compTheory
+arm8_targetTheory      $(CAKEMLDIR)/compiler/encoders/arm8 (13s)   [↓47]     OK
+Starting work on x64-heap
+Finished $(CAKEMLDIR)/compiler/encoders/arm8 [#theories: 1]           (13.462s) 
+pattern_compTheory       $(CAKEMLDIR)/.../pattern_matching (16s)   [↓46]     OK
+Starting work on flat_patternTheory
+Finished $(CAKEMLDIR)/compiler/backend/pattern_matching [#theories: 4] (60.760s) 
+x64-heap       $(HOLDIR)/examples/l3-machine-code/x64/step  (7s)             OK
+Starting work on x64_stepTheory
+flat_patternTheory           $(CAKEMLDIR)/compiler/backend  (5s)   [↓45]     OK
+Starting work on source_to_flatTheory
+source_to_flatTheory         $(CAKEMLDIR)/compiler/backend  (6s)   [↓44]     OK
+Starting work on commonUnifTheory
+commonUnifTheory      $(HOLDIR)/.../unification/triangular  (0s)   [↓43]     OK
+Starting work on cpsTheory
+Finished $(HOLDIR)/examples/algorithms/unification/triangular [#theories: 1] (0.872s) 
+cpsTheory                  $(HOLDIR)/src/transfer/examples  (0s)   [↓42]     OK
+Starting work on fmspTheory
+fmspTheory                 $(HOLDIR)/src/transfer/examples  (1s)   [↓41]     OK
+Starting work on termTheory
+Finished $(HOLDIR)/src/transfer/examples [#theories: 2]                (1.689s) 
+termTheory            $(HOLDIR)/.../triangular/first-order  (1s)   [↓40]     OK
+Starting work on substTheory
+substTheory           $(HOLDIR)/.../triangular/first-order  (2s)   [↓39]     OK
+Starting work on walkTheory
+walkTheory            $(HOLDIR)/.../triangular/first-order  (2s)   [↓38]     OK
+Starting work on walkstarTheory
+walkstarTheory        $(HOLDIR)/.../triangular/first-order  (2s)   [↓37]     OK
+Starting work on collapseTheory
+collapseTheory        $(HOLDIR)/.../triangular/first-order  (1s)   [↓36]     OK
+Starting work on unifDefTheory
+unifDefTheory         $(HOLDIR)/.../triangular/first-order  (3s)   [↓35]     OK
+Starting work on unifPropsTheory
+unifPropsTheory       $(HOLDIR)/.../triangular/first-order  (2s)   [↓34]     OK
+Starting work on rmfmapTheory
+Finished $(HOLDIR)/examples/algorithms/unification/triangular/first-order [#theories: 7] (15.422s) 
+rmfmapTheory         $(HOLDIR)/.../first-order/compilation  (1s)   [↓33]     OK
+Starting work on tcallUnifTheory
+tcallUnifTheory      $(HOLDIR)/.../first-order/compilation  (3s)   [↓32]     OK
+Starting work on infer_tTheory
+Finished $(HOLDIR)/examples/algorithms/unification/triangular/first-order/compilation [#theories: 2] (5.075s) 
+infer_tTheory              $(CAKEMLDIR)/compiler/inference (16s)   [↓31]     OK
+Starting work on unifyTheory
+unifyTheory                $(CAKEMLDIR)/compiler/inference (23s)   [↓30]     OK
+Starting work on inferTheory
+x64_stepTheory $(HOLDIR)/examples/l3-machine-code/x64/step (70s)   [↓29]     OK
+Starting work on x64_targetTheory
+Finished $(HOLDIR)/examples/l3-machine-code/x64/step [#theories: 1]   (77.275s) 
+x64_targetTheory        $(CAKEMLDIR)/compiler/encoders/x64 (14s)   [↓28]     OK
+Starting work on x64_eval_encodeTheory
+x64_eval_encodeTheory   $(CAKEMLDIR)/compiler/encoders/x64 (15s)   [↓27]     OK
+Starting work on unify_cvTheory
+Finished $(CAKEMLDIR)/compiler/encoders/x64 [#theories: 2]            (29.610s) 
+unify_cvTheory             $(CAKEMLDIR)/compiler/inference (20s)   [↓26]     OK
+Starting work on reg_allocTheory
+Finished $(CAKEMLDIR)/translator/monadic/monad_base                    (0.000s) 
+inferTheory                $(CAKEMLDIR)/compiler/inference (55s)   [↓25]     OK
+Starting work on inferPropsTheory
+reg_allocTheory    $(CAKEMLDIR)/compiler/backend/reg_alloc (20s)   [↓24]     OK
+Starting work on word_copyTheory
+word_copyTheory              $(CAKEMLDIR)/compiler/backend  (7s)   [↓23]     OK
+Starting work on linear_scanTheory
+linear_scanTheory  $(CAKEMLDIR)/compiler/backend/reg_alloc (20s)   [↓22]     OK
+Starting work on word_allocTheory
+inferPropsTheory           $(CAKEMLDIR)/compiler/inference (75s)   [↓21]     OK
+Starting work on infer_cvTheory
+Finished $(CAKEMLDIR)/compiler/backend/reg_alloc [#theories: 3]       (60.750s) 
+infer_cvTheory             $(CAKEMLDIR)/compiler/inference (32s)   [↓20]     OK
+Finished $(CAKEMLDIR)/compiler/inference [#theories: 6]              (223.489s) 
+word_allocTheory             $(CAKEMLDIR)/compiler/backend (83s)   [↓19]     OK
+Starting work on word_to_wordTheory
+word_to_wordTheory           $(CAKEMLDIR)/compiler/backend  (6s)   [↓18]     OK
+Starting work on data_to_wordTheory
+data_to_wordTheory           $(CAKEMLDIR)/compiler/backend (30s)   [↓17]     OK
+Starting work on stack_allocTheory
+Starting work on stack_rawcallTheory
+stack_allocTheory            $(CAKEMLDIR)/compiler/backend (19s)   [↓16]     OK
+stack_rawcallTheory          $(CAKEMLDIR)/compiler/backend (37s)   [↓15]     OK
+Starting work on stack_to_labTheory
+stack_to_labTheory           $(CAKEMLDIR)/compiler/backend (22s)   [↓14]     OK
+Starting work on backendTheory
+backendTheory                $(CAKEMLDIR)/compiler/backend (15s)   [↓13]     OK
+Starting work on backend_passesTheory
+Starting work on arm8_configTheory
+backend_passesTheory         $(CAKEMLDIR)/compiler/backend (16s)   [↓12]     OK
+Starting work on backend_enc_decTheory
+Finished $(CAKEMLDIR)/compiler/backend [#theories: 67]               (813.376s) 
+arm8_configTheory       $(CAKEMLDIR)/compiler/backend/arm8 (23s)   [↓11]     OK
+Starting work on x64_configTheory
+Finished $(CAKEMLDIR)/compiler/backend/arm8 [#theories: 2]            (37.568s) 
+backend_enc_decTheory  $(CAKEMLDIR)/.../backend/serialiser (32s)   [↓10]     OK
+Starting work on backend_asmTheory
+Finished $(CAKEMLDIR)/compiler/backend/serialiser [#theories: 3]      (59.491s) 
+x64_configTheory         $(CAKEMLDIR)/compiler/backend/x64 (24s)    [↓9]     OK
+Finished $(CAKEMLDIR)/compiler/backend/x64 [#theories: 2]             (38.330s) 
+backend_asmTheory $(CAKEMLDIR)/compiler/backend/cv_compute (24s)    [↓8]     OK
+Starting work on backend_arm8Theory
+Starting work on backend_x64Theory
+backend_arm8Theory     $(CAKEMLDIR)/.../backend/cv_compute (23s)    [↓7]     OK
+Starting work on to_data_cvTheory
+backend_x64Theory $(CAKEMLDIR)/compiler/backend/cv_compute (24s)    [↓6]     OK
+Finished $(CAKEMLDIR)/compiler/backend/cv_compute [#theories: 3]      (72.477s) 
+to_data_cvTheory                $(CAKEMLDIR)/cv_translator(579s)    [↓5]     OK
+Starting work on backend_cvTheory
+backend_cvTheory                $(CAKEMLDIR)/cv_translator(121s)    [↓4]     OK
+Starting work on backend_word_cvTheory
+backend_word_cvTheory           $(CAKEMLDIR)/cv_translator(137s)    [↓3]     OK
+Starting work on backend_arm8_cvTheory
+Starting work on backend_x64_cvTheory
+backend_x64_cvTheory            $(CAKEMLDIR)/cv_translator(133s)    [↓2]     OK
+backend_arm8_cvTheory           $(CAKEMLDIR)/cv_translator(148s)    [↓1]     OK
+Starting work on cake_compile_heap
+cake_compile_heap               $(CAKEMLDIR)/cv_translator (74s)             OK
+Finished $(CAKEMLDIR)/cv_translator [#theories: 5]                  (1194.853s) 
+Starting work on forge_refundArm8CompileTheory
+forge_refundArm8CompileTheory ...undArm8Compile_experiment (80s)    [↓0]     OK
+Finished $(CAKEMLDIR)/compiler/dafny/forge_refundArm8Compile_experiment [#theories: 1] (80.230s) 

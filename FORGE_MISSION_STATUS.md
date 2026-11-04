@@ -17,54 +17,52 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-Latest exception checkpoint: **U274 — attempted main-call rejection proof failed**.
-The [failure packet](proposals/refund-executable-feasibility/exception-bridge-20261104/REPORT.md)
-preserves three failed builds and two failed saved-goal diagnostics. No new
-theorem is accepted. Stop retries on that lemma under the existing five-check
-limit. The canonical-input source theorem is unchanged. The ARM64 compiler
-dependencies and heap have passed; the actual refund compile is now running.
-Its terminal result and native behavior are not established yet.
+Latest checkpoint: **U275 — exact ARM64 compilation reproduced**.
+The [compiler record](proposals/refund-executable-feasibility/arm8-compile-20261104/REPORT.md)
+contains the actual equation, commands, complete hashes and open premises.
+The compile and repeat both exit0. Six exported files and the assembly match.
+This is a compilation result. The separate compiler behavior proof is running.
+Its terminal exit and conclusion are not yet established.
 
-Earlier execution checkpoint: **U273 — ARM64 compile confirmed live**.
-The [compiler checkpoint](proposals/refund-executable-feasibility/arm8-compiler-preparation-20261104/REPORT.md)
-preserves live-process evidence, the prepared correctness composition and exact
-remaining premises. The compile has no terminal exit yet. The behavior proof
-has NOT RUN. Local bundle restore and356-file identity readback pass0; an exact
-off-machine restore remains unverified. No native result is inferred.
-
-Latest source-proof checkpoint: **U271 — whole-program source behavior checked**.
-Separate fixture checkpoint: **U272 — frozen wire expectations checked**.
-The [whole-program report](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md)
-records the exact theorem, entry conditions, commands, hashes and failed control.
-The proof and repeat pass. All six exported files match byte for byte. Replacing
-the required main function fails at the exact namespace binding. Fresh closure
-inspection covers 243 theory nodes and the four existing foundation axioms.
-This establishes conditional source semantics. It does not establish native behavior.
-
-| Current check | Actual exit | Evidence boundary |
+| Latest check | Actual exit | Evidence boundary |
 | --- | --- | --- |
-| Whole-program proof / repeat | 0/0 | Complete modeled output for every canonical typed request |
-| Wrong entry / control matrix | 1/0 | Required binding refusal; no accepted mutant export |
-| Closure / dependency snapshot / readback | 0/0/0 | 243 nodes, 242 file sets, 42 exported tags; imported objects remain explicit |
-| Fixture packet identity check | 0 | 300 files match local commit32e3613d; no human review inferred |
-| Local recovery bundle / restore / fsck | 0/0/0 | Restores cb68edf7 on this machine; not an independent backup |
+| ARM64 compile / repeat | 0/0 | Exact compilation equation; six identical exports and assembly |
+| Compiler identity validation | 0 | Both archives, live outputs, mission and30 frozen inputs checked |
+| Separate native build / repeat, inspected here | 0/0 | Same executable SHA256b8ed5ec2; no universal native theorem |
+| Separate native fixture runs, inspected here | 0/0 |22 typed outputs match; six malformed inputs also exit0 with no output |
+| Native stream readback | 0 |84 streams match across both runs; malformed error contract remains open |
+| Closure inspection / compiler behavior proof | IN_PROGRESS | Actual invocations started; no terminal exit available |
 
-**Next:** finish the running unsigned ARM64 compiler build for the exact
-`refund_prog_def`. Record its real exit code and code/data/configuration identities.
-Then require reproduction and the existing compiler-correctness relation before
-binding a linked artifact to the frozen native controls. Current invocation:
-`results/refund-arm8-compile-2026-11-04/attempt-0001/compile-0001/`.
-Its final result is **IN_PROGRESS**, not a successful compilation.
+**Next:** finish the existing compiler behavior invocation. Inspect its exact
+conclusion and installation, FFI and resource premises. Then check adversarial
+bindings and reproduction. Do not start another copy of either live process.
+Canonical records:
+`results/refund-arm8-compile-2026-11-04/attempt-0001/`.
 
-Keep the complete Unicode/source/model relation, malformed-input whole-program
-path, resource bounds, code installation, runtime and physical I/O explicit.
-Native execution, hosted refund measurements and new admission remain **NOT RUN**.
-The [fixture packet](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md)
-supplies checked test inputs and expected bytes, not a universal native theorem.
-The separate audit task retains its limited local signing authority from U269.
+**Separate rejection gap:** U274 preserves three failed source builds and two
+failed saved-goal diagnostics. No exception-to-main theorem was accepted.
+[Failure evidence](proposals/refund-executable-feasibility/exception-bridge-20261104/REPORT.md).
+Stop retries on that lemma under the five-check limit. The prior canonical-input
+source theorem and application-level rejection theorems remain intact.
+Do not treat the six observed malformed-input exits0 as proof of error behavior.
+
+**Existing source result:** U271 proves the complete modeled output for canonical
+typed requests under explicit source-environment premises. Its six exports
+reproduce. Wrong entry substitution fails1. Fresh closure inspection covers243
+theory nodes and four existing foundation axioms. The
+[whole-program report](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md)
+and [fixture report](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md)
+retain the exact claims. U273's live-compiler status is a historical checkpoint,
+now superseded by the completed compile records.
+
+Keep the full Unicode/source/model binding, malformed-input whole-program
+path, resource bounds, code installation and physical I/O explicit. Native
+observations are now available from the separate audit; full native correctness
+is NOT_ESTABLISHED. Hosted refund measurements and new admission remain NOT RUN.
+The separate task retains its limited U269 local signing authority.
 Independent claim/profile review and exact off-machine archive hash/restore
 remain open. Publication, protected adoption, release signing, merge and dispatch
-require their corresponding authorization. M1 and integration EXIT remain open.
+require corresponding authority. M1 and strict integration EXIT remain open.
 
 Previous checkpoint: **U270 — modeled I/O checked; five mutations refused**.
 The [I/O contract record](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md)
@@ -136,9 +134,10 @@ is separate. Neither establishes native refund behavior. Publication has not run
 | Proposed wire dispatcher | LOCALLY_VALIDATED | [Wire/I/O controls](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md); strict refusal, all six fields, three mutations and identical repeat |
 | Proposed modeled I/O | LOCALLY_VALIDATED; not adopted | [I/O contract](proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md); exact stdout and exception contracts, two mutations and identical repeat |
 | Whole-program initialization and source semantics | LOCALLY_VALIDATED; not adopted | [Whole-program proof](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md); exact main, initialization, canonical input and complete modeled output; wrong-entry refusal and identical repeat |
-| Exact ARM64 compile theorem | IN_PROGRESS | Existing in-logic compiler runs on refund_prog_def; no final result at U271 |
-| Frozen native fixture expectations | LOCALLY_VALIDATED | [Fixture proof](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md); 22 typed cases, six malformed inputs, exact bytes and two refusal controls; native execution NOT RUN |
-| Native input/output and exact executable | NOT_ESTABLISHED | Check the representation, calling convention and generated artifact through established tools; record exact artifact identity |
+| Exact ARM64 compile theorem | LOCALLY_VALIDATED | [Compilation record](proposals/refund-executable-feasibility/arm8-compile-20261104/REPORT.md); equation checked and six exports plus assembly reproduced |
+| Compiler behavior preservation | IN_PROGRESS | Published compiler-correctness composition started; no terminal proof result |
+| Frozen native fixture expectations | LOCALLY_VALIDATED | [Fixture proof](proposals/refund-executable-feasibility/native-fixtures-20261104/REPORT.md); 22 typed cases, six malformed inputs, exact bytes and two refusal controls; separate native observations now recorded in U275 |
+| Native input/output and exact executable | TESTED; universal relation NOT_ESTABLISHED | U275 reads two identical executables and repeated22-case typed output observations; six malformed-input exits0 do not establish the error contract |
 | Runtime and concrete/model relation | NOT_ESTABLISHED | Establish applicable entry and execution conditions; disclose every environment assumption |
 | Independent checking and reproduction | LOCALLY_VALIDATED for current model proofs | Extend the checked closure, reproduction and adversarial controls to the same native artifact |
 | New authenticated claim and independent admission | NOT_ESTABLISHED | Independently review the exact claim/profile and authorize provenance/admission; historical signatures do not cover it |

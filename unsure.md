@@ -8277,3 +8277,51 @@ curl: (6) Could not resolve host: github.com
   independent claim/profile review, authenticated admission and off-machine
   archive hash/restore remain unresolved. No signing, protected adoption,
   publication, merge, dispatch or deployment ran. M2–M4 remain later priorities.
+
+
+## U275 — Exact ARM64 compilation reproduced; behavior relation still pending
+
+- References:U271,U272,U273,U274. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Supersedes only U273/U274's pending compiler status. The full
+  mission and original refund specification remain unchanged.
+- The original compiler invocation and its repeat both terminate0. The existing
+  in-logic ARM64 compiler exports refund_arm8_compiled: exact refund_prog maps
+  to SOME(code,data,info), code length130436, data length2531, exact FFI/symbol/
+  configuration bindings, no extra shared memory and syntax validity. This is
+  a compilation equation, not the composed behavioral-preservation theorem.
+- Source SHA256b7e12fcf2754d115eb80d0f49fb07c06d629b956ed2e9f0d1a6213b2be60202c.
+  Theory data30076203f55c9f0fa85dec0ebcb62d5ee41961b46055727fe26c9299e55dd78a.
+  Assembly4c750e4f9ecf75ff1f0bf5af7bfbdd0600ee2ca0e1564fcadc299db55c3a1757.
+  Six exported files and755044-byte assembly reproduce exactly. validate_compile.py
+  returns0 after checking both saved runs, live outputs, mission and30 frozen inputs.
+- Printed theorem has zero hypotheses and DISK_THM import tag. Content identities
+  do not authenticate the producer. Fresh closure inspection started using the
+  configured cake_compile_heap; no terminal result yet. This is not a replay of
+  every upstream source. The prepared dependency snapshot has NOT RUN.
+- run_behavior.py0001repeat started the published compiler-correctness composition.
+  No terminal exit or accepted behavior theorem exists at this checkpoint. Keep
+  installation, FFI, environment and resource-limit premises explicit. Complete
+  these live invocations before new reproduction or adversarial binding controls.
+- First local compile2674.4407615409873seconds includes dependency builds. Repeat
+  137.65932195901405seconds uses existing dependencies. No comparable benchmark,
+  hosted runtime, billed runner-minute or savings claim is made.
+- Separate native-audit records are inspected, not rerun here. Build/repeat0/0
+  yield executableb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Each actual fixture run exits0 and contains22 typed matching outputs plus six
+  malformed cases. All28 processes exit0; malformed cases emit no output/error.
+  Readback0 checks exact executable/record hashes and84 repeated stream pairs.
+  Those six cases remain INCOMPLETE_NO_NATIVE_ERROR_CONTRACT. Local ad hoc
+  signing belongs to that separate task's U269 approval; it is not release authority.
+- U274's three failed builds and two failed diagnostics remain preserved. Stop
+  retries on that exception lemma. Canonical source and application-level error
+  theorems remain intact. No native error contract follows from the observed0.
+- Packet:proposals/refund-executable-feasibility/arm8-compile-20261104/REPORT.md.
+  Raw:results/refund-arm8-compile-2026-11-04/attempt-0001/. Partial logs are labeled
+  snapshots. They are not successful proof certificates or deterministic evidence.
+- Impact/next check: compilation identity is locally established; finish the
+  existing behavior proof and inspect its exact premises. Full Unicode/source/model,
+  runtime/resource, installation and malformed-input whole-program relations,
+  independent review, new provenance/admission and exact off-machine archive
+  restore remain open. M1 and integration EXIT are not established. No protected
+  adoption, publication, merge, dispatch, release signing, admission or deployment
+  ran here. M2–M4 remain later priorities.

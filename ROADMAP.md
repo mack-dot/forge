@@ -7,6 +7,42 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U275)
+
+The exact ARM64 compilation and repeat pass. Six exported theory files and
+assembly reproduce byte for byte. CURRENT none; M1 open; Stage12 unauthorized;
+end_to_end=false. This establishes a compiler equation, not native correctness.
+
+| Executed command/check | Actual exit | Observation |
+| --- | --- | --- |
+| Compiler `run.py 0001` / `run.py repeat` | 0/0 | Exact refund_prog compilation; code length130436 and data length2531 |
+| `validate_compile.py` | 0 | Saved results, six exports, assembly, mission and30 frozen inputs checked |
+| Separate native build / repeated build, inspected here | 0/0 | Same exact executableb8ed5ec2; no new root signing or native run |
+| Separate native fixture runs, inspected here | 0/0 |22 typed results match; six malformed inputs exit0 with no output |
+| Native stream readback | 0 |84 streams identical across runs; error contract remains unproved |
+
+[Exact theorem, commands, hashes and boundaries](proposals/refund-executable-feasibility/arm8-compile-20261104/REPORT.md).
+Compiler sourceb7e12fcf; data30076203; assembly4c750e4f. First compile
+2674.4407615409873 local seconds includes dependencies; repeat137.65932195901405
+seconds uses those dependencies. No speedup or hosted measurement is claimed.
+
+The following checks actually started but have no terminal exit at this checkpoint:
+`run_closure.py` and `run_behavior.py 0001 repeat`, in
+results/refund-arm8-compile-2026-11-04/attempt-0001/.
+They remain IN_PROGRESS. Fresh import is not a full upstream source replay.
+The prepared dependency snapshot is NOT RUN. Next: finish these existing runs,
+inspect the behavioral conclusion and all premises, then require binding controls
+and reproduction. Do not infer preservation from successful compilation.
+
+U274's five failed exception checks remain unchanged; no further retry on that
+lemma. Canonical source behavior remains checked. Full Unicode/source/model,
+installation, FFI, runtime/resource and malformed-input whole-program relations
+remain open. Native observations do not discharge universal claims. Independent
+review, new provenance/admission and exact off-machine restore remain open.
+No publication, protected adoption, merge, dispatch, release signing, admission
+or deployment ran here. M2–M4 remain later priorities. Strict integration EXIT
+is NOT_ESTABLISHED. The previous live-compiler checkpoints remain historical.
+
 ## Active mission update — 2026-11-04 (U274)
 
 The attempted exception-to-main lemma remains NOT_ESTABLISHED. Five checks
