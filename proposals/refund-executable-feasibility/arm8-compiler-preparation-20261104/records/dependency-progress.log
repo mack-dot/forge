@@ -1,0 +1,78 @@
+<<HOL message: Created theory "to_data_cv">>
+Proved triviality ___ "list_mem"
+Saved theorem _______ "cv_source_let_dest_Letrec_thm"
+Finished translating dest_Letrec, stored in cv_source_let_dest_Letrec_thm
+Saved theorem _______ "cv_source_let_dest_Let_thm"
+Finished translating dest_Let, stored in cv_source_let_dest_Let_thm
+Saved theorem _______ "cv_source_let_lift_let_thm"
+Finished translating lift_let, stored in cv_source_let_lift_let_thm
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in to_data_cv)>>
+Saved theorem _______ "cv_source_let_lift_lets_thm"
+Finished translating lift_lets, stored in cv_source_let_lift_lets_thm
+Saved definition ____ "cv_source_let_compile_decs_def"
+Saved induction _____ "cv_source_let_compile_decs_ind"
+Saved theorem _______ "source_let_compile_decs_pre_rules"
+Saved theorem _______ "source_let_compile_decs_pre_ind"
+Saved theorem _______ "source_let_compile_decs_pre_strongind"
+Saved theorem _______ "source_let_compile_decs_pre_cases"
+Saved theorem _______ "cv_source_let_compile_decs_thm"
+Finished translating compile_decs, stored in cv_source_let_compile_decs_thm
+
+WARNING: definition of cv_source_let_compile_decs has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem source_let_compile_decs_pre[cv_pre]:
+  ∀v. source_let_compile_decs_pre v
+Proof
+  ho_match_mp_tac source_letTheory.compile_decs_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "source_let_compile_decs_pre"
+Saved definition ____ "cv_ast_pat_bindings_def"
+Saved induction _____ "cv_ast_pat_bindings_ind"
+Saved theorem _______ "cv_ast_pat_bindings_thm"
+Finished translating pat_bindings, pats_bindings, stored in cv_ast_pat_bindings_thm
+Saved definition ____ "no_Open_alt_def"
+Saved induction _____ "no_Open_alt_ind"
+Saved theorem _______ "no_Open_alt_thm"
+Starting translation of no_Open_alt, no_Open_list, no_Open_pes, no_Open_funs from to_data_cvTheory.
+Saved definition ____ "cv_no_Open_alt_def"
+Saved induction _____ "cv_no_Open_alt_ind"
+Saved theorem _______ "cv_no_Open_alt_thm"
+Finished translating no_Open_alt, no_Open_list, no_Open_pes, no_Open_funs, stored in cv_no_Open_alt_thm
+Starting translation of open_free_dec, open_free_decs from source_dceTheory.
+Saved definition ____ "cv_source_dce_open_free_dec_def"
+Saved induction _____ "cv_source_dce_open_free_dec_ind"
+Saved theorem _______ "cv_source_dce_open_free_dec_thm"
+Finished translating open_free_dec, open_free_decs, stored in cv_source_dce_open_free_dec_thm
+Saved definition ____ "cv_source_dce_total_pat_def"
+Saved induction _____ "cv_source_dce_total_pat_ind"
+Saved theorem _______ "cv_source_dce_total_pat_thm"
+Finished translating total_pat, total_pat_list, stored in cv_source_dce_total_pat_thm
+Starting translation of pure_exp, pure_exp_list, pure_exp_pes from source_dceTheory.
+Starting translation of alloc_app from source_dceTheory.
+Starting translation of dest_int_lit from source_dceTheory.
+Saved theorem _______ "cv_source_dce_dest_int_lit_thm"
+Finished translating dest_int_lit, stored in cv_source_dce_dest_int_lit_thm
+Starting translation of alloc_app from source_dceTheory.
+Starting translation of alloc_op from source_dceTheory.
+Saved theorem _______ "cv_source_dce_alloc_op_thm"
+Finished translating alloc_op, stored in cv_source_dce_alloc_op_thm
+Starting translation of alloc_app from source_dceTheory.
+Saved theorem _______ "cv_source_dce_alloc_app_thm"
+Finished translating alloc_app, stored in cv_source_dce_alloc_app_thm
+Starting translation of pure_exp, pure_exp_list, pure_exp_pes from source_dceTheory.
+Starting translation of pure_op from source_dceTheory.
+Saved theorem _______ "cv_source_dce_pure_op_thm"
+Finished translating pure_op, stored in cv_source_dce_pure_op_thm
+Starting translation of pure_exp, pure_exp_list, pure_exp_pes from source_dceTheory.
+Saved definition ____ "EXISTS_total_pat_MAP_FST_1_def"
+Saved induction _____ "EXISTS_total_pat_MAP_FST_1_ind"
+Starting translation of EXISTS_total_pat_MAP_FST from to_data_cvTheory.
+Saved theorem _______ "cv_EXISTS_total_pat_MAP_FST_thm"
+Finished translating EXISTS_total_pat_MAP_FST, stored in cv_EXISTS_total_pat_MAP_FST_thm
+Saved theorem _______ "EXISTS_total_pat_MAP_FST_ho"
+Starting translation of pure_exp, pure_exp_list, pure_exp_pes from source_dceTheory.
+Saved definition ____ "cv_source_dce_pure_exp_def"
+Saved induction _____ "cv_source_dce_pure_exp_ind"

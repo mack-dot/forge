@@ -17,6 +17,13 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
+Latest execution checkpoint: **U273 — ARM64 compile confirmed live**.
+The [compiler checkpoint](proposals/refund-executable-feasibility/arm8-compiler-preparation-20261104/REPORT.md)
+preserves live-process evidence, the prepared correctness composition and exact
+remaining premises. The compile has no terminal exit yet. The behavior proof
+has NOT RUN. Local bundle restore and356-file identity readback pass0; an exact
+off-machine restore remains unverified. No native result is inferred.
+
 Latest source-proof checkpoint: **U271 — whole-program source behavior checked**.
 Separate fixture checkpoint: **U272 — frozen wire expectations checked**.
 The [whole-program report](proposals/refund-executable-feasibility/whole-program-20261104/REPORT.md)

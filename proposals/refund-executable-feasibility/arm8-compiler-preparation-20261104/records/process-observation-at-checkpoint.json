@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "ps",
+    "-p",
+    "94706,94707",
+    "-o",
+    "pid,ppid,etime,command"
+  ],
+  "actual_exit": 0,
+  "stdout": "  PID  PPID ELAPSED COMMAND\n94706  5515   25:15 /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python -B results/refund-arm8-compile-2026-11-04/attempt-0001/run.py 0001\n94707 94706   25:15 /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake --no-cache -j 2 forge_refundArm8CompileTheory.uo\n",
+  "stderr": "",
+  "exec_session": 60920,
+  "status": "IN_PROGRESS",
+  "compile_terminal_exit": null,
+  "compile_result_record_present": false,
+  "proof_composition": "NOT RUN",
+  "native_execution": "NOT RUN",
+  "end_to_end": false
+}

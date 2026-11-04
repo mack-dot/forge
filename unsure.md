@@ -8180,3 +8180,52 @@ curl: (6) Could not resolve host: github.com
   remain unresolved. GitHub was not refreshed. U269 limited local signing stays
   with the separate audit task. No protected adoption, publication, merge,
   dispatch, release signing or deployment ran here. M2–M4 remain later priorities.
+
+
+## U273 — ARM64 compiler remains live; composition and runtime premises retained
+
+- References:U267,U270,U271,U272. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The previous goal turn made progress through local commit
+  865b42394baf68f428cf088bd4ecf856cca4d9f6. This turn verifies the live check and
+  exact local recovery. It does not establish native refund behavior.
+- Fresh write_stdin polls return live exec session60920. A process query0
+  confirms runner94706 and Holmake94707. The terminal compile command.json does
+  not exist. Published backend definitions and ARM64 configuration built; current
+  to_data_cvTheory dependency execution advances through translation lemmas.
+  Dependency successes and CPU activity are not a successful refund compilation.
+- The exact run.py0001 invocation is unchanged and was not restarted. Its source
+  uses published eval_cake_compile_arm8 on checked refund_prog_def. Preserve the
+  live operation until an actual terminal result; observation timeout is not failure.
+- Nine compiler/proof sources match pinned CakeML cd9155694c16831373ab695a670794f23282ed62.
+  Comparison0 and tracked HOL/CakeML diffs0/0. Four additional boundary sources
+  match their pinned blobs0. No tool source, machine semantics or axiom changed.
+- Prepared forge_refundArm8ProofScript.sml composes the existing source theorem,
+  compiler evaluation and ARM64 compiler-correctness theorem. Its runner requires
+  a completed successful compile and exact parent source, exports and assembly.
+  Python syntax inspection0 is not proof execution. Composition remains NOT RUN.
+- Published compile_correct only guarantees inclusion in extend_with_resource_limit.
+  It permits resource-limit outcomes with source-trace prefixes. A complete-output
+  native guarantee needs justified resource premises. installed requires exact
+  memory/code/data/FFI bindings and alignment/separation conditions. No concrete
+  runtime state is proved to satisfy these conditions here.
+- Existing normal call_main_thm2, whole_prog_spec and whole_prog_spec2 require
+  POSTv. refund_main_error has POSTe. Its application-level rejection result does
+  not directly establish malformed-input whole-program behavior. Preserve that
+  missing relation; no claim or implementation was weakened. Logical Success is
+  not a POSIX status theorem.
+- Local recovery bundle create/verify/restore/fsck return0/0/0/0. Exact commit
+  865b42394baf68f428cf088bd4ecf856cca4d9f6 and356 files match. Bundle SHA256:
+  37c6985dbdf0d6a8f6234e698599f8ec1027e3e3a336406e3cc3cae55e437e33.
+  Restore occurred on this machine. External toolchains and raw failed heaps are
+  not in that Git bundle. Off-machine archive hash/restore remains unverified.
+- Packet:proposals/refund-executable-feasibility/arm8-compiler-preparation-20261104/REPORT.md.
+  Raw:results/refund-arm8-compile-2026-11-04/attempt-0001/. Progress logs are
+  explicitly incomplete snapshots, not deterministic proof certificates.
+- Next check: finish the exact live compiler, inspect actual theorem and artifact
+  identities, run the prepared correctness composition, then reproduce and check
+  adversarial bindings. Native controls remain with the separate audit task under
+  its limited U269 approval. Full Unicode/source/model and runtime relations,
+  independent claim/profile review and authenticated admission remain open.
+- No native execution, hosted refund measurements, protected adoption, release
+  signing, publication, merge, dispatch or deployment ran here. All earlier
+  entries and failed experiments remain intact. M2–M4 remain later priorities.

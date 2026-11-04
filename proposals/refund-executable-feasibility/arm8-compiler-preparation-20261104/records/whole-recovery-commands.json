@@ -1,0 +1,72 @@
+[
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "actual_exit": 0,
+    "stdout": "865b42394baf68f428cf088bd4ecf856cca4d9f6\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "bundle",
+      "create",
+      "/Users/mackianni/forge-backups/forge-refund-whole-source-2026-11-04.bundle",
+      "refs/heads/docs/integration-readiness-20261103"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "bundle",
+      "verify",
+      "/Users/mackianni/forge-backups/forge-refund-whole-source-2026-11-04.bundle"
+    ],
+    "actual_exit": 0,
+    "stdout": "The bundle contains this ref:\n865b42394baf68f428cf088bd4ecf856cca4d9f6 refs/heads/docs/integration-readiness-20261103\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\n",
+    "stderr": "/Users/mackianni/forge-backups/forge-refund-whole-source-2026-11-04.bundle is okay\n"
+  },
+  {
+    "argv": [
+      "git",
+      "clone",
+      "--bare",
+      "/Users/mackianni/forge-backups/forge-refund-whole-source-2026-11-04.bundle",
+      "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-whole-restore-vj2ag_c1/restored.git"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "Cloning into bare repository '/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-whole-restore-vj2ag_c1/restored.git'...\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-whole-restore-vj2ag_c1/restored.git",
+      "fsck",
+      "--full",
+      "--no-dangling"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "notice: HEAD points to an unborn branch (ElectraIOS)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-refund-whole-restore-vj2ag_c1/restored.git",
+      "rev-parse",
+      "refs/heads/docs/integration-readiness-20261103"
+    ],
+    "actual_exit": 0,
+    "stdout": "865b42394baf68f428cf088bd4ecf856cca4d9f6\n",
+    "stderr": ""
+  }
+]

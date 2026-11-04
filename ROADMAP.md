@@ -7,6 +7,38 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U273)
+
+The ARM64 compiler invocation is still live. Fresh exec-session60920 polls and
+process queries confirm runner94706 and Holmake94707. No terminal compile record
+or successful refund artifact is available. Published dependencies continue to
+build; to_data_cvTheory is active. No restart occurred. CURRENT none; M1 open;
+Stage12 unauthorized; end_to_end=false.
+
+| Executed check | Actual exit | Observation |
+| --- | --- | --- |
+| Live runner / Holmake process query | 0 | Both confirmed live; compiler terminal exit unavailable |
+| Nine pinned compiler/proof source comparisons | 0 | Exact pinned source bytes |
+| Tracked HOL / CakeML source diffs | 0/0 | Unchanged |
+| Four boundary-source comparisons | 0 | Resource, installation and exception-premise limits retained |
+| Prepared behavior runner syntax | 0 | Python parser only; proof composition NOT RUN |
+| Local recovery create / verify / restore / fsck | 0/0/0/0 | Exact865b4239 and356 files restored locally; not independent backup |
+
+[Exact live-build checkpoint and next proof command](proposals/refund-executable-feasibility/arm8-compiler-preparation-20261104/REPORT.md).
+The source theorem remains the U271 result. Its compiler-correctness composition
+is prepared but NOT RUN. First finish the existing compile, inspect actual
+code/data/configuration identities, then execute that composition and reproduce
+the results. Do not infer success from dependency builds.
+
+The published compiler permits resource-limit trace prefixes. Concrete memory
+installation and FFI/runtime conditions remain explicit. Normal whole-program
+helpers require POSTv; refund_main_error provides POSTe. The separate exception
+bridge remains open. No modeled label establishes a native process exit code.
+Native execution, hosted refund measurements and new admission remain NOT RUN.
+Independent claim/profile review and off-machine archive hash/restore remain
+unresolved. No signing, protected adoption, publication, merge or dispatch ran.
+M2–M4 stay later work. This is progress plus a verified wait, not a failed proof.
+
 ## Active mission update — 2026-11-04 (U271; includes U272 fixtures)
 
 The proposed refund program now has a checked whole-program source theorem.
