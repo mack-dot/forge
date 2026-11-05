@@ -8890,3 +8890,60 @@ curl: (6) Could not resolve host: github.com
   controls/reproduction if positive. Keep separate source work independent.
   No new native run, rebuild, signing, protected adoption, publication, merge,
   dispatch or Stage12. Hosted refund metrics NOT RUN; integration NOT_ESTABLISHED.
+
+
+## U291 — Conditional refund compiler behavior and recorded resource binding checked
+
+- References: U262,U267,U271,U275,U277,U283,U284,U289,U290. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. Prior turn made progress by
+  preserving exact entry-layout failures and committing950bde8. This turn closes
+  the conditional model compilation link. U286 and U288 remain separate work.
+- Original compiler behavior process completes0 after9397.899061417003 local
+  wall seconds. Same-source rebuild0 takes112.63485225001932 seconds. All six
+  exports match byte for byte. Different dependency scopes prevent a speedup
+  claim. Original runner47209/Holmake47239 are terminal; no further polling.
+- refund_compiled_behavior covers all nine typed model fields and full rendered
+  six-field output. Its premises retain is_arm8_machine_config, installed code,
+  canonical stdin, wfcl,wfFS and STD_streams. It concludes machine behaviors lie
+  in extend_with_resource_limit of the specified source success trace. It permits
+  resource-limit prefixes. It does not guarantee complete output/normal native
+  termination. No input-domain restriction, new axiom or semantics was introduced.
+- Source7cb940489138a6f81eb5b169e5397df7217170a84267e9565600273f36ff40ca;
+  data86bb80b8c32788f6c7703339a4116546615a885054d1341938d449183250aead.
+  Exact native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Saved loaded code/bitmap and six prior compilation artifacts remain identical.
+- Fresh import first fails1 before theorem comparison: virtual-path loader
+  appends .hol/objs to the archived objects directory. Isolated standard-layout
+  copies of the same six files give import0. The exact qualified statement has
+  zero explicit hypotheses/tagged axioms and DISK_THM only. Preconditions remain
+  in its conclusion. Closure481 nodes/2400 files retains four prior bool axioms.
+  Local rebuild/import is not clean independent full-chain replay or provenance.
+- Substituted code (extra leading0 byte) and changed output amount+1 each return1
+  for Exact compiler behavior statement mismatch. Input serialization stays
+  unchanged in the latter case. These are proof/claim binding controls, not
+  native behavioral counterexamples. Readback0 checks exact intended mutations,
+  successful imports, every identity and50 unchanged protected paths.
+- Separate resource proof: first syntax/rendering attempt1; corrected positive0,
+  same-source repeat0, fresh import0. Three statements bind the published register
+  names and read_limits to recorded pointers. Four exports match. Model stack/
+  heap limits are33554384/16777216 words under explicit register-equality premises.
+  Source8cfa0077f484ab557609c82b1908ab8f6cd464fa9aa7eac1f3db17dc5193d792;
+  data40d07eeab9189f9e2bcc02f071454c2c927ef91ffd5734c66f1e1a380edf65a6.
+  Claimed heap limit+1 and stale result after midpoint+16 both fail1 at
+  recorded_limits with residual F and no complete export. Readback0 checks
+  338 closure nodes/1683 files and the committed capture identity. No physical
+  state relation or is_safe_for_space proof follows from these numeric limits.
+- Packets:proposals/refund-executable-feasibility/compiled-behavior-20261104/REPORT.md and proposals/refund-executable-feasibility/resource-binding-20261104/REPORT.md.
+  All failures remain. U290 is not retried: its five-attempt boundary remains.
+  Separate source initial-heap check was observed with exit0, but its final
+  composition/replay remains owned by the source task; no new whole-chain claim.
+- Highest remaining assurance gaps: exact full Unicode/source/model binding;
+  applicable installed state and frames; physical ARM/FFI/OS/interference;
+  full-domain resource sufficiency and native exit. Independent complete-chain
+  replay/review, new authenticated provenance/admission and exact off-machine
+  archive hashes/restore remain open. No assumption is promoted to fact.
+- Next authorized check: audit U262's exact byte-level transport method against
+  U267's unchanged method relation and U291 input/output clauses, retaining all
+  nine inputs and six outputs. New experiment NOT RUN. No native run/rebuild,
+  signing, protected adoption, publication, merge, dispatch, admission, deployment
+  or Stage12 occurred. Hosted measurements NOT RUN. Integration NOT_ESTABLISHED.

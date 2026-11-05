@@ -1,0 +1,16 @@
+{
+  "actual_exit": 0,
+  "capture_readback_sha256": "65d4d7575d530a025aa8cfb2425e4884b9bdca0562a94bf312a6dccb88a49862",
+  "recorded_registers": {
+    "x1": 496542679040,
+    "x2": 496811114496,
+    "x3": 497079549952
+  },
+  "expected_limit_pair": [
+    33554384,
+    16777216
+  ],
+  "expected_pair_basis": "Existing get_stack_heap_limit uses word counts, two heap semispaces and the 48-word store_list. Confirm in HOL; this arithmetic expectation alone is not proof.",
+  "scope": "Published read_limits under exact register-equality premises. No is_safe_for_space, installed or physical-state proof.",
+  "end_to_end": false
+}

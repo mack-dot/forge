@@ -8,6 +8,30 @@ priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
 
+
+## Conditional compiler behavior established — 2026-11-04 (U291)
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| `run_behavior.py 0001 repeat` / `0002 repeat` | 0/0 | Original job finished; six exports reproduce exactly |
+| Behavior import / corrected isolated-layout import | 1/0 | Initial loader failure retained; exact full conditional claim checked |
+| Substituted code / changed result bindings | 1/1 | Exact-statement mismatch; no native counterexample claim |
+| Behavior readback.py | 0 |481-node closure,2400 files, exact artifacts and50 protected paths |
+| Resource positive initial/corrected/repeat/import | 1/0/0/0 | Initial rendering error retained; three exact statements and four equal exports |
+| Wrong resource limit / stale midpoint | 1/1 | Intended false equations; residual F |
+| Resource readback.py | 0 |338-node closure,1683 files, exact captured pointer inputs |
+
+[Actual theorem, commands, hashes, assumptions and approval packet](proposals/refund-executable-feasibility/compiled-behavior-20261104/REPORT.md).
+The compiled model behavior permits resource-limit I/O prefixes. Full input-domain
+Unicode/source/model binding, applicable installed state, physical runtime and
+resource sufficiency, native exit, independent replay/review and new admission
+remain open. Exact other-device restore remains unverified. Compiler jobs are
+terminal; do not restart them. U290's entry-layout proof stays stopped at five
+attempts. No new stage or protected adoption. Integration EXIT NOT_ESTABLISHED.
+
+
 ## Tracking and entry-layout checkpoint — 2026-11-04 (U290)
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

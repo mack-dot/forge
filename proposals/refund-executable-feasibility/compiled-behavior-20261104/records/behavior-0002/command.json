@@ -1,0 +1,82 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+    "--no-cache",
+    "-j",
+    "2",
+    "forge_refundArm8ProofTheory.uo"
+  ],
+  "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+  "actual_exit": 0,
+  "status": "FINISHED",
+  "source_sha256": "7cb940489138a6f81eb5b169e5397df7217170a84267e9565600273f36ff40ca",
+  "compiler_record": {
+    "argv": [
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+      "--no-cache",
+      "-j",
+      "2",
+      "forge_refundArm8CompileTheory.uo"
+    ],
+    "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+    "actual_exit": 0,
+    "status": "FINISHED",
+    "source_sha256": "b7e12fcf2754d115eb80d0f49fb07c06d629b956ed2e9f0d1a6213b2be60202c",
+    "whole_program": {
+      "argv": [
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+        "--no-cache",
+        "-j",
+        "2",
+        "forge_refundWholeProgTheory.uo"
+      ],
+      "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWholeProg_experiment",
+      "actual_exit": 0,
+      "wall_seconds": 130.35580424999353,
+      "source_sha256": "37d623cc2437f391d4a0e72afcc72ed0b541e82f985dc5a2dfbe73a29e3ef4d0",
+      "parent_source_sha256": "44ac5c9ecb51f13002cb7b762608ab39d4a0967053f34cc2d85adc6d9fd12e22",
+      "parent_data_sha256": "ecda3e2a6d3dfd8eb71c251f5a76f8f7634be849f24208c2f0a706188ab3100d",
+      "object_sha256": {
+        "forge_refundWholeProgTheory.cachekey": "7a84829a19c28d0883e78b59f0e15294f249189cff1731760452a559e6642839",
+        "forge_refundWholeProgTheory.dat": "52b94fa448fa6de315cab80251ed5cdf46184a576e9478644b374e8071b19ded",
+        "forge_refundWholeProgTheory.sig": "08a4a5c7da14795df5f874772e44b0578ca88a745c4ea53ca54924da01229b7c",
+        "forge_refundWholeProgTheory.sml": "a38571184d97be82df10a9d07cfadf3fd6935acaf85211df68999a25fc31e495",
+        "forge_refundWholeProgTheory.ui": "262314f8cb97a1d87c9fe5e0c87ca72e9808cdd775bc901998628f9a0d8f183b",
+        "forge_refundWholeProgTheory.uo": "5fefb01811bb6701d6bee8f56ef99a141dbcc48269d4cade7e8c59162f341b84"
+      },
+      "verified_library_source_sha256": "2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632",
+      "verified_library_data_sha256": "5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a",
+      "wire_source_sha256": "417b69d41a58da1ab3831e25cc3cf4ec6db7c0fcafd8af50be0caf9fd2306fb9",
+      "wire_data_sha256": "17482ed974f856688298b957aee8d5155b5d56e2a104bbe3ec2a02056a690ae1",
+      "stdio_source_sha256": "6f7aa17a5c671d83c94d2726932a7757083e30ee5508cce64f667f43138e0a68",
+      "stdio_data_sha256": "8971cd15449d1edbd0836aaba9f7339cd3a3da01268103cccd317d4df8054255",
+      "end_to_end": false,
+      "native_refund_claim": false
+    },
+    "end_to_end": false,
+    "native_execution": "NOT RUN",
+    "signing": "NOT RUN",
+    "wall_seconds": 137.65932195901405,
+    "object_sha256": {
+      "forge_refundArm8CompileTheory.sig": "3ac607e21c9a043f47f904dac6412f62f0681854ab755da404702562543d2d60",
+      "forge_refundArm8CompileTheory.dat": "30076203f55c9f0fa85dec0ebcb62d5ee41961b46055727fe26c9299e55dd78a",
+      "forge_refundArm8CompileTheory.ui": "12c04e0633c1dc9742ab952c63f5c6fd4a8a5f8d447ca3fa8a4d64d001490dbd",
+      "forge_refundArm8CompileTheory.uo": "e401718c6b2b321cce63ad91e5b3a2731527accd4c7f0575faf344aaf9f6aa03",
+      "forge_refundArm8CompileTheory.sml": "9a2657ccdfa31692b6d42a86dbc952edc84c13a11f8ef13387fec57f34494ef6",
+      "forge_refundArm8CompileTheory.cachekey": "c2e286e00dc8ae93492639f5a36d12b940f2e6c177e39d61599a10281fa96ccd"
+    },
+    "assembly_sha256": "4c750e4f9ecf75ff1f0bf5af7bfbdd0600ee2ca0e1564fcadc299db55c3a1757"
+  },
+  "end_to_end": false,
+  "native_execution": "NOT RUN",
+  "signing": "NOT RUN",
+  "wall_seconds": 112.63485225001932,
+  "object_sha256": {
+    "forge_refundArm8ProofTheory.cachekey": "40fcfab84c6229fdd398f3ef55b882114117b27ba3969f4b0589023aed9708ed",
+    "forge_refundArm8ProofTheory.sml": "73c34c0bfa868458fcae12e2a4de9082bd782bb6b75bf29e73fa2ff93a0d57c9",
+    "forge_refundArm8ProofTheory.dat": "86bb80b8c32788f6c7703339a4116546615a885054d1341938d449183250aead",
+    "forge_refundArm8ProofTheory.sig": "d115dbbaf4daae8d6dd9d57a1819f8a091beb24ced5cf8385cea645838aa4ee4",
+    "forge_refundArm8ProofTheory.ui": "b9e4ac886ec6621bbfc7ee3c17e5276e782fab4082207adb83bc1b896c4757d9",
+    "forge_refundArm8ProofTheory.uo": "38d356204bbdc04d158c3e13ca379516a08c67ad447b8345eefb9de2a41f6ecf"
+  }
+}

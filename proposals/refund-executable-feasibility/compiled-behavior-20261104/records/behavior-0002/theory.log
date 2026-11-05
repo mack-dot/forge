@@ -1,0 +1,27 @@
+<<HOL message: Created theory "forge_refundArm8Proof">>
+Saved theorem _______ "refund_compiled_behavior"
+FORGE_THEOREM refund_compiled_behavior
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ is_arm8_machine_config mc ∧
+  installed code cbspace data data_sp info.lab_conf.ffi_names
+    (heap_regs arm8_backend_config.stack_conf.reg_names) mc
+    info.lab_conf.shmem_extra ms ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+Exporting theory "forge_refundArm8Proof" ... done.
+Theory "forge_refundArm8Proof" took 4.7s to build

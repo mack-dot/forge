@@ -1,0 +1,22 @@
+<<HOL message: Created theory "forge_refundResourceBinding">>
+Saved theorem _______ "recorded_config"
+Saved theorem _______ "recorded_limits"
+Saved theorem _______ "recorded_read_limits"
+CHECKED recorded_config ⊢ find_name (set_oracle arm8_backend_config oracle).stack_conf.reg_names 2 =
+  1 ∧
+  find_name (set_oracle arm8_backend_config oracle).stack_conf.reg_names 3 =
+  2 ∧
+  find_name (set_oracle arm8_backend_config oracle).stack_conf.reg_names 4 =
+  3 ∧
+  2 * max_heap_limit 64 (set_oracle arm8_backend_config oracle).data_conf − 1 =
+  9007199254740991
+CHECKED recorded_limits ⊢ get_stack_heap_limit 9007199254740991
+    (0x739C400000w,0x73AC400000w,0x73BC400000w) = (33554384,16777216)
+CHECKED recorded_read_limits ⊢ mc.target.get_reg ms 1 = 0x739C400000w ∧
+  mc.target.get_reg ms 2 = 0x73AC400000w ∧
+  mc.target.get_reg ms 3 = 0x73BC400000w ⇒
+  read_limits arm8_config (set_oracle arm8_backend_config oracle) mc ms =
+  (33554384,16777216)
+Exporting theory "forge_refundResourceBinding" ... done.
+Theory "forge_refundResourceBinding" took 1.1s to build
+RESOURCE_BINDING_COMPLETE

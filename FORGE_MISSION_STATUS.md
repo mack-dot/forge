@@ -10,6 +10,35 @@ This tracker uses the new mission's M1–M4 definitions. Older roadmap milestone
 labels remain historical and must not be treated as the current priority order.
 
 
+
+## Current executable-proof checkpoint — U291
+
+[Exact conditional compiler theorem, controls and remaining premises](proposals/refund-executable-feasibility/compiled-behavior-20261104/REPORT.md).
+The original compiler job is **FINISHED, exit0**. Its rebuild returns0 and all
+six exports match. Fresh exact-statement import returns0 after one preserved
+loader-layout failure1. Substituted code and changed output claims are refused1/1.
+The audit records481 closure nodes and2400 dependency files.
+
+The theorem covers all nine typed model input fields and the complete six-field
+refund response. It retains installation, machine and filesystem premises, plus
+resource-limit I/O prefixes. It does not prove full native output or termination.
+The separate resource-binding proof passes0, repeat0, import0; wrong limit and
+stale pointer reject1/1. Resource sufficiency remains open.
+
+| Priority | Next action | Required completion evidence |
+| --- | --- | --- |
+| 1 | Bind the full Unicode/source/model input-output chain | Exact U262 transport method to U267 original-method relation and U291 serialization; all nine inputs and six outputs; no domain restriction |
+| 2 | Establish applicable concrete entry/runtime/resource conditions | Installed state, frames, ARM control state, FFI/OS/interference, sufficient resources and native exit; U290 remains stopped at five attempts |
+| 3 | Independently replay and review the complete assurance claim | Clean full-chain replay, exact assumption/profile review and independent approval |
+| 4 | Bind new provenance/admission and verify independent recovery | Authorized exact artifact/evidence chain; other-device archive hashes and restore |
+
+Do not poll or restart completed compiler jobs47209/47239. Separate malformed-input
+source work retains its owner. M1 remains open; M2–M4 stay later priorities.
+End-to-end and integration EXIT remain NOT_ESTABLISHED; end_to_end=false.
+Hosted refund measurements NOT RUN. No protected adoption, publication, merge,
+dispatch, signing, admission, deployment or Stage12 occurred.
+
+
 ## Current execution checkpoint — U290
 
 [Exact entry-layout attempts, recovery and pending work](proposals/refund-executable-feasibility/entry-layout-checkpoint-20261104/REPORT.md).
