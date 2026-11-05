@@ -1,0 +1,43 @@
+<<HOL message: Created theory "forge_refundEntryLayout">>
+Proof of 
+
+ffis = [«read»; «write»; «close»; «open_in»]
+
+failed.
+First unsolved sub-goal is
+
+to_list_tr to_char
+  (cv_snd
+     (cv$Pair (cv$Num 0)
+        (cv$Pair (cv$Num 114)
+           (cv$Pair (cv$Num 101)
+              (cv$Pair (cv$Num 97) (cv$Pair (cv$Num 100) (cv$Num 0))))))) "" =
+"read" ∧
+to_list_tr to_char
+  (cv_snd
+     (cv$Pair (cv$Num 0)
+        (cv$Pair (cv$Num 119)
+           (cv$Pair (cv$Num 114)
+              (cv$Pair (cv$Num 105)
+                 (cv$Pair (cv$Num 116) (cv$Pair (cv$Num 101) (cv$Num 0))))))))
+  "" = "write" ∧
+to_list_tr to_char
+  (cv_snd
+     (cv$Pair (cv$Num 0)
+        (cv$Pair (cv$Num 99)
+           (cv$Pair (cv$Num 108)
+              (cv$Pair (cv$Num 111)
+                 (cv$Pair (cv$Num 115) (cv$Pair (cv$Num 101) (cv$Num 0))))))))
+  "" = "close" ∧
+to_list_tr to_char
+  (cv_snd
+     (cv$Pair (cv$Num 0)
+        (cv$Pair (cv$Num 111)
+           (cv$Pair (cv$Num 112)
+              (cv$Pair (cv$Num 101)
+                 (cv$Pair (cv$Num 110)
+                    (cv$Pair (cv$Num 95)
+                       (cv$Pair (cv$Num 105)
+                          (cv$Pair (cv$Num 110) (cv$Num 0)))))))))) "" =
+"open_in"
+

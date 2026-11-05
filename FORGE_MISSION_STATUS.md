@@ -9,6 +9,32 @@ Active milestone: **M1 — executable behavioral correctness**.
 This tracker uses the new mission's M1–M4 definitions. Older roadmap milestone
 labels remain historical and must not be treated as the current priority order.
 
+
+## Current execution checkpoint — U290
+
+[Exact entry-layout attempts, recovery and pending work](proposals/refund-executable-feasibility/entry-layout-checkpoint-20261104/REPORT.md).
+The entry-layout proof is **NOT_ESTABLISHED** after five attempts, each exit1.
+The final attempt proves the compiled call names but stops on an unresolved
+lemma application. It has no complete export. Stop this proof path at the
+five-attempt limit. Negative controls and layout replay remain NOT RUN.
+
+| Priority | Next action | Current status / completion condition |
+| --- | --- | --- |
+| 1 | Collect the original compiler behavior job | IN_PROGRESS; runner47209/Holmake47239; require actual exit, exact theorem/premises, then controls and reproduction |
+| 2 | Complete source/runtime correspondence | Full-domain source relation, installed state, frames, physical ARM, FFI/OS, resources and native exit remain open |
+| 3 | Independently replay and review the complete claim | Clean full-chain replay and exact claim/profile approval required |
+| 4 | Bind authorized provenance/admission and confirm recovery | New exact assurance chain; independent-device archive hashes and restore remain unverified |
+
+U289's four finite FFI equations remain proved and reproduced. Entry-capture
+readback checks12 committed members and50 unchanged protected files. Local
+bundle/restore/fsck pass, with12865 tracked files compared; this does not confirm
+the other-device backup. M1 stays open. M2–M4 remain later priorities.
+Integration EXIT NOT_ESTABLISHED; hosted refund metrics NOT RUN;
+end_to_end=false. Separate source and swarm work retain their ownership.
+Publication, protected adoption, merge, dispatch, signing and admission still
+require their applicable authorization. No Stage12 work starts.
+
+
 ## Current proof checkpoint — U289
 
 [Exact FFI model equations, controls, replay and closure](proposals/refund-executable-feasibility/ffi-model-conformance-20261104/REPORT.md).

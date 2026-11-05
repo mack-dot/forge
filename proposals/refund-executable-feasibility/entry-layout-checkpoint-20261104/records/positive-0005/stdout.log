@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundEntryLayout">>
+Saved theorem _______ "compiled_ffi_names"
+Proof of 
+
+mmio_pcs_min_index
+  [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] =
+SOME 4
+
+failed.
+First unsolved sub-goal is
+
+(EVERY (λx. ∃s. x = ExtCall s) ffis ⇒
+ mmio_pcs_min_index ffis = SOME (LENGTH ffis)) ⇒
+mmio_pcs_min_index
+  [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] =
+SOME 4
+

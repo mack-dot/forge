@@ -1,0 +1,13 @@
+{
+  "actual_third_exit": 1,
+  "residual": "Four to_list_tr to_char expressions blocked on cv_snd of an explicit Pair",
+  "correction": "Use existing cvTheory.cv_snd_def on the residual, then existing EVAL.",
+  "lemma_source": "HOL/src/num/theories/cvScript.sml:219",
+  "all_theorem_statements_unchanged": true,
+  "source_sha256": {
+    "positive-0004": "75c8e1bfe7d3212a0ed3ee0d6e7b5d53f62f7a276c8012f40068d6cb17654071",
+    "wrong-ffi-slot-0004": "c76cc4d530df5152efb524b3223ffecb38d8d5e2c30b54e873b0d724426e72f2",
+    "halt-in-domain-0004": "ba8967e533f3020c95d096f9c616fa9abb90b85aed9497c5774730f356ab9cad"
+  },
+  "end_to_end": false
+}

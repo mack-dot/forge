@@ -1,0 +1,54 @@
+{
+  "actual_exit": 0,
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "capture_readback_sha256": "65d4d7575d530a025aa8cfb2425e4884b9bdca0562a94bf312a6dccb88a49862",
+  "header_sha256": "affd681c23fbcd238beecd70da53ae207b831b6e14b2e1d30b46450ae3a8c385",
+  "observed_pc": 4300243152,
+  "file_symbols": {
+    "cake_ffiopen_in": 4294983792,
+    "cake_fficlose": 4294983808,
+    "cake_ffiwrite": 4294983824,
+    "cake_ffiread": 4294983840,
+    "cake_install": 4294983856,
+    "cake_exit": 4294983872,
+    "cake_main": 4294983888
+  },
+  "derived_slide": 5259264,
+  "derived_entry_addresses": {
+    "cake_ffiopen_in": 4300243056,
+    "cake_fficlose": 4300243072,
+    "cake_ffiwrite": 4300243088,
+    "cake_ffiread": 4300243104,
+    "cake_install": 4300243120,
+    "cake_exit": 4300243136,
+    "cake_main": 4300243152
+  },
+  "candidate_domains": {
+    "code_and_codebuffer": [
+      4300243152,
+      4300374016
+    ],
+    "heap_stack": [
+      496542679040,
+      497079549952
+    ],
+    "bitmaps": [
+      4300406808,
+      4300427056
+    ]
+  },
+  "ffi_order": [
+    "read",
+    "write",
+    "close",
+    "open_in"
+  ],
+  "source_sha256": {
+    "positive": "3e02f22f88a7d19640dacbd02f9a48345296574e58a1b07a32ae42e4fe9eb13a",
+    "wrong-ffi-slot": "64df6ef3bd6c32337635ff789a61f8a87ece77943c2aaf8421cd9cb1f18aa2a6",
+    "halt-in-domain": "49e17681fc1abff9d477703266f1e2c68e1a223cb5f3bd0d6a002183875b70d6"
+  },
+  "scope": "Recorded scalar addresses and a candidate projected domain, not complete installed state or physical loader/FFI refinement",
+  "remaining_assumption": "Uniform relocation of the identified image symbols; actual relevant memory maps to the candidate projected domain",
+  "end_to_end": false
+}

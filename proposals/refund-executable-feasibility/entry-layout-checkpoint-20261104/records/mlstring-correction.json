@@ -1,0 +1,13 @@
+{
+  "actual_first_exit": 1,
+  "reason": "Compiler ffis has mlstring list type; first assertion used HOL string list literals.",
+  "correction": "Use the required mlstring literals for the same four names in the same order.",
+  "layout_statement_changed": false,
+  "prior_sources_preserved": true,
+  "source_sha256": {
+    "positive-0002": "c3d1b5d7efa9344191ace603d6b204c150aee487a4028fdd319b870e545ebf14",
+    "wrong-ffi-slot-0002": "a2fd106a608dc9fbe4aa49cb552097b24a5441848aba4a45bac48c2bcb2f241a",
+    "halt-in-domain-0002": "35d0443f9d4c0931704e09e6c606456d99c5236b74b600a3d2157b0e4c094106"
+  },
+  "end_to_end": false
+}

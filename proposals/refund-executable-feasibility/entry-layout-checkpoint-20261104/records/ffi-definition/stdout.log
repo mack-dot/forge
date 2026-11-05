@@ -1,0 +1,32 @@
+EXACT_FFIS_DEFINITION ⊢ ffis =
+  to_list to_mlstring_mlstring
+    (cv$Pair
+       (cv$Pair (cv$Num 0)
+          (cv$Pair (cv$Num 114)
+             (cv$Pair (cv$Num 101)
+                (cv$Pair (cv$Num 97) (cv$Pair (cv$Num 100) (cv$Num 0))))))
+       (cv$Pair
+          (cv$Pair (cv$Num 0)
+             (cv$Pair (cv$Num 119)
+                (cv$Pair (cv$Num 114)
+                   (cv$Pair (cv$Num 105)
+                      (cv$Pair (cv$Num 116) (cv$Pair (cv$Num 101) (cv$Num 0)))))))
+          (cv$Pair
+             (cv$Pair (cv$Num 0)
+                (cv$Pair (cv$Num 99)
+                   (cv$Pair (cv$Num 108)
+                      (cv$Pair (cv$Num 111)
+                         (cv$Pair (cv$Num 115)
+                            (cv$Pair (cv$Num 101) (cv$Num 0)))))))
+             (cv$Pair
+                (cv$Pair (cv$Num 0)
+                   (cv$Pair (cv$Num 111)
+                      (cv$Pair (cv$Num 112)
+                         (cv$Pair (cv$Num 101)
+                            (cv$Pair (cv$Num 110)
+                               (cv$Pair (cv$Num 95)
+                                  (cv$Pair (cv$Num 105)
+                                     (cv$Pair (cv$Num 110) (cv$Num 0)))))))))
+                (cv$Num 0)))))
+EVAL_FFIS ⊢ ffis = ffis
+FFIS_DEFINITION_DIAGNOSTIC_COMPLETE

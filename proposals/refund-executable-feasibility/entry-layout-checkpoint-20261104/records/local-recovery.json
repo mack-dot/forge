@@ -1,0 +1,77 @@
+{
+  "actual_exit": 0,
+  "commit": "f39849d74e0bbb9604b7453eb3f5ec9ece62c914",
+  "bundle_path": "/Users/mackianni/forge-backups/forge-ffi-conformance-2026-11-04.bundle",
+  "bundle_sha256": "6200c9c80872ed4200a5e6620e0ef92b61b23cdf1eb516155bfd805c1493e03d",
+  "bundle_bytes": 29115006,
+  "mode": "0o600",
+  "restore_path": "/private/tmp/forge-ffi-restore-20261104-evxh3vja/repo",
+  "restored_files_compared": 12865,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "bundle",
+        "create",
+        "/Users/mackianni/forge-backups/forge-ffi-conformance-2026-11-04.bundle",
+        "docs/integration-readiness-20261103"
+      ],
+      "cwd": "/private/tmp/forge-readiness-docs-20261103",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "bundle",
+        "verify",
+        "/Users/mackianni/forge-backups/forge-ffi-conformance-2026-11-04.bundle"
+      ],
+      "cwd": "/private/tmp/forge-readiness-docs-20261103",
+      "actual_exit": 0,
+      "stdout": "The bundle contains this ref:\nf39849d74e0bbb9604b7453eb3f5ec9ece62c914 refs/heads/docs/integration-readiness-20261103\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\n",
+      "stderr": "/Users/mackianni/forge-backups/forge-ffi-conformance-2026-11-04.bundle is okay\n"
+    },
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--branch",
+        "docs/integration-readiness-20261103",
+        "/Users/mackianni/forge-backups/forge-ffi-conformance-2026-11-04.bundle",
+        "/private/tmp/forge-ffi-restore-20261104-evxh3vja/repo"
+      ],
+      "cwd": "/private/tmp/forge-readiness-docs-20261103",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/private/tmp/forge-ffi-restore-20261104-evxh3vja/repo'...\nUpdating files:  18% (2365/12865)\nUpdating files:  19% (2445/12865)\nUpdating files:  20% (2573/12865)\nUpdating files:  21% (2702/12865)\nUpdating files:  22% (2831/12865)\nUpdating files:  23% (2959/12865)\nUpdating files:  24% (3088/12865)\nUpdating files:  25% (3217/12865)\nUpdating files:  26% (3345/12865)\nUpdating files:  27% (3474/12865)\nUpdating files:  28% (3603/12865)\nUpdating files:  29% (3731/12865)\nUpdating files:  30% (3860/12865)\nUpdating files:  31% (3989/12865)\nUpdating files:  32% (4117/12865)\nUpdating files:  33% (4246/12865)\nUpdating files:  34% (4375/12865)\nUpdating files:  34% (4476/12865)\nUpdating files:  35% (4503/12865)\nUpdating files:  36% (4632/12865)\nUpdating files:  37% (4761/12865)\nUpdating files:  38% (4889/12865)\nUpdating files:  39% (5018/12865)\nUpdating files:  40% (5146/12865)\nUpdating files:  41% (5275/12865)\nUpdating files:  42% (5404/12865)\nUpdating files:  43% (5532/12865)\nUpdating files:  44% (5661/12865)\nUpdating files:  45% (5790/12865)\nUpdating files:  46% (5918/12865)\nUpdating files:  47% (6047/12865)\nUpdating files:  48% (6176/12865)\nUpdating files:  49% (6304/12865)\nUpdating files:  50% (6433/12865)\nUpdating files:  51% (6562/12865)\nUpdating files:  52% (6690/12865)\nUpdating files:  53% (6819/12865)\nUpdating files:  54% (6948/12865)\nUpdating files:  55% (7076/12865)\nUpdating files:  55% (7189/12865)\nUpdating files:  56% (7205/12865)\nUpdating files:  57% (7334/12865)\nUpdating files:  58% (7462/12865)\nUpdating files:  59% (7591/12865)\nUpdating files:  60% (7719/12865)\nUpdating files:  61% (7848/12865)\nUpdating files:  62% (7977/12865)\nUpdating files:  63% (8105/12865)\nUpdating files:  64% (8234/12865)\nUpdating files:  65% (8363/12865)\nUpdating files:  66% (8491/12865)\nUpdating files:  67% (8620/12865)\nUpdating files:  68% (8749/12865)\nUpdating files:  69% (8877/12865)\nUpdating files:  70% (9006/12865)\nUpdating files:  71% (9135/12865)\nUpdating files:  72% (9263/12865)\nUpdating files:  73% (9392/12865)\nUpdating files:  74% (9521/12865)\nUpdating files:  75% (9649/12865)\nUpdating files:  76% (9778/12865)\nUpdating files:  77% (9907/12865)\nUpdating files:  78% (10035/12865)\nUpdating files:  79% (10164/12865)\nUpdating files:  80% (10292/12865)\nUpdating files:  81% (10421/12865)\nUpdating files:  82% (10550/12865)\nUpdating files:  83% (10678/12865)\nUpdating files:  84% (10807/12865)\nUpdating files:  84% (10810/12865)\nUpdating files:  85% (10936/12865)\nUpdating files:  86% (11064/12865)\nUpdating files:  87% (11193/12865)\nUpdating files:  88% (11322/12865)\nUpdating files:  89% (11450/12865)\nUpdating files:  90% (11579/12865)\nUpdating files:  91% (11708/12865)\nUpdating files:  92% (11836/12865)\nUpdating files:  93% (11965/12865)\nUpdating files:  94% (12094/12865)\nUpdating files:  95% (12222/12865)\nUpdating files:  96% (12351/12865)\nUpdating files:  97% (12480/12865)\nUpdating files:  97% (12491/12865)\nUpdating files:  98% (12608/12865)\nUpdating files:  99% (12737/12865)\nUpdating files: 100% (12865/12865)\nUpdating files: 100% (12865/12865), done.\n"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/private/tmp/forge-ffi-restore-20261104-evxh3vja/repo",
+      "actual_exit": 0,
+      "stdout": "f39849d74e0bbb9604b7453eb3f5ec9ece62c914\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "cwd": "/private/tmp/forge-ffi-restore-20261104-evxh3vja/repo",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "independent_off_machine_copy": "NOT VERIFIED",
+  "scope": "Local recovery only; this does not verify the owner-reported other-device backup",
+  "end_to_end": false
+}

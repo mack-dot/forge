@@ -8851,3 +8851,42 @@ curl: (6) Could not resolve host: github.com
   and exact off-machine hashes/restore remain open. No native rebuild, signing,
   protected adoption, publication, merge, dispatch or Stage12 ran. Hosted refund
   metrics NOT RUN; no performance improvement claim. Integration NOT_ESTABLISHED.
+
+
+## U290 — Entry-layout proof attempt limit reached; current actions recorded in Markdown
+
+- References: U275,U277,U283,U284,U285,U287,U289. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. U286 and unrelated U288 remain separate.
+- Exact native stays b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Candidate start_pc_ok uses recorded PC and projected code/heap/bitmap domains.
+  Stub PCs are derived under uniform image relocation, not independently observed
+  here. Full installed-state and physical-state relations are not established.
+- Five positive attempts return1/1/1/1/1. Failures: string/mlstring mismatch;
+  opaque ffis constant; residual cv_snd; Q.INST ML substitution type; then an
+  unresolved mmio_pcs_min_index specialization with free ffis. Last attempt saves
+  compiled_ffi_names but exports no complete theory. No layout success is claimed.
+- Exact definition diagnostic returns0. Final source is
+  5af4bfb81b709deebce5d9f1fda3a284d0ae0b8f16e7b83eb88301fa17f35bf8.
+  All required statements remain unchanged through tactic/type corrections.
+  No new axioms or semantic definitions. Stop this proof path at five attempts;
+  no sixth run. Prepared wrong-slot/halt-domain controls and replay/import NOT RUN.
+- checkpoint.py returns0:12 exact capture members match committed U283 manifest;
+  50 protected paths, mission and native identities match. Original compiler
+  runner47209/Holmake47239 remain live without terminal command.json. Backend proof
+  dependency completed; this is not a passing full compiler-behavior theorem.
+- Local recovery create/verify/clone/rev-parse/fsck all0.12865 tracked files match
+  restored commit f39849d74e0bbb9604b7453eb3f5ec9ece62c914. Bundle SHA256
+  6200c9c80872ed4200a5e6620e0ef92b61b23cdf1eb516155bfd805c1493e03d.
+  This same-machine bundle predates this checkpoint and is not all raw evidence.
+  Owner-reported other-device backup still lacks exact archive hashes and restore.
+- Packet:proposals/refund-executable-feasibility/entry-layout-checkpoint-20261104/REPORT.md. FORGE_MISSION_STATUS.md tracks next actions and completion
+  conditions. Historical failures and other-thread entries remain unchanged.
+- Impact: entry layout stays NOT_ESTABLISHED. U289 finite FFI conformance remains
+  established within its explicit limits. Full input-domain source binding,
+  installation/frames/physical ARM, universal FFI/OS, resources and native exit,
+  complete-chain independent replay/review, new provenance/admission and exact
+  independent backup remain open. No stronger executable claim follows.
+- Next check: collect the original compiler result; inspect every premise, then
+  controls/reproduction if positive. Keep separate source work independent.
+  No new native run, rebuild, signing, protected adoption, publication, merge,
+  dispatch or Stage12. Hosted refund metrics NOT RUN; integration NOT_ESTABLISHED.

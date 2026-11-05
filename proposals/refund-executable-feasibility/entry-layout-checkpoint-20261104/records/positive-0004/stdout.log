@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundEntryLayout">>
+Saved theorem _______ "compiled_ffi_names"
+/Users/mackianni/forge/results/refund-entry-model-2026-11-04/positive-0004/proof.sml:10: error: Type error in function application.
+   Function: Q.INST : (Q.tmquote, Q.tmquote) subst -> thm -> thm
+   Argument:
+      [
+         [QUOTE " (*#loc 10 19*)l |-> []"],
+         [
+            QUOTE
+            " (*#loc 10 30*)ffis |-> [ExtCall \194\171read\194\187;ExtCall \194\171write\194\187;ExtCall \194\171close\194\187;ExtCall \194\171open_in\194\187]"
+            ]
+         ] : 'a frag list list
+   Reason:
+      Can't unify 'a frag list to {redex: Q.tmquote, residue: Q.tmquote}
+         (Incompatible types)
+Found near
+  store_thm ("observed_mmio_index", Parse.Term [... ...], ... ... >> ... ...)

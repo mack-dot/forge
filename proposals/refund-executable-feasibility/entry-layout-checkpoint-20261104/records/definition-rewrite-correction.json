@@ -1,0 +1,17 @@
+{
+  "actual_second_exit": 1,
+  "diagnostic_exit": 0,
+  "observed_cause": "EVAL ffis returns reflexivity. Exported ffis_def contains the cv-encoded names and must be supplied explicitly.",
+  "corrections": [
+    "Rewrite with exact exported ffis_def before EVAL",
+    "Use Q.INST for the published unquantified mmio lemma",
+    "Use REDEPTH_CONV so bounded forall expansion visits all finite cases"
+  ],
+  "layout_statements_unchanged": true,
+  "source_sha256": {
+    "positive-0003": "4f032bfe7cba2c9502b0c745016c99ce4937126be37288846e711cd9e0545554",
+    "wrong-ffi-slot-0003": "3c4a0182492fe5c7e158dda1003447d30101b8ac8d149ed9fe3149ea4f08ec1b",
+    "halt-in-domain-0003": "d2dba7f29e40ea772bf181fbcae62653e365a38151e0da50082c749e35e3eb1c"
+  },
+  "end_to_end": false
+}

@@ -1,0 +1,26 @@
+{
+  "actual_exit": 0,
+  "protected_files_checked": 50,
+  "mission_sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c",
+  "exact_capture_members": {
+    "records/attempt-fullmap/command.json": "e5fce53817359c6942330fc978435d738ab580637cbb2d59a09efbb5869cb8b7",
+    "records/attempt-fullmap/commands.lldb": "1b853f8f7863352b307fda25c3b2a3ada0358c8c039258e2d70e31d6eefa92c3",
+    "records/attempt-fullmap/debugger.log": "15adf96c833e3a4d8a52ca40c8af16e2b3cdbb6e3a1d6025d5dfdf313b9989b3",
+    "records/attempt-fullmap/heap-header.bin": "affd681c23fbcd238beecd70da53ae207b831b6e14b2e1d30b46450ae3a8c385",
+    "records/attempt-fullmap/invocation.json": "4517987319499b8c7c129a8340b0b0a82b4d2da40b2d02912a14729f6a517b71",
+    "records/attempt-fullmap/loaded-bitmaps.bin": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+    "records/attempt-fullmap/loaded-code.bin": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+    "records/attempt-fullmap/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "records/attempt-fullmap/native.stdout": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee",
+    "records/attempt-fullmap/rationale.json": "ffd7f0f297ac4330b90e376239d3fc22c32c0ed117f9fc9eabfe0ba85a0c432f",
+    "records/attempt-fullmap/readback.json": "65d4d7575d530a025aa8cfb2425e4884b9bdca0562a94bf312a6dccb88a49862",
+    "records/attempt-fullmap/run.py": "99fad6bb60b5d0978111d4e3dcc87a5e4758f461c022d66fd86e7de8f883eaa2"
+  },
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "recovery_bundle_sha256": "6200c9c80872ed4200a5e6620e0ef92b61b23cdf1eb516155bfd805c1493e03d",
+  "independent_backup": "NOT VERIFIED",
+  "compiler_actual_exit": null,
+  "compiler_process_readback": "  PID  PPID  ELAPSED COMMAND\n47209  5515 02:47:12 /Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python -B results/refund-arm8-compile-2026-11-04/attempt-0001/run_behavior.py 0001 repeat\n47239 47209 02:47:11 /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake --no-cache -j 2 forge_refundArm8ProofTheory.uo\n",
+  "compiler_log_tail": "ofTheory\nsource_letProofTheory $(CAKEMLDIR)/compiler/backend/proofs (10s)   [\u219319]     OK\nStarting work on source_lift_constsProofTheory\nsource_dceProofTheory $(CAKEMLDIR)/compiler/backend/proofs (44s)   [\u219318]     OK\nStarting work on stack_namesProofTheory\nsource_lift_constsProofTheory      $(CAKEMLDIR)/.../proofs (43s)   [\u219317]     OK\nStarting work on source_to_sourceProofTheory\nsource_to_sourceProofTheory        $(CAKEMLDIR)/.../proofs  (5s)   [\u219316]     OK\nStarting work on stack_removeProofTheory\nstack_namesProofTheory     $(CAKEMLDIR)/.../backend/proofs (31s)   [\u219315]     OK\nStarting work on stack_rawcallProofTheory\nstack_rawcallProofTheory   $(CAKEMLDIR)/.../backend/proofs (45s)   [\u219314]     OK\nStarting work on word_to_stackProofTheory\nstack_removeProofTheory    $(CAKEMLDIR)/.../backend/proofs(243s)   [\u219313]     OK\nStarting work on reg_allocProofTheory\nreg_allocProofTheory     $(CAKEMLDIR)/.../reg_alloc/proofs (49s)   [\u219312]     OK\nStarting work on linear_scanProofTheory\nlinear_scanProofTheory   $(CAKEMLDIR)/.../reg_alloc/proofs (96s)   [\u219311]     OK\nStarting work on word_allocProofTheory\nFinished $(CAKEMLDIR)/compiler/backend/reg_alloc/proofs [#theories: 2] (146.227s) \nword_to_stackProofTheory   $(CAKEMLDIR)/.../backend/proofs(694s)   [\u219310]     OK\nStarting work on stack_to_labProofTheory\nword_allocProofTheory $(CAKEMLDIR)/compiler/backend/proofs(407s)    [\u21939]     OK\nStarting work on word_to_wordProofTheory\nword_to_wordProofTheory    $(CAKEMLDIR)/.../backend/proofs (65s)    [\u21938]     OK\nStarting work on data_to_wordProofTheory\ndata_to_wordProofTheory    $(CAKEMLDIR)/.../backend/proofs(121s)    [\u21937]     OK\nStarting work on data_to_word_syntaxProofTheory\nstack_to_labProofTheory    $(CAKEMLDIR)/.../backend/proofs(283s)    [\u21936]     OK\nStarting work on arm8_targetProofLemmasTheory\narm8_targetProofLemmasTheory  $(CAKEMLDIR)/.../arm8/proofs (20s)    [\u21935]     OK\nStarting work on arm8_targetProofTheory\ndata_to_word_syntaxProofTheory     $(CAKEMLDIR)/.../proofs(269s)    [\u21934]     OK\nStarting work on backendProofTheory\nbackendProofTheory    $(CAKEMLDIR)/compiler/backend/proofs(133s)    [\u21933]     OK\nFinished $(CAKEMLDIR)/compiler/backend/proofs [#theories: 70]       (7340.406s) \n",
+  "end_to_end": false
+}

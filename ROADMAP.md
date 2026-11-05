@@ -7,6 +7,29 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+
+## Tracking and entry-layout checkpoint — 2026-11-04 (U290)
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| Entry-layout positive attempts1–5 | 1/1/1/1/1 | Final attempt stops on unresolved lemma application; no complete export |
+| Exact compiled-FFI definition diagnostic | 0 | Encoded definition inspected; no layout proof |
+| checkpoint.py | 0 |12 capture members,50 protected paths and exact mission/native/recovery identities |
+| Local bundle create/verify/clone/rev-parse/fsck | 0/0/0/0/0 |12865 tracked files match restored commit f39849d |
+| Entry negative controls / reproduction / import | NOT RUN | No accepted positive layout export |
+| Original compiler behavior proof | IN_PROGRESS | Original runner47209/Holmake47239; no duplicate or terminal result |
+
+[Exact commands, failures, candidate-domain assumptions and next actions](proposals/refund-executable-feasibility/entry-layout-checkpoint-20261104/REPORT.md).
+The entry proof path stops at the five-attempt limit. The compiler remains the
+next active check. U289's finite FFI proof is retained. Full source/runtime,
+resource/exit, independent replay/review and new admission remain open. The
+owner-reported other-device backup lacks verified exact hashes and restore.
+This update preserves append-only history and adds no stage or publication.
+Integration EXIT remains NOT_ESTABLISHED.
+
+
 ## Active mission update — 2026-11-04 (U289)
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
