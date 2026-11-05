@@ -1,0 +1,52 @@
+<<HOL message: Created theory "forge_refundObservedFFI">>
+CHECKING_OBSERVED_FFI_0
+Saved theorem _______ "observed_ffi_0"
+OBSERVED_FFI_0_CHECKED
+CHECKING_OBSERVED_FFI_1
+Saved theorem _______ "observed_ffi_1"
+OBSERVED_FFI_1_CHECKED
+CHECKING_OBSERVED_FFI_2
+Saved theorem _______ "observed_ffi_2"
+OBSERVED_FFI_2_CHECKED
+CHECKING_OBSERVED_FFI_3
+Proof of 
+
+basis_ffi_oracle no_ext (ExtCall «write»)
+  (cl,
+   <|inode_tbl :=
+       [(UStream «stdin»,
+         MAP CHR
+           [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+            101; 115; 116; 45; 49; ... ; ... ]); (UStream «stdout»,"");
+        (UStream «stderr»,"")]; files := [];
+     infds :=
+       [(0,UStream «stdin»,ReadMode,62); (1,UStream «stdout»,WriteMode,0);
+        (2,UStream «stderr»,WriteMode,0)]; numchars := 4096:::ns;
+     maxFD := 1024|>) [0w; 0w; 0w; 0w; 0w; 0w; 0w; 0w]
+  [0w; 64w; 0w; 0w; 40w; 114w; 101w; 102w; 117w; 110w; 100w; 45w; 114w; 101w;
+   115w; 117w; 108w; 116w; 45w; 118w; 49w; 32w; 84w; 114w; 117w; 101w; 32w;
+   52w; ... ] =
+Oracle_return
+  (cl,
+   <|inode_tbl :=
+       [(UStream «stdin»,
+         MAP CHR
+           [40; 99; 104; 97; 114; 103; 101; 45; 49; 32; 114; 101; 113; 117;
+            101; 115; 116; 45; 49; 32; ... ; ... ]);
+        (UStream «stdout»,
+         MAP CHR
+           [40; 114; 101; 102; 117; 110; 100; 45; 114; 101; 115; 117; 108;
+            116; 45; 118; 49; 32; 84; ... ; ... ]); (UStream «stderr»,"")];
+     files := [];
+     infds :=
+       [(0,UStream «stdin»,ReadMode,62); (1,UStream «stdout»,WriteMode,64);
+        (2,UStream «stderr»,WriteMode,0)]; numchars := ns; maxFD := 1024|>)
+  [0w; 0w; 64w; 0w; 40w; 114w; 101w; 102w; 117w; 110w; 100w; 45w; 114w; 101w;
+   115w; 117w; 108w; 116w; 45w; 118w; 49w; 32w; 84w; 114w; 117w; 101w; 32w;
+   52w; ... ]
+
+failed.
+First unsolved sub-goal is
+
+F
+

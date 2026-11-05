@@ -7,6 +7,29 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Active mission update — 2026-11-04 (U289)
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Four exact captured FFI equations are now checked in the existing HOL model.
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| Original model positive-0002 | 1 | Three reads proved; write leaves THE(LDROP1(4096:::ns))=ns |
+| Model positive-0004 / identical-source repeat | 0/0 | Existing LDROP_1 lemma closes unchanged equation; four equal exports |
+| Altered-read / wrong-write-descriptor controls before and after fix | 1/1;1/1 | Exact intended false equations, residual F; no complete export |
+| Fresh standard-heap model import | 0 | Four exact statements, zero explicit hypotheses/tagged axioms; DISK_THM only |
+| Initial file audit / corrected readback_model_complete_0002.py | 1/0 | Built-in min root recorded explicitly;215 nodes,1068 files and24 buffer comparisons |
+| Protected-input and process readback | 0 |50 protected paths and mission unchanged; original compiler job live |
+| Compiler behavior proof | IN_PROGRESS | No terminal conclusion; no duplicate invocation |
+
+[Commands, hashes, assumptions and exact negative cases](proposals/refund-executable-feasibility/ffi-model-conformance-20261104/REPORT.md).
+The previous goal turn made tracking progress. This turn proves finite model
+conformance and checks rejection/reproduction/import. Full actual filesystem,
+physical state, memory frames, source/runtime/resource/exit correspondence,
+independent complete-chain review, new provenance/admission and exact backup
+restore remain open. No native rebuild, signing, publication, merge, dispatch
+or Stage12 occurred. Integration EXIT remains NOT_ESTABLISHED.
+
 ## Tracking checkpoint — 2026-11-04 (U287)
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

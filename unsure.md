@@ -8801,3 +8801,53 @@ curl: (6) Could not resolve host: github.com
   Owner-reported off-machine backup still lacks exact hash/restore evidence.
   New authenticated claim/profile/admission remains separately gated. Integration
   EXIT NOT_ESTABLISHED. No publication, signing, merge, dispatch or Stage12 ran.
+
+
+## U289 — Complete captured FFI equations proved, attacked, reproduced and imported
+
+- References: U271,U275,U277,U283,U284,U285,U287. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Prior goal turn made tracking progress;
+  this turn completes a finite conformance proof and its controls/replay/import.
+  U288 belongs to separate swarm work and is preserved. U286 remains separate.
+- The original model process terminates normally with exit1 after all three read
+  equations pass. The write proof leaves THE(LDROP1(4096:::ns))=ns. Existing HOL
+  marks LDROP nocompute and proves LDROP_1. Adding that one lemma to the write
+  tactic closes the same equation. Typed constructors preserve all four original
+  equations and twelve complete byte arrays. No premise, axiom or model changes.
+- Final positive-0004 returns0. Same-source repeat0 exports four byte-identical
+  files. Prepared positive-0003 remains unexecuted. Actual positive failures are
+  the initial syntax error and this tail-drop residual, both retained.
+- Both exact original negative cases are preserved through constructor rendering.
+  Altered returned-read byte40->41 fails1 at observed_ffi_0. Substituting fd0 for
+  write fd1 fails1 at observed_ffi_3 after three correct read equations pass.
+  Both have residual F and no complete export. Repeating both under the corrected
+  final tactic again returns1/1 for the same intended reasons. No tool error is
+  counted as adversarial rejection. No changed executable is run.
+- Fresh standard-heap import0 checks aconv for all four exact required statements,
+  zero explicit hypotheses/tagged axioms and DISK_THM only. Closure215 nodes
+  retains bool.SELECT_AX,INFINITY_AX,ETA_AX,BOOL_CASES_AX. Kernel/logic, Poly/ML,
+  loader, host and cached parent proof-data trust remain. This is not clean
+  independent replay of every upstream source or producer authentication.
+- File readback first fails1 because it expects minTheory.dat. Existing HOL source
+  installs min as the parentless kernel root. Corrected readback0 records this
+  root, source/heap identities and1068 other file identities. Every non-built-in
+  theory still requires its data/signature/source. All24 before/after/config
+  buffers equal both native captures. Six pinned semantics files remain unchanged.
+- Proof source b1daaa48e84b9946b0160da2f70c50d11cac0314c25c032cf1bfea13b7adbc78;
+  data5af94f633ccc88472f38e863a2beb9d80adb867589ce95a460743c7c65009747.
+  Exact native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Protected-input/process readback0 checks50 paths and mission. Original compiler
+  runner47209/Holmake47239 remain live. No terminal compiler theorem is claimed.
+- Packet:proposals/refund-executable-feasibility/ffi-model-conformance-20261104/REPORT.md.
+  Four theorems observed_ffi_0..3 concern the existing basis_ffi_oracle and one
+  recorded request, arbitrary command line cl and unobserved tail ns. Four fixed
+  transfer entries are4096. Neither a complete physical filesystem relation nor
+  liveness of ns/wfFS follows. Full memory frames, physical ARM, universal C/OS,
+  interference, resource sufficiency and native exit remain open. Full approved
+  integer/Unicode source/model binding remains required, without restriction.
+- Next: finish the original compiler behavior check; inspect its actual theorem;
+  run binding controls/reproduction. Keep separate source initialization/event
+  work. Independent full-chain replay/review, new authorized provenance/admission
+  and exact off-machine hashes/restore remain open. No native rebuild, signing,
+  protected adoption, publication, merge, dispatch or Stage12 ran. Hosted refund
+  metrics NOT RUN; no performance improvement claim. Integration NOT_ESTABLISHED.

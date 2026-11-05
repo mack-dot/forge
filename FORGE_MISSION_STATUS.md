@@ -9,7 +9,34 @@ Active milestone: **M1 — executable behavioral correctness**.
 This tracker uses the new mission's M1–M4 definitions. Older roadmap milestone
 labels remain historical and must not be treated as the current priority order.
 
-## Current action checkpoint — U287
+## Current proof checkpoint — U289
+
+[Exact FFI model equations, controls, replay and closure](proposals/refund-executable-feasibility/ffi-model-conformance-20261104/REPORT.md).
+All four captured call equations are PROVED in the existing HOL semantics.
+Positive proof, fresh rebuild and separate import return0/0/0. Four exports
+match byte for byte. Altered returned-read data and a substituted write descriptor
+both fail1 with residual F. The original proof failure and file-audit failure
+remain preserved. The corrected inventory checks215 nodes and1068 files.
+
+This closes finite model conformance for the recorded fixture. It does not prove
+universal C/OS behavior, actual complete filesystem correspondence, memory frames,
+physical ARM state, resources or native exit. Full integer/Unicode scope remains.
+No native process was rerun in this check. end_to_end=false; M1 remains open.
+
+| Priority | Next action | Required completion evidence |
+| --- | --- | --- |
+| 1 | Finish original compiler behavior job47209/47239 | Actual terminal exit, exact theorem and every premise; then binding controls and reproduction |
+| 2 | Complete source/runtime correspondence | Source initialization/events; full-domain source relation; installation, FFI/OS, resource and exit obligations |
+| 3 | Independently replay and review the full claim | Clean complete-chain replay, exact assumptions/profile and independent approval |
+| 4 | Bind new provenance/admission and operational evidence | Authorized exact claim/artifact chain; verified independent-copy hashes and restore |
+
+The FFI job is terminal; do not poll or restart old child91810. The compiler job
+remains live at this checkpoint. U284's source work and the unrelated swarm work
+retain separate ownership. M2–M4 remain later priorities. Hosted refund metrics
+are NOT RUN. Integration EXIT is NOT_ESTABLISHED. Publication, protected adoption,
+merge, dispatch, signing and admission retain their approval boundaries.
+
+## Action checkpoint at U287 — historical
 
 [Exact results, failed checks and next actions](proposals/refund-executable-feasibility/ffi-model-checkpoint-20261104/REPORT.md).
 The active goal remains M1: establish the approved refund behavior for the exact

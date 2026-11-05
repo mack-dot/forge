@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "results/refund-ffi-observation-2026-11-04/readback_model_complete.py"
+  ],
+  "actual_exit": 1,
+  "reason": "File inventory expected a separate minTheory.dat; existing HOL source installs min as the kernel root with no parents.",
+  "failed_source_sha256": "209ac2ce4aacadda1b83560c32bc13f9c42bec5f990b35034060b28021f99b9e",
+  "correction": "Explicitly identify built-in min, kernel source identities and standard heap; keep every non-built-in theory file required.",
+  "proof_changes": "NONE",
+  "end_to_end": false
+}

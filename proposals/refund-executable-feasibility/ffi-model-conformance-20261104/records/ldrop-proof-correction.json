@@ -1,0 +1,33 @@
+{
+  "actual_exit": 0,
+  "failed_positive_exit": 1,
+  "failed_positive_residual": "THE (LDROP 1 (4096:::ns)) = ns",
+  "existing_lemma": "llistTheory.LDROP_1",
+  "lemma_source": "HOL/src/coalgebras/llistScript.sml:2875",
+  "ldrop_definition_nocompute": true,
+  "prepared_positive_0003_not_run": true,
+  "cases": [
+    {
+      "case": "positive-0004",
+      "source_sha256": "b1daaa48e84b9946b0160da2f70c50d11cac0314c25c032cf1bfea13b7adbc78",
+      "prior_source_sha256": "7fad635b24005ac0d7dc3a9a0b5a33e91d19f634ff1c87607e95d0f7b429ac68",
+      "only_change": "append existing llistTheory.LDROP_1 simplification to the write proof tactic",
+      "equations_and_captured_bytes_unchanged": true
+    },
+    {
+      "case": "altered-read-byte-0004",
+      "source_sha256": "cf8b43acdb67a26a357a0ae8a174549202ff27bdedaea7d98775dd9e81c073a8",
+      "prior_source_sha256": "a53326607fa1f66c0857c0c53ef4769cb9d67326def0eeb228d202635684e523",
+      "only_change": "append existing llistTheory.LDROP_1 simplification to the write proof tactic",
+      "equations_and_captured_bytes_unchanged": true
+    },
+    {
+      "case": "wrong-write-descriptor-0004",
+      "source_sha256": "d7843478c92579fef731f5a924fd60867d3981e5cd45a8edbaf6cba3e5d1fc2a",
+      "prior_source_sha256": "6cea836a1f7a74d68ab1ae93133ae9bbf1828b7a3510120ec49a81dc010cbdaa",
+      "only_change": "append existing llistTheory.LDROP_1 simplification to the write proof tactic",
+      "equations_and_captured_bytes_unchanged": true
+    }
+  ],
+  "end_to_end": false
+}

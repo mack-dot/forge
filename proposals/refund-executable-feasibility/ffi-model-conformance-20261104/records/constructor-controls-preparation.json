@@ -1,0 +1,30 @@
+{
+  "actual_exit": 0,
+  "scope": "Preparation and exact negative-input identity only",
+  "cases": [
+    {
+      "case": "altered-read-byte-0003",
+      "source_sha256": "a53326607fa1f66c0857c0c53ef4769cb9d67326def0eeb228d202635684e523",
+      "prior_frozen_source_sha256": "54df6f6e32647b1d0089073b7b385a3bc2dbeb1b768e50ace8d0334260cae596",
+      "all_four_equations_equal_original_negative_case": true,
+      "changed_array": 2,
+      "changed_offset": 4,
+      "old_value": 40,
+      "new_value": 41,
+      "actual_exit": null
+    },
+    {
+      "case": "wrong-write-descriptor-0003",
+      "source_sha256": "6cea836a1f7a74d68ab1ae93133ae9bbf1828b7a3510120ec49a81dc010cbdaa",
+      "prior_frozen_source_sha256": "83f08479ce0fff57df09e4249a668bc5933342a380e88f8498e40bcab48ca1ca",
+      "all_four_equations_equal_original_negative_case": true,
+      "changed_array": 9,
+      "changed_offset": 7,
+      "old_value": 1,
+      "new_value": 0,
+      "actual_exit": null
+    }
+  ],
+  "positive_model_check_still_owned_by_original_runner": true,
+  "end_to_end": false
+}

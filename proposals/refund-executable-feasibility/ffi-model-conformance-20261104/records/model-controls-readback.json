@@ -1,0 +1,38 @@
+{
+  "actual_exit": 0,
+  "scope": "Readback of two actual intended HOL refusals",
+  "cases": [
+    {
+      "case": "altered-read-byte-0003",
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "rejection_theorem": "observed_ffi_0",
+      "residual_goal": "F",
+      "positive_prefix_equations": [],
+      "complete_export": false,
+      "source_sha256": "a53326607fa1f66c0857c0c53ef4769cb9d67326def0eeb228d202635684e523",
+      "command_sha256": "54dcbbd6f58478dd90c18b47e4661f50f19e3cc9e487c922b4eb22434de1e9bb",
+      "stdout_sha256": "0c97fa3edeac52b186a56fabb89ba612c8be7f7fd6ff3d5d3e9d71d2574b23ee",
+      "stderr_sha256": "cc3cb6e812278b55bc5d88347fa7883ec173c80c005ef37f984af99a6203104e"
+    },
+    {
+      "case": "wrong-write-descriptor-0003",
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "rejection_theorem": "observed_ffi_3",
+      "residual_goal": "F",
+      "positive_prefix_equations": [
+        "0",
+        "1",
+        "2"
+      ],
+      "complete_export": false,
+      "source_sha256": "6cea836a1f7a74d68ab1ae93133ae9bbf1828b7a3510120ec49a81dc010cbdaa",
+      "command_sha256": "915ff4e768e18ddf145a27b4b67c1e3cc91342f3b6d0f69827f5c05e58e9762b",
+      "stdout_sha256": "cca6ad36d875c50c2d9e8f46a4ec7a20b4e6321b9a9f44dfafb105bca2af45f5",
+      "stderr_sha256": "ad90bf218bec877100e96bb7e287d5356117ecd6e17745eaf1c30fd3503fce4f"
+    }
+  ],
+  "full_positive_model_result": "Still requires its original terminal record",
+  "end_to_end": false
+}
