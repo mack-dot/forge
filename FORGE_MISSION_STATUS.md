@@ -9,6 +9,37 @@ Active milestone: **M1 — executable behavioral correctness**.
 This tracker uses the new mission's M1–M4 definitions. Older roadmap milestone
 labels remain historical and must not be treated as the current priority order.
 
+## Current action checkpoint — U287
+
+[Exact results, failed checks and next actions](proposals/refund-executable-feasibility/ffi-model-checkpoint-20261104/REPORT.md).
+The active goal remains M1: establish the approved refund behavior for the exact
+native executable under explicit assumptions. Preserve the full integer and
+Unicode domain. Fixed RISC-V results remain supporting evidence. M2–M4 remain
+later priorities. This update does not start a repository stage.
+
+| Next action | Actual status | Completion condition |
+| --- | --- | --- |
+| Finish the existing FFI model check | IN_PROGRESS; two of four equations saved | Terminal exit, all four exact equations and complete export |
+| Finish the existing compiler behavior proof | IN_PROGRESS; original job remains live | Terminal exit, exact behavioral theorem and explicit premises |
+| Run FFI corruption controls and proof replay | NOT RUN | Intended rejection, identical exports, fresh import and checked closure |
+| Complete source/runtime correspondence | NOT_ESTABLISHED | Initialization/events, full-domain source relation, installed state, FFI/OS, resources and exit |
+| Independently review the complete claim | NOT RUN for complete chain | Exact claim/profile, assumptions, dependencies and reproducible evidence |
+| Confirm backup and new admission | NOT_ESTABLISHED | Independent-copy hashes and restore; authorized exact provenance and admission |
+
+The first model syntax failure remains recorded. Constructor diagnostics return
+1/1/0; the passing diagnostic constructs terms only. All four original equations
+reconstruct exactly, but the alternative proof remains NOT RUN. A replacement
+guard exits1 because the original job has started proving equations; no signal
+or duplicate job follows. The original model and compiler jobs retain their IDs.
+The [U285 captures](proposals/refund-executable-feasibility/ffi-observation-20261104/REPORT.md)
+remain finite observations. No new native or hosted run occurred in this update.
+
+Update this checkpoint after each terminal result. Preserve historical sections
+and append changes to unsure.md. Local recording/unsigned commits are authorized;
+protected adoption, publication, push, merge, dispatch, signing and admission
+retain their separate boundaries. Keep independent review and unresolved runtime
+assumptions explicit. Integration EXIT is NOT_ESTABLISHED; end_to_end=false.
+
 ## Start here
 
 Use this file for the current decision and unfinished work. Keep the full
@@ -17,7 +48,7 @@ instructions in [FORGE_MISSION.md](FORGE_MISSION.md), actual command results in
 Update these records after each experiment. Link each completed item to its
 evidence. Keep failed attempts and mark work that has not run as `NOT RUN`.
 
-## Current native FFI checkpoint — U285
+## Native FFI checkpoint at U285 — historical
 
 [Two complete native captures and model-check status](proposals/refund-executable-feasibility/ffi-observation-20261104/REPORT.md).
 Both captures return the expected output and exit0. All38 byte comparisons pass.

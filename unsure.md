@@ -8767,3 +8767,37 @@ curl: (6) Could not resolve host: github.com
   backup hashes/restore remain open. Integration EXIT is NOT_ESTABLISHED.
   No protected adoption, publication, merge, dispatch, release signing, admission,
   deployment or Stage12 occurred. No hosted timing or savings claim is made.
+
+
+## U287 — Markdown tracking refreshed from live proof progress and preserved diagnostics
+
+- References: U279,U283,U284,U285. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner requested persistent Markdown tracking. U286 remains
+  reserved for the separate source-proof task. No existing journal bytes change.
+- Saved constructor diagnostic exits1/1/0 are read back: nonexistent dest_word
+  API; renamed output environment key; then all four terms constructed using
+  existing typed HOL constructors. No diagnostic checks a theorem or exports
+  accepted proof evidence. Exact reconstruction returns0 for all four original
+  equations and twelve complete byte arrays. This establishes input identity only.
+- The original model child91810 has now saved observed_ffi_0 and observed_ffi_1.
+  Neither its terminal exit nor a complete accepted export exists at this
+  checkpoint. Original compiler runner47209/Holmake47239 also remain live.
+- A proposed replacement guard exits1 when it finds the first proof marker.
+  Its assertion prevents the signal and interruption-record write. No job is
+  stopped and the prepared constructor proof is NOT RUN. No duplicate is started.
+- checkpoint-U287.py returns0 after saved-record, native/source identity and
+  actual process checks. Exact report and snapshots:
+  proposals/refund-executable-feasibility/ffi-model-checkpoint-20261104/REPORT.md.
+  Native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8
+  remains unchanged. The two accepted native captures and38 comparisons are
+  prior evidence, not new executions. Both failed diagnostic sources remain.
+- Impact: the tracker now distinguishes partial proof progress, term construction,
+  actual failures and NOT RUN controls. No complete FFI or compiler behavior
+  result follows. The optional constructor path does not change the equations.
+- Next: finish the existing jobs; inspect exact conclusions; run the returned-read
+  byte and wrong-fd controls, reproduction and fresh import/closure after success.
+  Preserve full-domain source binding, installation, physical state, memory
+  frames, FFI/OS/interference/resources/exit and independent complete-chain review.
+  Owner-reported off-machine backup still lacks exact hash/restore evidence.
+  New authenticated claim/profile/admission remains separately gated. Integration
+  EXIT NOT_ESTABLISHED. No publication, signing, merge, dispatch or Stage12 ran.

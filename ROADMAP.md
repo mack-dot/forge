@@ -7,6 +7,28 @@ requirements in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md). The immediat
 priority is a real component's executable behavioral claim. The fixed-ELF GCD
 work is supporting evidence. This introduces no new repository stage or authority.
 
+## Tracking checkpoint — 2026-11-04 (U287)
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The owner requested a durable Markdown tracker. Current actions and completion
+conditions are in [FORGE_MISSION_STATUS.md](FORGE_MISSION_STATUS.md).
+
+| Command/check | Actual exit | Result |
+| --- | --- | --- |
+| `python3 -B results/refund-ffi-observation-2026-11-04/checkpoint-U287.py` | 0 | Saved records, source/native identity and live process checkpoint |
+| Constructor diagnostics (prior executions; read back here) | 1/1/0 | API error; environment-key error; complete term construction only |
+| Complete original-equation reconstruction (prior execution) | 0 | Input identity; no semantic proof claim |
+| Proposed replacement guard | 1 | First proof marker present; no signal or replacement executed |
+| Original model check / original compiler proof | IN_PROGRESS / IN_PROGRESS | Model saved first two equations; neither has a terminal result |
+| Model controls / reproduction / fresh import | NOT RUN | Wait for complete positive export |
+
+[Exact records and smallest next actions](proposals/refund-executable-feasibility/ffi-model-checkpoint-20261104/REPORT.md).
+Both original jobs continue without duplication. Two saved equations do not
+establish the four-equation check or full runtime correspondence. Complete-chain
+review, source/runtime premises, new admission and independent backup restore
+remain open. Historical evidence is unchanged. Integration EXIT NOT_ESTABLISHED.
+No new stage, protected adoption, publication, signing, merge or dispatch ran.
+
 ## Active mission update — 2026-11-04 (U285)
 
 Two native captures now record full FFI buffers and call returns for the same
