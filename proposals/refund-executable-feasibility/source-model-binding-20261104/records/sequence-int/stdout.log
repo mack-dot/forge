@@ -1,0 +1,41 @@
+sequence-int.dfy(1,16): S-expression extraction error: Unsupported SeqType: seq<int>
+   at System.Environment.get_StackTrace()
+   at Microsoft.Dafny.Compilers.Bake.UnsupportedError(Object obj) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 708
+   at Microsoft.Dafny.Compilers.Bake.TypeToString(Type type) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 182
+   at Microsoft.Dafny.Compilers.Bake.FormalToString(Formal formal) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 151
+   at System.Linq.Enumerable.SelectListIterator`2.MoveNext()
+   at System.Linq.Enumerable.WhereEnumerableIterator`1.MoveNext()
+   at System.String.Join(String separator, IEnumerable`1 values)
+   at Microsoft.Dafny.Compilers.Bake.ListToString[T](Func`2 f, IEnumerable`1 xs) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 686
+   at Microsoft.Dafny.Compilers.Bake.MemberDeclToString(MemberDecl member) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 111
+   at System.Linq.Enumerable.SelectListIterator`2.MoveNext()
+   at System.Linq.Enumerable.WhereEnumerableIterator`1.MoveNext()
+   at System.String.Join(String separator, IEnumerable`1 values)
+   at Microsoft.Dafny.Compilers.Bake.ListToString[T](Func`2 f, IEnumerable`1 xs) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 686
+   at Microsoft.Dafny.Compilers.Bake.ProgramToString(Program program) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/Bake.cs:line 58
+   at Microsoft.Dafny.BakeCommand.HandleExtraction(DafnyOptions options) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyDriver/Commands/BakeCommand.cs:line 48
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecutionContextCallback(Object s)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at Microsoft.Dafny.Compilation.ResolveAsync() in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyCore/Pipeline/Compilation.cs:line 261
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecutionContextCallback(Object s)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at Microsoft.Dafny.TextDocumentLoader.ResolveAsync(Compilation compilation, Program program, CancellationToken cancellationToken) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny-compat/Source/DafnyCore/Pipeline/TextDocumentLoader.cs:line 46
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecutionContextCallback(Object s)
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecuteFromThreadPool(Thread threadPoolThread)
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()

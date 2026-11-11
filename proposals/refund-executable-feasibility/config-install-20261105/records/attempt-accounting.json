@@ -1,0 +1,25 @@
+{
+  "actual_exit": 0,
+  "rule": "Make at most five attempts per failing proof.",
+  "source": "ROADMAP.md Hard rules",
+  "supersedes": "trace-stop.json; preserved unchanged",
+  "accounting": {
+    "epoch_single": {
+      "failures": 0,
+      "successful_builds": 5
+    },
+    "bounded_stack_single_epoch": {
+      "failed_attempts": 4,
+      "successful_attempt": 5,
+      "status": "KERNEL_SAVED_NOT_YET_COMPLETE_EXPORT"
+    },
+    "safe_run_single_epoch": {
+      "failed_attempts": 1,
+      "failure_case": "trace-0005",
+      "attempts_remaining": 4
+    }
+  },
+  "unchanged_successful_prefix_sha256": "e789ca71f990c51a93d3100d23b4fa158ce53f3090b3da99b66ccb488cf68bb2",
+  "next_operation": "Change only the failed corollary tactic; preserve both theorem statements and the successful prefix.",
+  "end_to_end": false
+}

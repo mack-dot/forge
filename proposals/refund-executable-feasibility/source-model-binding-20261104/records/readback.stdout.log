@@ -1,0 +1,90 @@
+{
+  "actual_exit": 0,
+  "recorded_exits": {
+    "build-0001": 0,
+    "build-0002": 0,
+    "build-0003": 0,
+    "export-0001": 1,
+    "export-0002": 1,
+    "export-0003": 0,
+    "export-repeat": 0,
+    "upstream-example": 0,
+    "named-example": 0,
+    "two-modules": 1,
+    "root-code": 1,
+    "nested-module": 1,
+    "abstract-module": 1,
+    "nonempty-frame": 1,
+    "sequence-int": 1,
+    "wrong-amount": 0,
+    "swapped-fields": 0,
+    "swapped-inputs": 0,
+    "missing-contract": 0,
+    "hol-0001": 1,
+    "hol-0002": 1,
+    "hol-0003": 1,
+    "hol-0004": 0,
+    "hol-repeat": 0,
+    "hol-wrong-amount": 1,
+    "hol-swapped-fields": 1,
+    "hol-swapped-inputs": 1,
+    "hol-missing-contract": 1,
+    "hol-trailing": 1,
+    "import-0001": 0,
+    "relation-0001": 0,
+    "relation-repeat": 0,
+    "relation-import": 0,
+    "bridge-0001": 0,
+    "bridge-repeat": 0,
+    "bridge-import": 0
+  },
+  "source_sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d",
+  "export_sha256": "58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d",
+  "frontend_pin": "6eb1ed63544a2e22c151db9b575f4308b8f329b0",
+  "frontend_patch_sha256": "df88831bcc41bb19b3148aed5f69332cde0e626e33d21538da8ef4f4dbf04a6a",
+  "frontend_driver_sha256": "55d26351d36b660ac6b1ea6eac7515cc4b15bc9a5f139f375a1a9e6f90455acb",
+  "prior_frontend_outputs_unchanged": 103,
+  "closure_node_count": 195,
+  "closure_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "dependency_file_count": 964,
+  "builtin_dependencies": {
+    "min": {
+      "source_sha256": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+      "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+    }
+  },
+  "negative_reasons": {
+    "hol-wrong-amount": [
+      "source_full_result",
+      "amount + 1 = amount"
+    ],
+    "hol-swapped-fields": [
+      "source_full_result",
+      "request = charge"
+    ],
+    "hol-swapped-inputs": [
+      "Failed to prove theorem \"source_signature\"",
+      "First unsolved sub-goal is\n\nF"
+    ],
+    "hol-missing-contract": [
+      "Failed to prove theorem \"source_postconditions\"",
+      "First unsolved sub-goal is\n\nF"
+    ],
+    "hol-trailing": [
+      "Trailing export bytes"
+    ]
+  },
+  "protected_files_unchanged": 50,
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "prior_packets_verified": {
+    "compiled-behavior-20261104": 88,
+    "resource-binding-20261104": 52
+  },
+  "scope": "Identity and recorded-outcome audit; HOL proofs concern parsed AST behavior. Unverified frontend, Unicode connection, physical runtime and independent authenticated assurance remain explicit gaps.",
+  "end_to_end": false
+}

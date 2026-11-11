@@ -1,0 +1,275 @@
+NORMALIZED_ORACLE ⊢ (I ##
+   MAP
+     (λ(p1,p1',p1'',p2).
+        full_compile_single 64 arm8_config.two_reg_arith
+          (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+          (set_oracle arm8_backend_config oracle).word_to_word_conf.reg_alg
+          arm8_config ((p1,p1',p1'',p2),NONE))) ∘
+  (I ##
+   MAP
+     (compile_part
+        (ensure_fp_conf_ok arm8_config
+           (set_oracle arm8_backend_config oracle).data_conf))) ∘
+  cake_orac (:64) arm8_config info syn
+    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog) =
+  cake_orac (:64) arm8_config info syn
+    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog)
+NORMALIZED_LABELS ⊢ ∀n. EVERY (λ(p1,p1',p1'',p2). data_num_stubs ≤ p1)
+        (SND
+           (cake_orac (:64) arm8_config info syn
+              (λx. SND (SND (SND (SND (SND (config_tuple2 x))))))
+              (λps. ps.data_prog) n))
+PREMISE_COUNT 12
+PREMISE 0 ∀k. ∃rest.
+  evaluate
+    (Call NONE (SOME InitGlobals_location) [0] NONE,
+     <|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+       fp_regs := s.fp_regs; store := s.store \\ Handler; stack := [];
+       stack_limit := LENGTH s.stack; stack_max := SOME 1;
+       stack_size :=
+         mapi
+           (λn (arg_count,prog,md).
+              FST
+                (SND
+                   (compile_prog arm8_config F prog arg_count
+                      (arm8_config.reg_count −
+                       (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+           (fromAList
+              (SND
+                 (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                    refund_prog))); memory := s.memory; mdomain := s.mdomain;
+       sh_mdomain := s.sh_mdomain; permute := K I;
+       compile :=
+         (λ(bm0,cfg) progs.
+            (let
+               (progs,fs,p1,p2) =
+                 compile_word_to_stack arm8_config F
+                   (arm8_config.reg_count −
+                    (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+             in
+               OPTION_MAP (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2,cfg))
+                 (s.compile cfg progs)));
+       compile_oracle :=
+         (I ##
+          MAP
+            (λ(p1,p1',p1'',p2).
+               full_compile_single 64 arm8_config.two_reg_arith
+                 (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+                 (set_oracle arm8_backend_config oracle).word_to_word_conf.
+                 reg_alg arm8_config ((p1,p1',p1'',p2),NONE))) ∘
+         (I ##
+          MAP
+            (compile_part
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf))) ∘
+         cake_orac (:64) arm8_config info syn
+           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog);
+       code_buffer := s.code_buffer; data_buffer := s.data_buffer;
+       gc_fun :=
+         word_gc_fun
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf);
+       handler := 0; clock := k; termdep := 0;
+       code :=
+         fromAList
+           (SND
+              (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                 refund_prog));
+       be :=
+         (ensure_fp_conf_ok arm8_config
+            (set_oracle arm8_backend_config oracle).data_conf).be;
+       ptr_eq_oracle := SOME po;
+       ptr_eq_rel :=
+         word_ptr_eq
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf);
+       ffi := basis_ffi ext cl fs|>) =
+  (I ## (λs. s with ptr_eq_oracle := SOME rest))
+    (evaluate
+       (Call NONE (SOME InitGlobals_location) [0] NONE,
+        <|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+          fp_regs := s.fp_regs; store := s.store \\ Handler; stack := [];
+          stack_limit := LENGTH s.stack; stack_max := SOME 1;
+          stack_size :=
+            mapi
+              (λn (arg_count,prog,md).
+                 FST
+                   (SND
+                      (compile_prog arm8_config F prog arg_count
+                         (arm8_config.reg_count −
+                          (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+              (fromAList
+                 (SND
+                    (to_word arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog)));
+          memory := s.memory; mdomain := s.mdomain;
+          sh_mdomain := s.sh_mdomain; permute := K I;
+          compile :=
+            (λ(bm0,cfg) progs.
+               (let
+                  (progs,fs,p1,p2) =
+                    compile_word_to_stack arm8_config F
+                      (arm8_config.reg_count −
+                       (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+                in
+                  OPTION_MAP
+                    (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2,cfg))
+                    (s.compile cfg progs)));
+          compile_oracle :=
+            (I ##
+             MAP
+               (λ(p1,p1',p1'',p2).
+                  full_compile_single 64 arm8_config.two_reg_arith
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 5))
+                    (set_oracle arm8_backend_config oracle).word_to_word_conf.
+                    reg_alg arm8_config ((p1,p1',p1'',p2),NONE))) ∘
+            (I ##
+             MAP
+               (compile_part
+                  (ensure_fp_conf_ok arm8_config
+                     (set_oracle arm8_backend_config oracle).data_conf))) ∘
+            cake_orac (:64) arm8_config info syn
+              (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+              (λps. ps.data_prog); code_buffer := s.code_buffer;
+          data_buffer := s.data_buffer;
+          gc_fun :=
+            word_gc_fun
+              (ensure_fp_conf_ok arm8_config
+                 (set_oracle arm8_backend_config oracle).data_conf);
+          handler := 0; clock := k; termdep := 0;
+          code :=
+            fromAList
+              (SND
+                 (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                    refund_prog));
+          be :=
+            (ensure_fp_conf_ok arm8_config
+               (set_oracle arm8_backend_config oracle).data_conf).be;
+          ptr_eq_oracle := NONE;
+          ptr_eq_rel :=
+            word_ptr_eq
+              (ensure_fp_conf_ok arm8_config
+                 (set_oracle arm8_backend_config oracle).data_conf);
+          ffi := basis_ffi ext cl fs|>))
+PREMISE 1 ∀n. EVERY (λ(n,p1,p1,p2). data_num_stubs ≤ n)
+      (SND
+         (cake_orac (:64) arm8_config info syn
+            (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog)
+            n))
+PREMISE 2 STD_streams fs
+PREMISE 3 wfFS fs
+PREMISE 4 wfcl cl
+PREMISE 5 s.stack ≠ []
+PREMISE 6 s.be ⇔
+(ensure_fp_conf_ok arm8_config
+   (set_oracle arm8_backend_config oracle).data_conf).be
+PREMISE 7 s.gc_fun =
+word_gc_fun
+  (ensure_fp_conf_ok arm8_config
+     (set_oracle arm8_backend_config oracle).data_conf)
+PREMISE 8 backend_from_data_tuple_cc (:64) arm8_config
+  (set_oracle arm8_backend_config oracle) =
+(λ(p1,p2).
+   OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘
+   (λprogs.
+      (let
+         (progs,fs,p1,p2') =
+           compile_word_to_stack arm8_config F
+             (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+             (MAP
+                (λ(p1,p1',p1'',p2).
+                   full_compile_single 64 arm8_config.two_reg_arith
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 5))
+                     (set_oracle arm8_backend_config oracle).
+                     word_to_word_conf.reg_alg arm8_config
+                     ((p1,p1',p1'',p2),NONE)) progs) (Nil,p1)
+       in
+         OPTION_MAP (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2',cfg))
+           (s.compile p2 progs))) ∘
+   MAP
+     (compile_part
+        (ensure_fp_conf_ok arm8_config
+           (set_oracle arm8_backend_config oracle).data_conf)))
+PREMISE 9 stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+PREMISE 10 data_lang_safe_for_space (basis_ffi ext cl fs) po
+  (fromAList
+     (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+  (get_limits
+     (ensure_fp_conf_ok arm8_config
+        (set_oracle arm8_backend_config oracle).data_conf)
+     <|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+       fp_regs := s.fp_regs; store := s.store \\ Handler; stack := [];
+       stack_limit := LENGTH s.stack; stack_max := SOME 1;
+       stack_size :=
+         mapi
+           (λn (arg_count,prog,md).
+              FST
+                (SND
+                   (compile_prog arm8_config F prog arg_count
+                      (arm8_config.reg_count −
+                       (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+           (fromAList
+              (SND
+                 (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                    refund_prog))); memory := s.memory; mdomain := s.mdomain;
+       sh_mdomain := s.sh_mdomain; permute := K I;
+       compile :=
+         (λ(bm0,cfg) progs.
+            (let
+               (progs,fs,p1,p2) =
+                 compile_word_to_stack arm8_config F
+                   (arm8_config.reg_count −
+                    (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+             in
+               OPTION_MAP (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2,cfg))
+                 (s.compile cfg progs)));
+       compile_oracle :=
+         (I ##
+          MAP
+            (λ(p1,p1',p1'',p2).
+               full_compile_single 64 arm8_config.two_reg_arith
+                 (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+                 (set_oracle arm8_backend_config oracle).word_to_word_conf.
+                 reg_alg arm8_config ((p1,p1',p1'',p2),NONE))) ∘
+         (I ##
+          MAP
+            (compile_part
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf))) ∘
+         cake_orac (:64) arm8_config info syn
+           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog);
+       code_buffer := s.code_buffer; data_buffer := s.data_buffer;
+       gc_fun := s.gc_fun; handler := 0; clock := s.clock; termdep := 0;
+       code :=
+         fromAList
+           (SND
+              (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                 refund_prog)); be := s.be; ptr_eq_oracle := NONE;
+       ptr_eq_rel :=
+         word_ptr_eq
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf);
+       ffi := basis_ffi ext cl fs|>)
+  (mapi
+     (λn (arg_count,prog,md).
+        FST
+          (SND
+             (compile_prog arm8_config F prog arg_count
+                (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+                (Nil,0))))
+     (fromAList
+        (SND
+           (to_word arm8_config (set_oracle arm8_backend_config oracle)
+              refund_prog)))) InitGlobals_location
+PREMISE 11 init_store_ok
+  (ensure_fp_conf_ok arm8_config
+     (set_oracle arm8_backend_config oracle).data_conf) (s.store \\ Handler)
+  s.memory s.mdomain s.code_buffer s.data_buffer
+ORACLE_DIAGNOSTIC_COMPLETE

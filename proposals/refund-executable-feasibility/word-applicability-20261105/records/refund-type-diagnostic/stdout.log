@@ -1,0 +1,36 @@
+<<HOL message: Created theory "forge_refundClaimImport">>
+CLAIM refund_data_nonfailure
+ACTUAL frames::num sptree$num_map
+ACTUAL lims::limits
+ACTUAL po::num -> num -> bool
+ACTUAL syn::num -> (num # num) # dec list
+ACTUAL fs::IO_fs
+ACTUAL cl::mlstring list
+ACTUAL ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+EXPECTED frames::num sptree$num_map
+EXPECTED lims::limits
+EXPECTED po::num -> num -> bool
+EXPECTED syn::num -> (num # num) # dec list
+EXPECTED fs::IO_fs
+EXPECTED cl::mlstring list
+EXPECTED ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+CLAIM refund_word_single_epoch
+ACTUAL t::(64, num # lab_to_target$config, 'ffi) word_to_stackProof$state
+ACTUAL fs::IO_fs
+ACTUAL cl::mlstring list
+ACTUAL ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+EXPECTED t::(64, num # lab_to_target$config, mlstring list # IO_fs)
+word_to_stackProof$state
+EXPECTED fs::IO_fs
+EXPECTED cl::mlstring list
+EXPECTED ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+TYPE_SUB :'ffi -> :mlstring list # IO_fs
+RUNTIME_PROOF_COMPLETE

@@ -1,0 +1,106 @@
+{
+  "additional_claim_proposal": {
+    "adopted": false,
+    "closure_assumptions": 86,
+    "exact_actual_closure_sha256": "012a45468c3d3f3847055b5666d5e058a5b7bb79c907ca781387540306b37457",
+    "formal_name": "ForgeMemoryCandidate.MemoryIndependent.selftest_memory_independent_termination",
+    "human_intent_approved": false,
+    "independent_kernel_exit": 0,
+    "kernel_log_sha256": "413c743d3f67dbcc431f9945b862baea3ce13fe1f59f04392b70679cb1b94aaf",
+    "modules": 569,
+    "source": "proposals/runtime-state-projection/MemoryIndependent.v.proposed",
+    "source_sha256": "ffe5a677e14b5d426196b3c8e56c821f4775037855b63c2a902c2f253c7cebfc",
+    "statement": "For all SP/random/argv/env/UID/hardware parameters, arbitrary data memory, and any unhalted LPS model with no lazy mappings, the exact image started in the defined register/FP initializer must exit normally with status0 under may_fail_cfg."
+  },
+  "approved_historical_claim": {
+    "actual_qemu_launch_satisfies_valid_entry": false,
+    "closure_assumptions": 86,
+    "implementation_lock": "5f78da2142699d51f4b9b47c41ba3202919196af575fee3ae67bed7f7ad264b0",
+    "independent_kernel_exit": 0,
+    "modules": 579,
+    "source_commit": "624c9fafccd3badaa6a9dd582ae33f1204fb1e3a",
+    "theorem": "Forge.Binary.Statements.selftest_halts"
+  },
+  "artifact": {
+    "bytes": 1240,
+    "entry_pc": "0x11158",
+    "kind": "ELF",
+    "sha256": "8ced2ab6c7160338899056fe51bacb23d86d81705eacfdd1e992cf5252bdaeb6"
+  },
+  "current_stage": null,
+  "end_to_end": false,
+  "observation_checks": {
+    "comparison_objects_independent_full_kernel": "NOT RUN",
+    "entry_and_word_compilation_exit": 0,
+    "full_projected_transition_compilation_exit": 0,
+    "implementation": "Published LPS fetch_word, init_machine_state and Omni.run_steps evaluated by pinned Rocq",
+    "intermediate_register_corruption_exit": 1,
+    "method": "tested_against_proved_model",
+    "permitted_primitive_assumptions": 13,
+    "reservation_fcsr_quantified": true,
+    "universal_runtime_refinement": false,
+    "word_corruption_exit": 1
+  },
+  "observed_execution": {
+    "classification": "TESTED",
+    "distinct_words": 13,
+    "frames": 21,
+    "guest_exit": 0,
+    "historical_release_package_admission_transferred": false,
+    "research_image": "sha256:e49a3a5765baf5f1828007bbf378513198364c9351bf0b9c81af4f08ed9668b8",
+    "runtime_sha256": "be89e201dc6112ef101617ab575c95119ad123f80ca2b51b6c36ef218ac9df65",
+    "rx_ro_mappings_reported": true,
+    "trace_sha256": "182b879d49991a5a026f527325f85f548d2b57b604c7bd159e282a3ebc399152"
+  },
+  "operational_blockers": [
+    "Original independent raw/sanitized archive backup unconfirmed",
+    "GitHub rules lack required verification checks; no settings changed",
+    "PR36 independent review/merge authorization pending"
+  ],
+  "overall_verdict": "PARTIALLY_ESTABLISHED",
+  "prohibited_inferences": [
+    "No whole-application correctness",
+    "No arbitrary-input GCD theorem",
+    "No generic cross-run receipt adoption",
+    "No new deployment/signing or Stage12 approval"
+  ],
+  "provenance": {
+    "classification": "AUTHENTICATED_PROVENANCE",
+    "consumer_negative_controls": 11,
+    "fresh_remote_artifact_id": 12939158560,
+    "full_consumer_positive_exits": [
+      0,
+      0
+    ],
+    "historical_consumer_matrix_exit": 0,
+    "member_comparison_exit": 0,
+    "new_claim_signed": false,
+    "new_release_admitted": false,
+    "scope": "Historical ELF/receipt/package only; no new-statement signature",
+    "zip_sha256": "8ded75a093cb5d9c1e24f240c4209279b363e4d5fc3338a73a20b086c984cfb4"
+  },
+  "record_kind": "Non-admissible proposed assurance case; no policy activation",
+  "remaining_boundaries": [
+    {
+      "classification": "NOT_ESTABLISHED",
+      "link": "Exact human-approved additional claim and evidence/admission profile"
+    },
+    {
+      "classification": "NOT_ESTABLISHED",
+      "link": "Universal QEMU/LPS instruction/syscall/runtime refinement; a proposed trust assumption must remain explicit"
+    },
+    {
+      "classification": "NOT_ESTABLISHED",
+      "link": "Complete actual physical-state abstraction; projection does not establish every unobserved field or model VM condition"
+    },
+    {
+      "classification": "NOT_ESTABLISHED",
+      "link": "Authorized new runtime/package/release binding; old signature cannot transfer to a new claim or deployment"
+    },
+    {
+      "classification": "UNSUPPORTED",
+      "link": "Applying historical valid_entry theorem to observed low-SP QEMU launch"
+    }
+  ],
+  "stage12_authorized": false
+}

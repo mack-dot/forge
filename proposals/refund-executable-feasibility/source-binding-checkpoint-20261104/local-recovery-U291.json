@@ -1,0 +1,77 @@
+{
+  "actual_exit": 0,
+  "commit": "2a5706d8d574c33347dc531fe6769351863b922b",
+  "bundle_path": "/Users/mackianni/forge-backups/forge-refund-compiled-behavior-2026-11-04-0001.bundle",
+  "bundle_sha256": "29e1b57cc8b476105f5083d541b729b2cd76047ce94fd6a27666d9fe0e5d4d36",
+  "bundle_bytes": 29353251,
+  "mode": "0o600",
+  "restore_path": "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-compiled-restore-20261104-nlfbmjd2/repo",
+  "restored_files_compared": 13071,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "bundle",
+        "create",
+        "/Users/mackianni/forge-backups/forge-refund-compiled-behavior-2026-11-04-0001.bundle",
+        "refs/heads/docs/integration-readiness-20261103"
+      ],
+      "cwd": "/private/tmp/forge-readiness-docs-20261103",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "bundle",
+        "verify",
+        "/Users/mackianni/forge-backups/forge-refund-compiled-behavior-2026-11-04-0001.bundle"
+      ],
+      "cwd": "/private/tmp/forge-readiness-docs-20261103",
+      "actual_exit": 0,
+      "stdout": "The bundle contains this ref:\n2a5706d8d574c33347dc531fe6769351863b922b refs/heads/docs/integration-readiness-20261103\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\n",
+      "stderr": "/Users/mackianni/forge-backups/forge-refund-compiled-behavior-2026-11-04-0001.bundle is okay\n"
+    },
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--branch",
+        "docs/integration-readiness-20261103",
+        "/Users/mackianni/forge-backups/forge-refund-compiled-behavior-2026-11-04-0001.bundle",
+        "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-compiled-restore-20261104-nlfbmjd2/repo"
+      ],
+      "cwd": "/private/tmp/forge-readiness-docs-20261103",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-compiled-restore-20261104-nlfbmjd2/repo'...\nUpdating files:  48% (6283/13071)\nUpdating files:  49% (6405/13071)\nUpdating files:  50% (6536/13071)\nUpdating files:  51% (6667/13071)\nUpdating files:  52% (6797/13071)\nUpdating files:  53% (6928/13071)\nUpdating files:  54% (7059/13071)\nUpdating files:  55% (7190/13071)\nUpdating files:  56% (7320/13071)\nUpdating files:  57% (7451/13071)\nUpdating files:  58% (7582/13071)\nUpdating files:  59% (7712/13071)\nUpdating files:  60% (7843/13071)\nUpdating files:  61% (7974/13071)\nUpdating files:  62% (8105/13071)\nUpdating files:  63% (8235/13071)\nUpdating files:  64% (8366/13071)\nUpdating files:  65% (8497/13071)\nUpdating files:  66% (8627/13071)\nUpdating files:  67% (8758/13071)\nUpdating files:  68% (8889/13071)\nUpdating files:  69% (9019/13071)\nUpdating files:  70% (9150/13071)\nUpdating files:  71% (9281/13071)\nUpdating files:  72% (9412/13071)\nUpdating files:  73% (9542/13071)\nUpdating files:  74% (9673/13071)\nUpdating files:  75% (9804/13071)\nUpdating files:  76% (9934/13071)\nUpdating files:  77% (10065/13071)\nUpdating files:  78% (10196/13071)\nUpdating files:  79% (10327/13071)\nUpdating files:  80% (10457/13071)\nUpdating files:  81% (10588/13071)\nUpdating files:  82% (10719/13071)\nUpdating files:  83% (10849/13071)\nUpdating files:  84% (10980/13071)\nUpdating files:  85% (11111/13071)\nUpdating files:  86% (11242/13071)\nUpdating files:  87% (11372/13071)\nUpdating files:  88% (11503/13071)\nUpdating files:  89% (11634/13071)\nUpdating files:  90% (11764/13071)\nUpdating files:  91% (11895/13071)\nUpdating files:  92% (12026/13071)\nUpdating files:  93% (12157/13071)\nUpdating files:  94% (12287/13071)\nUpdating files:  95% (12418/13071)\nUpdating files:  96% (12549/13071)\nUpdating files:  97% (12679/13071)\nUpdating files:  98% (12810/13071)\nUpdating files:  99% (12941/13071)\nUpdating files: 100% (13071/13071)\nUpdating files: 100% (13071/13071), done.\n"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-compiled-restore-20261104-nlfbmjd2/repo",
+      "actual_exit": 0,
+      "stdout": "2a5706d8d574c33347dc531fe6769351863b922b\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "cwd": "/var/folders/z1/n227h7913nn_v79v7r6dlwyc0000gn/T/forge-compiled-restore-20261104-nlfbmjd2/repo",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "independent_off_machine_copy": "NOT VERIFIED",
+  "scope": "Local Git recovery only. Does not verify the owner-reported other-device archives or include the complete raw/toolchain workspace.",
+  "end_to_end": false
+}

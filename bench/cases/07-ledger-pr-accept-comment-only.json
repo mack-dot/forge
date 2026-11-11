@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "  method Apply ... {\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "  // Retries replay; fresh valid transfers pay one fee unit; all others are rejected.\n  method Apply ... {\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-accept-comment-only",
+ "kind": "valid_alternative",
+ "order": 7,
+ "rationale": "Comment-only change to the implementation.",
+ "supplied_evidence": null
+}

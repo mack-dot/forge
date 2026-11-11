@@ -1,0 +1,17 @@
+val _ = PolyML.SaveState.loadHierarchy ["/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state0", "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/termination/numheap", "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state", "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap"];
+val _ = List.app (fn p => print ("LOADED_STATE " ^ p ^ "\n")) (PolyML.SaveState.showHierarchy ());
+val forgeRoot = "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs";
+val oldRoot = "/Users/mackianni/forge";
+fun relocate p = if String.isPrefix (oldRoot ^ "/") p then forgeRoot ^ String.extract(p,size oldRoot,NONE) else raise Fail ("Unmapped load path: " ^ p);
+val _ = holpathdb.extend_db {vname="HOLDIR",path="/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL"};
+val _ = holpathdb.extend_db {vname="CAKEMLDIR",path="/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/cakeml"};
+val _ = Meta.loadPath := map relocate (!Meta.loadPath);
+fun checked label f = (print ("PHASE " ^ label ^ "\n"); f ()) handle ex => (print ("EXCEPTION " ^ General.exnMessage ex ^ "\n"); print ("EXCEPTION_LOCATION " ^ PolyML.makestring (PolyML.exceptionLocation ex) ^ "\n"); (case ex of OS.SysErr (_,SOME e) => print ("ERRNO_NAME " ^ OS.errorName e ^ "\n") | _ => ()); PolyML.Exception.reraise ex);
+val _ = print ("FROZEN_SOLVER_PATH " ^ SatSolvers.getSolverExe SatSolvers.minisatp ^ "\n");
+val frozenAvailable = OS.FileSys.access (SatSolvers.getSolverExe SatSolvers.minisatp,[OS.FileSys.A_EXEC]);
+val _ = print ("FROZEN_SOLVER_EXECUTABLE " ^ Bool.toString frozenAvailable ^ "\n");
+val _ = checked "basis-theory-load" (fn () => load "basis_ffiTheory");
+val _ = print ("RESOLVED_CF_MODULE " ^ PolyML.makestring (Meta.findMod "cfLib") ^ "\n");
+val _ = QUse.use "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/results/hosted-cf-preparation-20261107/attempt-0001/prepared-inputs/parse-only.sml";
+val _ = print "RELOCATION_INSPECTION_COMPLETE\n";
+val _ = OS.Process.exit OS.Process.success;

@@ -1,0 +1,65 @@
+{
+  "actual_exit": 0,
+  "scope": "documentation checkpoint; byte identity only, not independent proof validation",
+  "base_commit": "14adbc4b91a3c594444e1e7a840e51a8a38ed2f6",
+  "prior_manifest_sha256": "c115fd24cf7f6918fbd30c3d3f5322c669595705b82614982118c9ddaa2ba75e",
+  "prior_members_per_copy": 535,
+  "protected_members": 50,
+  "oracle_actual_exit": 0,
+  "oracle_wall_seconds_recorded": 84.69368404199486,
+  "oracle_source_sha256": "9d6675cb5cc7470021d4ccd0574b272aee34c6a8855883e86fd9cfc0d2208419",
+  "oracle_completion_marker": true,
+  "oracle_reported_antecedents": 13,
+  "exported_files_checked": 4,
+  "imported_files_checked": 28,
+  "captured_files": {
+    "baseline.json": "4ec2dd6c07dd94446d5647ec6d7b3af6ebd9c7e0b5c513d180f46e0c0f56f2ae",
+    "run_composed.py": "e48c41e7ec46786c84a07b29ea5f5694ea7afec7e908366487eb20d6ad4b0858",
+    "oracle-0001/command.json": "56fe2ee892869900463da6cb9734390c0d75a460089fa655b5281b1be4348b69",
+    "oracle-0001/invocation.json": "915f429aae48448f1f0368261f35dcd4b615fff15b255d77b3c40cdf9504fdef",
+    "oracle-0001/preload.sml": "f12b829e03e43ab9a1787b41b3dba817957779917659f90c098eeac9c03c09ca",
+    "oracle-0001/proof.sml": "9d6675cb5cc7470021d4ccd0574b272aee34c6a8855883e86fd9cfc0d2208419",
+    "oracle-0001/stdout.log": "c5d3c9958764914236b7467345ce9367282fb61d75b24fe5c88a596a393b0d7f",
+    "oracle-0001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "oracle-0001/.hol/objs/forge_refundWordOracleTheory.dat": "f071e42cd31449a117260be34117f36eb15c5e9c53ff2b16c9d5dbcb3a2a1f51",
+    "oracle-0001/.hol/objs/forge_refundWordOracleTheory.sig": "45470ff8043bd6bc7aba1141e2baa8fdd3326baaae7404f8eae714f5bf0bd069",
+    "oracle-0001/.hol/objs/forge_refundWordOracleTheory.sml": "20fbbbf349aaa41a326beb4c9569901cd408cd5b7ef499dd3f3e6e624e4e57c5",
+    "oracle-0001/.hol/docs/forge_refundWordOracleTheory.html": "ce17ee738d42e2788d0f0da6ecb3dbcb11bd878829abdc481b0b13ea6c3c76e1"
+  },
+  "new_proof_run_this_documentation_step": false,
+  "repeat": "NOT RUN",
+  "exact_claim_import": "NOT RUN",
+  "new_negative_controls": "NOT RUN",
+  "independent_full_chain_replay": "NOT RUN",
+  "end_to_end": false,
+  "before_docs": {
+    "workspace": {
+      "ROADMAP.md": {
+        "sha256": "cadeac9fe9b5a69e802b1409fc2771b498196386a388761b0744936f0b7d4d5a",
+        "bytes": 366023
+      },
+      "FORGE_MISSION_STATUS.md": {
+        "sha256": "d6d87459c456d0468ce989a8844f4a82db8506e72d7f63e451d26333dd69b515",
+        "bytes": 92619
+      },
+      "unsure.md": {
+        "sha256": "b9c3a8ec91b46d9af6e5a58aa7ee891d2c64d952ec6fb8b97a54e039320846f8",
+        "bytes": 681200
+      }
+    },
+    "worktree": {
+      "ROADMAP.md": {
+        "sha256": "208bff61560606f093e97d3b375590d7e8d8140bc7f0fb8a1a5f46fec00c4114",
+        "bytes": 356137
+      },
+      "FORGE_MISSION_STATUS.md": {
+        "sha256": "06836fc5bc9ea92ef4085124c9242029b68d17c8aa49ed3889c16bbe8098f3ff",
+        "bytes": 89789
+      },
+      "unsure.md": {
+        "sha256": "031b232a3979544ce37f22a5e138d908cf2028a8eb8c205ce56c5c41f1682c77",
+        "bytes": 663272
+      }
+    }
+  }
+}

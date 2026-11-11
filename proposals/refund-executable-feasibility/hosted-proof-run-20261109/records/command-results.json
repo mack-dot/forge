@@ -1,0 +1,49 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-"
+      ],
+      "purpose": "Frozen-scope,branch,trigger and preservation preflight",
+      "actual_exit": 0,
+      "result": "PREFLIGHT.json"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-"
+      ],
+      "purpose": "Remote commit and workflow pre-trigger readback",
+      "actual_exit": 0,
+      "result": "PRE-TRIGGER.json"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-run-20261109/records/validate_terminal.py"
+      ],
+      "purpose": "Terminal failure evidence validation",
+      "actual_exit": 0,
+      "result": "TERMINAL-READBACK.json"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-run-20261109/records/finalize.py"
+      ],
+      "actual_exit": 0,
+      "purpose": "Preserve terminal evidence and append tracking"
+    }
+  ],
+  "hosted_process_exits": null,
+  "HOL_executed": false,
+  "end_to_end": false
+}

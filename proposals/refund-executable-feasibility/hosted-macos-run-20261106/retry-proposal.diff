@@ -1,0 +1,33 @@
+--- published/m1-macos-preflight.yml
++++ proposed/m1-macos-preflight.yml
+@@ -19,7 +19,7 @@
+           APPROVED_IMAGE_VERSION: '20261104.0514.1'
+           INPUT_COMMIT_SHA: 'ac05eaf972b8c98784466ae063fca505aaaf25f4'
+           INPUT_MANIFEST_SHA256: '6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7'
+-          INPUT_8435: '8435'
++          INPUT_MANIFEST_BYTES: '8435'
+         run: |
+           /usr/bin/python3 -I -B - <<'PY'
+           import traceback
+@@ -137,13 +137,14 @@
+               
+               # Preserve compiled paths. Never elevate, change an existing path, or relocate a heap.
+               installation_parent = Path('/Users/mackianni')
+-              try:
+-                  installation_parent.mkdir(mode=0o700)
+-              except OSError as exc:
+-                  emit('installation_parent_mkdir', path=str(installation_parent), errno=exc.errno,
+-                       error_name=errno.errorcode.get(exc.errno), SAT='NOT_RUN')
+-                  raise
+-              emit('installation_parent_mkdir', path=str(installation_parent), actual_result=0)
++              # PROPOSED ONLY: two exact privileged directory-setup commands require new approval.
++              # mkdir fails if the path exists. No existing path is changed or recursively owned.
++              command(['/usr/bin/sudo', '-n', '/bin/mkdir', '-m', '700', str(installation_parent)])
++              command(['/usr/bin/sudo', '-n', '/usr/sbin/chown',
++                       str(os.getuid()) + ':' + str(os.getgid()), str(installation_parent)])
++              parent_stat = installation_parent.stat()
++              assert parent_stat.st_uid == os.getuid() and (parent_stat.st_mode & 0o777) == 0o700
++              emit('installation_parent_created', path=str(installation_parent), uid=parent_stat.st_uid, mode='0700')
+               root = installation_parent / 'forge'
+               root.mkdir(mode=0o700)
+               prefix = 'https://raw.githubusercontent.com/mack-dot/forge/' + os.environ['INPUT_COMMIT_SHA'] + '/proposals/m1-hosted-sat-inputs/'

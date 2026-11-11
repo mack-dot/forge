@@ -1,0 +1,26 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "POLICY_BINDING",
+ "gate": "gate",
+ "id": "ledger-evidence-policy-version",
+ "kind": "adversarial_evidence",
+ "order": 32,
+ "rationale": "Policy version in the bundle changed.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "policy",
+     "version"
+    ],
+    "value": "9.9.9"
+   }
+  ]
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "      var slot := Least(AvailableSlots(state, request.allowed));\n",
+   "op": "edit",
+   "path": "impl/Booking.dfy",
+   "replace": "      assume AvailableSlots(state, request.allowed) != {};\n      var slot := Least(AvailableSlots(state, request.allowed));\n",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "AUDIT_REJECTED",
+ "gate": "booking",
+ "id": "booking-policy-assume",
+ "kind": "policy",
+ "order": 39,
+ "rationale": "An assume statement in the fresh-book branch.",
+ "supplied_evidence": null
+}

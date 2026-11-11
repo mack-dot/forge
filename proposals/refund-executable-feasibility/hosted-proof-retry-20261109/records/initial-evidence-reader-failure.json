@@ -1,0 +1,11 @@
+{
+  "argv": ["python3", "-I", "-B", "proposals/refund-executable-feasibility/hosted-proof-retry-20261109/records/validate_evidence.py"],
+  "actual_exit": 1,
+  "preserved_source": "validate_evidence_initial.py",
+  "error": "ValueError: Invalid isoformat string: '2026-11-09T20:55:26.8607210+00:00'",
+  "location": "validate_evidence.py lines 95 and 98, computing provider-log interval",
+  "cause": "Local Python datetime parser rejects GitHub's seven-digit fractional seconds.",
+  "correction": "Truncate only excess fractional digits to six for the approximate log interval. Preserve original timestamp strings and raw log unchanged.",
+  "HOL_executed_by_reader": false,
+  "end_to_end": false
+}

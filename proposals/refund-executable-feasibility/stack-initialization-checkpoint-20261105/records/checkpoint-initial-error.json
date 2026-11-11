@@ -1,0 +1,7 @@
+{
+  "command": "python3 -B results/stack-initialization-tracking/attempt-0001/checkpoint.py",
+  "actual_exit": 1,
+  "reason": "FileNotFoundError: imported objects retain their .hol/objs or .hol/docs subpaths; the first audit looked at the basename only.",
+  "effect": "Documentation audit stopped before copying a packet or editing any tracker. Original evidence and saved preimages remain unchanged.",
+  "next_check": "Validate the actual copied path from run_composed.py; revalidate saved preimages before reusing them."
+}

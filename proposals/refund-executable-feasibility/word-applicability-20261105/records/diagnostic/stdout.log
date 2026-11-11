@@ -1,0 +1,22 @@
+SOURCE
+ [.]
+⊢ ¬semantics_prog (init_state (basis_ffi ext cl fs)) init_env refund_prog
+    Fail ∧
+  (sem ⊆
+   extend_with_resource_limit
+     (semantics_prog (init_state (basis_ffi ext cl fs)) init_env refund_prog) ⇒
+   (∃behavior. sem = {behavior}) ⇒
+   ∃io_events.
+     sem ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+     extract_fs ext (cl,fs) io_events =
+     SOME
+       (add_stdout (fastForwardFD fs 0)
+          (refund_render_fields
+             (refund_fields charge request original remaining enabled opened
+                candidate amount reason))))
+COMPILE
+⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info)
+CONFIG
+⊢ backend_config_ok arm8_config arm8_backend_config
+RUNTIME_PROOF_COMPLETE

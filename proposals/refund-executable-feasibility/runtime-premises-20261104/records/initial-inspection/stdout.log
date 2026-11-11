@@ -1,0 +1,39 @@
+PRECISE_SPECIALISATION
+⊢ (∀po.
+     is_safe_for_space (:64) ffi po arm8_config
+       (set_oracle arm8_backend_config oracle) refund_prog
+       (stack_limit,heap_limit)) ⇒
+  read_limits arm8_config (set_oracle arm8_backend_config oracle) mc ms =
+  (stack_limit,heap_limit) ⇒
+  ¬semantics_prog (init_state ffi) init_env refund_prog Fail ⇒
+  backend_config_ok arm8_config arm8_backend_config ⇒
+  mc_conf_ok mc ⇒
+  mc_init_ok arm8_config arm8_backend_config mc ⇒
+  installed code cbspace data data_sp info.lab_conf.ffi_names
+    (heap_regs arm8_backend_config.stack_conf.reg_names) mc
+    info.lab_conf.shmem_extra ms ⇒
+  machine_sem mc ffi ms ⊆
+  semantics_prog (init_state ffi) init_env refund_prog
+NO_FAIL
+ [.]
+⊢ ¬semantics_prog (init_state (basis_ffi ext cl fs)) init_env refund_prog
+    Fail
+SOURCE_SEMANTICS
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧
+         extract_fs ext (cl,fs) io_events =
+         SOME
+           (add_stdout (fastForwardFD fs 0)
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason))))

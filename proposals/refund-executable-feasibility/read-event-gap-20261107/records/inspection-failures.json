@@ -1,0 +1,8 @@
+{
+  "scope":"Source inspection outcomes; no checker failure log is replaced.",
+  "records":[
+    {"aggregate_exit":2,"operation":"Search semantics/ffiScript.sml","result":"Wrong source path; resolved to semantics/ffi/ffiScript.sml using rg --files."},
+    {"aggregate_exit":1,"operation":"Read guessed stdio-contract proof.sml and exception-initialization expected.sml paths","result":"Paths absent; file inventory found forge_refundStdioProgScript.sml and expected-final.sml. Individual component exits were not captured."},
+    {"aggregate_exit":1,"operation":"Explore generic FFI theorem names","result":"Final rg query found no matching theorem name. Published app_ffi_def was then located and inspected."}
+  ]
+}

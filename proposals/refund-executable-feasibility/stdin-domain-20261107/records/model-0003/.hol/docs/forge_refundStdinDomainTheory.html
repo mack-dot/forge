@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundStdinDomain</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundStdinDomain</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../../../../refund-native-audit-2026-11-04/attempt-0010/model-0007/.hol/docs/forge_refundReadBoundaryTheory.html">forge_refundReadBoundary</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Definitions</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#stdin_ffi_read_status_zero">stdin_ffi_read_status_zero</a><a href="#stdin_read_inputs">stdin_read_inputs</a><a href="#wf_read_inputs">wf_read_inputs</a></div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="stdin_ffi_read_status_zero">
+<div class="thm-name"><code>stdin_ffi_read_status_zero</code></div>
+<pre> []
+⊢ wfFS fs ∧ STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ∧
+  ffi_read conf (n1::n0::pad1::pad2::read_tail) fs =
+  SOME (FFIreturn bytes' fs') ⇒
+  HD bytes' = 0w
+</pre>
+</div>
+<div class="thm" id="stdin_read_inputs">
+<div class="thm-name"><code>stdin_read_inputs</code></div>
+<pre> []
+⊢ wfFS fs ∧ STD_streams fs ⇒
+  ∃off content quota.
+    ALOOKUP fs.infds 0 = SOME (UStream «stdin»,ReadMode,off) ∧
+    ALOOKUP fs.inode_tbl (UStream «stdin») = SOME content ∧
+    LHD fs.numchars = SOME quota
+</pre>
+</div>
+<div class="thm" id="wf_read_inputs">
+<div class="thm-name"><code>wf_read_inputs</code></div>
+<pre> []
+⊢ wfFS fs ∧ ALOOKUP fs.infds fd = SOME (ino,ReadMode,off) ⇒
+  ∃content quota.
+    ALOOKUP fs.inode_tbl ino = SOME content ∧ LHD fs.numchars = SOME quota
+</pre>
+</div>
+</section>
+</body>
+</html>

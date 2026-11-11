@@ -1,0 +1,54 @@
+{
+  "python": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "executable": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund",
+  "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "executable_unchanged": true,
+  "records": [
+    {
+      "case": "nonblocking_empty_writer_open",
+      "operation": "read(fd,buffer,16)",
+      "fd": 3,
+      "fd_flags": 4,
+      "read_return": -1,
+      "errno": 35,
+      "errno_name": "EAGAIN",
+      "writer_open": true,
+      "buffer_before_hex": "a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+      "buffer_after_hex": "a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+      ],
+      "scope": "The probe observes this descriptor before child execution; it does not trace the child read syscall.",
+      "actual_native_exit": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "nonblocking_empty_eof",
+      "operation": "read(fd,buffer,16)",
+      "fd": 3,
+      "fd_flags": 4,
+      "read_return": 0,
+      "errno": 0,
+      "errno_name": "NONE",
+      "writer_open": false,
+      "buffer_before_hex": "a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+      "buffer_after_hex": "a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+      "argv": [
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+      ],
+      "scope": "The probe observes this descriptor before child execution; it does not trace the child read syscall.",
+      "actual_native_exit": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "end_to_end": false,
+  "proof_status": "TESTED_ONLY"
+}

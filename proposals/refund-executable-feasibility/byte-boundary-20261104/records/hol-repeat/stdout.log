@@ -1,0 +1,47 @@
+<<HOL message: Created theory "forge_refundByteBoundary">>
+Saved theorem _______ "byte_roundtrip"
+Saved theorem _______ "byte_string_codes"
+Saved theorem _______ "byte_string_eq"
+Saved theorem _______ "byte_codes_empty"
+Saved theorem _______ "byte_fields_result"
+Saved theorem _______ "byte_wire_inputs"
+Saved theorem _______ "byte_wire_outputs"
+CHECKED byte_roundtrip ⊢ ∀bytes. EVERY (λn. n < 256) bytes ⇒ byte_codes (byte_string bytes) = bytes
+CHECKED byte_string_codes ⊢ ∀s. byte_string (byte_codes s) = s
+CHECKED byte_string_eq ⊢ EVERY (λn. n < 256) bytes ⇒
+  (byte_string bytes = text ⇔ bytes = byte_codes text)
+CHECKED byte_codes_empty ⊢ byte_codes «» = []
+CHECKED byte_fields_result ⊢ EVERY (λn. n < 256) cb ∧ EVERY (λn. n < 256) qb ∧ EVERY (λn. n < 256) rb ⇒
+  (let
+     (ok,a,r,c,q,n) =
+       refund_fields (byte_string cb) (byte_string qb) original remaining
+         enabled opened candidate amount (byte_string rb)
+   in
+     (ok ⇔
+      cb ≠ [] ∧ qb ≠ [] ∧ enabled ∧ opened ∧ 0 ≤ original ∧
+      original ≤ 9223372036854775807 ∧ 0 ≤ remaining ∧ remaining ≤ original ∧
+      candidate ∧ 0 ≤ amount ∧ amount ≤ remaining ∧
+      (rb = byte_codes «duplicate_charge» ∨
+       rb = byte_codes «service_not_delivered» ∨
+       rb = byte_codes «returned_item»)) ∧ a = (if ok then amount else 0) ∧
+     byte_codes r = (if ok then rb else []) ∧
+     byte_codes c = (if ok then cb else []) ∧
+     byte_codes q = (if ok then qb else []) ∧ n = if ok then 1 else 0)
+CHECKED byte_wire_inputs ⊢ EVERY (λn. n < 256) cb ∧ EVERY (λn. n < 256) qb ∧ EVERY (λn. n < 256) rb ⇒
+  ∃c q r.
+    byte_codes c = cb ∧ byte_codes q = qb ∧ byte_codes r = rb ∧
+    refund_decode_wire
+      (sexp_to_string
+         (refund_request c q original remaining enabled opened candidate
+            amount r)) =
+    INR (c,q,original,remaining,enabled,opened,candidate,amount,r)
+CHECKED byte_wire_outputs ⊢ EVERY (λn. n < 256) rb ∧ EVERY (λn. n < 256) cb ∧ EVERY (λn. n < 256) qb ⇒
+  ∃r c q.
+    byte_codes r = rb ∧ byte_codes c = cb ∧ byte_codes q = qb ∧
+    parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+    INR (refund_response ok a r c q n,"") ∧
+    refund_response_fields (refund_response ok a r c q n) =
+    INR (ok,a,r,c,q,n)
+Exporting theory "forge_refundByteBoundary" ... done.
+Theory "forge_refundByteBoundary" took 1.1s to build
+BYTE_BOUNDARY_COMPLETE

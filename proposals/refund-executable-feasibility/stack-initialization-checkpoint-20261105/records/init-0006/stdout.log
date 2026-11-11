@@ -1,0 +1,67 @@
+<<HOL message: Created theory "forge_refundStackInitialization">>
+Saved theorem _______ "refund_stack_gc"
+Saved theorem _______ "refund_stack_store"
+BITMAP_SPECIALIZATION ⊢ MAP upper_w2w (MAP n2w ns) =
+  MAP (upper_n2w (arch_wordsize arm8_config.ISA)) ns
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStackInitialization)>>
+Saved theorem _______ "refund_stack_compiler"
+NORMALIZED_COMPILER ⊢ backend_from_data_tuple_cc (:64) arm8_config
+    (set_oracle arm8_backend_config oracle) =
+  (λ(p1,p2).
+     OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘
+     (λps.
+        (let
+           (progs,fs',p1,p2') =
+             compile_word_to_stack arm8_config F
+               (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+               (MAP
+                  (λ(p1,p1',p1'',p2).
+                     full_compile_single 64 arm8_config.two_reg_arith
+                       (arm8_config.reg_count −
+                        (LENGTH arm8_config.avoid_regs + 5))
+                       (set_oracle arm8_backend_config oracle).
+                       word_to_word_conf.reg_alg arm8_config
+                       ((p1,p1',p1'',p2),NONE)) ps) (Nil,p1)
+         in
+           OPTION_MAP (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2',cfg))
+             ((FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                          (λps. ps.lab_prog))) save_regs data_sp
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).compile p2
+                progs))) ∘
+     MAP
+       (compile_part
+          (ensure_fp_conf_ok arm8_config
+             (set_oracle arm8_backend_config oracle).data_conf)))

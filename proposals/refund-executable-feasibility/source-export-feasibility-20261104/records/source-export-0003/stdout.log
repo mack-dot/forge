@@ -1,0 +1,30 @@
+(0,0): S-expression extraction error: Unsupported Concat2Iterator`1: System.Linq.Enumerable+Concat2Iterator`1[Microsoft.Dafny.ModuleDefinition]
+   at System.Environment.get_StackTrace()
+   at Microsoft.Dafny.Compilers.Bake.UnsupportedError(Object obj) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyDriver/Commands/Bake.cs:line 668
+   at Microsoft.Dafny.Compilers.Bake.ProgramToString(Program program) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyDriver/Commands/Bake.cs:line 24
+   at Microsoft.Dafny.BakeCommand.HandleExtraction(DafnyOptions options) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyDriver/Commands/BakeCommand.cs:line 48
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecutionContextCallback(Object s)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at Microsoft.Dafny.Compilation.ResolveAsync() in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyCore/Pipeline/Compilation.cs:line 261
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecutionContextCallback(Object s)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at Microsoft.Dafny.TextDocumentLoader.ResolveAsync(Compilation compilation, Program program, CancellationToken cancellationToken) in /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyCore/Pipeline/TextDocumentLoader.cs:line 46
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecutionContextCallback(Object s)
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.ExecuteFromThreadPool(Thread threadPoolThread)
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()

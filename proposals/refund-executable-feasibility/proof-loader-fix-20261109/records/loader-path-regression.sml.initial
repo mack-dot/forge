@@ -1,0 +1,16 @@
+val _ = PolyML.SaveState.loadHierarchy ["/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state0", "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/termination/numheap", "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state", "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap"];
+val mode = valOf (OS.Process.getEnv "FORGE_LOADER_PATH_MODE");
+fun physical p = OS.Path.concat(OS.Path.concat(OS.Path.dir p,".hol/objs"),OS.Path.file p);
+fun direct p = let val f=TextIO.openIn p val s=TextIO.inputAll f in TextIO.closeIn f;s end;
+fun virtual p = let val f=HOLFileSys.openIn p val s=HOLFileSys.inputAll f in HOLFileSys.closeIn f;s end;
+fun check p = let
+  val expected = physical p
+  val requested = if mode="old" then expected else p
+  val _ = print ("REQUEST " ^ requested ^ "\nRESOLVED " ^ HOLFileSys.toFS requested ^ "\n")
+  val data = virtual requested
+  val _ = if HOLFileSys.toFS requested=expected andalso data=direct expected then () else raise Fail "Loader file identity mismatch"
+in print ("PARENT_BYTES_MATCH " ^ p ^ "\n") end;
+val _ = List.app check ["/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/forge_refundReadBoundaryTheory.sig", "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/forge_refundReadBoundaryTheory.sml", "/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/model-0004/forge_refundStdinDomainTheory.sig", "/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/model-0004/forge_refundStdinDomainTheory.sml"];
+val _ = List.app (fn p => if HOLFileSys.toFS p=physical p then print ("FUTURE_IMPORT_PATH_MATCH " ^ p ^ "\n") else raise Fail "Import path mismatch") ["/Users/mackianni/forge/outputs/proof/forge_refundGenericReadErrorTheory.sig", "/Users/mackianni/forge/outputs/proof/forge_refundGenericReadErrorTheory.sml"];
+val _ = print "LOADER_PATH_REGRESSION_COMPLETE\n";
+val _ = OS.Process.exit OS.Process.success;

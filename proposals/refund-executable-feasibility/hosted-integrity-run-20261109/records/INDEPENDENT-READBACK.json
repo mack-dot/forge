@@ -1,0 +1,79 @@
+{
+  "actual_exit": 0,
+  "status": "TRANSFER_INTEGRITY_ESTABLISHED",
+  "scope": "Exact frozen transferred bytes; TESTED, not a formal theorem or independent administrative assurance",
+  "run_id": 42624212334,
+  "job_id": 129183679727,
+  "workflow_commit": "fca212c45ccce9f27ffdf2d51ccf9ee96bce7162",
+  "workflow_sha256": "b8c96c19049e04aedc5b2902b9342ec26db4234690d2c5cce589bbd1730016e9",
+  "log_sha256": "b22630463ade3fc54f9481975f528de87ef283a94a05dd4dc496c062958b4187",
+  "actual_checker_exit": 0,
+  "event_counts": {
+    "identity": 1,
+    "download": 18,
+    "commit_checked": 2,
+    "mutation_control": 3,
+    "file_checked": 10,
+    "member_checked": 1493,
+    "archive_checked": 2,
+    "statement_bytes_checked": 1,
+    "integrity_complete": 1,
+    "resource_usage": 1
+  },
+  "payload_bytes": 26196042,
+  "metadata_bytes": 36303,
+  "source_commits": [
+    "21c4bdf958627e6a24e8dee9a45d90568b3e3c20",
+    "ac05eaf972b8c98784466ae063fca505aaaf25f4"
+  ],
+  "members_checked": 1493,
+  "mutation_controls_rejected": 3,
+  "candidate_sha256": "7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6",
+  "quotation_sha256": "289b8be8c848dc3debddbac5184e613e2c1e127c56dddd574e5b43087cc8c29a",
+  "quotation_bytes": 592,
+  "environment": {
+    "address_space_bytes": 1073741824,
+    "architecture": "x86_64",
+    "cpu_seconds": 90,
+    "end_to_end": false,
+    "file_bytes": 33554432,
+    "image_os": "ubuntu24",
+    "image_version": "20261101.360.1",
+    "operation": "identity",
+    "os": "Linux",
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "python_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+    "release": "7.0.0-1017-azure",
+    "run_id": "42624212334",
+    "trust": "GitHub runner/control plane,Python/hash/TLS implementation and OS; integrity check only",
+    "uid": 1001,
+    "wall_seconds": 180,
+    "workflow_sha": "fca212c45ccce9f27ffdf2d51ccf9ee96bce7162"
+  },
+  "resource_usage": {
+    "end_to_end": false,
+    "intended_exit": 0,
+    "max_rss_kib": 48684,
+    "operation": "resource_usage",
+    "system_cpu_seconds": 0.050338999999999995,
+    "user_cpu_seconds": 1.6853699999999998,
+    "wall_seconds": 9.004512771000002
+  },
+  "provider_usage": {
+    "billable": {
+      "UBUNTU": {
+        "total_ms": 0,
+        "jobs": 1,
+        "job_runs": [
+          {
+            "job_id": 129183679727,
+            "duration_ms": 0
+          }
+        ]
+      }
+    },
+    "run_duration_ms": 16000
+  },
+  "proof_executed": false,
+  "end_to_end": false
+}

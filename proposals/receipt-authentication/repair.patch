@@ -1,0 +1,204 @@
+--- a/gate/obligations.py
++++ b/gate/obligations.py
+@@ -21,6 +21,7 @@
+ import xml.etree.ElementTree as ET
+ 
+ from common import PIN_FILES, ROOT, Rejected, canonical, digest, host_profile, pin_file, read_json
++from provenance.common import files as provenance_files, Rejected as ProvenanceRejected
+ 
+ FRAMEWORK = ('gate/gate.py', 'gate/common.py', 'gate/core.py', 'gate/dependencies.py',
+              'gate/backends/__init__.py', 'schemas/evidence.schema.json', 'schemas/policy.schema.json',
+@@ -318,6 +319,73 @@
+     return record
+ 
+ 
++# Only this live trusted gate process can authorize reuse. Disk records, hashes
++# beside them, and restored artifacts never create an authority entry. This is
++# local execution provenance, NOT a signature or cross-run admission mechanism.
++_PRODUCER_PID = os.getpid()
++_PENDING_RECEIPTS = {}
++_TRUSTED_RECEIPTS = {}
++
++
++def receipt_slot(cache, key):
++    if os.getpid() != _PRODUCER_PID or cache.is_symlink():
++        raise Rejected('CACHE_PRODUCER: reuse requires the original trusted process')
++    return (str(cache.resolve()), key)
++
++
++def output_files(tree, work):
++    # Reuse the existing provenance file inventory: exact membership, all bytes,
++    # and no symlinks. Include checker bundles, TRX, reports, logs and generated
++    # artifacts, not just the two digest fields in an operational receipt.
++    try:
++        return {'tree_build': provenance_files(tree / 'build'),
++                'command_logs': provenance_files(work)}
++    except (OSError, ProvenanceRejected) as error:
++        raise Rejected('CACHE_ARTIFACT_INTEGRITY: ' + str(error)) from error
++
++
++def reused_receipt(name, key, tree, trusted_root, verified, cache):
++    path = cache / (key + '.json')
++    slot = receipt_slot(cache, key)
++    anchor = _TRUSTED_RECEIPTS.get(slot)
++    if not path.exists() and not path.is_symlink():
++        if anchor is not None:
++            raise Rejected('CACHE_RECEIPT_MISSING: ' + name)
++        return None
++    if anchor is None:
++        raise Rejected('CACHE_UNAUTHENTICATED: ' + name)
++    try:
++        raw = path.read_bytes()
++        if path.is_symlink() or raw != anchor['receipt']:
++            raise Rejected('CACHE_RECEIPT_INTEGRITY: ' + name)
++        if output_files(anchor['tree'], anchor['work']) != anchor['files']:
++            raise Rejected('CACHE_ARTIFACT_INTEGRITY: ' + name)
++        previous = json.loads(raw)
++        if (previous['obligation'] != name or previous['result'] != 'established'
++                or previous['cache_key'] != key or previous['reused'] is not False
++                or binding_violations(name, tree, trusted_root, verified)):
++            raise Rejected('CACHE_IDENTITY: ' + name)
++    except (OSError, ValueError, KeyError, TypeError) as error:
++        raise Rejected('CACHE_RECEIPT_INTEGRITY: ' + name) from error
++    return dict(previous, reused=True, reuse_provenance={
++        'scope': 'same_trusted_process', 'cross_run_authenticated': False,
++        'receipt_sha256': digest(raw), 'files_sha256': digest(canonical(anchor['files']))})
++
++
++def remember_fresh(records, cache, tree, work):
++    # Called only on results returned by the actual trusted run_one dispatcher.
++    # These remain pending until the caller checks the complete tree and coverage.
++    fresh = [r for r in records.values() if r.get('result') == 'established'
++             and r.get('reused') is False and r.get('cache_key')]
++    if not fresh:
++        return
++    present = output_files(tree, work)
++    for record in fresh:
++        _PENDING_RECEIPTS[receipt_slot(cache, record['cache_key'])] = {
++            'receipt': canonical(record), 'tree': tree, 'work': work, 'files': present}
++
++
++
+ def run(names, tree, trusted_root, verified, entries, context, work, cache, timeout=1800, workers=4):
+     """Run (or reuse) the named obligations inside the verification tree. Returns records by name.
+ 
+@@ -342,12 +410,10 @@
+         if name == 'ledger-proof':
+             continue
+         key = cache_key(name, tree, entries, context)
+-        cached = cache / (key + '.json') if key else None
+-        if cached is not None and cached.is_file():
+-            previous = read_json(cached)
+-            if previous.get('result') == 'established' and previous.get('cache_key') == key:
+-                records[name] = dict(previous, reused=True)
+-                continue
++        previous = reused_receipt(name, key, tree, trusted_root, verified, cache) if key else None
++        if previous is not None:
++            records[name] = previous
++            continue
+         pending.append((name, key))
+     # Obligations that share a gate-level lock (a 'mutex') run one after another; others run concurrently.
+     groups = {}
+@@ -362,12 +428,22 @@
+         for future in concurrent.futures.as_completed([pool.submit(run_group, members) for members in groups.values()]):
+             for name, key, result in future.result():
+                 records[name] = dict(result, reused=False, cache_key=key)
++    remember_fresh(records, cache, tree, work)
+     return records
+ 
+ 
+ def store(records, cache):
+-    """Cache established, freshly run records. Call only after the verification tree re-hashed identically."""
++    """Authorize only real fresh results after complete coverage and input integrity checks."""
+     for record in records.values():
+-        if record.get('result') == 'established' and not record.get('reused') and record.get('cache_key'):
++        if record.get('result') == 'established' and record.get('reused') is False and record.get('cache_key'):
++            slot = receipt_slot(cache, record['cache_key'])
++            anchor = _PENDING_RECEIPTS.pop(slot, None)
++            if (anchor is None or canonical(record) != anchor['receipt']
++                    or output_files(anchor['tree'], anchor['work']) != anchor['files']):
++                raise Rejected('CACHE_PRODUCER: fresh result lacks intact producer evidence')
+             cache.mkdir(parents=True, exist_ok=True)
+-            (cache / (record['cache_key'] + '.json')).write_bytes(canonical(record))
++            path = cache / (record['cache_key'] + '.json')
++            # Existing data is never overwritten or promoted into trusted state.
++            with path.open('xb') as stream:
++                stream.write(anchor['receipt'])
++            _TRUSTED_RECEIPTS[slot] = anchor
+--- a/gate/incremental.py
++++ b/gate/incremental.py
+@@ -15,6 +15,7 @@
+ import argparse
+ import json
+ import os
++import platform
+ from pathlib import Path
+ import re
+ import shlex
+@@ -187,7 +188,7 @@
+     return tree
+ 
+ 
+-def run_obligations(candidate, entries, proposed_before, trusted_before, approval, affected, changed, work, operation):
++def run_obligations(candidate, entries, proposed_before, trusted_before, approval, affected, changed, work, operation, cache):
+     names = [name for name in affected if name != 'ledger-proof']
+     operation['affected_obligations'] = affected
+     covered = obligations.all_inputs()
+@@ -207,18 +208,23 @@
+     verified = {'impl/Ledger.dfy'} | allowed
+     context = {'protected_manifest': digest(canonical(trusted_before)),
+                'pins': digest((ROOT / pin_file('dafny')).read_bytes()),
+-               'javascript_pins': digest((ROOT / pin_file('javascript')).read_bytes())}
++               'javascript_pins': digest((ROOT / pin_file('javascript')).read_bytes()),
++               'runtime': {'system': platform.system(), 'machine': platform.machine(),
++                           'python_version': platform.python_version(),
++                           'python_sha256': digest(Path(sys.executable).read_bytes())}}
+     records = obligations.run(names, tree, ROOT, verified, entries, context, work / 'obligations',
+-                              ROOT / 'build/obligation-cache')
++                              cache)
+     if (coverage.inventory(tree, coverage.BASE_UNTRACKED, include_bytecode=True)[1] != entries
+             or protected_manifest(tree) != proposed_before):
+         raise Rejected('INPUT_CHANGED: the verification tree changed while obligations ran')
+-    obligations.store(records, ROOT / 'build/obligation-cache')
+     operation['obligations'] = records
+     return records
+ 
+ 
+-def check(candidate, output, work, operation, profile='local'):
++def check(candidate, output, work, operation, profile='local', *, cache=None):
++    # New CLI processes never restore receipt authority from disk. A trusted
++    # in-process caller may share a cache; only live producer entries authorize hits.
++    cache = cache if cache is not None else work / 'obligation-cache'
+     versions = check_dependencies(profile)
+     from core import framework_paths, load_policy, make_bundle, snapshot, validate_evidence
+ 
+@@ -330,7 +336,7 @@
+     changed = [row['path'] for row in coverage.changes(inventory[1], inventory[2])]
+     affected = obligations.affected(changed)
+     records = run_obligations(candidate, inventory[2], proposed_before, trusted_before, approval,
+-                              affected, changed, work, operation)
++                              affected, changed, work, operation, cache)
+     assessment = coverage.assess(ROOT, candidate, *inventory, approval['approved_inputs'] if approval else {}, records)
+     for name in affected:
+         record = records.get(name)
+@@ -349,6 +355,7 @@
+         raise coverage.Unsupported('UNSUPPORTED: every obligation that ran holds, but '
+                                    + str(len(operation['coverage']['findings']))
+                                    + ' coverage finding(s) remain: ' + coverage.summary(operation['coverage']))
++    obligations.store(records, cache)
+     staged_evidence = work / 'accepted-evidence.json'
+     staged_evidence.write_bytes(canonical(bundle))
+     staged_evidence.replace(output)
+--- a/gate/provenance/implementation.lock
++++ b/gate/provenance/implementation.lock
+@@ -19,8 +19,8 @@
+     "gate/coverage.py": "b835fc41b6c73c6a2d4b97259ab2ddb0dec05fd3d8b4fa6f9a5e7e1d2e3fdc3c",
+     "gate/dependencies.py": "873a692b4b0217705ea680acfb81ba29376eff9a5e1cb2e3735fe2b372e04d1a",
+     "gate/expected-audit.md": "138f8c31661368369afe2f12589ef3fe76e93277470369fee4528e94365c69ae",
+-    "gate/incremental.py": "89f71b5a9e82fdf68f80f48ddbfc32e8451c1f57dc8673d3b858bc480f28e4ca",
+-    "gate/obligations.py": "31d75741a70bfda70e1ed50470ca7ae219bf7e7dcee58d9bf7cef1f1ce63793c",
++    "gate/incremental.py": "3d087455211bbdb4c1939bf8ca32c5bd691976c855e18c7228ff1cbd9a9646ee",
++    "gate/obligations.py": "2b8e9a87b92098a53ecf947725a12c88c21fa2664563dfc38d51cd562b14980d",
+     "gate/post_pr_report.py": "78c1133d2203f55e00777f507b18138d6e151425952cae12790b5c3dc40a134d",
+     "gate/pr_check.py": "6a79c16f97b05ea78d3d3820d8aeca7429792409dc677863064050a3ceb4fa13",
+     "gate/provenance/Dockerfile": "c915c79dfbedc45e58d2b901c03a9cc60c9941f760bc784b246b6607213108a5",

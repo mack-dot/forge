@@ -1,0 +1,17 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "DOCUMENT_FORMAT",
+ "gate": "gate",
+ "id": "ledger-evidence-duplicate-key",
+ "kind": "adversarial_evidence",
+ "order": 30,
+ "rationale": "A duplicate top-level end_to_end key (JSON parsers disagree on which value wins).",
+ "supplied_evidence": {
+  "duplicate_top_level_key": "end_to_end",
+  "from": "ledger-evidence-seed-fresh",
+  "ops": []
+ }
+}

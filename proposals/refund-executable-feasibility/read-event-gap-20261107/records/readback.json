@@ -1,0 +1,46 @@
+{
+  "actual_exit": 0,
+  "commands": {
+    "model-0001": 0,
+    "repeat": 0,
+    "fresh-import": 0,
+    "wrong-replay-result": 1,
+    "omitted-error-event": 1
+  },
+  "theorems": 4,
+  "identical_exports": 4,
+  "closure_nodes": 217,
+  "closure_parent_files": 1287,
+  "checked_input_files": 2668,
+  "foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "data_sha256": "60261ea96a993d62c971769d642c9ab1b9dbc558ccd31f41d9e4e3ef00202357",
+  "proof_source_sha256": "902821b55ffa3991c677640aeba8eec4d901e25cceb3c12a4680b45c24846d19",
+  "protected_paths": 50,
+  "frozen_mission_unchanged": true,
+  "source_files": {
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/basis_ffiScript.sml": "74862cf9782eaca3cf07d4c4e9aa08305947800973fc0e5077cdff9a148948db",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/TextIOProofScript.sml": "383fc86c4ebcf198f6ce9bb33b049a7e7b43cd08d2da0574d3b3fdb85cc420b7",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/TextIOProgScript.sml": "e2ddab184379b211222ff2a6879e5f192a7f9146f2561b9022483886f57ddb6a",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/fsFFIScript.sml": "ed0e73e7612bfca88f3109cc0d400e0fb5bd0579b752f0f6d1a7bceed073fe18",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/semantics/ffi/ffiScript.sml": "91ba9834ba7661c0278d7fcf88a22bca174c088a8eac62a72d6d452e4e39229d",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/characteristic/cfScript.sml": "b1e03cb3d21b8bd882af065c4f167c47130a35210a78275b6809c6b25dad6422",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/characteristic/cfHeapsBaseScript.sml": "afc71ffc1baa3a04dcd09133eabd369e30dab1c0cbb3d46db1a1c3f3cc099e05",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/characteristic/cfTacticsLib.sml": "02c0c2eb88328e5e25d688046cdb5bbf82b74363d74e3f7ac0878198662b227a"
+  },
+  "scope_files": {
+    "spec/refund/protocol.md": "5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4",
+    "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57",
+    "spec/refund/spec.lock": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57",
+    "proposals/refund-executable-feasibility/README.md": "c8d20f3fe95cf1940bbacb3a289b5576d0a88b93ec4a95f65339ecedc196d429",
+    "proposals/refund-executable-feasibility/stdio-contract-20261104/REPORT.md": "957d031795a5dddd95a75284413e35b806e6399c064462690d7d076db4c30a81",
+    "proposals/refund-executable-feasibility/runtime-premises-20261104/CORRESPONDENCE.md": "c42db7a9955ba797617812936d511dd691d1fa7cba292fc5fb909d95f7ff5b91",
+    "proposals/refund-executable-feasibility/exception-compiler-20261105/records/expected.sml": "eb97d1601834509aa7feb8b12c2aa84410780f636fe9d632d9e008b5731a8b6f"
+  },
+  "end_to_end": false,
+  "scope": "Separate local readback by the producing agent; not independent replay or human review."
+}

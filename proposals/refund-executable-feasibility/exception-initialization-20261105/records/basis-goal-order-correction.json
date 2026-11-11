@@ -1,0 +1,10 @@
+{
+  "prior_actual_exit": 1,
+  "diagnostic_actual_exit": 0,
+  "residual": "irule produces pointwise implication before sem_satisfies premise; source-contract rule was applied to pointwise implication",
+  "change": "reverse conj_tac handles the source-contract premise first, then the unchanged event-extraction implication",
+  "statement_changed": false,
+  "old_sha256": "9c352254bc12ade354c0e72486fad03d0618b78f966801994fbec82ed9196965",
+  "new_sha256": "68bac7fe6ee2a86ba73bed92d90d4085d8859b2166bd8474a5ce73bfd33c4420",
+  "end_to_end": false
+}

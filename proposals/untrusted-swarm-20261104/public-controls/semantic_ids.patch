@@ -1,0 +1,11 @@
+--- a/proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml
++++ b/proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml
+@@ -42,7 +42,7 @@
+ 
+ Quote add_cakeml:
+   fun refund_verified charge request original remaining enabled opened candidate amount reason =
+-    refund_fields charge request original remaining enabled opened candidate amount reason;
++    refund_fields request charge original remaining enabled opened candidate amount reason;
+ End
+ 
+ val st = get_ml_prog_state ();

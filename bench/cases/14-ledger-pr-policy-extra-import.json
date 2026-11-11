@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "include \"../spec/LedgerSpec.dfy\"\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "include \"../spec/LedgerSpec.dfy\"\ninclude \"Booking.dfy\"\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "SOURCE_SCOPE",
+ "gate": "incremental",
+ "id": "ledger-pr-policy-extra-import",
+ "kind": "policy",
+ "order": 14,
+ "rationale": "A second file is pulled into the ledger implementation.",
+ "supplied_evidence": null
+}

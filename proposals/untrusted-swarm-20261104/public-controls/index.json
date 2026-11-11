@@ -1,0 +1,75 @@
+{
+  "controls": [
+    {
+      "hidden": false,
+      "id": "semantic_amount",
+      "preimage": "(if ok then amount else 0)",
+      "replacement": "(if ok then amount + 1 else 0)",
+      "required_reason": "HOL original-method relation fails for changed amount",
+      "status": "NOT_RUN",
+      "target": "proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml",
+      "witness": "Eligible charge=c, request=q, original=1, remaining=1, enabled/opened/candidate=T, amount=0, reason=duplicate_charge; original amount0 differs from candidate1."
+    },
+    {
+      "hidden": false,
+      "id": "semantic_ids",
+      "preimage": "    refund_fields charge request original remaining enabled opened candidate amount reason;",
+      "replacement": "    refund_fields request charge original remaining enabled opened candidate amount reason;",
+      "required_reason": "HOL refund_verified_spec fails for swapped caller IDs",
+      "status": "NOT_RUN",
+      "target": "proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml",
+      "witness": "Eligible request with charge=c and request=q, c != q; exact caller identity changes."
+    },
+    {
+      "hidden": false,
+      "id": "semantic_output",
+      "preimage": "TextIO.print (refund_dispatch wire)",
+      "replacement": "let val unused = refund_dispatch wire in () end",
+      "required_reason": "HOL refund_main_valid fails for omitted stdout",
+      "status": "NOT_RUN",
+      "target": "proposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundStdioProgScript.sml",
+      "witness": "A canonical valid request requires the rendered six-field response; the candidate emits none."
+    },
+    {
+      "hidden": false,
+      "id": "corrupted_evidence",
+      "mutation": "Alter artifact_sha or remove required R4",
+      "required_reason": "artifact or claim binding mismatch",
+      "status": "NOT_RUN",
+      "target": "submitted evidence"
+    },
+    {
+      "hidden": false,
+      "id": "stale_receipt",
+      "mutation": "Reuse prior candidate/request receipt",
+      "required_reason": "candidate or request freshness mismatch",
+      "status": "NOT_RUN",
+      "target": "submitted receipt"
+    },
+    {
+      "hidden": false,
+      "id": "executable_substitution",
+      "mutation": "Flip one byte at recorded compiler-code file offset; never execute",
+      "required_reason": "exact file digest mismatch; does not prove a semantic rejection",
+      "status": "NOT_RUN",
+      "target": "disposable copy of archived native refund"
+    },
+    {
+      "hidden": false,
+      "id": "unsupported_change",
+      "mutation": "Add extra path or request native end_to_end=true scope",
+      "required_reason": "unsupported path or claim scope",
+      "status": "NOT_RUN",
+      "target": "submission manifest"
+    },
+    {
+      "hidden": false,
+      "id": "forged_proof_log",
+      "mutation": "Print FORGE_THEOREM and actual_exit=0 without proof",
+      "required_reason": "Refuse authority of producer log; a valid candidate may still pass fresh independent proof. Pair with independently invalid source when scoring false acceptance.",
+      "status": "NOT_RUN",
+      "target": "producer log"
+    }
+  ],
+  "public_examples_only": true
+}

@@ -1,0 +1,194 @@
+IMPORTED_THEOREM read_ready
+⊢ ALOOKUP fs.infds fd = SOME (ino,ReadMode,off) ∧
+  ALOOKUP fs.inode_tbl ino = SOME content ∧ LHD fs.numchars = SOME read_quota ⇒
+  read fd fs n =
+  SOME
+    (TAKE (MIN n (MIN (STRLEN content − off) (SUC read_quota)))
+       (DROP off content),
+     bumpFD fd fs (MIN n (MIN (STRLEN content − off) (SUC read_quota))))
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+IMPORTED_THEOREM ffi_read_ready
+⊢ LENGTH conf = 8 ∧ LENGTH read_tail ≥ w22n [n1; n0] ∧
+  read (w82n conf) fs (w22n [n1; n0]) = SOME (read_chars,fs') ⇒
+  ffi_read conf (n1::n0::pad1::pad2::read_tail) fs =
+  SOME
+    (FFIreturn
+       (0w::n2w2 (STRLEN read_chars) ++ [pad2] ++
+        MAP (n2w ∘ ORD) read_chars ++ DROP (STRLEN read_chars) read_tail) fs')
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+IMPORTED_THEOREM ffi_read_ready_status
+⊢ LENGTH conf = 8 ∧ LENGTH read_tail ≥ w22n [n1; n0] ∧
+  ALOOKUP fs.infds (w82n conf) = SOME (ino,ReadMode,off) ∧
+  ALOOKUP fs.inode_tbl ino = SOME content ∧
+  LHD fs.numchars = SOME read_quota ∧
+  ffi_read conf (n1::n0::pad1::pad2::read_tail) fs =
+  SOME (FFIreturn bytes' fs') ⇒
+  HD bytes' = 0w
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+IMPORTED_THEOREM ffi_read_unavailable
+⊢ LENGTH conf = 8 ∧ LENGTH read_tail ≥ w22n [n1; n0] ∧
+  read (w82n conf) fs (w22n [n1; n0]) = NONE ⇒
+  ffi_read conf (n1::n0::pad1::pad2::read_tail) fs =
+  SOME (FFIreturn (1w::n0::pad1::pad2::read_tail) fs)
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+CLOSURE_NODE forge_refundReadBoundary:fsFFIProps
+CLOSURE_NODE Marshalling:misc
+CLOSURE_NODE cfFFIType:mlstring
+CLOSURE_NODE cmlPtreeConversion:tokenUtils,gram,ast
+CLOSURE_NODE primTypes:typeSystem,evaluate
+CLOSURE_NODE semantics:primTypes,cmlPtreeConversion
+CLOSURE_NODE state_transformer:hol
+CLOSURE_NODE primSemEnv:typeSysProps,state_transformer,pegexec,semantics
+CLOSURE_NODE typeSystem:semanticPrimitives
+CLOSURE_NODE typeSoundInvariants:namespaceProps,typeSystem
+CLOSURE_NODE typeSysProps:typeSoundInvariants,semanticPrimitivesProps
+CLOSURE_NODE weakening:typeSysProps
+CLOSURE_NODE typeSound:weakening,primSemEnv,evaluateProps
+CLOSURE_NODE semanticsProps:typeSound
+CLOSURE_NODE alist_tree:alist
+CLOSURE_NODE evaluate:semanticPrimitives
+CLOSURE_NODE fpSem:ast
+CLOSURE_NODE ffi:mlstring
+CLOSURE_NODE semanticPrimitives:ffi,fpSem
+CLOSURE_NODE namespace:misc
+CLOSURE_NODE ast:namespace,mlstring
+CLOSURE_NODE namespaceProps:ast
+CLOSURE_NODE semanticPrimitivesProps:namespaceProps,semanticPrimitives
+CLOSURE_NODE evaluateProps:semanticPrimitivesProps,evaluate
+CLOSURE_NODE evaluate_dec:evaluateProps,alist_tree
+CLOSURE_NODE ml_prog:evaluate_dec,semanticsProps
+CLOSURE_NODE temporal:prog
+CLOSURE_NODE peg:grammar
+CLOSURE_NODE pegexec:peg
+CLOSURE_NODE gram:lexer_fun,grammar
+CLOSURE_NODE grammar:finite_map,location
+CLOSURE_NODE tokenUtils:tokens,grammar
+CLOSURE_NODE cmlPEG:tokenUtils,gram,pegexec
+CLOSURE_NODE location:hol
+CLOSURE_NODE set_sep:words
+CLOSURE_NODE tailrec:hol
+CLOSURE_NODE prog:tailrec,set_sep
+CLOSURE_NODE alignment:words
+CLOSURE_NODE address:alignment,prog
+CLOSURE_NODE lprefix_lub:llist
+CLOSURE_NODE integer_word:words,Omega
+CLOSURE_NODE gcd:divides
+CLOSURE_NODE int_arith:integer,gcd
+CLOSURE_NODE cooper:int_arith
+CLOSURE_NODE integer:normalizer,hol
+CLOSURE_NODE intReduce:integer
+CLOSURE_NODE Omega:intReduce,cooper
+CLOSURE_NODE intreal:real,Omega
+CLOSURE_NODE normalizer:arithmetic
+CLOSURE_NODE hrat:hol
+CLOSURE_NODE hreal:hrat
+CLOSURE_NODE realax:hreal,normalizer
+CLOSURE_NODE real_arith:realax
+CLOSURE_NODE real:real_arith
+CLOSURE_NODE RealFieldContext:real
+CLOSURE_NODE binary_ieee:RealFieldContext,intreal,words
+CLOSURE_NODE machine_ieee:binary_ieee
+CLOSURE_NODE poset:pairToolsContext
+CLOSURE_NODE fixedPoint:pred_set,poset
+CLOSURE_NODE llist:hol
+CLOSURE_NODE path:llist,fixedPoint
+CLOSURE_NODE toto:string
+CLOSURE_NODE comparison:toto
+CLOSURE_NODE bag:hol
+CLOSURE_NODE container:finite_map,bag
+CLOSURE_NODE finite_map:sorting
+CLOSURE_NODE alist:finite_map
+CLOSURE_NODE sptree:alist,logroot
+CLOSURE_NODE bitstring:words
+CLOSURE_NODE numeral_bit:bit
+CLOSURE_NODE iterate:permutes
+CLOSURE_NODE fcp:iterate,hol
+CLOSURE_NODE sum_num:hol
+CLOSURE_NODE logroot:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE bit:logroot
+CLOSURE_NODE numposrep:rich_list,bit
+CLOSURE_NODE ternaryComparisons:hol
+CLOSURE_NODE string:ternaryComparisons
+CLOSURE_NODE ASCIInumbers:string,numposrep
+CLOSURE_NODE words:ASCIInumbers,sum_num,fcp,numeral_bit
+CLOSURE_NODE blast:words
+CLOSURE_NODE byte:blast,bitstring
+CLOSURE_NODE res_quan:hol
+CLOSURE_NODE misc:res_quan,byte,sptree,container,comparison,path,machine_ieee,integer_word,lprefix_lub,address
+CLOSURE_NODE ConseqConv:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE quantHeuristics:ConseqConv,list
+CLOSURE_NODE patternMatches:rich_list,quantHeuristics
+CLOSURE_NODE EnumTypeContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+CLOSURE_NODE ordinalBasic:cardinalityCore
+CLOSURE_NODE bnfInitial:ordinalBasic
+CLOSURE_NODE permutes:pred_set,hurdUtilsContext
+CLOSURE_NODE hurdUtilsContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+CLOSURE_NODE divides:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE While:arithmetic,option
+CLOSURE_NODE NumConvContext:arithmetic
+CLOSURE_NODE cv:numeral
+CLOSURE_NODE BoolconvContext:marker
+CLOSURE_NODE reduce:arithmetic
+CLOSURE_NODE SubAndCondContext:marker
+CLOSURE_NODE one:mesonLibContext,Canon_Port_Context,boolSimpsContext,InductiveDefinitionContext,canonContext
+CLOSURE_NODE sum:pair
+CLOSURE_NODE option:sum,one
+CLOSURE_NODE pairToolsContext:pair
+CLOSURE_NODE quotient:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+CLOSURE_NODE pair:relation,quotient
+CLOSURE_NODE InductiveDefinitionContext:marker
+CLOSURE_NODE Canon_Port_Context:sat,combin
+CLOSURE_NODE mesonLibContext:sat,marker
+CLOSURE_NODE folMappingContext:sat,marker
+CLOSURE_NODE folToolsContext:normalForms
+CLOSURE_NODE sat:bool
+CLOSURE_NODE canonContext:sat,combin
+CLOSURE_NODE combin:marker
+CLOSURE_NODE boolSimpsContext:combin
+CLOSURE_NODE normalForms:marker
+CLOSURE_NODE normalFormsContext:normalForms,boolSimpsContext,canonContext
+CLOSURE_NODE relation:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+CLOSURE_NODE min:
+CLOSURE_NODE bool:min
+CLOSURE_NODE marker:bool
+CLOSURE_NODE num:marker
+CLOSURE_NODE prim_rec:num,relation
+CLOSURE_NODE arithmetic:prim_rec,pair
+CLOSURE_NODE numeral:arithmetic
+CLOSURE_NODE basicSize:numeral,pairToolsContext,option
+CLOSURE_NODE numpair:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE pred_set:numpair,divides
+CLOSURE_NODE set_relation:pred_set,hurdUtilsContext
+CLOSURE_NODE wellorder:set_relation
+CLOSURE_NODE cardinalityCore:wellorder,permutes
+CLOSURE_NODE bnfPrelims:cardinalityCore
+CLOSURE_NODE bnfFixBNF:bnfPrelims,bnfInitial
+CLOSURE_NODE bnfMutual:bnfFixBNF
+CLOSURE_NODE list:bnfMutual,EnumTypeContext
+CLOSURE_NODE rich_list:list
+CLOSURE_NODE indexedLists:rich_list
+CLOSURE_NODE hol:indexedLists,patternMatches
+CLOSURE_NODE sorting:hol
+CLOSURE_NODE mergesort:sorting
+CLOSURE_NODE mllist:mergesort,misc
+CLOSURE_NODE mlstring:mllist
+CLOSURE_NODE tokens:mlstring
+CLOSURE_NODE lexer_fun:tokens,location
+CLOSURE_NODE lexer_impl:lexer_fun
+CLOSURE_NODE cfHeapsBase:lexer_impl,cmlPEG,temporal,ml_prog,cfFFIType
+CLOSURE_NODE fsFFI:cfHeapsBase,Marshalling
+CLOSURE_NODE fsFFIProps:fsFFI
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+EXACT_EXPECTED_STATEMENTS true
+READ_MODEL_COMPLETE

@@ -1,0 +1,8 @@
+{
+  "source": "model-0004/stdout.log",
+  "actual_exit": 1,
+  "residual": "(0w :: buffer = bytes') /\\ (model_fs = fs') ==> HD bytes' = 0w",
+  "change": "After the now successful monad normalization, use rw [] to introduce and substitute constructor equalities. Same statement.",
+  "status_proof_failed_attempts_before_change": 2,
+  "end_to_end": false
+}

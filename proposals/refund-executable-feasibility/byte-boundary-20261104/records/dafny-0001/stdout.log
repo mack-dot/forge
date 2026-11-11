@@ -1,0 +1,23 @@
+Boundary.dfy(62,10): Warning: unusual indentation in right-hand operand of <==> (which ends at line 65, column 113); do you perhaps need parentheses?
+   |
+62 |       (ok <==> cb != [] && qb != [] && context.refundEnabled && context.requestOpen &&
+   |           ^^^^
+
+Boundary.dfy(71,12): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+   |
+71 |     ensures forall i | 0 <= i < |Codes(U.Encoded(if response.Candidate? then response.reason else ""))| ::
+   |             ^^^^^^
+
+Boundary.dfy(23,8): Error: assertion might not hold
+   |
+23 |         assert s[i] as int == t[i] as int;
+   |         ^^^^^^
+
+Boundary.dfy(53,9): Error: Verification out of resource (RefundByteBoundary.Boundary)
+   |
+53 |   method Boundary(context: R.Context, response: R.ModelResponse)
+   |          ^^^^^^^^
+
+
+Dafny program verifier finished with 1431 verified, 1 error, 1 out of resource
+Results File: /Users/mackianni/forge/results/refund-byte-boundary-2026-11-04/attempt-0001/dafny-0001/inputs/verification.csv

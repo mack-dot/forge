@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    // B1: no two active bookings occupy the same slot.\n    ensures NoDoubleBooking(next.active)\n",
+   "op": "edit",
+   "path": "spec/booking/BookingSpec.dfy",
+   "replace": "    // B1: no two active bookings occupy the same slot.\n",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "BOOKING_SPEC_LOCK",
+ "gate": "booking",
+ "id": "booking-policy-spec-weakened",
+ "kind": "policy",
+ "order": 40,
+ "rationale": "B1 postcondition deleted from the approved booking spec.",
+ "supplied_evidence": null
+}

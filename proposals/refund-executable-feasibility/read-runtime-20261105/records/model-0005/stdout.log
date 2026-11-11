@@ -1,0 +1,28 @@
+<<HOL message: Created theory "forge_refundReadBoundary">>
+Saved theorem _______ "read_ready"
+Saved theorem _______ "ffi_read_ready"
+Proof of 
+
+LENGTH conf = 8 ∧ LENGTH read_tail ≥ w22n [n1; n0] ∧
+ALOOKUP fs.infds (w82n conf) = SOME (ino,ReadMode,off) ∧
+ALOOKUP fs.inode_tbl ino = SOME content ∧ LHD fs.numchars = SOME read_quota ∧
+ffi_read conf (n1::n0::pad1::pad2::read_tail) fs =
+SOME (FFIreturn bytes' fs') ⇒
+HD bytes' = 0w
+
+failed.
+First unsolved sub-goal is
+
+HD
+  (0w::
+     (n2w2
+        (MIN (w22n [n1; n0]) (MIN (STRLEN content − off) (SUC read_quota))) ++
+      [pad2] ++
+      MAP (n2w ∘ ORD)
+        (TAKE
+           (MIN (w22n [n1; n0]) (MIN (STRLEN content − off) (SUC read_quota)))
+           (DROP off content)) ++
+      DROP
+        (MIN (w22n [n1; n0]) (MIN (STRLEN content − off) (SUC read_quota)))
+        read_tail)) = 0w
+

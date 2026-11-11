@@ -1,0 +1,244 @@
+[
+  {
+    "case": "valid_regular",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "regular_file",
+      "bytes": 62,
+      "start_offset": 0
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "7b450385073cc30d774749b240a8eb8252bfb9ba89b9af62d0f1e1435297c84f",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 64,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": true
+  },
+  {
+    "case": "empty_eof",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "regular_file",
+      "bytes": 0,
+      "start_offset": 0
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": null
+  },
+  {
+    "case": "malformed",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "regular_file",
+      "bytes": 1,
+      "start_offset": 0
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "32ebb1abcc1c601ceb9c4e3c4faba0caa5b85bb98c4f1e6612c40faa528a91c9",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": null
+  },
+  {
+    "case": "closed_stdin",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "fd0_closed_in_child_before_exec"
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": null
+  },
+  {
+    "case": "write_only_stdin",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "write_only_regular_file",
+      "fcntl_flags": 1
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": null
+  },
+  {
+    "case": "nonblocking_empty_pipe",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "pipe",
+      "fcntl_flags": 4,
+      "nonblocking_mask": 4,
+      "writer_open_in_parent": true,
+      "bytes_queued": 0
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": null
+  },
+  {
+    "case": "nonblocking_ready_pipe",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "pipe",
+      "fcntl_flags": 4,
+      "nonblocking_mask": 4,
+      "writer_open_in_parent": false,
+      "bytes_queued": 62
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "7b450385073cc30d774749b240a8eb8252bfb9ba89b9af62d0f1e1435297c84f",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": 0,
+    "stdout_sha256": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 64,
+    "stderr_bytes": 0,
+    "stdout_captured": true,
+    "matches_valid_expected": true
+  },
+  {
+    "case": "closed_stdout_reader",
+    "argv": [
+      "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+    ],
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "CML_HEAP_SIZE": "256",
+      "CML_STACK_SIZE": "256"
+    },
+    "descriptor_setup": {
+      "kind": "regular_file",
+      "bytes": 62,
+      "start_offset": 0,
+      "stdout": "pipe with no readers; default SIGPIPE restored by subprocess"
+    },
+    "cpu_seconds_per_process": 30,
+    "offered_input_sha256": "7b450385073cc30d774749b240a8eb8252bfb9ba89b9af62d0f1e1435297c84f",
+    "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "scope": "Finite native observation, no universal FFI or exit-contract proof",
+    "end_to_end": false,
+    "actual_exit": -13,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_captured": false,
+    "matches_valid_expected": null
+  }
+]

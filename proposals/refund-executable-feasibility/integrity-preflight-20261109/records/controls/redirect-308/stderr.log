@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls.py", line 68, in <module>
+    raise SystemExit(child(sys.argv[1]))
+  File "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls.py", line 52, in child
+    result = namespace['fetch'](origin, 64)
+  File "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/integrity_driver.py", line 127, in fetch
+    with opener.open(request,timeout=15) as response:
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 525, in open
+    response = meth(req, response)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 308: Found

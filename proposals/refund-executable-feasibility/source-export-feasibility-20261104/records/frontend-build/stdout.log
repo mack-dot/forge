@@ -1,0 +1,454 @@
+MSBuild version 17.8.5+b5265ef37 for .NET
+  Determining projects to restore...
+  Restored /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyTestGeneration/DafnyTestGeneration.csproj (in 3.17 sec).
+  Restored /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyPipeline/DafnyPipeline.csproj (in 3.17 sec).
+  Restored /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyDriver/DafnyDriver.csproj (in 3.17 sec).
+  Restored /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyCore/DafnyCore.csproj (in 3.17 sec).
+  Restored /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyLanguageServer/DafnyLanguageServer.csproj (in 3.17 sec).
+  Restored /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj (in 3.97 sec).
+  Skipping NuGet package signature verification.
+  Skipping NuGet package signature verification.
+  Tool 'cocor' (version '2014.12.25') was restored. Available commands: coco
+  Tool 'boogie' (version '3.2.5') was restored. Available commands: boogie
+  
+  Restore was successful.
+  .NET SDK:
+   Version:           8.0.111
+   Commit:            ad116b5ce0
+   Workload version:  8.0.100-manifests.996cfe54
+  
+  Runtime Environment:
+   OS Name:     Mac OS X
+   OS Version:  27.0
+   OS Platform: Darwin
+   RID:         osx-arm64
+   Base Path:   /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/sdk/sdk/8.0.111/
+  
+  .NET workloads installed:
+   Workload version: 8.0.100-manifests.996cfe54
+  There are no installed workloads to display.
+  
+  Host:
+    Version:      8.0.11
+    Architecture: arm64
+    Commit:       9cb3b725e3
+  
+  .NET SDKs installed:
+    8.0.111 [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/sdk/sdk]
+  
+  .NET runtimes installed:
+    Microsoft.AspNetCore.App 8.0.11 [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/sdk/shared/Microsoft.AspNetCore.App]
+    Microsoft.NETCore.App 8.0.11 [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/sdk/shared/Microsoft.NETCore.App]
+  
+  Other architectures found:
+    None
+  
+  Environment variables:
+    DOTNET_ROOT       [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/sdk]
+  
+  global.json file:
+    /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/global.json
+  
+  Learn more:
+    https://aka.ms/dotnet/info
+  
+  Download .NET:
+    https://aka.ms/dotnet/download
+  Coco/R (Apr 19, 2011)
+  checking
+    AtAttributes deletable
+    OldSemi deletable
+    WitnessClause deletable
+    ParameterDefaultValue deletable
+    IteratorSpec deletable
+    MethodSpec deletable
+    OptGenericInstantiation deletable
+    FunctionSpec deletable
+    LoopSpec deletable
+    ForallStatementEnsuresAndBody deletable
+    LambdaSpec deletable
+    DecreasesToExpressionList deletable
+    LL1 warning in OneStmt: opaque is start of several alternatives
+    LL1 warning in AssignStatement: lbracecolon is start of several alternatives
+    LL1 warning in AssignStatement: ":-" is start of several alternatives
+    LL1 warning in Lhs: openparen is start & successor of deletable structure
+    LL1 warning in Lhs: openparen is start & successor of deletable structure
+    LL1 warning in PrimaryExpression: reveal is start of several alternatives
+    LL1 warning in PrimaryExpression: hide is start of several alternatives
+  parser + scanner generated
+  0 errors detected
+  Compiling DafnyRuntimeJava to DafnyRuntimeJava/build/libs/DafnyRuntime-4.10.1.jar...
+  Downloading https://services.gradle.org/distributions/gradle-8.9-bin.zip
+  ............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+  
+  Welcome to Gradle 8.9!
+  
+  Here are the highlights of this release:
+   - Enhanced Error and Warning Messages
+   - IDE Integration Improvements
+   - Daemon JVM Information
+  
+  For more details see https://docs.gradle.org/8.9/release-notes.html
+  
+  Starting a Gradle Daemon (subsequent builds will be faster)
+  
+  > Task :compileJava
+EXEC : warning : [options] source value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+  
+  > Task :processResources NO-SOURCE
+  > Task :classes
+  > Task :jar
+EXEC : warning : [options] target value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] To suppress warnings about obsolete options, use -Xlint:-options. [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+  3 warnings
+  
+  > Task :javadoc
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:65: warning: no comment
+      public Array<T> copy() {
+                      ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:70: warning: no comment
+      public void copy(int offset, Array<T> to, int toOffset, int length) {
+                  ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:74: warning: no comment
+      public Array<T> copyOfRange(int lo, int hi) {
+                      ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:41: warning: no comment
+      public TypeDescriptor<T> elementType() {
+                               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:61: warning: no comment
+      public void fill(T value) {
+                  ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:37: warning: no comment
+      public static <T> Array<T> fromList(TypeDescriptor<T> eltType, List<T> elements) {
+                                 ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:49: warning: no comment
+      public T get(int index) {
+               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:57: warning: no comment
+      public int length() {
+                 ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:33: warning: no comment
+      public static <T> Array<T> newArray(TypeDescriptor<T> eltType, int length) {
+                                 ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:53: warning: no comment
+      public void set(int index, T value) {
+                  ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:80: warning: no comment
+      public boolean shallowEquals(Array<T> other) {
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:45: warning: no comment
+      public Object unwrap() {
+                    ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:119: warning: no comment
+      public static Object unwrap(Array<?> array) {
+                           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:144: warning: no comment
+      public static boolean[] unwrapBooleans(Array<Boolean> array) {
+                              ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:128: warning: no comment
+      public static byte[] unwrapBytes(Array<Byte> array) {
+                           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:148: warning: no comment
+      public static char[] unwrapChars(Array<Character> array) {
+                           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:136: warning: no comment
+      public static int[] unwrapInts(Array<Integer> array) {
+                          ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:140: warning: no comment
+      public static long[] unwrapLongs(Array<Long> array) {
+                           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:124: warning: no comment
+      public static <T> T[] unwrapObjects(Array<T> array) {
+                            ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:132: warning: no comment
+      public static short[] unwrapShorts(Array<Short> array) {
+                            ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:111: warning: no comment
+      public static Array<Boolean> wrap(boolean[] array) {
+                                   ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:95: warning: no comment
+      public static Array<Byte> wrap(byte[] array) {
+                                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:115: warning: no comment
+      public static Array<Character> wrap(char[] array) {
+                                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:103: warning: no comment
+      public static Array<Integer> wrap(int[] array) {
+                                   ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:107: warning: no comment
+      public static Array<Long> wrap(long[] array) {
+                                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:99: warning: no comment
+      public static Array<Short> wrap(short[] array) {
+                                 ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:84: warning: no comment
+      public static <T> Array<T> wrap(TypeDescriptor<T> eltType, Object array) {
+                                 ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/java/dafny/Array.java:91: warning: no comment
+      public static <T> Array<T> wrap(TypeDescriptor<T> eltType, T[] array) {
+                                 ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:3: warning: no comment
+  public final class Array1<T> {
+               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:6: warning: no comment
+    public final int dim0;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:4: warning: no comment
+    public final Object elmts;
+                        ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:7: warning: no comment
+    public Array1(dafny.TypeDescriptor<T> elmtType, int dim0, Object elmts) {
+           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:29: warning: no comment
+    public static <T> dafny.TypeDescriptor<Array1<T>> _typeDescriptor() {
+                                                      ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:19: warning: no comment
+    public void fill(T z) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:22: warning: no comment
+    public Array1 fillThenReturn(T z) {
+                  ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:13: warning: no comment
+    public T get(int i0) {
+             ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array1.java:16: warning: no comment
+    public void set(int i0, T value) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:3: warning: no comment
+  public final class Array10<T> {
+               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:6: warning: no comment
+    public final int dim0;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:7: warning: no comment
+    public final int dim1;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:8: warning: no comment
+    public final int dim2;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:9: warning: no comment
+    public final int dim3;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:10: warning: no comment
+    public final int dim4;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:11: warning: no comment
+    public final int dim5;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:12: warning: no comment
+    public final int dim6;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:13: warning: no comment
+    public final int dim7;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:14: warning: no comment
+    public final int dim8;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:15: warning: no comment
+    public final int dim9;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:4: warning: no comment
+    public final Object[][][][][][][][][] elmts;
+                                          ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:16: warning: no comment
+    public Array10(dafny.TypeDescriptor<T> elmtType, int dim0, int dim1, int dim2, int dim3, int dim4, int dim5, int dim6, int dim7, int dim8, int dim9, Object[][][][][][][][][] elmts) {
+           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:65: warning: no comment
+    public static <T> dafny.TypeDescriptor<Array10<T>> _typeDescriptor() {
+                                                       ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:37: warning: no comment
+    public void fill(T z) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:58: warning: no comment
+    public Array10 fillThenReturn(T z) {
+                   ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:31: warning: no comment
+    public T get(int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9) {
+             ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array10.java:34: warning: no comment
+    public void set(int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, T value) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:3: warning: no comment
+  public final class Array11<T> {
+               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:6: warning: no comment
+    public final int dim0;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:7: warning: no comment
+    public final int dim1;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:16: warning: no comment
+    public final int dim10;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:8: warning: no comment
+    public final int dim2;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:9: warning: no comment
+    public final int dim3;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:10: warning: no comment
+    public final int dim4;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:11: warning: no comment
+    public final int dim5;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:12: warning: no comment
+    public final int dim6;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:13: warning: no comment
+    public final int dim7;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:14: warning: no comment
+    public final int dim8;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:15: warning: no comment
+    public final int dim9;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:4: warning: no comment
+    public final Object[][][][][][][][][][] elmts;
+                                            ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:17: warning: no comment
+    public Array11(dafny.TypeDescriptor<T> elmtType, int dim0, int dim1, int dim2, int dim3, int dim4, int dim5, int dim6, int dim7, int dim8, int dim9, int dim10, Object[][][][][][][][][][] elmts) {
+           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:69: warning: no comment
+    public static <T> dafny.TypeDescriptor<Array11<T>> _typeDescriptor() {
+                                                       ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:39: warning: no comment
+    public void fill(T z) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:62: warning: no comment
+    public Array11 fillThenReturn(T z) {
+                   ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:33: warning: no comment
+    public T get(int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10) {
+             ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array11.java:36: warning: no comment
+    public void set(int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10, T value) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:3: warning: no comment
+  public final class Array12<T> {
+               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:6: warning: no comment
+    public final int dim0;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:7: warning: no comment
+    public final int dim1;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:16: warning: no comment
+    public final int dim10;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:17: warning: no comment
+    public final int dim11;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:8: warning: no comment
+    public final int dim2;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:9: warning: no comment
+    public final int dim3;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:10: warning: no comment
+    public final int dim4;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:11: warning: no comment
+    public final int dim5;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:12: warning: no comment
+    public final int dim6;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:13: warning: no comment
+    public final int dim7;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:14: warning: no comment
+    public final int dim8;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:15: warning: no comment
+    public final int dim9;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:4: warning: no comment
+    public final Object[][][][][][][][][][][] elmts;
+                                              ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:18: warning: no comment
+    public Array12(dafny.TypeDescriptor<T> elmtType, int dim0, int dim1, int dim2, int dim3, int dim4, int dim5, int dim6, int dim7, int dim8, int dim9, int dim10, int dim11, Object[][][][][][][][][][][] elmts) {
+           ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:73: warning: no comment
+    public static <T> dafny.TypeDescriptor<Array12<T>> _typeDescriptor() {
+                                                       ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:41: warning: no comment
+    public void fill(T z) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:66: warning: no comment
+    public Array12 fillThenReturn(T z) {
+                   ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:35: warning: no comment
+    public T get(int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10, int i11) {
+             ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array12.java:38: warning: no comment
+    public void set(int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10, int i11, T value) {
+                ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array13.java:3: warning: no comment
+  public final class Array13<T> {
+               ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array13.java:6: warning: no comment
+    public final int dim0;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array13.java:7: warning: no comment
+    public final int dim1;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array13.java:16: warning: no comment
+    public final int dim10;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array13.java:17: warning: no comment
+    public final int dim11;
+                     ^
+  /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntimeJava/src/main/dafny-generated/dafny/Array13.java:18: warning: no comment
+    public final int dim12;
+                     ^
+  100 warnings
+  
+  > Task :javadocJar
+  > Task :sourcesJar
+  > Task :assemble
+  
+  > Task :compileTestJava
+EXEC : warning : [options] source value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] target value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] To suppress warnings about obsolete options, use -Xlint:-options. [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+  3 warnings
+  
+  > Task :processTestResources NO-SOURCE
+  > Task :testClasses
+  > Task :test
+  > Task :check
+  > Task :build
+  
+  Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+  
+  You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+  
+  For more on this, please refer to https://docs.gradle.org/8.9/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+  
+  BUILD SUCCESSFUL in 13s
+  7 actionable tasks: 7 executed
+  DafnyRuntime -> /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/netstandard2.0/DafnyRuntime.dll
+  DafnyCore -> /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/net8.0/DafnyCore.dll
+  The package DafnyCore.4.10.1 is missing a readme. Go to https://aka.ms/nuget/authoring-best-practices/readme to learn why package readmes are important.
+  Successfully created package '/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/DafnyCore.4.10.1.nupkg'.
+  DafnyLanguageServer -> /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/net8.0/DafnyLanguageServer.dll
+  DafnyPipeline -> /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/net8.0/DafnyPipeline.dll
+  The package DafnyPipeline.4.10.1 is missing a readme. Go to https://aka.ms/nuget/authoring-best-practices/readme to learn why package readmes are important.
+  Successfully created package '/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/DafnyPipeline.4.10.1.nupkg'.
+  DafnyTestGeneration -> /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/net8.0/DafnyTestGeneration.dll
+  DafnyDriver -> /Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Binaries/net8.0/DafnyDriver.dll
+
+Build succeeded.
+
+EXEC : warning : [options] source value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] target value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] To suppress warnings about obsolete options, use -Xlint:-options. [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] source value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] target value 8 is obsolete and will be removed in a future release [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+EXEC : warning : [options] To suppress warnings about obsolete options, use -Xlint:-options. [/Users/mackianni/forge/.toolchain/experiments/refund-dafny-frontend-20261104/dafny/Source/DafnyRuntime/DafnyRuntime.csproj::TargetFramework=netstandard2.0]
+    6 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:37.59

@@ -1,0 +1,98 @@
+{
+  "scope": "Execution-target discovery only; no repeated sandbox diagnostic or proof audit.",
+  "workflow_runner_labels": {
+    ".github/workflows/proof-gate.yml": [
+      "ubuntu-22.04",
+      "ubuntu-22.04"
+    ],
+    ".github/workflows/provenance-negative.yml": [
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/provenance.yml": [
+      "ubuntu-24.04",
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/stage4-exits.yml": [
+      "ubuntu-22.04"
+    ],
+    ".github/workflows/stage9-candidate-dry-run-v2.yml": [
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/stage9-candidate-dry-run.yml": [
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/stage9-hosted-probe-2.yml": [
+      "ubuntu-24.04",
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/stage9-hosted-probe.yml": [
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/stage9-private-dry-run-v31.yml": [
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/stage9-private-dry-run-v32.yml": [
+      "ubuntu-24.04"
+    ],
+    ".github/workflows/toolchain-inventory.yml": [
+      "ubuntu-22.04"
+    ]
+  },
+  "configured_runner_jobs": 14,
+  "macos_or_self_hosted_labels_in_local_workflows": [],
+  "ssh_config": {
+    "exists": true,
+    "host_directive_aliases": 10,
+    "distinct_aliases": 9,
+    "includes": [],
+    "hostnames_and_accounts_not_archived": true,
+    "private_keys_read": false,
+    "connections_attempted": false,
+    "macos_architecture_and_Forge_authorization": "NOT_ESTABLISHED"
+  },
+  "local_VM_capability_evidence": {
+    "reused_U320_inventory": "/Users/mackianni/forge/results/refund-environment-recovery-20261106/attempt-0004/context-inventory.json",
+    "tools": {
+      "tart": null,
+      "utmctl": null,
+      "prlctl": null,
+      "limactl": null,
+      "vfkit": null,
+      "VBoxManage": null
+    },
+    "known_application_paths": {
+      "/Applications/UTM.app": false,
+      "/Applications/Parallels Desktop.app": false,
+      "/Applications/VMware Fusion.app": false,
+      "/Applications/VirtualBox.app": false
+    },
+    "no_new_VM_launcher_probe": true
+  },
+  "historical_runner_proposals": [
+    "proposals/stage9-runner-provisioning.md",
+    "proposals/provenance-implementation.md"
+  ],
+  "historical_runner_scope": "Review-only provisioning plan; no usable runner established or registered in that preparation. Not evidence of current registry emptiness or Forge M1 authorization.",
+  "github_registry": {
+    "repository": "mack-dot/forge",
+    "record": "corrected-recorder/command.json",
+    "actual_exit": 1,
+    "error": "error connecting to api.github.com",
+    "current_runner_inventory": "UNKNOWN",
+    "first_recorder_error": "recorder-failure.json"
+  },
+  "available_connector_scope": "No supported macOS execution service identified; GitHub connector does not expose runner inventory. Unrelated hosting/security apps were not used as execution targets.",
+  "verdict": "BLOCKED: AUTHORIZED_EXECUTION_TARGET_REQUIRED",
+  "required_target": [
+    "Existing authorized macOS ARM64 host or VM",
+    "Private writable /var/tmp with working mkstemp",
+    "Enforced isolation and exclusive control preventing other agents from writing proof inputs or outputs",
+    "Verifiable pinned HOL/PolyML/runtime identities and source/build provenance",
+    "Adequate memory,disk and process limits; preserve CPU3600/core0 until approved resource review"
+  ],
+  "minimum_user_action": "Provide one authorized target identifier and connection/access details, including a trusted host identity. Target validation comes before any proof command. Transfer to a new external target still needs explicit approval for the exact payload.",
+  "proof_or_SAT_execution": "NOT_RUN",
+  "new_environment_diagnostics": "NOT_RUN",
+  "transfer_or_installation_or_dispatch": "NOT_RUN",
+  "end_to_end": false
+}

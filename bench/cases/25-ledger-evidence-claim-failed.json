@@ -1,0 +1,29 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "MISSING_EVIDENCE",
+ "gate": "gate",
+ "id": "ledger-evidence-claim-failed",
+ "kind": "adversarial_evidence",
+ "order": 25,
+ "rationale": "C2 evidence result changed to failed.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "evidence",
+     {
+      "claim_id": "C2"
+     },
+     "result"
+    ],
+    "value": "failed"
+   }
+  ]
+ }
+}

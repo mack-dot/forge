@@ -1,0 +1,34 @@
+{
+  "prior_manifest_verified": true,
+  "sources": {
+    "polyml/basis/FinalPolyML.sml": {
+      "sha256": "75cb05d8a10b8fe1d0b7e375d6dc5e0dfb0a002830546a7be7caa7c9d3ee2ce9",
+      "source_commit": "4557554077078decce4ce5f90da00a713cfc32e4",
+      "git_actual_exit": 0
+    },
+    "polyml/libpolyml/savestate.cpp": {
+      "sha256": "15640a4f8c8868b7e4248a2d234ceb82f4d0367433949551d0d119fd08809bef",
+      "source_commit": "4557554077078decce4ce5f90da00a713cfc32e4",
+      "git_actual_exit": 0
+    },
+    "HOL/src/HolSat/SatSolvers.sml": {
+      "sha256": "e39b6ec30ff1ee98bbf79faba1b30bfb74e72f9bda8c9ba84c1ff496a321d446",
+      "source_commit": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+      "git_actual_exit": 0
+    },
+    "HOL/src/HolSat/satConfig.sml": {
+      "sha256": "46be90386a60845f1938086b1d09f21b832c1a860441ab086dad8cdfdcf1f13f",
+      "source_commit": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+      "git_actual_exit": 0
+    },
+    "HOL/src/HolSat/minisatProve.sml": {
+      "sha256": "bb7d98fc76dbae691cc826547ef31ee40aafd9cd717a27cf4d153611f537e9d4",
+      "source_commit": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+      "git_actual_exit": 0
+    }
+  },
+  "proposed_sudo_commands": "NOT_AUTHORIZED; not used",
+  "loader": "unchanged published PolyML.SaveState.loadHierarchy",
+  "solver_binding": "unchanged; canonical path remains embedded; native MiniSat reachability must be reported",
+  "end_to_end": false
+}

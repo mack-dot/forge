@@ -1,0 +1,9 @@
+<<HOL message: Created theory "forge_refundInstallPremise">>
+Saved theorem _______ "emitted_install_jump"
+Saved theorem _______ "install_jump_offset"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundInstallPremise)>>
+Proof of 
+
+(asm (Jump (-4692)) next_pc (s with pc := entry + 4660w)).pc = entry − 32w
+
+failed.

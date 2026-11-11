@@ -1,0 +1,27 @@
+{
+  "protocol": "FUSE-1",
+  "phase": "setup inventory, not a trial",
+  "requirements": {
+    "per_role_tool_permissions": {
+      "status": "UNAVAILABLE",
+      "evidence": "collaboration.spawn_agent exposes message, fork, model and reasoning fields; no per-agent filesystem or tool grants. All sessions share the workspace."
+    },
+    "authoritative_compute_broker": {
+      "status": "UNAVAILABLE",
+      "evidence": "Current collaboration responses expose no per-role provider usage ledger or enforced total token reservation. No execution model/configuration is frozen."
+    },
+    "private_hidden_corpus": {
+      "status": "NOT_ESTABLISHED",
+      "evidence": "All setup sessions can access this repository. Public controls are not blinded challenges."
+    },
+    "independent_refund_kernel_admission_adapter": {
+      "status": "NOT_IMPLEMENTED",
+      "evidence": "Existing refund.py proves the Dafny source claim. Research HOL runners share mutable toolchain directories and import disk theories. No frozen restricted proof renderer and isolated changed-candidate admission adapter exists in this packet."
+    },
+    "complete_execution_binding": {
+      "status": "NOT_ESTABLISHED",
+      "evidence": "Model/config, isolated worker image, complete checker closure and hidden seed commitment must be pinned before scored trials. FUSE-1 only freezes prerequisite checks."
+    }
+  },
+  "end_to_end": false
+}

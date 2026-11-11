@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundRejectCompiled</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundRejectCompiled</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../../../../refund-runtime-premises-2026-11-04/attempt-0002/precise-0003/.hol/docs/forge_refundPreciseBehaviorTheory.html">forge_refundPreciseBehavior</a></li>
+<li><a href="../../../../attempt-0008/concrete-0001/.hol/docs/forge_refundRejectBasisTheory.html">forge_refundRejectBasis</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Definitions</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#exception_event_witness">exception_event_witness</a><a href="#refund_error_compiled_precise">refund_error_compiled_precise</a></div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="exception_event_witness">
+<div class="thm-name"><code>exception_event_witness</code></div>
+<pre>⊢ sem_satisfies source_behaviors
+    (λb. ∃x y. b = Terminate outcome (event_of x) ∧ P x y) ⇒
+  sem_satisfies source_behaviors
+    (λb. ∃io. b = Terminate outcome io ∧ ∃x y. io = event_of x ∧ P x y)
+</pre>
+</div>
+<div class="thm" id="refund_error_compiled_precise">
+<div class="thm-name"><code>refund_error_compiled_precise</code></div>
+<pre>⊢ installed code cbspace data data_sp info.lab_conf.ffi_names
+    (heap_regs arm8_backend_config.stack_conf.reg_names) mc
+    info.lab_conf.shmem_extra ms ∧
+  read_limits arm8_config (set_oracle arm8_backend_config oracle) mc ms =
+  (stack_limit,heap_limit) ∧ wfFS fs ∧ STD_streams fs ∧
+  stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ∧
+  is_arm8_machine_config mc ∧
+  (∀po.
+     is_safe_for_space (:64) (basis_ffi ext cl fs) po arm8_config
+       (set_oracle arm8_backend_config oracle) refund_prog
+       (stack_limit,heap_limit)) ⇒
+  ∃h1 h2.
+    SPLIT
+      (st2heap (basis_proj1,basis_proj2)
+         (SexpProg_st_2 (basis_ffi ext cl fs,K (K F)))) (h1,h2) ∧
+    STDIO fs h1 ∧
+    ∃io.
+      machine_sem mc (basis_ffi ext cl fs) ms = {Terminate Success io} ∧
+      ∃st3 exn.
+        io = st3.ffi.io_events ∧
+        (∃h3 h4.
+           SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+           (&amp;Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+        call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+        extract_fs ext (cl,fs) st3.ffi.io_events =
+        SOME (fastForwardFD fs 0)
+</pre>
+</div>
+</section>
+</body>
+</html>

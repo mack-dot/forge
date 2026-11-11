@@ -2,7 +2,8 @@
 
 Stage 4 is complete. The incremental gate works for the fixed ledger layout.
 All three real PR EXIT commands passed. The exact approved fee change is merged.
-Stage 5 is current; this document records the completed change-loop scope.
+This document records the completed change-loop scope. It was written when
+Stage 5 was current; see [ROADMAP.md](../ROADMAP.md) for the current stage.
 
 Run the gate from a trusted checkout. Pass a complete candidate checkout as data:
 
@@ -118,7 +119,8 @@ posting a status alone does not prevent a repository administrator from merging.
 bytes, published comments, and commit statuses. It records real gate and replay
 codes. The EXIT workflow runs it against frozen PR/run references. The first two
 cases require one accepted implementation edit and two rejected spec changes.
-The approved-spec case remains pending exact-text human approval.
+The approved-spec case required exact-text human approval; it later passed
+(see the end of this document).
 
 The archived local proof example belongs to trusted revision
 `bafcd92533034dc342c53688f058ab8cfbc577a6`. Use that revision to reproduce its
@@ -152,4 +154,5 @@ All three exact Stage 4 EXIT commands exited 0 in
 [run 40409284514](https://github.com/mack-dot/forge/actions/runs/40409284514).
 The unapproved-spec EXIT includes the post-approval C2 rejection. PR 4 merged
 with a tree identical to the checked candidate. The recorded baseline and head
-identities remain authoritative for each run. Stage 5 work has not started.
+identities remain authoritative for each run. Stage 5 work had not started when
+this record was written.

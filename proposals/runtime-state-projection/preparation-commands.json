@@ -1,0 +1,137 @@
+[
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "reset",
+      "HEAD",
+      "--",
+      "proposals/fixed-elf-assurance"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "add",
+      "--",
+      "proposals/fixed-elf-assurance"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "-c",
+      "user.name=Forge integration agent",
+      "-c",
+      "user.email=codex@users.noreply.github.com",
+      "commit",
+      "-m",
+      "Propose fixed-ELF memory-independent termination assurance case"
+    ],
+    "exit_code": 0,
+    "stdout": "[proposal/fixed-elf-assurance 5bb008a] Propose fixed-ELF memory-independent termination assurance case\n 11 files changed, 1549 insertions(+)\n create mode 100644 proposals/fixed-elf-assurance/MemoryIndependent.v\n create mode 100644 proposals/fixed-elf-assurance/ObservedTransitions.v\n create mode 100644 proposals/fixed-elf-assurance/README.md\n create mode 100644 proposals/fixed-elf-assurance/Wrapper.v\n create mode 100644 proposals/fixed-elf-assurance/assurance-case.proposed.json\n create mode 100644 proposals/fixed-elf-assurance/environment-inputs.json\n create mode 100644 proposals/fixed-elf-assurance/kernel-check.log.xz\n create mode 100644 proposals/fixed-elf-assurance/observation-checks.json\n create mode 100644 proposals/fixed-elf-assurance/observed-execution.log.xz\n create mode 100644 proposals/fixed-elf-assurance/proof-context.json\n create mode 100644 proposals/fixed-elf-assurance/rebuild-check.json\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "stdout": "5bb008a1b7d40b8887d045f50eb55e54544bb76f\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "rev-parse",
+      "HEAD^{tree}"
+    ],
+    "exit_code": 0,
+    "stdout": "44c0d88af2c94978729f5e83fa71b9045e0e25a0\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "diff",
+      "--name-only",
+      "HEAD^",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "stdout": "proposals/fixed-elf-assurance/MemoryIndependent.v\nproposals/fixed-elf-assurance/ObservedTransitions.v\nproposals/fixed-elf-assurance/README.md\nproposals/fixed-elf-assurance/Wrapper.v\nproposals/fixed-elf-assurance/assurance-case.proposed.json\nproposals/fixed-elf-assurance/environment-inputs.json\nproposals/fixed-elf-assurance/kernel-check.log.xz\nproposals/fixed-elf-assurance/observation-checks.json\nproposals/fixed-elf-assurance/observed-execution.log.xz\nproposals/fixed-elf-assurance/proof-context.json\nproposals/fixed-elf-assurance/rebuild-check.json\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-campaign-main-20261102",
+      "apply",
+      "--check",
+      "/Users/mackianni/forge/proposals/runtime-state-projection/proposal.patch"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-claim-proposal-20261102",
+      "bundle",
+      "create",
+      "/Users/mackianni/forge/proposals/runtime-state-projection/proposal.bundle",
+      "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3..HEAD"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-campaign-main-20261102",
+      "bundle",
+      "verify",
+      "/Users/mackianni/forge/proposals/runtime-state-projection/proposal.bundle"
+    ],
+    "exit_code": 0,
+    "stdout": "The bundle contains this ref:\n5bb008a1b7d40b8887d045f50eb55e54544bb76f HEAD\nThe bundle requires this ref:\nf9eb1cbc252b28c80e5dfe2774da71bc35a31bd3 \nThe bundle uses this hash algorithm: sha1\n",
+    "stderr": "/Users/mackianni/forge/proposals/runtime-state-projection/proposal.bundle is okay\n"
+  }
+]

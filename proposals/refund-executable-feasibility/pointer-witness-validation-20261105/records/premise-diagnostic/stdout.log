@@ -1,0 +1,15 @@
+<<HOL message: Created theory "forge_pointerWitnessImport">>
+IMPORTED refund_initializer_oracle_independence EXACT_OR_KERNEL_NORMALIZED true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED refund_pointer_fixed_point EXACT_OR_KERNEL_NORMALIZED true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED refund_fixed_syntax_pointer_witness EXACT_OR_KERNEL_NORMALIZED true HYPOTHESES 0 TAGGED_AXIOMS 0
+EXPECTED_FREE_VARS (data_sp :num) ; (save_regs :num -> bool) ; (cbspace :num) ; (cbpos :word64) ; (ms :α) ; (sdm :word64 -> bool) ; (dm :word64 -> bool) ; (m :word64 -> 64 word_loc) ; (tar :64 asm_state) ; (mc :(64, α, β) machine_config) ; (syn :num -> (num # num) # dec list) ; (fs :IO_fs) ; (cl :mlstring list) ; (ext :ffiname ->
+      mlstring list # IO_fs ->
+      word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result)
+ACTUAL_FREE_VARS (data_sp :num) ; (save_regs :num -> bool) ; (cbspace :num) ; (cbpos :word64) ; (ms :α) ; (sdm :word64 -> bool) ; (dm :word64 -> bool) ; (m :word64 -> 64 word_loc) ; (tar :64 asm_state) ; (mc :(64, α, β) machine_config) ; (syn :num -> (num # num) # dec list) ; (fs :IO_fs) ; (cl :mlstring list) ; (ext :ffiname ->
+      mlstring list # IO_fs ->
+      word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result)
+RESOURCE_HEAD_MATCH true
+/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/premise-diagnostic/audit.sml:102: error: Value or constructor (map_index) has not been declared
+Found near
+  List.app (fn (i, ...) => (... ...; ...))
+  (map_index I (ListPair.zip (eargs, aargs)))

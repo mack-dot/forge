@@ -1,0 +1,11 @@
+--- a/proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml
++++ b/proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml
+@@ -10,7 +10,7 @@
+ Definition refund_fields_def:
+   refund_fields charge request original remaining enabled opened candidate amount reason =
+     let ok = eligible charge request original remaining enabled opened candidate amount reason in
+-    (ok, (if ok then amount else 0), (if ok then reason else «»),
++    (ok, (if ok then amount + 1 else 0), (if ok then reason else «»),
+          (if ok then charge else «»), (if ok then request else «»),
+          (if ok then 1:int else 0))
+ End

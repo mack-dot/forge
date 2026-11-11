@@ -1,0 +1,245 @@
+name: Forge M1 authorized macOS SAT preflight
+on:
+  push:
+    branches: [proposal/m1-macos-preflight-20261106]
+    paths: [.github/workflows/m1-macos-preflight.yml]
+permissions: {}
+concurrency:
+  group: forge-m1-macos-environment-preflight
+  cancel-in-progress: false
+jobs:
+  environment-and-unchanged-sat:
+    if: github.repository == 'mack-dot/forge' && github.event.repository.private == false
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Check environment and conditionally run exact SAT inputs
+        shell: bash --noprofile --norc -euo pipefail {0}
+        env:
+          APPROVED_IMAGE_VERSION: '20261104.0514.1'
+          INPUT_COMMIT_SHA: 'ac05eaf972b8c98784466ae063fca505aaaf25f4'
+          INPUT_MANIFEST_SHA256: '6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7'
+          INPUT_MANIFEST_BYTES: '8435'
+        run: |
+          /usr/bin/python3 -I -B - <<'PY'
+          import traceback
+          
+          def main():
+              import ctypes
+              import errno
+              import hashlib
+              import json
+              import os
+              import platform
+              import resource
+              import shutil
+              import subprocess
+              import sys
+              
+              def emit(name, **fields):
+                  print(json.dumps(dict(operation=name, end_to_end=False, **fields), sort_keys=True), flush=True)
+              
+              def command(argv):
+                  process = subprocess.run(argv, capture_output=True, text=True)
+                  emit('command', argv=argv, actual_exit=process.returncode,
+                       stdout=process.stdout, stderr=process.stderr)
+                  if process.returncode != 0:
+                      raise RuntimeError('command failed: ' + argv[0])
+                  return process.stdout.strip()
+              
+              resource.setrlimit(resource.RLIMIT_CPU, (120, 120))
+              resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+              emit('identity', architecture=platform.machine(), system=platform.system(),
+                   release=platform.release(), effective_uid=os.geteuid(),
+                   runner_os=os.environ.get('RUNNER_OS'), runner_arch=os.environ.get('RUNNER_ARCH'),
+                   image_os=os.environ.get('ImageOS'), image_version=os.environ.get('ImageVersion'),
+                   workflow_sha=os.environ.get('GITHUB_WORKFLOW_SHA'), source_sha=os.environ.get('GITHUB_SHA'),
+                   run_id=os.environ.get('GITHUB_RUN_ID'), python_version=sys.version,
+                   python_sha256=hashlib.sha256(open(sys.executable, 'rb').read()).hexdigest(),
+                   provider_isolation='GitHub fresh-VM claim; not independently proved by this probe')
+              assert platform.system() == 'Darwin' and platform.machine() == 'arm64'
+              assert os.environ.get('RUNNER_ARCH') == 'ARM64'
+              assert os.environ.get('ImageVersion') == os.environ['APPROVED_IMAGE_VERSION'], 'image identity differs; review required'
+              assert os.geteuid() != 0, 'negative permission control requires a non-root process'
+              command(['/usr/bin/sw_vers'])
+              memory = int(command(['/usr/sbin/sysctl', '-n', 'hw.memsize']))
+              disk = shutil.disk_usage('/var/tmp')
+              emit('resources', memory_bytes=memory, temporary_disk_free_bytes=disk.free,
+                   cpu_limit_seconds=120, core_limit_bytes=0,
+                   full_HOL_resource_adequacy='NOT_ESTABLISHED')
+              
+              libc = ctypes.CDLL(None, use_errno=True)
+              mkstemp = libc.mkstemp
+              mkstemp.argtypes = [ctypes.c_char_p]
+              mkstemp.restype = ctypes.c_int
+              template = ctypes.create_string_buffer(b'/var/tmp/forge-m1-preflight-XXXXXX')
+              old_mask = os.umask(0o077)
+              ctypes.set_errno(0)
+              try:
+                  fd = mkstemp(template)
+                  error = ctypes.get_errno()
+              finally:
+                  os.umask(old_mask)
+              path = os.fsdecode(template.value)
+              emit('mkstemp', path=path, return_value=fd, errno=error,
+                   error_name=errno.errorcode.get(error) if error else None)
+              if fd == -1:
+                  raise OSError(error, os.strerror(error), path)
+              try:
+                  payload = b'Forge environment preflight only\n'
+                  written = os.write(fd, payload)
+                  os.lseek(fd, 0, os.SEEK_SET)
+                  observed = os.read(fd, len(payload) + 1)
+                  emit('read_write', written=written, read_bytes=len(observed), equal=observed == payload)
+                  assert written == len(payload) and observed == payload
+                  os.close(fd)
+                  fd = -1
+                  os.chmod(path, 0)
+                  try:
+                      forbidden = os.open(path, os.O_RDONLY)
+                  except OSError as exc:
+                      emit('negative_permission', path=path, errno=exc.errno,
+                           error_name=errno.errorcode.get(exc.errno))
+                      assert exc.errno in (errno.EACCES, errno.EPERM)
+                  else:
+                      os.close(forbidden)
+                      raise RuntimeError('mode000 file could be opened by non-root process')
+              finally:
+                  if fd != -1:
+                      os.close(fd)
+                  os.chmod(path, 0o600)
+                  os.unlink(path)
+              
+              command(['/usr/bin/true'])
+              allocation = bytearray(64 * 1024 * 1024)
+              for offset in range(0, len(allocation), 4096):
+                  allocation[offset] = 1
+              emit('memory_probe', touched_bytes=len(allocation))
+              emit('environment_controls_complete', scope='Finite observations only')
+              
+              # Runs only after the unchanged U322 environment controls have passed.
+              # This transport binds bytes and dispatches the existing checker. It proves no theorem.
+              import base64
+              import io
+              from pathlib import Path
+              import tarfile
+              import urllib.request
+              
+              sha = lambda data: hashlib.sha256(data).hexdigest()
+              libc.access.argtypes = [ctypes.c_char_p, ctypes.c_int]
+              libc.access.restype = ctypes.c_int
+              ctypes.set_errno(0)
+              access_result = libc.access(b'/var/tmp', os.W_OK)
+              access_errno = ctypes.get_errno()
+              emit('access', path='/var/tmp', mode='W_OK', return_value=access_result,
+                   errno=access_errno, error_name=errno.errorcode.get(access_errno))
+              assert access_result == 0
+              
+              # Create one private directory under the runner's existing writable temporary root.
+              import tempfile
+              original_root = '/Users/mackianni/forge'
+              temp_root = Path(os.environ['RUNNER_TEMP']).resolve(strict=True)
+              root = Path(tempfile.mkdtemp(prefix='forge-m1-', dir=str(temp_root)))
+              root_stat = root.stat()
+              assert root.parent == temp_root and root_stat.st_uid == os.geteuid()
+              assert (root_stat.st_mode & 0o777) == 0o700
+              emit('writable_installation_root', path=str(root), canonical_input_root=original_root,
+                   uid=root_stat.st_uid, mode='0700', heap_file_bytes_changed=False)
+              prefix = 'https://raw.githubusercontent.com/mack-dot/forge/' + os.environ['INPUT_COMMIT_SHA'] + '/proposals/m1-hosted-sat-inputs/'
+              
+              def download(name, expected_size, expected_sha):
+                  # Downloads are bounded and hash checked before any input executes.
+                  with urllib.request.urlopen(prefix + name, timeout=30) as response:
+                      data = response.read(expected_size + 1)
+                  assert len(data) == expected_size, name + ': size mismatch'
+                  assert sha(data) == expected_sha, name + ': hash mismatch'
+                  emit('download_identity', file=name, bytes=len(data), sha256=sha(data))
+                  return data
+              
+              manifest_data = download('INPUTS.json', int(os.environ['INPUT_MANIFEST_BYTES']), os.environ['INPUT_MANIFEST_SHA256'])
+              manifest = json.loads(manifest_data)
+              assert manifest['installation_root'] == original_root
+              archive = b''.join(download(p['name'], p['bytes'], p['sha256']) for p in manifest['parts'])
+              assert len(archive) == manifest['archive_bytes'] and sha(archive) == manifest['archive_sha256']
+              expected = {e['path']: e for e in manifest['files']}
+              with tarfile.open(fileobj=io.BytesIO(archive), mode='r:xz') as tar:
+                  members = tar.getmembers()
+                  assert len(members) == len(expected) and {m.name for m in members} == set(expected)
+                  for member in members:
+                      rel = Path(member.name)
+                      assert member.isfile() and not rel.is_absolute() and '..' not in rel.parts
+                      entry = expected[member.name]
+                      assert member.size == entry['bytes']
+                      data = tar.extractfile(member).read()
+                      assert sha(data) == entry['sha256']
+                      path = root / rel
+                      path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+                      with path.open('xb') as output:
+                          output.write(data)
+                      path.chmod(entry['mode'])
+              
+              def verify_inputs(label):
+                  for name, entry in expected.items():
+                      path = root / name
+                      actual = sha(path.read_bytes())
+                      emit(label, file=name, bytes=path.stat().st_size, sha256=actual)
+                      assert actual == entry['sha256']
+              
+              verify_inputs('input_before')
+              tc = root / '.toolchain/experiments/refund-cakeml-20261104'
+              diagnostic = root / 'results/refund-native-audit-2026-11-04/attempt-0011/dependency-diagnostic'
+              hol = tc / 'HOL/bin/hol'
+              solver = tc / 'HOL/src/HolSat/sat_solvers/minisat/minisat'
+              assert os.access(hol, os.X_OK) and os.access(solver, os.X_OK)
+              emit('relocated_binaries', hol=str(hol), minisat=str(solver), note='Frozen solver binding is inspected inside HOL; no rebinding')
+              command(['/usr/bin/otool', '-L', str(hol), str(tc/'poly-install/lib/libpolyml.16.dylib'), str(tc/'transport/lib/libgmp.10.dylib'), str(solver)])
+              env = {key: value for key, value in os.environ.items() if key in ('HOME', 'TMPDIR', 'PATH', 'LANG', 'LC_ALL')}
+              env['DYLD_LIBRARY_PATH'] = str(tc/'poly-install/lib') + ':' + str(tc/'transport/lib')
+              env['DYLD_PRINT_LIBRARIES'] = '1'
+              # Public PolyML loader API supplies the parent filenames; files and library bindings stay unchanged.
+              heaps = ['HOL/bin/hol.state0', 'HOL/src/num/termination/numheap', 'HOL/bin/hol.state',
+                       'HOL/examples/l3-machine-code/l3-heap', 'HOL/examples/l3-machine-code/arm8/step/arm8-heap']
+              bootstrap = root / 'load-pinned-states.sml'
+              loader_text = 'val _ = PolyML.SaveState.loadHierarchy [' + ', '.join(json.dumps(str(tc/h)) for h in heaps) + '];\n'
+              loader_text += 'val _ = List.app (fn p => print ("LOADED_STATE " ^ p ^ "\\n")) (PolyML.SaveState.showHierarchy ());\n'
+              loader_text += 'val _ = print ("FROZEN_SOLVER_PATH " ^ SatSolvers.getSolverExe SatSolvers.minisatp ^ "\\n");\n'
+              loader_text += 'val _ = print ("FROZEN_SOLVER_EXECUTABLE " ^ Bool.toString (OS.FileSys.access (SatSolvers.getSolverExe SatSolvers.minisatp,[OS.FileSys.A_EXEC])) ^ "\\n");\n'
+              loader_text += 'val _ = QUse.use ' + json.dumps(str(diagnostic/'preload.sml')) + ';\n'
+              loader_text += 'val _ = QUse.use ' + json.dumps(str(diagnostic/'proof.sml')) + ';\n'
+              loader_text += 'val _ = OS.Process.exit OS.Process.failure;\n'
+              bootstrap.write_text(loader_text)
+              emit('published_loader_dispatch', source=loader_text, sha256=sha(loader_text.encode()),
+                   note='No solver,checker,theorem or heap modification; original SAT source follows standard state load')
+              argv = [str(hol), '--maxheap', '1024', 'run', '--poly', str(bootstrap)]
+              emit('sat_invocation', argv=argv, cwd=str(root),
+                   environment=env, cpu_limit_seconds=120, maxheap_MiB=1024, core_limit_bytes=0,
+                   loaded_libraries='DYLD_PRINT_LIBRARIES stderr; inspect exact paths',
+                   physical_correspondence='NOT_ESTABLISHED')
+              
+              def child_limits():
+                  resource.setrlimit(resource.RLIMIT_CPU, (120, 120))
+                  resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+                  resource.setrlimit(resource.RLIMIT_FSIZE, (32*1024*1024, 32*1024*1024))
+              
+              # Preserve complete streams independently of the theorem's printed markers.
+              stdout_path = root / 'sat.stdout'
+              stderr_path = root / 'sat.stderr'
+              with stdout_path.open('xb') as stdout, stderr_path.open('xb') as stderr:
+                  process = subprocess.run(argv, cwd=root,
+                                           env=env, stdout=stdout, stderr=stderr, preexec_fn=child_limits)
+              for name, path in [('stdout', stdout_path), ('stderr', stderr_path)]:
+                  data = path.read_bytes()
+                  emit('sat_stream', stream=name, bytes=len(data), sha256=sha(data), base64=base64.b64encode(data).decode('ascii'))
+              emit('sat_result', actual_exit=process.returncode, scope='Unchanged one-term SAT diagnostic after public loadHierarchy; inspect frozen solver reachability',
+                   logical_Success='No inference from process exit', physical_ffiread_proof='NOT_ESTABLISHED')
+              verify_inputs('input_after')
+              raise SystemExit(process.returncode if process.returncode >= 0 else 128-process.returncode)
+          
+          try:
+              main()
+          except Exception as exc:
+              import json,sys
+              print(json.dumps({"operation":"preflight_failure","exception_type":type(exc).__name__,"message":str(exc),"errno":getattr(exc,"errno",None),"actual_exit":78,"end_to_end":False},sort_keys=True),flush=True)
+              traceback.print_exc()
+              sys.exit(78)
+          PY

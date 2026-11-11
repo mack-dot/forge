@@ -1,0 +1,9 @@
+{
+  "actual_stdout": "No DNS configuration available\n",
+  "scutil_actual_exit": 1,
+  "raw_stdout_file": "dns/system-dns/stdout.log",
+  "diagnostic_annotation_correction": "The summary boolean was overwritten while processing empty stderr; use the preserved stdout and its hash. This does not affect any operation exit or DNS exception record.",
+  "inference": "The local execution context cannot resolve the tested external hosts. Managed network/resolver visibility is the likely boundary; exact denying component is not established.",
+  "not_inferred": "This does not establish a global host DNS misconfiguration or a GitHub outage. No resolver,proxy,firewall or permission setting was changed.",
+  "end_to_end": false
+}

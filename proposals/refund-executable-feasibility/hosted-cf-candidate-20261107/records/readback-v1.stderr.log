@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/readback_packet.py", line 48, in <module>
+    for p,h in baseline['protected'].items():assert sha((workspace/p).read_bytes())==h,p
+AssertionError: gate/core.py

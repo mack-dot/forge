@@ -1,0 +1,47 @@
+{
+  "actual_exit": 0,
+  "scope": "Captured-byte and process-record readback only.",
+  "base_commit": "edd406a059cb9d50bc54d5fe351820ea06cacf95",
+  "recorded_child_exits": {
+    "inspect-0001": 0,
+    "success-0001": 1,
+    "success-0002": 0
+  },
+  "reported_claims": [
+    "refund_lab_code",
+    "refund_lab_oracle",
+    "refund_initialization_sufficient"
+  ],
+  "reported_remaining_antecedents": 17,
+  "exports": {
+    ".hol/objs/forge_refundSuccessfulInitializationTheory.sml": "d19f4491100e442753831201c40517698808bad421e5af37537c54f36040799b",
+    ".hol/objs/forge_refundSuccessfulInitializationTheory.sig": "3ff9931fa5722e18d1c0875f10d145ebe9d4ad280c1293dbbfcfad8bcf829aea",
+    ".hol/objs/forge_refundSuccessfulInitializationTheory.dat": "267cc49251967655092dcc2c250fbbcbc985dc0d6465a4a878b9173146798f3b",
+    ".hol/docs/forge_refundSuccessfulInitializationTheory.html": "1508f0a48870b0edbfb1243949cefe1e1121e802317ad7223d046defda8289b3"
+  },
+  "proof_source_sha256": "f23025a1323792e064f44d42725beaa16ba987057d7df6bf6d638cba881a452a",
+  "source_hashes": {
+    "compiler/backend/backendScript.sml": "06487a5ec460e4038a761879dc6aec7099f7a5e20b4ee6ec9fbaf968ee4f0e09",
+    "compiler/backend/proofs/backendProofScript.sml": "380ee3fad6c7b316f057510e1505844f23af58c21eb4f27533aa089030b61e89",
+    "compiler/backend/proofs/stack_to_labProofScript.sml": "0e253106dcfa4a0d81f79e3a2128b3c82bc281acfda1a46186bb48ff590806e3",
+    "compiler/backend/proofs/lab_to_targetProofScript.sml": "6cfb4a5f85277e9e4de0ff83f14b515be5d100cedb9375f44e85b072d731b433",
+    "compiler/backend/proofs/word_to_stackProofScript.sml": "fffd6c7c688ecac26ec4e8fdf7584a2dbb25bc9cbf2fabbc75730e04afe8f329",
+    "compiler/backend/proofs/stack_removeProofScript.sml": "af88c8290d139f538f6803a6248e69abb6de641f84735b3044ca7e4ead0ef47d",
+    "compiler/backend/stack_to_labScript.sml": "5806f3625e11fca7d8df4db0d91076adcb333a2644921e9f7d89b156a556ef3b",
+    "compiler/backend/stack_allocScript.sml": "f495c96c434758171e6cbcd8506044891d729c3d2c5f353483b48e0ba385f05d",
+    "compiler/backend/stack_removeScript.sml": "f1e642decb2e81955af6835dd47e5b9375301259af7b697831a446f90ca9c579",
+    "compiler/backend/data_to_wordScript.sml": "0e0244dfcdaa76cfae2b3796733882cb81a0433df68aa70543508f04ee247f54",
+    "compiler/backend/arm8/arm8_configScript.sml": "1337ed30a4cf3661a4b995228164ff920ea872ba903190bc99f66abfbdc5eabc"
+  },
+  "source_pin_count": 11,
+  "protected_path_count": 50,
+  "prior_members_per_copy": 843,
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "mission_sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c",
+  "fresh_contract_import": "NOT RUN",
+  "closure_audit": "NOT RUN",
+  "proof_repeat": "NOT RUN",
+  "new_negative_controls": "NOT RUN",
+  "native_or_hosted_execution": "NOT RUN",
+  "end_to_end": false
+}

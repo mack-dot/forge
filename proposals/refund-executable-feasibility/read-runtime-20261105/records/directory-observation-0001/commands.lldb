@@ -1,0 +1,38 @@
+version
+settings set target.inherit-env false
+settings set target.disable-aslr false
+settings set target.skip-prologue false
+settings set target.require-hardware-breakpoint true
+settings set target.env-vars LANG=C LC_ALL=C CML_HEAP_SIZE=256 CML_STACK_SIZE=256
+target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+breakpoint set --hardware --address 0x100025170 --shlib refund
+breakpoint set --hardware --one-shot true --address 0x1000251ac --shlib refund
+breakpoint set --hardware --address 0x100025464 --shlib refund
+breakpoint list --verbose
+process launch --stdin /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/stdin-directory --stdout /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/native.stdout --stderr /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/native.stderr
+process status
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+expression --allow-jit false -- unsigned long long $forge_conf = $x0
+expression --allow-jit false -- unsigned long long $forge_clen = $x1
+expression --allow-jit false -- unsigned long long $forge_data = $x2
+expression --allow-jit false -- unsigned long long $forge_alen = $x3
+expression --allow-jit false -- unsigned long long $forge_return = $lr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/conf-before.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/data-before.bin $forge_data '$forge_data+$forge_alen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/loaded-ffiread.bin --size 1 --count 112 $pc
+breakpoint delete 1
+breakpoint set --hardware --one-shot true --address $forge_return
+process continue
+process status
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+process continue
+process status
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/conf-after.bin $forge_conf '$forge_conf+$forge_clen'
+memory read --force --binary --outfile /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/directory-observation-0001/data-after.bin $forge_data '$forge_data+$forge_alen'
+process continue
+process status
+register read x0 x1 x2 x3 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 fp lr sp pc cpsr
+process continue
+process status
+breakpoint list --verbose

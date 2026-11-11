@@ -1,0 +1,63 @@
+{
+  "actual_exit": 0,
+  "scope": "Identity and saved-record readback only; no proof, native execution, hosted run, or independent restore rerun.",
+  "worktree_head": "2a5706d8d574c33347dc531fe6769351863b922b",
+  "manifests": {
+    "compiled-behavior-20261104": {
+      "manifest_sha256": "80ccfd82913d276ad5ac11d2c4f70b0aa6ac0fe409f2dba7fe3957528bb5aac9",
+      "files_checked": 88
+    },
+    "resource-binding-20261104": {
+      "manifest_sha256": "ca12a6bd250deba46fc46fefede429ab357510352a2c181980fa849f7cdf5ee4",
+      "files_checked": 52
+    }
+  },
+  "identities": {
+    "flat_source": {
+      "path": "proposals/refund-executable-feasibility/unicode-20261104/transport/FlatCore.dfy",
+      "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+    },
+    "model_body": {
+      "path": ".toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_experiment/forge_refundScript.sml",
+      "sha256": "381eeac200322362afc5436db742aed3714c72bb39cd70363336f7b7ac525dd9"
+    },
+    "model_method": {
+      "path": ".toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment/forge_refund_callScript.sml",
+      "sha256": "081becc8f43334e716d8d7657c65740394d554e812ded8bdc169bffac2c022fe"
+    },
+    "frontend_snapshot": {
+      "path": "results/refund-verified-backend-2026-11-04/attempt-0001/frontend/Source/DafnyDriver/Commands/Bake.cs",
+      "sha256": "0ee2172bfdfacbd2b2d27994796407c586a112f421bdc61f0a7548f2f7a1b1b1"
+    },
+    "mission": {
+      "path": "FORGE_MISSION.md",
+      "sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c"
+    },
+    "prior_commit_readback": {
+      "path": "results/refund-arm8-behavior-audit-2026-11-04/commit-readback-U291.json",
+      "sha256": "3617dd7d0f927808ea7089719e8028e5034bc30bf67d79bb77c5e8f4c8d1d683"
+    },
+    "prior_local_recovery": {
+      "path": "results/refund-arm8-behavior-audit-2026-11-04/local-recovery.json",
+      "sha256": "f9579520f4e82526285e129ba56d81b3b1f959dc8fee5838c3cf63fec9870722"
+    }
+  },
+  "prior_behavior": {
+    "actual_exit": 0,
+    "positive_exit": 0,
+    "repeat_exit": 0,
+    "import_exit": 0,
+    "closure_node_count": 481,
+    "dependency_file_count": 2400
+  },
+  "prior_local_recovery": {
+    "actual_exit": 0,
+    "bundle_sha256": "29e1b57cc8b476105f5083d541b729b2cd76047ce94fd6a27666d9fe0e5d4d36",
+    "restored_files_compared": 13071,
+    "independent_off_machine_copy": "NOT VERIFIED"
+  },
+  "dotnet_on_path": null,
+  "source_to_model_binding": "NOT_ESTABLISHED",
+  "frontend_execution": "NOT RUN",
+  "end_to_end": false
+}

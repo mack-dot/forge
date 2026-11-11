@@ -1,0 +1,36 @@
+<<HOL message: Created theory "forge_refundReadEventGap">>
+Saved theorem _______ "basis_read_ignores_ext"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundReadEventGap)>>
+Saved theorem _______ "basis_stdin_read_total"
+Saved theorem _______ "stdin_error_event_rejected"
+Saved theorem _______ "stdin_error_complete_trace_rejected"
+CHECKED basis_read_ignores_ext
+ []
+⊢ basis_ffi_oracle ext (ExtCall «read») st conf bytes =
+  basis_ffi_oracle ext' (ExtCall «read») st conf bytes
+CHECKED basis_stdin_read_total
+ []
+⊢ wfFS fs ∧ STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ⇒
+  ∃bytes' fs'.
+    basis_ffi_oracle ext (ExtCall «read») (cl,fs) conf
+      (n1::n0::pad1::pad2::read_tail) = Oracle_return (cl,fs') bytes' ∧
+    HD bytes' = 0w
+CHECKED stdin_error_event_rejected
+ []
+⊢ wfFS fs ∧ STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ∧
+  MAP FST pairs = n1::n0::pad1::pad2::read_tail ∧ HD (MAP SND pairs) = 1w ⇒
+  extract_fs_with_numchars ext (cl,fs)
+    (IO_event (ExtCall «read») conf pairs::suffix) = NONE
+CHECKED stdin_error_complete_trace_rejected
+ []
+⊢ extract_fs_with_numchars ext (cl0,fs0) prefix = SOME (cl,fs) ∧ wfFS fs ∧
+  STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ∧
+  MAP FST pairs = n1::n0::pad1::pad2::read_tail ∧ HD (MAP SND pairs) = 1w ⇒
+  extract_fs ext (cl0,fs0)
+    (prefix ++ IO_event (ExtCall «read») conf pairs::suffix) = NONE
+Exporting theory "forge_refundReadEventGap" ... done.
+Theory "forge_refundReadEventGap" took 0.74520s to build
+READ_EVENT_GAP_COMPLETE

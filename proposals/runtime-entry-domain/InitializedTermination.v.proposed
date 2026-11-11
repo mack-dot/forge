@@ -1,0 +1,24 @@
+(* PROPOSAL ONLY. Not an approved claim. Not compiled or admitted. *)
+From Stdlib Require Import ZArith List.
+From LinuxProcessSemantics.LinuxProcessSem Require Import BvBase MemImageType State Run.
+From LinuxProcessSemantics.LinuxProcessSem.Checks Require Import SpuriousCfg.
+From LinuxProcessSemantics.EquivalenceDefinition Require Import MustExit HaltsAllowed Classifier.
+From Forge.Binary Require Images Execution.
+Import ListNotations.
+
+(* An additional abstract-model proposition. It does not assert that arbitrary
+   initializations are valid Linux process entries or that QEMU refines LPS. *)
+Definition selftest_initialized_termination : Prop :=
+  forall (en : ExecEntry) (inp : ProcInput),
+    must_exit_in_scfg may_fail_cfg [verdict_accept] Images.program
+      source_alloc_limit en inp.
+
+Theorem selftest_initialized_termination_holds : selftest_initialized_termination.
+Proof.
+  unfold selftest_initialized_termination.
+  intros [sp brk0 mbase rnd] inp.
+  unfold Images.program. cbn [must_exit_in_scfg].
+  apply must_exit_in_at_cfg_singleton. unfold init_config.
+  apply (exits_c_must_exit_at_cfg _ _ _ 128);
+    [reflexivity | reflexivity | apply Execution.selftest_exits_c].
+Qed.

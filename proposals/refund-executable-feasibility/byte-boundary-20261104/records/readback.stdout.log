@@ -1,0 +1,49 @@
+{
+  "actual_exit": 0,
+  "recorded_exits": {
+    "dafny-0001": 4,
+    "dafny-0002": 0,
+    "dafny-repeat": 0,
+    "frontend-verify": 0,
+    "dafny-lossy": 4,
+    "dafny-swapped": 4,
+    "dafny-audit": 0,
+    "hol-0001": 1,
+    "hol-0002": 1,
+    "hol-0003": 0,
+    "hol-repeat": 0,
+    "hol-lossy": 1,
+    "hol-swapped": 1,
+    "hol-import": 1,
+    "hol-import-0002": 0
+  },
+  "source_files_unchanged": 30,
+  "boundary_sha256": "8ab7cd8a22adc527cf8ac2ab22906adad79dfe9179a8c0f6c46650429c7a9314",
+  "dafny_assertion_batches": 1458,
+  "identical_symbol_outcomes": true,
+  "frontend_driver_sha256": "55d26351d36b660ac6b1ea6eac7515cc4b15bc9a5f139f375a1a9e6f90455acb",
+  "HOL_proof_sha256": "2aea5fb7bb1f4e3f4b1032acd5041ddeb7eed921657484bb7ea3ec53dda6bb41",
+  "closure_node_count": 231,
+  "closure_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "dependency_file_count": 1146,
+  "builtin_dependencies": {
+    "min": {
+      "source_sha256": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+      "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+    }
+  },
+  "protected_files_unchanged": 50,
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "prior_packet_members": {
+    "source-model-binding-20261104": 352,
+    "compiled-behavior-20261104": 88,
+    "resource-binding-20261104": 52
+  },
+  "scope": "Shared byte-list interface locally checked in Dafny and HOL; no verified inter-kernel translation, runtime proof or authentication inferred.",
+  "end_to_end": false
+}

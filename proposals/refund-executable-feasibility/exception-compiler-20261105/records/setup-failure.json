@@ -1,0 +1,9 @@
+{
+  "action": "Initial input-freeze inline Python",
+  "actual_exit": 1,
+  "error": "KeyError: 'files' at runtime-premises MANIFEST.json access",
+  "cause": "U286 uses a files wrapper; U296 is a direct path-to-hash dictionary",
+  "correction": "freeze_inputs.py handles both observed schemas, with unchanged hash requirements",
+  "hol_started": false,
+  "end_to_end": false
+}

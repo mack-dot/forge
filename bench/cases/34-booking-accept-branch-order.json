@@ -1,0 +1,28 @@
+{
+ "changes": [
+  {
+   "find": "    if IsRetry(state, id, request) {\n      next := state;\n      outcome := state.accepted[id].outcome;\n    } else if IsFreshBook(state, id, request) {",
+   "op": "edit",
+   "path": "impl/Booking.dfy",
+   "replace": "    if IsFreshBook(state, id, request) {",
+   "target": "root"
+  },
+  {
+   "find": "    } else {\n      next := state;\n      outcome := Rejected;\n    }",
+   "op": "edit",
+   "path": "impl/Booking.dfy",
+   "replace": "    } else if IsRetry(state, id, request) {\n      next := state;\n      outcome := state.accepted[id].outcome;\n    } else {\n      next := state;\n      outcome := Rejected;\n    }",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "booking",
+ "id": "booking-accept-branch-order",
+ "kind": "valid_alternative",
+ "order": 34,
+ "rationale": "Retry branch moved after the two fresh branches; the conditions are mutually exclusive.",
+ "supplied_evidence": null
+}

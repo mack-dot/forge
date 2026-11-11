@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    if Eligible(context, response) {\n",
+   "op": "edit",
+   "path": "impl/Refund.dfy",
+   "replace": "    if ValidContext(context) && response.Candidate? &&\n       0 <= response.amount <= context.original && AllowedReason(response.reason) {\n",
+   "target": "root"
+  }
+ ],
+ "domain": "refund",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "refund",
+ "id": "refund-defect-original-bound",
+ "kind": "defect",
+ "order": 47,
+ "rationale": "Amount checked against the original charge instead of the remaining amount: violates R1.",
+ "supplied_evidence": null
+}

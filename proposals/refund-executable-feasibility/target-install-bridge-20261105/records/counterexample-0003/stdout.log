@@ -1,0 +1,139 @@
+<<HOL message: Created theory "forge_installExclusionControl">>
+Proof of 
+
+let
+  mc =
+    <|prog_addresses := ∅; ffi_entry_pcs := []; halt_pc := 1w;
+      install_pc := 0w;
+      target := <|get_pc := (λs. n2w s); get_reg := (λs r. 0w)|>;
+      install_interfer := (λk x. 1)|>
+in
+  evaluate mc ffi 2 0 = (Halt Success,1,ffi) ∧
+  evaluate (mc with install_interfer := (λk x. 2)) ffi 2 0 = (Error,2,ffi)
+
+failed.
+First unsolved sub-goal is
+
+(if 0w ∈ ∅ DIFF set [] then
+   if
+     ∃i k.
+       k * 2 ** ARB.config.code_alignment < LENGTH (ARB.config.encode i) ∧
+       bytes_in_memory 0w
+         (DROP (k * 2 ** ARB.config.code_alignment) (ARB.config.encode i))
+         (ARB.get_byte 0) ∅
+   then
+     if
+       (ARB.state_ok 0 ∧ ARB.state_ok (ARB.next 0) ∧
+        ARB.state_ok (ARB.next_interfer 0 (ARB.next 0))) ∧
+       ∀x. ARB.get_byte (ARB.next 0) x = ARB.get_byte 0 x
+     then
+       if n2w (ARB.next_interfer 0 (ARB.next 0)) ∈ ∅ DIFF set [] then
+         if
+           ∃i k.
+             k * 2 ** ARB.config.code_alignment <
+             LENGTH (ARB.config.encode i) ∧
+             bytes_in_memory (n2w (ARB.next_interfer 0 (ARB.next 0)))
+               (DROP (k * 2 ** ARB.config.code_alignment)
+                  (ARB.config.encode i))
+               (ARB.get_byte (ARB.next_interfer 0 (ARB.next 0))) ∅
+         then
+           if
+             (ARB.state_ok (ARB.next_interfer 0 (ARB.next 0)) ∧
+              ARB.state_ok (ARB.next (ARB.next_interfer 0 (ARB.next 0))) ∧
+              ARB.state_ok
+                (ARB.next_interfer 1
+                   (ARB.next (ARB.next_interfer 0 (ARB.next 0))))) ∧
+             ∀x. ARB.get_byte (ARB.next (ARB.next_interfer 0 (ARB.next 0))) x =
+                 ARB.get_byte (ARB.next_interfer 0 (ARB.next 0)) x
+           then
+             (TimeOut,
+              ARB.next_interfer 1
+                (ARB.next (ARB.next_interfer 0 (ARB.next 0))),ffi)
+           else (Error,ARB.next_interfer 0 (ARB.next 0),ffi)
+         else (Error,ARB.next_interfer 0 (ARB.next 0),ffi)
+       else if n2w (ARB.next_interfer 0 (ARB.next 0)) = 1w then
+         (Halt Success,ARB.next_interfer 0 (ARB.next 0),ffi)
+       else if n2w (ARB.next_interfer 0 (ARB.next 0)) = 0w then
+         (TimeOut,1,ffi)
+       else (Error,ARB.next_interfer 0 (ARB.next 0),ffi)
+     else (Error,0,ffi)
+   else (Error,0,ffi)
+ else if 1w ∈ ∅ DIFF set [] then
+   if
+     ∃i k.
+       k * 2 ** ARB.config.code_alignment < LENGTH (ARB.config.encode i) ∧
+       bytes_in_memory 1w
+         (DROP (k * 2 ** ARB.config.code_alignment) (ARB.config.encode i))
+         (ARB.get_byte 1) ∅
+   then
+     if
+       (ARB.state_ok 1 ∧ ARB.state_ok (ARB.next 1) ∧
+        ARB.state_ok (ARB.next_interfer 0 (ARB.next 1))) ∧
+       ∀x. ARB.get_byte (ARB.next 1) x = ARB.get_byte 1 x
+     then
+       (TimeOut,ARB.next_interfer 0 (ARB.next 1),ffi)
+     else (Error,1,ffi)
+   else (Error,1,ffi)
+ else (Halt Success,1,ffi)) = (Halt Success,1,ffi) ∧
+(if 0w ∈ ∅ DIFF set [] then
+   if
+     ∃i k.
+       k * 2 ** ARB.config.code_alignment < LENGTH (ARB.config.encode i) ∧
+       bytes_in_memory 0w
+         (DROP (k * 2 ** ARB.config.code_alignment) (ARB.config.encode i))
+         (ARB.get_byte 0) ∅
+   then
+     if
+       (ARB.state_ok 0 ∧ ARB.state_ok (ARB.next 0) ∧
+        ARB.state_ok (ARB.next_interfer 0 (ARB.next 0))) ∧
+       ∀x. ARB.get_byte (ARB.next 0) x = ARB.get_byte 0 x
+     then
+       if n2w (ARB.next_interfer 0 (ARB.next 0)) ∈ ∅ DIFF set [] then
+         if
+           ∃i k.
+             k * 2 ** ARB.config.code_alignment <
+             LENGTH (ARB.config.encode i) ∧
+             bytes_in_memory (n2w (ARB.next_interfer 0 (ARB.next 0)))
+               (DROP (k * 2 ** ARB.config.code_alignment)
+                  (ARB.config.encode i))
+               (ARB.get_byte (ARB.next_interfer 0 (ARB.next 0))) ∅
+         then
+           if
+             (ARB.state_ok (ARB.next_interfer 0 (ARB.next 0)) ∧
+              ARB.state_ok (ARB.next (ARB.next_interfer 0 (ARB.next 0))) ∧
+              ARB.state_ok
+                (ARB.next_interfer 1
+                   (ARB.next (ARB.next_interfer 0 (ARB.next 0))))) ∧
+             ∀x. ARB.get_byte (ARB.next (ARB.next_interfer 0 (ARB.next 0))) x =
+                 ARB.get_byte (ARB.next_interfer 0 (ARB.next 0)) x
+           then
+             (TimeOut,
+              ARB.next_interfer 1
+                (ARB.next (ARB.next_interfer 0 (ARB.next 0))),ffi)
+           else (Error,ARB.next_interfer 0 (ARB.next 0),ffi)
+         else (Error,ARB.next_interfer 0 (ARB.next 0),ffi)
+       else if n2w (ARB.next_interfer 0 (ARB.next 0)) = 1w then
+         (Halt Success,ARB.next_interfer 0 (ARB.next 0),ffi)
+       else if n2w (ARB.next_interfer 0 (ARB.next 0)) = 0w then
+         (TimeOut,2,ffi)
+       else (Error,ARB.next_interfer 0 (ARB.next 0),ffi)
+     else (Error,0,ffi)
+   else (Error,0,ffi)
+ else if 2w ∈ ∅ DIFF set [] then
+   if
+     ∃i k.
+       k * 2 ** ARB.config.code_alignment < LENGTH (ARB.config.encode i) ∧
+       bytes_in_memory 2w
+         (DROP (k * 2 ** ARB.config.code_alignment) (ARB.config.encode i))
+         (ARB.get_byte 2) ∅
+   then
+     if
+       (ARB.state_ok 2 ∧ ARB.state_ok (ARB.next 2) ∧
+        ARB.state_ok (ARB.next_interfer 0 (ARB.next 2))) ∧
+       ∀x. ARB.get_byte (ARB.next 2) x = ARB.get_byte 2 x
+     then
+       (TimeOut,ARB.next_interfer 0 (ARB.next 2),ffi)
+     else (Error,2,ffi)
+   else (Error,2,ffi)
+ else (Error,2,ffi)) = (Error,2,ffi)
+

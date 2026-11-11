@@ -1,0 +1,56 @@
+{
+  "T1": {
+    "condition_enum": [
+      "ok",
+      "not_ok",
+      "true",
+      "false"
+    ],
+    "free_text_allowed": false,
+    "template": "if condition then true_tuple else false_tuple",
+    "tuple_slots": [
+      [
+        "true",
+        "false",
+        "ok"
+      ],
+      [
+        "amount",
+        "zero",
+        "one",
+        "amount_plus_one"
+      ],
+      [
+        "reason",
+        "charge",
+        "request",
+        "empty"
+      ],
+      [
+        "charge",
+        "request",
+        "empty"
+      ],
+      [
+        "request",
+        "charge",
+        "empty"
+      ],
+      [
+        "zero",
+        "one"
+      ]
+    ]
+  },
+  "T2": {
+    "action_enum": [
+      "print_output",
+      "discard_output"
+    ],
+    "free_text_allowed": false,
+    "template": "let val output = refund_dispatch wire in action end"
+  },
+  "proof_tactics": "NOT_IMPLEMENTED: execution binding must enumerate exact trusted tactic recipes",
+  "required_validation": "Exact keys, enum members and types; no arbitrary SML, extra keys or strings.",
+  "scope": "Finite syntax slots for bounded synthesis; renderer NOT_IMPLEMENTED"
+}

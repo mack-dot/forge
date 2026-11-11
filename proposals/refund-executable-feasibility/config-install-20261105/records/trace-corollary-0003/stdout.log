@@ -1,0 +1,27 @@
+<<HOL message: Created theory "forge_spaceInstallTrace">>
+Saved theorem _______ "epoch_single"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_spaceInstallTrace)>>
+Saved theorem _______ "bounded_stack_single_epoch"
+UNSOLVED final corollary
+evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k) = (q,r)
+∀k. FST (evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k)) ≠
+    SOME Error
+∀k res t.
+  evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k) =
+  (res,t) ⇒
+  ∃max. t.stack_max = SOME max ∧ max ≤ t.stack_limit
+GOAL IS_SOME r.stack_max ∧ q ≠ SOME Error
+Proof of 
+
+word_lang_safe_for_space initial start ∧
+(∀k. FST (evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k)) ≠
+     SOME Error) ⇒
+∀k. LENGTH
+      (ptr_eq_trace (Call NONE (SOME start) [0] NONE)
+         (initial with clock := k)) = 1
+
+failed.
+First unsolved sub-goal is
+
+IS_SOME r.stack_max ∧ q ≠ SOME Error
+

@@ -1,0 +1,89 @@
+[
+  {
+    "case": "exact-import-0002",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-B",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/run_import.py",
+      "exact-import-0002",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/expected.sml",
+      "init-parent:forge_refundSuccessfulInitialization",
+      "static-0003:forge_refundInitializationStatic"
+    ],
+    "actual_exit": 0,
+    "expected_exit": 0,
+    "end_to_end": false
+  },
+  {
+    "case": "parent-repeat",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-B",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/run_composed.py",
+      "parent-repeat",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/init-parent/proof.sml"
+    ],
+    "actual_exit": 0,
+    "expected_exit": 0,
+    "end_to_end": false
+  },
+  {
+    "case": "static-repeat",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-B",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/run_composed.py",
+      "static-repeat",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/static-normalized.sml",
+      "init-parent:forge_refundSuccessfulInitialization"
+    ],
+    "actual_exit": 0,
+    "expected_exit": 0,
+    "end_to_end": false
+  },
+  {
+    "case": "wrong-code",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-B",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/run_import.py",
+      "wrong-code",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/wrong-code.sml",
+      "init-parent:forge_refundSuccessfulInitialization",
+      "static-0003:forge_refundInitializationStatic"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "end_to_end": false
+  },
+  {
+    "case": "wrong-oracle",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-B",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/run_import.py",
+      "wrong-oracle",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/wrong-oracle.sml",
+      "init-parent:forge_refundSuccessfulInitialization",
+      "static-0003:forge_refundInitializationStatic"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "end_to_end": false
+  },
+  {
+    "case": "missing-memory",
+    "argv": [
+      "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "-B",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/run_import.py",
+      "missing-memory",
+      "/Users/mackianni/forge/results/refund-initialization-static-2026-11-05/attempt-0001/missing-memory.sml",
+      "init-parent:forge_refundSuccessfulInitialization",
+      "static-0003:forge_refundInitializationStatic"
+    ],
+    "actual_exit": 1,
+    "expected_exit": 1,
+    "end_to_end": false
+  }
+]

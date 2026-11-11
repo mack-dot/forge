@@ -1,0 +1,14 @@
+{
+  "case": "system-dns",
+  "argv": [
+    "/usr/sbin/scutil",
+    "--dns"
+  ],
+  "actual_exit": 1,
+  "wall_timeout": false,
+  "stdout_sha256": "af5688abacd134979a96688203aaa0c19462c6e93261b933c922396fdcba7651",
+  "stdout_bytes": 31,
+  "no_dns_configuration_message": false,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_bytes": 0
+}

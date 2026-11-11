@@ -4,14 +4,15 @@ import importlib.metadata
 import platform
 from pathlib import Path
 
-from common import PIN_FILES, ROOT, digest, host_profile, read_json
+from common import ROOT, digest, read_json
 
 
-def check_dependencies(profile=None):
-    profile = profile or host_profile()
-    if profile not in PIN_FILES:
+def check_dependencies(profile='local'):
+    profiles = {'local': 'toolchain/validator-pins.json',
+                'linux': 'toolchain/validator-linux-pins.json'}
+    if profile not in profiles:
         raise RuntimeError('TOOLCHAIN_ERROR: unknown validator profile')
-    pins = read_json(ROOT / PIN_FILES[profile]['validator'])
+    pins = read_json(ROOT / profiles[profile])
     if platform.python_version() != pins['python_version']:
         raise RuntimeError('TOOLCHAIN_ERROR: Python version differs from validator pin')
     for name, expected in pins['packages'].items():

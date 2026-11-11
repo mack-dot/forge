@@ -1,0 +1,47 @@
+<<HOL message: Created theory "forge_refundInitialStackCode">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundInitialStackCode)>>
+Saved theorem _______ "refund_word_postalloc"
+Proof of 
+
+ALL_DISTINCT
+  (MAP FST
+     (SND
+        (to_word arm8_config (set_oracle arm8_backend_config oracle)
+           refund_prog))) ∧
+EVERY (λn. 6 < n)
+  (MAP FST
+     (SND
+        (to_word arm8_config (set_oracle arm8_backend_config oracle)
+           refund_prog))) ∧
+EVERY
+  (λ(n,m,p,md).
+     EVERY (λ(l1,l2). l1 = n ∧ l2 ≠ 0 ∧ l2 ≠ 1) (extract_labels p) ∧
+     ALL_DISTINCT (extract_labels p))
+  (SND
+     (to_word arm8_config (set_oracle arm8_backend_config oracle) refund_prog))
+
+failed.
+First unsolved sub-goal is
+
+ALL_DISTINCT
+  (MAP FST
+     (SND
+        (to_word arm8_config (set_oracle arm8_backend_config oracle)
+           refund_prog))) ∧
+EVERY (λn. n > 6)
+  (MAP FST
+     (SND
+        (to_word arm8_config (set_oracle arm8_backend_config oracle)
+           refund_prog))) ∧
+EVERY
+  (λ(n,m,p,md).
+     EVERY (λ(l1,l2). l1 = n ∧ l2 ≠ 0 ∧ l2 ≠ 1) (extract_labels p) ∧
+     ALL_DISTINCT (extract_labels p))
+  (SND
+     (to_word arm8_config (set_oracle arm8_backend_config oracle) refund_prog)) ⇒
+EVERY (λn. 6 < n)
+  (MAP FST
+     (SND
+        (to_word arm8_config (set_oracle arm8_backend_config oracle)
+           refund_prog)))
+

@@ -1,0 +1,25 @@
+<<HOL message: Created theory "forge_spaceInstallTrace">>
+Saved theorem _______ "epoch_single"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_spaceInstallTrace)>>
+UNSOLVED MustTerminate
+evaluate
+  (p,s with <|clock := MustTerminate_limit (:α); termdep := s.termdep − 1|>) =
+(SOME TimeOut,s1)
+IS_SOME s.stack_max
+s.termdep ≠ 0
+IS_SOME s1.stack_max ⇒
+LENGTH
+  (ptr_eq_trace p
+     (s with <|clock := MustTerminate_limit (:α); termdep := s.termdep − 1|>)) =
+1
+GOAL LENGTH
+  (ptr_eq_trace p
+     (s with <|clock := MustTerminate_limit (:α); termdep := s.termdep − 1|>)) =
+1
+Proof of 
+
+∀p s res t.
+  evaluate (p,s) = (res,t) ∧ IS_SOME t.stack_max ⇒
+  LENGTH (ptr_eq_trace p s) = 1
+
+failed.

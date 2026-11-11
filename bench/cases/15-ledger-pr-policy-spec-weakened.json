@@ -1,0 +1,28 @@
+{
+ "changes": [
+  {
+   "find": "    // C2: non-negative balances.\n    ensures NonNegative(next.balances)\n",
+   "op": "edit",
+   "path": "spec/LedgerSpec.dfy",
+   "replace": "    // C2: non-negative balances.\n",
+   "target": "candidate"
+  },
+  {
+   "find": "\"spec_sha256\": \"2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940\"",
+   "op": "edit",
+   "path": "spec.lock",
+   "replace": "\"spec_sha256\": \"5411565ea3fb82c6a4119afe191cdd11ebf5bcd528d444ed709666eca86bed54\"",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "UNAPPROVED_PROTECTED_CHANGE",
+ "gate": "incremental",
+ "id": "ledger-pr-policy-spec-weakened",
+ "kind": "policy",
+ "order": 15,
+ "rationale": "C2 postcondition deleted from the spec and spec.lock updated to match, with no approval record.",
+ "supplied_evidence": null
+}

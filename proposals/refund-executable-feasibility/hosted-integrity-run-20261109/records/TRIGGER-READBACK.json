@@ -1,0 +1,185 @@
+[
+  {
+    "name": "booking-reuse.yml",
+    "sha": "6dc3ec9819abf8ccb0a17b2349e1167a99dadd0b",
+    "local_source": "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-cf-candidate-20261107/records/remote-booking-reuse.yml",
+    "on": {
+      "workflow_dispatch": {
+        "inputs": {
+          "booking_pr": {
+            "description": "Approved experiment PR number (one Booking.dfy change)",
+            "required": "true",
+            "type": "string"
+          },
+          "booking_head": {
+            "description": "Exact 40-character head approved for this dispatch",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "m1-macos-preflight.yml",
+    "sha": "6590425afd09e20a399d76a1a4764e004902cc40",
+    "local_source": "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-cf-candidate-20261107/records/remote-workflow.yml",
+    "on": {
+      "push": {
+        "branches": [
+          "proposal/m1-macos-preflight-20261106"
+        ],
+        "paths": [
+          ".github/workflows/m1-macos-preflight.yml"
+        ]
+      }
+    }
+  },
+  {
+    "name": "proof-gate.yml",
+    "sha": "c505b7997a8c66ecc4807d1b8744952b160bac18",
+    "local_source": "/Users/mackianni/forge/.github/workflows/proof-gate.yml",
+    "on": {
+      "pull_request_target": {
+        "types": [
+          "opened",
+          "synchronize",
+          "reopened",
+          "ready_for_review"
+        ],
+        "branches": [
+          "main"
+        ]
+      }
+    }
+  },
+  {
+    "name": "provenance-negative.yml",
+    "sha": "6244a5c82078c87d84ca51c1901215718fa1226d",
+    "local_source": "/Users/mackianni/forge/.github/workflows/provenance-negative.yml",
+    "on": {
+      "workflow_dispatch": {
+        "inputs": {
+          "request": {
+            "description": "Exact original controller request JSON",
+            "required": "true",
+            "type": "string"
+          },
+          "implementation_sha256": {
+            "description": "Separately approved implementation.lock SHA-256",
+            "required": "true",
+            "type": "string"
+          },
+          "producer_run_id": {
+            "description": "Successful provenance run at the same exact source commit",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "provenance.yml",
+    "sha": "b0aba84f7e7ef633bdd1722199ab09671dd8bf88",
+    "local_source": "/Users/mackianni/forge/.github/workflows/provenance.yml",
+    "on": {
+      "workflow_dispatch": {
+        "inputs": {
+          "request": {
+            "description": "Exact JSON request from the independent local controller",
+            "required": "true",
+            "type": "string"
+          },
+          "implementation_sha256": {
+            "description": "Separately approved implementation.lock SHA-256",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "stage4-exits.yml",
+    "sha": "efcead380ebda3c3187c0f2a495699c556f18e3c",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage4-exits.yml",
+    "on": {
+      "push": {
+        "branches": [
+          "main"
+        ],
+        "paths": [
+          "results/stage4/pr-runs.json"
+        ]
+      },
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "stage9-candidate-dry-run-v2.yml",
+    "sha": "1ae412d661571b9054dc9b1a40eeaa317975877b",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage9-candidate-dry-run-v2.yml",
+    "on": {
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "stage9-candidate-dry-run.yml",
+    "sha": "5785e1c020c7626eef4eaa74e7959a4d7768290d",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage9-candidate-dry-run.yml",
+    "on": {
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "stage9-hosted-probe-2.yml",
+    "sha": "4fdbcf229ae8ee9d4e4584fdf5d9715edbe4eaea",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage9-hosted-probe-2.yml",
+    "on": {
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "stage9-hosted-probe.yml",
+    "sha": "4470a8111ecfed915b8ee4ba054df2051641c06d",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage9-hosted-probe.yml",
+    "on": {
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "stage9-private-dry-run-v31.yml",
+    "sha": "5b76afb33401c1d889f679171c3fdf2a0184af67",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage9-private-dry-run-v31.yml",
+    "on": {
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "stage9-private-dry-run-v32.yml",
+    "sha": "ff723e83463147196794e13f831a07e1ab2c727e",
+    "local_source": "/Users/mackianni/forge/.github/workflows/stage9-private-dry-run-v32.yml",
+    "on": {
+      "workflow_dispatch": ""
+    }
+  },
+  {
+    "name": "toolchain-inventory.yml",
+    "sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+    "local_source": "/Users/mackianni/forge/.github/workflows/toolchain-inventory.yml",
+    "on": {
+      "workflow_dispatch": "",
+      "push": {
+        "branches": [
+          "main"
+        ],
+        "paths": [
+          ".github/workflows/toolchain-inventory.yml",
+          "toolchain/ci-bootstrap.json",
+          "toolchain/inventory_ci.py"
+        ]
+      }
+    }
+  }
+]

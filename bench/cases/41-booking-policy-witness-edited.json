@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    assert h.accepted.Keys == {100, 101, 200};\n",
+   "op": "edit",
+   "path": "tests/booking/SuccessfulExecution.dfy",
+   "replace": "",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "WITNESS_BINDING",
+ "gate": "booking",
+ "id": "booking-policy-witness-edited",
+ "kind": "policy",
+ "order": 41,
+ "rationale": "The checked successful-execution witness is changed.",
+ "supplied_evidence": null
+}

@@ -68,7 +68,8 @@
    that names the override commit, its tree and its lock. The current OVERRIDE
    commits (#16, #17, #18) need that ratification after step 1.
 
-## Untested
+## Status (2026-10-29)
 
-The APPROVED path cannot run until steps 1–2 exist: no exact-head code-owner
-approval exists on any main commit.
+Steps 1–2 are done: the agent is `mackiannii` (Write); `CODEOWNERS` merged as
+`aac837a0` (#21), the first APPROVED main commit (U136). Step 5 is now prepared as
+v3.4 with a ratification record: see `RATIFICATION.md`.

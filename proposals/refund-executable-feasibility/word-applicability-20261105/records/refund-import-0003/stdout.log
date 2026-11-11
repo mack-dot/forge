@@ -1,0 +1,19 @@
+<<HOL message: Created theory "forge_refundClaimImport">>
+IMPORTED refund_data_nonfailure KERNEL_CONCLUSION_EQUIVALENT true KERNEL_PREMISES_EQUIVALENT true HYPOTHESES 0 TAGGED_AXIOMS 0
+NORMALIZE_CONCLUSION refund_word_single_epoch
+ACTUAL ∀k. LENGTH
+      (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+         (t with <|clock := k; ffi := basis_ffi ext cl fs|>)) = 1
+EXPECTED ∀k. LENGTH
+      (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+         (t with <|clock := k; ffi := basis_ffi ext cl fs|>)) = 1
+Proof of 
+
+(∀k. LENGTH
+       (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+          (t with <|clock := k; ffi := basis_ffi ext cl fs|>)) = 1) ⇔
+∀k. LENGTH
+      (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+         (t with <|clock := k; ffi := basis_ffi ext cl fs|>)) = 1
+
+failed.

@@ -1,0 +1,21 @@
+<<HOL message: Created theory "forge_refundClaimImport">>
+Proof of 
+
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇔
+wfcl cl ∧ wfFS fs ∧ STD_streams fs
+
+failed.
+First unsolved sub-goal is
+
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+

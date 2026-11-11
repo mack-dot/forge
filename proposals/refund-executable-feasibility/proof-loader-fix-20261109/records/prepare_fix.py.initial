@@ -1,0 +1,80 @@
+"""Change only virtual theory paths in a new, unpublished orchestration proposal."""
+from pathlib import Path
+import ast,difflib,hashlib,importlib.util,json,subprocess,yaml
+
+root=Path('/Users/mackianni/forge');out=Path(__file__).resolve().parent
+old=root/'proposals/refund-executable-feasibility/hosted-integrity-run-20261109/records'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+write=lambda p,v:p.write_text(json.dumps(v,indent=2)+'\n')
+source=(old/'proposed-proof-driver.py').read_text()
+workflow=(old/'proposed-proof-workflow.yml').read_text()
+assert sha(source.encode())=='2667f6d8f81e4286c04a80bf3e856b66c74ce15141d5e80c18e1fb4662d45fd8'
+assert sha(workflow.encode())=='1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1'
+changes=[("q(root/path/'.hol/objs'/(name+'Theory'+ext))", "q(root/path/(name+'Theory'+ext))"),
+         ("q(root/'outputs/proof/.hol/objs'/('forge_refundGenericReadErrorTheory'+ext))", "q(root/'outputs/proof'/('forge_refundGenericReadErrorTheory'+ext))")]
+fixed=source
+for before,after in changes:
+ assert fixed.count(before)==1
+ fixed=fixed.replace(before,after,1)
+ast.parse(fixed)
+indent=lambda s:''.join('          '+line+'\n' for line in s.splitlines())
+assert workflow.count(indent(source))==1
+proposed=workflow.replace(indent(source),indent(fixed),1)
+original_yaml=yaml.load(workflow,Loader=yaml.BaseLoader)
+proposed_yaml=yaml.load(proposed,Loader=yaml.BaseLoader)
+original_step=next(iter(original_yaml['jobs'].values()))['steps'][0]
+proposed_step=next(iter(proposed_yaml['jobs'].values()))['steps'][0]
+shell=proposed_step['run']
+original_step['run']=proposed_step['run']='REVIEWED_BODY_ONLY'
+assert original_yaml==proposed_yaml
+for n,data in [('driver.py',fixed),('workflow.yml',proposed),('shell.sh',shell)]:
+ p=out/n;assert not p.exists();p.write_text(data)
+(out/'driver.diff').write_text(''.join(difflib.unified_diff(source.splitlines(True),fixed.splitlines(True),fromfile='U340/frozen-driver.py',tofile='U341/driver.py')))
+(out/'workflow.diff').write_text(''.join(difflib.unified_diff(workflow.splitlines(True),proposed.splitlines(True),fromfile='U340/frozen-workflow.yml',tofile='U341/workflow.yml')))
+argv=['/bin/bash','--noprofile','--norc','-n',str(out/'shell.sh')]
+r=subprocess.run(argv,capture_output=True)
+(out/'syntax.stdout.log').write_bytes(r.stdout);(out/'syntax.stderr.log').write_bytes(r.stderr)
+write(out/'syntax-command.json',{'argv':argv,'actual_exit':r.returncode});assert r.returncode==0
+spec=importlib.util.spec_from_file_location('fixed_orchestration',out/'driver.py')
+d=importlib.util.module_from_spec(spec);spec.loader.exec_module(d)
+cases=['proof','repeat','import','wrong-exception','omitted-event']
+bootstraps={}
+for mode in cases:
+ s=d.bootstrap(root,mode);bootstraps[mode]=s
+ (out/(mode+'-bootstrap.sml')).write_text(s)
+ assert '.hol/objs/' not in s
+ for path,name in d.PARENTS:
+  for ext in ['.sig','.sml']:
+   assert 'QUse.use '+json.dumps(str(root/path/(name+'Theory'+ext)))+';' in s
+ if mode in ['proof','repeat']:
+  assert 'QUse.use '+json.dumps(str(root/d.CANDIDATE)) in s
+ else:
+  for ext in ['.sig','.sml']:
+   assert 'QUse.use '+json.dumps(str(root/'outputs/proof'/('forge_refundGenericReadErrorTheory'+ext))) in s
+# Exercise the actual pinned HOLFileSys read layer without compiling theory sources.
+prefix='val _ = PolyML.SaveState.loadHierarchy ['+', '.join(json.dumps(str(root/d.TC_REL/h)) for h in d.HEAPS)+'];\n'
+targets=[str(root/path/(name+'Theory'+ext)) for path,name in d.PARENTS for ext in ['.sig','.sml']]
+future=[str(root/'outputs/proof'/('forge_refundGenericReadErrorTheory'+ext)) for ext in ['.sig','.sml']]
+s=prefix+'''val mode = valOf (OS.Process.getEnv "FORGE_LOADER_PATH_MODE");
+fun physical p = OS.Path.concat(OS.Path.concat(OS.Path.dir p,".hol/objs"),OS.Path.file p);
+fun direct p = let val f=TextIO.openIn p val s=TextIO.inputAll f in TextIO.closeIn f;s end;
+fun virtual p = let val f=HOLFileSys.openIn p val s=HOLFileSys.inputAll f in HOLFileSys.closeIn f;s end;
+fun check p = let
+  val expected = physical p
+  val requested = if mode="old" then expected else p
+  val _ = print ("REQUEST " ^ requested ^ "\\nRESOLVED " ^ HOLFileSys.toFS requested ^ "\\n")
+  val data = virtual requested
+  val _ = if HOLFileSys.toFS requested=expected andalso data=direct expected then () else raise Fail "Loader file identity mismatch"
+in print ("PARENT_BYTES_MATCH " ^ p ^ "\\n") end;
+'''
+s+='val _ = List.app check ['+', '.join(json.dumps(p) for p in targets)+'];\n'
+s+='val _ = List.app (fn p => if HOLFileSys.toFS p=physical p then print ("FUTURE_IMPORT_PATH_MATCH " ^ p ^ "\\n") else raise Fail "Import path mismatch") ['+', '.join(json.dumps(p) for p in future)+'];\n'
+s+='val _ = print "LOADER_PATH_REGRESSION_COMPLETE\\n";\nval _ = OS.Process.exit OS.Process.success;\n'
+(out/'loader-path-regression.sml').write_text(s)
+assert 'QUse.use' not in s and 'cfLib' not in s and 'store_thm' not in s
+write(out/'tracking-before.json',{n:{'bytes':len((root/n).read_bytes()),'sha256':sha((root/n).read_bytes())} for n in ['ROADMAP.md','FORGE_MISSION_STATUS.md','unsure.md']})
+assert b'U341' not in (root/'unsure.md').read_bytes()
+result={'workflow_sha256':sha(proposed.encode()),'workflow_bytes':len(proposed.encode()),'driver_sha256':sha(fixed.encode()),
+ 'changes':changes,'changed_expressions':2,'all_other_workflow_fields_unchanged':True,'bootstraps_checked':cases,
+ 'syntax_exit':r.returncode,'candidate_or_dependencies_changed':False,'published':False,'proof_executed':False,'end_to_end':False}
+write(out/'PREPARATION.json',result);print(json.dumps(result))

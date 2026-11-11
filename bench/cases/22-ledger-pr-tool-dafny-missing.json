@@ -1,0 +1,19 @@
+{
+ "changes": [
+  {
+   "op": "delete",
+   "path": ".toolchain/dafny-4.11.0/dafny/dafny",
+   "target": "root"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "tool_failure",
+ "expected_exit": 2,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-tool-dafny-missing",
+ "kind": "tool_failure",
+ "order": 22,
+ "rationale": "The trusted Dafny executable is missing (injected in this case's isolated copy only).",
+ "supplied_evidence": null
+}

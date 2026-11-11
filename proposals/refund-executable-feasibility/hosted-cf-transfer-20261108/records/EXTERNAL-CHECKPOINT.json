@@ -1,0 +1,56 @@
+{
+  "input_commit": {
+    "sha": "21c4bdf958627e6a24e8dee9a45d90568b3e3c20",
+    "parents": [
+      "8ad9de1e538edd48a2084796510e784913eaef8b"
+    ],
+    "files": [
+      {
+        "path": "proposals/m1-hosted-cf-inputs/INPUTS.json",
+        "status": "added",
+        "sha": "00cd900e212b8dd98cf7aad40b70a82324f5043f"
+      },
+      {
+        "path": "proposals/m1-hosted-cf-inputs/inputs.part-000",
+        "status": "added",
+        "sha": "dff690b8992e243950cab8d0565efbf7fe4fd32e"
+      },
+      {
+        "path": "proposals/m1-hosted-cf-inputs/inputs.part-001",
+        "status": "added",
+        "sha": "abc5c0bf9d39e62a34cabf034e529ac96e93ce32"
+      },
+      {
+        "path": "proposals/m1-hosted-cf-inputs/inputs.part-002",
+        "status": "added",
+        "sha": "d13b6bd585f6174712ad545c19dbd68261384ad7"
+      }
+    ]
+  },
+  "workflow_branch": {
+    "head": "8ad9de1e538edd48a2084796510e784913eaef8b",
+    "tree": "08f0e81f520081d6a75971f1c9dcc676ec67a939"
+  },
+  "recent_runs": [
+    {
+      "id": 42400884739,
+      "head_sha": "8ad9de1e538edd48a2084796510e784913eaef8b",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "path": ".github/workflows/m1-macos-preflight.yml"
+    },
+    {
+      "id": 42292059389,
+      "head_sha": "a599bf6c1e8e568bc1705468754edf959b274b6a",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "path": ".github/workflows/m1-macos-preflight.yml"
+    }
+  ],
+  "workflow_trigger_executed": false,
+  "hosted_runs_used": 0,
+  "latest_instruction": "Inspect/report exact scope; do not execute until explicitly authorized.",
+  "end_to_end": false
+}

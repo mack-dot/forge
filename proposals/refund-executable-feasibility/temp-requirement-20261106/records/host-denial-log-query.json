@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/usr/bin/log",
+    "show",
+    "--style",
+    "ndjson",
+    "--last",
+    "15m",
+    "--predicate",
+    "eventMessage CONTAINS \"MLTEMP\"",
+    "--info"
+  ],
+  "actual_exit": 64,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr": "log: Cannot run while sandboxed\n",
+  "events_without_timestamps": [],
+  "non_json_lines": [],
+  "timestamp_policy": "Retain relevant event fields without wall-clock timestamps; hash original returned stdout.",
+  "scope": "One read-only host log query limited to MLTEMP messages; no policy or execution workaround.",
+  "end_to_end": false
+}

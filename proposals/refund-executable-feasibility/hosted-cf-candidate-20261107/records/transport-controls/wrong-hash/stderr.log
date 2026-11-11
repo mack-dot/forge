@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/transport_probe.py", line 19, in <module>
+    d.unpack(root,manifest,archive)
+  File "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/hosted-driver.py", line 23, in unpack
+    assert len(archive)==manifest['archive_bytes'] and sha(archive)==manifest['archive_sha256']
+AssertionError

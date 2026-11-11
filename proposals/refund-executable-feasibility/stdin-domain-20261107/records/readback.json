@@ -1,0 +1,52 @@
+{
+  "actual_exit": 0,
+  "commands": {
+    "model-0002": 1,
+    "model-0003": 0,
+    "model-0004": 0,
+    "lookup-diagnostic": 1,
+    "lookup-diagnostic-0002": 1,
+    "lookup-diagnostic-0003": 1,
+    "lookup-diagnostic-0004": 0,
+    "repeat": 0,
+    "fresh-import": 0,
+    "wrong-status": 1,
+    "missing-stdin-guard": 1
+  },
+  "theorems": 4,
+  "identical_exports": 4,
+  "closure_nodes": 148,
+  "closure_parent_files": 876,
+  "checked_input_files": 2665,
+  "foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "data_sha256": "3192e34a57ac581727a3ce8c56770e7354242577d35bc4229903fe28020e671d",
+  "proof_source_sha256": "6791849e3c7f09dea6b09c7bb1f3b9d2bcb0458d1e1ca9352ae6094b7a64507f",
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "native_exit_codes": [
+    0,
+    0
+  ],
+  "protected_paths": 50,
+  "frozen_mission_unchanged": true,
+  "runtime_pins": {
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state0": "5994d245b3ff43da07f44345a2f58fc144f1decac43bf52975004b4d77d8c606",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/termination/numheap": "a40edbf73acb92b05567aa5a45151eb292e88e79fb2e816c719568b3f0951aa7",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state": "af73861d6482f1a5c530749f930c966a1f8af03f07708b5ed7ead792b3bdfb02",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/lib/libpolyml.16.dylib": "3f8fe4bc24c68d7d30840e2dd31966b50a02751d292fed3e67716b3575fa74fe",
+    "/opt/homebrew/opt/gmp/lib/libgmp.10.dylib": "1bb9184824b82f40bd50279634290d6cbdf9c1a371c045c7b10815e7955cd696"
+  },
+  "inspected_sources": {
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/basis_ffi.c": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/fsFFIScript.sml": "ed0e73e7612bfca88f3109cc0d400e0fb5bd0579b752f0f6d1a7bceed073fe18",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/fsFFIPropsScript.sml": "96ad37c7382a8509d049736c9304e576b8be322324a47fabf3c2d6e9955111ce",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/TextIOProgScript.sml": "e2ddab184379b211222ff2a6879e5f192a7f9146f2561b9022483886f57ddb6a"
+  },
+  "end_to_end": false,
+  "scope": "Separate local artifact readback by the producing agent; not independent full-chain replay."
+}

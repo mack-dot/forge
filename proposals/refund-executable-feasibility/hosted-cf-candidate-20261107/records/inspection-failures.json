@@ -1,0 +1,37 @@
+{
+  "failures": [
+    {
+      "operation": "Initial guessed HOL/tools/holpathdb glob",
+      "actual_exit": 1,
+      "observation": "Unmatched shell glob; corrected lookup found tools/Holmake/hfs. No source changed.",
+      "record_source": "Session tool output; raw full invocation not archived."
+    },
+    {
+      "operation": "Source read followed by exceptionLocation search",
+      "actual_exit": 1,
+      "observation": "Search had no match. Source read succeeded. No proof command.",
+      "record_source": "Session tool output; raw full invocation not archived."
+    },
+    {
+      "operation": "ps -axo pid,ppid,%cpu,rss,etime,command | rg package_inputs.py|hosted-cf-preparation",
+      "actual_exit": 1,
+      "observation": "zsh: operation not permitted: ps. No syscall location or numeric errno captured. Package was already complete.",
+      "record_source": "Session tool output."
+    },
+    {
+      "operation": "python3 -B readback_packet.py",
+      "actual_exit": 1,
+      "observation": "AssertionError gate/core.py when the root historical protected baseline was wrongly applied to the distinct review worktree. Original script preserved. No file mutation by this check.",
+      "record_source": "Full traceback preserved in readback-v1.stderr.log"
+    },
+    {
+      "operation": "cp results/hosted-cf-preparation-20261107/attempt-0001/readback_packet.py results/hosted-cf-preparation-20261107/attempt-0001/readback_packet_v1.py, executed in review worktree",
+      "actual_exit": "NOT_SEPARATELY_CAPTURED",
+      "aggregate_shell_exit": 0,
+      "observation": "cp source absent in review worktree; following git protected diff succeeded. Corrected absolute-path Python copy preserves original failed script.",
+      "record_source": "Session tool output."
+    }
+  ],
+  "causes_not_equated_to_U328": true,
+  "end_to_end": false
+}

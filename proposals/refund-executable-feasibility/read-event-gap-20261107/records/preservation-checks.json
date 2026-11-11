@@ -1,0 +1,32 @@
+[
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "actual_exit": 2,
+    "stdout_sha256": "0585e3aa1f75de6206eddfb83a8e340e130ddb6a31e5b1bcadd82c1eee718b12",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      "ROADMAP.md",
+      "FORGE_MISSION_STATUS.md",
+      "unsure.md",
+      "proposals/refund-executable-feasibility/read-event-gap-20261107/REPORT.md",
+      "proposals/refund-executable-feasibility/read-event-gap-20261107/ASSURANCE.md",
+      "proposals/refund-executable-feasibility/read-event-gap-20261107/NEXT-STEP.md",
+      "proposals/refund-executable-feasibility/read-event-gap-20261107/COMMANDS.md"
+    ],
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

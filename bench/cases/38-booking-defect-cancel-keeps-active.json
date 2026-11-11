@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "        state.active - {request.booking_id},\n",
+   "op": "edit",
+   "path": "impl/Booking.dfy",
+   "replace": "        state.active,\n",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "booking",
+ "id": "booking-defect-cancel-keeps-active",
+ "kind": "defect",
+ "order": 38,
+ "rationale": "Cancellation frees the slot but leaves the booking active: violates B3 and well-formedness.",
+ "supplied_evidence": null
+}

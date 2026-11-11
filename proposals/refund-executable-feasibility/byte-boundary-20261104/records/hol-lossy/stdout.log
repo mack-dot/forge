@@ -1,0 +1,10 @@
+<<HOL message: Created theory "forge_refundByteBoundary">>
+Proof of 
+
+∀bytes. EVERY (λn. n < 256) bytes ⇒ byte_codes (byte_string bytes) = bytes
+
+failed.
+First unsolved sub-goal is
+
+∀h. h < 256 ∧ EVERY (λn. n < 256) bytes ⇒ ORD (CHR (h MOD 128)) = h
+

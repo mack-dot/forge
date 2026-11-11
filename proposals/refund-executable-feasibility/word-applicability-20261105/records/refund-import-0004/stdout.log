@@ -1,0 +1,120 @@
+<<HOL message: Created theory "forge_refundClaimImport">>
+IMPORTED refund_data_nonfailure EXACT_CONCLUSION true KERNEL_PREMISES_EQUIVALENT true HYPOTHESES 0 TAGGED_AXIOMS 0
+Proof of 
+
+init_store_ok c t.store t.memory t.mdomain t.code_buffer t.data_buffer ∧
+data_lang_safe_for_space (basis_ffi ext cl fs) po
+  (fromAList
+     (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+  (get_limits c (t with ffi := basis_ffi ext cl fs)) frames
+  InitGlobals_location ∧ code_rel_ext (dimindex (:64)) x1 t.code ∧
+code_rel c
+  (fromAList
+     (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog))) x1 ∧
+conf_ok (dimindex (:64)) c ∧ frames = t.stack_size ∧
+lookup 0 t.locals = SOME (Loc 1 0) ∧ t.stack_max = SOME 1 ∧
+t.locals_size = SOME 0 ∧ t.ptr_eq_oracle = NONE ∧ t.termdep = 0 ∧
+t.handler = 0 ∧ isa_bits coo = dimindex (:64) ∧ t.stack = [] ∧
+backend_from_data_tuple_cc (:64) arm8_config
+  (set_oracle arm8_backend_config oracle) =
+(λcfg.
+   OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+   MAP (compile_part c)) ∧ t.gc_fun = word_gc_fun c ∧
+t.compile_oracle =
+(I ## MAP (λp. full_compile_single (dimindex (:64)) tt kk aa coo (p,NONE))) ∘
+tco ∧ domain x1 = domain t.code ∧ t.ptr_eq_rel = word_ptr_eq c ∧
+(t.be ⇔ c.be) ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ∧
+t.stack_limit ≠ 0 ∧ c.gc_kind ≠ None ∧ good_dimindex (:64) ∧
+Abbrev
+  (tcc =
+   (λconf progs.
+      t.compile conf
+        (MAP (λp. full_compile_single (dimindex (:64)) tt kk aa coo (p,NONE))
+           progs))) ∧
+Abbrev
+  (tco =
+   (I ## MAP (compile_part c)) ∘
+   cake_orac (:64) arm8_config info syn
+     (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog)) ∧
+(∀n. EVERY (λ(n,_0). data_num_stubs ≤ n)
+       (SND
+          (cake_orac (:64) arm8_config info syn
+             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+             (λps. ps.data_prog) n))) ∧
+(∀k. ∃rest.
+   evaluate
+     (Call NONE (SOME InitGlobals_location) [0] NONE,
+      t with
+      <|clock := k; ptr_eq_oracle := SOME po; ffi := basis_ffi ext cl fs|>) =
+   (I ## (λs. s with ptr_eq_oracle := SOME rest))
+     (evaluate
+        (Call NONE (SOME InitGlobals_location) [0] NONE,
+         t with <|clock := k; ffi := basis_ffi ext cl fs|>))) ⇔
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ∧
+data_lang_safe_for_space (basis_ffi ext cl fs) po
+  (fromAList
+     (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+  (get_limits c (t with ffi := basis_ffi ext cl fs)) frames
+  InitGlobals_location ∧ c.gc_kind ≠ None ∧
+(∀k. ∃rest.
+   evaluate
+     (Call NONE (SOME InitGlobals_location) [0] NONE,
+      t with
+      <|clock := k; ptr_eq_oracle := SOME po; ffi := basis_ffi ext cl fs|>) =
+   (I ## (λs. s with ptr_eq_oracle := SOME rest))
+     (evaluate
+        (Call NONE (SOME InitGlobals_location) [0] NONE,
+         t with <|clock := k; ffi := basis_ffi ext cl fs|>))) ∧
+t.handler = 0 ∧ t.gc_fun = word_gc_fun c ∧
+init_store_ok c t.store t.memory t.mdomain t.code_buffer t.data_buffer ∧
+good_dimindex (:64) ∧ isa_bits coo = dimindex (:64) ∧
+lookup 0 t.locals = SOME (Loc 1 0) ∧ t.stack = [] ∧
+conf_ok (dimindex (:64)) c ∧ t.termdep = 0 ∧
+code_rel c
+  (fromAList
+     (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog))) x1 ∧
+backend_from_data_tuple_cc (:64) arm8_config
+  (set_oracle arm8_backend_config oracle) =
+(λcfg.
+   OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+   MAP (compile_part c)) ∧
+Abbrev
+  (tco =
+   (I ## MAP (compile_part c)) ∘
+   cake_orac (:64) arm8_config info syn
+     (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog)) ∧
+(∀n. EVERY (λ(n,_0). data_num_stubs ≤ n)
+       (SND
+          (cake_orac (:64) arm8_config info syn
+             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+             (λps. ps.data_prog) n))) ∧
+code_rel_ext (dimindex (:64)) x1 t.code ∧ domain x1 = domain t.code ∧
+(t.be ⇔ c.be) ∧ t.stack_max = SOME 1 ∧ t.locals_size = SOME 0 ∧
+t.stack_limit ≠ 0 ∧
+t.compile_oracle =
+(I ## MAP (λp. full_compile_single (dimindex (:64)) tt kk aa coo (p,NONE))) ∘
+tco ∧
+Abbrev
+  (tcc =
+   (λconf progs.
+      t.compile conf
+        (MAP (λp. full_compile_single (dimindex (:64)) tt kk aa coo (p,NONE))
+           progs))) ∧ frames = t.stack_size ∧ t.ptr_eq_rel = word_ptr_eq c ∧
+t.ptr_eq_oracle = NONE
+
+failed.
+First unsolved sub-goal is
+
+Abbrev T
+

@@ -1,0 +1,34 @@
+{
+  "actual_exit": 0,
+  "scope": "Same-agent offline code/statement/transport review. No HOL, native execution, remote write or independent proof replay.",
+  "frozen_packet_members": 66,
+  "new_archive_members": 1475,
+  "candidate_sha256": "7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6",
+  "candidate_and_import_statement_identical": true,
+  "workflow_sha256": "6db12f716e14a227b5de1b6d7f58da6ba3c020dc07bb87b413a225cedfea2b42",
+  "driver_sha256": "b859fe575016c8b88f77a9d105e6e54f4535d7b82fffe8173dfdb28223b94eaf",
+  "shell_syntax": {
+    "argv": [
+      "/bin/bash",
+      "--noprofile",
+      "--norc",
+      "-n",
+      "/Users/mackianni/forge/results/hosted-cf-review-20261107/attempt-0001/embedded-shell.sh"
+    ],
+    "actual_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pinned_source_hashes": {
+    "basis/TextIOProgScript.sml": "e2ddab184379b211222ff2a6879e5f192a7f9146f2561b9022483886f57ddb6a",
+    "basis/TextIOProofScript.sml": "383fc86c4ebcf198f6ce9bb33b049a7e7b43cd08d2da0574d3b3fdb85cc420b7",
+    "characteristic/cfScript.sml": "b1e03cb3d21b8bd882af065c4f167c47130a35210a78275b6809c6b25dad6422",
+    "characteristic/cfTacticsLib.sml": "02c0c2eb88328e5e25d688046cdb5bbf82b74363d74e3f7ac0878198662b227a"
+  },
+  "blocking_defect_found_in_reviewed_scope": false,
+  "proof_result": "NOT_ESTABLISHED",
+  "dependency_closure_of_candidate": "NOT_ESTABLISHED",
+  "hosted_validation": "NOT_RUN",
+  "additional_hosted_approval": "PENDING",
+  "end_to_end": false
+}

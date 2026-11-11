@@ -1,7 +1,8 @@
 # Stage 7: binary verification
 
 Stage 7 is DONE. The upstream replay, intended negative control, and own-binary
-EXIT each returned 0. Stage 8 is CURRENT; its implementation has not started.
+EXIT each returned 0. This record was written when Stage 8 was CURRENT and not
+started; later stages are in ROADMAP.md.
 The authoritative EXIT record is in [ROADMAP.md](../ROADMAP.md).
 `end_to_end=false`.
 

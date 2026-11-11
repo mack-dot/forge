@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "git",
+    "-C",
+    "/private/tmp/forge-e1-claim-proposal-20261102",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "exit_code": 2,
+  "stdout": "proposals/fixed-elf-assurance/observed-execution.log:440: trailing whitespace.\n+0x0001118c:  00000073          ecall                   \n",
+  "stderr": "",
+  "scope": "Proposal packaging whitespace only; not a proof verdict"
+}

@@ -1,0 +1,5 @@
+version
+target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+disassemble --name ffiread
+script print("PYTHON_READY")
+script print(lldb.SBLaunchInfo.AddCloseFileAction.__doc__)

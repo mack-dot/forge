@@ -1,0 +1,25 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "COVERAGE_SCOPE",
+ "gate": "gate",
+ "id": "ledger-evidence-end-to-end-claimed",
+ "kind": "adversarial_evidence",
+ "order": 28,
+ "rationale": "end_to_end set to true.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "end_to_end"
+    ],
+    "value": true
+   }
+  ]
+ }
+}

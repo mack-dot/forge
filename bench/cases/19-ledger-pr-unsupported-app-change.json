@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "console.log(second.outcome);\n",
+   "op": "edit",
+   "path": "app/main.ts",
+   "replace": "console.log(second.outcome);\nconst third = applyModel(second.state, 3n, { sender: 2n, recipient: 1n, amount: 1n });\nconsole.log(third.outcome);\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "unsupported",
+ "expected_exit": null,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-unsupported-app-change",
+ "kind": "unsupported",
+ "order": 19,
+ "rationale": "Only app/main.ts changes (a new transfer). No Forge claim covers this file.",
+ "supplied_evidence": null
+}

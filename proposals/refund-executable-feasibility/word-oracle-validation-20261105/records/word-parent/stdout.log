@@ -1,0 +1,94 @@
+<<HOL message: Created theory "forge_compilerWordTrace">>
+Saved theorem _______ "error_implies_failure"
+Saved theorem _______ "semantics_nonerror"
+Saved theorem _______ "extended_nonfailure"
+Saved theorem _______ "compiled_word_nonerror"
+Saved theorem _______ "compiled_word_single_epoch"
+CHECKED error_implies_failure
+⊢ FST (evaluate (Call NONE (SOME start) [0] NONE,s with clock := k)) =
+  SOME Error ⇒
+  semantics s start = Fail
+CHECKED semantics_nonerror
+⊢ semantics s start ≠ Fail ⇒
+  ∀k. FST (evaluate (Call NONE (SOME start) [0] NONE,s with clock := k)) ≠
+      SOME Error
+CHECKED extended_nonfailure
+⊢ x ∈ extend_with_resource_limit' precise {y} ∧ y ≠ Fail ⇒ x ≠ Fail
+CHECKED compiled_word_nonerror
+⊢ (∀k. ∃rest.
+     evaluate
+       (Call NONE (SOME start) [0] NONE,
+        t with <|clock := k; ptr_eq_oracle := SOME po|>) =
+     (I ## (λs. s with ptr_eq_oracle := SOME rest))
+       (evaluate (Call NONE (SOME start) [0] NONE,t with clock := k))) ∧
+  t.handler = 0 ∧ t.gc_fun = word_gc_fun c ∧
+  init_store_ok c t.store t.memory t.mdomain t.code_buffer t.data_buffer ∧
+  good_dimindex (:α) ∧ isa_bits coo = dimindex (:α) ∧
+  lookup 0 t.locals = SOME (Loc 1 0) ∧ t.stack = [] ∧
+  conf_ok (dimindex (:α)) c ∧ t.termdep = 0 ∧
+  code_rel c (fromAList prog) x1 ∧
+  cc =
+  (λcfg.
+     OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+     MAP (compile_part c)) ∧
+  Abbrev (tco = (I ## MAP (compile_part c)) ∘ co) ∧
+  (∀n. EVERY (λ(n,_0). data_num_stubs ≤ n) (SND (co n))) ∧
+  code_rel_ext (dimindex (:α)) x1 t.code ∧ domain x1 = domain t.code ∧
+  (t.be ⇔ c.be) ∧ t.stack_max = SOME 1 ∧ t.locals_size = SOME 0 ∧
+  t.stack_limit ≠ 0 ∧
+  t.compile_oracle =
+  (I ## MAP (λp. full_compile_single (dimindex (:α)) tt kk aa coo (p,NONE))) ∘
+  tco ∧
+  Abbrev
+    (tcc =
+     (λconf progs.
+        t.compile conf
+          (MAP
+             (λp. full_compile_single (dimindex (:α)) tt kk aa coo (p,NONE))
+             progs))) ∧ fs = t.stack_size ∧ t.ptr_eq_rel = word_ptr_eq c ∧
+  t.ptr_eq_oracle = NONE ∧
+  Fail ≠ semantics t.ffi (fromAList prog) co cc po zero_limits fs start ⇒
+  ∀k. FST (evaluate (Call NONE (SOME start) [0] NONE,t with clock := k)) ≠
+      SOME Error
+CHECKED compiled_word_single_epoch
+⊢ data_lang_safe_for_space t.ffi po (fromAList prog) (get_limits c t) fs
+    start ∧ c.gc_kind ≠ None ∧
+  (∀k. ∃rest.
+     evaluate
+       (Call NONE (SOME start) [0] NONE,
+        t with <|clock := k; ptr_eq_oracle := SOME po|>) =
+     (I ## (λs. s with ptr_eq_oracle := SOME rest))
+       (evaluate (Call NONE (SOME start) [0] NONE,t with clock := k))) ∧
+  t.handler = 0 ∧ t.gc_fun = word_gc_fun c ∧
+  init_store_ok c t.store t.memory t.mdomain t.code_buffer t.data_buffer ∧
+  good_dimindex (:α) ∧ isa_bits coo = dimindex (:α) ∧
+  lookup 0 t.locals = SOME (Loc 1 0) ∧ t.stack = [] ∧
+  conf_ok (dimindex (:α)) c ∧ t.termdep = 0 ∧
+  code_rel c (fromAList prog) x1 ∧
+  cc =
+  (λcfg.
+     OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+     MAP (compile_part c)) ∧
+  Abbrev (tco = (I ## MAP (compile_part c)) ∘ co) ∧
+  (∀n. EVERY (λ(n,_0). data_num_stubs ≤ n) (SND (co n))) ∧
+  code_rel_ext (dimindex (:α)) x1 t.code ∧ domain x1 = domain t.code ∧
+  (t.be ⇔ c.be) ∧ t.stack_max = SOME 1 ∧ t.locals_size = SOME 0 ∧
+  t.stack_limit ≠ 0 ∧
+  t.compile_oracle =
+  (I ## MAP (λp. full_compile_single (dimindex (:α)) tt kk aa coo (p,NONE))) ∘
+  tco ∧
+  Abbrev
+    (tcc =
+     (λconf progs.
+        t.compile conf
+          (MAP
+             (λp. full_compile_single (dimindex (:α)) tt kk aa coo (p,NONE))
+             progs))) ∧ fs = t.stack_size ∧ t.ptr_eq_rel = word_ptr_eq c ∧
+  t.ptr_eq_oracle = NONE ∧
+  Fail ≠ semantics t.ffi (fromAList prog) co cc po zero_limits fs start ⇒
+  ∀k. LENGTH
+        (ptr_eq_trace (Call NONE (SOME start) [0] NONE) (t with clock := k)) =
+      1
+Exporting theory "forge_compilerWordTrace" ... done.
+Theory "forge_compilerWordTrace" took 2.5s to build
+RUNTIME_PROOF_COMPLETE

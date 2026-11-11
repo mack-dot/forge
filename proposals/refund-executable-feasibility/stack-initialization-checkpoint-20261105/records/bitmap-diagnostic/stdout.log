@@ -1,0 +1,11 @@
+GENERIC ⊢ isa_bits (asm_conf :asm_config) = dimindex (:α) ⇒
+  MAP (upper_w2w :α word -> word64) (MAP (n2w :num -> α word) (ns :num list)) =
+  MAP (upper_n2w (arch_wordsize asm_conf.ISA)) ns
+SPECIALIZED ⊢ T
+TARGET MAP (upper_w2w :word64 -> word64) (MAP (n2w :num -> word64) (ns :num list)) =
+MAP (upper_n2w (arch_wordsize arm8_config.ISA)) ns
+NORMALIZED ⊢ MAP (upper_w2w :word64 -> word64) (MAP (n2w :num -> word64) (ns :num list)) =
+  MAP (upper_n2w (arch_wordsize arm8_config.ISA)) ns ⇔
+  MAP (upper_w2w :word64 -> word64) (MAP (n2w :num -> word64) ns) =
+  MAP (upper_n2w (arch_wordsize arm8_config.ISA)) ns
+BITMAP_DIAGNOSTIC_COMPLETE

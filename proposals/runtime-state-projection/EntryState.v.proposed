@@ -1,0 +1,37 @@
+(* Local feasibility proposal using the published machine-state type and semantics. *)
+From Stdlib Require Import ZArith List.
+From LinuxProcessSemantics.LinuxProcessSem Require Import
+  BvBase MemImageType RiscvSemantics State Run OmniRun.
+From LinuxProcessSemantics.LinuxProcessSem.Checks Require Import
+  Examples Omni SpuriousCfg.
+From LinuxProcessSemantics.EquivalenceDefinition Require Import MustExit Classifier.
+From Forge.Binary.images Require Program.
+Import ListNotations.
+Module G := Program.M.
+
+Definition entry_machine regs fregs mem resv fcsr : machine_state :=
+  {| ms_regs := regs; ms_fregs := fregs;
+     ms_pc_val := Z_to_bv 64 (Z.of_N G.init_pc);
+     ms_svc_pending := None; ms_resv := resv; ms_fcsr := fcsr;
+     ms_mem := mem;
+     ms_rom := fun addr =>
+       match memory_read G.loaded_segments addr 1 with
+       | Some (b :: _) => Some b | _ => None end |}.
+
+Lemma entry_exits_c : forall regs fregs mem resv fcsr,
+  exits_c G.loaded_segments verdict_accept 128
+    (entry_machine regs fregs mem resv fcsr) = true.
+Proof. intros. vm_compute. reflexivity. Qed.
+
+Definition entry_termination : Prop :=
+  forall regs fregs mem resv fcsr model,
+    m_halted model = None -> m_vm_lazy model = [] ->
+    must_exit_at_cfg may_fail_cfg G.loaded_segments verdict_accept
+      (mkCfg (entry_machine regs fregs mem resv fcsr) model).
+
+Theorem entry_termination_holds : entry_termination.
+Proof.
+  unfold entry_termination. intros regs fregs mem resv fcsr model Hh Hlazy.
+  apply (exits_c_must_exit_at_cfg _ _ _ 128);
+    [exact Hh | exact Hlazy | apply entry_exits_c].
+Qed.

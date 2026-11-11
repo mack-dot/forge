@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/offline_check.py", line 34, in <module>
+    driver.run_integrity(fetch,work)
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/integrity_driver.py", line 86, in run_integrity
+    tree=verify_commit(c,json.loads(fetch(api+'commits/'+c['commit'],1048576)))
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/integrity_driver.py", line 28, in verify_commit
+    require(d['sha']==c['commit'] and git_hash('commit',raw)==c['commit'] and sha(raw)==c['commit_sha256'],'commit identity mismatch')
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/integrity_driver.py", line 19, in require
+    if not ok:raise ValueError(why)
+ValueError: commit identity mismatch

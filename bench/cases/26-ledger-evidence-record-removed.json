@@ -1,0 +1,27 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "MISSING_EVIDENCE",
+ "gate": "gate",
+ "id": "ledger-evidence-record-removed",
+ "kind": "adversarial_evidence",
+ "order": 26,
+ "rationale": "C4 evidence record removed.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "remove",
+    "path": [
+     "evidence",
+     {
+      "claim_id": "C4"
+     }
+    ]
+   }
+  ]
+ }
+}

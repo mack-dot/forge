@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    } else if IsFreshValid(state, id, request) {\n      var debit := state.balances[request.sender] - request.amount - 1;",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "    } else if IsFreshValid(state, id, request) {\n      var debit := state.balances[request.sender] - request.amount;",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "incremental",
+ "id": "ledger-pr-defect-fee-not-debited",
+ "kind": "defect",
+ "order": 8,
+ "rationale": "Sender is not charged the fee while account 0 still gains it: violates C1 conservation and C4.",
+ "supplied_evidence": null
+}

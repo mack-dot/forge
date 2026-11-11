@@ -70,7 +70,7 @@ The next repair is a proposal only; publication does not apply it.
 
 ## Raw records
 
-The [preserved records](../results/stage9/receipt-repair-published/README.md)
+The [preserved records](../results/stage9/receipt-repair-preparation/history-audit/)
 include `history-audit/connector-history.json`, workflow snapshots, branch refs,
 events, run-list responses and exact GET URLs/statuses. The connector rejected
 two per-workflow endpoints with tool error 400. Those errors remain recorded;

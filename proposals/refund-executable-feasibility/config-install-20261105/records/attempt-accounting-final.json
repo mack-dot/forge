@@ -1,0 +1,21 @@
+{
+  "actual_exit": 0,
+  "rule": "At most five attempts per failing proof",
+  "supersedes": [
+    "trace-stop.json",
+    "attempt-accounting.json"
+  ],
+  "preserved_earlier_records": true,
+  "bounded_stack_single_epoch": {
+    "failed_attempts": 4,
+    "successful_attempt": 5,
+    "later_prefix_unchanged": true
+  },
+  "safe_run_single_epoch": {
+    "failed_attempts": 3,
+    "successful_attempt": 4,
+    "complete_export_case": "trace-corollary-0004"
+  },
+  "complete_bundle_actual_exit": 0,
+  "end_to_end": false
+}

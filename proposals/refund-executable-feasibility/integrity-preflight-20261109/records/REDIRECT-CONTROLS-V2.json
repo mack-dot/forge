@@ -1,0 +1,173 @@
+{
+  "actual_exit": 0,
+  "cases": [
+    {
+      "case": "original-302",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "original-302"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "fac1c13a8970aa24d64ef58f23b6e3605ea0ae1918cbaa14474b7055ca4fdd4e",
+      "stderr_sha256": "33ff9ed14b6f3c023ac1f8a38d0e903560958c962f3ff67cd8feaccd8fdc6391",
+      "checked_evidence": {
+        "case": "original-302",
+        "network_used": false,
+        "source_sha256": "a22b7aa7496739a189366f6178c1d041dd4dda354dc441cb255221ce3def6812",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json",
+          "https://outside-approved-scope.invalid/redirect-target"
+        ],
+        "result": "original attempted follow-up URL",
+        "follow_up_requests": 1
+      }
+    },
+    {
+      "case": "positive",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "positive"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "ccafc66edb3357706a17914aed81f454a6cbbf7188f1092c27f5a61b875965f8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "checked_evidence": {
+        "case": "positive",
+        "network_used": false,
+        "source_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json"
+        ],
+        "result": "accepted expected bytes",
+        "follow_up_requests": 0
+      }
+    },
+    {
+      "case": "redirect-301",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "redirect-301"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "a28acb93cd955edf143a48a678288b09167d2861df88dbb121aa3cb88cd4d45b",
+      "stderr_sha256": "e897eabcc20956d31f0203702af1f4c1efcf09edcd61783560900d7bba50127c",
+      "checked_evidence": {
+        "case": "redirect-301",
+        "network_used": false,
+        "source_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json"
+        ],
+        "result": "redirect refused before follow-up request",
+        "follow_up_requests": 0
+      }
+    },
+    {
+      "case": "redirect-302",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "redirect-302"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "690f7408b9b0030f663e9e1cfd3784aacf76b402a8964c099d686f03d94b319a",
+      "stderr_sha256": "e897eabcc20956d31f0203702af1f4c1efcf09edcd61783560900d7bba50127c",
+      "checked_evidence": {
+        "case": "redirect-302",
+        "network_used": false,
+        "source_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json"
+        ],
+        "result": "redirect refused before follow-up request",
+        "follow_up_requests": 0
+      }
+    },
+    {
+      "case": "redirect-303",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "redirect-303"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "5a4b5c57a45ba2ec9fedd837f8fa4bff066346161a1288bc2035879eca28fd47",
+      "stderr_sha256": "e897eabcc20956d31f0203702af1f4c1efcf09edcd61783560900d7bba50127c",
+      "checked_evidence": {
+        "case": "redirect-303",
+        "network_used": false,
+        "source_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json"
+        ],
+        "result": "redirect refused before follow-up request",
+        "follow_up_requests": 0
+      }
+    },
+    {
+      "case": "redirect-307",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "redirect-307"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "a0b258e27ddeed1ae3f823905741354d99c0956204ff4e884eb10b2875732cb1",
+      "stderr_sha256": "e897eabcc20956d31f0203702af1f4c1efcf09edcd61783560900d7bba50127c",
+      "checked_evidence": {
+        "case": "redirect-307",
+        "network_used": false,
+        "source_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json"
+        ],
+        "result": "redirect refused before follow-up request",
+        "follow_up_requests": 0
+      }
+    },
+    {
+      "case": "redirect-308",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py",
+        "redirect-308"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "a91077956f4c2174aefdeaff1babd41307704b85445e9f608fbcf33fe587996c",
+      "stderr_sha256": "30339759345b6737684fee2338a587ce132c2fc33d121dd6604d884171d806fb",
+      "checked_evidence": {
+        "case": "redirect-308",
+        "network_used": false,
+        "source_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+        "requests": [
+          "https://raw.githubusercontent.com/mack-dot/forge/21c4bdf958627e6a24e8dee9a45d90568b3e3c20/proposals/m1-hosted-cf-inputs/INPUTS.json"
+        ],
+        "result": "HTTP 308 rejected by this Python runtime before any follow-up request",
+        "follow_up_requests": 0
+      }
+    }
+  ],
+  "python_version": "3.10.11 (v3.10.11:7d4cc5aa85, Apr  4 2023, 19:05:19) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "network_used": false,
+  "hosted_jobs_started": 0,
+  "proof_executed": false,
+  "prior_harness_limit": "Version1 checked exit codes only; its308 stderr was HTTPError,without the expected result record.",
+  "end_to_end": false
+}

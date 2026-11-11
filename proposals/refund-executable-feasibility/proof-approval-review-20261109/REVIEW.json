@@ -1,0 +1,91 @@
+{
+  "workflow_sha256": "1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1",
+  "workflow_bytes": 16385,
+  "driver_sha256": "2667f6d8f81e4286c04a80bf3e856b66c74ce15141d5e80c18e1fb4662d45fd8",
+  "manifest_records": [
+    {
+      "package": "addon",
+      "bytes": 932639,
+      "sha256": "6822e8da53f477f991bfa4a7cab02ffc59906a58460048a49af190fb42b2c105",
+      "members": 1475,
+      "archive_sha256": "1f7a009b866b18c8299aac5d36b6ad59e54bfb73d4bba568da98ebde3c2146e1",
+      "archive_bytes": 9882464,
+      "parts": [
+        {
+          "bytes": 4194304,
+          "name": "inputs.part-000",
+          "sha256": "9674b5747e11fcac3414938bc2fbd5bf371f4e8b2cbc60c8116bb27d3b617065"
+        },
+        {
+          "bytes": 4194304,
+          "name": "inputs.part-001",
+          "sha256": "191dc02f88b1761db3e59c058c6802583348caf95e271b338f13667d71436153"
+        },
+        {
+          "bytes": 1493856,
+          "name": "inputs.part-002",
+          "sha256": "2b867bcb9d48a4d31a771cc6c26254ecbc8b1c21efb6fc19ba9cc27aeb1f7f55"
+        }
+      ]
+    },
+    {
+      "package": "base",
+      "bytes": 8435,
+      "sha256": "6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7",
+      "members": 18,
+      "archive_sha256": "613bc67d7b7ac692c3f1b84db49a41c346b2836d5b9d179096f9522ce96b7602",
+      "archive_bytes": 15372504,
+      "parts": [
+        {
+          "bytes": 524288,
+          "name": "inputs.part-000",
+          "sha256": "22cc94b8c91b5dc997011b8feaccefba4bbbc306625e53e8e8c6c45f5ff2c346"
+        },
+        {
+          "bytes": 4194304,
+          "name": "inputs.block-001",
+          "sha256": "bfaf63972373fa33b658a2ec321be571f2b4c262ec72ba7075430f98ce05d3a8"
+        },
+        {
+          "bytes": 4194304,
+          "name": "inputs.block-002",
+          "sha256": "b0ee82189abb71e42a4537fe785c452559094c474327610a5b5bbddf5b08e801"
+        },
+        {
+          "bytes": 4194304,
+          "name": "inputs.block-003",
+          "sha256": "022eda112f19d915c45777da3dd987557faeaae38aeee1f4e5bbd88956583bd9"
+        },
+        {
+          "bytes": 2265304,
+          "name": "inputs.block-004",
+          "sha256": "e85df31d392fd1fc9f39659a987c8f9c02f2061c0aa969f00ccf33028361f6e5"
+        }
+      ]
+    }
+  ],
+  "members": 1493,
+  "quotation_sha256": "289b8be8c848dc3debddbac5184e613e2c1e127c56dddd574e5b43087cc8c29a",
+  "special_sources": {
+    "results/refund-read-event-gap-20261107/attempt-0001/generic-read-0001.sml": "7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6",
+    "results/hosted-cf-preparation-20261107/attempt-0001/prepared-inputs/import.sml": "3018afad63a80620fbf3f4ed04a606d1121da0cb77460c3cfea7542351b2bdc1",
+    "results/hosted-cf-preparation-20261107/attempt-0001/prepared-inputs/wrong-exception.sml": "c47b9f260e3e638a6fe91f75f263b37c4652bc68210447df0d3b898d308f19ee",
+    "results/hosted-cf-preparation-20261107/attempt-0001/prepared-inputs/omitted-event.sml": "d7cd686252cf99d571cee7a764720e7ff5db2ef1121d94416fd455601dee190e"
+  },
+  "shell_syntax_exit": 0,
+  "integrity_controls": {
+    "count": 3,
+    "observed": "Expected in-process ValueError rejections",
+    "separate_process_exit_codes": null
+  },
+  "proof_controls": {
+    "count": 2,
+    "expected_child_exit": 1,
+    "actual_child_exits": null,
+    "status": "NOT_RUN"
+  },
+  "HOL_executed": false,
+  "hosted_runs": 0,
+  "approval_granted": false,
+  "end_to_end": false
+}

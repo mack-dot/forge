@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    if Eligible(context, response) {\n",
+   "op": "edit",
+   "path": "impl/Refund.dfy",
+   "replace": "    if ValidContext(context) && response.Candidate? &&\n       0 <= response.amount <= context.remaining && AllowedReason(response.reason) {\n",
+   "target": "root"
+  }
+ ],
+ "domain": "refund",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "refund",
+ "id": "refund-accept-inline-condition",
+ "kind": "valid_alternative",
+ "order": 44,
+ "rationale": "Eligibility written out inline instead of calling Eligible.",
+ "supplied_evidence": null
+}

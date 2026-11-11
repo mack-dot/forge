@@ -1,0 +1,60 @@
+INPUT_THEOREM initialized_error
+⊢ (wfFS fs ∧ STD_streams fs) ∧ stdin_content fs = SOME text ∧
+  refund_run_wire (implode text) = INL err ⇒
+  ∃h1 h2.
+    (SPLIT
+       (st2heap (basis_proj1,basis_proj2)
+          (SexpProg_st_2 (basis_ffi ext cl fs,K (K F)))) (h1,h2) ∧
+     STDIO fs h1) ∧
+    sem_satisfies
+      (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+         refund_prog)
+      (λbehavior.
+         ∃st3 exn.
+           behavior = Terminate Success st3.ffi.io_events ∧
+           (∃h3 h4.
+              SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+              (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+           call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+           extract_fs ext (cl,fs) st3.ffi.io_events =
+           SOME (fastForwardFD fs 0))
+INPUT_THEOREM exact_compilation
+⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info) ∧
+  ffis = ffinames_to_string_list (the [] info.lab_conf.ffi_names) ∧
+  syms = info.symbols ∧ LENGTH code = 130436 ∧ LENGTH data = 2531 ∧
+  info.lab_conf.shmem_extra = [] ∧ prog_syntax_ok refund_prog ∧
+  conf = encode_backend_config info
+INPUT_THEOREM compiler_precise
+⊢ compile asm_conf c prog = SOME (bytes,bitmaps,c') ⇒
+  (∀po.
+     is_safe_for_space (:α) ffi po asm_conf c prog (stack_limit,heap_limit)) ⇒
+  read_limits asm_conf c mc ms = (stack_limit,heap_limit) ⇒
+  (let
+     (s,env) = THE (prim_sem_env ffi)
+   in
+     ¬semantics_prog s env prog Fail ∧ backend_config_ok asm_conf c ∧
+     mc_conf_ok mc ∧ mc_init_ok asm_conf c mc ∧
+     installed bytes cbspace bitmaps data_sp c'.lab_conf.ffi_names
+       (heap_regs c.stack_conf.reg_names) mc c'.lab_conf.shmem_extra ms ⇒
+     machine_sem mc ffi ms ⊆ semantics_prog s env prog)
+INPUT_THEOREM source_nonfailure
+⊢ sem_satisfies (semantics_dec_list s init_env prog)
+    (λb. ∃io. b = Terminate outcome io ∧ p io) ⇒
+  prog_syntax_ok prog ⇒
+  ¬semantics_prog s init_env prog Fail ∧
+  (sem ⊆ extend_with_resource_limit (semantics_prog s init_env prog) ⇒
+   (∃b. sem = {b}) ⇒
+   ∃io. sem ⊆ extend_with_resource_limit {Terminate outcome io} ∧ p io)
+INPUT_THEOREM precise_composition
+⊢ sem_satisfies (semantics_dec_list s init_env prog)
+    (λb. ∃io. b = Terminate outcome io ∧ p io) ⇒
+  prog_syntax_ok prog ⇒
+  candidate_behaviours ⊆ semantics_prog s init_env prog ⇒
+  (∃b. candidate_behaviours = {b}) ⇒
+  ∃io. candidate_behaviours = {Terminate outcome io} ∧ p io
+INPUT_THEOREM arm8_init
+⊢ is_arm8_machine_config mc ⇒ mc_init_ok arm8_config arm8_backend_config mc
+INPUT_THEOREM arm8_config
+⊢ is_arm8_machine_config mc ⇒ mc_conf_ok mc
+ERROR_COMPILER_COMPLETE

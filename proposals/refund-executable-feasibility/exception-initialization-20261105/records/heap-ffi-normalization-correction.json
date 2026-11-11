@@ -1,0 +1,10 @@
+{
+  "prior_actual_exit": 1,
+  "diagnostic_actual_exit": 0,
+  "residual": "Heap membership still contains conditional parts_ok on expanded basis FFI record; hypothesis states parts_ok res_st.ffi with an unused equality res_st.ffi=basis record",
+  "change": "State the already-proved basis parts_ok fact directly; reduce st2heap/ffi2heap before expanding basis records and maps",
+  "statement_changed": false,
+  "old_sha256": "984f1f39ab44b4825826d9b9c03ff0168264dc696f8e38fe80c265eec9d067d9",
+  "new_sha256": "123b05f06fd72dfa5a65d4c32bbf0460d7f2f16ee0ca0ea319d95efe681b8c1f",
+  "end_to_end": false
+}

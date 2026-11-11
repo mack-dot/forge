@@ -1,0 +1,12 @@
+RESIDUAL_ASSUMPTION ALOOKUP fs.infds fd = SOME (ino,ReadMode,off)
+RESIDUAL_ASSUMPTION always (eventually (λll. ∃k. LHD ll = SOME k ∧ k ≠ 0)) fs.numchars
+RESIDUAL_ASSUMPTION ¬LFINITE fs.numchars
+RESIDUAL_ASSUMPTION consistentFS fs
+RESIDUAL_ASSUMPTION ∀fd.
+  MEM fd (MAP FST fs.infds) ⇒
+  fd ≤ fs.maxFD ∧
+  ∃ino off.
+    ALOOKUP fs.infds fd = SOME (ino,off) ∧ MEM ino (MAP FST fs.inode_tbl)
+RESIDUAL_GOAL ∃content quota.
+  ALOOKUP fs.inode_tbl ino = SOME content ∧ LHD fs.numchars = SOME quota
+STDIN_DOMAIN_COMPLETE

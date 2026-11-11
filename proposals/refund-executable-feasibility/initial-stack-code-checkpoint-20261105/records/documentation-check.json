@@ -1,0 +1,21 @@
+{
+  "actual_exit": 0,
+  "check": "Append-only histories, stage, new links and raw-byte copies",
+  "copies": [
+    {
+      "copy": "workspace",
+      "prior_uncertainty_sha256": "dc0531af6d3e06edda888675aaab53fda6ed1323d52a66a663576cfcef8f821c",
+      "prior_uncertainty_bytes": 714643,
+      "prefix_preserved": true,
+      "checked_raw_files": 96
+    },
+    {
+      "copy": "worktree",
+      "prior_uncertainty_sha256": "7528814e543dd35c3bef0c84fa03d7d99fb947c52789d11d07b68f307c4fd4a5",
+      "prior_uncertainty_bytes": 692224,
+      "prefix_preserved": true,
+      "checked_raw_files": 96
+    }
+  ],
+  "end_to_end": false
+}

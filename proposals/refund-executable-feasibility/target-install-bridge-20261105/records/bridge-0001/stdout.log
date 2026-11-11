@@ -1,0 +1,12 @@
+<<HOL message: Created theory "forge_targetInstallBridge">>
+Proof of 
+
+∀k mc ffi ms.
+  (∀j ms' ffi'.
+     j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+     mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+  ∀handler.
+    evaluate (mc with install_interfer := handler) ffi k ms =
+    evaluate mc ffi k ms
+
+failed.

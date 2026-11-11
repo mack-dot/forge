@@ -1,0 +1,9 @@
+{
+  "diagnostic": "status-diagnostic/stdout.log",
+  "actual_exit": 0,
+  "residual": "HD bytes' = 0w",
+  "cause": "The input equality remains an OPTION_CHOICE/OPTION_IGNORE_BIND expression in the assumptions. Ready lookup and length equalities are present.",
+  "change": "Move only the ffi_read equality to the goal and use context-aware simp on the original definitions. No theorem statement changes.",
+  "status_proof_failed_attempts_before_change": 1,
+  "end_to_end": false
+}

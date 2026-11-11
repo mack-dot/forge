@@ -1,0 +1,181 @@
+{
+  "actual_exit": 0,
+  "sources": {
+    "compiler/backend/proofs/backendProofScript.sml": {
+      "sha256": "380ee3fad6c7b316f057510e1505844f23af58c21eb4f27533aa089030b61e89",
+      "bytes": 200563,
+      "git_object_matches": true
+    },
+    "compiler/backend/semantics/targetSemScript.sml": {
+      "sha256": "3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422",
+      "bytes": 23068,
+      "git_object_matches": true
+    },
+    "compiler/backend/arm8/proofs/arm8_configProofScript.sml": {
+      "sha256": "35bde5d213496bcc25cb454f47bfc0949ac42b1e1eb15e32525c2082d7496973",
+      "bytes": 3029,
+      "git_object_matches": true
+    },
+    "compiler/backend/arm8/arm8_configScript.sml": {
+      "sha256": "1337ed30a4cf3661a4b995228164ff920ea872ba903190bc99f66abfbdc5eabc",
+      "bytes": 2225,
+      "git_object_matches": true
+    },
+    "compiler/encoders/arm8/arm8_targetScript.sml": {
+      "sha256": "b6431d3a3f51a3059aa4144d5868a2a64a2c1681106b159c67d726e610bac388",
+      "bytes": 15623,
+      "git_object_matches": true
+    },
+    "compiler/encoders/asm/asmPropsScript.sml": {
+      "sha256": "a12637104eda161e6d6a9c03ca5d1687b3a9a41e7e2daa0b3fffe55ac04527cb",
+      "bytes": 15441,
+      "git_object_matches": true
+    },
+    "semantics/proofs/semanticsPropsScript.sml": {
+      "sha256": "9e7ab53bcdfe36ff161ff7aded9662eba88d6e1df02e282c2ebbdde3742e7ba3",
+      "bytes": 10959,
+      "git_object_matches": true
+    },
+    "basis/basis_ffiScript.sml": {
+      "sha256": "74862cf9782eaca3cf07d4c4e9aa08305947800973fc0e5077cdff9a148948db",
+      "bytes": 47023,
+      "git_object_matches": true
+    },
+    "basis/basis_ffi.c": {
+      "sha256": "e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1",
+      "bytes": 25389,
+      "git_object_matches": true
+    },
+    "basis/CommandLineProofScript.sml": {
+      "sha256": "dc2716086bd982f316caf928fe649e3871e47863c09203544dade7c510591f4d",
+      "bytes": 12541,
+      "git_object_matches": true
+    },
+    "basis/clFFIScript.sml": {
+      "sha256": "fba113362cc8b7d943002433f9e398b94f6e0a0759cc4957e8436c49d9ba1e5c",
+      "bytes": 2876,
+      "git_object_matches": true
+    },
+    "basis/fsFFIPropsScript.sml": {
+      "sha256": "96ad37c7382a8509d049736c9304e576b8be322324a47fabf3c2d6e9955111ce",
+      "bytes": 51871,
+      "git_object_matches": true
+    },
+    "basis/TextIOProofScript.sml": {
+      "sha256": "383fc86c4ebcf198f6ce9bb33b049a7e7b43cd08d2da0574d3b3fdb85cc420b7",
+      "bytes": 320332,
+      "git_object_matches": true
+    }
+  },
+  "inputs": {
+    "capture_readback_sha256": "65d4d7575d530a025aa8cfb2425e4884b9bdca0562a94bf312a6dccb88a49862",
+    "capture_command_sha256": "e5fce53817359c6942330fc978435d738ab580637cbb2d59a09efbb5869cb8b7",
+    "capture_members": {
+      "command.json": "e5fce53817359c6942330fc978435d738ab580637cbb2d59a09efbb5869cb8b7",
+      "commands.lldb": "1b853f8f7863352b307fda25c3b2a3ada0358c8c039258e2d70e31d6eefa92c3",
+      "debugger.log": "15adf96c833e3a4d8a52ca40c8af16e2b3cdbb6e3a1d6025d5dfdf313b9989b3",
+      "heap-header.bin": "affd681c23fbcd238beecd70da53ae207b831b6e14b2e1d30b46450ae3a8c385",
+      "invocation.json": "4517987319499b8c7c129a8340b0b0a82b4d2da40b2d02912a14729f6a517b71",
+      "loaded-bitmaps.bin": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+      "loaded-code.bin": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+      "native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "native.stdout": "629d44e9f09823060942f4b75007dcf87ddce9c505314a4b74f9ac19d9d84cee",
+      "rationale.json": "ffd7f0f297ac4330b90e376239d3fc22c32c0ed117f9fc9eabfe0ba85a0c432f",
+      "readback.json": "65d4d7575d530a025aa8cfb2425e4884b9bdca0562a94bf312a6dccb88a49862",
+      "run.py": "99fad6bb60b5d0978111d4e3dcc87a5e4758f461c022d66fd86e7de8f883eaa2"
+    },
+    "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "code_sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+    "bitmap_sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+    "header_words": [
+      4300406808,
+      4300427056,
+      4300427056,
+      4300373588,
+      4300374016
+    ],
+    "registers": {
+      "x0": 4300243152,
+      "x1": 496542679040,
+      "x2": 496811114496,
+      "x3": 497079549952,
+      "x4": 0,
+      "x5": 0,
+      "x6": 1,
+      "x7": 1,
+      "x8": 4300406800,
+      "x9": 496811114496,
+      "x10": 497079549952,
+      "x11": 4378395136,
+      "x12": 0,
+      "x13": 512,
+      "x14": 4378395072,
+      "x15": 4,
+      "x16": 18446744073709551601,
+      "x17": 8392260976,
+      "x18": 0,
+      "x19": 268435456,
+      "x20": 268435456,
+      "x21": 6166656656,
+      "x22": 6166656832,
+      "x23": 8362662000,
+      "x24": 8362661984,
+      "x25": 6166657016,
+      "x26": 1,
+      "x27": 65535,
+      "x28": 4302323712,
+      "fp": 6166656480,
+      "lr": 4300379596,
+      "sp": 6166656464,
+      "pc": 4300243152,
+      "cpsr": 2147487744
+    },
+    "observed_heap_stack_span": 536870912,
+    "code_buffer_bytes": 428,
+    "data_space_words": 0,
+    "model_required_gpr_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      28,
+      29,
+      30
+    ],
+    "model_fp_reg_count": 0,
+    "arm8_control_registers_unobserved": [
+      "SCTLR_EL1.E0E",
+      "SCTLR_EL1.SA0",
+      "TCR_EL1.TBI0",
+      "TCR_EL1.TBI1"
+    ],
+    "complete_installed_relation": "NOT_ESTABLISHED",
+    "scope": "Readback of recorded observations and scalar arithmetic, not fresh native execution or universal runtime proof."
+  },
+  "protected_files_unchanged": 50,
+  "mission_sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c",
+  "new_native_execution": "NOT RUN",
+  "end_to_end": false
+}

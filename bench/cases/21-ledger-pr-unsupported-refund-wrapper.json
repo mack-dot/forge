@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    if (amount > MAX_MONEY) return { kind: \"Unsupported\" };\n",
+   "op": "edit",
+   "path": "ts/refund.ts",
+   "replace": "",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "unsupported",
+ "expected_exit": null,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-unsupported-refund-wrapper",
+ "kind": "unsupported",
+ "order": 21,
+ "rationale": "Only ts/refund.ts changes: the wire decoder drops its MAX_MONEY bound. The critical refund proof does not cover this file.",
+ "supplied_evidence": null
+}

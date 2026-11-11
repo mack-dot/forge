@@ -1,0 +1,14 @@
+<<HOL message: Created theory "forge_installSpaceBarrier">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_installSpaceBarrier)>>
+Saved theorem _______ "install_outcomes"
+Proof of 
+
+evaluate (Install ptr len cptr dptr dend names,s) = (NONE,t) ∧
+evaluate (suffix,t) = (res,u) ⇒
+u.stack_max = NONE
+
+failed.
+First unsolved sub-goal is
+
+u.stack_max = NONE
+

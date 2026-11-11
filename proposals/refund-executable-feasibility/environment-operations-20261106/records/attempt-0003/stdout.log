@@ -1,0 +1,14 @@
+OP_BEGIN read_original_diagnostic
+READ_BYTES 64
+OP_PASS read_original_diagnostic
+OP_BEGIN allocate_65536_bytes
+ALLOCATED_BYTES 65536
+OP_PASS allocate_65536_bytes
+OP_BEGIN temporary_directory_access_query_only
+ACCESS_QUERY_VAR_TMP_WRITE false
+OP_PASS temporary_directory_access_query_only
+OP_BEGIN polyml_system_true
+SYSTEM_STATUS ?
+SYSTEM_SUCCESS true
+OP_PASS polyml_system_true
+ENVIRONMENT_OPERATIONS_COMPLETE

@@ -1,0 +1,21 @@
+<<HOL message: Created theory "forge_refundSourceBinding">>
+Saved theorem _______ "source_decode"
+Proof of 
+
+∃decrs.
+  source_program =
+  Program
+    [Method «AssessFlat»
+       [(«chargeId»,StrT); («requestId»,StrT); («original»,IntT);
+        («remaining»,IntT); («enabled»,BoolT); («requestOpen»,BoolT);
+        («candidate»,BoolT); («amount»,IntT); («reason»,StrT)] []
+       source_ensures [] decrs
+       [(«authorized»,BoolT); («outputAmount»,IntT); («outputReason»,StrT);
+        («outputCharge»,StrT); («outputRequest»,StrT); («intentCount»,IntT)]
+       [] source_body]
+
+failed.
+First unsolved sub-goal is
+
+F
+

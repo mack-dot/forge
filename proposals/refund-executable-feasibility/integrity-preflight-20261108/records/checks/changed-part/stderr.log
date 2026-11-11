@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/offline_check.py", line 34, in <module>
+    driver.run_integrity(fetch,work)
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/integrity_driver.py", line 97, in run_integrity
+    b=fetch(prefix+part['name'],part['bytes']);file_identity(part['name'],b,part['bytes'],part['sha256'],entries)
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/integrity_driver.py", line 42, in file_identity
+    require(len(data)==size and sha(data)==digest,'size/SHA256 mismatch: '+name)
+  File "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/integrity_driver.py", line 19, in require
+    if not ok:raise ValueError(why)
+ValueError: size/SHA256 mismatch: inputs.part-000

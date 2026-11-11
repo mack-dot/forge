@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundPointerWitness</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundPointerWitness</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../stack-parent/.hol/docs/forge_refundStackInitializationTheory.html">forge_refundStackInitialization</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Definitions</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#refund_fixed_syntax_pointer_witness">refund_fixed_syntax_pointer_witness</a><a href="#refund_initializer_oracle_independence">refund_initializer_oracle_independence</a><a href="#refund_pointer_fixed_point">refund_pointer_fixed_point</a><a href="#refund_witnessed_single_epoch">refund_witnessed_single_epoch</a></div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="refund_fixed_syntax_pointer_witness">
+<div class="thm-name"><code>refund_fixed_syntax_pointer_witness</code></div>
+<pre>⊢ ∀k. ∃rest.
+    evaluate
+      (Call NONE (SOME InitGlobals_location) [0] NONE,
+       make_init arm8_config
+         (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+         (FST
+            (full_make_init (arch_wordsize arm8_config.ISA)
+               arm8_backend_config.stack_conf
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf)
+               (2 *
+                max_heap_limit 64
+                  (ensure_fp_conf_ok arm8_config
+                     (set_oracle arm8_backend_config oracle).data_conf) − 1)
+               (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+               arm8_config.addr_offset
+               (MAP n2w
+                  (FST
+                     (to_stack arm8_config
+                        (set_oracle arm8_backend_config oracle) refund_prog)))
+               (SND
+                  (SND
+                     (to_stack arm8_config
+                        (set_oracle arm8_backend_config oracle) refund_prog)))
+               (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                  (SND
+                     (SND
+                        (to_lab arm8_config
+                           (set_oracle arm8_backend_config oracle)
+                           refund_prog))) (compile arm8_config) cbpos
+                  cbspace
+                  (cake_orac (:64) arm8_config info syn
+                     (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                     (λps. ps.lab_prog))) save_regs data_sp
+               (cake_orac (:64) arm8_config info syn
+                  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                  (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+         (fromAList
+            (SND
+               (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                  refund_prog)))
+         (cake_orac (:64) arm8_config info syn
+            (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+            (λps. ps.word_prog))
+         (word_ptr_eq
+            (ensure_fp_conf_ok arm8_config
+               (set_oracle arm8_backend_config oracle).data_conf)) with
+       &lt;|clock := k;
+         ptr_eq_oracle :=
+           SOME
+             (ptr_eq_fix (λpo. syn)
+                (λsyn.
+                   make_init arm8_config
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 5))
+                     (FST
+                        (full_make_init (arch_wordsize arm8_config.ISA)
+                           arm8_backend_config.stack_conf
+                           (ensure_fp_conf_ok arm8_config
+                              (set_oracle arm8_backend_config oracle).
+                              data_conf)
+                           (2 *
+                            max_heap_limit 64
+                              (ensure_fp_conf_ok arm8_config
+                                 (set_oracle arm8_backend_config oracle).
+                                 data_conf) − 1)
+                           (arm8_config.reg_count −
+                            (LENGTH arm8_config.avoid_regs + 3))
+                           arm8_config.addr_offset
+                           (MAP n2w
+                              (FST
+                                 (to_stack arm8_config
+                                    (set_oracle arm8_backend_config oracle)
+                                    refund_prog)))
+                           (SND
+                              (SND
+                                 (to_stack arm8_config
+                                    (set_oracle arm8_backend_config oracle)
+                                    refund_prog)))
+                           (make_init mc (basis_ffi ext cl fs) tar m dm sdm
+                              ms
+                              (SND
+                                 (SND
+                                    (to_lab arm8_config
+                                       (set_oracle arm8_backend_config
+                                          oracle) refund_prog)))
+                              (compile arm8_config) cbpos cbspace
+                              (cake_orac (:64) arm8_config info syn
+                                 (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                  config_tuple2) (λps. ps.lab_prog)))
+                           save_regs data_sp
+                           (cake_orac (:64) arm8_config info syn
+                              (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                               config_tuple2)
+                              (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+                     (fromAList
+                        (SND
+                           (to_word arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. ps.word_prog))
+                     (word_ptr_eq
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf)) with ffi := basis_ffi ext cl fs)
+                InitGlobals_location); ffi := basis_ffi ext cl fs|&gt;) =
+    (I ## (λt. t with ptr_eq_oracle := SOME rest))
+      (evaluate
+         (Call NONE (SOME InitGlobals_location) [0] NONE,
+          make_init arm8_config
+            (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+            (FST
+               (full_make_init (arch_wordsize arm8_config.ISA)
+                  arm8_backend_config.stack_conf
+                  (ensure_fp_conf_ok arm8_config
+                     (set_oracle arm8_backend_config oracle).data_conf)
+                  (2 *
+                   max_heap_limit 64
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf) −
+                   1)
+                  (arm8_config.reg_count −
+                   (LENGTH arm8_config.avoid_regs + 3))
+                  arm8_config.addr_offset
+                  (MAP n2w
+                     (FST
+                        (to_stack arm8_config
+                           (set_oracle arm8_backend_config oracle)
+                           refund_prog)))
+                  (SND
+                     (SND
+                        (to_stack arm8_config
+                           (set_oracle arm8_backend_config oracle)
+                           refund_prog)))
+                  (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                     (SND
+                        (SND
+                           (to_lab arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog))) (compile arm8_config) cbpos
+                     cbspace
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. ps.lab_prog))) save_regs data_sp
+                  (cake_orac (:64) arm8_config info syn
+                     (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                     (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+            (fromAList
+               (SND
+                  (to_word arm8_config
+                     (set_oracle arm8_backend_config oracle) refund_prog)))
+            (cake_orac (:64) arm8_config info syn
+               (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+               (λps. ps.word_prog))
+            (word_ptr_eq
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf)) with
+          &lt;|clock := k; ffi := basis_ffi ext cl fs|&gt;))
+</pre>
+</div>
+<div class="thm" id="refund_initializer_oracle_independence">
+<div class="thm-name"><code>refund_initializer_oracle_independence</code></div>
+<pre>⊢ make_init arm8_config
+    (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+    (FST
+       (full_make_init (arch_wordsize arm8_config.ISA)
+          (set_oracle arm8_backend_config oracle).stack_conf
+          (ensure_fp_conf_ok arm8_config
+             (set_oracle arm8_backend_config oracle).data_conf)
+          (2 *
+           max_heap_limit (dimindex (:64))
+             (ensure_fp_conf_ok arm8_config
+                (set_oracle arm8_backend_config oracle).data_conf) − 1)
+          (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+          arm8_config.addr_offset
+          (MAP n2w
+             (FST
+                (to_stack arm8_config
+                   (set_oracle arm8_backend_config oracle) refund_prog)))
+          (SND
+             (SND
+                (to_stack arm8_config
+                   (set_oracle arm8_backend_config oracle) refund_prog)))
+          (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+             (SND
+                (SND
+                   (to_lab arm8_config
+                      (set_oracle arm8_backend_config oracle) refund_prog)))
+             (compile arm8_config) cbpos cbspace
+             (cake_orac (:64) arm8_config info syn
+                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                (λps. ps.lab_prog))) save_regs data_sp
+          (cake_orac (:64) arm8_config info syn
+             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+             (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+    (fromAList
+       (SND
+          (to_word arm8_config (set_oracle arm8_backend_config oracle)
+             refund_prog)))
+    (cake_orac (:64) arm8_config info syn
+       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog))
+    (word_ptr_eq
+       (ensure_fp_conf_ok arm8_config
+          (set_oracle arm8_backend_config oracle).data_conf)) with
+  ffi := basis_ffi ext cl fs =
+  make_init arm8_config
+    (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+    (FST
+       (full_make_init (arch_wordsize arm8_config.ISA)
+          (set_oracle arm8_backend_config oracle).stack_conf
+          (ensure_fp_conf_ok arm8_config
+             (set_oracle arm8_backend_config oracle).data_conf)
+          (2 *
+           max_heap_limit (dimindex (:64))
+             (ensure_fp_conf_ok arm8_config
+                (set_oracle arm8_backend_config oracle).data_conf) − 1)
+          (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+          arm8_config.addr_offset
+          (MAP n2w
+             (FST
+                (to_stack arm8_config
+                   (set_oracle arm8_backend_config oracle) refund_prog)))
+          (SND
+             (SND
+                (to_stack arm8_config
+                   (set_oracle arm8_backend_config oracle) refund_prog)))
+          (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+             (SND
+                (SND
+                   (to_lab arm8_config
+                      (set_oracle arm8_backend_config oracle) refund_prog)))
+             (compile arm8_config) cbpos cbspace
+             (cake_orac (:64) arm8_config info syn'
+                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                (λps. ps.lab_prog))) save_regs data_sp
+          (cake_orac (:64) arm8_config info syn'
+             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+             (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+    (fromAList
+       (SND
+          (to_word arm8_config (set_oracle arm8_backend_config oracle)
+             refund_prog)))
+    (cake_orac (:64) arm8_config info syn'
+       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog))
+    (word_ptr_eq
+       (ensure_fp_conf_ok arm8_config
+          (set_oracle arm8_backend_config oracle).data_conf)) with
+  &lt;|compile_oracle :=
+      cake_orac (:64) arm8_config info syn
+        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog);
+    ffi := basis_ffi ext cl fs|&gt;
+</pre>
+</div>
+<div class="thm" id="refund_pointer_fixed_point">
+<div class="thm-name"><code>refund_pointer_fixed_point</code></div>
+<pre>⊢ (∀po po' i. (∀j. j ≤ i ⇒ po j = po' j) ⇒ Syn po i = Syn po' i) ⇒
+  ∀k. ∃rest.
+    evaluate
+      (Call NONE (SOME InitGlobals_location) [0] NONE,
+       (λsyn.
+          make_init arm8_config
+            (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+            (FST
+               (full_make_init (arch_wordsize arm8_config.ISA)
+                  (set_oracle arm8_backend_config oracle).stack_conf
+                  (ensure_fp_conf_ok arm8_config
+                     (set_oracle arm8_backend_config oracle).data_conf)
+                  (2 *
+                   max_heap_limit (dimindex (:64))
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf) −
+                   1)
+                  (arm8_config.reg_count −
+                   (LENGTH arm8_config.avoid_regs + 3))
+                  arm8_config.addr_offset
+                  (MAP n2w
+                     (FST
+                        (to_stack arm8_config
+                           (set_oracle arm8_backend_config oracle)
+                           refund_prog)))
+                  (SND
+                     (SND
+                        (to_stack arm8_config
+                           (set_oracle arm8_backend_config oracle)
+                           refund_prog)))
+                  (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                     (SND
+                        (SND
+                           (to_lab arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog))) (compile arm8_config) cbpos
+                     cbspace
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. ps.lab_prog))) save_regs data_sp
+                  (cake_orac (:64) arm8_config info syn
+                     (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                     (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+            (fromAList
+               (SND
+                  (to_word arm8_config
+                     (set_oracle arm8_backend_config oracle) refund_prog)))
+            (cake_orac (:64) arm8_config info syn
+               (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+               (λps. ps.word_prog))
+            (word_ptr_eq
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf)) with
+          ffi := basis_ffi ext cl fs)
+         (Syn
+            (ptr_eq_fix Syn
+               (λsyn.
+                  make_init arm8_config
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 5))
+                    (FST
+                       (full_make_init (arch_wordsize arm8_config.ISA)
+                          (set_oracle arm8_backend_config oracle).
+                          stack_conf
+                          (ensure_fp_conf_ok arm8_config
+                             (set_oracle arm8_backend_config oracle).
+                             data_conf)
+                          (2 *
+                           max_heap_limit (dimindex (:64))
+                             (ensure_fp_conf_ok arm8_config
+                                (set_oracle arm8_backend_config oracle).
+                                data_conf) − 1)
+                          (arm8_config.reg_count −
+                           (LENGTH arm8_config.avoid_regs + 3))
+                          arm8_config.addr_offset
+                          (MAP n2w
+                             (FST
+                                (to_stack arm8_config
+                                   (set_oracle arm8_backend_config oracle)
+                                   refund_prog)))
+                          (SND
+                             (SND
+                                (to_stack arm8_config
+                                   (set_oracle arm8_backend_config oracle)
+                                   refund_prog)))
+                          (make_init mc (basis_ffi ext cl fs) tar m dm sdm
+                             ms
+                             (SND
+                                (SND
+                                   (to_lab arm8_config
+                                      (set_oracle arm8_backend_config
+                                         oracle) refund_prog)))
+                             (compile arm8_config) cbpos cbspace
+                             (cake_orac (:64) arm8_config info syn
+                                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                 config_tuple2) (λps. ps.lab_prog)))
+                          save_regs data_sp
+                          (cake_orac (:64) arm8_config info syn
+                             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                              config_tuple2)
+                             (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+                    (fromAList
+                       (SND
+                          (to_word arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.word_prog))
+                    (word_ptr_eq
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf)) with
+                  ffi := basis_ffi ext cl fs) InitGlobals_location)) with
+       &lt;|clock := k;
+         ptr_eq_oracle :=
+           SOME
+             (ptr_eq_fix Syn
+                (λsyn.
+                   make_init arm8_config
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 5))
+                     (FST
+                        (full_make_init (arch_wordsize arm8_config.ISA)
+                           (set_oracle arm8_backend_config oracle).
+                           stack_conf
+                           (ensure_fp_conf_ok arm8_config
+                              (set_oracle arm8_backend_config oracle).
+                              data_conf)
+                           (2 *
+                            max_heap_limit (dimindex (:64))
+                              (ensure_fp_conf_ok arm8_config
+                                 (set_oracle arm8_backend_config oracle).
+                                 data_conf) − 1)
+                           (arm8_config.reg_count −
+                            (LENGTH arm8_config.avoid_regs + 3))
+                           arm8_config.addr_offset
+                           (MAP n2w
+                              (FST
+                                 (to_stack arm8_config
+                                    (set_oracle arm8_backend_config oracle)
+                                    refund_prog)))
+                           (SND
+                              (SND
+                                 (to_stack arm8_config
+                                    (set_oracle arm8_backend_config oracle)
+                                    refund_prog)))
+                           (make_init mc (basis_ffi ext cl fs) tar m dm sdm
+                              ms
+                              (SND
+                                 (SND
+                                    (to_lab arm8_config
+                                       (set_oracle arm8_backend_config
+                                          oracle) refund_prog)))
+                              (compile arm8_config) cbpos cbspace
+                              (cake_orac (:64) arm8_config info syn
+                                 (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                  config_tuple2) (λps. ps.lab_prog)))
+                           save_regs data_sp
+                           (cake_orac (:64) arm8_config info syn
+                              (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                               config_tuple2)
+                              (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+                     (fromAList
+                        (SND
+                           (to_word arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. ps.word_prog))
+                     (word_ptr_eq
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf)) with ffi := basis_ffi ext cl fs)
+                InitGlobals_location)|&gt;) =
+    (I ## (λt. t with ptr_eq_oracle := SOME rest))
+      (evaluate
+         (Call NONE (SOME InitGlobals_location) [0] NONE,
+          (λsyn.
+             make_init arm8_config
+               (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     (set_oracle arm8_backend_config oracle).stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit (dimindex (:64))
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+               (fromAList
+                  (SND
+                     (to_word arm8_config
+                        (set_oracle arm8_backend_config oracle) refund_prog)))
+               (cake_orac (:64) arm8_config info syn
+                  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                  (λps. ps.word_prog))
+               (word_ptr_eq
+                  (ensure_fp_conf_ok arm8_config
+                     (set_oracle arm8_backend_config oracle).data_conf)) with
+             ffi := basis_ffi ext cl fs)
+            (Syn
+               (ptr_eq_fix Syn
+                  (λsyn.
+                     make_init arm8_config
+                       (arm8_config.reg_count −
+                        (LENGTH arm8_config.avoid_regs + 5))
+                       (FST
+                          (full_make_init (arch_wordsize arm8_config.ISA)
+                             (set_oracle arm8_backend_config oracle).
+                             stack_conf
+                             (ensure_fp_conf_ok arm8_config
+                                (set_oracle arm8_backend_config oracle).
+                                data_conf)
+                             (2 *
+                              max_heap_limit (dimindex (:64))
+                                (ensure_fp_conf_ok arm8_config
+                                   (set_oracle arm8_backend_config oracle).
+                                   data_conf) − 1)
+                             (arm8_config.reg_count −
+                              (LENGTH arm8_config.avoid_regs + 3))
+                             arm8_config.addr_offset
+                             (MAP n2w
+                                (FST
+                                   (to_stack arm8_config
+                                      (set_oracle arm8_backend_config
+                                         oracle) refund_prog)))
+                             (SND
+                                (SND
+                                   (to_stack arm8_config
+                                      (set_oracle arm8_backend_config
+                                         oracle) refund_prog)))
+                             (make_init mc (basis_ffi ext cl fs) tar m dm
+                                sdm ms
+                                (SND
+                                   (SND
+                                      (to_lab arm8_config
+                                         (set_oracle arm8_backend_config
+                                            oracle) refund_prog)))
+                                (compile arm8_config) cbpos cbspace
+                                (cake_orac (:64) arm8_config info syn
+                                   (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                    config_tuple2) (λps. ps.lab_prog)))
+                             save_regs data_sp
+                             (cake_orac (:64) arm8_config info syn
+                                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                 config_tuple2)
+                                (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+                       (fromAList
+                          (SND
+                             (to_word arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog)))
+                       (cake_orac (:64) arm8_config info syn
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                          (λps. ps.word_prog))
+                       (word_ptr_eq
+                          (ensure_fp_conf_ok arm8_config
+                             (set_oracle arm8_backend_config oracle).
+                             data_conf)) with ffi := basis_ffi ext cl fs)
+                  InitGlobals_location)) with clock := k))
+</pre>
+</div>
+<div class="thm" id="refund_witnessed_single_epoch">
+<div class="thm-name"><code>refund_witnessed_single_epoch</code></div>
+<pre>⊢ data_lang_safe_for_space (basis_ffi ext cl fs)
+    (ptr_eq_fix (λpo. syn)
+       (λsyn'.
+          &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+            fp_regs :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).fp_regs;
+            store :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).store \\
+              Handler; stack := [];
+            stack_limit :=
+              LENGTH
+                (FST
+                   (full_make_init (arch_wordsize arm8_config.ISA)
+                      arm8_backend_config.stack_conf
+                      (ensure_fp_conf_ok arm8_config
+                         (set_oracle arm8_backend_config oracle).data_conf)
+                      (2 *
+                       max_heap_limit 64
+                         (ensure_fp_conf_ok arm8_config
+                            (set_oracle arm8_backend_config oracle).
+                            data_conf) − 1)
+                      (arm8_config.reg_count −
+                       (LENGTH arm8_config.avoid_regs + 3))
+                      arm8_config.addr_offset
+                      (MAP n2w
+                         (FST
+                            (to_stack arm8_config
+                               (set_oracle arm8_backend_config oracle)
+                               refund_prog)))
+                      (SND
+                         (SND
+                            (to_stack arm8_config
+                               (set_oracle arm8_backend_config oracle)
+                               refund_prog)))
+                      (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                         (SND
+                            (SND
+                               (to_lab arm8_config
+                                  (set_oracle arm8_backend_config oracle)
+                                  refund_prog))) (compile arm8_config)
+                         cbpos cbspace
+                         (cake_orac (:64) arm8_config info syn'
+                            (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                             config_tuple2) (λps. ps.lab_prog))) save_regs
+                      data_sp
+                      (cake_orac (:64) arm8_config info syn'
+                         (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                         (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).stack;
+            stack_max := SOME 1;
+            stack_size :=
+              mapi
+                (λn (arg_count,prog,md).
+                   FST
+                     (SND
+                        (compile_prog arm8_config F prog arg_count
+                           (arm8_config.reg_count −
+                            (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+                (fromAList
+                   (SND
+                      (to_word arm8_config
+                         (set_oracle arm8_backend_config oracle)
+                         refund_prog)));
+            memory :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).memory;
+            mdomain :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).mdomain;
+            sh_mdomain :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+              sh_mdomain; permute := K I;
+            compile :=
+              (λ(bm0,cfg) progs.
+                 (let
+                    (progs,fs',p1,p2) =
+                      compile_word_to_stack arm8_config F
+                        (arm8_config.reg_count −
+                         (LENGTH arm8_config.avoid_regs + 5)) progs
+                        (Nil,bm0)
+                  in
+                    OPTION_MAP
+                      (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2,cfg))
+                      ((FST
+                          (full_make_init (arch_wordsize arm8_config.ISA)
+                             arm8_backend_config.stack_conf
+                             (ensure_fp_conf_ok arm8_config
+                                (set_oracle arm8_backend_config oracle).
+                                data_conf)
+                             (2 *
+                              max_heap_limit 64
+                                (ensure_fp_conf_ok arm8_config
+                                   (set_oracle arm8_backend_config oracle).
+                                   data_conf) − 1)
+                             (arm8_config.reg_count −
+                              (LENGTH arm8_config.avoid_regs + 3))
+                             arm8_config.addr_offset
+                             (MAP n2w
+                                (FST
+                                   (to_stack arm8_config
+                                      (set_oracle arm8_backend_config
+                                         oracle) refund_prog)))
+                             (SND
+                                (SND
+                                   (to_stack arm8_config
+                                      (set_oracle arm8_backend_config
+                                         oracle) refund_prog)))
+                             (make_init mc (basis_ffi ext cl fs) tar m dm
+                                sdm ms
+                                (SND
+                                   (SND
+                                      (to_lab arm8_config
+                                         (set_oracle arm8_backend_config
+                                            oracle) refund_prog)))
+                                (compile arm8_config) cbpos cbspace
+                                (cake_orac (:64) arm8_config info syn'
+                                   (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                    config_tuple2) (λps. ps.lab_prog)))
+                             save_regs data_sp
+                             (cake_orac (:64) arm8_config info syn'
+                                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                 config_tuple2)
+                                (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+                       compile cfg progs)));
+            compile_oracle :=
+              (I ##
+               MAP
+                 (λ(p1,p1',p1'',p2).
+                    full_compile_single 64 arm8_config.two_reg_arith
+                      (arm8_config.reg_count −
+                       (LENGTH arm8_config.avoid_regs + 5))
+                      (set_oracle arm8_backend_config oracle).
+                      word_to_word_conf.reg_alg arm8_config
+                      ((p1,p1',p1'',p2),NONE))) ∘
+              (I ##
+               MAP
+                 (compile_part
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf))) ∘
+              cake_orac (:64) arm8_config info syn'
+                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                (λps. ps.data_prog);
+            code_buffer :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+              code_buffer;
+            data_buffer :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+              data_buffer;
+            gc_fun :=
+              word_gc_fun
+                (ensure_fp_conf_ok arm8_config
+                   (set_oracle arm8_backend_config oracle).data_conf);
+            handler := 0;
+            clock :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).clock;
+            termdep := 0;
+            code :=
+              fromAList
+                (SND
+                   (to_word arm8_config
+                      (set_oracle arm8_backend_config oracle) refund_prog));
+            be :=
+              (FST
+                 (full_make_init (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf)
+                    (2 *
+                     max_heap_limit 64
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf) −
+                     1)
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3))
+                    arm8_config.addr_offset
+                    (MAP n2w
+                       (FST
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (SND
+                       (SND
+                          (to_stack arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog)))
+                    (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                       (SND
+                          (SND
+                             (to_lab arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog))) (compile arm8_config) cbpos
+                       cbspace
+                       (cake_orac (:64) arm8_config info syn'
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2) (λps. ps.lab_prog))) save_regs
+                    data_sp
+                    (cake_orac (:64) arm8_config info syn'
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).be;
+            ptr_eq_oracle := NONE;
+            ptr_eq_rel :=
+              word_ptr_eq
+                (ensure_fp_conf_ok arm8_config
+                   (set_oracle arm8_backend_config oracle).data_conf);
+            ffi := basis_ffi ext cl fs|&gt;) InitGlobals_location)
+    (fromAList
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+    (get_limits
+       (ensure_fp_conf_ok arm8_config
+          (set_oracle arm8_backend_config oracle).data_conf)
+       &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+         fp_regs :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).fp_regs;
+         store :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).store \\
+           Handler; stack := [];
+         stack_limit :=
+           LENGTH
+             (FST
+                (full_make_init (arch_wordsize arm8_config.ISA)
+                   arm8_backend_config.stack_conf
+                   (ensure_fp_conf_ok arm8_config
+                      (set_oracle arm8_backend_config oracle).data_conf)
+                   (2 *
+                    max_heap_limit 64
+                      (ensure_fp_conf_ok arm8_config
+                         (set_oracle arm8_backend_config oracle).data_conf) −
+                    1)
+                   (arm8_config.reg_count −
+                    (LENGTH arm8_config.avoid_regs + 3))
+                   arm8_config.addr_offset
+                   (MAP n2w
+                      (FST
+                         (to_stack arm8_config
+                            (set_oracle arm8_backend_config oracle)
+                            refund_prog)))
+                   (SND
+                      (SND
+                         (to_stack arm8_config
+                            (set_oracle arm8_backend_config oracle)
+                            refund_prog)))
+                   (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                      (SND
+                         (SND
+                            (to_lab arm8_config
+                               (set_oracle arm8_backend_config oracle)
+                               refund_prog))) (compile arm8_config) cbpos
+                      cbspace
+                      (cake_orac (:64) arm8_config info syn
+                         (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                         (λps. ps.lab_prog))) save_regs data_sp
+                   (cake_orac (:64) arm8_config info syn
+                      (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                      (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).stack;
+         stack_max := SOME 1;
+         stack_size :=
+           mapi
+             (λn (arg_count,prog,md).
+                FST
+                  (SND
+                     (compile_prog arm8_config F prog arg_count
+                        (arm8_config.reg_count −
+                         (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+             (fromAList
+                (SND
+                   (to_word arm8_config
+                      (set_oracle arm8_backend_config oracle) refund_prog)));
+         memory :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).memory;
+         mdomain :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).mdomain;
+         sh_mdomain :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).sh_mdomain;
+         permute := K I;
+         compile :=
+           (λ(bm0,cfg) progs.
+              (let
+                 (progs,fs',p1,p2) =
+                   compile_word_to_stack arm8_config F
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+               in
+                 OPTION_MAP
+                   (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2,cfg))
+                   ((FST
+                       (full_make_init (arch_wordsize arm8_config.ISA)
+                          arm8_backend_config.stack_conf
+                          (ensure_fp_conf_ok arm8_config
+                             (set_oracle arm8_backend_config oracle).
+                             data_conf)
+                          (2 *
+                           max_heap_limit 64
+                             (ensure_fp_conf_ok arm8_config
+                                (set_oracle arm8_backend_config oracle).
+                                data_conf) − 1)
+                          (arm8_config.reg_count −
+                           (LENGTH arm8_config.avoid_regs + 3))
+                          arm8_config.addr_offset
+                          (MAP n2w
+                             (FST
+                                (to_stack arm8_config
+                                   (set_oracle arm8_backend_config oracle)
+                                   refund_prog)))
+                          (SND
+                             (SND
+                                (to_stack arm8_config
+                                   (set_oracle arm8_backend_config oracle)
+                                   refund_prog)))
+                          (make_init mc (basis_ffi ext cl fs) tar m dm sdm
+                             ms
+                             (SND
+                                (SND
+                                   (to_lab arm8_config
+                                      (set_oracle arm8_backend_config
+                                         oracle) refund_prog)))
+                             (compile arm8_config) cbpos cbspace
+                             (cake_orac (:64) arm8_config info syn
+                                (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                 config_tuple2) (λps. ps.lab_prog)))
+                          save_regs data_sp
+                          (cake_orac (:64) arm8_config info syn
+                             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                              config_tuple2)
+                             (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+                    compile cfg progs)));
+         compile_oracle :=
+           (I ##
+            MAP
+              (λ(p1,p1',p1'',p2).
+                 full_compile_single 64 arm8_config.two_reg_arith
+                   (arm8_config.reg_count −
+                    (LENGTH arm8_config.avoid_regs + 5))
+                   (set_oracle arm8_backend_config oracle).
+                   word_to_word_conf.reg_alg arm8_config
+                   ((p1,p1',p1'',p2),NONE))) ∘
+           (I ##
+            MAP
+              (compile_part
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf))) ∘
+           cake_orac (:64) arm8_config info syn
+             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+             (λps. ps.data_prog);
+         code_buffer :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).code_buffer;
+         data_buffer :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).data_buffer;
+         gc_fun :=
+           word_gc_fun
+             (ensure_fp_conf_ok arm8_config
+                (set_oracle arm8_backend_config oracle).data_conf);
+         handler := 0;
+         clock :=
+           (FST
+              (full_make_init (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf)
+                 (2 *
+                  max_heap_limit 64
+                    (ensure_fp_conf_ok arm8_config
+                       (set_oracle arm8_backend_config oracle).data_conf) −
+                  1)
+                 (arm8_config.reg_count −
+                  (LENGTH arm8_config.avoid_regs + 3))
+                 arm8_config.addr_offset
+                 (MAP n2w
+                    (FST
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (SND
+                    (SND
+                       (to_stack arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)))
+                 (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                    (SND
+                       (SND
+                          (to_lab arm8_config
+                             (set_oracle arm8_backend_config oracle)
+                             refund_prog))) (compile arm8_config) cbpos
+                    cbspace
+                    (cake_orac (:64) arm8_config info syn
+                       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                       (λps. ps.lab_prog))) save_regs data_sp
+                 (cake_orac (:64) arm8_config info syn
+                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                    (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).clock;
+         termdep := 0;
+         code :=
+           fromAList
+             (SND
+                (to_word arm8_config
+                   (set_oracle arm8_backend_config oracle) refund_prog));
+         be :=
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf).be;
+         ptr_eq_oracle := NONE;
+         ptr_eq_rel :=
+           word_ptr_eq
+             (ensure_fp_conf_ok arm8_config
+                (set_oracle arm8_backend_config oracle).data_conf);
+         ffi := basis_ffi ext cl fs|&gt;)
+    (mapi
+       (λn (arg_count,prog,md).
+          FST
+            (SND
+               (compile_prog arm8_config F prog arg_count
+                  (arm8_config.reg_count −
+                   (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+       (fromAList
+          (SND
+             (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                refund_prog)))) InitGlobals_location ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧
+  ((FST
+      (full_make_init (arch_wordsize arm8_config.ISA)
+         arm8_backend_config.stack_conf
+         (ensure_fp_conf_ok arm8_config
+            (set_oracle arm8_backend_config oracle).data_conf)
+         (2 *
+          max_heap_limit 64
+            (ensure_fp_conf_ok arm8_config
+               (set_oracle arm8_backend_config oracle).data_conf) − 1)
+         (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+         arm8_config.addr_offset
+         (MAP n2w
+            (FST
+               (to_stack arm8_config
+                  (set_oracle arm8_backend_config oracle) refund_prog)))
+         (SND
+            (SND
+               (to_stack arm8_config
+                  (set_oracle arm8_backend_config oracle) refund_prog)))
+         (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+            (SND
+               (SND
+                  (to_lab arm8_config
+                     (set_oracle arm8_backend_config oracle) refund_prog)))
+            (compile arm8_config) cbpos cbspace
+            (cake_orac (:64) arm8_config info syn
+               (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+               (λps. ps.lab_prog))) save_regs data_sp
+         (cake_orac (:64) arm8_config info syn
+            (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+            (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).be ⇔
+   (ensure_fp_conf_ok arm8_config
+      (set_oracle arm8_backend_config oracle).data_conf).be) ∧
+  (FST
+     (full_make_init (arch_wordsize arm8_config.ISA)
+        arm8_backend_config.stack_conf
+        (ensure_fp_conf_ok arm8_config
+           (set_oracle arm8_backend_config oracle).data_conf)
+        (2 *
+         max_heap_limit 64
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf) − 1)
+        (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+        arm8_config.addr_offset
+        (MAP n2w
+           (FST
+              (to_stack arm8_config (set_oracle arm8_backend_config oracle)
+                 refund_prog)))
+        (SND
+           (SND
+              (to_stack arm8_config (set_oracle arm8_backend_config oracle)
+                 refund_prog)))
+        (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+           (SND
+              (SND
+                 (to_lab arm8_config
+                    (set_oracle arm8_backend_config oracle) refund_prog)))
+           (compile arm8_config) cbpos cbspace
+           (cake_orac (:64) arm8_config info syn
+              (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+              (λps. ps.lab_prog))) save_regs data_sp
+        (cake_orac (:64) arm8_config info syn
+           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+           (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).stack ≠ [] ∧
+  wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀k. LENGTH
+        (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+           &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+             fp_regs :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).fp_regs;
+             store :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).store \\
+               Handler; stack := [];
+             stack_limit :=
+               LENGTH
+                 (FST
+                    (full_make_init (arch_wordsize arm8_config.ISA)
+                       arm8_backend_config.stack_conf
+                       (ensure_fp_conf_ok arm8_config
+                          (set_oracle arm8_backend_config oracle).data_conf)
+                       (2 *
+                        max_heap_limit 64
+                          (ensure_fp_conf_ok arm8_config
+                             (set_oracle arm8_backend_config oracle).
+                             data_conf) − 1)
+                       (arm8_config.reg_count −
+                        (LENGTH arm8_config.avoid_regs + 3))
+                       arm8_config.addr_offset
+                       (MAP n2w
+                          (FST
+                             (to_stack arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog)))
+                       (SND
+                          (SND
+                             (to_stack arm8_config
+                                (set_oracle arm8_backend_config oracle)
+                                refund_prog)))
+                       (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                          (SND
+                             (SND
+                                (to_lab arm8_config
+                                   (set_oracle arm8_backend_config oracle)
+                                   refund_prog))) (compile arm8_config)
+                          cbpos cbspace
+                          (cake_orac (:64) arm8_config info syn
+                             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                              config_tuple2) (λps. ps.lab_prog))) save_regs
+                       data_sp
+                       (cake_orac (:64) arm8_config info syn
+                          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                           config_tuple2)
+                          (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).stack;
+             stack_max := SOME 1;
+             stack_size :=
+               mapi
+                 (λn (arg_count,prog,md).
+                    FST
+                      (SND
+                         (compile_prog arm8_config F prog arg_count
+                            (arm8_config.reg_count −
+                             (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+                 (fromAList
+                    (SND
+                       (to_word arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog)));
+             memory :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).memory;
+             mdomain :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).mdomain;
+             sh_mdomain :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+               sh_mdomain; permute := K I;
+             compile :=
+               (λ(bm0,cfg) progs.
+                  (let
+                     (progs,fs',p1,p2) =
+                       compile_word_to_stack arm8_config F
+                         (arm8_config.reg_count −
+                          (LENGTH arm8_config.avoid_regs + 5)) progs
+                         (Nil,bm0)
+                   in
+                     OPTION_MAP
+                       (λ(bytes,cfg). (bytes,MAP n2w (append p1),p2,cfg))
+                       ((FST
+                           (full_make_init (arch_wordsize arm8_config.ISA)
+                              arm8_backend_config.stack_conf
+                              (ensure_fp_conf_ok arm8_config
+                                 (set_oracle arm8_backend_config oracle).
+                                 data_conf)
+                              (2 *
+                               max_heap_limit 64
+                                 (ensure_fp_conf_ok arm8_config
+                                    (set_oracle arm8_backend_config oracle).
+                                    data_conf) − 1)
+                              (arm8_config.reg_count −
+                               (LENGTH arm8_config.avoid_regs + 3))
+                              arm8_config.addr_offset
+                              (MAP n2w
+                                 (FST
+                                    (to_stack arm8_config
+                                       (set_oracle arm8_backend_config
+                                          oracle) refund_prog)))
+                              (SND
+                                 (SND
+                                    (to_stack arm8_config
+                                       (set_oracle arm8_backend_config
+                                          oracle) refund_prog)))
+                              (make_init mc (basis_ffi ext cl fs) tar m dm
+                                 sdm ms
+                                 (SND
+                                    (SND
+                                       (to_lab arm8_config
+                                          (set_oracle arm8_backend_config
+                                             oracle) refund_prog)))
+                                 (compile arm8_config) cbpos cbspace
+                                 (cake_orac (:64) arm8_config info syn
+                                    (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                     config_tuple2) (λps. ps.lab_prog)))
+                              save_regs data_sp
+                              (cake_orac (:64) arm8_config info syn
+                                 (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                                  config_tuple2)
+                                 (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+                        compile cfg progs)));
+             compile_oracle :=
+               (I ##
+                MAP
+                  (λ(p1,p1',p1'',p2).
+                     full_compile_single 64 arm8_config.two_reg_arith
+                       (arm8_config.reg_count −
+                        (LENGTH arm8_config.avoid_regs + 5))
+                       (set_oracle arm8_backend_config oracle).
+                       word_to_word_conf.reg_alg arm8_config
+                       ((p1,p1',p1'',p2),NONE))) ∘
+               (I ##
+                MAP
+                  (compile_part
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf))) ∘
+               cake_orac (:64) arm8_config info syn
+                 (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                 (λps. ps.data_prog);
+             code_buffer :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+               code_buffer;
+             data_buffer :=
+               (FST
+                  (full_make_init (arch_wordsize arm8_config.ISA)
+                     arm8_backend_config.stack_conf
+                     (ensure_fp_conf_ok arm8_config
+                        (set_oracle arm8_backend_config oracle).data_conf)
+                     (2 *
+                      max_heap_limit 64
+                        (ensure_fp_conf_ok arm8_config
+                           (set_oracle arm8_backend_config oracle).
+                           data_conf) − 1)
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 3))
+                     arm8_config.addr_offset
+                     (MAP n2w
+                        (FST
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (SND
+                        (SND
+                           (to_stack arm8_config
+                              (set_oracle arm8_backend_config oracle)
+                              refund_prog)))
+                     (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                        (SND
+                           (SND
+                              (to_lab arm8_config
+                                 (set_oracle arm8_backend_config oracle)
+                                 refund_prog))) (compile arm8_config) cbpos
+                        cbspace
+                        (cake_orac (:64) arm8_config info syn
+                           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘
+                            config_tuple2) (λps. ps.lab_prog))) save_regs
+                     data_sp
+                     (cake_orac (:64) arm8_config info syn
+                        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                        (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))).
+               data_buffer;
+             gc_fun :=
+               word_gc_fun
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf);
+             handler := 0; clock := k; termdep := 0;
+             code :=
+               fromAList
+                 (SND
+                    (to_word arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog));
+             be :=
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf).be;
+             ptr_eq_oracle := NONE;
+             ptr_eq_rel :=
+               word_ptr_eq
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf);
+             ffi := basis_ffi ext cl fs|&gt;) = 1
+</pre>
+</div>
+</section>
+</body>
+</html>

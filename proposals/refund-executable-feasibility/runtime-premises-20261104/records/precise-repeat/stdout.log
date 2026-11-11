@@ -1,0 +1,45 @@
+<<HOL message: Created theory "forge_refundPreciseBehavior">>
+Saved theorem _______ "precise_sem_satisfies_IMP_Terminate"
+SOURCE_NONFAILURE_READY
+PRECISE_SUBSET_READY
+SOURCE_PRECISE_READY
+Saved theorem _______ "refund_compiled_precise"
+Saved theorem _______ "empty_resource_prefix_allowed"
+CHECKED precise_sem_satisfies_IMP_Terminate
+⊢ sem_satisfies (semantics_dec_list s init_env prog)
+    (λb. ∃io. b = Terminate outcome io ∧ p io) ⇒
+  prog_syntax_ok prog ⇒
+  candidate_behaviours ⊆ semantics_prog s init_env prog ⇒
+  (∃b. candidate_behaviours = {b}) ⇒
+  ∃io. candidate_behaviours = {Terminate outcome io} ∧ p io
+CHECKED refund_compiled_precise
+⊢ installed code cbspace data data_sp info.lab_conf.ffi_names
+    (heap_regs arm8_backend_config.stack_conf.reg_names) mc
+    info.lab_conf.shmem_extra ms ∧
+  read_limits arm8_config (set_oracle arm8_backend_config oracle) mc ms =
+  (stack_limit,heap_limit) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+  STD_streams fs ∧ is_arm8_machine_config mc ∧
+  (∀po.
+     is_safe_for_space (:64) (basis_ffi ext cl fs) po arm8_config
+       (set_oracle arm8_backend_config oracle) refund_prog
+       (stack_limit,heap_limit)) ⇒
+  ∃io_events.
+    machine_sem mc (basis_ffi ext cl fs) ms = {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+CHECKED empty_resource_prefix_allowed
+⊢ Terminate Resource_limit_hit [] ∈
+  extend_with_resource_limit {Terminate Success io}
+Exporting theory "forge_refundPreciseBehavior" ... done.
+Theory "forge_refundPreciseBehavior" took 3.8s to build
+RUNTIME_PROOF_COMPLETE

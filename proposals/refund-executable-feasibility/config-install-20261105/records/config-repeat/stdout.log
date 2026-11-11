@@ -1,0 +1,13 @@
+<<HOL message: Created theory "forge_refundConfigInstall">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundConfigInstall)>>
+Saved theorem _______ "to_clos_set_oracle"
+Saved theorem _______ "refund_config_no_install"
+CHECKED to_clos_set_oracle
+⊢ ∀c p oracle. SND (to_clos (set_oracle c oracle) p) = SND (to_clos c p)
+CHECKED refund_config_no_install
+⊢ ∀oracle.
+    ¬has_install_list
+      (SND (to_clos (set_oracle arm8_backend_config oracle) refund_prog))
+Exporting theory "forge_refundConfigInstall" ... done.
+Theory "forge_refundConfigInstall" took 3.3s to build
+RUNTIME_PROOF_COMPLETE

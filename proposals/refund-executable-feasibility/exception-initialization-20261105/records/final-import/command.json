@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+    "run",
+    "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0008/final-import/preload.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0006/export-0002/forge_refundRejectDirectTheory.sig",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0006/export-0002/forge_refundRejectDirectTheory.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/stdio-0003/forge_refundRejectSemanticsTheory.sig",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0007/stdio-0003/forge_refundRejectSemanticsTheory.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0008/concrete-0001/forge_refundRejectBasisTheory.sig",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0008/concrete-0001/forge_refundRejectBasisTheory.sml",
+    "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0008/final-import/audit.sml"
+  ],
+  "cwd": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0008/final-import",
+  "expected_source_sha256": "7d37a8522efa79951d71b6ec5fb2491487adbfd4f8d00e5af8a341df0ba78de8",
+  "audit_source_sha256": "e3842469cc73e5061066cdab17df516d7f18f211dfc38eea89120a6105167dd8",
+  "expected_theorems": [
+    "refund_stdio_extract_fs",
+    "refund_sem_satisfies_imp",
+    "refund_error_basis_semantics",
+    "refund_basis_parts_ok",
+    "refund_basis_fs_projection",
+    "refund_split_from_subset",
+    "refund_initial_stdio",
+    "refund_error_program_identity",
+    "refund_error_initialized_semantics"
+  ],
+  "scope": "Fresh standard-heap import of concrete initialized exception statement and exact program identity",
+  "end_to_end": false,
+  "actual_exit": 0,
+  "completion_marker": true
+}

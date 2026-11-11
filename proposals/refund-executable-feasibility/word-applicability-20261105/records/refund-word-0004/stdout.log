@@ -1,0 +1,9 @@
+<<HOL message: Created theory "forge_refundWordPremises">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWordPremises)>>
+Saved theorem _______ "refund_data_nonfailure"
+EXACT_DATA_NONFAILURE_READY
+MATCH_PREMISE Fail ≠
+semantics (basis_ffi ext cl fs) (fromAList prog) co
+  (λcfg.
+     OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+     MAP (compile_part c)) po zero_limits t.stack_size start

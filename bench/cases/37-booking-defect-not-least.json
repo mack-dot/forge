@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "      var slot := Least(AvailableSlots(state, request.allowed));\n",
+   "op": "edit",
+   "path": "impl/Booking.dfy",
+   "replace": "      var slot :| slot in AvailableSlots(state, request.allowed);\n",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "booking",
+ "id": "booking-defect-not-least",
+ "kind": "defect",
+ "order": 37,
+ "rationale": "Any available slot is chosen instead of the least one: violates B2.",
+ "supplied_evidence": null
+}

@@ -1,0 +1,39 @@
+(lldb) command source -s 0 '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/observer-static/commands.lldb'
+Executing commands in '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/observer-static/commands.lldb'.
+(lldb) version
+lldb version 23.1.5 (https://github.com/llvm/llvm-project revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117)
+  clang revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117
+  llvm revision 392dfff97d29b59d77e5cac6d4b6ef2585fe7117
+(lldb) target create /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund
+Current executable set to '/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund' (arm64).
+(lldb) disassemble --name ffiread
+refund`ffiread:
+refund[0x100025170] <+0>:   stp    x20, x19, [sp, #-0x20]!
+refund[0x100025174] <+4>:   stp    x29, x30, [sp, #0x10]
+refund[0x100025178] <+8>:   add    x29, sp, #0x10
+refund[0x10002517c] <+12>:  cmp    x1, #0x8
+refund[0x100025180] <+16>:  b.ne   0x1000251d8               ; <+104>
+refund[0x100025184] <+20>:  mov    x19, x2
+refund[0x100025188] <+24>:  ldrh   w8, [x2]
+refund[0x10002518c] <+28>:  rev16  w2, w8
+refund[0x100025190] <+32>:  add    w8, w2, #0x4
+refund[0x100025194] <+36>:  cmp    x8, x3
+refund[0x100025198] <+40>:  b.gt   0x1000251dc               ; <+108>
+refund[0x10002519c] <+44>:  ldr    w8, [x0, #0x4]
+refund[0x1000251a0] <+48>:  rev    w0, w8
+refund[0x1000251a4] <+52>:  add    x1, x19, #0x4
+refund[0x1000251a8] <+56>:  bl     0x10002597c               ; symbol stub for: read
+refund[0x1000251ac] <+60>:  tbnz   w0, #0x1f, 0x1000251c4    ; <+84>
+refund[0x1000251b0] <+64>:  mov    w8, #0x0                  ; =0 
+refund[0x1000251b4] <+68>:  rev    w9, w0
+refund[0x1000251b8] <+72>:  lsr    w9, w9, #16
+refund[0x1000251bc] <+76>:  sturh  w9, [x19, #0x1]
+refund[0x1000251c0] <+80>:  b      0x1000251c8               ; <+88>
+refund[0x1000251c4] <+84>:  mov    w8, #0x1                  ; =1 
+refund[0x1000251c8] <+88>:  strb   w8, [x19]
+refund[0x1000251cc] <+92>:  ldp    x29, x30, [sp, #0x10]
+refund[0x1000251d0] <+96>:  ldp    x20, x19, [sp], #0x20
+refund[0x1000251d4] <+100>: ret    
+refund[0x1000251d8] <+104>: bl     0x100025788               ; ffiread.cold.1
+refund[0x1000251dc] <+108>: bl     0x1000257b0               ; ffiread.cold.2
+(lldb) script print("PYTHON_READY")

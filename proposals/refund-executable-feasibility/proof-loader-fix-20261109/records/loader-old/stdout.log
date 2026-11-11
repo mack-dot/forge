@@ -1,0 +1,9 @@
+/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/loader-path-regression.sml:9: error: Value or constructor (toFS) has not been declared in structure HOLFileSys
+Found near
+  print
+  (
+  ((("REQUEST " ^ requested) ^ "\nRESOLVED ") ^ HOLFileSys.toFS requested) ^
+  "\n")
+/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/loader-path-regression.sml:11: error: Value or constructor (toFS) has not been declared in structure HOLFileSys
+Found near
+  HOLFileSys.toFS requested = expected andalso data = direct expected

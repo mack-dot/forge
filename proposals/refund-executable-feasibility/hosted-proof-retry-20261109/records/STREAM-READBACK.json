@@ -1,0 +1,65 @@
+{
+  "log_bytes": 67204,
+  "log_sha256": "7fea30873cceeb1b199bfa468ccb4dde56ad2a4f884b95ef902241185c7d7cca",
+  "event_counts": {
+    "identity": 1,
+    "command": 4,
+    "resources": 1,
+    "mkstemp": 1,
+    "read_write": 1,
+    "negative_permission": 1,
+    "memory_probe": 1,
+    "private_root": 1,
+    "download": 10,
+    "inputs_before": 1,
+    "invocation": 1,
+    "file": 3,
+    "file_chunk": 3,
+    "child_result": 1,
+    "inputs_after_proof": 1,
+    "runtime_path_gate": 1,
+    "case_gate": 1,
+    "run_complete": 1
+  },
+  "artifacts": [
+    {
+      "case": "proof",
+      "file": "bootstrap.sml",
+      "bytes": 3054,
+      "sha256": "0a368ca0b0e9bd6b3949057e538ab7135cdd4fde9f7083dc763b9a0ad7858084"
+    },
+    {
+      "case": "proof",
+      "file": "stdout.log",
+      "bytes": 699,
+      "sha256": "875f9a2bfd8807429a1a50aa7a098e304dd8d21ce82a2fe44437d73c872439aa"
+    },
+    {
+      "case": "proof",
+      "file": "stderr.log",
+      "bytes": 96851,
+      "sha256": "8a66faefa79bbc1ec0c5661b29458a669fae464e86a06e8778e55d7c1f7c8674"
+    }
+  ],
+  "child_results": [
+    {
+      "actual_exit": 1,
+      "case": "proof",
+      "end_to_end": false,
+      "objects": {},
+      "operation": "child_result",
+      "wall_timeout": false
+    }
+  ],
+  "driver_failures": [],
+  "run_complete": [
+    {
+      "end_to_end": false,
+      "failed_case": "proof",
+      "full_chain_replay": "NOT_RUN",
+      "native_refund_execution": "NOT_RUN",
+      "operation": "run_complete"
+    }
+  ],
+  "end_to_end": false
+}

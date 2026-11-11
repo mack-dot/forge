@@ -1,0 +1,548 @@
+{
+  "actual_exit": 0,
+  "recorded_exits": {
+    "git-init": 0,
+    "git-fetch": 0,
+    "git-checkout": 0,
+    "git-identity": 0,
+    "git-integrity": 0,
+    "sdk-metadata": 0,
+    "sdk-download": 0,
+    "sdk-extract": 0,
+    "sdk-info": 0,
+    "frontend-build": 0,
+    "frontend-version": 0,
+    "source-export": 4,
+    "source-export-0002": 4,
+    "solver-version": 0,
+    "source-export-0003": 1,
+    "source-repeat": 1,
+    "example": 0,
+    "module-control": 1,
+    "module-free-diagnostic": 1
+  },
+  "frontend_commit": "6eb1ed63544a2e22c151db9b575f4308b8f329b0",
+  "frontend_tree": "ab2b12b545d8b6e725c47ac067f8c07705a47bd6",
+  "flat_source_sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d",
+  "source_unchanged": true,
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "protected_files_unchanged": 50,
+  "output_files_checked": 103,
+  "dependency_locks_checked": 6,
+  "nuget_package_archive_hashes": {
+    "Microsoft.Extensions.Configuration.CommandLine/5.0.0": {
+      "archive_sha512": "qZo9N6uPsSXPAxSoXmzS9YiNWDvXdthlOATwtl9vL/wmldBgyb04EDU8tJV7hhKh/JvdcImopkl5UCz/HkM88w==",
+      "metadata_content_hash": "OelM+VQdhZ0XMXsEQBq/bt3kFzD+EBGqR4TAgFDRAye0JfvHAaRi+3BxCRcwqUAwDhV0U0HieljBGHlTgYseRA=="
+    },
+    "Microsoft.Extensions.Configuration.Json/5.0.0": {
+      "archive_sha512": "1ByUXXuqFKALVt6SlvwiKby1rioj0ZRdgER+1DZzZ7guMVL6vUX8JhbyZTN0ETgyvo+j7zjOa0bci+6gHr61qA==",
+      "metadata_content_hash": "Pak8ymSUfdzPfBTLHxeOwcR32YDbuVfhnH2hkfOLnJNQd19ItlBdpMjIDY9C5O/nS2Sn9bzDMai0ZrvF7KyY/Q=="
+    },
+    "Microsoft.Extensions.Logging/5.0.0": {
+      "archive_sha512": "GGUVP+sruHXiWkeVXFPzGVgmX8GbiQyq3B1UMJzHelDyyLjVsWPB6IXone4+mJQCMvR9rsnpsSxdRYjb5+WyRQ==",
+      "metadata_content_hash": "MgOwK6tPzB6YNH21wssJcw/2MKwee8b2gI7SllYfn6rvTpIrVvVS5HAjSU2vqSku1fwqRvWP0MdIi14qjd93Aw=="
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "archive_sha512": "mbJSvHfRxfX3tR/U6n1WU+mWHXswYc+SB/hkOpx8yZZe68hNZGfymJu0cjsaJEkVzCMqePiU6LdIyogqfIn7kg==",
+      "metadata_content_hash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+    },
+    "RangeTree/3.0.1": {
+      "archive_sha512": "JQAngviA+9Mi1LQnNJlfOHWjzpKCNJQNlLIvYgw0HPCJVJyaLhXIq+1aM4X7YNU9or8ISkWF6q+fKnBh2ChT3Q==",
+      "metadata_content_hash": "VVQFR/RIN5jGMPCL3oTCrEYZF3bd9CZCBsIAlGspUJgzhctLC0uQTpFZ1UFy+QlLrEP0xLmJbzawniAUDPbF+Q=="
+    },
+    "Serilog/2.12.0": {
+      "archive_sha512": "NUa5g0C4OZqMp3i5uCBygzreZ7KgFv4mH1qTo/mv2iIqH0MrFG3Abt3baOa9Mr/6SpqsquAyBcNltD+IBEER/Q==",
+      "metadata_content_hash": "xaiJLIdu6rYMKfQMYUZgTy8YK7SMZjB4Yk50C/u//Z4OsvxkUfSPJy4nknfvwAC34yr13q7kcyh4grbwhSxyZg=="
+    },
+    "Serilog.Extensions.Logging/3.0.1": {
+      "archive_sha512": "ZeWwH4STxd34knIhpDGjwrwkVMEt5Dkthb0T8cDTzs4/cxNdL4EkLRRFba578PmcoHEaYAbvqOI1nIbghH4/bw==",
+      "metadata_content_hash": "U0xbGoZuxJRjE3C5vlCfrf9a4xHTmbrCXKmaA14cHAqiT1Qir0rkV7Xss9GpPJR3MRYH19DFUUqZ9hvWeJrzdQ=="
+    },
+    "Serilog.Settings.Configuration/3.1.0": {
+      "archive_sha512": "3PCdkjdqRgDwOcY64R1kSviK/SApMJ6PnvwqmFTChA00vno0oGe8WWucQEC99y+F37y55R+o2juPQO4dZdSBmA==",
+      "metadata_content_hash": "BS+G1dhThTHBOYm8R21JNlR+Nh7ETAOlJuL1P6te1rOG98eV1vos5EyWRTGr0AbHgySxsGu1Q/evfFxS9+Gk1Q=="
+    },
+    "Serilog.Sinks.Debug/2.0.0": {
+      "archive_sha512": "+92zlEG+Ka7kB3xIfjIasMOhZ63HT2mBFaVBLZieTTPCqNHNn8uWsxLFZ8spPSP4QxyTbZZHaR4BlgCkBcXMbQ==",
+      "metadata_content_hash": "Y6g3OBJ4JzTyyw16fDqtFcQ41qQAydnEvEqmXjhwhgjsnG/FaJ8GUqF5ldsC/bVkK8KYmqrPhDO+tm4dF6xx4A=="
+    },
+    "Serilog.Sinks.File/5.0.0": {
+      "archive_sha512": "4BObHDe7xujc9LRPaW+uEhLHeTpp1ZnTpVX2nSzqqS8kF6DU0oRdgOqL5JTU/ZlIQbkWsZf43Fl6+2ptkVKDVg==",
+      "metadata_content_hash": "uwV5hdhWPwUH1szhO8PJpFiahqXmzPzJT/sOijH/kFgUx+cyoDTMM8MHD0adw9+Iem6itoibbUXHYslzXsLEAg=="
+    },
+    "System.Collections/4.3.0": {
+      "archive_sha512": "ynuVLTDaFIfKTkOqUigXte4m5+EFNwYoEBEvxnp1EnZsOdQC85S7BCbREIu8+bu2Tpzh9a9zbvIVpRo15V8FGw==",
+      "metadata_content_hash": "3Dcj85/TBdVpL5Zr+gEEBUuFe2icOnLalmEh9hfck1PTYbbyWuZgh4fmm2ysCLTrqLQw6t3TgTyJ+VLp+Qb+Lw=="
+    },
+    "System.Diagnostics.Debug/4.3.0": {
+      "archive_sha512": "bFj+HjYY5/h2hMHOp+/H07Gb19+NJTX54ntixS9EHxG2eyEiXWvNYvQJ4CwqFiMcTbGb4zuPq1ubClyGYN2rJA==",
+      "metadata_content_hash": "ZUhUOdqmaG5Jk3Xdb8xi5kIyQYAA4PnTNlHx1mu9ZY3qv4ELIdKbnL/akbGaKi2RnNUWaZsAs31rvzFdewTj2g=="
+    },
+    "System.IO.FileSystem.Primitives/4.3.0": {
+      "archive_sha512": "WIWVPQlYLP/Zc9I6IakpBk1y8ryVGK83MtZx//zGKKi2hvHQWKAB7moRQCOz5Is/wNDksiYpocf3FeA3le6e5Q==",
+      "metadata_content_hash": "6QOb2XFLch7bEc4lIcJH49nJN2HV+OC3fHDgsLVsBVBk3Y4hFAnOBGzJ2lUu7CyDDFo9IBWkSsnbkT6IBwwiMw=="
+    },
+    "System.Runtime.Handles/4.3.0": {
+      "archive_sha512": "CluvHdVUv54BvLTOCCyybugreDNk/rR8unMPruzXDtxSjvrQOU3M4R831/lQf4YI8VYp668FGQa/01E+Rq8PEQ==",
+      "metadata_content_hash": "OKiSUN7DmTWeYb3l51A7EYaeNMnvxwE249YtZz7yooT4gOZhmTjIn48KgSsw2k2lYdLgTKNJw/ZIfSElwDRVgg=="
+    },
+    "Boogie.AbstractInterpretation/3.4.3": {
+      "archive_sha512": "If5Zti0NrcuXxVIdTSoPpdNVJ72ObeRlRgUQypKBJut7xgPRObixgRrKTcxPYTp2bSl08+ThhJdb5XxBGV9/Gg==",
+      "metadata_content_hash": "8PbqpDO9Xj1+TuCjrSyy14k4eO3C1FkttnUCl4bgoxYdvOGO6gp1rjtD+J2ePMqHxsE41zCAe56zQcVBIz6uCQ=="
+    },
+    "Boogie.BaseTypes/3.4.3": {
+      "archive_sha512": "LXhs4J58LUPLndMDKp0XeaZzuKhAnva5AqPMsd4WzylDYCLcjCH6RTF+vZGrGQj+l8GPYjYl1PbCKd8KB+oVNw==",
+      "metadata_content_hash": "UG8PAzu1nPnF+iUOiOSx3YtZgrENJZjFoUnJlwESewZ3u+pFbCMOrSWVl6hRa1AQ8JoykeSZIHXff1sFiq26Cw=="
+    },
+    "Boogie.CodeContractsExtender/3.4.3": {
+      "archive_sha512": "i/M6v/q04mHpNxolaMHuUHpr9mWZdY0Z1DWH8HVUFRzSHffX6Uoi9d5GBuNivABlHekXbBpSHQYo4RG2o0rxXQ==",
+      "metadata_content_hash": "b+N3Ce4PWcf8avUtB+wtW3HjvDxbyufTuqV2JckWD7uKPwqc2JvARG0qskbMPsiDOFNV6wAbFnTaWpxeIcjDAA=="
+    },
+    "Boogie.Concurrency/3.4.3": {
+      "archive_sha512": "rn5NWPXX6D6O88qPGKOj542Wi/AWun/LxNhK4RFWGYUORDM8zfhXD8Xn8KiLpEyD8eJzSytqfLZm7B88183QEw==",
+      "metadata_content_hash": "Ko7n+FosQUMsSOmvxsOAp0oa5dgW3BOJdX5V0ewCMiHN/CDhKyfBn9/bTkOA75OXlwJrnSaK12wkJ8PEbAGbpg=="
+    },
+    "Boogie.Core/3.4.3": {
+      "archive_sha512": "OsEL8QZNh8EteymZ99Y1dfcy/ngHYHlExgTn+faessEycZJQaQ58JRKAx1pNun2OmM3MRdy8P1P9cLg2U0XEiw==",
+      "metadata_content_hash": "SLH1M0I9o+gLvLOjDNLsDrhX/9nO4ZAgZmzSl6ZJfT6A47hy4QJkgLxVwuazXtfCQOR1TLJrOkMY5vpbTj6Vew=="
+    },
+    "Boogie.ExecutionEngine/3.4.3": {
+      "archive_sha512": "Op2i6lpQUUS/hVXG8ae4lO25PbVgqh59gGeQEMfP977t4PzMojQyYuEbPFLOUv+jlQX1dHmZ92FEdGNqlcRiCA==",
+      "metadata_content_hash": "UeZe9QvPP/KdSPFeihXQUEqJu0LCIxW6bK0wDYkQfQGU4hDwymePhNSr/NDWFbuMU6blS99DvQWMIl3rN9XMwg=="
+    },
+    "Boogie.Graph/3.4.3": {
+      "archive_sha512": "h4cJbUVUxShTEaYNcfh8+4zNHIapZ10lDA0qtKadPJqieTX7jEnjgWWUw6q96VG2COoeSUj7zc3nMXyAGuH0+A==",
+      "metadata_content_hash": "URxJpXFrbuAIxw8RC0nyLYLB0eozaqX/7VVGa30OIuY5hoHMTN+/y+R5FzKWb0eWaEBjSFC3JmoZlljhECH5xw=="
+    },
+    "Boogie.Houdini/3.4.3": {
+      "archive_sha512": "zOkUmKaP5Smkc8mgFbd/BnHw4p+RQAuHdEYVIjQl2PHh6OgB+hlqbZdUbIi5Z2xv6JYCsVWDInH8vFIGv4S1pQ==",
+      "metadata_content_hash": "DyhFHbk2mUrjOtvJemwOUQ4kHl0n9/datcMTVJEczfs9wVnEAYXv8elW6NQ4o8Gq+QcTaoFMJu/UDHkIylEIpw=="
+    },
+    "Boogie.Model/3.4.3": {
+      "archive_sha512": "0oYe0sF4ZUkAskT2CSLIEccNRaEDeAKxp477rR+aVpljEOPd+RNoM80FJJ6kvf3rWAzH4mifs5u9g4QlY4mmAg==",
+      "metadata_content_hash": "ACiN+J8lfyMsQxjofepx1cfVUFIO26vLRlur4Ft+krJa0HlnR5gf3jjLRLaNc7a1DolHd2+nH/tZuCAuLpnD5A=="
+    },
+    "Boogie.Provers.LeanAuto/3.4.3": {
+      "archive_sha512": "BEuYuIG49fKExFZJF3Zc+3+znzaATWRYniwyRh6cE3s4/QZFlr3cqKmUz9FcTuiHU+shkI/2+TWk3gokXVNwbQ==",
+      "metadata_content_hash": "AMqgAaem+tUaGp1lEgXO8+K9VtWHDchsf7O+ReJ1qAzZw1XChRvBvIo+EZrf7FZBOMNj6ltXE0OSfYxB8mgMCQ=="
+    },
+    "Boogie.Provers.SMTLib/3.4.3": {
+      "archive_sha512": "D6GP9PdKZqadNmMUe4ENTMMUERS+KijWkWYYE8VAZTjGSwb6RHMJNbX7BcO9RiS73y/D2jhjjFN6o6Cs3I7AfA==",
+      "metadata_content_hash": "FiQ6uJ6TjoblFR5adoxfoeoTzkdnaEsZcO7pAbEwHfbWjJM34Pk3b7S2v9BM4owTbgOiSABucOOWpd1pYB0Q9A=="
+    },
+    "Boogie.VCExpr/3.4.3": {
+      "archive_sha512": "fab3ALdslVX+cczx9zgVCOtKr3vv+waSXIwar+NRrL4u9GgigaoOKQswItq3146fND8GcAJy32mWWsK0LpMSkg==",
+      "metadata_content_hash": "HeOBRjKr8cbkC4P8dK9u/aRgZZSEMzTxjN3DYv77Ht+xp5z4ivZkpzRwjO2B4mnN81cICZepQyFVwVGupQf1+Q=="
+    },
+    "Boogie.VCGeneration/3.4.3": {
+      "archive_sha512": "3R1HTaJnPQTWuYTizSQyr1etmH9+ybkYUE38rBSPQjp+XIeisYsr+oTPFR9/NPnxDc85Es/TfOF6vt+5wax8tw==",
+      "metadata_content_hash": "zhCJhHdBz9CkKszBeMyNP55Yt5x+296D8oDGyIZcD5zNLguh4DVyKboK32BMo6hfznheJKdq4uy97wuFOIV2Hg=="
+    },
+    "JetBrains.Annotations/2021.1.0": {
+      "archive_sha512": "OxdZn2/EQT3TgRoyIW90JZbaXG2HCRNNhdKSzSis59xyrs74or9kpd/TF5Z4dGjnDjk26i657QUFx8YTDWbbFw==",
+      "metadata_content_hash": "n9JSw5Z+F+6gp9vSv4aLH6p/bx3GAYA6FZVq1wJq/TJySv/kPgFKLGFeS7A8Xa5X4/GWorh5gd43yjamUgnBNA=="
+    },
+    "MediatR/8.1.0": {
+      "archive_sha512": "hIsLYH61C4zvFp6/lTKLXlUX6spRh1eMRjumwwn+/30U4Wlm8E12Fd5PMvsglI+63sCy+8evZoSLV2OVcaP0Yg==",
+      "metadata_content_hash": "KJFnA0MV83bNOhvYbjIX1iDykhwFXoQu0KV7E1SVbNA/CmO2I7SAm2Baly0eS7VJ2GwlmStLajBfeiNgTpvYzQ=="
+    },
+    "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
+      "archive_sha512": "IhoFoMkQ96h7Yg2PODHtOStOuV0RK+4nTTXycAmtKiZEXenXzSNf5vtKA/JVCHS9o7493dlu2vnAhSqcI9ewmQ==",
+      "metadata_content_hash": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg=="
+    },
+    "Microsoft.DotNet.PlatformAbstractions/2.0.4": {
+      "archive_sha512": "xwIyaAKMgbw4pMQQ7vN3IaDKzlXbbpmELjsXpkHvI7iMCDUdmjyodyKm911vPjM7FKJfnDFlSFeFoV55erXB7Q==",
+      "metadata_content_hash": "2HjSGp63VCLQaeGadrLYR868g25mJHr+TFF81yWCaClzjUbU2vNDx6km7SUgPnoLVksE/1e7in88eh+oPtc4aQ=="
+    },
+    "Microsoft.Extensions.Configuration/5.0.0": {
+      "archive_sha512": "I+GN5jNOIZMkb+qgvNbyiYKkeRE7dNxhW86y0oB2KOITYSNkZKaKOQ6QkcvwTLum8ybBF7Z3wIgKdxqvOoCAww==",
+      "metadata_content_hash": "LN322qEKHjuVEhhXueTUe7RNePooZmS8aGid5aK2woX3NPjSnONFyKUc6+JknOS6ce6h2tCLfKPTBXE3mN/6Ag=="
+    },
+    "Microsoft.Extensions.Configuration.Abstractions/5.0.0": {
+      "archive_sha512": "mbRSBPMlbuH8wgfVa+Cpqudgv4JLPR1W9s5VXcm049/X1J4OfPNuyloTtG4tHkeyEudZSp22x1LJk8AArW4jmQ==",
+      "metadata_content_hash": "ETjSBHMp3OAZ4HxGQYpwyGsD8Sw5FegQXphi0rpoGMT74S4+I2mm7XJEswwn59XAaKOzC15oDSOWEE8SzDCd6Q=="
+    },
+    "Microsoft.Extensions.Configuration.Binder/2.0.0": {
+      "archive_sha512": "0f8nZDIyR3zaRlaq6QZZws7wrG7dccqTbArY7DXmxRcIP4OXwUw3NPxcWRbk58R4ejh1xpPOSFIJwVvrTFkbLg==",
+      "metadata_content_hash": "IznHHzGUtrdpuQqIUdmzF6TYPcsYHONhHh3o9dGp39sX/9Zfmt476UnhvU0UhXgJnXXAikt/MpN6AuSLCCMdEQ=="
+    },
+    "Microsoft.Extensions.Configuration.FileExtensions/5.0.0": {
+      "archive_sha512": "LU47qiQQuPJEOJnqYTeyQ+kbVAPgv8ADMLhJZKBJrFbw3G9RfevakM9RwZSm6zGAx4q+h/rJ6pO7fl85A+3Uxg==",
+      "metadata_content_hash": "rRdspYKA18ViPOISwAihhCMbusHsARCOtDMwa23f+BGEdIjpKPlhs3LLjmKlxfhpGXBjIsS0JpXcChjRUN+PAw=="
+    },
+    "Microsoft.Extensions.DependencyInjection/5.0.0": {
+      "archive_sha512": "yTpP2f3FpCMdG5pF7VG49flM+UL79SE8rs434qL3AlFmKyONwn8LMVyhyBynFyi3g4EH2Hw8UHEGrOfCwGh5Kw==",
+      "metadata_content_hash": "Rc2kb/p3Ze6cP6rhFC3PJRdWGbLvSHZc0ev7YlyeU6FmHciDMLrhoVoTUEzKPhN5ZjFgKF1Cf5fOz8mCMIkvpA=="
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/5.0.0": {
+      "archive_sha512": "3ycnTwLNZTTCyhtZ19e6QIkyIG98MqrnuMtdF6c3cw5JD9Sot34nremRrJGoBdOQe2PcLER2p67q/XhVqaWk3g==",
+      "metadata_content_hash": "ORj7Zh81gC69TyvmcUm9tSzytcy8AVousi+IVRAI8nLieQjOFryRusSFh7+aLk16FN9pQNqJAiMd7BTKINK0kA=="
+    },
+    "Microsoft.Extensions.DependencyModel/2.0.4": {
+      "archive_sha512": "YcEp7Pp6+j8oYwsjxrs/Bp5X81gN8EeFfr2oqxTwoMi9KngojVueLx93Yjhyetp7v3EzTYNxBUBCqlzdMLgCqQ==",
+      "metadata_content_hash": "jnHAeijsfJFQXdXmnYK/NhQIkgBUeth//RZZkf0ldIKC+jARbf7YxbA9uTrs/EPhuQxHXaDxVuMyscgmL+UqfA=="
+    },
+    "Microsoft.Extensions.FileProviders.Abstractions/5.0.0": {
+      "archive_sha512": "HTmQqit7MeBfKPypKc97lki+wc0OoXK9sxPde0Fo4b+YNub5693jKOQso+tTR97InG7Lii2Rj5TVOA9gdZOpVg==",
+      "metadata_content_hash": "iuZIiZ3mteEb+nsUqpGXKx2cGF+cv6gWPd5jqQI4hzqdiJ6I94ddLjKhQOuRW1lueHwocIw30xbSHGhQj0zjdQ=="
+    },
+    "Microsoft.Extensions.FileProviders.Physical/5.0.0": {
+      "archive_sha512": "Wu8Ii1uNIa3vRkEJXDslkdM1D8+ql4Btw3XR80f1oNWAbdFEYcVWraaUCJQ+NDE5FYs7NOqT5kRe5lDTl8p+JQ==",
+      "metadata_content_hash": "1rkd8UO2qf21biwO7X0hL9uHP7vtfmdv/NLvKgCRHkdz1XnW8zVQJXyEYiN68WYpExgtVWn55QF0qBzgfh1mGg=="
+    },
+    "Microsoft.Extensions.FileSystemGlobbing/5.0.0": {
+      "archive_sha512": "X1WJOtWH0DhM0+3bNcvbCoeF6TtIPX3OSXBw/LM/ZEf+ztluimOkYUD7Nu6508xV9iZDhjYcKUVbT7pwACYgww==",
+      "metadata_content_hash": "ArliS8lGk8sWRtrWpqI8yUVYJpRruPjCDT+EIjrgkA/AAPRctlAkRISVZ334chAKktTLzD1+PK8F5IZpGedSqA=="
+    },
+    "Microsoft.Extensions.Logging.Abstractions/5.0.0": {
+      "archive_sha512": "rrVmzoZXZ/qL/xrmnA2oU75Y2bqSVl9yK8t8VoTnf1AC0wXXY+orm0eCP4gmjV/+h49CANA99JQAiG1i6bZKww==",
+      "metadata_content_hash": "NxP6ahFcBnnSfwNBi2KH2Oz8Xl5Sm2krjId/jRR3I7teFphwiUoUeZPwTNA21EX+5PtjqmyAvKaOeBXcJjcH/w=="
+    },
+    "Microsoft.Extensions.Options/5.0.0": {
+      "archive_sha512": "j/Xf3RwSBHya/vKNlpbl8lgrml8RTLwOrCYYfQ5de8ET7AZEi6dVeOjgfPGXvRm6MLueH+CCszPHghkZgcNFmg==",
+      "metadata_content_hash": "CBvR92TCJ5uBIdd9/HzDSrxYak+0W/3+yxrNg8Qm6Bmrkh5L+nu6m3WeazQehcZ5q1/6dDA7J5YdQjim0165zg=="
+    },
+    "Microsoft.Extensions.Options.ConfigurationExtensions/2.0.0": {
+      "archive_sha512": "OJSVA/mzSY3zPLQsvLU/2Ki92AOuLDCyHmkTP5ZX9TRHy7j1h1ISUxU6kDGpdgHxgcoVgqWteN3aimlYjyO3mg==",
+      "metadata_content_hash": "Y/lGICwO27fCkQRK3tZseVzFjZaxfGmui990E67sB4MuiPzdJHnJDS/BeYWrHShSSBgCl4KyKRx4ux686fftPg=="
+    },
+    "Microsoft.Extensions.Primitives/5.0.0": {
+      "archive_sha512": "PlGYfiZ4HdBDRRf4f/l9bf5ZmlUUZvHJMVKe+ch1GrvCnsK95Gkl84xW/V5xON6cjHqaddQQMp2neg6jML/37g==",
+      "metadata_content_hash": "cI/VWn9G1fghXrNDagX9nYaaB/nokkZn0HYAawGaELQrl8InSezfe9OnfPZLcJq3esXxygh3hkq2c3qoV3SDyQ=="
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "archive_sha512": "a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
+      "metadata_content_hash": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A=="
+    },
+    "Microsoft.NETCore.Targets/1.1.0": {
+      "archive_sha512": "HvAzpoaIqrmZfsHAN4rLFji0r7YY5TP8r3SdkziXN7qU9KCpRIG+zfcBx+mIri/jkBNqjq4iWIfuYNtFBjSQ/g==",
+      "metadata_content_hash": "aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg=="
+    },
+    "Microsoft.VisualStudio.Threading/16.7.56": {
+      "archive_sha512": "CzH5RX6XeOP96e5hL437BlxrUSmbT55q8MdfaOaS5TQJoGTQ1T/OpGbJpB3wlvfRIVCf/PzRIDk5PDB2as4R8Q==",
+      "metadata_content_hash": "1XR6Os4SJ6yLUL0wg8ifnvGVJH+YRrPhBlQJiJPEYA9EisklRuuQUle0CzW1v+JI5wff9qN+9Ws44YXQva2Uuw=="
+    },
+    "Microsoft.VisualStudio.Threading.Analyzers/16.7.56": {
+      "archive_sha512": "sgIbbovSvXA72Sj7q/zZdjEGyF5Ml+PHqJTaOiOtngo8iox7C0xCRpwVZvUVulK64IJ/gqKaSkz8O+uvrWM5/w==",
+      "metadata_content_hash": "c/DKkPSjAW1mXumLf2m6Y2Sd+aUZcPcjsg5i7BgeBvAM/StGT1+2VcMbO9YyUUmnu+pPjyMYEpI6nygTeJ+6sw=="
+    },
+    "Microsoft.VisualStudio.Validation/15.5.31": {
+      "archive_sha512": "Lnd+b6MGuHwh7+YEpqfmkRKZgDiVun9QPjhwpYiY7lEaMkAtOBkPapcQUyJ5BPDpfZlMEmh/knt3smusU22gQg==",
+      "metadata_content_hash": "AOmvJTT4CpamJ2A6J+PBrhKPfs2HXi/MJVxN/QlViewjI4XZDrt/yp3NMto+OOgB25jDnt9IIdNTkjpNBUpXmw=="
+    },
+    "Microsoft.Win32.Primitives/4.3.0": {
+      "archive_sha512": "Nm8Hp51y9tYcK3xD6qk43Wjftrg1mdH24CCJsTb6gr7HS21U1uA+CKPGEtUcVZbjU1y8Kynzm5eoJ7Pnx5gm8A==",
+      "metadata_content_hash": "9ZQKCWxH7Ijp9BfahvL2Zyf1cJIk8XYLF6Yjzr2yi0b2cOut/HQ31qf1ThHAgCc3WiZMdnWcfJCgN82/0UunxA=="
+    },
+    "Microsoft.Win32.Registry/4.6.0": {
+      "archive_sha512": "DGoxXIfT4XgwLnNy/AemxlYjZS0bLNXDSAv9wfzrHUGtcr7SP+J9CUTG0ZoQwMSy0z+Fnp90mB0YaAPRf/Gu8A==",
+      "metadata_content_hash": "Xuqo5Lf5h1eUAbT8sJwNSEgusyEcQQQcza1R8dxJ6q/1vLSU1SG/WxtgiCPAth14dz/IjBXCxWT/+6E9glX33w=="
+    },
+    "Microsoft.Win32.SystemEvents/6.0.0": {
+      "archive_sha512": "XidKzplsPrpjCZ7VEW+dw59p9oT3wediPCjDxzmIt1xn38ySmlCnYfAiLfJD3VQHIKbliOkd+nhPgb/Oeok4dQ==",
+      "metadata_content_hash": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A=="
+    },
+    "Namotion.Reflection/3.2.0": {
+      "archive_sha512": "p8D5kz8eQ6ijRdTNC2B1aCzlAKrYeeJC10V/zbKdxRD99+c+6QrZMBRqf3Let6aBqucdwBvn8CJIQHhV/AIKsg==",
+      "metadata_content_hash": "YfGjDPzMEs3vRMI4CMkJwOg75SV5JEDV72kMccD2GCo++TfgOYb5ZTpABYq3dUQqFtnAPpqMKM+deLlrUwnN1g=="
+    },
+    "Nerdbank.Streams/2.6.81": {
+      "archive_sha512": "uVe86pvvTU+fTFrakiD7s7DWfRSbh3YVB0nfqAvT5Bl06uV4MfcAt6aOiCqs4Gu7S7hDQfqyBgIYOxlJlDIgXg==",
+      "metadata_content_hash": "htBHFE359qyyFwrvAGvFxrbBAoldZdl0XjtQdDWTJ8t5sWWs7QVXID5y1ZGJE61UgpV5CqWsj/NT0LOAn5GdZw=="
+    },
+    "NJsonSchema/11.1.0": {
+      "archive_sha512": "uZCCO+eEa7doPUTgW4srahLGoM+Dw+gMZ2HKCHLa+i3Q8e+n0Yb0e165kxS0PVhE4el26+rLpGQ05dQVPbTj3A==",
+      "metadata_content_hash": "H7QO+bM/2uzF81mVyy4U8ha4MXS9eOX06rTvBgJKquzIuLUGuiOTc4nknkCFKW7mr+xnWgzY7Spevz5ZEK8fGg=="
+    },
+    "NJsonSchema.Annotations/11.1.0": {
+      "archive_sha512": "74Hj1ZPxtzQ65klLP/CzPf8Go/rZHtDybnHDCPeNK8aOW722Uh2TPCu9cXkQEJFGKD2gxe0c2iE7BPZNpyxCqg==",
+      "metadata_content_hash": "2gU72pKhMLrQt7TjHv+nrb8CxxgUaBk2SD/CaB5f00SxuWdOT4YVQaGy+jTVx+8IgQit+9WWMvBWU9f6U2HNiQ=="
+    },
+    "OmniSharp.Extensions.JsonRpc/0.19.5": {
+      "archive_sha512": "0QiIfxqlDsvPHSHHqoPnIzVxS2/Yb6aA8GE30nqGaWyuzRYAXDExjMO6vvunhltloS77yxggCJxgBnaKJ+23ZA==",
+      "metadata_content_hash": "+YpFJ58ziperSJkIn+FoInad2+bPe6QkSMdRAAJCZGn8pIk4lfJdwi9PC/PdanLbRdbjBF+Zz2i39tpKOhKRDw=="
+    },
+    "OmniSharp.Extensions.JsonRpc.Generators/0.19.5": {
+      "archive_sha512": "nn8aJHz93EsJqstT437j7UuAzt4NjF7Ie9kDTXp7c8kBiT7T8Qr8mAjJns+0Jmzan1DPaJMMCxKhmiGazr+qZg==",
+      "metadata_content_hash": "9MpvJsx8KFHrEnYWdr1q6nWRbZpajzb7fd3njkQ7KMeTqOC0oYgh/oRXHDUlJDYmUc4/3KcWGYWMaKifx6QaVQ=="
+    },
+    "OmniSharp.Extensions.LanguageProtocol/0.19.5": {
+      "archive_sha512": "5TYGjxfqpG2p4q+BKPZeT1DF5aSxXOrlGTH9TxgatBu/LmA9u3fyzfs6mtjSCA9LZjZK8ZWvdjxkqNjPqR2/AA==",
+      "metadata_content_hash": "OceEIJPHSu9wftQpX7guLBt0W/C4PRWOINqmIBlLbG62ZnfvPKVuimwRpVTYvgq4VHN/L4j5gJ16qH9/HiiKMQ=="
+    },
+    "OmniSharp.Extensions.LanguageServer/0.19.5": {
+      "archive_sha512": "bDGQfwFkFxalqFPlsT5VFY/nTuIje+gapN9G/wqEGi+KabKse5YMnyXe6qc7d4CixPdR1GvTZEujsfvnwLID3g==",
+      "metadata_content_hash": "jq6R+2Mo5LdiBrrZ1U4f0UbNCAOQYojDppmFpIwTcfb+wqvpS8azFU3Yub6Cqvd9VXBvIh4rm0/lba8IAV/IRA=="
+    },
+    "OmniSharp.Extensions.LanguageServer.Shared/0.19.5": {
+      "archive_sha512": "q6koRuZU5iE3ixX6HsFvSuL5tiaXqAv/AHswI119y7c+ypLljPTMo45S4/4sjZuoRVHl17N2v1eiIrVpkbUg/A==",
+      "metadata_content_hash": "9boD4zQ6bP4kHo/R2b53mhuZZg/dcumjHc2blvj76o/VbnClmlhccv2bAL449yeuBG8OM+1mIerCPcvJTGQgiw=="
+    },
+    "runtime.native.System/4.0.0": {
+      "archive_sha512": "Vf8+r6QG7D2OM9i+RNDQY1LOdGq//ewTeHFrJ11jThM/wbxW/DEr8Nkh78WejeSsgRAizDSnf8Hxq8mCyTGTKw==",
+      "metadata_content_hash": "QfS/nQI7k/BLgmLrw7qm7YBoULEvgWnPI+cYsbfCVFTW8Aj+i8JhccxcFMu1RWms0YZzF+UHguNBK4Qn89e2Sg=="
+    },
+    "System.AppContext/4.1.0": {
+      "archive_sha512": "9ySvE+sUqlclX4KEFoOpO0J94XK40xuf4sa8jCGnleYOzyEbTknhwuKF/hrUmOa9nIQ+EJpgo9wntJ31YBBulg==",
+      "metadata_content_hash": "3QjO4jNV7PdKkmQAVp9atA+usVnKRwI3Kx1nMwJ93T0LcQfx7pKAYk0nKz5wn1oP5iqlhZuy6RXOFdhr7rDwow=="
+    },
+    "System.Collections.Immutable/1.7.1": {
+      "archive_sha512": "0mPMLJClN+3Em84zRJD9CdiIpQ9beT5C6JEzrY25VE81a9V0WnNcS4G3aHvBuOTfnI1k44jIQzNhp3VZHd7ddg==",
+      "metadata_content_hash": "B43Zsz5EfMwyEbnObwRxW5u85fzJma3lrDeGcSAV1qkhSRTNY5uXAByTn9h9ddNdhM+4/YoLc/CI43umjwIl9Q=="
+    },
+    "System.CommandLine/2.0.0-beta4.22272.1": {
+      "archive_sha512": "l5p+Zrop4XvFvsQukm7RU2LiOuQD5JjJVeCd/8TTuqFHd6BvleJdWR/JdXoOqhjeueRmKhyhZj+jAPUJpKA4PA==",
+      "metadata_content_hash": "1uqED/q2H0kKoLJ4+hI2iPSBSEdTuhfCYADeJrAqERmiGQ2NNacYKRNEQ+gFbU4glgVyK8rxI+ZOe1onEtr/Pg=="
+    },
+    "System.Configuration.ConfigurationManager/6.0.0": {
+      "archive_sha512": "3ljLko1jA6FjAf16qO2sN53+bEfm2AshZl+SurndX/UrPiRM9t8PlF8ccucckjN1YdvydS/DMkF0qMnsxwwyRw==",
+      "metadata_content_hash": "7T+m0kDSlIPTHIkPMIu6m6tV6qsMqJpvQWW2jIc2qi7sn40qxFo0q+7mEQAhMPXZHMKnWrnv47ntGlM/ejvw3g=="
+    },
+    "System.Drawing.Common/6.0.0": {
+      "archive_sha512": "1h8KPgHD6sFfE/wboEosfOTqyVZACy+qNh/sq9ODbUnVvTRPOYXuPZTNw/anK44H5CPNspZbT1yiIitd4ymI5A==",
+      "metadata_content_hash": "NfuoKUiP2nUWwKZN6twGqXioIe1zVD0RIj2t976A+czLHr2nY454RwwXs6JU9Htc6mwqL6Dn/nEL3dpVf2jOhg=="
+    },
+    "System.Dynamic.Runtime/4.0.11": {
+      "archive_sha512": "CyGJpvUO/6tEqLH4g/Kh+bmzLESBIxkOiUaod8KP9GojWqkK8ImNHM1tovMVWqLPJuV/f2HufjxQ394hkNeBqw==",
+      "metadata_content_hash": "db34f6LHYM0U0JpE+sOmjar27BnqTVkbLJhgfwMpTdgTigG/Hna3m2MYVwnFzGGKnEJk2UXFuoVTr8WUbU91/A=="
+    },
+    "System.Globalization/4.3.0": {
+      "archive_sha512": "gj0rowjLBztAoxRuzM0Nn9exYVrD+++xb3PYc+QR/YHDvch98gbT3H4vFMnNU6r8poSjVwwlRxKAqtqN6AXs4g==",
+      "metadata_content_hash": "kYdVd2f2PAdFGblzFswE4hkNANJBKRmsfa2X5LG2AcWE1c7/4t0pYae1L8vfZ5xvE2nK/R9JprtToA61OSHWIg=="
+    },
+    "System.IO/4.3.0": {
+      "archive_sha512": "v8paIePhmGuXZbE9xvvNb4uJ5ME4OFXR1+8la/G/L1GIl2nbU2WFnddgb79kVK3U2us7q1aZT/uY/R0D/ovB5g==",
+      "metadata_content_hash": "3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg=="
+    },
+    "System.IO.FileSystem/4.0.1": {
+      "archive_sha512": "pkeLF/XVL8W5UXRY6T4aabkldcFw9EBGs/TiXH5nydQSarSG9aPFGryyedBaBXvVOqj0mh5R6uaVY645IUty0w==",
+      "metadata_content_hash": "IBErlVq5jOggAD69bg1t0pJcHaDbJbWNUZTPI96fkYWzwYbN6D9wRHMULLDd9dHsl7C2YsxXL31LMfPI1SWt8w=="
+    },
+    "System.IO.Pipelines/4.7.3": {
+      "archive_sha512": "RgOyS/gz62XP6yGKbEEIur9tnBiHRY5gulIqhNSN8sqSOcA33MN/5VLYlC1rskcOuLtPgGTp5J9js//JP82vAQ==",
+      "metadata_content_hash": "zykThu9scJyg2Yeg27GMZCbjzniIsmjtNP5x6kQCd/8rEeKXRy20fP2NOMS7xQ+0pS/E85LZQA+K1aoQLxiUdw=="
+    },
+    "System.Linq/4.1.0": {
+      "archive_sha512": "U+UyIOX91q1E9JjkZXUDeAvKH3O+ZGAJE0FQ8Gp2sIc3U9s6rpc5gFS9HozAwcTN0tt3P2WiaHSrlBEO2wzdsQ==",
+      "metadata_content_hash": "bQ0iYFOQI0nuTnt+NQADns6ucV4DUvMdwN6CbkB1yj8i7arTGiTN5eok1kQwdnnNWSDZfIUySQY+J3d5KjWn0g=="
+    },
+    "System.Linq.Async/6.0.1": {
+      "archive_sha512": "eSt7FKb8xS+IzAR1orqKaUOZOT+mAkRv4j+m0514LBb5CLS8Os1YRUVUkyt6QQVthEJLX9ZvD+bjwAF46z2KGg==",
+      "metadata_content_hash": "0YhHcaroWpQ9UCot3Pizah7ryAzQhNvobLMSxeDIGmnXfkQn8u5owvpOH0K6EVB+z9L7u6Cc4W17Br/+jyttEQ=="
+    },
+    "System.Linq.Expressions/4.1.0": {
+      "archive_sha512": "BGBaCR066kBLyXy3/8FUcIs77IhlYtnjauzU0u0TCvu0X1TNFqP3FPDMs/J8W8dwflX7w+gWgaeD6TlpMAWKzA==",
+      "metadata_content_hash": "I+y02iqkgmCAyfbqOmSDOgqdZQ5tTj80Akm5BPSS8EeB0VGWdy6X1KCoYe8Pk6pwDoAKZUOdLVxnTJcExiv5zw=="
+    },
+    "System.Net.WebSockets/4.3.0": {
+      "archive_sha512": "K92jUrnqIfzBr8IssbulQetz8f2gAs2XC2jyVWbUvr+804YWv6LIksBIz84WV7HStpluw3RQTcHxd3+C5zIewA==",
+      "metadata_content_hash": "u6fFNY5q4T8KerUAVbya7bR6b7muBuSTAersyrihkcmE5QhEOiH3t5rh4il15SexbVlpXFHGuMwr/m8fDrnkQg=="
+    },
+    "System.ObjectModel/4.0.12": {
+      "archive_sha512": "9Rkc2zYL0mJKvXRUxmhiVA+XqhnfkuoIVHhrnTy5VJ6VxhlM/orcAViSA8T+sWc6EpxJKUhry1+NuD6lNUd8Uw==",
+      "metadata_content_hash": "tAgJM1xt3ytyMoW4qn4wIqgJYm7L7TShRZG4+Q4Qsi2PCcj96pXN7nRywS9KkB3p/xDUjc2HSwP9SROyPYDYKQ=="
+    },
+    "System.Reactive/4.4.1": {
+      "archive_sha512": "xPAaiRIarudWmQfGHPizZ+ZHlW33f/ak3TBXQSAfXI9KOFjpjalRkHsuzBlSAiyNF8jZwsi3kBRaPaMUJt3hAA==",
+      "metadata_content_hash": "iSTPeWR9HJhGoNV4WhVlvofuiTjpok1i4E3LPgMdbMqf3jKhFlT9HAlO32lb52NLppWC/4dZQFfUzTytvyXBmw=="
+    },
+    "System.Reflection/4.3.0": {
+      "archive_sha512": "IyW2ftYNzgMCgHBk8lQiy+G3+ydbU5tE+6PEqM5JJvIdeFKaXDSzHAPYDREPe6zpr5WJ1Fcma+rAFCIAV6+DMw==",
+      "metadata_content_hash": "KMiAFoW7MfJGa9nDFNcfu+FpEdiHpWgTcS2HdMpDvt9saK3y/G4GwprPyzqjFH9NTaGPQeWNHU+iDlDILj96aQ=="
+    },
+    "System.Reflection.Emit/4.0.1": {
+      "archive_sha512": "/3dmiGuUUUjqZaSeTdxkgzY0De8sLpS4J3tYRETskSbZaRjwvL62IBalMGI6iczZ6udJ1iBlsBBYOHtdCfx90Q==",
+      "metadata_content_hash": "P2wqAj72fFjpP6wb9nSfDqNBMab+2ovzSDzUZK7MVIm54tBJEPr9jWfSjjoTpPwj1LeKcmX3vr0ttyjSSFM47g=="
+    },
+    "System.Reflection.Emit.ILGeneration/4.0.1": {
+      "archive_sha512": "w4Gc06WPYJ/1eWUlNvn0FEgcqk2efcJ34NPIyP6OD/kIBvqU98ZDbUr4U8b8zSbVr1fwpJxbrO704NqqOeJncw==",
+      "metadata_content_hash": "Ov6dU8Bu15Bc7zuqttgHF12J5lwSWyTf1S+FJouUXVMSqImLZzYaQ+vRr1rQ0OZ0HqsrwWl4dsKHELckQkVpgA=="
+    },
+    "System.Reflection.Emit.Lightweight/4.0.1": {
+      "archive_sha512": "VChj+ghaMXBbCylLZHRMEWF6CYvq5NVmS+tTGJFI0ZJGyaES3jDy1ZfgiIBppBTyrtjpSis2kpSoGyS5kbwhSQ==",
+      "metadata_content_hash": "sSzHHXueZ5Uh0OLpUQprhr+ZYJrLPA2Cmr4gn0wj9+FftNKXx8RIMKvO9qnjk2ebPYUjZ+F2ulGdPOsvj+MEjA=="
+    },
+    "System.Reflection.Extensions/4.0.1": {
+      "archive_sha512": "Pi8Hwpg2c1vmJH5192DekHg9Xs5k6Mzk4j7Ot3faiXWjUTCATYfd0mRJwT0so0GA4/a4RLD90txZS77G5ycgmA==",
+      "metadata_content_hash": "GYrtRsZcMuHF3sbmRHfMYpvxZoIN2bQGrYGerUiWLEkqdEUQZhH3TRSaC/oI4wO0II1RKBPlpIa1TOMxIcOOzQ=="
+    },
+    "System.Reflection.Primitives/4.3.0": {
+      "archive_sha512": "1LnMkF9aXKuQAgYzjoiQaL9mwY7oY6KdaO/zzeLMynNBEqKoUfLi5TiKIewoAF+hkxfGTZsjkjsF1jRL4uSeqg==",
+      "metadata_content_hash": "5RXItQz5As4xN2/YUDxdpsEkMhvw3e6aNveFXUn4Hl/udNTCNhnKp8lT9fnc3MhvGKh1baak5CovpuQUXHAlIA=="
+    },
+    "System.Reflection.TypeExtensions/4.1.0": {
+      "archive_sha512": "Wxh1rob3b2Awf74mHHRx6ZbU1OreDEeDyzWlqtf+xPAb4Byx8feK8i1IPszhIJb27UMdacSmbHvyNQCLysMMtw==",
+      "metadata_content_hash": "tsQ/ptQ3H5FYfON8lL4MxRk/8kFyE0A+tGPXmVP967cT/gzLHYxIejIYSxp4JmIeFHVP78g/F2FE1mUUTbDtrg=="
+    },
+    "System.Resources.ResourceManager/4.3.0": {
+      "archive_sha512": "kGfbKPHEjQj8Uq1Apgj4jBStkRJkZ0Hdr0Jv3+aL7WGrAZVLF5Rh5h0Yc3FgDB5uXDbHiJk/WhBaZPVwKmuB1A==",
+      "metadata_content_hash": "/zrcPkkWdZmI4F92gL/TPumP98AVDu/Wxr3CSJGQQ+XN6wbRZcyfSKVoPo17ilb3iOr0cCRqJInGwNMolqhS8A=="
+    },
+    "System.Runtime/4.3.0": {
+      "archive_sha512": "kqsiSfCAc8+v3Ez719s21lGthxuNi6lhAGmCGH3jdL9KMK+T8V9zsFrzQ/enDL1ISwTWRlcFh2Nq5yFx6wcU+w==",
+      "metadata_content_hash": "JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw=="
+    },
+    "System.Runtime.Caching/6.0.0": {
+      "archive_sha512": "ABgQolY7/ChWG8Pj6EBysMjtj1CDVJN7aWeWuXXh+y7aS+HMjOwx1OZi/s//diUHUrdizAInmgWray45gy5EQg==",
+      "metadata_content_hash": "E0e03kUp5X2k+UAoVl6efmI7uU7JRBWi5EIdlQ7cr0NpBGjHG4fWII35PgsBY9T4fJQ8E4QPsL0rKksU9gcL5A=="
+    },
+    "System.Runtime.CompilerServices.Unsafe/4.7.1": {
+      "archive_sha512": "yNeB/qz3nz7/wcIxqEvrD6HoafvqodlLo+hNt1r+kV4EXDnOBZMx/kiVZTTc69zVT9l6sZnmoJC93FJQ4gjuUg==",
+      "metadata_content_hash": "zOHkQmzPCn5zm/BH+cxC1XbUS3P4Yoi3xzW7eRgVpDR2tPGSzyMZ17Ig1iRkfJuY0nhxkQQde8pgePNiA7z7TQ=="
+    },
+    "System.Runtime.Extensions/4.3.0": {
+      "archive_sha512": "aAoysZwr1QJvhoeqU4KupPQytPAy+L3imfrLYYxW1XNpre9/fMjmCtgq48EuXdUHckkTY7+ARMd4d4YopmBbvA==",
+      "metadata_content_hash": "guW0uK0fn5fcJJ1tJVXYd7/1h5F+pea1r7FLSOz/f8vPEqbR2ZAknuRDvTQ8PzAilDveOxNjSfr0CHfIQfFk8g=="
+    },
+    "System.Runtime.InteropServices/4.1.0": {
+      "archive_sha512": "6FEeakzUDzxgPfT/u/akqsTRC+ebz9Akmpr5DVXPKgJUOtm4LmB6RmXVjyjHzpvbD38/+byN7YolIhORancb0g==",
+      "metadata_content_hash": "16eu3kjHS633yYdkjwShDHZLRNMKVi/s0bY8ODiqJ2RfMhDMAwxZaUaWVnZ2P71kr/or+X9o/xFWtNqz8ivieQ=="
+    },
+    "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
+      "archive_sha512": "Ri015my90h3AB/BsbvEpq1foEPoPBBa9L8b7fu1VE4eA1NMeMe5iZ6guLjoWB+XGQr1u/rEwtXobqofjFBsAgA==",
+      "metadata_content_hash": "hWPhJxc453RCa8Z29O91EmfGeZIHX1ZH2A8L6lYQVSaKzku2DfArSfMEb1/MYYzPQRJZeu0c9dmYeJKxW5Fgng=="
+    },
+    "System.Runtime.Numerics/4.3.0": {
+      "archive_sha512": "PjR/qo5+xITUgeU7HCGf4c40augniiFLRQjPDiM8Fie9nGxsfGVOjB9BQycYON3ZWT9joQQ1d62HxA45Kvf9NA==",
+      "metadata_content_hash": "yMH+MfdzHjy17l2KESnPiF2dwq7T+xLnSJar7slyimAkUh/gTrS9/UQOtv7xarskJ2/XDSNvfLGOBQPjL7PaHQ=="
+    },
+    "System.Security.AccessControl/6.0.0": {
+      "archive_sha512": "ZKNqEDuVSrS36KdsDodleb1ITDCOREwtkV+5oP0FrWNhRQHtI1xUSvybQxy4pM8PBxW47UFOhZWObWhXkWj7RQ==",
+      "metadata_content_hash": "AUADIc0LIEQe7MzC+I0cl0rAT8RrTAKFHl53yHjEUzNVIaUlhFY11vc2ebiVJzVBuOzun6F7FBA+8KAbGTTedQ=="
+    },
+    "System.Security.Cryptography.ProtectedData/6.0.0": {
+      "archive_sha512": "SJtdqwq/rfuLwtBDfeg6FEeRgHGUlEDnZttwHIHDUY3mo4o+D2mXBrBtWRq1OTx7wLLqqBwVv/FWM5JI5sNXMA==",
+      "metadata_content_hash": "rp1gMNEZpvx9vP0JW0oHLxlf8oSiQgtno77Y4PLUBjSiDYoD77Y8uXHr1Ea5XG4/pIKhqAdxZ8v8OTUtqo9PeQ=="
+    },
+    "System.Security.Permissions/6.0.0": {
+      "archive_sha512": "1PIXLMOxZPEE+i46Mwti8qFfUOBQqRZZ21co8o1NXWyoZg7sOk+SIJAYGlS8Hp9mNMpJdQOYNgcn0bxZ22ICeA==",
+      "metadata_content_hash": "T/uuc7AklkDoxmcJ7LGkyX1CcSviZuLCa4jg3PekfJ7SU0niF0IVTXwUiNVP9DSpzou2PpxJ+eNY2IfDM90ZCg=="
+    },
+    "System.Security.Principal.Windows/4.6.0": {
+      "archive_sha512": "vFxU1zSGskh2J3pBmFWGDCN0rNOhvpBb86Tzj1CTiWNF1JDvO3skbn+87G23cOf+fWXodV/nh1fXlYuAsy/sjQ==",
+      "metadata_content_hash": "Mdukseovp0YIGaz16FMH6nbfgZkrCFOJbtXQptv0aeBO9h775Ilb9+TDwLVTKikoW7y7CY7lpoXl9zmZ5G3ndA=="
+    },
+    "System.Text.Encoding/4.3.0": {
+      "archive_sha512": "b/f+7HMTpxIfeV7H03bkuHKMFylCGfr9/U6gePnfFFW0aF8LOWLDgQCY6V1oWUqDksC3mdNuyChM1vy9TP4sZw==",
+      "metadata_content_hash": "BiIg+KWaSDOITze6jGQynxg64naAPtqGHBwDrLaCtixsa5bKiR8dpPOHA7ge3C0JJQizJE+sfkz1wV+BAKAYZw=="
+    },
+    "System.Threading/4.0.11": {
+      "archive_sha512": "BcDdG7z87bb8bF8xHEGSCkd1+KKKYcoka2xlrYr9mwSIHTNXiArwAKwFb9Eh/Fw+wLVtb9YH4MJ+emORV8hePg==",
+      "metadata_content_hash": "N+3xqIcg3VDKyjwwCGaZ9HawG9aC6cSDI+s7ROma310GQo8vilFZa86hqKppwTHleR/G0sfOzhvgnUxWCR/DrQ=="
+    },
+    "System.Threading.Channels/4.7.1": {
+      "archive_sha512": "9AG3BniTyxQFajQ99spryWoANoRmCAtlM5m2Mpr8HS1dJ+QmbiZ/t2+EUP2HJAFCUkkmaBNRMV9DcTuj82aqJQ==",
+      "metadata_content_hash": "6akRtHK/wab3246t4p5v3HQrtQk8LboOt5T4dtpNgsp3zvDeM4/Gx8V12t0h+c/W9/enUrilk8n6EQqdQorZAA=="
+    },
+    "System.Threading.Tasks/4.3.0": {
+      "archive_sha512": "fUiP+CyyCjs872OA8trl6p97qma/da1xGq3h4zAbJZk8zyaU4zyEfqW5vbkP80xG/Nimun1vlWBboMEk7XxdEw==",
+      "metadata_content_hash": "LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA=="
+    },
+    "System.Threading.Tasks.Extensions/4.5.3": {
+      "archive_sha512": "ELsmPiHFrvulVLpumtz8wx+fNpL2dWZbWM92taW8whM9Vu7bqU9CKzC+mtJR7c/rp+vCShX/TLeDgHLpu7GEcA==",
+      "metadata_content_hash": "+MvhNtcvIbqmhANyKu91jQnvIRVSTiaOiFNfKWwXGHG48YAb4I/TyH8spsySiPYla7gKal5ZnF3teJqZAximyQ=="
+    },
+    "System.Windows.Extensions/6.0.0": {
+      "archive_sha512": "9R7sgWb5e1/OokgW7HN8JNXFpcsUXvLTMnfJoWBE9AvD+5e0z+f5ojr3BO3pFYbGq9Ks8AsndTi7ME13ocpU8A==",
+      "metadata_content_hash": "IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog=="
+    },
+    "Tomlyn/0.17.0": {
+      "archive_sha512": "DdVxcQEmL9eDPLt0q1uV8POeOdKzLJB3XW5UNZZD0X1cFnW572UmCwH1uJyBw9RGrjv/1ZiwpT5rOhAUn54B+w==",
+      "metadata_content_hash": "3BRbxOjZwgdXBGemOvJWuydaG/KsKrnG1Z15Chruvih8Tc8bgtLcmDgo6LPRqiF5LNh6X4Vmos7YuGteBHfePA=="
+    },
+    "Microsoft.TestPlatform.Extensions.TrxLogger/17.9.0": {
+      "archive_sha512": "m2xn3tPxUKLarm9abbUthuAzizrqYKB9/uxnymMOPKmlqHFcccW7BQh2C4d/XivS8TXX8Y+bq5yBmRov1E8Apg==",
+      "metadata_content_hash": "0W9qbEFYg+d5V/g2JRO/zA/mjrTqEDR2snrveD946te26Db4vux1lkh4R24qqQmM74kDC8iNO1g20G12pg+FEw=="
+    },
+    "Microsoft.TestPlatform.TestHost/17.9.0": {
+      "archive_sha512": "yCRsmzZaiv6/NTFzVxJVY4GaPqaLGi7E2VzUSDjvsvEhvlcQJQpozrBsegUmBr/xwgKpUE7i0gz2X2ZGO0PTGg==",
+      "metadata_content_hash": "Spmg7Wx49Ya3SxBjyeAR+nQpjMTKZwTwpZ7KyeOTIqI/WHNPnBU4HUvl5kuHPQAwGWqMy4FGZja1HvEwvoaDiA=="
+    },
+    "System.Runtime.InteropServices/4.3.0": {
+      "archive_sha512": "ZQeZw+ZU77ua1nFXycYM5G8oioFZe+N84qC/XUg1BEBl7z9luZcyjLu7+4H0yJuNfn1hOAiAAZ3u5us/lj9w2Q==",
+      "metadata_content_hash": "uv1ynXqiMK8mp1GM3jDqPCFN66eJ5w5XNomaK2XD+TuCroNTLFGeZ+WCmBMcBDyTFKou3P6cR6J/QsaqDp7fGQ=="
+    },
+    "System.Text.Encoding.Extensions/4.3.0": {
+      "archive_sha512": "5kjF3HgeNc8AxcyOfkLoFbljz4+3iOioF/m1PjGLK0Li96VW6cPGS/L2ov1GFfJqtPDU63E6AVHnHgrz/pw+7Q==",
+      "metadata_content_hash": "YVMK0Bt/A43RmwizJoZ22ei2nmrhobgeiYwFzC4YAN+nue8RF6djXDMog0UCn+brerQoYVyaS+ghy9P/MUVcmw=="
+    },
+    "System.Threading/4.3.0": {
+      "archive_sha512": "l6J1G9zmn6r5xU+DSp/Vxgx6eG+qUvQgdpgo28m1gEwfNyG6HqlF6h2ESDXZCYEPnngsmkTQ+q7MyyMMTNlaiA==",
+      "metadata_content_hash": "VkUS0kOBcUf3Wwm0TSbrevDDZ6BlM+b/HRiapRFWjM5O0NS0LviG0glKmFK+hhPDd1XFeSdU1GmlLhb2CoVpIw=="
+    },
+    "Microsoft.TestPlatform.ObjectModel/17.9.0": {
+      "archive_sha512": "Y3BIxwsZCgJp1+B2HXy+x9qNMG9XcEgMuRKGwGBH1/TxZmVW38RJTsCQ2wEbA/tzbKAzE0ebVmAZpaVFZ+BfNw==",
+      "metadata_content_hash": "1ilw/8vgmjLyKU+2SKXKXaOqpYFJCQfGqGz+x0cosl981VzjrY74Sv6qAJv+neZMZ9ZMxF3ArN6kotaQ4uvEBw=="
+    },
+    "System.Reflection.Metadata/1.6.0": {
+      "archive_sha512": "9SJ2Zu3Gux2ni4qOhqaOm9ZHyqLsahWAwUpKXh/lz9472vDYwj3CEMQFpV+Dzrat0amtqxSdwGWzjP3cmwG6IA==",
+      "metadata_content_hash": "COC1aiAJjCoA5GBF+QKL2uLqEBew4JsCkQmoHKbN3TlOZKa2fKLz5CpiRQKDz0RsAOEGsVKqOD5bomsXq/4STQ=="
+    },
+    "Microsoft.Extensions.Configuration/2.0.0": {
+      "archive_sha512": "LBfLMV5vKkxX6xM8WUT0YrIYUBgrcfKMuJX9ufIZc7vX3p016s5TZ4zy2IKpn8p5kFG31L6AZRpPeHW+U8wBmw==",
+      "metadata_content_hash": "SsI4RqI8EH00+cYO96tbftlh87sNUv1eeyuBU1XZdQkG0RrHAOjWgl7P0FoLeTSMXJpOnfweeOWj2d1/5H3FxA=="
+    },
+    "Microsoft.Extensions.Configuration.Abstractions/2.0.0": {
+      "archive_sha512": "NYGEV4dwU9OPiZcV7pC3pnLVtrlf2qaw+ijl2hDgs0mjI5s9/peCpY/mD6pbpOhpV2Xpbv/SO53wKtxexsUWxw==",
+      "metadata_content_hash": "rHFrXqMIvQNq51H8RYTO4IWmDOYh8NUzyqGlh0xHWTP6XYnKk7Ryinys2uDs+Vu88b3AMlM3gBBSs78m6OQpYQ=="
+    },
+    "Microsoft.Extensions.DependencyInjection/2.0.0": {
+      "archive_sha512": "aimtR3Dh78z3NuaLXvsvOFz77bIgF/NAQ/03Dvgk9Grl6VqFq7rorVSyXoBmjpVK+G64iIf54JXVFOQB93FzlA==",
+      "metadata_content_hash": "wakg18gHYiUL1pcjjyZuYk6OvDpbSw1E7IWxm78TMepsr+gQ8W0tWzuRm0q/9RFblngwPwo15rrgZSUV51W5Iw=="
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/2.0.0": {
+      "archive_sha512": "VN6zV4xkMKIxIP48kQzXieZPWXUeGL3M1nQvgXCm44EAvi2eC0gYj/ldrfPde4JF3TOypAENZvuJX1qkTFAgew==",
+      "metadata_content_hash": "eUdJ0Q/GfVyUJc0Jal5L1QZLceL78pvEM9wEKcHeI24KorqMDoVX+gWsMGLulQMfOwsUaPtkpQM2pFERTzSfSg=="
+    },
+    "Microsoft.Extensions.Logging/2.0.0": {
+      "archive_sha512": "tScnYyAa79A/yE/7/Vrlw5ehhgl2XarJe3RF09Ay9IgbWBQ0Fhddx9LeaAMMCRj9S3LNKgqirgEKZK4YO2H+AA==",
+      "metadata_content_hash": "VP10syWV/vxYYMKgZ2eDESmUsz3gPxvBn5J6tkVN8lI4M+dF43RN8fWsEPbcAneDmZrHl3Pv23z05nmyGkJlpg=="
+    },
+    "Microsoft.Extensions.Options/2.0.0": {
+      "archive_sha512": "r8jvgDr+HYMuuG8CO7vV3BS3ZYPOGRM437L3/wMK3Oxx01qsGU1O/PDQjlr1cuIgXoSPwTf4gS+MqFvecuEeMw==",
+      "metadata_content_hash": "sAKBgjl2gWsECBLLR9K54T7/uZaP2n9GhMYHay/oOLfvpvX0+iNAlQ2NJgVE352C9Fs5CDV3VbNTK8T2aNKQFA=="
+    },
+    "Microsoft.Extensions.Primitives/2.0.0": {
+      "archive_sha512": "RyhLFJoMszfbu1rz/gzoqvOrdgsnXxk0B/M4fKjsJdb6/I3t2MdVq4s1dWs8hOXKjcq26ovsLL1UPLowTsaTcQ==",
+      "metadata_content_hash": "ukg53qNlqTrK38WA30b5qhw0GD7y3jdI9PHHASjdKyTcBHTevFM2o23tyk3pWCgAV27Bbkm+CPQ2zUe1ZOuYSA=="
+    },
+    "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
+      "archive_sha512": "47gxeykGlqOAoyq92edecd2uaASXab64lQJMNAifQSYq7d9T4wmEMwsSk/AT402FSoMiOuHir+QXGGeV2o3BSA==",
+      "metadata_content_hash": "vUc9Npcs14QsyOD01tnv/m8sQUnGTGOw1BCmKcv77LBJY7OxhJ+zJF7UD/sCL3lYNFuqmQEVlkfS4Quif6FyYg=="
+    },
+    "System.Collections.Immutable/1.7.0": {
+      "archive_sha512": "2gKCL/2AHiNpWOm9KPYW6uDbH3+UiyP1CqILwLFju17I4oSu+RJogJUenDfWH+na6arlS+XzSgH+YjfBpcuB0w==",
+      "metadata_content_hash": "RVSM6wZUo6L2y6P3vN6gjUtyJ2IF2RVtrepF3J7nrDKfFQd5u/SnSUFclchYQis8/k5scHy9E+fVeKVQLnnkzw=="
+    },
+    "Microsoft.NETFramework.ReferenceAssemblies.net452/1.0.3": {
+      "archive_sha512": "Els1ywsbLD/XpEgQWV0yMpAOHk0Lecz4jWmOeLwzGSFJ3KFXB+57wKjX4rEJxqJf97CIFnUmcO+pvIz8LfTXvw==",
+      "metadata_content_hash": "kuFOgilYbs29xENHlqQ6aJYa+t56u+OqHx85P7GYLVlo7HL3nsug9IQY2DoPgkOpZ2xb9btYV2EFK7Enll8S3A=="
+    },
+    "NETStandard.Library/2.0.3": {
+      "archive_sha512": "548M6mnBSJWxsIlkQHfbzoYxpiYFXZZSL00p4GHYv8PkiqFBnnT68mW5mGEsA/ch9fDO9GkPgkFQpWiXZN7mAQ==",
+      "metadata_content_hash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A=="
+    },
+    "System.Buffers/4.4.0": {
+      "archive_sha512": "Ii2bedd4HVzddupdU35n3ygohUPlNn7MDimBOYcwWNce2NizQ1fCSaQJY1Tzv80aMqOGpVcU4wZr/Xe50xcTwg==",
+      "metadata_content_hash": "AwarXzzoDwX6BgrhjoJsk6tUezZEozOT5Y9QKF94Gl4JK91I4PIIBkBco9068Y9/Dra8Dkbie99kXB8+1BaYKw=="
+    },
+    "System.Memory/4.5.3": {
+      "archive_sha512": "cPzhWlLMdqrLrgXI6J4uOY0dMpA/Y/ZAp91KPldH8seoh9S/0i8qLkAnSQbPkWSN/RaXNPt8dOubT3JhQITh2w==",
+      "metadata_content_hash": "3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA=="
+    },
+    "System.Numerics.Vectors/4.4.0": {
+      "archive_sha512": "gdRrUJs1RrjW3JB5p82hYjA67xoeFLvh0SdSIWjTiN8qExlbFt/RtXwVYNc5BukJ/f9OKzQQS6gakzbJeHTqHg==",
+      "metadata_content_hash": "UiLzLW+Lw6HLed1Hcg+8jSRttrbuXv7DANVj0DkL9g6EnnzbL75EB7EWsw5uRbhxd/4YdG8li5XizGWepmG3PQ=="
+    },
+    "System.Runtime.CompilerServices.Unsafe/4.5.2": {
+      "archive_sha512": "hMkdWxksypQlFXB7JamQegDscxEAQO4FHd/lw/zlSZU9dZgAij65xjCrXer183wvoNAzJic5zzjj2oc9/dloWg==",
+      "metadata_content_hash": "wprSFgext8cwqymChhrBLu62LMg/1u92bU+VOwyfBimSPVFXtsNqEWC92Pf9ofzJFlk4IHmJA75EDJn1b2goAQ=="
+    }
+  },
+  "nuget_packages_checked": 127,
+  "dependency_identity_scope": "Raw archive digests match archive sidecars; metadata contentHash matches locks. ContentHash was not independently recomputed. No authenticated producer claim. Build reports skipped NuGet signature verification.",
+  "source_to_model_binding": "NOT_ESTABLISHED",
+  "exact_source_export": "UNSUPPORTED",
+  "HOL_parse_and_equivalence": "NOT RUN",
+  "end_to_end": false
+}

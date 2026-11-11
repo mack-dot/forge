@@ -1,0 +1,22 @@
+<<HOL message: Created theory "forge_spaceInstallTrace">>
+Saved theorem _______ "epoch_single"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_spaceInstallTrace)>>
+Saved theorem _______ "bounded_stack_single_epoch"
+Saved theorem _______ "safe_run_single_epoch"
+CHECKED epoch_single
+⊢ LENGTH a = 1 ∧ LENGTH b = 1 ⇒ LENGTH (epoch_append a b) = 1
+CHECKED bounded_stack_single_epoch
+⊢ ∀p s res t.
+    evaluate (p,s) = (res,t) ∧ res ≠ SOME Error ∧ IS_SOME t.stack_max ⇒
+    LENGTH (ptr_eq_trace p s) = 1
+CHECKED safe_run_single_epoch
+⊢ word_lang_safe_for_space initial start ∧
+  (∀k. FST
+         (evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k)) ≠
+       SOME Error) ⇒
+  ∀k. LENGTH
+        (ptr_eq_trace (Call NONE (SOME start) [0] NONE)
+           (initial with clock := k)) = 1
+Exporting theory "forge_spaceInstallTrace" ... done.
+Theory "forge_spaceInstallTrace" took 2.3s to build
+RUNTIME_PROOF_COMPLETE

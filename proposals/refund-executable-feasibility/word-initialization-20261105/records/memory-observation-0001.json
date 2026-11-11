@@ -1,0 +1,23 @@
+{
+  "memory": {
+    "argv": [
+      "vm_stat"
+    ],
+    "actual_exit": 0,
+    "stdout": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                    10411.\nPages active:                                 301993.\nPages inactive:                               286881.\nPages speculative:                             14064.\nPages throttled:                                   0.\nPages wired down:                             179585.\nPages purgeable:                               13181.\n\"Translation faults\":                    10154637807.\nPages copy-on-write:                       278649611.\nPages zero filled:                        3134096435.\nPages reactivated:                        3441828195.\nPages purged:                              145382829.\nFile-backed pages:                            181428.\nAnonymous pages:                              421510.\nPages stored in compressor:                   398726.\nPages occupied by compressor:                 214493.\nDecompressions:                           4271454218.\nCompressions:                             4639091546.\nPageins:                                   188317484.\nPageouts:                                    2113725.\nSwapins:                                   167417923.\nSwapouts:                                  176010207.\n",
+    "stderr": ""
+  },
+  "processes": {
+    "argv": [
+      "ps",
+      "-axo",
+      "pid,ppid,etime,rss,comm"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "reason": "exact-import-0003 exits1 during cached dependency loading: Run out of store. It never compares claims. One other owned HOL check remains live; no restart or process termination.",
+  "next": "Wait for terminal state, then serialize remaining checks without toolchain or proof changes.",
+  "end_to_end": false
+}

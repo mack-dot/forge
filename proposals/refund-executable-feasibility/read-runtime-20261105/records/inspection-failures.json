@@ -1,0 +1,31 @@
+{
+  "scope": "Incidental read-only path errors from tool results; no proof or build was run by these commands.",
+  "actual_failures": [
+    {
+      "command": "tail -n 100 attempt-0010/model-0003/proof.log",
+      "exit": 1,
+      "reason": "log is stdout.log"
+    },
+    {
+      "command": "cat exception-compiler-20261105/REPLAY-PLAN.md",
+      "exit": 1,
+      "reason": "file is under records/"
+    },
+    {
+      "command": "sed exception-compiler-20261105/readback.py",
+      "exit": 1,
+      "reason": "file is under records/"
+    },
+    {
+      "command": "rg HOL/src/1/bossLib.sml ...",
+      "exit": 2,
+      "reason": "wrong bossLib source path; other searched paths existed"
+    },
+    {
+      "command": "sed runtime-boundary-20261105/REPORT.md",
+      "exit": 1,
+      "reason": "packet is runtime-premises-20261104"
+    }
+  ],
+  "end_to_end": false
+}

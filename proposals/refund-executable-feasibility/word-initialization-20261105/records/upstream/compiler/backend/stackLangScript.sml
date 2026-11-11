@@ -1,0 +1,100 @@
+(*
+  The stackLang intermediate language is a structured programming
+  language with function calls, while loops, if statements, etc. All
+  assignments are assembly instructions and register allocation is
+  assumed to have been done. This is the language within which stack
+  operations get optimised and turned into normal memory accesses.
+*)
+Theory stackLang
+Ancestors
+  asm backend_common
+Libs
+  preamble
+
+
+Datatype:
+  store_name =
+    NextFree | EndOfHeap | TriggerGC | HeapLength | ProgStart | BitmapBase |
+    CurrHeap | OtherHeap | AllocSize | Globals | GlobReal | Handler | GenStart |
+    CodeBuffer | CodeBufferEnd | BitmapBuffer | BitmapBufferEnd |
+    Temp (5 word)
+End
+
+Datatype:
+  prog = Skip
+       | Inst inst
+       | Get num store_name
+       | Set store_name num
+       | OpCurrHeap binop num num
+       | Call ((stackLang$prog # num # num # num) option)
+              (* return-handler code, link reg, labels l1,l2*)
+              (num + num) (* target of call *)
+              ((stackLang$prog # num # num) option)
+              (* handler: exception-handler code, labels l1,l2*)
+       | Seq stackLang$prog stackLang$prog
+       | If cmp num reg_imm stackLang$prog stackLang$prog
+       | Loop stackLang$prog
+       | JumpLower num num num (* reg, reg, target name *)
+       | Alloc num
+       | StoreConsts num num (num option) (* reg, reg, stub name to call *)
+       | Raise num
+       | Return num
+       | Break num
+       | Continue num
+       | FFI mlstring num num num num num (* FFI index, conf_ptr, conf_len,
+                                             array_ptr, array_len, ret_addr *)
+       | Tick
+       | LocValue num num num   (* assign v1 := Loc v2 v3 *)
+       | Install num num num num num num
+           (* copy code from ptr, length of new code, code buffer start,
+              data buffer start, length of new data, ret_addr *)
+       | ShMemOp memop num (addr) (* share memory operation, register, addr to load/store *)
+       | DataBufferWrite num num (* data buffer address, word to write *)
+       (* new in stackLang, compared to wordLang, below *)
+       | RawCall num            (* tail-call into body of function (past stack alloc) *)
+       | StackAlloc num         (* allocate n slots on the stack *)
+       | StackFree num          (* free n slots on the stack *)
+       | StackStore num num     (* offset, fast *)
+       | StackStoreAny num num  (* reg contains offset, slow, used by GC *)
+       | StackLoad num num      (* offset, fast *)
+       | StackLoadAny num num   (* reg contains offset, slow, used by GC *)
+       | StackGetSize num       (* used when installing exc handler *)
+       | StackSetSize num       (* used by implementation of raise *)
+       | BitmapLoad num num     (* load word from read-only region *)
+       | Halt num
+End
+
+Overload While = “λcmp r ri c. Loop (If cmp r ri c (Break 0))”
+
+Overload move = “λdest src. Inst (Arith (Binop Or dest src (Reg src)))”
+Overload sub_1_inst = “λr1. Inst (Arith (Binop Sub r1 r1 (Imm 1)))”
+Overload sub_inst = “λr1 r2. Inst (Arith (Binop Sub r1 r1 (Reg r2)))”
+Overload add_inst = “λr1 r2. Inst (Arith (Binop Add r1 r1 (Reg r2)))”
+Overload and_inst = “λr1 r2. Inst (Arith (Binop And r1 r1 (Reg r2)))”
+Overload xor_inst = “λr1 r2. Inst (Arith (Binop Xor r1 r1 (Reg r2)))”
+Overload add_1_inst = “λr1. Inst (Arith (Binop Add r1 r1 (Imm 1)))”
+Overload or_inst = “λr1 r2. Inst (Arith (Binop Or r1 r1 (Reg r2)))”
+Overload add_bytes_in_word_inst = “λaw r1. Inst (Arith (Binop Add r1 r1 (Imm (&(arch_bytes aw)))))”
+Overload div2_inst = “λr. Inst (Arith (Shift Lsr r r (Imm 1)))”
+Overload left_shift_inst = “λr v. Inst (Arith (Shift Lsl r r (Imm (&v))))”
+Overload right_shift_inst = “λr v. Inst (Arith (Shift Lsr r r (Imm (&v))))”
+Overload const_inst = “λr w. Inst (Const r w)”
+Overload load_inst = “λr a. Inst (Mem Load r (Addr a 0))”
+Overload store_inst = “λr a. Inst (Mem Store r (Addr a 0))”
+
+Definition list_Seq_def:
+  (list_Seq [] = Skip) /\
+  (list_Seq [x] = x) /\
+  (list_Seq (x::y::xs) = Seq x (list_Seq (y::xs)))
+End
+
+Definition gc_stub_location_def:
+  gc_stub_location = stack_num_stubs-1
+End
+Definition store_consts_stub_location_def:
+  store_consts_stub_location = gc_stub_location-1
+End
+Theorem gc_stub_location_eq =
+  gc_stub_location_def |> CONV_RULE(RAND_CONV EVAL)
+Theorem store_consts_stub_location_eq =
+  store_consts_stub_location_def |> CONV_RULE(RAND_CONV EVAL)

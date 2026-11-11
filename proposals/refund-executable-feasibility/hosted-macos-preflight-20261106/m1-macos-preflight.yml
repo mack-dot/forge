@@ -1,0 +1,118 @@
+name: Forge M1 macOS environment preflight
+
+on:
+  push:
+    branches: [proposal/m1-macos-preflight-20261106]
+    paths: [.github/workflows/m1-macos-preflight.yml]
+
+permissions: {}
+
+concurrency:
+  group: forge-m1-macos-environment-preflight
+  cancel-in-progress: false
+
+jobs:
+  environment-only:
+    if: github.repository == 'mack-dot/forge' && github.event.repository.private == false
+    runs-on: macos-15
+    steps:
+      - name: Observe isolated runner capabilities without proof inputs
+        shell: bash --noprofile --norc -euo pipefail {0}
+        env:
+          APPROVED_IMAGE_VERSION: '20261104.0514.1'
+        run: |
+          /usr/bin/python3 -I -B - <<'PY'
+          import ctypes
+          import errno
+          import hashlib
+          import json
+          import os
+          import platform
+          import resource
+          import shutil
+          import subprocess
+          import sys
+
+          def emit(name, **fields):
+              print(json.dumps(dict(operation=name, end_to_end=False, **fields), sort_keys=True), flush=True)
+
+          def command(argv):
+              process = subprocess.run(argv, capture_output=True, text=True)
+              emit('command', argv=argv, actual_exit=process.returncode,
+                   stdout=process.stdout, stderr=process.stderr)
+              if process.returncode != 0:
+                  raise RuntimeError('command failed: ' + argv[0])
+              return process.stdout.strip()
+
+          resource.setrlimit(resource.RLIMIT_CPU, (120, 120))
+          resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+          emit('identity', architecture=platform.machine(), system=platform.system(),
+               release=platform.release(), effective_uid=os.geteuid(),
+               runner_os=os.environ.get('RUNNER_OS'), runner_arch=os.environ.get('RUNNER_ARCH'),
+               image_os=os.environ.get('ImageOS'), image_version=os.environ.get('ImageVersion'),
+               workflow_sha=os.environ.get('GITHUB_WORKFLOW_SHA'), source_sha=os.environ.get('GITHUB_SHA'),
+               run_id=os.environ.get('GITHUB_RUN_ID'), python_version=sys.version,
+               python_sha256=hashlib.sha256(open(sys.executable, 'rb').read()).hexdigest(),
+               provider_isolation='GitHub fresh-VM claim; not independently proved by this probe')
+          assert platform.system() == 'Darwin' and platform.machine() == 'arm64'
+          assert os.environ.get('RUNNER_ARCH') == 'ARM64'
+          assert os.environ.get('ImageVersion') == os.environ['APPROVED_IMAGE_VERSION'], 'image identity differs; review required'
+          assert os.geteuid() != 0, 'negative permission control requires a non-root process'
+          command(['/usr/bin/sw_vers'])
+          memory = int(command(['/usr/sbin/sysctl', '-n', 'hw.memsize']))
+          disk = shutil.disk_usage('/var/tmp')
+          emit('resources', memory_bytes=memory, temporary_disk_free_bytes=disk.free,
+               cpu_limit_seconds=120, core_limit_bytes=0,
+               full_HOL_resource_adequacy='NOT_ESTABLISHED')
+
+          libc = ctypes.CDLL(None, use_errno=True)
+          mkstemp = libc.mkstemp
+          mkstemp.argtypes = [ctypes.c_char_p]
+          mkstemp.restype = ctypes.c_int
+          template = ctypes.create_string_buffer(b'/var/tmp/forge-m1-preflight-XXXXXX')
+          old_mask = os.umask(0o077)
+          ctypes.set_errno(0)
+          try:
+              fd = mkstemp(template)
+              error = ctypes.get_errno()
+          finally:
+              os.umask(old_mask)
+          path = os.fsdecode(template.value)
+          emit('mkstemp', path=path, return_value=fd, errno=error,
+               error_name=errno.errorcode.get(error) if error else None)
+          if fd == -1:
+              raise OSError(error, os.strerror(error), path)
+          try:
+              payload = b'Forge environment preflight only\n'
+              written = os.write(fd, payload)
+              os.lseek(fd, 0, os.SEEK_SET)
+              observed = os.read(fd, len(payload) + 1)
+              emit('read_write', written=written, read_bytes=len(observed), equal=observed == payload)
+              assert written == len(payload) and observed == payload
+              os.close(fd)
+              fd = -1
+              os.chmod(path, 0)
+              try:
+                  forbidden = os.open(path, os.O_RDONLY)
+              except OSError as exc:
+                  emit('negative_permission', path=path, errno=exc.errno,
+                       error_name=errno.errorcode.get(exc.errno))
+                  assert exc.errno in (errno.EACCES, errno.EPERM)
+              else:
+                  os.close(forbidden)
+                  raise RuntimeError('mode000 file could be opened by non-root process')
+          finally:
+              if fd != -1:
+                  os.close(fd)
+              os.chmod(path, 0o600)
+              os.unlink(path)
+
+          command(['/usr/bin/true'])
+          allocation = bytearray(64 * 1024 * 1024)
+          for offset in range(0, len(allocation), 4096):
+              allocation[offset] = 1
+          emit('memory_probe', touched_bytes=len(allocation))
+          emit('preflight_complete', scope='Finite environment observations only',
+               pinned_HOL_execution='NOT_RUN', physical_ffiread_proof='NOT_ESTABLISHED',
+               independent_replay='NOT_RUN')
+          PY

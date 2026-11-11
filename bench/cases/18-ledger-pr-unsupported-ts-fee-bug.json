@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "balances.set(request.sender, debit - request.amount - 1n);",
+   "op": "edit",
+   "path": "ts/ledger.ts",
+   "replace": "balances.set(request.sender, debit - request.amount);",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "unsupported",
+ "expected_exit": null,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-unsupported-ts-fee-bug",
+ "kind": "unsupported",
+ "order": 18,
+ "rationale": "Only ts/ledger.ts changes: the shipped TypeScript transfer stops charging the fee. No Forge claim covers this file.",
+ "supplied_evidence": null
+}

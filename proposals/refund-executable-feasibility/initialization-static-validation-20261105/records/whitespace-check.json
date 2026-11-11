@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "full": {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "actual_exit": 2,
+      "output_lines": 305
+    },
+    "authored": {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        "ROADMAP.md",
+        "FORGE_MISSION_STATUS.md",
+        "unsure.md",
+        "proposals/refund-executable-feasibility/initialization-static-validation-20261105/REPORT.md",
+        "proposals/refund-executable-feasibility/initialization-static-validation-20261105/COMMANDS.md",
+        "proposals/refund-executable-feasibility/initialization-static-validation-20261105/records/readback.py",
+        "proposals/refund-executable-feasibility/initialization-static-validation-20261105/records/validate-sequence.py",
+        "proposals/refund-executable-feasibility/initialization-static-validation-20261105/records/validate-completion.py"
+      ],
+      "actual_exit": 0,
+      "output_lines": 0
+    }
+  },
+  "scope": "Raw generated/upstream bytes preserved; authored files pass.",
+  "end_to_end": false
+}

@@ -1,0 +1,17 @@
+{
+  "actual_exit": 0,
+  "source_snapshots_verified": 21,
+  "tool_identities_verified": {
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+  },
+  "reviewer_controlled_clean_environment": "NOT_ESTABLISHED",
+  "independent_source_acquisition_and_bootstrap_provenance": "NOT_ESTABLISHED",
+  "cold_rebuild_with_published_build_machinery": "NOT_RUN",
+  "independent_full_chain_replay": "NOT_RUN",
+  "replay_gate": "NO_GO",
+  "existing_environment_failure": "U301 records Docker socket operation not permitted. No changed environment is established; no retry or alternate access was attempted.",
+  "next_action": "Validate an authorized reviewer-controlled ARM64/macOS environment and independent source/bootstrap provenance. Rebuild standard dependencies there without producer heaps or proof caches, then follow the unchanged 21-snapshot replay plan.",
+  "scope": "Identity preflight only. Local git objects and producer hashes do not establish independent provenance or replay.",
+  "end_to_end": false
+}

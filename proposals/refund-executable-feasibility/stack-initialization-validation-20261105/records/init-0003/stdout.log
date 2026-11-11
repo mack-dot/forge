@@ -1,0 +1,94 @@
+<<HOL message: Created theory "forge_refundStackInitialization">>
+Saved theorem _______ "refund_stack_gc"
+Saved theorem _______ "refund_stack_store"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStackInitialization)>>
+Proof of 
+
+backend_from_data_tuple_cc (:64) arm8_config
+  (set_oracle arm8_backend_config oracle) =
+(λcf.
+   OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘
+   (λps.
+      (make_init arm8_config
+         (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+         (FST
+            (full_make_init (arch_wordsize arm8_config.ISA)
+               (set_oracle arm8_backend_config oracle).stack_conf
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf)
+               (2 *
+                max_heap_limit (dimindex (:64))
+                  (ensure_fp_conf_ok arm8_config
+                     (set_oracle arm8_backend_config oracle).data_conf) − 1)
+               (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+               arm8_config.addr_offset
+               (MAP n2w
+                  (FST
+                     (to_stack arm8_config
+                        (set_oracle arm8_backend_config oracle) refund_prog)))
+               (SND
+                  (SND
+                     (to_stack arm8_config
+                        (set_oracle arm8_backend_config oracle) refund_prog)))
+               (make_init mc (basis_ffi ext cl fs) tar m dm sdm ms
+                  (SND
+                     (SND
+                        (to_lab arm8_config
+                           (set_oracle arm8_backend_config oracle)
+                           refund_prog))) (compile arm8_config) cbpos cbspace
+                  (cake_orac (:64) arm8_config info syn
+                     (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                     (λps. ps.lab_prog))) save_regs data_sp
+               (cake_orac (:64) arm8_config info syn
+                  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                  (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))))
+         (fromAList
+            (SND
+               (to_word arm8_config (set_oracle arm8_backend_config oracle)
+                  refund_prog)))
+         (cake_orac (:64) arm8_config info syn
+            (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog))
+         (word_ptr_eq
+            (ensure_fp_conf_ok arm8_config
+               (set_oracle arm8_backend_config oracle).data_conf))).compile
+        cf
+        (MAP
+           (λp.
+              full_compile_single (dimindex (:64)) arm8_config.two_reg_arith
+                (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+                (set_oracle arm8_backend_config oracle).word_to_word_conf.
+                reg_alg arm8_config (p,NONE)) ps)) ∘
+   MAP
+     (compile_part
+        (ensure_fp_conf_ok arm8_config
+           (set_oracle arm8_backend_config oracle).data_conf)))
+
+failed.
+First unsolved sub-goal is
+
+OPTION_MAP
+  (λ(p1,p2).
+     (bytes_to_mlstring p1,
+      MAP (upper_n2w (arch_wordsize arm8_config.ISA)) (append (FST bm)),
+      SND bm,p2))
+  (compile arm8_config cfg
+     (MAP prog_to_section
+        (MAP (prog_comp arm8_backend_config.stack_conf.reg_names)
+           (MAP
+              (prog_comp (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf.jump arm8_config.addr_offset
+                 (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3)))
+              (MAP prog_comp progs))))) =
+OPTION_MAP
+  (λ(p1,p2).
+     (bytes_to_mlstring p1,MAP upper_w2w (MAP n2w (append (FST bm))),SND bm,
+      p2))
+  (compile arm8_config cfg
+     (MAP prog_to_section
+        (MAP (prog_comp arm8_backend_config.stack_conf.reg_names)
+           (MAP
+              (prog_comp (arch_wordsize arm8_config.ISA)
+                 arm8_backend_config.stack_conf.jump arm8_config.addr_offset
+                 (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3)))
+              (MAP prog_comp progs)))))
+

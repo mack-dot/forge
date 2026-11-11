@@ -1,0 +1,36 @@
+{
+  "full": {
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "cwd": "/private/tmp/forge-readiness-docs-20261103",
+    "actual_exit": 2,
+    "log": "full-whitespace.log"
+  },
+  "authored": {
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      "ROADMAP.md",
+      "FORGE_MISSION_STATUS.md",
+      "unsure.md",
+      "proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/CHECKPOINT.md",
+      "proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/COMMANDS.md",
+      "proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/records/checkpoint.py",
+      "proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/records/checkpoint-complete.py",
+      "proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/records/update-tracking.py",
+      "proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/records/finalize.py"
+    ],
+    "cwd": "/private/tmp/forge-readiness-docs-20261103",
+    "actual_exit": 0,
+    "log": "authored-whitespace.log"
+  },
+  "scope": "Raw proof/source bytes remain unchanged; authored files must pass.",
+  "end_to_end": false
+}

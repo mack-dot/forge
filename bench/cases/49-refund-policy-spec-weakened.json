@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    ensures decision.Authorized? ==> AllowedReason(decision.reason)\n",
+   "op": "edit",
+   "path": "spec/refund/RefundSpec.dfy",
+   "replace": "",
+   "target": "root"
+  }
+ ],
+ "domain": "refund",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "APPROVED_CONTRACT",
+ "gate": "refund",
+ "id": "refund-policy-spec-weakened",
+ "kind": "policy",
+ "order": 49,
+ "rationale": "R2 reason restriction deleted from the approved refund spec.",
+ "supplied_evidence": null
+}

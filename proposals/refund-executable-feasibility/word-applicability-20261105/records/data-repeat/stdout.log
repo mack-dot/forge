@@ -1,0 +1,58 @@
+<<HOL message: Created theory "forge_refundDataBehavior">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundDataBehavior)>>
+CHECKPOINT entry
+semantics_determ (s0 with ptr_eq_oracle := po) env prog =
+{semantics ffi (fromAList (SND (to_data cfg prog)))
+   (cake_orac (:α) asm_conf cfg' syn
+      (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+   (backend_from_data_tuple_cc (:α) asm_conf cfg) po zero_limits LN
+   InitGlobals_location}
+CHECKPOINT source-nonfailure
+semantics_determ (s0 with ptr_eq_oracle := po) env prog =
+{semantics ffi (fromAList (SND (to_data cfg prog)))
+   (cake_orac (:α) asm_conf cfg' syn
+      (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+   (backend_from_data_tuple_cc (:α) asm_conf cfg) po zero_limits LN
+   InitGlobals_location}
+CHECKPOINT flat-membership
+semantics_determ (s0 with ptr_eq_oracle := po) env prog =
+{semantics ffi (fromAList (SND (to_data cfg prog)))
+   (cake_orac (:α) asm_conf cfg' syn
+      (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+   (backend_from_data_tuple_cc (:α) asm_conf cfg) po zero_limits LN
+   InitGlobals_location}
+Saved theorem _______ "compiled_source_data"
+Saved theorem _______ "refund_data_behavior"
+CHECKED compiled_source_data
+⊢ compile asm_conf cfg prog = SOME (bytes,bitmaps,cfg') ⇒
+  (let
+     (s0,env) = THE (prim_sem_env ffi)
+   in
+     ¬semantics_prog s0 env prog Fail ∧ backend_config_ok asm_conf cfg ⇒
+     semantics_determ (s0 with ptr_eq_oracle := po) env prog =
+     {semantics ffi (fromAList (SND (to_data cfg prog)))
+        (cake_orac (:α) asm_conf cfg' syn
+           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+        (backend_from_data_tuple_cc (:α) asm_conf cfg) po zero_limits LN
+        InitGlobals_location})
+CHECKED refund_data_behavior
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  semantics_determ
+    (init_state (basis_ffi ext cl fs) with ptr_eq_oracle := po) init_env
+    refund_prog =
+  {semantics (basis_ffi ext cl fs)
+     (fromAList
+        (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+     (cake_orac (:α) arm8_config info syn
+        (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+     (backend_from_data_tuple_cc (:α) arm8_config
+        (set_oracle arm8_backend_config oracle)) po zero_limits LN
+     InitGlobals_location}
+Exporting theory "forge_refundDataBehavior" ... done.
+Theory "forge_refundDataBehavior" took 4.1s to build
+RUNTIME_PROOF_COMPLETE

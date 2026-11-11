@@ -1,0 +1,19 @@
+{
+ "changes": [
+  {
+   "op": "truncate",
+   "path": ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+   "target": "root"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "tool_failure",
+ "expected_exit": 2,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-tool-z3-corrupt",
+ "kind": "tool_failure",
+ "order": 23,
+ "rationale": "The trusted Z3 solver is truncated to zero bytes (isolated copy only).",
+ "supplied_evidence": null
+}

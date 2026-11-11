@@ -1,0 +1,33 @@
+<<HOL message: Created theory "forge_wordOracleImport">>
+EXPECTED (I ##
+ MAP
+   (λ(p1,p1',p1'',p2).
+      full_compile_single 64 arm8_config.two_reg_arith
+        (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+        (set_oracle arm8_backend_config oracle).word_to_word_conf.reg_alg
+        arm8_config ((p1,p1',p1'',p2),NONE))) ∘
+(I ##
+ MAP
+   (compile_part
+      (ensure_fp_conf_ok arm8_config
+         (set_oracle arm8_backend_config oracle).data_conf))) ∘
+cake_orac (:64) arm8_config info syn
+  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog) =
+cake_orac (:64) arm8_config forged_info syn
+  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog)
+ACTUAL (I ##
+ MAP
+   (λ(p1,p1',p1'',p2).
+      full_compile_single 64 arm8_config.two_reg_arith
+        (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+        (set_oracle arm8_backend_config oracle).word_to_word_conf.reg_alg
+        arm8_config ((p1,p1',p1'',p2),NONE))) ∘
+(I ##
+ MAP
+   (compile_part
+      (ensure_fp_conf_ok arm8_config
+         (set_oracle arm8_backend_config oracle).data_conf))) ∘
+cake_orac (:64) arm8_config info syn
+  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog) =
+cake_orac (:64) arm8_config info syn
+  (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.word_prog)

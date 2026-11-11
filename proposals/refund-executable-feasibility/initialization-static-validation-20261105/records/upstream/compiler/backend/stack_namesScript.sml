@@ -1,0 +1,119 @@
+(*
+  This compiler phase renames the registers to fit with the target
+  architecture.
+*)
+Theory stack_names
+Ancestors
+  stackLang
+Libs
+  preamble
+
+
+val _ = patternMatchesSyntax.temp_enable_pmatch();
+
+Overload find_name = ``tlookup``
+
+Definition ri_find_name_def:
+  (ri_find_name f (Reg r) = Reg (find_name f r)) /\
+  (ri_find_name f (Imm w) = Imm w)
+End
+
+Definition inst_find_name_def:
+  inst_find_name f i =
+    case i of
+    | Skip => Skip
+    | Const r w => Const (find_name f r) w
+    | Arith (Binop bop d r ri) =>
+        Arith (Binop bop (find_name f d) (find_name f r) (ri_find_name f ri))
+    | Arith (Shift sop d r ri) =>
+        Arith (Shift sop (find_name f d) (find_name f r) (ri_find_name f ri))
+    | Arith (Div r1 r2 r3) =>
+        Arith (Div (find_name f r1) (find_name f r2) (find_name f r3))
+    | Arith (AddCarry r1 r2 r3 r4) =>
+        Arith (AddCarry (find_name f r1) (find_name f r2) (find_name f r3) (find_name f r4))
+    | Arith (AddOverflow r1 r2 r3 r4) =>
+        Arith (AddOverflow (find_name f r1) (find_name f r2) (find_name f r3) (find_name f r4))
+    | Arith (SubOverflow r1 r2 r3 r4) =>
+        Arith (SubOverflow (find_name f r1) (find_name f r2) (find_name f r3) (find_name f r4))
+    | Arith (LongMul r1 r2 r3 r4) =>
+        Arith (LongMul (find_name f r1) (find_name f r2) (find_name f r3) (find_name f r4))
+    | Arith (LongDiv r1 r2 r3 r4 r5) =>
+        Arith (LongDiv (find_name f r1) (find_name f r2) (find_name f r3) (find_name f r4) (find_name f r5))
+    | Arith (IMul rd ra rb ro) =>
+        Arith (IMul (find_name f rd) (find_name f ra) (find_name f rb) (find_name f ro))
+    | Arith (IDiv rq rr ra rb) =>
+        Arith (IDiv (find_name f rq) (find_name f rr) (find_name f ra) (find_name f rb))
+    | Mem mop r (Addr a w) => Mem mop (find_name f r) (Addr (find_name f a) w)
+    | FP (FPLess r f1 f2) => FP (FPLess (find_name f r) f1 f2)
+    | FP (FPLessEqual r f1 f2) => FP (FPLessEqual (find_name f r) f1 f2)
+    | FP (FPEqual r f1 f2) => FP (FPEqual (find_name f r) f1 f2)
+    | FP (FPMovToReg r1 r2 d) => FP (FPMovToReg (find_name f r1) (find_name f r2) d)
+    | FP (FPMovFromReg d r1 r2) => FP (FPMovFromReg d (find_name f r1) (find_name f r2))
+    | i => i
+End
+
+Definition dest_find_name_def:
+  dest_find_name f (INR r) = INR (find_name f r) ∧
+  dest_find_name f x = x
+End
+
+local val comp_quotation = `
+  comp f p =
+    case p of
+    | Halt r => Halt (find_name f r)
+    | Raise r => Raise (find_name f r)
+    | Break n => Break n
+    | Continue n => Continue n
+    | Return r => Return (find_name f r)
+    | Inst i => Inst (inst_find_name f i)
+    | LocValue i l1 l2 => LocValue (find_name f i) l1 l2
+    | Seq p1 p2 => Seq (comp f p1) (comp f p2)
+    | If c r ri p1 p2 =>
+        If c (find_name f r) (ri_find_name f ri) (comp f p1) (comp f p2)
+    | Loop p1 => Loop (comp f p1)
+    | Call ret dest exc =>
+        Call (case ret of
+              | NONE => NONE
+              | SOME (p1,lr,l1,l2) => SOME (comp f p1,find_name f lr,l1,l2))
+             (dest_find_name f dest)
+             (case exc of
+              | NONE => NONE
+              | SOME (p2,l1,l2) => SOME (comp f p2,l1,l2))
+    | Install r1 r2 r3 r4 r5 r6 => Install (find_name f r1) (find_name f r2)
+      (find_name f r3) (find_name f r4) (find_name f r5) (find_name f r6)
+    | ShMemOp op r (Addr a w) => ShMemOp op (find_name f r) (Addr (find_name f a) w)
+    | FFI i r1 r2 r3 r4 r5 => FFI i (find_name f r1) (find_name f r2) (find_name f r3)
+                                    (find_name f r4) (find_name f r5)
+    | JumpLower r1 r2 dest => JumpLower (find_name f r1) (find_name f r2) dest
+    | p => p`
+in
+val comp_def = Define comp_quotation
+
+Theorem comp_pmatch = Q.prove(
+  `∀f p.` @
+    (comp_quotation |>
+     map (fn QUOTE s => Portable.replace_string {from="case",to="pmatch"} s |> QUOTE
+         | aq => aq)),
+   rpt(
+    rpt strip_tac
+    >> CONV_TAC(RAND_CONV patternMatchesLib.PMATCH_ELIM_CONV)
+    >> every_case_tac
+    >> fs[Once comp_def]));
+end
+
+Definition prog_comp_def:
+  prog_comp f (n,p,md) = (n,comp f p,md)
+End
+
+Definition compile_def:
+  compile f prog = MAP (prog_comp f) prog
+End
+
+(* some defaults *)
+
+Definition names_ok_def:
+  names_ok names reg_count avoid_regs =
+    let xs = GENLIST (find_name names) (reg_count - LENGTH avoid_regs) in
+      ALL_DISTINCT xs /\
+      EVERY (\x. x < reg_count /\ ~(MEM x avoid_regs)) xs
+End

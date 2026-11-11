@@ -1,0 +1,17 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "ARTIFACT_MISMATCH",
+ "gate": "gate",
+ "id": "ledger-evidence-from-other-domain",
+ "kind": "adversarial_evidence",
+ "order": 31,
+ "rationale": "Valid booking evidence supplied for the ledger artifact.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "booking-seed-fresh",
+  "ops": []
+ }
+}

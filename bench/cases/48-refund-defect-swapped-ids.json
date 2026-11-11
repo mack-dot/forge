@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "      plan := [Intent(context.chargeId, context.requestId, response.amount, response.reason)];\n",
+   "op": "edit",
+   "path": "impl/Refund.dfy",
+   "replace": "      plan := [Intent(context.requestId, context.chargeId, response.amount, response.reason)];\n",
+   "target": "root"
+  }
+ ],
+ "domain": "refund",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "refund",
+ "id": "refund-defect-swapped-ids",
+ "kind": "defect",
+ "order": 48,
+ "rationale": "Intent written with charge and request IDs swapped: violates R4/R5.",
+ "supplied_evidence": null
+}

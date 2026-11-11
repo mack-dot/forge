@@ -1,0 +1,32 @@
+<<HOL message: Created theory "forge_refundSourceBinding">>
+Saved theorem _______ "source_decode"
+Saved theorem _______ "source_signature"
+Proof of 
+
+let
+  initial =
+    source_initial h charge request original remaining enabled opened
+      candidate amount reason;
+  result = evaluate_stmt initial env source_body;
+  final = FST result;
+  ok =
+    eligible charge request original remaining enabled opened candidate
+      amount reason
+in
+  SND result = Rstop Sret ∧ final.heap = h ∧
+  read_local final.locals «authorized» = SOME (BoolV ok) ∧
+  read_local final.locals «outputAmount» =
+  SOME (IntV (if ok then amount else 0)) ∧
+  read_local final.locals «outputReason» =
+  SOME (StrV (if ok then reason else «»)) ∧
+  read_local final.locals «outputCharge» =
+  SOME (StrV (if ok then charge else «»)) ∧
+  read_local final.locals «outputRequest» =
+  SOME (StrV (if ok then request else «»)) ∧
+  read_local final.locals «intentCount» = SOME (IntV (if ok then 1 else 0))
+
+failed.
+First unsolved sub-goal is
+
+request = charge ∧ charge = request
+

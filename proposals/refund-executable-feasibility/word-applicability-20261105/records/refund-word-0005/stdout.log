@@ -1,0 +1,28 @@
+<<HOL message: Created theory "forge_refundWordPremises">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWordPremises)>>
+Saved theorem _______ "refund_data_nonfailure"
+EXACT_DATA_NONFAILURE_READY
+MATCH_PREMISE Fail ≠
+semantics (basis_ffi ext cl fs) (fromAList prog) co cc po zero_limits frames
+  start
+WORD_VAR start::num
+WORD_VAR frames::num sptree$num_map
+WORD_VAR po::num -> num -> bool
+WORD_VAR cc::'word_conf ->
+(num # num # dataLang$prog # metadata) list ->
+(mlstring # word64 list # 'word_conf) option
+WORD_VAR co::num -> 'word_conf # (num # num # dataLang$prog # metadata) list
+WORD_VAR prog::(num # num # dataLang$prog # metadata) list
+WORD_VAR fs::IO_fs
+WORD_VAR cl::mlstring list
+WORD_VAR ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+DATA_VAR frames::num sptree$num_map
+DATA_VAR po::num -> num -> bool
+DATA_VAR syn::num -> (num # num) # dec list
+DATA_VAR fs::IO_fs
+DATA_VAR cl::mlstring list
+DATA_VAR ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result

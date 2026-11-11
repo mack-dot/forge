@@ -1,0 +1,37 @@
+{
+  "actual_exit": 0,
+  "prior_packet_members": {
+    "exception-compiler-20261105": 134,
+    "read-runtime-20261105": 270,
+    "native-error-instructions-20261105": 83
+  },
+  "source_snapshots_match": 21,
+  "protected_files_unchanged": 50,
+  "completion_audit": "NOT_ACHIEVED",
+  "blocked_audit": {
+    "consecutive_goal_turns": [
+      {
+        "turn": "Original goal turn, U315",
+        "classification": "PROGRESS",
+        "common_blocker": "No validated reviewer-controlled clean execution environment or independent bootstrap/source provenance; replay NOT RUN."
+      },
+      {
+        "turn": "First continuation, U316",
+        "classification": "PROGRESS",
+        "common_blocker": "Same independent execution/provenance prerequisite remains unavailable. Alternate existing instruction-proof infrastructure fails before any instruction theorem; standard SAT diagnostic reports EPERM."
+      },
+      {
+        "turn": "Current continuation",
+        "classification": "Completion and blocked audit; no new proof progress",
+        "common_blocker": "Same independent execution/provenance prerequisite remains unvalidated. No new authorized context or successful dependency/observer run has been supplied or found in the inspected mission/replay evidence."
+      }
+    ],
+    "threshold_satisfied": true,
+    "same_condition": "Required independent execution context and provenance are not validated. No authorized available path can complete the physical correspondence/replay here.",
+    "important_distinction": "The SAT EPERM itself was observed in U316 only; it is not counted as three independent failures or attributed to an unobserved syscall.",
+    "no_verified_wait": "All our prior proof/observer command handles returned terminal exit codes. No live handle is being awaited.",
+    "meaningful_local_progress_available": false,
+    "external_change_required": true
+  },
+  "end_to_end": false
+}

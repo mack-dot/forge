@@ -1,0 +1,233 @@
+<<HOL message: Created theory "forge_targetInstallBridge">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_targetInstallBridge)>>
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  MEM (mc.target.get_pc ms) mc.ffi_entry_pcs
+ 4.  mc.target.get_pc ms ≠ mc.halt_pc
+ 5.  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME x
+ 6.  mc.ffi_names❲x❳ = SharedMem MappedWrite
+ 7.  ALOOKUP mc.mmio_info x = SOME (q,Addr n i,q'',r)
+ 8.  q = 0w ⇒
+     w2n (i2w i + mc.target.get_reg ms n) MOD (dimindex (:α) DIV 8) = 0
+ 9.  i2w i + mc.target.get_reg ms n ∈ mc.shared_addresses
+10.  is_valid_mapped_write (mc.target.get_pc ms) q (Addr n i) q'' r mc.target
+       ms mc.prog_addresses
+11.  call_FFI ffi (SharedMem MappedWrite) [q]
+       ((if q = 0w then word_to_bytes (mc.target.get_reg ms q'') F
+         else word_to_bytes_aux (w2n q) (mc.target.get_reg ms q'') F) ++
+        word_to_bytes (i2w i + mc.target.get_reg ms n) F) = FFI_return f l
+------------------------------------
+     evaluate
+       (mc with
+        <|ffi_interfer := shift_seq 1 mc.ffi_interfer;
+          install_interfer := handler|>) f k (mc.ffi_interfer 0 (x,l,ms)) =
+     evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) f k
+       (mc.ffi_interfer 0 (x,l,ms))
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  MEM (mc.target.get_pc ms) mc.ffi_entry_pcs
+ 4.  mc.target.get_pc ms ≠ mc.halt_pc
+ 5.  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME x
+ 6.  mc.ffi_names❲x❳ = SharedMem MappedRead
+ 7.  ALOOKUP mc.mmio_info x = SOME (q,Addr n i,q'',r)
+ 8.  q = 0w ⇒
+     w2n (i2w i + mc.target.get_reg ms n) MOD (dimindex (:α) DIV 8) = 0
+ 9.  i2w i + mc.target.get_reg ms n ∈ mc.shared_addresses
+10.  is_valid_mapped_read (mc.target.get_pc ms) q (Addr n i) q'' r mc.target
+       ms mc.prog_addresses
+11.  call_FFI ffi (SharedMem MappedRead) [q]
+       (word_to_bytes (i2w i + mc.target.get_reg ms n) F) = FFI_return f l
+------------------------------------
+     evaluate
+       (mc with
+        <|ffi_interfer := shift_seq 1 mc.ffi_interfer;
+          install_interfer := handler|>) f k (mc.ffi_interfer 0 (x,l,ms)) =
+     evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) f k
+       (mc.ffi_interfer 0 (x,l,ms))
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  MEM (mc.target.get_pc ms) mc.ffi_entry_pcs
+ 4.  mc.target.get_pc ms ≠ mc.halt_pc
+ 5.  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME x
+ 6.  mc.ffi_names❲x❳ = ExtCall m
+ 7.  ALOOKUP mc.mmio_info x = NONE
+ 8.  read_bytearray (mc.target.get_reg ms mc.ptr_reg)
+       (w2n (mc.target.get_reg ms mc.len_reg))
+       (λa.
+          if a ∈ mc.prog_addresses then SOME (mc.target.get_byte ms a)
+          else NONE) = SOME x'
+ 9.  read_bytearray (mc.target.get_reg ms mc.ptr2_reg)
+       (w2n (mc.target.get_reg ms mc.len2_reg))
+       (λa.
+          if a ∈ mc.prog_addresses then SOME (mc.target.get_byte ms a)
+          else NONE) = SOME x''
+10.  call_FFI ffi (ExtCall m) x' x'' = FFI_return f l
+------------------------------------
+     evaluate
+       (mc with
+        <|ffi_interfer := shift_seq 1 mc.ffi_interfer;
+          install_interfer := handler|>) f k (mc.ffi_interfer 0 (x,l,ms)) =
+     evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) f k
+       (mc.ffi_interfer 0 (x,l,ms))
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  mc.target.get_pc ms ∉ mc.prog_addresses
+ 4.  mc.target.get_pc ms ≠ mc.halt_pc
+ 5.  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME x
+ 6.  mc.ffi_names❲x❳ = SharedMem MappedWrite
+ 7.  ALOOKUP mc.mmio_info x = SOME (q,Addr n i,q'',r)
+ 8.  q = 0w ⇒
+     w2n (i2w i + mc.target.get_reg ms n) MOD (dimindex (:α) DIV 8) = 0
+ 9.  i2w i + mc.target.get_reg ms n ∈ mc.shared_addresses
+10.  is_valid_mapped_write (mc.target.get_pc ms) q (Addr n i) q'' r mc.target
+       ms mc.prog_addresses
+11.  call_FFI ffi (SharedMem MappedWrite) [q]
+       ((if q = 0w then word_to_bytes (mc.target.get_reg ms q'') F
+         else word_to_bytes_aux (w2n q) (mc.target.get_reg ms q'') F) ++
+        word_to_bytes (i2w i + mc.target.get_reg ms n) F) = FFI_return f l
+------------------------------------
+     evaluate
+       (mc with
+        <|ffi_interfer := shift_seq 1 mc.ffi_interfer;
+          install_interfer := handler|>) f k (mc.ffi_interfer 0 (x,l,ms)) =
+     evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) f k
+       (mc.ffi_interfer 0 (x,l,ms))
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  mc.target.get_pc ms ∉ mc.prog_addresses
+ 4.  mc.target.get_pc ms ≠ mc.halt_pc
+ 5.  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME x
+ 6.  mc.ffi_names❲x❳ = SharedMem MappedRead
+ 7.  ALOOKUP mc.mmio_info x = SOME (q,Addr n i,q'',r)
+ 8.  q = 0w ⇒
+     w2n (i2w i + mc.target.get_reg ms n) MOD (dimindex (:α) DIV 8) = 0
+ 9.  i2w i + mc.target.get_reg ms n ∈ mc.shared_addresses
+10.  is_valid_mapped_read (mc.target.get_pc ms) q (Addr n i) q'' r mc.target
+       ms mc.prog_addresses
+11.  call_FFI ffi (SharedMem MappedRead) [q]
+       (word_to_bytes (i2w i + mc.target.get_reg ms n) F) = FFI_return f l
+------------------------------------
+     evaluate
+       (mc with
+        <|ffi_interfer := shift_seq 1 mc.ffi_interfer;
+          install_interfer := handler|>) f k (mc.ffi_interfer 0 (x,l,ms)) =
+     evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) f k
+       (mc.ffi_interfer 0 (x,l,ms))
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  mc.target.get_pc ms ∉ mc.prog_addresses
+ 4.  mc.target.get_pc ms ≠ mc.halt_pc
+ 5.  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME x
+ 6.  mc.ffi_names❲x❳ = ExtCall m
+ 7.  ALOOKUP mc.mmio_info x = NONE
+ 8.  read_bytearray (mc.target.get_reg ms mc.ptr_reg)
+       (w2n (mc.target.get_reg ms mc.len_reg))
+       (λa.
+          if a ∈ mc.prog_addresses then SOME (mc.target.get_byte ms a)
+          else NONE) = SOME x'
+ 9.  read_bytearray (mc.target.get_reg ms mc.ptr2_reg)
+       (w2n (mc.target.get_reg ms mc.len2_reg))
+       (λa.
+          if a ∈ mc.prog_addresses then SOME (mc.target.get_byte ms a)
+          else NONE) = SOME x''
+10.  call_FFI ffi (ExtCall m) x' x'' = FFI_return f l
+------------------------------------
+     evaluate
+       (mc with
+        <|ffi_interfer := shift_seq 1 mc.ffi_interfer;
+          install_interfer := handler|>) f k (mc.ffi_interfer 0 (x,l,ms)) =
+     evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) f k
+       (mc.ffi_interfer 0 (x,l,ms))
+INSTALL_BRIDGE_RECURSIVE_GOAL 0.  ∀mc ffi ms.
+       (∀j ms' ffi'.
+          j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+          mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+       ∀handler.
+         evaluate (mc with install_interfer := handler) ffi k ms =
+         evaluate mc ffi k ms
+ 1.  ∀j ms' ffi'.
+       j < SUC k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc
+ 2.  mc.target.get_pc ms ≠ mc.install_pc
+ 3.  mc.target.get_pc ms ∈ mc.prog_addresses
+ 4.  ¬MEM (mc.target.get_pc ms) mc.ffi_entry_pcs
+ 5.  encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+       (mc.target.get_byte ms) mc.prog_addresses
+ 6.  mc.target.state_ok ms
+ 7.  mc.target.state_ok (mc.target.next ms)
+ 8.  mc.target.state_ok (mc.next_interfer 0 (mc.target.next ms))
+ 9.  ∀x. x ∉ mc.prog_addresses ⇒
+         mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x
+------------------------------------
+     evaluate
+       (mc with
+        <|next_interfer := shift_seq 1 mc.next_interfer;
+          install_interfer := handler|>) ffi k
+       (mc.next_interfer 0 (mc.target.next ms)) =
+     evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi k
+       (mc.next_interfer 0 (mc.target.next ms))
+Proof of 
+
+∀k mc ffi ms.
+  (∀j ms' ffi'.
+     j < k ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+     mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+  ∀handler.
+    evaluate (mc with install_interfer := handler) ffi k ms =
+    evaluate mc ffi k ms
+
+failed.

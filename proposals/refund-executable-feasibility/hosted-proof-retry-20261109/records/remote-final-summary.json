@@ -1,0 +1,41 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "jobs": [
+      {
+        "id": 129430257438,
+        "name": "environment-and-unchanged-generic-candidate",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 42661020831,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Validate private inputs and execute the unchanged generic FFI candidate",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ]
+  },
+  "isError": false
+}

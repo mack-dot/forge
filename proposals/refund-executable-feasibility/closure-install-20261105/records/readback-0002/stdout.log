@@ -1,0 +1,62 @@
+{
+  "actual_exit": 0,
+  "recorded_child_exits": {
+    "closure-0001": 1,
+    "closure-0002": 0,
+    "closure-repeat": 0,
+    "exact-import": 0,
+    "injected-install": 1,
+    "wrong-program": 1
+  },
+  "proof_hashes": {
+    "closure.sml": "5353adb2d3069820578a740c25bcb03834b6843bd73f030be1ef4ac51ce2f845",
+    "expected.sml": "c32b2b68937a314c7b2956272845603af2c3e54e56d980f31b7644886c49ab78",
+    "injected-install.sml": "45a52655a2998e7f9bb9e786cfe3c00273fb0285bc48a38f9ad75632ffbb69cb",
+    "wrong-program.sml": "48a6fe3a8e6b48b08cbd50f608bf27c68bb19e183a1046094a00064b006441da"
+  },
+  "identical_exports": {
+    ".hol/objs/forge_refundClosureInstallTheory.sig": "9d05e2f650d1d0fd070c529430c731239085bf0abc252fe662d01879e5b50896",
+    ".hol/objs/forge_refundClosureInstallTheory.dat": "ec471e2565b31a90c7bb288904c83946da1ef6b5b7b90f54ed072b7e72f4fa8f",
+    ".hol/objs/forge_refundClosureInstallTheory.sml": "984764d9016fe764fd114297f98fef66e45ac0d62ebb93a58f640d3ae52c78cf",
+    ".hol/docs/forge_refundClosureInstallTheory.html": "f213a4b053528df0889adeac779bc758c735f994913270e2f6de9eb3f1a05c6d"
+  },
+  "exact_import_statements": 1,
+  "closure_node_count": 379,
+  "closure_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "dependency_file_count": 1888,
+  "builtin_dependencies": {
+    "min": {
+      "source_sha256": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+      "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+    }
+  },
+  "local_compiler_script": {
+    "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment/forge_refundArm8CompileScript.sml",
+    "sha256": "b7e12fcf2754d115eb80d0f49fb07c06d629b956ed2e9f0d1a6213b2be60202c"
+  },
+  "protected_files_unchanged": 50,
+  "prior_packets": {
+    "runtime-premises-20261104": {
+      "manifest_sha256": "33cd153d38907be0ee34e4a7cda35698b46b41c9f218126a325eaeeecf3e3177",
+      "members": 100
+    },
+    "installation-premise-20261104": {
+      "manifest_sha256": "393b2f2664d5c23cd289a95c51b6870c5c30b3d62595f91df3c088a0931641b7",
+      "members": 123
+    },
+    "target-install-bridge-20261105": {
+      "manifest_sha256": "523ae744f9ffbb1d1bfade9db4d200bf53a25219479a6780a1aeaa418513005c",
+      "members": 233
+    }
+  },
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "scope": "Exact refund closure syntax under default ARM8 config contains no Install. Lower-pass preservation and target installer exclusion NOT_ESTABLISHED.",
+  "native_or_hosted_execution": "NOT RUN",
+  "independent_full_chain_replay": "NOT RUN",
+  "end_to_end": false
+}

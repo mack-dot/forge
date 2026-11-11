@@ -1,0 +1,37 @@
+{
+  "actual_exit": 0,
+  "cost": {
+    "billable": {
+      "MACOS": {
+        "job_runs": [
+          {
+            "duration_ms": 0,
+            "job_id": 128147719439
+          }
+        ],
+        "jobs": 1,
+        "total_ms": 0
+      }
+    },
+    "run_duration_ms": 12000
+  },
+  "end_to_end": false,
+  "job_actual_exit": 78,
+  "latent_config_failure": {
+    "actual_remote_cause": false,
+    "finding": "Manifest-byte-count placeholder replacement also changed the environment key",
+    "published_key": "INPUT_8435",
+    "reachability": "Not reached; mkdir EACCES occurred first",
+    "remote_SAT": "NOT_RUN",
+    "required_key": "INPUT_MANIFEST_BYTES",
+    "static_check_status": "FAIL"
+  },
+  "normalization": "Provider timestamp prefixes and ANSI escape sequences stripped only in derived view; complete raw log retained per user request",
+  "proposed_workflow_execution": "NOT_RUN",
+  "proposed_workflow_sha256": "ed975f35b2016f84fcb814a4cdb81997f94eb8beb3b4d6e4fde0b74c9640d9fe",
+  "raw_log_bytes": 24364,
+  "raw_log_sha256": "3353e60dea84993945265b204c8cf9b52e0ebb400814c04cf9456f12c72a7c53",
+  "remote_SAT": "NOT_RUN",
+  "remote_theorem_claim": "NOT_ESTABLISHED",
+  "remote_workflow_bytes_match": true
+}

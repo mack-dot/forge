@@ -1,0 +1,24 @@
+LOADED_STATE /Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state0
+LOADED_STATE /Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/termination/numheap
+LOADED_STATE /Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state
+LOADED_STATE /Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap
+FROZEN_SOLVER_PATH /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/HolSat/sat_solvers/minisat/minisat
+FROZEN_SOLVER_EXECUTABLE true
+PHASE basis-theory-load
+RESOLVED_CF_MODULE SOME "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/local-private-inputs/.toolchain/experiments/refund-cakeml-20261104/cakeml/characteristic/cfLib.uo"
+CANDIDATE_TERM_PARSED
+FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧ MEM «read» ns ∧
+¬MEM «» ns ∧
+u «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) s =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) s') ⇒
+app p TextIO_read_v [fdv; nv]
+  (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) * one (FFI_part s u ns events))
+  (POSTe e.
+     &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+     one
+       (FFI_part s' u ns
+          (events ++
+           [IO_event (ExtCall «read») (n2w8 fd)
+              (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))])))
+NO_THEOREM_ATTEMPTED
+RELOCATION_INSPECTION_COMPLETE

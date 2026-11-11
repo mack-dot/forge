@@ -1,0 +1,23 @@
+{
+  "reviewer": "/root/binary_assurance_audit",
+  "read_only": true,
+  "approval": false,
+  "observation_log_byte_identical": true,
+  "actual_modules": 567,
+  "actual_closure_assumptions": 86,
+  "pool_objects": 580,
+  "integrity_archive_members": 26,
+  "archive_members_match_frozen_records": true,
+  "theorem_source_hashes_unchanged": true,
+  "initial_findings": [
+    {
+      "file": "observation-checks.json",
+      "finding": "Stale NOT RUN/new_full_independent_kernel statuses",
+      "resolution": "Top status actual0; completed567/86 context added; primitive-audit flag renamed and marked historical",
+      "resolved": true
+    }
+  ],
+  "final_targeted_review": "Finding resolved; no remaining blocker from this finding",
+  "claim_or_policy_approval": false,
+  "end_to_end": false
+}

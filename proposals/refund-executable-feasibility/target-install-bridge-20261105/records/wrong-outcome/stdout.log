@@ -1,0 +1,19 @@
+<<HOL message: Created theory "forge_installExclusionControl">>
+Proof of 
+
+let
+  mc =
+    <|prog_addresses := ∅; ffi_entry_pcs := []; halt_pc := 1w;
+      install_pc := 0w;
+      target := <|get_pc := (λs. n2w s); get_reg := (λs r. 0w)|>;
+      install_interfer := (λk x. 1)|>
+in
+  evaluate mc ffi 2 0 = (Halt Success,1,ffi) ∧
+  evaluate (mc with install_interfer := (λk x. 2)) ffi 2 0 =
+  (Halt Success,2,ffi)
+
+failed.
+First unsolved sub-goal is
+
+F
+

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundReadEventGap</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundReadEventGap</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../../../../../.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/.hol/docs/basis_ffiTheory.html">basis_ffi</a></li>
+<li><a href="../../../../../refund-stdin-domain-20261107/attempt-0001/model-0004/.hol/docs/forge_refundStdinDomainTheory.html">forge_refundStdinDomain</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Definitions</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#basis_read_ignores_ext">basis_read_ignores_ext</a><a href="#basis_stdin_read_total">basis_stdin_read_total</a><a href="#stdin_error_complete_trace_rejected">stdin_error_complete_trace_rejected</a><a href="#stdin_error_event_rejected">stdin_error_event_rejected</a></div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="basis_read_ignores_ext">
+<div class="thm-name"><code>basis_read_ignores_ext</code></div>
+<pre> []
+⊢ basis_ffi_oracle ext (ExtCall «read») st conf bytes =
+  basis_ffi_oracle ext' (ExtCall «read») st conf bytes
+</pre>
+</div>
+<div class="thm" id="basis_stdin_read_total">
+<div class="thm-name"><code>basis_stdin_read_total</code></div>
+<pre> []
+⊢ wfFS fs ∧ STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ⇒
+  ∃bytes' fs'.
+    basis_ffi_oracle ext (ExtCall «read») (cl,fs) conf
+      (n1::n0::pad1::pad2::read_tail) = Oracle_return (cl,fs') bytes' ∧
+    HD bytes' = 0w
+</pre>
+</div>
+<div class="thm" id="stdin_error_complete_trace_rejected">
+<div class="thm-name"><code>stdin_error_complete_trace_rejected</code></div>
+<pre> []
+⊢ extract_fs_with_numchars ext (cl0,fs0) prefix = SOME (cl,fs) ∧ wfFS fs ∧
+  STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ∧
+  MAP FST pairs = n1::n0::pad1::pad2::read_tail ∧ HD (MAP SND pairs) = 1w ⇒
+  extract_fs ext (cl0,fs0)
+    (prefix ++ IO_event (ExtCall «read») conf pairs::suffix) = NONE
+</pre>
+</div>
+<div class="thm" id="stdin_error_event_rejected">
+<div class="thm-name"><code>stdin_error_event_rejected</code></div>
+<pre> []
+⊢ wfFS fs ∧ STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ∧
+  MAP FST pairs = n1::n0::pad1::pad2::read_tail ∧ HD (MAP SND pairs) = 1w ⇒
+  extract_fs_with_numchars ext (cl,fs)
+    (IO_event (ExtCall «read») conf pairs::suffix) = NONE
+</pre>
+</div>
+</section>
+</body>
+</html>

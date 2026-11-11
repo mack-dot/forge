@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "content": "#!/bin/sh\necho \"4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\"\nexit 0\n",
+   "mode": "0755",
+   "op": "write",
+   "path": ".toolchain/dafny-4.11.0/dafny/dafny",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "tool_failure",
+ "expected_exit": 2,
+ "expected_reason_prefix": null,
+ "gate": "booking",
+ "id": "booking-tool-lying-checker",
+ "kind": "tool_failure",
+ "order": 43,
+ "rationale": "Dafny replaced by a script that prints the pinned version and exits 0 for everything (isolated copy only).",
+ "supplied_evidence": null
+}

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundInitializedEpoch</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundInitializedEpoch</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../code-0003/.hol/docs/forge_refundWordInitializationTheory.html">forge_refundWordInitialization</a></li>
+<li><a href="../../refund-parent/.hol/docs/forge_refundWordPremisesTheory.html">forge_refundWordPremises</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Definitions</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#refund_initialized_single_epoch">refund_initialized_single_epoch</a><a href="#refund_word_config_facts">refund_word_config_facts</a></div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="refund_initialized_single_epoch">
+<div class="thm-name"><code>refund_initialized_single_epoch</code></div>
+<pre>⊢ (∀k. ∃rest.
+     evaluate
+       (Call NONE (SOME InitGlobals_location) [0] NONE,
+        &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+          fp_regs := s.fp_regs; store := s.store \\ Handler; stack := [];
+          stack_limit := LENGTH s.stack; stack_max := SOME 1;
+          stack_size :=
+            mapi
+              (λn (arg_count,prog,md).
+                 FST
+                   (SND
+                      (compile_prog arm8_config F prog arg_count
+                         (arm8_config.reg_count −
+                          (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+              (fromAList
+                 (SND
+                    (to_word arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog)));
+          memory := s.memory; mdomain := s.mdomain;
+          sh_mdomain := s.sh_mdomain; permute := K I;
+          compile :=
+            (λ(bm0,cfg) progs.
+               (let
+                  (progs,fs,bm) =
+                    compile_word_to_stack arm8_config F
+                      (arm8_config.reg_count −
+                       (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+                in
+                  OPTION_MAP
+                    (λ(bytes,cfg).
+                       (bytes,MAP n2w (append (FST bm)),SND bm,cfg))
+                    (s.compile cfg progs)));
+          compile_oracle :=
+            (I ##
+             MAP
+               (λp.
+                  full_compile_single 64 arm8_config.two_reg_arith
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 5))
+                    (set_oracle arm8_backend_config oracle).
+                    word_to_word_conf.reg_alg arm8_config (p,NONE))) ∘ tco;
+          code_buffer := s.code_buffer; data_buffer := s.data_buffer;
+          gc_fun :=
+            word_gc_fun
+              (ensure_fp_conf_ok arm8_config
+                 (set_oracle arm8_backend_config oracle).data_conf);
+          handler := 0; clock := k; termdep := 0;
+          code :=
+            fromAList
+              (SND
+                 (to_word arm8_config
+                    (set_oracle arm8_backend_config oracle) refund_prog));
+          be :=
+            (ensure_fp_conf_ok arm8_config
+               (set_oracle arm8_backend_config oracle).data_conf).be;
+          ptr_eq_oracle := SOME po;
+          ptr_eq_rel :=
+            word_ptr_eq
+              (ensure_fp_conf_ok arm8_config
+                 (set_oracle arm8_backend_config oracle).data_conf);
+          ffi := basis_ffi ext cl fs|&gt;) =
+     (I ## (λs. s with ptr_eq_oracle := SOME rest))
+       (evaluate
+          (Call NONE (SOME InitGlobals_location) [0] NONE,
+           &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+             fp_regs := s.fp_regs; store := s.store \\ Handler;
+             stack := []; stack_limit := LENGTH s.stack;
+             stack_max := SOME 1;
+             stack_size :=
+               mapi
+                 (λn (arg_count,prog,md).
+                    FST
+                      (SND
+                         (compile_prog arm8_config F prog arg_count
+                            (arm8_config.reg_count −
+                             (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+                 (fromAList
+                    (SND
+                       (to_word arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog))); memory := s.memory;
+             mdomain := s.mdomain; sh_mdomain := s.sh_mdomain;
+             permute := K I;
+             compile :=
+               (λ(bm0,cfg) progs.
+                  (let
+                     (progs,fs,bm) =
+                       compile_word_to_stack arm8_config F
+                         (arm8_config.reg_count −
+                          (LENGTH arm8_config.avoid_regs + 5)) progs
+                         (Nil,bm0)
+                   in
+                     OPTION_MAP
+                       (λ(bytes,cfg).
+                          (bytes,MAP n2w (append (FST bm)),SND bm,cfg))
+                       (s.compile cfg progs)));
+             compile_oracle :=
+               (I ##
+                MAP
+                  (λp.
+                     full_compile_single 64 arm8_config.two_reg_arith
+                       (arm8_config.reg_count −
+                        (LENGTH arm8_config.avoid_regs + 5))
+                       (set_oracle arm8_backend_config oracle).
+                       word_to_word_conf.reg_alg arm8_config (p,NONE))) ∘
+               tco; code_buffer := s.code_buffer;
+             data_buffer := s.data_buffer;
+             gc_fun :=
+               word_gc_fun
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf);
+             handler := 0; clock := k; termdep := 0;
+             code :=
+               fromAList
+                 (SND
+                    (to_word arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog));
+             be :=
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf).be;
+             ptr_eq_oracle := NONE;
+             ptr_eq_rel :=
+               word_ptr_eq
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf);
+             ffi := basis_ffi ext cl fs|&gt;))) ∧
+  (∀n. EVERY (λ(n,_0). data_num_stubs ≤ n)
+         (SND
+            (cake_orac (:64) arm8_config info syn
+               (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+               (λps. ps.data_prog) n))) ∧
+  Abbrev
+    (tco =
+     (I ##
+      MAP
+        (compile_part
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf))) ∘
+     cake_orac (:64) arm8_config info syn
+       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog)) ∧
+  Abbrev
+    (tcc =
+     (λconf progs.
+        (λ(bm0,cfg) progs.
+           (let
+              (progs,fs,bm) =
+                compile_word_to_stack arm8_config F
+                  (arm8_config.reg_count −
+                   (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+            in
+              OPTION_MAP
+                (λ(bytes,cfg). (bytes,MAP n2w (append (FST bm)),SND bm,cfg))
+                (s.compile cfg progs))) conf
+          (MAP
+             (λp.
+                full_compile_single 64 arm8_config.two_reg_arith
+                  (arm8_config.reg_count −
+                   (LENGTH arm8_config.avoid_regs + 5))
+                  (set_oracle arm8_backend_config oracle).word_to_word_conf.
+                  reg_alg arm8_config (p,NONE)) progs))) ∧ STD_streams fs ∧
+  wfFS fs ∧ wfcl cl ∧ s.stack ≠ [] ∧
+  (s.be ⇔
+   (ensure_fp_conf_ok arm8_config
+      (set_oracle arm8_backend_config oracle).data_conf).be) ∧
+  co =
+  (I ##
+   MAP
+     (λp.
+        full_compile_single 64 arm8_config.two_reg_arith
+          (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+          (set_oracle arm8_backend_config oracle).word_to_word_conf.reg_alg
+          arm8_config (p,NONE))) ∘ tco ∧
+  s.gc_fun =
+  word_gc_fun
+    (ensure_fp_conf_ok arm8_config
+       (set_oracle arm8_backend_config oracle).data_conf) ∧
+  backend_from_data_tuple_cc (:64) arm8_config
+    (set_oracle arm8_backend_config oracle) =
+  (λcfg.
+     OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+     MAP
+       (compile_part
+          (ensure_fp_conf_ok arm8_config
+             (set_oracle arm8_backend_config oracle).data_conf))) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧
+  frames =
+  mapi
+    (λn (arg_count,prog,md).
+       FST
+         (SND
+            (compile_prog arm8_config F prog arg_count
+               (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5))
+               (Nil,0))))
+    (fromAList
+       (SND
+          (to_word arm8_config (set_oracle arm8_backend_config oracle)
+             refund_prog))) ∧
+  data_lang_safe_for_space (basis_ffi ext cl fs) po
+    (fromAList
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+    (get_limits
+       (ensure_fp_conf_ok arm8_config
+          (set_oracle arm8_backend_config oracle).data_conf)
+       &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+         fp_regs := s.fp_regs; store := s.store \\ Handler; stack := [];
+         stack_limit := LENGTH s.stack; stack_max := SOME 1;
+         stack_size :=
+           mapi
+             (λn (arg_count,prog,md).
+                FST
+                  (SND
+                     (compile_prog arm8_config F prog arg_count
+                        (arm8_config.reg_count −
+                         (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+             (fromAList
+                (SND
+                   (to_word arm8_config
+                      (set_oracle arm8_backend_config oracle) refund_prog)));
+         memory := s.memory; mdomain := s.mdomain;
+         sh_mdomain := s.sh_mdomain; permute := K I;
+         compile :=
+           (λ(bm0,cfg) progs.
+              (let
+                 (progs,fs,bm) =
+                   compile_word_to_stack arm8_config F
+                     (arm8_config.reg_count −
+                      (LENGTH arm8_config.avoid_regs + 5)) progs (Nil,bm0)
+               in
+                 OPTION_MAP
+                   (λ(bytes,cfg).
+                      (bytes,MAP n2w (append (FST bm)),SND bm,cfg))
+                   (s.compile cfg progs))); compile_oracle := co;
+         code_buffer := s.code_buffer; data_buffer := s.data_buffer;
+         gc_fun := s.gc_fun; handler := 0; clock := s.clock; termdep := 0;
+         code :=
+           fromAList
+             (SND
+                (to_word arm8_config
+                   (set_oracle arm8_backend_config oracle) refund_prog));
+         be := s.be; ptr_eq_oracle := NONE;
+         ptr_eq_rel :=
+           word_ptr_eq
+             (ensure_fp_conf_ok arm8_config
+                (set_oracle arm8_backend_config oracle).data_conf);
+         ffi := basis_ffi ext cl fs|&gt;) frames InitGlobals_location ∧
+  init_store_ok
+    (ensure_fp_conf_ok arm8_config
+       (set_oracle arm8_backend_config oracle).data_conf)
+    (s.store \\ Handler) s.memory s.mdomain s.code_buffer s.data_buffer ⇒
+  ∀k. LENGTH
+        (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+           &lt;|locals := insert 0 (Loc 1 0) LN; locals_size := SOME 0;
+             fp_regs := s.fp_regs; store := s.store \\ Handler;
+             stack := []; stack_limit := LENGTH s.stack;
+             stack_max := SOME 1;
+             stack_size :=
+               mapi
+                 (λn (arg_count,prog,md).
+                    FST
+                      (SND
+                         (compile_prog arm8_config F prog arg_count
+                            (arm8_config.reg_count −
+                             (LENGTH arm8_config.avoid_regs + 5)) (Nil,0))))
+                 (fromAList
+                    (SND
+                       (to_word arm8_config
+                          (set_oracle arm8_backend_config oracle)
+                          refund_prog))); memory := s.memory;
+             mdomain := s.mdomain; sh_mdomain := s.sh_mdomain;
+             permute := K I;
+             compile :=
+               (λ(bm0,cfg) progs.
+                  (let
+                     (progs,fs,bm) =
+                       compile_word_to_stack arm8_config F
+                         (arm8_config.reg_count −
+                          (LENGTH arm8_config.avoid_regs + 5)) progs
+                         (Nil,bm0)
+                   in
+                     OPTION_MAP
+                       (λ(bytes,cfg).
+                          (bytes,MAP n2w (append (FST bm)),SND bm,cfg))
+                       (s.compile cfg progs)));
+             compile_oracle :=
+               (I ##
+                MAP
+                  (λp.
+                     full_compile_single 64 arm8_config.two_reg_arith
+                       (arm8_config.reg_count −
+                        (LENGTH arm8_config.avoid_regs + 5))
+                       (set_oracle arm8_backend_config oracle).
+                       word_to_word_conf.reg_alg arm8_config (p,NONE))) ∘
+               tco; code_buffer := s.code_buffer;
+             data_buffer := s.data_buffer;
+             gc_fun :=
+               word_gc_fun
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf);
+             handler := 0; clock := k; termdep := 0;
+             code :=
+               fromAList
+                 (SND
+                    (to_word arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog));
+             be :=
+               (ensure_fp_conf_ok arm8_config
+                  (set_oracle arm8_backend_config oracle).data_conf).be;
+             ptr_eq_oracle := NONE;
+             ptr_eq_rel :=
+               word_ptr_eq
+                 (ensure_fp_conf_ok arm8_config
+                    (set_oracle arm8_backend_config oracle).data_conf);
+             ffi := basis_ffi ext cl fs|&gt;) = 1
+</pre>
+</div>
+<div class="thm" id="refund_word_config_facts">
+<div class="thm-name"><code>refund_word_config_facts</code></div>
+<pre>⊢ conf_ok (dimindex (:64))
+    (ensure_fp_conf_ok arm8_config
+       (set_oracle arm8_backend_config oracle).data_conf) ∧
+  (ensure_fp_conf_ok arm8_config
+     (set_oracle arm8_backend_config oracle).data_conf).gc_kind ≠ None ∧
+  isa_bits arm8_config = dimindex (:64) ∧ good_dimindex (:64)
+</pre>
+</div>
+</section>
+</body>
+</html>

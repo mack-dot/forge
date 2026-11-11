@@ -1,0 +1,20 @@
+<<HOL message: Created theory "forge_installSpaceBarrier">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_installSpaceBarrier)>>
+Saved theorem _______ "install_outcomes"
+Saved theorem _______ "install_suffix_unbounded"
+Saved theorem _______ "safe_run_excludes_install_suffix"
+CHECKED install_outcomes
+⊢ evaluate (Install ptr len cptr dptr dend names,s) = (res,t) ⇒
+  res = NONE ∧ t.stack_max = NONE ∨ res = SOME Error ∧ t = s
+CHECKED install_suffix_unbounded
+⊢ evaluate (Install ptr len cptr dptr dend names,s) = (NONE,t) ∧
+  evaluate (suffix,t) = (res,u) ⇒
+  u.stack_max = NONE
+CHECKED safe_run_excludes_install_suffix
+⊢ word_lang_safe_for_space initial start ∧
+  evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k) =
+  (res,final) ∧ evaluate (Install ptr len cptr dptr dend names,s) = (NONE,t) ⇒
+  ¬∃suffix r. evaluate (suffix,t) = (r,final)
+Exporting theory "forge_installSpaceBarrier" ... done.
+Theory "forge_installSpaceBarrier" took 0.59999s to build
+RUNTIME_PROOF_COMPLETE

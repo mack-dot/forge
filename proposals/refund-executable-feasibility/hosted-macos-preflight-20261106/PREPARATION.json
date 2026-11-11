@@ -1,0 +1,124 @@
+{
+  "actual_static_check_exit": 0,
+  "scope": "YAML parsing,embedded Python compilation and mutation-scope checks only. No workflow or environment probe executed.",
+  "workflow_sha256": "2b9d331ab4c85c54ec69c49600b110289937b27353d307f36f783645eda34ccb",
+  "embedded_python_sha256": "f750660debd585d83317194cffd29a95e99f2e8dea177e92dc6d42bdb0ffa2dc",
+  "base_commit": "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+  "base_workflow_triggers": {
+    ".github/workflows/booking-reuse.yml": {
+      "workflow_dispatch": {
+        "inputs": {
+          "booking_pr": {
+            "description": "Approved experiment PR number (one Booking.dfy change)",
+            "required": "true",
+            "type": "string"
+          },
+          "booking_head": {
+            "description": "Exact 40-character head approved for this dispatch",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    },
+    ".github/workflows/proof-gate.yml": {
+      "pull_request_target": {
+        "types": [
+          "opened",
+          "synchronize",
+          "reopened",
+          "ready_for_review"
+        ],
+        "branches": [
+          "main"
+        ]
+      }
+    },
+    ".github/workflows/provenance-negative.yml": {
+      "workflow_dispatch": {
+        "inputs": {
+          "request": {
+            "description": "Exact original controller request JSON",
+            "required": "true",
+            "type": "string"
+          },
+          "implementation_sha256": {
+            "description": "Separately approved implementation.lock SHA-256",
+            "required": "true",
+            "type": "string"
+          },
+          "producer_run_id": {
+            "description": "Successful provenance run at the same exact source commit",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    },
+    ".github/workflows/provenance.yml": {
+      "workflow_dispatch": {
+        "inputs": {
+          "request": {
+            "description": "Exact JSON request from the independent local controller",
+            "required": "true",
+            "type": "string"
+          },
+          "implementation_sha256": {
+            "description": "Separately approved implementation.lock SHA-256",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    },
+    ".github/workflows/stage4-exits.yml": {
+      "push": {
+        "branches": [
+          "main"
+        ],
+        "paths": [
+          "results/stage4/pr-runs.json"
+        ]
+      },
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-candidate-dry-run-v2.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-candidate-dry-run.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-hosted-probe-2.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-hosted-probe.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-private-dry-run-v31.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-private-dry-run-v32.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/toolchain-inventory.yml": {
+      "workflow_dispatch": "",
+      "push": {
+        "branches": [
+          "main"
+        ],
+        "paths": [
+          ".github/workflows/toolchain-inventory.yml",
+          "toolchain/ci-bootstrap.json",
+          "toolchain/inventory_ci.py"
+        ]
+      }
+    }
+  },
+  "existing_workflows_matching_proposed_branch_push": 0,
+  "candidate_runner": "macos-15",
+  "approved_image_version": "20261104.0514.1",
+  "publication": "NOT_RUN",
+  "remote_preflight": "NOT_RUN",
+  "pinned_SAT": "NOT_RUN",
+  "end_to_end": false
+}

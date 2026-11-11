@@ -1,0 +1,25 @@
+--- a/gate/provenance/common.py
++++ b/gate/provenance/common.py
+@@ -104,7 +104,10 @@
+     if token_name is not None:
+         # Each caller names its own read-only token; records never contain it.
+         token = os.environ.get(token_name, '')
+-        require(re.fullmatch(r'[A-Za-z0-9_]{20,255}', token), 'GITHUB_TOKEN_REQUIRED:' + token_name)
++        # Tokens are opaque and vary in length (stateless installation tokens are
++        # about 520 characters). Visible ASCII only: no space, control character
++        # or line break can reach the request header.
++        require(re.fullmatch(r'[\x21-\x7e]{20,4096}', token), 'GITHUB_TOKEN_REQUIRED:' + token_name)
+         headers['Authorization'] = 'Bearer ' + token
+     req = urllib.request.Request(url, headers=headers)
+     try:
+--- a/gate/provenance/implementation.lock
++++ b/gate/provenance/implementation.lock
+@@ -20,7 +20,7 @@
+     "gate/provenance/Dockerfile": "bb0a3d3dee8865515c3b777a6799a6178d8d6c0c796d2b46d37e3fa13987b877",
+     "gate/provenance/artifact-identities.json": "0f2c86a49738b5bbdf15cd00b3490347dfece5f5239a3414a46d75c212fa9718",
+     "gate/provenance/bootstrap.py": "8895a0881586dfcdf844fca8c09ec8bac662cbbc158cadb19084cfc5a5385bbf",
+-    "gate/provenance/common.py": "d63010fc674df43494f1b803268d0d81fa892679a5d1ae7546d120138daf0a64",
++    "gate/provenance/common.py": "6602b3e4b28e25e944dcb56b8e37f40e8d7dca54dcaf15998c446d0312b1ff64",
+     "gate/provenance/hosted_setup.py": "710b24edd7b69561c8fb951afa42c3b8f2e1e16393d4cebbb6517a08f73d6c28",
+     "gate/provenance/observe.py": "aea3bf21a1d0267df0e374bbcfbf3e09ff2df2e3b1fa34d16fe115bc010a6c13",
+     "gate/provenance/preflight.py": "e4f40ecfbc2faed744ddb286a77abde140ef40d1fb1a7a245536a1171146cb39",

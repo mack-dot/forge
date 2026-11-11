@@ -1,0 +1,82 @@
+<<HOL message: Created theory "forge_refundSuccessfulInitialization">>
+PUBLISHED full_make_init_semantics2
+⊢ full_make_init (aw :arch_width) (stack_conf :stack_to_lab$config)
+    (data_conf :data_to_word$config) (max_heap :num) (sp :num)
+    (offset :int # int) (bitmaps :α word list)
+    (code :(num # prog # metadata) list) (t :(α, β, γ) labSem$state)
+    (save_regs :num -> bool) (data_sp :num)
+    (coracle :num -> β # (num # prog # metadata) list # α word list) =
+  ((s :(α, β, γ) stackSem$state),(opt :(α, β, γ) stackSem$state option)) ∧
+  good_dimindex (:α) ∧ arch_width_bits aw = dimindex (:α) ∧
+  t.code =
+  (compile aw stack_conf data_conf max_heap sp offset code :sec list) ∧
+  t.compile_oracle =
+  (pure_co
+     (compile_no_stubs aw stack_conf.reg_names stack_conf.jump offset sp ∘
+      (FST :(num # prog # metadata) list # α word list ->
+            (num # prog # metadata) list)) :
+   β # (num # prog # metadata) list # α word list -> β # sec list) ∘ coracle ∧
+  ¬t.failed ∧ memory_assumption stack_conf.reg_names bitmaps data_sp t ∧
+  max_stack_alloc ≤ max_heap ∧ t.link_reg ∉ save_regs ∧ t.pc = (0 :num) ∧
+  (∀(k :num) (i :ffiname) (n :num).
+     k ∈ save_regs ⇒ t.io_regs n i k = (NONE :α word option)) ∧
+  (∀(k :num) (n :num). k ∈ save_regs ⇒ t.cc_regs n k = (NONE :α word option)) ∧
+  (∀(x :α word).
+     x ∈ t.mem_domain ⇒ w2n x MOD (dimindex (:α) DIV (8 :num)) = (0 :num)) ∧
+  (∀(x :α word).
+     x ∈ t.shared_mem_domain ⇒
+     w2n x MOD (dimindex (:α) DIV (8 :num)) = (0 :num)) ∧
+  (good_code sp code :bool) ∧
+  (∀(n :num). (good_code sp (FST (SND (coracle n))) :bool)) ∧
+  (10 :num) ≤ sp ∧
+  EVERY
+    (λ(r :num).
+       find_name stack_conf.reg_names (r + sp − (2 :num)) ∈ save_regs)
+    [(2 :num); (3 :num); (4 :num)] ∧
+  find_name stack_conf.reg_names (4 :num) = t.len2_reg ∧
+  find_name stack_conf.reg_names (3 :num) = t.ptr2_reg ∧
+  find_name stack_conf.reg_names (2 :num) = t.len_reg ∧
+  find_name stack_conf.reg_names (1 :num) = t.ptr_reg ∧
+  find_name stack_conf.reg_names (0 :num) = t.link_reg ∧
+  find_name stack_conf.reg_names PERMUTES 𝕌(:num) ⇒
+  opt ≠ (NONE :(α, β, γ) stackSem$state option) ∧
+  ((semantics InitGlobals_location s :behaviour) ≠ Fail ⇒
+   (semantics t :behaviour) = (semantics InitGlobals_location s :behaviour))
+PUBLISHED stack_to_lab_orac_eq_std_sym
+⊢ (compile (asm_conf :asm_config) (c :config) (prog :dec list) :
+   (word8 list # num list # config) option) =
+  SOME ((b :word8 list),(bm :num list),(c' :config)) ⇒
+  cake_orac (:α) asm_conf c' (src :num -> (num # num) # dec list)
+    (f5 :config -> ε) (λ(ps :backend_progs). ps.lab_prog) =
+  (pure_co
+     (compile_no_stubs (arch_wordsize asm_conf.ISA) c.stack_conf.reg_names
+        c.stack_conf.jump asm_conf.addr_offset
+        (asm_conf.reg_count − (LENGTH asm_conf.avoid_regs + (3 :num))) ∘
+      (FST :(num # prog # metadata) list # α word list ->
+            (num # prog # metadata) list)) :
+   ε # (num # prog # metadata) list # α word list -> ε # sec list) ∘
+  cake_orac (:α) asm_conf c' src f5
+    (λ(ps :backend_progs). (ps.stack_prog,MAP (n2w :num -> α word) ps.cur_bm))
+PUBLISHED oracle_stack_good_code
+⊢ (compile (asm_conf :asm_config) (c :config) (prog :dec list) :
+   (word8 list # num list # config) option) =
+  SOME ((b :word8 list),(bm :num list),(c' :config)) ∧
+  (reg_count_sub :num) =
+  asm_conf.reg_count − (LENGTH asm_conf.avoid_regs + (3 :num)) ∧
+  isa_bits asm_conf = dimindex (:α) ∧ backend_config_ok asm_conf c ∧
+  mc_conf_ok (mc :(α, β, γ) machine_config) ∧ asm_conf = mc.target.config ⇒
+  (good_code reg_count_sub
+     (FST
+        (SND
+           (cake_orac (:α) asm_conf c'
+              (syntax :num -> (num # num) # dec list) (f :config -> δ)
+              (λ(ps :backend_progs).
+                 (ps.stack_prog,MAP (n2w :num -> α word) ps.cur_bm)) (n :num)))) :
+   bool)
+PUBLISHED to_lab_labels_ok
+⊢ (compile (asm_conf :asm_config) (c :config) (prog :dec list) :
+   (word8 list # num list # config) option) =
+  SOME ((b :word8 list),(bm :num list),(c' :config)) ∧
+  backend_config_ok asm_conf c ⇒
+  labels_ok (SND (SND (to_lab asm_conf c prog)))
+INITIALIZATION_PREMISE_INSPECTION_COMPLETE

@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    if IsRetry(state, id, request) {\n      next := state;\n      outcome := Ok;",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "    if IsRetry(state, id, request) {\n      next := state;\n      outcome := Rejected;",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "incremental",
+ "id": "ledger-pr-defect-retry-rejected",
+ "kind": "defect",
+ "order": 9,
+ "rationale": "An accepted identical retry returns Rejected: violates C3.",
+ "supplied_evidence": null
+}

@@ -1,0 +1,25 @@
+{
+  "actual_exit": 0,
+  "source_workflow_sha256": "3e7c35a8b3a21a3645f8f966e6ba8058a2a605646c9eb3499d105eed2ed20e78",
+  "workflow_sha256": "213160ff1a6b09f1e7def8f2076b2e7abf73e24a6d0f982faac38192fbfe753d",
+  "workflow_bytes": 11897,
+  "driver_sha256": "867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72",
+  "driver_bytes": 9886,
+  "changes": [
+    "Refuse HTTP redirects before a follow-up request.",
+    "Use a new proposal branch and concurrency group."
+  ],
+  "shell_check": {
+    "argv": [
+      "/bin/bash",
+      "--noprofile",
+      "--norc",
+      "-n",
+      "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/proposed-shell.sh"
+    ],
+    "actual_exit": 0
+  },
+  "proof_inputs_changed": false,
+  "hosted_job": "NOT_RUN",
+  "end_to_end": false
+}

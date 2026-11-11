@@ -1,0 +1,9 @@
+valid_regular actual exit 0 stdout 64 stderr 0
+empty_eof actual exit 0 stdout 0 stderr 0
+malformed actual exit 0 stdout 0 stderr 0
+closed_stdin actual exit 0 stdout 0 stderr 0
+write_only_stdin actual exit 0 stdout 0 stderr 0
+nonblocking_empty_pipe actual exit 0 stdout 0 stderr 0
+nonblocking_ready_pipe actual exit 0 stdout 64 stderr 0
+closed_stdout_reader actual exit -13 stdout 0 stderr 0
+NATIVE_OBSERVATIONS_COMPLETE

@@ -1,0 +1,226 @@
+{
+  "protocol": "FUSE-1",
+  "roles": [
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "builder_01",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "builder"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "builder_02",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "builder"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "builder_03",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "builder"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "builder_04",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "builder"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "builder_05",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "builder"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "prover_01",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "prover"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "prover_02",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "prover"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "prover_03",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "prover"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "prover_04",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "prover"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "prover_05",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "prover"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "compiler_engineer_01",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "compiler_engineer"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "compiler_engineer_02",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "compiler_engineer"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "compiler_engineer_03",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "compiler_engineer"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "adversary_01",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "adversary"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "adversary_02",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "adversary"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "adversary_03",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "adversary"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "specification_critic_01",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "specification_critic"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "specification_critic_02",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "specification_critic"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "evidence_auditor_01",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "evidence_auditor"
+    },
+    {
+      "admission_authority": false,
+      "checker_access": false,
+      "context": "fresh, no setup history",
+      "id": "evidence_auditor_02",
+      "input_mount": "/fuse/input",
+      "network": false,
+      "output_mount": "/fuse/output",
+      "peer_access": false,
+      "role": "evidence_auditor"
+    }
+  ],
+  "total": 20
+}

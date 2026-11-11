@@ -1,0 +1,13 @@
+<<HOL message: Created theory "forge_refundWordPremises">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWordPremises)>>
+Proof of 
+
+semantics_determ (s with ptr_eq_oracle := po) env prog = {d} ∧
+¬semantics_prog s env prog Fail ⇒
+d ≠ Fail
+
+failed.
+First unsolved sub-goal is
+
+d ≠ Fail
+

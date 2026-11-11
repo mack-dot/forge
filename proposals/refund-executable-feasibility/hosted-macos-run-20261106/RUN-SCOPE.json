@@ -1,0 +1,137 @@
+{
+  "authority": "Current user goal authorizes one macOS ARM64 preflight plus unchanged SAT conditional on validated environment",
+  "prior_checkpoint": "c79037b",
+  "prior_workflow_sha256": "2b9d331ab4c85c54ec69c49600b110289937b27353d307f36f783645eda34ccb",
+  "current_workflow_sha256": "f83eaada408fc4adf8f900a908b5b326440bff5a352323ef248c9300b4f2c88c",
+  "scope_change": "Preserves environment probes; adds exact-byte conditional SAT transport and bounded resources under new authorization",
+  "input_commit": "ac05eaf972b8c98784466ae063fca505aaaf25f4",
+  "manifest_sha256": "6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7",
+  "remote_readback": [
+    {
+      "path": "proposals/m1-hosted-sat-inputs/INPUTS.json",
+      "sha": "e68d4c77a87c0e99eeed0360a819ea9f0258e60e",
+      "size": 8435
+    },
+    {
+      "path": "proposals/m1-hosted-sat-inputs/inputs.block-001",
+      "sha": "51b25d2eec9dd568c86bb90c2c8d9c11c1039595",
+      "size": 4194304
+    },
+    {
+      "path": "proposals/m1-hosted-sat-inputs/inputs.block-002",
+      "sha": "9456a0cc9170dbd441f44f1a66c11bbf4610f3c8",
+      "size": 4194304
+    },
+    {
+      "path": "proposals/m1-hosted-sat-inputs/inputs.block-003",
+      "sha": "9a06c0046599d8ab4bb7e5ac03e4bdb2bd194f23",
+      "size": 4194304
+    },
+    {
+      "path": "proposals/m1-hosted-sat-inputs/inputs.block-004",
+      "sha": "d1b8a9b7488b9b82c685825efd446e88f4dcc256",
+      "size": 2265304
+    },
+    {
+      "path": "proposals/m1-hosted-sat-inputs/inputs.part-000",
+      "sha": "ab1ab877ae4b05f9ec7e1cae14c29cf851b4f1c3",
+      "size": 524288
+    }
+  ],
+  "compare": {
+    "repository_full_name": "mack-dot/forge",
+    "base": "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+    "head": "ac05eaf972b8c98784466ae063fca505aaaf25f4",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+      "html_url": "https://github.com/mack-dot/forge/commit/f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3"
+    },
+    "merge_base_commit": {
+      "sha": "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+      "url": "https://api.github.com/repos/mack-dot/forge/commits/f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+      "html_url": "https://github.com/mack-dot/forge/commit/f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3"
+    },
+    "files": [
+      {
+        "filename": "proposals/m1-hosted-sat-inputs/INPUTS.json",
+        "status": "added",
+        "additions": 191,
+        "deletions": 0,
+        "changes": 191,
+        "previous_filename": null
+      },
+      {
+        "filename": "proposals/m1-hosted-sat-inputs/inputs.block-001",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "proposals/m1-hosted-sat-inputs/inputs.block-002",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "proposals/m1-hosted-sat-inputs/inputs.block-003",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "proposals/m1-hosted-sat-inputs/inputs.block-004",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "proposals/m1-hosted-sat-inputs/inputs.part-000",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      }
+    ]
+  },
+  "resource_bounds": {
+    "CPU_seconds": 120,
+    "SAT_maxheap_MiB": 1024,
+    "stream_limit_bytes": 33554432,
+    "job_operational_cap_minutes": 15
+  },
+  "runner": {
+    "label": "macos-15",
+    "architecture": "ARM64",
+    "image_version": "20261104.0514.1",
+    "permissions": {}
+  },
+  "cost": {
+    "pricing": "standard public repository class: free per GitHub documentation",
+    "pricing_source": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+    "expected_compute_charge_USD": 0,
+    "actual_billing_verified": false
+  },
+  "trust_limits": [
+    "Provider control plane and OS remain trusted",
+    "Input byte identity is not independent bootstrap provenance",
+    "No unchanged-SAT execution unless normal permissions allow original absolute installation root",
+    "No alternate solver or heap relocation",
+    "Environment success is not physical ffiread correspondence"
+  ],
+  "end_to_end": false
+}

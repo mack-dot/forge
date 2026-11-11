@@ -1,0 +1,16 @@
+<<HOL message: Created theory "forge_refundDataBehavior">>
+Proof of 
+
+compile asm_conf cfg prog = SOME (bytes,bitmaps,cfg') ⇒
+(let
+   (s0,env) = THE (prim_sem_env ffi)
+ in
+   ¬semantics_prog s0 env prog Fail ∧ backend_config_ok asm_conf cfg ⇒
+   semantics_determ (s0 with ptr_eq_oracle := po) env prog =
+   {semantics ffi (fromAList (SND (to_data cfg prog)))
+      (cake_orac (:α) asm_conf cfg' syn
+         (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+      (backend_from_data_tuple_cc (:α) asm_conf cfg) po zero_limits LN
+      InitGlobals_location})
+
+failed.

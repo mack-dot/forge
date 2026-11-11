@@ -1,0 +1,19 @@
+{
+ "changes": [
+  {
+   "op": "delete",
+   "path": ".toolchain/dafny-4.11.0/dafny/dafny",
+   "target": "root"
+  }
+ ],
+ "domain": "refund",
+ "expected_class": "tool_failure",
+ "expected_exit": 2,
+ "expected_reason_prefix": null,
+ "gate": "refund",
+ "id": "refund-tool-dafny-missing",
+ "kind": "tool_failure",
+ "order": 51,
+ "rationale": "The trusted Dafny executable is missing (isolated copy only).",
+ "supplied_evidence": null
+}

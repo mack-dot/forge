@@ -1,0 +1,93 @@
+<<HOL message: Created theory "forge_refundSourceBinding">>
+Saved theorem _______ "source_decode"
+Saved theorem _______ "source_signature"
+Proof of 
+
+let
+  initial =
+    source_initial h charge request original remaining enabled opened
+      candidate amount reason;
+  result = evaluate_stmt initial env source_body;
+  final = FST result;
+  ok =
+    eligible charge request original remaining enabled opened candidate
+      amount reason
+in
+  SND result = Rstop Sret ∧ final.heap = h ∧
+  read_local final.locals «authorized» = SOME (BoolV ok) ∧
+  read_local final.locals «outputAmount» =
+  SOME (IntV (if ok then amount else 0)) ∧
+  read_local final.locals «outputReason» =
+  SOME (StrV (if ok then reason else «»)) ∧
+  read_local final.locals «outputCharge» =
+  SOME (StrV (if ok then charge else «»)) ∧
+  read_local final.locals «outputRequest» =
+  SOME (StrV (if ok then request else «»)) ∧
+  read_local final.locals «intentCount» = SOME (IntV (if ok then 1 else 0))
+
+failed.
+First unsolved sub-goal is
+
+SND
+  (evaluate_stmt
+     (source_initial h charge request original remaining T T T amount
+        «duplicate_charge») env source_body) = Rstop Sret ∧
+(FST
+   (evaluate_stmt
+      (source_initial h charge request original remaining T T T amount
+         «duplicate_charge») env source_body)).heap = h ∧
+(case
+   ALOOKUP
+     (FST
+        (evaluate_stmt
+           (source_initial h charge request original remaining T T T amount
+              «duplicate_charge») env source_body)).locals «authorized»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (BoolV T) ∧
+(case
+   ALOOKUP
+     (FST
+        (evaluate_stmt
+           (source_initial h charge request original remaining T T T amount
+              «duplicate_charge») env source_body)).locals «outputAmount»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (IntV amount) ∧
+(case
+   ALOOKUP
+     (FST
+        (evaluate_stmt
+           (source_initial h charge request original remaining T T T amount
+              «duplicate_charge») env source_body)).locals «outputReason»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (StrV «duplicate_charge») ∧
+(case
+   ALOOKUP
+     (FST
+        (evaluate_stmt
+           (source_initial h charge request original remaining T T T amount
+              «duplicate_charge») env source_body)).locals «outputCharge»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (StrV charge) ∧
+(case
+   ALOOKUP
+     (FST
+        (evaluate_stmt
+           (source_initial h charge request original remaining T T T amount
+              «duplicate_charge») env source_body)).locals «outputRequest»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (StrV request) ∧
+(case
+   ALOOKUP
+     (FST
+        (evaluate_stmt
+           (source_initial h charge request original remaining T T T amount
+              «duplicate_charge») env source_body)).locals «intentCount»
+ of
+   NONE => NONE
+ | SOME ov => ov) = SOME (IntV 1)
+

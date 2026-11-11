@@ -1,0 +1,66 @@
+{
+  "actual_exit": 0,
+  "roundtrip_files": [
+    {
+      "path": "bootstrap.sml",
+      "bytes": 2658,
+      "sha256": "6080a50640c76cf01d12630e1acb3d416471395daa9fa5642ff5480830d0eafa"
+    },
+    {
+      "path": "stdout.log",
+      "bytes": 1749,
+      "sha256": "e079feff85bb6b08ef944693cc508f2f2182ae5936b55aa0f1044a05b1ea3c8a"
+    },
+    {
+      "path": "stderr.log",
+      "bytes": 7762,
+      "sha256": "a7b875865468d1705d878a5e29fb2abbd80b734680771cd9b54951734134f85c"
+    }
+  ],
+  "controls": [
+    {
+      "case": "wrong-hash",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/transport_probe.py",
+        "wrong-hash"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "66663c297f9c66ab7c3493600bf0abb7a11d7dfae874855bc7c6734bbc2604ae",
+      "assertion_refusal": true
+    },
+    {
+      "case": "path-traversal",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/transport_probe.py",
+        "path-traversal"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ff92f2abd065bea7970d8a6a7a809f92aeb63291e812ca794b838bcb81c025db",
+      "assertion_refusal": true
+    },
+    {
+      "case": "symlink",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/hosted-cf-preparation-20261107/attempt-0001/transport_probe.py",
+        "symlink"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ff92f2abd065bea7970d8a6a7a809f92aeb63291e812ca794b838bcb81c025db",
+      "assertion_refusal": true
+    }
+  ],
+  "inspected_bootstrap_unchanged": true,
+  "process_wall_limit_change_executed": false,
+  "proof_claim": false,
+  "hosted_run": "NOT_RUN",
+  "end_to_end": false
+}

@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "  method Apply ... {\n    if IsRetry(state, id, request) {\n      next := state;\n      outcome := Ok;\n    } else if IsFreshValid(state, id, request) {\n      var debit := state.balances[request.sender] - request.amount - 1;\n      TotalReplace(state.balances, request.sender, debit);\n      var debited := state.balances[request.sender := debit];\n      var credit := state.balances[request.recipient] + request.amount;\n      TotalReplace(debited, request.recipient, credit);\n      var credited := debited[request.recipient := credit];\n      var fee := state.balances[0] + 1;\n      TotalReplace(credited, 0, fee);\n      next := LedgerState(\n        credited[0 := fee],\n        state.accepted[id := request]);\n      outcome := Ok;\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "  lemma TotalTransfer(balances: map<int, int>, sender: int, recipient: int, amount: int)\n    requires sender in balances && recipient in balances && 0 in balances\n    requires sender != recipient && sender != 0 && recipient != 0\n    ensures Total(balances[sender := balances[sender] - amount - 1]\n                          [recipient := balances[recipient] + amount]\n                          [0 := balances[0] + 1]) == Total(balances)\n  {\n    var debited := balances[sender := balances[sender] - amount - 1];\n    TotalReplace(balances, sender, balances[sender] - amount - 1);\n    var credited := debited[recipient := balances[recipient] + amount];\n    TotalReplace(debited, recipient, balances[recipient] + amount);\n    TotalReplace(credited, 0, balances[0] + 1);\n  }\n\n  method Apply ... {\n    if IsRetry(state, id, request) {\n      next := state;\n      outcome := Ok;\n    } else if IsFreshValid(state, id, request) {\n      TotalTransfer(state.balances, request.sender, request.recipient, request.amount);\n      next := LedgerState(\n        state.balances[request.sender := state.balances[request.sender] - request.amount - 1]\n                      [request.recipient := state.balances[request.recipient] + request.amount]\n                      [0 := state.balances[0] + 1],\n        state.accepted[id := request]);\n      outcome := Ok;\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-accept-transfer-lemma",
+ "kind": "valid_alternative",
+ "order": 6,
+ "rationale": "One conservation lemma for the whole transfer replaces three inline lemma calls; the next state is written as one map update chain.",
+ "supplied_evidence": null
+}

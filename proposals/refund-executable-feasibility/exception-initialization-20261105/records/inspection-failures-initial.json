@@ -1,0 +1,18 @@
+{
+  "failures": [
+    {
+      "action": "git status --short in shared root",
+      "actual_exit": 128,
+      "stderr": "fatal: not a git repository (or any of the parent directories): .git",
+      "basis": "Git fatal diagnostic; enclosing mixed read command ended0. No metadata changed. Use existing isolated worktree for local commit.",
+      "child_exit_captured_separately": false
+    },
+    {
+      "action": "cat stdin-precondition-discharge.json",
+      "actual_exit": 1,
+      "stderr": "No such file or directory",
+      "correction": "Existing file is stdio-precondition-discharge.json; proof evidence unaffected."
+    }
+  ],
+  "end_to_end": false
+}

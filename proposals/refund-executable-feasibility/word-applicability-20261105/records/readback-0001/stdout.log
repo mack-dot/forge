@@ -1,0 +1,95 @@
+{
+  "actual_exit": 0,
+  "recorded_child_exits": {
+    "diagnostic": 0,
+    "data-0001": 1,
+    "data-0002": 1,
+    "data-0003": 1,
+    "data-0004": 0,
+    "data-repeat": 0,
+    "word-0001": 1,
+    "word-0002": 0,
+    "word-repeat": 0,
+    "word-import": 0,
+    "data-import": 0,
+    "missing-data-nonfailure": 1,
+    "missing-data-space": 1,
+    "wrong-refund-program": 1,
+    "refund-word-0001": 1,
+    "refund-word-0002": 1,
+    "refund-word-0003": 1,
+    "refund-word-0004": 1,
+    "refund-word-0005": 1,
+    "refund-word-0006": 1,
+    "refund-word-0007": 0,
+    "refund-word-repeat": 0,
+    "refund-import": 1,
+    "refund-import-0002": 1,
+    "missing-input-contract": 1,
+    "refund-import-0003": 1,
+    "refund-type-diagnostic": 0,
+    "refund-import-0004": 1,
+    "missing-input-contract-0002": 1,
+    "missing-input-contract-0003": 1,
+    "refund-import-0005": 0,
+    "missing-input-contract-0004": 1
+  },
+  "new_theorems": 9,
+  "checked_statements": 9,
+  "proof_hashes": {
+    "data-pairs.sml": "86ee25a4e29d393d6146712354f29ad2a9edfb4035333b805a69fc697cea1aa0",
+    "word-qualified.sml": "c2b914d657910453078f7794e121a801743f0f157c9c25fc9efbd9fe63ecc74e",
+    "refund-word-instantiate.sml": "76bf700a75cedfb872879abf7c609ed52411c9914e4ac5f05038c19b4a5f6afb",
+    "expected-data.sml": "a4bc13de57ca9faf57564071b813d105ba9dfbd22990bf34fb7ec74ac4bbfe7e",
+    "expected-word.sml": "25211b66162ed2f5633bbb079ef47085635e1cc11e427a5d871489543e409767",
+    "expected-refund.sml": "fba320821c99632b07bfc3a4c18017ec50f0aa4da588ddcb269539e0245c4483"
+  },
+  "closure_node_count": 486,
+  "closure_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "dependency_file_count": 2415,
+  "builtin_dependencies": {
+    "min": {
+      "source_sha256": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+      "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+    }
+  },
+  "toolchain_commits": {
+    "cakeml": "cd9155694c16831373ab695a670794f23282ed62",
+    "HOL": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3"
+  },
+  "tracked_toolchain_diffs": 0,
+  "protected_files_unchanged": 50,
+  "prior_packets": {
+    "runtime-premises-20261104": {
+      "manifest_sha256": "33cd153d38907be0ee34e4a7cda35698b46b41c9f218126a325eaeeecf3e3177",
+      "members": 100
+    },
+    "installation-premise-20261104": {
+      "manifest_sha256": "393b2f2664d5c23cd289a95c51b6870c5c30b3d62595f91df3c088a0931641b7",
+      "members": 123
+    },
+    "target-install-bridge-20261105": {
+      "manifest_sha256": "523ae744f9ffbb1d1bfade9db4d200bf53a25219479a6780a1aeaa418513005c",
+      "members": 233
+    },
+    "closure-install-20261105": {
+      "manifest_sha256": "7f93f63bb7478c8f0c49f547719d91bafd6ce9f800e3291bd7670a17e6cc3247",
+      "members": 84
+    },
+    "config-install-20261105": {
+      "manifest_sha256": "2a78990387e974ed99439bb753d5a0e783b18ac09898772c260edfbb22492b8a",
+      "members": 386
+    }
+  },
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "mission_sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c",
+  "scope": "Exact refund data behavior/nonfailure and conditional word trace composition. Runtime word-state applicability and target event correspondence remain unestablished.",
+  "independent_full_chain_replay": "NOT RUN",
+  "new_native_or_hosted_execution": "NOT RUN",
+  "end_to_end": false
+}

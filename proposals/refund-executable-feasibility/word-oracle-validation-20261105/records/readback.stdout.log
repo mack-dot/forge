@@ -1,0 +1,81 @@
+{
+  "actual_exit": 0,
+  "recorded_child_exits": {
+    "oracle-0001": 0,
+    "oracle-0002": 1,
+    "normalization-diagnostic": 0,
+    "oracle-0003": 0,
+    "exact-import": 1,
+    "exact-import-0002": 1,
+    "exact-import-0003": 0,
+    "oracle-repeat": 0,
+    "wrong-oracle": 1,
+    "missing-pointer": 1
+  },
+  "new_theorems": 3,
+  "checked_statements": 3,
+  "remaining_antecedents": 11,
+  "closure_node_count": 489,
+  "closure_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "dependency_file_count": 2424,
+  "builtin_dependencies": {
+    "min": {
+      "source_sha256": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+      "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+    }
+  },
+  "hol_source_hashes": {
+    "src/1/Conv.sml": "13f75fa6304e4fc47550be1f73466f032d8ed55ec8025343023a4fba8cf5e7ba"
+  },
+  "toolchain_commits": {
+    "cakeml": "cd9155694c16831373ab695a670794f23282ed62",
+    "HOL": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3"
+  },
+  "tracked_toolchain_diffs": 0,
+  "protected_files_unchanged": 50,
+  "prior_packets": {
+    "runtime-premises-20261104": {
+      "manifest_sha256": "33cd153d38907be0ee34e4a7cda35698b46b41c9f218126a325eaeeecf3e3177",
+      "members": 100
+    },
+    "installation-premise-20261104": {
+      "manifest_sha256": "393b2f2664d5c23cd289a95c51b6870c5c30b3d62595f91df3c088a0931641b7",
+      "members": 123
+    },
+    "target-install-bridge-20261105": {
+      "manifest_sha256": "523ae744f9ffbb1d1bfade9db4d200bf53a25219479a6780a1aeaa418513005c",
+      "members": 233
+    },
+    "closure-install-20261105": {
+      "manifest_sha256": "7f93f63bb7478c8f0c49f547719d91bafd6ce9f800e3291bd7670a17e6cc3247",
+      "members": 84
+    },
+    "config-install-20261105": {
+      "manifest_sha256": "2a78990387e974ed99439bb753d5a0e783b18ac09898772c260edfbb22492b8a",
+      "members": 386
+    },
+    "word-applicability-20261105": {
+      "manifest_sha256": "e6d9f7331580ed79819174871615a3c856ccec4b0336d5e21b6dcc1a043024a4",
+      "members": 686
+    },
+    "word-initialization-20261105": {
+      "manifest_sha256": "c115fd24cf7f6918fbd30c3d3f5322c669595705b82614982118c9ddaa2ba75e",
+      "members": 535
+    },
+    "word-oracle-20261105": {
+      "manifest_sha256": "494d3c17c15e1736c2277d9e621b68d288a2870c30b8391d12f6da8e30084ce4",
+      "members": 17
+    }
+  },
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "mission_sha256": "7bb18eb90435b6c9ca16e93ae31624ec422bdfff05fb6a51ad71c8e9756df08c",
+  "scope": "Exact compiler oracle and future label bounds discharge two combined premises. Eleven resource/state/compiler/input/pointer conditions remain.",
+  "independent_full_chain_replay": "NOT RUN",
+  "new_native_or_hosted_execution": "NOT RUN",
+  "end_to_end": false
+}

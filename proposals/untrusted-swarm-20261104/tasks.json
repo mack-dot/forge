@@ -1,0 +1,24 @@
+[
+  {
+    "allowed_claim": "existing behavioral scope only",
+    "id": "T1",
+    "preimage": "    (ok, (if ok then amount else 0), (if ok then reason else \u00ab\u00bb),\n         (if ok then charge else \u00ab\u00bb), (if ok then request else \u00ab\u00bb),\n         (if ok then 1:int else 0))",
+    "replacement": "    if ok then (T, amount, reason, charge, request, (1:int))\n    else (F, 0, \u00ab\u00bb, \u00ab\u00bb, \u00ab\u00bb, (0:int))",
+    "replacement_id": "T1_FINITE_REFACTOR",
+    "source": "proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml",
+    "source_sha256": "2ef6fd80d2fcccbc092096e2e20fc5d616af1a99fe00e1e949450f55e3e31632",
+    "status": "UNVERIFIED_CANDIDATE",
+    "task": "Coalesce all six result fields into one conditional."
+  },
+  {
+    "allowed_claim": "existing behavioral scope only",
+    "id": "T2",
+    "preimage": "TextIO.print (refund_dispatch wire)",
+    "replacement": "let val output = refund_dispatch wire in TextIO.print output end",
+    "replacement_id": "T2_FINITE_REFACTOR",
+    "source": "proposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundStdioProgScript.sml",
+    "source_sha256": "6f7aa17a5c671d83c94d2726932a7757083e30ee5508cce64f667f43138e0a68",
+    "status": "UNVERIFIED_CANDIDATE",
+    "task": "Bind dispatch output locally before printing."
+  }
+]

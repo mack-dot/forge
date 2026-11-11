@@ -1,0 +1,71 @@
+<<HOL message: Created theory "forge_refundWordInitialization">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWordInitialization)>>
+Saved theorem _______ "compiled_raw_code_rel"
+Saved theorem _______ "refund_data_labels"
+Saved theorem _______ "make_init_static"
+Saved theorem _______ "compiled_word_code_rel"
+Saved theorem _______ "to_word_code_rel"
+LABELS_EXACT ⊢ EVERY (λn. data_num_stubs ≤ n)
+    (MAP FST
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog))) ∧
+  ALL_DISTINCT
+    (MAP FST
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+Saved theorem _______ "refund_word_code_rel"
+CHECKED compiled_raw_code_rel
+⊢ ALL_DISTINCT (MAP FST dp) ∧ EVERY (λn. data_num_stubs ≤ n) (MAP FST dp) ⇒
+  code_rel c (fromAList dp)
+    (fromAList (stubs_md c ++ MAP (compile_part c) dp))
+CHECKED refund_data_labels
+⊢ EVERY (λn. data_num_stubs ≤ n)
+    (MAP FST
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog))) ∧
+  ALL_DISTINCT
+    (MAP FST
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+CHECKED make_init_static
+⊢ let
+    w = make_init ac k s wcode co pe
+  in
+    lookup 0 w.locals = SOME (Loc 1 0) ∧ w.stack = [] ∧ w.handler = 0 ∧
+    w.termdep = 0 ∧ w.stack_max = SOME 1 ∧ w.locals_size = SOME 0 ∧
+    w.ptr_eq_oracle = NONE ∧ w.ptr_eq_rel = pe ∧ w.code = wcode ∧
+    w.compile_oracle = co ∧ w.stack_limit = LENGTH s.stack ∧
+    w.gc_fun = s.gc_fun ∧ (w.be ⇔ s.be) ∧ w.ffi = s.ffi
+CHECKED compiled_word_code_rel
+⊢ compile dc wc ac dp = (col,wp) ∧ ALL_DISTINCT (MAP FST dp) ∧
+  EVERY (λn. data_num_stubs ≤ n) (MAP FST dp) ⇒
+  ∃rawcode.
+    code_rel (ensure_fp_conf_ok ac dc) (fromAList dp) rawcode ∧
+    code_rel_ext (isa_bits ac) rawcode (fromAList wp) ∧
+    domain rawcode = domain (fromAList wp)
+CHECKED to_word_code_rel
+⊢ ALL_DISTINCT (MAP FST (SND (to_data cfg prg))) ∧
+  EVERY (λn. data_num_stubs ≤ n) (MAP FST (SND (to_data cfg prg))) ⇒
+  ∃rawcode.
+    code_rel (ensure_fp_conf_ok ac cfg.data_conf)
+      (fromAList (SND (to_data cfg prg))) rawcode ∧
+    code_rel_ext (isa_bits ac) rawcode (fromAList (SND (to_word ac cfg prg))) ∧
+    domain rawcode = domain (fromAList (SND (to_word ac cfg prg)))
+CHECKED refund_word_code_rel
+⊢ ∃rawcode.
+    code_rel
+      (ensure_fp_conf_ok arm8_config
+         (set_oracle arm8_backend_config oracle).data_conf)
+      (fromAList
+         (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+      rawcode ∧
+    code_rel_ext (isa_bits arm8_config) rawcode
+      (fromAList
+         (SND
+            (to_word arm8_config (set_oracle arm8_backend_config oracle)
+               refund_prog))) ∧
+    domain rawcode =
+    domain
+      (fromAList
+         (SND
+            (to_word arm8_config (set_oracle arm8_backend_config oracle)
+               refund_prog)))
+Exporting theory "forge_refundWordInitialization" ... done.
+Theory "forge_refundWordInitialization" took 6.0s to build
+RUNTIME_PROOF_COMPLETE

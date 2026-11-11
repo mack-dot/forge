@@ -1,0 +1,108 @@
+{
+  "actual_exit": 0,
+  "parent_commit": "6ce40d4663e17499b6157f9b83d669e44b0208a6",
+  "previous_goal_turn_classification": "PROGRESS",
+  "prior_packet_members": {
+    "exception-compiler-20261105": 134,
+    "read-runtime-20261105": 270,
+    "native-error-instructions-20261105": 83
+  },
+  "prior_packet_members_total": 487,
+  "source_snapshots_match": 21,
+  "native_sha256": {
+    "native-build-0001": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+    "native-repeat-0001": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+  },
+  "protected_files_unchanged": 50,
+  "prior_journal_prefixes_preserved": true,
+  "git_commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/forge-native-audit-review-20261104",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout": "6ce40d4663e17499b6157f9b83d669e44b0208a6\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/forge-native-audit-review-20261104",
+        "status",
+        "--porcelain"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/forge-native-audit-review-20261104",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--",
+        "spec",
+        "spec.lock",
+        "policy",
+        "gate",
+        "FORGE_MISSION.md"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "accepted_theory_data_sha256": {
+    "U310": "6b8a9a3cb7ecf6746d407b22d840f414b2d6d4e2618c8afc87680a6c94f0917f",
+    "U315": "32d97ebfdd39e761c4b9ea8905a2f6090df23b9c9985dafc2c508b266abaf050"
+  },
+  "prior_closure_counts": {
+    "U310": 486,
+    "U315": 147
+  },
+  "foundation_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "scope": "Fresh identity and requirement audit of retained evidence; no new proof, native execution, signature verification, or independent replay.",
+  "completion_audit": "NOT_ACHIEVED",
+  "blocked_audit": {
+    "consecutive_goal_turns": [
+      {
+        "turn": "Original goal turn, U315",
+        "classification": "PROGRESS",
+        "common_blocker": "No validated reviewer-controlled clean execution environment or independent bootstrap/source provenance; replay NOT RUN."
+      },
+      {
+        "turn": "First continuation, U316",
+        "classification": "PROGRESS",
+        "common_blocker": "Same independent execution/provenance prerequisite remains unavailable. Alternate existing instruction-proof infrastructure fails before any instruction theorem; standard SAT diagnostic reports EPERM."
+      },
+      {
+        "turn": "Current continuation",
+        "classification": "Completion and blocked audit; no new proof progress",
+        "common_blocker": "Same independent execution/provenance prerequisite remains unvalidated. No new authorized context or successful dependency/observer run has been supplied or found in the inspected mission/replay evidence."
+      }
+    ],
+    "threshold_satisfied": true,
+    "same_condition": "Required independent execution context and provenance are not validated. No authorized available path can complete the physical correspondence/replay here.",
+    "important_distinction": "The SAT EPERM itself was observed in U316 only; it is not counted as three independent failures or attributed to an unobserved syscall.",
+    "no_verified_wait": "All our prior proof/observer command handles returned terminal exit codes. No live handle is being awaited.",
+    "meaningful_local_progress_available": false,
+    "external_change_required": true
+  },
+  "required_next_context": "An explicitly authorized working proof/observer context plus a reviewer-controlled clean replay environment with verified source/bootstrap provenance. Do not use producer caches as independent inputs.",
+  "smallest_open_proof": "One exact ffiread call must match the published model in OS result, complete buffer, filesystem effects, valid return state and full FFI frame.",
+  "new_SAT_debugger_native_or_replay_execution": "NOT_RUN",
+  "end_to_end": false
+}

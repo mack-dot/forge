@@ -8544,6 +8544,79 @@ curl: (6) Could not resolve host: github.com
   hash/restore remain open. Integration EXIT is NOT_ESTABLISHED; M2–M4 stay later.
 
 
+## U280 — Twenty-role swarm protocol frozen; isolation prerequisites fail
+
+- References:U267,U271,U274–U279. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner requested the Forge Untrusted Swarm Experiment and
+  supplied the title Twenty Untrusted Agents, One Trusted Specification.
+- Twenty read-only setup role sessions completed:5 Builders,5 Provers,3 Compiler
+  Engineers,3 Adversaries,2 Specification Critics,2 Evidence Auditors. These share
+  filesystem/tools and are not isolated or blinded experimental participants.
+  They supply suggestions, not correctness decisions. No scored model cell ran.
+- FUSE-1 preregisters two bounded-synthesis tasks on the actual refund library
+  and stdio source,18 paired cells,20 contexts per team and equal total budgets.
+  Eight attack families, fixed rounds, participant/reference separation, exact
+  claim layers and all open native premises are explicit. The full execution
+  binding, private hidden corpus, safe renderer, admission adapter and compute
+  broker remain missing; the full experiment protocol is not execution-ready.
+- prepare.py and two preparation reproductions return0/0/0. Syntax/inventory
+  checks return0. benchmark.py freeze returns0 before any prerequisite execution.
+  Its100 input-file identities and four tool entry identities bind the packet.
+  Freeze SHA25624611850b642a61d144a36eade0837146d23b36ded2a451ef378aad88c4da94b.
+- benchmark.py preflight returns2. System shasum on the real archived native
+  file returns0; the controller's one-byte substituted copy returns1 for the
+  intended digest mismatch. Offset16592 lies in the exact130436-byte HOL-derived
+  code payload. This is file identity only. No native mutant was executed/signed.
+- sandbox-exec returns71: sandbox_apply: Operation not permitted. Its benign
+  isolation probe body never ran. No role isolation result follows. Stop scored
+  execution; no escalation, reroute or repeated probe was attempted. This is an
+  infrastructure limitation, not a semantic rejection or evidence of swarm failure.
+- report.py equivalent benchmark.py report returns0 with all three arms NOT_RUN,
+  zero attempted cells and null trial metrics. No matched-compute result exists.
+  readback_controls.py returns0 for six local integrity/launch-record checks.
+  benchmark.py validate returns0:20 result files, comparison manifests,100 frozen
+  inputs,44 protected paths and unchanged journal prefix. Local anchors are not
+  authenticated or isolated from same-user writers.
+- The goal service exposed539185 aggregate setup tokens and972 elapsed seconds
+  at one checkpoint; not a final total, provider ledger, per-arm usage or bill.
+  Do not omit setup cost or report it as matched trial compute. No new proof,
+  real compiler trial, changed-candidate certification or native execution ran.
+- Evidence:results/untrusted-swarm-20261104/REPORT.md and preflight-0001/;
+  protocol:proposals/untrusted-swarm-20261104/PROTOCOL.md. Failed canary stderr,
+  actual commands/exits, public patches, prepared schedules and negative results
+  are retained. This packet does not complete the original experiment goal.
+- Next: establish authorized local OS security domains and a metered broker;
+  implement/freeze restricted trusted replay with exact typed claim/dependency
+  binding and private candidate-aware hidden controls; then run fresh cells.
+  Do not weaken prerequisites or substitute setup reviews for trial evidence.
+  U278/U279 and the independent live behavior work remain untouched. Native M1
+  premises and approved-intent-to-HOL binding stay open. No protected changes,
+  signing, publication, merge, deployment or Stage12 occurred.
+
+
+## U281 — Swarm goal blocked after three consecutive prerequisite audits
+
+- References:U280. CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- Initial goal turn made progress by freezing the prerequisite packet and recording
+  the isolation refusal. Continuation2 and continuation3 are no progress, not
+  verified waits. The same unavailable isolation/metering condition persists.
+- Fresh saved-packet validation returns0 on each continuation. This checks records
+  only. No sandbox retry, proof/compiler invocation or scored trial occurred.
+- Current collaboration tools still share filesystem access and expose no per-role
+  permission grants or authoritative inference usage ledger. No suitable local
+  isolated executor was found in available tool metadata. The original canary
+  launcher exit71 remains preserved; its body never ran.
+- The third-turn blocked audit passes. Goal service confirms status blocked.
+  This is not completion. Full comparison, runtime measurements, independent
+  admission implementation and actual kernel/compiler trials remain unfinished.
+- Evidence:results/untrusted-swarm-20261104/blocked-audit-0002.json and
+  blocked-audit-0003.json; original protocol and failures remain unchanged.
+- Next: provide an authorized local execution environment with enforced worker
+  and checker domains and metered model access. Then complete and freeze the
+  missing checker/renderer, hidden corpus and execution binding before any trial.
+  No protected change, signing, publication, merge, deployment or Stage12 ran.
+
+
 ## U283 — Authenticated observer records exact loaded refund payloads; runtime proof stays open
 
 - References:U271,U275–U279. CURRENT none; M1 open; Stage12 unauthorized;
@@ -8803,6 +8876,67 @@ curl: (6) Could not resolve host: github.com
   EXIT NOT_ESTABLISHED. No publication, signing, merge, dispatch or Stage12 ran.
 
 
+## U288 — Swarm launch-readiness audit: NO-GO after fresh execution
+
+- References:U280,U281,U282,U283,U284,U285,U287. CURRENT none; M1 separate/open;
+  Stage12 unauthorized; end_to_end=false. Owner expressly requested fresh launch
+  readiness checks, including prior EPERM, with no paid model calls or full arms.
+- Actual source inspection confirms FUSE-1 implements prerequisite checks only.
+  Frozen-task reproduction0 yields34 identical files; original freeze readback0.
+  The complete model/checker/hidden-case execution binding remains absent.
+- Audit prepare0 pins1165 inputs, including real HOL heap/launcher, imported
+  parent files and exact source scripts. Preflight and HOL dispatchers exit0;
+  their real child results below remain distinct. No protected file changed.
+- Fresh sandbox launcher71 repeats sandbox_apply: Operation not permitted. Its
+  probe body did not run. No weakening or alternate sandbox route occurred.
+  Separate benign same-user role control0 demonstrates peer write, synthetic
+  checker-artifact contamination, hidden-canary read and signal to an audit-owned
+  sleeping peer. Peer exits-15. Directory separation is not security isolation.
+- Actual CPU work0 is measured with wait4 and monotonic time. CPU exhaustion
+  exits-24 (SIGXCPU), consuming1.002904 CPU seconds under soft1/hard2 limits.
+  A two-child control returns0 while children consume1.463878 CPU seconds under
+  per-process1-second limits. Per-process limits do not enforce aggregate budgets.
+  Actual budgeted CLI request exits2: run is not a supported command. This is
+  missing infrastructure, not successful token/dollar budget-exhaustion control.
+- Fresh exact refund original-method HOL replay/repeat return0/0. Four exports
+  are byte-identical. New data63529c02903b722ea33c17c5e13a86a131f9e77b77dc80ee939972b1a9c7319b.
+  ALL_TAC altered-proof and returned-amount+1 attempts fail1/1 at the required
+  theorem with unsolved goals and no accepted export. This is fresh theorem
+  construction with pinned imported parents, not independent certificate replay
+  of producer proof objects or the complete upstream chain. DISK_THM trust remains.
+- Existing gate/core.py helper intact0; corrupted evidence/stale candidate/
+  unsupported scope/extra manifest member1/1/1/1 with exact intended reasons.
+  This is actual identity/policy dispatch, not the complete gate or swarm admission.
+  Same-candidate request-nonce replay remains NOT RUN. Fresh proof artifact
+  system-hash original/mutant controls return0/1. Mutant never imported or executed.
+- Existing packet rejection driver0 confirms invalid saved comparisons are
+  refused. The general scored-trial filtering/metering pipeline is not implemented.
+  All arms remain NOT RUN. Provider token/cost exhaustion is NOT RUN; no paid
+  requests or fabricated token measurements were used. Direct audit harness
+  makes0 model API calls; conversation/total billing is not measured here.
+- Readback0 confirms1165 inputs unchanged and equal proof exports. Twenty measured
+  local child commands consume49.979462 aggregate CPU seconds; summed command
+  wall60.156477 is not elapsed latency because phases overlap. Four actual HOL
+  invocations; peak child RSS587988992 bytes. Preparation/reporting and assistant
+  inference are outside that meter; total experiment spending remains null.
+- Readiness matrix and sole verdict:results/untrusted-swarm-readiness-20261104/REPORT.md
+  and readiness.json. Mandatory isolation, compute broker and independent
+  admission remain BLOCKED. The audit is complete; no pilot is authorized.
+- A future3-cell planning slice would cap240 calls,720000 tokens,10800 CPU seconds,
+  2 CPU workers,16GiB peak and12GiB new outputs plus private toolchain storage.
+  These are ceilings, not consumption predictions or a spending authorization.
+  Dollar cost remains unknown until model/pricing and enforced budget are pinned.
+- Smallest external blocker: current sandbox_apply EPERM. In an authorized local
+  macOS execution context where sandbox initialization works, run the prepared
+  recheck_isolation.py with a fresh output directory; it is NOT RUN here. Then
+  establish the full process/checker profile, metered broker and exact admission
+  path. A narrow canary pass alone cannot authorize the pilot.
+- U285/U287 concurrent work is preserved; no existing live job was touched or
+  duplicated. No paid model call, full arm, signing, protected adoption, merge,
+  publication, deployment or Stage12 occurred. The older execution goal remains
+  blocked; goal service refused replacement by this separate audit objective.
+
+
 ## U289 — Complete captured FFI equations proved, attacked, reproduced and imported
 
 - References: U271,U275,U277,U283,U284,U285,U287. CURRENT none; M1 open;
@@ -8947,3 +9081,2490 @@ curl: (6) Could not resolve host: github.com
   nine inputs and six outputs. New experiment NOT RUN. No native run/rebuild,
   signing, protected adoption, publication, merge, dispatch, admission, deployment
   or Stage12 occurred. Hosted measurements NOT RUN. Integration NOT_ESTABLISHED.
+
+## U292 — Source-to-model gap and exact resume point recorded in Markdown
+
+- References: U262,U267,U271,U275,U283,U289,U290,U291. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. This is the owner's requested
+  tracking update. U286 and U288 remain separate work.
+- Observation: FlatCore.dfy defines FlatRefund.AssessFlat. The published HOL
+  semantics experiment constructs refund_body and refund_method explicitly;
+  its method is named Refund and uses v0 through v14. Existing compiler theorems
+  begin from that constructed AST. No checked exact-source parsing/equivalence
+  result is supplied by those theorems. All nine inputs and six outputs must
+  remain bound; matching-looking source is not a semantic preservation proof.
+- Exact FlatCore SHA256:
+  a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d.
+  The current frontend snapshot warns that unsupported features may translate
+  without errors. Frontend trust remains explicit. No dotnet executable appears
+  on PATH; installation, export, parser execution and new proof are NOT RUN.
+- Actual inline Python readback exits0: 88 compiled-behavior packet files and
+  52 resource-binding packet files match their manifests. Mission bytes remain
+  unchanged. The prior bundle SHA256 matches
+  29e1b57cc8b476105f5083d541b729b2cd76047ce94fd6a27666d9fe0e5d4d36.
+  Saved U291 local recovery reports 13071 compared files and exit0. This is
+  readback, not a new restore or proof execution. Exact other-device recovery
+  remains NOT VERIFIED. The initial root Git query exits128 because this
+  workspace has no .git; the documentation worktree status exits0 and is clean
+  at 2a5706d8d574c33347dc531fe6769351863b922b before this update.
+- Impact: source-to-model correspondence remains NOT_ESTABLISHED. U291's
+  conditional model theorem is preserved. No full native output, termination,
+  authenticated new claim or integration success follows from this checkpoint.
+- Next check: inspect the pinned existing frontend requirements, export the
+  unchanged FlatCore source and inspect its AST with the existing CakeML parser.
+  Establish or explicitly bound the required source/model semantic relation;
+  do not substitute a custom parser or weaken the source contract. Full runtime,
+  resource/exit, clean independent replay/review and new admission remain open.
+- Evidence: proposals/refund-executable-feasibility/source-binding-checkpoint-20261104/identity-readback.json
+  and local-recovery-U291.json; raw tracking preimages in
+  results/mission-tracking-2026-11-04/checkpoint-U292/.
+  FORGE_MISSION_STATUS.md gives the exact resume point and approval boundaries.
+  U290 stays stopped at five attempts; completed compiler jobs stay terminal.
+  No protected adoption, publication, push, merge, dispatch, signing, admission,
+  deployment or Stage12. Hosted refund measurements NOT RUN.
+
+## U293 — Pinned frontend runs but refuses the exact refund source
+
+- References: U262,U267,U271,U291,U292. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. The prior goal turn made progress by committing
+  tracking checkpoint df1484b77380c165305b8d43ac7f5bc9a05bf08b. U286/U288 stay separate.
+- Existing upstream frontend commit6eb1ed63544a2e22c151db9b575f4308b8f329b0,
+  treeab2b12b545d8b6e725c47ac067f8c07705a47bd6: fetch/checkout/fsck0/0/0.
+  Vendor SDK8.0.111 archive hash matches HTTPS release metadata; extraction/info0/0.
+  The unchanged frontend builds0 with six warnings and no errors. Driver CLI
+  reports0.0.0.0; exact source/binary hashes identify it. No version claim inferred.
+- Initial export and explicit solver-option export fail4/4 on Z3 lookup. A local
+  PATH symlink to the existing Z3 4.12.1 binary resolves lookup; solver version0.
+  Exact FlatCore export then fails1 at Bake.ProgramToString's two-module guard.
+  Identical source replay fails1 at that same guard. No refund AST is produced.
+- The published unchanged plus_one example exports0. Enclosing that example in
+  a named module fails1 at the same guard. A separate module-free diagnostic copy
+  preserves FlatCore's complete method and every contract byte; it fails1 on
+  unsupported ResolvedOpcode Iff. This is not an approved adapter or an equivalence
+  proof. The original source remains unchanged. No contract was dropped to pass.
+- Original source SHA256 a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d.
+  Built driver b598f5b5dd170a4775db0decd9e090e01bd4e467b97d0e68fa8c4588fac024c6;
+  built core ab4503211701c06582bb6c6627ee5f362062361362505c8c31cbcb12ffc6504d.
+  Exact native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Initial readback fails1 by comparing full signed-package ZIP hashes to NuGet
+  contentHash, which excludes the signature. Corrected readback0 checks127 raw
+  archive hashes against sidecars and metadata contentHash against six locks;
+  these are identity/metadata consistency checks, not producer authentication.
+  ContentHash was not independently recomputed. Build logs report skipped NuGet
+  signature verification. All103 output hashes and50 protected files match.
+- A prior snapshot byte comparison fails1. Diagnosis0 establishes that the older
+  API snapshot has exactly one additional terminal LF; the current checkout is
+  byte-identical to its pinned Git blob. Neither historical snapshot nor upstream
+  tracked source was changed. The first build identity record's unresolved tree
+  placeholder is explicitly superseded by build-identities-0002.json. All failures
+  and their scope remain visible; no failed check counts as a proof success.
+- Impact: pinned frontend applicability is UNSUPPORTED for the exact source;
+  full source/model correspondence stays NOT_ESTABLISHED. HOL refund parsing,
+  semantic equivalence, new proof controls, native execution and hosted measures
+  are NOT RUN. Existing conditional model proofs remain within their prior scope.
+- Next authorized task: prepare a narrowly scoped compatibility proposal for the
+  existing frontend's module selection and Iff handling. Retain every contract,
+  all nine inputs/six outputs and full integer/Unicode domain. Further unsupported
+  constructs may remain. Any export then needs the existing CakeML parser and
+  HOL kernel to check the actual semantic relation, not assumed AST identity.
+  No custom parser, protected tool replacement or authority expansion is approved.
+- Evidence: results/refund-source-binding-2026-11-04/attempt-0001/ and
+  proposals/refund-executable-feasibility/source-export-feasibility-20261104/REPORT.md.
+  Full runtime/resources/exit, clean independent replay/review, new provenance/
+  admission and independent-copy hash/restore remain open. U290 stays stopped at
+  five proof attempts; original compiler jobs stay terminal. No publication, push,
+  merge, dispatch, signing, admission, deployment or Stage12. Integration EXIT
+  NOT_ESTABLISHED. This experiment introduces no new persistent service.
+
+## U294 — Exported refund AST agrees with the existing model and compiled function
+
+- References: U262,U267,U290,U291,U292,U293. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. This adds an actual checked link after
+  U293's preserved frontend failures. Separate U286/U288 work stays unchanged.
+- A one-file local proposal changes the pinned existing frontend Bake.cs. It
+  permits one concrete named leaf under an empty root, represents Boolean Iff
+  and string SeqEq/SeqNeq with existing AST operators, and maps only literal
+  finite empty frame sets to empty frames. No source contracts were removed.
+  Six unsupported module/frame/type controls exit1 with no export. Published
+  plus_one and named plus_one both exit0 and match the prior example bytes.
+- Build attempts1/2/3 exit0/0/0. Exact export attempts1/2 fail1/1 on SeqNeq
+  and empty-frame support. Attempt3 and repeat exit0/0 with identical3621-byte
+  S-expressions. Original FlatCore remains a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d.
+  Export SHA25658154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d.
+  Proposed patch SHA256df88831bcc41bb19b3148aed5f69332cde0e626e33d21538da8ef4f4dbf04a6a.
+  Upstream commit6eb1ed63544a2e22c151db9b575f4308b8f329b0 stays unchanged;
+  one experimental tracked file differs. Six locks match prior captures.
+- HOL positive attempts1/2/3 exit1/1/1: API tuple misuse, missing list bracket,
+  then definitions not registered for existing computation. Attempt4 exits0;
+  separate rebuild exits0 with four identical exports. The published parser
+  consumes all bytes. Five theorems bind exact program/signature, all six result
+  fields, unchanged heap, all three parsed postconditions and mapped operators.
+  Fresh import exits0 and checks five theorem statements plus two exact definitions.
+- The relation to the original constructed method exits0; repeat/import0/0.
+  The relation to the existing compiled refund_fields function exits0;
+  repeat/import0/0. Each reproduces four exports. These check return status,
+  heap and six outputs under exact typed initializers, not arbitrary internal
+  state/contextual equivalence or physical machine execution.
+- Negative HOL cases exit1 each: amount+1 leaves amount+1=amount; swapped
+  result identities leave request=charge and its converse; swapped formal
+  identities fail source_signature; removed contracts fail source_postconditions;
+  trailing bytes fail explicit complete-input parsing. None exports an accepted
+  theory. They are theorem/binding controls, not release-admission decisions.
+- readback.py exits0:195-node closure union,964 exact theory files,50 unchanged
+  protected paths,140 prior compiled/resource packet members. Only existing
+  bool.SELECT_AX,INFINITY_AX,ETA_AX,BOOL_CASES_AX occur. No new axiom or verifier.
+  Full same-host imports are not independent full-chain replay or review.
+  The unchanged native SHA256 remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Impact: the exact exported AST's behavior and model/compiler-input relations
+  are checked. Source-language parsing/serialization remains unverified. Dafny
+  4.11 source transport versus the frontend fork's4.10.1 identity and the full
+  Unicode/byte representation connection remain explicit. Matching hashes do
+  not authenticate the frontend or package producer. Prior skipped NuGet
+  signature verification remains disclosed. No whole native guarantee follows.
+- Evidence: proposals/refund-executable-feasibility/source-model-binding-20261104/
+  REPORT.md,COMMANDS.md,records/readback.json and all retained source/logs.
+  Raw results/refund-source-binding-2026-11-04/attempt-0002/ also retains the
+  process sample, excluded from reproducible proof artifacts. No failure erased.
+- Next check: connect the exact U262 UTF-8 transport relation to the published
+  byte-string model using existing library proofs. Independently review the
+  exact frontend proposal before any protected adoption. Preserve full input
+  domain and all six fields. U290 stays stopped at five attempts; compiler jobs
+  remain terminal. Runtime installation/resources/exit, full-chain review and
+  new provenance/admission remain open. Exact other-device hashes/restore stay
+  NOT VERIFIED. Hosted/native execution, signing and admission NOT RUN here.
+  No publication,push,merge,dispatch,policy change,Stage12 or SPM work.
+  Integration EXIT NOT_ESTABLISHED. Local tracking and unsigned commit authorized.
+
+## U295 — Full-domain source transport and model share a checked byte-list contract
+
+- References:U262,U263,U267,U289,U290,U291,U294. The prior turn made progress
+  at local commitf7224e9c3246abe5257a06fe3886783c3d127ea7. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false.
+- New unprotected Boundary.dfy projects existing encoded strings to natural-byte
+  lists. It calls the unchanged U262 full-domain transport. There is no input
+  precondition: every approved Unicode string, integer and response constructor
+  remains. The proof establishes exact encoded input bytes, byte bounds, reason
+  identity, approved eligibility and all six result fields. No UTF-8 codec changed.
+- Source attempt1 exits4: a missing sequence-element projection fact, boundary
+  resource exhaustion and two warnings. Explicit element facts and isolated
+  assertions resolve them without changing claims. Attempt2/repeat0/0,1458 batches
+  each. The exact U294 extraction frontend also verifies all1458 batches with
+  exit0. All source hashes and symbol/outcome sets agree. This tests compatibility
+  of that exact build, not universal equivalence or verified serialization.
+  Dafny audit0 reports zero findings and explicitly attempts no verification.
+- HOL uses published implode/explode and CHR/ORD, defining type projections only.
+  Seven theorems establish bounded-byte inversion, inverse string mapping, exact
+  equality/empty identity, refund_fields' complete projected result, and complete
+  wire request/response round trips. HOL attempts1/2 exit1/1 on induction
+  normalization and an opaque projection definition. Attempt3/repeat0/0 produce
+  four byte-identical exports. No theorem or domain was weakened.
+- Fresh import first exits1: expected open definition versus universally
+  quantified exported definition. Corrected universal-specialization comparison
+  exits0 for seven theorems and two definitions, with zero explicit hypotheses or
+  new tagged axioms. Full closure231 nodes/1146 files, only the four existing
+  Boolean foundations. Same-host import is not independent complete-chain replay.
+- New source lossy projection and swapped caller-ID controls exit4/4 for exact
+  identity/byte-list or complete-result failures. No resource/parse failure is
+  counted as rejection. HOL lossy projection and swapped result bindings exit1/1:
+  residual ORD(CHR(h MOD128))=h and cb=qb with its converse. None exports the
+  complete boundary theory. These are proof controls, not admission decisions.
+- Boundary source SHA2568ab7cd8a22adc527cf8ac2ab22906adad79dfe9179a8c0f6c46650429c7a9314;
+  HOL script2aea5fb7bb1f4e3f4b1032acd5041ddeb7eed921657484bb7ea3ec53dda6bb41;
+  theory data120d384aa1e3e42bb92228a5483aa918820dccba50cb6fcefc2906f7624c7860.
+  Extraction driver remains55d26351d36b660ac6b1ea6eac7515cc4b15bc9a5f139f375a1a9e6f90455acb.
+  readback0 binds30 unchanged source inputs,50 protected files,492 prior packet
+  members and the unchanged nativeb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Impact: the byte-list interface is locally checked on both sides. Dafny and
+  HOL semantics are not connected by a verified inter-kernel translation.
+  Their mathematical Boolean/integer/sequence/byte identification remains an
+  explicit review requirement. Source frontend/serializer and package producer
+  trust remain. Wider model byte inputs are not relabeled as valid source Unicode.
+  U291 still permits resource-limit prefixes; no unconditional physical output
+  or termination follows. The original source and approved contract stay intact.
+- Evidence:proposals/refund-executable-feasibility/byte-boundary-20261104/REPORT.md,
+  COMMANDS.md and records/readback.json; raw
+  results/refund-byte-boundary-2026-11-04/attempt-0001/. Every failed attempt is
+  retained. Timing observations are not cache savings or proof certificates.
+- Next check: compare exact installed-state, memory/frame, ARM control-state,
+  FFI/interference/resource/exit premises against retained entry/FFI observations.
+  Prepare an exact independently reviewable assumption profile; do not turn
+  observations into universal runtime proofs. U290 stays stopped at five attempts.
+  Independent full-chain replay/review, new provenance/admission and exact
+  other-device archive hashes/restore remain open. Native/hosted/signing/admission
+  NOT RUN here. No protected adoption,publication,push,merge,dispatch,policy change,
+  Stage12,SPM or Node work. M1/integration EXIT NOT_ESTABLISHED.
+
+## U296 — Precise conditional refund success checked; runtime installation premise unresolved
+
+- References:U262,U267,U277,U283,U289,U290,U291,U294,U295. Previous goal turn
+  made progress at local commitd69af8b1251e5ca2040967aeff2ee9607812defb.
+  CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- The runtime audit reconciles every prior U277 premise with later evidence.
+  Source/readback0 binds16 pinned upstream files,12 capture members,43 prior
+  audit packet members, exact runtime flags/object and50 protected files.
+  The unchanged native digest is
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Entry values and loaded bytes are observations, not a complete physical relation.
+- Actual stronger-backend diagnostic0. Precise proof attempts1/2 return1/1:
+  sem resolves to an unrelated constant; then a polymorphic singleton theorem
+  application fails. Rename only the variable and rewrite with the existing
+  machine_sem_sing theorem. Attempt3/repeat0/0 produce four byte-identical exports.
+  No proposition, specification, input domain, semantic model or axiom weakened.
+- refund_compiled_precise specializes the existing compile_correct_is_safe_for_space.
+  It retains installed state, exact read_limits, canonical nine-field stdin,
+  wfcl/wfFS/STD_streams/is_arm8_machine_config and space safety for every pointer
+  oracle. Its conclusion is a singleton successful modeled trace with complete
+  six-field output. It does not prove resource sufficiency or physical applicability.
+  A helper retains singleton/nonempty behavior. Another theorem proves the old
+  resource-extended relation permits Terminate Resource_limit_hit [] explicitly.
+- Fresh import0 checks all three exact statements with zero explicit hypotheses
+  or new tagged axioms. Closure482 nodes/2403 hashed files retains only the four
+  existing Boolean foundations. Cached DISK_THM parents remain a trust boundary;
+  this is not clean independent full-chain source replay or producer authentication.
+  Removing the resource premise or changing only the claimed heap limit by1
+  each returns1 for Exact statement mismatch: refund_compiled_precise. These are
+  claim-binding controls, not physical counterexamples or admission decisions.
+- Proof source933d7c3f07df5b32d9209d9755bb87a0ab17aae759858e4b507f9ea347e2b7bf;
+  expected statements88fe4f5c65649d1b3e0db94adc21d242165171dd6f652ca4954aa0071ed6c15a;
+  theory datae5034a037556f3d86c895e73d6523425ce781ca42e4972ddaa3220a4efa40c4c.
+  readback0 also verifies515 previous byte-boundary/compiler/resource packet files.
+- New runtime concern: the observed428-byte candidate code buffer lies in r-x
+  text. The bound runtime compile command has no -DEVAL option; its mprotect
+  calls are EVAL-conditional. The theorem's universal install_interfer_ok is
+  NOT_ESTABLISHED for the physical runtime. No install mutation/faulting native
+  run occurred. No checked unreachability argument is claimed. Finite absence
+  of an install event does not discharge the universal premise.
+- Every failure remains. Initial fresh-directory setup1 discovered historical
+  attempt-0001; newly added inspection files did not replace prior packet members.
+  The proof cases use attempt-0002. Wrong source-path lookup2/corrected0 and
+  exact diagnostic command are retained. No old unsure entry was changed.
+- Evidence:proposals/refund-executable-feasibility/runtime-premises-20261104/
+  REPORT.md,CORRESPONDENCE.md,COMMANDS.md,records/readback.json. Raw records:
+  results/refund-runtime-premises-2026-11-04/attempt-0002/ and the separately
+  retained initial read-only inspection under attempt-0001/inspect/.
+- Next check: inspect published no-install/reachability lemmas for this exact
+  program and whether they can support a sound concrete/model simulation.
+  Otherwise preserve the installation premise as unsupported. Do not change
+  runtime permissions, enable EVAL or drop the premise. U290 stays stopped at
+  five attempts. Resource sufficiency, unobserved ARM fields, complete memory,
+  FFI/frame/interference/OS relations, source frontend/shared interpretation,
+  independent replay/review and new provenance/admission remain open.
+  Owner-reported other-device backup still lacks exact hashes and restore.
+  No new native/hosted execution, protected adoption, signing, publication, push,
+  merge, dispatch, admission, deployment, Node, SPM or Stage12. M1/integration
+  EXIT NOT_ESTABLISHED. Only local proposal tracking and unsigned commit proceed.
+
+## U297 — Conditional data-oracle independence checked; machine installation bridge remains open
+
+- References:U283,U289,U290,U291,U294,U295,U296. Prior local checkpoint
+  e940b9d5b23b5d8d1cad8e9d8bba05550ff31d88. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. No remote state refresh occurred.
+- Source/static audit0 binds19 files to CakeMLcd9155694c16831373ab695a670794f23282ed62.
+  The full compiler proof selects the no-shared-memory disjunct of
+  no_install_or_no_share_mem. It does not prove no_install. Standard stubs include
+  Install_code. Static otool0 and byte readback0 locate bytes6bfbff17 at code4660,
+  native file21252; branch destination is entry-32. The exact130436-byte payload
+  still matches nativeb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  This is static presence, not proof of dynamic reachability or unreachability.
+- Installation proof attempts1–5 exit1/1/1/1/1: opaque encoder; FFI-name collision;
+  negative i2w normalization; wrong list_Seq qualifier; standard-stub metis failure.
+  Final log saves four statements, then fails standard_stubs_require_reachability.
+  No complete export, repeat, import or installation negative control passed.
+  Route STOPPED; no sixth attempt or disguised retry. Prepared controls stay NOT RUN.
+- Separate data-oracle proof initial/corrected/repeat1/0/0. Initial failure names
+  InitGlobals_location in the wrong theory; corrected source uses bvl_to_bvi and
+  backendProof's frame computation. Three theorems export; four files reproduce.
+  refund_data_oracle_independence specializes published evaluate_cc_co_only_diff
+  to the exact refund_prog with its cfg, code, stack frames and resource limits.
+  For each clock it preserves result and cc_co_only_diff under is_safe_for_space.
+  Compiler/compiler-oracle fields may differ; the relation retains FFI, refs,
+  locals, stack, code, clock and resource fields. Resource adequacy is NOT proved.
+- Exact import0 checks three statements, no explicit hypotheses or new tagged
+  axioms. Closure482 nodes/2403 files retains only the four Boolean foundations.
+  Cached DISK_THM parents remain trusted; no independent full-chain replay occurred.
+  Missing resource premise and substituted empty program each exit1 at
+  Exact statement mismatch: refund_data_oracle_independence. These are exact-claim
+  controls, not physical counterexamples or admission decisions.
+- Proof SHA2568566a4ef31034b02fc2c6b3cd2c006f2d245a455aa0ca67b7c05f922dfab2772;
+  expected3c9d249fbd5725374fd859ec07d77240951dc677f2d86ef1d01bc0709ad7b11f;
+  theory dataf7502eeea86a4c1fdd6fe257779ed842c8b2ceb7d0ad00fcb3e007a7256d5c5f.
+  readback0 verifies19 pinned sources,50 protected paths and240 prior packet members.
+  Local wall times remain observations, not hosted benchmarks or performance savings.
+- Impact: the data compiler oracle can vary under the retained model premise.
+  No theorem here replaces target install_interfer or establishes no InstallApp on
+  reachable machine traces. U296's universal runtime contract remains unresolved.
+  Exact bytes and matching fixtures cannot substitute for that missing relation.
+- Evidence:proposals/refund-executable-feasibility/installation-premise-20261104/
+  REPORT.md,COMMANDS.md,records/readback.json. Raw records:
+  results/refund-installation-reachability-2026-11-04/attempt-0001/.
+  All failures and prepared-but-unexecuted sources remain. No previous unsure entry
+  was edited. Root and docs-worktree histories retain their distinct prior bytes.
+- Next check: inspect the existing backend simulation relations for a narrow
+  reachable-state bridge from the data result to target installation independence.
+  Do not retry either stopped five-attempt route. Otherwise retain the premise as
+  unsupported. Full ARM/memory/frame/FFI/OS relations, resource adequacy, source
+  frontend/shared interpretation, independent replay/review and new provenance/
+  admission remain open. Owner-reported backup still lacks exact hashes/restore.
+  No physical/hosted run, protection change, protected adoption, publication, push,
+  merge, dispatch, signing, admission, deployment, Stage12, Node or SPM work.
+  M1/integration EXIT NOT_ESTABLISHED. Only local tracking and unsigned commit proceed.
+
+## U298 — Conditional target installer bridge and complete-prefix rule checked
+
+- References:U283,U289,U290,U291,U294,U295,U296,U297. Previous goal turn made
+  progress at local commit82d3ffb8de70427cfd38e6d48d5896ab8f4a564d.
+  CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- The source audit confirms that published semantics_compile still requires
+  good_init_state, which includes install_interfer_ok. The U297 data-level
+  result cannot remove that machine premise. The next action became a narrow
+  conditional target-model bridge, separate from the stopped stub proof.
+- forge_targetInstallBridge.evaluate_install_irrelevant proves equality of the
+  full evaluator result at k when all earlier formal TimeOut prefixes avoid the
+  installer PC. machine_sem_install_irrelevant proves equality of the complete
+  behavior set under all-clock exclusion. Only install_interfer changes; every
+  other configuration field and initial machine/FFI state remains identical.
+  Proof uses the existing target evaluator, no replacement semantics or axiom.
+- Bridge attempts1–5 actual child exits1/-2/1/1/0; repeat0. The first base rewrite
+  was incomplete; broad symbolic rewriting was interrupted; reader equality and
+  induction specialization required exact handling. Child SIGINT=-2, wrapper254;
+  it is neither a theorem rejection nor a pass. The successful fifth source is
+  unchanged in the repeat and produces four byte-identical exports.
+- The model counterexample attempts1–4 exit1/-2/1/0; repeat0. An initial wrong
+  Success qualifier, interrupted broad rewrite and unsimplified membership guard
+  remain. The checked generic target witness starts at install_pc; a handler
+  returning1 reaches Halt Success, while a handler returning2 reaches Error.
+  No processor instruction runs. This is not the refund executable, a physical
+  runtime counterexample, or a newly defined machine semantics.
+- forge_completeInstallExclusion.complete_prefix_suffices proves a finite rule:
+  a formal Halt result at k plus installer exclusion at every earlier clock
+  implies machine_sem equality after handler replacement. Existing evaluate_add_clock
+  supplies the suffix argument. Attempts1/2/3/4 exit1/1/1/0; repeat0. Setup failures
+  were a wrong object path, direct use without HOL preprocessing, and unavailable
+  omega name. Existing HOL loading and LESS_EQ_EXISTS resolve them. A sampled
+  trace or physical exit does not itself establish the formal halt premise.
+- Exact imports of three and then four statements exit0/0. No explicit hypotheses
+  or new tagged axioms; closure131 nodes/644 files retains only the four Boolean
+  foundations. All three theories reproduce four exports. Cached DISK_THM parents
+  remain a trust boundary; no independent full-chain source replay occurred.
+- Wrong success outcome exits1 with final subgoal F. Missing exclusion and a
+  21-step-only replacement each exit1 at Exact statement mismatch:
+  machine_sem_install_irrelevant. Removing the complete-prefix halt premise exits1
+  at Exact statement mismatch: complete_prefix_suffices. Exact-claim controls are
+  not physical counterexamples or admission decisions. No test was weakened.
+- Bridge source92a86e046e3f9d92ac0065c0e4f3c75e26b3f326b54a2cc71db64c5345472ea0;
+  complete-prefix003ce4db363e896c649384aa595c662b6bc8227e6b6cb7b165400021af285bc6;
+  expected fullf60c6ce8058e3f952ddda4652d07788b45f7e2e14972ecac8c54e506e7c0e838.
+  readback0 binds10 pinned sources,50 protected paths,223 U296/U297 packet members
+  and unchanged nativeb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Impact: a sufficient machine-level replacement rule is now locally checked.
+  Exact refund target exclusion is NOT_ESTABLISHED. Its data-oracle theorem alone
+  does not discharge the premise. Physical equivalence of all non-install fields,
+  runtime/resources/FFI/OS, source interpretation and complete independent review
+  remain open. U296's installer contract is not removed from any accepted claim.
+- Evidence:proposals/refund-executable-feasibility/target-install-bridge-20261105/
+  REPORT.md,COMMANDS.md,records/readback.json; raw records under
+  results/refund-target-install-bridge-2026-11-05/attempt-0001/. All failures remain.
+  Next: use existing backend simulation relations to prove installer exclusion
+  for the exact refund program over its approved domain, or retain it unsupported.
+  U290 and U297 stopped five-attempt routes stay closed. No new native/hosted run,
+  protected adoption, publication,push,merge,dispatch,signing,admission,deployment,
+  Node,SPM or Stage12. New authenticated admission and exact off-machine hashes/
+  restore remain open. No remote governance refresh or change occurred.
+  M1/integration EXIT NOT_ESTABLISHED. Local unsigned tracking commit is authorized.
+
+
+## U299 — Exact refund closure syntax excludes Install; target bridge remains open
+
+- References: U283,U289,U290,U294,U295,U296,U297,U298. Previous local commit
+  560a76f384c0c9389239a05bfbf475d84fe939f1; previous goal turn made progress.
+  CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- The published has_install_list predicate was evaluated on the exact
+  SND(backend.to_clos arm8_backend_config refund_prog). It returns F.
+  forge_refundClosureInstall.refund_closure_no_install exports that negation.
+  This scans closure syntax, including function and recursive bodies. It is
+  not a bounded input test, target-prefix proof or physical correspondence claim.
+- Proof attempts1/2 actual exits1/0; unchanged repeat0. The first left a CV term
+  untranslated. Full configuration normalization, as in the existing compiler
+  driver, resolves it. Four proof exports reproduce byte for byte. Fresh exact
+  import0 checks one theorem, no explicit hypotheses/new tagged axioms, 379-node
+  dependency closure and 1888 files. Four Boolean foundations remain. Same-host
+  DISK_THM imports are not independent full-chain source replay.
+- Adding Op None Install [] before the exact closure code computes T and exits1
+  at EQF_ELIM. Substituting [] for refund_prog in the expected statement exits1
+  at Exact statement mismatch: refund_closure_no_install. The first tests syntax
+  rejection, not an executable installer invocation; the second tests identity,
+  not behavioral unsafety of the substituted program. No negative test weakened.
+- readback first/corrected exits1/0. The first matcher expected a qualified
+  exception name; actual log says cv_repLib.sml:119: NeedsTranslation. Only that
+  matcher changed. Original source and failure record remain. This infrastructure
+  failure is neither a passing result nor an adversarial rejection.
+- Proof source5353adb2d3069820578a740c25bcb03834b6843bd73f030be1ef4ac51ce2f845;
+  exact claimc32b2b68937a314c7b2956272845603af2c3e54e56d980f31b7644886c49ab78;
+  theory DATec471e2565b31a90c7bb288904c83946da1ef6b5b7b90f54ed072b7e72f4fa8f.
+  Fourteen pinned source snapshots, 50 protected paths, mission/native identities
+  and 456 prior packet members match. The local compiler script is also hashed.
+- Uncertainty: the published compiler subsequently sets a register-allocation
+  oracle. The early closure projection equality for that update is source-supported
+  but not newly proved here. Published evaluate_change_oracle additionally requires
+  its precise state and captured-value invariants and non-type-error execution.
+  It does not export target installer absence. Inspected lower-pass behavior
+  simulations do not alone discharge all-prefix installer exclusion. Equality of
+  final outcomes or oracle functions is not an event-count argument.
+- Impact: exact no-install syntax is now checked. U298's sufficient target bridge
+  is still unapplied to the refund executable. U296's resource and physical
+  installation premises remain; no accepted claim has been strengthened. Next:
+  bind the exact compiler configuration and preserve installer-event exclusion
+  through existing simulations. Preserve the full approved integer/Unicode domain.
+  U290/U297 stopped paths remain closed; no new verifier, semantics or axiom.
+- Evidence: proposals/refund-executable-feasibility/closure-install-20261105/
+  REPORT.md,COMMANDS.md,records/readback.json. Raw append-only results:
+  results/refund-closure-install-2026-11-05/attempt-0001/. Markdown mission and
+  roadmap tracking updated; earlier entries preserved. No native/hosted run,
+  independent full-chain replay, signing, admission, publication,push,merge,
+  dispatch,deployment,protected adoption,Node,SPM or Stage12 work. Exact other-device
+  archive hashes/restore and independent review remain open. No new GitHub
+  protection verification or change. M1/integration EXIT NOT_ESTABLISHED.
+
+
+## U300 — Configuration bound and conditional word installation epoch theorem checked
+
+- References: U283,U289,U290,U294,U295,U296,U297,U298,U299. Previous goal turn
+  made progress at0c4a7166f2a0f6d68b3983ed051758e8544e3406.
+  CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- forge_refundConfigInstall.to_clos_set_oracle proves the closure projection
+  is unchanged for every configuration/program/allocation oracle. Its exact
+  refund_config_no_install corollary closes U299's configuration gap. Initial
+  proof/repeat child exits0/0; four identical exports. No input restriction.
+- forge_installSpaceBarrier exports install_outcomes, install_suffix_unbounded
+  and safe_run_excludes_install_suffix. Successful word Install removes the
+  modeled finite stack bound; any subsequent word evaluation retains NONE.
+  Such a suffix cannot have the final state of a space-safe entry run. This
+  does not characterize every nested context or prove physical unbounded memory.
+  Proof first/corrected/repeat exits1/0/0. Explicit monotonicity application
+  resolves the initial suffix tactic failure. Four exports reproduce.
+- forge_spaceInstallTrace exports epoch_single, bounded_stack_single_epoch
+  and safe_run_single_epoch. For every p,s,res,t, evaluation plus res<>SOME Error
+  plus IS_SOME t.stack_max implies LENGTH(ptr_eq_trace p s)=1. The entry corollary
+  keeps word_lang_safe_for_space and non-error at every clock. This is the
+  published wordProps trace, not a new tracer or semantics. A successful Install
+  adds an epoch. Target InstallApp correspondence and physical exclusion remain open.
+- The first proposed trace lemma omitted non-error. MustTerminate's timeout
+  branch restores the old state and returns Error, so the outer bound cannot
+  supply that inner execution premise. The revised proposed lemma retains
+  non-error explicitly; no approved claim or specification changed. No physical
+  counterexample or universal falsification was produced. Later failures exposed
+  loop error propagation and a missing pair projection fact in the corollary.
+- Trace bundle first5 child exits1/1/1/1/1. On the fifth, the main theorem saved
+  successfully and the separate final corollary failed for the first time.
+  A premature STOPPED_AT_FIVE bundle record is preserved. The rule applies per
+  failing proof: main theorem failed4/passed5; corollary failed3/passed4. Follow-up
+  child exits1/1/0, complete repeat0. The earlier successful prefix is byte-identical
+  across follow-ups. attempt-accounting-final.json supersedes the earlier stop
+  and intermediate count; nothing was erased. No theorem exceeded five attempts.
+  Existing U290/U297 stopped routes remain closed. Trace exports reproduce four files.
+- First main import and three initial controls exited1 because wordPropsTheory
+  was not preloaded. These are infrastructure failures, not security rejections.
+  Loading that existing parent yields main import0 and trace import0. Nine exact
+  statements match; eight are new. No explicit hypotheses/new tagged axioms.
+  Combined closure386 nodes/1917 files, four Boolean foundations. Same-host
+  DISK_THM imports are not independent full-chain source replay or authentication.
+- Corrected wrong-program, omitted-space, changed-bound, omitted-nonerror and
+  omitted-trace-space controls each exit1 at the intended exact-statement
+  mismatch. They test claim binding, not physical counterexamples or admission.
+  Initial-control source bytes remain identical in the corrected loader runs.
+- Source hashes: config00390171f00926ad6a6c976c9db2babb85302bdb90fe51a4286fc430393cde4c;
+  spacea56b2a7bdbf61b6a3cbc0e9e6224941a8764da8f30e60fb0d1e774ff04d3017a;
+  tracebc02a55aae9bbf6f60fe044153c269fc998e1df38794612168d336c0e6f03ad0.
+  readback0 binds12 pinned sources,50 protected paths,540 prior packet members,
+  unchanged mission/native identities and all recorded outcomes.
+- Impact: the actual configuration gap is closed and a conditional word event
+  property is checked. Exact refund word-state space/non-error specialization,
+  lower-pass event preservation and U298 target-prefix applicability remain open.
+  Existing compile_semantics_oracle and backendProof safety implications do not
+  themselves export target installation exclusion. Next: specialize the exact
+  word-state premises and investigate the event-preservation bridge using existing
+  models. Keep every resource, nested-error, physical-state, FFI/OS and review premise.
+- Evidence: proposals/refund-executable-feasibility/config-install-20261105/
+  REPORT.md,COMMANDS.md,records/readback.json and attempt-accounting-final.json.
+  Raw results: results/refund-config-install-2026-11-05/attempt-0001/. All failures
+  and superseded count records remain. No native/hosted execution, independent
+  full-chain replay, signing, admission, publication,push,merge,dispatch,deployment,
+  protected adoption,Node,SPM or Stage12 work. Exact off-machine hashes/restore,
+  source interpretation, independent review and new provenance/admission remain
+  open. No new GitHub control verification/change. M1/integration EXIT NOT_ESTABLISHED.
+
+
+## U301 — Swarm substrate blocked by engine access; resource scopes clarified
+
+- References:U280,U281,U288,U300. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner directs work to the execution substrate, with one
+  adversarial worker, one defending worker and an independent authority. Keep
+  the benchmark frozen and NO-GO; do not launch a pilot or incur paid model costs.
+- Read-only /usr/local/bin/docker version --format '{{json .}}' exits1.
+  Client28.5.1/API1.51/darwin-arm64 is present, context desktop-linux; Server=null.
+  The local Unix socket connection is denied: connect: operation not permitted.
+  The recording wrapper exits0 after retaining this failure. It does not prove
+  the daemon is absent, stopped or usable. Podman/Lima are not found in PATH.
+- No engine/context/socket permission, sandbox protection or global service is
+  modified. No container, image pull, alternate socket/proxy, checker installation
+  or model request runs. The earlier sandbox_apply71 remains unresolved and is
+  not retried without an environment change. This is an environment blocker,
+  not a failed adversarial-proof or resource-exhaustion control.
+- Original FUSE readback0 confirms the unchanged freeze,20 saved files and44
+  protected paths. Prior readiness-packet verification0 confirms187 members and
+  1165 pinned inputs. No protocol or old evidence bytes changed.
+- Resource clarification follows existing FUSE-1:3600 aggregate child CPU seconds
+  per cell includes agent/checker/repeat/control work;10800 seconds across a
+  proposed3-cell slice is3 aggregate CPU-hours, not3 hours per agent or wall time.
+  16GiB is a per-cell peak allowance, not per-agent or an enforced global cap.
+  Three simultaneous cells could allow48GiB from that rule alone. Sequential
+  cells do not automatically include controller/host memory. The substrate must
+  bind an explicit global cap, allocations and accounting scope before execution.
+- 720000 tokens/240 calls/12GiB outputs are sums of3 nominal cell ceilings. No
+  model/configuration/pricing or authoritative token/dollar gateway is bound.
+  Thus no verified dollar-spending limit or responsible dollar estimate exists.
+  Paid model calls remain unauthorized; no gateway enforcement is claimed.
+- Evidence:results/swarm-substrate-20261105/REPORT.md and environment-0001/.
+  Exact argv, raw streams, hashes and observed child exit are preserved. The
+  planned process-tree/container quotas, gateway and independent admission
+  remain NOT RUN. No prompt-only or directory-only substitute qualifies.
+- Next external action: supply a local context explicitly authorized to access
+  its chosen engine. Rerun the recorded read-only version command there, then
+  inspect actual isolation/resource controllers. A reachable engine is not a
+  passing security gate. Linux checker use would require separately pinned and
+  checked tools; existing native HOL binaries are macOS-specific. No platform
+  substitution or permission bypass occurs here. Once the substrate exists,
+  repeat the existing real boundary/exhaustion/admission controls before any pilot.
+- NO-GO, M1 open, Stage12 unauthorized and end_to_end=false remain unchanged.
+  No protected modification, publication, merge, signing, deployment or full arm.
+
+
+## U286 — Exact initialized refund exception behavior and event replay checked
+
+- Reserved ID, appended after U301 without moving or changing prior entries.
+  References:U270,U271,U274,U282,U284,U294,U295,U296,U300. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false.
+- New forge_refundRejectBasisTheory.refund_error_initialized_semantics proves
+  the error branch for the exact existing refund_prog. Stored declarations,
+  main lookup, initial FFI/reference-store and STDIO heap are discharged using
+  published kernel rules and the existing translator state. Program equality
+  is a separate checked theorem; no new program definition is substituted.
+- Exact premises: wfFS fs, STD_streams fs, stdin_content fs=SOME text and
+  refund_run_wire(implode text)=INL err. The nonempty source behavior set retains
+  all pointer oracles, Fail_exn err, the same initial heap frame, full final
+  ffi.io_events, RTC call_FFI_rel and exact extract_fs replay to fastForwardFD fs0.
+  No Unicode, ID, integer, reason, caller or event restriction was introduced.
+  Logical Terminate Success is neither normal ML return nor an OS exit0 proof.
+- Extraction attempts exit1/1/0: missing helper; existing helperLib DECIDE-load
+  failure; then ordinary published SPLIT tactic expression checks the lemma.
+  Internal library-load cause remains open; no library or proof machinery patched.
+  Composition first/diagnostic/corrected exits1/0/0. The residual establishes
+  generated goal order; reversing conjunction handling proves the same target.
+  Intermediate replay/import0/0, four identical exports. Wrong final fs fails1.
+- Initial declaration inspection0. Initial heap attempts1–5 exit1/1/1/1/0.
+  Three diagnostics0/0/0 and a separate projection proof0 isolate the missing
+  FFI partition/projection and explicit STDIO_precond hypotheses. DISCH_ALL
+  exposes those hypotheses; unchanged premises discharge them. Fifth attempt
+  passes. Concrete initialization composition passes first attempt0, repeat0.
+  U274's five failures and U290/U297 stopped routes are not repeated.
+- Wrong entry changes only the appended main in the exact program identity;
+  REFL_TAC refuses it, exit1. Fresh final import0 checks the explicit expected
+  final statement and closed entry identity. Removing wfFS only from that
+  expected statement fails1 at exact comparison. Controls test claim binding,
+  not universal refutations or native process behavior. All failures remain.
+- Accepted source82c4877bb9f298fa440c1657b54e291fcd0377cbd0dc9dfc79f29e8cb37f296c;
+  data3c358b38b4617b8b29349fb90200c639150a582a8da6aad2c78bee092e7a8f28.
+  Four final exports reproduce byte for byte. Earlier same-name theory variants
+  have distinct directories/hashes; final import binds concrete-0001 exactly.
+- readback0 checks246 theory nodes,1462 parent files, nine theorem tags with
+  zero explicit hypotheses/new tagged axioms and only DISK_THM. Four existing
+  Boolean foundations remain: SELECT_AX,INFINITY_AX,ETA_AX,BOOL_CASES_AX.
+  Eight direct ML macro files are hashed; this is not a complete dynamic ML
+  loader dependency closure. Logic/kernel, Poly/ML, host and cached-parent trust
+  remain. Same-host repeat/import is not independent clean full-chain replay.
+- Mission,50 protected paths,212 prior packet members, both failed heaps and
+  native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8 match.
+  Pinned CakeML/HOL/PolyML readbacks0; selected upstream library diff0.
+  Root Git failure had no separately captured child exit; an inferred128 in
+  the initial inspection note was corrected to unknown with both notes kept.
+  A mistyped inspection filename failed1; no proof result depended on it.
+- Impact: U284's initialized-program and exact filesystem-replay gaps are now
+  closed in the source model. Native error-path composition, runtime resources,
+  machine/FFI/memory/OS applicability and unavailable-stdin behavior remain open.
+  U300's separate space/non-error and target installation obligations remain.
+- Next smallest experiment: retain the full exception/event/heap predicate in
+  the compiler's source-behavior form; apply the existing exact ARM8 correctness
+  theorem without recompilation. Keep all physical/resource premises. Do not
+  replace resource-limit prefixes with successful complete execution.
+- Evidence:proposals/refund-executable-feasibility/exception-initialization-20261105/REPORT.md; raw
+  results/refund-native-audit-2026-11-04/attempt-0008/. All commands, residuals,
+  intermediate variants, hashes and limitations are preserved. No native test,
+  build, signing, protected change, deployment or Stage12 ran. Independent
+  full-chain replay/review, source interpretation, provenance/admission and
+  operational assurance remain open. M1/integration EXIT NOT_ESTABLISHED.
+
+
+## U302 — Exact refund data behavior and conditional word trace composed
+
+- References:U294,U295,U296,U298,U299,U300. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. U301 was allocated concurrently to
+  the separate substrate record. This packet uses U302; no old entry changed.
+- Nine new HOL theorems connect the exact refund source behavior to its compiled
+  data semantics, establish data non-failure under the existing source contract,
+  and compose it with the public compiler theorem and U300 word trace result.
+  The final theorem removes a separate data non-failure assumption. It retains
+  complete code/state/oracle relations and data_lang_safe_for_space.
+- Source conditions remain the exact canonical nine-field request on stdin,
+  wfcl cl, wfFS fs and STD_streams fs. Arbitrary data limit/frame tracking uses
+  the published semantics_zero_limits theorem; it does not prove resource adequacy.
+  Related abstract word state is 64-bit with the explicit basis FFI replacement.
+  This does not establish that physical make_init or exact emitted word code
+  satisfies all retained premises. Full integer/Unicode R1–R5 remains the goal.
+- Data bundles1–4 exit1/1/1/0; repeat0. The first two failures are qualifiers,
+  then a pair-goal tactic fails; explicit pair cases complete the same claim.
+  Word setup/corrected/repeat exits1/0/0; a missing historical parent preload
+  caused the first failure. No theorem or assumption was weakened.
+- Refund bundles1–7 exit1/1/1/1/1/1/0; repeat0. The main composition first runs
+  in bundle4 and passes its fourth attempt in bundle7. Earlier setup/helper
+  failures occur before it. Its established data prefix remains byte-identical.
+  Existing INST_TY_TERM instantiates hypotheses and conclusion before MP; it
+  does not discard hypotheses. No proof exceeded five attempts. U290/U297 remain
+  stopped. The per-proof accounting and every failed source/log are retained.
+- Word/data imports exit0/0. Refund imports exit1/1/1/1/0. A typed diagnostic0
+  shows the replaced old FFI field is polymorphic; an initial expected statement
+  incorrectly fixed its type. The later comparison expands existing Abbrev.
+  The final audit checks exact conclusions and proves equivalence of complete
+  premise sets. The theorem source did not change during these import repairs.
+- Omitted non-failure, omitted space and substituted data program each exit1
+  at exact claim comparison. Four omitted-input audit versions each exit1 with
+  the canonical stdin premise unproved. These are premise-preservation controls,
+  not physical counterexamples or universal falsification theorems.
+- Final readback exits0: nine imported statements,486 theory nodes,2415 hashed
+  dependency files, no explicit theorem hypotheses/new tagged axioms and only
+  the four existing Boolean foundation axioms. Three theories each reproduce
+  four exports. Same-host cached DISK_THM imports are not independent full-chain
+  source replay or authenticated production. Fourteen pinned source snapshots,
+  50 protected paths,926 prior packet members, mission and native hashes match.
+- Evidence:proposals/refund-executable-feasibility/word-applicability-20261105/
+  REPORT.md, COMMANDS.md and records/readback.json. Baseline local commit
+  6cdb235c02e3d47a78fea3ace4788656920a27dc. Exact child argv, sources, numeric
+  exits, local elapsed times, theory data hashes and closure hashes are recorded.
+- Next: instantiate existing word_to_stackProof.make_init/code/oracle relations
+  for the exact refund to_word result. Keep resource adequacy explicit. Then
+  connect word epochs through lower compiler passes to U298 target-prefix
+  exclusion. One modeled epoch is not physical installer exclusion.
+- Full runtime/FFI/OS correspondence, source interpretation review, independent
+  checking, new provenance/admission and exact other-device archive hash/restore
+  remain open. GitHub protections were not refreshed. No native/hosted run,
+  protected adoption, publication, merge, dispatch, signing or deployment occurs.
+  M1 and integration EXIT NOT_ESTABLISHED; end_to_end=false.
+
+
+## U303 — Exact word code and modeled initializer discharge static trace premises
+
+- References:U294,U295,U296,U298,U300,U302. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Baseline6116d584 is preserved.
+  The prior goal turn made progress; this turn closes further model links.
+- Six new forge_refundWordInitialization theorems establish reserved/distinct
+  labels for the exact refund data program, its code relation through the
+  published data/word compiler, matching domains, and fixed make_init fields.
+  Two forge_refundInitializedEpoch theorems establish the exact configuration
+  and compose these facts with U302's conditional one-epoch trace theorem.
+- No code-relation premise remains in that composition. The exact to_word
+  output and existing allocation oracle are bound. The input stack state is
+  still abstract. make_init is a model function; U302's phrase “physical
+  make_init” does not describe a verified physical loader or runtime witness.
+- Sixteen conditions remain: four source/environment conditions; nonempty
+  input stack and exact frame accounting; init_store_ok; data safe-for-space;
+  GC/endian agreement; four compiler/oracle equations; future-oracle stub bounds;
+  and the all-clock pointer representative equation. No source integer/Unicode
+  domain, approved R1–R5 contract, event condition or resource premise changed.
+- Code bundles exit1/1/0; repeat0. First failure qualifies Loc in the wrong
+  theory; second treats the isa_bits overload as a constant. Earlier proof
+  prefixes pass and remain preserved. Epoch bundles exit1/0; repeat0. The
+  first selects a trace None constructor instead of the GC None constructor.
+  Each new behavioral/helper proof passes its first actual proof attempt.
+- Import attempts1–5 exit1/1/1/1/0. The first expected term has an unbound
+  metadata type; the second compares unreduced let forms. The third runs out
+  of store while loading cached parents and does not reach claim checking.
+  The fourth serial import matches the reduced conclusion but its premise
+  tactic leaves one pointer-oracle relation. Diagnostic0 finds16 premises on
+  both sides; that relation differs only by three retained equalities for
+  co, GC and endian fields. Normalizing assumptions and goal proves complete
+  equivalence on its second proof attempt. Theorems/exports never change.
+- The other owned check is terminal before serial retry. No external process
+  is killed and no checker/resource setting changes. Memory exhaustion's cause
+  is unproved. The first observation's live-handle wording is clarified by a
+  second record: an empty process snapshot cannot confirm a live process.
+- Final import0 checks seven exact statements and one kernel-normalized
+  conclusion with complete premise equivalence. All eight have no explicit
+  hypotheses/new tagged axioms. Four existing Boolean foundations remain.
+  Same-host cached DISK_THM imports are not independent clean full-chain replay
+  or authenticated evidence production. Both theories reproduce four exports.
+- Wrong return location and empty-stack positive-capacity claims each fail1
+  at a false goal. Substituted word code fails1 at exact claim comparison.
+  Removing only safe-for-space fails1 with that predicate unproved. These are
+  model/claim controls, not physical attacks, receipt controls or admission.
+  A failed proof alone is not universal behavioral falsification.
+- readback0 validates488 theory nodes,2421 dependency files,19 pinned source
+  snapshots,50 protected files,1612 prior packet members, mission bytes and
+  unchanged native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Both toolchain tracked trees remain unchanged. No proof exceeds five attempts;
+  U290/U297 stopped routes are not repeated. Every failed source/log remains.
+- Evidence:proposals/refund-executable-feasibility/word-initialization-20261105/
+  REPORT.md, COMMANDS.md, records/readback.json and exact output streams. Local
+  elapsed times are observations, not hosted runner costs or savings claims.
+- Next: bind the exact word cake_orac using the existing compiled theorem and
+  data_to_word_orac_eq_std. Then instantiate lower-pass compiler/stack relations.
+  Keep resource/pointer and physical applicability premises explicit. Continue
+  to U298's target-prefix condition through checked event correspondence.
+- Full source interpretation review, physical memory/FFI/OS correspondence,
+  resource adequacy, independent replay/review, new provenance/admission,
+  exact other-device hashes/restore and fresh effective protection evidence
+  remain open. No new native/hosted run, protected change, publication, push,
+  merge, dispatch, signing or deployment. M1/integration EXIT NOT_ESTABLISHED.
+
+
+## U304 — Oracle run preserved; complete composition audit remains pending
+
+- References:U298,U302,U303. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. This is a documentation checkpoint at the owner's request.
+- Observation: previously launched oracle-0001 completed with actual child exit0
+  and RUNTIME_PROOF_COMPLETE. It exports refund_word_oracle_binding,
+  refund_data_oracle_labels and refund_exact_oracle_single_epoch. Recorded local
+  wall time is84.69368404199486 seconds; no hosted-cost or speedup claim follows.
+- The combined printed statement retains13 antecedents, including the oracle
+  equality and future-label bound. The first two exported lemmas do not yet
+  discharge those conditions in the combined result. U303's16 conditions were
+  instantiated/simplified; do not call the count reduction physical proof.
+- Checkpoint byte readback exits0: U303's535 manifest members match separately
+  in workspace and Git worktree, four new exports and28 imported files match,
+  and50 protected files, mission bytes and native identity remain unchanged.
+  These hashes establish local identity, not producer authentication or theorem
+  applicability. Documentation copies preserve their different old histories.
+- Repeat, fresh exact-statement import, full premise/closure audit and new oracle
+  negative controls are NOT RUN. The checkpoint is not fully validated. No new
+  proof/native/hosted execution or independent admission ran in this tracking step.
+- Next check: normalize the established ARM8 width and tuple/list forms; apply
+  the exact oracle and label lemmas without removing unproved conditions. Then
+  run the expected-statement, reproducibility and adversarial checks. Preserve
+  every failed attempt and keep U290/U297 stopped. Lower-pass correspondence,
+  resource adequacy and the physical runtime/FFI contract remain unresolved.
+- Evidence:proposals/refund-executable-feasibility/word-oracle-20261105/CHECKPOINT.md
+  and records/. Raw results/refund-word-oracle-2026-11-05/attempt-0001/ remains
+  unchanged. Source SHA2569d6675cb5cc7470021d4ccd0574b272aee34c6a8855883e86fd9cfc0d2208419;
+  theory data f071e42cd31449a117260be34117f36eb15c5e9c53ff2b16c9d5dbcb3a2a1f51.
+- Independent review/full-chain replay, new provenance/admission, verified exact
+  off-machine hashes/restore and effective protection evidence remain open.
+  No protected/remote action. M1/integration EXIT remains NOT_ESTABLISHED.
+
+
+## U305 — Exact oracle and label lemmas discharge the combined trace premises
+
+- References:U296,U298,U302,U303,U304. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. Baseline546fd3d9. The prior goal turn made
+  progress by preserving the run and exposing the still-retained conditions.
+- The exact oracle binding and future data-program label theorem now discharge
+  their conditions from refund_exact_oracle_single_epoch. Eleven antecedents
+  remain. U303's16 first became13 through defined compiler/frame instantiation;
+  only the next two were discharged by these checked oracle/label lemmas.
+- Retained conditions: four canonical-source/environment predicates; nonempty
+  stack; init_store_ok; data safe-for-space; GC and endian agreement; exact
+  lower-pass compiler-function equation; all-clock pointer-oracle relation.
+  No input domain, approved R1–R5 behavior or physical assumption was weakened.
+- Normalization attempt exits1. Diagnostic exits0 and identifies12 remaining
+  conditions: global o_DEF expansion changes the projection in the label lemma.
+  Corrected normalization exits0 with11 conditions. Repeat and byte comparison
+  exit0/0; all four exported files match. Historical oracle-0001 remains0 with13.
+- Fresh imports exit1/1/0. First SIMP_CONV raises UNCHANGED on a normalized term;
+  TRY_CONV also propagates it. Pinned HOL Conv.sml supplies QCONV, which returns
+  kernel reflexivity for that case. The final import checks two helper statements
+  after kernel normalization and proves complete premise equivalence for the
+  combined conclusion. No proof source or object changes during audit repair.
+- The three claims have no explicit hypotheses or new tagged axioms. Closure
+  has489 nodes and2424 hashed dependency files; the four existing Boolean
+  foundation axioms remain. Same-host cached imports do not establish independent
+  clean full-chain replay, authenticated production or an admission decision.
+- Substituted compiler information exits1 at exact oracle statement mismatch.
+  Removing only the pointer premise exits1 with its evaluation relation unproved.
+  These are intended claim/premise refusals, not physical counterexamples.
+  readback exits0. Two incidental wrong-directory inspection errors are recorded
+  separately. All failed attempts remain; no proof exceeded five attempts.
+- Nine pinned CakeML sources, one inspected HOL source,50 protected paths,
+  2164 prior packet members, mission bytes and unchanged native identity match.
+  Both toolchain tracked trees are unchanged. All HOL checks ran serially.
+  U304's checkpoint bytes remain unchanged. Final source c140f5bb6ec9e9bb870e575b4cd3322f58d3b84c6901bb7c10c564c544edd335;
+  theory data59661a42b226b7bb15c5ddbe427d0d7f274ae6e653bde59706844f10a9b156c9.
+- Evidence:proposals/refund-executable-feasibility/word-oracle-validation-20261105/
+  REPORT.md, COMMANDS.md and records/. Raw results/refund-word-oracle-2026-11-05/
+  attempt-0001/ remains. Local durations are not hosted runner costs or savings.
+- Next: instantiate the lower-pass compiler/state relations using existing
+  full_make_init_compile, IMP_init_store_ok and exact backend_from_data_tuple_cc.
+  Preserve every resulting entry/memory/resource/pointer premise; then connect
+  word events to U298's target-prefix condition. U290/U297 remain stopped.
+- Full physical/runtime/FFI correspondence, resource adequacy, source review,
+  independent full-chain checking, new provenance/admission and operational
+  assurance remain open. Exact other-device hashes/restore are unverified;
+  effective protection settings were not refreshed. No new native/hosted run,
+  protected/remote action or Stage12. M1/integration EXIT NOT_ESTABLISHED.
+
+
+## U306 — Completed stack-initialization run captured; validation still pending
+
+- References:U296,U297,U298,U303,U305. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. Documentation checkpoint at the owner's request.
+- Recovered init-0007 completes with actual HOL exit0 and four exports. The
+  combined theorem retains eight antecedents. Checked GC, init_store_ok and
+  exact compiler-function lemmas discharge three U305 model conditions.
+- Remaining: canonical stdin, STD_streams, wfFS, wfcl, nonempty stack, endian
+  agreement, data safe-for-space and the all-clock pointer-oracle relation.
+  Full expected-statement import, closure audit, repeat and new controls remain
+  NOT RUN. U305 is still the latest completed local validation packet.
+- Published make_init_any returns a synthetic fallback when make_init_opt fails.
+  Fallback fields include mdomain=EMPTY and stack=[Word0w]. Properties of
+  FST(full_make_init) do not establish IS_SOME(SND initial), successful runtime
+  initialization, loaded memory or physical applicability. Preserve that gap.
+- Bundles1/2 fail1/1 before proof execution. Compiler proof attempts1/2 fail,
+  then pass on attempt3. Composition attempts1/2 fail its guards, then pass on
+  attempt3. Bundle exits1/1/1/1/1/1/0; bitmap diagnostic0. No proof exceeds five
+  attempts. U290/U297 stay stopped. All sources, failures and logs remain.
+- Tracking byte audit first exits1 on an incorrect imported-object basename;
+  the corrected audit follows the actual .hol path and exits0. This is not a
+  theorem or security-control failure. A prior text-diff inspection error also
+  remains. No original record or proof changed; no new HOL run occurred here.
+- Readback checks534 U305 members in each copy, four final exports,224 imported
+  copies,10 pinned sources,50 protected files, mission bytes and native identity.
+  All456 raw files are captured. Hashes bind bytes, not authenticated production.
+  Native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Proof source9fc5478364027e06ca8b35185f4ec08f6735c5133876815325b3bd2b2b75fcb6;
+  theory data3d4b6a2e096f81ea8762a4d8ece4f4bea12621cc10a841124597dc8e4b7f1cc6.
+  Evidence:proposals/refund-executable-feasibility/stack-initialization-checkpoint-20261105/CHECKPOINT.md and records/. Raw attempt-0001 is unchanged.
+- Next: fresh complete claim/premise audit, repeat and meaningful compiler,
+  unsupported-initialization and resource-premise controls. Only then advance
+  the checklist and connect lower-pass events to U298's target-prefix condition.
+- Full physical/FFI/OS correspondence, resources, source review, independent
+  replay and new provenance/admission remain open. Other-device archive hashes
+  and restore remain unverified; effective protections were not refreshed.
+  No new native/hosted run, protected/remote action or stage. M1/integration EXIT
+  NOT_ESTABLISHED. This checkpoint preserves the existing mission and authority.
+
+
+## U307 — Exact modeled stack-constructor claims pass complete local validation
+
+- References:U296,U297,U298,U303,U305,U306. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Baseline743ed9c. Previous goal turn
+  made progress by preserving exact proof evidence and the current checklist.
+- Fresh import0 checks the three helper claims and complete conclusion/premise
+  equivalence of refund_stack_initialized_single_epoch. All eight conditions
+  remain. GC, init_store_ok and compiler-function conditions are discharged by
+  the checked helpers. The successful proof source and exports are unchanged.
+- Retained: STD_streams, wfFS, wfcl, canonical stdin, nonempty stack, endian
+  agreement, data safe-for-space and all-clock pointer-oracle representation.
+  No approved input domain, R1–R5 behavior, resource requirement or model changed.
+- Proof repeat0 and byte comparison0 reproduce four exports. Closure has
+  490 nodes/2427 hashed files. Four existing Boolean foundations remain.
+  No explicit hypotheses or new tagged axioms. Same-host cached imports are not
+  independent clean full-chain replay or authenticated production.
+- Compiler substitution1 refuses the exact compiler statement. Extra initializer-
+  success conclusion1 refuses the strengthened claim. Removed resource premise1
+  leaves data_lang_safe_for_space unproved. Each control first passes the complete
+  positive audit. These are claim/premise controls, not physical counterexamples
+  or admission decisions. No infrastructure failure counts as a valid rejection.
+- The old unexecuted audit draft has a single-backslash finite-map deletion token.
+  A new audit copy corrects it before execution. No theorem changes. One wrong
+  source-path lookup exits2; rg --files correction0. Historical failures remain.
+  Compiler and composition each passed on attempt3; no proof exceeds five attempts.
+- make_init_any's fallback preserves model fields without establishing the
+  successful SOME branch. No successful/physical initialization, resource adequacy
+  or target InstallApp exclusion follows merely from these four claims. One word
+  epoch alone does not establish U298's complete target-prefix condition.
+- readback0 checks11 pinned sources,50 protected paths,3162 prior packet
+  members, mission bytes and unchanged native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Both toolchain tracked trees remain unchanged. U306's packet stays immutable.
+- Source9fc5478364027e06ca8b35185f4ec08f6735c5133876815325b3bd2b2b75fcb6;
+  theory data3d4b6a2e096f81ea8762a4d8ece4f4bea12621cc10a841124597dc8e4b7f1cc6.
+  Evidence:proposals/refund-executable-feasibility/stack-initialization-validation-20261105/REPORT.md, COMMANDS.md and records/. Local elapsed times
+  are observations, not hosted costs or savings. No new native/hosted run occurred.
+- Next: specialize ptr_eq_fix_thm with the exact constructor. Establish its prefix
+  and constructor-oracle independence conditions using existing congruence lemmas.
+  That specialization is NOT RUN. Then retain and discharge the published
+  full_make_init_semantics success/memory/register/code conditions before bridging
+  events. U290/U297 stay stopped; no new semantics, verifier or stage is introduced.
+- Full source review, physical/FFI/OS relations, resources, independent replay,
+  new provenance/admission and operational assurance remain open. Other-device
+  hashes/restore remain unverified; protections were not refreshed. No protected
+  change, push, publication, merge, dispatch, signing or deployment. EXIT NOT_ESTABLISHED.
+
+
+## U308 — Pointer-witness run preserved; full premise equivalence remains open
+
+- References:U296,U297,U298,U303,U305,U306,U307. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Documentation checkpoint requested
+  by the owner. Baselinec752467773dd396ec1dbbf5782b94b16030333.
+- Recorded pointer bundles1/2/3 exit1/1/0. Composition passes on its third
+  attempt after normalizing the checked GC equality itself. Four claims export;
+  seven antecedents remain. The original sources, objects and failures remain.
+- Helpers establish exact constructor oracle independence and the published
+  pointer fixed-point relation. The generic syntax transformer retains its causal
+  prefix premise. The fixed-syntax instance selects a specific pointer witness
+  for arbitrary syn; this does not authorize arbitrary pointer substitution.
+- The combined statement reports STD_streams,wfFS,wfcl,canonical stdin,nonempty
+  stack,endian agreement and data_lang_safe_for_space. Resource adequacy remains
+  a premise tied to the constructed witness. No physical applicability follows.
+- Fresh full-contract imports1/2 exit1/1. Three helpers and the main conclusion
+  match; the complete premise-equivalence proof leaves the resource condition
+  unsolved. Its actual mismatch is not yet isolated. No assumption of mere
+  notation, accepted complete contract or completed closure audit is justified.
+- Normalization diagnostic exits0. Later premise diagnostic exits1 on undeclared
+  map_index after reporting matching typed variable sets and resource head. Its
+  argument comparisons did not run. This is a script failure, not a negative
+  control or mathematical counterexample. Two complete-premise proof attempts
+  have failed; the five-attempt rule remains. U290/U297 stay stopped.
+- Repeat, exported-byte reproduction, new closure audit and new negative controls
+  are NOT RUN. U307 remains the latest completed local validation packet. The
+  unexecuted readback.py draft still expects the first import to pass and absent
+  cases to exist; preserve it, then prepare a corrected version from real results.
+- Documentation byte capture exits0. All539 raw files,264 imported-file copies,
+  four exports,six pinned sources,50 protected paths and684 U307 members in each
+  copy match. Mission and native identities remain unchanged. Same-host bytes
+  do not establish independent production, complete replay or applicability.
+- Source99e35d5937ac492740bd9a5c674c6fba7adf5ba2e0773db2d5a50978dac9b71f;
+  theory data2ee72b9c06e787835dd0ecde5b7a2fb17e1adf70323ad2f2a6b2e318b463d320.
+  Nativeb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Evidence:proposals/refund-executable-feasibility/pointer-witness-checkpoint-20261105/CHECKPOINT.md and records/. Raw attempt-0001 remains unchanged.
+- Two coordination calls failed at local MCP transport; delivery is unconfirmed.
+  This does not change proof results. Separate U286 work is not adopted here.
+- Next: repair only the diagnostic indexing helper in a new source. Compare each
+  resource-predicate argument, resolve the real mismatch with checked reasoning,
+  then complete import/closure,repeat and meaningful controls. Retain endian,
+  space and all source/environment premises. Then justify successful initializer
+  and lower-pass event relations before applying U298's target-prefix result.
+- Full source review, physical/FFI/OS correspondence, resources, independent
+  complete-chain checking and new provenance/admission remain open. Exact backup
+  hashes/restore on the other device remain unverified; protection exports and
+  GitHub state were not refreshed. No new HOL/native/hosted execution, protected
+  adoption, push, publication, merge, dispatch, signing, admission or deployment
+  occurred in this tracking step. M1/integration EXIT NOT_ESTABLISHED.
+
+
+## U309 — Correct U308 baseline commit transcription
+
+- Reference:U308. Its baseline commit literal omitted two characters. The exact
+  baseline is c752467773dd396ec1dbbfef5782b94b16030333.
+- The first precommit assertion exited1 because its copied literal had the same
+  omission. Actual Git HEAD and the original baseline/byte-check JSON agree.
+  This is a documentation error, not a proof failure or repository change.
+- Corrected the active tracker and new checkpoint. U308 remains unchanged here.
+  All proof sources, artifacts and numeric results remain unchanged.
+- Evidence:pointer-witness-checkpoint-20261105/records/precommit-identity-error.json.
+  Next: rerun the exact baseline/packet check, then commit this tracking update.
+  Complete premise equivalence and M1 remain NOT_ESTABLISHED; end_to_end=false.
+
+
+## U310 — Exact ARM8 error composition preserves complete exception events and heap frame
+
+- References:U286,U296,U305,U307,U308,U309. Continue the user-requested U286
+  branch from cf91be0c. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Concurrent U306–U309 entries remain unchanged.
+- forge_refundRejectCompiledTheory.refund_error_compiled_precise composes the
+  exact initialized source error theorem with compile_correct_is_safe_for_space
+  and the existing precise_sem_satisfies_IMP_Terminate helper. The original
+  refund_prog/code/data/configuration identity comes from refund_arm8_compiled.
+- Eight retained premise groups: exact installed state; read_limits equation;
+  wfFS; STD_streams; stdin_content=SOME text; wire evaluation=INL err;
+  is_arm8_machine_config; is_safe_for_space for every pointer oracle. No input
+  domain, specification, original theorem or event requirement was changed.
+- Conclusion preserves outer h1/h2 initial STDIO split, singleton target
+  Terminate Success io, io equal to full final source ffi.io_events, Fail_exn err,
+  final source SPLIT3 with the same h2, RTC call_FFI_rel and exact extract_fs
+  replay to fastForwardFD fs0. This retains the source heap relation; it does
+  not establish a new physical C-heap correspondence. Logical Success is neither
+  normal ML return nor a universal OS exit0 claim.
+- Minimal new exception_event_witness repacks the event projection and retains
+  the predicate verbatim. Kernel CHOOSE eliminates temporary existential-body
+  hypotheses. Fresh inspection0 precedes construction; proof0, repeat0, exact
+  import0 on their first attempts. Four exported files are byte-identical.
+- Wrong installed code, omitted universal space premise and shortened trace
+  each exit1 at Exact statement mismatch: refund_error_compiled_precise. These
+  are complete-claim binding controls, not physical attacks or universal
+  falsification proofs. Every source, command and output remains preserved.
+- Setup inventory1/corrected0: U296 uses a direct manifest dictionary instead
+  of U286's files wrapper. Replay preparation1/corrected0: U282 uses the saved
+  export-proof.sml filename. Incidental missing-file/no-match inspections are
+  recorded; an uncaptured child status remains unknown. No proof exceeded its
+  attempt limit. U290/U297 stopped paths are not repeated.
+- New source4c0a0c2a6e27cfd3b2b1e1e510f301bff47d731ef44c8ba03ca9645c132e6a56;
+  data6b8a9a3cb7ecf6746d407b22d840f414b2d6d4e2618c8afc87680a6c94f0917f.
+  Both exact imported statements have zero open hypotheses/new tagged axioms
+  and only DISK_THM. Closure486 nodes retains bool.SELECT_AX,INFINITY_AX,
+  ETA_AX,BOOL_CASES_AX. Logic/kernel/PolyML/loader/host/cached-parent trust remains.
+- readback0 checks2659 parent file bindings,2727 historical chain files,
+  370 parent packet members,50 protected paths, frozen mission and U286 journal
+  bytes. Separate standard shasum check0 covers311 artifact/native-record members.
+  Existing signatures verify0/0; full native digests and code/bitmap slices match.
+  Native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8
+  remains unchanged. No native process runs, build or signing occur here.
+- Three source pins match; CakeML/HOL tracked trees are unchanged. Fresh readback
+  processes are separate from proof construction but on the same host, not
+  independent clean full-chain replay or authenticated production.21 replay
+  source snapshots and an explicit dependency-order/acceptance plan are prepared.
+- Smallest physical FFI check: relate one exact ffiread C/ABI call to ffi_read,
+  including short reads, EOF, error result, descriptor position and full frame.
+  The pinned model's own comment warns that its unchanged-fs error fallback
+  may not describe unspecified real file-position effects. No physical Darwin
+  counterexample is established. Do not assume away this relation or alter the
+  approved model. Preserve all resource/installation/interference/OS conditions.
+- Evidence:proposals/refund-executable-feasibility/exception-compiler-20261105/REPORT.md; raw
+  results/refund-native-audit-2026-11-04/attempt-0009/. The assurance matrix,
+  PHYSICAL-NEXT.md and REPLAY-PLAN.md state exact scope and pending checks.
+  Full physical/FFI/OS correspondence, resource adequacy, source interpretation,
+  independent full-chain review/replay and provenance remain open. No protected
+  change, release signing, deployment or Stage12. M1/integration NOT_ESTABLISHED.
+
+
+## U311 — Exact pointer witness passes full local contract and controls
+
+- References:U296,U297,U298,U303,U305,U307,U308,U309. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Baselinea431f1714f360e2abc31157acd500f49df409583.
+  Previous goal turn made progress by preserving the pending proof/audit packet.
+- The corrected premise diagnostic exits0. Five resource arguments match; only
+  get_limits's state argument differs, at its be field. The initial map_index
+  script error1 remains. Text comparison isolates a hypothesis; it is not proof.
+- get_limits_def does not read that state field. A third fresh complete import
+  unfolds the published definition and exits0. HOL checks the three helper
+  statements, exact combined conclusion and complete seven-premise equivalence.
+  Imports1/2 remain1/1. The successful proof source and four exports are unchanged.
+- The generic fixed-point helper retains causal syntax-prefix agreement. Its
+  fixed-syntax instance uses Syn=(lambda po.syn), with arbitrary syn, and the
+  specific published ptr_eq_fix witness. It does not justify arbitrary pointer
+  substitution or narrow the approved refund input domain.
+- Seven retained conditions: STD_streams,wfFS,wfcl,canonical stdin,nonempty stack,
+  endian agreement and data_lang_safe_for_space for the constructed witness.
+  Safe-for-space and successful/physical initialization are not discharged.
+  The synthetic fallback constructor still prevents inferring runtime success.
+- Proof repeat0 and byte comparison0 reproduce four exports. All four claims
+  have no explicit hypotheses or new tagged axioms. Closure491 nodes/2430
+  hashed dependency files retains the four existing Boolean foundations.
+  Same-host cached imports are not independent clean full-chain replay or
+  authenticated production. No source/target or admission claim is inferred.
+- Pointer substitution1 and removed causal-prefix1 fail exact statement binding.
+  Removed space1 leaves data_lang_safe_for_space unproved. Each first passes all
+  four positive checks. These are claim/premise refusals, not physical execution
+  counterexamples or admission decisions. No script error counts as rejection.
+- Composition and premise equivalence each pass on attempt3. No failing proof
+  exceeds five attempts. U290/U297 remain stopped. Two incidental continuation
+  inspection/preparation errors1/1 are preserved; neither ran a proof. All prior
+  proof/import/diagnostic and transport failures remain in the captured records.
+- readback-validation0 checks seven pinned sources,50 protected paths and4393
+  prior packet members. Tracked toolchain trees, mission bytes and native identity
+  match. Native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  The old unexecuted readback draft stays intact; the new audit reflects real cases.
+- Source99e35d5937ac492740bd9a5c674c6fba7adf5ba2e0773db2d5a50978dac9b71f;
+  theory data2ee72b9c06e787835dd0ecde5b7a2fb17e1adf70323ad2f2a6b2e318b463d320.
+  Evidence:proposals/refund-executable-feasibility/pointer-witness-validation-20261105/REPORT.md,
+  COMMANDS.md and records/. U308's packet stays immutable. Local times are measured
+  observations, not hosted runner costs or savings. No new native run occurred.
+- Next: use full_make_init_semantics for the exact constructor. Retain and
+  justify code/oracle, memory/layout/alignment, saved-register, name-bijection and
+  configuration requirements before claiming successful initialization. Then
+  inspect the lower-pass evaluator relation for U298's every-prefix condition.
+  Final behavior equality alone does not establish intermediate-transition equality.
+- Full source/physical/FFI/OS/resource applicability, independent review/replay,
+  new provenance/admission and operational assurance remain open. Owner-reported
+  backup still lacks verified other-device archive hashes/restore. Protection
+  exports were not refreshed. Separate U310 work and both histories are preserved.
+  No protected/remote action or new stage. M1/integration EXIT NOT_ESTABLISHED.
+
+## U312 — Successful-initialization checkpoint and Markdown tracking
+
+- References:U296,U297,U298,U303,U305,U307,U308,U309,U311. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. Baseline local commit
+  edd406a059cb9d50bc54d5fe351820ea06cacf95. The owner requested Markdown tracking.
+- Recovered actual terminal records: inspect-0001 exits0; success-0001 exits1;
+  success-0002 exits0. No process remained live. The lost response did not justify
+  restarting it. This tracking step did not rerun HOL or a native/hosted process.
+- First proof source has a type error: code resolves to the loaded byte-code
+  constant instead of the intended free stack-program variable. Renaming it to
+  stack_prg is the only source change before the successful run. Failure remains.
+- Three local model claims: refund_lab_code, refund_lab_oracle and
+  refund_initialization_sufficient. Exact code/oracle and basic static arithmetic
+  conditions are discharged. The conclusion gives SND initial <> NONE and
+  stack/lab semantics equality conditional on stack non-failure.
+- Seventeen antecedents remain: memory_assumption; link-register exclusion;
+  saved I/O/call registers; memory/shared-memory alignment; initial/future
+  good_code; three saved-register memberships; five physical-name equalities;
+  register-name permutation. No physical assignment or observation proves them.
+- Fresh complete-statement/premise import, dependency-closure audit, reproducible
+  rebuild and new adversarial controls are NOT RUN for this checkpoint. The
+  source checks zero explicit hypotheses/new tagged axioms, but cached parents
+  are not independent full-chain replay. U311 remains the latest completed local
+  pointer/word validation. This packet is not promoted to executable assurance.
+- First byte readback exits1 because it looks only at stdout for the old type
+  error. A separate corrected reader includes stderr and exits0. Both scripts and
+  the failure record remain. This is not a negative-test success or theorem failure.
+- Corrected readback checks four export files,11 pinned sources,50 protected
+  paths, mission/native identity and843 U311 members in each copy. Existing native
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8 unchanged.
+  Source f23025a1323792e064f44d42725beaa16ba987057d7df6bf6d638cba881a452a;
+  theory data267cc49251967655092dcc2c250fbbcbc985dc0d6465a4a878b9173146798f3b.
+  Successful recorded wall time89.81102383302641s is local, not hosted cost/savings.
+- Evidence:proposals/refund-executable-feasibility/initialization-success-checkpoint-20261105/
+  CHECKPOINT.md,COMMANDS.md,records/. Earlier evidence and both uncertainty-log
+  prefixes remain intact. Separate U310 records are not overwritten or adopted.
+- Next: use existing compiler/configuration facts to remove justified static
+  premises; complete exact import/closure/repeat/controls before composing further.
+  Then justify lower-pass execution and U298's every-prefix installer condition.
+  Final semantics equality alone is insufficient. U290/U297 routes remain stopped.
+- Physical/source/resource/FFI/OS applicability, independent review/replay and new
+  provenance/admission remain open. Owner-reported other-device backup still lacks
+  exact archive hash/restore evidence. Protection exports were not refreshed.
+  No protected adoption,push,publication,merge,dispatch,signing,admission,deployment
+  or new stage. M1/integration EXIT NOT_ESTABLISHED; end_to_end=false.
+
+## U313 — Initialization compiler facts discharge two premises; full local validation passes
+
+- References:U296,U297,U298,U303,U305,U307,U311,U312. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Baseline195ad87e6e82badbc16151bb231581c410cebdb7.
+  Previous goal turn made progress by preserving U312 evidence and tracking it.
+- Four claims in forge_refundInitializationStatic establish exact config validity,
+  the register-name permutation, good_code for all future exact stack-oracle
+  programs, and a reduced sufficient initialization theorem. Fifteen conditions
+  remain. Complete approved refund R1–R5 integer/Unicode behavior remains M1.
+- The future-code proof uses published oracle_stack_good_code and a constructed
+  abstract ARM8 config. Published arm8_machine_config_ok proves its validity.
+  Unused fields are arbitrary. This witness proves only a static compiler fact;
+  it does not replace physical mc or establish runtime memory/register conditions.
+- Static bundles1/2/3 exit1/0/0. First uses a wrong qualifier for find_name, an
+  existing tlookup overload. Second proves the helper facts but leaves16 conditions:
+  set_oracle projection is normalized in the combined claim but not the name-map
+  helper. First complete import exits1 at Wrong complete premise count. A new
+  source normalizes the already checked helper before rewriting. Third bundle
+  reports15 conditions. Expected contracts and original theorem stay unchanged.
+- Second fresh import exits0. It checks five exact/kernel-normalized statements
+  and full premise equivalence for both original17/reduced15-condition claims.
+  All seven have zero explicit hypotheses/new tagged axioms. Closure483
+  nodes/2406 hashed dependency files retains only the four Boolean foundations.
+  Same-host cached parents are not independent clean full-chain source replay.
+- Original and static proof repeats exit0/0; separate byte comparisons0/0 confirm
+  four exports per theory. Code substitution1 and oracle substitution1 refuse exact
+  statement binding. Missing memory1 leaves memory_assumption unproved. All three
+  first pass all seven positive checks. The first missing-memory attempt instead
+  fails at MATCH_MP_TAC with No match; the sequence guard exits1 and refuses to
+  count it. A corrected copy uses DISCH_TAC, preserving the same attempted claim
+  and conjunctive conclusion. The corrected control and completion guard exit1/0.
+  No script error counts as a rejection.
+- readback0 binds14 pinned sources,50 protected paths, mission/native identity,
+  and892 U311/U312 members per copy. Earlier failures and both histories remain.
+  U312's local validation gap is closed; its packet remains unchanged. U290/U297
+  stay stopped. No failing proof exceeds five attempts. No new axiom or semantics.
+- Final source303ea5ad004ab8988ba79acc804d4a9055a64ec892f5285750ebf4d3970cdf67;
+  data985e43cd906cd26f82f69da2ae3081ee7c768eb710a8a7e8de1f8d6239c3f948.
+  Nativeb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8 unchanged.
+  Evidence:proposals/refund-executable-feasibility/initialization-static-validation-20261105/
+  REPORT.md,COMMANDS.md,records/. Measured local durations are not hosted costs/savings.
+- Next: use published to_word_labels_ok,data_to_word_compile_conventions,
+  word_to_stack_compile_lab_pres and word_to_stack_stack_convs to establish the
+  exact initial stack good_code condition. Preserve reserved-label bounds and
+  exact compiler identity. Then justify register/memory relations and lower-pass
+  target-prefix correspondence. Final semantics equality alone is insufficient.
+- Complete physical/source/resource/FFI/OS applicability, independent review/replay,
+  fresh provenance/admission and operational readiness remain open. Owner-reported
+  backup lacks exact other-device hash/restore verification. Protections were not
+  refreshed. No native/hosted run,protected adoption,push,publication,merge,dispatch,
+  signing,admission,deployment or Stage12. M1/integration EXIT NOT_ESTABLISHED.
+
+## U314 — Initial stack-code composition remains unproved; exact checkpoint preserved
+
+- References:U296,U297,U298,U303,U305,U307,U310,U311,U312,U313. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. Baseline local commit
+  05a6596db5c147739c74b42d3df0c7fb38bd60b1. Owner requests Markdown tracking;
+  existing local-commit authorization persists. No new stage or wider authority.
+- Recorded code-0001/0002/0003 exit1/1/1. First saves allocation conventions but
+  leaves label goals. Published GREATER_DEF resolves that label form in the
+  second source. It saves three helpers, then numeric DECIDE construction fails.
+  The third uses explicit num types; its generic stack-good proof instead fails
+  at Tactical.FIRST_ASSUM. No run reaches completion or exports the new theory.
+- The three in-process helpers concern exact word allocation conventions, exact
+  label validity and exact stack-lowering identity. They have no completed fresh
+  import/closure/reproduction/control audit. Initial-stack good_code and the
+  proposed14-condition initializer remain NOT_ESTABLISHED. U313's validated
+  15-condition claim remains the accepted local checkpoint; no premise is removed.
+- The log does not identify which drule fails. A hidden word-type mismatch is
+  a hypothesis only. Next: print typed goals, assumptions and specialized theorem
+  types at each drule, then change only the demonstrated mismatch. The label
+  helper passed on attempt2; the generic composition has one actual failing
+  proof attempt after a separate numeric-construction failure. Preserve all
+  counts; no failing proof may exceed five attempts. U290/U297 stay stopped.
+- expected.sml, wrong-lowering.sml, duplicate-label.sml and missing-memory.sml
+  are prepared but NOT RUN. After a complete export, require exact statements,
+  all14 intended remaining premises, closure audit, repeated identical exports
+  and intended rejection reasons after positive audits. Script errors cannot
+  count as negative-control success. No new HOL/native/hosted run in this
+  Markdown tracking step; earlier command records are not fresh executions.
+- Initial byte audit exits1 because it assumes identical protected bytes in
+  distinct historical checkouts. First correction preparation exits1 on a
+  workspace-only __pycache__ path; the premature script invocation exits2 because
+  that correction script was not created. All failures are retained. Corrected
+  checkpoint-complete.py exits0:96 raw files,18 exact upstream source pins,
+  208 U313 members per copy and Git, parent/source/heap/native/mission identities.
+  All50 workspace protected paths match their original baseline;46 tracked
+  worktree protected paths match its baseline commit. No protected bytes changed.
+- Latest incomplete source f3e2be7884bd6ee005de790179859e1858bad7e8862901e59c3709be7c8acb11.
+  Existing native b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Evidence:proposals/refund-executable-feasibility/initial-stack-code-checkpoint-20261105/CHECKPOINT.md, COMMANDS.md and records/.
+  Separate root/worktree histories remain intact, including root-only U310.
+- Impact:the initial good_code premise remains required. Other initializer
+  memory/alignment/saved-register conditions and stack non-failure remain;
+  they are not the complete M1 assumption list. Then justify lower-pass
+  transitions and U298's every-formal-prefix condition. Final-output equality,
+  partial in-process proofs and observations do not establish physical behavior.
+- Independent review/full-chain replay, physical/source/resource/FFI/OS
+  applicability, fresh authenticated provenance/admission and operational controls
+  remain open. Owner-reported backup needs exact required archive hashes and a
+  restore from the independent device. GitHub controls were not refreshed.
+  No publication,push,merge,dispatch,signing,admission,deployment or Stage12.
+  M1/integration EXIT NOT_ESTABLISHED. Hosted costs/savings NOT RUN.
+
+## U315 — Published read/error frame checked; physical syscall relation remains open
+
+- References:U262,U275,U276,U283,U286,U289,U290,U291,U294,U295,U296,U297,U301,
+  U310,U313,U314. CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+  Parent local commit dde26bed545bb1f5fc87efe0410ddcace239e531. This goal turn
+  makes new proof/audit progress; it does not establish the full native chain.
+- forge_refundReadBoundary proves read_ready,ffi_read_ready,ffi_read_ready_status
+  and ffi_read_unavailable from unchanged published fsFFI definitions. Ready
+  descriptor/inode/choice-head conditions force status0. Modeled read=NONE with
+  length guards gives status1, unchanged remaining buffer and unchanged fs.
+  No original specification, theorem, event/error/heap predicate or domain changed.
+- Model bundles0001–0006 exit1/1/1/1/1/1; diagnostic0; bundle0007/repeat/import0/0/0.
+  First two failures are parser collisions. Status proof failures expose an
+  unreduced assumption, constructor substitution, then HD(cons); existing list
+  equations close it on its fourth actual proof attempt. Error-frame proof passes
+  on its second attempt with LUPDATE_def. No failing proof exceeds five attempts.
+  All failed sources, logs, partial in-process claims and exact residuals remain.
+- Fresh import checks all four complete statements, zero explicit hypotheses/new
+  tagged axioms. Four exports repeat byte for byte. Closure147 nodes/870 parent
+  files retains only SELECT_AX,INFINITY_AX,ETA_AX,BOOL_CASES_AX. All2659 U310
+  parent bindings match. HOL logic/kernel,PolyML,host,loader and cached DISK_THM
+  provenance remain trusted. This is not independent clean full-chain replay.
+- Wrong-ready-status1 and changed-error-frame1 first pass all four positive
+  audits, then refuse the exact altered statement. These are claim-binding
+  controls, not physical counterexamples or new proof axioms.
+- Native controls run twice: eight cases each; wrapper exits0/0. Valid regular
+  input and ready nonblocking input produce exact64-byte output with exit0.
+  Empty EOF,malformed input,closed stdin,write-only stdin and empty nonblocking
+  pipe each produce empty stdout/stderr and exit0. A stdout pipe without readers
+  terminates with signal status-13 (SIGPIPE); stdout is not captured in that case.
+  Complete two-run observation records match. No internal errno/FFI byte is
+  observed or inferred. Logical Success, modeled events and OS status stay distinct.
+- Pinned LLDB static disassembly succeeds but its Python command fails: exit1,
+  no scripting support. Command-only directory-input and known-valid launches
+  both exit1 at no-such-process before a breakpoint. No native status or frame
+  capture is established. Stop this launch path until an identified environment
+  change. No debugger substitution, permission bypass or executable change.
+- Smallest physical gap: connect one exact ffiread call's OS result, complete
+  buffer, filesystem update, valid return state and full ffi_interfer_ok frame to
+  the published model. IO_fs does not represent nonblocking flags,errno or signals.
+  The C negative branch writes status1 but that alone proves no syscall buffer or
+  offset frame. fsFFI itself notes its unchanged-offset error-model limitation.
+  Published CakeML I/O work keeps C/OS implementation in the trusted base; no
+  checked exact C-object/Darwin refinement is available in the inspected chain.
+- Correct U310 report prose: is_arm8_machine_config fixes only target and
+  pointer/length/saved-register mapping. Entry,memory,FFI and installer conditions
+  reside under installed/good_init_state. U310's exact theorem and packet remain
+  unchanged. The new assurance matrix preserves all eight premise groups plus
+  successful-source,resource,linker,loader,interference and OS trust conditions.
+- Artifact readback0 verifies2727 historical chain files,311 standard-checksum
+  members,134 U310 members,100 U296 members and50 unchanged protected paths.
+  Both existing signatures verify0/0; no signing or recompilation ran. Frozen
+  mission unchanged. Native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Replay preflight0 verifies21 original/snapshot pairs and all three pinned source
+  revisions with clean tracked diffs. Independent environment and bootstrap/source
+  provenance are NOT_ESTABLISHED; replay gate NO_GO, execution NOT RUN. U301's
+  Docker socket denial and old Holmake refusal have no demonstrated environment
+  change and were not retried or bypassed. Copying producer caches is not replay.
+- Accepted source2ebad35c506b95ab9a3f209341777514fbd75e679fb0f673e91d32553845fa7a;
+  data32d97ebfdd39e761c4b9ea8905a2f6090df23b9c9985dafc2c508b266abaf050.
+  Evidence:proposals/refund-executable-feasibility/read-runtime-20261105/REPORT.md,ASSURANCE.md,COMMANDS.md,NEXT-CHECK.md and records/.
+- Next experiment: after an authorized observer launch is actually restored,
+  capture before/after one empty nonblocking-pipe read, including return register,
+  descriptor flags,complete buffer and saved-state frame. Compare with the exact
+  checked model; preserve any mismatch. This finite experiment cannot replace a
+  universal concrete refinement. No new environmental assumption is adopted.
+- Separate U313/U314 initializer work and distinct workspace/worktree histories
+  remain intact; U290/U297 stopped routes stay stopped. Independent full-chain
+  assurance,physical/source/resource applicability,admission and operational
+  backup/protection evidence remain open. No Stage12,protected change,release
+  signing,deployment,push,publication,merge or hosted execution. M1 EXIT NOT_ESTABLISHED.
+
+## U316 — Exact native error words bound; standard ARM8 proof dependency returns EPERM
+
+- References:U272,U275,U276,U283,U286,U290,U296,U297,U301,U310,U314,U315.
+  CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false. Parent local
+  commit2e4315138a6984268d4ad1297748337af3adcec3. Previous goal turn made progress;
+  this continuation adds exact instruction identities and a minimal dependency
+  failure. No new native instruction theorem or full-chain result is established.
+- Pinned LLDB static disassembly and section listing exit0. No native process
+  launch. All28 words in the112-byte ffiread disassembly match both exact files.
+  Separate raw-word readback0 checks every word again against file bytes, not
+  merely the producer's count. Fragment starts at file offset151920 and hashes
+  ec5f3b8045a2d7038e8645acd7bd72a001bddc75ab24b7fd913c4d36cc163bf4.
+- Exact post-read error words:37f800c0,52800028,39000268,a9417bfd,a8c24ff4,d65f03c0.
+  Standard disassembly identifies branch,status write,register/stack restore and
+  return. No custom instruction decoder or semantics was written. These words
+  identify a proposed six-step proof, not a checked state transition or frame.
+- First relative arm8_stepLib load exits1 at missing ui search path. Absolute
+  load exits1 in unchanged utilsLib/numLib.DECIDE. The published existing ARM8
+  heap gets past utilsLib but exits1 in arm8_stepLib/numLib.DECIDE. All three
+  invocations stop before any requested instruction theorem or export. No fourth
+  library-load attempt. Original tools,heaps,sources and failures remain intact.
+- A separate standard HOL dependency diagnostic, without loading stepLib again,
+  calls HolSatLib.SAT_PROVE on probe OR NOT probe. It exits1 with exact error:
+  SysErr ("Operation not permitted", SOME EPERM). DECIDE/TAUT/SAT source inspection
+  supports the dependency-chain explanation, but does not prove that every old
+  DECIDE failure had this cause. The denied syscall/path remains NOT_ESTABLISHED;
+  process creation versus temporary-file access is not distinguished.
+- Stop this proof-tool route. No alternate solver,temp path,helper process,
+  sandbox change,evaluator patch or permission bypass. This is an OS-reported
+  EPERM, not an automatic approval-review rejection. Library failures are not
+  accepted negative controls. New proof/repeat/import/control/closure checks
+  are NOT RUN because no instruction theory exists. U315 remains the checked
+  read/error model result; no source contract, event trace or premise changed.
+- First artifact reader exits1 because it searches stdout for a stderr loader
+  message. Corrected readback_0002.py exits0 and checks both retained streams.
+  It verifies2659 prior parent bindings,ten source snapshots,270 U315 members,
+  134 U310 members,additional tool/heap identities,both native files,50 protected
+  paths,frozen mission and existing journal prefixes. First reader and log remain.
+- HOL revision9783a49979c94c401ff8c0e51b2eefae7ea95ae3 has a clean tracked diff.
+  Existing ARM8 heap787499c5305260a0dcf93cab119e0cb2f830c539ddf9327c433758f0a92350a9;
+  L3 heap9a59e119969c4a180d1eaa19104f92237054ca5e81fe3298e5ad9843b440052c.
+  Local identities do not establish independent source/bootstrap provenance.
+  Native remains b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+- Smallest physical obligation stays the complete single-call ffiread relation:
+  OS result,full buffer,filesystem effect,valid return state and FFI frame together.
+  A future six-instruction theorem would cover only the post-syscall error return
+  under explicit machine/code/stack/separation/return premises. It would not
+  establish the syscall,whole prologue,physical ISA or complete FFI refinement.
+- Next smallest tool check: run the unchanged standard dependency diagnostic in
+  an explicitly authorized context that permits its underlying operation. Identify
+  the failed syscall/path there before proposing changes. Do not retry the same
+  blocked context. If it passes, inspect full exact instruction premises before
+  composing, then require fresh statement/closure/repeat/control and byte audits.
+- Evidence:proposals/refund-executable-feasibility/native-error-instructions-20261105/REPORT.md,ASSURANCE.md,COMMANDS.md and records/.
+  Independent21-snapshot replay remains NOT RUN: clean environment and provenance
+  prerequisites are unvalidated. No debugger launch,native execution,recompilation
+  or signature command ran here. Prior signatures/controls are reused only through
+  unchanged identities. All physical/source/resource/installer/linker/loader/OS
+  gaps remain. U290/U297 stopped routes and separate U314 work are untouched.
+- No protected change,new stage,release signing,admission,deployment,push,merge,
+  publication or hosted action. M1 and integration EXIT NOT_ESTABLISHED.
+
+## U317 — Full M1 goal marked blocked after three-turn prerequisite audit
+
+- References:U310,U314,U315,U316. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Parent local commit6ce40d4663e17499b6157f9b83d669e44b0208a6.
+  Goal service confirms status blocked for the unchanged full U310 objective.
+  This is not completion or a weaker success criterion. Receipt:records/goal-status.json.
+- Previous goal turn classification:PROGRESS. U316 bound exact native words and
+  diagnosed a standard HOL dependency restriction. U315 also made proof/native
+  progress. The repeated blocker is the missing validated independent execution
+  context and source/bootstrap provenance, present in U315,U316 and this audit.
+  The SAT EPERM itself is not counted as three separate goal-turn failures.
+- Completion audit checks all six requested requirements. Model inspection,
+  conditional source/compiler results,finite native controls and byte identities
+  are established at their recorded scopes. The complete physical read/frame
+  relation,environment/resource applicability and independent full-chain replay
+  remain NOT_ESTABLISHED. No safe authorized route to those results is available
+  here without new context/input or an external-state change. No live proof or
+  observer handle is being awaited; prior handles returned terminal exits.
+- audit.py exits0:487 prior packet members,21 original/source snapshot pairs,
+  accepted U310/U315 theory data,both exact native files,50 protected paths,
+  frozen mission and existing journal prefixes match. Git HEAD/status/protected
+  diff each exit0. Scoped inventory contains55 replay/environment evidence paths;
+  it identifies no validated replacement context. This is not an assertion about
+  all possible external infrastructure. No new runtime/proof evidence is created.
+- U316's standard SAT_PROVE query retains historical exit1 and exact error
+  SysErr ("Operation not permitted", SOME EPERM). The denied syscall/path stays
+  unknown. No new SAT,debugger,Holmake,Docker,native,signature or replay command
+  ran. No solver/temp-path/sandbox/evaluator workaround or protected change.
+- Smallest unresolved proof: one complete real ffiread call must agree with the
+  published model in OS result,full buffer,filesystem effects,valid return state
+  and complete FFI frame. Logical Success,modeled FFI events,OS exit0 and physical
+  execution remain distinct. No specification,input domain,error predicate,event
+  trace,heap relation,runtime premise or resource premise was weakened.
+- Unblock condition: explicitly authorized working proof/observer context plus
+  reviewer-controlled clean replay environment and verified source/bootstrap
+  provenance. First run the unchanged SAT dependency diagnostic there; identify
+  any denied syscall/path before changes. If it passes, inspect exact instruction
+  premises before composition. Execute U310's21-snapshot plan only after its
+  prerequisites pass. Producer heaps/caches are not independent proof inputs.
+- U310 data6b8a9a3cb7ecf6746d407b22d840f414b2d6d4e2618c8afc87680a6c94f0917f;
+  U315 data32d97ebfdd39e761c4b9ea8905a2f6090df23b9c9985dafc2c508b266abaf050;
+  nativeb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Prior486/147-node closures and four Boolean foundations remain; no fresh
+  kernel replay is claimed by this readback. Full assumption matrices remain.
+- Evidence:proposals/refund-executable-feasibility/runtime-blocked-audit-20261105/REPORT.md and records/. ROADMAP,mission tracker and assurance matrix
+  reflect the blocked audit. Separate U314 work and U290/U297 stopped routes
+  are unchanged. All failures and distinct histories remain. No new stage,
+  release signing,deployment,admission,push,publication,merge or hosted action.
+  Full M1/integration EXIT NOT_ESTABLISHED; goal blocked; end_to_end=false.
+
+## U318 — Source diagnosis narrows recovery check; execution context remains blocked
+
+- References:U310,U315,U316,U317. Parent local commit
+  a62970da86c484c76dea6ca412c8770fd347b47c. CURRENT none; M1 open and blocked;
+  Stage12 unauthorized; end_to_end=false. Owner requested environment recovery
+  before further proof work. This bounded inspection does not resume the goal.
+- source_audit.py exits0. Twelve HOL/PolyML source files match their pinned local
+  Git objects;14 Git reads exit0. Six U316 diagnostic files match byte for byte.
+  Relevant existing launcher/heap/tool identities,50 protected paths and frozen
+  mission match. Local Git identity is not independent acquisition or bootstrap
+  provenance, nor proof that compiled binaries implement each inspected source.
+- Source finding: PolyML raiseSycallWithLocation replaces a nonzero-errno call
+  message with the generic OS error text. Both temporary-file and system-command
+  call sites can therefore produce the same printed EPERM. Source-visible
+  operations include temporary creation, file writes, access checks, vfork,
+  child execv and waitpid. This is not an exhaustive dynamic trace or an
+  attribution of U316 to one operation. The exact denied syscall/path stays open.
+- The runtime macro records file/line in an exception packet. The published
+  PolyML.Exception.exceptionLocation function exposes the optional location.
+  U316's handler printed only Feedback.exn_to_string, then exited. No original
+  location survives in its retained records. An intervening ML raise can replace
+  a location. A future location is evidence about that future failure only;
+  it may locate the raise site, not the complete syscall/path or earlier failures.
+- Initial read-only source lookup batch exits2 for guessed exceptions.cpp.
+  Another guessed PolyML.sml lookup emits a missing-file error inside an overall
+  exit0 read batch; no separate intermediate status was retained. Correct paths
+  run_time.cpp/run_time.h/PolyMLException.sml were found. Errors remain in
+  records/inspection-errors.md. These are navigation failures, not proof attempts
+  or successful negative controls.
+- No new SAT,HOL proof,debugger,native,signature,independent replay or environment
+  recovery execution. No changed solver,temp path,proof tool or permissions.
+  No working replacement context was validated. EPERM is OS-reported, not an
+  automatic approval-review rejection. No new permission request is made.
+- Next smallest experiment: validate an explicitly authorized context's source,
+  tool,bootstrap,isolation and permission scope; run the unchanged diagnostic
+  first. Its source SHA256 is
+  bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108.
+  Preserve exact argv,cwd,streams and actual exit. If it fails, stop and obtain
+  its optional exception location plus errno in that authorized diagnostic
+  context, or an authorized host failure record. This additive observation is
+  proposed only; it was not built or run. No same-context retry is authorized
+  by this source finding. The independent21-snapshot replay gate remains closed.
+- Physical ffiread correspondence remains NOT_ESTABLISHED: OS result,complete
+  buffer,filesystem effect,return state and full FFI frame must agree together.
+  A SAT pass would establish dependency execution only. Logical Success, modeled
+  events, native exit0 and physical OS behavior remain separate. U310/U315
+  statements and their complete trace/error/heap/runtime/resource premises stand.
+- Evidence:proposals/refund-executable-feasibility/environment-recovery-20261106/REPORT.md and records/.
+  ROADMAP,mission tracker and assurance matrix retain blocked status. All previous
+  failures and journal prefixes remain. No protected edit,stage transition,
+  release signing,deployment,publication or remote execution. U290/U297 stopped
+  routes and separate U314 work are unchanged.
+
+## U319 — Read-only operation execution finds denied /var/tmp write-access query
+
+- References:U269,U272,U287,U301,U310,U315,U316,U317,U318. Parent local commit
+  4aa8f08a2d19172cd91637b085fdc422fb95c7a5. CURRENT none; M1 open and blocked;
+  Stage12 unauthorized; end_to_end=false. Owner authorized operation-specific
+  read-only environment investigation. No unchanged SAT retry or proof restart.
+- New diagnostic uses the same pinned HOL executable and ARM8 heap. First run
+  exits1 at int/FixedInt.int formatting mismatch; no OP_BEGIN occurs. New attempt
+  changes only four exception-location conversions to FixedInt.toString. It
+  exits0 with four probes complete: existing input read64bytes, allocation65536
+  bytes,Boolean /var/tmp write-access query false,and OS.Process.system true
+  success. The original failed attempt remains. No new theorem was constructed.
+- SYSTEM_STATUS prints opaque ?. SYSTEM_SUCCESS true is the observed standard
+  API result. No numeric child status is inferred from opaque text. The optional
+  exception-location handler typechecks but receives no runtime exception in
+  the corrected run. This current process command succeeds; that does not
+  establish every process,debugger or sandbox-creation operation is permitted.
+- Separate read-only libc recorder exits0. access(/var/tmp,W_OK) and the resolved
+  /private/var/tmp alias return-1 with errno1 EPERM. Existence,read and search
+  queries pass. Forge and /private/tmp pass all queries. A known absent path
+  gives ENOENT for all queries. All20 returns/errors remain. No file creation,
+  chmod,sandbox change,temporary-path override,alternate solver or workaround.
+- The denied directory has mode01777,uid0,gid0. Mode bits alone do not explain
+  the result. The exact observed denial is the current libc access API query.
+  Its issuer remains NOT_ESTABLISHED: no host denial record distinguishes
+  sandbox,ACL,TCC or another policy. Python errno is not attributed to the
+  separate HOL process,which records only its own Boolean false.
+- Existing source/SDK evidence shows tmpName uses P_tmpdir when defined and
+  the installed SDK defines /var/tmp/. New observations support that hypothesis;
+  they do not capture mkstemp or prove the binary's preprocessing. Historical
+  SAT/Holmake failing operations remain unknown. Earlier sandbox_apply exit71
+  is a separate boundary. No swarm sandbox launcher was retried.
+- Local record review exits0:12 pinned sources,SDK header and all recorded
+  inputs retain hashes. Both diagnostics validate50 protected paths and frozen
+  mission before/after. Relevant old tool/heap pins match. Runtime dylib's new
+  before/after identity is recorded; independent production is not established.
+  CPU3600/core0 match U316; inherited memory/stack/descriptor/process limits
+  remain. No resource exhaustion was observed by these small probes; full
+  resource premises remain open. No resource limits or permissions increased.
+- Smallest recovery prerequisite: explicitly authorized isolated macOS ARM64
+  context that runs the same pinned bytes and permits standard temporary files
+  in its own private /var/tmp. Validate context,provenance,isolation,permissions
+  and limits,then run unchanged U316 diagnostic first. Preserve any new failure
+  and inspect original exception location or authorized host record before proof
+  work. No replacement context was established here. Existing protections stay.
+- Unchanged SAT,physical ffiread proof,native refund execution,swarm and21-snapshot
+  independent replay remain NOT RUN. U310/U315 conditional results and all
+  original trace/error/heap/runtime/resource premises remain. Physical I/O and
+  independent clean replay are NOT_ESTABLISHED. Logical Success,modeled events,
+  OS exit and physical behavior remain distinct. M1 remains blocked.
+- Evidence:proposals/refund-executable-feasibility/environment-operations-20261106/REPORT.md, records/attempt-0002 and records/attempt-0003.
+  ROADMAP,mission tracker and assurance matrix updated. Prior failures,immutable
+  evidence and journal prefixes remain. No protected edit,Stage12,release signing,
+  deployment,publication or remote execution. U290/U297 and separate U314 untouched.
+
+## U320 — Required default tmpName fails at mkstemp; TMPDIR does not select this path
+
+- References:U269,U272,U287,U301,U310,U315,U316,U317,U318,U319. Parent local commit
+  3cbd82d29875351192389550626a35d1d615c6c2. Owner resumed the U319 environment
+  objective. CURRENT none; M1 execution blocked; Stage12 unauthorized;
+  end_to_end=false. This is the first turn of the resumed environment objective,
+  not three new repetitions of a blocker or a claim that full correctness passed.
+- run_temp_requirement.py exits1. Private mode0700 scratch write/read passes.
+  Published def_cnf.to_cnf on the exact original probe OR NOT probe term yields
+  one variable,two clauses. Standard SAT initialization therefore needs tmpName.
+  The separate default OS.FileSys.tmpName call raises SysErr EPERM. Captured
+  location is exactly basicio.cpp:1025:1025-0:0. File/startLine1025 identify the
+  pinned mkstemp failure branch. No runtime/tool or original SAT input changed.
+- Standard otool disassembly exits0. The inspected runtime loads /var/tmp/ at
+  0x3a444,appends /MLTEMPXXXXXX at0x3a45c,calls mkstemp at0x3a480,and branches
+  on return-1 to the error block.0x3a9f8 supplies line0x401=1025 to the exception
+  helper. Runtime SHA3f8fe4bc24c68d7d30840e2dd31966b50a02751d292fed3e67716b3575fa74fe.
+  Generated random filename suffix is not captured. This is observed/static
+  diagnostic evidence,not a formal machine-code or OS theorem. U316's historical
+  failing operation remains unknown; no retroactive attribution is made.
+- Pinned basicio.cpp uses compiled P_tmpdir for this function and reads no TMPDIR.
+  Pinned osmemunix.cpp does read TMPDIR for a different memory-backing operation.
+  Both source files match PolyML4557554077078decce4ce5f90da00a713cfc32e4. The inherited
+  TMPDIR already names the permitted per-user area. It was not changed; no supported
+  setting was found for redirecting this unchanged tmpName branch.
+- Current managed writable roots exclude /private/var/tmp. U319 records EPERM
+  there despite1777 mode,with permitted-path controls passing. A single MLTEMP-only
+  host-log query exits64:log: Cannot run while sandboxed. The managed filesystem
+  sandbox is therefore the leading enforcement inference,not an identified kernel
+  rule. No denial events were retrieved. No retry,escalation,alternate logging
+  route,global permission change,temp override or security bypass followed.
+- Scoped VM tool/application inventory finds no candidate among the six commands
+  and four standard app paths checked. No external host is inferred absent.
+  User asked for an existing authorized macOS ARM64 target; none supplied yet.
+  Exact next action: provide that isolated target with its own writable /var/tmp,
+  then validate identity,source/tool provenance,enforced isolation,resources and
+  read/write/process/memory/temp/negative-permission controls before unchanged SAT.
+- Original unchanged SAT source remains
+  bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108.
+  New instrumentation SHA2c0fc86f4d6fd53b0b7ac660873427201334886b0811ba1d7270f2b96992fdff.
+  Record readback exits0:86 prior bindings,including50 protected paths and frozen
+  mission,match before/after. CPU3600/core0 stay; no resource limits increased.
+  Mode0700 scratch is not a separate OS isolation boundary. Local hashes are not
+  independent source/bootstrap provenance. No replacement environment validated.
+- Initial metadata lookup exits127 for /usr/bin/ls; corrected /bin/ls exits0.
+  Two external source fetches report Cache miss; neither supplies source evidence.
+  Local pinned Git objects do. All failures and earlier records remain.
+- Full unchanged SAT,new physical ffiread proof,native refund execution,swarm,
+  and independent21-snapshot replay remain NOT RUN. U310/U315 claims and complete
+  event/error/heap/runtime/resource premises remain. No unchecked axiom,tool
+  modification,specification weakening or protected change. Logical Success,
+  modeled events,process exit and physical OS behavior remain separate.
+- Evidence:proposals/refund-executable-feasibility/temp-requirement-20261106/REPORT.md and records/.
+  ROADMAP,mission tracker and assurance matrix updated; journals append-only.
+  Smallest physical obligation still joins OS result,full buffer,filesystem
+  effects,return state and FFI frame. Stop speculative proof work pending a
+  validated environment. No Stage12,release signing,deployment,remote execution,
+  publication or new stage. U290/U297 and separate U314 work are unchanged.
+
+## U321 — No authorized execution target established by scoped discovery
+
+- References:U317,U319,U320. Parent3e81393815a44dde3d20518a4f0929d3f6ffb2ae.
+  CURRENT none; M1 blocked; Stage12 unauthorized; end_to_end=false.
+  Verdict:BLOCKED: AUTHORIZED_EXECUTION_TARGET_REQUIRED.
+- Scoped configuration discovery exits0. Eleven local workflow files contain14
+  Ubuntu runner jobs and no macOS/self-hosted label. Historical macOS plans
+  explicitly established no usable registered runner in that preparation; they
+  grant no M1 execution authority. Nine distinct SSH aliases establish neither
+  macOS architecture nor Forge authorization. No SSH connection or private-key
+  read. Host/account values are not archived in this evidence packet.
+- GitHub connector lacks runner-inventory support. Read-only gh API fallback:
+  first recorder exits1 saving returned string as bytes; API status/content not
+  retained,so no runner count inferred. Corrected recorder/request exits1 with
+  error connecting to api.github.com. Live registry UNKNOWN,not empty. Both
+  failures remain. No dispatch,registration,alternate network route or transfer.
+- Reuse U320's scoped local VM inventory. No repeated sandbox diagnostic,old
+  artifact audit,proof or native run. No applicable macOS execution connector
+  identified; unrelated services were not used as fallback execution hosts.
+- Minimum user action: provide one existing authorized macOS ARM64 target and
+  connection/access details with trusted host identity. Require private writable
+  /var/tmp,enforced isolation,exclusive inputs/outputs against other agents,
+  verifiable pinned tool/source provenance and adequate resources. Validate
+  before proof commands. Any new external transfer still requires explicit
+  approval for its exact payload after target selection.
+- Evidence:proposals/refund-executable-feasibility/target-required-20261106/REPORT.md and records/. All earlier records remain;
+  journals append-only. No infrastructure installation,cloud charges,security
+  change,protected edit,Stage12,swarm,release signing,deployment or publication.
+  U320 diagnosis and assurance limits unchanged; replacement context,unchanged
+  SAT execution,physical correspondence and independent replay NOT_ESTABLISHED.
+
+## U322 — On-demand hosted Mac candidate prepared; exact preflight approval pending
+
+- References:U319,U320,U321. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner asked to handle the stalled work. No speculative proof
+  or same-sandbox diagnostic followed. U321's missing authorized target remains;
+  on-demand GitHub-hosted Macs add a candidate that does not require a previously
+  registered self-hosted machine. This is not a validated environment claim.
+- Connected GitHub read tools succeed: Forge visibility public; main remains
+  f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3. This does not repair or relabel the
+  prior CLI runner-registry connection failure. Registered-runner state remains
+  unknown. No claim that connected API reads establish remote execution access.
+- Official GitHub runner docs list standard macos-15 ARM64 public-repository jobs
+  as free,new VMs,3 M1 CPUs,7GB RAM,14GB storage. Published image release lists
+  macOS15.8.2 and image20261104.0514.1. Candidate uses standard label only,public
+  repository guard and exact image-version check.7GB is not assumed adequate
+  for the full proof chain. Provider isolation remains a disclosed trust boundary.
+- Prepared m1-macos-preflight.yml only under the proposal directory. One push
+  branch,one generic environment job,empty token permissions,no checkout,
+  external action dependencies,installs,secrets,proof inputs or toolchain upload.
+  Controls cover OS/architecture,image identity,private-VM /var/tmp mkstemp,
+  read/write,own mode000 denied-read fixture,process and64MiB memory. No sudo.
+- Local YAML parsing,embedded Python compilation and scope checks exit0.
+  Twelve workflows at the exact base have no push trigger matching the new
+  proposal branch. Workflow SHA256
+  2b9d331ab4c85c54ec69c49600b110289937b27353d307f36f783645eda34ccb.
+  No actual environment probe was run by static validation.
+- Concrete requested approval: create proposal/m1-macos-preflight-20261106 from
+  exact mainf9eb1cbc,publish only this generic workflow at
+  .github/workflows/m1-macos-preflight.yml,and observe its one triggered job.
+  The owner's previous rule requires explicit authorization for a new external
+  host. Question is pending; elapsed time does not authorize publication.
+- Hosted publication,preflight,SAT and independent replay NOT RUN. A future
+  preflight does not authenticate pinned HOL production or prove ffiread; its VM
+  is disposed at job end. Subsequent SAT needs same-job validation plus separately
+  approved exact immutable input transfer. No provider-control-plane or peer-write
+  exclusion premise is silently discharged. All U310/U315/U320 limits remain.
+- Evidence:proposals/refund-executable-feasibility/hosted-macos-preflight-20261106/APPROVAL.md, PREPARATION.json,REMOTE-STATE.json and the
+  prepared workflow. Docs cite primary GitHub runner/image sources. ROADMAP and
+  tracker updated; existing journals and evidence preserved. No protected edit,
+  cloud charge,security-policy change,Stage12,swarm,signing,deployment or remote
+  mutation occurred in this preparation.
+
+## U323 — Preparation readback corrected for distinct document histories
+
+- References:U322. CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+- Initial local preparation readback exits1 with AssertionError: ROADMAP.md.
+  The check wrongly required root and worktree historical documents to match.
+  Their retained histories differ by design; no source/proof defect is inferred.
+- Corrected check exits0: ten packet-file bindings,six individual document hashes,
+  both append-only journal prefixes and the identical new U322 suffix match.
+  No document history was rewritten to make the comparison pass.
+- Evidence:proposals/refund-executable-feasibility/hosted-macos-preflight-20261106/READBACK.json.
+  Remote publication,preflight,SAT and replay remain NOT RUN. Exact external
+  preflight approval remains pending; no environment or proof claim changes.
+
+## U324 — Authorized hosted /var/tmp probes pass; exact installation path denied
+
+- References:U310,U315,U320,U322,U323. Parentc79037b. Previous goal turn made
+  concrete preparation progress. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Current user explicitly authorized one hosted ARM64
+  preflight and unchanged SAT conditional on verified environment/inputs.
+- Rechecked prior approval manifest. Published only18 necessary exact input
+  files as five archive chunks plus manifest on the approved proposal branch.
+  Input commitac05eaf972b8c98784466ae063fca505aaaf25f4. GitHub blob/size readback
+  matches; compare shows six additions and no protected/default-branch change.
+  Workflow commita599bf6c1e8e568bc1705468754edf959b274b6a adds only its file.
+- Pin identities: workflow SHA256
+  f83eaada408fc4adf8f900a908b5b326440bff5a352323ef248c9300b4f2c88c; input manifest
+  6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7.
+  Unchanged SAT sourcebc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108.
+  Local published PolyML showParent calls exit0/0 and identify five saved states.
+  Packaging/extraction/static checks exit0. Seven input files match U320 pins;
+  newly recorded parent hashes identify current bytes,not independent bootstrap.
+- Actual run42292059389,job128147719439,attempt1 completed/failure. Python step
+  exits78. macOS15.8.2 build24H232,ARM64,image20261104.0514.1 match. UID501.
+  access(/var/tmp,W_OK) returns0 errno0; mkstemp returns fd3 errno0;33-byte
+  write/read matches; own mode000 read raises EACCES13; true exits0;64MiB
+  memory touch passes. sw_vers/sysctl exit0/0; RAM7516192768 bytes reported.
+- Next operation mkdir(/Users/mackianni,0700) raises EACCES13. This hosted
+  installation-path permission boundary differs from local /var/tmp EPERM.
+  No input download,pinned HOL,MiniSat or SAT invocation reached. No theorem
+  failure or impossibility inferred. No sudo or security-policy change occurred.
+- Complete raw log24364 UTF-8 bytes SHA256
+  3353e60dea84993945265b204c8cf9b52e0ebb400814c04cf9456f12c72a7c53 retained
+  with provider timestamps for exact-log preservation; derived normalized view
+  strips only timestamp prefixes/ANSI escapes. Separate API/log/source readback
+  exits0; it is not an independent organization or full-chain proof replay.
+- GitHub timing reports one job,0 billable MACOS milliseconds,run_duration_ms12000.
+  Standard public-repository class is documented free; account invoice and
+  unrelated charges are not inspected. Token reports Metadata:read only.
+  Host/OS/provider isolation remains assumed. Full HOL resource adequacy unknown.
+- Independent readback detects a latent workflow-generation error: environment
+  key INPUT_MANIFEST_BYTES became INPUT_8435. Initial static check missed it.
+  It was not reached and did not cause the actual EACCES. Preserve both findings.
+  Local proposed revision fixes the key and adds exactly two privileged commands
+  to create one new0700 directory and give it to the non-root runner. No existing
+  path changes,recursive ownership,sandbox bypass,heap relocation or alternate
+  solver. Proposal SHAed975f35b2016f84fcb814a4cdb81997f94eb8beb3b4d6e4fde0b74c9640d9fe.
+- One authorized run is consumed. Exact additional-run/directory-setup approval
+  requested and pending. No automatic retry. Smallest next action: approve
+  NEXT-ACTION.md or supply an authorized VM with that original private path.
+  Source preservation exits0:50 protected paths,frozen mission,18 inputs match.
+- Preserve source-lookup failures1/2,expected missing-branch404,encoded-path
+  connector400 and bounded-output transport truncation. Truncated data was not
+  uploaded; segmented reads and Git blob identities checked before publication.
+- Evidence:proposals/refund-executable-feasibility/hosted-macos-run-20261106/REPORT.md,
+  INPUTS.json,OPERATIONS.json,ASSURANCE.md and immutable records. ROADMAP/tracker
+  updated; journals append-only. Complete physical ffiread/native I/O proof and
+ 21-snapshot independent replay remain NOT_ESTABLISHED. U310/U315 premises and
+  logical Success/modeled events/native exit/physical behavior remain distinct.
+
+## U325 — Goal blocked after three turns at the additional-run approval boundary
+
+- References:U323,U324. Parentde4a57b. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. Goal service now returns status blocked.
+- Three consecutive goal turns retain the same boundary: U324 made progress
+  and ended at missing additional-run/setup authority; the next continuation
+  made no progress; this continuation revalidates the same condition.
+  The previous turn was not a verified wait. GitHub now confirms job128147719439
+  in run42292059389 is completed/failure. No live process is awaited.
+- Original hosted step exit78 and mkdir(/Users/mackianni,0700) EACCES13 remain
+  the actual execution result. One authorized run is consumed. The prepared
+  second run and two scoped privileged setup commands have no new approval.
+  Automatic continuation is not explicit approval for either action.
+- Read/status commands exit0; GitHub status read succeeds without a process
+  exit. No new SAT,proof,native run,remote mutation or repeat artifact audit.
+  Existing U324 assurance classifications,cost report,hashes and failures stay.
+- Smallest next action remains approval of hosted-macos-run-20261106/NEXT-ACTION.md
+  or an explicitly authorized compatible target with the original private path.
+  No new permission question or broadened operation. No protected edit,Stage12,
+  signing,deployment or weakened theorem. SAT and full correspondence unfinished.
+- Evidence:proposals/refund-executable-feasibility/execution-approval-blocked-20261106/CHECKPOINT.json.
+  ROADMAP and mission tracker record the returned blocked state; journals append-only.
+
+## U326 — Unchanged SAT diagnostic passes in a private hosted path without sudo
+
+- References:U310,U315,U316,U320,U324,U325. Parent44d4f76. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. User renews authority for
+  one additional hosted run and expressly prohibits sudo. The two prior proposed
+  privileged setup commands are reviewed but not used. No further approval asked.
+- Published PolyML loadHierarchy accepts explicit parent filenames while keeping
+  all state bytes unchanged. Source inspection matches pinned HOL/PolyML commits.
+  Local API-only check exits0; no local SAT retry. New workflow creates a0700
+  private root under RUNNER_TEMP and uses the same pinned binary/library/heap bytes.
+  No privileged command,renameParent,custom loader,solver rebinding or theorem edit.
+- Exactly one additional job: run42400884739,job128488158467,attempt1. Commit
+  8ad9de1e538edd48a2084796510e784913eaef8b changes only the proposal workflow.
+  Remote readback matches workflow SHA256
+  65e3addb289c29650fd7c84b2d3894c8d468a351a422778e9a1c9a9ec6a87027.
+  Reuses input commitac05eaf972b8c98784466ae063fca505aaaf25f4 and manifest
+  6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7.
+- Hosted image20261104.0514.1,ARM64,macOS15.8.2 build24H232,UID501 match.
+  /var/tmp access returns0; mkstemp fd3; errno0.33-byte write/read and64MiB
+  memory touch pass. Own mode000 read raises expected EACCES13. Actual private
+  path /Users/runner/work/_temp/forge-m1-pnsscbe1 has mode0700 and owner501.
+  sw_vers,sysctl,true and otool exit0. No /Users/mackianni mutation was attempted.
+- HOL subprocess actual exit0. Unchanged660-byte SAT source hash remains
+  bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108.
+  Output contains DIAGNOSTIC_SAT_THEOREM ⊢ probe ∨ ¬probe and NATIVE_STEP_COMPLETE.
+  That marker is only the diagnostic's completion token; it is not a native
+  refund or instruction-proof result. No refund executable was run here.
+- Material limit: FROZEN_SOLVER_EXECUTABLE false. The fixed original MiniSat
+  path is unavailable. The matched unchanged SAT_PROVE/invoke_solver source
+  has its existing DPLL_TAUT fallback; is_proved stays true. No alternate
+  implementation was selected or injected. This kernel diagnostic success
+  does not establish external native MiniSat execution or original-path parity.
+  Branch classification follows observed reachability and source,not a separate
+  internal-function trace. The original pinned checker and theorem input remain.
+- The five saved states print their loaded paths. Complete stdout1061 bytes SHA
+  bcce9389ee783189c6d405c0b6d69589ce71a63c6cc7ab8be988d80822e1d6dc; stderr96531
+  bytes SHA c99d288e5bd61647b47a432efc5e5047ecca5c38597d9213e48ec5e03530c60b.
+  Raw log172948 bytes SHA909cc3cdfe9daae052dcab8103e5ce63a5bb183979f91a40b77976172bec68cc.
+  Complete raw provider logs retained; normalized view is separate. Dyld records
+  the pinned relocated libpolyml/libgmp paths. Stream sizes/hashes checked on decode.
+- Separate API/log/source readback exits0:36 remote before/after input identities,
+  all18 current source files,50 protected paths and frozen mission match. No
+  independent reviewer or bootstrap replay is claimed by this separate readback.
+  GitHub reports one job,0 billable MACOS ms,run duration47000ms. CPU120 seconds
+  per process,HOL maxheap1024MiB,core0 and32MiB stream limits retained.
+- Scoped execution objective achieved. Physical ffiread/native I/O correspondence
+  remains NOT_ESTABLISHED. Next: validate/load unchanged arm8_stepLib in a separately
+  authorized context; inspect the step theorem for39000268 at0x1000251c8,then
+  address the six-word error-return frame without dropping state/stack/return
+  premises. A passing SAT query does not prove the prior DECIDE failures resolved.
+  Syscall result,full buffer,filesystem effects,valid return and complete FFI
+  frame still need a joint correspondence. Full21-snapshot replay NOT RUN.
+- Evidence:proposals/refund-executable-feasibility/hosted-macos-nosudo-20261107/REPORT.md,
+  ASSURANCE.md,NEXT-STEP.md and records. ROADMAP/tracker updated; journal append-only.
+  Prior U324 EACCES and configuration-key failure remain immutable. U310/U315
+  claims remain unchanged; logical Success,modeled events,exit0 and physical
+  behavior stay distinct. No protected change,Stage12,signing or deployment.
+
+## U327 — Well-formed stdin model forces successful status; native error domain remains open
+
+- References:U262,U286,U310,U315,U316,U320,U326. Parent8a09927. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. Owner clarifies software-only
+  correctness: trust ISA implementation,documented OS behavior,HOL logic/kernel;
+  do not verify silicon. No broader software premise is accepted by that trust.
+- A new minimal HOL composition reuses U315 and pinned fsFFIProps. It proves
+  wf_read_inputs,stdin_read_inputs,stdin_ffi_read_status_zero,stdin_ffi_read_total
+  in forge_refundStdinDomainTheory. Under wfFS,STD_streams,length conf8,decoded
+  fd0 and buffer capacity,ffi_read has a result and every result has first byte0.
+  Totality is explicit; the status claim is not merely conditional on existence.
+- First runner preflight1 uses the wrong physical location of the generated
+  signature; HOL not launched. First theorem attempt1 stops at the descriptor
+  membership subgoal. Three residual inspections fail1:interactive alias g
+  absent,explicit Context.t missing,then the same local subgoal unresolved.
+  Fourth inspection0 prints the precise assumptions. Existing option distinctness
+  and pair injectivity facts close the unchanged claim. Corrected model0;
+  totality extension0;repeat0;fresh import0. All failure files remain.
+- Final source SHA6791849e3c7f09dea6b09c7bb1f3b9d2bcb0458d1e1ca9352ae6094b7a64507f;
+  final theory data SHA3192e34a57ac581727a3ce8c56770e7354242577d35bc4229903fe28020e671d.
+  Four exports match across proof/repeat. Four exact imported statements have
+  zero hypotheses,zero tagged axioms,only DISK_THM tags. Closure148 theory nodes,
+  876 parent files,existing SELECT_AX/INFINITY_AX/ETA_AX/BOOL_CASES_AX only.
+  This is local cached-parent assurance,not an independent source replay.
+- Wrong-status and missing-fd0-guard controls exit1 at the exact statement check.
+  They test claim binding; they are not attempted proofs of false statements.
+  Readback0 checks2665 current inputs,50 protected paths and frozen mission.
+  Tool/source pin and source-diff checks0/0/0 retain the pinned HOL/CakeML commits.
+- The pinned C ffiread sets byte0 to1 after a negative read. Pinned TextIO
+  read/read_into raises InvalidFD for that byte. Apple read(2) documents EAGAIN
+  and EINTR,so documented OS behavior alone does not imply a no-error transport.
+  The archived page is not an exhaustive specification of either execution OS.
+- New local libc probe on an empty nonblocking pipe:writer open gives read-1,
+  errno35/EAGAIN;writer closed gives read0,errno0.16-byte sentinel unchanged in
+  both finite observations. The exact native refund executable then runs on
+  each corresponding descriptor; both actual exits0,stdout/stderr empty. Wrapper0.
+  The probe precedes the child; it does not trace the child's syscall or prove
+  native exception identity,full memory frame,or universal OS behavior.
+  Native SHA remainsb8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8.
+  Observer reports local macOS27.0.1 arm64; U326 hosted macOS15.8.2 is distinct.
+- Impact: a direct status/event-preserving relation cannot map an admitted
+  status1 read into this well-formed standard-stdin model domain. Whether an
+  approved physical-state relation admits that case remains unestablished.
+  This is not a counterexample to the refund contract or impossibility of every
+  assurance route. Do not add no-error assumptions,exclude inputs,or weaken events.
+- Next check: one-byte request,fd0,valid buffer and wfFS/STD_streams against
+  the physical empty nonblocking pipe case. Inspect the exact approved transport
+  domain/refinement premise. Identify an existing justified exclusion or an
+  established semantic route covering the error. Otherwise prepare an explicit
+  change proposal; do not alter the contract or trusted model without authority.
+  A STRB frame theorem alone does not repair this domain mismatch.
+- No new hosted execution,SAT retry,ARM8 loader retry,expensive rebuild,signing,
+  deployment,swarm or independent21-snapshot replay. Memory/install/resource,
+  loader/linking,stdout,complete physical I/O and independent assurance remain
+  open. Logical Success,FFI events,native exit0 and OS behavior stay distinct.
+- Evidence:proposals/refund-executable-feasibility/stdin-domain-20261107/REPORT.md,
+  ASSURANCE.md,NEXT-STEP.md,records and MANIFEST.json. Source lookup/glob/path
+  failures and web403 are also recorded. ROADMAP/tracker updated; this journal
+  append preserves both distinct histories. No protected change or new axiom.
+
+## U328 — Complete stdin error-event replay obstruction; generic FFI loader failure preserved
+
+- References:U286,U310,U315,U316,U320,U326,U327. Parent2874d5c. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. Previous goal turn made progress.
+  This turn follows the approved software boundary and preserves all prior claims.
+- Locked RefundSpec/protocol/spec.lock identities match. The source contract
+  has no POSIX descriptor-availability premise. The inspected protocol does not
+  supply a no-error stdin assumption; modeled stdio/runtime correspondence
+  documents remain explicitly unadopted. Absence is not approval to exclude errors.
+- Published TextIO read_spec only permits InvalidFD when content is unavailable
+  or mode is not ReadMode. IOFS retains wfFS; STDIO retains STD_streams.
+  basis_ffi_oracle handles read before consulting ext. Eight inspected CakeML
+  sources match the pinned cd9155694c16831373ab695a670794f23282ed62 revision.
+- New forge_refundReadEventGapTheory exports basis_read_ignores_ext,
+  basis_stdin_read_total,stdin_error_event_rejected and
+  stdin_error_complete_trace_rejected. The last result preserves an arbitrary
+  replayed prefix,complete event byte pairs and arbitrary suffix. If the prefix
+  reaches wfFS/STD_streams and the fd0/configuration/capacity guards hold,a read
+  event with first returned byte1 forces extract_fs of the entire trace to NONE.
+  U310 requires SOME. No ext value repairs the read call under these premises.
+- This is a checked obstruction to that direct model/replay route,not a proved
+  native counterexample or impossibility of every assurance route. A preceding
+  ext call could alter state; the new theorem explicitly requires guards at
+  the read state. Their physical applicability remains unestablished.
+- Proof/repeat/fresh import exit0/0/0 on first proof attempt. Four generated
+  exports match. Four exact imported statements have no hypotheses or tagged
+  axioms; only DISK_THM tags. Closure217 theory nodes,1287 parent files; four
+  existing Boolean foundation axioms only. Source SHA
+  902821b55ffa3991c677640aeba8eec4d901e25cceb3c12a4680b45c24846d19;
+  data SHA60261ea96a993d62c971769d642c9ab1b9dbc558ccd31f41d9e4e3ef00202357.
+- Wrong-replay-result and omitted-error-event controls exit1/1 at the exact
+  statement check. These test claim binding,not native attacks. Readback0 checks
+  2668 current inputs,50 protected paths and frozen mission. Source pin/diff0/0.
+  Checks use same-host cached parents; independent source replay remains unrun.
+- A separate candidate uses published app_ffi/FFI_part to state an explicit
+  status1 transition and the unchanged TextIO read function's InvalidFD result.
+  It retains the full buffer,oracle state,names and exact event append. It defines
+  no new oracle or semantics. Its transition premise is not accepted as trusted;
+  physical read/frame correspondence would still be required.
+- That candidate exits1 at its first load cfLib,through cfDivLib,cfTacticsLib,
+  helperLib and numLib.DECIDE. No theorem is reached and no theory export exists.
+  Statement and tactics remain unchecked. Full stderr/source/command are kept;
+  failure readback0 confirms them. No errno or syscall location is captured.
+  Cause equivalence to U320's mkstemp EPERM is unproved. No same-context retry,
+  alternate solver,modified library,permission change or workaround occurred.
+  Candidate SHA7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6.
+- Next smallest execution:prepare exact hosted payload/dependency closure for
+  unchanged cfLib load and candidate,using supported U326 saved-state loading
+  and private writable paths; obtain one additional run/input-transfer approval
+  before external action. No such authority is currently granted. A successful
+  load would not prove the candidate. Inspect actual residuals only after it runs.
+- No new native execution,hosted job,release signing,Stage12,deployment,swarm,
+  proof-machinery/specification change or independent21-snapshot replay.
+  Runtime memory,loader/linker,full I/O correspondence and independent assurance
+  remain open. Logical Success,full FFI events,native exit and OS effects remain
+  distinct. ISA/OS/HOL trust does not discharge these software obligations.
+- Evidence:proposals/refund-executable-feasibility/read-event-gap-20261107/REPORT.md,
+  ASSURANCE.md,NEXT-STEP.md,COMMANDS.md,records and MANIFEST.json. Incidental
+  missing-path/search failures are also preserved. ROADMAP/tracker updated;
+  this append retains both distinct uncertainty histories unchanged.
+
+## U329 — Exact generic FFI hosted package prepared; additional approval pending
+
+- References:U310,U315,U320,U326,U327,U328. Parentb8586b6. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. The software boundary stays
+  unchanged:explicit ISA implementation, documented OS behavior and HOL trust.
+- U328's generic candidate remains byte-identical,SHA
+  7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6.
+  Its last actual cfLib attempt is still the U328 exit1 before the theorem.
+  The cause remains distinct from the proved U320 mkstemp failure unless new
+  evidence relates them. No local failing loader/SAT/ARM8 route was retried.
+- Public PolyML saved-state and HOL path metadata inspections exit0/0.
+  Four required states are identified;549 preloaded modules do not include
+  cfLib. Published holpathdb registration and Meta.loadPath permit relocation
+  without rewriting any runtime,state,library file,theorem or solver binding.
+- Static collection/packaging exit0/0:280 module nodes,1,475 additional files
+  and18 previously published base files. Three parts bind9,882,464 compressed
+  bytes. New manifest932,639 bytes,SHA
+  6822e8da53f477f991bfa4a7cab02ffc59906a58460048a49af190fb42b2c105.
+  Proposed new publication totals10,815,103 bytes plus one workflow. Static
+  file references and cached proof ancestry are not a checked new theorem closure.
+- Local private-context inspection exits0. All1,493 input hashes match before
+  and after. Exact candidate quotation parses. Private pinned Poly/ML/GMP paths
+  appear in the load log. No cfLib load,theorem attempt or generated theory.
+  This is same-host preparation,not independently controlled full-chain replay.
+- Workflow/transport checks exit0/0. Three complete logged files reconstruct
+  byte for byte. Wrong archive hash,path traversal and symlink controls exit1/1/1
+  at expected assertions. These check transport,not mathematical correctness.
+- First artifact readback exits1 because the root protected baseline was
+  incorrectly applied to a distinct review-worktree history. Script and traceback
+  preserved. Corrected readback exits0:root historical50 protected paths and
+  frozen mission match; review worktree protected diff againstb8586b6 exits0.
+  Source lookup failures,ps permission denial and a wrong-directory copy failure
+  are retained. No observed cause is attributed to the historical cfLib failure.
+- The exact prepared workflow has token permissions{},one macOS ARM64 job,
+  fixed image20261104.0514.1,private paths and unchanged pinned inputs.
+  Limits:15 minutes per job;CPU120/wall150 seconds and maxheap1536MiB per child;
+  4MiB per output file. The final wall-limit/runtime-path additions are statically
+  reviewed; they have not executed remotely. Missing evidence is failure.
+- Proposed sequence:environment controls; unchanged generic candidate; only
+  on success,identical repeat,fresh import and two exact-statement refusals.
+  Stop on the first unexpected result. No implicit second job or proof revision.
+  Original MiniSat binding remains; its old absolute path must be unavailable,
+  so any use of HOL's existing fallback is disclosed as inU326.
+- Approval requested for this exact input publication and one job under the
+  owner's explicit additional-hosted-run rule. None received at this checkpoint.
+  No remote write,hosted execution,new native run,Stage12,signing,deployment,
+  swarm or21-snapshot replay occurred. Provider/OS isolation would remain trust;
+  private permissions and hashes do not prove adversarial same-UID isolation.
+- Smallest next action:approve the concrete scope in
+  proposals/refund-executable-feasibility/hosted-cf-candidate-20261107/APPROVAL.md.
+  Then read back exact published bytes and execute the unchanged candidate.
+  If it runs,inspect the actual residual or theorem premises/closure. A generic
+  transition remains an obligation,not a new assumption. Native errors/frame,
+  inputAllFrom/refund_main,stdout,memory/install/resources,link/loader and full
+  independent replay remain open. Logical Success is not native OS exit0.
+- Evidence:the same packet's REPORT.md,ASSURANCE.md,COMMANDS.md,payload,
+  records and MANIFEST.json. ROADMAP/tracker updated; this append preserves
+  the separate journal prefixes. No original theorem or event requirement changed.
+
+## U330 — Goal blocked pending the prepared additional hosted-action approval
+
+- References:U328,U329. Parent4a45cb0. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Goal service returned blocked,not complete.
+- Previous goal turn classification:progress. U329 completed exact inputs,
+  relocation/term checks,transport controls and the concrete one-job scope.
+  Current classification:no progress toward proof; no verified live wait.
+- The same additional hosted-run/input-transfer approval condition occurs in
+  U328,U329 andU330. No approval reply or alternative authorized execution
+  context has been supplied. The owner's current goal explicitly requires
+  new external-action approval. The U326 one-run grant was already consumed.
+- ROADMAP,prepared scope,journal and worktree reads exit0. Review worktree is
+  clean at4a45cb0b36518cb02b76806b1955bb2bc0e66d53. No redundant proof,archive
+  audit,local failed loader retry,remote publication or new hosted job ran.
+- The next proof target remains unchanged:generic TextIO read-error exception,
+  exact buffer,state and complete event append from an explicit status1 FFI
+  transition. Candidate syntax is checked; proof and closure are not established.
+  Native transition/frame and whole-program composition remain obligations.
+- Minimum action:answer the existing exact one-job/input-transfer request in
+  proposals/refund-executable-feasibility/hosted-cf-candidate-20261107/APPROVAL.md.
+  No automatic retry or broader authority is inferred from goal continuation.
+- Existing assurance classifications,protected files,failures and immutable
+  U329 packet remain. Logical Success,modeled FFI events,OS exit and physical
+  effects stay distinct. No silicon work,Stage12,signing,deployment or independent
+  replay. Evidence:hosted-cf-approval-blocked-20261107/CHECKPOINT.json and
+  ASSURANCE.md. ROADMAP/tracker updated; both journal prefixes preserved.
+
+## U331 — Requested offline review of the prepared generic FFI job
+
+- References:U328,U329,U330. Parent68c3fb2. CURRENT none; M1 open; goal remains
+  blocked; Stage12 unauthorized; end_to_end=false. Owner said "check it".
+  Applied this as review permission,not clear approval for public input transfer
+  or another hosted job. Existing approval question remains; no duplicate request.
+- Offline review exits0. All66 frozen packet files and1,475 archive members
+  match. Exact workflow/driver identities and declared job/token/trigger scope
+  agree. Embedded shell syntax check bash -n exits0 without executing the shell.
+- Candidate/import quotation equality holds. The status1 transition,buffer,
+  FFI state and complete event append remain. Four inspected CakeML sources
+  match U328 hashes. Published TextIO.read checks byte0 and raises InvalidFD;
+  app_ffi retains the explicit transition and complete IO_event. Source-form
+  correspondence is not a checked theorem or evidence that tactics will close.
+- No blocking defect found within the reviewed scope. This same-agent offline
+  review is not independent assurance. Generic candidate theorem/closure and
+  native transition/frame obligations remain NOT_ESTABLISHED. No new trust
+  assumption,no-error restriction,axiom,event omission or spec change.
+- Optional source search exits2 on a guessed absent PolyML osmem.cpp path.
+  Failure retained. No HOL loader/SAT/native retry or remote write occurred.
+  The prepared runtime-path/wall-limit behavior still needs actual execution;
+  missing output or resource-limit failure must not become a passing record.
+- Next action remains the unchanged U329 one-job/input-transfer approval under
+  the owner's explicit external-run rule. No hosted job,native run,independent
+  replay,signing,Stage12 or deployment. Logical Success and OS exit stay distinct.
+- Evidence:proposals/refund-executable-feasibility/hosted-cf-review-20261107/
+  REPORT.md,ASSURANCE.md,records and MANIFEST.json. ROADMAP/tracker updated;
+  both historical journal prefixes and the complete U329 packet preserved.
+
+## U332 — Approved exact source transfer completed; hosted execution held
+
+- References:U326,U328–U331. Parent902511c. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false.
+- Owner first said "go ahead and try it" after the exact prepared scope.
+  Treated that as one-run and input-transfer approval. During readback,the owner
+  then required exact manifest scope reporting before execution and explicit
+  authorization. Workflow trigger held; no new proof or hosted run started.
+- Inspected APPROVAL.md SHA
+  d17518d10fa1c5ba5c0219f002176da65b75e2f93a10ff04032fd76c04cb700e.
+  Scope:four new files totaling10,815,103 bytes;1,475 archive members,18 reused
+  base files; unchanged candidate and pinned libraries/states/parents. Report
+  lists exact commands,public destination,permissions{},image/resource limits
+  and conditional proof/repeat/import/two controls.21-snapshot replay excluded.
+- Local approved-input identity helper exits0. Initial large tool response
+  causes JSON parse failure at character524288; no upload in that failed call.
+  Corrected262143-byte reads exit0 and assemble44 pieces. All four Git blob
+  hashes match the upload API responses. Catalog change rejects the first
+  commit tool call before execution; rediscovery/retry creates the input commit.
+- Published21c4bdf958627e6a24e8dee9a45d90568b3e3c20 on
+  proposal/m1-cf-inputs-20261107. Separate API read confirms exactly four added
+  paths under proposals/m1-hosted-cf-inputs and matching local blob IDs.
+  Workflow branch remains8ad9de1e538edd48a2084796510e784913eaef8b. Run read lists
+  only the prior completed U324/U326 jobs. Zero hosted runs used by this attempt.
+- Complete remote byte readback is NOT_ESTABLISHED. Generic blob fetch rejects
+  binary UTF-8; base64 file reader returns empty content for a4MiB part; specific
+  blob reader raises UnicodeDecodeError. The first manifest fetch returned its
+  decoded text,not the expected envelope; this was a reader interpretation
+  failure,not a demonstrated byte mismatch. Direct immutable-URL download exits1
+  on getaddrinfo error8 before download. No sandbox override or security bypass.
+- Source-search missing-path/truncated-display failure also preserved. Root50
+  protected paths and mission match; separate review baseline protected/old
+  packet diff exits0. No approved specification or trusted machinery changed.
+- Minimum transport action:binary-capable readback of already approved immutable
+  commit bytes. No extra upload,rechunked manifest,new host or proof substitution
+  was introduced. Source publication is not a proof check. The latest instruction
+  requires this exact scope report before further execution and authorization.
+- The unchanged TextIO.read error theorem remains unproved. Explicit transition,
+  buffer,state and complete event append retained. Native transition/frame,
+  aliasing/lifetimes and inputAllFrom/refund_main composition remain obligations.
+  No assumption strengthening,axiom,event deletion,logical-Success/OS-exit
+  equivalence,independent replay,Stage12,release signing or deployment.
+- Evidence:proposals/refund-executable-feasibility/hosted-cf-transfer-20261108/
+  REPORT.md,ASSURANCE.md,records and MANIFEST.json. ROADMAP/tracker updated;
+  both journal prefixes preserved. Expected hosted exits remain clearly unrun.
+
+## U333 — DNS boundary diagnosed; integrity-only hosted fallback prepared
+
+- References:U328–U332. Last verified parentbd37d71. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. No hosted execution or remote write.
+- getaddrinfo(localhost) exits0. Three GitHub host lookups exit1/gaierror8;
+  scutil --dns exits1 with "No DNS configuration available"; curl exits6.
+  Resolver visibility in the managed context is the likely boundary,not a
+  proven global DNS defect. Exact enforcing rule and issuer remain unknown.
+- DNS recorder exits0 but its scutil boolean was overwritten by empty stderr.
+  Raw stdout establishes the actual message. Explicit annotation correction
+  preserves the original flawed summary,script,logs and failures.
+- Fresh connector reads return both full frozen manifests. SHA256 values match.
+  Reconstructed unsigned commits21c4bdf/ac05eaf and six trees match. An initial
+  UTC-only reconstruction had no matches; original -0500 headers match exactly.
+- Separate verifier exits0 for2 commits,6 trees,10 package files and all1,475
+  new plus18 base local archived members. Full candidate SHA7e36c486 and exact
+  candidate/import quotation match. Changed commit/manifest/part exit1/1/1.
+  This is separate implementation by the same agent,not independent control.
+  Captured API data plus local archives do not prove remote binary readback.
+- Remote complete package readback remains NOT_ESTABLISHED. Known binary
+  connector limitations were not retried. No DNS/security setting was changed.
+- Prepared workflow SHA3e7c35a8b3a21a3645f8f966e6ba8058a2a605646c9eb3499d105eed2ed20e78;
+  driver SHAa22b7aa7496739a189366f6178c1d041dd4dda354dc441cb255221ce3def6812.
+  Workflow/shell checks exit0. Proposed one Ubuntu integrity job,permissions{},
+  5-minute cap;180 wall seconds,90 CPU seconds,1GiB address space. Only one
+  11,609-byte workflow is published;26,196,042 existing payload bytes plus
+  eight bounded API responses are read. No input execution,installation or HOL.
+- GO recommendation:authorize the exact integrity-only preflight. NO-GO proof
+  until complete remote integrity evidence and separate proof-run approval.
+  Current owner rule explicitly requires approval; none received for this job.
+- During preservation the review .git pointer and admin HEAD/gitdir/commondir
+  were absent. Initial preservation exited1 before edits; git rev-parse128;
+  followup Git diagnostic batch129. Cause unknown. No metadata repair or new
+  commit. Local protected50 hashes/mission and both prior packet copies match.
+  Current review Git diff is NOT_ESTABLISHED; no reconstructed history claimed.
+- Evidence:proposals/refund-executable-feasibility/integrity-preflight-20261108/
+  APPROVAL.md,REPORT.md,ASSURANCE.md,records and MANIFEST.json. Root and review
+  journals keep their separate prefixes; tracker and ROADMAP record actual exits.
+- Next check:authorized hosted byte verification,with complete logs and actual
+  exit0 required. The frozen TextIO.read theorem/closure remains unproved.
+  Native frame/memory,whole-program composition and21-snapshot replay remain
+  separate. Logical Success,FFI events,OS exit and physical effects stay distinct.
+
+## U334 — Exact preflight review corrects redirect scope before authorization
+
+- References:U332,U333. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner explicitly gave a recommendation,not authorization.
+- Exact workflow review found urllib followed redirects before the final URL
+  check. This could exceed the stated host scope before rejection. Original
+  local302 control exits1 and records a second URL,intercepted before a socket.
+  This is a checker orchestration defect; no proof/input defect is inferred.
+- New proposal refuses redirects before following them. Workflow SHA256
+  213160ff1a6b09f1e7def8f2076b2e7abf73e24a6d0f982faac38192fbfe753d;
+ 11897 bytes. Driver SHA867ef586d6d1a5ed8a5f9efa7efd71c9ed60fcef150ad655c5938d5307c62e72;
+ 9886 bytes. Preparation/shell0/0. Only transport handler and proposal branch/
+  concurrency changed; all source pins and theorem quotations remain.
+- Initial recorder exits0 but accepts exit codes without checking result records.
+  Its308 child has HTTPError and no expected result record. This limitation is
+  preserved. Corrected recorder0 validates exact reasons,request lists/counts:
+  positive0;301/302/303/307/308 each1 with zero follow-up requests. Python3.10
+  rejects308 via HTTPError; remaining codes use the new guard. Ubuntu execution
+  is still untested. These controls use local fake HTTP handlers,no network.
+- U333's1,493-member and identity-mutation checks are reused,not repeated.
+  Both copies of its64 packet members match. Actual remote binary readback
+  remains NOT_ESTABLISHED. No DNS retry,Git repair,proof or hosted run occurred.
+- Supersedes U333's GO recommendation for its original workflow:old version
+  NO-GO. GO for requesting approval of revised one-job Ubuntu integrity scope,
+  permissions{},5-minute cap,same immutable downloads; no proof input execution.
+  Latest owner instruction requires approval,and explicitly has not granted it.
+- Missing local Git metadata remains unresolved; no new commit claimed. The
+  hosted checker must independently bind remote input commits21c4bdf/ac05eaf,
+  their trees/blobs and actual downloaded bytes. Local Git is no substitute.
+- Evidence:proposals/refund-executable-feasibility/integrity-preflight-20261109/
+  APPROVAL.md,REPORT.md,ASSURANCE.md,records and MANIFEST.json. Both old journal
+  prefixes retained; tracker and ROADMAP updated. Prior evidence unchanged.
+- Next check:explicit approval of the revised integrity job,then its full logs
+  and actual exit. HOL still needs separate approval after integrity. Native
+  memory/frame,whole-program composition and21-snapshot replay remain separate.
+
+## U335 — Authorized hosted readback establishes exact transfer integrity
+
+- References:U329,U332–U334. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner explicitly authorized one5-minute Ubuntu integrity
+  job,permissions{},no secrets/privilege/proof,and requested mutation controls.
+- Used U334's redirect refusal plus requested in-process mutations and actual
+  exit/resource records. Final13735-byte workflow SHA256
+  b8c96c19049e04aedc5b2902b9342ec26db4234690d2c5cce589bbd1730016e9.
+  Original U333/U334 artifacts remain. No pinned proof input or theorem changed.
+- Final preparation/local fixture validation0/0. All13 inherited workflow
+  identities/triggers match; none triggers on the new branch. Remote commit
+  fca212c45ccce9f27ffdf2d51ccf9ee96bce7162 adds only the integrity workflow.
+  Pre-trigger byte/commit readback0; source parent8ad9de1. No local Git needed.
+- One run42624212334,attempt1,job129183679727 succeeds. Complete log records
+  actual checker process exit0. All1475 addon and18 base files match,along
+  with ten package files,two archives,six tree bindings and both source commits.
+  Download26196042 payload bytes and36303 metadata bytes. Source commits remain
+  21c4bdf958627e6a24e8dee9a45d90568b3e3c20 andac05eaf972b8c98784466ae063fca505aaaf25f4.
+- Three hosted in-process controls reject changed commit/manifest/part with
+  exact ValueError reasons. These are not three OS child exits. The checker
+  process alone exits0. No transferred program,HOL or native refund was run.
+- Complete decoded log455127 UTF-8 bytes,SHA256
+  b22630463ade3fc54f9481975f528de87ef283a94a05dd4dc496c062958b4187.
+  Separate evidence reader exits0 and compares all expected records against
+  frozen manifests,without importing producer checker code. Same agent and
+  provider trust remain; no independent administrative control claim.
+- Candidate SHA7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6;
+  original quotation SHA289b8be8c848dc3debddbac5184e613e2c1e127c56dddd574e5b43087cc8c29a.
+  TRANSFER_INTEGRITY_ESTABLISHED is TESTED byte integrity,not a HOL theorem.
+- Actual Linux x86_64,Ubuntu image20261101.360.1,Python3.12.3,UID1001.
+  Checker wall9.004512771s,user CPU1.68537s,system CPU0.050339s,peak RSS48684KiB.
+  Provider duration16000ms,one job,0 billable Ubuntu ms. Token log shows implicit
+  Metadata:read; workflow permissions{} and no token/secret use remain.
+- Read-only wrong-branch lookup404 and unsupported optional full-job metadata
+  endpoint400 are preserved. Correct branch,job-summary,full logs and timing
+  reads succeed. No hosted failure,retry,Git repair or extra job. Root50 protected
+  hashes and mission match; both copies of U333/U334 packets remain unchanged.
+- Next proof proposal is local only. It binds verified addon commit and applies
+  redirect refusal to transport; all other U329 driver code byte-identical.
+  Proposed workflow SHA1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1;
+  syntax/preparation0. Exact original,bound-only version and diff retained.
+  Current owner explicitly forbids HOL execution; separate approval is required.
+- Evidence:proposals/refund-executable-feasibility/hosted-integrity-run-20261109/
+  REPORT.md,ASSURANCE.md,PROOF-RUN-APPROVAL.md,records and MANIFEST.json.
+  Tracker/ROADMAP updated; both journal prefixes preserved. No new local commit.
+- Smallest remaining formal step:run the unchanged generic TextIO.read error
+  candidate in the bounded separately authorized macOS context. Native memory/
+  frame/lifetime,whole-program composition and21-snapshot replay remain separate.
+  Logical Success,FFI events,native OS exit and physical effects stay distinct.
+
+## U336 — Existing authorized integrity run confirmed; duplicate execution avoided
+
+- References:U333,U334,U335. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The resumed request found U335 already complete on disk.
+- Fresh GitHub run/list/job/workflow/log/timing reads all succeed. Run42624212334
+  remains completed/success,attempt1,one job129183679727,one run at its head.
+  No new job,rerun,publication,proof,native execution or21-snapshot replay occurred.
+- confirm.py exits0. Fresh13735-byte workflow and455127-byte decoded log match
+  U335 exactly. Workflow SHA b8c96c19049e04aedc5b2902b9342ec26db4234690d2c5cce589bbd1730016e9;
+  log SHA b22630463ade3fc54f9481975f528de87ef283a94a05dd4dc496c062958b4187.
+  One Ubuntu job,5-minute cap,permissions{},no secrets,privilege or proof execution.
+  Original U333 redirect defect stays preserved. Executed U335 code retains the
+  U334 refusal and adds requested mutation,exit and resource records.
+- Existing separate readback.py runs against fresh provider responses and exits0.
+  All1475+18 member records match frozen manifests; ten package identities,two
+  commits,download counts,original quotation,three exact mutation reasons and
+  complete exit0 evidence match. Its result is byte-identical to U335's result.
+  Hosted mutation controls have ValueError rejections,not invented child exits.
+- Existing measurements remain26196042 payload bytes plus36303 metadata bytes,
+  9.004512771s wall,1.68537s user CPU,0.050339s system CPU,48684KiB peak RSS;
+  provider16000ms,one job,0 billable Ubuntu ms reported. No new performance run.
+- All181 manifest-listed U333/U334/U335 files match,including preserved failures;
+  root50 protected hashes and mission match. No Git repair or new commit claimed.
+  Only root tracker/journal updated; no other-workspace synchronization claimed.
+- Impact:TRANSFER_INTEGRITY_ESTABLISHED remains TESTED. The requested preflight
+  was already fulfilled; repeating it is unnecessary. Provider/control-plane,
+  OS,Python/hash/TLS and connector authenticity remain explicit trust. Separate
+  checker code does not establish independent administrative control.
+- Evidence:proposals/refund-executable-feasibility/integrity-confirmation-20261109/
+  REPORT.md,ASSURANCE.md,records and MANIFEST.json. No old journal bytes changed.
+- Next check:separate authorization for the existing unchanged TextIO.read proof
+  proposal. Proof workflow SHA1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1
+  matches. HOL is not run. Native memory/frame,whole-program correspondence and
+  independent21-snapshot replay remain open. M1 is not complete.
+
+## U337 — Frozen proof-run scope inspected; owner withholds execution authority
+
+- References:U329,U335,U336. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner recommends a separate approval after manifest review,
+  explicitly authorizes no additional execution,and requests the control distinction.
+- Read exact approval,complete workflow/driver,two frozen manifests and candidate/
+  import/two control sources. review.py exits0; shell syntax child exits0. No
+  proposed driver import,proof,hosted action,publication,signing or native run.
+- Workflow16385 bytes,SHA1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1;
+  driver2667f6d8f81e4286c04a80bf3e856b66c74ce15141d5e80c18e1fb4662d45fd8.
+  Both exact manifest hashes and1493 distinct entries match. Candidate/import
+  quotation289b8be8c848dc3debddbac5184e613e2c1e127c56dddd574e5b43087cc8c29a
+  and all four reviewed source identities match. No premise or event changed.
+- One15-minute macos-15 job,required ARM64/image20261104.0514.1,permissions{}.
+  Up to five serial HOL children:proof,repeat,import,wrong-exception,omitted-event.
+  Each CPU120s,wall150s,maxheap1536MiB,4MiB/file,zero core dumps. Expected
+  exits0/0/0/1/1 are proposal requirements only; actual exits remain NOT RUN.
+- Three previous hosted integrity mutations remain expected in-process ValueError
+  rejections with no separate process exit codes. Only the surrounding integrity
+  checker has observed exit0. Assurance matrix records this distinction explicitly.
+- No blocking static mismatch found. Recommendation applies only to a separate
+  approval decision. Image availability and resource adequacy remain unknown;
+  fail-closed guards remain. Per-child limits do not establish aggregate capacity
+  or completion within the900s job budget. Cached ancestry/provider trust remain.
+- Previous U335/U336 packet hashes,50 protected paths and mission match. No old
+  packet or uncertainty entry changed; no local Git repair or commit claimed.
+  Evidence:proposals/refund-executable-feasibility/proof-approval-review-20261109/
+  REPORT.md,ASSURANCE.md,REVIEW.json,command records and MANIFEST.json.
+- Next check:separate explicit authorization for the exact frozen proposal;
+  recheck branch head and inherited triggers before any publication. If proof
+  and evidence checks pass,native memory/frame correspondence and whole-program
+  composition remain,then independent full-chain replay. No automatic authority
+  or M1 completion follows from a passing generic TextIO.read theorem.
+
+## U338 — Authorized frozen HOL attempt cancelled without an assigned runner
+
+- References:U329,U335–U337. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner authorized one frozen hosted proof job and conditional
+  repeat/import/two controls,with stop on first unexpected result. No retry scope.
+- Local frozen-scope preflight exits0. Exact approved workflow/driver/manifest
+  packet hashes and parent8ad9de1 match. All12 other workflow identities and
+  trigger definitions checked; none triggers on this branch push.
+- Remote workflow/commit readback exits0 before branch update. New commit
+  f1e4a080fd4c33aa1072c93fe4757e16805ab484 has only modified path
+  .github/workflows/m1-macos-preflight.yml.16385 bytes,SHA256
+  1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1;
+  Git blobc6bdbde3f8612de474d1423216efce545c813f25. Parent lease checked,
+  no force. Final branch read matches. No source upload or protected change.
+- One run42661020831,attempt1,one job129312292711. Successive job reads remain
+  queued until terminal cancellation. Run conclusion failure; job conclusion
+  cancelled. Full job API:runner_id0,runner_name empty,steps[]. One run at head.
+  These are provider conclusions,not OS process exit codes. No retry occurred.
+- No environment/input-download/HOL command executed. Pinned ARM64/image
+  20261104.0514.1 guard was not reached; no image observation or substitution.
+  Proof/repeat/import/negative controls NOT RUN. Actual process exits,theorem
+  statements,export hashes and dependency closures are unavailable,not passes.
+- Full log request returns404 BlobNotFound. Optional check-run reason read
+  returns connector400 unsupported endpoint. Raw responses preserved. Artifact
+  list empty. Local stream reader not run because no hosted log exists.
+- Provider reports902000ms run duration,0 billable MACOS ms,one job. No actual
+  proof CPU or peak RSS exists. API started_at equals creation but no runner or
+  steps are recorded; that timestamp is not evidence of execution. The interval
+  resembles the15-minute limit,but precise scheduler cause remains UNKNOWN.
+  No account,capacity,billing,image-availability or external-cancellation cause
+  is established. The observed issue is absent runner assignment.
+- Separate validate_terminal.py exits0,imports no producer checker,and binds
+  frozen workflow/blob,parent/change list,current head,one run/job/attempt,
+  terminal conclusions,timing,no artifacts and log failure. This validates the
+  environmental-failure report,not a theorem. Same provider/agent trust remains.
+- All217 manifest-listed U333–U337 packet members,50 protected files and mission
+  match. No old uncertainty bytes,proof premises,dependencies or failures changed.
+  Three prior integrity controls remain in-process ValueError rejections with
+  no separate exits; enclosing checker exit0 only. New HOL controls have no exits.
+- Evidence:proposals/refund-executable-feasibility/hosted-proof-run-20261109/
+  REPORT.md,ASSURANCE.md,records and MANIFEST.json. Queued checkpoint preserved
+  and superseded by TERMINAL-READBACK.json. No local Git repair/commit claimed.
+- Impact:one authorized attempt ended unsuccessfully before mathematical work.
+  Original generic TextIO.read obligation remains unchanged and untested here.
+  Next check:runner allocation and unchanged pinned-image guard,only under
+  separate approval for another attempt. No retry remains authorized. Native
+  memory/frame,whole-program composition and21-snapshot replay stay separate.
+
+## U339 — Scheduling metadata inspected; unchanged single-job retry awaits approval
+
+- References:U335–U338. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner requests scheduling inspection and a bounded retry
+  proposal,with separate authorization before dispatch. No execution authorized.
+- Fresh run/jobs metadata confirms run42661020831 failure,attempt1; sole job
+  129312292711 cancelled,runner_id0,runner_name empty,steps[],labelmacos-15.
+  No HOL process,statement,closure or mathematical failure exists for this job.
+- Workflow at exact commitf1e4a080 remains SHA256
+  1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1.
+  Concurrency groupforge-m1-macos-environment-preflight,cancel-in-progress:false.
+  One job,no needs/dependents,no environment approval binding,permissions{},
+  15-minute cap. Public mack-dot/forge condition; repo public,not archived/disabled.
+- Current repository-wide queued and in-progress lists empty; run pending-
+  deployments empty. This does not prove historical absence of concurrency
+  contention or rule out provider/account restrictions. No such cause asserted.
+- Workflow settings endpoint returns connector400; cancellation annotation
+  endpoint's prior400 not retried. Public run-page fallback cache miss. Exact
+  cancellation cause,workflow enabled state and account Actions policy unknown.
+  The prior404 BlobNotFound only records an unavailable log blob,not its cause.
+  No log retry,settings change,alternate runner or hosted diagnostic occurred.
+- inspect_retry.py exits0. Same workflow and candidate bytes checked; candidate
+  SHA7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6.
+  No proof development or repeated1493-member integrity audit. U335/U336 evidence
+  reused. Previous three integrity controls remain in-process rejections without
+  separate exits. New proof/control exits remain NOT RUN.
+- Prepared exactly one rerun_workflow_job call for mack-dot/forge job129312292711,
+  expected attempt2 at original commitf1e4a080. Official GitHub documentation
+  states reruns retain original SHA/ref and initial actor's privileges. No job
+  dependents here. No publication,workflow/input change,debug logging or further
+  automatic retry. Caller Actions write permission required; no permission change.
+- Existing15-minute job,ARM64/image20261104.0514.1 guard,CPU120s/wall150s/
+  maxheap1536MiB/4MiB-file child limits and conditional five cases unchanged.
+  Allocation remains uncertain. Recheck status/attempt and conflicts before the
+  one authorized call. On refused or ambiguous trigger,preserve and inspect
+  read-only; no second request or alternate execution route.
+- Evidence:proposals/refund-executable-feasibility/proof-retry-review-20261109/
+  REPORT.md,ASSURANCE.md,APPROVAL.md,records and MANIFEST.json. Root tracking
+  updated; old uncertainty prefix preserved. Prior proof/evidence files unmodified.
+- Impact:correctness assessment unchanged. Proof unestablished,not disproved.
+  Next check:owner's separate approval of exact retry,then one request and full
+  result readback. Native memory/frame,composition and full-chain replay remain
+  separate. No Stage12,signing,deployment or local Git repair/commit.
+
+## U340 — Approved retry launches HOL; physical parent path is translated twice
+
+- References:U282,U291,U329,U335–U339. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner confirms exactly the single U339 retry,not an extra
+  grant. One rerun_workflow_job call was issued; no automatic/further attempt.
+- Preflight0 checks terminal attempt1,empty queues,exact approval/workflow/driver,
+  manifest hashes and unchanged candidate. Run42661020831 becomes attempt2 with
+  one job129430257438 at unchanged commitf1e4a080. No repository write or upload.
+  Workflow SHA1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1.
+- After queueing,runner1000000100 assigned. Actual Darwin arm64,UID501,macos15,
+  image20261104.0514.1 matches guard. sw_vers/sysctl/true/otool0/0/0/0. mkstemp
+  fd4/errno0,read/write match,denied-read EACCES13,64MiB probe and0700 root pass.
+- Ten downloads match frozen manifest/part identities,total26196042 bytes.
+  Both before/after checks report1493 unchanged inputs; private libpolyml/libgmp
+  gate passes. Four saved states loaded; original MiniSat path remains false
+  as required by frozen driver. No solver path or dependency changed.
+- First HOL child exit1,wall_timeout=false,objects{}. Workflow step exit1.
+  Bootstrap QUse.use passes physical pathmodel-0007/.hol/objs/
+  forge_refundReadBoundaryTheory.sig. Actual ENOENT path adds .hol/objs again.
+  Single-path parent exists in manifest; doubled path absent. stdout reaches
+  PHASE basis-theory-load but never cf-library-load or unchanged-source phase.
+  Candidate theorem NOT_REACHED. No theorem output,exports or new closure.
+- Workflow stops at first unexpected result. Repeat,import,wrong-exception and
+  omitted-event controls NOT RUN. No logical counterexample or failed tactic
+  result is claimed. HOL ran,but the theorem was not tested or disproved.
+- Complete log67204 bytes,SHA7fea30873cceeb1b199bfa468ccb4dde56ad2a4f884b95ef902241185c7d7cca.
+  Stream reader0 recovers bootstrap3054B/stdout699B/stderr96851B with exact hashes.
+  Independent reader first1:local Python rejects seven fractional timestamp
+  digits. Initial source/error preserved. Corrected parser truncates excess
+  sub-microsecond digits only for approximate interval; raw data unchanged.
+  Final reader0 binds complete event counts,downloads,paths,exits and provider
+  state. This validates failure evidence,not a theorem or independent authority.
+- Resource capacity7516192768 memory bytes,49431048192 free temp-disk bytes.
+  Workflow step31s;approx17.468184s invocation/result log interval includes
+  wrapper/log handling. Provider duration343000ms includes wait; billing0 across
+  both job IDs,reported count2 cumulative. Actual child CPU/peak RSS unavailable.
+  CPU120s/wall150s/maxheap1536MiB/4MiB-file limits retained; no resource timeout.
+- Initial read-only source glob exits1; corrected lookup0 finds quse.sml and
+  virtual file translation. U282/U291 were read before resolving this issue.
+  They record the same physical-versus-virtual theory-path convention. U337/U339
+  static review did not catch this bootstrap defect; readiness confidence is
+  superseded. No orchestration repair or new execution is authorized or applied.
+-50 protected hashes and mission unchanged. Frozen statement quotation SHA
+  289b8be8c848dc3debddbac5184e613e2c1e127c56dddd574e5b43087cc8c29a preserved
+  as UNEXECUTED target,not theorem output. Earlier failures remain. Three U335
+  integrity controls remain in-process rejections without separate exits.
+- Evidence:proposals/refund-executable-feasibility/hosted-proof-retry-20261109/
+  REPORT.md,ASSURANCE.md,records and MANIFEST.json. Journal prefix preserved.
+  No protected change,Stage12,native/full-chain replay,signing,deployment,Git
+  repair or new local commit. Provider/OS/runtime/connector/cached ancestry trust
+  limits remain. Input integrity does not establish theorem correctness.
+- Smallest next issue:review virtual theory-file addressing for bootstrap parent
+  and later import loads. The theorem statement,premises and trusted dependencies
+  need no change on current evidence. Any changed orchestration or further
+  execution is a separate decision. M1 remains open and theorem unestablished.
+
+## U341 — Virtual theory paths fixed; actual pinned loader regression passes
+
+- References:U282,U291,U340. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Owner requests fixing the defect. No additional hosted
+  execution is inferred from that request;the preceding single retry is exhausted.
+- New local proposal removes explicit .hol/objs from two driver expressions:
+  parent signature/source paths and generated-theorem import/control paths.
+  All other driver bytes and workflow fields unchanged. All five generated
+  modes use virtual theory paths;candidate/control script paths untouched.
+- Corrected workflow16363 bytes,SHA9a29e94d16033592704bfa20bd1ef06818e50458d4155a2216500ac205486629;
+  drivercf7e2f2281130d186b2ee22511b953b81e2c6750469085ec0e7629e154215dd1.
+  Preparation0,shell syntax0. No published workflow or original packet edit.
+- Initial local test runner1,child1:HOLFileSys.toFS is internal,not exported.
+  Static Errors occur before file reads. This is not an accepted ENOENT control.
+  Initial source/generator/runner/logs retained. Corrected test uses exported
+  HFS_NameMunge.HOLtoFS and real HOLFileSys.openIn/inputAll. No driver change
+  was needed for that test correction.
+- Corrected test runner0. Old-path child1 reproduces exact U340 duplicated
+  .hol/objs/.hol/objs/forge_refundReadBoundaryTheory.sig ENOENT. Fixed child0
+  reads all four parent signature/source files and matches direct physical
+  reads byte for byte. Real resolver maps both future theorem import paths to
+  the correct physical output locations. No generated theorem files exist yet;
+  those two resolution checks are not actual fresh imports.
+- Tests use pinned local HOL runtime and unchanged four saved states,with
+  CPU30s,wall45s,maxheap1536MiB,4MiB/file,zero core dumps. They read file bytes
+  only:no QUse theory-source compilation,cfLib,SAT,candidate or proof attempt.
+  They are targeted fix regressions,not a new hosted run or correctness proof.
+- check_preservation.py0:reverse substitution recovers original driver exactly;
+  runtime/states/parent input hashes match before/after;candidate and four
+  prepared source identities,50 protected files and mission remain unchanged.
+- Impact:specific double-translation defect fixed and locally tested. Full
+  parent theory compilation,candidate theorem,conditional controls and hosted
+  environment integration remain untested with the new workflow. No assumption,
+  theorem,premise,dependency,image guard,limit or permission was changed.
+- Evidence:proposals/refund-executable-feasibility/proof-loader-fix-20261109/
+  REPORT.md,ASSURANCE.md,NEXT-RUN-APPROVAL.md,records and MANIFEST.json.
+  Root tracker/ROADMAP updated;journal prefix preserved;old failures untouched.
+- Next check:separately authorize exact corrected one-job scope,then publish
+  with current-head/trigger checks. Rerunning old commit would retain the bug.
+  No publication,hosted run,protected edit,Stage12,signing,deployment,Git repair
+  or new local commit occurred. M1 and native/frame/composition/replay stay open.

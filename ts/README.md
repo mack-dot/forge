@@ -79,19 +79,20 @@ attached to the generated JS module or the handwritten TS artifact.
 
 ## Property-test scope
 
-The fixed seed is 3032026. Each of 300 runs contains seven directed operations
+The fixed seed is 3032026. Each of 300 runs contains nine directed operations
 and up to 40 generated operations. Generated balances range from 0 through
 2^128; generated arbitrary amounts range from -2^128 through 2^128. Derived
 insufficient-funds amounts can exceed the initial balance by one. The implementation
 uses bigint rather than restricting its numeric representation to this test range.
 Account IDs include a negative integer and 2^80. One fixed example starts with
-balances 2^100 and 2^120.
+balances 2^100 and 2^120. A second fixed example has no fee account.
 
 The suite compares complete states and outcomes after each operation. It also
 checks that the candidate did not mutate its input maps. The corpus includes
 exact-balance transfers, accepted retries, changed-payload ID conflicts,
-self-transfers, unknown accounts, nonpositive amounts, insufficient funds, and
-values above Number.MAX_SAFE_INTEGER. Generated operations can repeat request
+self-transfers, unknown accounts, nonpositive amounts, insufficient funds,
+amounts equal to the full balance (fee not covered), requests that name fee
+account 0, states with no fee account, and values above Number.MAX_SAFE_INTEGER. Generated operations can repeat request
 IDs. Accepted histories are built through real model transitions.
 
 The planted `bugs/self_transfer.ts` credits a self-transfer without debiting it.

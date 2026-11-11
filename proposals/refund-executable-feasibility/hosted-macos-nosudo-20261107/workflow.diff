@@ -1,0 +1,94 @@
+--- U324/workflow
++++ no-privilege/workflow
+@@ -19,7 +19,7 @@
+           APPROVED_IMAGE_VERSION: '20261104.0514.1'
+           INPUT_COMMIT_SHA: 'ac05eaf972b8c98784466ae063fca505aaaf25f4'
+           INPUT_MANIFEST_SHA256: '6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7'
+-          INPUT_8435: '8435'
++          INPUT_MANIFEST_BYTES: '8435'
+         run: |
+           /usr/bin/python3 -I -B - <<'PY'
+           import traceback
+@@ -135,17 +135,16 @@
+                    errno=access_errno, error_name=errno.errorcode.get(access_errno))
+               assert access_result == 0
+               
+-              # Preserve compiled paths. Never elevate, change an existing path, or relocate a heap.
+-              installation_parent = Path('/Users/mackianni')
+-              try:
+-                  installation_parent.mkdir(mode=0o700)
+-              except OSError as exc:
+-                  emit('installation_parent_mkdir', path=str(installation_parent), errno=exc.errno,
+-                       error_name=errno.errorcode.get(exc.errno), SAT='NOT_RUN')
+-                  raise
+-              emit('installation_parent_mkdir', path=str(installation_parent), actual_result=0)
+-              root = installation_parent / 'forge'
+-              root.mkdir(mode=0o700)
++              # Create one private directory under the runner's existing writable temporary root.
++              import tempfile
++              original_root = '/Users/mackianni/forge'
++              temp_root = Path(os.environ['RUNNER_TEMP']).resolve(strict=True)
++              root = Path(tempfile.mkdtemp(prefix='forge-m1-', dir=str(temp_root)))
++              root_stat = root.stat()
++              assert root.parent == temp_root and root_stat.st_uid == os.geteuid()
++              assert (root_stat.st_mode & 0o777) == 0o700
++              emit('writable_installation_root', path=str(root), canonical_input_root=original_root,
++                   uid=root_stat.st_uid, mode='0700', heap_file_bytes_changed=False)
+               prefix = 'https://raw.githubusercontent.com/mack-dot/forge/' + os.environ['INPUT_COMMIT_SHA'] + '/proposals/m1-hosted-sat-inputs/'
+               
+               def download(name, expected_size, expected_sha):
+@@ -159,7 +158,7 @@
+               
+               manifest_data = download('INPUTS.json', int(os.environ['INPUT_MANIFEST_BYTES']), os.environ['INPUT_MANIFEST_SHA256'])
+               manifest = json.loads(manifest_data)
+-              assert manifest['installation_root'] == str(root)
++              assert manifest['installation_root'] == original_root
+               archive = b''.join(download(p['name'], p['bytes'], p['sha256']) for p in manifest['parts'])
+               assert len(archive) == manifest['archive_bytes'] and sha(archive) == manifest['archive_sha256']
+               expected = {e['path']: e for e in manifest['files']}
+@@ -192,13 +191,27 @@
+               hol = tc / 'HOL/bin/hol'
+               solver = tc / 'HOL/src/HolSat/sat_solvers/minisat/minisat'
+               assert os.access(hol, os.X_OK) and os.access(solver, os.X_OK)
++              emit('relocated_binaries', hol=str(hol), minisat=str(solver), note='Frozen solver binding is inspected inside HOL; no rebinding')
+               command(['/usr/bin/otool', '-L', str(hol), str(tc/'poly-install/lib/libpolyml.16.dylib'), str(tc/'transport/lib/libgmp.10.dylib'), str(solver)])
+               env = {key: value for key, value in os.environ.items() if key in ('HOME', 'TMPDIR', 'PATH', 'LANG', 'LC_ALL')}
+               env['DYLD_LIBRARY_PATH'] = str(tc/'poly-install/lib') + ':' + str(tc/'transport/lib')
+               env['DYLD_PRINT_LIBRARIES'] = '1'
+-              argv = [str(hol), '--maxheap', '1024', 'run', '--holstate=' + str(tc/'HOL/examples/l3-machine-code/arm8/step/arm8-heap'),
+-                      str(diagnostic/'preload.sml'), str(diagnostic/'proof.sml')]
+-              emit('sat_invocation', argv=argv, cwd=str(tc/'HOL/examples/l3-machine-code/arm8/step'),
++              # Public PolyML loader API supplies the parent filenames; files and library bindings stay unchanged.
++              heaps = ['HOL/bin/hol.state0', 'HOL/src/num/termination/numheap', 'HOL/bin/hol.state',
++                       'HOL/examples/l3-machine-code/l3-heap', 'HOL/examples/l3-machine-code/arm8/step/arm8-heap']
++              bootstrap = root / 'load-pinned-states.sml'
++              loader_text = 'val _ = PolyML.SaveState.loadHierarchy [' + ', '.join(json.dumps(str(tc/h)) for h in heaps) + '];\n'
++              loader_text += 'val _ = List.app (fn p => print ("LOADED_STATE " ^ p ^ "\\n")) (PolyML.SaveState.showHierarchy ());\n'
++              loader_text += 'val _ = print ("FROZEN_SOLVER_PATH " ^ SatSolvers.getSolverExe SatSolvers.minisatp ^ "\\n");\n'
++              loader_text += 'val _ = print ("FROZEN_SOLVER_EXECUTABLE " ^ Bool.toString (OS.FileSys.access (SatSolvers.getSolverExe SatSolvers.minisatp,[OS.FileSys.A_EXEC])) ^ "\\n");\n'
++              loader_text += 'val _ = QUse.use ' + json.dumps(str(diagnostic/'preload.sml')) + ';\n'
++              loader_text += 'val _ = QUse.use ' + json.dumps(str(diagnostic/'proof.sml')) + ';\n'
++              loader_text += 'val _ = OS.Process.exit OS.Process.failure;\n'
++              bootstrap.write_text(loader_text)
++              emit('published_loader_dispatch', source=loader_text, sha256=sha(loader_text.encode()),
++                   note='No solver,checker,theorem or heap modification; original SAT source follows standard state load')
++              argv = [str(hol), '--maxheap', '1024', 'run', '--poly', str(bootstrap)]
++              emit('sat_invocation', argv=argv, cwd=str(root),
+                    environment=env, cpu_limit_seconds=120, maxheap_MiB=1024, core_limit_bytes=0,
+                    loaded_libraries='DYLD_PRINT_LIBRARIES stderr; inspect exact paths',
+                    physical_correspondence='NOT_ESTABLISHED')
+@@ -212,12 +225,12 @@
+               stdout_path = root / 'sat.stdout'
+               stderr_path = root / 'sat.stderr'
+               with stdout_path.open('xb') as stdout, stderr_path.open('xb') as stderr:
+-                  process = subprocess.run(argv, cwd=tc/'HOL/examples/l3-machine-code/arm8/step',
++                  process = subprocess.run(argv, cwd=root,
+                                            env=env, stdout=stdout, stderr=stderr, preexec_fn=child_limits)
+               for name, path in [('stdout', stdout_path), ('stderr', stderr_path)]:
+                   data = path.read_bytes()
+                   emit('sat_stream', stream=name, bytes=len(data), sha256=sha(data), base64=base64.b64encode(data).decode('ascii'))
+-              emit('sat_result', actual_exit=process.returncode, scope='Unchanged one-term SAT diagnostic only',
++              emit('sat_result', actual_exit=process.returncode, scope='Unchanged one-term SAT diagnostic after public loadHierarchy; inspect frozen solver reachability',
+                    logical_Success='No inference from process exit', physical_ffiread_proof='NOT_ESTABLISHED')
+               verify_inputs('input_after')
+               raise SystemExit(process.returncode if process.returncode >= 0 else 128-process.returncode)

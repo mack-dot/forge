@@ -1,0 +1,48 @@
+{
+  "checkpoint": "U330",
+  "prior_commit": "4a45cb0b36518cb02b76806b1955bb2bc0e66d53",
+  "goal_status": "blocked",
+  "goal_updated_at": 1794091154,
+  "current_stage": "none",
+  "milestone": "M1",
+  "blocker": "ADDITIONAL_HOSTED_RUN_AND_INPUT_TRANSFER_APPROVAL_REQUIRED",
+  "previous_turn_classification": "PROGRESS: U329 completed exact offline package, relocation/parse checks and transport controls.",
+  "current_turn_classification": "NO_PROGRESS: status readback adds no proof evidence; no authorized execution remains.",
+  "consecutive_turns": [
+    {
+      "checkpoint": "U328",
+      "condition": "Unchanged local cfLib load stopped before theorem; next hosted candidate needs new run and transfer approval."
+    },
+    {
+      "checkpoint": "U329",
+      "condition": "Exact bounded hosted package completed and approval requested; not received."
+    },
+    {
+      "checkpoint": "U330",
+      "condition": "Same pending approval; prepared scope unchanged; no further meaningful safe action before execution."
+    }
+  ],
+  "current_checks": [
+    {
+      "command": "Read ROADMAP, APPROVAL and U329 uncertainty entry",
+      "actual_exit": 0
+    },
+    {
+      "command": "git status --porcelain; git log -3",
+      "actual_exit": 0,
+      "result": "Clean worktree at 4a45cb0b36518cb02b76806b1955bb2bc0e66d53"
+    },
+    {
+      "tool": "update_goal",
+      "returned_status": "blocked"
+    }
+  ],
+  "new_proof": "NOT_RUN",
+  "new_hosted_run": "NOT_RUN",
+  "new_external_write": "NOT_RUN",
+  "independent_replay": "NOT_RUN",
+  "approval_request": "proposals/refund-executable-feasibility/hosted-cf-candidate-20261107/APPROVAL.md",
+  "smallest_obligation": "Derive unchanged TextIO.read InvalidFD behavior from an explicit generic status1 FFI transition, preserving buffer, state and full event append. Candidate is parsed but unproved; native transition/frame and whole-program composition remain open.",
+  "stage12_authorized": false,
+  "end_to_end": false
+}

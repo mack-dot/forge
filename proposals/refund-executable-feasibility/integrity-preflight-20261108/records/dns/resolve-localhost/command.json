@@ -1,0 +1,15 @@
+{
+  "case": "resolve-localhost",
+  "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "-B",
+    "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/dns_diagnostic.py",
+    "localhost"
+  ],
+  "actual_exit": 0,
+  "wall_timeout": false,
+  "stdout_sha256": "cebfa82f049bfba0c84138e019528ca1b77f748cabcf0dfda1361431373ffde9",
+  "stdout": "{\"name\": \"localhost\", \"operation\": \"socket.getaddrinfo\", \"success\": true, \"result_count\": 2, \"families\": [2, 30]}\n",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr": ""
+}

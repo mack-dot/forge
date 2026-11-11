@@ -1,0 +1,78 @@
+{
+  "actual_exit": 0,
+  "controls": {
+    "wrong-pointer": {
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/run_import.py",
+        "wrong-pointer",
+        "/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/wrong-pointer-limits.sml",
+        "space-parent:forge_installSpaceBarrier",
+        "trace-parent:forge_spaceInstallTrace",
+        "word-parent:forge_compilerWordTrace",
+        "data-parent:forge_refundDataBehavior",
+        "refund-parent:forge_refundWordPremises",
+        "init-parent:forge_refundWordInitialization",
+        "epoch-parent:forge_refundInitializedEpoch",
+        "oracle-parent:forge_refundWordOracle",
+        "stack-parent:forge_refundStackInitialization",
+        "pointer-0003:forge_refundPointerWitness"
+      ],
+      "actual_exit": 1,
+      "observed_refusal": "Exact statement mismatch: refund_fixed_syntax_pointer_witness",
+      "positive_audit_passed_first": true
+    },
+    "missing-prefix": {
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/run_import.py",
+        "missing-prefix",
+        "/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/missing-prefix-limits.sml",
+        "space-parent:forge_installSpaceBarrier",
+        "trace-parent:forge_spaceInstallTrace",
+        "word-parent:forge_compilerWordTrace",
+        "data-parent:forge_refundDataBehavior",
+        "refund-parent:forge_refundWordPremises",
+        "init-parent:forge_refundWordInitialization",
+        "epoch-parent:forge_refundInitializedEpoch",
+        "oracle-parent:forge_refundWordOracle",
+        "stack-parent:forge_refundStackInitialization",
+        "pointer-0003:forge_refundPointerWitness"
+      ],
+      "actual_exit": 1,
+      "observed_refusal": "Exact statement mismatch: refund_pointer_fixed_point",
+      "positive_audit_passed_first": true
+    },
+    "missing-space": {
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+        "-B",
+        "/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/run_import.py",
+        "missing-space",
+        "/Users/mackianni/forge/results/refund-pointer-witness-2026-11-05/attempt-0001/missing-space-limits.sml",
+        "space-parent:forge_installSpaceBarrier",
+        "trace-parent:forge_spaceInstallTrace",
+        "word-parent:forge_compilerWordTrace",
+        "data-parent:forge_refundDataBehavior",
+        "refund-parent:forge_refundWordPremises",
+        "init-parent:forge_refundWordInitialization",
+        "epoch-parent:forge_refundInitializedEpoch",
+        "oracle-parent:forge_refundWordOracle",
+        "stack-parent:forge_refundStackInitialization",
+        "pointer-0003:forge_refundPointerWitness"
+      ],
+      "actual_exit": 1,
+      "observed_refusal": "unsolved goals",
+      "positive_audit_passed_first": true
+    }
+  },
+  "identical_exports": {
+    ".hol/objs/forge_refundPointerWitnessTheory.sig": "551c90c426b99437a08d3266978fc121ed3c3e4ed2ad129f3d50f9c615287fad",
+    ".hol/objs/forge_refundPointerWitnessTheory.dat": "2ee72b9c06e787835dd0ecde5b7a2fb17e1adf70323ad2f2a6b2e318b463d320",
+    ".hol/objs/forge_refundPointerWitnessTheory.sml": "bee321a1695bd57ee9e49733484db24ebf0d7e6793f5554306a4e8ceb72e4d06",
+    ".hol/docs/forge_refundPointerWitnessTheory.html": "98b69e4550607b49f601b32b9e9353456e12b716d8c7c447c7cb3963c8ea4ac6"
+  },
+  "end_to_end": false
+}

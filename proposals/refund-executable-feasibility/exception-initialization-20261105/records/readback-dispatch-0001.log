@@ -1,0 +1,52 @@
+{
+  "actual_exit": 0,
+  "commands": {
+    "extraction-0001": 1,
+    "extraction-0002": 1,
+    "extraction-0003": 0,
+    "basis-0001": 1,
+    "basis-diagnostic": 0,
+    "basis-0002": 0,
+    "basis-repeat": 0,
+    "import-audit": 0,
+    "wrong-final-fs": 1,
+    "initialization-inspection": 0,
+    "initial-heap-0001": 1,
+    "initial-heap-0002": 1,
+    "initial-heap-diagnostic": 0,
+    "initial-heap-0003": 1,
+    "initial-heap-diagnostic-0002": 0,
+    "projection-0001": 0,
+    "initial-heap-0004": 1,
+    "initial-heap-diagnostic-0003": 0,
+    "initial-heap-0005": 0,
+    "concrete-0001": 0,
+    "concrete-repeat": 0,
+    "wrong-main": 1,
+    "final-import": 0,
+    "wrong-premise": 1
+  },
+  "input_files_checked": 1462,
+  "closure_nodes": 246,
+  "theorem_tags_checked": 9,
+  "exact_final_statement_and_program_identity_checked": true,
+  "identical_final_exports": 4,
+  "identical_intermediate_exports": 4,
+  "direct_macro_files_hashed": 8,
+  "foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "protected_files_unchanged": 50,
+  "prior_packet_members_checked": {
+    "exception-declaration-20261104": 97,
+    "exception-semantics-20261104": 115
+  },
+  "source_sha256": "82c4877bb9f298fa440c1657b54e291fcd0377cbd0dc9dfc79f29e8cb37f296c",
+  "data_sha256": "3c358b38b4617b8b29349fb90200c639150a582a8da6aad2c78bee092e7a8f28",
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "failed_heaps_preserved": 2,
+  "end_to_end": false
+}

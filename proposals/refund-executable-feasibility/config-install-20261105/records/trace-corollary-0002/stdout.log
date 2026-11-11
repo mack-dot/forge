@@ -1,0 +1,14 @@
+<<HOL message: Created theory "forge_spaceInstallTrace">>
+Saved theorem _______ "epoch_single"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_spaceInstallTrace)>>
+Saved theorem _______ "bounded_stack_single_epoch"
+Proof of 
+
+word_lang_safe_for_space initial start ∧
+(∀k. FST (evaluate (Call NONE (SOME start) [0] NONE,initial with clock := k)) ≠
+     SOME Error) ⇒
+∀k. LENGTH
+      (ptr_eq_trace (Call NONE (SOME start) [0] NONE)
+         (initial with clock := k)) = 1
+
+failed.

@@ -1,0 +1,230 @@
+(*
+  The closLang intermediate language. This language is the last
+  intermediate language that has closure values. This language is
+  designed for optimisation of function calls.
+*)
+Theory closLang
+Ancestors
+  ast[qualified] backend_common fpSem
+Libs
+  preamble
+
+(* compilation from this language removes closures *)
+
+Datatype:
+  const = ConstCons num (const list)
+        | ConstInt int
+        | ConstStr mlstring
+        | ConstWord64 word64
+End
+
+Datatype:
+  const_part = Con num (num list)
+             | Int int
+             | Str mlstring
+             | W64 word64
+End
+
+Datatype:
+  int_op
+     = Const int          (* integer *)
+     | Add                (* + over the integers *)
+     | Sub                (* - over the integers *)
+     | Mult               (* * over the integers *)
+     | Div                (* div over the integers *)
+     | Mod                (* mod over the integers *)
+     | Less               (* < over the integers *)
+     | LessEq             (* <= over the integers *)
+     | Greater            (* > over the integers *)
+     | GreaterEq          (* >= over the integers *)
+     | LessConstSmall num (* checks < const for small ints *)
+     | Smallnum smallnum_op
+End
+
+Datatype:
+  word_op
+     = WordOpw word_size opw
+     | WordShift word_size shift num
+     | WordShiftVar word_size shift
+     | WordTest word_size ast$test
+     | WordFromInt
+     | WordToInt
+     | WordFromWord bool
+     | FP_cmp fp_cmp
+     | FP_uop fp_uop
+     | FP_bop fp_bop
+     | FP_top fp_top
+End
+
+Datatype:
+  block_op
+     = Cons num          (* construct a Block with given tag *)
+     | ElemAt num        (* same as El but for constant index *)
+     | TagLenEq num num  (* check Block's tag and length *)
+     | LenEq num         (* check Block's length *)
+     | TagEq num         (* check Block's tag *)
+     | LengthBlock       (* get length of Block *)
+     | BoolTest ast$test (* tests for bools *)
+     | BoolNot           (* boolean not *)
+     | BoundsCheckBlock  (* check that vector index is within bounds *)
+     | ConsExtend num    (* construct a Block with given tag. The first three
+                            arguments should be a block followed by two numbers
+                            indicating the first element, and how many, should be
+                            copied into the end of the new block. The fourth
+                            argument is the total size of the new block. *)
+     | FromList num      (* convert list to packed Block *)
+     | ListAppend        (* appends two lists *)
+     | Constant const    (* produces a constant value *)
+     | Equal             (* structural equality *)
+     | PtrEqual          (* pointer equality: true implies structural equality,
+                            but may spuriously return false; consumes one bit
+                            of the state's ptr_eq_oracle on every answer *)
+     | EqualConst const_part (* equal to integer/string/word constant *)
+     | Build (const_part list)  (* implementation of Constant above *)
+End
+
+Datatype:
+  glob_op
+     = Global num    (* load global var with index *)
+     | SetGlobal num (* assign a value to a global *)
+     | AllocGlobal   (* make space for a new global *)
+     | GlobalsPtr    (* get pointer to globals array *)
+     | SetGlobalsPtr (* set pointer to globals array *)
+End
+
+Datatype:
+  mem_op
+     = Ref           (* makes a reference/array *)
+     | Update        (* updates a reference/array *)
+     | El            (* read index from block of reference/array *)
+     | Length        (* get length of reference *)
+     | LengthByte    (* get length of byte array *)
+     | RefByte bool  (* makes a byte array, T = immutable/compare-by-contents *)
+     | RefArray      (* makes an array by replicating a value *)
+     | ScanByte bool (* T finds the first unequal byte; F finds the first equal byte *)
+     | DerefByte     (* loads a byte from a byte array *)
+     | UpdateByte    (* updates a byte array *)
+     | DerefBit      (* read a bit from a byte array *)
+     | UpdateBit     (* update a bit of a byte array *)
+     | ConcatByteVec (* concatenate list of byte vectors *)
+     | CopyWord bool (* copy a slice of an array/vector, T allocates a vector *)
+     | CopyByte bool (* copy a slice of a byte array, T means target should be allocated *)
+     | FromListByte  (* convert list of chars to ByteVector *)
+     | ToListByte    (* convert ByteVector to list of chars *)
+     | LengthByteVec (* get length of ByteVector *)
+     | DerefByteVec  (* load a byte from a ByteVector *)
+     | StringCmp bool ast$opb (* string comparisons *)
+     | XorByte       (* xor a btye vector into a byte array *)
+     | BoundsCheckArray
+     | BoundsCheckBit
+     | BoundsCheckByte bool (* T = loose (<=) bound *)
+     | MutCons num num (* allocate a cons with a mutable hole, tag, index of hole *)
+     | UpdateCons    (* mutate the hole in a MutCons *)
+     | FinaliseCons  (* turns a stack of MutCons into Cons *)
+     | ConfigGC
+End
+
+Datatype:
+  op = Label num     (* constructs a CodePtr *)
+     | FFI mlstring    (* calls the FFI *)
+     | IntOp int_op
+     | WordOp word_op
+     | BlockOp block_op
+     | GlobOp glob_op
+     | MemOp mem_op
+     | Install       (* installs new code at runtime *)
+     | ThunkOp thunk_op
+End
+
+Datatype:
+  exp = Var tra num
+      | If tra exp exp exp
+      | Let tra (exp list) exp
+      | Raise tra exp
+      | Handle tra exp exp
+      | Tick tra exp
+      | Call tra num (* ticks *) num (* loc *) (exp list) (* args *)
+      | App tra (num option) exp (exp list)
+      | Fn mlstring (num option) (num list option) num exp
+      | Letrec (mlstring list) (num option) (num list option) ((num # exp) list) exp
+      | Op tra op (exp list)
+End
+
+Definition has_install_def:
+  has_install ((Var t n):closLang$exp) = F ∧
+  has_install (If t e1 e2 e3) = (has_install e1 ∨ has_install e2 ∨ has_install e3) ∧
+  has_install (Let t es e) = (has_install e ∨ has_install_list es) ∧
+  has_install (Op t p es) = (p = Install ∨ has_install_list es) ∧
+  has_install (Raise t e) = has_install e ∧
+  has_install (Tick t e) = has_install e ∧
+  has_install (Fn _ _ _ _ e) = has_install e ∧
+  has_install (Handle t e1 e2) = (has_install e1 ∨ has_install e2) ∧
+  has_install (Call _ _ _ es) = has_install_list es ∧
+  has_install (App _ _ e es) = (has_install e ∨ has_install_list es) ∧
+  has_install (Letrec _ _ _ fns e) = (has_install_list (MAP SND fns) ∨ has_install e) ∧
+  has_install_list [] = F ∧
+  has_install_list (x::xs) = (has_install x ∨ has_install_list xs)
+Termination
+  WF_REL_TAC ‘measure $ λx. case x of INL e => closLang$exp_size e
+                                    | INR es => list_size closLang$exp_size es’
+  \\ rw []
+  \\ qsuff_tac ‘list_size exp_size (MAP SND fns) ≤ list_size (pair_size (λx. x) exp_size) fns’
+  >- fs []
+  \\ Induct_on ‘fns’ \\ fs [FORALL_PROD]
+End
+
+Definition pure_op_def:
+  pure_op op ⇔
+    case op of
+      FFI _ => F
+    | GlobOp (SetGlobal _) => F
+    | GlobOp AllocGlobal => F
+    | MemOp (RefByte _) => F
+    | MemOp RefArray => F
+    | MemOp UpdateByte => F
+    | MemOp UpdateBit => F
+    | MemOp (CopyWord F) => F
+    | MemOp (CopyByte F) => F
+    | MemOp XorByte => F
+    | MemOp Ref => F
+    | MemOp Update => F
+    | Install => F
+    | ThunkOp _ => F
+    | BlockOp PtrEqual => F
+    | _ => T
+End
+
+(* pure e means e can neither raise an exception nor side-effect the state *)
+Definition pure_def:
+  (pure (Var _ _) ⇔ T)
+    ∧
+  (pure (If _ e1 e2 e3) ⇔ pure e1 ∧ pure e2 ∧ pure e3)
+    ∧
+  (pure (Let _ es e2) ⇔ EVERY pure es ∧ pure e2)
+    ∧
+  (pure (Raise _ _) ⇔ F)
+    ∧
+  (pure (Handle _ e1 e2) ⇔ pure e1)
+    ∧
+  (pure (Tick _ _) ⇔ F)
+    ∧
+  (pure (Call _ _ _ _) ⇔ F)
+    ∧
+  (pure (App _ _ _ _) ⇔ F)
+    ∧
+  (pure (Fn _ _ _ _ _) ⇔ T)
+    ∧
+  (pure (Letrec _ _ _ _ x) ⇔ pure x)
+    ∧
+  (pure (Op _ opn es) ⇔ EVERY pure es ∧ pure_op opn)
+End
+
+(* used in proofs about closLang, BVL, BVI and dataLang *)
+Definition assign_get_code_label_def:
+  (assign_get_code_label (closLang$Label x) = {x}) ∧
+  (assign_get_code_label x = {})
+End
+
+Type clos_prog = ``: closLang$exp list # (num # num # closLang$exp # metadata) list``
+
+Type clos_cc = ``:'c -> clos_prog -> (mlstring # word64 list # 'c) option``

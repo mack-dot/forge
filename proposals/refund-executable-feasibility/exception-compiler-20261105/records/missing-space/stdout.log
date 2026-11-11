@@ -1,0 +1,8 @@
+IMPORTED_THEOREM exception_event_witness
+⊢ sem_satisfies source_behaviors
+    (λb. ∃x y. b = Terminate outcome (event_of x) ∧ P x y) ⇒
+  sem_satisfies source_behaviors
+    (λb. ∃io. b = Terminate outcome io ∧ ∃x y. io = event_of x ∧ P x y)
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0

@@ -1,0 +1,39 @@
+{
+  "actual_exit": 0,
+  "parent_commit": "dde26bed545bb1f5fc87efe0410ddcace239e531",
+  "parent_packet_members": 134,
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/uname",
+        "-a"
+      ],
+      "actual_exit": 0,
+      "stdout": "Darwin Macks-MacBook-Pro-3.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:22:49 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6000 arm64\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "actual_exit": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund: valid on disk\n/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund: satisfies its Designated Requirement\n"
+    }
+  ],
+  "prior_goal_turn": "PROGRESS: U310 composition, repeat, import, controls and artifact checks passed",
+  "end_to_end": false
+}

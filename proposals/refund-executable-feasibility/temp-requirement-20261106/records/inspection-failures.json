@@ -1,0 +1,35 @@
+{
+  "wrong_ls_location": {
+    "argv": [
+      "/usr/bin/ls",
+      "-ldeO",
+      "/var/tmp",
+      "/private/var/tmp",
+      "/private/tmp"
+    ],
+    "actual_batch_exit": 127,
+    "error": "zsh:4: no such file or directory: /usr/bin/ls",
+    "corrected_argv": [
+      "/bin/ls",
+      "-ldeO",
+      "/var/tmp",
+      "/private/var/tmp",
+      "/private/tmp"
+    ],
+    "corrected_actual_exit": 0,
+    "retained_metadata_summary": "No ACL entries or special flags displayed; directory modes1777. Wall-clock metadata omitted."
+  },
+  "web_source_fetches": [
+    {
+      "url": "https://raw.githubusercontent.com/polyml/polyml/4557554077078decce4ce5f90da00a713cfc32e4/libpolyml/basicio.cpp",
+      "tool_result": "Cache miss",
+      "source_used": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/polyml/polyml/4557554077078decce4ce5f90da00a713cfc32e4/libpolyml/osmemunix.cpp",
+      "tool_result": "Cache miss",
+      "source_used": false
+    }
+  ],
+  "end_to_end": false
+}

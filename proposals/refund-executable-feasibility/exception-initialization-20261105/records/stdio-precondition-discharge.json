@@ -1,0 +1,16 @@
+{
+  "prior_initial_heap_failures": 4,
+  "diagnostic_exit": 0,
+  "remaining_goal": "STDIO fs on exact FFI-part plus Mem1 buffer heap; subset branch is proved",
+  "imported_explicit_hypotheses": [
+    "STD_streams fs",
+    "wfFS fs",
+    "LENGTH v >= 2052"
+  ],
+  "change": "DISCH_ALL converts existing theorem hypotheses to implication premises before matching; all are supplied by unchanged initial-heap assumptions",
+  "attempt_limit": "This is full initial-heap attempt5; preserve prior failures and stop if it does not close unless a separately justified change is authorized",
+  "statement_changed": false,
+  "old_sha256": "bbebb9ff12d668e49b48b369f22efe7179efb8c6628c24bf1e07ed2ea46504e9",
+  "new_sha256": "1ca7a8961d2e6c96112e96356e82ee860e30c4722a05de9eade4b6b85446a82b",
+  "end_to_end": false
+}

@@ -1,0 +1,36 @@
+{
+  "checks": {
+    "full": {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "actual_exit": 2,
+      "output_sha256": "b71cefee5c2b9cddc3418cbd63415f7e4765b23365f37bb810631071ba6d37ff",
+      "output_lines": 14
+    },
+    "authored": {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        "ROADMAP.md",
+        "FORGE_MISSION_STATUS.md",
+        "unsure.md",
+        "proposals/refund-executable-feasibility/initialization-success-checkpoint-20261105/CHECKPOINT.md",
+        "proposals/refund-executable-feasibility/initialization-success-checkpoint-20261105/COMMANDS.md",
+        "proposals/refund-executable-feasibility/initialization-success-checkpoint-20261105/records/checkpoint-readback.py",
+        "proposals/refund-executable-feasibility/initialization-success-checkpoint-20261105/records/checkpoint-readback-complete.py"
+      ],
+      "actual_exit": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_lines": 0
+    }
+  },
+  "scope": "Raw proof, generated and published source bytes are preserved; authored files pass.",
+  "end_to_end": false
+}

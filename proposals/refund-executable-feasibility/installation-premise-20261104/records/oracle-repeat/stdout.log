@@ -1,0 +1,42 @@
+<<HOL message: Created theory "forge_refundDataOracle">>
+Saved theorem _______ "initial_oracle_relation"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundDataOracle)>>
+Saved theorem _______ "safe_data_execution"
+Saved theorem _______ "refund_data_oracle_independence"
+CHECKED initial_oracle_relation
+⊢ cc_co_only_diff (initial_state ffi dcode ARB ARB pe T lims ss k)
+    (initial_state ffi dcode coracle cc pe T lims ss k)
+CHECKED safe_data_execution
+⊢ data_lang_safe_for_space ffi pe dcode lims ss start ∧
+  evaluate
+    (Call NONE (SOME start) [] NONE,
+     initial_state ffi dcode ARB ARB pe T lims ss k) = (res,s1) ⇒
+  ∃t1.
+    evaluate
+      (Call NONE (SOME start) [] NONE,
+       initial_state ffi dcode coracle cc pe T lims ss k) = (res,t1) ∧
+    cc_co_only_diff s1 t1
+CHECKED refund_data_oracle_independence
+⊢ let
+    cfg = set_oracle arm8_backend_config oracle;
+    dcode = fromAList (SND (to_data cfg refund_prog));
+    lims =
+      compute_limits cfg.data_conf.len_size (is_64_bits (:64))
+        cfg.data_conf.has_fp_ops cfg.data_conf.has_fp_tern stack_heap_limit;
+    frames =
+      compute_stack_frame_sizes arm8_config
+        (SND (to_word arm8_config cfg refund_prog))
+  in
+    is_safe_for_space (:64) ffi pe arm8_config cfg refund_prog
+      stack_heap_limit ∧
+    evaluate
+      (Call NONE (SOME InitGlobals_location) [] NONE,
+       initial_state ffi dcode ARB ARB pe T lims frames k) = (res,s1) ⇒
+    ∃t1.
+      evaluate
+        (Call NONE (SOME InitGlobals_location) [] NONE,
+         initial_state ffi dcode coracle cc pe T lims frames k) = (res,t1) ∧
+      cc_co_only_diff s1 t1
+Exporting theory "forge_refundDataOracle" ... done.
+Theory "forge_refundDataOracle" took 4.2s to build
+RUNTIME_PROOF_COMPLETE

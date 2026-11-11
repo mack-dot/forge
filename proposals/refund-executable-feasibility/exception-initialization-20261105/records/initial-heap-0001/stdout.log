@@ -1,0 +1,9 @@
+<<HOL message: Created theory "forge_refundRejectBasis">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRejectBasis)>>
+Saved theorem _______ "refund_stdio_extract_fs"
+Saved theorem _______ "refund_sem_satisfies_imp"
+Saved theorem _______ "refund_error_basis_semantics"
+/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0008/initial-heap-0001/proof.sml:81: error: Value or constructor (head_of) has not been declared
+Found near
+  same_const (head_of tm) (Parse.Term [QUOTE " (*#loc 81 29*)basis_ffi"])
+  handle HOL_ERR _ => false

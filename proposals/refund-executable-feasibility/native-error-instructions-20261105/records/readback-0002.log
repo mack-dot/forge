@@ -1,0 +1,74 @@
+{
+  "actual_exit": 0,
+  "commands": {
+    "inspect-steps": 1,
+    "inspect-steps-0002": 1,
+    "inspect-arm8-steps": 1,
+    "dependency-diagnostic": 1
+  },
+  "static_inspection_exit": 0,
+  "prior_goal_turn": "PROGRESS",
+  "parent_files_checked": 2659,
+  "upstream_source_snapshots": 10,
+  "prior_packet_members": {
+    "read-runtime-20261105": 270,
+    "exception-compiler-20261105": 134
+  },
+  "new_native_step_theorems": 0,
+  "native_error_path_words": [
+    {
+      "vm_address": "0x1000251ac",
+      "file_offset": 151980,
+      "word": "37f800c0"
+    },
+    {
+      "vm_address": "0x1000251c4",
+      "file_offset": 152004,
+      "word": "52800028"
+    },
+    {
+      "vm_address": "0x1000251c8",
+      "file_offset": 152008,
+      "word": "39000268"
+    },
+    {
+      "vm_address": "0x1000251cc",
+      "file_offset": 152012,
+      "word": "a9417bfd"
+    },
+    {
+      "vm_address": "0x1000251d0",
+      "file_offset": 152016,
+      "word": "a8c24ff4"
+    },
+    {
+      "vm_address": "0x1000251d4",
+      "file_offset": 152020,
+      "word": "d65f03c0"
+    }
+  ],
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "native_fragment_sha256": "ec5f3b8045a2d7038e8645acd7bd72a001bddc75ab24b7fd913c4d36cc163bf4",
+  "toolchain_source_diff": {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+      "diff",
+      "--exit-code",
+      "HEAD",
+      "--"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "protected_files_unchanged": 50,
+  "journal_prefixes_preserved": true,
+  "proof_repeat_import_negative_controls": "NOT_RUN: no new instruction theory exported",
+  "new_native_execution": "NOT_RUN",
+  "independent_full_chain_replay": "NOT_RUN",
+  "smallest_open_physical_obligation": "One exact ffiread transition must refine the published model with OS result, full buffer, filesystem relation and FFI state/frame together.",
+  "tool_blocker": "Standard HOL SAT_PROVE returns SysErr Operation not permitted (EPERM); exact syscall/path not established. No reroute or dependency changes.",
+  "end_to_end": false
+}

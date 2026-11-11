@@ -1,0 +1,9 @@
+{
+  "failed_case": "inspect-steps",
+  "actual_exit": 1,
+  "error": "Cannot find file arm8_stepLib.ui",
+  "before_instruction_proof": true,
+  "cause": "Standard load search from the basis cwd does not include the existing step library directory.",
+  "change": "Use the full existing pinned library path with the same HOL loader. No tool installation, rebuild, permission change or source modification.",
+  "end_to_end": false
+}

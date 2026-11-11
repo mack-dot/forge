@@ -1,0 +1,185 @@
+{
+  "actual_exit": 0,
+  "proposed_workflow_sha256": "6db12f716e14a227b5de1b6d7f58da6ba3c020dc07bb87b413a225cedfea2b42",
+  "driver_sha256": "b859fe575016c8b88f77a9d105e6e54f4535d7b82fffe8173dfdb28223b94eaf",
+  "workflow_bytes": 16118,
+  "current_remote_head": "8ad9de1e538edd48a2084796510e784913eaef8b",
+  "existing_workflows": [
+    {
+      "path": ".github/workflows/booking-reuse.yml",
+      "blob_sha": "6dc3ec9819abf8ccb0a17b2349e1167a99dadd0b",
+      "events": {
+        "workflow_dispatch": {
+          "inputs": {
+            "booking_pr": {
+              "description": "Approved experiment PR number (one Booking.dfy change)",
+              "required": "true",
+              "type": "string"
+            },
+            "booking_head": {
+              "description": "Exact 40-character head approved for this dispatch",
+              "required": "true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/m1-macos-preflight.yml",
+      "blob_sha": "6590425afd09e20a399d76a1a4764e004902cc40",
+      "events": {
+        "push": {
+          "branches": [
+            "proposal/m1-macos-preflight-20261106"
+          ],
+          "paths": [
+            ".github/workflows/m1-macos-preflight.yml"
+          ]
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/proof-gate.yml",
+      "blob_sha": "c505b7997a8c66ecc4807d1b8744952b160bac18",
+      "events": {
+        "pull_request_target": {
+          "types": [
+            "opened",
+            "synchronize",
+            "reopened",
+            "ready_for_review"
+          ],
+          "branches": [
+            "main"
+          ]
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/provenance-negative.yml",
+      "blob_sha": "6244a5c82078c87d84ca51c1901215718fa1226d",
+      "events": {
+        "workflow_dispatch": {
+          "inputs": {
+            "request": {
+              "description": "Exact original controller request JSON",
+              "required": "true",
+              "type": "string"
+            },
+            "implementation_sha256": {
+              "description": "Separately approved implementation.lock SHA-256",
+              "required": "true",
+              "type": "string"
+            },
+            "producer_run_id": {
+              "description": "Successful provenance run at the same exact source commit",
+              "required": "true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/provenance.yml",
+      "blob_sha": "b0aba84f7e7ef633bdd1722199ab09671dd8bf88",
+      "events": {
+        "workflow_dispatch": {
+          "inputs": {
+            "request": {
+              "description": "Exact JSON request from the independent local controller",
+              "required": "true",
+              "type": "string"
+            },
+            "implementation_sha256": {
+              "description": "Separately approved implementation.lock SHA-256",
+              "required": "true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/stage4-exits.yml",
+      "blob_sha": "efcead380ebda3c3187c0f2a495699c556f18e3c",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "results/stage4/pr-runs.json"
+          ]
+        },
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-candidate-dry-run-v2.yml",
+      "blob_sha": "1ae412d661571b9054dc9b1a40eeaa317975877b",
+      "events": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-candidate-dry-run.yml",
+      "blob_sha": "5785e1c020c7626eef4eaa74e7959a4d7768290d",
+      "events": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-hosted-probe-2.yml",
+      "blob_sha": "4fdbcf229ae8ee9d4e4584fdf5d9715edbe4eaea",
+      "events": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-hosted-probe.yml",
+      "blob_sha": "4470a8111ecfed915b8ee4ba054df2051641c06d",
+      "events": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-private-dry-run-v31.yml",
+      "blob_sha": "5b76afb33401c1d889f679171c3fdf2a0184af67",
+      "events": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-private-dry-run-v32.yml",
+      "blob_sha": "ff723e83463147196794e13f831a07e1ab2c727e",
+      "events": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/toolchain-inventory.yml",
+      "blob_sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+      "events": {
+        "workflow_dispatch": "",
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/toolchain-inventory.yml",
+            "toolchain/ci-bootstrap.json",
+            "toolchain/inventory_ci.py"
+          ]
+        }
+      }
+    }
+  ],
+  "additional_trigger_for_proposal_push": false,
+  "single_dynamic_field": "ADDON_COMMIT_SHA; exact new immutable input commit only",
+  "approval": "PENDING",
+  "published": false,
+  "hosted_run": "NOT_RUN",
+  "end_to_end": false
+}

@@ -1,0 +1,118 @@
+[
+  {
+    "architecture": "arm64",
+    "effective_uid": 501,
+    "end_to_end": false,
+    "image_os": "macos15",
+    "image_version": "20261104.0514.1",
+    "operation": "identity",
+    "provider_isolation": "GitHub fresh-VM claim; not independently proved by this probe",
+    "python_sha256": "5c5950c62eee5fd227a67e4bdfcde81c9add59799bba0949635f3d5ba9661c26",
+    "python_version": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+    "release": "24.6.0",
+    "run_id": "42292059389",
+    "runner_arch": "ARM64",
+    "runner_os": "macOS",
+    "source_sha": "a599bf6c1e8e568bc1705468754edf959b274b6a",
+    "system": "Darwin",
+    "workflow_sha": "a599bf6c1e8e568bc1705468754edf959b274b6a"
+  },
+  {
+    "actual_exit": 0,
+    "argv": [
+      "/usr/bin/sw_vers"
+    ],
+    "end_to_end": false,
+    "operation": "command",
+    "stderr": "",
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t15.8.2\nBuildVersion:\t\t24H232\n"
+  },
+  {
+    "actual_exit": 0,
+    "argv": [
+      "/usr/sbin/sysctl",
+      "-n",
+      "hw.memsize"
+    ],
+    "end_to_end": false,
+    "operation": "command",
+    "stderr": "",
+    "stdout": "7516192768\n"
+  },
+  {
+    "core_limit_bytes": 0,
+    "cpu_limit_seconds": 120,
+    "end_to_end": false,
+    "full_HOL_resource_adequacy": "NOT_ESTABLISHED",
+    "memory_bytes": 7516192768,
+    "operation": "resources",
+    "temporary_disk_free_bytes": 49423114240
+  },
+  {
+    "end_to_end": false,
+    "errno": 0,
+    "error_name": null,
+    "operation": "mkstemp",
+    "path": "/var/tmp/forge-m1-preflight-G2BJfb",
+    "return_value": 3
+  },
+  {
+    "end_to_end": false,
+    "equal": true,
+    "operation": "read_write",
+    "read_bytes": 33,
+    "written": 33
+  },
+  {
+    "end_to_end": false,
+    "errno": 13,
+    "error_name": "EACCES",
+    "operation": "negative_permission",
+    "path": "/var/tmp/forge-m1-preflight-G2BJfb"
+  },
+  {
+    "actual_exit": 0,
+    "argv": [
+      "/usr/bin/true"
+    ],
+    "end_to_end": false,
+    "operation": "command",
+    "stderr": "",
+    "stdout": ""
+  },
+  {
+    "end_to_end": false,
+    "operation": "memory_probe",
+    "touched_bytes": 67108864
+  },
+  {
+    "end_to_end": false,
+    "operation": "environment_controls_complete",
+    "scope": "Finite observations only"
+  },
+  {
+    "end_to_end": false,
+    "errno": 0,
+    "error_name": null,
+    "mode": "W_OK",
+    "operation": "access",
+    "path": "/var/tmp",
+    "return_value": 0
+  },
+  {
+    "SAT": "NOT_RUN",
+    "end_to_end": false,
+    "errno": 13,
+    "error_name": "EACCES",
+    "operation": "installation_parent_mkdir",
+    "path": "/Users/mackianni"
+  },
+  {
+    "actual_exit": 78,
+    "end_to_end": false,
+    "errno": 13,
+    "exception_type": "PermissionError",
+    "message": "[Errno 13] Permission denied: '/Users/mackianni'",
+    "operation": "preflight_failure"
+  }
+]

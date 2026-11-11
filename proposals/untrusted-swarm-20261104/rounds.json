@@ -1,0 +1,91 @@
+{
+  "checker_selection": "After20 contexts finish up to4 calls each, check syntactically supported candidates in canonical digest order; every check consumes the cell budget. No controller model call.",
+  "delivery": "Only broker-copied regular artifacts; sorted role IDs then paths; no adaptive routing.",
+  "prompt_sha256": {
+    "adversary_01": "7323f95e58d890792cb4c5bc9d0b0f9975f5b264a07c47efd309de99ab05d6db",
+    "adversary_02": "30b647b766759bfdd0a57f8ca9c3835577a56253d6039db0099628dd0dcbf0a7",
+    "adversary_03": "43bafc4cc487d7f6f8015a77b0a48f12a1bba7f40081f919361bb629d5904fde",
+    "builder_01": "661875d92768b3681cbedd33b53ba53a035a1b4510aed736cfac2c60d066fae6",
+    "builder_02": "801cd8ecabf6776519f0ac793ac5933acc41ccb4274978cd63d832394a1e6d4d",
+    "builder_03": "4f2634871f014e7bc4e5fa55304f3e57be89cf5a5e2012c602dc61961b7d4719",
+    "builder_04": "04e91494d242b03b5d52dc8cfc1f93232e53e0b108893d07de970158c452326f",
+    "builder_05": "604e853e2eed1ce421198773c06dd6e338484c579ef59ebd49b6ecc38fa98aa9",
+    "compiler_engineer_01": "29d252202b737eab9534a1b3456501f995b682ca01ba13c3e469ee83952371e7",
+    "compiler_engineer_02": "1d495f752bbad6dd612d465f8159cc018a6212f6ed08a8bb005802fb9de294be",
+    "compiler_engineer_03": "579f2babbfb64b5a25b436cb91780385591ea4b9d1e292dbac5efdd285bb62da",
+    "evidence_auditor_01": "8ed6770878b7fa64738a29dd39e049f3208bb0da4e3ef0a55cbc01ede8a5dab7",
+    "evidence_auditor_02": "7b226e7378ad15151d00a6ce27bf1da87256a9aeac5c5befc2c5cfe4dfbc4006",
+    "prover_01": "21a3e4a3d6cae93573ff71bab933d6fbc8328b90c08dd70e8e7053a5d84048cc",
+    "prover_02": "a1ed6e4a9149e930a6e1451ebc765a0265b4b972b31eda74e45aa58088580816",
+    "prover_03": "df6ff2dc979a81a4a46058ba0be447bb1fdb866a2d55090d8dbec87ce02d264a",
+    "prover_04": "cc1238af6a8b438c81700f7267b574c2c533f8c0156bd6b9d943b83b45ecff1b",
+    "prover_05": "eda273032cb1c012e52cb9b60c2f619fe60104375706969d8cec8d9827bc8307",
+    "specification_critic_01": "85c0264deb66b241e5e1dd4e5e240deeac081ab4047818084d6e55f917f0a7d0",
+    "specification_critic_02": "54fac1574fb788448e36031ac635065a78f477745613c05aae9e4f471645969e"
+  },
+  "protocol": "FUSE-1",
+  "rounds": [
+    {
+      "inputs": "frozen task plus all previous round outputs sorted by role ID and path",
+      "roles": [
+        "specification_critic_01",
+        "specification_critic_02"
+      ],
+      "round": 1,
+      "same_round_messages": false
+    },
+    {
+      "inputs": "frozen task plus all previous round outputs sorted by role ID and path",
+      "roles": [
+        "builder_01",
+        "builder_02",
+        "builder_03",
+        "builder_04",
+        "builder_05"
+      ],
+      "round": 2,
+      "same_round_messages": false
+    },
+    {
+      "inputs": "frozen task plus all previous round outputs sorted by role ID and path",
+      "roles": [
+        "adversary_01",
+        "adversary_02",
+        "adversary_03"
+      ],
+      "round": 3,
+      "same_round_messages": false
+    },
+    {
+      "inputs": "frozen task plus all previous round outputs sorted by role ID and path",
+      "roles": [
+        "prover_01",
+        "prover_02",
+        "prover_03",
+        "prover_04",
+        "prover_05"
+      ],
+      "round": 4,
+      "same_round_messages": false
+    },
+    {
+      "inputs": "frozen task plus all previous round outputs sorted by role ID and path",
+      "roles": [
+        "compiler_engineer_01",
+        "compiler_engineer_02",
+        "compiler_engineer_03"
+      ],
+      "round": 5,
+      "same_round_messages": false
+    },
+    {
+      "inputs": "frozen task plus all previous round outputs sorted by role ID and path",
+      "roles": [
+        "evidence_auditor_01",
+        "evidence_auditor_02"
+      ],
+      "round": 6,
+      "same_round_messages": false
+    }
+  ]
+}

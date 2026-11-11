@@ -1,0 +1,74 @@
+<<HOL message: Created theory "forge_refundRejectBasis">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRejectBasis)>>
+Saved theorem _______ "refund_stdio_extract_fs"
+Saved theorem _______ "refund_sem_satisfies_imp"
+Saved theorem _______ "refund_error_basis_semantics"
+Saved theorem _______ "refund_basis_parts_ok"
+Saved theorem _______ "refund_basis_fs_projection"
+Saved theorem _______ "refund_split_from_subset"
+Saved theorem _______ "refund_initial_stdio"
+CHECKED_THEOREM refund_stdio_extract_fs
+⊢ call_FFI_rel꙳ (basis_ffi ext cl fs) st.ffi ∧
+  SPLIT3 (st2heap (basis_proj1,basis_proj2) st) (h1,h2,h3) ∧ STDIO fs' h1 ⇒
+  extract_fs ext (cl,fs) st.ffi.io_events =
+  SOME (fs' with numchars := fs.numchars)
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_sem_satisfies_imp
+⊢ sem_satisfies s P ⇒
+  (∀behavior. P behavior ⇒ Q behavior) ⇒
+  sem_satisfies s Q
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_error_basis_semantics
+⊢ Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+    env2 st2 ⇒
+  lookup_var «refund_main» env2 = SOME refund_main_v ⇒
+  stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ⇒
+  SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2) ∧ STDIO fs h1 ⇒
+  sem_satisfies
+    (semantics_dec_list
+       (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE [])
+             (App Opapp [Var (Short «refund_main»); Unit])) prog))
+    (λbehavior.
+       ∃st3 exn.
+         behavior = Terminate Success st3.ffi.io_events ∧
+         (∃h3 h4.
+            SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+            (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+         call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+         extract_fs ext (cl,fs) st3.ffi.io_events = SOME (fastForwardFD fs 0))
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_basis_parts_ok
+⊢ parts_ok (basis_ffi ext cls fs) (basis_proj1,basis_proj2)
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_basis_fs_projection
+⊢ MEM n (MAP FST (SND (SND fs_ffi_part))) ⇒
+  FLOOKUP (basis_proj1 (cl,fs)) n = SOME (encode fs)
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_split_from_subset
+⊢ (∃h_i. h_i ⊆ s ∧ P h_i) ⇒ ∃h_i h_k. SPLIT s (h_i,h_k) ∧ P h_i
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+CHECKED_THEOREM refund_initial_stdio
+⊢ res_st.ffi = basis_ffi ext cl fs ∧ wfFS fs ∧ STD_streams fs ∧
+  is_refs_basis res_st.refs ⇒
+  ∃h_i h_k.
+    SPLIT (st2heap (basis_proj1,basis_proj2) res_st) (h_i,h_k) ∧ STDIO fs h_i
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+Exporting theory "forge_refundRejectBasis" ... done.
+Theory "forge_refundRejectBasis" took 4.5s to build
+EXCEPTION_BASIS_COMPLETE

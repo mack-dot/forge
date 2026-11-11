@@ -1,0 +1,18 @@
+{
+  "failures": [
+    {
+      "action": "git status --short in shared root",
+      "actual_exit": null,
+      "stderr": "fatal: not a git repository (or any of the parent directories): .git",
+      "basis": "Git fatal diagnostic is observed, but child numeric exit was not captured separately; enclosing mixed read command ended0. Initial record incorrectly inferred128 and remains preserved.",
+      "child_exit_captured_separately": false
+    },
+    {
+      "action": "cat stdin-precondition-discharge.json",
+      "actual_exit": 1,
+      "stderr": "No such file or directory",
+      "correction": "Existing file is stdio-precondition-discharge.json; proof evidence unaffected."
+    }
+  ],
+  "end_to_end": false
+}

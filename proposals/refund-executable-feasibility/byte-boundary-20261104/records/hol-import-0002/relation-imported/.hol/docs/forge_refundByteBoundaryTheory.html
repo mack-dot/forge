@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundByteBoundary</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundByteBoundary</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../imported/.hol/docs/forge_refundSourceBindingTheory.html">forge_refundSourceBinding</a></li>
+<li><a href="../../../../../../.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWireProg_experiment/.hol/docs/forge_refundWireProgTheory.html">forge_refundWireProg</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<ul class="sig-list">
+<li><code>byte_codes : mlstring -&gt; num list</code></li>
+<li><code>byte_string : num list -&gt; mlstring</code></li>
+</ul>
+<h3>Definitions</h3>
+<div class="toc-items"><a href="#byte_codes_def">byte_codes_def</a><a href="#byte_string_def">byte_string_def</a></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#byte_codes_empty">byte_codes_empty</a><a href="#byte_fields_result">byte_fields_result</a><a href="#byte_roundtrip">byte_roundtrip</a><a href="#byte_string_codes">byte_string_codes</a><a href="#byte_string_eq">byte_string_eq</a><a href="#byte_wire_inputs">byte_wire_inputs</a><a href="#byte_wire_outputs">byte_wire_outputs</a></div>
+</section>
+<section>
+<h2>Definitions</h2>
+<div class="thm" id="byte_codes_def">
+<div class="thm-name"><code>byte_codes_def</code></div>
+<pre>⊢ ∀text. byte_codes text = MAP ORD (explode text)
+</pre>
+</div>
+<div class="thm" id="byte_string_def">
+<div class="thm-name"><code>byte_string_def</code></div>
+<pre>⊢ ∀bytes. byte_string bytes = implode (MAP CHR bytes)
+</pre>
+</div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="byte_codes_empty">
+<div class="thm-name"><code>byte_codes_empty</code></div>
+<pre>⊢ byte_codes «» = []
+</pre>
+</div>
+<div class="thm" id="byte_fields_result">
+<div class="thm-name"><code>byte_fields_result</code></div>
+<pre>⊢ EVERY (λn. n &lt; 256) cb ∧ EVERY (λn. n &lt; 256) qb ∧ EVERY (λn. n &lt; 256) rb ⇒
+  (let
+     (ok,a,r,c,q,n) =
+       refund_fields (byte_string cb) (byte_string qb) original remaining
+         enabled opened candidate amount (byte_string rb)
+   in
+     (ok ⇔
+      cb ≠ [] ∧ qb ≠ [] ∧ enabled ∧ opened ∧ 0 ≤ original ∧
+      original ≤ 9223372036854775807 ∧ 0 ≤ remaining ∧
+      remaining ≤ original ∧ candidate ∧ 0 ≤ amount ∧ amount ≤ remaining ∧
+      (rb = byte_codes «duplicate_charge» ∨
+       rb = byte_codes «service_not_delivered» ∨
+       rb = byte_codes «returned_item»)) ∧ a = (if ok then amount else 0) ∧
+     byte_codes r = (if ok then rb else []) ∧
+     byte_codes c = (if ok then cb else []) ∧
+     byte_codes q = (if ok then qb else []) ∧ n = if ok then 1 else 0)
+</pre>
+</div>
+<div class="thm" id="byte_roundtrip">
+<div class="thm-name"><code>byte_roundtrip</code></div>
+<pre>⊢ ∀bytes.
+    EVERY (λn. n &lt; 256) bytes ⇒ byte_codes (byte_string bytes) = bytes
+</pre>
+</div>
+<div class="thm" id="byte_string_codes">
+<div class="thm-name"><code>byte_string_codes</code></div>
+<pre>⊢ ∀s. byte_string (byte_codes s) = s
+</pre>
+</div>
+<div class="thm" id="byte_string_eq">
+<div class="thm-name"><code>byte_string_eq</code></div>
+<pre>⊢ EVERY (λn. n &lt; 256) bytes ⇒
+  (byte_string bytes = text ⇔ bytes = byte_codes text)
+</pre>
+</div>
+<div class="thm" id="byte_wire_inputs">
+<div class="thm-name"><code>byte_wire_inputs</code></div>
+<pre>⊢ EVERY (λn. n &lt; 256) cb ∧ EVERY (λn. n &lt; 256) qb ∧ EVERY (λn. n &lt; 256) rb ⇒
+  ∃c q r.
+    byte_codes c = cb ∧ byte_codes q = qb ∧ byte_codes r = rb ∧
+    refund_decode_wire
+      (sexp_to_string
+         (refund_request c q original remaining enabled opened candidate
+            amount r)) =
+    INR (c,q,original,remaining,enabled,opened,candidate,amount,r)
+</pre>
+</div>
+<div class="thm" id="byte_wire_outputs">
+<div class="thm-name"><code>byte_wire_outputs</code></div>
+<pre>⊢ EVERY (λn. n &lt; 256) rb ∧ EVERY (λn. n &lt; 256) cb ∧ EVERY (λn. n &lt; 256) qb ⇒
+  ∃r c q.
+    byte_codes r = rb ∧ byte_codes c = cb ∧ byte_codes q = qb ∧
+    parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+    INR (refund_response ok a r c q n,&quot;&quot;) ∧
+    refund_response_fields (refund_response ok a r c q n) =
+    INR (ok,a,r,c,q,n)
+</pre>
+</div>
+</section>
+</body>
+</html>

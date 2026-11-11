@@ -1,0 +1,13 @@
+/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/lookup-diagnostic-0002/proof.sml:6: error: Pattern and expression have incompatible types.
+   Pattern: (goals, _) : 'a * 'b
+   Expression:
+      (
+      rw [wfFS_def, liveFS_def, ...] >>
+      (
+      [QUOTE " (*#loc 7 5*)MEM fd (MAP FST fs.infds)"] by
+      metis_tac [ALOOKUP_NONE])) ([], goal) :
+      Context.t -> goal list * (thm list -> thm)
+   Reason:
+      Can't unify 'a * 'b to Context.t -> goal list * (thm list -> thm)
+         (Incompatible types)
+Found near val (goals, _) = (rw [...] >> ([...] by ... ...)) ([], goal)

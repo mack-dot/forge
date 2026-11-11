@@ -1,0 +1,306 @@
+(*
+  The wordLang intermediate language consists of structured programs
+  that operate over machine words, a list-like stack and a flat memory.
+  This is the language where register allocation is performed.
+*)
+Theory wordLang
+Ancestors
+  stackLang
+Libs
+  preamble
+
+Type shift = ``:ast$shift``
+
+Datatype:
+  exp = Const int
+      | Var num
+      | Lookup store_name
+      | Load exp
+      | Op binop (exp list)
+      | Shift shift exp exp
+End
+
+Overload ShiftN = “λsh e n. Shift sh e (Const (& n))”;
+
+Type cutsets = “:num_set # num_set” (* non-GCed cutset, GCed cutset *)
+
+Datatype:
+  prog = Skip
+       | Move num ((num # num) list)
+       | Inst inst
+       | Assign num exp
+       | Get num store_name
+       | Set store_name exp
+       | Store exp num
+       | MustTerminate wordLang$prog
+       | Call ((num list # cutsets # wordLang$prog # num # num) option)
+              (* return vars, cut-set, return-handler code, labels l1,l2*)
+              (num option) (* target of call *)
+              (num list) (* arguments *)
+              ((num # wordLang$prog # num # num) option)
+              (* handler: varname, exception-handler code, labels l1,l2*)
+       | Seq wordLang$prog wordLang$prog
+       | If cmp num reg_imm wordLang$prog wordLang$prog
+       | Loop num_set wordLang$prog num_set
+       | Alloc num cutsets
+       | StoreConsts num num num num ((bool # int) list)
+       | Raise num
+       | Return num (num list) (* return lab, return values *)
+       | Break num
+       | Continue num
+       | Tick
+       | OpCurrHeap binop num num (* special case compiled well in stackLang *)
+       | LocValue num num        (* assign v1 := Loc v2 0 *)
+       | Install num num num num num cutsets
+                (* code ptr, length of new code, code buffer start,
+                   data buffer start, length of new data, cut-set *)
+       | DataBufferWrite num num (* data buffer address, word to write *)
+       | FFI mlstring num num num num cutsets (* FFI name, conf_ptr, conf_len, array_ptr, array_len, cut-set *)
+       | ShareInst memop num exp (* memory operation, varname, expression for memory address *)
+       | PtrEq num num num int int
+         (* dest, src1, src2, value written if equal, value written if not equal *)
+End
+
+Definition raise_stub_location_def:
+  raise_stub_location = word_num_stubs - 2
+End
+Definition store_consts_stub_location_def:
+  store_consts_stub_location = word_num_stubs - 1
+End
+
+Theorem raise_stub_location_eq = EVAL``raise_stub_location``;
+Theorem store_consts_stub_location_eq = EVAL``store_consts_stub_location``;
+
+(* wordLang uses syntactic invariants compared to stackLang that uses semantic flags
+   Some of these are also used to EVAL (e.g. for the oracle)
+*)
+
+(* Recursors for variables *)
+Definition every_var_exp_def:
+  (every_var_exp P (Var num) = P num) ∧
+  (every_var_exp P (Load exp) = every_var_exp P exp) ∧
+  (every_var_exp P (Op wop ls) = EVERY (every_var_exp P) ls) ∧
+  (every_var_exp P (Shift sh e1 e2) = (every_var_exp P e1 ∧ every_var_exp P e2)) ∧
+  (every_var_exp P expr = T)
+End
+
+Definition every_var_imm_def:
+  (every_var_imm P (Reg r) = P r) ∧
+  (every_var_imm P _ = T)
+End
+
+Definition every_var_inst_def:
+  (every_var_inst (bits:num) P (Const reg w) = P reg) ∧
+  (every_var_inst bits P (Arith (Binop bop r1 r2 ri)) =
+    (P r1 ∧ P r2 ∧ every_var_imm P ri)) ∧
+  (every_var_inst bits P (Arith (Shift shift r1 r2 ri)) = (P r1 ∧ P r2 ∧ every_var_imm P ri)) ∧
+  (every_var_inst bits P (Arith (Div r1 r2 r3)) = (P r1 ∧ P r2 ∧ P r3)) ∧
+  (every_var_inst bits P (Arith (AddCarry r1 r2 r3 r4)) = (P r1 ∧ P r2 ∧ P r3 ∧ P r4)) ∧
+  (every_var_inst bits P (Arith (AddOverflow r1 r2 r3 r4)) = (P r1 ∧ P r2 ∧ P r3 ∧ P r4)) ∧
+  (every_var_inst bits P (Arith (SubOverflow r1 r2 r3 r4)) = (P r1 ∧ P r2 ∧ P r3 ∧ P r4)) ∧
+  (every_var_inst bits P (Arith (LongMul r1 r2 r3 r4)) = (P r1 ∧ P r2 ∧ P r3 ∧ P r4)) ∧
+  (every_var_inst bits P (Arith (LongDiv r1 r2 r3 r4 r5)) = (P r1 ∧ P r2 ∧ P r3 ∧ P r4 ∧ P r5)) ∧
+  (every_var_inst bits P (Arith (IMul rd ra rb ro)) = (P rd ∧ P ra ∧ P rb ∧ P ro)) ∧
+  (every_var_inst bits P (Arith (IDiv rq rr ra rb)) = (P rq ∧ P rr ∧ P ra ∧ P rb)) ∧
+  (every_var_inst bits P (Mem Load r (Addr a w)) = (P r ∧ P a)) ∧
+  (every_var_inst bits P (Mem Store r (Addr a w)) = (P r ∧ P a)) ∧
+  (every_var_inst bits P (Mem Load32 r (Addr a w)) = (P r ∧ P a)) ∧
+  (every_var_inst bits P (Mem Store32 r (Addr a w)) = (P r ∧ P a)) ∧
+  (every_var_inst bits P (Mem Load8 r (Addr a w)) = (P r ∧ P a)) ∧
+  (every_var_inst bits P (Mem Store8 r (Addr a w)) = (P r ∧ P a)) ∧
+  (every_var_inst bits P (FP (FPLess r d1 d2)) = P r) ∧
+  (every_var_inst bits P (FP (FPLessEqual r d1 d2)) = P r) ∧
+  (every_var_inst bits P (FP (FPEqual r d1 d2)) = P r) ∧
+  (every_var_inst bits P (FP (FPMovToReg r1 r2 d):inst) =
+    if bits = 64 then P r1
+    else (P r1 ∧ P r2)) ∧
+  (every_var_inst bits P (FP (FPMovFromReg d r1 r2)) =
+    if bits = 64 then P r1
+    else (P r1 ∧ P r2)) ∧
+  (every_var_inst bits P inst = T)
+End (*catchall*)
+
+Definition every_name_def:
+  every_name P (t:cutsets) ⇔
+  EVERY P (MAP FST (toAList (FST t))) ∧
+  EVERY P (MAP FST (toAList (SND t)))
+End
+
+Definition every_var_def:
+  (every_var bits P (Skip:prog) ⇔ T) ∧
+  (every_var bits P (Move pri ls) = (EVERY P (MAP FST ls) ∧ EVERY P (MAP SND ls))) ∧
+  (every_var bits P (Inst i) = every_var_inst (bits) P i) ∧
+  (every_var bits P (Assign num exp) = (P num ∧ every_var_exp P exp)) ∧
+  (every_var bits P (Get num store) = P num) ∧
+  (every_var bits P (Store exp num) = (P num ∧ every_var_exp P exp)) ∧
+  (every_var bits P (LocValue r _) = P r) ∧
+  (every_var bits P (Install r1 r2 r3 r4 r5 names) =
+    (P r1 ∧ P r2 ∧ P r3 ∧ P r4 ∧ P r5 ∧ every_name P names)) ∧
+  (every_var bits P (DataBufferWrite r1 r2) = (P r1 ∧ P r2)) ∧
+  (every_var bits P (FFI ffi_index cptr clen ptr len names) =
+    (P cptr ∧ P clen ∧ P ptr ∧ P len ∧ every_name P names)) ∧
+  (every_var bits P (MustTerminate s1) = every_var bits P s1) ∧
+  (every_var bits P (Call ret dest args h) =
+    ((EVERY P args) ∧
+    (case ret of
+      NONE => T
+    | SOME (v,cutset,ret_handler,l1,l2) =>
+      (EVERY P v ∧ every_name P cutset ∧
+      every_var bits P ret_handler ∧
+      (case h of
+        NONE => T
+      | SOME (v,prog,l1,l2) =>
+        (P v ∧
+        every_var bits P prog)))))) ∧
+  (every_var bits P (Seq s1 s2) = (every_var bits P s1 ∧ every_var bits P s2)) ∧
+  (every_var bits P (If cmp r1 ri e2 e3) =
+    (P r1 ∧ every_var_imm P ri ∧ every_var bits P e2 ∧ every_var bits P e3)) ∧
+  (every_var bits P (Alloc num numset) =
+    (P num ∧ every_name P numset)) ∧
+  (every_var bits P (StoreConsts a b c d ws) =
+    (P a ∧ P b ∧ P c ∧ P d)) ∧
+  (every_var bits P (Raise num) = P num) ∧
+  (every_var bits P (Return num1 ns) = (P num1 ∧ EVERY P ns)) ∧
+  (every_var bits P (OpCurrHeap _ num1 num2) = (P num1 ∧ P num2)) ∧
+  (every_var bits P Tick = T) ∧
+  (every_var bits P (Set n exp) = every_var_exp P exp) ∧
+  (every_var bits P (ShareInst op num exp) = (P num /\ every_var_exp P exp)) /\
+  (every_var bits P (wordLang$Loop names body exit_names) =
+    (EVERY P (MAP FST (toAList names)) ∧ every_var bits P body ∧
+     EVERY P (MAP FST (toAList exit_names)))) ∧
+  (every_var bits P (PtrEq dst v1 v2 t f) = (P dst ∧ P v1 ∧ P v2)) ∧
+  (every_var bits P p = T)
+End
+
+(*Recursor for stack variables*)
+Definition every_stack_var_def:
+  (every_stack_var P (FFI ffi_index cptr clen ptr len names) =
+    every_name P names) ∧
+  (every_stack_var P (Install _ _ _ _ _ names) =
+    every_name P names) ∧
+  (every_stack_var P (Call ret dest args h) =
+    (case ret of
+      NONE => T
+    | SOME (v,cutset,ret_handler,l1,l2) =>
+      every_name P cutset ∧
+      every_stack_var P ret_handler ∧
+    (case h of  (*Does not check the case where Calls are ill-formed*)
+      NONE => T
+    | SOME (v,prog,l1,l2) =>
+      every_stack_var P prog))) ∧
+  (every_stack_var P (Alloc num numset) =
+    every_name P numset) ∧
+  (every_stack_var P (MustTerminate s1) =
+    every_stack_var P s1) ∧
+  (every_stack_var P (Seq s1 s2) =
+    (every_stack_var P s1 ∧ every_stack_var P s2)) ∧
+  (every_stack_var P (If cmp r1 ri e2 e3) =
+    (every_stack_var P e2 ∧ every_stack_var P e3)) ∧
+  (every_stack_var P (wordLang$Loop names body exit_names) =
+    every_stack_var P body) ∧
+  (every_stack_var P p = T)
+End
+
+(*Find the maximum variable*)
+Definition max_var_exp_def:
+  (max_var_exp (Var num) = num) ∧
+  (max_var_exp (Load exp) = max_var_exp exp) ∧
+  (max_var_exp (Op wop ls) = MAX_LIST (MAP (max_var_exp) ls))∧
+  (max_var_exp (Shift sh exp1 exp2) = MAX (max_var_exp exp1) (max_var_exp exp2)) ∧
+  (max_var_exp exp = 0:num)
+End
+
+Definition max_var_inst_def:
+  (max_var_inst (bits:num) Skip = 0) ∧
+  (max_var_inst bits (Const reg w) = reg) ∧
+  (max_var_inst bits (Arith (Binop bop r1 r2 ri)) =
+    case ri of Reg r => max3 r1 r2 r | _ => MAX r1 r2) ∧
+  (max_var_inst bits (Arith (Shift shift r1 r2 n)) =
+    case n  of Reg r => max3 r1 r2 r | _ => MAX r1 r2) ∧
+  (max_var_inst bits (Arith (Div r1 r2 r3)) = max3 r1 r2 r3) ∧
+  (max_var_inst bits (Arith (AddCarry r1 r2 r3 r4)) = MAX (MAX r1 r2) (MAX r3 r4)) ∧
+  (max_var_inst bits (Arith (AddOverflow r1 r2 r3 r4)) = MAX (MAX r1 r2) (MAX r3 r4)) ∧
+  (max_var_inst bits (Arith (SubOverflow r1 r2 r3 r4)) = MAX (MAX r1 r2) (MAX r3 r4)) ∧
+  (max_var_inst bits (Arith (LongMul r1 r2 r3 r4)) = MAX (MAX r1 r2) (MAX r3 r4)) ∧
+  (max_var_inst bits (Arith (LongDiv r1 r2 r3 r4 r5)) = MAX (MAX (MAX r1 r2) (MAX r3 r4)) r5) ∧
+  (max_var_inst bits (Arith (IMul rd ra rb ro)) = MAX (MAX rd ra) (MAX rb ro)) ∧
+  (max_var_inst bits (Arith (IDiv rq rr ra rb)) = MAX (MAX rq rr) (MAX ra rb)) ∧
+  (max_var_inst bits (Mem Load r (Addr a w)) = MAX a r) ∧
+  (max_var_inst bits (Mem Store r (Addr a w)) = MAX a r) ∧
+  (max_var_inst bits (Mem Load32 r (Addr a w)) = MAX a r) ∧
+  (max_var_inst bits (Mem Store32 r (Addr a w)) = MAX a r) ∧
+  (max_var_inst bits (Mem Load8 r (Addr a w)) = MAX a r) ∧
+  (max_var_inst bits (Mem Store8 r (Addr a w)) = MAX a r) ∧
+  (max_var_inst bits (FP (FPLess r f1 f2)) = r) ∧
+  (max_var_inst bits (FP (FPLessEqual r f1 f2)) = r) ∧
+  (max_var_inst bits (FP (FPEqual r f1 f2)) = r) ∧
+  (max_var_inst bits (FP (FPMovToReg r1 r2 d):inst) =
+    if bits = 64 then r1
+    else MAX r1 r2) ∧
+  (max_var_inst bits (FP (FPMovFromReg d r1 r2)) =
+    if bits = 64 then r1
+    else MAX r1 r2) ∧
+  (max_var_inst bits _ = 0)
+End
+
+Definition cutsets_max_def[simp]:
+  cutsets_max (c:cutsets) =
+    MAX (MAX_LIST (MAP FST (toAList (FST c)))) (MAX_LIST (MAP FST (toAList (SND c))))
+End
+
+Definition max_var_def:
+  (max_var bits (Skip:prog) = 0) ∧
+  (max_var bits (Move pri ls) =
+    MAX_LIST (MAP FST ls ++ MAP SND ls)) ∧
+  (max_var bits (Inst i) = max_var_inst (bits) i) ∧
+  (max_var bits (Assign num exp) = MAX num (max_var_exp exp)) ∧
+  (max_var bits (Get num store) = num) ∧
+  (max_var bits (Store exp num) = MAX num (max_var_exp exp)) ∧
+  (max_var bits (Call ret dest args h) =
+    let n = MAX_LIST args in
+    case ret of
+      NONE => n
+    | SOME (v,cutset,ret_handler,l1,l2) =>
+      let cutset_max = MAX n (cutsets_max cutset) in
+      let ret_max = max3 (MAX_LIST v) cutset_max (max_var bits ret_handler) in
+      (case h of
+        NONE => ret_max
+      | SOME (v,prog,l1,l2) =>
+        max3 v ret_max (max_var bits prog))) ∧
+  (max_var bits (Seq s1 s2) = MAX (max_var bits s1) (max_var bits s2)) ∧
+  (max_var bits (MustTerminate s1) = max_var bits s1) ∧
+  (max_var bits (If cmp r1 ri e2 e3) =
+    let r = case ri of Reg r => MAX r r1 | _ => r1 in
+      max3 r (max_var bits e2) (max_var bits e3)) ∧
+  (max_var bits (Alloc num numset) =
+    MAX num (cutsets_max numset)) ∧
+  (max_var bits (StoreConsts a b c d ws) =
+    MAX_LIST [a;b;c;d]) ∧
+  (max_var bits (Install r1 r2 r3 r4 r5 numset) =
+    (MAX_LIST [r1;r2;r3;r4;r5;cutsets_max numset])) ∧
+  (max_var bits (DataBufferWrite r1 r2) =
+    MAX r1 r2) ∧
+  (max_var bits (FFI ffi_index ptr1 len1 ptr2 len2 numset) =
+    MAX_LIST [ptr1;len1;ptr2;len2;cutsets_max numset]) ∧
+  (max_var bits (Raise num) = num) ∧
+  (max_var bits (OpCurrHeap _ num1 num2) = MAX num1 num2) ∧
+  (max_var bits (Return num1 ns) = MAX_LIST (num1::ns)) ∧
+  (max_var bits Tick = 0) ∧
+  (max_var bits (LocValue r l1) = r) ∧
+  (max_var bits (Set n exp) = max_var_exp exp) ∧
+  (max_var bits (ShareInst op num exp) = MAX num (max_var_exp exp)) /\
+  (max_var bits (Loop names body exit_names) =
+    max3 (MAX_LIST (MAP FST (toAList names)))
+         (max_var bits body)
+         (MAX_LIST (MAP FST (toAList exit_names)))) /\
+  (max_var bits (PtrEq dst v1 v2 t f) = MAX_LIST [dst;v1;v2]) /\
+  (max_var bits p = 0)
+End
+
+Definition exp_to_addr_def:
+  (exp_to_addr (Var ad) = SOME $ Addr ad 0) /\
+  (exp_to_addr (Op Add [Var ad;Const offset]) = SOME $ Addr ad offset) /\
+  (exp_to_addr _ = NONE)
+End
+
+Overload shift = “backend_common$word_shift”

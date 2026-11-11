@@ -1,0 +1,21 @@
+{
+  "scope": "Incidental read-only search path failures, distinct from tool execution failures.",
+  "actual_failures": [
+    {
+      "command": "rg DECIDE in guessed boolLib paths",
+      "exit": 2,
+      "reason": "Some guessed source paths do not exist."
+    },
+    {
+      "command": "rg TAUT_PROVE in guessed Boolify path and actual taut path",
+      "exit": 2,
+      "reason": "Wrong Boolify path; actual tautLib source was found."
+    },
+    {
+      "command": "rg SAT_PROVE in guessed satLib.sml plus existing HolSat sources",
+      "exit": 2,
+      "reason": "satLib.sml does not exist; actual minisatProve and satTools sources were found."
+    }
+  ],
+  "end_to_end": false
+}

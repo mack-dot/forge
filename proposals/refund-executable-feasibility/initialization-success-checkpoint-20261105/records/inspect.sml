@@ -1,0 +1,38 @@
+load "forge_refundArm8ProofTheory";
+open preamble backendProofTheory;
+val _=OS.FileSys.chDir(valOf(OS.Process.getEnv "FORGE_RUNTIME_OUT"));
+val _=new_theory "forge_refundSuccessfulInitialization";
+val cfg=``backend$set_oracle arm8_config$arm8_backend_config forge_refundArm8Compile$oracle``;
+val ac=``arm8_target$arm8_config``;
+val dc=``backend$ensure_fp_conf_ok ^ac (^cfg).data_conf``;
+val aw=``arch_wordsize (^ac).ISA``;
+val regcount=``(^ac).reg_count - (LENGTH (^ac).avoid_regs + 5)``;
+val stk=``(^ac).reg_count - (LENGTH (^ac).avoid_regs + 3)``;
+val proj=``SND o SND o SND o SND o SND o backendProof$config_tuple2``;
+val stackproj=``SND o ^proj``;
+val labproj=stackproj;
+val wo=``backendProof$cake_orac (:64) ^ac forge_refundArm8Compile$info syn ^proj (\ps.ps.word_prog)``;
+val so=``backendProof$cake_orac (:64) ^ac forge_refundArm8Compile$info syn ^stackproj (\ps.(ps.stack_prog,(MAP n2w ps.cur_bm:64 word list)))``;
+val lo=``backendProof$cake_orac (:64) ^ac forge_refundArm8Compile$info syn ^labproj (\ps.ps.lab_prog)``;
+val labcode=``SND(SND(backend$to_lab ^ac ^cfg forge_refundWholeProg$refund_prog))``;
+val stackcode=``SND(SND(backend$to_stack ^ac ^cfg forge_refundWholeProg$refund_prog))``;
+val bitmaps=``MAP n2w (FST(backend$to_stack ^ac ^cfg forge_refundWholeProg$refund_prog)):64 word list``;
+val lab=``lab_to_targetProof$make_init mc (basis_ffi$basis_ffi ext cl fs) tar m dm sdm ms
+ ^labcode (lab_to_target$compile ^ac) (cbpos:64 word) cbspace ^lo``;
+val initial=``stack_to_labProof$full_make_init ^aw (^cfg).stack_conf ^dc
+ (2*data_to_word$max_heap_limit (dimindex(:64)) ^dc - 1) ^stk (^ac).addr_offset
+ ^bitmaps ^stackcode ^lab save_regs data_sp ^so``;
+val s=``FST ^initial``;
+val wp=``sptree$fromAList(SND(backend$to_word ^ac ^cfg forge_refundWholeProg$refund_prog))``;
+val w=``word_to_stackProof$make_init ^ac ^regcount ^s ^wp ^wo
+ (data_to_word_memoryProof$word_ptr_eq ^dc)``;
+
+val _=Globals.max_print_depth:=1000;
+val _=Globals.show_types:=true;
+val _=List.app(fn(n,th)=>print("PUBLISHED "^n^"\n"^Parse.thm_to_string th^"\n"))
+ [("full_make_init_semantics2",backendProofTheory.full_make_init_semantics2),
+  ("stack_to_lab_orac_eq_std_sym",backendProofTheory.stack_to_lab_orac_eq_std_sym),
+  ("oracle_stack_good_code",backendProofTheory.oracle_stack_good_code),
+  ("to_lab_labels_ok",backendProofTheory.to_lab_labels_ok)];
+val _=print "INITIALIZATION_PREMISE_INSPECTION_COMPLETE\n";
+val _=OS.Process.exit OS.Process.success;

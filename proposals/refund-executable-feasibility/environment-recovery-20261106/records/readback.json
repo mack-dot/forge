@@ -1,0 +1,28 @@
+{
+  "scope": "Metadata and file identity readback only; no proof claim.",
+  "source_snapshots": 12,
+  "historical_diagnostic_files": 6,
+  "append_only_journals": 2,
+  "protected_diff": {
+    "argv": [
+      "git",
+      "-C",
+      "/private/tmp/forge-native-audit-review-20261104",
+      "diff",
+      "--exit-code",
+      "HEAD",
+      "--",
+      "spec",
+      "spec.lock",
+      "policy",
+      "gate",
+      "FORGE_MISSION.md"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "new_SAT_proof_native_replay": "NOT_RUN",
+  "goal_status": "blocked",
+  "end_to_end": false
+}

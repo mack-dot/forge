@@ -1,0 +1,42 @@
+{
+  "actual_exit": 0,
+  "word_repeat_equal": true,
+  "data_repeat_equal": true,
+  "preserved_successful_nonfailure_prefix_sha256": "82dd6b98d46591a0a280e8c248479b4394ed58ff1198ad83215607277691fc1b",
+  "per_proof_accounting": {
+    "compiled_source_data": {
+      "initial_parse_failures": 2,
+      "proof_failures": 1,
+      "successful_bundle": "data-0004"
+    },
+    "word_helpers_and_compiler_corollaries": {
+      "initial_preload_failure": 1,
+      "successful_bundle": "word-0002",
+      "proof_failures": 0
+    },
+    "determ_nonfailure": {
+      "proof_failures": 1,
+      "successful_bundle": "refund-word-0003"
+    },
+    "arbitrary_tracking": {
+      "parse_failures": 1,
+      "successful_bundle": "refund-word-0004"
+    },
+    "refund_data_nonfailure": {
+      "successful_bundle": "refund-word-0004",
+      "later_prefix_unchanged": true
+    },
+    "refund_word_single_epoch": {
+      "first_attempt_bundle": "refund-word-0004",
+      "matching_failures": 3,
+      "successful_attempt": 4,
+      "successful_bundle": "refund-word-0007"
+    }
+  },
+  "initial_refund_bundle": "refund-word-0001 failed in parent preload before source execution",
+  "stopped_routes": [
+    "U290",
+    "U297"
+  ],
+  "end_to_end": false
+}

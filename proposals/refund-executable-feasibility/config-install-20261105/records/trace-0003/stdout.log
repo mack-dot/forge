@@ -1,0 +1,10 @@
+<<HOL message: Created theory "forge_spaceInstallTrace">>
+Saved theorem _______ "epoch_single"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_spaceInstallTrace)>>
+Proof of 
+
+∀p s res t.
+  evaluate (p,s) = (res,t) ∧ res ≠ SOME Error ∧ IS_SOME t.stack_max ⇒
+  LENGTH (ptr_eq_trace p s) = 1
+
+failed.

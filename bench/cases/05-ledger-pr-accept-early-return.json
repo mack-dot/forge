@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "  method Apply ... {\n    if IsRetry(state, id, request) {\n      next := state;\n      outcome := Ok;\n    } else if IsFreshValid(state, id, request) {\n      var debit := state.balances[request.sender] - request.amount - 1;\n      TotalReplace(state.balances, request.sender, debit);\n      var debited := state.balances[request.sender := debit];\n      var credit := state.balances[request.recipient] + request.amount;\n      TotalReplace(debited, request.recipient, credit);\n      var credited := debited[request.recipient := credit];\n      var fee := state.balances[0] + 1;\n      TotalReplace(credited, 0, fee);\n      next := LedgerState(\n        credited[0 := fee],\n        state.accepted[id := request]);\n      outcome := Ok;\n    } else {\n      next := state;\n      outcome := Rejected;\n    }\n  }\n}\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "  method Apply ... {\n    next := state;\n    outcome := Rejected;\n    if IsRetry(state, id, request) {\n      outcome := Ok;\n      return;\n    }\n    if !IsFreshValid(state, id, request) {\n      return;\n    }\n      var debit := state.balances[request.sender] - request.amount - 1;\n      TotalReplace(state.balances, request.sender, debit);\n      var debited := state.balances[request.sender := debit];\n      var credit := state.balances[request.recipient] + request.amount;\n      TotalReplace(debited, request.recipient, credit);\n      var credited := debited[request.recipient := credit];\n      var fee := state.balances[0] + 1;\n      TotalReplace(credited, 0, fee);\n      next := LedgerState(\n        credited[0 := fee],\n        state.accepted[id := request]);\n      outcome := Ok;\n  }\n}\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-accept-early-return",
+ "kind": "valid_alternative",
+ "order": 5,
+ "rationale": "Default to the rejected result and return early; same outcomes for every input.",
+ "supplied_evidence": null
+}

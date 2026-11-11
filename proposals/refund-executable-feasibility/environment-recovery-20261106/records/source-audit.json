@@ -1,0 +1,224 @@
+{
+  "scope": "Local source identity and retained diagnostic readback only.",
+  "pins": {
+    "HOL": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+    "polyml": "4557554077078decce4ce5f90da00a713cfc32e4"
+  },
+  "sources": {
+    "HOL/src/HolSat/minisatProve.sml": "bb7d98fc76dbae691cc826547ef31ee40aafd9cd717a27cf4d153611f537e9d4",
+    "HOL/src/HolSat/satConfig.sml": "46be90386a60845f1938086b1d09f21b832c1a860441ab086dad8cdfdcf1f13f",
+    "HOL/src/HolSat/dimacsTools.sml": "159a2b04de5ce84e6a9f658337d84ca4fee1657ac75852592c00d59858f5213e",
+    "HOL/src/HolSat/satTools.sml": "29dd346988b27670e69058df4f16a463d895eb58e08a856badfc1da945b386ae",
+    "HOL/src/HolSat/SatSolvers.sml": "e39b6ec30ff1ee98bbf79faba1b30bfb74e72f9bda8c9ba84c1ff496a321d446",
+    "HOL/tools-poly/Holmake/unix-systeml.sml": "17bd4eb87f35f08edd113a3d6e072bfb606147664e2b57c7f9a981c6b76c27fc",
+    "polyml/basis/OS.sml": "487b9f092c98253b8e2d94bcdf77f7289cf9a432eaf5d591d0cdba72ccd8329a",
+    "polyml/basis/PolyMLException.sml": "22a779c6416dce462e32032aab189d3675a8bd1159721f3070f4db09f944cadf",
+    "polyml/libpolyml/basicio.cpp": "91764edd0af2da87afd6f219d438d8793795485ee3f82c0a62ec7f64653d4f64",
+    "polyml/libpolyml/process_env.cpp": "c8e074cd341368a5adadc2e4b208c6a0fa4aae2de8173d4982a4107a4cb3c6a8",
+    "polyml/libpolyml/run_time.cpp": "a08c746722b2685f89d016be7753abd2dc25f758a9c8fd39bf327f5be9a22248",
+    "polyml/libpolyml/run_time.h": "cc5232b65a74709500cf162660b2ef62e09f9eaf0c7f143cbdee7e329ba94e72"
+  },
+  "source_git_commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "7515fcc8645287ed6324bbf004ecee9986d06a224a0ba3901c0149134ebe0dbc",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:src/HolSat/minisatProve.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "bb7d98fc76dbae691cc826547ef31ee40aafd9cd717a27cf4d153611f537e9d4",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:src/HolSat/satConfig.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "46be90386a60845f1938086b1d09f21b832c1a860441ab086dad8cdfdcf1f13f",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:src/HolSat/dimacsTools.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "159a2b04de5ce84e6a9f658337d84ca4fee1657ac75852592c00d59858f5213e",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:src/HolSat/satTools.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "29dd346988b27670e69058df4f16a463d895eb58e08a856badfc1da945b386ae",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:src/HolSat/SatSolvers.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "e39b6ec30ff1ee98bbf79faba1b30bfb74e72f9bda8c9ba84c1ff496a321d446",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "show",
+        "9783a49979c94c401ff8c0e51b2eefae7ea95ae3:tools-poly/Holmake/unix-systeml.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "17bd4eb87f35f08edd113a3d6e072bfb606147664e2b57c7f9a981c6b76c27fc",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "9cfe4f2d56719326b468756ec8fdc5186ad506dd6cfe4cb3180258c253ee8c14",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:basis/OS.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "487b9f092c98253b8e2d94bcdf77f7289cf9a432eaf5d591d0cdba72ccd8329a",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:basis/PolyMLException.sml"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "22a779c6416dce462e32032aab189d3675a8bd1159721f3070f4db09f944cadf",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:libpolyml/basicio.cpp"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "91764edd0af2da87afd6f219d438d8793795485ee3f82c0a62ec7f64653d4f64",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:libpolyml/process_env.cpp"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "c8e074cd341368a5adadc2e4b208c6a0fa4aae2de8173d4982a4107a4cb3c6a8",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:libpolyml/run_time.cpp"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "a08c746722b2685f89d016be7753abd2dc25f758a9c8fd39bf327f5be9a22248",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "show",
+        "4557554077078decce4ce5f90da00a713cfc32e4:libpolyml/run_time.h"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "cc5232b65a74709500cf162660b2ef62e09f9eaf0c7f143cbdee7e329ba94e72",
+      "stderr": ""
+    }
+  ],
+  "historical_diagnostic_files": {
+    "proof.sml": "bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108",
+    "preload.sml": "74207d849aea3499cc00cb7e4d66510adefb6355c018f1e862e7de39cb860bdb",
+    "command.json": "a2637be5b6039d6de5df23116b6db4aab75097c5422f7f5443d615e9974efeca",
+    "invocation.json": "93fedddc08f4a5fcf4b750bad099dcfe4b0f48c5d84c5eabff329a8ec6de1e6e",
+    "stdout.log": "9baea93738610c1a61efd7a6bbb1bc202c436848f6b0c1a23ad8f8b9ee454efc",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "historical_diagnostic_exit": 1,
+  "relevant_tool_files": {
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.sml": "d06211cfc689511d525949cc447e6b5337d860e712dd875caeb44b3ac39a3642",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.sig": "132ebbdecd43d64e63ec13e2eca1302a8ee1ab0ec85837aedf13f640f7144b45",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepScript.sml": "5ce60a3e1ea882b5fb63fd420c4143bf470b4bc1aaf286b11a61c2cddedcd943",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/.hol/objs/arm8_stepLib.uo": "db1f6eef8156b7e21558ae7b7dceaf196e0c4898b4831652cf6c45521c7f9139",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/.hol/objs/arm8_stepLib.ui": "515f50942ff75c3f86176158f2a98eabc45108e0dbc03839d942de5501c8638a",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap": "787499c5305260a0dcf93cab119e0cb2f830c539ddf9327c433758f0a92350a9",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/l3-heap": "9a59e119969c4a180d1eaa19104f92237054ca5e81fe3298e5ad9843b440052c",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/Holmakefile": "f503dc99b3c71e41453d22814510cee88298fe1a074a2114ad0c46fc7c63f73c",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/utilsLib.sml": "52f3071e22662d4e4828ba426b255aedc7c63fba33c213f19e295547548ae9c9",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/utilsLib.sig": "45eadc56c5a0c51fda452d28cc34948282499b65c5b8f88bafc4a1f1b546c91b",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/.hol/objs/utilsLib.uo": "32e83e12a032f1b92887bad0c7c1361ebbb839e25081cbf4591ff4762b7e5c9c",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/.hol/objs/utilsLib.ui": "30da6be57e31bbe7da8b32edd8457341c4c5140e43c1925577b0ba5e396ecc71"
+  },
+  "protected_files_unchanged": 50,
+  "new_verifier_solver_or_native_execution": "NOT_RUN",
+  "denied_operation": "NOT_ESTABLISHED",
+  "exception_location_from_failed_run": "NOT_RECORDED",
+  "authorized_replacement_environment": "NOT_ESTABLISHED",
+  "independent_full_chain_replay": "NOT_RUN",
+  "goal_status": "blocked",
+  "end_to_end": false
+}

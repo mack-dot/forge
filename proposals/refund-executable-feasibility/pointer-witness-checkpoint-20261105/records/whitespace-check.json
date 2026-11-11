@@ -1,0 +1,35 @@
+{
+  "actual_exits": {
+    "full": {
+      "actual_exit": 2,
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "output_lines": 1462,
+      "output_sha256": "ced180b02f625e108aec2196c2f12c601085cb0cbcfaeb32f25f8e7b1037b51b"
+    },
+    "authored": {
+      "actual_exit": 0,
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        "ROADMAP.md",
+        "FORGE_MISSION_STATUS.md",
+        "unsure.md",
+        "proposals/refund-executable-feasibility/pointer-witness-checkpoint-20261105/CHECKPOINT.md",
+        "proposals/refund-executable-feasibility/pointer-witness-checkpoint-20261105/records/checkpoint.py",
+        "proposals/refund-executable-feasibility/pointer-witness-checkpoint-20261105/records/validate_docs.py"
+      ],
+      "output_lines": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "scope": "Preserve captured raw/generated/upstream bytes; authored documentation must be whitespace-clean.",
+  "end_to_end": false
+}

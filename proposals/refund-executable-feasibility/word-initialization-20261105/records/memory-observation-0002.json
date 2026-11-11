@@ -1,0 +1,9 @@
+{
+  "prior_record": "memory-observation-0001.json",
+  "prior_process_rows": "",
+  "wrong_word_code_actual_exit": 1,
+  "audit_loader_actual_exit": 1,
+  "current_action": "exact-import-0004 started after both owned previous handles returned terminal results. Same source/heap and CPU limit. No other owned HOL job started concurrently.",
+  "uncertainty": "The memory failure occurred during concurrent imports. Causation is not proved. The prior live-handle wording is not a process-state assertion if its process snapshot is empty.",
+  "end_to_end": false
+}

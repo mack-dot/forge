@@ -1,0 +1,37 @@
+{
+  "actual_exit": 0,
+  "local_fixture_members": 1493,
+  "mutation_controls": [
+    {
+      "end_to_end": false,
+      "exception": "ValueError",
+      "name": "changed-commit",
+      "operation": "mutation_control",
+      "process_exit": "NOT_APPLICABLE: in-process control",
+      "reason": "commit identity mismatch",
+      "rejected": true
+    },
+    {
+      "end_to_end": false,
+      "exception": "ValueError",
+      "name": "changed-manifest",
+      "operation": "mutation_control",
+      "process_exit": "NOT_APPLICABLE: in-process control",
+      "reason": "size/SHA256 mismatch: INPUTS.json",
+      "rejected": true
+    },
+    {
+      "end_to_end": false,
+      "exception": "ValueError",
+      "name": "changed-part",
+      "operation": "mutation_control",
+      "process_exit": "NOT_APPLICABLE: in-process control",
+      "reason": "size/SHA256 mismatch: inputs.part-000",
+      "rejected": true
+    }
+  ],
+  "existing_workflow_triggers_checked": 13,
+  "network_used": false,
+  "remote_transfer_integrity": "NOT_ESTABLISHED",
+  "end_to_end": false
+}

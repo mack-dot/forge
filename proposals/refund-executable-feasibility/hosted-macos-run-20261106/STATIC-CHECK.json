@@ -1,0 +1,155 @@
+{
+  "actual_exit": 0,
+  "workflow_sha256": "f83eaada408fc4adf8f900a908b5b326440bff5a352323ef248c9300b4f2c88c",
+  "workflow_bytes": 13263,
+  "unchanged_diagnostic_sha256": "bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108",
+  "source_pins": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/polyml",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout": "4557554077078decce4ce5f90da00a713cfc32e4\n",
+      "stderr": ""
+    }
+  ],
+  "base_workflow_triggers": {
+    ".github/workflows/booking-reuse.yml": {
+      "workflow_dispatch": {
+        "inputs": {
+          "booking_pr": {
+            "description": "Approved experiment PR number (one Booking.dfy change)",
+            "required": "true",
+            "type": "string"
+          },
+          "booking_head": {
+            "description": "Exact 40-character head approved for this dispatch",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    },
+    ".github/workflows/proof-gate.yml": {
+      "pull_request_target": {
+        "types": [
+          "opened",
+          "synchronize",
+          "reopened",
+          "ready_for_review"
+        ],
+        "branches": [
+          "main"
+        ]
+      }
+    },
+    ".github/workflows/provenance-negative.yml": {
+      "workflow_dispatch": {
+        "inputs": {
+          "request": {
+            "description": "Exact original controller request JSON",
+            "required": "true",
+            "type": "string"
+          },
+          "implementation_sha256": {
+            "description": "Separately approved implementation.lock SHA-256",
+            "required": "true",
+            "type": "string"
+          },
+          "producer_run_id": {
+            "description": "Successful provenance run at the same exact source commit",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    },
+    ".github/workflows/provenance.yml": {
+      "workflow_dispatch": {
+        "inputs": {
+          "request": {
+            "description": "Exact JSON request from the independent local controller",
+            "required": "true",
+            "type": "string"
+          },
+          "implementation_sha256": {
+            "description": "Separately approved implementation.lock SHA-256",
+            "required": "true",
+            "type": "string"
+          }
+        }
+      }
+    },
+    ".github/workflows/stage4-exits.yml": {
+      "push": {
+        "branches": [
+          "main"
+        ],
+        "paths": [
+          "results/stage4/pr-runs.json"
+        ]
+      },
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-candidate-dry-run-v2.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-candidate-dry-run.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-hosted-probe-2.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-hosted-probe.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-private-dry-run-v31.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/stage9-private-dry-run-v32.yml": {
+      "workflow_dispatch": ""
+    },
+    ".github/workflows/toolchain-inventory.yml": {
+      "workflow_dispatch": "",
+      "push": {
+        "branches": [
+          "main"
+        ],
+        "paths": [
+          ".github/workflows/toolchain-inventory.yml",
+          "toolchain/ci-bootstrap.json",
+          "toolchain/inventory_ci.py"
+        ]
+      }
+    }
+  },
+  "permissions": {},
+  "job_count": 1,
+  "resource_bounds": {
+    "cpu_seconds_per_process": 120,
+    "SAT_maxheap_MiB": 1024,
+    "SAT_stream_file_limit_bytes": 33554432,
+    "job_operational_ceiling_minutes": 15,
+    "time_limit_is_proof_acceptance": false
+  },
+  "no_sudo": true,
+  "environment_failure_exit": 78,
+  "publication": "inputs committed; workflow NOT RUN",
+  "end_to_end": false
+}

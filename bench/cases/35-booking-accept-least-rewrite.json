@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    var picked :| picked in values;\n    value := picked;\n    var rest := values - {picked};\n    if rest != {} {\n      var other := Least(rest);\n      if other < value {\n        value := other;\n      }\n    }\n    forall other | other in values\n      ensures value <= other\n    {\n      if other != picked {\n        assert other in rest;\n      }\n    }\n",
+   "op": "edit",
+   "path": "impl/Booking.dfy",
+   "replace": "    var picked :| picked in values;\n    var rest := values - {picked};\n    if rest == {} {\n      value := picked;\n      forall other | other in values\n        ensures value <= other\n      {\n        assert other !in rest;\n      }\n    } else {\n      var smallest := Least(rest);\n      value := if smallest < picked then smallest else picked;\n      forall other | other in values\n        ensures value <= other\n      {\n        if other != picked {\n          assert other in rest;\n        }\n      }\n    }\n",
+   "target": "root"
+  }
+ ],
+ "domain": "booking",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "booking",
+ "id": "booking-accept-least-rewrite",
+ "kind": "valid_alternative",
+ "order": 35,
+ "rationale": "Least rewritten with a separate singleton branch and a conditional expression.",
+ "supplied_evidence": null
+}

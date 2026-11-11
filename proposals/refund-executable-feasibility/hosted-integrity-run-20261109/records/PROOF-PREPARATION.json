@@ -1,0 +1,28 @@
+{
+  "actual_exit": 0,
+  "frozen_template_sha256": "6db12f716e14a227b5de1b6d7f58da6ba3c020dc07bb87b413a225cedfea2b42",
+  "bound_frozen_workflow_sha256": "29cebfd4c874a1d39d6a2bb4c6858499750549a102fba2ad581e7a5b7790cb6f",
+  "proposed_workflow_sha256": "1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1",
+  "proposed_workflow_bytes": 16385,
+  "proposed_driver_sha256": "2667f6d8f81e4286c04a80bf3e856b66c74ce15141d5e80c18e1fb4662d45fd8",
+  "shell_check": {
+    "argv": [
+      "/bin/bash",
+      "--noprofile",
+      "--norc",
+      "-n",
+      "/Users/mackianni/forge/results/hosted-integrity-run-20261109/attempt-0001/proposed-proof-shell.sh"
+    ],
+    "actual_exit": 0
+  },
+  "changes": [
+    "Bind the already published and verified addon commit.",
+    "Apply the same redirect refusal to transport only."
+  ],
+  "all_other_driver_code_identical": true,
+  "theorem_or_input_changes": false,
+  "published": false,
+  "HOL_executed": false,
+  "authorization": "NOT_GRANTED: current user explicitly excludes hosted HOL execution",
+  "end_to_end": false
+}

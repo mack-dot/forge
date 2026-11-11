@@ -1,0 +1,29 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "METHOD_POLICY",
+ "gate": "gate",
+ "id": "ledger-evidence-method-downgraded",
+ "kind": "adversarial_evidence",
+ "order": 33,
+ "rationale": "C3 evidence method changed from source_proof to property_tested.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "evidence",
+     {
+      "claim_id": "C3"
+     },
+     "method"
+    ],
+    "value": "property_tested"
+   }
+  ]
+ }
+}

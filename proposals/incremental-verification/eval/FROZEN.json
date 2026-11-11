@@ -1,0 +1,36 @@
+{
+ "frozen_before_any_candidate_run": true,
+ "files": {
+  "cases.json": "ceec69ca99000f1c6fb1313892895734d07239da94edbeeb3c8cb007e2da9e1f",
+  "run_eval.py": "319b65cd005e22a742745d62c2873c7922fadac562bbd52011ecf78181c6171f"
+ },
+ "case_count": 18,
+ "expected_exit_counts": {
+  "0": 6,
+  "1": 6,
+  "2": 2,
+  "3": 4
+ },
+ "runner_revisions": [
+  {
+   "run_eval.py": "80d25691620df52b4cca4dcb9b7924d3a9de33f29187c68e4abe43c10004dad7",
+   "note": "initial; PATH lacked the pinned node directory; eval-0001 aborted after 3 cases (NOT_ESTABLISHED on ledger-model)"
+  },
+  {
+   "run_eval.py": "c144256fcdee6c1e0774e070a99f8e7ed48fa3a29a5871fa1b73a9231ce278d3",
+   "note": "adds NODE_DIR to PATH; cases.json unchanged"
+  },
+  {
+   "run_eval.py": "e5c7fdcfcd3a981abeb0cb50a4cbb021599f2dab9ae5cec98646561742bba70f",
+   "note": "regen_evidence leaves no bytecode in the candidate (a committed .pyc is an uncovered change); cases.json unchanged"
+  },
+  {
+   "run_eval.py": "93454bc84959887dfe67fcfdd8cb2cc4f878cb750285c75f4872ffeda8e78485",
+   "note": "a case whose frozen edit anchor is absent (e12: the anchor line belongs to the booking witness, not the Stage 5 witness) is recorded as harness_error instead of aborting the run; cases.json unchanged"
+  },
+  {
+   "run_eval.py": "319b65cd005e22a742745d62c2873c7922fadac562bbd52011ecf78181c6171f",
+   "note": "INCIDENT: the previous runner linked the real pinned toolchain into the root, so case e17 deleted the real Dafny executable (restored from a byte-identical clone copy; pins verified). The root now gets a private APFS clone of the toolchain and delete ops refuse to pass through symlinks. cases.json unchanged."
+  }
+ ]
+}

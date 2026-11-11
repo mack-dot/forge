@@ -1,0 +1,15 @@
+{
+  "case": "resolve-raw.githubusercontent.com",
+  "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "-B",
+    "/Users/mackianni/forge/results/hosted-integrity-prep-20261108/attempt-0001/dns_diagnostic.py",
+    "raw.githubusercontent.com"
+  ],
+  "actual_exit": 1,
+  "wall_timeout": false,
+  "stdout_sha256": "108fbfda284c4fd85b3b5936fc03db2b0e11c31aff0b4dc3966a6874e0290488",
+  "stdout": "{\"name\": \"raw.githubusercontent.com\", \"operation\": \"socket.getaddrinfo\", \"success\": false, \"exception\": \"gaierror\", \"errno\": 8, \"message\": \"[Errno 8] nodename nor servname provided, or not known\"}\n",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr": ""
+}

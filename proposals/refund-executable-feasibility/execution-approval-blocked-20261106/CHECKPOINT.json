@@ -1,0 +1,32 @@
+{
+  "entry": "U325",
+  "goal_status": "blocked",
+  "blocking_condition": "Additional hosted run and scoped privileged installation-directory setup lack explicit approval",
+  "consecutive_goal_turns": 3,
+  "turn_classification": [
+    "U324: progress; authorized job completed and blocking boundary preserved",
+    "Following continuation: no progress; terminal job and missing approval confirmed",
+    "Current continuation: no progress; same boundary revalidated; goal marked blocked"
+  ],
+  "run_id": 42292059389,
+  "job_id": 128147719439,
+  "job_status": "completed",
+  "job_conclusion": "failure",
+  "prior_actual_step_exit": 78,
+  "failing_operation": "mkdir(/Users/mackianni,0700)",
+  "errno": 13,
+  "error_name": "EACCES",
+  "new_SAT": "NOT_RUN",
+  "new_remote_execution": "NOT_RUN",
+  "live_wait": false,
+  "approval_proposal": "../hosted-macos-run-20261106/NEXT-ACTION.md",
+  "proposed_workflow_sha256": "ed975f35b2016f84fcb814a4cdb81997f94eb8beb3b4d6e4fde0b74c9640d9fe",
+  "local_read_status_exits": [
+    0,
+    0,
+    0
+  ],
+  "job_API_tool_status": "success; no process exit",
+  "proof_and_assurance_claims": "Unchanged from U324",
+  "end_to_end": false
+}

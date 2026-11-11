@@ -1,0 +1,17 @@
+--- a/.github/workflows/booking-reuse.yml
++++ b/.github/workflows/booking-reuse.yml
+@@ -75,6 +75,14 @@
+             trusted/build/booking-preflight.json
+             trusted/build/security-cache/
+             trusted/build/regression-*/operation.json
++            trusted/build/regression-*/version.log
++            trusted/build/regression-*/audit-*.log
++            trusted/build/regression-*/audit-*.md*
++            trusted/build/regression-*/snapshots.log
++            trusted/build/regression-*/Snapshot.dfy
++            trusted/build/regression-*/v[01]/impl/Ledger.dfy
++            trusted/build/regression-*/v[01]/spec/LedgerSpec.dfy
++            trusted/build/regression-*/v[01]/gate/ContractBinding.dfy
+             trusted/build/regression-*/obligations/
+             trusted/build/regression-*/verify/build/obligations/
+             trusted/build/*.json

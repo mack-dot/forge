@@ -1,0 +1,44 @@
+{
+  "actual_exit": 0,
+  "entry": "U315",
+  "raw_files": 256,
+  "source_snapshots": 9,
+  "append_only": true,
+  "protected_files_unchanged": 50,
+  "read_only_git_commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/forge-native-audit-review-20261104",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout": "dde26bed545bb1f5fc87efe0410ddcace239e531\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/forge-native-audit-review-20261104",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--",
+        "spec",
+        "spec.lock",
+        "policy",
+        "gate",
+        "FORGE_MISSION.md"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "end_to_end": false,
+  "packet_files": 261,
+  "packet_bytes": 1208415
+}

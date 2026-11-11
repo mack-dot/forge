@@ -1,0 +1,20 @@
+{
+  "scope": "Record readback and exact artifact identity; no formal runtime proof or independent environment claim.",
+  "diagnostic_actual_exit": 1,
+  "standard_disassembly_actual_exit": 0,
+  "host_log_actual_exit": 64,
+  "scratch_read_write": "PASS",
+  "CNF_variables": 1,
+  "CNF_clauses": 2,
+  "failed_operation": "OS.FileSys.tmpName / pinned mkstemp failure branch",
+  "errno": "EPERM",
+  "exception_location_raw": "basicio.cpp:1025:1025-0:0",
+  "compiled_temporary_template": "/var/tmp//MLTEMPXXXXXX",
+  "original_SAT_causation": "NOT_ESTABLISHED",
+  "permission_issuer": "NOT_ESTABLISHED; managed filesystem sandbox is leading inference",
+  "all_input_bindings_unchanged": 86,
+  "dynamic_loader_override_names_present": [],
+  "replacement_context": "NOT_SUPPLIED",
+  "unchanged_SAT": "NOT_RUN",
+  "end_to_end": false
+}

@@ -1,0 +1,5 @@
+/Users/mackianni/forge/results/refund-source-binding-2026-11-04/attempt-0002/hol-0001/proof.sml:11: error: Type error in function application.
+   Function: pairSyntax.dest_pair : term -> term * term
+   Argument: (sumSyntax.dest_inr (rhs (concl parse_th))) : term * hol_type
+   Reason: Can't unify term to term * hol_type (Incompatible types)
+Found near pairSyntax.dest_pair (sumSyntax.dest_inr (rhs (concl parse_th)))

@@ -1,0 +1,123 @@
+name: Forge proof gate
+
+"on":
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  verify:
+    if: github.event.pull_request.base.repo.full_name == github.repository
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    outputs:
+      report_ready: ${{ steps.check.outputs.report_ready }}
+    steps:
+      - name: Read the trusted base revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          persist-credentials: false
+      - name: Read the proposed revision as data
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+          submodules: false
+          lfs: false
+      - name: Select the recorded Python version
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.10.11'
+          check-latest: false
+      - name: Install and authenticate the recorded toolchain bytes
+        working-directory: trusted
+        run: |
+          python -m venv .toolchain/ci-python
+          .toolchain/ci-python/bin/python -m pip install --disable-pip-version-check pip==25.3
+          .toolchain/ci-python/bin/python toolchain/install_ci.py
+      - name: Install the recorded Node and package bytes
+        working-directory: trusted
+        shell: bash
+        run: |
+          set -euo pipefail
+          forge_node_dir=$(mktemp -d "$RUNNER_TEMP/forge-node.XXXXXX")
+          curl --fail --location --silent --show-error --output "$forge_node_dir/node.tar.xz" https://nodejs.org/dist/v24.3.0/node-v24.3.0-linux-x64.tar.xz
+          printf '%s  %s\n' 'a962afadaa8b94bae8bff87ddd6c11f7aae621032424ef05c0a4fe2537fa4de0' "$forge_node_dir/node.tar.xz" | sha256sum --check --strict
+          mkdir "$forge_node_dir/runtime"
+          tar -xJf "$forge_node_dir/node.tar.xz" -C "$forge_node_dir/runtime" --strip-components=1
+          printf '%s  %s\n' '11ee468e2ac16c11dde59c6897b341968442430439733fdce6ff6f4da8bca38f' "$forge_node_dir/runtime/bin/node" | sha256sum --check --strict
+          export PATH="$forge_node_dir/runtime/bin:$PATH"
+          printf '%s\n' "$forge_node_dir/runtime/bin" >> "$GITHUB_PATH"
+          test "$(npm --version)" = '11.4.2'
+          npm ci --ignore-scripts --no-audit --no-fund
+          .toolchain/ci-python/bin/python scripts/javascript_env.py
+      - name: Check exact PR revisions with trusted code
+        id: check
+        working-directory: trusted
+        run: .toolchain/ci-python/bin/python gate/pr_check.py --candidate ../candidate
+      - name: Retain replay observations
+        if: always() && steps.check.outputs.report_ready == 'true'
+        working-directory: trusted
+        shell: bash
+        run: |
+          set -euo pipefail
+          .toolchain/ci-python/bin/python - <<'PYOBS'
+          import json
+          import pathlib
+          import shutil
+          receipt = json.loads(pathlib.Path('build/pr/receipt.json').read_text())
+          if receipt['exit_code'] == 0:
+              paths = list(pathlib.Path('build').glob('change-run-*/operation.json'))
+              if len(paths) != 1:
+                  raise RuntimeError('Expected one replay operation in this fresh runner')
+              operation = json.loads(paths[0].read_text())
+              if operation['exit_code'] != 0 or not operation['coverage']['covered']:
+                  raise RuntimeError('Replay observations do not establish coverage')
+              destination = pathlib.Path('build/pr/observations')
+              destination.mkdir(exist_ok=False)
+              shutil.copyfile(paths[0], destination / 'replay-operation.json')
+          PYOBS
+      - name: Save the real checker receipt
+        if: always() && steps.check.outputs.report_ready == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: forge-proof-report
+          path: trusted/build/pr/
+          if-no-files-found: error
+
+  report:
+    needs: verify
+    if: always() && needs.verify.outputs.report_ready == 'true'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+      statuses: write
+    steps:
+      - name: Read only trusted reporting code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Select the reporting Python version
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.10.11'
+          check-latest: false
+      - name: Read the report as data
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: forge-proof-report
+          path: build/report
+      - name: Publish claims and a status for the checked revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python gate/post_pr_report.py

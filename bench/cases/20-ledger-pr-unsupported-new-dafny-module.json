@@ -1,0 +1,20 @@
+{
+ "changes": [
+  {
+   "content": "module Extra {\n  method Half(x: int) returns (y: int)\n    ensures y * 2 == x\n  {\n    y := x / 2;\n  }\n}\n",
+   "op": "write",
+   "path": "impl/Extra.dfy",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "unsupported",
+ "expected_exit": null,
+ "expected_reason_prefix": null,
+ "gate": "incremental",
+ "id": "ledger-pr-unsupported-new-dafny-module",
+ "kind": "unsupported",
+ "order": 20,
+ "rationale": "A new Dafny module with a false postcondition (odd inputs) and no claim.",
+ "supplied_evidence": null
+}

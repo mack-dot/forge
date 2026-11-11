@@ -1,0 +1,11 @@
+--- a/impl/Booking.dfy
++++ b/impl/Booking.dfy
+@@ -15,7 +15,7 @@
+     var rest := values - {picked};
+     if rest != {} {
+       var other := Least(rest);
+-      if other < value {
++      if other <= value {
+         value := other;
+       }
+     }

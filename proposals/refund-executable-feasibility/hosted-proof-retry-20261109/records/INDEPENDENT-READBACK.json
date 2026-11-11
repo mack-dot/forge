@@ -1,0 +1,82 @@
+{
+  "status": "HOL_PARENT_LOAD_ENOENT",
+  "actual_validation_exit": 0,
+  "run_id": 42661020831,
+  "job_id": 129430257438,
+  "attempt": 2,
+  "HOL_process_exit": 1,
+  "workflow_step_exit": 1,
+  "wall_timeout": false,
+  "candidate_theorem_reached": false,
+  "conditional_cases": "NOT_RUN",
+  "theorem_exports": {},
+  "new_dependency_closure": "NOT_PRODUCED",
+  "workflow_sha256": "1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1",
+  "log_sha256": "7fea30873cceeb1b199bfa468ccb4dde56ad2a4f884b95ef902241185c7d7cca",
+  "statement_sha256": "289b8be8c848dc3debddbac5184e613e2c1e127c56dddd574e5b43087cc8c29a",
+  "environment": {
+    "architecture": "arm64",
+    "end_to_end": false,
+    "image_os": "macos15",
+    "image_version": "20261104.0514.1",
+    "isolation": "GitHub fresh VM and documented OS isolation are trusted; no independent provider attestation",
+    "operation": "identity",
+    "python_sha256": "5c5950c62eee5fd227a67e4bdfcde81c9add59799bba0949635f3d5ba9661c26",
+    "python_version": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+    "release": "24.6.0",
+    "run_id": "42661020831",
+    "source_sha": "f1e4a080fd4c33aa1072c93fe4757e16805ab484",
+    "system": "Darwin",
+    "uid": 501,
+    "workflow_sha": "f1e4a080fd4c33aa1072c93fe4757e16805ab484"
+  },
+  "resources": {
+    "end_to_end": false,
+    "full_proof_resource_adequacy": "NOT_ESTABLISHED",
+    "memory_bytes": 7516192768,
+    "operation": "resources",
+    "temporary_disk_free_bytes": 49431048192
+  },
+  "provider_timing": {
+    "billable": {
+      "MACOS": {
+        "total_ms": 0,
+        "jobs": 2,
+        "job_runs": [
+          {
+            "job_id": 129312292711,
+            "duration_ms": 0
+          },
+          {
+            "job_id": 129430257438,
+            "duration_ms": 0
+          }
+        ]
+      }
+    },
+    "run_duration_ms": 343000
+  },
+  "step_seconds": 31.0,
+  "invocation_to_result_log_interval_seconds": 17.468184,
+  "actual_child_cpu_seconds": null,
+  "actual_peak_RSS": null,
+  "download_bytes": 26196042,
+  "inputs_before_and_after": 1493,
+  "missing_path": "/Users/runner/work/_temp/forge-m1-cf-7068upwz/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/.hol/objs/.hol/objs/forge_refundReadBoundaryTheory.sig",
+  "packaged_parent": {
+    "bytes": 219,
+    "historical_U328_binding": true,
+    "mode": 256,
+    "path": "results/refund-native-audit-2026-11-04/attempt-0010/model-0007/.hol/objs/forge_refundReadBoundaryTheory.sig",
+    "resolved_source": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/.hol/objs/forge_refundReadBoundaryTheory.sig",
+    "roles": [
+      "unchanged-local-parent",
+      "cached-proof-ancestry"
+    ],
+    "sha256": "98b325ea103bbb9dfcb071b88248755bd09d036eb7f03baaa73d702015f7daf1",
+    "source": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/.hol/objs/forge_refundReadBoundaryTheory.sig"
+  },
+  "retry_calls": 1,
+  "additional_attempt_authorized": false,
+  "end_to_end": false
+}

@@ -1,0 +1,16 @@
+--- U340/frozen-driver.py
++++ U341/driver.py
+@@ -59,11 +59,11 @@
+         s+='val _ = print "RELOCATION_INSPECTION_COMPLETE\\n";\nval _ = OS.Process.exit OS.Process.success;\n'
+         return s
+     for path,name in PARENTS:
+-        for ext in ['.sig','.sml']:s+='val _ = QUse.use '+q(root/path/'.hol/objs'/(name+'Theory'+ext))+';\n'
++        for ext in ['.sig','.sml']:s+='val _ = QUse.use '+q(root/path/(name+'Theory'+ext))+';\n'
+     s+='val _ = checked "cf-library-load" (fn () => load "cfLib");\nval _ = print "CF_LIBRARY_LOADED\\n";\n'
+     if mode in ('proof','repeat'):target=root/CANDIDATE
+     else:
+-        for ext in ['.sig','.sml']:s+='val _ = QUse.use '+q(root/'outputs/proof/.hol/objs'/('forge_refundGenericReadErrorTheory'+ext))+';\n'
++        for ext in ['.sig','.sml']:s+='val _ = QUse.use '+q(root/'outputs/proof'/('forge_refundGenericReadErrorTheory'+ext))+';\n'
+         target=root/PREP_REL/({'import':'import.sml','wrong-exception':'wrong-exception.sml','omitted-event':'omitted-event.sml'}[mode])
+     s+='val _ = checked "unchanged-source" (fn () => QUse.use '+q(target)+');\n'
+     s+='val _ = OS.Process.exit OS.Process.failure;\n'

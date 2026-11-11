@@ -1,0 +1,20 @@
+{
+  "entry": "U323",
+  "initial_check": {
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 10, in <module>\nAssertionError: ROADMAP.md\n",
+    "failed_assertion": "root ROADMAP.md bytes == worktree ROADMAP.md bytes",
+    "cause": "Invalid comparison of documents with distinct retained histories"
+  },
+  "corrected_check": {
+    "actual_exit": 0,
+    "packet_bindings_checked": 10,
+    "tracked_documents_checked": 6,
+    "both_journal_prefixes_unchanged": true,
+    "U322_suffixes_match": true
+  },
+  "publication": "NOT_RUN",
+  "preflight": "NOT_RUN",
+  "end_to_end": false
+}

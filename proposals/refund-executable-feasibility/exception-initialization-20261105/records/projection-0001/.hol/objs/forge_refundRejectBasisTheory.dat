@@ -1,0 +1,32 @@
+(theory
+ ("forge_refundRejectBasis"
+  ("forge_refundRejectSemantics" .
+   "4f25430514adaa1b05187a9a9001b9f78d9eedce"))
+ (core-data
+  (tables
+   (string-table "list" "mlstring" "fsFFI" "IO_fs" "pair" "," "min" "fun"
+    "prod" "=" "bool" "option" "cfFFIType" "ffi" "==>" "finite_map"
+    "FLOOKUP" "fmap" "FST" "cfHeapsBase" "ffi_result" "fcp" "cart" "bit0"
+    "one" "IN" "LIST_TO_SET" "MAP" "SND" "SOME" "basis_ffi" "basis_proj1"
+    "encode" "fs_ffi_part" "refund_basis_fs_projection"
+    "forge_refundRejectBasis" "clFFI" "combin" "numeral" "pred_set"
+    "runtimeFFI" "string")
+   (id-table (0 . 0) (1 . 1) (2 . 3) (4 . 5) (6 . 7) (4 . 8) (6 . 9)
+    (6 . 10) (11 . 11) (12 . 13) (6 . 14) (15 . 16) (15 . 17) (4 . 18)
+    (19 . 20) (21 . 22) (21 . 23) (24 . 24) (10 . 25) (0 . 26) (0 . 27)
+    (4 . 28) (11 . 29) (30 . 31) (2 . 32) (2 . 33))
+   (type-table (1) (0 0) (2) (5 1 2) (4 2 3) (4 1 4) (7) (9) (8 7) (4 8 6)
+    (4 8 9) (4 6 6) (4 6 11) (4 0 8) (12 0 7) (4 14 13) (14 2) (8 16)
+    (4 2 17) (17) (16 19) (16 20) (16 21) (15 6 22) (0 23) (4 24 18)
+    (4 24 25) (5 0 26) (4 27 0) (4 0 6) (4 29 6) (4 0 30) (4 1 29) (0 27)
+    (4 33 1) (4 28 34) (8 2) (4 7 36) (5 37 33) (4 2 7) (5 39 38) (4 40 38)
+    (4 38 33) (4 7 8) (4 3 14))
+   (term-table ("cl" 1) ("fs" 2) ("n" 0) (3 5) (6 10) (10 12) (11 15)
+    (13 28) (18 31) (19 32) (20 35) (21 41) (21 42) (22 43) (23 44) (24 39)
+    (25 40))) exports (nil) (nil)
+  ((34
+    (((35 0) (30 7) (10 14 25 50 51 54 56 58 63 105 128 154) (19 1 106)
+      (36 7 9) (37 13) (15 80 167) (2 113) (0 42 45 47 50 747) (1 257)
+      (38 3 6 7) (4 8 9 22) (39 18 121) (40 2 3 5) (41 9 35)) "DISK_THM")
+    (2 0) ("%2%7%16U11U12B10U9B8%0%1B3U14%2B6%1U15U13B4B5"))))
+ (incorporate (incorporate-types) incorporate-consts) (loadable-thydata))

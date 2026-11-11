@@ -1,0 +1,29 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "REPRODUCTION_MISMATCH",
+ "gate": "gate",
+ "id": "ledger-evidence-tool-version-edited",
+ "kind": "adversarial_evidence",
+ "order": 29,
+ "rationale": "C1 tool_version edited; still schema- and policy-valid, so only the fresh rerun can catch it.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "evidence",
+     {
+      "claim_id": "C1"
+     },
+     "tool_version"
+    ],
+    "value": "4.11.1"
+   }
+  ]
+ }
+}

@@ -1,0 +1,53 @@
+{
+  "actual_SAT_exit": 0,
+  "actual_exit": 0,
+  "cost": {
+    "billable": {
+      "MACOS": {
+        "job_runs": [
+          {
+            "duration_ms": 0,
+            "job_id": 128488158467
+          }
+        ],
+        "jobs": 1,
+        "total_ms": 0
+      }
+    },
+    "run_duration_ms": 47000
+  },
+  "end_to_end": false,
+  "fallback_classification": "Published unchanged SAT_PROVE/invoke_solver contains DPLL_TAUT fallback; successful theorem is not native MiniSat execution evidence",
+  "input_identity_checks": 36,
+  "job_id": 128488158467,
+  "loaded_saved_states": [
+    "/Users/runner/work/_temp/forge-m1-pnsscbe1/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state0",
+    "/Users/runner/work/_temp/forge-m1-pnsscbe1/.toolchain/experiments/refund-cakeml-20261104/HOL/src/num/termination/numheap",
+    "/Users/runner/work/_temp/forge-m1-pnsscbe1/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol.state",
+    "/Users/runner/work/_temp/forge-m1-pnsscbe1/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/l3-heap",
+    "/Users/runner/work/_temp/forge-m1-pnsscbe1/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap"
+  ],
+  "physical_ffiread_correspondence": "NOT_ESTABLISHED",
+  "protected_paths_plus_frozen_mission_matched": 51,
+  "raw_log_sha256": "909cc3cdfe9daae052dcab8103e5ce63a5bb183979f91a40b77976172bec68cc",
+  "remaining_trust": [
+    "HOL logic/kernel and previously built pinned states",
+    "PolyML and host OS/loader",
+    "GitHub VM/control plane; no independently controlled full-chain replay"
+  ],
+  "run_attempt": 1,
+  "run_id": 42400884739,
+  "solver_binding": "unchanged; original absolute native MiniSat path is not executable",
+  "source_inputs_unchanged": 18,
+  "streams": {
+    "stderr": {
+      "bytes": 96531,
+      "sha256": "c99d288e5bd61647b47a432efc5e5047ecca5c38597d9213e48ec5e03530c60b"
+    },
+    "stdout": {
+      "bytes": 1061,
+      "sha256": "bcce9389ee783189c6d405c0b6d69589ce71a63c6cc7ab8be988d80822e1d6dc"
+    }
+  },
+  "workflow_sha256": "65e3addb289c29650fd7c84b2d3894c8d468a351a422778e9a1c9a9ec6a87027"
+}

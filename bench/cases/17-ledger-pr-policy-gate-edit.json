@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    if code == 4:\n        raise Rejected('VERIFICATION_REJECTED",
+   "op": "edit",
+   "path": "gate/incremental.py",
+   "replace": "    if code == 4 and False:\n        raise Rejected('VERIFICATION_REJECTED",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "UNAPPROVED_PROTECTED_CHANGE",
+ "gate": "incremental",
+ "id": "ledger-pr-policy-gate-edit",
+ "kind": "policy",
+ "order": 17,
+ "rationale": "The PR edits the gate so that Dafny exit 4 would be accepted.",
+ "supplied_evidence": null
+}

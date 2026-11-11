@@ -1,0 +1,55 @@
+<<HOL message: Created theory "forge_refundSourceBinding">>
+Saved theorem _______ "source_decode"
+Saved theorem _______ "source_signature"
+Saved theorem _______ "source_full_result"
+Saved theorem _______ "source_postconditions"
+Saved theorem _______ "mapped_operators"
+CHECKED source_decode ⊢ ∃se.
+    parse source_export_text = INR (se,"") ∧
+    to_program se = INR source_program
+CHECKED source_signature ⊢ ∃decrs.
+    source_program =
+    Program
+      [Method «AssessFlat»
+         [(«chargeId»,StrT); («requestId»,StrT); («original»,IntT);
+          («remaining»,IntT); («enabled»,BoolT); («requestOpen»,BoolT);
+          («candidate»,BoolT); («amount»,IntT); («reason»,StrT)] []
+         source_ensures [] decrs
+         [(«authorized»,BoolT); («outputAmount»,IntT); («outputReason»,StrT);
+          («outputCharge»,StrT); («outputRequest»,StrT);
+          («intentCount»,IntT)] [] source_body]
+CHECKED source_full_result ⊢ let
+    initial =
+      source_initial h charge request original remaining enabled opened
+        candidate amount reason;
+    result = evaluate_stmt initial env source_body;
+    final = FST result;
+    ok =
+      eligible charge request original remaining enabled opened candidate
+        amount reason
+  in
+    SND result = Rstop Sret ∧ final.heap = h ∧
+    read_local final.locals «authorized» = SOME (BoolV ok) ∧
+    read_local final.locals «outputAmount» =
+    SOME (IntV (if ok then amount else 0)) ∧
+    read_local final.locals «outputReason» =
+    SOME (StrV (if ok then reason else «»)) ∧
+    read_local final.locals «outputCharge» =
+    SOME (StrV (if ok then charge else «»)) ∧
+    read_local final.locals «outputRequest» =
+    SOME (StrV (if ok then request else «»)) ∧
+    read_local final.locals «intentCount» = SOME (IntV (if ok then 1 else 0))
+CHECKED source_postconditions ⊢ let
+    initial =
+      source_initial h charge request original remaining enabled opened
+        candidate amount reason;
+    final = FST (evaluate_stmt initial env source_body)
+  in
+    evaluate_exps final env source_ensures =
+    (final,Rval [BoolV T; BoolV T; BoolV T])
+CHECKED mapped_operators ⊢ do_bop Eq (BoolV a) (BoolV b) = SOME (BoolV (a ⇔ b)) ∧
+  do_bop Eq (StrV s) (StrV t) = SOME (BoolV (s = t)) ∧
+  do_bop Neq (StrV s) (StrV t) = SOME (BoolV (s ≠ t))
+Exporting theory "forge_refundSourceBinding" ... done.
+Theory "forge_refundSourceBinding" took 2m49s to build
+SOURCE_BINDING_COMPLETE

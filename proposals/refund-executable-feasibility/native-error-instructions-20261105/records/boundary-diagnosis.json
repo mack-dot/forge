@@ -1,0 +1,15 @@
+{
+  "actual_dependency_exit": 1,
+  "standard_HOL_query": "HolSatLib.SAT_PROVE (probe OR NOT probe)",
+  "exact_error": "SysErr (\"Operation not permitted\", SOME EPERM)",
+  "failure_location_known": "During standard SAT_PROVE call; no instruction theorem returned",
+  "denied_syscall_or_path": "NOT_ESTABLISHED",
+  "no_further_retry": true,
+  "no_evaluator_or_dependency_edits": true,
+  "no_alternate_solver_or_temp_path": true,
+  "no_sandbox_change": true,
+  "no_native_launch": true,
+  "not_automatic_approval_review_rejection": true,
+  "next_check": "Run the same standard HOL dependency diagnostic only in an explicitly authorized context where the underlying operation is permitted. Preserve and identify the failed syscall/path there before any toolchain change.",
+  "end_to_end": false
+}

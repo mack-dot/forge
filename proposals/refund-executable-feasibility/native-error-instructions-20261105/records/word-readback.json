@@ -1,0 +1,18 @@
+{
+  "actual_exit": 0,
+  "standard_disassembler_output_sha256": "ca6460d09f631403ba7d9c308e7cb9a56a3b802806b5c55209fc18e7f464c47f",
+  "builds": [
+    {
+      "build": "native-build-0001",
+      "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "raw_words_checked": 28
+    },
+    {
+      "build": "native-repeat-0001",
+      "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "raw_words_checked": 28
+    }
+  ],
+  "scope": "Independent byte readback of each raw disassembler word; no instruction decoding or physical execution proof.",
+  "end_to_end": false
+}

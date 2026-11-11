@@ -278,25 +278,25 @@ Do not equate operational progress with an increase in formally established corr
 
 First produce:
 
-**1. Current-state audit**
+**1. Current-state audit**  
 What Forge actually proves and does today, with concrete evidence references.
 
-**2. Capability-gap analysis**
+**2. Capability-gap analysis**  
 Every major missing capability between the current foundation and autonomous verified software engineering.
 
-**3. Target architecture**
+**3. Target architecture**  
 Mermaid diagrams, components, trust boundaries, evidence flows, deployment controls, and technical choices.
 
-**4. Prioritized milestone roadmap**
+**4. Prioritized milestone roadmap**  
 Dependencies, implementation scope, required research, adversarial controls, acceptance criteria, and explicit authorization boundaries.
 
-**5. Next-action plan**
+**5. Next-action plan**  
 The five highest-leverage next actions, ordered by what unblocks the most subsequent work. Distinguish ready-to-execute work from human approval requirements.
 
-**6. Benchmark plan**
+**6. Benchmark plan**  
 How we will demonstrate usefulness and superiority over simpler alternatives.
 
-**7. Risk and complexity assessment**
+**7. Risk and complexity assessment**  
 Top correctness risks, trusted computing base, source-to-runtime gaps, operating cost, maintenance burden, and opportunities to simplify.
 
 ## Final directive

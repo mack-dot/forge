@@ -1,0 +1,23 @@
+Boundary.dfy(23,8): Error: assertion might not hold
+   |
+23 |         assert Codes(s)[i] == s[i] as int;
+   |         ^^^^^^
+
+Boundary.dfy(24,8): Error: assertion might not hold
+   |
+24 |         assert Codes(t)[i] == t[i] as int;
+   |         ^^^^^^
+
+Boundary.dfy(36,2): Error: a postcondition could not be proved on this return path
+   |
+36 |   {
+   |   ^
+
+Boundary.dfy(32,32): Related location: this is the postcondition that could not be proved
+   |
+32 |     ensures Codes(U.Encoded(s)) ==
+   |                                 ^^
+
+
+Dafny program verifier finished with 1456 verified, 3 errors
+Results File: /Users/mackianni/forge/results/refund-byte-boundary-2026-11-04/attempt-0001/dafny-lossy/inputs/verification.csv

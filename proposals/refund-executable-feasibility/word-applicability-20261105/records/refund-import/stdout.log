@@ -1,0 +1,16 @@
+Proof of 
+
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇔
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+
+failed.

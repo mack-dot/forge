@@ -1,7 +1,8 @@
 # Stage 8: verified boundary around untrusted AI
 
-Stage 8 is DONE. All three real EXIT commands passed. Stage 9 is CURRENT;
-its implementation has not started. `end_to_end=false`.
+Stage 8 is DONE. All three real EXIT commands passed. This record was written
+when Stage 9 was CURRENT and not started; see [ROADMAP.md](../ROADMAP.md) for
+the current stage. `end_to_end=false`.
 
 | Command | Latest actual exit | Required result |
 | --- | --- | --- |

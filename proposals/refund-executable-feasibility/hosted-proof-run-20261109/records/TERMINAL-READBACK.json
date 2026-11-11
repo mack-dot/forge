@@ -1,0 +1,73 @@
+{
+  "status": "HOSTED_RUNNER_NOT_ASSIGNED",
+  "run_id": 42661020831,
+  "job_id": 129312292711,
+  "run_conclusion": "failure",
+  "job_conclusion": "cancelled",
+  "attempt": 1,
+  "workflow_commit": "f1e4a080fd4c33aa1072c93fe4757e16805ab484",
+  "workflow_sha256": "1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1",
+  "runner_id": 0,
+  "steps": [],
+  "logs": "UNAVAILABLE: 404 BlobNotFound",
+  "artifacts": [],
+  "proof_actual_exit": null,
+  "repeat_actual_exit": null,
+  "import_actual_exit": null,
+  "negative_control_actual_exits": null,
+  "theorem_statement_output": null,
+  "dependency_closure_output": null,
+  "runner_image": "NOT_OBSERVED; required 20261104.0514.1 guard did not run",
+  "timing": {
+    "billable": {
+      "MACOS": {
+        "total_ms": 0,
+        "jobs": 1,
+        "job_runs": [
+          {
+            "job_id": 129312292711,
+            "duration_ms": 0
+          }
+        ]
+      }
+    },
+    "run_duration_ms": 902000
+  },
+  "proof_cpu_seconds": null,
+  "proof_peak_RSS": null,
+  "resource_limit_execution": "NOT_OBSERVED: no runner or steps",
+  "scheduler_cause": "UNKNOWN: metadata establishes absence of runner, not the underlying allocation cause",
+  "prior_packets": [
+    {
+      "packet": "integrity-preflight-20261108",
+      "members": 64,
+      "manifest_sha256": "897b19891950a6d1e8890bb4ac6a877f5ae37a8f95d649a51293b10f9cacd908"
+    },
+    {
+      "packet": "integrity-preflight-20261109",
+      "members": 57,
+      "manifest_sha256": "bb69a47ebd93d1cda64489d6ce3a4472e509b5bf8c5e13dc463a71f17044910c"
+    },
+    {
+      "packet": "hosted-integrity-run-20261109",
+      "members": 60,
+      "manifest_sha256": "d61cd1c64caf7cb4641aec2592431533ca7db663fbc8b77eea554cffbd7ac793"
+    },
+    {
+      "packet": "integrity-confirmation-20261109",
+      "members": 25,
+      "manifest_sha256": "d064becd242688272bea3bb5a18a17918bfbd4e36f32d665cc76b065b6975d1e"
+    },
+    {
+      "packet": "proof-approval-review-20261109",
+      "members": 11,
+      "manifest_sha256": "be738aa75ea8549114cc6a21e7ec50a8872f0a744f9b8466e52f5206ab3168e7"
+    }
+  ],
+  "protected_paths": 50,
+  "mission_matches": true,
+  "HOL_executed": false,
+  "new_payload_transfer": "NOT_RUN in this job; U335/U336 integrity retained",
+  "retry_authorized": false,
+  "end_to_end": false
+}

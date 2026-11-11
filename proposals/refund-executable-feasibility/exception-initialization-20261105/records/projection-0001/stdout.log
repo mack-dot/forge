@@ -1,0 +1,11 @@
+<<HOL message: Created theory "forge_refundRejectBasis">>
+Saved theorem _______ "refund_basis_fs_projection"
+CHECKED_THEOREM refund_basis_fs_projection
+⊢ MEM n (MAP FST (SND (SND fs_ffi_part))) ⇒
+  FLOOKUP (basis_proj1 (cl,fs)) n = SOME (encode fs)
+CHECKED_ORACLES DISK_THM
+CHECKED_HYPOTHESES 0
+CHECKED_TAGGED_AXIOMS 0
+Exporting theory "forge_refundRejectBasis" ... done.
+Theory "forge_refundRejectBasis" took 2.5s to build
+EXCEPTION_BASIS_COMPLETE

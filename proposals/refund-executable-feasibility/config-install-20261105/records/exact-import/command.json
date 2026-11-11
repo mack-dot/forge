@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+    "run",
+    "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/preload.sml",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/closure-parent/forge_refundClosureInstallTheory.sig",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/closure-parent/forge_refundClosureInstallTheory.sml",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/config-0001/forge_refundConfigInstallTheory.sig",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/config-0001/forge_refundConfigInstallTheory.sml",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/space-0002/forge_installSpaceBarrierTheory.sig",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/space-0002/forge_installSpaceBarrierTheory.sml",
+    "/Users/mackianni/forge/results/refund-config-install-2026-11-05/attempt-0001/exact-import/audit.sml"
+  ],
+  "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+  "source_sha256": "c2cfa56848d89f2a6e11db67051836c1d99c79838db074ce67e306d852073be3",
+  "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+  "imported_objects": {
+    "closure-parent": {
+      ".hol/objs/forge_refundClosureInstallTheory.sig": "9d05e2f650d1d0fd070c529430c731239085bf0abc252fe662d01879e5b50896",
+      ".hol/objs/forge_refundClosureInstallTheory.dat": "ec471e2565b31a90c7bb288904c83946da1ef6b5b7b90f54ed072b7e72f4fa8f",
+      ".hol/objs/forge_refundClosureInstallTheory.sml": "984764d9016fe764fd114297f98fef66e45ac0d62ebb93a58f640d3ae52c78cf",
+      ".hol/docs/forge_refundClosureInstallTheory.html": "f213a4b053528df0889adeac779bc758c735f994913270e2f6de9eb3f1a05c6d"
+    },
+    "config-0001": {
+      ".hol/objs/forge_refundConfigInstallTheory.sml": "3d4d565fb496cb0d1134b88c32683e1ad409e8ed978eba2a407f904276b1931a",
+      ".hol/objs/forge_refundConfigInstallTheory.sig": "6451897c5780441966d07300364285c353b02c07087b67ba9a7f5b5e00d04d07",
+      ".hol/objs/forge_refundConfigInstallTheory.dat": "372507feeaa971a9dd54329490306c42adbeb8e49111e51092099a2542cef146",
+      ".hol/docs/forge_refundConfigInstallTheory.html": "b4744fe2261b206a221eff844d53e81ef9b28771ec3e7b93db219a271b0fca3f"
+    },
+    "space-0002": {
+      ".hol/objs/forge_installSpaceBarrierTheory.sig": "09dd81eb525b7ffaa66ba7295fe2be3877d8fe86bdeed8cbdce7617aab351bb2",
+      ".hol/objs/forge_installSpaceBarrierTheory.dat": "af08fc17c93472d6b53b81b7efb0216ebda89128a54e505295131d4f5fff6560",
+      ".hol/objs/forge_installSpaceBarrierTheory.sml": "2783af4a0503877be5a101cfd4661cf0d30bb8054b8537ddc1f139b9c3913c29",
+      ".hol/docs/forge_installSpaceBarrierTheory.html": "299e8e028a4e7a21ce98c174ee9adbe2d353bae2460a019990c6b4c4985bc631"
+    }
+  },
+  "actual_exit": 1,
+  "end_to_end": false,
+  "cpu_seconds_per_process": 3600,
+  "scope": "Fresh same-host import, not independent full-chain replay or authenticated production.",
+  "wall_seconds": 101.59955162499682,
+  "import_complete": false
+}

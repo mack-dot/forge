@@ -1,0 +1,29 @@
+{
+ "changes": [],
+ "domain": "booking",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "MISSING_EVIDENCE",
+ "gate": "booking",
+ "id": "booking-evidence-claim-failed",
+ "kind": "adversarial_evidence",
+ "order": 42,
+ "rationale": "B3 evidence result changed to failed.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "booking-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "evidence",
+     {
+      "claim_id": "B3"
+     },
+     "result"
+    ],
+    "value": "failed"
+   }
+  ]
+ }
+}

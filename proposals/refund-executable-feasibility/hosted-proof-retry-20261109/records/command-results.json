@@ -1,0 +1,54 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-retry-20261109/records/preflight.py"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-retry-20261109/records/read_streams.py"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-retry-20261109/records/validate_evidence.py"
+      ],
+      "actual_exit": 1,
+      "source": "validate_evidence_initial.py"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-retry-20261109/records/validate_evidence.py"
+      ],
+      "actual_exit": 0,
+      "source": "validate_evidence.py"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/hosted-proof-retry-20261109/records/finalize.py"
+      ],
+      "actual_exit": 0
+    }
+  ],
+  "hosted_HOL_process_exit": 1,
+  "hosted_step_exit": 1,
+  "candidate_theorem_reached": false,
+  "end_to_end": false
+}

@@ -1,8 +1,18 @@
 # Stage 9 signing preparation audit
 
+> **Historical record.** This page describes the receipt validator before the
+> receipt repair (PR #32, merged at edd9f9d9; see U219-U221 in `unsure.md`).
+> The stage statement, the listed gaps and the expected exit code 1 apply to
+> the audited revision only. The current `gate/provenance/release.py` contains
+> added file-presence, dependency-digest and ELF-binding checks. This note does
+> not re-run the audit; the present exit code of
+> `scripts/audit_stage9_receipts.py` is not recorded here. It does not claim
+> that all listed gaps are closed. See `ROADMAP.md` for the current state.
+
 The exact 11 approved additions are installed. **Complete independent receipt
 and artifact validation is not confirmed.** A local audit found three inputs
-that the real receipt validator did not reject. Stage 9 remains CURRENT.
+that the real receipt validator did not reject. Stage 9 was CURRENT at the time
+of this audit; see [ROADMAP.md](../ROADMAP.md) for the current stage.
 `end_to_end=false`.
 
 This audit used only file inspection, Python syntax checks, identity checks and

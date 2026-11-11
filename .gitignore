@@ -4,7 +4,11 @@ __pycache__/
 *.pyc
 .DS_Store
 build/
+# Proposal build inputs are reviewable evidence; only proposals/<name>/build/ is re-included.
+!/proposals/*/build/
 TestResults/
+# Holmake machine-local state (root only; nested .hol/ in evidence records stays visible)
+/.hol/
 *.expect
 # Full Stage 7 records remain in the lossless, indexed public tar/xz archives.
 results/stage7/**/tracked-sha256.json

@@ -1,0 +1,108 @@
+<<HOL message: Created theory "forge_refundWordPremises">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWordPremises)>>
+Saved theorem _______ "refund_data_nonfailure"
+EXACT_DATA_NONFAILURE_READY
+MATCH_PREMISE Fail ≠
+semantics (basis_ffi ext cl fs) (fromAList prog) co cc po zero_limits frames
+  start
+WORD_VAR start::num
+WORD_VAR frames::num sptree$num_map
+WORD_VAR po::num -> num -> bool
+WORD_VAR cc::'word_conf ->
+(num # num # dataLang$prog # metadata) list ->
+(mlstring # word64 list # 'word_conf) option
+WORD_VAR co::num -> 'word_conf # (num # num # dataLang$prog # metadata) list
+WORD_VAR prog::(num # num # dataLang$prog # metadata) list
+WORD_VAR fs::IO_fs
+WORD_VAR cl::mlstring list
+WORD_VAR ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+DATA_VAR frames::num sptree$num_map
+DATA_VAR po::num -> num -> bool
+DATA_VAR syn::num -> (num # num) # dec list
+DATA_VAR fs::IO_fs
+DATA_VAR cl::mlstring list
+DATA_VAR ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+ACTUAL_CONFIG_TYPE :num # lab_to_target$config
+Saved theorem _______ "refund_word_single_epoch"
+CHECKED refund_data_nonfailure
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  semantics (basis_ffi ext cl fs)
+    (fromAList
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+    (cake_orac (:α) arm8_config info syn
+       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog))
+    (backend_from_data_tuple_cc (:α) arm8_config
+       (set_oracle arm8_backend_config oracle)) po lims frames
+    InitGlobals_location ≠ Fail
+CHECKED refund_word_single_epoch
+⊢ init_store_ok c t.store t.memory t.mdomain t.code_buffer t.data_buffer ∧
+  data_lang_safe_for_space (basis_ffi ext cl fs) po
+    (fromAList
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+    (get_limits c (t with ffi := basis_ffi ext cl fs)) frames
+    InitGlobals_location ∧ code_rel_ext (dimindex (:64)) x1 t.code ∧
+  code_rel c
+    (fromAList
+       (SND (to_data (set_oracle arm8_backend_config oracle) refund_prog)))
+    x1 ∧ conf_ok (dimindex (:64)) c ∧ frames = t.stack_size ∧
+  lookup 0 t.locals = SOME (Loc 1 0) ∧ t.stack_max = SOME 1 ∧
+  t.locals_size = SOME 0 ∧ t.ptr_eq_oracle = NONE ∧ t.termdep = 0 ∧
+  t.handler = 0 ∧ isa_bits coo = dimindex (:64) ∧ t.stack = [] ∧
+  backend_from_data_tuple_cc (:64) arm8_config
+    (set_oracle arm8_backend_config oracle) =
+  (λcfg.
+     OPTION_MAP (bytes_to_mlstring ## MAP upper_w2w ## I) ∘ tcc cfg ∘
+     MAP (compile_part c)) ∧ t.gc_fun = word_gc_fun c ∧
+  t.compile_oracle =
+  (I ## MAP (λp. full_compile_single (dimindex (:64)) tt kk aa coo (p,NONE))) ∘
+  tco ∧ domain x1 = domain t.code ∧ t.ptr_eq_rel = word_ptr_eq c ∧
+  (t.be ⇔ c.be) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+  STD_streams fs ∧ t.stack_limit ≠ 0 ∧ c.gc_kind ≠ None ∧
+  good_dimindex (:64) ∧
+  Abbrev
+    (tcc =
+     (λconf progs.
+        t.compile conf
+          (MAP
+             (λp. full_compile_single (dimindex (:64)) tt kk aa coo (p,NONE))
+             progs))) ∧
+  Abbrev
+    (tco =
+     (I ## MAP (compile_part c)) ∘
+     cake_orac (:64) arm8_config info syn
+       (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2) (λps. ps.data_prog)) ∧
+  (∀n. EVERY (λ(n,_0). data_num_stubs ≤ n)
+         (SND
+            (cake_orac (:64) arm8_config info syn
+               (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+               (λps. ps.data_prog) n))) ∧
+  (∀k. ∃rest.
+     evaluate
+       (Call NONE (SOME InitGlobals_location) [0] NONE,
+        t with
+        <|clock := k; ptr_eq_oracle := SOME po; ffi := basis_ffi ext cl fs|>) =
+     (I ## (λs. s with ptr_eq_oracle := SOME rest))
+       (evaluate
+          (Call NONE (SOME InitGlobals_location) [0] NONE,
+           t with <|clock := k; ffi := basis_ffi ext cl fs|>))) ⇒
+  ∀k. LENGTH
+        (ptr_eq_trace (Call NONE (SOME InitGlobals_location) [0] NONE)
+           (t with <|clock := k; ffi := basis_ffi ext cl fs|>)) = 1
+Exporting theory "forge_refundWordPremises" ... done.
+Theory "forge_refundWordPremises" took 5.8s to build
+RUNTIME_PROOF_COMPLETE

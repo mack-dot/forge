@@ -1,0 +1,19 @@
+{
+  "replay_source_inventory": {
+    "actual_exit": 1,
+    "error": "AssertionError: attempt-0006/export-0002/proof.sml",
+    "cause": "Historical U282 source is named export-proof.sml",
+    "correction": "Read its original command.json and use the actual argv source path. Preserve and compare partial snapshots."
+  },
+  "identity_inspection": {
+    "error": "identity-0001/identity.json: No such file or directory",
+    "actual_child_exit": null,
+    "enclosing_pipeline_exit": 0,
+    "correction": "Inventory located the existing result.json; no identity evidence changed."
+  },
+  "oracle_name_search": {
+    "actual_exit": 1,
+    "meaning": "No oracle_def match; subsequent source/signature inspection used the existing theorem, with no new definition."
+  },
+  "end_to_end": false
+}

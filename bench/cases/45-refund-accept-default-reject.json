@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    if Eligible(context, response) {\n      decision := Authorized(response.amount, response.reason);\n      plan := [Intent(context.chargeId, context.requestId, response.amount, response.reason)];\n    } else {\n      decision := Rejected;\n      plan := [];\n    }\n",
+   "op": "edit",
+   "path": "impl/Refund.dfy",
+   "replace": "    decision := Rejected;\n    plan := [];\n    if Eligible(context, response) {\n      decision := Authorized(response.amount, response.reason);\n      plan := [Intent(context.chargeId, context.requestId, response.amount, response.reason)];\n    }\n",
+   "target": "root"
+  }
+ ],
+ "domain": "refund",
+ "expected_class": "accept",
+ "expected_exit": 0,
+ "expected_reason_prefix": null,
+ "gate": "refund",
+ "id": "refund-accept-default-reject",
+ "kind": "valid_alternative",
+ "order": 45,
+ "rationale": "Start from Rejected and an empty plan; overwrite only when eligible.",
+ "supplied_evidence": null
+}

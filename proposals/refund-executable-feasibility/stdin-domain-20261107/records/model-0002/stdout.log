@@ -1,0 +1,9 @@
+<<HOL message: Created theory "forge_refundStdinDomain">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStdinDomain)>>
+Proof of 
+
+wfFS fs ∧ ALOOKUP fs.infds fd = SOME (ino,ReadMode,off) ⇒
+∃content quota.
+  ALOOKUP fs.inode_tbl ino = SOME content ∧ LHD fs.numchars = SOME quota
+
+failed.

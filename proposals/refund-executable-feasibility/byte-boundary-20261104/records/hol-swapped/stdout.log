@@ -1,0 +1,29 @@
+<<HOL message: Created theory "forge_refundByteBoundary">>
+Saved theorem _______ "byte_roundtrip"
+Saved theorem _______ "byte_string_codes"
+Saved theorem _______ "byte_string_eq"
+Saved theorem _______ "byte_codes_empty"
+Proof of 
+
+EVERY (λn. n < 256) cb ∧ EVERY (λn. n < 256) qb ∧ EVERY (λn. n < 256) rb ⇒
+(let
+   (ok,a,r,c,q,n) =
+     refund_fields (byte_string cb) (byte_string qb) original remaining
+       enabled opened candidate amount (byte_string rb)
+ in
+   (ok ⇔
+    cb ≠ [] ∧ qb ≠ [] ∧ enabled ∧ opened ∧ 0 ≤ original ∧
+    original ≤ 9223372036854775807 ∧ 0 ≤ remaining ∧ remaining ≤ original ∧
+    candidate ∧ 0 ≤ amount ∧ amount ≤ remaining ∧
+    (rb = byte_codes «duplicate_charge» ∨
+     rb = byte_codes «service_not_delivered» ∨
+     rb = byte_codes «returned_item»)) ∧ a = (if ok then amount else 0) ∧
+   byte_codes r = (if ok then rb else []) ∧
+   byte_codes c = (if ok then qb else []) ∧
+   byte_codes q = (if ok then cb else []) ∧ n = if ok then 1 else 0)
+
+failed.
+First unsolved sub-goal is
+
+cb = qb ∧ qb = cb
+

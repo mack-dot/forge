@@ -1,0 +1,75 @@
+{
+  "actual_records": {
+    "bridge-0001": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "bridge-0002": {
+      "child_exit": -2,
+      "wrapper_exit": 254,
+      "complete": false
+    },
+    "bridge-0003": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "bridge-0004": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "bridge-0005": {
+      "child_exit": 0,
+      "wrapper_exit": 0,
+      "complete": true
+    },
+    "counterexample-0001": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "counterexample-0002": {
+      "child_exit": -2,
+      "wrapper_exit": 254,
+      "complete": false
+    },
+    "counterexample-0003": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "counterexample-0004": {
+      "child_exit": 0,
+      "wrapper_exit": 0,
+      "complete": true
+    },
+    "complete-prefix-0001": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "complete-prefix-0002": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "complete-prefix-0003": {
+      "child_exit": 1,
+      "wrapper_exit": 1,
+      "complete": false
+    },
+    "complete-prefix-0004": {
+      "child_exit": 0,
+      "wrapper_exit": 0,
+      "complete": true
+    }
+  },
+  "interrupted_cases": [
+    "bridge-0002",
+    "counterexample-0002"
+  ],
+  "scope": "Child -2 is SIGINT, wrapper254. Neither is a theorem rejection. All unsuccessful attempts remain. Earlier U290/U297 stopped paths were not retried.",
+  "end_to_end": false
+}

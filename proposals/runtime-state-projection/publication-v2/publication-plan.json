@@ -1,0 +1,55 @@
+{
+  "operation": "Publish this exact prepared proposal as a draft PR only",
+  "authorized": false,
+  "head": "fc85ecc2c7f12caa6c8991fa002410bdf78dd51d",
+  "base": "f9eb1cbc252b28c80e5dfe2774da71bc35a31bd3",
+  "expected_actor": "mackiannii",
+  "repository_id": 1434789853,
+  "owner_review_identity": "mack-dot",
+  "credential_handling": "Read existing gh credential in memory, verify API login and push role again, set GH_TOKEN only in the subprocess environment; do not record it",
+  "preconditions": [
+    "Exact local head and clean worktree",
+    "Current main equals recorded base",
+    "Theorem/packet hashes and14-file proposals-only diff unchanged",
+    "Explicit owner publication authorization",
+    "No conflicting remote proposal branch or PR"
+  ],
+  "commands_after_authorization_only": [
+    [
+      "git",
+      "-C",
+      "/private/tmp/forge-e1-publication-v2-20261102",
+      "-c",
+      "credential.helper=",
+      "-c",
+      "credential.helper=!gh auth git-credential",
+      "push",
+      "https://mackiannii@github.com/mack-dot/forge.git",
+      "fc85ecc2c7f12caa6c8991fa002410bdf78dd51d:refs/heads/proposal/fixed-elf-assurance"
+    ],
+    [
+      "gh",
+      "pr",
+      "create",
+      "--repo",
+      "mack-dot/forge",
+      "--base",
+      "main",
+      "--head",
+      "proposal/fixed-elf-assurance",
+      "--draft",
+      "--title",
+      "Propose a termination claim for the fixed RISC-V ELF",
+      "--body-file",
+      "/Users/mackianni/forge/proposals/runtime-state-projection/publication-v2/pr-body.md"
+    ]
+  ],
+  "force_push": false,
+  "self_review": false,
+  "merge": false,
+  "workflow_dispatch": false,
+  "claim_or_policy_activation": false,
+  "signing_admission_deployment": false,
+  "stage12": false,
+  "end_to_end": false
+}

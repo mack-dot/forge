@@ -1,0 +1,200 @@
+<<HOL message: Created theory "forge_refundRejectBasis">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRejectBasis)>>
+Saved theorem _______ "refund_stdio_extract_fs"
+Saved theorem _______ "refund_sem_satisfies_imp"
+DIAG_STEP strip
+OK..
+1 subgoal:
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL sem_satisfies
+  (semantics_dec_list
+     (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+       extract_fs ext (cl,fs) st3.ffi.io_events = SOME (fastForwardFD fs 0))
+DIAG_STEP sem-satisfies-map
+OK..
+1 subgoal:
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL ∃P. (∀behavior.
+       P behavior ⇒
+       (λbehavior.
+          ∃st3 exn.
+            behavior = Terminate Success st3.ffi.io_events ∧
+            (∃h3 h4.
+               SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+               (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+            call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+            extract_fs ext (cl,fs) st3.ffi.io_events =
+            SOME (fastForwardFD fs 0)) behavior) ∧
+    sem_satisfies
+      (semantics_dec_list
+         (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+         (SNOC
+            (Dlet NoLocs (Pcon NONE [])
+               (App Opapp [Var (Short «refund_main»); Unit])) prog)) P
+DIAG_STEP prior-postcondition
+OK..
+1 subgoal:
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL (∀behavior.
+   (λbehavior.
+      ∃st3 exn.
+        behavior = Terminate Success st3.ffi.io_events ∧
+        (∃h3 h4.
+           SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+           (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+        call_FFI_rel꙳
+          (init_state (basis_ffi ext cl fs) with eval_state := es).ffi
+          st3.ffi) behavior ⇒
+   (λbehavior.
+      ∃st3 exn.
+        behavior = Terminate Success st3.ffi.io_events ∧
+        (∃h3 h4.
+           SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+           (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+        call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+        extract_fs ext (cl,fs) st3.ffi.io_events = SOME (fastForwardFD fs 0))
+     behavior) ∧
+sem_satisfies
+  (semantics_dec_list
+     (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳
+         (init_state (basis_ffi ext cl fs) with eval_state := es).ffi st3.ffi)
+DIAG_STEP composition-split
+OK..
+2 subgoals:
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL ∀behavior.
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳
+         (init_state (basis_ffi ext cl fs) with eval_state := es).ffi st3.ffi)
+    behavior ⇒
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+       extract_fs ext (cl,fs) st3.ffi.io_events = SOME (fastForwardFD fs 0))
+    behavior
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL sem_satisfies
+  (semantics_dec_list
+     (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳
+         (init_state (basis_ffi ext cl fs) with eval_state := es).ffi st3.ffi)
+DIAG_STEP source-contract
+OK..
+DIAG_EXCEPTION HOL_ERR (HOL_ERROR {message = "No match", origins = [{origin_function = "MATCH_MP_TAC", origin_structure = "Tactic", source_location = Loc_Unknown}]})
+DIAG_STOP source-contract
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL ∀behavior.
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳
+         (init_state (basis_ffi ext cl fs) with eval_state := es).ffi st3.ffi)
+    behavior ⇒
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳ (basis_ffi ext cl fs) st3.ffi ∧
+       extract_fs ext (cl,fs) st3.ffi.io_events = SOME (fastForwardFD fs 0))
+    behavior
+DIAG_HYP STDIO fs h1
+DIAG_HYP SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+DIAG_HYP refund_run_wire (implode text) = INL err
+DIAG_HYP stdin_content fs = SOME text
+DIAG_HYP lookup_var «refund_main» env2 = SOME refund_main_v
+DIAG_HYP Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+DIAG_GOAL sem_satisfies
+  (semantics_dec_list
+     (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+     (SNOC
+        (Dlet NoLocs (Pcon NONE [])
+           (App Opapp [Var (Short «refund_main»); Unit])) prog))
+  (λbehavior.
+     ∃st3 exn.
+       behavior = Terminate Success st3.ffi.io_events ∧
+       (∃h3 h4.
+          SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+          (&Fail_exn err exn * STDIO (fastForwardFD fs 0)) h3) ∧
+       call_FFI_rel꙳
+         (init_state (basis_ffi ext cl fs) with eval_state := es).ffi st3.ffi)
+DIAGNOSTIC_COMPLETE

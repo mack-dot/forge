@@ -1,0 +1,14 @@
+{
+  "prior_actual_exits": [
+    1,
+    1
+  ],
+  "failure_scope": "Neither attempt checked the new extraction lemma; missing structure then existing helperLib initialization DECIDE failure",
+  "source_inspection": "cfHeapsBaseLib.sml lines19-22 defines SPLIT_TAC as ordinary fs of set/separation definitions followed by metis_tac",
+  "changed_approach": "Use that exact published tactic expression at the heap-membership subgoal. Do not load unrelated helper initializers. Existing HOL kernel/tactics and theorem statement unchanged. No library or proof machinery patch.",
+  "library_failure_resolved": false,
+  "helper_failure_location": "helperLib.sml:486 EQ_IMP_IMP = DECIDE ((x=y) ==> x ==> y); exact internal cause not established",
+  "old_sha256": "95bc5c2ad9a38f71bed8ba1e2fcb563b549552da0c7e32efffd4ff9b78e06965",
+  "new_sha256": "7f1f0e3b3d86ce15419f9ae835344ada23401332b081cd7b4db62d5d153fa308",
+  "end_to_end": false
+}

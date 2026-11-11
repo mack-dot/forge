@@ -1,0 +1,11 @@
+open preamble forge_refundWordOracleTheory forge_refundInitializedEpochTheory;
+val _=Globals.max_print_depth:=1000;
+val oracle_n = SIMP_RULE(srw_ss())[refund_word_config_facts,LAMBDA_PROD] refund_word_oracle_binding;
+val labels_n = SIMP_RULE(srw_ss())[EVERY_MAP,o_DEF,LAMBDA_PROD] refund_data_oracle_labels;
+val fixed = SIMP_RULE(srw_ss())[GSYM oracle_n,labels_n] refund_exact_oracle_single_epoch;
+val _=print("NORMALIZED_ORACLE "^Parse.thm_to_string oracle_n^"\nNORMALIZED_LABELS "^Parse.thm_to_string labels_n^"\n");
+val ps=strip_conj(fst(dest_imp(concl fixed)));
+val _=print("PREMISE_COUNT "^Int.toString(length ps)^"\n");
+val _=List.app(fn (i,p)=>print("PREMISE "^Int.toString i^" "^Parse.term_to_string p^"\n"))(ListPair.zip(List.tabulate(length ps,fn i=>i),ps));
+val _=print "ORACLE_DIAGNOSTIC_COMPLETE\n";
+val _=OS.Process.exit OS.Process.success;

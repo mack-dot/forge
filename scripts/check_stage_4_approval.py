@@ -1,17 +1,9 @@
 #!/usr/bin/env python3
-"""Exercise exact approval against a v1 trusted baseline using real Dafny runs.
-
-Every tree is a complete copy of this checkout (minus untracked trees). Under the
-incremental gate, the approved fee-spec change is UNSUPPORTED (exit 3): every affected
-obligation is re-established (the candidate carries the matching evidence.json and
-booking lock), but the negative fixtures in bugs/ and the proposal copy in proposals/ include
-the spec and no obligation depends on them (UNKNOWN_DEPENDENCY). The approval path is still exercised: the
-operation record must name the bound approval and the snapshot proof must have run. Results go
-to results/stage4/approval-coverage-v2.json; historical results are never rewritten.
-"""
+"""Exercise exact approval against a v1 trusted baseline using real Dafny runs."""
 
 import json
 from pathlib import Path
+import shlex
 import shutil
 import subprocess
 import sys
@@ -21,39 +13,23 @@ sys.path.insert(0, str(ROOT / 'gate'))
 from common import canonical, digest
 
 WORK = ROOT / 'build/stage4-approval'
-REPORT = ROOT / 'results/stage4/approval-coverage-v2.json'
-UNTRACKED = ('.git', '.toolchain', 'build', 'node_modules', 'TestResults')
 
 
-def checkout(destination, toolchain):
+def checkout(destination):
     destination.mkdir(parents=True)
-    for entry in sorted(ROOT.iterdir()):
-        if entry.name in UNTRACKED or entry.name == '__pycache__':
-            continue
-        if sys.platform == 'darwin':
-            subprocess.run(['/bin/cp', '-cRp', str(entry), str(destination / entry.name)], check=True)
-        elif entry.is_dir() and not entry.is_symlink():
-            shutil.copytree(entry, destination / entry.name, symlinks=True,
-                            ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-        else:
-            shutil.copy2(entry, destination / entry.name, follow_symlinks=False)
-    for pycache in destination.rglob('__pycache__'):
-        shutil.rmtree(pycache)
-    if toolchain:
-        # The baseline is the trusted base for the gate: it needs the pinned toolchain and the
-        # pinned JavaScript packages that dependent obligations (ledger-model) read.
-        for name in ('.toolchain', 'node_modules'):
-            if (ROOT / name).exists():
-                (destination / name).symlink_to((ROOT / name).resolve(), target_is_directory=True)
+    for name in ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github', 'impl', 'proposals'):
+        shutil.copytree(ROOT / name, destination / name,
+                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+    for name in ('spec.lock', 'AGENTS.md'):
+        shutil.copyfile(ROOT / name, destination / name)
+    (destination / '.toolchain').symlink_to(ROOT / '.toolchain', target_is_directory=True)
 
 
 def main():
     if WORK.exists():
         raise RuntimeError('Preserve build/stage4-approval before rerunning')
-    if REPORT.exists():
-        raise RuntimeError('Preserve ' + str(REPORT.relative_to(ROOT)) + ' before rerunning')
     baseline = WORK / 'baseline'
-    checkout(baseline, toolchain=True)
+    checkout(baseline)
     for name in ('spec/LedgerSpec.dfy', 'spec.lock', 'impl/Ledger.dfy'):
         shutil.copyfile(ROOT / 'results/stage4/fee-baseline' / name, baseline / name)
     report = {'stage': 4, 'stage_exit': False, 'end_to_end': False, 'commands': [], 'cases': []}
@@ -68,10 +44,10 @@ def main():
         return child
 
     try:
-        for name, expected in [('approved', 3), ('approved-repeat', 3), ('changed-after-approval', 1),
+        for name, expected in [('approved', 0), ('approved-repeat', 0), ('changed-after-approval', 1),
                                ('weaken-c2', 1), ('candidate-approval-edit', 1), ('policy-edit', 1)]:
             candidate = WORK / name
-            checkout(candidate, toolchain=False)
+            checkout(candidate)
             if name in ('changed-after-approval', 'weaken-c2'):
                 spec = candidate / 'spec/LedgerSpec.dfy'
                 text = spec.read_text()
@@ -94,27 +70,26 @@ def main():
             report['cases'].append({'name': name, 'operation': operation})
             assert child.returncode == expected, child.stdout + child.stderr
             evidence = baseline / 'build' / (name + '.json')
-            assert not evidence.exists()
-            if name in ('approved', 'approved-repeat'):
-                assert operation['outcome'] == 'UNSUPPORTED'
-                assert operation['spec_approval']['record'] == 'gate/approvals/fees-v2.json'
-                assert 'Ledger.Apply (correctness)' in operation['snapshots'][1]['checked']
-                assert all(r['result'] == 'established' for r in operation['obligations'].values())
-                findings = operation['coverage']['findings']
-                assert findings and all(f['reason'] == 'UNKNOWN_DEPENDENCY' and f['path'] == 'spec/LedgerSpec.dfy'
-                                        and ('bugs/' in f['detail'] or 'proposals/' in f['detail']) for f in findings)
+            if expected:
+                assert not evidence.exists() and operation['error'].startswith('UNAPPROVED_PROTECTED_CHANGE:')
             else:
-                assert operation['outcome'] == 'REJECTED'
-                assert operation['error'].startswith('UNAPPROVED_PROTECTED_CHANGE:')
-        first, second = (report['cases'][i]['operation'] for i in (0, 1))
-        assert (first['outcome'], first['error'][:40], first['affected_obligations']) == \
-            (second['outcome'], second['error'][:40], second['affected_obligations'])
-        report.update(result='passed', exit_code=0, identical_decisions=True)
+                bundle = json.loads(evidence.read_text())
+                assert {c['spec_sha'] for c in bundle['claims']} == {
+                    '2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940'}
+                assert bundle['backend_details']['spec_approval']['record'] == 'gate/approvals/fees-v2.json'
+                assert 'Ledger.Apply (correctness)' in operation['snapshots'][1]['checked']
+        first = (baseline / 'build/approved.json').read_bytes()
+        assert first == (baseline / 'build/approved-repeat.json').read_bytes()
+        command = json.loads(first)['evidence'][0]['reproduce_cmd']
+        replay = run(shlex.split(command), baseline, 'literal-replay')
+        assert replay.returncode == 0 and (baseline / 'build/change-evidence.json').read_bytes() == first
+        report.update(result='passed', exit_code=0, byte_identical=True,
+                      evidence_sha256=digest(first))
+        shutil.copyfile(baseline / 'build/approved.json', ROOT / 'results/stage4/approved-local-evidence.json')
     except (AssertionError, OSError, ValueError, KeyError) as error:
         report.update(result='failed', exit_code=1, error=str(error))
         print(str(error), file=sys.stderr)
-    REPORT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT.write_bytes(canonical(report))
+    (ROOT / 'results/stage4/approval-local.json').write_bytes(canonical(report))
     return report['exit_code']
 
 

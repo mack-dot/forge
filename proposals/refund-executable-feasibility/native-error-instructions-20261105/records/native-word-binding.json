@@ -1,0 +1,54 @@
+{
+  "actual_exit": 0,
+  "disassembler_record": "static-native/command.json",
+  "layout_source": "static-native/stdout.log: refund.__TEXT VM start0x100000000,file offset0",
+  "ffiread_file_offset": 151920,
+  "ffiread_bytes": 112,
+  "all_disassembled_words_matched": 28,
+  "error_path_words": [
+    {
+      "vm_address": "0x1000251ac",
+      "file_offset": 151980,
+      "word": "37f800c0"
+    },
+    {
+      "vm_address": "0x1000251c4",
+      "file_offset": 152004,
+      "word": "52800028"
+    },
+    {
+      "vm_address": "0x1000251c8",
+      "file_offset": 152008,
+      "word": "39000268"
+    },
+    {
+      "vm_address": "0x1000251cc",
+      "file_offset": 152012,
+      "word": "a9417bfd"
+    },
+    {
+      "vm_address": "0x1000251d0",
+      "file_offset": 152016,
+      "word": "a8c24ff4"
+    },
+    {
+      "vm_address": "0x1000251d4",
+      "file_offset": 152020,
+      "word": "d65f03c0"
+    }
+  ],
+  "builds": [
+    {
+      "name": "native-build-0001",
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "ffiread_sha256": "ec5f3b8045a2d7038e8645acd7bd72a001bddc75ab24b7fd913c4d36cc163bf4"
+    },
+    {
+      "name": "native-repeat-0001",
+      "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+      "ffiread_sha256": "ec5f3b8045a2d7038e8645acd7bd72a001bddc75ab24b7fd913c4d36cc163bf4"
+    }
+  ],
+  "scope": "Byte identity and standard-tool layout only. No decoder or loader proof. HOL stepLib supplies instruction semantics.",
+  "end_to_end": false
+}

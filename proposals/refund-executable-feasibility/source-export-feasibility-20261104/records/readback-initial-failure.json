@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "results/refund-source-binding-2026-11-04/attempt-0001/readback.py"
+  ],
+  "actual_exit": 1,
+  "evidence_source": "Observed tool result in this session; this note is not a raw subprocess log.",
+  "reason": "Compared raw nupkg SHA512 with NuGet contentHash. Signed packages can have different values.",
+  "package": "Microsoft.Extensions.Configuration.CommandLine/5.0.0",
+  "raw_sha512": "qZo9N6uPsSXPAxSoXmzS9YiNWDvXdthlOATwtl9vL/wmldBgyb04EDU8tJV7hhKh/JvdcImopkl5UCz/HkM88w==",
+  "contentHash": "OelM+VQdhZ0XMXsEQBq/bt3kFzD+EBGqR4TAgFDRAye0JfvHAaRi+3BxCRcwqUAwDhV0U0HieljBGHlTgYseRA==",
+  "source": "https://github.com/NuGet/Home/wiki/Nupkg-Metadata-File",
+  "next_check": "Compare full archive digest with archive sidecar; compare lock contentHash with NuGet metadata separately. Neither establishes producer authenticity."
+}

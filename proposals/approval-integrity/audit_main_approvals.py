@@ -11,6 +11,14 @@ CODEOWNERS file of the base commit. Nothing here grants or records approval.
   UNKNOWN       GitHub has no rule-suite record for the push (for example, outside
                 the retention window). Never counted as approved.
 
+Rule-suite records need admin access. Without them (HTTP 404 for a Write
+account), the status is inferred and marked so: a merge with no qualifying
+approval while the ruleset requires one can only be a bypass (OVERRIDE,
+inferred); a qualifying approval merged by a non-admin cannot be a bypass,
+because only the admin role may bypass (APPROVED, inferred). An admin merge
+with an approval stays UNKNOWN. With no CODEOWNERS at the base, the required
+approver is the repository owner (the root of trust).
+
   python3 audit_main_approvals.py OWNER/REPO COUNT [--rule-suites FILE]
 
 Exit 0 only when every examined commit is APPROVED; 1 otherwise; 2 on usage or API error.
@@ -60,6 +68,7 @@ def classify(repo, commit, suites):
     record = {'commit': commit['sha'], 'tree': commit['commit']['tree']['sha']}
     suite = suites.get(commit['sha'])
     record['rule_suite'] = suite and {'id': suite['id'], 'result': suite['result'], 'actor': suite['actor_name']}
+    record['rule_suites_readable'] = not suites.get('_unreadable')
     pulls = api(f'repos/{repo}/commits/{commit["sha"]}/pulls')
     merged = [p for p in pulls if p.get('merge_commit_sha') == commit['sha']]
     if not merged:
@@ -75,6 +84,8 @@ def classify(repo, commit, suites):
     required = set()
     for path in files:
         required.update(owners_for(rules or [], path))
+    if rules is None:
+        required = {repo.split('/')[0].lower()}
     # Latest review per reviewer before the merge; a later dismissal or change revokes it.
     latest = {}
     for review in api(f'repos/{repo}/pulls/{pull["number"]}/reviews?per_page=100'):
@@ -85,7 +96,17 @@ def classify(repo, commit, suites):
                        and login != author and (login in required))
     record.update(code_owners_base=None if rules is None else sorted(required), exact_head_owner_approvals=approvers,
                   tree_equals_approved_head=record['tree'] == head_tree)
-    if suite is None:
+    merger = record['merged_by']
+    merger_role = merger and api(f'repos/{repo}/collaborators/{merger}/permission')['role_name']
+    record['merged_by_role_now'] = merger_role
+    if suite is None and suites.get('_unreadable'):
+        if not approvers:
+            record.update(status='OVERRIDE', reason='INFERRED_MERGED_WITHOUT_REQUIRED_APPROVAL')
+        elif merger_role != 'admin' and record['tree_equals_approved_head']:
+            record.update(status='APPROVED', reason='INFERRED_NON_ADMIN_MERGE_CANNOT_BYPASS')
+        else:
+            record.update(status='UNKNOWN', reason='INFERRED_ADMIN_MERGE_WITH_APPROVAL')
+    elif suite is None:
         record.update(status='UNKNOWN', reason='NO_RULE_SUITE_RECORD')
     elif suite['result'] == 'bypass':
         record.update(status='OVERRIDE', reason='RULESET_BYPASS')
@@ -111,9 +132,14 @@ def main():
         if len(sys.argv) == 5:
             listed = json.load(open(sys.argv[4]))
         else:
-            listed = api(f'repos/{repo}/rulesets/rule-suites?ref=refs/heads/main&time_period=month'
-                         '&rule_suite_result=all&per_page=100')
-        suites = {s['after_sha']: s for s in listed}
+            try:
+                listed = api(f'repos/{repo}/rulesets/rule-suites?ref=refs/heads/main&time_period=month'
+                             '&rule_suite_result=all&per_page=100')
+            except RuntimeError as error:
+                if 'HTTP 404' not in str(error):
+                    raise
+                listed = None
+        suites = {'_unreadable': True} if listed is None else {s['after_sha']: s for s in listed}
         commits = api(f'repos/{repo}/commits?sha=main&per_page={count}')
         records = [classify(repo, commit, suites) for commit in commits]
     except (RuntimeError, KeyError, ValueError) as error:

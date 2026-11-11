@@ -1,0 +1,25 @@
+{
+  "actual_exit": 0,
+  "scope": "Pinned-source next-link inspection; not a new proof or physical witness",
+  "sources": {
+    "compiler/backend/proofs/backendProofScript.sml": [
+      "word_init_compile_oracle local lemma at3984",
+      "exact constructor and ptr_eq_fix_thm application at4110\u20134170"
+    ],
+    "compiler/backend/proofs/stack_to_labProofScript.sml": [
+      "full_make_init_semantics at3451 retains memory/register/code conditions and concludes opt != NONE",
+      "IMP_init_state_ok near3830 requires successful SOME branch"
+    ],
+    "compiler/backend/semantics/wordPropsScript.sml": [
+      "ptr_eq_fix_thm at4058 requires prefix-compatible syntax/compiler oracles and initial-state oracle independence"
+    ]
+  },
+  "next_check": "Use the existing constructor-oracle congruence lemmas to instantiate the pointer fixed-point theorem for this exact state; preserve its prefix conditions. Separately discharge successful initialization with the existing full_make_init_semantics premises before lower-pass event composition.",
+  "not_established": [
+    "pointer fixed-point specialization for this exact constructor",
+    "successful initialization",
+    "physical memory and runtime applicability",
+    "target installer exclusion"
+  ],
+  "end_to_end": false
+}

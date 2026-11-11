@@ -1,0 +1,41 @@
+{
+  "files": {
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap": "787499c5305260a0dcf93cab119e0cb2f830c539ddf9327c433758f0a92350a9",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/l3-heap": "9a59e119969c4a180d1eaa19104f92237054ca5e81fe3298e5ad9843b440052c",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/Holmakefile": "f503dc99b3c71e41453d22814510cee88298fe1a074a2114ad0c46fc7c63f73c",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/utilsLib.sml": "52f3071e22662d4e4828ba426b255aedc7c63fba33c213f19e295547548ae9c9",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/utilsLib.sig": "45eadc56c5a0c51fda452d28cc34948282499b65c5b8f88bafc4a1f1b546c91b",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/.hol/objs/utilsLib.uo": "32e83e12a032f1b92887bad0c7c1361ebbb839e25081cbf4591ff4762b7e5c9c",
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/.hol/objs/utilsLib.ui": "30da6be57e31bbe7da8b32edd8457341c4c5140e43c1925577b0ba5e396ecc71"
+  },
+  "authority": "Existing published HOL ARM8 build target and unmodified pinned sources. Heap hashes establish local identity, not independent bootstrap provenance.",
+  "end_to_end": false,
+  "source_commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual_exit": 0,
+      "stdout": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

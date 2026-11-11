@@ -1,0 +1,70 @@
+{
+  "end_to_end": false,
+  "foundation_axioms": [
+    "bool.SELECT_AX",
+    "bool.INFINITY_AX",
+    "bool.ETA_AX",
+    "bool.BOOL_CASES_AX"
+  ],
+  "import_boundary": "Frozen upstream DISK_THM inputs remain trusted; producer imports forbidden.",
+  "required": [
+    {
+      "source": "proposals/refund-executable-feasibility/certified-library-20261104/records/proof-repeat/forge_refundCertifiedProgScript.sml",
+      "statement_lines": [
+        [
+          18,
+          32
+        ],
+        [
+          50,
+          58
+        ]
+      ],
+      "theorems": [
+        "refund_fields_original_method",
+        "refund_verified_spec"
+      ],
+      "theory": "forge_refundCertifiedProg"
+    },
+    {
+      "source": "proposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundWireProgScript.sml",
+      "theorems": [
+        "refund_run_wire_valid",
+        "refund_render_fields_roundtrip",
+        "refund_run_wire_decode_error",
+        "refund_run_wire_trailing",
+        "refund_run_wire_malformed",
+        "refund_dispatch_valid",
+        "refund_dispatch_error"
+      ],
+      "theory": "forge_refundWireProg"
+    },
+    {
+      "source": "proposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundStdioProgScript.sml",
+      "theorems": [
+        "refund_main_valid",
+        "refund_main_error"
+      ],
+      "theory": "forge_refundStdioProg"
+    },
+    {
+      "source": "proposals/refund-executable-feasibility/whole-program-20261104/records/forge_refundWholeProgScript.sml",
+      "theorems": [
+        "refund_whole_prog_spec",
+        "refund_request_whole_prog_spec",
+        "refund_semantics"
+      ],
+      "theory": "forge_refundWholeProg"
+    },
+    {
+      "source": "proposals/refund-executable-feasibility/arm8-compile-20261104/records/compile-repeat/forge_refundArm8CompileScript.sml",
+      "theorems": [
+        "refund_arm8_compiled"
+      ],
+      "theory": "forge_refundArm8Compile"
+    }
+  ],
+  "required_hypotheses": 0,
+  "scope": "coverage inventory, not an implemented admission rule",
+  "typed_statement_binding": "NOT_IMPLEMENTED"
+}

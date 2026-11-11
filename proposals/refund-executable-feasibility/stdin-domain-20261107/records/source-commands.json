@@ -1,0 +1,44 @@
+[
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+      "rev-parse",
+      "HEAD"
+    ],
+    "actual_exit": 0,
+    "stdout": "cd9155694c16831373ab695a670794f23282ed62\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+      "rev-parse",
+      "HEAD"
+    ],
+    "actual_exit": 0,
+    "stdout": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+      "diff",
+      "--exit-code",
+      "HEAD",
+      "--",
+      "basis/basis_ffi.c",
+      "basis/fsFFIScript.sml",
+      "basis/fsFFIPropsScript.sml",
+      "basis/TextIOProgScript.sml"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

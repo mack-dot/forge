@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    } else if IsFreshValid(state, id, request) {\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "    } else if id !in state.accepted && request.sender in state.balances &&\n              request.recipient in state.balances && request.sender != request.recipient &&\n              0 in state.balances && request.sender != 0 && request.recipient != 0 &&\n              0 < request.amount {\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "incremental",
+ "id": "ledger-pr-defect-overdraft",
+ "kind": "defect",
+ "order": 11,
+ "rationale": "Balance check dropped from the transfer condition: overdrafts give negative balances (C2) and wrong acceptances (C5).",
+ "supplied_evidence": null
+}

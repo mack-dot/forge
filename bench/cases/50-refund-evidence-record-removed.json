@@ -1,0 +1,27 @@
+{
+ "changes": [],
+ "domain": "refund",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "MISSING_EVIDENCE",
+ "gate": "refund",
+ "id": "refund-evidence-record-removed",
+ "kind": "adversarial_evidence",
+ "order": 50,
+ "rationale": "R2 evidence record removed.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "refund-seed-fresh",
+  "ops": [
+   {
+    "op": "remove",
+    "path": [
+     "evidence",
+     {
+      "claim_id": "R2"
+     }
+    ]
+   }
+  ]
+ }
+}

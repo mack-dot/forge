@@ -1,0 +1,18 @@
+IMPORTED_THEOREM wf_read_inputs
+ []
+⊢ wfFS fs ∧ ALOOKUP fs.infds fd = SOME (ino,ReadMode,off) ⇒
+  ∃content quota.
+    ALOOKUP fs.inode_tbl ino = SOME content ∧ LHD fs.numchars = SOME quota
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+IMPORTED_THEOREM stdin_read_inputs
+ []
+⊢ wfFS fs ∧ STD_streams fs ⇒
+  ∃off content quota.
+    ALOOKUP fs.infds 0 = SOME (UStream «stdin»,ReadMode,off) ∧
+    ALOOKUP fs.inode_tbl (UStream «stdin») = SOME content ∧
+    LHD fs.numchars = SOME quota
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0

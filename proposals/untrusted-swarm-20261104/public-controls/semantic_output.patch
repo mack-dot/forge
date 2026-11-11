@@ -1,0 +1,11 @@
+--- a/proposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundStdioProgScript.sml
++++ b/proposals/refund-executable-feasibility/stdio-contract-20261104/records/forge_refundStdioProgScript.sml
+@@ -12,7 +12,7 @@
+   fun refund_main u =
+     case TextIO.inputAllFrom None of
+       None => raise Fail "refund: stdin unavailable"
+-    | Some wire => TextIO.print (refund_dispatch wire);
++    | Some wire => let val unused = refund_dispatch wire in () end;
+ End
+ 
+ val st = get_ml_prog_state ();

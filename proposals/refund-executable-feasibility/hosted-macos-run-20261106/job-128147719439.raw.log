@@ -1,0 +1,267 @@
+﻿2026-11-06T20:52:54.6151060Z Current runner version: '2.338.2'
+2026-11-06T20:52:54.6181370Z ##[group]Runner Image Provisioner
+2026-11-06T20:52:54.6182070Z Hosted Compute Agent
+2026-11-06T20:52:54.6182450Z Version: 20261103.629
+2026-11-06T20:52:54.6182890Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-06T20:52:54.6183380Z Build Date: 2026-11-03T17:26:59Z
+2026-11-06T20:52:54.6183920Z Worker ID: {e1a69b24-97e4-4634-bb67-6825760dd667}
+2026-11-06T20:52:54.6184440Z Region: westus
+2026-11-06T20:52:54.6184810Z Cloud: MacCloud
+2026-11-06T20:52:54.6185170Z ##[endgroup]
+2026-11-06T20:52:54.6186300Z ##[group]Operating System
+2026-11-06T20:52:54.6186730Z macOS
+2026-11-06T20:52:54.6187110Z 15.8.2
+2026-11-06T20:52:54.6187480Z 24H232
+2026-11-06T20:52:54.6187830Z ##[endgroup]
+2026-11-06T20:52:54.6188200Z ##[group]Runner Image
+2026-11-06T20:52:54.6188620Z Image: macos-15-arm64
+2026-11-06T20:52:54.6189000Z Version: 20261104.0514.1
+2026-11-06T20:52:54.6189900Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20261104.0514/images/macos/macos-15-arm64-Readme.md
+2026-11-06T20:52:54.6191000Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20261104.0514
+2026-11-06T20:52:54.6191750Z ##[endgroup]
+2026-11-06T20:52:54.6192450Z ##[group]GITHUB_TOKEN Permissions
+2026-11-06T20:52:54.6193910Z Metadata: read
+2026-11-06T20:52:54.6194390Z ##[endgroup]
+2026-11-06T20:52:54.6196030Z Secret source: Actions
+2026-11-06T20:52:54.6196600Z Cache mode: write
+2026-11-06T20:52:54.6197040Z Prepare workflow directory
+2026-11-06T20:52:54.6633460Z Prepare all required actions
+2026-11-06T20:52:54.6777230Z Complete job name: environment-and-unchanged-sat
+2026-11-06T20:52:54.8415290Z ##[group]Run /usr/bin/python3 -I -B - <<'PY'
+2026-11-06T20:52:54.8416550Z [36;1m/usr/bin/python3 -I -B - <<'PY'[0m
+2026-11-06T20:52:54.8417030Z [36;1mimport traceback[0m
+2026-11-06T20:52:54.8417440Z [36;1m[0m
+2026-11-06T20:52:54.8417840Z [36;1mdef main():[0m
+2026-11-06T20:52:54.8418220Z [36;1m    import ctypes[0m
+2026-11-06T20:52:54.8418660Z [36;1m    import errno[0m
+2026-11-06T20:52:54.8419060Z [36;1m    import hashlib[0m
+2026-11-06T20:52:54.8419450Z [36;1m    import json[0m
+2026-11-06T20:52:54.8419840Z [36;1m    import os[0m
+2026-11-06T20:52:54.8420220Z [36;1m    import platform[0m
+2026-11-06T20:52:54.8420650Z [36;1m    import resource[0m
+2026-11-06T20:52:54.8421040Z [36;1m    import shutil[0m
+2026-11-06T20:52:54.8421430Z [36;1m    import subprocess[0m
+2026-11-06T20:52:54.8421880Z [36;1m    import sys[0m
+2026-11-06T20:52:54.8422240Z [36;1m    [0m
+2026-11-06T20:52:54.8422590Z [36;1m    def emit(name, **fields):[0m
+2026-11-06T20:52:54.8423310Z [36;1m        print(json.dumps(dict(operation=name, end_to_end=False, **fields), sort_keys=True), flush=True)[0m
+2026-11-06T20:52:54.8424000Z [36;1m    [0m
+2026-11-06T20:52:54.8424350Z [36;1m    def command(argv):[0m
+2026-11-06T20:52:54.8424900Z [36;1m        process = subprocess.run(argv, capture_output=True, text=True)[0m
+2026-11-06T20:52:54.8425620Z [36;1m        emit('command', argv=argv, actual_exit=process.returncode,[0m
+2026-11-06T20:52:54.8426230Z [36;1m             stdout=process.stdout, stderr=process.stderr)[0m
+2026-11-06T20:52:54.8426760Z [36;1m        if process.returncode != 0:[0m
+2026-11-06T20:52:54.8427270Z [36;1m            raise RuntimeError('command failed: ' + argv[0])[0m
+2026-11-06T20:52:54.8427830Z [36;1m        return process.stdout.strip()[0m
+2026-11-06T20:52:54.8428260Z [36;1m    [0m
+2026-11-06T20:52:54.8428670Z [36;1m    resource.setrlimit(resource.RLIMIT_CPU, (120, 120))[0m
+2026-11-06T20:52:54.8429240Z [36;1m    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))[0m
+2026-11-06T20:52:54.8429910Z [36;1m    emit('identity', architecture=platform.machine(), system=platform.system(),[0m
+2026-11-06T20:52:54.8430620Z [36;1m         release=platform.release(), effective_uid=os.geteuid(),[0m
+2026-11-06T20:52:54.8431330Z [36;1m         runner_os=os.environ.get('RUNNER_OS'), runner_arch=os.environ.get('RUNNER_ARCH'),[0m
+2026-11-06T20:52:54.8433070Z [36;1m         image_os=os.environ.get('ImageOS'), image_version=os.environ.get('ImageVersion'),[0m
+2026-11-06T20:52:54.8433930Z [36;1m         workflow_sha=os.environ.get('GITHUB_WORKFLOW_SHA'), source_sha=os.environ.get('GITHUB_SHA'),[0m
+2026-11-06T20:52:54.8434810Z [36;1m         run_id=os.environ.get('GITHUB_RUN_ID'), python_version=sys.version,[0m
+2026-11-06T20:52:54.8435590Z [36;1m         python_sha256=hashlib.sha256(open(sys.executable, 'rb').read()).hexdigest(),[0m
+2026-11-06T20:52:54.8436380Z [36;1m         provider_isolation='GitHub fresh-VM claim; not independently proved by this probe')[0m
+2026-11-06T20:52:54.8437240Z [36;1m    assert platform.system() == 'Darwin' and platform.machine() == 'arm64'[0m
+2026-11-06T20:52:54.8437870Z [36;1m    assert os.environ.get('RUNNER_ARCH') == 'ARM64'[0m
+2026-11-06T20:52:54.8438680Z [36;1m    assert os.environ.get('ImageVersion') == os.environ['APPROVED_IMAGE_VERSION'], 'image identity differs; review required'[0m
+2026-11-06T20:52:54.8439620Z [36;1m    assert os.geteuid() != 0, 'negative permission control requires a non-root process'[0m
+2026-11-06T20:52:54.8440230Z [36;1m    command(['/usr/bin/sw_vers'])[0m
+2026-11-06T20:52:54.8440750Z [36;1m    memory = int(command(['/usr/sbin/sysctl', '-n', 'hw.memsize']))[0m
+2026-11-06T20:52:54.8441900Z [36;1m    disk = shutil.disk_usage('/var/tmp')[0m
+2026-11-06T20:52:54.8442570Z [36;1m    emit('resources', memory_bytes=memory, temporary_disk_free_bytes=disk.free,[0m
+2026-11-06T20:52:54.8443220Z [36;1m         cpu_limit_seconds=120, core_limit_bytes=0,[0m
+2026-11-06T20:52:54.8444310Z [36;1m         full_HOL_resource_adequacy='NOT_ESTABLISHED')[0m
+2026-11-06T20:52:54.8444860Z [36;1m    [0m
+2026-11-06T20:52:54.8445240Z [36;1m    libc = ctypes.CDLL(None, use_errno=True)[0m
+2026-11-06T20:52:54.8445700Z [36;1m    mkstemp = libc.mkstemp[0m
+2026-11-06T20:52:54.8446480Z [36;1m    mkstemp.argtypes = [ctypes.c_char_p][0m
+2026-11-06T20:52:54.8451770Z [36;1m    mkstemp.restype = ctypes.c_int[0m
+2026-11-06T20:52:54.8453820Z [36;1m    template = ctypes.create_string_buffer(b'/var/tmp/forge-m1-preflight-XXXXXX')[0m
+2026-11-06T20:52:54.8455810Z [36;1m    old_mask = os.umask(0o077)[0m
+2026-11-06T20:52:54.8456980Z [36;1m    ctypes.set_errno(0)[0m
+2026-11-06T20:52:54.8458160Z [36;1m    try:[0m
+2026-11-06T20:52:54.8459230Z [36;1m        fd = mkstemp(template)[0m
+2026-11-06T20:52:54.8459700Z [36;1m        error = ctypes.get_errno()[0m
+2026-11-06T20:52:54.8460160Z [36;1m    finally:[0m
+2026-11-06T20:52:54.8460560Z [36;1m        os.umask(old_mask)[0m
+2026-11-06T20:52:54.8461010Z [36;1m    path = os.fsdecode(template.value)[0m
+2026-11-06T20:52:54.8461770Z [36;1m    emit('mkstemp', path=path, return_value=fd, errno=error,[0m
+2026-11-06T20:52:54.8462410Z [36;1m         error_name=errno.errorcode.get(error) if error else None)[0m
+2026-11-06T20:52:54.8462970Z [36;1m    if fd == -1:[0m
+2026-11-06T20:52:54.8463390Z [36;1m        raise OSError(error, os.strerror(error), path)[0m
+2026-11-06T20:52:54.8464070Z [36;1m    try:[0m
+2026-11-06T20:52:54.8464580Z [36;1m        payload = b'Forge environment preflight only\n'[0m
+2026-11-06T20:52:54.8465080Z [36;1m        written = os.write(fd, payload)[0m
+2026-11-06T20:52:54.8465590Z [36;1m        os.lseek(fd, 0, os.SEEK_SET)[0m
+2026-11-06T20:52:54.8466070Z [36;1m        observed = os.read(fd, len(payload) + 1)[0m
+2026-11-06T20:52:54.8466750Z [36;1m        emit('read_write', written=written, read_bytes=len(observed), equal=observed == payload)[0m
+2026-11-06T20:52:54.8467750Z [36;1m        assert written == len(payload) and observed == payload[0m
+2026-11-06T20:52:54.8468350Z [36;1m        os.close(fd)[0m
+2026-11-06T20:52:54.8468740Z [36;1m        fd = -1[0m
+2026-11-06T20:52:54.8469160Z [36;1m        os.chmod(path, 0)[0m
+2026-11-06T20:52:54.8469650Z [36;1m        try:[0m
+2026-11-06T20:52:54.8470070Z [36;1m            forbidden = os.open(path, os.O_RDONLY)[0m
+2026-11-06T20:52:54.8470570Z [36;1m        except OSError as exc:[0m
+2026-11-06T20:52:54.8471570Z [36;1m            emit('negative_permission', path=path, errno=exc.errno,[0m
+2026-11-06T20:52:54.8472170Z [36;1m                 error_name=errno.errorcode.get(exc.errno))[0m
+2026-11-06T20:52:54.8473290Z [36;1m            assert exc.errno in (errno.EACCES, errno.EPERM)[0m
+2026-11-06T20:52:54.8474150Z [36;1m        else:[0m
+2026-11-06T20:52:54.8474550Z [36;1m            os.close(forbidden)[0m
+2026-11-06T20:52:54.8475670Z [36;1m            raise RuntimeError('mode000 file could be opened by non-root process')[0m
+2026-11-06T20:52:54.8476420Z [36;1m    finally:[0m
+2026-11-06T20:52:54.8476800Z [36;1m        if fd != -1:[0m
+2026-11-06T20:52:54.8477200Z [36;1m            os.close(fd)[0m
+2026-11-06T20:52:54.8477610Z [36;1m        os.chmod(path, 0o600)[0m
+2026-11-06T20:52:54.8478160Z [36;1m        os.unlink(path)[0m
+2026-11-06T20:52:54.8478570Z [36;1m    [0m
+2026-11-06T20:52:54.8479700Z [36;1m    command(['/usr/bin/true'])[0m
+2026-11-06T20:52:54.8480210Z [36;1m    allocation = bytearray(64 * 1024 * 1024)[0m
+2026-11-06T20:52:54.8480770Z [36;1m    for offset in range(0, len(allocation), 4096):[0m
+2026-11-06T20:52:54.8481510Z [36;1m        allocation[offset] = 1[0m
+2026-11-06T20:52:54.8482220Z [36;1m    emit('memory_probe', touched_bytes=len(allocation))[0m
+2026-11-06T20:52:54.8482930Z [36;1m    emit('environment_controls_complete', scope='Finite observations only')[0m
+2026-11-06T20:52:54.8483550Z [36;1m    [0m
+2026-11-06T20:52:54.8484050Z [36;1m    # Runs only after the unchanged U322 environment controls have passed.[0m
+2026-11-06T20:52:54.8485380Z [36;1m    # This transport binds bytes and dispatches the existing checker. It proves no theorem.[0m
+2026-11-06T20:52:54.8486210Z [36;1m    import base64[0m
+2026-11-06T20:52:54.8486610Z [36;1m    import io[0m
+2026-11-06T20:52:54.8486980Z [36;1m    from pathlib import Path[0m
+2026-11-06T20:52:54.8487470Z [36;1m    import tarfile[0m
+2026-11-06T20:52:54.8488830Z [36;1m    import urllib.request[0m
+2026-11-06T20:52:54.8489350Z [36;1m    [0m
+2026-11-06T20:52:54.8489830Z [36;1m    sha = lambda data: hashlib.sha256(data).hexdigest()[0m
+2026-11-06T20:52:54.8490990Z [36;1m    libc.access.argtypes = [ctypes.c_char_p, ctypes.c_int][0m
+2026-11-06T20:52:54.8494680Z [36;1m    libc.access.restype = ctypes.c_int[0m
+2026-11-06T20:52:54.8495130Z [36;1m    ctypes.set_errno(0)[0m
+2026-11-06T20:52:54.8495590Z [36;1m    access_result = libc.access(b'/var/tmp', os.W_OK)[0m
+2026-11-06T20:52:54.8496090Z [36;1m    access_errno = ctypes.get_errno()[0m
+2026-11-06T20:52:54.8496770Z [36;1m    emit('access', path='/var/tmp', mode='W_OK', return_value=access_result,[0m
+2026-11-06T20:52:54.8497830Z [36;1m         errno=access_errno, error_name=errno.errorcode.get(access_errno))[0m
+2026-11-06T20:52:54.8500910Z [36;1m    assert access_result == 0[0m
+2026-11-06T20:52:54.8501310Z [36;1m    [0m
+2026-11-06T20:52:54.8501840Z [36;1m    # Preserve compiled paths. Never elevate, change an existing path, or relocate a heap.[0m
+2026-11-06T20:52:54.8503520Z [36;1m    installation_parent = Path('/Users/mackianni')[0m
+2026-11-06T20:52:54.8504000Z [36;1m    try:[0m
+2026-11-06T20:52:54.8504380Z [36;1m        installation_parent.mkdir(mode=0o700)[0m
+2026-11-06T20:52:54.8504870Z [36;1m    except OSError as exc:[0m
+2026-11-06T20:52:54.8506290Z [36;1m        emit('installation_parent_mkdir', path=str(installation_parent), errno=exc.errno,[0m
+2026-11-06T20:52:54.8507020Z [36;1m             error_name=errno.errorcode.get(exc.errno), SAT='NOT_RUN')[0m
+2026-11-06T20:52:54.8508490Z [36;1m        raise[0m
+2026-11-06T20:52:54.8509110Z [36;1m    emit('installation_parent_mkdir', path=str(installation_parent), actual_result=0)[0m
+2026-11-06T20:52:54.8511090Z [36;1m    root = installation_parent / 'forge'[0m
+2026-11-06T20:52:54.8511580Z [36;1m    root.mkdir(mode=0o700)[0m
+2026-11-06T20:52:54.8512390Z [36;1m    prefix = 'https://raw.githubusercontent.com/mack-dot/forge/' + os.environ['INPUT_COMMIT_SHA'] + '/proposals/m1-hosted-sat-inputs/'[0m
+2026-11-06T20:52:54.8513540Z [36;1m    [0m
+2026-11-06T20:52:54.8514270Z [36;1m    def download(name, expected_size, expected_sha):[0m
+2026-11-06T20:52:54.8517350Z [36;1m        # Downloads are bounded and hash checked before any input executes.[0m
+2026-11-06T20:52:54.8518160Z [36;1m        with urllib.request.urlopen(prefix + name, timeout=30) as response:[0m
+2026-11-06T20:52:54.8518810Z [36;1m            data = response.read(expected_size + 1)[0m
+2026-11-06T20:52:54.8520540Z [36;1m        assert len(data) == expected_size, name + ': size mismatch'[0m
+2026-11-06T20:52:54.8521300Z [36;1m        assert sha(data) == expected_sha, name + ': hash mismatch'[0m
+2026-11-06T20:52:54.8521980Z [36;1m        emit('download_identity', file=name, bytes=len(data), sha256=sha(data))[0m
+2026-11-06T20:52:54.8527470Z [36;1m        return data[0m
+2026-11-06T20:52:54.8527860Z [36;1m    [0m
+2026-11-06T20:52:54.8528660Z [36;1m    manifest_data = download('INPUTS.json', int(os.environ['INPUT_MANIFEST_BYTES']), os.environ['INPUT_MANIFEST_SHA256'])[0m
+2026-11-06T20:52:54.8529580Z [36;1m    manifest = json.loads(manifest_data)[0m
+2026-11-06T20:52:54.8530120Z [36;1m    assert manifest['installation_root'] == str(root)[0m
+2026-11-06T20:52:54.8530800Z [36;1m    archive = b''.join(download(p['name'], p['bytes'], p['sha256']) for p in manifest['parts'])[0m
+2026-11-06T20:52:54.8531990Z [36;1m    assert len(archive) == manifest['archive_bytes'] and sha(archive) == manifest['archive_sha256'][0m
+2026-11-06T20:52:54.8532870Z [36;1m    expected = {e['path']: e for e in manifest['files']}[0m
+2026-11-06T20:52:54.8533840Z [36;1m    with tarfile.open(fileobj=io.BytesIO(archive), mode='r:xz') as tar:[0m
+2026-11-06T20:52:54.8534450Z [36;1m        members = tar.getmembers()[0m
+2026-11-06T20:52:54.8536290Z [36;1m        assert len(members) == len(expected) and {m.name for m in members} == set(expected)[0m
+2026-11-06T20:52:54.8537740Z [36;1m        for member in members:[0m
+2026-11-06T20:52:54.8538230Z [36;1m            rel = Path(member.name)[0m
+2026-11-06T20:52:54.8539020Z [36;1m            assert member.isfile() and not rel.is_absolute() and '..' not in rel.parts[0m
+2026-11-06T20:52:54.8539790Z [36;1m            entry = expected[member.name][0m
+2026-11-06T20:52:54.8540300Z [36;1m            assert member.size == entry['bytes'][0m
+2026-11-06T20:52:54.8540810Z [36;1m            data = tar.extractfile(member).read()[0m
+2026-11-06T20:52:54.8541730Z [36;1m            assert sha(data) == entry['sha256'][0m
+2026-11-06T20:52:54.8542190Z [36;1m            path = root / rel[0m
+2026-11-06T20:52:54.8542740Z [36;1m            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)[0m
+2026-11-06T20:52:54.8543520Z [36;1m            with path.open('xb') as output:[0m
+2026-11-06T20:52:54.8544090Z [36;1m                output.write(data)[0m
+2026-11-06T20:52:54.8545000Z [36;1m            path.chmod(entry['mode'])[0m
+2026-11-06T20:52:54.8545530Z [36;1m    [0m
+2026-11-06T20:52:54.8545890Z [36;1m    def verify_inputs(label):[0m
+2026-11-06T20:52:54.8546440Z [36;1m        for name, entry in expected.items():[0m
+2026-11-06T20:52:54.8546890Z [36;1m            path = root / name[0m
+2026-11-06T20:52:54.8547340Z [36;1m            actual = sha(path.read_bytes())[0m
+2026-11-06T20:52:54.8548660Z [36;1m            emit(label, file=name, bytes=path.stat().st_size, sha256=actual)[0m
+2026-11-06T20:52:54.8549270Z [36;1m            assert actual == entry['sha256'][0m
+2026-11-06T20:52:54.8549810Z [36;1m    [0m
+2026-11-06T20:52:54.8550170Z [36;1m    verify_inputs('input_before')[0m
+2026-11-06T20:52:54.8550720Z [36;1m    tc = root / '.toolchain/experiments/refund-cakeml-20261104'[0m
+2026-11-06T20:52:54.8552040Z [36;1m    diagnostic = root / 'results/refund-native-audit-2026-11-04/attempt-0011/dependency-diagnostic'[0m
+2026-11-06T20:52:54.8552750Z [36;1m    hol = tc / 'HOL/bin/hol'[0m
+2026-11-06T20:52:54.8553340Z [36;1m    solver = tc / 'HOL/src/HolSat/sat_solvers/minisat/minisat'[0m
+2026-11-06T20:52:54.8554330Z [36;1m    assert os.access(hol, os.X_OK) and os.access(solver, os.X_OK)[0m
+2026-11-06T20:52:54.8555380Z [36;1m    command(['/usr/bin/otool', '-L', str(hol), str(tc/'poly-install/lib/libpolyml.16.dylib'), str(tc/'transport/lib/libgmp.10.dylib'), str(solver)])[0m
+2026-11-06T20:52:54.8556500Z [36;1m    env = {key: value for key, value in os.environ.items() if key in ('HOME', 'TMPDIR', 'PATH', 'LANG', 'LC_ALL')}[0m
+2026-11-06T20:52:54.8557380Z [36;1m    env['DYLD_LIBRARY_PATH'] = str(tc/'poly-install/lib') + ':' + str(tc/'transport/lib')[0m
+2026-11-06T20:52:54.8558070Z [36;1m    env['DYLD_PRINT_LIBRARIES'] = '1'[0m
+2026-11-06T20:52:54.8559060Z [36;1m    argv = [str(hol), '--maxheap', '1024', 'run', '--holstate=' + str(tc/'HOL/examples/l3-machine-code/arm8/step/arm8-heap'),[0m
+2026-11-06T20:52:54.8559970Z [36;1m            str(diagnostic/'preload.sml'), str(diagnostic/'proof.sml')][0m
+2026-11-06T20:52:54.8560800Z [36;1m    emit('sat_invocation', argv=argv, cwd=str(tc/'HOL/examples/l3-machine-code/arm8/step'),[0m
+2026-11-06T20:52:54.8561570Z [36;1m         environment=env, cpu_limit_seconds=120, maxheap_MiB=1024, core_limit_bytes=0,[0m
+2026-11-06T20:52:54.8562320Z [36;1m         loaded_libraries='DYLD_PRINT_LIBRARIES stderr; inspect exact paths',[0m
+2026-11-06T20:52:54.8562960Z [36;1m         physical_correspondence='NOT_ESTABLISHED')[0m
+2026-11-06T20:52:54.8563510Z [36;1m    [0m
+2026-11-06T20:52:54.8563850Z [36;1m    def child_limits():[0m
+2026-11-06T20:52:54.8564320Z [36;1m        resource.setrlimit(resource.RLIMIT_CPU, (120, 120))[0m
+2026-11-06T20:52:54.8565080Z [36;1m        resource.setrlimit(resource.RLIMIT_CORE, (0, 0))[0m
+2026-11-06T20:52:54.8565720Z [36;1m        resource.setrlimit(resource.RLIMIT_FSIZE, (32*1024*1024, 32*1024*1024))[0m
+2026-11-06T20:52:54.8566310Z [36;1m    [0m
+2026-11-06T20:52:54.8566820Z [36;1m    # Preserve complete streams independently of the theorem's printed markers.[0m
+2026-11-06T20:52:54.8567420Z [36;1m    stdout_path = root / 'sat.stdout'[0m
+2026-11-06T20:52:54.8567940Z [36;1m    stderr_path = root / 'sat.stderr'[0m
+2026-11-06T20:52:54.8568610Z [36;1m    with stdout_path.open('xb') as stdout, stderr_path.open('xb') as stderr:[0m
+2026-11-06T20:52:54.8569340Z [36;1m        process = subprocess.run(argv, cwd=tc/'HOL/examples/l3-machine-code/arm8/step',[0m
+2026-11-06T20:52:54.8570100Z [36;1m                                 env=env, stdout=stdout, stderr=stderr, preexec_fn=child_limits)[0m
+2026-11-06T20:52:54.8570860Z [36;1m    for name, path in [('stdout', stdout_path), ('stderr', stderr_path)]:[0m
+2026-11-06T20:52:54.8571600Z [36;1m        data = path.read_bytes()[0m
+2026-11-06T20:52:54.8572350Z [36;1m        emit('sat_stream', stream=name, bytes=len(data), sha256=sha(data), base64=base64.b64encode(data).decode('ascii'))[0m
+2026-11-06T20:52:54.8573510Z [36;1m    emit('sat_result', actual_exit=process.returncode, scope='Unchanged one-term SAT diagnostic only',[0m
+2026-11-06T20:52:54.8574530Z [36;1m         logical_Success='No inference from process exit', physical_ffiread_proof='NOT_ESTABLISHED')[0m
+2026-11-06T20:52:54.8575430Z [36;1m    verify_inputs('input_after')[0m
+2026-11-06T20:52:54.8576210Z [36;1m    raise SystemExit(process.returncode if process.returncode >= 0 else 128-process.returncode)[0m
+2026-11-06T20:52:54.8577030Z [36;1m[0m
+2026-11-06T20:52:54.8577340Z [36;1mtry:[0m
+2026-11-06T20:52:54.8577670Z [36;1m    main()[0m
+2026-11-06T20:52:54.8578120Z [36;1mexcept Exception as exc:[0m
+2026-11-06T20:52:54.8578560Z [36;1m    import json,sys[0m
+2026-11-06T20:52:54.8579770Z [36;1m    print(json.dumps({"operation":"preflight_failure","exception_type":type(exc).__name__,"message":str(exc),"errno":getattr(exc,"errno",None),"actual_exit":78,"end_to_end":False},sort_keys=True),flush=True)[0m
+2026-11-06T20:52:54.8581100Z [36;1m    traceback.print_exc()[0m
+2026-11-06T20:52:54.8581610Z [36;1m    sys.exit(78)[0m
+2026-11-06T20:52:54.8582230Z [36;1mPY[0m
+2026-11-06T20:52:56.0528780Z shell: /bin/bash --noprofile --norc -euo pipefail {0}
+2026-11-06T20:52:56.0529980Z env:
+2026-11-06T20:52:56.0530350Z   APPROVED_IMAGE_VERSION: 20261104.0514.1
+2026-11-06T20:52:56.0530850Z   INPUT_COMMIT_SHA: ac05eaf972b8c98784466ae063fca505aaaf25f4
+2026-11-06T20:52:56.0531530Z   INPUT_MANIFEST_SHA256: 6822d1ae4ef5ca78ae14e352c5b1e222ed113bba1f3760d9b0141b70386c51a7
+2026-11-06T20:52:56.0532120Z   INPUT_8435: 8435
+2026-11-06T20:52:56.0532470Z ##[endgroup]
+2026-11-06T20:52:57.4584620Z {"architecture": "arm64", "effective_uid": 501, "end_to_end": false, "image_os": "macos15", "image_version": "20261104.0514.1", "operation": "identity", "provider_isolation": "GitHub fresh-VM claim; not independently proved by this probe", "python_sha256": "5c5950c62eee5fd227a67e4bdfcde81c9add59799bba0949635f3d5ba9661c26", "python_version": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]", "release": "24.6.0", "run_id": "42292059389", "runner_arch": "ARM64", "runner_os": "macOS", "source_sha": "a599bf6c1e8e568bc1705468754edf959b274b6a", "system": "Darwin", "workflow_sha": "a599bf6c1e8e568bc1705468754edf959b274b6a"}
+2026-11-06T20:52:57.4689210Z {"actual_exit": 0, "argv": ["/usr/bin/sw_vers"], "end_to_end": false, "operation": "command", "stderr": "", "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t15.8.2\nBuildVersion:\t\t24H232\n"}
+2026-11-06T20:52:57.4739040Z {"actual_exit": 0, "argv": ["/usr/sbin/sysctl", "-n", "hw.memsize"], "end_to_end": false, "operation": "command", "stderr": "", "stdout": "7516192768\n"}
+2026-11-06T20:52:57.4744220Z {"core_limit_bytes": 0, "cpu_limit_seconds": 120, "end_to_end": false, "full_HOL_resource_adequacy": "NOT_ESTABLISHED", "memory_bytes": 7516192768, "operation": "resources", "temporary_disk_free_bytes": 49423114240}
+2026-11-06T20:52:57.4748330Z {"end_to_end": false, "errno": 0, "error_name": null, "operation": "mkstemp", "path": "/var/tmp/forge-m1-preflight-G2BJfb", "return_value": 3}
+2026-11-06T20:52:57.4750830Z {"end_to_end": false, "equal": true, "operation": "read_write", "read_bytes": 33, "written": 33}
+2026-11-06T20:52:57.4754170Z {"end_to_end": false, "errno": 13, "error_name": "EACCES", "operation": "negative_permission", "path": "/var/tmp/forge-m1-preflight-G2BJfb"}
+2026-11-06T20:52:57.4829340Z {"actual_exit": 0, "argv": ["/usr/bin/true"], "end_to_end": false, "operation": "command", "stderr": "", "stdout": ""}
+2026-11-06T20:52:57.5377960Z {"end_to_end": false, "operation": "memory_probe", "touched_bytes": 67108864}
+2026-11-06T20:52:57.5382430Z {"end_to_end": false, "operation": "environment_controls_complete", "scope": "Finite observations only"}
+2026-11-06T20:52:57.7407720Z {"end_to_end": false, "errno": 0, "error_name": null, "mode": "W_OK", "operation": "access", "path": "/var/tmp", "return_value": 0}
+2026-11-06T20:52:57.7410520Z {"SAT": "NOT_RUN", "end_to_end": false, "errno": 13, "error_name": "EACCES", "operation": "installation_parent_mkdir", "path": "/Users/mackianni"}
+2026-11-06T20:52:57.7413140Z Traceback (most recent call last):
+2026-11-06T20:52:57.7414080Z   File "<stdin>", line 202, in <module>
+2026-11-06T20:52:57.7415220Z   File "<stdin>", line 117, in main
+2026-11-06T20:52:57.7417260Z   File "/Applications/Xcode_16.4.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1313, in mkdir
+2026-11-06T20:52:57.7419400Z     self._accessor.mkdir(self, mode)
+2026-11-06T20:52:57.7420520Z PermissionError: [Errno 13] Permission denied: '/Users/mackianni'
+2026-11-06T20:52:57.7423520Z {"actual_exit": 78, "end_to_end": false, "errno": 13, "exception_type": "PermissionError", "message": "[Errno 13] Permission denied: '/Users/mackianni'", "operation": "preflight_failure"}
+2026-11-06T20:52:57.7510510Z ##[error]Process completed with exit code 78.
+2026-11-06T20:52:57.7696240Z Cleaning up orphan processes

@@ -1,0 +1,74 @@
+{
+  "argv": [
+    "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+    "run",
+    "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/preload.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/space-parent/forge_installSpaceBarrierTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/space-parent/forge_installSpaceBarrierTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/trace-parent/forge_spaceInstallTraceTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/trace-parent/forge_spaceInstallTraceTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/word-parent/forge_compilerWordTraceTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/word-parent/forge_compilerWordTraceTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/data-parent/forge_refundDataBehaviorTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/data-parent/forge_refundDataBehaviorTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/refund-parent/forge_refundWordPremisesTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/refund-parent/forge_refundWordPremisesTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/code-0003/forge_refundWordInitializationTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/code-0003/forge_refundWordInitializationTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/epoch-0002/forge_refundInitializedEpochTheory.sig",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/epoch-0002/forge_refundInitializedEpochTheory.sml",
+    "/Users/mackianni/forge/results/refund-word-initialization-2026-11-05/attempt-0001/exact-import-0002/audit.sml"
+  ],
+  "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+  "source_sha256": "655cf063914fd8d008c83315b942484902933ba66ec39ccf9617b67b36327de8",
+  "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+  "imported_objects": {
+    "space-parent": {
+      ".hol/objs/forge_installSpaceBarrierTheory.sig": "09dd81eb525b7ffaa66ba7295fe2be3877d8fe86bdeed8cbdce7617aab351bb2",
+      ".hol/objs/forge_installSpaceBarrierTheory.dat": "af08fc17c93472d6b53b81b7efb0216ebda89128a54e505295131d4f5fff6560",
+      ".hol/objs/forge_installSpaceBarrierTheory.sml": "2783af4a0503877be5a101cfd4661cf0d30bb8054b8537ddc1f139b9c3913c29",
+      ".hol/docs/forge_installSpaceBarrierTheory.html": "299e8e028a4e7a21ce98c174ee9adbe2d353bae2460a019990c6b4c4985bc631"
+    },
+    "trace-parent": {
+      ".hol/objs/forge_spaceInstallTraceTheory.dat": "5f2158bc5b57f30901dbca1d1d44898349b771e376cc7b76d07042c57f327b1b",
+      ".hol/objs/forge_spaceInstallTraceTheory.sig": "839ff311c213489455a00a60ea077ff490953f5a4849763b116ec9ac1accaf8d",
+      ".hol/objs/forge_spaceInstallTraceTheory.sml": "e17140c3ae372d33e1e804e3e6682fc2646cb72d56e2b7b7e290ac4b5fd1cfef",
+      ".hol/docs/forge_spaceInstallTraceTheory.html": "6bf4467f72b83c82b4f7d902a7fa19dfb9636e9ac48d3fa196b71ad678cd5905"
+    },
+    "word-parent": {
+      ".hol/objs/forge_compilerWordTraceTheory.sml": "8554f9b33e09ea9641a11db5d3ce0e70644a8ea1aaa6e781daf391e8c7114538",
+      ".hol/objs/forge_compilerWordTraceTheory.dat": "8f2ee0c5a0f2a9ca33c96d17d6bb7ae45846cd0f5dbc49f3e1c61036363232d5",
+      ".hol/objs/forge_compilerWordTraceTheory.sig": "e3e7d4dc80091d1f41d607b5707c6b2132d5ade3517e54991a746d5b1a81ee9f",
+      ".hol/docs/forge_compilerWordTraceTheory.html": "dae8705d6740505be5a12e6dd52e09996af626cb345cab80e0bda826a839f9d7"
+    },
+    "data-parent": {
+      ".hol/objs/forge_refundDataBehaviorTheory.sml": "9ac8a486d79d088dc425234d0cb6fa65d929715b4ad9d2c0da47c54d43ee8ed7",
+      ".hol/objs/forge_refundDataBehaviorTheory.dat": "afc716d5d2f486fdbcd7c38b2f645ef108735afc349e96acdf648750d9f6a84f",
+      ".hol/objs/forge_refundDataBehaviorTheory.sig": "f660ed1bbcebbae276ed0cbe4c235ad936e8600916d4e874d4c753c81fe53627",
+      ".hol/docs/forge_refundDataBehaviorTheory.html": "59d33e706de5e49fe66d72320f2d163b88e9812f0d94b284b0f992afd6d4727c"
+    },
+    "refund-parent": {
+      ".hol/objs/forge_refundWordPremisesTheory.sml": "86d7020dd9ee3bb1ac638f2bb6fed9cb283b72baffc43ee164063b57fab013ab",
+      ".hol/objs/forge_refundWordPremisesTheory.dat": "ec4712f6a53b11c62550789c2315a2a2f4a2c0bfc789e2e7f787dec73022b1f5",
+      ".hol/objs/forge_refundWordPremisesTheory.sig": "d8f9885a09ee689f986f26fcbd421f73fd12cda5aaab6fe01dc257f01f5b9a0d",
+      ".hol/docs/forge_refundWordPremisesTheory.html": "52a98e3b90db16886861914d81ff3203b4e53ca2b3cf0caa0cf5d657d661d527"
+    },
+    "code-0003": {
+      ".hol/objs/forge_refundWordInitializationTheory.sml": "fb3418e09bbbdffe1b207f4764359e014c9e237cc7eaa280d1a2080282cba152",
+      ".hol/objs/forge_refundWordInitializationTheory.dat": "2c7a3b4f3f0ee40bc9ddbb2a69d392181d886f2f3565b6f617d3434306991833",
+      ".hol/objs/forge_refundWordInitializationTheory.sig": "2984482ca71d7261102dd918af5deaff40c52f767b7d1fd7a943a2be6ad68322",
+      ".hol/docs/forge_refundWordInitializationTheory.html": "3970279fbd8219dfc0278dfad4b538d10b8fedcd3cade6532d7602d64cae07b7"
+    },
+    "epoch-0002": {
+      ".hol/objs/forge_refundInitializedEpochTheory.dat": "34e3a3972507a4d982994c6a4688f78aaa0b65efe4e88e56f241f5b8eb3fe1f5",
+      ".hol/objs/forge_refundInitializedEpochTheory.sig": "fb8f34b579f0026237982229dff4db1701098888e2607a9ca1d323df54c1ff2b",
+      ".hol/objs/forge_refundInitializedEpochTheory.sml": "6636e51fd424d6e88f23ff04d55358de5970728dd976ee46947883ab444b64b8",
+      ".hol/docs/forge_refundInitializedEpochTheory.html": "e0b951d43c4bb78449c34e408e167e50eb1d7bb13d5b03632daa6142fa4d0e08"
+    }
+  },
+  "actual_exit": null,
+  "end_to_end": false,
+  "cpu_seconds_per_process": 3600,
+  "scope": "Fresh same-host import, not independent full-chain replay or authenticated production."
+}

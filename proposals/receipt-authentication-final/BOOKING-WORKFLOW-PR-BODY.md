@@ -1,0 +1,9 @@
+Run the approved receipt repair's booking-only acceptance matrix on a genuine GitHub-hosted Linux runner. A manual main-only workflow binds an exact one-file Booking PR head, authenticates the existing bootstrap/implementation lock, and executes cold verification, valid same-process reuse, input invalidation, and adversarial refusal tests. It records actual verifier launches, gate exits, source/evidence identities, timings and failure artifacts.
+
+Base: merged receipt repair `edd9f9d95b315ea9985c9d892522923a457a3964`. Two files only: `.github/workflows/booking-reuse.yml` and `.github/experiments/booking_reuse.py`. Existing action commit pins and Linux verifier setup are retained. Permissions are contents/read and pull-requests/read. No Node integration, signing, status writes, cross-run cache adoption, infrastructure, protection change or Stage 12.
+
+Validation: patch applies to the merged source tree; Python/YAML structural checks, immutable action references, read-only permissions and expected implementation-lock checks passed (exit 0). Existing 13-case repair results are local. The workflow's Linux matrix and hosted performance measurements are NOT RUN. No result is inferred from syntax checks.
+
+Workflow publication does not authorize merge or execution. After independent owner review and explicit merge authorization, a real booking-only PR must be based on the approved workflow revision. A separate dispatch authorization must identify the trusted main commit, booking PR number and exact candidate head. All expected refusals must be observed; failures remain failures. `end_to_end=false`.
+
+Prepared patch SHA-256: `564cc2021661bc15cc34af132ae80424d08a93b1e6b899b91801b4aa4f668317`. Off-machine evidence backup and complete effective-protection exports remain unconfirmed; integration EXIT remains NOT_ESTABLISHED.

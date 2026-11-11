@@ -1,0 +1,46 @@
+{
+  "actual_exit": 0,
+  "new_archive_files": 1475,
+  "reused_base_files": 18,
+  "all_source_bytes_match": true,
+  "metadata_child_exits": [
+    0,
+    0
+  ],
+  "local_parse_child_exit": 0,
+  "transport_negative_child_exits": [
+    1,
+    1,
+    1
+  ],
+  "protected_paths": {
+    "root_historical_files": 50,
+    "root_frozen_mission_unchanged": true,
+    "worktree_prior_commit": "b8586b6fc3d37d5423114fc7a8cf96b4030403ec",
+    "argv": [
+      "git",
+      "diff",
+      "--exit-code",
+      "b8586b6fc3d37d5423114fc7a8cf96b4030403ec",
+      "--",
+      "gate",
+      "policy",
+      "spec",
+      "spec.lock",
+      "FORGE_MISSION.md"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "scope": "Distinct workspaces use their own historical baselines."
+  },
+  "frozen_mission_unchanged": true,
+  "manifest_sha256": "6822e8da53f477f991bfa4a7cab02ffc59906a58460048a49af190fb42b2c105",
+  "driver_sha256": "b859fe575016c8b88f77a9d105e6e54f4535d7b82fffe8173dfdb28223b94eaf",
+  "workflow_template_sha256": "6db12f716e14a227b5de1b6d7f58da6ba3c020dc07bb87b413a225cedfea2b42",
+  "scope": "Separate readback by producing agent; not independent assurance or full-chain replay.",
+  "new_theorem": "NOT_ESTABLISHED",
+  "hosted": "NOT_RUN",
+  "approval": "PENDING",
+  "end_to_end": false
+}

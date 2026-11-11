@@ -1,0 +1,31 @@
+[
+  {
+    "label": "full",
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "cwd": "/private/tmp/forge-native-audit-review-20261104",
+    "actual_exit": 2
+  },
+  {
+    "label": "authored",
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      "ROADMAP.md",
+      "FORGE_MISSION_STATUS.md",
+      "unsure.md",
+      "proposals/refund-executable-feasibility/native-error-instructions-20261105/REPORT.md",
+      "proposals/refund-executable-feasibility/native-error-instructions-20261105/ASSURANCE.md",
+      "proposals/refund-executable-feasibility/native-error-instructions-20261105/COMMANDS.md"
+    ],
+    "cwd": "/private/tmp/forge-native-audit-review-20261104",
+    "actual_exit": 0
+  }
+]

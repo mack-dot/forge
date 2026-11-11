@@ -1,0 +1,68 @@
+diff --git a/Source/DafnyDriver/Commands/Bake.cs b/Source/DafnyDriver/Commands/Bake.cs
+index 27185c7..e641fac 100644
+--- a/Source/DafnyDriver/Commands/Bake.cs
++++ b/Source/DafnyDriver/Commands/Bake.cs
+@@ -16,20 +16,39 @@ namespace Microsoft.Dafny.Compilers {
+     private static string seq_name = "Then";
+ 
+     public static string ProgramToString(Program program) {
+-      var compileModules = program.CompileModules;
+-
+-      // For now, we only consider programs with a single module besides
+-      // the system module
+-      if (compileModules.Count() != 2) {
++      var compileModules = program.CompileModules.ToList();
++      if (compileModules.Count < 2) {
+         throw UnsupportedError(compileModules);
+       }
+       if (!compileModules.First().Name.Equals("_System")) {
+         throw UnsupportedError(compileModules.First());
+       }
+ 
+-      // The single module we consider should only have a DefaultClassDecl
+-      var topLevelDecls = compileModules.ElementAt(1).TopLevelDecls;
+-      if (topLevelDecls.Count() != 1) {
++      // Also accept one named leaf module inside an otherwise empty default
++      // module. Do not select a module while ignoring executable siblings,
++      // imports, refinements, nested modules or additional declarations.
++      var selected = compileModules[1];
++      if (compileModules.Count != 2) {
++        var root = program.DefaultModuleDef;
++        var named = compileModules.Skip(1).Where(m => m != root).ToList();
++        if (compileModules.Count != 3 || !compileModules.Contains(root) || named.Count != 1) {
++          throw UnsupportedError(compileModules);
++        }
++        selected = named[0];
++        var rootDecls = root.TopLevelDecls.ToList();
++        if (selected.IsFacade || selected.Implements != null ||
++            selected.ModuleKind != ModuleKindEnum.Concrete || selected.Attributes != null ||
++            root.Includes.Count != 0 ||
++            rootDecls.OfType<LiteralModuleDecl>().Count() != 1 ||
++            !rootDecls.All(d => d is DefaultClassDecl c && c.Members.Count == 0 ||
++                               d is LiteralModuleDecl l && l.ModuleDef == selected)) {
++          throw UnsupportedError(rootDecls);
++        }
++      }
++
++      // The selected module must contain only its default class.
++      var topLevelDecls = selected.TopLevelDecls.ToList();
++      if (topLevelDecls.Count != 1 || topLevelDecls[0] is not DefaultClassDecl) {
+         throw UnsupportedError(topLevelDecls);
+       }
+       var defaultClassDecl = (DefaultClassDecl)topLevelDecls.First();
+@@ -544,6 +563,8 @@ namespace Microsoft.Dafny.Compilers {
+         BinaryExpr.ResolvedOpcode.Le => StringListToString(["Le"]),
+         BinaryExpr.ResolvedOpcode.Ge => StringListToString(["Ge"]),
+         BinaryExpr.ResolvedOpcode.EqCommon => StringListToString(["Eq"]),
++        // Resolved Boolean equivalence is equality in the existing HOL AST.
++        BinaryExpr.ResolvedOpcode.Iff => StringListToString(["Eq"]),
+         BinaryExpr.ResolvedOpcode.NeqCommon => StringListToString(["Neq"]),
+         BinaryExpr.ResolvedOpcode.Sub => StringListToString(["Sub"]),
+         BinaryExpr.ResolvedOpcode.Add => StringListToString(["Add"]),
+@@ -668,4 +689,4 @@ namespace Microsoft.Dafny.Compilers {
+       return new ExtractorError(startToken, $"Unsupported {typeName}: {obj}\n{Environment.StackTrace}");
+     }
+   }
+-}
+\ No newline at end of file
++}

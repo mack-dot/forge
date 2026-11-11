@@ -1,0 +1,40 @@
+{
+  "paths": [
+    {
+      "path": "/private/tmp/forge-native-audit-review-20261104",
+      "exists": true,
+      "is_file": false,
+      "is_dir": true,
+      "is_symlink": false
+    },
+    {
+      "path": "/private/tmp/forge-native-audit-review-20261104/.git",
+      "exists": false,
+      "is_file": false,
+      "is_dir": false,
+      "is_symlink": false
+    },
+    {
+      "path": "/private/tmp/forge-campaign-main-20261102/.git",
+      "exists": true,
+      "is_file": false,
+      "is_dir": true,
+      "is_symlink": false
+    },
+    {
+      "path": "/Users/mackianni/forge/.git",
+      "exists": false,
+      "is_file": false,
+      "is_dir": false,
+      "is_symlink": false
+    }
+  ],
+  "git_rev_parse": {
+    "actual_exit": 128,
+    "stdout": "",
+    "stderr": "fatal: not a git repository (or any of the parent directories): .git\n"
+  },
+  "prior_state": "At start of this turn,the same worktree reported clean HEAD bd37d71f509ab062dc86fd3be6db1b9514b35cb7.",
+  "no_repair_attempted": true,
+  "end_to_end": false
+}

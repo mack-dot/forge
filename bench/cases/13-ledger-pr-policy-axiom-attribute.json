@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "  method Apply ... {\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "  lemma {:axiom} AnyTotalIsZero(balances: map<int, int>)\n    ensures Total(balances) == 0\n\n  method Apply ... {\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "policy_reject",
+ "expected_exit": 1,
+ "expected_reason_prefix": "SOURCE_SCOPE",
+ "gate": "incremental",
+ "id": "ledger-pr-policy-axiom-attribute",
+ "kind": "policy",
+ "order": 13,
+ "rationale": "A bodiless {:axiom} lemma that would make any total equal zero.",
+ "supplied_evidence": null
+}

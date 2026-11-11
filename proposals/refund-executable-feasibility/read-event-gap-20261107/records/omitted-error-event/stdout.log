@@ -1,0 +1,18 @@
+IMPORTED_THEOREM basis_read_ignores_ext
+ []
+⊢ basis_ffi_oracle ext (ExtCall «read») st conf bytes =
+  basis_ffi_oracle ext' (ExtCall «read») st conf bytes
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+IMPORTED_THEOREM basis_stdin_read_total
+ []
+⊢ wfFS fs ∧ STD_streams fs ∧ LENGTH conf = 8 ∧ w82n conf = 0 ∧
+  LENGTH read_tail ≥ w22n [n1; n0] ⇒
+  ∃bytes' fs'.
+    basis_ffi_oracle ext (ExtCall «read») (cl,fs) conf
+      (n1::n0::pad1::pad2::read_tail) = Oracle_return (cl,fs') bytes' ∧
+    HD bytes' = 0w
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0

@@ -1,0 +1,21 @@
+{
+ "changes": [
+  {
+   "find": "    } else {\n      next := state;\n      outcome := Rejected;\n    }\n  }\n}\n",
+   "op": "edit",
+   "path": "impl/Ledger.dfy",
+   "replace": "    } else {\n      next := state;\n      outcome := Ok;\n    }\n  }\n}\n",
+   "target": "candidate"
+  }
+ ],
+ "domain": "ledger-pr",
+ "expected_class": "defect",
+ "expected_exit": 1,
+ "expected_reason_prefix": "VERIFICATION_REJECTED",
+ "gate": "incremental",
+ "id": "ledger-pr-defect-invalid-accepted",
+ "kind": "defect",
+ "order": 10,
+ "rationale": "Every other request returns Ok: violates C5.",
+ "supplied_evidence": null
+}

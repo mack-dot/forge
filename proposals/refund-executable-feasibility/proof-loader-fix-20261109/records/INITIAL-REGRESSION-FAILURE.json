@@ -1,0 +1,9 @@
+{
+  "actual_exit": 1,
+  "child_exit": 1,
+  "accepted_negative_control": false,
+  "reason": "HOLFileSys.toFS is internal and not exported; SML Static Errors before path open",
+  "source": "loader-path-regression.sml.initial",
+  "runner": "test_loader.py.initial",
+  "correction": "Use exported HFS_NameMunge.HOLtoFS for resolution and unchanged HOLFileSys.openIn for reads. No driver/proof change."
+}

@@ -1,0 +1,26 @@
+{
+ "changes": [],
+ "domain": "ledger-evidence",
+ "expected_class": "missing_evidence",
+ "expected_exit": 1,
+ "expected_reason_prefix": "ARTIFACT_MISMATCH",
+ "gate": "gate",
+ "id": "ledger-evidence-artifact-swapped",
+ "kind": "adversarial_evidence",
+ "order": 27,
+ "rationale": "Artifact digest replaced.",
+ "supplied_evidence": {
+  "duplicate_top_level_key": null,
+  "from": "ledger-evidence-seed-fresh",
+  "ops": [
+   {
+    "op": "set",
+    "path": [
+     "artifact",
+     "sha256"
+    ],
+    "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ]
+ }
+}

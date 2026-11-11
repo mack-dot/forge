@@ -1,0 +1,57 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/prepare_fix.py"
+      ],
+      "actual_exit": 0,
+      "executed_source": "prepare_fix.py.initial"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/test_loader.py"
+      ],
+      "actual_exit": 1,
+      "executed_source": "test_loader.py.initial"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/test_loader.py"
+      ],
+      "actual_exit": 0,
+      "child_exits": [
+        1,
+        0
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/check_preservation.py"
+      ],
+      "actual_exit": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/Users/mackianni/forge/proposals/refund-executable-feasibility/proof-loader-fix-20261109/records/record_fix.py"
+      ],
+      "actual_exit": 0
+    }
+  ],
+  "proof_executed": false,
+  "hosted_execution": false,
+  "end_to_end": false
+}

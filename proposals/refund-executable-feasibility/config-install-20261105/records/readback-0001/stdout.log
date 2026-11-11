@@ -1,0 +1,119 @@
+{
+  "actual_exit": 0,
+  "recorded_child_exits": {
+    "config-0001": 0,
+    "config-repeat": 0,
+    "space-0001": 1,
+    "space-0002": 0,
+    "space-repeat": 0,
+    "trace-0001": 1,
+    "trace-0002": 1,
+    "trace-0003": 1,
+    "trace-0004": 1,
+    "trace-0005": 1,
+    "exact-import": 1,
+    "wrong-program": 1,
+    "missing-space": 1,
+    "retained-bound": 1,
+    "exact-import-0002": 0,
+    "wrong-program-0002": 1,
+    "missing-space-0002": 1,
+    "retained-bound-0002": 1,
+    "trace-corollary-0002": 1,
+    "trace-corollary-0003": 1,
+    "trace-corollary-0004": 0,
+    "trace-repeat": 0,
+    "trace-import": 0,
+    "missing-nonerror": 1,
+    "missing-trace-space": 1
+  },
+  "proof_hashes": {
+    "config.sml": "00390171f00926ad6a6c976c9db2babb85302bdb90fe51a4286fc430393cde4c",
+    "space.sml": "a56b2a7bdbf61b6a3cbc0e9e6224941a8764da8f30e60fb0d1e774ff04d3017a",
+    "trace.sml": "bc02a55aae9bbf6f60fe044153c269fc998e1df38794612168d336c0e6f03ad0",
+    "expected.sml": "c2cfa56848d89f2a6e11db67051836c1d99c79838db074ce67e306d852073be3",
+    "expected-trace.sml": "f9b09779790c39643a3321831d959205fb0a212d087ab08796724dc7499864f1"
+  },
+  "new_exported_theorems": 8,
+  "exact_import_statements": 9,
+  "historical_parent": "closure-parent; not a new source replay",
+  "trace_bundle": {
+    "actual_exit": 0,
+    "rule": "At most five attempts per failing proof",
+    "supersedes": [
+      "trace-stop.json",
+      "attempt-accounting.json"
+    ],
+    "preserved_earlier_records": true,
+    "bounded_stack_single_epoch": {
+      "failed_attempts": 4,
+      "successful_attempt": 5,
+      "later_prefix_unchanged": true
+    },
+    "safe_run_single_epoch": {
+      "failed_attempts": 3,
+      "successful_attempt": 4,
+      "complete_export_case": "trace-corollary-0004"
+    },
+    "complete_bundle_actual_exit": 0,
+    "end_to_end": false
+  },
+  "superseded_stop_record_preserved": {
+    "actual_child_exits": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "status": "STOPPED_AT_FIVE",
+    "complete_theory_export": false,
+    "repeat": "NOT RUN",
+    "exact_import": "NOT RUN",
+    "negative_controls": "NOT RUN",
+    "last_failure": "safe_run_single_epoch: no solution found",
+    "partial_log_only": [
+      "epoch_single",
+      "bounded_stack_single_epoch"
+    ],
+    "end_to_end": false
+  },
+  "closure_node_count": 386,
+  "closure_axioms": [
+    "bool.BOOL_CASES_AX",
+    "bool.ETA_AX",
+    "bool.INFINITY_AX",
+    "bool.SELECT_AX"
+  ],
+  "dependency_file_count": 1917,
+  "builtin_dependencies": {
+    "min": {
+      "source_sha256": "5a8fbf2f14608764b499032f7e497d4008f82039da190d963af4b822b69ed92e",
+      "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+    }
+  },
+  "protected_files_unchanged": 50,
+  "prior_packets": {
+    "runtime-premises-20261104": {
+      "manifest_sha256": "33cd153d38907be0ee34e4a7cda35698b46b41c9f218126a325eaeeecf3e3177",
+      "members": 100
+    },
+    "installation-premise-20261104": {
+      "manifest_sha256": "393b2f2664d5c23cd289a95c51b6870c5c30b3d62595f91df3c088a0931641b7",
+      "members": 123
+    },
+    "target-install-bridge-20261105": {
+      "manifest_sha256": "523ae744f9ffbb1d1bfade9db4d200bf53a25219479a6780a1aeaa418513005c",
+      "members": 233
+    },
+    "closure-install-20261105": {
+      "manifest_sha256": "7f93f63bb7478c8f0c49f547719d91bafd6ce9f800e3291bd7670a17e6cc3247",
+      "members": 84
+    }
+  },
+  "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "scope": "Refund closure binding under set_oracle and conditional word-level installation-space barriers plus single-epoch trace theorem. Target installer exclusion NOT_ESTABLISHED.",
+  "native_or_hosted_execution": "NOT RUN",
+  "independent_full_chain_replay": "NOT RUN",
+  "end_to_end": false
+}

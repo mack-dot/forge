@@ -1,0 +1,209 @@
+{
+  "scope": "Read-only libc access permission queries in the current managed Python process; no file creation, SAT, proof, or permission change.",
+  "effective_uid": 501,
+  "real_uid": 501,
+  "source_sha256": "1e43a59712e128ff163b5994d0f9681cac8bcbbad582dad34343a28c759030b9",
+  "observations": [
+    {
+      "path": "/var/tmp",
+      "resolved_path": "/private/var/tmp",
+      "metadata": {
+        "mode": "0o1777",
+        "owner_uid": 0,
+        "owner_gid": 0,
+        "directory": true
+      },
+      "queries": [
+        {
+          "function": "libc.access",
+          "mode": "F_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "R_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "W_OK",
+          "return": -1,
+          "errno": 1,
+          "error_name": "EPERM"
+        },
+        {
+          "function": "libc.access",
+          "mode": "X_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        }
+      ]
+    },
+    {
+      "path": "/private/var/tmp",
+      "resolved_path": "/private/var/tmp",
+      "metadata": {
+        "mode": "0o1777",
+        "owner_uid": 0,
+        "owner_gid": 0,
+        "directory": true
+      },
+      "queries": [
+        {
+          "function": "libc.access",
+          "mode": "F_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "R_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "W_OK",
+          "return": -1,
+          "errno": 1,
+          "error_name": "EPERM"
+        },
+        {
+          "function": "libc.access",
+          "mode": "X_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp",
+      "resolved_path": "/private/tmp",
+      "metadata": {
+        "mode": "0o1777",
+        "owner_uid": 0,
+        "owner_gid": 0,
+        "directory": true
+      },
+      "queries": [
+        {
+          "function": "libc.access",
+          "mode": "F_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "R_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "W_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "X_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        }
+      ]
+    },
+    {
+      "path": "/Users/mackianni/forge",
+      "resolved_path": "/Users/mackianni/forge",
+      "metadata": {
+        "mode": "0o755",
+        "owner_uid": 501,
+        "owner_gid": 20,
+        "directory": true
+      },
+      "queries": [
+        {
+          "function": "libc.access",
+          "mode": "F_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "R_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "W_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        },
+        {
+          "function": "libc.access",
+          "mode": "X_OK",
+          "return": 0,
+          "errno": 0,
+          "error_name": null
+        }
+      ]
+    },
+    {
+      "path": "/Users/mackianni/forge/results/refund-environment-recovery-20261106/attempt-0003/nonexistent-read-only-control",
+      "resolved_path": "/Users/mackianni/forge/results/refund-environment-recovery-20261106/attempt-0003/nonexistent-read-only-control",
+      "metadata": {
+        "stat_errno": 2,
+        "stat_error_name": "ENOENT"
+      },
+      "queries": [
+        {
+          "function": "libc.access",
+          "mode": "F_OK",
+          "return": -1,
+          "errno": 2,
+          "error_name": "ENOENT"
+        },
+        {
+          "function": "libc.access",
+          "mode": "R_OK",
+          "return": -1,
+          "errno": 2,
+          "error_name": "ENOENT"
+        },
+        {
+          "function": "libc.access",
+          "mode": "W_OK",
+          "return": -1,
+          "errno": 2,
+          "error_name": "ENOENT"
+        },
+        {
+          "function": "libc.access",
+          "mode": "X_OK",
+          "return": -1,
+          "errno": 2,
+          "error_name": "ENOENT"
+        }
+      ]
+    }
+  ],
+  "denial_issuer": "NOT_ESTABLISHED: errno alone does not distinguish sandbox, ACL, TCC or other policy.",
+  "historical_SAT_failing_operation": "NOT_ESTABLISHED",
+  "end_to_end": false
+}

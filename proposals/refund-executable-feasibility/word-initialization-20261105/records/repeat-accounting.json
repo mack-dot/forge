@@ -1,0 +1,60 @@
+{
+  "actual_exit": 0,
+  "identical_exports": {
+    "code-0003": {
+      ".hol/objs/forge_refundWordInitializationTheory.sml": "fb3418e09bbbdffe1b207f4764359e014c9e237cc7eaa280d1a2080282cba152",
+      ".hol/objs/forge_refundWordInitializationTheory.dat": "2c7a3b4f3f0ee40bc9ddbb2a69d392181d886f2f3565b6f617d3434306991833",
+      ".hol/objs/forge_refundWordInitializationTheory.sig": "2984482ca71d7261102dd918af5deaff40c52f767b7d1fd7a943a2be6ad68322",
+      ".hol/docs/forge_refundWordInitializationTheory.html": "3970279fbd8219dfc0278dfad4b538d10b8fedcd3cade6532d7602d64cae07b7"
+    },
+    "epoch-0002": {
+      ".hol/objs/forge_refundInitializedEpochTheory.dat": "34e3a3972507a4d982994c6a4688f78aaa0b65efe4e88e56f241f5b8eb3fe1f5",
+      ".hol/objs/forge_refundInitializedEpochTheory.sig": "fb8f34b579f0026237982229dff4db1701098888e2607a9ca1d323df54c1ff2b",
+      ".hol/objs/forge_refundInitializedEpochTheory.sml": "6636e51fd424d6e88f23ff04d55358de5970728dd976ee46947883ab444b64b8",
+      ".hol/docs/forge_refundInitializedEpochTheory.html": "e0b951d43c4bb78449c34e408e167e50eb1d7bb13d5b03632daa6142fa4d0e08"
+    }
+  },
+  "new_theorem_count": 8,
+  "proof_attempts": {
+    "compiled_raw_code_rel": {
+      "first_proof": "initial-0001",
+      "proof_failures": 0
+    },
+    "refund_data_labels": {
+      "first_proof": "initial-0001",
+      "proof_failures": 0
+    },
+    "make_init_static": {
+      "parse_failures": 1,
+      "first_proof": "code-0002",
+      "proof_failures": 0
+    },
+    "compiled_word_code_rel": {
+      "parse_failures": 1,
+      "first_proof": "code-0003",
+      "proof_failures": 0
+    },
+    "to_word_code_rel": {
+      "first_proof": "code-0003",
+      "proof_failures": 0
+    },
+    "refund_word_code_rel": {
+      "first_proof": "code-0003",
+      "proof_failures": 0
+    },
+    "refund_word_config_facts": {
+      "parse_failures": 1,
+      "first_proof": "epoch-0002",
+      "proof_failures": 0
+    },
+    "refund_initialized_single_epoch": {
+      "first_proof": "epoch-0002",
+      "proof_failures": 0
+    }
+  },
+  "prior_routes_stopped": [
+    "U290",
+    "U297"
+  ],
+  "end_to_end": false
+}

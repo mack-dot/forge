@@ -1,0 +1,20 @@
+<<HOL message: Created theory "forge_refundSourceBinding">>
+Saved theorem _______ "source_decode"
+Saved theorem _______ "source_signature"
+Saved theorem _______ "source_full_result"
+Proof of 
+
+let
+  initial =
+    source_initial h charge request original remaining enabled opened
+      candidate amount reason;
+  final = FST (evaluate_stmt initial env source_body)
+in
+  evaluate_exps final env source_ensures =
+  (final,Rval [BoolV T; BoolV T; BoolV T])
+
+failed.
+First unsolved sub-goal is
+
+F
+

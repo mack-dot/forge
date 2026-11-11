@@ -1,0 +1,172 @@
+{
+  "actual_exit": 0,
+  "parent": "8ad9de1e538edd48a2084796510e784913eaef8b",
+  "base_tree": "08f0e81f520081d6a75971f1c9dcc676ec67a939",
+  "workflow_sha256": "1af894a0f8f13b279c3c4752f77366c02c32075959041d08174c996c01b560a1",
+  "workflow_blob": "c6bdbde3f8612de474d1423216efce545c813f25",
+  "other_workflow_triggers": [
+    {
+      "path": ".github/workflows/booking-reuse.yml",
+      "sha": "6dc3ec9819abf8ccb0a17b2349e1167a99dadd0b",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "booking_pr": {
+              "description": "Approved experiment PR number (one Booking.dfy change)",
+              "required": "true",
+              "type": "string"
+            },
+            "booking_head": {
+              "description": "Exact 40-character head approved for this dispatch",
+              "required": "true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/proof-gate.yml",
+      "sha": "c505b7997a8c66ecc4807d1b8744952b160bac18",
+      "on": {
+        "pull_request_target": {
+          "types": [
+            "opened",
+            "synchronize",
+            "reopened",
+            "ready_for_review"
+          ],
+          "branches": [
+            "main"
+          ]
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/provenance-negative.yml",
+      "sha": "6244a5c82078c87d84ca51c1901215718fa1226d",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "request": {
+              "description": "Exact original controller request JSON",
+              "required": "true",
+              "type": "string"
+            },
+            "implementation_sha256": {
+              "description": "Separately approved implementation.lock SHA-256",
+              "required": "true",
+              "type": "string"
+            },
+            "producer_run_id": {
+              "description": "Successful provenance run at the same exact source commit",
+              "required": "true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/provenance.yml",
+      "sha": "b0aba84f7e7ef633bdd1722199ab09671dd8bf88",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "request": {
+              "description": "Exact JSON request from the independent local controller",
+              "required": "true",
+              "type": "string"
+            },
+            "implementation_sha256": {
+              "description": "Separately approved implementation.lock SHA-256",
+              "required": "true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": ".github/workflows/stage4-exits.yml",
+      "sha": "efcead380ebda3c3187c0f2a495699c556f18e3c",
+      "on": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "results/stage4/pr-runs.json"
+          ]
+        },
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-candidate-dry-run-v2.yml",
+      "sha": "1ae412d661571b9054dc9b1a40eeaa317975877b",
+      "on": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-candidate-dry-run.yml",
+      "sha": "5785e1c020c7626eef4eaa74e7959a4d7768290d",
+      "on": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-hosted-probe-2.yml",
+      "sha": "4fdbcf229ae8ee9d4e4584fdf5d9715edbe4eaea",
+      "on": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-hosted-probe.yml",
+      "sha": "4470a8111ecfed915b8ee4ba054df2051641c06d",
+      "on": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-private-dry-run-v31.yml",
+      "sha": "5b76afb33401c1d889f679171c3fdf2a0184af67",
+      "on": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/stage9-private-dry-run-v32.yml",
+      "sha": "ff723e83463147196794e13f831a07e1ab2c727e",
+      "on": {
+        "workflow_dispatch": ""
+      }
+    },
+    {
+      "path": ".github/workflows/toolchain-inventory.yml",
+      "sha": "247229d28742ae0da7513a3d390c5fc972cb7a90",
+      "on": {
+        "workflow_dispatch": "",
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/toolchain-inventory.yml",
+            "toolchain/ci-bootstrap.json",
+            "toolchain/inventory_ci.py"
+          ]
+        }
+      }
+    }
+  ],
+  "prior_review_and_integrity_packets_match": true,
+  "required_image": "20261104.0514.1",
+  "runtime_image_check": "Mandatory fail-closed before payload execution",
+  "permissions": {},
+  "job_timeout_minutes": 15,
+  "HOL_executed": false,
+  "end_to_end": false
+}

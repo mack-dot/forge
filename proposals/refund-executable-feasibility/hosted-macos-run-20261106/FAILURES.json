@@ -1,0 +1,40 @@
+{
+  "source_lookup_failures": [
+    {"actual_exit": 1, "operation": "rg with unmatched portableML/Systeml* shell glob", "stderr": "zsh:1: no matches found: .toolchain/experiments/refund-cakeml-20261104/HOL/src/portableML/Systeml*", "correction": "Read existing unix-systeml.sml and locate FinalPolyML.sml"},
+    {"actual_exit": 2, "operation": "rg of guessed polyml/basis/SaveState.sml and existing savestate.cpp", "stderr": "rg: .toolchain/experiments/refund-cakeml-20261104/polyml/basis/SaveState.sml: No such file or directory (os error 2)", "correction": "Published SaveState API found in basis/FinalPolyML.sml"},
+    {"actual_exit": 1, "operation": "Scoped prior JSON searches for additional heap and MiniSat bindings", "meaning": "No matches in selected files; not proof of absence across all history"}
+  ],
+  "branch_lookup": {
+    "first_tool_status": "INVALID_ARGUMENT",
+    "message": "HTTPError: 400: GitHub Fetch URL contains an invalid repository path. (Response: None)",
+    "cause": "Encoded slash in branch path rejected by connector",
+    "corrected_tool_status": "NOT_FOUND",
+    "corrected_HTTP_status": 404,
+    "meaning": "Unescaped branch read established branch absent before authorized creation"
+  },
+  "large_block_read": {
+    "actual_shell_exit": 0,
+    "received_characters": 1048607,
+    "expected_characters": 5592408,
+    "functions_exec_error": "Incomplete block read; no upload",
+    "correction": "Read complete segments within the tool output bound, assemble in memory, and compare returned Git blob SHA",
+    "malformed_upload_performed": false
+  },
+  "remote_execution": {
+    "run_id": 42292059389,
+    "job_id": 128147719439,
+    "actual_step_exit": 78,
+    "operation": "mkdir(/Users/mackianni,0700)",
+    "errno": 13,
+    "error_name": "EACCES",
+    "SAT": "NOT_RUN"
+  },
+  "latent_configuration_error": {
+    "reference": "LATENT-CONFIG-FAILURE.json",
+    "observed_remote_failure_cause": false,
+    "published_key": "INPUT_8435",
+    "required_key": "INPUT_MANIFEST_BYTES",
+    "prepared_fix_execution": "NOT_RUN"
+  },
+  "end_to_end": false
+}

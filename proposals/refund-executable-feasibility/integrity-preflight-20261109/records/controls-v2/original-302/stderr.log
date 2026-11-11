@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py", line 66, in child
+    result = namespace['fetch'](origin, 64)
+  File "/Users/mackianni/forge/proposals/refund-executable-feasibility/integrity-preflight-20261108/records/integrity_driver.py", line 123, in fetch
+    with urllib.request.urlopen(request,timeout=15) as response:
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 525, in open
+    response = meth(req, response)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 557, in error
+    result = self._call_chain(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 749, in http_error_302
+    return self.parent.open(new, timeout=req.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/Users/mackianni/forge/results/hosted-integrity-review-20261109/attempt-0001/redirect_controls_v2.py", line 45, in https_open
+    raise FollowUpDetected('redirect handler attempted a follow-up URL')
+child.<locals>.FollowUpDetected: redirect handler attempted a follow-up URL
