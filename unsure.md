@@ -12388,3 +12388,28 @@ curl: (6) Could not resolve host: github.com
 - Evidence: m1-n1-reachability-20261113/REPORT.md sections 4 and 7.
 - Next check: P1 by re-running the published in-logic compile with the
   oracle definition kept and evaluating to_lab_all_arm8. Truth not known.
+
+## U366 — Owner-directed commit and push of the U345–U365 documents and packets
+
+- References: U343, U363, U364, U365. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. During the U364 run the owner sent a direct
+  instruction to bring the documents up to date and put them on GitHub. That
+  instruction is later than, and replaces, the "do not commit" line of the
+  U364 task text. It changes no authorization state.
+- Commit 96c04dddb51cf76ed8237e885f4da972bd9fdc32 on branch
+  backup/forge-local-2026-11-11: ROADMAP.md, unsure.md,
+  FORGE_MISSION_STATUS.md and eleven proposal packets of 2026-11-12 and
+  2026-11-13; 1036 files, 87542 added lines, 0 removed lines. git push to
+  origin exited 0 as a fast-forward from 77a31eba; local and remote heads are
+  equal. The repository is public.
+- Before the commit: a pattern scan of the staged packets found no token or
+  private key; the only e-mail addresses are upstream committers in a
+  recorded GitHub API response.
+- Not committed: every record under results/ (36 GiB; as in the previous
+  snapshot) and the mode-only change of ten tracked ELF files (U363). Those
+  records exist only on this disk. main is unchanged; no pull request was
+  opened; no hosted workflow was dispatched by the agent.
+- Statements "nothing committed" in the reports of U360–U365 were true when
+  written and are superseded by this entry.
+- Next check: owner decision on a pull request to main and on an off-machine
+  copy of results/.

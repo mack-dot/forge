@@ -27,6 +27,7 @@ adopted. No hosted action, protected edit or deletion.
 | `python3 -I -B verify_cases_r5.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
 | Lab-level closure P1; lab invariant P2; target prefix lemma P3 |NOT RUN|Proposed lemmas only |
 | U298 exclusion for the exact program |NOT ESTABLISHED|Needs P1, P2 and P3 |
+| `git commit` / `git push origin backup/forge-local-2026-11-11` (owner instruction, U366) |0/0|Commit `96c04ddd`: three documents and eleven packets; fast-forward; `results/` and ELF mode changes not included |
 
 [Report](proposals/refund-executable-feasibility/m1-n1-reachability-20261113/REPORT.md).
 N1 as first stated is false: `InstallData_location` calls `Install_location`.
