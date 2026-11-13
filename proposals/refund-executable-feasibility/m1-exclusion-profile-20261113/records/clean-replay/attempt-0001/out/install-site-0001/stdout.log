@@ -1,0 +1,33 @@
+<<HOL message: Created theory "forge_refundInstallSite">>
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 107w,
+ s.MEM (s.PC + 1w) = 251w, s.MEM (s.PC + 3w) = 23w, s.MEM (s.PC + 2w) = 255w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 0xFFFFFFFFFFFFEDACw; REG := s.REG;
+       branch_hint := SOME BranchType_JMP|>)
+PREMISE ¬s.SCTLR_EL1.E0E
+PREMISE ¬s.TCR_EL1.TBI0
+PREMISE ¬s.TCR_EL1.TBI1
+PREMISE s.MEM s.PC = 107w
+PREMISE s.MEM (s.PC + 1w) = 251w
+PREMISE s.MEM (s.PC + 3w) = 23w
+PREMISE s.MEM (s.PC + 2w) = 255w
+PREMISE s.PSTATE.EL = 0w
+PREMISE s.exception = NoException
+PREMISE aligned 2 s.PC
+Saved theorem _______ "install_call_site_step"
+CHECKED install_call_site_step
+ []
+⊢ ∀s. ¬s.SCTLR_EL1.E0E ∧ ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧
+      s.MEM s.PC = 107w ∧ s.MEM (s.PC + 1w) = 251w ∧
+      s.MEM (s.PC + 3w) = 23w ∧ s.MEM (s.PC + 2w) = 255w ∧ s.PSTATE.EL = 0w ∧
+      s.exception = NoException ∧ aligned 2 s.PC ⇒
+      ∃s1.
+        NextStateARM8 s = SOME s1 ∧ s1.PC = s.PC − 4692w ∧ s1.MEM = s.MEM ∧
+        s1.REG = s.REG ∧ s1.SP_EL0 = s.SP_EL0
+Exporting theory "forge_refundInstallSite" ... done.
+Theory "forge_refundInstallSite" took 0.20631s to build
+NATIVE_STEP_COMPLETE

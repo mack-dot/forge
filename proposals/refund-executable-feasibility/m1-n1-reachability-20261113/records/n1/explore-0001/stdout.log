@@ -1,0 +1,825 @@
+COMPILE_THY refund_prog_cv_def :: ⊢ ∀x. refund_prog_cv x = from_list from_ast_ast_dec refund_prog
+COMPILE_THY ffis_def :: ⊢ ffis =
+  to_list to_mlstring_mlstring
+    (cv$Pair
+       (cv$Pair (cv$Num 0)
+          (cv$Pair (cv$Num 114)
+             (cv$Pair (cv$Num 101)
+                (cv$Pair (cv$Num 97) (cv$Pair (cv$Num 100) (cv$Num 0))))))
+       (cv$Pair
+          (cv$Pair (cv$Num 0)
+             (cv$Pair (cv$Num 119)
+                (cv$Pair (cv$Num 114)
+                   (cv$Pair (cv$Num 105)
+                      (cv$Pair (cv$Num 116) (cv$Pair (cv$Num 101) (cv$Num 0)))))))
+          (cv$Pair
+             (cv$Pair (cv$Num 0)
+                (cv$Pair (cv$Num 99)
+                   (cv$Pair (cv$Num 108)
+   
+COMPILE_THY data_def :: ⊢ data =
+  to_list cv$c2n
+    (cv$Pair (cv$Num 4)
+       (cv$Pair (cv$Num 16)
+          (cv$Pair (cv$Num 23)
+             (cv$Pair (cv$Num 16)
+                (cv$Pair (cv$Num 23)
+                   (cv$Pair (cv$Num 23)
+                      (cv$Pair (cv$Num 16)
+                         (cv$Pair (cv$Num 16)
+                            (cv$Pair (cv$Num 16)
+                               (cv$Pair (cv$Num 11)
+                                  (cv$Pair (cv$Num 16)
+                                     (cv$Pair (cv$Num 23)
+                                        (cv$Pair (cv$Num 2)
+               
+COMPILE_THY conf_def :: ⊢ conf =
+  to_list to_char
+    (cv$Pair (cv$Num 82)
+       (cv$Pair (cv$Num 37)
+          (cv$Pair (cv$Num 52)
+             (cv$Pair (cv$Num 41)
+                (cv$Pair (cv$Num 58)
+                   (cv$Pair (cv$Num 46)
+                      (cv$Pair (cv$Num 35)
+                         (cv$Pair (cv$Num 79)
+                            (cv$Pair (cv$Num 34)
+                               (cv$Pair (cv$Num 69)
+                                  (cv$Pair (cv$Num 35)
+                                     (cv$Pair (cv$Num 84)
+                                        (cv$Pair (cv$Num 35)
+            
+COMPILE_THY compiled :: ⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info) ∧
+  ffis = ffinames_to_string_list (the [] info.lab_conf.ffi_names) ∧
+  syms = info.symbols ∧ LENGTH code = 130436 ∧ LENGTH data = 2531 ∧
+  info.lab_conf.shmem_extra = [] ∧ prog_syntax_ok refund_prog ∧
+  conf = encode_backend_config info
+COMPILE_THY code_def :: ⊢ code =
+  to_list to_word
+    (cv$Pair (cv$Num 126)
+       (cv$Pair (cv$Num 0)
+          (cv$Pair (cv$Num 3)
+             (cv$Pair (cv$Num 170)
+                (cv$Pair (cv$Num 222)
+                   (cv$Pair (cv$Num 3)
+                      (cv$Pair (cv$Num 1)
+                         (cv$Pair (cv$Num 203)
+                            (cv$Pair (cv$Num 222)
+                               (cv$Pair (cv$Num 255)
+                                  (cv$Pair (cv$Num 68)
+                                     (cv$Pair (cv$Num 211)
+                                        (cv$Pair (cv$Num 222)
+        
+COMPILE_THY temp_oracle_cv_thm :: ⊢ from_list (from_option (from_sptree_sptree_spt cv$Num)) temp_oracle =
+  temp_oracle_cv (cv$Num 0)
+COMPILE_THY refund_prog_cv_thm :: ⊢ from_list from_ast_ast_dec refund_prog = refund_prog_cv (cv$Num 0)
+COMPILE_THY refund_prog_cv_eq :: ⊢ refund_prog_cv x =
+  cv$Pair
+    (cv$Pair (cv$Num 2)
+       (cv$Pair (cv$Num 0)
+          (cv$Pair
+             (cv$Pair
+                (cv$Pair
+                   (cv$Pair (cv$Num 0)
+                      (cv$Pair (cv$Num 39) (cv$Pair (cv$Num 97) (cv$Num 0))))
+                   (cv$Num 0))
+                (cv$Pair
+                   (cv$Pair (cv$Num 0)
+                      (cv$Pair (cv$Num 111)
+                         (cv$Pair (cv$Num 112)
+                            (cv$Pair (cv$Num 116)
+                               (cv$Pair (cv$Num 105)
+                                  (cv$Pair (
+COMPILE_THY refund_arm8_compiled :: ⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info) ∧
+  ffis = ffinames_to_string_list (the [] info.lab_conf.ffi_names) ∧
+  syms = info.symbols ∧ LENGTH code = 130436 ∧ LENGTH data = 2531 ∧
+  info.lab_conf.shmem_extra = [] ∧ prog_syntax_ok refund_prog ∧
+  conf = encode_backend_config info
+ARM8_CONST word_to_word_inlogic_arm8 : :word_to_word$config ->
+(α # num # prog # β) list ->
+(num sptree$num_map option list # (α # num # prog # β) list) option
+ARM8_CONST word_internal_all_arm8 : :(mlstring # any_prog) list ->
+(num # num # prog # metadata) list ->
+(num # num # prog # metadata) list # (mlstring # any_prog) list
+ARM8_CONST word_alloc_inlogic_arm8 : :prog -> num sptree$num_map option -> prog option
+ARM8_CONST to_word_all_arm8 : :config ->
+dec list ->
+(mlstring # any_prog) list # config # (num # num # prog # metadata) list
+ARM8_CONST to_word_0_arm8 : :config -> dec list -> config # (num # num # prog # metadata) list
+ARM8_CONST to_stack_all_arm8 : :config ->
+dec list ->
+(mlstring # any_prog) list #
+num list # config # (num # stackLang$prog # metadata) list
+ARM8_CONST to_livesets_arm8 : :config ->
+dec list ->
+(num #
+ (clash_tree #
+  (num # num # num) list #
+  num sptree$num_map option # (num # num) list # sptree$num_set) list) #
+config # (num # num # prog # metadata) list
+ARM8_CONST to_livesets_0_arm8 : :config # (num # num # prog # α) list ->
+(num #
+ (clash_tree #
+  (num # num # num) list #
+  num sptree$num_map option # (num # num) list # sptree$num_set) list) #
+config # (num # num # prog # α) list
+ARM8_CONST to_lab_all_arm8 : :config ->
+dec list -> (mlstring # any_prog) list # num list # config # sec list
+ARM8_CONST sec_ok_light_arm8 : :sec -> bool
+ARM8_CONST remove_labels_loop_arm8 : :num ->
+num ->
+num sptree$num_map sptree$num_map ->
+ffiname list ->
+sec list -> (sec list # num sptree$num_map sptree$num_map) option
+ARM8_CONST remove_labels_arm8 : :num ->
+num ->
+num sptree$num_map sptree$num_map ->
+ffiname list ->
+sec list -> (sec list # num sptree$num_map sptree$num_map) option
+ARM8_CONST reg_ok_arm8 : :num -> bool
+ARM8_CONST reg_imm_ok_arm8 : :binop + cmp -> reg_imm -> bool
+ARM8_CONST line_ok_light_arm8 : :line -> bool
+ARM8_CONST lab_to_target_arm8 : :lab_to_target$config ->
+sec list -> (word8 list # lab_to_target$config) option
+ARM8_CONST inst_select_exp_arm8 : :num -> num -> num -> wordLang$exp -> prog
+ARM8_CONST inst_select_arm8 : :num -> num -> prog -> prog
+ARM8_CONST inst_ok_arm8 : :inst -> bool
+ARM8_CONST get_forced_arm8 : :prog -> (num # num) list -> (num # num) list
+ARM8_CONST from_word_arm8 : :config ->
+(num # num # prog # metadata) list ->
+(word8 list #
+ num #
+ num list # num # mlstring list # num # (mlstring # num # num) list # string)
+option
+ARM8_CONST from_word_0_arm8 : :config # (num # num # prog # metadata) list ->
+(word8 list #
+ num #
+ num list # num # mlstring list # num # (mlstring # num # num) list # string)
+option
+ARM8_CONST from_stack_arm8 : :config ->
+(num # stackLang$prog # metadata) list ->
+num list ->
+(word8 list #
+ num #
+ num list # num # mlstring list # num # (mlstring # num # num) list # string)
+option
+ARM8_CONST from_lab_arm8 : :config ->
+sec list ->
+num list ->
+(word8 list #
+ num #
+ num list # num # mlstring list # num # (mlstring # num # num) list # string)
+option
+ARM8_CONST fp_reg_ok_arm8 : :num -> bool
+ARM8_CONST fp_ok_arm8 : :fp -> bool
+ARM8_CONST enc_secs_again_arm8 : :num ->
+num sptree$num_map sptree$num_map ->
+ffiname list -> sec list -> sec list # bool
+ARM8_CONST enc_sec_list_arm8 : :sec list -> sec list
+ARM8_CONST enc_sec_arm8 : :num -> sec -> sec
+ARM8_CONST enc_lines_again_arm8 : :num sptree$num_map sptree$num_map ->
+ffiname list ->
+num -> line list -> line list # bool -> line list # num # bool
+ARM8_CONST enc_line_arm8 : :num -> line -> line
+ARM8_CONST each_inlogic_arm8 : :((α # num # prog # β) # num sptree$num_map option) list ->
+(α # num # prog # β) list option
+ARM8_CONST compile_word_to_stack_arm8 : :bool ->
+num ->
+(num # num # prog # metadata) list ->
+num app_list # num ->
+(num # stackLang$prog # metadata) list # num list # num app_list # num
+ARM8_CONST compile_prog_arm8 : :bool ->
+prog ->
+num -> num -> num app_list # num -> stackLang$prog # num # num app_list # num
+ARM8_CONST compile_lab_arm8 : :lab_to_target$config ->
+sec list -> (word8 list # lab_to_target$config) option
+ARM8_CONST compile_cake_explore_arm8 : :config -> dec list -> mlstring
+ARM8_CONST compile_cake_arm8 : :config ->
+dec list ->
+(word8 list #
+ num #
+ num list # num # mlstring list # num # (mlstring # num # num) list # string)
+option
+ARM8_CONST compile_0_arm8 : :data_to_word$config ->
+(num # num # dataLang$prog # metadata) list ->
+(num # num # prog # metadata) list
+ARM8_CONST comp_arm8 : :bool ->
+prog ->
+num app_list # num -> num # num # num -> stackLang$prog # num app_list # num
+ARM8_CONST cmp_ok_arm8 : :cmp -> num -> reg_imm -> bool
+ARM8_CONST asm_ok_arm8 : :asm -> bool
+ARM8_CONST arith_ok_arm8 : :arith -> bool
+ARM8_CV_THM wRegWrite1_lam_ShMemOp_Load_Ad_ho
+ARM8_CV_THM wRegWrite1_lam_ShMemOp_Load8_A_ho
+ARM8_CV_THM wRegWrite1_lam_ShMemOp_Load32__ho
+ARM8_CV_THM wRegWrite1_lam_ShMemOp_Load16__ho
+ARM8_CV_THM wRegWrite1_lam_OpCurrHeap_ho
+ARM8_CV_THM wRegWrite1_lam_LocValue_0_ho
+ARM8_CV_THM wRegWrite1_lam_If_Equal_Reg_In_ho
+ARM8_CV_THM wRegWrite1_lam_Get_ho
+ARM8_CV_THM to_asm_architecture_def
+ARM8_CV_THM to_arm8_SystemHintOp_def
+ARM8_CV_THM to_arm8_System_def
+ARM8_CV_THM to_arm8_ShiftType_def
+ARM8_CV_THM to_arm8_RevOp_def
+ARM8_CV_THM to_arm8_PSTATEField_def
+ARM8_CV_THM to_arm8_MoveWideOp_def
+ARM8_CV_THM to_arm8_MemOp_def
+ARM8_CV_THM to_arm8_MemBarrierOp_def
+ARM8_CV_THM to_arm8_MachineCode_def
+ARM8_CV_THM to_arm8_LogicalOp_def
+ARM8_CV_THM to_arm8_LoadStore_def
+ARM8_CV_THM to_arm8_instruction_def
+ARM8_CV_THM to_arm8_ExtendType_def
+ARM8_CV_THM to_arm8_Debug_def
+ARM8_CV_THM to_arm8_Data_def
+ARM8_CV_THM to_arm8_CRCExt_def
+ARM8_CV_THM to_arm8_BranchType_def
+ARM8_CV_THM to_arm8_Branch_def
+ARM8_CV_THM to_arm8_AccType_def
+ARM8_CV_THM remove_labels_loop_arm8_pre_strongind
+ARM8_CV_THM remove_labels_loop_arm8_pre_rules
+ARM8_CV_THM remove_labels_loop_arm8_pre_ind
+ARM8_CV_THM remove_labels_loop_arm8_pre_cases
+ARM8_CV_THM remove_labels_loop_arm8_pre
+ARM8_CV_THM pp_with_title_any_prog_pp_FOLD_ho
+ARM8_CV_THM MAP_UNCURRY_lam_UNCURRY_lam_la_ho
+ARM8_CV_THM MAP_UNCURRY_lam_lam_pair_CASE__ho
+ARM8_CV_THM MAP_UNCURRY_lam_lam_pair_CASE__1_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_9_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_8_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_7_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_6_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_5_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_4_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_3_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_2_ho
+ARM8_CV_THM map_to_append_o_str_tree_to_st_1_ho
+ARM8_CV_THM MAP_o_FST_o_SND_SND_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_9_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_8_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_7_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_6_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_5_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_4_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_3_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_2_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_1_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_15_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_14_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_13_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_12_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_11_ho
+ARM8_CV_THM MAP_lam_pair_CASE_lam_lam_pair_10_ho
+ARM8_CV_THM MAP_lam___Section_num_LET_lam__ho
+ARM8_CV_THM MAP_lab_line_to_display_ho
+ARM8_CV_THM MAP_escape_sym_char_explode_ho
+ARM8_CV_THM MAP_enc_sec_arm8_ho
+ARM8_CV_THM MAP_enc_line_arm8_ho
+ARM8_CV_THM MAP_compile_part_ho
+ARM8_CV_THM MAP_arm8_encode_arm8_ast_ho
+ARM8_CV_THM inst_select_exp_arm8_pre_strongind
+ARM8_CV_THM inst_select_exp_arm8_pre_rules
+ARM8_CV_THM inst_select_exp_arm8_pre_ind
+ARM8_CV_THM inst_select_exp_arm8_pre_cases
+ARM8_CV_THM inst_select_exp_arm8_pre
+ARM8_CV_THM inst_select_arm8_pre_strongind
+ARM8_CV_THM inst_select_arm8_pre_rules
+ARM8_CV_THM inst_select_arm8_pre_ind
+ARM8_CV_THM inst_select_arm8_pre_cases
+ARM8_CV_THM HighestSetBit_pre_strongind
+ARM8_CV_THM HighestSetBit_pre_rules
+ARM8_CV_THM HighestSetBit_pre_ind
+ARM8_CV_THM HighestSetBit_pre_cases
+ARM8_CV_THM get_forced_arm8_pre_strongind
+ARM8_CV_THM get_forced_arm8_pre_rules
+ARM8_CV_THM get_forced_arm8_pre_ind
+ARM8_CV_THM get_forced_arm8_pre_cases
+ARM8_CV_THM genlist_0_num_to_display_ho
+ARM8_CV_THM genlist_0_lam_word_bit_____1_w_ho
+ARM8_CV_THM genlist_0_lam_num_to_display___ho
+ARM8_CV_THM genlist_0_lam_____Bignum_locat_ho
+ARM8_CV_THM genlist_0_display_num_as_varn_ho
+ARM8_CV_THM from_asm_to_asm_architecture_thm
+ARM8_CV_THM from_asm_architecture_def
+ARM8_CV_THM from_arm8_to_arm8_SystemHintOp_thm
+ARM8_CV_THM from_arm8_to_arm8_System_thm
+ARM8_CV_THM from_arm8_to_arm8_ShiftType_thm
+ARM8_CV_THM from_arm8_to_arm8_RevOp_thm
+ARM8_CV_THM from_arm8_to_arm8_PSTATEField_thm
+ARM8_CV_THM from_arm8_to_arm8_MoveWideOp_thm
+ARM8_CV_THM from_arm8_to_arm8_MemOp_thm
+ARM8_CV_THM from_arm8_to_arm8_MemBarrierOp_thm
+ARM8_CV_THM from_arm8_to_arm8_MachineCode_thm
+ARM8_CV_THM from_arm8_to_arm8_LogicalOp_thm
+ARM8_CV_THM from_arm8_to_arm8_LoadStore_thm
+ARM8_CV_THM from_arm8_to_arm8_instruction_thm
+ARM8_CV_THM from_arm8_to_arm8_ExtendType_thm
+ARM8_CV_THM from_arm8_to_arm8_Debug_thm
+ARM8_CV_THM from_arm8_to_arm8_Data_thm
+ARM8_CV_THM from_arm8_to_arm8_CRCExt_thm
+ARM8_CV_THM from_arm8_to_arm8_BranchType_thm
+ARM8_CV_THM from_arm8_to_arm8_Branch_thm
+ARM8_CV_THM from_arm8_to_arm8_AccType_thm
+ARM8_CV_THM from_arm8_SystemHintOp_def
+ARM8_CV_THM from_arm8_System_def
+ARM8_CV_THM from_arm8_ShiftType_def
+ARM8_CV_THM from_arm8_RevOp_def
+ARM8_CV_THM from_arm8_PSTATEField_def
+ARM8_CV_THM from_arm8_MoveWideOp_def
+ARM8_CV_THM from_arm8_MemOp_def
+ARM8_CV_THM from_arm8_MemBarrierOp_def
+ARM8_CV_THM from_arm8_MachineCode_def
+ARM8_CV_THM from_arm8_LogicalOp_def
+ARM8_CV_THM from_arm8_LoadStore_def
+ARM8_CV_THM from_arm8_instruction_def
+ARM8_CV_THM from_arm8_ExtendType_def
+ARM8_CV_THM from_arm8_Debug_def
+ARM8_CV_THM from_arm8_Data_def
+ARM8_CV_THM from_arm8_CRCExt_def
+ARM8_CV_THM from_arm8_BranchType_def
+ARM8_CV_THM from_arm8_Branch_def
+ARM8_CV_THM from_arm8_AccType_def
+ARM8_CV_THM FOLDR_pp_with_title_any_prog_p_ho
+ARM8_CV_THM FOLDR_merge_stack_only_ho
+ARM8_CV_THM FOLDR_delete_ho
+ARM8_CV_THM FOLDL_get_sym_label___int_of_n_ho
+ARM8_CV_THM FILTER_lam_EXISTS___FST_ho
+ARM8_CV_THM export_funcs_alt_thm
+ARM8_CV_THM EXISTS___FST_ho
+ARM8_CV_THM EVERY_sec_ok_light_arm8_ho
+ARM8_CV_THM EVERY_line_ok_light_arm8_ho
+ARM8_CV_THM EVERY_lam_IN_LIST_TO_SET_ho
+ARM8_CV_THM enc_secs_again_arm8_pre_strongind
+ARM8_CV_THM enc_secs_again_arm8_pre_rules
+ARM8_CV_THM enc_secs_again_arm8_pre_ind
+ARM8_CV_THM enc_secs_again_arm8_pre_cases
+ARM8_CV_THM enc_lines_again_arm8_pre_strongind
+ARM8_CV_THM enc_lines_again_arm8_pre_rules
+ARM8_CV_THM enc_lines_again_arm8_pre_ind
+ARM8_CV_THM enc_lines_again_arm8_pre_cases
+ARM8_CV_THM each_inlogic_arm8_pre_strongind
+ARM8_CV_THM each_inlogic_arm8_pre_rules
+ARM8_CV_THM each_inlogic_arm8_pre_ind
+ARM8_CV_THM each_inlogic_arm8_pre_cases
+ARM8_CV_THM e_load_store_pre_strongind
+ARM8_CV_THM e_load_store_pre_rules
+ARM8_CV_THM e_load_store_pre_ind
+ARM8_CV_THM e_load_store_pre_cases
+ARM8_CV_THM e_load_store_pre
+ARM8_CV_THM cv_zero_extend_thm
+ARM8_CV_THM cv_XorLoop_location_thm
+ARM8_CV_THM cv_wShareInst_thm
+ARM8_CV_THM cv_wRegWrite1_lam_ShMemOp_Load_Ad_thm
+ARM8_CV_THM cv_wRegWrite1_lam_ShMemOp_Load8_A_thm
+ARM8_CV_THM cv_wRegWrite1_lam_ShMemOp_Load32__thm
+ARM8_CV_THM cv_wRegWrite1_lam_ShMemOp_Load16__thm
+ARM8_CV_THM cv_wRegWrite1_lam_OpCurrHeap_thm
+ARM8_CV_THM cv_wRegWrite1_lam_LocValue_0_thm
+ARM8_CV_THM cv_wRegWrite1_lam_If_Equal_Reg_In_thm
+ARM8_CV_THM cv_wRegWrite1_lam_Get_thm
+ARM8_CV_THM cv_WordCopySub_location_thm
+ARM8_CV_THM cv_WordCopyLoop_location_thm
+ARM8_CV_THM cv_WordCopyAdd_location_thm
+ARM8_CV_THM cv_WordCopy_location_thm
+ARM8_CV_THM cv_word_to_word_inlogic_arm8_thm
+ARM8_CV_THM cv_word_to_strs_thm
+ARM8_CV_THM cv_word_internal_all_arm8_thm
+ARM8_CV_THM cv_word_fun_to_display_thm
+ARM8_CV_THM cv_word_alloc_inlogic_arm8_thm
+ARM8_CV_THM cv_valid_immediate_thm
+ARM8_CV_THM cv_v2n_custom'_thm
+ARM8_CV_THM cv_to_word_all_arm8_thm
+ARM8_CV_THM cv_to_word_0_arm8_thm
+ARM8_CV_THM cv_to_stack_all_arm8_thm
+ARM8_CV_THM cv_to_livesets_arm8_thm
+ARM8_CV_THM cv_to_livesets_0_arm8_thm
+ARM8_CV_THM cv_to_lab_all_arm8_thm
+ARM8_CV_THM cv_SystemHintOp2num_thm
+ARM8_CV_THM cv_Sub_location_thm
+ARM8_CV_THM cv_stubs_thm
+ARM8_CV_THM cv_stub_names_thm
+ARM8_CV_THM cv_StringCmpLoop_location_thm
+ARM8_CV_THM cv_store_consts_stub_location_thm
+ARM8_CV_THM cv_startup_thm
+ARM8_CV_THM cv_stack_to_strs_thm
+ARM8_CV_THM cv_stack_fun_to_display_thm
+ARM8_CV_THM cv_source_to_strs_thm
+ARM8_CV_THM cv_SmallnumDivMod_location_thm
+ARM8_CV_THM cv_skip_free_thm
+ARM8_CV_THM cv_ShiftType2num_thm
+ARM8_CV_THM cv_shiftr_thm
+ARM8_CV_THM cv_Section_num_thm
+ARM8_CV_THM cv_Section_metadata_thm
+ARM8_CV_THM cv_sec_ok_light_arm8_thm
+ARM8_CV_THM cv_sec_length_thm
+ARM8_CV_THM cv_ScanNeq_location_thm
+ARM8_CV_THM cv_ScanEq_location_thm
+ARM8_CV_THM cv_rotate_thm
+ARM8_CV_THM cv_RevOp2num_thm
+ARM8_CV_THM cv_Replicate_thm
+ARM8_CV_THM cv_replicate_thm
+ARM8_CV_THM cv_Replicate_location_thm
+ARM8_CV_THM cv_Replicate'_thm
+ARM8_CV_THM cv_rep_asm_asm_architecture_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_SystemHintOp_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_System_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_ShiftType_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_RevOp_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_PSTATEField_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_MoveWideOp_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_MemOp_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_MemBarrierOp_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_MachineCode_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_LogicalOp_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_LoadStore_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_instruction_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_ExtendType_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_Debug_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_Data_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_CRCExt_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_BranchType_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_Branch_datatype
+ARM8_CV_THM cv_rep_arm8_arm8_AccType_datatype
+ARM8_CV_THM cv_remove_temp_stack_thm
+ARM8_CV_THM cv_remove_labels_loop_arm8_thm
+ARM8_CV_THM cv_remove_labels_arm8_thm
+ARM8_CV_THM cv_reg_ok_arm8_thm
+ARM8_CV_THM cv_reg_imm_ok_arm8_thm
+ARM8_CV_THM cv_RefByte_location_thm
+ARM8_CV_THM cv_RefArray_location_thm
+ARM8_CV_THM cv_pp_with_title_any_prog_pp_FOLD_thm
+ARM8_CV_THM cv_Ones_thm
+ARM8_CV_THM cv_NoOperation_thm
+ARM8_CV_THM cv_Mul_location_thm
+ARM8_CV_THM cv_Mod_location_thm
+ARM8_CV_THM cv_merge_stack_sets_thm
+ARM8_CV_THM cv_merge_stack_only_thm
+ARM8_CV_THM cv_MemCopy_location_thm
+ARM8_CV_THM cv_MemBarrierOp2num_thm
+ARM8_CV_THM cv_max_heap_limit_thm
+ARM8_CV_THM cv_MAP_UNCURRY_lam_UNCURRY_lam_la'_thm
+ARM8_CV_THM cv_MAP_UNCURRY_lam_UNCURRY_lam_la'_ind
+ARM8_CV_THM cv_MAP_UNCURRY_lam_UNCURRY_lam_la'_def
+ARM8_CV_THM cv_MAP_UNCURRY_lam_lam_pair_CASE__thm
+ARM8_CV_THM cv_MAP_UNCURRY_lam_lam_pair_CASE__ind
+ARM8_CV_THM cv_MAP_UNCURRY_lam_lam_pair_CASE__def
+ARM8_CV_THM cv_MAP_UNCURRY_lam_lam_pair_CASE__1_thm
+ARM8_CV_THM cv_MAP_UNCURRY_lam_lam_pair_CASE__1_ind
+ARM8_CV_THM cv_MAP_UNCURRY_lam_lam_pair_CASE__1_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_9_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_9_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_9_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_8_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_8_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_8_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_7_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_7_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_7_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_6_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_6_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_6_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_5_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_5_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_5_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_4_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_4_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_4_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_3_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_3_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_3_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_2_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_2_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_2_def
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_1_thm
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_1_ind
+ARM8_CV_THM cv_map_to_append_o_str_tree_to_st_1_def
+ARM8_CV_THM cv_MAP_o_FST_o_SND_SND'_thm
+ARM8_CV_THM cv_MAP_o_FST_o_SND_SND'_ind
+ARM8_CV_THM cv_MAP_o_FST_o_SND_SND'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_9'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_9'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_9'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_8'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_8'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_8'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_7'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_7'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_7'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_6'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_6'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_6'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_5'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_5'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_5'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_4'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_4'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_4'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_3'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_3'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_3'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_2'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_2'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_2'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_15'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_15'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_15'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_14'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_14'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_14'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_13'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_13'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_13'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_12'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_12'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_12'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_11'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_11'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_11'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_10'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_10'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_10'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_1'_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_1'_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair_1'_def
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair'''_thm
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair'''_ind
+ARM8_CV_THM cv_MAP_lam_pair_CASE_lam_lam_pair'''_def
+ARM8_CV_THM cv_MAP_lam___Section_num_LET_lam__thm
+ARM8_CV_THM cv_MAP_lam___Section_num_LET_lam__ind
+ARM8_CV_THM cv_MAP_lam___Section_num_LET_lam__def
+ARM8_CV_THM cv_MAP_lab_line_to_display_thm
+ARM8_CV_THM cv_MAP_lab_line_to_display_ind
+ARM8_CV_THM cv_MAP_lab_line_to_display_def
+ARM8_CV_THM cv_MAP_escape_sym_char_explode_thm
+ARM8_CV_THM cv_MAP_escape_sym_char_explode_ind
+ARM8_CV_THM cv_MAP_escape_sym_char_explode_def
+ARM8_CV_THM cv_MAP_enc_sec_arm8_thm
+ARM8_CV_THM cv_MAP_enc_sec_arm8_ind
+ARM8_CV_THM cv_MAP_enc_sec_arm8_def
+ARM8_CV_THM cv_MAP_enc_line_arm8_thm
+ARM8_CV_THM cv_MAP_enc_line_arm8_ind
+ARM8_CV_THM cv_MAP_enc_line_arm8_def
+ARM8_CV_THM cv_MAP_compile_part'_thm
+ARM8_CV_THM cv_MAP_compile_part'_ind
+ARM8_CV_THM cv_MAP_compile_part'_def
+ARM8_CV_THM cv_MAP_arm8_encode_arm8_ast_thm
+ARM8_CV_THM cv_MAP_arm8_encode_arm8_ast_ind
+ARM8_CV_THM cv_MAP_arm8_encode_arm8_ast_def
+ARM8_CV_THM cv_LongDiv_location_thm
+ARM8_CV_THM cv_LongDiv1_location_thm
+ARM8_CV_THM cv_list_subset_thm
+ARM8_CV_THM cv_line_ok_light_arm8_thm
+ARM8_CV_THM cv_lab_to_target_arm8_thm
+ARM8_CV_THM cv_lab_to_strs_thm
+ARM8_CV_THM cv_lab_line_to_display_thm
+ARM8_CV_THM cv_lab_fun_to_display_thm
+ARM8_CV_THM cv_lab_asm_to_display_thm
+ARM8_CV_THM cv_is_test_thm
+ARM8_CV_THM cv_is_stack_var_thm
+ARM8_CV_THM cv_InstallData_location_thm
+ARM8_CV_THM cv_Install_location_thm
+ARM8_CV_THM cv_inst_select_exp_arm8_thm
+ARM8_CV_THM cv_inst_select_exp_arm8_ind
+ARM8_CV_THM cv_inst_select_exp_arm8_def
+ARM8_CV_THM cv_inst_select_arm8_thm
+ARM8_CV_THM cv_inst_select_arm8_ind
+ARM8_CV_THM cv_inst_select_arm8_def
+ARM8_CV_THM cv_inst_ok_arm8_thm
+ARM8_CV_THM cv_HighestSetBit_thm
+ARM8_CV_THM cv_get_symbols_thm
+ARM8_CV_THM cv_get_symbols_ind
+ARM8_CV_THM cv_get_symbols_def
+ARM8_CV_THM cv_get_sym_labels_thm
+ARM8_CV_THM cv_get_sym_label_thm
+ARM8_CV_THM cv_get_stack_only_thm
+ARM8_CV_THM cv_get_stack_only_aux_thm
+ARM8_CV_THM cv_get_stack_only_aux_ind
+ARM8_CV_THM cv_get_stack_only_aux_def
+ARM8_CV_THM cv_get_forced_arm8_thm
+ARM8_CV_THM cv_get_forced_arm8_ind
+ARM8_CV_THM cv_get_forced_arm8_def
+ARM8_CV_THM cv_genlist_0_num_to_display_thm
+ARM8_CV_THM cv_genlist_0_num_to_display_ind
+ARM8_CV_THM cv_genlist_0_num_to_display_def
+ARM8_CV_THM cv_genlist_0_lam_word_bit_____1_w_thm
+ARM8_CV_THM cv_genlist_0_lam_word_bit_____1_w_ind
+ARM8_CV_THM cv_genlist_0_lam_word_bit_____1_w_def
+ARM8_CV_THM cv_genlist_0_lam_num_to_display___thm
+ARM8_CV_THM cv_genlist_0_lam_num_to_display___ind
+ARM8_CV_THM cv_genlist_0_lam_num_to_display___def
+ARM8_CV_THM cv_genlist_0_lam_____Bignum_locat_thm
+ARM8_CV_THM cv_genlist_0_lam_____Bignum_locat_ind
+ARM8_CV_THM cv_genlist_0_lam_____Bignum_locat_def
+ARM8_CV_THM cv_genlist_0_display_num_as_varn_thm
+ARM8_CV_THM cv_genlist_0_display_num_as_varn_ind
+ARM8_CV_THM cv_genlist_0_display_num_as_varn_def
+ARM8_CV_THM cv_FromList_location_thm
+ARM8_CV_THM cv_FromList1_location_thm
+ARM8_CV_THM cv_from_word_arm8_thm
+ARM8_CV_THM cv_from_word_0_arm8_thm
+ARM8_CV_THM cv_from_stack_arm8_thm
+ARM8_CV_THM cv_from_lab_arm8_thm
+ARM8_CV_THM cv_fp_ok_arm8_thm
+ARM8_CV_THM cv_FOLDR_pp_with_title_any_prog_p_thm
+ARM8_CV_THM cv_FOLDR_pp_with_title_any_prog_p_ind
+ARM8_CV_THM cv_FOLDR_pp_with_title_any_prog_p_def
+ARM8_CV_THM cv_FOLDR_merge_stack_only_thm
+ARM8_CV_THM cv_FOLDR_merge_stack_only_ind
+ARM8_CV_THM cv_FOLDR_merge_stack_only_def
+ARM8_CV_THM cv_FOLDR_delete_thm
+ARM8_CV_THM cv_FOLDR_delete_ind
+ARM8_CV_THM cv_FOLDR_delete_def
+ARM8_CV_THM cv_FOLDL_get_sym_label___int_of_n_thm
+ARM8_CV_THM cv_flat_to_strs_thm
+ARM8_CV_THM cv_fixwidth_thm
+ARM8_CV_THM cv_FILTER_lam_EXISTS___FST_thm
+ARM8_CV_THM cv_FILTER_lam_EXISTS___FST_ind
+ARM8_CV_THM cv_FILTER_lam_EXISTS___FST_def
+ARM8_CV_THM cv_field_thm
+ARM8_CV_THM cv_ffi_asm_thm
+ARM8_CV_THM cv_ffi_asm_ind
+ARM8_CV_THM cv_ffi_asm_def
+ARM8_CV_THM cv_ExtendType2num_thm
+ARM8_CV_THM cv_export_funcs_thm
+ARM8_CV_THM cv_export_funcs_alt_thm
+ARM8_CV_THM cv_export_func_thm
+ARM8_CV_THM cv_exp_to_addr_thm
+ARM8_CV_THM cv_EXISTS___FST_thm
+ARM8_CV_THM cv_EVERY_sec_ok_light_arm8_thm
+ARM8_CV_THM cv_EVERY_line_ok_light_arm8_thm
+ARM8_CV_THM cv_EVERY_lam_IN_LIST_TO_SET_thm
+ARM8_CV_THM cv_Equal_location_thm
+ARM8_CV_THM cv_Equal1_location_thm
+ARM8_CV_THM cv_EncodeLogicalOp_thm
+ARM8_CV_THM cv_EncodeBitMaskAux_thm
+ARM8_CV_THM cv_EncodeBitMaskAux'_thm
+ARM8_CV_THM cv_EncodeBitMask_thm
+ARM8_CV_THM cv_EncodeBitMask'_thm
+ARM8_CV_THM cv_Encode_thm
+ARM8_CV_THM cv_enc_secs_again_arm8_thm
+ARM8_CV_THM cv_enc_secs_again_arm8_ind
+ARM8_CV_THM cv_enc_secs_again_arm8_def
+ARM8_CV_THM cv_enc_sec_list_arm8_thm
+ARM8_CV_THM cv_enc_sec_arm8_thm
+ARM8_CV_THM cv_enc_lines_again_arm8_thm
+ARM8_CV_THM cv_enc_line_arm8_thm
+ARM8_CV_THM cv_each_inlogic_arm8_thm
+ARM8_CV_THM cv_each_inlogic_arm8_ind
+ARM8_CV_THM cv_each_inlogic_arm8_def
+ARM8_CV_THM cv_e_system_thm
+ARM8_CV_THM cv_e_LoadStoreRegister_thm
+ARM8_CV_THM cv_e_LoadStoreImmediate_thm
+ARM8_CV_THM cv_e_load_store_thm
+ARM8_CV_THM cv_e_debug_thm
+ARM8_CV_THM cv_e_data_thm
+ARM8_CV_THM cv_e_crc_thm
+ARM8_CV_THM cv_e_branch_thm
+ARM8_CV_THM cv_Div_location_thm
+ARM8_CV_THM cv_DecodeBitMasks_thm
+ARM8_CV_THM cv_DecodeBitMasks'_thm
+ARM8_CV_THM cv_data_to_strs_thm
+ARM8_CV_THM cv_data_fun_to_display_thm
+ARM8_CV_THM cv_CountTrailing_T_thm
+ARM8_CV_THM cv_CountTrailing_T_ind
+ARM8_CV_THM cv_CountTrailing_T_def
+ARM8_CV_THM cv_CountTrailing_T'_thm
+ARM8_CV_THM cv_CountTrailing_T'_ind
+ARM8_CV_THM cv_CountTrailing_T'_def
+ARM8_CV_THM cv_CountTrailing_F_thm
+ARM8_CV_THM cv_CountTrailing_F_ind
+ARM8_CV_THM cv_CountTrailing_F_def
+ARM8_CV_THM cv_CountTrailing_F'_thm
+ARM8_CV_THM cv_CountTrailing_F'_ind
+ARM8_CV_THM cv_CountTrailing_F'_def
+ARM8_CV_THM cv_compile_word_to_stack_arm8_thm
+ARM8_CV_THM cv_compile_word_to_stack_arm8_ind
+ARM8_CV_THM cv_compile_word_to_stack_arm8_def
+ARM8_CV_THM cv_compile_prog_arm8_thm
+ARM8_CV_THM cv_compile_lab_arm8_thm
+ARM8_CV_THM cv_compile_cake_explore_arm8_thm
+ARM8_CV_THM cv_compile_cake_arm8_thm
+ARM8_CV_THM cv_compile_0_arm8_thm
+ARM8_CV_THM cv_Compare_location_thm
+ARM8_CV_THM cv_Compare1_location_thm
+ARM8_CV_THM cv_comp_arm8_thm
+ARM8_CV_THM cv_comp_arm8_ind
+ARM8_CV_THM cv_comp_arm8_def
+ARM8_CV_THM cv_cmp_ok_arm8_thm
+ARM8_CV_THM cv_cmp_cond_thm
+ARM8_CV_THM cv_clos_to_strs_thm
+ARM8_CV_THM cv_clos_fun_to_display_thm
+ARM8_CV_THM cv_clos_dec_to_display_thm
+ARM8_CV_THM cv_chunks16_words_line_word_implo_thm
+ARM8_CV_THM cv_chunks16_words_line_word_implo_ind
+ARM8_CV_THM cv_chunks16_words_line_word_implo_def
+ARM8_CV_THM cv_chunks16_words_line_byte_implo_thm
+ARM8_CV_THM cv_chunks16_words_line_byte_implo_ind
+ARM8_CV_THM cv_chunks16_words_line_byte_implo_def
+ARM8_CV_THM cv_ByteCopySub_location_thm
+ARM8_CV_THM cv_ByteCopyNew_location_thm
+ARM8_CV_THM cv_ByteCopyLoop_location_thm
+ARM8_CV_THM cv_ByteCopyAlign_location_thm
+ARM8_CV_THM cv_ByteCopyAdd_location_thm
+ARM8_CV_THM cv_ByteCopy_location_thm
+ARM8_CV_THM cv_bvl_to_strs_thm
+ARM8_CV_THM cv_bvl_fun_to_display_thm
+ARM8_CV_THM cv_bvi_to_strs_thm
+ARM8_CV_THM cv_bvi_fun_to_display_thm
+ARM8_CV_THM cv_bop_enc_thm
+ARM8_CV_THM cv_Bignum_location_thm
+ARM8_CV_THM cv_asm_ok_arm8_thm
+ARM8_CV_THM cv_asm_asm_to_display_thm
+ARM8_CV_THM cv_arm8_valid_imm_thm
+ARM8_CV_THM cv_arm8_shv_thm
+ARM8_CV_THM cv_arm8_load_store_ast_thm
+ARM8_CV_THM cv_arm8_load_store_ast32_thm
+ARM8_CV_THM cv_arm8_load_store_ast16_thm
+ARM8_CV_THM cv_arm8_export_thm
+ARM8_CV_THM cv_arm8_encode_thm
+ARM8_CV_THM cv_arm8_encode_fail_thm
+ARM8_CV_THM cv_arm8_enc_thm
+ARM8_CV_THM cv_arm8_enc_mov_imm_thm
+ARM8_CV_THM cv_arm8_code_buffer_thm
+ARM8_CV_THM cv_arm8_ast_thm
+ARM8_CV_THM cv_arith_ok_arm8_thm
+ARM8_CV_THM cv_arch_wordsize_thm
+ARM8_CV_THM cv_AppendMainLoop_location_thm
+ARM8_CV_THM cv_AppendLenLoop_location_thm
+ARM8_CV_THM cv_Append_location_thm
+ARM8_CV_THM cv_AnyArith_location_thm
+ARM8_CV_THM cv_any_prog_pp_thm
+ARM8_CV_THM cv_Add_location_thm
+ARM8_CV_THM CountTrailing_T_ind
+ARM8_CV_THM CountTrailing_T_def
+ARM8_CV_THM CountTrailing_F_ind
+ARM8_CV_THM CountTrailing_F_def
+ARM8_CV_THM compile_word_to_stack_arm8_pre_strongind
+ARM8_CV_THM compile_word_to_stack_arm8_pre_rules
+ARM8_CV_THM compile_word_to_stack_arm8_pre_ind
+ARM8_CV_THM compile_word_to_stack_arm8_pre_cases
+ARM8_CV_THM compile_word_to_stack_arm8_pre
+ARM8_CV_THM comp_arm8_pre_strongind
+ARM8_CV_THM comp_arm8_pre_rules
+ARM8_CV_THM comp_arm8_pre_ind
+ARM8_CV_THM comp_arm8_pre_cases
+ARM8_CV_THM chunks16_words_line_word_implo_ho
+ARM8_CV_THM chunks16_words_line_byte_implo_ho
+ARM8_CV_THM bop_enc_pre_strongind
+ARM8_CV_THM bop_enc_pre_rules
+ARM8_CV_THM bop_enc_pre_ind
+ARM8_CV_THM bop_enc_pre_cases
+ARM8_CV_THM arm8_ast_pre_strongind
+ARM8_CV_THM arm8_ast_pre_rules
+ARM8_CV_THM arm8_ast_pre_ind
+ARM8_CV_THM arm8_ast_pre_cases
+ARM8_CV_THM arm8_ast_pre
+FIND_WORD_REF ⊢ (∀p. find_word_ref (MustTerminate p) = find_word_ref p) ∧
+  (∀v0 target ret handler.
+     find_word_ref (Call ret target v0 handler) =
+     union (case target of NONE => LN | SOME n => insert n () LN)
+       (union
+          (case ret of
+             NONE => LN
+           | SOME (v1,v3,ret_handler,l1,v8) =>
+             insert l1 () (find_word_ref ret_handler))
+          (case handler of NONE => LN | SOME (v1,v3,v4) => find_word_ref v3))) ∧
+  (∀p2 p1.
+     find_word_ref (Seq p1 p2) = union (find_word_ref p1) (find_word_ref p2)) ∧
+  (∀v3 v2 v1 p2 p1.
+     find_word_ref (If v1 v2 v3 p1 p2) =
+     union (find_word_ref p1) (find_word_ref p2)) ∧
+  (∀v4 n. find_word_ref (LocValue v4 n) = insert n () LN) ∧
+  (∀names exit_names body.
+     find_word_ref (Loop names body exit_names) = find_word_ref body) ∧
+  isEmpty (find_word_ref Skip) ∧
+  (∀v9 v7. isEmpty (find_word_ref (Move v7 v9))) ∧
+  (∀v10. isEmpty (find_word_ref (Inst v10))) ∧
+  (∀v12 v11. isEmpty (find_word_ref (Assign v11 v12))) ∧
+  (∀v14 v13. isEmpty (find_word_ref (Get v13 v14))) ∧
+  (∀v16 v15. isEmpty (find_word_ref (Set v15 v16))) ∧
+  (∀v18 v17. isEmpty (find_word_ref (Store v17 v18))) ∧
+  (∀v35 v34. isEmpty (find_word_ref (Alloc v34 v35))) ∧
+  (∀v40 v39 v38 v37 v36.
+     isEmpty (find_word_ref (StoreConsts v36 v37 v38 v39 v40))) ∧
+  (∀v41. isEmpty (find_word_ref (Raise v41))) ∧
+  (∀v43 v42. isEmpty (find_word_ref (Return v42 v43))) ∧
+  (∀v44. isEmpty (find_word_ref (Break v44))) ∧
+  (∀v45. isEmpty (find_word_ref (Continue v45))) ∧
+  isEmpty (find_word_ref Tick) ∧
+  (∀v48 v47 v46. isEmpty (find_word_ref (OpCurrHeap v46 v47 v48))) ∧
+  (∀v56 v55 v54 v53 v52 v51.
+     isEmpty (find_word_ref (... ... v53 v54 v55 v56))) ∧
+  (∀v58 v57. isEmpty (find_word_ref (DataBufferWrite v57 v58))) ∧
+  (∀v64 v63 v62 v61 v60 v59. isEmpty (find_word_ref (... ... v63 v64))) ∧
+  (∀v67 v66 v65. isEmpty (find_word_ref (... ... v67))) ∧
+  ∀v72 v71 v70 v69 v68. isEmpty (find_word_ref (... ... v72))
+INSTALL_LOCATION ⊢ Install_location = 29
+EXPLORE_COMPLETE

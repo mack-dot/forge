@@ -1,0 +1,6 @@
+!s. ~s.SCTLR_EL1.E0E /\ ~s.TCR_EL1.TBI0 /\ ~s.TCR_EL1.TBI1 /\
+      s.MEM s.PC = 107w /\ s.MEM (s.PC + 1w) = 251w /\
+      s.MEM (s.PC + 3w) = 23w /\ s.MEM (s.PC + 2w) = 255w /\ s.PSTATE.EL = 0w /\
+      s.exception = NoException /\ aligned 2 s.PC ==>
+      ?s1. NextStateARM8 s = SOME s1 /\ s1.PC = s.PC - 4692w /\
+           s1.MEM = s.MEM /\ s1.REG = s.REG /\ s1.SP_EL0 = s.SP_EL0

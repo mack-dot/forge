@@ -1,0 +1,631 @@
+<<HOL message: Created theory "forge_refundInitialStackCodeDiag">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundInitialStackCodeDiag)>>
+Saved theorem _______ "refund_word_postalloc"
+Saved theorem _______ "refund_word_labels"
+Saved theorem _______ "refund_stack_lowering"
+WORD_CONVENTIONS_LABELS_AND_LOWERING_CHECKED
+SPECIALIZED_CONVS
+ []
+⊢ (compile (ac :asm_config) F
+     (p :(num # num # wordLang$prog # metadata) list) :
+   num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+  ((bytes :num list),(c' :word_to_stack$config),(f' :num list),
+   (p' :(num # prog # metadata) list)) ∧ isa_bits ac = dimindex (:64) ∧
+  EVERY
+    (post_alloc_conventions (dimindex (:64))
+       (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num))))
+    (MAP
+       ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+        (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+        (SND :num # num # wordLang$prog # metadata ->
+              num # wordLang$prog # metadata)) p) ∧
+  arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num)) =
+  ac.reg_count − ((5 :num) + LENGTH ac.avoid_regs) ∧
+  (4 :num) ≤
+  arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num)) ⇒
+  EVERY alloc_arg
+    (MAP
+       ((FST :prog # metadata -> prog) ∘
+        (SND :num # prog # metadata -> prog # metadata)) p') ∧
+  EVERY
+    (λ(p :prog).
+       reg_bound p
+         (arm8_config.reg_count −
+          (LENGTH arm8_config.avoid_regs + (5 :num)) + (2 :num)))
+    (MAP
+       ((FST :prog # metadata -> prog) ∘
+        (SND :num # prog # metadata -> prog # metadata)) p') ∧
+  EVERY
+    (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+    (MAP
+       ((FST :prog # metadata -> prog) ∘
+        (SND :num # prog # metadata -> prog # metadata)) p')
+SPECIALIZED_LABELS
+ []
+⊢ EVERY
+    (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+       (let
+          (labs :(num # num) list) = extract_labels p
+        in
+          EVERY
+            (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+            labs ∧ ALL_DISTINCT labs))
+    (prog :(num # num # wordLang$prog # metadata) list) ⇒
+  (let
+     ((bytes :num list),(c :word_to_stack$config),(f :num list),
+        (p :(num # prog # metadata) list)) =
+       (compile arm8_config F prog :
+        num list #
+        word_to_stack$config # num list # (num # prog # metadata) list)
+   in
+     MAP (FST :num # prog # metadata -> num) p =
+     (5 :num)::(6 :num)::
+       MAP (FST :num # num # wordLang$prog # metadata -> num) prog ∧
+     EVERY
+       (λ((n :num),(p :prog),(md :metadata)).
+          (let
+             (labs :(num # num) list) = extract_labels p
+           in
+             EVERY
+               (λ((l1 :num),(l2 :num)).
+                  l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num)) labs ∧
+             ALL_DISTINCT labs)) p)
+STATIC_NUMBER  [] ⊢ isa_bits arm8_config = (64 :num)
+STATIC_NUMBER  [] ⊢ dimindex (:64) = (64 :num)
+STATIC_NUMBER  []
+⊢ arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num)) =
+  (24 :num)
+STATIC_NUMBER  []
+⊢ arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (3 :num)) =
+  (26 :num)
+STATIC_NUMBER  [] ⊢ stack_num_stubs = (5 :num)
+WORDPROG_TYPE :(num # num # wordLang$prog # metadata) list
+SPECIALIZED_LABELS_LET_EXPANDED
+ []
+⊢ EVERY
+    (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+       EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+         (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+    (prog :(num # num # wordLang$prog # metadata) list) ⇒
+  (λ((bytes :num list),(c :word_to_stack$config),(f :num list),
+      (p :(num # prog # metadata) list)).
+     MAP (FST :num # prog # metadata -> num) p =
+     (5 :num)::(6 :num)::
+       MAP (FST :num # num # wordLang$prog # metadata -> num) prog ∧
+     EVERY
+       (λ((n :num),(p :prog),(md :metadata)).
+          EVERY
+            (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+            (extract_labels p) ∧ ALL_DISTINCT (extract_labels p)) p)
+    (compile arm8_config F prog :
+     num list #
+     word_to_stack$config # num list # (num # prog # metadata) list)
+SEQUENCE_BEGIN let-expanded
+STATEMENT_TYPE_VARS 
+OK..
+1 subgoal:
+STEP_OK let-expanded:strip
+STATE let-expanded:strip goals=1
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (good_code
+   (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (3 :num)))
+   (stack_prg :(num # prog # metadata) list) :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:drule-convs
+STATE let-expanded:drule-convs goals=1
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (isa_bits arm8_config = dimindex (:64) ∧
+ EVERY
+   (post_alloc_conventions (dimindex (:64))
+      (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num))))
+   (MAP
+      ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+       (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+       (SND :num # num # wordLang$prog # metadata ->
+             num # wordLang$prog # metadata))
+      (wprog :(num # num # wordLang$prog # metadata) list)) ∧
+ arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num)) =
+ arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs) ∧
+ (4 :num) ≤
+ arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num)) ⇒
+ EVERY alloc_arg
+   (MAP
+      ((FST :prog # metadata -> prog) ∘
+       (SND :num # prog # metadata -> prog # metadata))
+      (stack_prg :(num # prog # metadata) list)) ∧
+ EVERY
+   (λ(p :prog).
+      reg_bound p
+        (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (5 :num)) +
+         (2 :num)))
+   (MAP
+      ((FST :prog # metadata -> prog) ∘
+       (SND :num # prog # metadata -> prog # metadata)) stack_prg) ∧
+ EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+   (MAP
+      ((FST :prog # metadata -> prog) ∘
+       (SND :num # prog # metadata -> prog # metadata)) stack_prg)) ⇒
+(good_code
+   (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + (3 :num)))
+   stack_prg :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:simp-static
+STATE let-expanded:simp-static goals=1
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (EVERY (post_alloc_conventions (64 :num) (24 :num))
+   (MAP
+      ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+       (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+       (SND :num # num # wordLang$prog # metadata ->
+             num # wordLang$prog # metadata))
+      (wprog :(num # num # wordLang$prog # metadata) list)) ⇒
+ EVERY alloc_arg
+   (MAP
+      ((FST :prog # metadata -> prog) ∘
+       (SND :num # prog # metadata -> prog # metadata))
+      (stack_prg :(num # prog # metadata) list)) ∧
+ EVERY (λ(p :prog). reg_bound p (26 :num))
+   (MAP
+      ((FST :prog # metadata -> prog) ∘
+       (SND :num # prog # metadata -> prog # metadata)) stack_prg) ∧
+ EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+   (MAP
+      ((FST :prog # metadata -> prog) ∘
+       (SND :num # prog # metadata -> prog # metadata)) stack_prg)) ⇒
+(good_code (26 :num) stack_prg :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:impl
+STATE let-expanded:impl goals=1
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list)) ∧
+EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata)) stack_prg) ∧
+EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata)) stack_prg) ⇒
+(good_code (26 :num) stack_prg :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:strip2
+STATE let-expanded:strip2 goals=1
+ASSUMPTION EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (good_code (26 :num) (stack_prg :(num # prog # metadata) list) :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:drule-labels
+STATE let-expanded:drule-labels goals=1
+ASSUMPTION EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (λ((bytes :num list),(c :word_to_stack$config),(f :num list),
+    (p :(num # prog # metadata) list)).
+   MAP (FST :num # prog # metadata -> num) p =
+   (5 :num)::(6 :num)::
+     MAP (FST :num # num # wordLang$prog # metadata -> num)
+       (wprog :(num # num # wordLang$prog # metadata) list) ∧
+   EVERY
+     (λ((n :num),(p :prog),(md :metadata)).
+        EVERY
+          (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+          (extract_labels p) ∧ ALL_DISTINCT (extract_labels p)) p)
+  (compile arm8_config F wprog :
+   num list # word_to_stack$config # num list # (num # prog # metadata) list) ⇒
+(good_code (26 :num) (stack_prg :(num # prog # metadata) list) :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:simp
+STATE let-expanded:simp goals=1
+ASSUMPTION EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL MAP (FST :num # prog # metadata -> num)
+  (stack_prg :(num # prog # metadata) list) =
+(5 :num)::(6 :num)::
+  MAP (FST :num # num # wordLang$prog # metadata -> num)
+    (wprog :(num # num # wordLang$prog # metadata) list) ∧
+EVERY
+  (λ((n :num),(p :prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p)) stack_prg ⇒
+(good_code (26 :num) stack_prg :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:strip3
+STATE let-expanded:strip3 goals=1
+ASSUMPTION EVERY
+  (λ((n :num),(p :prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (stack_prg :(num # prog # metadata) list)
+ASSUMPTION MAP (FST :num # prog # metadata -> num)
+  (stack_prg :(num # prog # metadata) list) =
+(5 :num)::(6 :num)::
+  MAP (FST :num # num # wordLang$prog # metadata -> num)
+    (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (good_code (26 :num) (stack_prg :(num # prog # metadata) list) :bool)
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK let-expanded:distinct
+STATE let-expanded:distinct goals=1
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # prog # metadata -> num)
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(p :prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (stack_prg :(num # prog # metadata) list)
+ASSUMPTION MAP (FST :num # prog # metadata -> num)
+  (stack_prg :(num # prog # metadata) list) =
+(5 :num)::(6 :num)::
+  MAP (FST :num # num # wordLang$prog # metadata -> num)
+    (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (post_alloc_conventions (isa_bits arm8_config)
+     (arm8_config.reg_count − ((5 :num) + LENGTH arm8_config.avoid_regs)))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL (good_code (26 :num) (stack_prg :(num # prog # metadata) list) :bool)
+END_GOAL
+OK..
+STEP_FAIL let-expanded:bound :: 
+Exception raised at BasicProvers.by: by's tactic failed to prove subgoal on line 115
+
+OK..
+1 subgoal:
+STEP_OK let-expanded:unfold
+STATE let-expanded:unfold goals=1
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # prog # metadata -> num)
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(p :prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (stack_prg :(num # prog # metadata) list)
+ASSUMPTION MAP (FST :num # prog # metadata -> num)
+  (stack_prg :(num # prog # metadata) list) =
+(5 :num)::(6 :num)::
+  MAP (FST :num # num # wordLang$prog # metadata -> num)
+    (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(p :prog). call_args p (1 :num) (2 :num) (3 :num) (4 :num) (0 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (λ(p :prog). reg_bound p (26 :num))
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY alloc_arg
+  (MAP
+     ((FST :prog # metadata -> prog) ∘
+      (SND :num # prog # metadata -> prog # metadata))
+     (stack_prg :(num # prog # metadata) list))
+ASSUMPTION EVERY (post_alloc_conventions (64 :num) (24 :num))
+  (MAP
+     ((FST :wordLang$prog # metadata -> wordLang$prog) ∘
+      (SND :num # wordLang$prog # metadata -> wordLang$prog # metadata) ∘
+      (SND :num # num # wordLang$prog # metadata ->
+            num # wordLang$prog # metadata))
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION EVERY
+  (λ((n :num),(m :num),(p :wordLang$prog),(md :metadata)).
+     EVERY (λ((l1 :num),(l2 :num)). l1 = n ∧ l2 ≠ (0 :num) ∧ l2 ≠ (1 :num))
+       (extract_labels p) ∧ ALL_DISTINCT (extract_labels p))
+  (wprog :(num # num # wordLang$prog # metadata) list)
+ASSUMPTION EVERY (λ(n :num). (6 :num) < n)
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION ALL_DISTINCT
+  (MAP (FST :num # num # wordLang$prog # metadata -> num)
+     (wprog :(num # num # wordLang$prog # metadata) list))
+ASSUMPTION (compile arm8_config F (wprog :(num # num # wordLang$prog # metadata) list) :
+ num list # word_to_stack$config # num list # (num # prog # metadata) list) =
+((bm :num list),(cc :word_to_stack$config),(frames :num list),
+ (stack_prg :(num # prog # metadata) list))
+GOAL EVERY
+  (λ((k :num),(prog :prog),(md :metadata)). (5 :num) ≤ k ∧ alloc_arg prog)
+  (stack_prg :(num # prog # metadata) list)
+END_GOAL
+OK..
+STEP_FAIL let-expanded:final :: 
+Exception raised at folTools.FOL_FIND: no solution found
+
+SEQUENCE_END let-expanded proved=false
+REST_SKIPPED
+DIAGNOSTIC_COMPLETE

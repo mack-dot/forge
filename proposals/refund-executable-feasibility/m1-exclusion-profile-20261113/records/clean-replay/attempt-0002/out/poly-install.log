@@ -1,0 +1,96 @@
+Making install in libpolyml
+make[1]: Entering directory '/build/polyml/libpolyml'
+make[2]: Entering directory '/build/polyml/libpolyml'
+ /usr/bin/mkdir -p '/build/poly-install/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libpolyml.la '/build/poly-install/lib'
+libtool: install: /usr/bin/install -c .libs/libpolyml.so.16.0.0 /build/poly-install/lib/libpolyml.so.16.0.0
+libtool: install: (cd /build/poly-install/lib && { ln -s -f libpolyml.so.16.0.0 libpolyml.so.16 || { rm -f libpolyml.so.16 && ln -s libpolyml.so.16.0.0 libpolyml.so.16; }; })
+libtool: install: (cd /build/poly-install/lib && { ln -s -f libpolyml.so.16.0.0 libpolyml.so || { rm -f libpolyml.so && ln -s libpolyml.so.16.0.0 libpolyml.so; }; })
+libtool: install: /usr/bin/install -c .libs/libpolyml.lai /build/poly-install/lib/libpolyml.la
+libtool: install: /usr/bin/install -c .libs/libpolyml.a /build/poly-install/lib/libpolyml.a
+libtool: install: chmod 644 /build/poly-install/lib/libpolyml.a
+libtool: install: ranlib /build/poly-install/lib/libpolyml.a
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/sbin" ldconfig -n /build/poly-install/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /build/poly-install/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/build/poly-install/lib/pkgconfig'
+ /usr/bin/install -c -m 644 polyml.pc '/build/poly-install/lib/pkgconfig'
+make[2]: Leaving directory '/build/polyml/libpolyml'
+make[1]: Leaving directory '/build/polyml/libpolyml'
+Making install in libpolymain
+make[1]: Entering directory '/build/polyml/libpolymain'
+make[2]: Entering directory '/build/polyml/libpolymain'
+ /usr/bin/mkdir -p '/build/poly-install/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libpolymain.la '/build/poly-install/lib'
+libtool: install: /usr/bin/install -c .libs/libpolymain.lai /build/poly-install/lib/libpolymain.la
+libtool: install: /usr/bin/install -c .libs/libpolymain.a /build/poly-install/lib/libpolymain.a
+libtool: install: chmod 644 /build/poly-install/lib/libpolymain.a
+libtool: install: ranlib /build/poly-install/lib/libpolymain.a
+libtool: finish: PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/sbin" ldconfig -n /build/poly-install/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /build/poly-install/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/build/polyml/libpolymain'
+make[1]: Leaving directory '/build/polyml/libpolymain'
+Making install in .
+make[1]: Entering directory '/build/polyml'
+make[2]: Entering directory '/build/polyml'
+ /usr/bin/mkdir -p '/build/poly-install/bin'
+  /bin/bash ./libtool   --mode=install /usr/bin/install -c polyimport poly '/build/poly-install/bin'
+libtool: install: /usr/bin/install -c .libs/polyimport /build/poly-install/bin/polyimport
+libtool: install: /usr/bin/install -c .libs/poly /build/poly-install/bin/poly
+ /usr/bin/mkdir -p '/build/poly-install/bin'
+ /usr/bin/install -c polyc '/build/poly-install/bin'
+ /usr/bin/mkdir -p '/build/poly-install/share/man/man1'
+ /usr/bin/install -c -m 644 poly.1 polyimport.1 polyc.1 '/build/poly-install/share/man/man1'
+make[2]: Leaving directory '/build/polyml'
+make[1]: Leaving directory '/build/polyml'
+Making install in modules
+make[1]: Entering directory '/build/polyml/modules'
+Making install in IntInfAsInt
+make[2]: Entering directory '/build/polyml/modules/IntInfAsInt'
+make[3]: Entering directory '/build/polyml/modules/IntInfAsInt'
+/usr/bin/mkdir -p /build/poly-install/lib/polyml/modules
+/usr/bin/install -c -m 644 IntInfAsInt /build/poly-install/lib/polyml/modules
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/build/polyml/modules/IntInfAsInt'
+make[2]: Leaving directory '/build/polyml/modules/IntInfAsInt'
+make[2]: Entering directory '/build/polyml/modules'
+make[3]: Entering directory '/build/polyml/modules'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/build/polyml/modules'
+make[2]: Leaving directory '/build/polyml/modules'
+make[1]: Leaving directory '/build/polyml/modules'

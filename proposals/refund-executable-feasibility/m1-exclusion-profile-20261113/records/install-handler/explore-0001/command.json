@@ -1,0 +1,34 @@
+{
+ "case": "explore-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/explore-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+ "source": "explore-0001.sml",
+ "source_sha256": "590e29dd60be963a2edf746af43276a83ab19b74cf52ab3c88e39b815fb2f612",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247"
+ },
+ "resource_guard": {
+  "memory_free_percent": 41,
+  "disk_free_gib": 37.43,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 26.101,
+ "child_user_cpu_seconds": 26.305,
+ "child_max_rss_bytes": 1028407296,
+ "markers": [],
+ "stdout_sha256": "6f46068db665cda15f0a80a6a92d7028848758e01dbb9e5627caef9a02effce3",
+ "stderr_sha256": "644e270792f61ba0915bcf409a20ab10d42c0129550594d919add9be8eb7a2fa",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

@@ -1,0 +1,76 @@
+<<HOL message: Created theory "forge_n1Explore">>
+ARM8_THM compile_0_arm8_def :: ⊢ compile_0_arm8 data_conf prog =
+  (let
+     data_conf = data_conf with <|has_fp_ops := F; has_fp_tern := F|>
+   in
+     stubs_md data_conf ++ MAP (compile_part data_conf) prog)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_n1Explore)>>
+OK..
+1 subgoal:
+AFTER single-start: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels [(n,m,pp,md)] (get_code_labels pp) ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]))
+   (get_code_labels pp)) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER single-cases: 1 goals, proved=false
+  ASM full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (LENGTH ac.avoid_regs + 5)) wc.reg_alg ac
+  ((n,m,pp,md),orac) = (out0,out1,out2,out3)
+  ASM out0 = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[(n,out1,out2,out3)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels [(n,m,pp,md)] (get_code_labels pp) ⇒
+ word_good_code_labels [(n,out1,out2,out3)] (get_code_labels pp)) ⇒
+word_get_code_labels out2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER single-labels: 1 goals, proved=false
+  ASM full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (LENGTH ac.avoid_regs + 5)) wc.reg_alg ac
+  ((n,m,pp,md),orac) = (out0,out1,out2,out3)
+  ASM out0 = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[(n,out1,out2,out3)]
+  ASM word_good_handlers n pp
+  GOAL (word_get_code_labels pp ⊆ {n} ∪ get_code_labels pp ⇒
+ word_good_handlers n out2 ∧
+ word_get_code_labels out2 ⊆ {n} ∪ get_code_labels pp) ⇒
+word_get_code_labels out2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED single-close 
+Exception raised at folTools.FOL_FIND: no solution found
+
+AFTER failure of single-close: 1 goals, proved=false
+  ASM full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (LENGTH ac.avoid_regs + 5)) wc.reg_alg ac
+  ((n,m,pp,md),orac) = (out0,out1,out2,out3)
+  ASM out0 = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[(n,out1,out2,out3)]
+  ASM word_good_handlers n pp
+  GOAL (word_get_code_labels pp ⊆ {n} ∪ get_code_labels pp ⇒
+ word_good_handlers n out2 ∧
+ word_get_code_labels out2 ⊆ {n} ∪ get_code_labels pp) ⇒
+word_get_code_labels out2 ⊆ n INSERT word_get_code_labels pp
+----
+EXPLORE_COMPLETE

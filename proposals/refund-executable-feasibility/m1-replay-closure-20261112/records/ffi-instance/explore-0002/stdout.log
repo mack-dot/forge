@@ -1,0 +1,146 @@
+<<HOL message: Created theory "forge_refundFfiInstanceExplore">>
+OLD_GOAL_VAR events : :io_event list
+OLD_GOAL_VAR fd : :num
+OLD_GOAL_VAR fdv : :v
+OLD_GOAL_VAR fs : :IO_fs
+OLD_GOAL_VAR h1 : :word8
+OLD_GOAL_VAR h2 : :word8
+OLD_GOAL_VAR h3 : :word8
+OLD_GOAL_VAR h4 : :word8
+OLD_GOAL_VAR n : :num
+OLD_GOAL_VAR ns : :mlstring list
+OLD_GOAL_VAR nv : :v
+OLD_GOAL_VAR p : :('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring -> word8 list -> word8 list -> ffi -> ffi ffi_result option)) list
+OLD_GOAL_VAR rest : :word8 list
+OLD_GOAL_VAR rest : :α list
+NEW_GOAL_VAR events : :io_event list
+NEW_GOAL_VAR fd : :num
+NEW_GOAL_VAR fdv : :v
+NEW_GOAL_VAR fs : :IO_fs
+NEW_GOAL_VAR h1 : :word8
+NEW_GOAL_VAR h2 : :word8
+NEW_GOAL_VAR h3 : :word8
+NEW_GOAL_VAR h4 : :word8
+NEW_GOAL_VAR n : :num
+NEW_GOAL_VAR ns : :mlstring list
+NEW_GOAL_VAR nv : :v
+NEW_GOAL_VAR p : :('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring -> word8 list -> word8 list -> ffi -> ffi ffi_result option)) list
+NEW_GOAL_VAR rest : :word8 list
+CONCLUSIONS_ACONV true
+GOALS_ACONV false
+SEQUENCE_BEGIN old
+OK..
+1 subgoal:
+STEP_OK old:strip
+STATE old:strip goals=1
+OPEN_GOAL app p TextIO_read_v [fdv; nv]
+  (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) *
+   one (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns events))
+  (POSTe e.
+     &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+     one
+       (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns
+      
+OK..
+1 subgoal:
+STEP_OK old:match-inst
+STATE old:match-inst goals=1
+OPEN_GOAL FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧ MEM «read» ns ∧
+¬MEM «» ns ∧
+mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) (encode fs) =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+OK..
+2 subgoals:
+STEP_OK old:split-accept
+STATE old:split-accept goals=2
+OPEN_GOAL MAX n 2048 ≤ LENGTH rest
+OPEN_GOAL mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) (encode fs) =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+OK..
+STEP_FAIL old:match-oracle :: 
+Exception raised at Tactic.MATCH_MP_TAC: No match
+
+OK..
+1 subgoal:
+STEP_OK old:fs
+STATE old:fs goals=1
+OPEN_GOAL n ≤ LENGTH rest ∧ 2048 ≤ LENGTH rest
+SEQUENCE_END old proved=false
+SEQUENCE_BEGIN new
+OK..
+1 subgoal:
+STEP_OK new:strip
+STATE new:strip goals=1
+OPEN_GOAL app p TextIO_read_v [fdv; nv]
+  (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) *
+   one (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns events))
+  (POSTe e.
+     &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+     one
+       (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns
+      
+OK..
+1 subgoal:
+STEP_OK new:match-inst
+STATE new:match-inst goals=1
+OPEN_GOAL FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧ MEM «read» ns ∧
+¬MEM «» ns ∧
+mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) (encode fs) =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+OK..
+1 subgoal:
+STEP_OK new:split-accept
+STATE new:split-accept goals=1
+OPEN_GOAL mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) (encode fs) =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+OK..
+1 subgoal:
+STEP_OK new:match-oracle
+STATE new:match-oracle goals=1
+OPEN_GOAL fd < 256 ** 8 ∧ n < 2 ** (2 * 8) ∧ n ≤ LENGTH rest ∧ read fd fs n = NONE
+OK..
+
+Goal proved.
+
+[¬MEM «» ns, n < 256², MAX n 2048 ≤ LENGTH rest, read fd fs n = NONE,
+ FD fd fdv, MEM «read» ns, NUM n nv]
+⊢ fd < 256 ** 8 ∧ n < 2 ** (2 * 8) ∧ n ≤ LENGTH rest ∧ read fd fs n = NONE
+
+Goal proved.
+
+[¬MEM «» ns, n < 256², MAX n 2048 ≤ LENGTH rest, read fd fs n = NONE,
+ FD fd fdv, MEM «read» ns, NUM n nv]
+⊢ mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest)
+    (encode fs) = SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+
+Goal proved.
+
+[¬MEM «» ns, n < 256², MAX n 2048 ≤ LENGTH rest, read fd fs n = NONE,
+ FD fd fdv, MEM «read» ns, NUM n nv]
+⊢ FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧
+  MEM «read» ns ∧ ¬MEM «» ns ∧
+  mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest)
+    (encode fs) = SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+
+Goal proved.
+
+[¬MEM «» ns, n < 256², MAX n 2048 ≤ LENGTH rest, read fd fs n = NONE,
+ FD fd fdv, MEM «read» ns, NUM n nv]
+⊢ app p TextIO_read_v [fdv; nv]
+    (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) *
+     one (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns events))
+    (POSTe e.
+       &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+       one
+         (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns
+            (events ++
+             [IO_event (ExtCall «read») (n2w8 fd)
+                (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))])))
+STEP_OK new:fs
+STATE new:fs goals=0
+SEQUENCE_END new proved=true
+EXPLORE_COMPLETE

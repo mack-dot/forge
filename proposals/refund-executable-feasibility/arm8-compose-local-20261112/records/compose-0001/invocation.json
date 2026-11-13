@@ -1,0 +1,17 @@
+{
+ "case": "compose-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/compose-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "compose-0001.sml",
+ "source_sha256": "3db90e8ac12e112adc75a8eacba110176064d45985b39e652153e20b80353b07",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 15,
+ "end_to_end": false
+}

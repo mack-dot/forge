@@ -1,0 +1,41 @@
+{
+ "case": "missing-memory",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/preload.sml",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/init-parent/forge_refundSuccessfulInitializationTheory.sig",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/init-parent/forge_refundSuccessfulInitializationTheory.sml",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/static-parent/forge_refundInitializationStaticTheory.sig",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/static-parent/forge_refundInitializationStaticTheory.sml",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-local-20261112/attempt-0001/code-0004/forge_refundInitialStackCodeTheory.sig",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-local-20261112/attempt-0001/code-0004/forge_refundInitialStackCodeTheory.sml",
+  "/Users/mackianni/forge/results/refund-initializer-machine-local-20261112/attempt-0001/machine-0001/forge_refundInitializerMachineTheory.sig",
+  "/Users/mackianni/forge/results/refund-initializer-machine-local-20261112/attempt-0001/machine-0001/forge_refundInitializerMachineTheory.sml",
+  "/Users/mackianni/forge/results/refund-initializer-machine-local-20261112/attempt-0001/missing-memory/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+ "source": "missing-memory.sml",
+ "source_sha256": "1718f50a533e9d4692e99a586107bb0e941faf742abc5f44766fde27eb953745",
+ "recorded_code_0003_source_sha256": "f3e2be7884bd6ee005de790179859e1858bad7e8862901e59c3709be7c8acb11",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false,
+ "actual_exit": -24,
+ "wall_timeout": false,
+ "wall_seconds": 395.329,
+ "child_user_cpu_seconds": 288.978,
+ "child_system_cpu_seconds": 350.289,
+ "child_max_rss_bytes": 2957967360,
+ "completion_marker": false,
+ "markers": [
+  "AFTER_POSITIVE_AUDIT",
+  "CONTROL_HARNESS_PROVES_ORIGINAL"
+ ],
+ "stdout_sha256": "539ebc553ed76b380a2b69586724a516363d431e6aa0439ffb177614e1799a5e",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

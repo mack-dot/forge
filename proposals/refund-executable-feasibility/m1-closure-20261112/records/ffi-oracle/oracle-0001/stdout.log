@@ -1,0 +1,30 @@
+<<HOL message: Created theory "forge_refundFfiOracle">>
+Saved theorem _______ "basis_read_error_oracle"
+CHECKED basis_read_error_oracle
+ []
+⊢ fd < 256 ** 8 ∧ n < 2 ** (2 * 8) ∧ n ≤ LENGTH rest ∧ read fd fs n = NONE ⇒
+  mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest)
+    (encode fs) = SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+Proof of 
+
+FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧ MEM «read» ns ∧
+¬MEM «» ns ∧ read fd fs n = NONE ⇒
+app p TextIO_read_v [fdv; nv]
+  (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) *
+   one (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns events))
+  (POSTe e.
+     &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+     one
+       (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns
+          (events ++
+           [IO_event (ExtCall «read») (n2w8 fd)
+              (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))])))
+
+failed.
+INSTANCE_NOT_PROVED 
+Exception raised at Tactic.MATCH_MP_TAC: No match
+
+THEOREM_COUNT 1
+Exporting theory "forge_refundFfiOracle" ... done.
+Theory "forge_refundFfiOracle" took 0.89621s to build
+FFI_ORACLE_COMPLETE

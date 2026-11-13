@@ -1,0 +1,144 @@
+{
+ "native_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+ "code_sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+ "code_file_offset": 16592,
+ "code_bytes": 130436,
+ "targets": {
+  "-16": {
+   "entry": "halt entry",
+   "count": 325,
+   "sites": [
+    {
+     "code_offset": 748,
+     "file_offset": 17340,
+     "word": "17ffff41",
+     "bytes": [
+      65,
+      255,
+      255,
+      23
+     ]
+    },
+    {
+     "code_offset": 756,
+     "file_offset": 17348,
+     "word": "17ffff3f",
+     "bytes": [
+      63,
+      255,
+      255,
+      23
+     ]
+    },
+    {
+     "code_offset": 1664,
+     "file_offset": 18256,
+     "word": "17fffe5c",
+     "bytes": [
+      92,
+      254,
+      255,
+      23
+     ]
+    },
+    {
+     "code_offset": 1876,
+     "file_offset": 18468,
+     "word": "17fffe27",
+     "bytes": [
+      39,
+      254,
+      255,
+      23
+     ]
+    }
+   ]
+  },
+  "-32": {
+   "entry": "install entry",
+   "count": 1,
+   "sites": [
+    {
+     "code_offset": 4660,
+     "file_offset": 21252,
+     "word": "17fffb6b",
+     "bytes": [
+      107,
+      251,
+      255,
+      23
+     ]
+    }
+   ]
+  },
+  "-48": {
+   "entry": "entry index 0",
+   "count": 1,
+   "sites": [
+    {
+     "code_offset": 99244,
+     "file_offset": 115836,
+     "word": "17ff9f09",
+     "bytes": [
+      9,
+      159,
+      255,
+      23
+     ]
+    }
+   ]
+  },
+  "-64": {
+   "entry": "entry index 1",
+   "count": 1,
+   "sites": [
+    {
+     "code_offset": 96264,
+     "file_offset": 112856,
+     "word": "17ffa1ee",
+     "bytes": [
+      238,
+      161,
+      255,
+      23
+     ]
+    }
+   ]
+  },
+  "-80": {
+   "entry": "entry index 2",
+   "count": 1,
+   "sites": [
+    {
+     "code_offset": 95984,
+     "file_offset": 112576,
+     "word": "17ffa230",
+     "bytes": [
+      48,
+      162,
+      255,
+      23
+     ]
+    }
+   ]
+  },
+  "-96": {
+   "entry": "entry index 3",
+   "count": 1,
+   "sites": [
+    {
+     "code_offset": 95632,
+     "file_offset": 112224,
+     "word": "17ffa284",
+     "bytes": [
+      132,
+      162,
+      255,
+      23
+     ]
+    }
+   ]
+  }
+ },
+ "scope": "Observation. Hand-written B/BL field extraction; not a proof; indirect branches not analysed."
+}

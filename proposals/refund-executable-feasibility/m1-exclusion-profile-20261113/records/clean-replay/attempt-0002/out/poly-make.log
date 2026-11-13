@@ -1,0 +1,1380 @@
+make  all-recursive
+make[1]: Entering directory '/build/polyml'
+Making all in libpolyml
+make[2]: Entering directory '/build/polyml/libpolyml'
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT arb.lo -MD -MP -MF .deps/arb.Tpo -c -o arb.lo arb.cpp
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT bitmap.lo -MD -MP -MF .deps/bitmap.Tpo -c -o bitmap.lo bitmap.cpp
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT bytecode.lo -MD -MP -MF .deps/bytecode.Tpo -c -o bytecode.lo bytecode.cpp
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT check_objects.lo -MD -MP -MF .deps/check_objects.Tpo -c -o check_objects.lo check_objects.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT arb.lo -MD -MP -MF .deps/arb.Tpo -c arb.cpp  -fPIC -DPIC -o .libs/arb.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT bytecode.lo -MD -MP -MF .deps/bytecode.Tpo -c bytecode.cpp  -fPIC -DPIC -o .libs/bytecode.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT bitmap.lo -MD -MP -MF .deps/bitmap.Tpo -c bitmap.cpp  -fPIC -DPIC -o .libs/bitmap.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT check_objects.lo -MD -MP -MF .deps/check_objects.Tpo -c check_objects.cpp  -fPIC -DPIC -o .libs/check_objects.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT bitmap.lo -MD -MP -MF .deps/bitmap.Tpo -c bitmap.cpp -o bitmap.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT check_objects.lo -MD -MP -MF .deps/check_objects.Tpo -c check_objects.cpp -o check_objects.o >/dev/null 2>&1
+mv -f .deps/bitmap.Tpo .deps/bitmap.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT diagnostics.lo -MD -MP -MF .deps/diagnostics.Tpo -c -o diagnostics.lo diagnostics.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT diagnostics.lo -MD -MP -MF .deps/diagnostics.Tpo -c diagnostics.cpp  -fPIC -DPIC -o .libs/diagnostics.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT diagnostics.lo -MD -MP -MF .deps/diagnostics.Tpo -c diagnostics.cpp -o diagnostics.o >/dev/null 2>&1
+mv -f .deps/check_objects.Tpo .deps/check_objects.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT errors.lo -MD -MP -MF .deps/errors.Tpo -c -o errors.lo errors.cpp
+mv -f .deps/diagnostics.Tpo .deps/diagnostics.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT exporter.lo -MD -MP -MF .deps/exporter.Tpo -c -o exporter.lo exporter.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT errors.lo -MD -MP -MF .deps/errors.Tpo -c errors.cpp  -fPIC -DPIC -o .libs/errors.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT exporter.lo -MD -MP -MF .deps/exporter.Tpo -c exporter.cpp  -fPIC -DPIC -o .libs/exporter.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT errors.lo -MD -MP -MF .deps/errors.Tpo -c errors.cpp -o errors.o >/dev/null 2>&1
+mv -f .deps/errors.Tpo .deps/errors.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc.lo -MD -MP -MF .deps/gc.Tpo -c -o gc.lo gc.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc.lo -MD -MP -MF .deps/gc.Tpo -c gc.cpp  -fPIC -DPIC -o .libs/gc.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT arb.lo -MD -MP -MF .deps/arb.Tpo -c arb.cpp -o arb.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc.lo -MD -MP -MF .deps/gc.Tpo -c gc.cpp -o gc.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT exporter.lo -MD -MP -MF .deps/exporter.Tpo -c exporter.cpp -o exporter.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT bytecode.lo -MD -MP -MF .deps/bytecode.Tpo -c bytecode.cpp -o bytecode.o >/dev/null 2>&1
+mv -f .deps/gc.Tpo .deps/gc.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc_check_weak_ref.lo -MD -MP -MF .deps/gc_check_weak_ref.Tpo -c -o gc_check_weak_ref.lo gc_check_weak_ref.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_check_weak_ref.lo -MD -MP -MF .deps/gc_check_weak_ref.Tpo -c gc_check_weak_ref.cpp  -fPIC -DPIC -o .libs/gc_check_weak_ref.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_check_weak_ref.lo -MD -MP -MF .deps/gc_check_weak_ref.Tpo -c gc_check_weak_ref.cpp -o gc_check_weak_ref.o >/dev/null 2>&1
+mv -f .deps/arb.Tpo .deps/arb.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc_copy_phase.lo -MD -MP -MF .deps/gc_copy_phase.Tpo -c -o gc_copy_phase.lo gc_copy_phase.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_copy_phase.lo -MD -MP -MF .deps/gc_copy_phase.Tpo -c gc_copy_phase.cpp  -fPIC -DPIC -o .libs/gc_copy_phase.o
+mv -f .deps/gc_check_weak_ref.Tpo .deps/gc_check_weak_ref.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc_mark_phase.lo -MD -MP -MF .deps/gc_mark_phase.Tpo -c -o gc_mark_phase.lo gc_mark_phase.cpp
+mv -f .deps/exporter.Tpo .deps/exporter.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc_progress.lo -MD -MP -MF .deps/gc_progress.Tpo -c -o gc_progress.lo gc_progress.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_mark_phase.lo -MD -MP -MF .deps/gc_mark_phase.Tpo -c gc_mark_phase.cpp  -fPIC -DPIC -o .libs/gc_mark_phase.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_progress.lo -MD -MP -MF .deps/gc_progress.Tpo -c gc_progress.cpp  -fPIC -DPIC -o .libs/gc_progress.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_progress.lo -MD -MP -MF .deps/gc_progress.Tpo -c gc_progress.cpp -o gc_progress.o >/dev/null 2>&1
+mv -f .deps/gc_progress.Tpo .deps/gc_progress.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc_share_phase.lo -MD -MP -MF .deps/gc_share_phase.Tpo -c -o gc_share_phase.lo gc_share_phase.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_share_phase.lo -MD -MP -MF .deps/gc_share_phase.Tpo -c gc_share_phase.cpp  -fPIC -DPIC -o .libs/gc_share_phase.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_copy_phase.lo -MD -MP -MF .deps/gc_copy_phase.Tpo -c gc_copy_phase.cpp -o gc_copy_phase.o >/dev/null 2>&1
+mv -f .deps/gc_copy_phase.Tpo .deps/gc_copy_phase.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gc_update_phase.lo -MD -MP -MF .deps/gc_update_phase.Tpo -c -o gc_update_phase.lo gc_update_phase.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_mark_phase.lo -MD -MP -MF .deps/gc_mark_phase.Tpo -c gc_mark_phase.cpp -o gc_mark_phase.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_update_phase.lo -MD -MP -MF .deps/gc_update_phase.Tpo -c gc_update_phase.cpp  -fPIC -DPIC -o .libs/gc_update_phase.o
+mv -f .deps/bytecode.Tpo .deps/bytecode.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT gctaskfarm.lo -MD -MP -MF .deps/gctaskfarm.Tpo -c -o gctaskfarm.lo gctaskfarm.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_share_phase.lo -MD -MP -MF .deps/gc_share_phase.Tpo -c gc_share_phase.cpp -o gc_share_phase.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gc_update_phase.lo -MD -MP -MF .deps/gc_update_phase.Tpo -c gc_update_phase.cpp -o gc_update_phase.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gctaskfarm.lo -MD -MP -MF .deps/gctaskfarm.Tpo -c gctaskfarm.cpp  -fPIC -DPIC -o .libs/gctaskfarm.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT gctaskfarm.lo -MD -MP -MF .deps/gctaskfarm.Tpo -c gctaskfarm.cpp -o gctaskfarm.o >/dev/null 2>&1
+mv -f .deps/gc_mark_phase.Tpo .deps/gc_mark_phase.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT heapsizing.lo -MD -MP -MF .deps/heapsizing.Tpo -c -o heapsizing.lo heapsizing.cpp
+mv -f .deps/gctaskfarm.Tpo .deps/gctaskfarm.Plo
+mv -f .deps/gc_update_phase.Tpo .deps/gc_update_phase.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT locking.lo -MD -MP -MF .deps/locking.Tpo -c -o locking.lo locking.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT heapsizing.lo -MD -MP -MF .deps/heapsizing.Tpo -c heapsizing.cpp  -fPIC -DPIC -o .libs/heapsizing.o
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT memmgr.lo -MD -MP -MF .deps/memmgr.Tpo -c -o memmgr.lo memmgr.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT locking.lo -MD -MP -MF .deps/locking.Tpo -c locking.cpp  -fPIC -DPIC -o .libs/locking.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT memmgr.lo -MD -MP -MF .deps/memmgr.Tpo -c memmgr.cpp  -fPIC -DPIC -o .libs/memmgr.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT locking.lo -MD -MP -MF .deps/locking.Tpo -c locking.cpp -o locking.o >/dev/null 2>&1
+mv -f .deps/locking.Tpo .deps/locking.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT mpoly.lo -MD -MP -MF .deps/mpoly.Tpo -c -o mpoly.lo mpoly.cpp
+mv -f .deps/gc_share_phase.Tpo .deps/gc_share_phase.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT network.lo -MD -MP -MF .deps/network.Tpo -c -o network.lo network.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT mpoly.lo -MD -MP -MF .deps/mpoly.Tpo -c mpoly.cpp  -fPIC -DPIC -o .libs/mpoly.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT network.lo -MD -MP -MF .deps/network.Tpo -c network.cpp  -fPIC -DPIC -o .libs/network.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT heapsizing.lo -MD -MP -MF .deps/heapsizing.Tpo -c heapsizing.cpp -o heapsizing.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT mpoly.lo -MD -MP -MF .deps/mpoly.Tpo -c mpoly.cpp -o mpoly.o >/dev/null 2>&1
+mv -f .deps/mpoly.Tpo .deps/mpoly.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT objsize.lo -MD -MP -MF .deps/objsize.Tpo -c -o objsize.lo objsize.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT objsize.lo -MD -MP -MF .deps/objsize.Tpo -c objsize.cpp  -fPIC -DPIC -o .libs/objsize.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT memmgr.lo -MD -MP -MF .deps/memmgr.Tpo -c memmgr.cpp -o memmgr.o >/dev/null 2>&1
+mv -f .deps/heapsizing.Tpo .deps/heapsizing.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT pexport.lo -MD -MP -MF .deps/pexport.Tpo -c -o pexport.lo pexport.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT pexport.lo -MD -MP -MF .deps/pexport.Tpo -c pexport.cpp  -fPIC -DPIC -o .libs/pexport.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT network.lo -MD -MP -MF .deps/network.Tpo -c network.cpp -o network.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT objsize.lo -MD -MP -MF .deps/objsize.Tpo -c objsize.cpp -o objsize.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT pexport.lo -MD -MP -MF .deps/pexport.Tpo -c pexport.cpp -o pexport.o >/dev/null 2>&1
+mv -f .deps/objsize.Tpo .deps/objsize.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT poly_specific.lo -MD -MP -MF .deps/poly_specific.Tpo -c -o poly_specific.lo poly_specific.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT poly_specific.lo -MD -MP -MF .deps/poly_specific.Tpo -c poly_specific.cpp  -fPIC -DPIC -o .libs/poly_specific.o
+mv -f .deps/network.Tpo .deps/network.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT polyffi.lo -MD -MP -MF .deps/polyffi.Tpo -c -o polyffi.lo polyffi.cpp
+mv -f .deps/memmgr.Tpo .deps/memmgr.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT polystring.lo -MD -MP -MF .deps/polystring.Tpo -c -o polystring.lo polystring.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT polyffi.lo -MD -MP -MF .deps/polyffi.Tpo -c polyffi.cpp  -fPIC -DPIC -o .libs/polyffi.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT polystring.lo -MD -MP -MF .deps/polystring.Tpo -c polystring.cpp  -fPIC -DPIC -o .libs/polystring.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT poly_specific.lo -MD -MP -MF .deps/poly_specific.Tpo -c poly_specific.cpp -o poly_specific.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT polystring.lo -MD -MP -MF .deps/polystring.Tpo -c polystring.cpp -o polystring.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT polyffi.lo -MD -MP -MF .deps/polyffi.Tpo -c polyffi.cpp -o polyffi.o >/dev/null 2>&1
+mv -f .deps/polystring.Tpo .deps/polystring.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT process_env.lo -MD -MP -MF .deps/process_env.Tpo -c -o process_env.lo process_env.cpp
+mv -f .deps/pexport.Tpo .deps/pexport.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT processes.lo -MD -MP -MF .deps/processes.Tpo -c -o processes.lo processes.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT process_env.lo -MD -MP -MF .deps/process_env.Tpo -c process_env.cpp  -fPIC -DPIC -o .libs/process_env.o
+mv -f .deps/polyffi.Tpo .deps/polyffi.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT profiling.lo -MD -MP -MF .deps/profiling.Tpo -c -o profiling.lo profiling.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT processes.lo -MD -MP -MF .deps/processes.Tpo -c processes.cpp  -fPIC -DPIC -o .libs/processes.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT profiling.lo -MD -MP -MF .deps/profiling.Tpo -c profiling.cpp  -fPIC -DPIC -o .libs/profiling.o
+mv -f .deps/poly_specific.Tpo .deps/poly_specific.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT quick_gc.lo -MD -MP -MF .deps/quick_gc.Tpo -c -o quick_gc.lo quick_gc.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT quick_gc.lo -MD -MP -MF .deps/quick_gc.Tpo -c quick_gc.cpp  -fPIC -DPIC -o .libs/quick_gc.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT process_env.lo -MD -MP -MF .deps/process_env.Tpo -c process_env.cpp -o process_env.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT profiling.lo -MD -MP -MF .deps/profiling.Tpo -c profiling.cpp -o profiling.o >/dev/null 2>&1
+mv -f .deps/process_env.Tpo .deps/process_env.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT reals.lo -MD -MP -MF .deps/reals.Tpo -c -o reals.lo reals.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT quick_gc.lo -MD -MP -MF .deps/quick_gc.Tpo -c quick_gc.cpp -o quick_gc.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT reals.lo -MD -MP -MF .deps/reals.Tpo -c reals.cpp  -fPIC -DPIC -o .libs/reals.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT processes.lo -MD -MP -MF .deps/processes.Tpo -c processes.cpp -o processes.o >/dev/null 2>&1
+mv -f .deps/profiling.Tpo .deps/profiling.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT rts_module.lo -MD -MP -MF .deps/rts_module.Tpo -c -o rts_module.lo rts_module.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT rts_module.lo -MD -MP -MF .deps/rts_module.Tpo -c rts_module.cpp  -fPIC -DPIC -o .libs/rts_module.o
+mv -f .deps/quick_gc.Tpo .deps/quick_gc.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT rtsentry.lo -MD -MP -MF .deps/rtsentry.Tpo -c -o rtsentry.lo rtsentry.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT rtsentry.lo -MD -MP -MF .deps/rtsentry.Tpo -c rtsentry.cpp  -fPIC -DPIC -o .libs/rtsentry.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT rts_module.lo -MD -MP -MF .deps/rts_module.Tpo -c rts_module.cpp -o rts_module.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT reals.lo -MD -MP -MF .deps/reals.Tpo -c reals.cpp -o reals.o >/dev/null 2>&1
+mv -f .deps/rts_module.Tpo .deps/rts_module.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT run_time.lo -MD -MP -MF .deps/run_time.Tpo -c -o run_time.lo run_time.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT rtsentry.lo -MD -MP -MF .deps/rtsentry.Tpo -c rtsentry.cpp -o rtsentry.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT run_time.lo -MD -MP -MF .deps/run_time.Tpo -c run_time.cpp  -fPIC -DPIC -o .libs/run_time.o
+mv -f .deps/rtsentry.Tpo .deps/rtsentry.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT save_vec.lo -MD -MP -MF .deps/save_vec.Tpo -c -o save_vec.lo save_vec.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT save_vec.lo -MD -MP -MF .deps/save_vec.Tpo -c save_vec.cpp  -fPIC -DPIC -o .libs/save_vec.o
+mv -f .deps/reals.Tpo .deps/reals.Plo
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT run_time.lo -MD -MP -MF .deps/run_time.Tpo -c run_time.cpp -o run_time.o >/dev/null 2>&1
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT savestate.lo -MD -MP -MF .deps/savestate.Tpo -c -o savestate.lo savestate.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT save_vec.lo -MD -MP -MF .deps/save_vec.Tpo -c save_vec.cpp -o save_vec.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT savestate.lo -MD -MP -MF .deps/savestate.Tpo -c savestate.cpp  -fPIC -DPIC -o .libs/savestate.o
+mv -f .deps/save_vec.Tpo .deps/save_vec.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT scanaddrs.lo -MD -MP -MF .deps/scanaddrs.Tpo -c -o scanaddrs.lo scanaddrs.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT scanaddrs.lo -MD -MP -MF .deps/scanaddrs.Tpo -c scanaddrs.cpp  -fPIC -DPIC -o .libs/scanaddrs.o
+mv -f .deps/run_time.Tpo .deps/run_time.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT sharedata.lo -MD -MP -MF .deps/sharedata.Tpo -c -o sharedata.lo sharedata.cpp
+mv -f .deps/processes.Tpo .deps/processes.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT sighandler.lo -MD -MP -MF .deps/sighandler.Tpo -c -o sighandler.lo sighandler.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT sharedata.lo -MD -MP -MF .deps/sharedata.Tpo -c sharedata.cpp  -fPIC -DPIC -o .libs/sharedata.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT sighandler.lo -MD -MP -MF .deps/sighandler.Tpo -c sighandler.cpp  -fPIC -DPIC -o .libs/sighandler.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT scanaddrs.lo -MD -MP -MF .deps/scanaddrs.Tpo -c scanaddrs.cpp -o scanaddrs.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT sighandler.lo -MD -MP -MF .deps/sighandler.Tpo -c sighandler.cpp -o sighandler.o >/dev/null 2>&1
+mv -f .deps/sighandler.Tpo .deps/sighandler.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT statistics.lo -MD -MP -MF .deps/statistics.Tpo -c -o statistics.lo statistics.cpp
+mv -f .deps/scanaddrs.Tpo .deps/scanaddrs.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT timing.lo -MD -MP -MF .deps/timing.Tpo -c -o timing.lo timing.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT statistics.lo -MD -MP -MF .deps/statistics.Tpo -c statistics.cpp  -fPIC -DPIC -o .libs/statistics.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT sharedata.lo -MD -MP -MF .deps/sharedata.Tpo -c sharedata.cpp -o sharedata.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT timing.lo -MD -MP -MF .deps/timing.Tpo -c timing.cpp  -fPIC -DPIC -o .libs/timing.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT savestate.lo -MD -MP -MF .deps/savestate.Tpo -c savestate.cpp -o savestate.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT timing.lo -MD -MP -MF .deps/timing.Tpo -c timing.cpp -o timing.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT statistics.lo -MD -MP -MF .deps/statistics.Tpo -c statistics.cpp -o statistics.o >/dev/null 2>&1
+mv -f .deps/timing.Tpo .deps/timing.Plo
+mv -f .deps/sharedata.Tpo .deps/sharedata.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT xwindows.lo -MD -MP -MF .deps/xwindows.Tpo -c -o xwindows.lo xwindows.cpp
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT arm64.lo -MD -MP -MF .deps/arm64.Tpo -c -o arm64.lo arm64.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT xwindows.lo -MD -MP -MF .deps/xwindows.Tpo -c xwindows.cpp  -fPIC -DPIC -o .libs/xwindows.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT arm64.lo -MD -MP -MF .deps/arm64.Tpo -c arm64.cpp  -fPIC -DPIC -o .libs/arm64.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT xwindows.lo -MD -MP -MF .deps/xwindows.Tpo -c xwindows.cpp -o xwindows.o >/dev/null 2>&1
+mv -f .deps/xwindows.Tpo .deps/xwindows.Plo
+mv -f .deps/statistics.Tpo .deps/statistics.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"     -MT arm64assembly.lo -MD -MP -MF .deps/arm64assembly.Tpo -c -o arm64assembly.lo arm64assembly.S
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT elfexport.lo -MD -MP -MF .deps/elfexport.Tpo -c -o elfexport.lo elfexport.cpp
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -MT arm64assembly.lo -MD -MP -MF .deps/arm64assembly.Tpo -c arm64assembly.S  -fPIC -DPIC -o .libs/arm64assembly.o
+arm64assembly.S: Assembler messages:
+arm64assembly.S:32: Warning: ignoring changed section attributes for .text
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -MT arm64assembly.lo -MD -MP -MF .deps/arm64assembly.Tpo -c arm64assembly.S -o arm64assembly.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT elfexport.lo -MD -MP -MF .deps/elfexport.Tpo -c elfexport.cpp  -fPIC -DPIC -o .libs/elfexport.o
+mv -f .deps/arm64assembly.Tpo .deps/arm64assembly.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT basicio.lo -MD -MP -MF .deps/basicio.Tpo -c -o basicio.lo basicio.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT basicio.lo -MD -MP -MF .deps/basicio.Tpo -c basicio.cpp  -fPIC -DPIC -o .libs/basicio.o
+mv -f .deps/savestate.Tpo .deps/savestate.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT unix_specific.lo -MD -MP -MF .deps/unix_specific.Tpo -c -o unix_specific.lo unix_specific.cpp
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT arm64.lo -MD -MP -MF .deps/arm64.Tpo -c arm64.cpp -o arm64.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT unix_specific.lo -MD -MP -MF .deps/unix_specific.Tpo -c unix_specific.cpp  -fPIC -DPIC -o .libs/unix_specific.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT elfexport.lo -MD -MP -MF .deps/elfexport.Tpo -c elfexport.cpp -o elfexport.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT basicio.lo -MD -MP -MF .deps/basicio.Tpo -c basicio.cpp -o basicio.o >/dev/null 2>&1
+mv -f .deps/elfexport.Tpo .deps/elfexport.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=compile g++ -DHAVE_CONFIG_H -I. -I..  -O3  -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\"    -O3 -MT osmemunix.lo -MD -MP -MF .deps/osmemunix.Tpo -c -o osmemunix.lo osmemunix.cpp
+mv -f .deps/arm64.Tpo .deps/arm64.Plo
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT unix_specific.lo -MD -MP -MF .deps/unix_specific.Tpo -c unix_specific.cpp -o unix_specific.o >/dev/null 2>&1
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT osmemunix.lo -MD -MP -MF .deps/osmemunix.Tpo -c osmemunix.cpp  -fPIC -DPIC -o .libs/osmemunix.o
+libtool: compile:  g++ -DHAVE_CONFIG_H -I. -I.. -O3 -DGIT_VERSION=\"4557554\" -Wall -DMODULEDIR=\"/build/poly-install/lib/polyml/modules\" -O3 -MT osmemunix.lo -MD -MP -MF .deps/osmemunix.Tpo -c osmemunix.cpp -o osmemunix.o >/dev/null 2>&1
+mv -f .deps/basicio.Tpo .deps/basicio.Plo
+mv -f .deps/osmemunix.Tpo .deps/osmemunix.Plo
+mv -f .deps/unix_specific.Tpo .deps/unix_specific.Plo
+/bin/bash ../libtool  --tag=CXX   --mode=link g++  -O3 -version-info 16:0:0   -o libpolyml.la -rpath /build/poly-install/lib arb.lo bitmap.lo bytecode.lo check_objects.lo diagnostics.lo errors.lo exporter.lo gc.lo gc_check_weak_ref.lo gc_copy_phase.lo gc_mark_phase.lo gc_progress.lo gc_share_phase.lo gc_update_phase.lo gctaskfarm.lo heapsizing.lo locking.lo memmgr.lo mpoly.lo network.lo objsize.lo pexport.lo poly_specific.lo polyffi.lo polystring.lo process_env.lo processes.lo profiling.lo quick_gc.lo reals.lo rts_module.lo rtsentry.lo run_time.lo save_vec.lo savestate.lo scanaddrs.lo sharedata.lo sighandler.lo statistics.lo timing.lo xwindows.lo arm64.lo arm64assembly.lo elfexport.lo basicio.lo unix_specific.lo osmemunix.lo  -lgmp -lm -lstdc++ 
+libtool: link: g++  -fPIC -DPIC -shared -nostdlib /usr/lib/gcc/aarch64-linux-gnu/12/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/12/crtbeginS.o  .libs/arb.o .libs/bitmap.o .libs/bytecode.o .libs/check_objects.o .libs/diagnostics.o .libs/errors.o .libs/exporter.o .libs/gc.o .libs/gc_check_weak_ref.o .libs/gc_copy_phase.o .libs/gc_mark_phase.o .libs/gc_progress.o .libs/gc_share_phase.o .libs/gc_update_phase.o .libs/gctaskfarm.o .libs/heapsizing.o .libs/locking.o .libs/memmgr.o .libs/mpoly.o .libs/network.o .libs/objsize.o .libs/pexport.o .libs/poly_specific.o .libs/polyffi.o .libs/polystring.o .libs/process_env.o .libs/processes.o .libs/profiling.o .libs/quick_gc.o .libs/reals.o .libs/rts_module.o .libs/rtsentry.o .libs/run_time.o .libs/save_vec.o .libs/savestate.o .libs/scanaddrs.o .libs/sharedata.o .libs/sighandler.o .libs/statistics.o .libs/timing.o .libs/xwindows.o .libs/arm64.o .libs/arm64assembly.o .libs/elfexport.o .libs/basicio.o .libs/unix_specific.o .libs/osmemunix.o   -lgmp -L/usr/lib/gcc/aarch64-linux-gnu/12 -L/usr/lib/gcc/aarch64-linux-gnu/12/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/12/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/12/../../.. -lstdc++ -lm -lc -lgcc_s /usr/lib/gcc/aarch64-linux-gnu/12/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/12/../../../aarch64-linux-gnu/crtn.o  -O3   -Wl,-soname -Wl,libpolyml.so.16 -o .libs/libpolyml.so.16.0.0
+libtool: link: (cd ".libs" && rm -f "libpolyml.so.16" && ln -s "libpolyml.so.16.0.0" "libpolyml.so.16")
+libtool: link: (cd ".libs" && rm -f "libpolyml.so" && ln -s "libpolyml.so.16.0.0" "libpolyml.so")
+libtool: link: ar cr .libs/libpolyml.a  arb.o bitmap.o bytecode.o check_objects.o diagnostics.o errors.o exporter.o gc.o gc_check_weak_ref.o gc_copy_phase.o gc_mark_phase.o gc_progress.o gc_share_phase.o gc_update_phase.o gctaskfarm.o heapsizing.o locking.o memmgr.o mpoly.o network.o objsize.o pexport.o poly_specific.o polyffi.o polystring.o process_env.o processes.o profiling.o quick_gc.o reals.o rts_module.o rtsentry.o run_time.o save_vec.o savestate.o scanaddrs.o sharedata.o sighandler.o statistics.o timing.o xwindows.o arm64.o arm64assembly.o elfexport.o basicio.o unix_specific.o osmemunix.o
+libtool: link: ranlib .libs/libpolyml.a
+libtool: link: ( cd ".libs" && rm -f "libpolyml.la" && ln -s "../libpolyml.la" "libpolyml.la" )
+make[2]: Leaving directory '/build/polyml/libpolyml'
+Making all in libpolymain
+make[2]: Entering directory '/build/polyml/libpolymain'
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..    -Wall    -Wall -fno-strict-aliasing -O3 -MT polystub.lo -MD -MP -MF .deps/polystub.Tpo -c -o polystub.lo polystub.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -Wall -Wall -fno-strict-aliasing -O3 -MT polystub.lo -MD -MP -MF .deps/polystub.Tpo -c polystub.c  -fPIC -DPIC -o .libs/polystub.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -Wall -Wall -fno-strict-aliasing -O3 -MT polystub.lo -MD -MP -MF .deps/polystub.Tpo -c polystub.c -o polystub.o >/dev/null 2>&1
+mv -f .deps/polystub.Tpo .deps/polystub.Plo
+/bin/bash ../libtool  --tag=CC   --mode=link gcc   -Wall -fno-strict-aliasing -O3 -static -version-info 0:0  -o libpolymain.la -rpath /build/poly-install/lib polystub.lo  -lgmp -lm -lstdc++ 
+libtool: link: ar cr .libs/libpolymain.a  polystub.o
+libtool: link: ranlib .libs/libpolymain.a
+libtool: link: ( cd ".libs" && rm -f "libpolymain.la" && ln -s "../libpolymain.la" "libpolymain.la" )
+make[2]: Leaving directory '/build/polyml/libpolymain'
+Making all in .
+make[2]: Entering directory '/build/polyml'
+gcc -DHAVE_CONFIG_H -I.     -O3 -MT polyimport.o -MD -MP -MF .deps/polyimport.Tpo -c -o polyimport.o polyimport.c
+mv -f .deps/polyimport.Tpo .deps/polyimport.Po
+/bin/bash ./libtool  --tag=CC   --mode=link gcc  -O3    -o polyimport polyimport.o  libpolyml/libpolyml.la -lgmp -lm -lstdc++ 
+libtool: link: gcc -O3 -o .libs/polyimport polyimport.o  libpolyml/.libs/libpolyml.so -lgmp -lm -lstdc++ -Wl,-rpath -Wl,/build/poly-install/lib
+./polyimport --intIsIntInf ./bootstrap/bootstrap64.txt -I . < ./bootstrap/Stage1.sml
+Use: basis/build.sml
+Use: basis/InitialBasis.ML
+Use: basis/Universal.ML
+Use: basis/General.sml
+Use: basis/LibrarySupport.sml
+Use: basis/PolyMLException.sml
+Use: basis/Option.sml
+Use: basis/ListSignature.sml
+Use: basis/List.sml
+Use: basis/VectorOperations.sml
+Use: basis/PolyVectorOperations.sml
+Use: basis/VectorSliceOperations.sml
+Use: basis/MONO_VECTOR.sml
+Use: basis/MONO_VECTOR_SLICE.sml
+Use: basis/MONO_ARRAY.sml
+Use: basis/MONO_ARRAY_SLICE.sml
+Use: basis/StringSignatures.sml
+Use: basis/String.sml
+Use: basis/INTEGER.sml
+Use: basis/Int.sml
+Use: basis/IntAsLargeInt.sml
+Use: basis/Int63.sml
+Use: basis/WordSignature.sml
+Use: basis/LargeWord.sml
+Use: basis/VectorSignature.sml
+Use: basis/VectorSliceSignature.sml
+Use: basis/Vector.sml
+Use: basis/ArraySignature.sml
+Use: basis/ArraySliceSignature.sml
+Use: basis/Array.sml
+Use: basis/Text.sml
+Use: basis/Bool.sml
+Use: basis/ListPair.sml
+Use: basis/Word32In64.sml
+Use: basis/Word16.sml
+Use: basis/Word8.sml
+Use: basis/IntInf.sml
+Use: basis/Int32.sml
+Use: basis/Word8Array.sml
+Use: basis/Byte.sml
+Use: basis/BoolArray.sml
+Use: basis/IntArray.sml
+Use: basis/RealArray.sml
+Use: basis/IEEE_REAL.sml
+Use: basis/IEEEReal.sml
+Use: basis/MATH.sig
+Use: basis/RealNumbersAsBits.ML
+Use: basis/RealToDecimalConversion.ML
+Use: basis/REAL.sig
+Use: basis/Real.sml
+Use: basis/Time.sml
+Use: basis/DATE.sig
+Use: basis/Date.sml
+Use: basis/Thread.sml
+Use: basis/ThreadLib.sml
+Use: basis/Timer.sml
+Use: basis/CommandLine.sml
+Use: basis/ExnPrinter.sml
+Use: basis/ForeignConstants.sml
+Use: basis/ForeignMemory.sml
+Use: basis/Foreign.sml
+Use: basis/IO.sml
+Use: basis/OS.sml
+Use: basis/PRIM_IO.sml
+Use: basis/PrimIO.sml
+Use: basis/LibraryIOSupport.sml
+Use: basis/STREAM_IO.sml
+Use: basis/BasicStreamIO.sml
+Use: basis/IMPERATIVE_IO.sml
+Use: basis/ImperativeIO.sml
+Use: basis/TextIO.sml
+Use: basis/BinIO.sml
+Use: basis/Socket.sml
+Use: basis/NetProtDB.sml
+Use: basis/NetServDB.sml
+Use: basis/GenericSock.sml
+Use: basis/INetSock.sml
+Use: basis/INet6Sock.sml
+Use: basis/PackReal.sml
+Use: basis/PackReal32Tagged.sml
+Use: basis/PackWord.sml
+Use: basis/Array2Signature.sml
+Use: basis/Array2.sml
+Use: basis/IntArray2.sml
+Use: basis/SML90.sml
+Use: basis/Weak.sml
+Use: basis/Signal.sml
+Use: basis/BIT_FLAGS.sml
+Use: basis/SingleAssignment.sml
+Use: basis/Posix.sml
+Use: basis/Unix.sml
+Use: basis/UnixSock.sml
+Use: basis/HashArray.ML
+Use: basis/UniversalArray.ML
+Use: basis/PrettyPrinter.sml
+Use: basis/ASN1.sml
+Use: basis/Statistics.ML
+Use: basis/InitialPolyML.ML
+Use: basis/FinalPolyML.sml
+Use: basis/TopLevelPolyML.sml
+******Bootstrap stage 2 of 7******
+Making MLCompiler
+Making Address
+Created structure Address
+Created signature AddressSig
+Making Misc
+Created structure Misc
+Making HashTable
+Created structure HashTable
+Making UniversalTable
+Created structure UniversalTable
+Making StretchArray
+Created structure StretchArray
+Created structure Boot
+Making Initialise
+Making INITIALISE_
+Making LEXSIG
+Created signature LEXSIG
+Making TYPETREESIG
+Created signature TYPETREESIG
+Making STRUCTVALSIG
+Created signature STRUCTVALSIG
+Making VALUEOPSSIG
+Created signature VALUEOPSSIG
+Making CODETREE
+Making BUILTINS
+Created signature BUILTINS
+Making FOREIGNCALL
+Created signature FOREIGNCALL
+Created signature CODETREE
+Making EXPORTTREESIG
+Created signature EXPORTTREESIG
+Making DATATYPEREPSIG
+Created signature DATATYPEREPSIG
+Making TYPEIDCODESIG
+Created signature TYPEIDCODESIG
+Making MAKESIG
+Created signature MAKESIG
+Making DEBUG
+Created signature DEBUG
+Making DEBUGGER
+Created signature DEBUGGER
+Making PRETTY
+Created signature PRETTY
+Making PRINTTABLESIG
+Created signature PRINTTABLESIG
+Created functor INITIALISE_
+Making Lex
+Making LEX_
+Making SymbolsSig
+Created signature SymbolsSig
+Created functor LEX_
+Making Pretty
+Created structure Pretty
+Making Symbols
+Created structure Symbols
+Making Debug
+Created structure Debug
+Created structure Lex
+Making TypeTree
+Making TYPE_TREE
+Created functor TYPE_TREE
+Making StructVals
+Making STRUCT_VALS
+Created functor STRUCT_VALS
+Making CodeTree
+Making CodetreeFunctions
+Making BASECODETREE
+Created signature BASECODETREE
+Making CODETREEFUNCTIONS
+Created signature CODETREEFUNCTIONS
+Created functor CodetreeFunctions
+Making BaseCodeTree
+Making BackendIntermediateCode
+Making BACKENDINTERMEDIATECODE
+Created signature BACKENDINTERMEDIATECODE
+Created structure BackendIntermediateCode
+Created structure BaseCodeTree
+Making StronglyConnected
+Created structure StronglyConnected
+Making CodetreeStaticLinkAndCases
+Making GENCODE
+Created signature GENCODE
+Making CODEGENTREE
+Created signature CODEGENTREE
+Created functor CodetreeStaticLinkAndCases
+Making GCode
+Making ByteCode
+Making IntCodeCons
+Making CODEARRAY
+Created signature CODEARRAY
+Making INTCODECONS
+Created signature INTCODECONS
+Created functor IntCodeCons
+Making CodeArray
+Created structure CodeArray
+Making IntGCode
+Created functor IntGCode
+Created structure ByteCode
+Created structure GCode
+Making CodetreeLambdaLift
+Created functor CodetreeLambdaLift
+Making CodetreeCodegenConstantFunctions
+Created functor CodetreeCodegenConstantFunctions
+Making CodetreeRemoveRedundant
+Created functor CodetreeRemoveRedundant
+Making CodetreeSimplifier
+Created functor CodetreeSimplifier
+Making CodetreeOptimiser
+Created functor CodetreeOptimiser
+Making CodeTreeConstruction
+Created functor CodeTreeConstruction
+Created structure CodeTree
+Created structure StructVals
+Making Utilities
+Making UTILITIES_
+Created functor UTILITIES_
+Created structure Utilities
+Making ExportTreeStruct
+Making ExportTree
+Created functor ExportTree
+Created structure ExportTreeStruct
+Created structure TypeTree
+Making ValueOps
+Making VALUE_OPS
+Making COPIERSIG
+Created signature COPIERSIG
+Created functor VALUE_OPS
+Making PrintTable
+Making PRINT_TABLE
+Created functor PRINT_TABLE
+Created structure PrintTable
+Making CopierStruct
+Making COPIER
+Created functor COPIER
+Created structure CopierStruct
+Making TypeIDCodeStruct
+Making TYPEIDCODE
+Created functor TYPEIDCODE
+Created structure TypeIDCodeStruct
+Making DatatypeRep
+Making DATATYPE_REP
+Created functor DATATYPE_REP
+Created structure DatatypeRep
+Created structure ValueOps
+Making Make
+Making MAKE_
+Making COMPILERBODYSIG
+Created signature COMPILERBODYSIG
+Created functor MAKE_
+Making CompilerBody
+Making COMPILER_BODY
+Making STRUCTURESSIG
+Created signature STRUCTURESSIG
+Created functor COMPILER_BODY
+Making SymSet
+Making SymsetSig
+Created signature SymsetSig
+Created structure SymSet
+Making Structures
+Making STRUCTURES_
+Making PARSETREESIG
+Created signature PARSETREESIG
+Making SIGNATURESSIG
+Created signature SIGNATURESSIG
+Created functor STRUCTURES_
+Making ParseTree
+Making BASE_PARSE_TREE
+Making BaseParseTreeSig
+Created signature BaseParseTreeSig
+Created functor BASE_PARSE_TREE
+Making Debugger
+Making DEBUGGER_
+Created functor DEBUGGER_
+Created structure Debugger
+Making PRINT_PARSETREE
+Making PrintParsetreeSig
+Created signature PrintParsetreeSig
+Created functor PRINT_PARSETREE
+Making EXPORT_PARSETREE
+Making ExportParsetreeSig
+Created signature ExportParsetreeSig
+Created functor EXPORT_PARSETREE
+Making TYPECHECK_PARSETREE
+Making TypeCheckParsetreeSig
+Created signature TypeCheckParsetreeSig
+Created functor TYPECHECK_PARSETREE
+Making MATCH_COMPILER
+Making MatchCompilerSig
+Created signature MatchCompilerSig
+Created functor MATCH_COMPILER
+Making CODEGEN_PARSETREE
+Making CodegenParsetreeSig
+Created signature CodegenParsetreeSig
+Created functor CODEGEN_PARSETREE
+Making PARSE_TREE
+Created functor PARSE_TREE
+Created structure ParseTree
+Making SignaturesStruct
+Making SIGNATURES
+Created functor SIGNATURES
+Created structure SignaturesStruct
+Created structure Structures
+Making ParseDec
+Making PARSE_DEC
+Created functor PARSE_DEC
+Making Skips
+Making SKIPS_
+Created functor SKIPS_
+Created structure Skips
+Making ParseType
+Making PARSE_TYPE
+Created functor PARSE_TYPE
+Created structure ParseType
+Created structure ParseDec
+Created structure CompilerBody
+Making CompilerVersion
+Created structure CompilerVersion
+Created structure Make
+Created structure Initialise
+Created structure MLCompiler
+Use: bootstrap/Stage3.sml
+******Bootstrap stage 3 of 7******
+Use: basis/build.sml
+Use: basis/InitialBasis.ML
+Use: basis/Universal.ML
+Use: basis/General.sml
+Use: basis/LibrarySupport.sml
+Use: basis/PolyMLException.sml
+Use: basis/Option.sml
+Use: basis/ListSignature.sml
+Use: basis/List.sml
+Use: basis/VectorOperations.sml
+Use: basis/PolyVectorOperations.sml
+Use: basis/VectorSliceOperations.sml
+Use: basis/MONO_VECTOR.sml
+Use: basis/MONO_VECTOR_SLICE.sml
+Use: basis/MONO_ARRAY.sml
+Use: basis/MONO_ARRAY_SLICE.sml
+Use: basis/StringSignatures.sml
+Use: basis/String.sml
+Use: basis/INTEGER.sml
+Use: basis/Int.sml
+Use: basis/IntAsFixedInt.sml
+Use: basis/Int63.sml
+Use: basis/WordSignature.sml
+Use: basis/LargeWord.sml
+Use: basis/VectorSignature.sml
+Use: basis/VectorSliceSignature.sml
+Use: basis/Vector.sml
+Use: basis/ArraySignature.sml
+Use: basis/ArraySliceSignature.sml
+Use: basis/Array.sml
+Use: basis/Text.sml
+Use: basis/Bool.sml
+Use: basis/ListPair.sml
+Use: basis/Word32In64.sml
+Use: basis/Word16.sml
+Use: basis/Word8.sml
+Use: basis/IntInf.sml
+Use: basis/Int32.sml
+Use: basis/Word8Array.sml
+Use: basis/Byte.sml
+Use: basis/BoolArray.sml
+Use: basis/IntArray.sml
+Use: basis/RealArray.sml
+Use: basis/IEEE_REAL.sml
+Use: basis/IEEEReal.sml
+Use: basis/MATH.sig
+Use: basis/RealNumbersAsBits.ML
+Use: basis/RealToDecimalConversion.ML
+Use: basis/REAL.sig
+Use: basis/Real.sml
+Use: basis/Time.sml
+Use: basis/DATE.sig
+Use: basis/Date.sml
+Use: basis/Thread.sml
+Use: basis/ThreadLib.sml
+Use: basis/Timer.sml
+Use: basis/CommandLine.sml
+Use: basis/ExnPrinter.sml
+Use: basis/ForeignConstants.sml
+Use: basis/ForeignMemory.sml
+Use: basis/Foreign.sml
+Use: basis/IO.sml
+Use: basis/OS.sml
+Use: basis/PRIM_IO.sml
+Use: basis/PrimIO.sml
+Use: basis/LibraryIOSupport.sml
+Use: basis/STREAM_IO.sml
+Use: basis/BasicStreamIO.sml
+Use: basis/IMPERATIVE_IO.sml
+Use: basis/ImperativeIO.sml
+Use: basis/TextIO.sml
+Use: basis/BinIO.sml
+Use: basis/Socket.sml
+Use: basis/NetProtDB.sml
+Use: basis/NetServDB.sml
+Use: basis/GenericSock.sml
+Use: basis/INetSock.sml
+Use: basis/INet6Sock.sml
+Use: basis/PackReal.sml
+Use: basis/PackReal32Tagged.sml
+Use: basis/PackWord.sml
+Use: basis/Array2Signature.sml
+Use: basis/Array2.sml
+Use: basis/IntArray2.sml
+Use: basis/SML90.sml
+Use: basis/Weak.sml
+Use: basis/Signal.sml
+Use: basis/BIT_FLAGS.sml
+Use: basis/SingleAssignment.sml
+Use: basis/Posix.sml
+Use: basis/Unix.sml
+Use: basis/UnixSock.sml
+Use: basis/HashArray.ML
+Use: basis/UniversalArray.ML
+Use: basis/PrettyPrinter.sml
+Use: basis/ASN1.sml
+Use: basis/Statistics.ML
+Use: basis/InitialPolyML.ML
+Use: basis/FinalPolyML.sml
+Use: basis/TopLevelPolyML.sml
+******Bootstrap stage 4 of 7******
+Making MLCompiler
+Making Address
+Created structure Address
+Created signature AddressSig
+Making Misc
+Created structure Misc
+Making HashTable
+Created structure HashTable
+Making UniversalTable
+Created structure UniversalTable
+Making StretchArray
+Created structure StretchArray
+Created structure Boot
+Making Initialise
+Making INITIALISE_
+Making LEXSIG
+Created signature LEXSIG
+Making TYPETREESIG
+Created signature TYPETREESIG
+Making STRUCTVALSIG
+Created signature STRUCTVALSIG
+Making VALUEOPSSIG
+Created signature VALUEOPSSIG
+Making CODETREE
+Making BUILTINS
+Created signature BUILTINS
+Making FOREIGNCALL
+Created signature FOREIGNCALL
+Created signature CODETREE
+Making EXPORTTREESIG
+Created signature EXPORTTREESIG
+Making DATATYPEREPSIG
+Created signature DATATYPEREPSIG
+Making TYPEIDCODESIG
+Created signature TYPEIDCODESIG
+Making MAKESIG
+Created signature MAKESIG
+Making DEBUG
+Created signature DEBUG
+Making DEBUGGER
+Created signature DEBUGGER
+Making PRETTY
+Created signature PRETTY
+Making PRINTTABLESIG
+Created signature PRINTTABLESIG
+Created functor INITIALISE_
+Making Lex
+Making LEX_
+Making SymbolsSig
+Created signature SymbolsSig
+Created functor LEX_
+Making Pretty
+Created structure Pretty
+Making Symbols
+Created structure Symbols
+Making Debug
+Created structure Debug
+Created structure Lex
+Making TypeTree
+Making TYPE_TREE
+Created functor TYPE_TREE
+Making StructVals
+Making STRUCT_VALS
+Created functor STRUCT_VALS
+Making CodeTree
+Making CodetreeFunctions
+Making BASECODETREE
+Created signature BASECODETREE
+Making CODETREEFUNCTIONS
+Created signature CODETREEFUNCTIONS
+Created functor CodetreeFunctions
+Making BaseCodeTree
+Making BackendIntermediateCode
+Making BACKENDINTERMEDIATECODE
+Created signature BACKENDINTERMEDIATECODE
+Created structure BackendIntermediateCode
+Created structure BaseCodeTree
+Making StronglyConnected
+Created structure StronglyConnected
+Making CodetreeStaticLinkAndCases
+Making GENCODE
+Created signature GENCODE
+Making CODEGENTREE
+Created signature CODEGENTREE
+Created functor CodetreeStaticLinkAndCases
+Making GCode
+Making Arm64Code
+Making Arm64Assembly
+Making CODEARRAY
+Created signature CODEARRAY
+Making ARM64ASSEMBLY
+Created signature ARM64ASSEMBLY
+Created functor Arm64Assembly
+Making CodeArray
+Created structure CodeArray
+Making Arm64PreAssembly
+Making ARM64PREASSEMBLY
+Created signature ARM64PREASSEMBLY
+Created functor Arm64PreAssembly
+Making Arm64ForeignCall
+Created functor Arm64ForeignCall
+Making Arm64ICode
+Making ARM64ICODE
+Created signature ARM64ICODE
+Created functor Arm64ICode
+Making Arm64IdentifyReferences
+Making INTSET
+Created signature INTSET
+Making ARM64IDENTIFYREFERENCES
+Created signature ARM64IDENTIFYREFERENCES
+Created functor Arm64IdentifyReferences
+Making IntSet
+Created structure IntSet
+Making Arm64PushRegisters
+Making ARM64PUSHREGISTERS
+Created signature ARM64PUSHREGISTERS
+Created functor Arm64PushRegisters
+Making Arm64ICodeOptimise
+Making ARM64ICODEOPTIMISE
+Created signature ARM64ICODEOPTIMISE
+Created functor Arm64ICodeOptimise
+Making Arm64AllocateRegisters
+Making ARM64ALLOCATEREGISTERS
+Created signature ARM64ALLOCATEREGISTERS
+Created functor Arm64AllocateRegisters
+Making Arm64ICodeToArm64Code
+Making ARM64ICODEGENERATE
+Created signature ARM64ICODEGENERATE
+Created functor Arm64ICodeToArm64Code
+Making Arm64ICodeTransform
+Making ARM64ICODETRANSFORM
+Created signature ARM64ICODETRANSFORM
+Created functor Arm64ICodeTransform
+Making Arm64CodetreeToICode
+Created functor Arm64CodetreeToICode
+Created structure Arm64Code
+Created structure GCode
+Making CodetreeLambdaLift
+Created functor CodetreeLambdaLift
+Making CodetreeCodegenConstantFunctions
+Created functor CodetreeCodegenConstantFunctions
+Making CodetreeRemoveRedundant
+Created functor CodetreeRemoveRedundant
+Making CodetreeSimplifier
+Created functor CodetreeSimplifier
+Making CodetreeOptimiser
+Created functor CodetreeOptimiser
+Making CodeTreeConstruction
+Created functor CodeTreeConstruction
+Created structure CodeTree
+Created structure StructVals
+Making Utilities
+Making UTILITIES_
+Created functor UTILITIES_
+Created structure Utilities
+Making ExportTreeStruct
+Making ExportTree
+Created functor ExportTree
+Created structure ExportTreeStruct
+Created structure TypeTree
+Making ValueOps
+Making VALUE_OPS
+Making COPIERSIG
+Created signature COPIERSIG
+Created functor VALUE_OPS
+Making PrintTable
+Making PRINT_TABLE
+Created functor PRINT_TABLE
+Created structure PrintTable
+Making CopierStruct
+Making COPIER
+Created functor COPIER
+Created structure CopierStruct
+Making TypeIDCodeStruct
+Making TYPEIDCODE
+Created functor TYPEIDCODE
+Created structure TypeIDCodeStruct
+Making DatatypeRep
+Making DATATYPE_REP
+Created functor DATATYPE_REP
+Created structure DatatypeRep
+Created structure ValueOps
+Making Make
+Making MAKE_
+Making COMPILERBODYSIG
+Created signature COMPILERBODYSIG
+Created functor MAKE_
+Making CompilerBody
+Making COMPILER_BODY
+Making STRUCTURESSIG
+Created signature STRUCTURESSIG
+Created functor COMPILER_BODY
+Making SymSet
+Making SymsetSig
+Created signature SymsetSig
+Created structure SymSet
+Making Structures
+Making STRUCTURES_
+Making PARSETREESIG
+Created signature PARSETREESIG
+Making SIGNATURESSIG
+Created signature SIGNATURESSIG
+Created functor STRUCTURES_
+Making ParseTree
+Making BASE_PARSE_TREE
+Making BaseParseTreeSig
+Created signature BaseParseTreeSig
+Created functor BASE_PARSE_TREE
+Making Debugger
+Making DEBUGGER_
+Created functor DEBUGGER_
+Created structure Debugger
+Making PRINT_PARSETREE
+Making PrintParsetreeSig
+Created signature PrintParsetreeSig
+Created functor PRINT_PARSETREE
+Making EXPORT_PARSETREE
+Making ExportParsetreeSig
+Created signature ExportParsetreeSig
+Created functor EXPORT_PARSETREE
+Making TYPECHECK_PARSETREE
+Making TypeCheckParsetreeSig
+Created signature TypeCheckParsetreeSig
+Created functor TYPECHECK_PARSETREE
+Making MATCH_COMPILER
+Making MatchCompilerSig
+Created signature MatchCompilerSig
+Created functor MATCH_COMPILER
+Making CODEGEN_PARSETREE
+Making CodegenParsetreeSig
+Created signature CodegenParsetreeSig
+Created functor CODEGEN_PARSETREE
+Making PARSE_TREE
+Created functor PARSE_TREE
+Created structure ParseTree
+Making SignaturesStruct
+Making SIGNATURES
+Created functor SIGNATURES
+Created structure SignaturesStruct
+Created structure Structures
+Making ParseDec
+Making PARSE_DEC
+Created functor PARSE_DEC
+Making Skips
+Making SKIPS_
+Created functor SKIPS_
+Created structure Skips
+Making ParseType
+Making PARSE_TYPE
+Created functor PARSE_TYPE
+Created structure ParseType
+Created structure ParseDec
+Created structure CompilerBody
+Making CompilerVersion
+Created structure CompilerVersion
+Created structure Make
+Created structure Initialise
+Created structure MLCompiler
+Use: bootstrap/Stage5.sml
+******Bootstrap stage 5 of 7******
+Use: basis/build.sml
+Use: basis/InitialBasis.ML
+Use: basis/Universal.ML
+Use: basis/General.sml
+Use: basis/LibrarySupport.sml
+Use: basis/PolyMLException.sml
+Use: basis/Option.sml
+Use: basis/ListSignature.sml
+Use: basis/List.sml
+Use: basis/VectorOperations.sml
+Use: basis/PolyVectorOperations.sml
+Use: basis/VectorSliceOperations.sml
+Use: basis/MONO_VECTOR.sml
+Use: basis/MONO_VECTOR_SLICE.sml
+Use: basis/MONO_ARRAY.sml
+Use: basis/MONO_ARRAY_SLICE.sml
+Use: basis/StringSignatures.sml
+Use: basis/String.sml
+Use: basis/INTEGER.sml
+Use: basis/Int.sml
+Use: basis/IntAsFixedInt.sml
+Use: basis/Int63.sml
+Use: basis/WordSignature.sml
+Use: basis/LargeWord.sml
+Use: basis/VectorSignature.sml
+Use: basis/VectorSliceSignature.sml
+Use: basis/Vector.sml
+Use: basis/ArraySignature.sml
+Use: basis/ArraySliceSignature.sml
+Use: basis/Array.sml
+Use: basis/Text.sml
+Use: basis/Bool.sml
+Use: basis/ListPair.sml
+Use: basis/Word32In64.sml
+Use: basis/Word16.sml
+Use: basis/Word8.sml
+Use: basis/IntInf.sml
+Use: basis/Int32.sml
+Use: basis/Word8Array.sml
+Use: basis/Byte.sml
+Use: basis/BoolArray.sml
+Use: basis/IntArray.sml
+Use: basis/RealArray.sml
+Use: basis/IEEE_REAL.sml
+Use: basis/IEEEReal.sml
+Use: basis/MATH.sig
+Use: basis/RealNumbersAsBits.ML
+Use: basis/RealToDecimalConversion.ML
+Use: basis/REAL.sig
+Use: basis/Real.sml
+Use: basis/Time.sml
+Use: basis/DATE.sig
+Use: basis/Date.sml
+Use: basis/Thread.sml
+Use: basis/ThreadLib.sml
+Use: basis/Timer.sml
+Use: basis/CommandLine.sml
+Use: basis/ExnPrinter.sml
+Use: basis/ForeignConstants.sml
+Use: basis/ForeignMemory.sml
+Use: basis/Foreign.sml
+Use: basis/IO.sml
+Use: basis/OS.sml
+Use: basis/PRIM_IO.sml
+Use: basis/PrimIO.sml
+Use: basis/LibraryIOSupport.sml
+Use: basis/STREAM_IO.sml
+Use: basis/BasicStreamIO.sml
+Use: basis/IMPERATIVE_IO.sml
+Use: basis/ImperativeIO.sml
+Use: basis/TextIO.sml
+Use: basis/BinIO.sml
+Use: basis/Socket.sml
+Use: basis/NetProtDB.sml
+Use: basis/NetServDB.sml
+Use: basis/GenericSock.sml
+Use: basis/INetSock.sml
+Use: basis/INet6Sock.sml
+Use: basis/PackReal.sml
+Use: basis/PackReal32Tagged.sml
+Use: basis/PackWord.sml
+Use: basis/Array2Signature.sml
+Use: basis/Array2.sml
+Use: basis/IntArray2.sml
+Use: basis/SML90.sml
+Use: basis/Weak.sml
+Use: basis/Signal.sml
+Use: basis/BIT_FLAGS.sml
+Use: basis/SingleAssignment.sml
+Use: basis/Posix.sml
+Use: basis/Unix.sml
+Use: basis/UnixSock.sml
+Use: basis/HashArray.ML
+Use: basis/UniversalArray.ML
+Use: basis/PrettyPrinter.sml
+Use: basis/ASN1.sml
+Use: basis/Statistics.ML
+Use: basis/InitialPolyML.ML
+Use: basis/FinalPolyML.sml
+Use: basis/TopLevelPolyML.sml
+******Bootstrap stage 6 of 7******
+Making MLCompiler
+Making Address
+Created structure Address
+Created signature AddressSig
+Making Misc
+Created structure Misc
+Making HashTable
+Created structure HashTable
+Making UniversalTable
+Created structure UniversalTable
+Making StretchArray
+Created structure StretchArray
+Created structure Boot
+Making Initialise
+Making INITIALISE_
+Making LEXSIG
+Created signature LEXSIG
+Making TYPETREESIG
+Created signature TYPETREESIG
+Making STRUCTVALSIG
+Created signature STRUCTVALSIG
+Making VALUEOPSSIG
+Created signature VALUEOPSSIG
+Making CODETREE
+Making BUILTINS
+Created signature BUILTINS
+Making FOREIGNCALL
+Created signature FOREIGNCALL
+Created signature CODETREE
+Making EXPORTTREESIG
+Created signature EXPORTTREESIG
+Making DATATYPEREPSIG
+Created signature DATATYPEREPSIG
+Making TYPEIDCODESIG
+Created signature TYPEIDCODESIG
+Making MAKESIG
+Created signature MAKESIG
+Making DEBUG
+Created signature DEBUG
+Making DEBUGGER
+Created signature DEBUGGER
+Making PRETTY
+Created signature PRETTY
+Making PRINTTABLESIG
+Created signature PRINTTABLESIG
+Created functor INITIALISE_
+Making Lex
+Making LEX_
+Making SymbolsSig
+Created signature SymbolsSig
+Created functor LEX_
+Making Pretty
+Created structure Pretty
+Making Symbols
+Created structure Symbols
+Making Debug
+Created structure Debug
+Created structure Lex
+Making TypeTree
+Making TYPE_TREE
+Created functor TYPE_TREE
+Making StructVals
+Making STRUCT_VALS
+Created functor STRUCT_VALS
+Making CodeTree
+Making CodetreeFunctions
+Making BASECODETREE
+Created signature BASECODETREE
+Making CODETREEFUNCTIONS
+Created signature CODETREEFUNCTIONS
+Created functor CodetreeFunctions
+Making BaseCodeTree
+Making BackendIntermediateCode
+Making BACKENDINTERMEDIATECODE
+Created signature BACKENDINTERMEDIATECODE
+Created structure BackendIntermediateCode
+Created structure BaseCodeTree
+Making StronglyConnected
+Created structure StronglyConnected
+Making CodetreeStaticLinkAndCases
+Making GENCODE
+Created signature GENCODE
+Making CODEGENTREE
+Created signature CODEGENTREE
+Created functor CodetreeStaticLinkAndCases
+Making GCode
+Making Arm64Code
+Making Arm64Assembly
+Making CODEARRAY
+Created signature CODEARRAY
+Making ARM64ASSEMBLY
+Created signature ARM64ASSEMBLY
+Created functor Arm64Assembly
+Making CodeArray
+Created structure CodeArray
+Making Arm64PreAssembly
+Making ARM64PREASSEMBLY
+Created signature ARM64PREASSEMBLY
+Created functor Arm64PreAssembly
+Making Arm64ForeignCall
+Created functor Arm64ForeignCall
+Making Arm64ICode
+Making ARM64ICODE
+Created signature ARM64ICODE
+Created functor Arm64ICode
+Making Arm64IdentifyReferences
+Making INTSET
+Created signature INTSET
+Making ARM64IDENTIFYREFERENCES
+Created signature ARM64IDENTIFYREFERENCES
+Created functor Arm64IdentifyReferences
+Making IntSet
+Created structure IntSet
+Making Arm64PushRegisters
+Making ARM64PUSHREGISTERS
+Created signature ARM64PUSHREGISTERS
+Created functor Arm64PushRegisters
+Making Arm64ICodeOptimise
+Making ARM64ICODEOPTIMISE
+Created signature ARM64ICODEOPTIMISE
+Created functor Arm64ICodeOptimise
+Making Arm64AllocateRegisters
+Making ARM64ALLOCATEREGISTERS
+Created signature ARM64ALLOCATEREGISTERS
+Created functor Arm64AllocateRegisters
+Making Arm64ICodeToArm64Code
+Making ARM64ICODEGENERATE
+Created signature ARM64ICODEGENERATE
+Created functor Arm64ICodeToArm64Code
+Making Arm64ICodeTransform
+Making ARM64ICODETRANSFORM
+Created signature ARM64ICODETRANSFORM
+Created functor Arm64ICodeTransform
+Making Arm64CodetreeToICode
+Created functor Arm64CodetreeToICode
+Created structure Arm64Code
+Created structure GCode
+Making CodetreeLambdaLift
+Created functor CodetreeLambdaLift
+Making CodetreeCodegenConstantFunctions
+Created functor CodetreeCodegenConstantFunctions
+Making CodetreeRemoveRedundant
+Created functor CodetreeRemoveRedundant
+Making CodetreeSimplifier
+Created functor CodetreeSimplifier
+Making CodetreeOptimiser
+Created functor CodetreeOptimiser
+Making CodeTreeConstruction
+Created functor CodeTreeConstruction
+Created structure CodeTree
+Created structure StructVals
+Making Utilities
+Making UTILITIES_
+Created functor UTILITIES_
+Created structure Utilities
+Making ExportTreeStruct
+Making ExportTree
+Created functor ExportTree
+Created structure ExportTreeStruct
+Created structure TypeTree
+Making ValueOps
+Making VALUE_OPS
+Making COPIERSIG
+Created signature COPIERSIG
+Created functor VALUE_OPS
+Making PrintTable
+Making PRINT_TABLE
+Created functor PRINT_TABLE
+Created structure PrintTable
+Making CopierStruct
+Making COPIER
+Created functor COPIER
+Created structure CopierStruct
+Making TypeIDCodeStruct
+Making TYPEIDCODE
+Created functor TYPEIDCODE
+Created structure TypeIDCodeStruct
+Making DatatypeRep
+Making DATATYPE_REP
+Created functor DATATYPE_REP
+Created structure DatatypeRep
+Created structure ValueOps
+Making Make
+Making MAKE_
+Making COMPILERBODYSIG
+Created signature COMPILERBODYSIG
+Created functor MAKE_
+Making CompilerBody
+Making COMPILER_BODY
+Making STRUCTURESSIG
+Created signature STRUCTURESSIG
+Created functor COMPILER_BODY
+Making SymSet
+Making SymsetSig
+Created signature SymsetSig
+Created structure SymSet
+Making Structures
+Making STRUCTURES_
+Making PARSETREESIG
+Created signature PARSETREESIG
+Making SIGNATURESSIG
+Created signature SIGNATURESSIG
+Created functor STRUCTURES_
+Making ParseTree
+Making BASE_PARSE_TREE
+Making BaseParseTreeSig
+Created signature BaseParseTreeSig
+Created functor BASE_PARSE_TREE
+Making Debugger
+Making DEBUGGER_
+Created functor DEBUGGER_
+Created structure Debugger
+Making PRINT_PARSETREE
+Making PrintParsetreeSig
+Created signature PrintParsetreeSig
+Created functor PRINT_PARSETREE
+Making EXPORT_PARSETREE
+Making ExportParsetreeSig
+Created signature ExportParsetreeSig
+Created functor EXPORT_PARSETREE
+Making TYPECHECK_PARSETREE
+Making TypeCheckParsetreeSig
+Created signature TypeCheckParsetreeSig
+Created functor TYPECHECK_PARSETREE
+Making MATCH_COMPILER
+Making MatchCompilerSig
+Created signature MatchCompilerSig
+Created functor MATCH_COMPILER
+Making CODEGEN_PARSETREE
+Making CodegenParsetreeSig
+Created signature CodegenParsetreeSig
+Created functor CODEGEN_PARSETREE
+Making PARSE_TREE
+Created functor PARSE_TREE
+Created structure ParseTree
+Making SignaturesStruct
+Making SIGNATURES
+Created functor SIGNATURES
+Created structure SignaturesStruct
+Created structure Structures
+Making ParseDec
+Making PARSE_DEC
+Created functor PARSE_DEC
+Making Skips
+Making SKIPS_
+Created functor SKIPS_
+Created structure Skips
+Making ParseType
+Making PARSE_TYPE
+Created functor PARSE_TYPE
+Created structure ParseType
+Created structure ParseDec
+Created structure CompilerBody
+Making CompilerVersion
+Created structure CompilerVersion
+Created structure Make
+Created structure Initialise
+Created structure MLCompiler
+Use: bootstrap/Stage7.sml
+******Bootstrap stage 7 of 7******
+Use: basis/build.sml
+Use: basis/InitialBasis.ML
+Use: basis/Universal.ML
+Use: basis/General.sml
+Use: basis/LibrarySupport.sml
+Use: basis/PolyMLException.sml
+Use: basis/Option.sml
+Use: basis/ListSignature.sml
+Use: basis/List.sml
+Use: basis/VectorOperations.sml
+Use: basis/PolyVectorOperations.sml
+Use: basis/VectorSliceOperations.sml
+Use: basis/MONO_VECTOR.sml
+Use: basis/MONO_VECTOR_SLICE.sml
+Use: basis/MONO_ARRAY.sml
+Use: basis/MONO_ARRAY_SLICE.sml
+Use: basis/StringSignatures.sml
+Use: basis/String.sml
+Use: basis/INTEGER.sml
+Use: basis/Int.sml
+Use: basis/IntAsLargeInt.sml
+Use: basis/Int63.sml
+Use: basis/WordSignature.sml
+Use: basis/LargeWord.sml
+Use: basis/VectorSignature.sml
+Use: basis/VectorSliceSignature.sml
+Use: basis/Vector.sml
+Use: basis/ArraySignature.sml
+Use: basis/ArraySliceSignature.sml
+Use: basis/Array.sml
+Use: basis/Text.sml
+Use: basis/Bool.sml
+Use: basis/ListPair.sml
+Use: basis/Word32In64.sml
+Use: basis/Word16.sml
+Use: basis/Word8.sml
+Use: basis/IntInf.sml
+Use: basis/Int32.sml
+Use: basis/Word8Array.sml
+Use: basis/Byte.sml
+Use: basis/BoolArray.sml
+Use: basis/IntArray.sml
+Use: basis/RealArray.sml
+Use: basis/IEEE_REAL.sml
+Use: basis/IEEEReal.sml
+Use: basis/MATH.sig
+Use: basis/RealNumbersAsBits.ML
+Use: basis/RealToDecimalConversion.ML
+Use: basis/REAL.sig
+Use: basis/Real.sml
+Use: basis/Time.sml
+Use: basis/DATE.sig
+Use: basis/Date.sml
+Use: basis/Thread.sml
+Use: basis/ThreadLib.sml
+Use: basis/Timer.sml
+Use: basis/CommandLine.sml
+Use: basis/ExnPrinter.sml
+Use: basis/ForeignConstants.sml
+Use: basis/ForeignMemory.sml
+Use: basis/Foreign.sml
+Use: basis/IO.sml
+Use: basis/OS.sml
+Use: basis/PRIM_IO.sml
+Use: basis/PrimIO.sml
+Use: basis/LibraryIOSupport.sml
+Use: basis/STREAM_IO.sml
+Use: basis/BasicStreamIO.sml
+Use: basis/IMPERATIVE_IO.sml
+Use: basis/ImperativeIO.sml
+Use: basis/TextIO.sml
+Use: basis/BinIO.sml
+Use: basis/Socket.sml
+Use: basis/NetProtDB.sml
+Use: basis/NetServDB.sml
+Use: basis/GenericSock.sml
+Use: basis/INetSock.sml
+Use: basis/INet6Sock.sml
+Use: basis/PackReal.sml
+Use: basis/PackReal32Tagged.sml
+Use: basis/PackWord.sml
+Use: basis/Array2Signature.sml
+Use: basis/Array2.sml
+Use: basis/IntArray2.sml
+Use: basis/SML90.sml
+Use: basis/Weak.sml
+Use: basis/Signal.sml
+Use: basis/BIT_FLAGS.sml
+Use: basis/SingleAssignment.sml
+Use: basis/Posix.sml
+Use: basis/Unix.sml
+Use: basis/UnixSock.sml
+Use: basis/HashArray.ML
+Use: basis/UniversalArray.ML
+Use: basis/PrettyPrinter.sml
+Use: basis/ASN1.sml
+Use: basis/Statistics.ML
+Use: basis/InitialPolyML.ML
+Use: basis/FinalPolyML.sml
+Use: basis/TopLevelPolyML.sml
+******Writing object code******
+/bin/bash ./libtool  --tag=CC   --mode=link gcc  -O3   -o poly  polyexport.o  libpolymain/libpolymain.la libpolyml/libpolyml.la  -lgmp -lm -lstdc++ 
+libtool: link: gcc -O3 -o .libs/poly polyexport.o  libpolymain/.libs/libpolymain.a libpolyml/.libs/libpolyml.so -lgmp -lm -lstdc++ -Wl,-rpath -Wl,/build/poly-install/lib
+make[2]: Leaving directory '/build/polyml'
+Making all in modules
+make[2]: Entering directory '/build/polyml/modules'
+Making all in IntInfAsInt
+make[3]: Entering directory '/build/polyml/modules/IntInfAsInt'
+echo "use \"./ROOT.sml\";" | ../../poly -q -error-exit
+make[3]: Leaving directory '/build/polyml/modules/IntInfAsInt'
+make[3]: Entering directory '/build/polyml/modules'
+make[3]: Nothing to be done for 'all-am'.
+make[3]: Leaving directory '/build/polyml/modules'
+make[2]: Leaving directory '/build/polyml/modules'
+make[1]: Leaving directory '/build/polyml'

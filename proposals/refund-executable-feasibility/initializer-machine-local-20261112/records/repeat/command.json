@@ -1,0 +1,43 @@
+{
+ "case": "repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/preload.sml",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/init-parent/forge_refundSuccessfulInitializationTheory.sig",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/init-parent/forge_refundSuccessfulInitializationTheory.sml",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/static-parent/forge_refundInitializationStaticTheory.sig",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-2026-11-05/attempt-0001/code-0003/static-parent/forge_refundInitializationStaticTheory.sml",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-local-20261112/attempt-0001/code-0004/forge_refundInitialStackCodeTheory.sig",
+  "/Users/mackianni/forge/results/refund-initial-stack-code-local-20261112/attempt-0001/code-0004/forge_refundInitialStackCodeTheory.sml",
+  "/Users/mackianni/forge/results/refund-initializer-machine-local-20261112/attempt-0001/repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+ "source": "machine-0001.sml",
+ "source_sha256": "d4a4e464af45e5195b5ddbf0125a2cd63b341423433313fcc87accb257a0a77d",
+ "recorded_code_0003_source_sha256": "f3e2be7884bd6ee005de790179859e1858bad7e8862901e59c3709be7c8acb11",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 15,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 157.273,
+ "child_user_cpu_seconds": 158.058,
+ "child_system_cpu_seconds": 49.673,
+ "child_max_rss_bytes": 2392784896,
+ "completion_marker": true,
+ "markers": [
+  "RUNTIME_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "f9a1a2504a9f5a65ddd608c9f3941d9a2a77b2a31f4d08a9a756c47a3f25c9c7",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundInitializerMachineTheory.html": "522cd94ca36908ec4fff09e1d2edd497ce32816ed5b08489a818a2ff428a5319",
+  ".hol/objs/forge_refundInitializerMachineTheory.dat": "8e8cb008d8a9e43cad68f9a2b8cc62997d0b728c85355698f24b6975a3c4af72",
+  ".hol/objs/forge_refundInitializerMachineTheory.sig": "d0bb0631ba28fea1c24e64b90d2cec5dfcbf96740e81a08e10c0adf154543186",
+  ".hol/objs/forge_refundInitializerMachineTheory.sml": "3ed182f30f12d5a31a1c783c7f1a92e74dc430b7df2690bb5c8d29de3151697a"
+ },
+ "inputs_unchanged_after": true
+}

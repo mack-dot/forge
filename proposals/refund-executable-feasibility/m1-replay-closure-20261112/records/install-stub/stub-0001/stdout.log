@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundInstallStub">>
+STUBS_MD_DEF
+ []
+⊢ ∀data_conf.
+    stubs_md data_conf =
+    MAP
+      (λ(n,arg_count,p).
+         (n,arg_count,p,
+          Metadata
+            (case ALOOKUP (stub_names ()) n of NONE => «» | SOME s => s)
+            [Stub])) (stubs data_conf)
+Saved theorem _______ "install_stub_has_install"
+LEMMA_PROVED install_stub_has_install
+ [] ⊢ ¬no_install (Install_code c)
+Saved theorem _______ "stubs_contain_install"
+LEMMA_PROVED stubs_contain_install
+ [] ⊢ MEM (Install_location,3,Install_code c) (stubs c)

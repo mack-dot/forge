@@ -1,0 +1,39 @@
+{
+ "cases": {
+  "code-0004": 0,
+  "repeat": 0,
+  "audit": 0,
+  "wrong-lowering": 1,
+  "duplicate-label": 1,
+  "missing-memory": 1
+ },
+ "candidate_sha256": "7d24953dea9a70a51db26a4ee7c6b858d692a9a5cd84fecf5a86544ff5871c6f",
+ "exports": {
+  ".hol/docs/forge_refundInitialStackCodeTheory.html": "e66e8a04e7a90587d0a3d1c9b0cad7b70372e76398dd51475c6bc8f8306eedd4",
+  ".hol/objs/forge_refundInitialStackCodeTheory.dat": "76a5b0379933b2c30ece7a004dd0ab61aed9f68d650d95615d425b04b3980aed",
+  ".hol/objs/forge_refundInitialStackCodeTheory.sig": "feefe3a3e97896fb9174940b02de6af9f1f95916f1577c994bddc9e100cad0e4",
+  ".hol/objs/forge_refundInitialStackCodeTheory.sml": "d2691bfb479729ce460a03e9d2472b38fb31b05be3611dd1aa1b9d11f10f49d0"
+ },
+ "remaining_antecedents": 14,
+ "closure_nodes": 484,
+ "closure_axioms": [
+  "bool.BOOL_CASES_AX",
+  "bool.ETA_AX",
+  "bool.INFINITY_AX",
+  "bool.SELECT_AX"
+ ],
+ "control_exceptions": {
+  "wrong-lowering": [
+   "Uncaught exception at /Users/mackianni/forge/results/refund-initial-stack-code-local-20261112/attempt-0001/wrong-lowering/proof.sml:71: Fail \"Exact statement mismatch: refund_stack_lowering\""
+  ],
+  "duplicate-label": [
+   "Uncaught exception at /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/1/Tactical.sml:120: HOL_ERR (HOL_ERROR {message = \"unsolved goals\", origins = [{origin_function = \"TA"
+  ],
+  "missing-memory": [
+   "Uncaught exception at /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/1/Tactical.sml:120: HOL_ERR (HOL_ERROR {message = \"unsolved goals\", origins = [{origin_function = \"TA"
+  ]
+ },
+ "scope": "Byte, exit and marker binding only. Not a proof checker. No independent replay.",
+ "failures": [],
+ "end_to_end": false
+}

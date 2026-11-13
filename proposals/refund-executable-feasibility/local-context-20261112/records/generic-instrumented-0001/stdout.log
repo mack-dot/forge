@@ -1,0 +1,165 @@
+<<HOL message: Created theory "forge_refundGenericReadError">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundGenericReadError)>>
+Adding nsLookup representation thms for 8 consts [TextIOProg_env_24, TextIOProg_env_23, ..., TextIOProg_env_17]
+Adding nsLookup representation thms for 6 consts [TextIOProg_env_16, TextIOProg_env_15, ..., TextIOProg_env_11]
+Adding nsLookup representation thms for [TextIOProg_env_10, TextIOProg_env_9]
+Adding nsLookup representation thms for [TextIOProg_env_8]
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_7, TextIOProg_env_6, ..., TextIOProg_env_4]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_3, TextIOProg_env_2, ..., TextIOProg_env]
+Adding nsLookup representation thms for 528 consts [MarshallingProg_env_1, MarshallingProg_env_0, ..., CommandLineProg_env_2]
+Using CF specification n2w2_spec from theory MarshallingProg
+Post condition: POSTv uv.
+  W8ARRAY iobuff_loc (insert_atI (n2w2 n) 0 (h1::h2::h3::h4::rest)) *
+  one (FFI_part s u ns events) * &UNIT_TYPE () uv
+RESIDUAL generic-ffi
+ASSUMPTION UNIT_TYPE () uv
+ASSUMPTION u «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) s =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) s')
+ASSUMPTION ¬MEM «» ns
+ASSUMPTION MEM «read» ns
+ASSUMPTION MAX n 2048 ≤ LENGTH rest
+ASSUMPTION n < 256²
+ASSUMPTION NUM n nv
+ASSUMPTION FD fd fdv
+GOAL ∃conf' ws frame s'' u' ns' events'.
+  MEM «read» ns' ∧ fdv = Litv (StrLit (implode (MAP (CHR ∘ w2n) conf'))) ∧
+  W8ARRAY iobuff_loc (n2w (n DIV 256)::n2w n::h3::h4::rest) *
+  one (FFI_part s u ns events) ==>>
+  frame * W8ARRAY iobuff_loc ws * one (FFI_part s'' u' ns' events') *
+  &¬MEM «» ns' ∧
+  case u' «read» conf' ws s'' of
+    NONE => F
+  | SOME (FFIreturn vs s'') =>
+    frame * W8ARRAY iobuff_loc vs *
+    one
+      (FFI_part s'' u' ns'
+         (events' ++ [IO_event (ExtCall «read») conf' (ZIP (ws,vs))])) *
+    &¬MEM «» ns' ==>>
+    W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+    one
+      (FFI_part s' u ns
+         (events ++
+          [IO_event (ExtCall «read») (n2w8 fd)
+             (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))]))
+  | SOME FFIdiverge =>
+    frame * W8ARRAY iobuff_loc ws * one (FFI_part s'' u' ns' events') *
+    &¬MEM «» ns' ==>> &F
+RESIDUAL after-xsimpl
+ASSUMPTION UNIT_TYPE () uv
+ASSUMPTION u «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) s =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) s')
+ASSUMPTION ¬MEM «» ns
+ASSUMPTION MEM «read» ns
+ASSUMPTION MAX n 2048 ≤ LENGTH rest
+ASSUMPTION n < 256²
+ASSUMPTION NUM n nv
+ASSUMPTION FD fd fdv
+GOAL ∃conf' frame s'' u' ns' events'.
+  MEM «read» ns' ∧ fdv = Litv (StrLit (implode (MAP (CHR ∘ w2n) conf'))) ∧
+  ¬MEM «» ns' ∧
+  one (FFI_part s u ns events) ==>> frame * one (FFI_part s'' u' ns' events') ∧
+  case u' «read» conf' (n2w (n DIV 256)::n2w n::h3::h4::rest) s'' of
+    NONE => F
+  | SOME (FFIreturn vs s'') =>
+    frame * W8ARRAY iobuff_loc vs *
+    one
+      (FFI_part s'' u' ns'
+         (events' ++
+          [IO_event (ExtCall «read») conf'
+             (ZIP (n2w (n DIV 256)::n2w n::h3::h4::rest,vs))])) *
+    &¬MEM «» ns' ==>>
+    W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+    one
+      (FFI_part s' u ns
+         (events ++
+          [IO_event (ExtCall «read») (n2w8 fd)
+             (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))]))
+  | SOME FFIdiverge =>
+    frame * W8ARRAY iobuff_loc (n2w (n DIV 256)::n2w n::h3::h4::rest) *
+    one (FFI_part s'' u' ns' events') * &¬MEM «» ns' ==>> &F
+RESIDUAL after-exists
+ASSUMPTION UNIT_TYPE () uv
+ASSUMPTION u «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) s =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) s')
+ASSUMPTION ¬MEM «» ns
+ASSUMPTION MEM «read» ns
+ASSUMPTION MAX n 2048 ≤ LENGTH rest
+ASSUMPTION n < 256²
+ASSUMPTION NUM n nv
+ASSUMPTION FD fd fdv
+GOAL ∃frame s'' u' ns' events'.
+  MEM «read» ns' ∧
+  fdv = Litv (StrLit (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) ∧ ¬MEM «» ns' ∧
+  one (FFI_part s u ns events) ==>> frame * one (FFI_part s'' u' ns' events') ∧
+  case u' «read» (n2w8 fd) (n2w (n DIV 256)::n2w n::h3::h4::rest) s'' of
+    NONE => F
+  | SOME (FFIreturn vs s'') =>
+    frame * W8ARRAY iobuff_loc vs *
+    one
+      (FFI_part s'' u' ns'
+         (events' ++
+          [IO_event (ExtCall «read») (n2w8 fd)
+             (ZIP (n2w (n DIV 256)::n2w n::h3::h4::rest,vs))])) *
+    &¬MEM «» ns' ==>>
+    W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+    one
+      (FFI_part s' u ns
+         (events ++
+          [IO_event (ExtCall «read») (n2w8 fd)
+             (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))]))
+  | SOME FFIdiverge =>
+    frame * W8ARRAY iobuff_loc (n2w (n DIV 256)::n2w n::h3::h4::rest) *
+    one (FFI_part s'' u' ns' events') * &¬MEM «» ns' ==>> &F
+RESIDUAL after-fs
+ASSUMPTION UNIT_TYPE () uv
+ASSUMPTION u «read» (n2w8 fd) (n2w (n DIV 256)::n2w n::h3::h4::rest) s =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) s')
+ASSUMPTION ¬MEM «» ns
+ASSUMPTION MEM «read» ns
+ASSUMPTION 2048 ≤ LENGTH rest
+ASSUMPTION n ≤ LENGTH rest
+ASSUMPTION n < 65536
+ASSUMPTION NUM n nv
+ASSUMPTION fd < 18446744073709551616
+ASSUMPTION STRING_TYPE (implode (MAP (CHR ∘ w2n) (n2w8 fd))) fdv
+GOAL ∃frame s'' u' ns' events'.
+  MEM «read» ns' ∧
+  fdv = Litv (StrLit (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) ∧ ¬MEM «» ns' ∧
+  one (FFI_part s u ns events) ==>> frame * one (FFI_part s'' u' ns' events') ∧
+  case u' «read» (n2w8 fd) (n2w (n DIV 256)::n2w n::h3::h4::rest) s'' of
+    NONE => F
+  | SOME (FFIreturn vs s'') =>
+    frame * W8ARRAY iobuff_loc vs *
+    one
+      (FFI_part s'' u' ns'
+         (events' ++
+          [IO_event (ExtCall «read») (n2w8 fd)
+             (ZIP (n2w (n DIV 256)::n2w n::h3::h4::rest,vs))])) *
+    &¬MEM «» ns' ==>>
+    W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+    one
+      (FFI_part s' u ns
+         (events ++
+          [IO_event (ExtCall «read») (n2w8 fd)
+             ((n2w (n DIV 256),1w)::(n2w n,n2w n)::(h3,h3)::(h4,h4)::
+                ZIP (rest,rest))]))
+  | SOME FFIdiverge =>
+    frame * W8ARRAY iobuff_loc (n2w (n DIV 256)::n2w n::h3::h4::rest) *
+    one (FFI_part s'' u' ns' events') * &¬MEM «» ns' ==>> &F
+Proof of 
+
+FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧ MEM «read» ns ∧
+¬MEM «» ns ∧
+u «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) s =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) s') ⇒
+app p TextIO_read_v [fdv; nv]
+  (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) * one (FFI_part s u ns events))
+  (POSTe e.
+     &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+     one
+       (FFI_part s' u ns
+          (events ++
+           [IO_event (ExtCall «read») (n2w8 fd)
+              (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))])))
+
+failed.

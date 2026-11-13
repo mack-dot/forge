@@ -1,0 +1,1152 @@
+WEAK_TERM ∃t m bitmap_ptr bitmaps_dm sdm.
+  (let
+     heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+   in
+     (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+      t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+      n2w (2 ** t.align − 1) && t.pc = 0w ∧
+      interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+      ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+      bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+      heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+      (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+           a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+      (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+      DISJOINT mc.prog_addresses mc.shared_addresses ∧
+      (∀a. ∃w.
+         t.mem a = get_byte a w mc.target.config.big_endian ∧
+         m (byte_align a) = Word w) ∧
+      (∀n. n < cbspace ⇒
+           n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+           n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+      cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+     byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+     t.regs r1 ≤₊ t.regs r2 ∧
+     1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+     DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+     m (t.regs r1 + bytes_in_word) =
+     Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+     m (t.regs r1 + 2w * bytes_in_word) =
+     Word
+       (bitmap_ptr + bytes_in_word * n2w data_sp +
+        bytes_in_word * n2w (LENGTH bitmaps)) ∧
+     m (t.regs r1 + 3w * bytes_in_word) =
+     Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+     m (t.regs r1 + 4w * bytes_in_word) =
+     Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+     (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+      word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+        data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+     ffi_names = SOME mc.ffi_names ∧
+     ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+         MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+         DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+         mc.mmio_info =
+         ZIP
+           (GENLIST (λindex. index + i) (LENGTH shmem),
+            MAP
+              (λrec.
+                 (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                  n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+         cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64))
+OK..
+AFTER handler: 0 goals, proved=true
+HANDLER_THEOREM  []
+⊢ ∀mc pc cbspace.
+    is_arm8_machine_config mc ⇒
+    install_interfer_ok pc cbspace
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|PC := (SND x).REG 30w;
+              MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+<<HOL message: Created theory "forge_installHandlerExplore">>
+INVARIANCE target_configured  []
+⊢ target_configured t (mc with install_interfer := h) ⇔
+  target_configured t mc
+INVARIANCE start_pc_ok  [] ⊢ start_pc_ok (mc with install_interfer := h) pc ⇔ start_pc_ok mc pc
+INVARIANCE ffi_interfer_ok  []
+⊢ ffi_interfer_ok pc (mc with install_interfer := h) ⇔ ffi_interfer_ok pc mc
+INVARIANCE code_loaded  []
+⊢ code_loaded bytes (mc with install_interfer := h) ms ⇔
+  code_loaded bytes mc ms
+OK..
+1 subgoal:
+AFTER weak-unfold: 1 goals, proved=false
+  ASM ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+    MAP (λrec. rec.entry_pc + w2n (mc.target.get_pc ms)) shmem =
+    DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+    mc.mmio_info =
+    ZIP
+      (GENLIST (λindex. i + index) (LENGTH shmem),
+       MAP
+         (λrec.
+            (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+             n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+    cbspace + (LENGTH bytes + ffi_offset * (i + 3)) < 18446744073709551616
+  ASM ffi_names = SOME mc.ffi_names
+  ASM (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+ word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) data_sp)
+  (fun2set (m,byte_aligned ∩ bitmaps_dm))
+  ASM m (4w * bytes_in_word + t.regs r1) =
+Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (3w * bytes_in_word + t.regs r1) =
+Word (n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (2w * bytes_in_word + t.regs r1) =
+Word
+  (bitmap_ptr + bytes_in_word * n2w data_sp +
+   bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (bytes_in_word + t.regs r1) =
+Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (t.regs r1) = Word bitmap_ptr
+  ASM DISJOINT {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} bitmaps_dm
+  ASM 1024w * bytes_in_word ≤₊ -1w * t.regs r1 + t.regs r2
+  ASM t.regs r1 ≤₊ t.regs r2
+  ASM byte_aligned bitmap_ptr
+  ASM byte_aligned (t.regs r2)
+  ASM byte_aligned (t.regs r1)
+  ASM cbspace + LENGTH bytes < 18446744073709551616
+  ASM ∀n. n < cbspace ⇒
+    n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+    (¬(t.regs r1 ≤₊ n2w (n + LENGTH bytes) + t.pc) ∨
+     ¬(n2w (n + LENGTH bytes) + t.pc <₊ t.regs r2)) ∧
+    n2w (n + LENGTH bytes) + t.pc ∉ bitmaps_dm
+  ASM ∀a. ∃w.
+  t.mem a = get_byte a w mc.target.config.big_endian ∧
+  m (byte_align a) = Word w
+  ASM DISJOINT mc.prog_addresses mc.shared_addresses
+  ASM ∀a. byte_align a ∈ sdm ⇒ a ∈ sdm
+  ASM sdm = mc.shared_addresses
+  ASM ∀a. t.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t.regs r2 ∨
+    byte_align a ∈ bitmaps_dm ⇒
+    t.regs r1 ≤₊ a ∧ a <₊ t.regs r2 ∨ a ∈ bitmaps_dm
+  ASM bitmaps_dm ⊆ t.mem_domain
+  ASM {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ⊆ t.mem_domain
+  ASM bytes_in_mem t.pc bytes t.mem t.mem_domain
+  ({w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ∪ bitmaps_dm)
+  ASM code_loaded bytes mc ms
+  ASM ffi_interfer_ok t.pc mc
+  ASM interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses)
+  ASM n2w (2 ** t.align − 1) && t.pc = 0w
+  ASM start_pc_ok mc t.pc
+  ASM t.pc = mc.target.get_pc ms
+  ASM target_configured t mc
+  ASM target_state_rel mc.target t ms
+  ASM is_arm8_machine_config mc
+  GOAL ∃t' m' bitmap_ptr' bitmaps_dm'.
+  target_state_rel mc.target t' ms ∧
+  target_configured t'
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+  t'.pc = mc.target.get_pc ms ∧
+  start_pc_ok
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+    t'.pc ∧ n2w (2 ** t'.align − 1) && t'.pc = 0w ∧
+  ffi_interfer_ok t'.pc
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+  install_interfer_ok t'.pc cbspace
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+  code_loaded bytes
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+    ms ∧
+  bytes_in_mem t'.pc bytes t'.mem t'.mem_domain
+    ({w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ∪ bitmaps_dm') ∧
+  {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ⊆ t'.mem_domain ∧
+  bitmaps_dm' ⊆ t'.mem_domain ∧
+  (∀a. t'.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t'.regs r2 ∨
+       byte_align a ∈ bitmaps_dm' ⇒
+       t'.regs r1 ≤₊ a ∧ a <₊ t'.regs r2 ∨ a ∈ bitmaps_dm') ∧
+  (∀a. byte_align a ∈ mc.shared_addresses ⇒ a ∈ mc.shared_addresses) ∧
+  (∀a. ∃w.
+     t'.mem a = get_byte a w mc.target.config.big_endian ∧
+     m' (byte_align a) = Word w) ∧
+  (∀n. n < cbspace ⇒
+       n2w (n + LENGTH bytes) + t'.pc ∈ t'.mem_domain ∧
+       (¬(t'.regs r1 ≤₊ n2w (n + LENGTH bytes) + t'.pc) ∨
+        ¬(n2w (n + LENGTH bytes) + t'.pc <₊ t'.regs r2)) ∧
+       n2w (n + LENGTH bytes) + t'.pc ∉ bitmaps_dm') ∧
+  byte_aligned (t'.regs r1) ∧ byte_aligned (t'.regs r2) ∧
+  byte_aligned bitmap_ptr' ∧ t'.regs r1 ≤₊ t'.regs r2 ∧
+  1024w * bytes_in_word ≤₊ -1w * t'.regs r1 + t'.regs r2 ∧
+  DISJOINT {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} bitmaps_dm' ∧
+  m' (t'.regs r1) = Word bitmap_ptr' ∧
+  m' (bytes_in_word + t'.regs r1) =
+  Word (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m' (2w * bytes_in_word + t'.regs r1) =
+  Word
+    (bitmap_ptr' + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m' (3w * bytes_in_word + t'.regs r1) =
+  Word (n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+  m' (4w * bytes_in_word + t'.regs r1) =
+  Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+  (word_list bitmap_ptr' (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m',byte_aligned ∩ bitmaps_dm'))
+----
+OK..
+1 subgoal:
+AFTER weak-witness: 1 goals, proved=false
+  ASM ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+    MAP (λrec. rec.entry_pc + w2n (mc.target.get_pc ms)) shmem =
+    DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+    mc.mmio_info =
+    ZIP
+      (GENLIST (λindex. i + index) (LENGTH shmem),
+       MAP
+         (λrec.
+            (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+             n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+    cbspace + (LENGTH bytes + ffi_offset * (i + 3)) < 18446744073709551616
+  ASM ffi_names = SOME mc.ffi_names
+  ASM (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+ word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) data_sp)
+  (fun2set (m,byte_aligned ∩ bitmaps_dm))
+  ASM m (4w * bytes_in_word + t.regs r1) =
+Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (3w * bytes_in_word + t.regs r1) =
+Word (n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (2w * bytes_in_word + t.regs r1) =
+Word
+  (bitmap_ptr + bytes_in_word * n2w data_sp +
+   bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (bytes_in_word + t.regs r1) =
+Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (t.regs r1) = Word bitmap_ptr
+  ASM DISJOINT {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} bitmaps_dm
+  ASM 1024w * bytes_in_word ≤₊ -1w * t.regs r1 + t.regs r2
+  ASM t.regs r1 ≤₊ t.regs r2
+  ASM byte_aligned bitmap_ptr
+  ASM byte_aligned (t.regs r2)
+  ASM byte_aligned (t.regs r1)
+  ASM cbspace + LENGTH bytes < 18446744073709551616
+  ASM ∀n. n < cbspace ⇒
+    n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+    (¬(t.regs r1 ≤₊ n2w (n + LENGTH bytes) + t.pc) ∨
+     ¬(n2w (n + LENGTH bytes) + t.pc <₊ t.regs r2)) ∧
+    n2w (n + LENGTH bytes) + t.pc ∉ bitmaps_dm
+  ASM ∀a. ∃w.
+  t.mem a = get_byte a w mc.target.config.big_endian ∧
+  m (byte_align a) = Word w
+  ASM DISJOINT mc.prog_addresses mc.shared_addresses
+  ASM ∀a. byte_align a ∈ sdm ⇒ a ∈ sdm
+  ASM sdm = mc.shared_addresses
+  ASM ∀a. t.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t.regs r2 ∨
+    byte_align a ∈ bitmaps_dm ⇒
+    t.regs r1 ≤₊ a ∧ a <₊ t.regs r2 ∨ a ∈ bitmaps_dm
+  ASM bitmaps_dm ⊆ t.mem_domain
+  ASM {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ⊆ t.mem_domain
+  ASM bytes_in_mem t.pc bytes t.mem t.mem_domain
+  ({w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ∪ bitmaps_dm)
+  ASM code_loaded bytes mc ms
+  ASM ffi_interfer_ok t.pc mc
+  ASM interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses)
+  ASM n2w (2 ** t.align − 1) && t.pc = 0w
+  ASM start_pc_ok mc t.pc
+  ASM t.pc = mc.target.get_pc ms
+  ASM target_configured t mc
+  ASM target_state_rel mc.target t ms
+  ASM is_arm8_machine_config mc
+  GOAL target_configured t
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+start_pc_ok
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+  (mc.target.get_pc ms) ∧
+ffi_interfer_ok (mc.target.get_pc ms)
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+install_interfer_ok (mc.target.get_pc ms) cbspace
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+code_loaded bytes
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+  ms ∧ ∀a. byte_align a ∈ mc.shared_addresses ⇒ a ∈ mc.shared_addresses
+----
+OK..
+
+Goal proved.
+
+[∀a. ∃w.
+   t.mem a = get_byte a w mc.target.config.big_endian ∧
+   m (byte_align a) = Word w, ∀a. byte_align a ∈ sdm ⇒ a ∈ sdm,
+ ∀a. t.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t.regs r2 ∨
+     byte_align a ∈ bitmaps_dm ⇒
+     t.regs r1 ≤₊ a ∧ a <₊ t.regs r2 ∨ a ∈ bitmaps_dm,
+ ∀n. n < cbspace ⇒
+     n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+     (¬(t.regs r1 ≤₊ n2w (n + LENGTH bytes) + t.pc) ∨
+      ¬(n2w (n + LENGTH bytes) + t.pc <₊ t.regs r2)) ∧
+     n2w (n + LENGTH bytes) + t.pc ∉ bitmaps_dm,
+ ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+     MAP (λrec. rec.entry_pc + w2n (mc.target.get_pc ms)) shmem =
+     DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+     mc.mmio_info =
+     ZIP
+       (GENLIST (λindex. i + index) (LENGTH shmem),
+        MAP
+          (λrec.
+             (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+              n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+     cbspace + (LENGTH bytes + ffi_offset * (i + 3)) < 18446744073709551616,
+ byte_aligned bitmap_ptr, byte_aligned (t.regs r1), byte_aligned (t.regs r2),
+ is_arm8_machine_config mc, cbspace + LENGTH bytes < 18446744073709551616,
+ t.pc = mc.target.get_pc ms, n2w (2 ** t.align − 1) && t.pc = 0w,
+ sdm = mc.shared_addresses, ffi_names = SOME mc.ffi_names,
+ m (t.regs r1) = Word bitmap_ptr,
+ m (bytes_in_word + t.regs r1) =
+ Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)),
+ m (3w * bytes_in_word + t.regs r1) =
+ Word (n2w (LENGTH bytes) + mc.target.get_pc ms),
+ m (2w * bytes_in_word + t.regs r1) =
+ Word
+   (bitmap_ptr + bytes_in_word * n2w data_sp +
+    bytes_in_word * n2w (LENGTH bitmaps)),
+ m (4w * bytes_in_word + t.regs r1) =
+ Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms),
+ DISJOINT {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} bitmaps_dm,
+ DISJOINT mc.prog_addresses mc.shared_addresses, bitmaps_dm ⊆ t.mem_domain,
+ {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ⊆ t.mem_domain,
+ ffi_interfer_ok t.pc mc,
+ interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses),
+ start_pc_ok mc t.pc, target_configured t mc, t.regs r1 ≤₊ t.regs r2,
+ 1024w * bytes_in_word ≤₊ -1w * t.regs r1 + t.regs r2,
+ (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+  word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+    data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)),
+ code_loaded bytes mc ms, target_state_rel mc.target t ms,
+ bytes_in_mem t.pc bytes t.mem t.mem_domain
+   ({w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ∪ bitmaps_dm)]
+⊢ target_configured t
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+  start_pc_ok
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+    (mc.target.get_pc ms) ∧
+  ffi_interfer_ok (mc.target.get_pc ms)
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+  install_interfer_ok (mc.target.get_pc ms) cbspace
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+  code_loaded bytes
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            PC := (SND x).REG 30w; REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+    ms ∧ ∀a. byte_align a ∈ mc.shared_addresses ⇒ a ∈ mc.shared_addresses
+
+Goal proved.
+
+[∀a. ∃w.
+   t.mem a = get_byte a w mc.target.config.big_endian ∧
+   m (byte_align a) = Word w, ∀a. byte_align a ∈ sdm ⇒ a ∈ sdm,
+ ∀a. t.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t.regs r2 ∨
+     byte_align a ∈ bitmaps_dm ⇒
+     t.regs r1 ≤₊ a ∧ a <₊ t.regs r2 ∨ a ∈ bitmaps_dm,
+ ∀n. n < cbspace ⇒
+     n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+     (¬(t.regs r1 ≤₊ n2w (n + LENGTH bytes) + t.pc) ∨
+      ¬(n2w (n + LENGTH bytes) + t.pc <₊ t.regs r2)) ∧
+     n2w (n + LENGTH bytes) + t.pc ∉ bitmaps_dm,
+ ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+     MAP (λrec. rec.entry_pc + w2n (mc.target.get_pc ms)) shmem =
+     DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+     mc.mmio_info =
+     ZIP
+       (GENLIST (λindex. i + index) (LENGTH shmem),
+        MAP
+          (λrec.
+             (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+              n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+     cbspace + (LENGTH bytes + ffi_offset * (i + 3)) < 18446744073709551616,
+ byte_aligned bitmap_ptr, byte_aligned (t.regs r1), byte_aligned (t.regs r2),
+ is_arm8_machine_config mc, cbspace + LENGTH bytes < 18446744073709551616,
+ t.pc = mc.target.get_pc ms, n2w (2 ** t.align − 1) && t.pc = 0w,
+ sdm = mc.shared_addresses, ffi_names = SOME mc.ffi_names,
+ m (t.regs r1) = Word bitmap_ptr,
+ m (bytes_in_word + t.regs r1) =
+ Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)),
+ m (3w * bytes_in_word + t.regs r1) =
+ Word (n2w (LENGTH bytes) + mc.target.get_pc ms),
+ m (2w * bytes_in_word + t.regs r1) =
+ Word
+   (bitmap_ptr + bytes_in_word * n2w data_sp +
+    bytes_in_word * n2w (LENGTH bitmaps)),
+ m (4w * bytes_in_word + t.regs r1) =
+ Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms),
+ DISJOINT {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} bitmaps_dm,
+ DISJOINT mc.prog_addresses mc.shared_addresses, bitmaps_dm ⊆ t.mem_domain,
+ {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ⊆ t.mem_domain,
+ ffi_interfer_ok t.pc mc,
+ interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses),
+ start_pc_ok mc t.pc, target_configured t mc, t.regs r1 ≤₊ t.regs r2,
+ 1024w * bytes_in_word ≤₊ -1w * t.regs r1 + t.regs r2,
+ (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+  word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+    data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)),
+ code_loaded bytes mc ms, target_state_rel mc.target t ms,
+ bytes_in_mem t.pc bytes t.mem t.mem_domain
+   ({w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ∪ bitmaps_dm)]
+⊢ ∃t' m' bitmap_ptr' bitmaps_dm'.
+    target_state_rel mc.target t' ms ∧
+    target_configured t'
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              PC := (SND x).REG 30w;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+    t'.pc = mc.target.get_pc ms ∧
+    start_pc_ok
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              PC := (SND x).REG 30w;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) t'.pc ∧
+    n2w (2 ** t'.align − 1) && t'.pc = 0w ∧
+    ffi_interfer_ok t'.pc
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              PC := (SND x).REG 30w;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+    install_interfer_ok t'.pc cbspace
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              PC := (SND x).REG 30w;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ∧
+    code_loaded bytes
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              PC := (SND x).REG 30w;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ms ∧
+    bytes_in_mem t'.pc bytes t'.mem t'.mem_domain
+      ({w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ∪ bitmaps_dm') ∧
+    {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ⊆ t'.mem_domain ∧
+    bitmaps_dm' ⊆ t'.mem_domain ∧
+    (∀a. t'.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t'.regs r2 ∨
+         byte_align a ∈ bitmaps_dm' ⇒
+         t'.regs r1 ≤₊ a ∧ a <₊ t'.regs r2 ∨ a ∈ bitmaps_dm') ∧
+    (∀a. byte_align a ∈ mc.shared_addresses ⇒ a ∈ mc.shared_addresses) ∧
+    (∀a. ∃w.
+       t'.mem a = get_byte a w mc.target.config.big_endian ∧
+       m' (byte_align a) = Word w) ∧
+    (∀n. n < cbspace ⇒
+         n2w (n + LENGTH bytes) + t'.pc ∈ t'.mem_domain ∧
+         (¬(t'.regs r1 ≤₊ n2w (n + LENGTH bytes) + t'.pc) ∨
+          ¬(n2w (n + LENGTH bytes) + t'.pc <₊ t'.regs r2)) ∧
+         n2w (n + LENGTH bytes) + t'.pc ∉ bitmaps_dm') ∧
+    byte_aligned (t'.regs r1) ∧ byte_aligned (t'.regs r2) ∧
+    byte_aligned bitmap_ptr' ∧ t'.regs r1 ≤₊ t'.regs r2 ∧
+    1024w * bytes_in_word ≤₊ -1w * t'.regs r1 + t'.regs r2 ∧
+    DISJOINT {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} bitmaps_dm' ∧
+    m' (t'.regs r1) = Word bitmap_ptr' ∧
+    m' (bytes_in_word + t'.regs r1) =
+    Word (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+    m' (2w * bytes_in_word + t'.regs r1) =
+    Word
+      (bitmap_ptr' + bytes_in_word * n2w data_sp +
+       bytes_in_word * n2w (LENGTH bitmaps)) ∧
+    m' (3w * bytes_in_word + t'.regs r1) =
+    Word (n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+    m' (4w * bytes_in_word + t'.regs r1) =
+    Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+    (word_list bitmap_ptr' (MAP (Word ∘ n2w) bitmaps) *
+     word_list_exists (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps))
+       data_sp) (fun2set (m',byte_aligned ∩ bitmaps_dm'))
+AFTER weak-finish: 0 goals, proved=true
+WEAK_THEOREM_PROVED
+OK..
+2 subgoals:
+AFTER final-witness: 2 goals, proved=false
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM let
+  heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+in
+  (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+   t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+   n2w (2 ** t.align − 1) && t.pc = 0w ∧
+   interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+   ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+   bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+   heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+   (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+        a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+   (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+   DISJOINT mc.prog_addresses mc.shared_addresses ∧
+   (∀a. ∃w.
+      t.mem a = get_byte a w mc.target.config.big_endian ∧
+      m (byte_align a) = Word w) ∧
+   (∀n. n < cbspace ⇒
+        n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+        n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+   cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+  byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+  t.regs r1 ≤₊ t.regs r2 ∧ 1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+  DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+  m (t.regs r1 + bytes_in_word) =
+  Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 2w * bytes_in_word) =
+  Word
+    (bitmap_ptr + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 3w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+  m (t.regs r1 + 4w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+  (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+  ffi_names = SOME mc.ffi_names ∧
+  ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+      MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+      DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+      mc.mmio_info =
+      ZIP
+        (GENLIST (λindex. index + i) (LENGTH shmem),
+         MAP
+           (λrec.
+              (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+               n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+      cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64)
+  ASM is_arm8_machine_config mc
+  GOAL is_arm8_machine_config
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+----
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM let
+  heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+in
+  (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+   t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+   n2w (2 ** t.align − 1) && t.pc = 0w ∧
+   interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+   ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+   bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+   heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+   (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+        a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+   (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+   DISJOINT mc.prog_addresses mc.shared_addresses ∧
+   (∀a. ∃w.
+      t.mem a = get_byte a w mc.target.config.big_endian ∧
+      m (byte_align a) = Word w) ∧
+   (∀n. n < cbspace ⇒
+        n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+        n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+   cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+  byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+  t.regs r1 ≤₊ t.regs r2 ∧ 1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+  DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+  m (t.regs r1 + bytes_in_word) =
+  Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 2w * bytes_in_word) =
+  Word
+    (bitmap_ptr + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 3w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+  m (t.regs r1 + 4w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+  (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+  ffi_names = SOME mc.ffi_names ∧
+  ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+      MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+      DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+      mc.mmio_info =
+      ZIP
+        (GENLIST (λindex. index + i) (LENGTH shmem),
+         MAP
+           (λrec.
+              (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+               n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+      cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64)
+  ASM is_arm8_machine_config mc
+  GOAL installed bytes cbspace bitmaps data_sp ffi_names (r1,r2)
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) shmem ms ∧
+machine_sem
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ffi ms =
+machine_sem mc ffi ms
+----
+OK..
+
+Goal proved.
+
+[∀j ms' ffi'.
+   evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+   mc.target.get_pc ms' ≠ mc.install_pc, is_arm8_machine_config mc,
+ let
+   heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+ in
+   (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+    t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+    n2w (2 ** t.align − 1) && t.pc = 0w ∧
+    interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+    ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+    bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+    heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+    (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+         a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+    (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+    DISJOINT mc.prog_addresses mc.shared_addresses ∧
+    (∀a. ∃w.
+       t.mem a = get_byte a w mc.target.config.big_endian ∧
+       m (byte_align a) = Word w) ∧
+    (∀n. n < cbspace ⇒
+         n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+         n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+    cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+   byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+   t.regs r1 ≤₊ t.regs r2 ∧ 1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+   DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+   m (t.regs r1 + bytes_in_word) =
+   Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+   m (t.regs r1 + 2w * bytes_in_word) =
+   Word
+     (bitmap_ptr + bytes_in_word * n2w data_sp +
+      bytes_in_word * n2w (LENGTH bitmaps)) ∧
+   m (t.regs r1 + 3w * bytes_in_word) =
+   Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+   m (t.regs r1 + 4w * bytes_in_word) =
+   Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+   (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+    word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+      data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+   ffi_names = SOME mc.ffi_names ∧
+   ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+       MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+       DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+       mc.mmio_info =
+       ZIP
+         (GENLIST (λindex. index + i) (LENGTH shmem),
+          MAP
+            (λrec.
+               (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+       cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64)]
+⊢ is_arm8_machine_config
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|PC := (SND x).REG 30w;
+            MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+
+Remaining subgoals:
+AFTER final-config: 1 goals, proved=false
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM let
+  heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+in
+  (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+   t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+   n2w (2 ** t.align − 1) && t.pc = 0w ∧
+   interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+   ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+   bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+   heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+   (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+        a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+   (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+   DISJOINT mc.prog_addresses mc.shared_addresses ∧
+   (∀a. ∃w.
+      t.mem a = get_byte a w mc.target.config.big_endian ∧
+      m (byte_align a) = Word w) ∧
+   (∀n. n < cbspace ⇒
+        n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+        n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+   cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+  byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+  t.regs r1 ≤₊ t.regs r2 ∧ 1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+  DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+  m (t.regs r1 + bytes_in_word) =
+  Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 2w * bytes_in_word) =
+  Word
+    (bitmap_ptr + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 3w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+  m (t.regs r1 + 4w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+  (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+  ffi_names = SOME mc.ffi_names ∧
+  ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+      MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+      DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+      mc.mmio_info =
+      ZIP
+        (GENLIST (λindex. index + i) (LENGTH shmem),
+         MAP
+           (λrec.
+              (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+               n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+      cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64)
+  ASM is_arm8_machine_config mc
+  GOAL installed bytes cbspace bitmaps data_sp ffi_names (r1,r2)
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) shmem ms ∧
+machine_sem
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ffi ms =
+machine_sem mc ffi ms
+----
+OK..
+2 subgoals:
+AFTER final-split: 2 goals, proved=false
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM let
+  heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+in
+  (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+   t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+   n2w (2 ** t.align − 1) && t.pc = 0w ∧
+   interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+   ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+   bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+   heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+   (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+        a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+   (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+   DISJOINT mc.prog_addresses mc.shared_addresses ∧
+   (∀a. ∃w.
+      t.mem a = get_byte a w mc.target.config.big_endian ∧
+      m (byte_align a) = Word w) ∧
+   (∀n. n < cbspace ⇒
+        n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+        n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+   cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+  byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+  t.regs r1 ≤₊ t.regs r2 ∧ 1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+  DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+  m (t.regs r1 + bytes_in_word) =
+  Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 2w * bytes_in_word) =
+  Word
+    (bitmap_ptr + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 3w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+  m (t.regs r1 + 4w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+  (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+  ffi_names = SOME mc.ffi_names ∧
+  ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+      MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+      DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+      mc.mmio_info =
+      ZIP
+        (GENLIST (λindex. index + i) (LENGTH shmem),
+         MAP
+           (λrec.
+              (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+               n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+      cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64)
+  ASM is_arm8_machine_config mc
+  GOAL installed bytes cbspace bitmaps data_sp ffi_names (r1,r2)
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) shmem ms
+----
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM let
+  heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+in
+  (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+   t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+   n2w (2 ** t.align − 1) && t.pc = 0w ∧
+   interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+   ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+   bytes_in_mem t.pc bytes t.mem t.mem_domain (heap_stack_dm ∪ bitmaps_dm) ∧
+   heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+   (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+        a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+   (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+   DISJOINT mc.prog_addresses mc.shared_addresses ∧
+   (∀a. ∃w.
+      t.mem a = get_byte a w mc.target.config.big_endian ∧
+      m (byte_align a) = Word w) ∧
+   (∀n. n < cbspace ⇒
+        n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+        n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+   cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+  byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+  t.regs r1 ≤₊ t.regs r2 ∧ 1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+  DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+  m (t.regs r1 + bytes_in_word) =
+  Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 2w * bytes_in_word) =
+  Word
+    (bitmap_ptr + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m (t.regs r1 + 3w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+  m (t.regs r1 + 4w * bytes_in_word) =
+  Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+  (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+  ffi_names = SOME mc.ffi_names ∧
+  ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+      MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+      DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+      mc.mmio_info =
+      ZIP
+        (GENLIST (λindex. index + i) (LENGTH shmem),
+         MAP
+           (λrec.
+              (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+               n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+      cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64)
+  ASM is_arm8_machine_config mc
+  GOAL machine_sem
+  (mc with
+   install_interfer :=
+     (λk x.
+        SND x with
+        <|PC := (SND x).REG 30w;
+          MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+          REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) ffi ms =
+machine_sem mc ffi ms
+----
+OK..
+1 subgoal:
+AFTER final-installed: 1 goals, proved=false
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+    MAP (λrec. rec.entry_pc + w2n (mc.target.get_pc ms)) shmem =
+    DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+    mc.mmio_info =
+    ZIP
+      (GENLIST (λindex. i + index) (LENGTH shmem),
+       MAP
+         (λrec.
+            (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+             n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+    cbspace + (LENGTH bytes + ffi_offset * (i + 3)) < 18446744073709551616
+  ASM ffi_names = SOME mc.ffi_names
+  ASM (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+ word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) data_sp)
+  (fun2set (m,byte_aligned ∩ bitmaps_dm))
+  ASM m (4w * bytes_in_word + t.regs r1) =
+Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (3w * bytes_in_word + t.regs r1) =
+Word (n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (2w * bytes_in_word + t.regs r1) =
+Word
+  (bitmap_ptr + bytes_in_word * n2w data_sp +
+   bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (bytes_in_word + t.regs r1) =
+Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (t.regs r1) = Word bitmap_ptr
+  ASM DISJOINT {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} bitmaps_dm
+  ASM 1024w * bytes_in_word ≤₊ -1w * t.regs r1 + t.regs r2
+  ASM t.regs r1 ≤₊ t.regs r2
+  ASM byte_aligned bitmap_ptr
+  ASM byte_aligned (t.regs r2)
+  ASM byte_aligned (t.regs r1)
+  ASM cbspace + LENGTH bytes < 18446744073709551616
+  ASM ∀n. n < cbspace ⇒
+    n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+    (¬(t.regs r1 ≤₊ n2w (n + LENGTH bytes) + t.pc) ∨
+     ¬(n2w (n + LENGTH bytes) + t.pc <₊ t.regs r2)) ∧
+    n2w (n + LENGTH bytes) + t.pc ∉ bitmaps_dm
+  ASM ∀a. ∃w.
+  t.mem a = get_byte a w mc.target.config.big_endian ∧
+  m (byte_align a) = Word w
+  ASM DISJOINT mc.prog_addresses mc.shared_addresses
+  ASM ∀a. byte_align a ∈ sdm ⇒ a ∈ sdm
+  ASM sdm = mc.shared_addresses
+  ASM ∀a. t.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t.regs r2 ∨
+    byte_align a ∈ bitmaps_dm ⇒
+    t.regs r1 ≤₊ a ∧ a <₊ t.regs r2 ∨ a ∈ bitmaps_dm
+  ASM bitmaps_dm ⊆ t.mem_domain
+  ASM {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ⊆ t.mem_domain
+  ASM bytes_in_mem t.pc bytes t.mem t.mem_domain
+  ({w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ∪ bitmaps_dm)
+  ASM code_loaded bytes mc ms
+  ASM ffi_interfer_ok t.pc mc
+  ASM interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses)
+  ASM n2w (2 ** t.align − 1) && t.pc = 0w
+  ASM start_pc_ok mc t.pc
+  ASM t.pc = mc.target.get_pc ms
+  ASM target_configured t mc
+  ASM target_state_rel mc.target t ms
+  ASM is_arm8_machine_config mc
+  GOAL ∃t' m' bitmap_ptr' bitmaps_dm'.
+  target_state_rel mc.target t' ms ∧ target_configured t' mc ∧
+  t'.pc = mc.target.get_pc ms ∧ start_pc_ok mc t'.pc ∧
+  n2w (2 ** t'.align − 1) && t'.pc = 0w ∧ ffi_interfer_ok t'.pc mc ∧
+  bytes_in_mem t'.pc bytes t'.mem t'.mem_domain
+    ({w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ∪ bitmaps_dm') ∧
+  {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ⊆ t'.mem_domain ∧
+  bitmaps_dm' ⊆ t'.mem_domain ∧
+  (∀a. t'.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t'.regs r2 ∨
+       byte_align a ∈ bitmaps_dm' ⇒
+       t'.regs r1 ≤₊ a ∧ a <₊ t'.regs r2 ∨ a ∈ bitmaps_dm') ∧
+  (∀a. byte_align a ∈ mc.shared_addresses ⇒ a ∈ mc.shared_addresses) ∧
+  (∀a. ∃w.
+     t'.mem a = get_byte a w mc.target.config.big_endian ∧
+     m' (byte_align a) = Word w) ∧
+  (∀n. n < cbspace ⇒
+       n2w (n + LENGTH bytes) + t'.pc ∈ t'.mem_domain ∧
+       (¬(t'.regs r1 ≤₊ n2w (n + LENGTH bytes) + t'.pc) ∨
+        ¬(n2w (n + LENGTH bytes) + t'.pc <₊ t'.regs r2)) ∧
+       n2w (n + LENGTH bytes) + t'.pc ∉ bitmaps_dm') ∧
+  byte_aligned (t'.regs r1) ∧ byte_aligned (t'.regs r2) ∧
+  byte_aligned bitmap_ptr' ∧ t'.regs r1 ≤₊ t'.regs r2 ∧
+  1024w * bytes_in_word ≤₊ -1w * t'.regs r1 + t'.regs r2 ∧
+  DISJOINT {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} bitmaps_dm' ∧
+  m' (t'.regs r1) = Word bitmap_ptr' ∧
+  m' (bytes_in_word + t'.regs r1) =
+  Word (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m' (2w * bytes_in_word + t'.regs r1) =
+  Word
+    (bitmap_ptr' + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m' (3w * bytes_in_word + t'.regs r1) =
+  Word (n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+  m' (4w * bytes_in_word + t'.regs r1) =
+  Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+  (word_list bitmap_ptr' (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m',byte_aligned ∩ bitmaps_dm'))
+----
+OK..
+STEP_FAILED final-bridge 
+Exception raised at Tactic.MATCH_MP_TAC: No match
+
+AFTER failure of final-bridge: 1 goals, proved=false
+  ASM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+    MAP (λrec. rec.entry_pc + w2n (mc.target.get_pc ms)) shmem =
+    DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+    mc.mmio_info =
+    ZIP
+      (GENLIST (λindex. i + index) (LENGTH shmem),
+       MAP
+         (λrec.
+            (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+             n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+    cbspace + (LENGTH bytes + ffi_offset * (i + 3)) < 18446744073709551616
+  ASM ffi_names = SOME mc.ffi_names
+  ASM (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+ word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) data_sp)
+  (fun2set (m,byte_aligned ∩ bitmaps_dm))
+  ASM m (4w * bytes_in_word + t.regs r1) =
+Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (3w * bytes_in_word + t.regs r1) =
+Word (n2w (LENGTH bytes) + mc.target.get_pc ms)
+  ASM m (2w * bytes_in_word + t.regs r1) =
+Word
+  (bitmap_ptr + bytes_in_word * n2w data_sp +
+   bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (bytes_in_word + t.regs r1) =
+Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+  ASM m (t.regs r1) = Word bitmap_ptr
+  ASM DISJOINT {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} bitmaps_dm
+  ASM 1024w * bytes_in_word ≤₊ -1w * t.regs r1 + t.regs r2
+  ASM t.regs r1 ≤₊ t.regs r2
+  ASM byte_aligned bitmap_ptr
+  ASM byte_aligned (t.regs r2)
+  ASM byte_aligned (t.regs r1)
+  ASM cbspace + LENGTH bytes < 18446744073709551616
+  ASM ∀n. n < cbspace ⇒
+    n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+    (¬(t.regs r1 ≤₊ n2w (n + LENGTH bytes) + t.pc) ∨
+     ¬(n2w (n + LENGTH bytes) + t.pc <₊ t.regs r2)) ∧
+    n2w (n + LENGTH bytes) + t.pc ∉ bitmaps_dm
+  ASM ∀a. ∃w.
+  t.mem a = get_byte a w mc.target.config.big_endian ∧
+  m (byte_align a) = Word w
+  ASM DISJOINT mc.prog_addresses mc.shared_addresses
+  ASM ∀a. byte_align a ∈ sdm ⇒ a ∈ sdm
+  ASM sdm = mc.shared_addresses
+  ASM ∀a. t.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t.regs r2 ∨
+    byte_align a ∈ bitmaps_dm ⇒
+    t.regs r1 ≤₊ a ∧ a <₊ t.regs r2 ∨ a ∈ bitmaps_dm
+  ASM bitmaps_dm ⊆ t.mem_domain
+  ASM {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ⊆ t.mem_domain
+  ASM bytes_in_mem t.pc bytes t.mem t.mem_domain
+  ({w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2} ∪ bitmaps_dm)
+  ASM code_loaded bytes mc ms
+  ASM ffi_interfer_ok t.pc mc
+  ASM interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses)
+  ASM n2w (2 ** t.align − 1) && t.pc = 0w
+  ASM start_pc_ok mc t.pc
+  ASM t.pc = mc.target.get_pc ms
+  ASM target_configured t mc
+  ASM target_state_rel mc.target t ms
+  ASM is_arm8_machine_config mc
+  GOAL ∃t' m' bitmap_ptr' bitmaps_dm'.
+  target_state_rel mc.target t' ms ∧ target_configured t' mc ∧
+  t'.pc = mc.target.get_pc ms ∧ start_pc_ok mc t'.pc ∧
+  n2w (2 ** t'.align − 1) && t'.pc = 0w ∧ ffi_interfer_ok t'.pc mc ∧
+  bytes_in_mem t'.pc bytes t'.mem t'.mem_domain
+    ({w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ∪ bitmaps_dm') ∧
+  {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} ⊆ t'.mem_domain ∧
+  bitmaps_dm' ⊆ t'.mem_domain ∧
+  (∀a. t'.regs r1 ≤₊ byte_align a ∧ byte_align a <₊ t'.regs r2 ∨
+       byte_align a ∈ bitmaps_dm' ⇒
+       t'.regs r1 ≤₊ a ∧ a <₊ t'.regs r2 ∨ a ∈ bitmaps_dm') ∧
+  (∀a. byte_align a ∈ mc.shared_addresses ⇒ a ∈ mc.shared_addresses) ∧
+  (∀a. ∃w.
+     t'.mem a = get_byte a w mc.target.config.big_endian ∧
+     m' (byte_align a) = Word w) ∧
+  (∀n. n < cbspace ⇒
+       n2w (n + LENGTH bytes) + t'.pc ∈ t'.mem_domain ∧
+       (¬(t'.regs r1 ≤₊ n2w (n + LENGTH bytes) + t'.pc) ∨
+        ¬(n2w (n + LENGTH bytes) + t'.pc <₊ t'.regs r2)) ∧
+       n2w (n + LENGTH bytes) + t'.pc ∉ bitmaps_dm') ∧
+  byte_aligned (t'.regs r1) ∧ byte_aligned (t'.regs r2) ∧
+  byte_aligned bitmap_ptr' ∧ t'.regs r1 ≤₊ t'.regs r2 ∧
+  1024w * bytes_in_word ≤₊ -1w * t'.regs r1 + t'.regs r2 ∧
+  DISJOINT {w | t'.regs r1 ≤₊ w ∧ w <₊ t'.regs r2} bitmaps_dm' ∧
+  m' (t'.regs r1) = Word bitmap_ptr' ∧
+  m' (bytes_in_word + t'.regs r1) =
+  Word (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m' (2w * bytes_in_word + t'.regs r1) =
+  Word
+    (bitmap_ptr' + bytes_in_word * n2w data_sp +
+     bytes_in_word * n2w (LENGTH bitmaps)) ∧
+  m' (3w * bytes_in_word + t'.regs r1) =
+  Word (n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+  m' (4w * bytes_in_word + t'.regs r1) =
+  Word (n2w cbspace + n2w (LENGTH bytes) + mc.target.get_pc ms) ∧
+  (word_list bitmap_ptr' (MAP (Word ∘ n2w) bitmaps) *
+   word_list_exists (bitmap_ptr' + bytes_in_word * n2w (LENGTH bitmaps))
+     data_sp) (fun2set (m',byte_aligned ∩ bitmaps_dm'))
+----
+EXPLORE_COMPLETE

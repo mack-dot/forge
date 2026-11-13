@@ -1,0 +1,38 @@
+{
+ "case": "naive-closure naive-closure.sml",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/proof-0001/forge_refundInstallReachTheory.sig",
+  "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/proof-0001/forge_refundInstallReachTheory.sml",
+  "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/naive-closure naive-closure.sml/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/preload.sml",
+ "source_sha256": "c72dce24cd76125e664a685a9bd02cd57c125d90b0fbe251fdc14b6eb687c42a",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/proof-0001/.hol/objs/forge_refundInstallReachTheory.sig": "af922c26d65af168db2be84df38ebbfa5ed4ed8307ad8989cccb90302f938442",
+  "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/proof-0001/.hol/objs/forge_refundInstallReachTheory.sml": "b70a5e6b6fbdf7cdcd171ad8c9ba8c45a6128de92f459e5642faf4eedee39592"
+ },
+ "resource_guard": {
+  "memory_free_percent": 53,
+  "disk_free_gib": 35.74,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 0.72,
+ "child_user_cpu_seconds": 0.241,
+ "child_max_rss_bytes": 279494656,
+ "markers": [],
+ "stdout_sha256": "8e0c2afa7d7c3d276484a0f3fd684ae903cd296e50f280cfacd029599eb60bd3",
+ "stderr_sha256": "644e270792f61ba0915bcf409a20ab10d42c0129550594d919add9be8eb7a2fa",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

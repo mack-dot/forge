@@ -9,6 +9,220 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## N1 corrected and proved for every oracle; exclusion still not established — U364–U365
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_case.py explore-0001` / `0003` / `0006` / `0008`–`0010` / `0012`–`0014` / `0016` |0 each|Explorations; nothing stored. 552 functions; callers of 29 are `[31]` |
+| `run_case.py explore-0002` / `0004` / `0005` / `0011` / `0015` |1 each|SCRIPT ERRORS, not counted; no `store_thm` attempt failed |
+| `run_case.py explore-0007` |−15|Non-terminating tactic stopped by the agent; not counted |
+| `python3 -I -B run_case.py proof-0001 proof-0001.sml` |0|`install_stubs_unreferenced` and ten supporting theorems; three exports |
+| `run_case.py import` / `repeat` |0/0|Ten exact statements, 477 closure nodes; byte-identical |
+| `run_case.py naive-statement` / `naive-closure` |1/1|Intended mismatch; fresh evaluation rejects `Install_location` alone |
+| `python3 -I -B verify_cases_r5.py` (first version) |1|Reader error (export count); corrected |
+| `python3 -I -B verify_cases_r5.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| Lab-level closure P1; lab invariant P2; target prefix lemma P3 |NOT RUN|Proposed lemmas only |
+| U298 exclusion for the exact program |NOT ESTABLISHED|Needs P1, P2 and P3 |
+
+[Report](proposals/refund-executable-feasibility/m1-n1-reachability-20261113/REPORT.md).
+N1 as first stated is false: `InstallData_location` calls `Install_location`.
+The corrected N1 is PROVED for every allocation oracle: no other function of
+the exact word program holds a code label of either stub. This is a syntactic
+fact; it does not show that the installer is never executed. None of the six
+installed-state obligations becomes dischargeable. No frozen statement
+changed; no axiom or `cheat`. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Exclusion suffices; exclusion not proved; clean replay of two ARM8 theorems; profiles compared — U360–U363
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs and one clean-container replay. No profile approved. No
+authorization changed. No hosted action, protected edit, commit or deletion
+(except two containers that the agent created).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Host disk, swap, Docker VM and process check (read-only) |0|39.1 GiB free (target 20); swap 3.8 GiB in use; no running container; prerequisites hold |
+| `docker run … sh /inputs/replay.sh` (clean replay attempt-0001) |30|Both proofs 0; imports and controls 1 by SCRIPT ERROR (theory path); not counted |
+| `docker run … sh /inputs/replay.sh` (clean replay attempt-0002) |0|PolyML and HOL from upstream commits; `ffiread_error_return`, `install_call_site_step` and imports 0; two controls 1 as intended; exports byte-identical to the host |
+| `run_case.py explore-0001` / `0003` / `0004` / `0006` / `0007` |1/1/1/1/1|SCRIPT ERRORS, not counted; no `store_thm` attempt failed |
+| `run_case.py explore-0002` / `0005` / `0008` / `0009` / `0010` |0/0/0/0/0|Goal-manager explorations; nothing stored |
+| `python3 -I -B run_case.py proof-0001 proof-0001.sml …` |0|`arm8_install_handler_ok`, `arm8_install_handler_exists`, `installed_modulo_install_handler`, `install_exclusion_suffices`; four exports |
+| `run_case.py import` / `repeat` |0/0|Four exact statements, 343 closure nodes; byte-identical |
+| `run_case.py missing-exclusion` / `wrong-return-register-v2` |1/1|Intended statement mismatch; bounded tactic fails for the altered handler |
+| `run_case.py wrong-return-register` |−24|CPU-limit resource stop; not counted |
+| `run_case.py search-install-pc` |0|Observation: no stored theorem concludes an evaluator-prefix PC inequality with `install_pc` |
+| `python3 -I -B verify_cases_r4.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| Working-tree audit (read-only) |0|Tracked documents: additions only; ten ELF files: mode change only; nine packets: 0 manifest mismatches |
+| U298 exclusion for the exact program |NOT ESTABLISHED|No published program-counter invariant; needs an instrumented simulation |
+| Clean replay of CakeML-dependent theorems; independent replay; hosted job |NOT RUN|No from-source CakeML build on this host |
+
+[Report](proposals/refund-executable-feasibility/m1-exclusion-profile-20261113/REPORT.md),
+[profile comparison](proposals/refund-executable-feasibility/m1-exclusion-profile-20261113/PROFILES.md),
+[installed-state obligations](proposals/refund-executable-feasibility/m1-exclusion-profile-20261113/INSTALLED-STATE.md).
+With installer exclusion, `installed` no longer needs a correct install
+handler (PROVED). The exclusion itself is not proved; it is the minimal
+explicit assumption and is not adopted. Profile A is recommended, not
+approved. `installed` for the physical process stays NOT_ESTABLISHED. No
+frozen statement changed; no axiom or `cheat`. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## No safe cleanup; replay not run; initializer on `installed`; installer call site — U357–U359
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs, one at a time behind a resource guard. All results are
+same-machine results. No deletion, pruning, clean replay, hosted action or protected edit.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Scratch, Docker, swap and process inspection (read-only) |0|0 GiB recovered; 12.3 GiB free at the end; target 20; other-project scratch is in live use; Docker trim gains nothing |
+| Clean-container replay |NOT RUN|Disk below target; Docker VM shared with a live session |
+| `run_stack_case.py explore-0001` / `explore-0002` / `explore-0003` |1/1/0|Two script errors, not counted; then goal-manager proof of the heap lemma |
+| `python3 -I -B run_stack_case.py installed-0001 installed-0001.sml ...` |0|`heap_region_extends`, `arm8_machine_model_instance`, `refund_initialization_installed`; four exports |
+| `run_stack_case.py audit` / `repeat` |0/0|Premises are the predicate and `installed`; 487 closure nodes; byte-identical |
+| `run_stack_case.py missing-installed` / `other-bitmaps` |1/1|Intended statement mismatches |
+| `python3 -I -B scan_entry_branches.py` |0|Observation: one direct branch to the installer entry, code offset 4660 |
+| `python3 -I -B run_arm8_case.py install-site-0001 install-site-0001.sml` |0|`install_call_site_step`; four exports |
+| `run_arm8_case.py import` / `wrong-target` / `repeat` |0/1/0|Exact statement, 97 closure nodes; intended mismatch; byte-identical |
+| `python3 -I -B verify_cases_r3.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| U298 exclusion theorem; `installed` for the physical process; independent replay; hosted job |NOT RUN|Separate obligations |
+
+[Report](proposals/refund-executable-feasibility/m1-installed-closure-20261112/REPORT.md).
+The initializer now has two premises: the machine-model predicate, for which
+an explicit instance is proved, and the published `installed` predicate, which
+stays an assumption for the physical process. The exact code holds one
+installer call; U298 is a reachability claim and is not established. Profiles
+A and B are unchanged and not approved. No frozen statement changed; no axiom
+or `cheat`. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Replay stopped at disk deficit; basis instance, initializer 6→2, U298 lemmas — U352–U356
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs, one at a time behind a resource guard. All results are
+same-machine results. No deletion, clean replay, hosted action or protected edit.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Disk, swap, cache and process inspection (read-only) |0|6.7 GiB free; target 20; deficit 13.3 GiB; nothing already authorized for deletion; 0 GiB recovered by cleanup |
+| Clean-container replay |NOT RUN|Stopped by the owner's rule at the deficit |
+| `run_case.py explore-0001` / `explore-0002` (instance diagnosis) |1/0|Script error, not counted; then cause shown: two `rest` variables of different type in the old goal |
+| `python3 -I -B run_case.py instance-0001 instance-0001.sml ...` |0|`read_error_basis_instance` checked; four exports |
+| `run_case.py repeat` / `import` |0/0|Byte-identical; both theorems exact; 219 closure nodes |
+| `run_case.py wrong-exception` / `instance-missing-read-none` / `oracle-missing-read-none` |1/1/1|Intended rejections |
+| `run_case.py oracle-repeat oracle-0001.sml ...` |0|Byte-identical to U351's export |
+| `run_stack_case.py no-machine-config` / `missing-memory` / `missing-memory-statement` (U349 controls) |1/−24/1|Rejection; CPU-limit resource stop, not counted; statement mismatch |
+| `python3 -I -B run_stack_case.py aligned-0001 aligned-0001.sml ...` |0|`refund_initialization_aligned`; `REMAINING_ANTECEDENTS 2`; four exports |
+| `run_stack_case.py audit` / `repeat` |0/0|Two premises; 486 closure nodes; byte-identical |
+| `run_stack_case.py unaligned-domain` / `missing-memory-statement` |1/1|Intended statement mismatches |
+| `run_case.py stub-0001` |−24|CPU limit in an optional third lemma; nothing exported; not counted |
+| `python3 -I -B run_case.py stub-0002 stub-0002.sml` |0|`install_stub_has_install`, `stubs_contain_install` checked; four exports |
+| `run_case.py import` / `wrong-polarity` (first versions) |1/1|SCRIPT ERROR, load order; not counted |
+| `run_case.py import-0002` / `wrong-polarity-0002` |0/1|Exact statements, 243 closure nodes; intended mismatch |
+| `python3 -I -B verify_cases_r2.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| U298 target-level exclusion; `memory_assumption`; independent replay; hosted job |NOT RUN|Separate obligations |
+
+[Report with profiles, matrix and graph](proposals/refund-executable-feasibility/m1-replay-closure-20261112/REPORT.md).
+The U351 instance failure was the agent's goal-construction error (U353).
+Assurance Profiles A and B are written and not approved (U356). No frozen
+statement changed; no axiom or `cheat`. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Continuation: ARM8 composition, initializer 14→6, oracle lemma; replay not run — U348–U351
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs with the pinned tools. All results are same-machine results.
+No clean or independent replay, hosted action, native execution or protected edit.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 -I -B verify_sources.py upstream-api` |0|HOL, CakeML, PolyML tracked files equal upstream commit trees |
+| `run_arm8_case.py explore-0001/0002` |0/0|Explorations; no theorem |
+| `python3 -I -B run_arm8_case.py compose-0001 compose-0001.sml` |0|`ffiread_error_return` checked on the exact native bytes; four exports |
+| `run_arm8_case.py repeat` / `import` |0/0|Exports byte-identical; exact statement; `DISK_THM` only; 97 closure nodes |
+| `run_arm8_case.py wrong-status` / `missing-separation-v2` / `untaken-branch-v2` |1/1/1|Intended rejections after the positive audit |
+| `run_arm8_case.py missing-separation` / `untaken-branch` (first versions) |1/1|SCRIPT ERROR, no current theory; not counted |
+| `run_stack_case.py explore-0001` (initializer) |0|Exploration; no theorem |
+| `python3 -I -B run_stack_case.py machine-0001 machine-0001.sml ...` |0|`refund_initialization_machine`; `REMAINING_ANTECEDENTS 6`; four exports |
+| `run_stack_case.py repeat` / `audit-0002` |0/0|Exports byte-identical; six premises; 485 closure nodes |
+| `run_stack_case.py audit` (first start) |none|INTERRUPTED by the agent under memory pressure; not a result |
+| Initializer controls `no-machine-config`, `missing-memory` |NOT RUN|Memory and disk guard |
+| `run_case.py explore-0001/0002/0003` (FFI oracle) |1/−9/0|Script error; wall timeout under load; then goal-manager proof. No theorem stored |
+| `python3 -I -B run_case.py oracle-0001 oracle-0001.sml ...` |0|`basis_read_error_oracle` checked; instance theorem FAILED once (`No match`) |
+| `python3 -I -B verify_cases.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| Clean or independent replay; U298 exclusion; hosted job; oracle import/repeat/controls |NOT RUN|Disk 1–2 GiB free, swap 15–16 GiB; approval boundaries |
+
+[Continuation report with matrix, graph, inventory and plan](proposals/refund-executable-feasibility/m1-closure-20261112/REPORT.md),
+[ARM8 composition](proposals/refund-executable-feasibility/arm8-compose-local-20261112/REPORT.md),
+[initializer corollary](proposals/refund-executable-feasibility/initializer-machine-local-20261112/REPORT.md).
+Parallel HOL jobs raised swap and reduced free disk to about 1 GiB; the agent
+stopped the batch and ran the rest one at a time under a guard (U350).
+No frozen statement changed; no axiom or `cheat`. The FFI oracle equation for
+native read errors on open descriptors stays ASSUMED. U298 was inspected by
+source reading only. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Two local proofs checked: generic read error and initial stack code — U345, U346, U347
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The owner approved the local M1 actions of U342. All runs are local HOL runs
+with the pinned tools. No hosted action, native execution or protected edit.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_case.py explore-0001/0002/0003` (goal-manager explorations) |0/0/0|No theorem; two exploration-script tracking errors preserved |
+| `python3 -I -B run_case.py proof-0001 generic-read-0002.sml` |0|`read_error_generic` checked; frozen statement bytes; four exports |
+| `python3 -I -B run_case.py repeat generic-read-0002.sml` |0|Four exports byte-identical |
+| `python3 -I -B run_case.py import import.sml proof-0001 forge_refundGenericReadError` |0|Frozen U329 import; exact statement; `DISK_THM` only; 217 closure nodes |
+| `run_case.py wrong-exception ...` / `run_case.py omitted-event ...` |1/1|Frozen U329 controls; `Exact generic read statement mismatch` |
+| `python3 -I -B validate_evidence.py` / altered-copy control |0/1|Byte, exit and marker binding only |
+| `python3 -I -B run_recorded.py inspect-arm8-steps-0001` (unchanged U316 source) |0|`arm8_stepLib` loads; seven step theorems for six words; U316 recorded exit1 |
+| `run_stack_case.py diagnose-0001/0002/0003` (typed-goal diagnostics) |0/0/0|No export; U314 failing step is `drule specialized_labels` |
+| `python3 -I -B run_stack_case.py code-0004 code-local-0004.sml` |0|Five theorems checked; `REMAINING_ANTECEDENTS 14`; four exports |
+| `python3 -I -B run_stack_case.py repeat code-local-0004.sml` |0|Four exports byte-identical |
+| `python3 -I -B run_stack_case.py audit expected.sml code-0004 forge_refundInitialStackCode` |0|Prepared U314 audit; 14-premise contract; 484 closure nodes |
+| `run_stack_case.py wrong-lowering/duplicate-label/missing-memory ...` |1/1/1|Prepared U314 controls; each rejects after the positive audit |
+| `python3 -I -B validate_stack_evidence.py` / altered-copy control |0/1|Byte, exit and marker binding only |
+| Hosted job; `inputAllFrom`/`refund_main` composition; six-step ARM8 composition; U298; independent replay |NOT RUN|Separate obligations |
+
+[Generic read report](proposals/refund-executable-feasibility/generic-read-local-20261112/REPORT.md),
+[ARM8 step report](proposals/refund-executable-feasibility/arm8-step-local-20261112/REPORT.md),
+[initial stack code report](proposals/refund-executable-feasibility/initial-stack-code-local-20261112/REPORT.md).
+Candidates: generic read SHA90e827dc782bcfe23f0518cca18facf649d434f59421d593bc436a187f003ae3;
+stack code SHA7d24953dea9a70a51db26a4ee7c6b858d692a9a5cd84fecf5a86544ff5871c6f.
+Both keep every quoted statement byte-identical; tactic changes only; no axiom
+or `cheat`. `read_error_generic` assumes the FFI oracle equation; it does not
+discharge it for the native runtime. The initializer keeps 14 open conditions
+(U313 had 15). Both results are LOCALLY_VALIDATED: same machine and agent,
+cached parents, no independent replay. The U341 hosted request was not used.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Local proof context works; candidate fails at one tactic step — U342, U343
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The EPERM of U316/U319/U320 does not occur in this session. The unchanged
+candidate now reaches the theorem and fails. No hosted action or protected edit.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Read-only `access()` query on `/var/tmp`, `/private/var/tmp` |0|Write access reported; U319 recorded EPERM; no file created |
+| Unchanged SAT diagnostic `diagnose-sat.sml`, pinned HOL and ARM8 heap, U316 argv/cwd |0|`⊢ probe ∨ ¬probe`; U316 recorded exit1 |
+| `python3 -I -B run_candidate.py` on unchanged `generic-read-0001.sml`, U328 argv/cwd |1|`cfLib` loads; theorem reached for the first time; `THEN1` failure; 2665 inputs unchanged; no export |
+| `python3 -I -B run_candidate.py` on instrumented diagnostic copy |1|Same failure; `xffi` branch leaves five uninstantiated witnesses |
+| Tactic repair / repeat / import / two controls / hosted job |NOT RUN|Expected exits are not observed exits |
+| Script removal (U343) |NOT RUN|Zero files removed; 33 of 35 `scripts/` files are pinned by the protected lock |
+
+[Report](proposals/refund-executable-feasibility/local-context-20261112/REPORT.md),
+[records](proposals/refund-executable-feasibility/local-context-20261112/records).
+Candidate SHA7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6.
+`read_error_generic` is unestablished, not disproved. The residual is a missing
+witness step by the agent's reading; no repair was run. U341's hosted workflow
+runs the same candidate bytes, so the same failure is the expected result there;
+that is an inference, not an observed hosted exit. Recommendation: hold the
+[U341 approval request](proposals/refund-executable-feasibility/proof-loader-fix-20261109/NEXT-RUN-APPROVAL.md)
+and repair the tactic locally. Same-machine and cached-parent trust limits remain.
+Native frame, composition, U314, U298 and independent replay stay open.
+
 ## Loader paths fixed; real local regression passes — U341
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

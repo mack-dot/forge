@@ -1,0 +1,26 @@
+--- a/code-numeric.sml
++++ b/code-local-0004.sml
+@@ -60,7 +60,7 @@
+  |> INST_TYPE[alpha|->``:64``] |> Q.GEN `k` |> ISPEC regcount;
+ val specialized_labels=word_to_stackProofTheory.word_to_stack_compile_lab_pres
+  |> Q.GEN `asm_conf` |> ISPEC ac
+- |> SIMP_RULE(srw_ss())[EVAL ``wordLang$raise_stub_location``,EVAL ``wordLang$store_consts_stub_location``];
++ |> SIMP_RULE(srw_ss())[LET_THM,EVAL ``wordLang$raise_stub_location``,EVAL ``wordLang$store_consts_stub_location``];
+ val static_numbers=[EVAL ``isa_bits ^ac``,EVAL ``dimindex(:64)``,
+  EVAL ``^regcount``,EVAL ``^stk``,EVAL ``backend_common$stack_num_stubs``];
+ val stack_good_from_word=prove(``
+@@ -76,10 +76,11 @@
+  drule specialized_labels >> simp[] >> strip_tac >>
+  `ALL_DISTINCT(MAP FST stack_prg)` by
+   (fs[EVERY_MEM] >> metis_tac[DECIDE ``~((6:num)<5)``,DECIDE ``~((6:num)<6)``]) >>
+- `EVERY(\n.5<=n)(MAP FST stack_prg)` by
+-  (fs[EVERY_MEM] >> metis_tac[DECIDE ``(6:num)<n ==> 5<=n``]) >>
++ `!k. MEM k (MAP FST stack_prg) ==> 5 <= k` by
++  (fs[EVERY_MEM] >> rw[] >> res_tac >> fs[]) >>
++ qpat_x_assum `MAP FST stack_prg = _` kall_tac >>
+  fs(stack_to_labProofTheory.good_code_def::static_numbers) >>
+- fs[EVERY_MAP,EVERY_MEM,FORALL_PROD] >> metis_tac[]);
++ fs[EVERY_MEM,FORALL_PROD,MEM_MAP,PULL_EXISTS] >> rw[] >> res_tac >> fs[]);
+ val sc=``word_to_stack$compile ^ac F ^wordprog``;
+ val exact_stack=stack_good_from_word |> Q.GENL[`wprog`,`bm`,`cc`,`frames`,`stack_prg`]
+  |> ISPECL[wordprog,``FST ^sc``,``FST(SND ^sc)``,``FST(SND(SND ^sc))``,``SND(SND(SND ^sc))``]

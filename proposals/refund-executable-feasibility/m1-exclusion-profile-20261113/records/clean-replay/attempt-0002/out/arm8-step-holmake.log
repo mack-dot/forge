@@ -1,0 +1,56 @@
+Scanning $(HOLDIR)/src/sort
+Scanning $(HOLDIR)/src/string
+Scanning $(HOLDIR)/src/n-bit
+Scanning $(HOLDIR)/examples/machine-code/hoare-triple
+Scanning $(HOLDIR)/src/TeX
+Scanning $(HOLDIR)/src/bag
+Scanning $(HOLDIR)/src/res_quan/src
+Scanning $(HOLDIR)/src/finite_maps
+Scanning $(HOLDIR)/src/integer
+Scanning $(HOLDIR)/src/transfer
+Scanning $(HOLDIR)/src/pred_set/src/more_theories
+Scanning $(HOLDIR)/src/algebra/base
+Scanning $(HOLDIR)/src/algebra/construction
+Scanning $(HOLDIR)/src/algebra
+Scanning $(HOLDIR)/src/hol88
+Scanning $(HOLDIR)/src/rational
+Scanning $(HOLDIR)/src/real
+Scanning $(HOLDIR)/src/floating-point
+Scanning $(HOLDIR)/src/monad/more_monads
+Scanning $(HOLDIR)/src/update
+Scanning $(HOLDIR)/examples/l3-machine-code/common
+Scanning $(HOLDIR)/examples/machine-code/decompiler
+Scanning $(HOLDIR)/examples/l3-machine-code
+Scanning $(HOLDIR)/examples/l3-machine-code/lib
+Scanning $(HOLDIR)/examples/l3-machine-code/arm8/model
+Scanned 26 directories
+Building 9 theory files
+Starting work on set_sepTheory
+Starting work on tailrecTheory
+Starting work on arm8Theory
+Starting work on utilsLibSupportTheory
+tailrecTheory           examples/machine-code/hoare-triple  (0s)   [1/9]     OK
+Finished examples/l3-machine-code/lib                                  (0.000s) 
+utilsLibSupportTheory      examples/l3-machine-code/common  (2s)   [2/9]     OK
+Finished examples/l3-machine-code/common [#theories: 1]                (2.581s) 
+set_sepTheory           examples/machine-code/hoare-triple  (2s)   [3/9]     OK
+Starting work on progTheory
+progTheory              examples/machine-code/hoare-triple  (3s)   [4/9]     OK
+Starting work on addressTheory
+Starting work on temporalTheory
+temporalTheory          examples/machine-code/hoare-triple  (2s)   [5/9]     OK
+addressTheory           examples/machine-code/hoare-triple  (5s)   [6/9]     OK
+Starting work on decompilerLibSupportTheory
+Finished examples/machine-code/hoare-triple [#theories: 5]            (14.206s) 
+arm8Theory             examples/l3-machine-code/arm8/model (12s)   [7/9]     OK
+Finished examples/l3-machine-code/arm8/model [#theories: 1]           (12.850s) 
+decompilerLibSupportTheory         examples/.../decompiler  (1s)   [8/9]     OK
+Starting work on l3-heap
+Finished examples/machine-code/decompiler [#theories: 1]               (1.947s) 
+l3-heap                           examples/l3-machine-code  (9s)             OK
+Finished examples/l3-machine-code                                      (9.971s) 
+Starting work on arm8-heap
+arm8-heap               examples/l3-machine-code/arm8/step  (8s)             OK
+Starting work on arm8_stepTheory
+arm8_stepTheory         examples/l3-machine-code/arm8/step  (3s)   [9/9]     OK
+Finished examples/l3-machine-code/arm8/step [#theories: 1]            (11.333s) 

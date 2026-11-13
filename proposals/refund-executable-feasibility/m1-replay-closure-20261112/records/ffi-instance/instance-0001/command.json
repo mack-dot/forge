@@ -1,0 +1,48 @@
+{
+ "case": "instance-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "--maxheap",
+  "1400",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-read-event-gap-20261107/attempt-0001/generic-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/forge_refundReadBoundaryTheory.sig",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/forge_refundReadBoundaryTheory.sml",
+  "/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/model-0004/forge_refundStdinDomainTheory.sig",
+  "/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/model-0004/forge_refundStdinDomainTheory.sml",
+  "/Users/mackianni/forge/results/refund-generic-read-local-20261112/attempt-0001/proof-0001/forge_refundGenericReadErrorTheory.sig",
+  "/Users/mackianni/forge/results/refund-generic-read-local-20261112/attempt-0001/proof-0001/forge_refundGenericReadErrorTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffi-oracle-local-20261112/attempt-0001/oracle-0001/forge_refundFfiOracleTheory.sig",
+  "/Users/mackianni/forge/results/refund-ffi-oracle-local-20261112/attempt-0001/oracle-0001/forge_refundFfiOracleTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffi-instance-local-20261112/attempt-0001/instance-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis",
+ "source": "instance-0001.sml",
+ "source_sha256": "dd1147684d582c9990440277c752763dfa4819372d45917f9352d9cd827421d8",
+ "cpu_seconds_limit": 120,
+ "wall_seconds_limit": 150,
+ "maxheap_MiB": 1400,
+ "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+ "hol_binary_sha256": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+ "checked_input_files": 2671,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 50.136,
+ "child_user_cpu_seconds": 48.061,
+ "child_system_cpu_seconds": 9.689,
+ "child_max_rss_bytes": 1486569472,
+ "stdout_sha256": "d44356fa4b4565f28097bbc449ac151205f7831509bcfd606deb65ca0cec7986",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFfiInstanceTheory.html": "37069571c9d0f8a1b01c5445a0892e77cca26f8ac268d29db7c186c5cb8bfe80",
+  ".hol/objs/forge_refundFfiInstanceTheory.dat": "f2afe94b6d9a0cc152e6077876e0383016bbabcb103fea8497e5e29a00b37885",
+  ".hol/objs/forge_refundFfiInstanceTheory.sig": "7e569a70d89db42442aa51f6a1f0aae4c246e7f8a65809f059ff2b054bc08bf2",
+  ".hol/objs/forge_refundFfiInstanceTheory.sml": "087013f580e1c98954dba99b51dd880ef58773201e4b7ef2671d308f747eaeda"
+ },
+ "inputs_unchanged_after": true,
+ "markers": [
+  "FFI_INSTANCE_COMPLETE"
+ ]
+}

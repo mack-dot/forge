@@ -1,0 +1,131 @@
+<<HOL message: Created theory "forge_refundFfiOracleExplore">>
+FS_FFI_PART_DEF
+ []
+⊢ fs_ffi_part =
+  (encode,decode,
+   [(«open_in»,ffi_open_in); («open_out»,ffi_open_out); («read»,ffi_read);
+    («write»,ffi_write); («close»,ffi_close)])
+MK_FFI_NEXT_DEF
+ []
+⊢ ∀encode decode ls name conf bytes s.
+    mk_ffi_next (encode,decode,ls) name conf bytes s =
+    do
+      f <- ALOOKUP ls name;
+      s' <- decode s;
+      r <- f conf bytes s';
+      case r of
+        FFIreturn bytes s => SOME (FFIreturn bytes (encode s))
+      | FFIdiverge => SOME FFIdiverge
+    od
+FFI_READ_DEF
+ []
+⊢ ∀conf bytes fs.
+    ffi_read conf bytes fs =
+    case bytes of
+      [] => NONE
+    | [n1] => NONE
+    | [n1; n0] => NONE
+    | [n1; n0; pad1] => NONE
+    | n1::n0::pad1::pad2::tll =>
+      OPTION_CHOICE
+        (OPTION_IGNORE_BIND (assert (LENGTH conf = 8))
+           (OPTION_IGNORE_BIND (assert (LENGTH tll ≥ w22n [n1; n0]))
+              do
+                (l,fs') <- read (w82n conf) fs (w22n [n1; n0]);
+                SOME
+                  (FFIreturn
+                     (0w::n2w2 (STRLEN l) ++ [pad2] ++ MAP (n2w ∘ ORD) l ++
+                      DROP (STRLEN l) tll) fs')
+              od)) (SOME (FFIreturn bytes❲0 ↦ 1w❳ fs))
+W22N_N2W2
+ [] ⊢ ∀i. i < 2 ** (2 * 8) ⇒ w22n (n2w2 i) = i
+W82N_N2W8
+ [] ⊢ ∀i. i ≤ 256 ** 8 − 1 ⇒ w82n (n2w8 i) = i
+DECODE_ENCODE
+ [] ⊢ ∀cls. decode (encode cls) = SOME cls
+OK..
+1 subgoal:
+STEP_OK strip
+STATE strip goals=1
+ASSUMPTION read fd fs n = NONE
+ASSUMPTION n ≤ LENGTH rest
+ASSUMPTION n < 2 ** (2 * 8)
+ASSUMPTION fd < 256 ** 8
+GOAL mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) (encode fs) =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK w22n
+STATE w22n goals=1
+ASSUMPTION w22n (n2w2 n) = n
+ASSUMPTION read fd fs n = NONE
+ASSUMPTION n ≤ LENGTH rest
+ASSUMPTION n < 2 ** (2 * 8)
+ASSUMPTION fd < 256 ** 8
+GOAL mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest) (encode fs) =
+SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+END_GOAL
+OK..
+1 subgoal:
+STEP_OK unfold
+STATE unfold goals=1
+ASSUMPTION w22n (n2w2 n) = n
+ASSUMPTION read fd fs n = NONE
+ASSUMPTION n ≤ LENGTH rest
+ASSUMPTION n < 2 ** (2 * 8)
+ASSUMPTION fd < 256 ** 8
+GOAL ∃r. OPTION_CHOICE
+      (OPTION_IGNORE_BIND
+         (assert (LENGTH rest ≥ w22n [n2w (n DIV 256); n2w n]))
+         do
+           (l,fs') <-
+             read (w82n (n2w8 fd)) fs (w22n [n2w (n DIV 256); n2w n]);
+           SOME
+             (FFIreturn
+                (0w::n2w (STRLEN l DIV 256)::n2w (STRLEN l)::h4::
+                   (MAP (n2w ∘ ORD) l ++ DROP (STRLEN l) rest)) fs')
+         od) (SOME (FFIreturn (1w::n2w n::h3::h4::rest) fs)) = SOME r ∧
+    (case r of
+       FFIreturn bytes s => SOME (FFIreturn bytes (encode s))
+     | FFIdiverge => SOME FFIdiverge) =
+    SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+END_GOAL
+OK..
+
+Goal proved.
+
+[fd < 256 ** 8, n < 2 ** (2 * 8), n ≤ LENGTH rest, w22n (n2w2 n) = n,
+ read fd fs n = NONE]
+⊢ ∃r. OPTION_CHOICE
+        (OPTION_IGNORE_BIND
+           (assert (LENGTH rest ≥ w22n [n2w (n DIV 256); n2w n]))
+           do
+             (l,fs') <-
+               read (w82n (n2w8 fd)) fs (w22n [n2w (n DIV 256); n2w n]);
+             SOME
+               (FFIreturn
+                  (0w::n2w (STRLEN l DIV 256)::n2w (STRLEN l)::h4::
+                     (MAP (n2w ∘ ORD) l ++ DROP (STRLEN l) rest)) fs')
+           od) (SOME (FFIreturn (1w::n2w n::h3::h4::rest) fs)) = SOME r ∧
+      (case r of
+         FFIreturn bytes s => SOME (FFIreturn bytes (encode s))
+       | FFIdiverge => SOME FFIdiverge) =
+      SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+
+Goal proved.
+
+[fd < 256 ** 8, n < 2 ** (2 * 8), n ≤ LENGTH rest, w22n (n2w2 n) = n,
+ read fd fs n = NONE]
+⊢ mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest)
+    (encode fs) = SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+
+Goal proved.
+ [fd < 256 ** 8, n < 2 ** (2 * 8), n ≤ LENGTH rest, read fd fs n = NONE]
+⊢ mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest)
+    (encode fs) = SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+STEP_OK fs
+STATE fs goals=0
+NO_OPEN_GOAL
+FINAL proved=true
+EXPLORE_COMPLETE

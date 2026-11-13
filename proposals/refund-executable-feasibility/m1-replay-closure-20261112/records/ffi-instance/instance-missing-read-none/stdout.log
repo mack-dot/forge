@@ -1,0 +1,268 @@
+IMPORTED_THEOREM read_error_basis_instance
+ []
+⊢ FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧
+  MEM «read» ns ∧ ¬MEM «» ns ∧ read fd fs n = NONE ⇒
+  app p TextIO_read_v [fdv; nv]
+    (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) *
+     one (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns events))
+    (POSTe e.
+       &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+       one
+         (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns
+            (events ++
+             [IO_event (ExtCall «read») (n2w8 fd)
+                (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))])))
+IMPORTED_THEOREM basis_read_error_oracle
+ []
+⊢ fd < 256 ** 8 ∧ n < 2 ** (2 * 8) ∧ n ≤ LENGTH rest ∧ read fd fs n = NONE ⇒
+  mk_ffi_next fs_ffi_part «read» (n2w8 fd) (n2w2 n ++ h3::h4::rest)
+    (encode fs) = SOME (FFIreturn (1w::n2w n::h3::h4::rest) (encode fs))
+IMPORTED_ORACLES DISK_THM
+IMPORTED_HYPOTHESES 0
+IMPORTED_TAGGED_AXIOMS 0
+CLOSURE_NODE forge_refundFfiInstance:forge_refundFfiOracle
+CLOSURE_NODE clFFI:cfHeapsBase
+CLOSURE_NODE CommandLineProof:cfMonad,clFFI,Word8ArrayProof,CommandLineProg
+CLOSURE_NODE runtimeFFI:cfHeapsBase
+CLOSURE_NODE RuntimeProof:runtimeFFI,RuntimeProg
+CLOSURE_NODE binary_ieeeProps:binary_ieee
+CLOSURE_NODE ArrayProg:Word8ArrayProg
+CLOSURE_NODE mlmap:balanced_map,misc
+CLOSURE_NODE MapProg:mlmap,ArrayProg
+CLOSURE_NODE mlset:balanced_map,misc
+CLOSURE_NODE SetProg:mlset,MapProg
+CLOSURE_NODE HashtableProg:SetProg
+CLOSURE_NODE CommandLineProg:HashtableProg
+CLOSURE_NODE DoubleProg:CommandLineProg,binary_ieeeProps
+CLOSURE_NODE std_prelude:ml_pmatch,ml_optimise
+CLOSURE_NODE cfDiv:std_prelude,xcf,cfTactics
+CLOSURE_NODE cfMain:xcf,cfTactics
+CLOSURE_NODE mloption:misc
+CLOSURE_NODE RuntimeProg:mloption,cfMain,cfLetAuto,cfDiv
+CLOSURE_NODE OptionProg:RuntimeProg
+CLOSURE_NODE ListProg:OptionProg
+CLOSURE_NODE VectorProg:ListProg
+CLOSURE_NODE StringProg:VectorProg
+CLOSURE_NODE mlbasicsProg:StringProg
+CLOSURE_NODE IntProg:mlbasicsProg
+CLOSURE_NODE typeDecToPP:ast,mlint
+CLOSURE_NODE mlprettyprinter:mlint
+CLOSURE_NODE PrettyPrinterProg:mlprettyprinter,typeDecToPP,IntProg
+CLOSURE_NODE primeFactor:bag,gcd
+CLOSURE_NODE schneiderUtilsContext:hol
+CLOSURE_NODE intExtension:schneiderUtilsContext,Omega
+CLOSURE_NODE frac:intExtension
+CLOSURE_NODE rat:frac,primeFactor
+CLOSURE_NODE mlrat:mlint,rat
+CLOSURE_NODE RatProg:mlrat,PrettyPrinterProg
+CLOSURE_NODE CharProg:RatProg
+CLOSURE_NODE Word64Prog:CharProg
+CLOSURE_NODE Word8Prog:Word64Prog
+CLOSURE_NODE Word8ArrayProg:Word8Prog
+CLOSURE_NODE Word8ArrayProof:Word8ArrayProg
+CLOSURE_NODE MarshallingProg:Word8ArrayProof,Marshalling,DoubleProg
+CLOSURE_NODE TextIOProg:MarshallingProg
+CLOSURE_NODE cfTactics:cf
+CLOSURE_NODE ml_optimise:ml_translator
+CLOSURE_NODE balanced_map:comparison,alist
+CLOSURE_NODE oset:balanced_map
+CLOSURE_NODE FormalLang:hol
+CLOSURE_NODE charset:words,comparison
+CLOSURE_NODE regexp:mergesort,container,charset,FormalLang
+CLOSURE_NODE regexp_map:regexp,oset
+CLOSURE_NODE vec_map:alist
+CLOSURE_NODE regexp_compiler:vec_map,regexp_map
+CLOSURE_NODE mlvector:mllist,regexp_compiler
+CLOSURE_NODE mlint:mlvector,mlstring
+CLOSURE_NODE ml_translator:ml_prog,mlint
+CLOSURE_NODE ml_pmatch:ml_translator
+CLOSURE_NODE cfHeaps:ml_pmatch,ml_optimise,cfHeapsBase
+CLOSURE_NODE cfStore:cfHeaps
+CLOSURE_NODE cfNormalise:cfStore
+CLOSURE_NODE cfApp:cfNormalise
+CLOSURE_NODE cf:cfApp
+CLOSURE_NODE xcf:cf
+CLOSURE_NODE cfLetAuto:xcf,cfTactics
+CLOSURE_NODE ml_monadBase:semanticPrimitives
+CLOSURE_NODE ml_monad_translatorBase:ml_monadBase,cfLetAuto
+CLOSURE_NODE ml_monad_translator:ml_monad_translatorBase
+CLOSURE_NODE cfMonad:ml_monad_translator
+CLOSURE_NODE TextIOProof:cfMonad,fsFFIProps,TextIOProg
+CLOSURE_NODE basis_ffi:TextIOProof,RuntimeProof,CommandLineProof
+CLOSURE_NODE Marshalling:misc
+CLOSURE_NODE cfFFIType:mlstring
+CLOSURE_NODE cmlPtreeConversion:tokenUtils,gram,ast
+CLOSURE_NODE primTypes:typeSystem,evaluate
+CLOSURE_NODE semantics:primTypes,cmlPtreeConversion
+CLOSURE_NODE state_transformer:hol
+CLOSURE_NODE primSemEnv:typeSysProps,state_transformer,pegexec,semantics
+CLOSURE_NODE typeSystem:semanticPrimitives
+CLOSURE_NODE typeSoundInvariants:namespaceProps,typeSystem
+CLOSURE_NODE typeSysProps:typeSoundInvariants,semanticPrimitivesProps
+CLOSURE_NODE weakening:typeSysProps
+CLOSURE_NODE typeSound:weakening,primSemEnv,evaluateProps
+CLOSURE_NODE semanticsProps:typeSound
+CLOSURE_NODE alist_tree:alist
+CLOSURE_NODE evaluate:semanticPrimitives
+CLOSURE_NODE fpSem:ast
+CLOSURE_NODE ffi:mlstring
+CLOSURE_NODE semanticPrimitives:ffi,fpSem
+CLOSURE_NODE namespace:misc
+CLOSURE_NODE ast:namespace,mlstring
+CLOSURE_NODE namespaceProps:ast
+CLOSURE_NODE semanticPrimitivesProps:namespaceProps,semanticPrimitives
+CLOSURE_NODE evaluateProps:semanticPrimitivesProps,evaluate
+CLOSURE_NODE evaluate_dec:evaluateProps,alist_tree
+CLOSURE_NODE ml_prog:evaluate_dec,semanticsProps
+CLOSURE_NODE temporal:prog
+CLOSURE_NODE peg:grammar
+CLOSURE_NODE pegexec:peg
+CLOSURE_NODE gram:lexer_fun,grammar
+CLOSURE_NODE grammar:finite_map,location
+CLOSURE_NODE tokenUtils:tokens,grammar
+CLOSURE_NODE cmlPEG:tokenUtils,gram,pegexec
+CLOSURE_NODE location:hol
+CLOSURE_NODE set_sep:words
+CLOSURE_NODE tailrec:hol
+CLOSURE_NODE prog:tailrec,set_sep
+CLOSURE_NODE alignment:words
+CLOSURE_NODE address:alignment,prog
+CLOSURE_NODE lprefix_lub:llist
+CLOSURE_NODE integer_word:words,Omega
+CLOSURE_NODE gcd:divides
+CLOSURE_NODE int_arith:integer,gcd
+CLOSURE_NODE cooper:int_arith
+CLOSURE_NODE integer:normalizer,hol
+CLOSURE_NODE intReduce:integer
+CLOSURE_NODE Omega:intReduce,cooper
+CLOSURE_NODE intreal:real,Omega
+CLOSURE_NODE normalizer:arithmetic
+CLOSURE_NODE hrat:hol
+CLOSURE_NODE hreal:hrat
+CLOSURE_NODE realax:hreal,normalizer
+CLOSURE_NODE real_arith:realax
+CLOSURE_NODE real:real_arith
+CLOSURE_NODE RealFieldContext:real
+CLOSURE_NODE binary_ieee:RealFieldContext,intreal,words
+CLOSURE_NODE machine_ieee:binary_ieee
+CLOSURE_NODE poset:pairToolsContext
+CLOSURE_NODE fixedPoint:pred_set,poset
+CLOSURE_NODE llist:hol
+CLOSURE_NODE path:llist,fixedPoint
+CLOSURE_NODE toto:string
+CLOSURE_NODE comparison:toto
+CLOSURE_NODE bag:hol
+CLOSURE_NODE container:finite_map,bag
+CLOSURE_NODE finite_map:sorting
+CLOSURE_NODE alist:finite_map
+CLOSURE_NODE sptree:alist,logroot
+CLOSURE_NODE bitstring:words
+CLOSURE_NODE numeral_bit:bit
+CLOSURE_NODE iterate:permutes
+CLOSURE_NODE fcp:iterate,hol
+CLOSURE_NODE sum_num:hol
+CLOSURE_NODE logroot:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE bit:logroot
+CLOSURE_NODE numposrep:rich_list,bit
+CLOSURE_NODE ternaryComparisons:hol
+CLOSURE_NODE string:ternaryComparisons
+CLOSURE_NODE ASCIInumbers:string,numposrep
+CLOSURE_NODE words:ASCIInumbers,sum_num,fcp,numeral_bit
+CLOSURE_NODE blast:words
+CLOSURE_NODE byte:blast,bitstring
+CLOSURE_NODE res_quan:hol
+CLOSURE_NODE misc:res_quan,byte,sptree,container,comparison,path,machine_ieee,integer_word,lprefix_lub,address
+CLOSURE_NODE ConseqConv:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE quantHeuristics:ConseqConv,list
+CLOSURE_NODE patternMatches:rich_list,quantHeuristics
+CLOSURE_NODE EnumTypeContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+CLOSURE_NODE ordinalBasic:cardinalityCore
+CLOSURE_NODE bnfInitial:ordinalBasic
+CLOSURE_NODE permutes:pred_set,hurdUtilsContext
+CLOSURE_NODE hurdUtilsContext:SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While,pairToolsContext
+CLOSURE_NODE divides:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE While:arithmetic,option
+CLOSURE_NODE NumConvContext:arithmetic
+CLOSURE_NODE cv:numeral
+CLOSURE_NODE BoolconvContext:marker
+CLOSURE_NODE reduce:arithmetic
+CLOSURE_NODE SubAndCondContext:marker
+CLOSURE_NODE one:mesonLibContext,Canon_Port_Context,boolSimpsContext,InductiveDefinitionContext,canonContext
+CLOSURE_NODE sum:pair
+CLOSURE_NODE option:sum,one
+CLOSURE_NODE pairToolsContext:pair
+CLOSURE_NODE quotient:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+CLOSURE_NODE pair:relation,quotient
+CLOSURE_NODE InductiveDefinitionContext:marker
+CLOSURE_NODE Canon_Port_Context:sat,combin
+CLOSURE_NODE mesonLibContext:sat,marker
+CLOSURE_NODE folMappingContext:sat,marker
+CLOSURE_NODE folToolsContext:normalForms
+CLOSURE_NODE sat:bool
+CLOSURE_NODE canonContext:sat,combin
+CLOSURE_NODE combin:marker
+CLOSURE_NODE boolSimpsContext:combin
+CLOSURE_NODE normalForms:marker
+CLOSURE_NODE normalFormsContext:normalForms,boolSimpsContext,canonContext
+CLOSURE_NODE relation:normalFormsContext,folToolsContext,folMappingContext,mesonLibContext,Canon_Port_Context,InductiveDefinitionContext
+CLOSURE_NODE min:
+CLOSURE_NODE bool:min
+CLOSURE_NODE marker:bool
+CLOSURE_NODE num:marker
+CLOSURE_NODE prim_rec:num,relation
+CLOSURE_NODE arithmetic:prim_rec,pair
+CLOSURE_NODE numeral:arithmetic
+CLOSURE_NODE basicSize:numeral,pairToolsContext,option
+CLOSURE_NODE numpair:basicSize,SubAndCondContext,reduce,BoolconvContext,cv,NumConvContext,While
+CLOSURE_NODE pred_set:numpair,divides
+CLOSURE_NODE set_relation:pred_set,hurdUtilsContext
+CLOSURE_NODE wellorder:set_relation
+CLOSURE_NODE cardinalityCore:wellorder,permutes
+CLOSURE_NODE bnfPrelims:cardinalityCore
+CLOSURE_NODE bnfFixBNF:bnfPrelims,bnfInitial
+CLOSURE_NODE bnfMutual:bnfFixBNF
+CLOSURE_NODE list:bnfMutual,EnumTypeContext
+CLOSURE_NODE rich_list:list
+CLOSURE_NODE indexedLists:rich_list
+CLOSURE_NODE hol:indexedLists,patternMatches
+CLOSURE_NODE sorting:hol
+CLOSURE_NODE mergesort:sorting
+CLOSURE_NODE mllist:mergesort,misc
+CLOSURE_NODE mlstring:mllist
+CLOSURE_NODE tokens:mlstring
+CLOSURE_NODE lexer_fun:tokens,location
+CLOSURE_NODE lexer_impl:lexer_fun
+CLOSURE_NODE cfHeapsBase:lexer_impl,cmlPEG,temporal,ml_prog,cfFFIType
+CLOSURE_NODE fsFFI:cfHeapsBase,Marshalling
+CLOSURE_NODE fsFFIProps:fsFFI
+CLOSURE_NODE forge_refundReadBoundary:fsFFIProps
+CLOSURE_NODE forge_refundStdinDomain:forge_refundReadBoundary
+CLOSURE_NODE forge_refundGenericReadError:forge_refundStdinDomain,basis_ffi
+CLOSURE_NODE forge_refundFfiOracle:forge_refundGenericReadError
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+AFTER_POSITIVE_AUDIT
+<<HOL message: Created theory "forge_refundFfiControl">>
+CONTROL_HARNESS_PROVES_ORIGINAL
+Proof of 
+
+FD fd fdv ∧ NUM n nv ∧ n < 256² ∧ MAX n 2048 ≤ LENGTH rest ∧ MEM «read» ns ∧
+¬MEM «» ns ⇒
+app p TextIO_read_v [fdv; nv]
+  (W8ARRAY iobuff_loc (h1::h2::h3::h4::rest) *
+   one (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns events))
+  (POSTe e.
+     &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::h3::h4::rest) *
+     one
+       (FFI_part (encode fs) (mk_ffi_next fs_ffi_part) ns
+          (events ++
+           [IO_event (ExtCall «read») (n2w8 fd)
+              (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))])))
+
+failed.
+First unsolved sub-goal is
+
+read fd fs n = NONE
+

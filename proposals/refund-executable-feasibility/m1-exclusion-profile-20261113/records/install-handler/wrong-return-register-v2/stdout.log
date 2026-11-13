@@ -1,0 +1,16 @@
+<<HOL message: Created theory "forge_refundInstallHandlerControl">>
+AFTER_POSITIVE_AUDIT
+Proof of 
+
+∀mc pc cbspace.
+  is_arm8_machine_config mc ⇒
+  install_interfer_ok pc cbspace
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|PC := (SND x).REG 29w;
+            MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+
+failed.

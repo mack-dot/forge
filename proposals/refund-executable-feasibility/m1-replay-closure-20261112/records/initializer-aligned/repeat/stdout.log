@@ -1,0 +1,245 @@
+ALIGNED_MOD  [] ⊢ ∀x. x ∈ byte_aligned ⇒ w2n x MOD 8 = 0
+<<HOL message: Created theory "forge_refundInitializerAligned">>
+Saved theorem _______ "refund_initialization_aligned"
+REMAINING_ANTECEDENTS 2
+DISCHARGED_CONDITION ∀k i n.
+  MEM k mc.callee_saved_regs ⇒
+  target_io_regs mc (basis_ffi ext cl fs) ms n i k = NONE
+DISCHARGED_CONDITION ∀k n.
+  MEM k mc.callee_saved_regs ⇒
+  target_cc_regs mc (basis_ffi ext cl fs) ms n k = NONE
+DISCHARGED_CONDITION ∀x. x ∈ dm ∩ byte_aligned ⇒ w2n x MOD 8 = 0
+DISCHARGED_CONDITION ∀x. x ∈ sdm ∩ byte_aligned ⇒ w2n x MOD 8 = 0
+CHECKED refund_initialization_aligned
+ []
+⊢ is_arm8_machine_config mc ∧
+  memory_assumption arm8_backend_config.stack_conf.reg_names
+    (MAP n2w
+       (FST
+          (to_stack arm8_config (set_oracle arm8_backend_config oracle)
+             refund_prog))) data_sp
+    <|regs := (λk. Word (tar.regs k)); fp_regs := tar.fp_regs; mem := m;
+      mem_domain := dm ∩ byte_aligned;
+      shared_mem_domain := sdm ∩ byte_aligned; pc := 0;
+      be := mc.target.config.big_endian; ffi := basis_ffi ext cl fs;
+      io_regs := target_io_regs mc (basis_ffi ext cl fs) ms;
+      cc_regs := target_cc_regs mc (basis_ffi ext cl fs) ms;
+      io_fp_regs := target_io_fp_regs mc (basis_ffi ext cl fs) ms;
+      cc_fp_regs := target_cc_fp_regs mc (basis_ffi ext cl fs) ms;
+      code :=
+        SND
+          (SND
+             (to_lab arm8_config (set_oracle arm8_backend_config oracle)
+                refund_prog)); compile := compile arm8_config;
+      compile_oracle :=
+        pure_co
+          (compile_no_stubs (arch_wordsize arm8_config.ISA)
+             arm8_backend_config.stack_conf.reg_names
+             arm8_backend_config.stack_conf.jump arm8_config.addr_offset
+             (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3)) ∘
+           FST) ∘
+        cake_orac (:64) arm8_config info syn
+          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+          (λps. (ps.stack_prog,MAP n2w ps.cur_bm));
+      code_buffer :=
+        <|position := cbpos; buffer := []; space_left := cbspace|>;
+      clock := 0; failed := F; ptr_reg := mc.ptr_reg; len_reg := mc.len_reg;
+      ptr2_reg := mc.ptr2_reg; len2_reg := mc.len2_reg;
+      link_reg := case mc.target.config.link_reg of NONE => 0 | SOME n => n|> ⇒
+  SND
+    (full_make_init (arch_wordsize arm8_config.ISA)
+       arm8_backend_config.stack_conf
+       (ensure_fp_conf_ok arm8_config
+          (set_oracle arm8_backend_config oracle).data_conf)
+       (2 *
+        max_heap_limit 64
+          (ensure_fp_conf_ok arm8_config
+             (set_oracle arm8_backend_config oracle).data_conf) − 1)
+       (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+       arm8_config.addr_offset
+       (MAP n2w
+          (FST
+             (to_stack arm8_config (set_oracle arm8_backend_config oracle)
+                refund_prog)))
+       (SND
+          (SND
+             (to_stack arm8_config (set_oracle arm8_backend_config oracle)
+                refund_prog)))
+       <|regs := (λk. Word (tar.regs k)); fp_regs := tar.fp_regs; mem := m;
+         mem_domain := dm ∩ byte_aligned;
+         shared_mem_domain := sdm ∩ byte_aligned; pc := 0;
+         be := mc.target.config.big_endian; ffi := basis_ffi ext cl fs;
+         io_regs := target_io_regs mc (basis_ffi ext cl fs) ms;
+         cc_regs := target_cc_regs mc (basis_ffi ext cl fs) ms;
+         io_fp_regs := target_io_fp_regs mc (basis_ffi ext cl fs) ms;
+         cc_fp_regs := target_cc_fp_regs mc (basis_ffi ext cl fs) ms;
+         code :=
+           SND
+             (SND
+                (to_lab arm8_config (set_oracle arm8_backend_config oracle)
+                   refund_prog)); compile := compile arm8_config;
+         compile_oracle :=
+           pure_co
+             (compile_no_stubs (arch_wordsize arm8_config.ISA)
+                arm8_backend_config.stack_conf.reg_names
+                arm8_backend_config.stack_conf.jump arm8_config.addr_offset
+                (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3)) ∘
+              FST) ∘
+           cake_orac (:64) arm8_config info syn
+             (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+             (λps. (ps.stack_prog,MAP n2w ps.cur_bm));
+         code_buffer :=
+           <|position := cbpos; buffer := []; space_left := cbspace|>;
+         clock := 0; failed := F; ptr_reg := mc.ptr_reg;
+         len_reg := mc.len_reg; ptr2_reg := mc.ptr2_reg;
+         len2_reg := mc.len2_reg;
+         link_reg :=
+           case mc.target.config.link_reg of NONE => 0 | SOME n => n|>
+       (set mc.callee_saved_regs) data_sp
+       (cake_orac (:64) arm8_config info syn
+          (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+          (λps. (ps.stack_prog,MAP n2w ps.cur_bm)))) ≠ NONE ∧
+  (semantics InitGlobals_location
+     (FST
+        (full_make_init (arch_wordsize arm8_config.ISA)
+           arm8_backend_config.stack_conf
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf)
+           (2 *
+            max_heap_limit 64
+              (ensure_fp_conf_ok arm8_config
+                 (set_oracle arm8_backend_config oracle).data_conf) − 1)
+           (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+           arm8_config.addr_offset
+           (MAP n2w
+              (FST
+                 (to_stack arm8_config
+                    (set_oracle arm8_backend_config oracle) refund_prog)))
+           (SND
+              (SND
+                 (to_stack arm8_config
+                    (set_oracle arm8_backend_config oracle) refund_prog)))
+           <|regs := (λk. Word (tar.regs k)); fp_regs := tar.fp_regs;
+             mem := m; mem_domain := dm ∩ byte_aligned;
+             shared_mem_domain := sdm ∩ byte_aligned; pc := 0;
+             be := mc.target.config.big_endian; ffi := basis_ffi ext cl fs;
+             io_regs := target_io_regs mc (basis_ffi ext cl fs) ms;
+             cc_regs := target_cc_regs mc (basis_ffi ext cl fs) ms;
+             io_fp_regs := target_io_fp_regs mc (basis_ffi ext cl fs) ms;
+             cc_fp_regs := target_cc_fp_regs mc (basis_ffi ext cl fs) ms;
+             code :=
+               SND
+                 (SND
+                    (to_lab arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog));
+             compile := compile arm8_config;
+             compile_oracle :=
+               pure_co
+                 (compile_no_stubs (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf.reg_names
+                    arm8_backend_config.stack_conf.jump
+                    arm8_config.addr_offset
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3)) ∘ FST) ∘
+               cake_orac (:64) arm8_config info syn
+                 (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                 (λps. (ps.stack_prog,MAP n2w ps.cur_bm));
+             code_buffer :=
+               <|position := cbpos; buffer := []; space_left := cbspace|>;
+             clock := 0; failed := F; ptr_reg := mc.ptr_reg;
+             len_reg := mc.len_reg; ptr2_reg := mc.ptr2_reg;
+             len2_reg := mc.len2_reg;
+             link_reg :=
+               case mc.target.config.link_reg of NONE => 0 | SOME n => n|>
+           (set mc.callee_saved_regs) data_sp
+           (cake_orac (:64) arm8_config info syn
+              (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+              (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))) ≠ Fail ⇒
+   semantics
+     <|regs := (λk. Word (tar.regs k)); fp_regs := tar.fp_regs; mem := m;
+       mem_domain := dm ∩ byte_aligned;
+       shared_mem_domain := sdm ∩ byte_aligned; pc := 0;
+       be := mc.target.config.big_endian; ffi := basis_ffi ext cl fs;
+       io_regs := target_io_regs mc (basis_ffi ext cl fs) ms;
+       cc_regs := target_cc_regs mc (basis_ffi ext cl fs) ms;
+       io_fp_regs := target_io_fp_regs mc (basis_ffi ext cl fs) ms;
+       cc_fp_regs := target_cc_fp_regs mc (basis_ffi ext cl fs) ms;
+       code :=
+         SND
+           (SND
+              (to_lab arm8_config (set_oracle arm8_backend_config oracle)
+                 refund_prog)); compile := compile arm8_config;
+       compile_oracle :=
+         pure_co
+           (compile_no_stubs (arch_wordsize arm8_config.ISA)
+              arm8_backend_config.stack_conf.reg_names
+              arm8_backend_config.stack_conf.jump arm8_config.addr_offset
+              (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3)) ∘
+            FST) ∘
+         cake_orac (:64) arm8_config info syn
+           (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+           (λps. (ps.stack_prog,MAP n2w ps.cur_bm));
+       code_buffer :=
+         <|position := cbpos; buffer := []; space_left := cbspace|>;
+       clock := 0; failed := F; ptr_reg := mc.ptr_reg; len_reg := mc.len_reg;
+       ptr2_reg := mc.ptr2_reg; len2_reg := mc.len2_reg;
+       link_reg := case mc.target.config.link_reg of NONE => 0 | SOME n => n|> =
+   semantics InitGlobals_location
+     (FST
+        (full_make_init (arch_wordsize arm8_config.ISA)
+           arm8_backend_config.stack_conf
+           (ensure_fp_conf_ok arm8_config
+              (set_oracle arm8_backend_config oracle).data_conf)
+           (2 *
+            max_heap_limit 64
+              (ensure_fp_conf_ok arm8_config
+                 (set_oracle arm8_backend_config oracle).data_conf) − 1)
+           (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+           arm8_config.addr_offset
+           (MAP n2w
+              (FST
+                 (to_stack arm8_config
+                    (set_oracle arm8_backend_config oracle) refund_prog)))
+           (SND
+              (SND
+                 (to_stack arm8_config
+                    (set_oracle arm8_backend_config oracle) refund_prog)))
+           <|regs := (λk. Word (tar.regs k)); fp_regs := tar.fp_regs;
+             mem := m; mem_domain := dm ∩ byte_aligned;
+             shared_mem_domain := sdm ∩ byte_aligned; pc := 0;
+             be := mc.target.config.big_endian; ffi := basis_ffi ext cl fs;
+             io_regs := target_io_regs mc (basis_ffi ext cl fs) ms;
+             cc_regs := target_cc_regs mc (basis_ffi ext cl fs) ms;
+             io_fp_regs := target_io_fp_regs mc (basis_ffi ext cl fs) ms;
+             cc_fp_regs := target_cc_fp_regs mc (basis_ffi ext cl fs) ms;
+             code :=
+               SND
+                 (SND
+                    (to_lab arm8_config
+                       (set_oracle arm8_backend_config oracle) refund_prog));
+             compile := compile arm8_config;
+             compile_oracle :=
+               pure_co
+                 (compile_no_stubs (arch_wordsize arm8_config.ISA)
+                    arm8_backend_config.stack_conf.reg_names
+                    arm8_backend_config.stack_conf.jump
+                    arm8_config.addr_offset
+                    (arm8_config.reg_count −
+                     (LENGTH arm8_config.avoid_regs + 3)) ∘ FST) ∘
+               cake_orac (:64) arm8_config info syn
+                 (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+                 (λps. (ps.stack_prog,MAP n2w ps.cur_bm));
+             code_buffer :=
+               <|position := cbpos; buffer := []; space_left := cbspace|>;
+             clock := 0; failed := F; ptr_reg := mc.ptr_reg;
+             len_reg := mc.len_reg; ptr2_reg := mc.ptr2_reg;
+             len2_reg := mc.len2_reg;
+             link_reg :=
+               case mc.target.config.link_reg of NONE => 0 | SOME n => n|>
+           (set mc.callee_saved_regs) data_sp
+           (cake_orac (:64) arm8_config info syn
+              (SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ SND ∘ config_tuple2)
+              (λps. (ps.stack_prog,MAP n2w ps.cur_bm))))))
+Exporting theory "forge_refundInitializerAligned" ... done.
+Theory "forge_refundInitializerAligned" took 5.2s to build
+RUNTIME_PROOF_COMPLETE

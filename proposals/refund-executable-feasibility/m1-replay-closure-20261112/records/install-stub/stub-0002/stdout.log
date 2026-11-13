@@ -1,0 +1,10 @@
+<<HOL message: Created theory "forge_refundInstallStub">>
+Saved theorem _______ "install_stub_has_install"
+Saved theorem _______ "stubs_contain_install"
+CHECKED install_stub_has_install
+ [] ⊢ ¬no_install (Install_code c)
+CHECKED stubs_contain_install
+ [] ⊢ MEM (Install_location,3,Install_code c) (stubs c)
+Exporting theory "forge_refundInstallStub" ... done.
+Theory "forge_refundInstallStub" took 0.86208s to build
+INSTALL_STUB_COMPLETE

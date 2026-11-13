@@ -1,0 +1,10 @@
+good_dimindex (:'a) /\
+  byte_aligned (a:'a word) /\ byte_aligned b /\ byte_aligned (bitmap_ptr:'a word) /\
+  a <=+ b /\ DISJOINT {w | a <=+ w /\ w <+ b} bitmaps_dm /\
+  (word_list bitmap_ptr (MAP Word (bitmaps:'a word list)) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) data_sp)
+    (fun2set (m, byte_aligned INTER bitmaps_dm)) ==>
+  (word_list bitmap_ptr (MAP Word bitmaps) *
+   word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) data_sp *
+   word_list_exists a (w2n (-1w * a + b) DIV w2n (bytes_in_word:'a word)))
+    (fun2set (m, ({w | a <=+ w /\ w <+ b} UNION bitmaps_dm) INTER byte_aligned))

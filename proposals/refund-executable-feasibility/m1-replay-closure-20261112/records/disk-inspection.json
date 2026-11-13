@@ -1,0 +1,27 @@
+{
+ "measured_with": "du -sk, df -k, sysctl vm.swapusage, docker system df; read-only",
+ "disk_free_GiB_at_start_of_phase_1": 3.2,
+ "disk_free_KiB_now": 7050588,
+ "swap_now": "total = 14336.00M  used = 12912.38M  free = 1423.62M  (encrypted)",
+ "swapfiles_now": 14,
+ "target_free_GiB": 20,
+ "deleted_by_agent": [],
+ "recovered_by_cleanup_GiB": 0,
+ "already_authorized_deletions_found": "none (earlier approvals were one-time and are consumed; DELETION-PROPOSAL.md is proposal only and its Tier 1 paths no longer exist)",
+ "candidates_for_owner_GiB": {
+  "/private/tmp/claude-501/-Users-mackianni-spm-release-loop (Claude session scratch, other project)": 13.15,
+  "/private/tmp/claude-501/-Users-mackianni-spm (Claude session scratch, other project)": 7.2,
+  "swap files in /System/Volumes/VM (released by restart)": "14-18, varies",
+  "Docker.raw on-disk usage 30.21 vs about 8.6 GB of images and volumes (reclaim/trim; gain not measured)": "up to about 21",
+  "~/Library/Caches": 3.1,
+  "sibling clones ~/forge-* (per-path approval; earlier Tier 3)": 2.44,
+  "results/ control-suite tree copies (earlier marked not proposed; evidence)": "about 7"
+ },
+ "repo_GiB": {
+  "results": 35.53,
+  ".toolchain": 8.9,
+  "proposals": 0.27,
+  ".git": 0.34
+ },
+ "running_hol_processes": 0
+}

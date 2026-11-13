@@ -1,0 +1,164 @@
+<<HOL message: Created theory "forge_n1Explore">>
+ARM8_THM compile_0_arm8_def :: ⊢ compile_0_arm8 data_conf prog =
+  (let
+     data_conf = data_conf with <|has_fp_ops := F; has_fp_tern := F|>
+   in
+     stubs_md data_conf ++ MAP (compile_part data_conf) prog)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_n1Explore)>>
+<<HOL message: mk_functional: 
+  pattern completion has added 19 clauses to the original specification.>>
+Saved definition ____ "no_label_def"
+Saved induction _____ "no_label_ind"
+Saved definition ____ "labels_closed_def"
+Saved definition ____ "label_callers_def"
+Starting translation of no_label from forge_n1ExploreTheory.
+Saved definition ____ "cv_no_label_def"
+Saved induction _____ "cv_no_label_ind"
+Saved theorem _______ "cv_no_label_thm"
+Finished translating no_label, stored in cv_no_label_thm
+Starting translation of good_handlers from wordConvsTheory.
+Saved definition ____ "cv_good_handlers_def"
+Saved induction _____ "cv_good_handlers_ind"
+Saved theorem _______ "cv_good_handlers_thm"
+Finished translating good_handlers, stored in cv_good_handlers_thm
+Starting translation of labels_closed from forge_n1ExploreTheory.
+Saved definition ____ "EVERY_lam_pair_CASE_lam_lam_pa_1_def"
+Saved induction _____ "EVERY_lam_pair_CASE_lam_lam_pa_1_ind"
+Starting translation of EVERY_lam_pair_CASE_lam_lam_pa from forge_n1ExploreTheory.
+Saved definition ____ "EVERY_lam_no_label_1_def"
+Saved induction _____ "EVERY_lam_no_label_1_ind"
+Starting translation of EVERY_lam_no_label from forge_n1ExploreTheory.
+Saved theorem _______ "cv_EVERY_lam_no_label_thm"
+Finished translating EVERY_lam_no_label, stored in cv_EVERY_lam_no_label_thm
+Saved theorem _______ "EVERY_lam_no_label_ho"
+Starting translation of EVERY_lam_pair_CASE_lam_lam_pa from forge_n1ExploreTheory.
+Saved theorem _______ "cv_EVERY_lam_pair_CASE_lam_lam_pa'_thm"
+Finished translating EVERY_lam_pair_CASE_lam_lam_pa, stored in cv_EVERY_lam_pair_CASE_lam_lam_pa'_thm
+Saved theorem _______ "EVERY_lam_pair_CASE_lam_lam_pa_ho"
+Starting translation of labels_closed from forge_n1ExploreTheory.
+Saved theorem _______ "cv_labels_closed_thm"
+Finished translating labels_closed, stored in cv_labels_closed_thm
+Starting translation of label_callers from forge_n1ExploreTheory.
+Saved definition ____ "FILTER_lam_pair_CASE_lam_lam_p_1_def"
+Saved induction _____ "FILTER_lam_pair_CASE_lam_lam_p_1_ind"
+Starting translation of FILTER_lam_pair_CASE_lam_lam_p from forge_n1ExploreTheory.
+Saved definition ____ "cv_FILTER_lam_pair_CASE_lam_lam_p_def"
+Saved induction _____ "cv_FILTER_lam_pair_CASE_lam_lam_p_ind"
+Saved theorem _______ "cv_FILTER_lam_pair_CASE_lam_lam_p_thm"
+Finished translating FILTER_lam_pair_CASE_lam_lam_p, stored in cv_FILTER_lam_pair_CASE_lam_lam_p_thm
+Saved theorem _______ "FILTER_lam_pair_CASE_lam_lam_p_ho"
+Starting translation of label_callers from forge_n1ExploreTheory.
+Saved theorem _______ "cv_label_callers_thm"
+Finished translating label_callers, stored in cv_label_callers_thm
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+FACT closed tags=DISK_THM :: ⊢ labels_closed [29; 31]
+    (SND (to_word_0 arm8_config arm8_backend_config refund_prog))
+FACT open tags=DISK_THM :: ⊢ ¬labels_closed [29]
+    (SND (to_word_0 arm8_config arm8_backend_config refund_prog))
+FACT callers_29 tags=DISK_THM :: ⊢ label_callers 29
+    (SND (to_word_0 arm8_config arm8_backend_config refund_prog)) = [31]
+FACT callers_31 tags=DISK_THM :: ⊢ label_callers 31
+    (SND (to_word_0 arm8_config arm8_backend_config refund_prog)) = [31]
+FACT count tags=DISK_THM :: ⊢ LENGTH (SND (to_word_0 arm8_config arm8_backend_config refund_prog)) = 552
+OK..
+1 subgoal:
+AFTER f1: 1 goals, proved=false
+  ASM n ≠ 31
+  ASM n ≠ 29
+  ASM MEM (n,m,pp,md)
+  (SND
+     (compile
+        (FST
+           (to_word_0 arm8_config (set_oracle arm8_backend_config orac)
+              refund_prog)).word_to_word_conf arm8_config
+        (SND (to_word_0 arm8_config arm8_backend_config refund_prog))))
+  GOAL 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER f2: 1 goals, proved=false
+  ASM labels_closed [29; 31] P0
+  ASM Abbrev (P0 = SND (to_word_0 arm8_config arm8_backend_config refund_prog))
+  ASM n ≠ 31
+  ASM n ≠ 29
+  ASM MEM (n,m,pp,md)
+  (SND
+     (compile
+        (FST
+           (to_word_0 arm8_config (set_oracle arm8_backend_config orac)
+              refund_prog)).word_to_word_conf arm8_config P0))
+  GOAL 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER f3: 1 goals, proved=false
+  ASM EVERY (λ(n,m,pp,md). word_good_handlers n pp) P0
+  ASM labels_closed [29; 31] P0
+  ASM Abbrev (P0 = SND (to_word_0 arm8_config arm8_backend_config refund_prog))
+  ASM n ≠ 31
+  ASM n ≠ 29
+  ASM MEM (n,m,pp,md)
+  (SND
+     (compile
+        (FST
+           (to_word_0 arm8_config (set_oracle arm8_backend_config orac)
+              refund_prog)).word_to_word_conf arm8_config P0))
+  GOAL 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER f4: 1 goals, proved=false
+  ASM word_get_code_labels pp ⊆ n INSERT word_get_code_labels pp'
+  ASM MEM (n,m',pp',md') P0
+  ASM EVERY (λ(n,m,pp,md). word_good_handlers n pp) P0
+  ASM labels_closed [29; 31] P0
+  ASM Abbrev (P0 = SND (to_word_0 arm8_config arm8_backend_config refund_prog))
+  ASM n ≠ 31
+  ASM n ≠ 29
+  ASM MEM (n,m,pp,md)
+  (SND
+     (compile
+        (FST
+           (to_word_0 arm8_config (set_oracle arm8_backend_config orac)
+              refund_prog)).word_to_word_conf arm8_config P0))
+  GOAL 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER f5: 1 goals, proved=false
+  ASM 31 ∉ word_get_code_labels pp'
+  ASM 29 ∉ word_get_code_labels pp'
+  ASM word_good_handlers n pp'
+  ASM word_get_code_labels pp ⊆ n INSERT word_get_code_labels pp'
+  ASM MEM (n,m',pp',md') P0
+  ASM EVERY (λ(n,m,pp,md). word_good_handlers n pp) P0
+  ASM Abbrev (P0 = SND (to_word_0 arm8_config arm8_backend_config refund_prog))
+  ASM n ≠ 31
+  ASM n ≠ 29
+  ASM MEM (n,m,pp,md)
+  (SND
+     (compile
+        (FST
+           (to_word_0 arm8_config (set_oracle arm8_backend_config orac)
+              refund_prog)).word_to_word_conf arm8_config P0))
+  GOAL 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+----
+OK..
+
+Goal proved.
+ [..........] ⊢ 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+
+Goal proved.
+ [........] ⊢ 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+
+Goal proved.
+ [......] ⊢ 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+
+Goal proved.
+ [.....] ⊢ 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+
+Goal proved.
+ [...] ⊢ 29 ∉ word_get_code_labels pp ∧ 31 ∉ word_get_code_labels pp
+AFTER f6: 0 goals, proved=true
+EXPLORE_COMPLETE

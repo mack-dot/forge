@@ -1,0 +1,527 @@
+GOAL ∀mc pc cbspace.
+  is_arm8_machine_config mc ⇒
+  install_interfer_ok pc cbspace
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|PC := (SND x).REG 30w;
+            MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+GOAL_TYPE_OF_MC :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+OK..
+1 subgoal:
+AFTER unfold
+1 goals
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2 ms2.PC
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (mc.target.get_reg ms2 0) (w2n (mc.target.get_reg ms2 1))
+  (λa.
+     if a ∈ mc.prog_addresses then SOME (mc.target.get_byte ms2 a) else NONE) =
+SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL (∀a. a ∈ t1.mem_domain ⇒
+     asm_write_bytearray (t1.regs 2) bytes ms2.MEM a =
+     asm_write_bytearray (t1.regs 2) bytes t1.mem a) ∧
+∀r. ((r = 19 ∨ r = 20 ∨ r = 21 ∨ r = 22 ∨ r = 23 ∨ r = 24 ∨ r = 25 ∨ r = 26 ∨
+      r = 27 ∨ r = 28) ∨ r = 0) ∧ r < 32 ∧ r ≠ 18 ∧ r ≠ 26 ∧ r ≠ 31 ⇒
+    ms2.REG⦇0w ↦ t1.regs 2⦈ (n2w r) = if r = 0 then t1.regs 2 else t1.regs r
+----
+OK..
+10 subgoals:
+AFTER regs
+10 goals
+  ASM a ∈ t1.mem_domain
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa'. if a' ∈ t1.mem_domain then SOME (t1.mem a') else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL asm_write_bytearray (t1.regs 2) bytes ms2.MEM a =
+asm_write_bytearray (t1.regs 2) bytes t1.mem a
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 19w = t1.regs 19
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 20w = t1.regs 20
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 21w = t1.regs 21
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 22w = t1.regs 22
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 23w = t1.regs 23
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 24w = t1.regs 24
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 25w = t1.regs 25
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 27w = t1.regs 27
+----
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ t1.mem_domain then SOME (t1.mem a) else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL ms2.REG⦇0w ↦ t1.regs 2⦈ 28w = t1.regs 28
+----
+OK..
+1 subgoal:
+AFTER split
+1 goals
+  ASM a ∈ t1.mem_domain
+  ASM aligned 2 (t1.regs 30)
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+pc +
+n2w
+  ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (pc +
+   n2w
+     ((18446744073709551616 − 2 * ffi_offset MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM LENGTH bytes ≤ cbspace
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa'. if a' ∈ t1.mem_domain then SOME (t1.mem a') else NONE) = SOME bytes
+  ASM mc.prog_addresses = t1.mem_domain
+  ASM mc.callee_saved_regs = [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+  ASM mc.ptr2_reg = 2
+  ASM mc.len2_reg = 3
+  ASM mc.ptr_reg = 0
+  ASM mc.len_reg = 1
+  ASM mc.target =
+<|config :=
+    <|ISA := ARMv8; encode := arm8_enc; big_endian := F; code_alignment := 2;
+      link_reg := SOME 30; avoid_regs := [18; 26; 31]; reg_count := 32;
+      fp_reg_count := 0; two_reg_arith := F; valid_imm := arm8_valid_imm;
+      addr_offset := (-4351,4350); hw_offset := (-4351,4350);
+      byte_offset := (-256,4095); jump_offset := (-134217728,134217727);
+      cjump_offset := (-1048572,1048579);
+      loc_offset := (-2147483648,2147483647)|>; next := arm8_next;
+  get_pc := arm8_state_PC; get_reg := (λs. s.REG ∘ n2w);
+  get_byte := arm8_state_MEM; state_ok := arm8_ok; proj := arm8_proj|>
+  GOAL asm_write_bytearray (t1.regs 2) bytes ms2.MEM a =
+asm_write_bytearray (t1.regs 2) bytes t1.mem a
+----
+EXPLORE_COMPLETE

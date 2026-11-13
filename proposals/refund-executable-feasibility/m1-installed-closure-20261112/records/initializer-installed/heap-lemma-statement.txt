@@ -1,0 +1,6 @@
+good_dimindex (:'a) /\
+  byte_aligned (a:'a word) /\ byte_aligned b /\ a <=+ b /\
+  DISJOINT {w | a <=+ w /\ w <+ b} bitmaps_dm /\
+  p (fun2set (m, byte_aligned INTER bitmaps_dm)) ==>
+  (p * word_list_exists a (w2n (-1w * a + b) DIV w2n (bytes_in_word:'a word)))
+    (fun2set (m, ({w | a <=+ w /\ w <+ b} UNION bitmaps_dm) INTER byte_aligned))

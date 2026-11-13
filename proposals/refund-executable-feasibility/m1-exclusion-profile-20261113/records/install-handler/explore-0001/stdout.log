@@ -1,0 +1,16 @@
+/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/explore-0001/proof.sml:8: error: Value or constructor (top_goals) has not been declared
+Found near
+  (
+     pr ("AFTER " ^ label);
+     pr (PolyML.makestring (... ...) ^ " goals");
+     List.app (fn ...) (top_goals ())
+     )
+/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/explore-0001/proof.sml:9: error: Value or constructor (goal_to_string) has not been declared
+Found near List.app (fn g => pr (... ^ ...)) (top_goals ())
+/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/explore-0001/proof.sml:9: error: Value or constructor (top_goals) has not been declared
+Found near
+  (
+     pr ("AFTER " ^ label);
+     pr (PolyML.makestring (... ...) ^ " goals");
+     List.app (fn ...) (top_goals ())
+     )

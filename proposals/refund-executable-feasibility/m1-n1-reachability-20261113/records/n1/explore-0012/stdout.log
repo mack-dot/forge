@@ -1,0 +1,171 @@
+<<HOL message: Created theory "forge_n1Explore">>
+ARM8_THM compile_0_arm8_def :: ⊢ compile_0_arm8 data_conf prog =
+  (let
+     data_conf = data_conf with <|has_fp_ops := F; has_fp_tern := F|>
+   in
+     stubs_md data_conf ++ MAP (compile_part data_conf) prog)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_n1Explore)>>
+W2W_THEOREM ⊢ word_good_code_labels progs elabs ⇒
+  word_good_code_labels (SND (compile wc ac progs)) elabs
+W2W_GEN ⊢ ∀wc progs elabs ac.
+    word_good_code_labels progs elabs ⇒
+    word_good_code_labels (SND (compile wc ac progs)) elabs
+OK..
+1 subgoal:
+AFTER s1: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL ∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER s2: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels progs elabs ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac progs)) elabs) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED s3 
+Exception raised at Thm_cont.DISCH_THEN:
+
+AFTER failure of s3: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels progs elabs ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac progs)) elabs) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED s4 
+Exception raised at Thm_cont.DISCH_THEN:
+
+AFTER failure of s4: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels progs elabs ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac progs)) elabs) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+1 subgoal:
+AFTER s5: 1 goals, proved=false
+  ASM full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (LENGTH ac.avoid_regs + 5)) wc.reg_alg ac
+  ((n,m,pp,md),orac) = (out0,out1,out2,out3)
+  ASM out0 = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[(n,out1,out2,out3)]
+  ASM word_good_handlers n pp
+  GOAL (EVERY (λ(n,m,pp,md). word_good_handlers n pp) progs ∧
+ BIGUNION (set (MAP (λ(n,m,pp,md). word_get_code_labels pp) progs)) ⊆
+ set (MAP FST progs) ∪ elabs ⇒
+ EVERY (λ(n,m,pp,md). word_good_handlers n pp)
+   (SND (compile (wc with col_oracle := [orac]) ac progs)) ∧
+ BIGUNION
+   (set
+      (MAP (λ(n,m,pp,md). word_get_code_labels pp)
+         (SND (compile (wc with col_oracle := [orac]) ac progs)))) ⊆
+ set (MAP FST (SND (compile (wc with col_oracle := [orac]) ac progs))) ∪
+ elabs) ⇒
+word_get_code_labels out2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED s6 
+Exception raised at Tactical.THEN1: first subgoal not solved by second tactic
+
+AFTER failure of s6: 1 goals, proved=false
+  ASM full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (LENGTH ac.avoid_regs + 5)) wc.reg_alg ac
+  ((n,m,pp,md),orac) = (out0,out1,out2,out3)
+  ASM out0 = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[(n,out1,out2,out3)]
+  ASM word_good_handlers n pp
+  GOAL (EVERY (λ(n,m,pp,md). word_good_handlers n pp) progs ∧
+ BIGUNION (set (MAP (λ(n,m,pp,md). word_get_code_labels pp) progs)) ⊆
+ set (MAP FST progs) ∪ elabs ⇒
+ EVERY (λ(n,m,pp,md). word_good_handlers n pp)
+   (SND (compile (wc with col_oracle := [orac]) ac progs)) ∧
+ BIGUNION
+   (set
+      (MAP (λ(n,m,pp,md). word_get_code_labels pp)
+         (SND (compile (wc with col_oracle := [orac]) ac progs)))) ⊆
+ set (MAP FST (SND (compile (wc with col_oracle := [orac]) ac progs))) ∪
+ elabs) ⇒
+word_get_code_labels out2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED s7 
+Exception raised at folTools.FOL_FIND: no solution found
+
+AFTER failure of s7: 1 goals, proved=false
+  ASM full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (LENGTH ac.avoid_regs + 5)) wc.reg_alg ac
+  ((n,m,pp,md),orac) = (out0,out1,out2,out3)
+  ASM out0 = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[(n,out1,out2,out3)]
+  ASM word_good_handlers n pp
+  GOAL (EVERY (λ(n,m,pp,md). word_good_handlers n pp) progs ∧
+ BIGUNION (set (MAP (λ(n,m,pp,md). word_get_code_labels pp) progs)) ⊆
+ set (MAP FST progs) ∪ elabs ⇒
+ EVERY (λ(n,m,pp,md). word_good_handlers n pp)
+   (SND (compile (wc with col_oracle := [orac]) ac progs)) ∧
+ BIGUNION
+   (set
+      (MAP (λ(n,m,pp,md). word_get_code_labels pp)
+         (SND (compile (wc with col_oracle := [orac]) ac progs)))) ⊆
+ set (MAP FST (SND (compile (wc with col_oracle := [orac]) ac progs))) ∪
+ elabs) ⇒
+word_get_code_labels out2 ⊆ n INSERT word_get_code_labels pp
+----
+EXPLORE_COMPLETE

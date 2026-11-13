@@ -1,0 +1,877 @@
+Cleaning out /build/HOL/sigobj
+/build/HOL/sigobj cleaned
+Building directory tools/check-builds [13 Nov, 18:04:57]
+Starting work on checkbuilds
+checkbuilds                                                 (0s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory tools/set_mtime [13 Nov, 18:04:57]
+Starting work on set_mtime.exe
+set_mtime.exe                                               (0s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory tools/mlyacc/mlyacclib [13 Nov, 18:04:57]
+Uploading files to /build/HOL/sigobj
+Building directory src/portableML/poly [13 Nov, 18:04:57]
+Starting work on SHA1_ML
+SHA1_ML                                                     (0s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/portableML [13 Nov, 18:04:58]
+Starting work on HOLsexp.grm-sig
+Starting work on HOLsexp.lex
+HOLsexp.grm-sig                                             (0s)             OK
+Starting work on HOLsexp.grm-sig
+HOLsexp.lex                                                 (0s)             OK
+HOLsexp.grm-sig                                             (0s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/portableML/monads [13 Nov, 18:04:58]
+Uploading files to /build/HOL/sigobj
+Building directory src/portableML/rawtheory [13 Nov, 18:04:58]
+Starting work on theorytool
+Starting work on dat-printer
+theorytool                                                  (6s)             OK
+dat-printer                                                 (6s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/portableML/json [13 Nov, 18:05:04]
+Uploading files to /build/HOL/sigobj
+Building directory src/portableML/poly/concurrent [13 Nov, 18:05:04]
+Uploading files to /build/HOL/sigobj
+Building directory src/prekernel [13 Nov, 18:05:04]
+Uploading files to /build/HOL/sigobj
+Building directory src/0 [13 Nov, 18:05:04]
+Uploading files to /build/HOL/sigobj
+Building directory src/thm [13 Nov, 18:05:05]
+Starting work on Thm-sig
+Starting work on Thm
+Thm-sig                                                     (0s)             OK
+Thm                                                         (0s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/tracing [13 Nov, 18:05:05]
+Uploading files to /build/HOL/sigobj
+Building directory src/tracing/no [13 Nov, 18:05:05]
+Uploading files to /build/HOL/sigobj
+Building directory src/postkernel [13 Nov, 18:05:05]
+Uploading files to /build/HOL/sigobj
+Building directory src/postkernel/prooftrace [13 Nov, 18:05:05]
+*** Doing nothing when no mlton
+Uploading files to /build/HOL/sigobj
+Building directory src/parse [13 Nov, 18:05:05]
+Starting work on base_lexer
+base_lexer                                                  (0s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/opentheory [13 Nov, 18:05:06]
+Uploading files to /build/HOL/sigobj
+Building directory src/bool [13 Nov, 18:05:07]
+Building 1 theory file
+Starting work on boolTheory
+boolTheory                                                  (7s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/1 [13 Nov, 18:05:15]
+Uploading files to /build/HOL/sigobj
+Building directory src/proofman [13 Nov, 18:05:15]
+Starting work on /build/HOL/bin/hol.state0
+Starting work on /build/HOL/bin/hol.state.min
+hol.state.min                                          bin  (3s)             OK
+hol.state0                                             bin  (9s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/compute/src [13 Nov, 18:05:24]
+Uploading files to /build/HOL/sigobj
+Building directory src/HolSat/sat_solvers/minisat [13 Nov, 18:05:24]
+Building minisat (release)
+Compiling: File.C
+Compiling: Main.C
+Compiling: Proof.C
+Compiling: Solver.C
+Linking minisat
+/usr/bin/ld: Proof.o: in function `Proof::Proof()':
+Proof.C:(.text+0x720): warning: the use of `tempnam' is dangerous, better use `mkstemp'
+Uploading files to /build/HOL/sigobj
+Building directory src/HolSat/sat_solvers/zc2hs [13 Nov, 18:05:26]
+ln -fs ../minisat/Proof.o
+ln -fs ../minisat/File.o
+ln -fs ../minisat/File.h
+ln -fs ../minisat/Proof.h
+ln -fs ../minisat/Global.h
+ln -fs ../minisat/Sort.h
+ln -fs ../minisat/SolverTypes.h
+/usr/bin/ld: Proof.o: in function `Proof::Proof()':
+Proof.C:(.text+0x720): warning: the use of `tempnam' is dangerous, better use `mkstemp'
+Uploading files to /build/HOL/sigobj
+Building directory src/HolSat [13 Nov, 18:05:27]
+Building 1 theory file
+Starting work on satTheory
+satTheory                                                   (0s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/taut [13 Nov, 18:05:27]
+Uploading files to /build/HOL/sigobj
+Building directory src/marker [13 Nov, 18:05:28]
+Building 1 theory file
+Starting work on markerTheory
+markerTheory                                                (0s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/q [13 Nov, 18:05:28]
+HOLMOSMLC -o selftest.exe selftest.uo
+Uploading files to /build/HOL/sigobj
+Building directory src/combin [13 Nov, 18:05:28]
+Building 1 theory file
+Starting work on combinTheory
+combinTheory                                                (1s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/lite [13 Nov, 18:05:30]
+Uploading files to /build/HOL/sigobj
+Building directory src/refute [13 Nov, 18:05:30]
+Building 1 theory file
+Starting work on canonContextTheory
+canonContextTheory                                          (1s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/simp/src/poly [13 Nov, 18:05:32]
+Uploading files to /build/HOL/sigobj
+Building directory src/simp/src [13 Nov, 18:05:32]
+Building 1 theory file
+Starting work on boolSimpsContextTheory
+boolSimpsContextTheory                                      (0s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/metis [13 Nov, 18:05:33]
+Building 4 theory files
+Starting work on normalFormsTheory
+Starting work on folMappingContextTheory
+normalFormsTheory                                           (0s)   [1/4]     OK
+Starting work on normalFormsContextTheory
+Starting work on folToolsContextTheory
+folToolsContextTheory                                       (0s)   [2/4]     OK
+folMappingContextTheory                                     (1s)   [3/4]     OK
+normalFormsContextTheory                                    (2s)   [4/4]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/meson/src [13 Nov, 18:05:37]
+Building 2 theory files
+Starting work on Canon_Port_ContextTheory
+Starting work on mesonLibContextTheory
+mesonLibContextTheory                                       (1s)   [1/2]     OK
+Canon_Port_ContextTheory                                    (1s)   [2/2]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/IndDef [13 Nov, 18:05:39]
+Building 1 theory file
+Starting work on InductiveDefinitionContextTheory
+InductiveDefinitionContextTheory                            (0s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/basicProof [13 Nov, 18:05:41]
+Uploading files to /build/HOL/sigobj
+Building directory src/relation [13 Nov, 18:05:41]
+Building 2 theory files
+Starting work on relationTheory
+relationTheory                                             (11s)   [1/2]     OK
+Starting work on bisimulationTheory
+bisimulationTheory                                         (11s)   [2/2]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/quotient/src [13 Nov, 18:06:08]
+Building 1 theory file
+Starting work on quotientTheory
+quotientTheory                                              (6s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/coretypes [13 Nov, 18:06:16]
+Building 6 theory files
+Starting work on pairTheory
+Starting work on oneTheory
+oneTheory                                                   (3s)   [1/6]     OK
+pairTheory                                                  (7s)   [2/6]     OK
+Starting work on sumTheory
+Starting work on pairToolsContextTheory
+pairToolsContextTheory                                      (1s)   [3/6]     OK
+Starting work on posetTheory
+sumTheory                                                   (4s)   [4/6]     OK
+Starting work on optionTheory
+posetTheory                                                 (6s)   [5/6]     OK
+optionTheory                                                (6s)   [6/6]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/tfl/src [13 Nov, 18:06:37]
+Uploading files to /build/HOL/sigobj
+Building directory src/num/theories [13 Nov, 18:06:37]
+Building 8 theory files
+Starting work on numTheory
+numTheory                                                   (0s)   [1/8]     OK
+Starting work on prim_recTheory
+prim_recTheory                                              (3s)   [2/8]     OK
+Starting work on arithmeticTheory
+arithmeticTheory                                            (9s)   [3/8]     OK
+Starting work on numeralTheory
+Starting work on WhileTheory
+Starting work on NumConvContextTheory
+NumConvContextTheory                                        (1s)   [4/8]     OK
+WhileTheory                                                 (7s)   [5/8]     OK
+numeralTheory                                               (7s)   [6/8]     OK
+Starting work on cvTheory
+Starting work on basicSizeTheory
+basicSizeTheory                                             (4s)   [7/8]     OK
+cvTheory                                                    (6s)   [8/8]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/num/theories/cv_compute [13 Nov, 18:07:10]
+Uploading files to /build/HOL/sigobj
+Building directory src/num/reduce/conv [13 Nov, 18:07:10]
+Uploading files to /build/HOL/sigobj
+Building directory src/num/reduce/src [13 Nov, 18:07:10]
+Building 3 theory files
+Starting work on normalizerTheory
+Starting work on reduceTheory
+Starting work on BoolconvContextTheory
+BoolconvContextTheory                                       (0s)   [1/3]     OK
+reduceTheory                                                (1s)   [2/3]     OK
+normalizerTheory                                            (4s)   [3/3]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/num/arith/src [13 Nov, 18:07:16]
+Building 1 theory file
+Starting work on SubAndCondContextTheory
+SubAndCondContextTheory                                     (0s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/num [13 Nov, 18:07:17]
+Uploading files to /build/HOL/sigobj
+Building directory src/num/termination [13 Nov, 18:07:17]
+Starting work on numheap
+numheap                                                    (12s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/num/extra_theories [13 Nov, 18:07:27]
+Building 6 theory files
+Starting work on logrootTheory
+Starting work on dividesTheory
+Starting work on numpairTheory
+numpairTheory                                               (1s)   [1/6]     OK
+dividesTheory                                               (2s)   [2/6]     OK
+Starting work on gcdTheory
+logrootTheory                                               (4s)   [3/6]     OK
+Starting work on bitTheory
+gcdTheory                                                   (2s)   [4/6]     OK
+bitTheory                                                   (2s)   [5/6]     OK
+Starting work on numeral_bitTheory
+numeral_bitTheory                                           (1s)   [6/6]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/unwind [13 Nov, 18:07:35]
+Uploading files to /build/HOL/sigobj
+Building directory src/pred_set/src [13 Nov, 18:07:36]
+Building 11 theory files
+Starting work on pred_setTheory
+Starting work on hurdUtilsContextTheory
+hurdUtilsContextTheory                                      (0s)  [1/11]     OK
+pred_setTheory                                             (11s)  [2/11]     OK
+Starting work on set_relationTheory
+Starting work on permutesTheory
+Starting work on gcdsetTheory
+Starting work on fixedPointTheory
+fixedPointTheory                                            (2s)  [3/11]     OK
+gcdsetTheory                                                (3s)  [4/11]     OK
+set_relationTheory                                          (8s)  [5/11]     OK
+Starting work on wellorderTheory
+permutesTheory                                             (13s)  [6/11]     OK
+Starting work on iterateTheory
+wellorderTheory                                             (8s)  [7/11]     OK
+Starting work on cardinalityCoreTheory
+iterateTheory                                               (5s)  [8/11]     OK
+cardinalityCoreTheory                                      (14s)  [9/11]     OK
+Starting work on cardinalTheory
+Starting work on ordinalBasicTheory
+cardinalTheory                                              (2s) [10/11]     OK
+ordinalBasicTheory                                         (11s) [11/11]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/datatype/record [13 Nov, 18:08:35]
+Uploading files to /build/HOL/sigobj
+Building directory src/datatype [13 Nov, 18:08:35]
+Building 5 theory files
+Starting work on bnfPrelimsTheory
+Starting work on EnumTypeContextTheory
+Starting work on bnfInitialTheory
+EnumTypeContextTheory                                       (0s)   [1/5]     OK
+bnfPrelimsTheory                                            (2s)   [2/5]     OK
+bnfInitialTheory                                            (5s)   [3/5]     OK
+Starting work on bnfFixBNFTheory
+bnfFixBNFTheory                                             (3s)   [4/5]     OK
+Starting work on bnfMutualTheory
+bnfMutualTheory                                             (3s)   [5/5]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/monad [13 Nov, 18:08:48]
+Uploading files to /build/HOL/sigobj
+Building directory src/list/src [13 Nov, 18:08:48]
+Building 7 theory files
+Starting work on listTheory
+listTheory                                                 (11s)   [1/7]     OK
+Starting work on rich_listTheory
+Starting work on listRangeTheory
+Starting work on listCardinalityTheory
+listCardinalityTheory                                       (5s)   [2/7]     OK
+listRangeTheory                                             (5s)   [3/7]     OK
+rich_listTheory                                            (10s)   [4/7]     OK
+Starting work on nlistTheory
+Starting work on numposrepTheory
+Starting work on indexedListsTheory
+indexedListsTheory                                          (4s)   [5/7]     OK
+nlistTheory                                                 (5s)   [6/7]     OK
+numposrepTheory                                             (5s)   [7/7]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/quantHeuristics [13 Nov, 18:09:19]
+Building 2 theory files
+Starting work on ConseqConvTheory
+ConseqConvTheory                                            (0s)   [1/2]     OK
+Starting work on quantHeuristicsTheory
+quantHeuristicsTheory                                       (5s)   [2/2]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/pattern_matches [13 Nov, 18:09:26]
+Building 1 theory file
+Starting work on patternMatchesTheory
+patternMatchesTheory                                        (6s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/HolSat/vector_def_CNF [13 Nov, 18:09:33]
+Building 1 theory file
+Starting work on defCNFTheory
+defCNFTheory                                                (4s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/boss/ml_evaluation [13 Nov, 18:09:38]
+Uploading files to /build/HOL/sigobj
+Building directory src/opentheory/reader [13 Nov, 18:09:38]
+Building 1 theory file
+Starting work on OpenTheoryReaderContextTheory
+OpenTheoryReaderContextTheory                               (7s)   [1/1]     OK
+Uploading files to /build/HOL/sigobj
+Building directory src/boss [13 Nov, 18:09:46]
+Building 1 theory file
+Starting work on holTheory
+holTheory                                                   (9s)   [1/1]     OK
+Starting work on /build/HOL/bin/hol.state
+hol.state                                              bin (12s)             OK
+Uploading files to /build/HOL/sigobj
+Building directory src/AI [13 Nov, 18:10:07]
+Uploading files to /build/HOL/sigobj
+Building directory src/AI/sml_inspection [13 Nov, 18:10:07]
+Uploading files to /build/HOL/sigobj
+Building directory src/AI/proof_search [13 Nov, 18:10:07]
+Uploading files to /build/HOL/sigobj
+Building directory src/AI/machine_learning [13 Nov, 18:10:07]
+Uploading files to /build/HOL/sigobj
+Building directory src/tactictoe/src [13 Nov, 18:10:07]
+Uploading files to /build/HOL/sigobj
+Building directory src/holyhammer [13 Nov, 18:10:07]
+Uploading files to /build/HOL/sigobj
+Building directory src/parallel_builds/core [13 Nov, 18:10:08]
+Scanning $(HOLDIR)/src/Boolify/src
+Scanning $(HOLDIR)/src/HolQbf
+Scanning $(HOLDIR)/src/hol88
+Scanning $(HOLDIR)/src/TeX
+Scanning $(HOLDIR)/src/bag
+Scanning $(HOLDIR)/src/sort
+Scanning $(HOLDIR)/src/string
+Scanning $(HOLDIR)/src/n-bit
+Scanning $(HOLDIR)/src/res_quan/src
+Scanning $(HOLDIR)/src/finite_maps
+Scanning $(HOLDIR)/src/integer
+Scanning $(HOLDIR)/src/rational
+Scanning $(HOLDIR)/src/transfer
+Scanning $(HOLDIR)/src/pred_set/src/more_theories
+Scanning $(HOLDIR)/src/algebra/base
+Scanning $(HOLDIR)/src/algebra/construction
+Scanning $(HOLDIR)/src/algebra
+Scanning $(HOLDIR)/src/real
+Scanning $(HOLDIR)/src/real/analysis
+Scanning $(HOLDIR)/src/HolSmt
+Scanning $(HOLDIR)/src/coalgebras
+Scanning $(HOLDIR)/src/datatype/inftree
+Scanning $(HOLDIR)/src/monad/more_monads
+Scanning $(HOLDIR)/src/emit
+Scanning $(HOLDIR)/src/float
+Scanning $(HOLDIR)/src/floating-point
+Scanning $(HOLDIR)/src/floating-point/native
+Scanning $(HOLDIR)/src/num/theories/cv_compute/automation
+Scanning $(HOLDIR)/src/probability
+Scanning $(HOLDIR)/src/search
+Scanning $(HOLDIR)/src/update
+Scanned 32 directories
+Building 132 theory files
+Starting work on hratTheory
+Starting work on res_quanTheory
+Starting work on topologyTheory
+Starting work on integerTheory
+hratTheory                                        src/real  (2s)  [↓131]     OK
+Starting work on hrealTheory
+hrealTheory                                       src/real  (2s)  [↓130]     OK
+Starting work on realaxTheory
+topologyTheory              src/pred_set/src/more_theories  (5s)  [↓129]     OK
+Starting work on schneiderUtilsContextTheory
+schneiderUtilsContextTheory                   src/rational  (0s)  [↓128]     OK
+Starting work on bagTheory
+realaxTheory                                      src/real  (3s)  [↓127]     OK
+Starting work on real_arithTheory
+integerTheory                                  src/integer  (9s)  [↓126]     OK
+Starting work on int_arithTheory
+int_arithTheory                                src/integer  (2s)  [↓125]     OK
+Starting work on cooperTheory
+res_quanTheory                            src/res_quan/src (12s)  [↓124]     OK
+Starting work on intReduceTheory
+cooperTheory                                   src/integer  (0s)  [↓123]     OK
+Starting work on numberTheory
+intReduceTheory                                src/integer  (1s)  [↓122]     OK
+Starting work on OmegaTheory
+bagTheory                                          src/bag  (6s)  [↓121]     OK
+Starting work on primeFactorTheory
+primeFactorTheory                                  src/bag  (1s)  [↓120]     OK
+Starting work on ternaryComparisonsTheory
+real_arithTheory                                  src/real  (6s)  [↓119]     OK
+Starting work on realTheory
+ternaryComparisonsTheory                          src/sort  (0s)  [↓118]     OK
+Starting work on stringTheory
+OmegaTheory                                    src/integer  (2s)  [↓117]     OK
+Starting work on intExtensionTheory
+stringTheory                                    src/string  (1s)  [↓116]     OK
+Starting work on fcpTheory
+fcpTheory                                        src/n-bit  (2s)  [↓115]     OK
+Starting work on ASCIInumbersTheory
+intExtensionTheory                            src/rational  (4s)  [↓114]     OK
+Starting work on fracTheory
+ASCIInumbersTheory                              src/string  (1s)  [↓113]     OK
+Starting work on sum_numTheory
+sum_numTheory                                    src/n-bit  (0s)  [↓112]     OK
+Starting work on wordsTheory
+numberTheory                              src/algebra/base (11s)  [↓111]     OK
+Starting work on combinatoricsTheory
+fracTheory                                    src/rational  (5s)  [↓110]     OK
+Starting work on ratTheory
+realTheory                                        src/real (14s)  [↓109]     OK
+Starting work on real_sigmaTheory
+ratTheory                                     src/rational (11s)  [↓108]     OK
+Starting work on RealFieldContextTheory
+wordsTheory                                      src/n-bit (19s)  [↓107]     OK
+Starting work on intrealTheory
+RealFieldContextTheory                            src/real  (4s)  [↓106]     OK
+Starting work on sortingTheory
+combinatoricsTheory                       src/algebra/base (19s)  [↓105]     OK
+Starting work on primeTheory
+real_sigmaTheory                                  src/real (16s)  [↓104]     OK
+Starting work on metricTheory
+sortingTheory                                     src/sort  (4s)  [↓103]     OK
+Starting work on finite_mapTheory
+intrealTheory                                     src/real (11s)  [↓102]     OK
+Starting work on real_of_ratTheory
+metricTheory                                      src/real (10s)  [↓101]     OK
+Starting work on netsTheory
+finite_mapTheory                           src/finite_maps  (8s)  [↓100]     OK
+Starting work on binary_ieeeTheory
+real_of_ratTheory                                 src/real  (7s)   [↓99]     OK
+Starting work on extreal_baseTheory
+primeTheory                               src/algebra/base (16s)   [↓98]     OK
+Starting work on monoidTheory
+netsTheory                                        src/real  (8s)   [↓97]     OK
+Starting work on realheap
+realheap                                 src/real/analysis  (5s)             OK
+Starting work on real_topologyTheory
+monoidTheory                      src/algebra/construction (15s)   [↓96]     OK
+Starting work on sigma_algebraTheory
+extreal_baseTheory                                src/real (23s)   [↓95]     OK
+Starting work on groupTheory
+sigma_algebraTheory                        src/probability (11s)   [↓94]     OK
+Starting work on integer_wordTheory
+integer_wordTheory                             src/integer (13s)   [↓93]     OK
+Starting work on bitstringTheory
+binary_ieeeTheory                       src/floating-point (51s)   [↓92]     OK
+Starting work on cv_typeTheory
+groupTheory                       src/algebra/construction (25s)   [↓91]     OK
+Starting work on alistTheory
+cv_typeTheory       src/num/theories/cv_compute/automation  (3s)   [↓90]     OK
+Starting work on blastTheory
+bitstringTheory                                  src/n-bit  (7s)   [↓89]     OK
+Starting work on containerTheory
+alistTheory                                src/finite_maps  (2s)   [↓88]     OK
+Starting work on sptreeTheory
+containerTheory                            src/finite_maps  (1s)   [↓87]     OK
+Starting work on cv_repTheory
+blastTheory                                      src/n-bit  (4s)   [↓86]     OK
+Starting work on ringTheory
+cv_repTheory        src/num/theories/cv_compute/automation  (3s)   [↓85]     OK
+Starting work on byteTheory
+sptreeTheory                               src/finite_maps (12s)   [↓84]     OK
+Starting work on cv_primTheory
+byteTheory                                       src/n-bit (11s)   [↓83]     OK
+Starting work on transferTheory
+transferTheory                                src/transfer  (1s)   [↓82]     OK
+Starting work on liftingTheory
+liftingTheory                                 src/transfer  (0s)   [↓81]     OK
+Starting work on finite_setTheory
+cv_primTheory       src/num/theories/cv_compute/automation  (7s)   [↓80]     OK
+Starting work on lift_ieeeTheory
+finite_setTheory            src/pred_set/src/more_theories  (3s)   [↓79]     OK
+Starting work on cv_stdTheory
+cv_stdTheory        src/num/theories/cv_compute/automation (11s)   [↓78]     OK
+Starting work on machine_ieeeTheory
+lift_ieeeTheory                         src/floating-point (15s)   [↓77]     OK
+Starting work on companionTheory
+ringTheory                        src/algebra/construction (37s)   [↓76]     OK
+Starting work on llistTheory
+machine_ieeeTheory                      src/floating-point (12s)   [↓75]     OK
+Starting work on patriciaTheory
+companionTheory                             src/coalgebras (10s)   [↓74]     OK
+Starting work on smtheap
+llistTheory                                 src/coalgebras  (6s)   [↓73]     OK
+Starting work on cv_string_fmapTheory
+patriciaTheory                             src/finite_maps  (3s)   [↓72]     OK
+Starting work on totoTheory
+totoTheory                                 src/finite_maps  (1s)   [↓71]     OK
+Starting work on ieeeTheory
+smtheap                                         src/HolSmt  (8s)             OK
+Starting work on itreeTheory
+real_topologyTheory                      src/real/analysis (99s)   [↓70]     OK
+Starting work on derivativeTheory
+ieeeTheory                                       src/float  (2s)   [↓69]     OK
+Starting work on seqTheory
+itreeTheory                                 src/coalgebras  (1s)   [↓68]     OK
+Starting work on enumeralTheory
+enumeralTheory                             src/finite_maps  (2s)   [↓67]     OK
+Starting work on patricia_castsTheory
+cv_string_fmapTheory         src/.../cv_compute/automation  (9s)   [↓66]     OK
+Starting work on pre_emitTheory
+pre_emitTheory                                    src/emit  (2s)   [↓65]     OK
+Starting work on simpleSetCatTheory
+patricia_castsTheory                       src/finite_maps  (4s)   [↓64]     OK
+Starting work on binary_ieeePropsTheory
+seqTheory                                src/real/analysis  (8s)   [↓63]     OK
+Starting work on basis_emitTheory
+simpleSetCatTheory          src/pred_set/src/more_theories  (2s)   [↓62]     OK
+Starting work on itreeTauTheory
+basis_emitTheory                                  src/emit  (4s)   [↓61]     OK
+Starting work on ordinalTheory
+derivativeTheory                         src/real/analysis (14s)   [↓60]     OK
+Starting work on limTheory
+itreeTauTheory                              src/coalgebras  (7s)   [↓59]     OK
+Starting work on integrationTheory
+ordinalTheory               src/pred_set/src/more_theories  (3s)   [↓58]     OK
+Starting work on lift_machine_ieeeTheory
+binary_ieeePropsTheory                  src/floating-point (11s)   [↓57]     OK
+Starting work on ltreeTheory
+ltreeTheory                                 src/coalgebras  (5s)   [↓56]     OK
+Starting work on EncodeTheory
+EncodeTheory                               src/Boolify/src  (1s)   [↓55]     OK
+Starting work on HolSmtTheory
+lift_machine_ieeeTheory                 src/floating-point  (9s)   [↓54]     OK
+Starting work on coalgAxiomsTheory
+HolSmtTheory                                    src/HolSmt  (6s)   [↓53]     OK
+Starting work on comparisonTheory
+coalgAxiomsTheory                           src/coalgebras  (8s)   [↓52]     OK
+Starting work on fmapalTheory
+limTheory                                src/real/analysis (22s)   [↓51]     OK
+Starting work on powserTheory
+fmapalTheory                               src/finite_maps  (4s)   [↓50]     OK
+Starting work on floatTheory
+comparisonTheory                           src/finite_maps  (6s)   [↓49]     OK
+Starting work on state_transformerTheory
+state_transformerTheory              src/monad/more_monads  (1s)   [↓48]     OK
+Starting work on ordinalNotationTheory
+powserTheory                             src/real/analysis  (8s)   [↓47]     OK
+Starting work on transcTheory
+ordinalNotationTheory       src/pred_set/src/more_theories  (3s)   [↓46]     OK
+Starting work on polyTheory
+floatTheory                                      src/float  (7s)   [↓45]     OK
+Starting work on real_algebraTheory
+polyTheory                               src/real/analysis (10s)   [↓44]     OK
+Starting work on int_bitwiseTheory
+real_algebraTheory                                src/real  (9s)   [↓43]     OK
+Starting work on DecodeTheory
+DecodeTheory                               src/Boolify/src  (2s)   [↓42]     OK
+Starting work on inttoTheory
+int_bitwiseTheory                              src/integer  (6s)   [↓41]     OK
+Starting work on pathTheory
+inttoTheory                                    src/integer  (4s)   [↓40]     OK
+Starting work on extended_emitTheory
+pathTheory                                  src/coalgebras  (2s)   [↓39]     OK
+Starting work on alignmentTheory
+extended_emitTheory                               src/emit  (5s)   [↓38]     OK
+Starting work on mergesortTheory
+alignmentTheory                                  src/n-bit  (4s)   [↓37]     OK
+Starting work on bitArithTheory
+integrationTheory                        src/real/analysis (56s)   [↓36]     OK
+Starting work on integralTheory
+mergesortTheory                                   src/sort  (3s)   [↓35]     OK
+Starting work on lbtreeTheory
+bitArithTheory                                    src/real  (3s)   [↓34]     OK
+Starting work on errorStateMonadTheory
+errorStateMonadTheory                src/monad/more_monads  (1s)   [↓33]     OK
+Starting work on DeepSyntaxTheory
+lbtreeTheory                                src/coalgebras  (2s)   [↓32]     OK
+Starting work on ordNotationSemanticsTheory
+transcTheory                             src/real/analysis (33s)   [↓31]     OK
+Starting work on extrealTheory
+DeepSyntaxTheory                               src/integer  (1s)   [↓30]     OK
+Starting work on real_borelTheory
+ordNotationSemanticsTheory  src/pred_set/src/more_theories  (2s)   [↓29]     OK
+Starting work on complexTheory
+complexTheory                            src/real/analysis (11s)   [↓28]     OK
+Starting work on CoderTheory
+CoderTheory                                src/Boolify/src  (1s)   [↓27]     OK
+Starting work on emitOrdinalTheory
+integralTheory                           src/real/analysis (22s)   [↓26]     OK
+Starting work on dirGraphTheory
+dirGraphTheory                                  src/search  (0s)   [↓25]     OK
+Starting work on alist_treeTheory
+emitOrdinalTheory                                 src/emit  (4s)   [↓24]     OK
+Starting work on tcTheory
+alist_treeTheory                           src/finite_maps  (2s)   [↓23]     OK
+Starting work on streamTheory
+streamTheory                                src/coalgebras  (1s)   [↓22]     OK
+Starting work on errorMonadTheory
+tcTheory                                   src/finite_maps  (2s)   [↓21]     OK
+Starting work on veblenTheory
+errorMonadTheory                     src/monad/more_monads  (0s)   [↓20]     OK
+Starting work on fmaptreeTheory
+fmaptreeTheory                             src/finite_maps  (2s)   [↓19]     OK
+Starting work on string_encodingTheory
+veblenTheory                src/pred_set/src/more_theories  (2s)   [↓18]     OK
+Starting work on dftTheory
+dftTheory                                       src/search  (1s)   [↓17]     OK
+Starting work on string_numTheory
+string_encodingTheory                           src/string  (1s)   [↓16]     OK
+Starting work on bftTheory
+string_numTheory                                src/string  (2s)   [↓15]     OK
+Starting work on inftreeTheory
+bftTheory                                       src/search  (2s)   [↓14]     OK
+Starting work on errorLogMonadTheory
+inftreeTheory                         src/datatype/inftree  (1s)   [↓13]     OK
+Starting work on readerMonadTheory
+errorLogMonadTheory                  src/monad/more_monads  (1s)   [↓12]     OK
+Starting work on updateTheory
+readerMonadTheory                    src/monad/more_monads  (1s)   [↓11]     OK
+Starting work on EncodeVarTheory
+updateTheory                                    src/update  (1s)   [↓10]     OK
+Starting work on link-to-sigobj
+Finished src/HolQbf                                                    (0.000s) 
+link-to-sigobj                                   src/hol88  (0s)             OK
+Finished src/hol88                                                     (0.005s) 
+Starting work on /build/HOL/bin/mkmunge.exe
+mkmunge.exe                                            bin  (0s)             OK
+Starting work on holindex.grm-sig
+holindex.grm-sig                                   src/TeX  (0s)             OK
+Starting work on holindex.grm-sig
+holindex.grm-sig                                   src/TeX  (0s)             OK
+Starting work on holindex.lex
+holindex.lex                                       src/TeX  (0s)             OK
+Starting work on munger.lex
+munger.lex                                         src/TeX  (0s)             OK
+Starting work on link-to-sigobj
+link-to-sigobj                                     src/TeX  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/TeX                                                       (0.050s) 
+link-to-sigobj                                     src/bag  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/bag [#theories: 2]                                        (8.207s) 
+link-to-sigobj                                    src/sort  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/sort [#theories: 3]                                       (8.178s) 
+link-to-sigobj                                  src/string  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/string [#theories: 4]                                     (7.246s) 
+link-to-sigobj                                   src/n-bit  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/n-bit [#theories: 7]                                     (50.532s) 
+EncodeVarTheory                            src/Boolify/src  (0s)    [↓9]     OK
+Starting work on link-to-sigobj
+link-to-sigobj                            src/res_quan/src  (0s)             OK
+Finished src/res_quan/src [#theories: 1]                              (12.292s) 
+Starting work on link-to-sigobj
+link-to-sigobj                             src/Boolify/src  (0s)             OK
+Finished src/Boolify/src [#theories: 4]                                (6.159s) 
+Starting work on link-to-sigobj
+link-to-sigobj                             src/finite_maps  (0s)             OK
+Finished src/finite_maps [#theories: 13]                              (55.188s) 
+Starting work on link-to-sigobj
+link-to-sigobj                                 src/integer  (0s)             OK
+Finished src/integer [#theories: 9]                                   (42.527s) 
+Starting work on link-to-sigobj
+link-to-sigobj                                src/rational  (0s)             OK
+Finished src/rational [#theories: 4]                                  (21.539s) 
+Starting work on countable_typesTheory
+link-to-sigobj                                src/transfer  (0s)             OK
+Finished src/transfer [#theories: 2]                                   (1.812s) 
+Starting work on link-to-sigobj
+link-to-sigobj                            src/algebra/base  (0s)             OK
+Finished src/algebra/base [#theories: 3]                              (48.625s) 
+Starting work on link-to-sigobj
+link-to-sigobj                    src/algebra/construction  (0s)             OK
+Finished src/algebra/construction [#theories: 3]                      (78.886s) 
+Starting work on link-to-sigobj
+link-to-sigobj                                    src/real  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/real [#theories: 14]                                    (124.232s) 
+link-to-sigobj                           src/real/analysis  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/real/analysis [#theories: 10]                           (293.561s) 
+link-to-sigobj                                  src/HolSmt  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/HolSmt [#theories: 1]                                    (15.773s) 
+link-to-sigobj                              src/coalgebras  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/coalgebras [#theories: 9]                                (45.644s) 
+link-to-sigobj                        src/datatype/inftree  (0s)             OK
+Finished src/datatype/inftree [#theories: 1]                           (1.664s) 
+Starting work on link-to-sigobj
+link-to-sigobj                       src/monad/more_monads  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/monad/more_monads [#theories: 5]                          (6.320s) 
+link-to-sigobj                                    src/emit  (0s)             OK
+Starting work on link-to-sigobj
+Finished src/emit [#theories: 4]                                      (16.749s) 
+countable_typesTheory       src/pred_set/src/more_theories  (0s)    [↓8]     OK
+Starting work on link-to-sigobj
+link-to-sigobj                                   src/float  (0s)             OK
+Finished src/float [#theories: 2]                                     (10.403s) 
+Starting work on link-to-sigobj
+link-to-sigobj              src/pred_set/src/more_theories  (0s)             OK
+Finished src/pred_set/src/more_theories [#theories: 8]                (24.903s) 
+Starting work on link-to-sigobj
+link-to-sigobj                          src/floating-point  (0s)             OK
+Finished src/floating-point [#theories: 5]                           (100.256s) 
+Starting work on link-to-sigobj
+link-to-sigobj                   src/floating-point/native  (0s)             OK
+Finished src/floating-point/native                                     (0.003s) 
+Starting work on link-to-sigobj
+link-to-sigobj      src/num/theories/cv_compute/automation  (0s)             OK
+Finished src/num/theories/cv_compute/automation [#theories: 5]        (34.557s) 
+Starting work on link-to-sigobj
+link-to-sigobj                                  src/search  (0s)             OK
+Finished src/search [#theories: 3]                                     (4.374s) 
+*** Command succeeded but did not create /build/HOL/src/update/link-to-sigobj (--strict-outputs makes this an error)
+link-to-sigobj                                  src/update  (0s)             OK
+Finished src/update [#theories: 1]                                     (1.554s) 
+real_borelTheory                           src/probability (39s)    [↓7]     OK
+extrealTheory                              src/probability (49s)    [↓6]     OK
+Starting work on measureTheory
+measureTheory                              src/probability (25s)    [↓5]     OK
+Starting work on borelTheory
+borelTheory                                src/probability (29s)    [↓4]     OK
+Starting work on lebesgueTheory
+lebesgueTheory                             src/probability (33s)    [↓3]     OK
+Starting work on martingaleTheory
+Starting work on lebesgue_measureTheory
+lebesgue_measureTheory                     src/probability (21s)    [↓2]     OK
+martingaleTheory                           src/probability (26s)    [↓1]     OK
+Starting work on probabilityTheory
+probabilityTheory                          src/probability (23s)    [↓0]     OK
+Starting work on link-to-sigobj
+link-to-sigobj                             src/probability  (0s)             OK
+Finished src/probability [#theories: 9]                              (260.921s) 
+Uploading files to /build/HOL/sigobj
+Starting work on process_docfiles
+Starting work on Lexer.lex
+Starting work on Parser.grm
+Starting work on AliasGen.exe
+Lexer.lex                                                   (0s)             OK
+Parser.grm                                                  (0s)             OK
+Starting work on makebase.exe
+AliasGen.exe                                                (0s)             OK
+Starting work on /build/HOL/help/generated-alias-docs/.stamp
+.stamp                           help/generated-alias-docs  (0s)             OK
+Starting work on /build/HOL/help/generated-alias-docs/.stamp
+.stamp                           help/generated-alias-docs  (0s)             OK
+makebase.exe                                                (1s)             OK
+process_docfiles                                            (2s)             OK
+Polyscripting Docfiles and generating .txt outputs...
+Processing 1589 entries from /build/HOL/help/Docfiles, /build/HOL/help/generated-alias-docs
+...polyscripter pass done
+Can't find pandoc in PATH; wrote the mdbook .md mirror to /build/HOL/Manual/build/Docfiles-processed but skipped the .txt help text and .html pages.
+Generating chapter-stems.mk in Description, Tutorial, Logic...
+/build/HOL/Manual/Description/Holmakefile:18: chapter-stems.mk not yet built;              run `Holmake chapter-stems.mk' first
+Scanning $(HOLDIR)/src/bag
+Scanning $(HOLDIR)/src/TeX
+Scanning $(HOLDIR)/src/sort
+Scanning $(HOLDIR)/src/string
+Scanning $(HOLDIR)/src/n-bit
+Scanning $(HOLDIR)/src/res_quan/src
+Scanning $(HOLDIR)/src/finite_maps
+Scanning $(HOLDIR)/src/integer
+Scanning $(HOLDIR)/src/transfer
+Scanning $(HOLDIR)/src/pred_set/src/more_theories
+Scanning $(HOLDIR)/src/algebra/base
+Scanning $(HOLDIR)/src/algebra/construction
+Scanning $(HOLDIR)/src/algebra
+Scanning $(HOLDIR)/src/hol88
+Scanning $(HOLDIR)/src/rational
+Scanning $(HOLDIR)/src/real
+Scanning $(HOLDIR)/src/real/analysis
+Scanning $(HOLDIR)/examples/misc
+Scanning $(HOLDIR)/tools/cmp
+Scanning $(HOLDIR)/Manual/Tools
+Scanning $(HOLDIR)/help/src-sml
+Scanning $(HOLDIR)/Manual/Reference
+Scanning $(HOLDIR)/src/floating-point
+Scanning $(HOLDIR)/src/probability
+Scanning $(HOLDIR)/examples/probability
+Scanning $(HOLDIR)/src/num/theories/cv_compute/automation
+Scanned 27 directories
+Starting work on gen_chap_lists
+gen_chap_lists                                Manual/Tools  (1s)             OK
+Finished Manual/Tools                                                  (1.532s) 
+Starting work on chapter-stems.mk
+chapter-stems.mk                        Manual/Description  (0s)             OK
+Finished Manual/Description                                            (0.006s) 
+/build/HOL/Manual/Tutorial/Holmakefile:14: chapter-stems.mk not yet built;              run `Holmake chapter-stems.mk' first
+Scanning $(HOLDIR)/src/bag
+Scanning $(HOLDIR)/src/TeX
+Scanning $(HOLDIR)/src/sort
+Scanning $(HOLDIR)/src/string
+Scanning $(HOLDIR)/src/n-bit
+Scanning $(HOLDIR)/src/res_quan/src
+Scanning $(HOLDIR)/src/finite_maps
+Scanning $(HOLDIR)/src/integer
+Scanning $(HOLDIR)/src/transfer
+Scanning $(HOLDIR)/src/pred_set/src/more_theories
+Scanning $(HOLDIR)/src/algebra/base
+Scanning $(HOLDIR)/src/algebra/construction
+Scanning $(HOLDIR)/src/algebra
+Scanning $(HOLDIR)/src/hol88
+Scanning $(HOLDIR)/src/rational
+Scanning $(HOLDIR)/src/real
+Scanning $(HOLDIR)/src/real/analysis
+Scanning $(HOLDIR)/examples/misc
+Scanning $(HOLDIR)/tools/cmp
+Scanning $(HOLDIR)/Manual/Tools
+Scanning $(HOLDIR)/help/src-sml
+Scanning $(HOLDIR)/Manual/Reference
+Scanned 23 directories
+Starting work on chapter-stems.mk
+chapter-stems.mk                                            (0s)             OK
+/build/HOL/Manual/Logic/Holmakefile:14: chapter-stems.mk not yet built;              run `Holmake chapter-stems.mk' first
+Scanning $(HOLDIR)/src/bag
+Scanning $(HOLDIR)/src/TeX
+Scanning $(HOLDIR)/src/sort
+Scanning $(HOLDIR)/src/string
+Scanning $(HOLDIR)/src/n-bit
+Scanning $(HOLDIR)/src/res_quan/src
+Scanning $(HOLDIR)/src/finite_maps
+Scanning $(HOLDIR)/src/integer
+Scanning $(HOLDIR)/src/transfer
+Scanning $(HOLDIR)/src/pred_set/src/more_theories
+Scanning $(HOLDIR)/src/algebra/base
+Scanning $(HOLDIR)/src/algebra/construction
+Scanning $(HOLDIR)/src/algebra
+Scanning $(HOLDIR)/src/hol88
+Scanning $(HOLDIR)/src/rational
+Scanning $(HOLDIR)/src/real
+Scanning $(HOLDIR)/src/real/analysis
+Scanning $(HOLDIR)/examples/misc
+Scanning $(HOLDIR)/tools/cmp
+Scanning $(HOLDIR)/Manual/Tools
+Scanned 21 directories
+Starting work on chapter-stems.mk
+chapter-stems.mk                                            (0s)             OK
+Building Help DB
+Reading signatures in directory /build/HOL/sigobj
+and writing help database in file /build/HOL/help/HOL.Help
+docdirs = help/Docfiles, help/generated-alias-docs
+
+Processed 44329 entries in total.
+Building database...
+Writing database to file /build/HOL/help/HOL.Help
+
+Writing ASCII signature index in file index.txt
+
+Writing Latex signature index in file index.tex
+
+Creating HTML versions of signature files
+Directory /build/HOL/Manual/book/htmlsigs exists
+
+Writing HTML signature index in file /build/HOL/Manual/book/htmlsigs/idIndex.html
+
+Writing HTML theory signature index in file /build/HOL/Manual/book/htmlsigs/TheoryIndex.html
+
+Writing lander fragment to /build/HOL/help/HOL.LanderFragment.html
+*** If you had a copy of the dot tool installed, I might try
+*** to build a theory graph at this point
+
+Hol built successfully.

@@ -1,0 +1,19 @@
+{
+ "case": "import",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/compose-0001/forge_refundNativeReadErrorTheory.sig",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/compose-0001/forge_refundNativeReadErrorTheory.sml",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/import/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "import.sml",
+ "source_sha256": "064a49ab770118e729db62fe9a212b0a12a945c831c1b3898bfd6623b9906b0b",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false
+}

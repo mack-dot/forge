@@ -1,0 +1,86 @@
+<<HOL message: Created theory "forge_n1Explore">>
+ARM8_THM compile_0_arm8_def :: ⊢ compile_0_arm8 data_conf prog =
+  (let
+     data_conf = data_conf with <|has_fp_ops := F; has_fp_tern := F|>
+   in
+     stubs_md data_conf ++ MAP (compile_part data_conf) prog)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_n1Explore)>>
+OK..
+1 subgoal:
+AFTER single-start: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels [(n,m,pp,md)] (get_code_labels pp) ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]))
+   (get_code_labels pp)) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED single-finish 
+Exception raised at pairTools.PairCases_on: Not of pair type
+
+AFTER failure of single-finish: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels [(n,m,pp,md)] (get_code_labels pp) ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]))
+   (get_code_labels pp)) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+OK..
+STEP_FAILED single-finish2 
+Exception raised at Preterm.type-analysis: on line 42, characters 160-175:
+  
+Type error in function application.
+  Function: full_compile_single (isa_bits ac) ac.two_reg_arith
+  (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac :(num # num # wordLang$prog # α) # num sptree$num_map option ->
+num # num # wordLang$prog # α
+  Argument: ((n,m,pp,md),orac) :(num # num # closLang$exp # α) # num sptree$num_map option
+  Reason: Attempt to unify different type operators: wordLang$prog and closLang$exp
+
+
+AFTER failure of single-finish2: 1 goals, proved=false
+  ASM FST
+  (full_compile_single (isa_bits ac) ac.two_reg_arith
+     (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+     ((n,m,pp,md),orac)) = n
+  ASM SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]) =
+[full_compile_single (isa_bits ac) ac.two_reg_arith
+   (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+   ((n,m,pp,md),orac)]
+  ASM word_good_handlers n pp
+  GOAL (word_good_code_labels [(n,m,pp,md)] (get_code_labels pp) ⇒
+ word_good_code_labels
+   (SND (compile (wc with col_oracle := [orac]) ac [(n,m,pp,md)]))
+   (get_code_labels pp)) ⇒
+∃m2 pp2 md2.
+  full_compile_single (isa_bits ac) ac.two_reg_arith
+    (ac.reg_count − (5 + LENGTH ac.avoid_regs)) wc.reg_alg ac
+    ((n,m,pp,md),orac) = (n,m2,pp2,md2) ∧
+  word_get_code_labels pp2 ⊆ n INSERT word_get_code_labels pp
+----
+EXPLORE_COMPLETE

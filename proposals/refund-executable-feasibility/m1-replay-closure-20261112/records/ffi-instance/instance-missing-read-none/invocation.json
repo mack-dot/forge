@@ -1,0 +1,32 @@
+{
+ "case": "instance-missing-read-none",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "--maxheap",
+  "1400",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-read-event-gap-20261107/attempt-0001/generic-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/forge_refundReadBoundaryTheory.sig",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0010/model-0007/forge_refundReadBoundaryTheory.sml",
+  "/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/model-0004/forge_refundStdinDomainTheory.sig",
+  "/Users/mackianni/forge/results/refund-stdin-domain-20261107/attempt-0001/model-0004/forge_refundStdinDomainTheory.sml",
+  "/Users/mackianni/forge/results/refund-generic-read-local-20261112/attempt-0001/proof-0001/forge_refundGenericReadErrorTheory.sig",
+  "/Users/mackianni/forge/results/refund-generic-read-local-20261112/attempt-0001/proof-0001/forge_refundGenericReadErrorTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffi-oracle-local-20261112/attempt-0001/oracle-0001/forge_refundFfiOracleTheory.sig",
+  "/Users/mackianni/forge/results/refund-ffi-oracle-local-20261112/attempt-0001/oracle-0001/forge_refundFfiOracleTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffi-instance-local-20261112/attempt-0001/instance-0001/forge_refundFfiInstanceTheory.sig",
+  "/Users/mackianni/forge/results/refund-ffi-instance-local-20261112/attempt-0001/instance-0001/forge_refundFfiInstanceTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffi-instance-local-20261112/attempt-0001/instance-missing-read-none/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis",
+ "source": "instance-missing-read-none.sml",
+ "source_sha256": "f76f4375fd0bd6b14b0230ab496907a2800e841278ae61b0e98d5f221b4c21af",
+ "cpu_seconds_limit": 120,
+ "wall_seconds_limit": 150,
+ "maxheap_MiB": 1400,
+ "heap_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+ "hol_binary_sha256": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+ "checked_input_files": 2674,
+ "end_to_end": false
+}

@@ -1,0 +1,45 @@
+<<HOL message: Created theory "forge_refundFfiOracleExplore">>
+FS_FFI_PART_DEF
+ []
+⊢ fs_ffi_part =
+  (encode,decode,
+   [(«open_in»,ffi_open_in); («open_out»,ffi_open_out); («read»,ffi_read);
+    («write»,ffi_write); («close»,ffi_close)])
+MK_FFI_NEXT_DEF
+ []
+⊢ ∀encode decode ls name conf bytes s.
+    mk_ffi_next (encode,decode,ls) name conf bytes s =
+    do
+      f <- ALOOKUP ls name;
+      s' <- decode s;
+      r <- f conf bytes s';
+      case r of
+        FFIreturn bytes s => SOME (FFIreturn bytes (encode s))
+      | FFIdiverge => SOME FFIdiverge
+    od
+FFI_READ_DEF
+ []
+⊢ ∀conf bytes fs.
+    ffi_read conf bytes fs =
+    case bytes of
+      [] => NONE
+    | [n1] => NONE
+    | [n1; n0] => NONE
+    | [n1; n0; pad1] => NONE
+    | n1::n0::pad1::pad2::tll =>
+      OPTION_CHOICE
+        (OPTION_IGNORE_BIND (assert (LENGTH conf = 8))
+           (OPTION_IGNORE_BIND (assert (LENGTH tll ≥ w22n [n1; n0]))
+              do
+                (l,fs') <- read (w82n conf) fs (w22n [n1; n0]);
+                SOME
+                  (FFIreturn
+                     (0w::n2w2 (STRLEN l) ++ [pad2] ++ MAP (n2w ∘ ORD) l ++
+                      DROP (STRLEN l) tll) fs')
+              od)) (SOME (FFIreturn bytes❲0 ↦ 1w❳ fs))
+W22N_N2W2
+ [] ⊢ ∀i. i < 2 ** (2 * 8) ⇒ w22n (n2w2 i) = i
+W82N_N2W8
+ [] ⊢ ∀i. i ≤ 256 ** 8 − 1 ⇒ w82n (n2w8 i) = i
+/Users/mackianni/forge/results/refund-ffi-oracle-local-20261112/attempt-0001/explore-0001/proof.sml:19: error: Value or constructor (decode_encode_FS) has not been declared
+Found near pr ("DECODE_ENCODE_FS\n" ^ thm_to_string decode_encode_FS)

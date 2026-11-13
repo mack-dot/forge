@@ -1,0 +1,455 @@
+STEP 1
+  HYP_RAW ¬s.SCTLR_EL1.E0E
+  HYP_SIMP ¬s.SCTLR_EL1.E0E
+  HYP_RAW ¬s.TCR_EL1.TBI0
+  HYP_SIMP ¬s.TCR_EL1.TBI0
+  HYP_RAW ¬s.TCR_EL1.TBI1
+  HYP_SIMP ¬s.TCR_EL1.TBI1
+  HYP_RAW s.MEM s.PC = 192w
+  HYP_SIMP s.MEM s.PC = 192w
+  HYP_RAW s.MEM (s.PC + 1w) = 0w
+  HYP_SIMP s.MEM (s.PC + 1w) = 0w
+  HYP_RAW s.MEM (s.PC + 3w) = 55w
+  HYP_SIMP s.MEM (s.PC + 3w) = 55w
+  HYP_RAW s.MEM (s.PC + 2w) = 248w
+  HYP_SIMP s.MEM (s.PC + 2w) = 248w
+  HYP_RAW s.PSTATE.EL = 0w
+  HYP_SIMP s.PSTATE.EL = 0w
+  HYP_RAW s.exception = NoException
+  HYP_SIMP s.exception = NoException
+  HYP_RAW aligned 2 s.PC
+  HYP_SIMP aligned 2 s.PC
+  HYP_RAW word_bit 31 (w2w (s.REG 0w))
+  HYP_SIMP word_bit 31 (w2w (s.REG 0w))
+  NEXT_STATE s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>
+STEP 2
+  HYP_RAW ¬(s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).SCTLR_EL1.
+E0E
+  HYP_SIMP ¬s.SCTLR_EL1.E0E
+  HYP_RAW (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).MEM
+  (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).PC =
+40w
+  HYP_SIMP s.MEM (s.PC + 24w) = 40w
+  HYP_RAW (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).MEM
+  ((s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).PC + 1w) =
+0w
+  HYP_SIMP s.MEM (s.PC + 25w) = 0w
+  HYP_RAW (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).MEM
+  ((s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).PC + 3w) =
+82w
+  HYP_SIMP s.MEM (s.PC + 27w) = 82w
+  HYP_RAW (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).MEM
+  ((s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).PC + 2w) =
+128w
+  HYP_SIMP s.MEM (s.PC + 26w) = 128w
+  HYP_RAW (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).PSTATE.EL =
+0w
+  HYP_SIMP s.PSTATE.EL = 0w
+  HYP_RAW (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).exception =
+NoException
+  HYP_SIMP s.exception = NoException
+  HYP_RAW aligned 2
+  (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>).PC
+  HYP_SIMP aligned 2 (s.PC + 24w)
+  NEXT_STATE s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>
+STEP 3
+  HYP_RAW ¬(s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+SCTLR_EL1.E0E
+  HYP_SIMP ¬s.SCTLR_EL1.E0E
+  HYP_RAW ¬(s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+SCTLR_EL1.SA0
+  HYP_SIMP ¬s.SCTLR_EL1.SA0
+  HYP_RAW (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).MEM
+  (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+  PC =
+104w
+  HYP_SIMP s.MEM (s.PC + 28w) = 104w
+  HYP_RAW (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).MEM
+  ((s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+   PC + 1w) =
+2w
+  HYP_SIMP s.MEM (s.PC + 29w) = 2w
+  HYP_RAW (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).MEM
+  ((s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+   PC + 3w) =
+57w
+  HYP_SIMP s.MEM (s.PC + 31w) = 57w
+  HYP_RAW (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).MEM
+  ((s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+   PC + 2w) =
+0w
+  HYP_SIMP s.MEM (s.PC + 30w) = 0w
+  HYP_RAW (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+PSTATE.EL =
+0w
+  HYP_SIMP s.PSTATE.EL = 0w
+  HYP_RAW (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+exception =
+NoException
+  HYP_SIMP s.exception = NoException
+  HYP_RAW aligned 2
+  (s with <|PC := s.PC + 28w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>).
+  PC
+  HYP_SIMP aligned 2 (s.PC + 28w)
+  NEXT_STATE s with
+<|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+  branch_hint := NONE|>
+STEP 4
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).SCTLR_EL1.E0E
+  HYP_SIMP ¬s.SCTLR_EL1.E0E
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).SCTLR_EL1.SA0
+  HYP_SIMP ¬s.SCTLR_EL1.SA0
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).MEM
+  (s with
+   <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+     branch_hint := NONE|>).PC =
+253w
+  HYP_SIMP (if s.REG 19w = s.PC + 32w then 1w else s.MEM (s.PC + 32w)) = 253w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+      branch_hint := NONE|>).PC + 1w) =
+123w
+  HYP_SIMP (if s.REG 19w = s.PC + 33w then 1w else s.MEM (s.PC + 33w)) = 123w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+      branch_hint := NONE|>).PC + 3w) =
+169w
+  HYP_SIMP (if s.REG 19w = s.PC + 35w then 1w else s.MEM (s.PC + 35w)) = 169w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+      branch_hint := NONE|>).PC + 2w) =
+65w
+  HYP_SIMP (if s.REG 19w = s.PC + 34w then 1w else s.MEM (s.PC + 34w)) = 65w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).PSTATE.EL =
+0w
+  HYP_SIMP s.PSTATE.EL = 0w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+   branch_hint := NONE|>).exception =
+NoException
+  HYP_SIMP s.exception = NoException
+  HYP_RAW aligned 3
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+      branch_hint := NONE|>).SP_EL0 + 16w)
+  HYP_SIMP aligned 3 (s.SP_EL0 + 16w)
+  HYP_RAW aligned 2
+  (s with
+   <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 32w; REG := s.REG⦇8w ↦ 1w⦈;
+     branch_hint := NONE|>).PC
+  HYP_SIMP aligned 2 (s.PC + 32w)
+  NEXT_STATE s with
+<|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+  REG :=
+    s.REG⦇
+      30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+      29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+    ⦈; branch_hint := NONE|>
+STEP 5
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).SCTLR_EL1.E0E
+  HYP_SIMP ¬s.SCTLR_EL1.E0E
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).SCTLR_EL1.SA0
+  HYP_SIMP ¬s.SCTLR_EL1.SA0
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).MEM
+  (s with
+   <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+     REG :=
+       s.REG⦇
+         30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+         29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+       ⦈; branch_hint := NONE|>).PC =
+244w
+  HYP_SIMP (if s.REG 19w = s.PC + 36w then 1w else s.MEM (s.PC + 36w)) = 244w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+      REG :=
+        s.REG⦇
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; branch_hint := NONE|>).PC + 1w) =
+79w
+  HYP_SIMP (if s.REG 19w = s.PC + 37w then 1w else s.MEM (s.PC + 37w)) = 79w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+      REG :=
+        s.REG⦇
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; branch_hint := NONE|>).PC + 3w) =
+168w
+  HYP_SIMP (if s.REG 19w = s.PC + 39w then 1w else s.MEM (s.PC + 39w)) = 168w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+      REG :=
+        s.REG⦇
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; branch_hint := NONE|>).PC + 2w) =
+194w
+  HYP_SIMP (if s.REG 19w = s.PC + 38w then 1w else s.MEM (s.PC + 38w)) = 194w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).PSTATE.EL =
+0w
+  HYP_SIMP s.PSTATE.EL = 0w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+   REG :=
+     s.REG⦇
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; branch_hint := NONE|>).exception =
+NoException
+  HYP_SIMP s.exception = NoException
+  HYP_RAW aligned 3
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+      REG :=
+        s.REG⦇
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; branch_hint := NONE|>).SP_EL0 + 0w)
+  HYP_SIMP aligned 3 s.SP_EL0
+  HYP_RAW aligned 2
+  (s with
+   <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 36w;
+     REG :=
+       s.REG⦇
+         30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+         29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+       ⦈; branch_hint := NONE|>).PC
+  HYP_SIMP aligned 2 (s.PC + 36w)
+  NEXT_STATE s with
+<|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+  REG :=
+    s.REG⦇
+      19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+      20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+      30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+      29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+    ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>
+STEP 6
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).SCTLR_EL1.E0E
+  HYP_SIMP ¬s.SCTLR_EL1.E0E
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).TCR_EL1.TBI0
+  HYP_SIMP ¬s.TCR_EL1.TBI0
+  HYP_RAW ¬(s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).TCR_EL1.TBI1
+  HYP_SIMP ¬s.TCR_EL1.TBI1
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).MEM
+  (s with
+   <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+     REG :=
+       s.REG⦇
+         19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+         20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+         30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+         29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+       ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).PC =
+192w
+  HYP_SIMP (if s.REG 19w = s.PC + 40w then 1w else s.MEM (s.PC + 40w)) = 192w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+      REG :=
+        s.REG⦇
+          19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+          20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).PC + 1w) =
+3w
+  HYP_SIMP (if s.REG 19w = s.PC + 41w then 1w else s.MEM (s.PC + 41w)) = 3w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+      REG :=
+        s.REG⦇
+          19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+          20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).PC + 3w) =
+214w
+  HYP_SIMP (if s.REG 19w = s.PC + 43w then 1w else s.MEM (s.PC + 43w)) = 214w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).MEM
+  ((s with
+    <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+      REG :=
+        s.REG⦇
+          19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+          20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+          30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+          29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+        ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).PC + 2w) =
+95w
+  HYP_SIMP (if s.REG 19w = s.PC + 42w then 1w else s.MEM (s.PC + 42w)) = 95w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).PSTATE.EL =
+0w
+  HYP_SIMP s.PSTATE.EL = 0w
+  HYP_RAW (s with
+ <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+   REG :=
+     s.REG⦇
+       19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+       20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+       30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+       29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+     ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).exception =
+NoException
+  HYP_SIMP s.exception = NoException
+  HYP_RAW aligned 2
+  (s with
+   <|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈; PC := s.PC + 40w;
+     REG :=
+       s.REG⦇
+         19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+         20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+         30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+         29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+       ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>).PC
+  HYP_SIMP aligned 2 (s.PC + 40w)
+  NEXT_STATE s with
+<|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈;
+  PC := mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+  REG :=
+    s.REG⦇
+      19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+      20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+      30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+      29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+    ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := SOME BranchType_RET|>
+FINAL_STATE s with
+<|MEM := s.MEM⦇s.REG 19w ↦ 1w⦈;
+  PC := mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+  REG :=
+    s.REG⦇
+      19w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 8w);
+      20w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ s.SP_EL0;
+      30w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 24w);
+      29w ↦ mem_dword s.MEM⦇s.REG 19w ↦ 1w⦈ (s.SP_EL0 + 16w); 8w ↦ 1w
+    ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := SOME BranchType_RET|>
+EXPLORE_COMPLETE

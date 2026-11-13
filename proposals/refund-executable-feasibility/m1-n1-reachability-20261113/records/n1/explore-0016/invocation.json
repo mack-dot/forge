@@ -1,0 +1,24 @@
+{
+ "case": "explore-0016",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/explore-0016/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "explore-0016.sml",
+ "source_sha256": "82fa5b2356a05724eaabe008c1ea1128aabde24f619107a67430be3132ce0b97",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743"
+ },
+ "resource_guard": {
+  "memory_free_percent": 49,
+  "disk_free_gib": 35.73,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false
+}

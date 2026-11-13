@@ -11,6 +11,182 @@ labels remain historical and must not be treated as the current priority order.
 
 
 
+## Resume here — N1 proved in corrected form; exclusion needs P1–P3 (U364–U365)
+
+[Fifth continuation report](proposals/refund-executable-feasibility/m1-n1-reachability-20261113/REPORT.md).
+
+- [x] N1 as first stated is false: function 31 (`InstallData_location`) calls
+  29 (`Install_location`) (U364).
+- [x] `install_stubs_unreferenced`: for every allocation oracle, no other
+  function of the exact word program holds a code label of either stub (U364).
+- [ ] **U298:** exclusion not established. Proposed, not run: P1 lab-level
+  closure, P2 lab semantic invariant, P3 target prefix lemma (U365).
+- [ ] Next: P1 by evaluation with an explicit oracle.
+- [ ] Owner decisions of U360–U363 are unchanged: installer assumption,
+  Profile A or B, replay budget.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U360–U363) — superseded by U364–U365
+
+[Fourth continuation report](proposals/refund-executable-feasibility/m1-exclusion-profile-20261113/REPORT.md).
+
+- [x] `install_exclusion_suffices` and three supporting theorems: with
+  installer exclusion, `installed` needs no correct install handler (U360).
+- [x] Profile A/B comparison and installed-state obligation list written (U361).
+- [x] Clean-container replay of `ffiread_error_return` and
+  `install_call_site_step` from upstream sources: exit 0; exports
+  byte-identical to the host (U362).
+- [x] Working-tree audit: additions only; ten ELF files with a mode change (U363).
+- [ ] **U298:** exclusion for the exact program is not proved. Next lemma N1:
+  `Install_location` is not call-reachable in the exact word program.
+- [ ] Owner decision: accept the exclusion as a named assumption, or wait for
+  its proof. `install_interfer_ok` is likely false for the native build
+  without `EVAL` (U296, U360).
+- [ ] Owner decision: Profile A (recommended) or Profile B. Neither is approved.
+- [ ] `installed` for the physical process: six obligations, NOT_ESTABLISHED.
+- [ ] Clean replay of CakeML-dependent theorems; independent replay.
+- [ ] Owner decision: commit of the 2026-11-12 and 2026-11-13 packets; the
+  ELF mode change.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U357–U359) — superseded by U360–U363
+
+[Third continuation report](proposals/refund-executable-feasibility/m1-installed-closure-20261112/REPORT.md):
+resource candidates, replay status, initializer on `installed`, installer call site.
+
+- [x] Resource inspection: nothing safe to remove; 0 GiB recovered (U357).
+- [x] `arm8_machine_model_instance`: explicit machine-model instance of the
+  predicate. A model choice, not a physical property (U358).
+- [x] `refund_initialization_installed`: `memory_assumption` follows from the
+  published `installed` predicate. Initializer premises: the predicate and
+  `installed` (U358).
+- [x] `install_call_site_step`: the exact code has one direct branch to the
+  installer entry, at code offset 4660 (U359).
+- [ ] **Blocker:** clean replay NOT RUN. Free disk 12.3 GiB against a 20 GiB
+  target; the Docker VM is in live use by another project. Owner decides on
+  the candidates in the report.
+- [ ] **U298:** prove that the instruction at code offset 4660 is never
+  executed and that no indirect branch targets the installer entry, or keep
+  an explicit installer assumption.
+- [ ] `installed` for the physical process: ASSUMED under either profile.
+- [ ] Owner decision: Profile A or Profile B. Neither is approved.
+- [ ] ARM8: prologue, call frame and success path of `ffiread`.
+
+All results are same-machine results with cached parent theories. M1 open;
+Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U352–U356) — superseded by U357–U359
+
+[Second continuation report](proposals/refund-executable-feasibility/m1-replay-closure-20261112/REPORT.md):
+resource inspection, replay stop, proofs, Profiles A and B, updated matrix and graph.
+
+- [x] `read_error_basis_instance`: proved; proof, repeat, import exit0; three
+  controls exit1. The U351 failure was a goal-construction error (U353).
+- [x] `basis_read_error_oracle`: import, repeat and control now run (U353).
+- [x] U349 controls: one rejection, one CPU-limit stop (not counted), one
+  statement-level rejection (U354).
+- [x] `refund_initialization_aligned`: initializer has 2 premises (was 6):
+  `is_arm8_machine_config mc` and `memory_assumption` (U354).
+- [x] U298 first obligation: the published stub list is not install-free;
+  two lemmas proved (U355). The exclusion itself stays NOT RUN.
+- [x] Profiles A and B written; neither approved (U356).
+- [ ] **Blocker:** 6.7 GiB free; target 20 GiB; deficit 13.3 GiB. Nothing is
+  already authorized for deletion. Clean replay NOT RUN.
+- [ ] **Owner decisions:** what to free (largest: 20.35 GiB of other-project
+  Claude scratch, a restart for swap, Docker reclaim); Profile A or B.
+- [ ] Next proofs: `memory_assumption` from the published installed-state
+  predicate; U298 target-level invariant or an installer assumption; ARM8
+  prologue and call of `ffiread`.
+
+All results are same-machine results with cached parent theories. M1 open;
+Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U348–U351) — superseded by U352–U356
+
+[Continuation report](proposals/refund-executable-feasibility/m1-closure-20261112/REPORT.md):
+verification matrix, dependency graph, trusted-base inventory, obligations, plan.
+
+- [x] `ffiread_error_return`: six ARM8 steps on the exact native bytes; proof,
+  repeat, import exit0; three valid controls exit1.
+  [U348](proposals/refund-executable-feasibility/arm8-compose-local-20261112/REPORT.md).
+- [x] `refund_initialization_machine`: initializer has 6 premises (was 14);
+  proof, repeat, audit exit0. Controls NOT RUN.
+  [U349](proposals/refund-executable-feasibility/initializer-machine-local-20261112/REPORT.md).
+- [x] `basis_read_error_oracle`: published oracle satisfies the read-error
+  equation for an unreadable descriptor; proof exit0. Import, repeat, controls
+  NOT RUN. Instance theorem FAILED once (U351).
+- [x] HOL, CakeML and PolyML sources equal upstream commit trees (U350).
+- [ ] **Blocker:** host disk 1–2 GiB free and swap 15–16 GiB. Run HOL jobs one
+  at a time. Owner: free at least 20 GiB and clear swap.
+- [ ] **Next:** clean-container replay, first `ffiread_error_return` (97
+  closure nodes, no CakeML theory). Independent replay stays NOT RUN.
+- [ ] Owner decision: FFI environment assumption (published oracle only, or
+  an extended oracle proposal) and the assurance profile.
+- [ ] Pending local checks: two initializer controls; oracle import, repeat
+  and controls; instance theorem with a corrected tactic.
+- [ ] U298 exclusion for the exact program: inspected by source reading only.
+- [ ] ARM8: prologue and call of `ffiread`; initializer premises 2–5 from the
+  published installed-state predicate.
+
+All results are same-machine results with cached parent theories. M1 open;
+Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Two local proofs checked (U345–U347) — superseded as resume point by U348–U351
+
+- [x] `read_error_generic`: frozen statement checked locally. Proof, repeat and
+  frozen import exit0; two frozen controls exit1.
+  [U345 report](proposals/refund-executable-feasibility/generic-read-local-20261112/REPORT.md).
+  The FFI oracle premise stays an assumption.
+- [x] U316 `arm8_stepLib` inspection: unchanged source exits0; seven step
+  theorems for the six error-return words.
+  [U346 report](proposals/refund-executable-feasibility/arm8-step-local-20261112/REPORT.md).
+- [x] U314 initial stack `good_code`: proved; initializer has 14 conditions
+  (was 15). Proof, repeat and prepared audit exit0; three prepared controls exit1.
+  [U347 report](proposals/refund-executable-feasibility/initial-stack-code-local-20261112/REPORT.md).
+- [ ] **Next:** compose `read_error_generic` through `inputAllFrom` and
+  `refund_main`. Compare the error behavior with the approved contract.
+- [ ] Compose the six ARM8 steps into one error-return theorem with explicit
+  code, stack, separation and return-address premises.
+- [ ] Lower-pass transitions and the U298 condition for every formal target
+  `TimeOut` prefix. Not started.
+- [ ] Hold the [U341 hosted request](proposals/refund-executable-feasibility/proof-loader-fix-20261109/NEXT-RUN-APPROVAL.md);
+  it is not necessary for these theorems.
+- [ ] Owner decision: an approved assurance profile for the conditions that
+  stay assumptions (14 initializer conditions, FFI oracle, runtime matrix rows).
+- [ ] Independent full-chain replay, then the operational items O1 and O2.
+
+All three results are LOCALLY_VALIDATED: same machine and agent, cached parent
+theories, no independent replay. M1 open; Stage12 unauthorized;
+end_to_end=false. This section grants no authority.
+
+## Local context works; one tactic step failed (U342) — superseded by U345
+
+[Report](proposals/refund-executable-feasibility/local-context-20261112/REPORT.md).
+The `/var/tmp` EPERM of U316/U319/U320 does not occur in this session. The
+unchanged SAT diagnostic exits0. The unchanged candidate loads `cfLib`, reaches
+`read_error_generic` for the first time and exits1 at `THEN1`. An instrumented
+copy exits1 and shows the cause: the `xffi` branch supplies no witness for
+`frame`, `s''`, `u'`, `ns'` and `events'`. The theorem is unestablished, not
+disproved. No repair, repeat, import, control or hosted job ran.
+
+- [ ] **Next:** new candidate file that changes only the `xffi` witness step.
+  Then proof, repeat, fresh import and two controls locally. Stop at the first
+  unexpected result.
+- [ ] Hold the [U341 hosted request](proposals/refund-executable-feasibility/proof-loader-fix-20261109/NEXT-RUN-APPROVAL.md).
+  It runs the same candidate bytes. The hosted context is not necessary now.
+- [ ] Retry the U316 `arm8_stepLib` load locally. Then resume U314 and U298.
+- [ ] Owner decision: an approved assurance profile. The mission requires it
+  for every correspondence that stays an assumption. The
+  [runtime matrix](proposals/refund-executable-feasibility/runtime-premises-20261104/CORRESPONDENCE.md)
+  rows marked ASSUMED are proposals, not approved waivers. Without this
+  decision M1 stays PARTIAL.
+- [ ] Independent full-chain replay, then the operational items O1 and O2.
+
+U343: no script was removed. The protected lock pins 33 of 35 `scripts/` files.
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
 ## Bootstrap path fix tested locally; proof execution remains open — U341
 
 [Fix](proposals/refund-executable-feasibility/proof-loader-fix-20261109/REPORT.md),

@@ -1,0 +1,242 @@
+SEARCHED_THEORIES 330
+SEARCHED_THEOREMS 32526
+MENTION_INSTALL_PC 20
+HIT targetProps.next_interference_SharedMem conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT targetProps.next_interference_MappedWrite conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT targetProps.next_interference_MappedRead conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT targetProps.next_interference_install conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT targetProps.next_interference_ExtCall conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT targetProps.find_next_interference_def conclusion_mentions=true conclusion_has_pc_inequality=false
+HIT lab_to_targetProof.oracle_tie_install_residues conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT lab_to_targetProof.oracle_tie_ExtCall_residues conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT lab_to_targetProof.ffi_entry_pcs_NOT_install_OR_halt_pc conclusion_mentions=true conclusion_has_pc_inequality=true
+HIT lab_to_targetProof.asm_fetch_NOT_ffi_entry_pcs conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT lab_to_targetProof.state_rel_def conclusion_mentions=true conclusion_has_pc_inequality=true
+HIT lab_to_targetProof.share_mem_state_rel_def conclusion_mentions=true conclusion_has_pc_inequality=true
+HIT targetSem.machine_config_fupdselfid conclusion_mentions=true conclusion_has_pc_inequality=false
+HIT targetSem.machine_config_component_equality conclusion_mentions=true conclusion_has_pc_inequality=false
+HIT targetSem.machine_config_accfupds conclusion_mentions=true conclusion_has_pc_inequality=false
+HIT targetSem.machine_config_accessors conclusion_mentions=true conclusion_has_pc_inequality=false
+HIT targetSem.evaluate_ind conclusion_mentions=false conclusion_has_pc_inequality=false
+HIT targetSem.evaluate_def conclusion_mentions=true conclusion_has_pc_inequality=false
+HIT targetSem.start_pc_ok_def conclusion_mentions=true conclusion_has_pc_inequality=true
+HIT targetSem.recordtype_machine_config_seldef_install_pc_def conclusion_mentions=true conclusion_has_pc_inequality=false
+CONCLUDE_PC_INEQUALITY 4
+CONCLUSION_HIT lab_to_targetProof.ffi_entry_pcs_NOT_install_OR_halt_pc
+⊢ find_index pc mc_conf.ffi_entry_pcs 0 = SOME index ∧
+  mc_conf.halt_pc ≠ mc_conf.ffi_entry_pcs❲index❳ ∧
+  mc_conf.install_pc ≠ mc_conf.ffi_entry_pcs❲index❳ ⇒
+  pc ≠ mc_conf.install_pc ∧ pc ≠ mc_conf.halt_pc
+CONCLUSION_HIT lab_to_targetProof.state_rel_def
+⊢ ∀mc_conf code2 labs p s1 t1 ms1.
+    state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ⇔
+    target_state_rel mc_conf.target t1 ms1 ∧ good_dimindex (:α) ∧
+    mc_conf.prog_addresses = t1.mem_domain ∧
+    mc_conf.halt_pc ∉ mc_conf.prog_addresses ∧
+    mc_conf.install_pc ∉ mc_conf.prog_addresses ∧
+    reg_ok s1.ptr_reg mc_conf.target.config ∧ mc_conf.ptr_reg = s1.ptr_reg ∧
+    reg_ok s1.len_reg mc_conf.target.config ∧ mc_conf.len_reg = s1.len_reg ∧
+    reg_ok s1.ptr2_reg mc_conf.target.config ∧
+    mc_conf.ptr2_reg = s1.ptr2_reg ∧
+    reg_ok s1.len2_reg mc_conf.target.config ∧
+    mc_conf.len2_reg = s1.len2_reg ∧
+    reg_ok s1.link_reg mc_conf.target.config ∧
+    (∃i. mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+         ∀index.
+           if i ≤ index ∧ index < LENGTH mc_conf.ffi_names then
+             ∃info. ALOOKUP mc_conf.mmio_info index = SOME info
+           else ALOOKUP mc_conf.mmio_info index = NONE) ∧
+    (∀ms2 k index new_bytes t1 bytes bytes2 st new_st i.
+       mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧ index < i ∧
+       read_ffi_bytearrays mc_conf ms2 = (SOME bytes,SOME bytes2) ∧
+       call_FFI_rel꙳ s1.ffi st ∧
+       call_FFI st mc_conf.ffi_names❲index❳ bytes bytes2 =
+       FFI_return new_st new_bytes ∧ mc_conf.prog_addresses = t1.mem_domain ∧
+       target_state_rel mc_conf.target
+         (t1 with pc := p − n2w ((3 + index) * ffi_offset)) ms2 ∧
+       aligned mc_conf.target.config.code_alignment (t1.regs s1.link_reg) ⇒
+       (let
+          ms' = mc_conf.ffi_interfer k (index,new_bytes,ms2)
+        in
+          target_state_rel mc_conf.target
+            (t1 with
+             <|regs :=
+                 (λa.
+                    if
+                      MEM a mc_conf.callee_saved_regs ∨
+                      ¬(a < mc_conf.target.config.reg_count) ∨
+                      MEM a mc_conf.target.config.avoid_regs
+                    then
+                      t1.regs a
+                    else mc_conf.target.get_reg ms' a);
+               fp_regs := (λn. mc_conf.target.get_fp_reg ms' n);
+               mem :=
+                 asm_write_bytearray (t1.regs s1.ptr2_reg) new_bytes t1.mem;
+               pc := t1.regs s1.link_reg|>) ms')) ∧
+    (∀ms2 t1 k bytes.
+       mc_conf.prog_addresses = t1.mem_domain ∧
+       read_ffi_bytearray mc_conf mc_conf.ptr_reg mc_conf.len_reg ms2 =
+       SOME bytes ∧ LENGTH bytes ≤ s1.code_buffer.space_left ∧
+       target_state_rel mc_conf.target
+         (t1 with pc := p − n2w (2 * ffi_offset)) ms2 ∧
+       aligned mc_conf.target.config.code_alignment (t1.regs s1.link_reg) ⇒
+       (let
+          ms' = mc_conf.install_interfer k (bytes,ms2)
+        in
+          target_state_rel mc_conf.target
+            (t1 with
+             <|regs :=
+                 (λa.
+                    if
+                      MEM a mc_conf.callee_saved_regs ∨ a = s1.ptr_reg ∨
+                      ¬(a < mc_conf.target.config.reg_count) ∨
+                      MEM a mc_conf.target.config.avoid_regs
+                    then
+                      if a = s1.ptr_reg then t1.regs s1.ptr2_reg
+                      else t1.regs a
+                    else mc_conf.target.get_reg ms' a);
+               fp_regs := (λn. mc_conf.target.get_fp_reg ms' n);
+               mem := asm_write_bytearray (t1.regs s1.ptr2_reg) bytes t1.mem;
+               pc := t1.regs s1.link_reg|>) ms')) ∧
+    s1.compile = compile_lab mc_conf.target.config ∧
+    (no_share_mem_inst code2 ⇒
+     ∀k. (let
+            (cfg,code) = s1.compile_oracle k
+          in
+            good_code mc_conf.target.config cfg.labels code ∧
+            no_share_mem_inst code ∧
+            (k = 0 ⇒
+             cfg.labels = labs ∧ cfg.pos = LENGTH (prog_to_bytes code2) ∧
+             cfg.ffi_names = SOME mc_conf.ffi_names))) ∧
+    (∀l1 l2 x. lab_lookup l1 l2 labs = SOME x ⇒ EVEN x) ∧ 1w && p = 0w ∧
+    list_subset (FILTER (λx. ∃s. x = ExtCall s) (find_ffi_names s1.code))
+      mc_conf.ffi_names ∧ EVEN (LENGTH (prog_to_bytes code2)) ∧
+    (∀name i.
+       MEM name mc_conf.ffi_names ∧
+       mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+       get_ffi_index mc_conf.ffi_names name < i ⇒
+       (∃s. name = ExtCall s) ∧
+       p − n2w ((3 + get_ffi_index mc_conf.ffi_names name) * ffi_offset) ∉
+       mc_conf.prog_addresses ∧
+       p − n2w ((3 + get_ffi_index mc_conf.ffi_names name) * ffi_offset) ≠
+       mc_conf.halt_pc ∧
+       p − n2w ((3 + get_ffi_index mc_conf.ffi_names name) * ffi_offset) ≠
+       mc_conf.install_pc ∧
+       find_index
+         (p − n2w ((3 + get_ffi_index mc_conf.ffi_names name) * ffi_offset))
+         mc_conf.ffi_entry_pcs 0 =
+       SOME (get_ffi_index mc_conf.ffi_names name)) ∧
+    p − n2w ffi_offset = mc_conf.halt_pc ∧
+    p − n2w (2 * ffi_offset) = mc_conf.install_pc ∧
+    interference_ok mc_conf.next_interfer (mc_conf.target.proj t1.mem_domain) ∧
+    (∀l1 l2 x2.
+       loc_to_pc l1 l2 s1.code = SOME x2 ⇒
+       lab_lookup l1 l2 labs = SOME (pos_val x2 0 code2)) ∧
+    (∀r. s1.fp_regs r = t1.fp_regs r) ∧
+    (∀r. word_loc_val p labs (read_reg r s1) = SOME (t1.regs r)) ∧
+    (∀a. byte_align a ∈ s1.mem_domain ⇒
+         a ∈ t1.mem_domain ∧ a ∈ s1.mem_domain ∧
+         word_loc_val_byte p labs s1.mem a s1.be = SOME (t1.mem a)) ∧
+    (∀n. n < s1.code_buffer.space_left ⇒
+         (let
+            addr =
+              s1.code_buffer.position +
+              n2w (LENGTH s1.code_buffer.buffer + n)
+          in
+            addr ∈ t1.mem_domain ∧ addr ∉ s1.mem_domain)) ∧
+    bytes_in_mem p (prog_to_bytes code2) t1.mem t1.mem_domain s1.mem_domain ∧
+    s1.code_buffer.position = p + n2w (LENGTH (prog_to_bytes code2)) ∧
+    bytes_in_mem s1.code_buffer.position s1.code_buffer.buffer t1.mem
+      t1.mem_domain s1.mem_domain ∧
+    LENGTH (prog_to_bytes code2) + LENGTH s1.code_buffer.buffer +
+    s1.code_buffer.space_left < dimword (:α) ∧
+    (∀bn.
+       bn < LENGTH s1.code_buffer.buffer + s1.code_buffer.space_left ⇒
+       ¬MEM (s1.code_buffer.position + n2w bn) mc_conf.ffi_entry_pcs) ∧
+    ¬s1.failed ∧ ¬t1.failed ∧ (s1.be ⇔ t1.be) ∧
+    t1.pc = p + n2w (pos_val s1.pc 0 code2) ∧
+    p && n2w (2 ** t1.align − 1) = 0w ∧
+    (case mc_conf.target.config.link_reg of NONE => T | SOME r => t1.lr = r) ∧
+    (t1.be ⇔ mc_conf.target.config.big_endian) ∧
+    t1.align = mc_conf.target.config.code_alignment ∧
+    enc_ok mc_conf.target.config ∧
+    all_enc_ok mc_conf.target.config labs
+      (TAKE (THE (mmio_pcs_min_index mc_conf.ffi_names)) mc_conf.ffi_names) 0
+      code2 ∧ EVERY sec_labels_ok code2 ∧ code_similar s1.code code2 ∧
+    share_mem_state_rel mc_conf s1 t1 ms1 ∧
+    share_mem_domain_code_rel mc_conf p code2 s1.shared_mem_domain ∧
+    LENGTH mc_conf.ffi_names = LENGTH mc_conf.ffi_entry_pcs ∧
+    no_install_or_no_share_mem code2 mc_conf.ffi_names
+CONCLUSION_HIT lab_to_targetProof.share_mem_state_rel_def
+⊢ ∀mc_conf s1 t1 ms1.
+    share_mem_state_rel mc_conf s1 t1 ms1 ⇔
+    (∀ms2 k index new_bytes t1 nb ad offs re pc' ad' st new_st i.
+       mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧ i ≤ index ∧
+       index < LENGTH mc_conf.ffi_names ∧ call_FFI_rel꙳ s1.ffi st ∧
+       ALOOKUP mc_conf.mmio_info index = SOME (nb,Addr ad offs,re,pc') ∧
+       mc_conf.prog_addresses = t1.mem_domain ∧
+       ad' = mc_conf.target.get_reg ms2 ad + i2w offs ∧
+       target_state_rel mc_conf.target
+         (t1 with pc := mc_conf.ffi_entry_pcs❲index❳) ms2 ⇒
+       ∃op.
+         mc_conf.ffi_names❲index❳ = SharedMem op ∧
+         case op of
+           MappedRead =>
+             (if nb = 0w then w2n ad' MOD (dimindex (:α) DIV 8) = 0 else T) ∧
+             ad' ∈ mc_conf.shared_addresses ∧
+             is_valid_mapped_read (mc_conf.target.get_pc ms2) nb
+               (Addr ad offs) re pc' mc_conf.target ms2
+               mc_conf.prog_addresses ∧
+             call_FFI st (SharedMem MappedRead) [nb] (word_to_bytes ad' F) =
+             FFI_return new_st new_bytes ⇒
+             target_state_rel mc_conf.target
+               (t1 with
+                <|pc := pc';
+                  regs :=
+                    (λn.
+                       if n = re then word_of_bytes F 0w new_bytes
+                       else t1.regs n)|>)
+               (mc_conf.ffi_interfer k (index,new_bytes,ms2))
+         | MappedWrite =>
+           (if nb = 0w then w2n ad' MOD (dimindex (:α) DIV 8) = 0 else T) ∧
+           ad' ∈ mc_conf.shared_addresses ∧
+           is_valid_mapped_write (mc_conf.target.get_pc ms2) nb
+             (Addr ad offs) re pc' mc_conf.target ms2 mc_conf.prog_addresses ∧
+           call_FFI st (SharedMem MappedWrite) [nb]
+             ((let
+                 w = mc_conf.target.get_reg ms2 re
+               in
+                 if nb = 0w then word_to_bytes w F
+                 else word_to_bytes_aux (w2n nb) w F) ++ word_to_bytes ad' F) =
+           FFI_return new_st new_bytes ⇒
+           target_state_rel mc_conf.target (t1 with pc := pc')
+             (mc_conf.ffi_interfer k (index,new_bytes,ms2))) ∧
+    ∀index i.
+      mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+      index < LENGTH mc_conf.ffi_names ∧ i ≤ index ⇒
+      mc_conf.halt_pc ≠ mc_conf.ffi_entry_pcs❲index❳ ∧
+      mc_conf.install_pc ≠ mc_conf.ffi_entry_pcs❲index❳
+CONCLUSION_HIT targetSem.start_pc_ok_def
+⊢ ∀mc_conf pc.
+    start_pc_ok mc_conf pc ⇔
+    mc_conf.halt_pc ∉ mc_conf.prog_addresses ∧
+    mc_conf.install_pc ∉ mc_conf.prog_addresses ∧
+    mc_conf.halt_pc ∉ mc_conf.shared_addresses ∧
+    mc_conf.install_pc ∉ mc_conf.shared_addresses ∧
+    pc − n2w ffi_offset = mc_conf.halt_pc ∧
+    pc − n2w (2 * ffi_offset) = mc_conf.install_pc ∧ 1w && pc = 0w ∧
+    ∃i. mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+        (∀index.
+           index < i ⇒
+           pc − n2w ((3 + index) * ffi_offset) ∉ mc_conf.prog_addresses ∧
+           pc − n2w ((3 + index) * ffi_offset) ∉ mc_conf.shared_addresses ∧
+           pc − n2w ((3 + index) * ffi_offset) ≠ mc_conf.halt_pc ∧
+           pc − n2w ((3 + index) * ffi_offset) ≠ mc_conf.install_pc ∧
+           find_index (pc − n2w ((3 + index) * ffi_offset))
+             mc_conf.ffi_entry_pcs 0 = SOME index) ∧
+        (∀index.
+           index < LENGTH mc_conf.ffi_names ∧ i ≤ index ⇒
+           mc_conf.halt_pc ≠ mc_conf.ffi_entry_pcs❲index❳ ∧
+           mc_conf.install_pc ≠ mc_conf.ffi_entry_pcs❲index❳) ∧
+        LENGTH mc_conf.ffi_names = LENGTH mc_conf.ffi_entry_pcs
+EXPLORE_COMPLETE

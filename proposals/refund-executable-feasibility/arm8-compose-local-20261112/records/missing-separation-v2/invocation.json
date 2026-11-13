@@ -1,0 +1,19 @@
+{
+ "case": "missing-separation-v2",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/compose-0001/forge_refundNativeReadErrorTheory.sig",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/compose-0001/forge_refundNativeReadErrorTheory.sml",
+  "/Users/mackianni/forge/results/refund-arm8-compose-local-20261112/attempt-0001/missing-separation-v2/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "missing-separation-v2.sml",
+ "source_sha256": "fae76f88c813ce65efdfde7634e0ad9d5dfc984d0b499abb8af02354385f26c7",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false
+}

@@ -1,0 +1,30 @@
+{
+ "case": "explore-0007",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/forge_targetInstallBridgeTheory.sig",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/forge_targetInstallBridgeTheory.sml",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/explore-0007/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+ "source": "explore-0007.sml",
+ "source_sha256": "f60b864bce16ec119a28b25a142dbb6f4a60f970d6a585e07618ed13a85b005c",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/preload.sml": "82c116203344a21a1ba385b78f87bf5f0f0297335b597e0b8aec26781edd50fd",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/.hol/objs/forge_targetInstallBridgeTheory.sig": "e0e2e4eb8245b499e14b105438a33793c777d24fe96eefc25e1119252a9ae4e3",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/.hol/objs/forge_targetInstallBridgeTheory.sml": "b09adf790d8451e83e2aa87506c5b567770c839d60a980edd54049a426329216"
+ },
+ "resource_guard": {
+  "memory_free_percent": 45,
+  "disk_free_gib": 36.22,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false
+}

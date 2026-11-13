@@ -1,0 +1,151 @@
+<<HOL message: Created theory "forge_refundInstallHandler">>
+Saved theorem _______ "arm8_install_handler_ok"
+Saved theorem _______ "arm8_install_handler_exists"
+Saved theorem _______ "installed_modulo_install_handler"
+Saved theorem _______ "install_exclusion_suffices"
+CHECKED arm8_install_handler_ok
+ []
+⊢ ∀mc pc cbspace.
+    is_arm8_machine_config mc ⇒
+    install_interfer_ok pc cbspace
+      (mc with
+       install_interfer :=
+         (λk x.
+            SND x with
+            <|PC := (SND x).REG 30w;
+              MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+              REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>))
+CHECKED arm8_install_handler_exists
+ []
+⊢ ∀mc pc cbspace.
+    is_arm8_machine_config mc ⇒
+    ∃h. install_interfer_ok pc cbspace (mc with install_interfer := h)
+CHECKED installed_modulo_install_handler
+ []
+⊢ is_arm8_machine_config mc ∧
+  (∃t m bitmap_ptr bitmaps_dm sdm.
+     (let
+        heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+      in
+        (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+         t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+         n2w (2 ** t.align − 1) && t.pc = 0w ∧
+         interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+         ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+         bytes_in_mem t.pc bytes t.mem t.mem_domain
+           (heap_stack_dm ∪ bitmaps_dm) ∧
+         heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+         (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+              a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+         (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+         DISJOINT mc.prog_addresses mc.shared_addresses ∧
+         (∀a. ∃w.
+            t.mem a = get_byte a w mc.target.config.big_endian ∧
+            m (byte_align a) = Word w) ∧
+         (∀n. n < cbspace ⇒
+              n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+              n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+         cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+        byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+        t.regs r1 ≤₊ t.regs r2 ∧
+        1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+        DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+        m (t.regs r1 + bytes_in_word) =
+        Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+        m (t.regs r1 + 2w * bytes_in_word) =
+        Word
+          (bitmap_ptr + bytes_in_word * n2w data_sp +
+           bytes_in_word * n2w (LENGTH bitmaps)) ∧
+        m (t.regs r1 + 3w * bytes_in_word) =
+        Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+        m (t.regs r1 + 4w * bytes_in_word) =
+        Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+        (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+         word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+           data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+        ffi_names = SOME mc.ffi_names ∧
+        ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+            MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+            DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+            mc.mmio_info =
+            ZIP
+              (GENLIST (λindex. index + i) (LENGTH shmem),
+               MAP
+                 (λrec.
+                    (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                     n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+            cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64))) ⇒
+  installed bytes cbspace bitmaps data_sp ffi_names (r1,r2)
+    (mc with
+     install_interfer :=
+       (λk x.
+          SND x with
+          <|PC := (SND x).REG 30w;
+            MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+            REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)) shmem ms
+CHECKED install_exclusion_suffices
+ []
+⊢ is_arm8_machine_config mc ∧
+  (∃t m bitmap_ptr bitmaps_dm sdm.
+     (let
+        heap_stack_dm = {w | t.regs r1 ≤₊ w ∧ w <₊ t.regs r2}
+      in
+        (target_state_rel mc.target t ms ∧ target_configured t mc ∧
+         t.pc = mc.target.get_pc ms ∧ start_pc_ok mc t.pc ∧
+         n2w (2 ** t.align − 1) && t.pc = 0w ∧
+         interference_ok mc.next_interfer (mc.target.proj mc.prog_addresses) ∧
+         ffi_interfer_ok t.pc mc ∧ T ∧ code_loaded bytes mc ms ∧
+         bytes_in_mem t.pc bytes t.mem t.mem_domain
+           (heap_stack_dm ∪ bitmaps_dm) ∧
+         heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+         (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+              a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc.shared_addresses ∧
+         (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+         DISJOINT mc.prog_addresses mc.shared_addresses ∧
+         (∀a. ∃w.
+            t.mem a = get_byte a w mc.target.config.big_endian ∧
+            m (byte_align a) = Word w) ∧
+         (∀n. n < cbspace ⇒
+              n2w (n + LENGTH bytes) + t.pc ∈ t.mem_domain ∧
+              n2w (n + LENGTH bytes) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+         cbspace + LENGTH bytes < dimword (:64)) ∧ byte_aligned (t.regs r1) ∧
+        byte_aligned (t.regs r2) ∧ byte_aligned bitmap_ptr ∧
+        t.regs r1 ≤₊ t.regs r2 ∧
+        1024w * bytes_in_word ≤₊ t.regs r2 − t.regs r1 ∧
+        DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs r1) = Word bitmap_ptr ∧
+        m (t.regs r1 + bytes_in_word) =
+        Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps)) ∧
+        m (t.regs r1 + 2w * bytes_in_word) =
+        Word
+          (bitmap_ptr + bytes_in_word * n2w data_sp +
+           bytes_in_word * n2w (LENGTH bitmaps)) ∧
+        m (t.regs r1 + 3w * bytes_in_word) =
+        Word (mc.target.get_pc ms + n2w (LENGTH bytes)) ∧
+        m (t.regs r1 + 4w * bytes_in_word) =
+        Word (mc.target.get_pc ms + n2w cbspace + n2w (LENGTH bytes)) ∧
+        (word_list bitmap_ptr (MAP (Word ∘ n2w) bitmaps) *
+         word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))
+           data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+        ffi_names = SOME mc.ffi_names ∧
+        ∀i. mmio_pcs_min_index mc.ffi_names = SOME i ⇒
+            MAP (λrec. w2n (mc.target.get_pc ms) + rec.entry_pc) shmem =
+            DROP i (MAP w2n mc.ffi_entry_pcs) ∧
+            mc.mmio_info =
+            ZIP
+              (GENLIST (λindex. index + i) (LENGTH shmem),
+               MAP
+                 (λrec.
+                    (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                     n2w rec.exit_pc + mc.target.get_pc ms)) shmem) ∧
+            cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64))) ∧
+  (∀j ms' ffi'.
+     evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+     mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+  ∃mc2.
+    is_arm8_machine_config mc2 ∧
+    installed bytes cbspace bitmaps data_sp ffi_names (r1,r2) mc2 shmem ms ∧
+    machine_sem mc2 ffi ms = machine_sem mc ffi ms
+REMOVED_CLAUSES 1
+Exporting theory "forge_refundInstallHandler" ... done.
+Theory "forge_refundInstallHandler" took 3.7s to build
+HANDLER_PROOF_COMPLETE

@@ -1,0 +1,18 @@
+--- a/generic-read-0001.sml
++++ b/generic-read-instrumented-0001.sml
+@@ -33,10 +33,12 @@
+     one (FFI_part s' u ns
+       (events ++ [IO_event (ExtCall «read») (n2w8 fd)
+         (ZIP (n2w2 n ++ h3::h4::rest,1w::n2w n::h3::h4::rest))]))`
+-  >- (xffi >> report_goal "generic-ffi" >> xsimpl >>
+-      qexists_tac `n2w8 fd` >> fs [FD_def,n2w2_def]) >>
++  >- (xffi >> report_goal "generic-ffi" >> xsimpl >> report_goal "after-xsimpl" >>
++      qexists_tac `n2w8 fd` >> report_goal "after-exists" >>
++      fs [FD_def,n2w2_def] >> report_goal "after-fs") >>
+   rpt (xlet_auto >- xsimpl) >> xif >> instantiate >>
+-  xlet_auto >- (xcon >> xsimpl >> instantiate >> xsimpl) >>
++  report_goal "before-xcon-xlet" >>
++  xlet_auto >- (xcon >> xsimpl >> report_goal "xcon-after-xsimpl" >> instantiate >> xsimpl >> report_goal "xcon-end") >>
+   xraise >> fs [InvalidFD_exn_def] >> xsimpl);
+ val (ors,axs) = Tag.dest_tag (Thm.tag read_error_generic);
+ val _ = if null (hyp read_error_generic) andalso null axs andalso

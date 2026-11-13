@@ -1,0 +1,33 @@
+{
+ "case": "import",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-install-site-local-20261112/attempt-0001/install-site-0001/forge_refundInstallSiteTheory.sig",
+  "/Users/mackianni/forge/results/refund-install-site-local-20261112/attempt-0001/install-site-0001/forge_refundInstallSiteTheory.sml",
+  "/Users/mackianni/forge/results/refund-install-site-local-20261112/attempt-0001/import/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "import.sml",
+ "source_sha256": "95d21b3eb2acd73eee0bef5fd9c40b1e4851e21cbdef6f73cfdcc8af7beebb90",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 4.958,
+ "child_user_cpu_seconds": 5.552,
+ "child_system_cpu_seconds": 0.95,
+ "child_max_rss_bytes": 615776256,
+ "markers": [
+  "NATIVE_IMPORT_COMPLETE"
+ ],
+ "stdout_sha256": "9deb801575227dacc6b562da7ad36d31a2fb7535fdceb57d083e50c190ea66de",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {},
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

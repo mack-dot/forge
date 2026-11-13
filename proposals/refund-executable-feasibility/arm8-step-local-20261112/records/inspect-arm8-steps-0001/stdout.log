@@ -1,0 +1,141 @@
+STEP_WORD 37f800c0 COUNT 2
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1,
+ ¬word_bit 31 (w2w (s.REG 0w)), s.MEM s.PC = 192w, s.MEM (s.PC + 1w) = 0w,
+ s.MEM (s.PC + 3w) = 55w, s.MEM (s.PC + 2w) = 248w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s = SOME (s with <|PC := s.PC + 4w; branch_hint := NONE|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP ¬s.TCR_EL1.TBI0
+STEP_HYP ¬s.TCR_EL1.TBI1
+STEP_HYP ¬word_bit 31 (w2w (s.REG 0w))
+STEP_HYP s.MEM s.PC = 192w
+STEP_HYP s.MEM (s.PC + 1w) = 0w
+STEP_HYP s.MEM (s.PC + 3w) = 55w
+STEP_HYP s.MEM (s.PC + 2w) = 248w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 2 s.PC
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 192w,
+ s.MEM (s.PC + 1w) = 0w, s.MEM (s.PC + 3w) = 55w, s.MEM (s.PC + 2w) = 248w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC,
+ word_bit 31 (w2w (s.REG 0w))]
+⊢ NextStateARM8 s =
+  SOME (s with <|PC := s.PC + 24w; branch_hint := SOME BranchType_JMP|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP ¬s.TCR_EL1.TBI0
+STEP_HYP ¬s.TCR_EL1.TBI1
+STEP_HYP s.MEM s.PC = 192w
+STEP_HYP s.MEM (s.PC + 1w) = 0w
+STEP_HYP s.MEM (s.PC + 3w) = 55w
+STEP_HYP s.MEM (s.PC + 2w) = 248w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 2 s.PC
+STEP_HYP word_bit 31 (w2w (s.REG 0w))
+STEP_WORD 52800028 COUNT 1
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 40w, s.MEM (s.PC + 1w) = 0w,
+ s.MEM (s.PC + 3w) = 82w, s.MEM (s.PC + 2w) = 128w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with <|PC := s.PC + 4w; REG := s.REG⦇8w ↦ 1w⦈; branch_hint := NONE|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP s.MEM s.PC = 40w
+STEP_HYP s.MEM (s.PC + 1w) = 0w
+STEP_HYP s.MEM (s.PC + 3w) = 82w
+STEP_HYP s.MEM (s.PC + 2w) = 128w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 2 s.PC
+STEP_WORD 39000268 COUNT 1
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 104w,
+ s.MEM (s.PC + 1w) = 2w, s.MEM (s.PC + 3w) = 57w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|MEM := s.MEM⦇s.REG 19w + 0w ↦ w2w (s.REG 8w)⦈; PC := s.PC + 4w;
+       branch_hint := NONE|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP ¬s.SCTLR_EL1.SA0
+STEP_HYP s.MEM s.PC = 104w
+STEP_HYP s.MEM (s.PC + 1w) = 2w
+STEP_HYP s.MEM (s.PC + 3w) = 57w
+STEP_HYP s.MEM (s.PC + 2w) = 0w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 2 s.PC
+STEP_WORD a9417bfd COUNT 1
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 253w,
+ s.MEM (s.PC + 1w) = 123w, s.MEM (s.PC + 3w) = 169w, s.MEM (s.PC + 2w) = 65w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 3 (s.SP_EL0 + 16w),
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG :=
+         s.REG⦇
+           30w ↦ mem_dword s.MEM (s.SP_EL0 + 16w + 8w);
+           29w ↦ mem_dword s.MEM (s.SP_EL0 + 16w)
+         ⦈; branch_hint := NONE|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP ¬s.SCTLR_EL1.SA0
+STEP_HYP s.MEM s.PC = 253w
+STEP_HYP s.MEM (s.PC + 1w) = 123w
+STEP_HYP s.MEM (s.PC + 3w) = 169w
+STEP_HYP s.MEM (s.PC + 2w) = 65w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 3 (s.SP_EL0 + 16w)
+STEP_HYP aligned 2 s.PC
+STEP_WORD a8c24ff4 COUNT 1
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 244w,
+ s.MEM (s.PC + 1w) = 79w, s.MEM (s.PC + 3w) = 168w, s.MEM (s.PC + 2w) = 194w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 3 (s.SP_EL0 + 0w),
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG :=
+         s.REG⦇
+           19w ↦ mem_dword s.MEM (s.SP_EL0 + 0w + 8w);
+           20w ↦ mem_dword s.MEM (s.SP_EL0 + 0w)
+         ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP ¬s.SCTLR_EL1.SA0
+STEP_HYP s.MEM s.PC = 244w
+STEP_HYP s.MEM (s.PC + 1w) = 79w
+STEP_HYP s.MEM (s.PC + 3w) = 168w
+STEP_HYP s.MEM (s.PC + 2w) = 194w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 3 (s.SP_EL0 + 0w)
+STEP_HYP aligned 2 s.PC
+STEP_WORD d65f03c0 COUNT 1
+STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 192w,
+ s.MEM (s.PC + 1w) = 3w, s.MEM (s.PC + 3w) = 214w, s.MEM (s.PC + 2w) = 95w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.REG 30w; REG := s.REG; branch_hint := SOME BranchType_RET|>)
+STEP_HYP ¬s.SCTLR_EL1.E0E
+STEP_HYP ¬s.TCR_EL1.TBI0
+STEP_HYP ¬s.TCR_EL1.TBI1
+STEP_HYP s.MEM s.PC = 192w
+STEP_HYP s.MEM (s.PC + 1w) = 3w
+STEP_HYP s.MEM (s.PC + 3w) = 214w
+STEP_HYP s.MEM (s.PC + 2w) = 95w
+STEP_HYP s.PSTATE.EL = 0w
+STEP_HYP s.exception = NoException
+STEP_HYP aligned 2 s.PC
+NATIVE_STEP_COMPLETE

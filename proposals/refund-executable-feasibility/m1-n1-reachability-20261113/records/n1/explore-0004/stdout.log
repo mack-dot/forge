@@ -1,0 +1,69 @@
+<<HOL message: Created theory "forge_n1Explore">>
+TO_WORD_0_ARM8 ⊢ to_word_0_arm8 c p =
+  (let (c,p) = to_data c p; p = compile_0_arm8 c.data_conf p in (c,p))
+ARM8_THM to_word_0_arm8_def :: ⊢ to_word_0_arm8 c p =
+  (let (c,p) = to_data c p; p = compile_0_arm8 c.data_conf p in (c,p))
+ARM8_THM compile_cake_arm8_thm :: ⊢ compile_cake_arm8 c p =
+  SOME (bytes,bytes_len,bm,bm_len,ffi_names,shmem_len,syms,conf_str) ⇒
+  ∃c1.
+    compile arm8_config c p = SOME (bytes,bm,c1) ∧
+    ffi_names = ffinames_to_string_list (the [] c1.lab_conf.ffi_names) ∧
+    syms = c1.symbols ∧ LENGTH bytes = bytes_len ∧ LENGTH bm = bm_len ∧
+    LENGTH c1.lab_conf.shmem_extra = shmem_len ∧ prog_syntax_ok p ∧
+    conf_str = encode_backend_config c1
+ARM8_THM compile_cake_arm8_def :: ⊢ compile_cake_arm8 c p =
+  if prog_syntax_ok p then from_word_0_arm8 (to_word_0_arm8 c p) else NONE
+<<HOL message: mk_functional: 
+  pattern completion has added 19 clauses to the original specification.>>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_n1Explore)>>
+Saved definition ____ "no_label_def"
+Saved induction _____ "no_label_ind"
+NO_LABEL_DEF ⊢ (∀r l h d a.
+     no_label l (Call r d a h) ⇔
+     (case d of NONE => T | SOME x => x ≠ l) ∧
+     (case r of NONE => T | SOME (v1,v3,v5,v6) => no_label l v5) ∧
+     case h of NONE => T | SOME (v1,v3,v4) => no_label l v3) ∧
+  (∀p2 p1 l. no_label l (Seq p1 p2) ⇔ no_label l p1 ∧ no_label l p2) ∧
+  (∀p names l exit_names. no_label l (Loop names p exit_names) ⇔ no_label l p) ∧
+  (∀v2 v1 v0 p2 p1 l.
+     no_label l (If v0 v1 v2 p1 p2) ⇔ no_label l p1 ∧ no_label l p2) ∧
+  (∀p l. no_label l (MustTerminate p) ⇔ no_label l p) ∧
+  (∀v3 l1 l. no_label l (LocValue v3 l1) ⇔ l1 ≠ l) ∧
+  (∀l. no_label l Skip ⇔ T) ∧ (∀v9 v10 l. no_label l (Move v9 v10) ⇔ T) ∧
+  (∀v11 l. no_label l (Inst v11) ⇔ T) ∧
+  (∀v13 v12 l. no_label l (Assign v12 v13) ⇔ T) ∧
+  (∀v15 v14 l. no_label l (Get v14 v15) ⇔ T) ∧
+  (∀v17 v16 l. no_label l (Set v16 v17) ⇔ T) ∧
+  (∀v19 v18 l. no_label l (Store v18 v19) ⇔ T) ∧
+  (∀v36 v35 l. no_label l (Alloc v35 v36) ⇔ T) ∧
+  (∀v41 v40 v39 v38 v37 l. no_label l (StoreConsts v37 v38 v39 v40 v41) ⇔ T) ∧
+  (∀v42 l. no_label l (Raise v42) ⇔ T) ∧
+  (∀v44 v43 l. no_label l (Return v43 v44) ⇔ T) ∧
+  (∀v45 l. no_label l (Break v45) ⇔ T) ∧
+  (∀v46 l. no_label l (Continue v46) ⇔ T) ∧ (∀l. no_label l Tick ⇔ T) ∧
+  (∀v49 v48 v47 l. no_label l (OpCurrHeap v47 v48 v49) ⇔ T) ∧
+  (∀v57 v56 v55 v54 v53 v52 l.
+     no_label l (Install v52 v53 v54 v55 v56 v57) ⇔ T) ∧
+  (∀v59 v58 l. no_label l (DataBufferWrite v58 v59) ⇔ T) ∧
+  (∀v65 v64 v63 v62 v61 v60 l. no_label l (FFI v60 v61 v62 v63 v64 v65) ⇔ T) ∧
+  (∀v68 v67 v66 l. no_label l (ShareInst v66 v67 v68) ⇔ T) ∧
+  ∀v73 v72 v71 v70 v69 l. no_label l (PtrEq v69 v70 v71 v72 v73) ⇔ T
+NO_LABEL_THM ⊢ ∀l p. no_label l p ⇔ l ∉ word_get_code_labels p
+STEP_OK no_label_thm
+STAMP before cv_trans 1794595412.869
+Starting translation of no_label from forge_n1ExploreTheory.
+Saved definition ____ "cv_no_label_def"
+Saved induction _____ "cv_no_label_ind"
+Saved theorem _______ "cv_no_label_thm"
+Finished translating no_label, stored in cv_no_label_thm
+STEP_OK cv_trans no_label
+Starting translation of good_handlers from wordConvsTheory.
+Saved definition ____ "cv_good_handlers_def"
+Saved induction _____ "cv_good_handlers_ind"
+Saved theorem _______ "cv_good_handlers_thm"
+Finished translating good_handlers, stored in cv_good_handlers_thm
+STEP_OK cv_trans good_handlers
+/Users/mackianni/forge/results/refund-n1-reachability-local-20261113/attempt-0001/explore-0004/proof.sml:35: error: Can't unify thm to thm * class * thm_src_location (Incompatible types)
+Found near
+  DB.fetch "forge_refundWholeProg" "refund_prog_def"
+  handle _ => #2 (hd (DB.find "refund_prog_def"))

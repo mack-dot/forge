@@ -1,0 +1,42 @@
+{
+ "case": "explore-0005",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/forge_targetInstallBridgeTheory.sig",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/forge_targetInstallBridgeTheory.sml",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/explore-0005/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Proof_experiment",
+ "source": "explore-0005.sml",
+ "source_sha256": "45c60d89a784ebbd2e76ac71daeab25c1e15f09fa39ce2281b80f632022198b2",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+  "/Users/mackianni/forge/results/refund-install-handler-local-20261113/attempt-0001/preload.sml": "82c116203344a21a1ba385b78f87bf5f0f0297335b597e0b8aec26781edd50fd",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/.hol/objs/forge_targetInstallBridgeTheory.sig": "e0e2e4eb8245b499e14b105438a33793c777d24fe96eefc25e1119252a9ae4e3",
+  "/Users/mackianni/forge/results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/.hol/objs/forge_targetInstallBridgeTheory.sml": "b09adf790d8451e83e2aa87506c5b567770c839d60a980edd54049a426329216"
+ },
+ "resource_guard": {
+  "memory_free_percent": 47,
+  "disk_free_gib": 36.25,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 26.507,
+ "child_user_cpu_seconds": 28.933,
+ "child_max_rss_bytes": 1258356736,
+ "markers": [
+  "EXPLORE_COMPLETE"
+ ],
+ "stdout_sha256": "6472cf0bf054d07a30a827484b3576d008e3f86e7651c854cff1867f8b0d86a9",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

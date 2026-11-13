@@ -11568,3 +11568,823 @@ curl: (6) Could not resolve host: github.com
   with current-head/trigger checks. Rerunning old commit would retain the bug.
   No publication,hosted run,protected edit,Stage12,signing,deployment,Git repair
   or new local commit occurred. M1 and native/frame/composition/replay stay open.
+
+## U342 — Local proof context works in this session; unchanged candidate reaches the theorem and fails at one tactic step
+
+- References: U316, U319, U320, U328, U329, U340, U341. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. The owner asked for a full status
+  review and the next M1 action. No hosted action, publication or protected edit.
+- Environment: a read-only access query in this session reports write access
+  to /var/tmp and /private/var/tmp. U319 recorded EPERM there. The cause of the
+  difference is not established. A different agent sandbox is the leading
+  inference. The query created no file.
+- Unchanged SAT diagnostic: source bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108,
+  HOL revision 9783a49979c94c401ff8c0e51b2eefae7ea95ae3, ARM8 heap
+  787499c5305260a0dcf93cab119e0cb2f830c539ddf9327c433758f0a92350a9, same argv
+  and cwd as U316, CPU limit 120 s. One run. Actual exit 0. Output: ⊢ probe ∨ ¬probe
+  and NATIVE_STEP_COMPLETE. U316 recorded exit 1 with EPERM. The /var/tmp entry
+  count is equal before and after. This establishes dependency execution in
+  this context only.
+- Unchanged candidate generic-read-0001.sml, SHA256
+  7e36c4867615e1d7fdce3d49143ced0788f0f28517df49a1f611ef95a684ffc6, with the
+  argv, cwd, CakeML heap and CPU limit 120 s of U328's generic-0001. All 2665
+  recorded input hashes match before and after. One run. Actual exit 1.
+  load "cfLib" completes; U328's helperLib/numLib.DECIDE failure does not occur.
+  HOL reaches the theorem goal for the first time. store_thm fails at THEN1:
+  "first subgoal not solved by second tactic". No theory export. Wall 97.907 s;
+  child CPU 54.402 s user and 24.694 s system; max RSS 1479049216 bytes.
+- Instrumented diagnostic copy, SHA256
+  1fba080f9272656fb068c984a92f9473504840ae73365945db98c486fcaf014a. It adds goal
+  printing only; statement and tactics are unchanged. One run. Actual exit 1,
+  same failure. The failing step is the xffi branch of the second xlet. After
+  fs [FD_def,n2w2_def], one goal remains with five uninstantiated existential
+  variables: frame, s'', u', ns', events'. The assumptions contain the FFI
+  equation for the same buffer and STRING_TYPE (implode (MAP (CHR o w2n) (n2w8 fd))) fdv.
+  The later xcon branch was not reached.
+- Interpretation (the agent's, not a checked result): the residual is a missing
+  witness instantiation. It is not evidence that the statement is false. The
+  theorem stays unestablished and not disproved. A tactic repair is a candidate.
+  It was NOT RUN.
+- Impact on U341: the corrected hosted workflow runs the same candidate bytes.
+  If the hosted HOL behaves as this local HOL, that job exits 1 at the same
+  step. This is an inference; no hosted run occurred. Recommendation: hold
+  NEXT-RUN-APPROVAL.md. The hosted context is not necessary while this local
+  context works. U341's loader fix stays valid for its own scope.
+- Attempt count for read_error_generic: two local executions reached the
+  theorem, one unchanged and one instrumented. Both exit 1. Neither is a
+  negative control. Repeat, fresh import, wrong-exception and omitted-event
+  controls are NOT RUN.
+- Limits: same machine, cached parent theories and saved states, one run per
+  case, no independent replay. Local hashes are not independent provenance.
+  A later local pass would not establish native read/frame correspondence,
+  whole-program composition or M1.
+- The same EPERM also stopped arm8_stepLib in U316. That load was not retried
+  here. The SAT result suggests it can now run locally; this is unverified.
+- Preservation: the candidate, prior packets and tracked files outside this
+  new packet are unmodified. git status shows only file-mode differences on ten
+  tracked ELF copies under results/; their bytes equal HEAD (SHA256 8ced2ab6...).
+- Evidence: proposals/refund-executable-feasibility/local-context-20261112/REPORT.md,
+  records and MANIFEST.json. Run output went to a session scratch directory;
+  streams and command records were copied to the packet.
+- Next check: write a new candidate file that changes only the xffi witness
+  step. Keep the statement, premises and dependencies. Run proof, repeat, fresh
+  import and the two controls locally with the existing limits. Stop at the
+  first unexpected result. Native memory/frame, composition, U314, U298 and
+  independent replay stay separate and open.
+
+## U343 — Script removal review: no tracked script can be removed without a protected lock change
+
+- References: U341, U342. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner asked for removal of unnecessary or unused
+  scripts. Result: zero files removed. No lock, manifest or record changed.
+- scripts/ holds 35 files. gate/provenance/implementation.lock (SHA256
+  5f78da2142699d51f4b9b47c41ba3202919196af575fee3ae67bed7f7ad264b0) pins 33 by
+  SHA256. gate/provenance/common.py context() reads every pinned file; a missing
+  file stops every caller of context(). The lock is under protected gate/.
+- The other two: scripts/exit_stage_10.py is pinned by bench/manifest.json.
+  scripts/generate_examples.ts is used by generate_claim_docs.py and stage5_tools.py.
+- Seventeen pinned scripts have no code, workflow or manifest reference other
+  than the lock: audit_stage9_receipts, check_stage9_installation,
+  check_stage_4_approval, check_stage_4_local, check_stage_6,
+  collect_stage9_receipt_reference, exit_stage_1, exit_stage_2, exit_stage_3,
+  exit_stage_6, exit_stage_8, exit_stage_9, probe_stage_4, render_spec_report,
+  stage7_emit_evidence, stage7_pack_records, stage7_record. They are entry
+  points that a person runs. ROADMAP and docs record several as stage EXIT
+  commands. Removal makes those recorded commands unreproducible from the tree.
+- Script files under proposals/ (2882 tracked) and results/ are evidence
+  records. Packet manifests and later readback checks bind their bytes.
+  The two proposals/check_provenance_*.py files have references in ROADMAP and
+  in an approval manifest. Every other tracked code file outside scripts/ has
+  a live reference. Ignored gate/__pycache__ paths appear in recorded packet
+  baselines, so they were left in place.
+- This working tree is the recovery snapshot branch backup/forge-local-2026-11-11.
+  Its gate/ and scripts/ differ from origin/main: main holds gate/obligations.py,
+  gate/coverage.py and scripts/exit_stage_11.py; this tree holds
+  scripts/exit_stage_10.py and bench/. A removal here does not change main.
+- Uncertainty: the reference search covered tracked files outside results/ and
+  proposals/. It did not search results/ in bulk. Eight historical lock copies
+  under proposals/ also name these scripts; their consumers were not checked.
+- Impact: a removal needs an exact owner-approved change to the lock on main,
+  a new lock digest in each controller that supplies it, and code-owner review.
+  Next check: the owner selects the scripts to retire, or keeps them as
+  historical EXIT commands. No removal is prepared.
+
+## U344 — Correct U343 count of historical lock copies
+
+- References: U343. U343 states that eight lock copies under proposals/ name
+  the scripts. That count came from proposals/repo-audit-20261109 and was not
+  checked first. A direct count finds twelve files named implementation.lock
+  under proposals/. Eight pin all 33 scripts. Four older copies
+  (provenance-hosted, provenance-hosted-v2, provenance-implementation,
+  provenance-receipt-repair) pin six scripts each.
+- Impact: none on the U343 result. Zero files were removed. The consumers of
+  the twelve copies remain unchecked. Next check: unchanged from U343.
+
+## U345 — read_error_generic checked locally; repeat, fresh import and two controls match
+
+- References: U328, U329, U337, U340, U341, U342. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. After U342 the owner answered
+  "go ahead and do it". The agent reads this as approval of the three local
+  M1 actions listed in that report. No hosted action, publication or
+  protected edit followed from it.
+- Three goal-manager explorations ran first (explore-0001/0002/0003), each
+  actual exit 0, no theorem stored. Two explorations had goal-tracking errors
+  in the exploration script; they are preserved and are not negative controls.
+  The third shows every step through xraise and one final residual: n2w2 is
+  unfolded on one side of the last heap implication only.
+- New candidate generic-read-0002.sml, SHA256
+  90e827dc782bcfe23f0518cca18facf649d434f59421d593bc436a187f003ae3. The theorem
+  statement bytes equal the frozen candidate 7e36c486... (statement quotation
+  SHA256 ae4abbf8cafec57b4058a90e34528c45e31ebe000e787f2b4cf4add9f0b29076).
+  Two tactic regions changed: the xffi witness step, following the published
+  read_spec proof, and n2w2_def added to the final fs list. U342 named the
+  first change only; the second is also necessary. No axiom, cheat or oracle.
+- Actual exits: proof 0, same-source repeat 0, fresh import 0, wrong-exception
+  1, omitted-event 1. The import and both controls are the frozen U329
+  prepared inputs, byte-identical (3018afad..., c47b9f26..., d7cd6862...).
+  Proof and repeat export four byte-identical files; theory data SHA256
+  0fc131812c25df433dd5bae060e2ef055deee6b4cb7a417dd844818cd32c0044. Import:
+  exact statement match by aconv, DISK_THM tag only, 0 hypotheses, 0 tagged
+  axioms, 217 closure nodes, four standard Boolean axioms. Both controls stop
+  at "Exact generic read statement mismatch" with no completion marker.
+- Separate reader validate_evidence.py exits 0. It binds hashes, exits and
+  markers only. A copy with one altered stream makes it exit 1.
+- Tools and limits: pinned HOL 9783a499..., CakeML cd915569..., CakeML heap
+  36f7c254...; argv prefix, cwd and 2665 inputs of U328's generic-0001; all
+  inputs unchanged before and after every case. CPU 120 s, wall 150 s per
+  child; no timeout. Proof wall 56.301 s, max RSS 1808613376 bytes.
+- What the theorem states: if the read FFI call returns status byte 1 for
+  the given buffer, the unchanged TextIO.read raises InvalidFD, the array
+  holds the returned bytes and the FFI state holds the complete error event.
+  The premise on the oracle function u is assumed, not discharged for the
+  native runtime.
+- Limits: LOCALLY_VALIDATED only. Same machine and agent; cached parent
+  theories and saved states; DISK_THM is not a fresh kernel replay of the
+  parents. No independent replay. The hosted request of U341 was not used
+  and is not necessary for this theorem.
+- Evidence: proposals/refund-executable-feasibility/generic-read-local-20261112/
+  REPORT.md, records and MANIFEST.json; originals in
+  results/refund-generic-read-local-20261112/attempt-0001.
+- Impact: U328's generic-FFI candidate route now has its first checked
+  theorem. M1 stays open. Next check: compose through inputAllFrom and
+  refund_main with exact exception, event, memory and initialization
+  conditions, then compare the error behavior with the approved contract.
+  A required behavior or model change needs a separate proposal.
+
+## U346 — Unchanged ARM8 step inspection passes locally
+
+- References: U316, U317, U342. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Same owner approval as U345. One local HOL run.
+- The unchanged U316 inspect-arm8-steps command (source SHA256
+  d124bc112181f5eb83d314a5b91666cb1f5f2358a73e55e2b8049f2798c6d922, ARM8 heap
+  787499c5..., same argv and cwd) exits 0. U316 recorded exit 1 in
+  arm8_stepLib/numLib.DECIDE. arm8_stepLib loads; the six post-read error
+  words give seven published step theorems (two for the branch word).
+  Wall 6.216 s. All 16 checked tool and source files and the cwd listing are
+  unchanged.
+- Each theorem is NextStateARM8 s = SOME ... under explicit hypotheses on
+  instruction bytes, EL0, NoException, PC alignment and control-register bits.
+  52800028 sets REG 8 to 1; 39000268 stores its low byte at REG 19;
+  d65f03c0 sets PC to REG 30.
+- Limits: published-model instances only. No composed six-step theorem, no
+  syscall, prologue, frame or physical-processor result. U316's word binding
+  to the native file is reused, not repeated. No independent replay.
+- Evidence: proposals/refund-executable-feasibility/arm8-step-local-20261112/
+  REPORT.md, records and MANIFEST.json.
+- Next check: compose the six steps into one error-return theorem with
+  explicit code, stack, separation and return-address premises, and compare
+  its memory effect with the status byte of U345.
+
+## U347 — Initial stack good_code proved; U314 failure causes identified; 14 initializer premises remain
+
+- References: U298, U312, U313, U314, U342, U345. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false. Same owner approval as U345.
+  Local HOL runs only. No hosted action, native execution or protected edit.
+- Diagnosis by the typed-goal step that U314 prescribed, three goal-manager
+  diagnostics, each actual exit 0, no theorem exported:
+  (1) the statement has no type variables, so U314's word-type hypothesis is
+  false; (2) drule specialized_convs passes and drule specialized_labels
+  fails, because the published antecedent keeps a let form that the goal's
+  assumption has expanded; (3) after that repair the 5 <= n bound sub-proof
+  fails for the stub labels 5 and 6, and the last step fails because fs
+  rewrites the bound with the label-list equation.
+- New candidate code-local-0004.sml, SHA256
+  7d24953dea9a70a51db26a4ee7c6b858d692a9a5cd84fecf5a86544ff5871c6f, from U314's
+  code-numeric.sml f3e2be78... Three tactic changes: LET_THM in the
+  specialized label theorem, a pointwise bound fact with removal of the
+  label-list equation, and a new final simplification step. All six quoted
+  goal statements are byte-identical. No axiom, cheat or new oracle.
+- Actual exits: proof 0, same-source repeat 0, prepared 14-premise audit 0,
+  wrong-lowering 1, duplicate-label 1, missing-memory 1. The audit and the
+  three controls are U314's prepared sources, byte-identical and bound by the
+  U314 manifest. Proof and repeat export four byte-identical files; theory
+  data SHA256 76a5b0379933b2c30ece7a004dd0ab61aed9f68d650d95615d425b04b3980aed.
+  Audit: five exact statements, 14-premise contract, theorem count 5, 484
+  closure nodes, four standard Boolean axioms. Each control first passes the
+  positive audit. wrong-lowering stops at "Exact statement mismatch:
+  refund_stack_lowering". The other two stop at "unsolved goals" in prove.
+  That shows the prepared tactic does not prove the altered claim; it is not
+  a proof that the altered claim is false.
+- Separate reader validate_stack_evidence.py exits 0; a copy with an added
+  acceptance marker makes it exit 1. Its first draft used a line-number
+  criterion that was wrong for helper and library raise sites; the
+  marker-order criterion replaced it before the first run.
+- Result: refund_initialization_code has 14 antecedents; U313 had 15. The
+  discharged one is good_code for the exact initial stack program. The 14
+  remaining conditions are unchanged: memory_assumption, link-register
+  exclusion, two save_regs conditions on io/cc registers, dm and sdm
+  alignment, three save_regs membership conditions and five register-name
+  equalities. Their physical applicability is NOT_ESTABLISHED.
+- Tools and limits: pinned HOL 9783a499..., CakeML cd915569..., CakeML heap
+  36f7c254...; argv prefix, cwd and parent theories of U314's code-0003. CPU
+  600 s and wall 900 s per child; U314 used CPU 3600 s. No timeout. Proof
+  wall 178.994 s; max RSS 2369142784 bytes.
+- Attempt count for the generic composition: U314's one failing proof attempt
+  stands. This entry adds three diagnostics and one passing proof, and no
+  failing prove/store_thm attempt.
+- Limits: LOCALLY_VALIDATED only. Same machine and agent; cached parent
+  theories and saved states; no fresh kernel replay of parents; no
+  independent replay.
+- Evidence: proposals/refund-executable-feasibility/initial-stack-code-local-20261112/
+  REPORT.md, records and MANIFEST.json; originals in
+  results/refund-initial-stack-code-local-20261112/attempt-0001.
+- Impact: the open checklist item of U314 is complete at local scope. Next
+  check: lower-pass transitions and U298's condition for every formal target
+  TimeOut prefix. U298 was not started here.
+
+## U348 — Six-step ARM8 error-return composition proved for the exact native ffiread bytes
+
+- References: U316, U345, U346. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner supplied a continuation request with six
+  execution items and hard constraints: no Stage 12, no end_to_end change, no
+  weakened statement, no axiom or cheat, no script removal, no commit or push.
+- forge_refundNativeReadError.ffiread_error_return is PROVED at local scope.
+  Under explicit premises on control-register bits, EL0, no exception, PC and
+  SP alignment, bit 31 of register 0, 24 exact code bytes and 12 separation
+  inequalities, six NextStateARM8 steps reach an exact final record: memory
+  changes only at the address in register 19, which receives 1; registers 29,
+  30, 20 and 19 are loaded from the stack; SP grows by 32; PC is the loaded
+  link value. NextStateARM8 is the published L3 model; no new semantics.
+- The 24 code bytes are read from the native executable
+  b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8 at file
+  offsets 151980 and 152004..152023 (VM 0x1000251ac and 0x1000251c4..). The
+  ffiread fragment hash equals U316. The branch target PC+24 equals the
+  taken-branch step theorem.
+- Actual exits: two explorations 0/0 (no theorem); proof 0; repeat 0 with four
+  byte-identical exports; import 0 (exact statement by aconv, DISK_THM only,
+  97 closure nodes, four Boolean axioms); wrong-status control 1 at the
+  intended mismatch. Two first-version proof-attempt controls exit 1 with
+  "no current theory when proving": script errors, not counted, preserved.
+  Their second versions first prove the original statement in the same
+  context, then exit 1 on the altered statement (missing one separation
+  premise; negated branch bit). Statement SHA256
+  95e65d61268c917b538a0b2997ffdef539a4c7f41ded38574d1ce31f03a824ff; proof
+  source 3db90e8ac12e112adc75a8eacba110176064d45985b39e652153e20b80353b07;
+  theory data 2cd333092554259dfddf6b070791ea7839b87af544745ea40cf082092daec841.
+- Limits: model-level result. Not covered: the ffiread prologue and call, so
+  register 19 is not bound to the buffer; the read system call; the success
+  path; the processor and loader. Same machine, cached heap, no clean replay.
+- Evidence: proposals/refund-executable-feasibility/arm8-compose-local-20261112/.
+  Next check: extend over the prologue and call; relate the memory effect to
+  the returned buffer of U345.
+
+## U349 — Initializer reduced from 14 to 6 premises by the published machine-config predicate
+
+- References: U310, U313, U347. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- Nine of the 14 conditions of refund_initialization_code mention only mc.
+  forge_refundInitializerMachine.refund_initialization_machine replaces them
+  by the published predicate is_arm8_machine_config mc, after instantiation of
+  save_regs to set mc.callee_saved_regs and of one type variable. The
+  published compile_correct proof uses the same instantiation. The other five
+  conditions and the conclusion are unchanged. The base statement is not
+  modified; this is a new corollary. PROVED at local scope.
+- Actual exits: exploration 0 (no theorem); proof 0 with REMAINING_ANTECEDENTS
+  6 and nine DISCHARGED_CONDITION lines; repeat 0 with four byte-identical
+  exports; audit-0002 0 (statement rebuilt from the imported base and compared
+  by aconv, six premises, DISK_THM only, 485 closure nodes, four Boolean
+  axioms). A first audit start was interrupted by the agent with SIGTERM under
+  memory pressure; it has no result record and is not a result. The two
+  prepared controls (no-machine-config, missing-memory) are NOT RUN.
+- Proof source d4a4e464af45e5195b5ddbf0125a2cd63b341423433313fcc87accb257a0a77d;
+  theory data 8e8cb008d8a9e43cad68f9a2b8cc62997d0b728c85355698f24b6975a3c4af72.
+- Limits: the audit derives its expected statement from the base theorem, not
+  from an independent text. Remaining premises: the predicate,
+  memory_assumption, two FFI register conditions, dm and sdm alignment. Their
+  physical applicability is NOT_ESTABLISHED. No clean replay.
+- Evidence: proposals/refund-executable-feasibility/initializer-machine-local-20261112/.
+  Next check: run the two controls; derive premises 2..5 from the published
+  installed-state predicate.
+
+## U350 — Independent replay NOT RUN; source identity tested; memory and disk incident
+
+- References: U317, U321, U345, U347, U348, U349. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false.
+- No clean or independent replay ran. Same-machine repetition was not
+  substituted. Blockers: host free disk 4.7 GiB at the start and 1.1 to 2.3 GiB
+  later, against an estimated 2.5 to 3 GiB for a from-source PolyML, HOL and
+  CakeML-basis build and more for the compiler proofs; 16 GiB RAM with 15 to
+  16 GiB swap in use; Docker VM 8.2 GiB RAM; no independent host without
+  publication or dispatch. A same-host container is also not an independent
+  operator or host.
+- Prerequisite tested: an unauthenticated GitHub API read returns the pinned
+  commits of HOL, CakeML and PolyML with tree IDs equal to local HEAD trees.
+  verify_sources.py exits 0: every tracked regular file hashes to its index
+  entry and the index equals HEAD (7805, 2018 and 857 files; 55 symlink or
+  submodule entries not content-hashed). This binds local sources to upstream
+  objects under Git SHA-1. It does not check heaps, objects or Forge parents.
+- Incident: several HOL jobs ran at the same time. Three 1 GiB swap files
+  appeared between 16:36 and 16:58 and free disk fell to about 1 GiB. The
+  agent stopped the background batch with SIGTERM at 17:03 (exit 144). Two
+  later single runs each added one swap file. A guard then refused further
+  HOL runs below 1.4 GiB free disk. No file was lost. Attribution of the swap
+  growth to these jobs is the leading inference, not a measured fact.
+- Evidence integrity: verify_cases.py exits 0 on the ARM8 and initializer
+  cases; it exits 1 on a copy with one altered export byte and on a copy with
+  an added acceptance marker. Readers bind bytes, exits and markers; they do
+  not show that a theorem is true or who produced a file.
+- Evidence: proposals/refund-executable-feasibility/m1-closure-20261112/REPORT.md
+  (verification matrix, dependency graph, trusted-base inventory, obligations
+  and plan), records and MANIFEST.json.
+- Next check: after the owner frees disk space, a clean-container replay that
+  starts with ffiread_error_return (97 closure nodes, no CakeML theory).
+  Lesson for this host: run HOL jobs one at a time.
+
+## U351 — FFI oracle equation classified; basis instance lemma proved; U298 inspected only
+
+- References: U298, U327, U328, U345, U348. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false.
+- forge_refundFfiOracle.basis_read_error_oracle is PROVED at local scope: for
+  fd < 256**8, n < 2**(2*8), n <= LENGTH rest and read fd fs n = NONE, the
+  published oracle mk_ffi_next fs_ffi_part answers the read call with
+  1w::n2w n::h3::h4::rest and unchanged state. So the oracle premise of
+  read_error_generic is satisfiable by the published model. Run oracle-0001
+  exit 0; theory data
+  b0927759510a0b8730d791d9f6e431368bc9b7f3d3f57a6e926cd35c498e9a3c. Repeat,
+  import and controls are NOT RUN (memory guard).
+- In the same run the instance read_error_basis_instance FAILED once:
+  MATCH_MP_TAC: No match. The statement is not disproved. Not retried.
+- Two earlier explorations are not results: explore-0001 exit 1 on an
+  undeclared lemma name; explore-0002 exit -9 at the 150 s wall limit under
+  machine load. explore-0003 exit 0 proved the lemma in the goal manager.
+- Classification: invalid-descriptor read error in the published oracle,
+  PROVED; status 0 for well-formed stdin, PROVED earlier (U327); native read
+  error on an open descriptor, ASSUMED absent, outside the published oracle;
+  native status write on negative result, PROVED at model level (U348);
+  buffer-address binding, system-call behavior and descriptor decoding,
+  NOT RUN or ASSUMED. Two paths are open and neither is adopted: keep the
+  standard assumption that the environment behaves as the published oracle,
+  or propose an extended oracle with a new whole-program proof.
+- U298 by source reading only: the published syntactic chain
+  (word_to_stack_compile_no_install, stack_to_lab_compile_no_install) needs
+  no_install_code for the word program, and data_to_word places the Install
+  stub, which holds a wordLang Install instruction, in every stub list. The
+  agent's reading is that the syntactic route does not apply; this was not
+  checked in HOL and the exact post-pass program was not evaluated. The open
+  subgoal is a target-level invariant that the program counter never equals
+  mc.install_pc on any prefix. No statement changed. No HOL attempt.
+- Evidence: proposals/refund-executable-feasibility/m1-closure-20261112/REPORT.md
+  sections 2 and 4, records/ffi-oracle.
+- Next check: owner decision on the FFI environment assumption; then either
+  drop the error-path composition from the critical path or prepare an
+  extended-oracle proposal.
+
+## U352 — Resource recovery target not reached; clean replay phase stopped
+
+- References: U350. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner asked for resource recovery to at least 20 GiB,
+  then a clean-container replay, and set the rule: if safe cleanup is
+  insufficient, report the deficit and stop the replay phase.
+- Read-only inspection: 3.2 GiB free at the start; 14 to 18 swap files of
+  1 GiB; no HOL process; results/ 35.5 GiB and .toolchain/ 8.9 GiB (preserved);
+  20.35 GiB of Claude scratch that belongs to two other projects; a Docker
+  disk image of 30.2 GiB on disk for about 8.6 GB of content; ~/Library/Caches
+  3.1 GiB; sibling clones 2.4 GiB.
+- No deletion is already authorized. Earlier owner approvals were for named
+  items and are consumed; DELETION-PROPOSAL.md is a proposal and its Tier 1
+  paths no longer exist. The agent deleted nothing. Cleanup recovered 0 GiB.
+- Free space rose to 6.7 GiB because the system released swap files after
+  serial runs. Target 20 GiB; deficit 13.3 GiB. The replay phase stopped. No
+  container started. Clean and independent replay stay NOT RUN.
+- All later HOL runs in this continuation ran one at a time behind a guard
+  (memory free at least 25 percent, disk free at least 1.4 GiB, no other HOL
+  process).
+- Evidence: proposals/refund-executable-feasibility/m1-replay-closure-20261112/
+  REPORT.md and records/disk-inspection.json.
+- Next check: owner frees space (largest candidates: the other-project
+  scratch, a restart, Docker reclaim); then the replay plan of U350.
+
+## U353 — read_error_basis_instance proved; the U351 failure was a goal-construction error
+
+- References: U345, U351. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- Diagnosis by run explore-0002: the U351 goal term was assembled from two
+  separately parsed quotations. Its premise held rest of type alpha list and
+  its conclusion held rest of type word8 list. The premise MAX n 2048 <=
+  LENGTH rest did not match the instantiated theorem's conjunct, stayed open,
+  and match_mp_tac of the oracle lemma failed on it with "No match". That
+  term was not the intended statement. This corrects the wording of U351: the
+  failure was the agent's goal-construction error, not a tactic defect and
+  not a counterexample.
+- forge_refundFfiInstance.read_error_basis_instance is PROVED at local scope
+  with the statement parsed as one quotation and the unchanged tactic. It
+  keeps every assumption of read_error_generic except the oracle equation,
+  which basis_read_error_oracle discharges from read fd fs n = NONE.
+- Actual exits: explore-0001 1 (script error: oracle theory file not passed,
+  not counted); explore-0002 0; proof 0; repeat 0 with byte-identical exports;
+  import 0 for both theorems (exact statements, DISK_THM only, 219 closure
+  nodes, four Boolean axioms); wrong-exception 1 at the intended mismatch;
+  instance-missing-read-none 1 and oracle-missing-read-none 1, each after the
+  harness proved the original statement; oracle-repeat 0 with exports
+  byte-identical to U351's oracle-0001. This completes the import, repeat and
+  control checks that U351 recorded as NOT RUN for basis_read_error_oracle.
+- Source dd1147684d582c9990440277c752763dfa4819372d45917f9352d9cd827421d8;
+  theory data f2afe94b6d9a0cc152e6077876e0383016bbabcb103fea8497e5e29a00b37885.
+  The runs used --maxheap 1400, a resource limit only.
+- Limits: same machine, cached parents, no clean replay. The theorem concerns
+  the published oracle with an unreadable descriptor. It says nothing about
+  native read errors on open descriptors.
+- Evidence: m1-replay-closure-20261112/REPORT.md, records/ffi-instance.
+
+## U354 — Initializer controls run; initializer reduced from 6 to 2 premises
+
+- References: U347, U349. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- Controls for U349: no-machine-config exits 1 after the harness proved the
+  original statement. missing-memory ended with signal 24 at the 600 s CPU
+  limit after the harness check; it is a resource stop and is not counted as
+  a rejection; no acceptance marker appeared. A statement-level control,
+  missing-memory-statement, exits 1 at "Exact statement mismatch: missing
+  memory_assumption".
+- forge_refundInitializerAligned.refund_initialization_aligned is PROVED at
+  local scope: two premises remain, is_arm8_machine_config mc and
+  memory_assumption. The two FFI register premises follow from the published
+  target_io_regs_callee_saved and target_cc_regs_callee_saved. The two
+  alignment premises follow from the instantiation dm := dm INTER
+  byte_aligned and sdm := sdm INTER byte_aligned with the published
+  byte_aligned_MOD. The published compile_correct proof uses the same
+  instantiation. The result is an instance of U349's theorem for byte-aligned
+  domains; U349's theorem is unchanged.
+- Actual exits: proof 0 (REMAINING_ANTECEDENTS 2, four discharged conditions);
+  audit 0 (486 closure nodes, four Boolean axioms); repeat 0 with
+  byte-identical exports; unaligned-domain 1 and missing-memory-statement 1
+  at the intended statement mismatches. Source
+  01e895f0fa7a28a91227162c41f46b26d8cde57a67f0dec89e90addf56ba365f; theory data
+  a4d3164e43af4e782a3dc0e071f7792ce8e4880f1cf2dd90cff49bf9d3639619.
+- Limits: the audit derives its expected statement from the imported base.
+  memory_assumption is open and its physical applicability is
+  NOT_ESTABLISHED. Same machine, cached parents, no clean replay.
+- Evidence: m1-replay-closure-20261112/REPORT.md, records/initializer-aligned
+  and records/initializer-machine-controls.
+- Next check: derive memory_assumption from the published installed-state
+  predicate, as the published proof does.
+
+## U355 — U298 first executable obligation: the published stub list is not install-free
+
+- References: U298, U351. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- forge_refundInstallStub holds two PROVED lemmas at local scope:
+  install_stub_has_install, |- ~no_install (Install_code c), and
+  stubs_contain_install, |- MEM (Install_location,3,Install_code c) (stubs c).
+  This replaces the source-reading finding of U351 with checked lemmas. The
+  premise of the published syntactic no-install chain cannot come from the
+  syntax of the program before word_to_word.
+- Not shown: that the exact post-pass refund word program still holds the
+  stub (not evaluated); the target-level exclusion itself. U298's frozen
+  obligation is unchanged and stays NOT RUN.
+- Actual exits: stub-0001 signal 24 at the 120 s CPU limit inside an optional
+  third lemma, ~no_install_code (fromAList (stubs_md c)), after two in-process
+  proofs and before any export (not counted; one attempt for the third lemma);
+  stub-0002 0 with four exports; import and wrong-polarity 1/1 (script error:
+  parent theories loaded after the theory file, not counted); import-0002 0
+  (exact statements, 243 closure nodes, four Boolean axioms);
+  wrong-polarity-0002 1 at the intended mismatch. Theory data
+  300d83c784ef9c8b9d6b59484158bbf282112353aaecf0cc4ae08efdf3f7a90c.
+- Evidence: m1-replay-closure-20261112/REPORT.md, records/install-stub.
+- Next check: a target-level program-counter invariant, or an explicit
+  installer assumption in the assurance profile.
+
+## U356 — Two assurance profiles written; neither approved
+
+- References: U327, U328, U345, U348, U351, U353. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false.
+- Profile A (standard CakeML oracle) and Profile B (extended read-error
+  oracle) are stated in m1-replay-closure-20261112/REPORT.md, Phase 5.
+  A excludes native read errors on open readable descriptors by assumption
+  and lists the exact environment restrictions and what the claim does and
+  does not cover. B lists six additional obligations: a new oracle, an
+  approved error clause in the contract, library proofs, a whole-program
+  theorem, native obligations and a narrower operating-system assumption.
+- Neither profile is adopted or approved by this entry. The choice is the
+  owner's. B is a model and contract change and needs a separate proposal.
+- Evidence reader verify_cases_r2.py exits 0 on this continuation's cases and
+  exits 1 on two altered copies. It binds bytes, exits and markers only.
+- Next check: owner decision on the profile.
+
+## U357 — Resource candidates inspected; nothing safe to remove; clean replay not run
+
+- References: U350, U352. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The owner asked for inspection of the Claude scratch
+  root, Docker storage, swap and build artifacts, with no deletion of
+  other-project files without authorization, no removal of volumes, active
+  containers or unique images, and a stop before destructive operations.
+- Claude scratch, by metadata only: the 14.34 GiB tree of project
+  spm-release-loop is in live use by another session (8607 files changed in
+  the last hour, a Postgres server running from a data directory inside it,
+  copies in progress). Its du size overstates any gain because the copies
+  are APFS clones. A 6.24 GiB tree of project spm is idle since 2026-11-08
+  and holds directories that look like git worktrees. Neither was touched.
+- Docker: the VM file system holds 28.97 GiB and the host image allocates
+  30.43 GiB, so a trim gains about nothing. Inside the VM, 13.97 GiB is in
+  /var/lib/desktop-containerd and is not listed by docker system df. Two
+  containers of another project started minutes before the inspection. Safe
+  build-cache pruning would free under 1 MB and was not run. Nothing was
+  pruned or removed.
+- Free space was 6.6 GiB at the start and 12.3 GiB at the end; the change
+  came from the system releasing swap files. Cleanup recovered 0 GiB. Target
+  20 GiB; deficit 7.7 GiB at the end. The agent deleted nothing.
+- Clean replay NOT RUN: disk below target, a Docker VM shared with a live
+  session, and 13 to 14 GiB of swap in use. Independent replay stays NOT RUN.
+- All HOL runs in this continuation ran one at a time behind a guard (memory
+  free at least 25 percent, disk free at least 3 GiB, no other HOL process).
+- Evidence: proposals/refund-executable-feasibility/m1-installed-closure-20261112/
+  REPORT.md and records/resource-inspection.json.
+- Next check: owner decision on the listed candidates.
+
+## U358 — Initializer rests on the published installed predicate; machine-model instance proved
+
+- References: U349, U354. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- forge_refundInitializerInstalled.arm8_machine_model_instance is PROVED at
+  local scope: any machine record with target arm8_target, length and pointer
+  registers 1, 0, 3, 2 and callee-saved registers 19 to 28 satisfies
+  is_arm8_machine_config. This discharges that premise by an explicit model
+  instantiation. It is a choice of the abstract machine record, not a proved
+  property of the physical machine.
+- Exact statement of memory_assumption read from stack_to_labProofScript.sml
+  line 3209: heap registers, five header words, empty code buffer, ordering,
+  byte alignment, at least 1024 words, and a separation of memory into bitmap
+  words, data_sp words and the heap region.
+- forge_refundInitializerInstalled.refund_initialization_installed is PROVED
+  at local scope: is_arm8_machine_config mc and the published
+  installed bytes cbspace bitmaps data_sp ffi_names (heap_regs names) mc
+  shmem ms, with the exact program bitmaps, imply that there are tar, m, dm,
+  sdm with good_init_state and the conclusion of refund_initialization_aligned
+  for those witnesses. memory_assumption is no longer a premise. The helper
+  heap_region_extends is generic in the word size and uses the tactic of the
+  published compile_correct proof.
+- Actual exits: explore-0001 1 and explore-0002 1 (script errors: plain use
+  of a file with quotations; an undeclared name; not counted); explore-0003 0
+  (goal-manager proof of the lemma, nothing stored); proof 0 with
+  REMAINING_ANTECEDENTS 2 and four exports; audit 0 (three exact statements,
+  487 closure nodes, four Boolean axioms); repeat 0 with byte-identical
+  exports; missing-installed 1 and other-bitmaps 1 at the intended statement
+  mismatches. Source
+  902dd23679f33fd11651aa02c88394b79a1999c68efaa0b0640cfdd97f552832; theory data
+  767dfbf8eca8f5ccf1f95ae522f32b9be9f7a836400174f275d175db8b0a1255.
+- Limits: installed for the physical process is NOT_ESTABLISHED. It
+  quantifies over all interference and steps; existing loader and runtime
+  evidence is finite observation. The audit derives the main expected
+  statement from the imported base theorem. Same machine, cached parents, no
+  clean replay.
+- Evidence: m1-installed-closure-20261112/REPORT.md, records/initializer-installed.
+- Next check: none at model level for the initializer; the open item is the
+  physical installed-state assumption.
+
+## U359 — U298: one direct branch to the installer entry in the exact code; exclusion not established
+
+- References: U298, U355. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- Observation by a hand-written B/BL field extraction on the exact native
+  code (hash equal to runtime-matrix row C1): one direct branch targets the
+  installer entry, word 17fffb6b at code offset 4660; 325 target the halt
+  entry; one targets each of four FFI entries. This scan is not a proof and
+  does not analyse indirect branches.
+- forge_refundInstallSite.install_call_site_step is PROVED at local scope:
+  with bytes 6b fb ff 17 at the program counter and the usual state premises,
+  one step of the published ARMv8 model sets PC to PC minus 4692 and changes
+  no memory, register or stack pointer. From code offset 4660 that is code
+  start minus 32, the installer entry of start_pc_ok.
+- Consequence: the exact executable contains the installer call. No syntactic
+  exclusion exists. The frozen U298 obligation is a reachability claim: that
+  instruction is never executed and no indirect branch targets the entry.
+- The complete exclusion theorem was not obtained. The published
+  lab-to-target theorems state behavior inclusion and do not export the
+  program-counter invariant. No statement was weakened or replaced.
+- Actual exits: scan 0; proof 0 with four exports; import 0 (exact statement,
+  97 closure nodes, four Boolean axioms); wrong-target 1 at the intended
+  mismatch; repeat 0 with byte-identical exports. Theory data
+  0b23f5f8740d46dcd49e9b69dea1e2ad224d9a5ff6b6bb4116e2744a94c7a9af.
+- Evidence reader verify_cases_r3.py exits 0 on this continuation's cases and
+  1 on two altered copies. Profiles A and B are unchanged and not approved.
+- Evidence: m1-installed-closure-20261112/REPORT.md, records/install-site.
+- Next check: a target-level program-counter invariant for the exact program,
+  or an explicit installer assumption in the chosen profile.
+
+## U360 — Installer exclusion suffices without a correct install handler; exclusion itself not established
+
+- References: U296, U297, U298, U355, U358, U359. CURRENT none; M1 open;
+  Stage12 unauthorized; end_to_end=false.
+- forge_refundInstallHandler holds four PROVED theorems at local scope.
+  arm8_install_handler_ok: for every is_arm8_machine_config record, an explicit
+  handler (return to register 30, write the byte array at register 2, put that
+  address in register 0) satisfies install_interfer_ok.
+  arm8_install_handler_exists: the existential form.
+  installed_modulo_install_handler: the published installed predicate with its
+  one install_interfer_ok clause replaced by T gives installed for the record
+  with that handler. install_exclusion_suffices: that weaker predicate plus the
+  frozen U298 exclusion gives a record mc2 with is_arm8_machine_config,
+  installed and machine_sem mc2 = machine_sem mc. It uses the U298 bridge.
+- This does not prove the exclusion. It shows which assumption the exclusion
+  replaces. No new constant, axiom or cheat. No frozen statement changed.
+- Exclusion attempt: NOT established. Exact failure point: no stored theorem
+  concludes a program-counter inequality with install_pc for an evaluator
+  prefix. search-install-pc read 32526 stored theorems and definitions in 330
+  theories; 20 mention install_pc; the four with such a conclusion are three
+  definitions and ffi_entry_pcs_NOT_install_OR_halt_pc. Local theorems of the
+  published scripts are not stored and were read in source only. A behavior
+  theorem cannot exclude the installer, because a run that reaches a correct
+  installer is a legal run. A proof needs an instrumented simulation at lab
+  and target level.
+- Minimal explicit assumption identified, not adopted: the exclusion premise
+  itself. Consequence of the alternative: cml_install is compiled without EVAL
+  and the code buffer is mapped read/execute (U296), so install_interfer_ok is
+  likely false for a faithful model of the physical machine. That is an
+  inference from source and a memory map; no faulting run exists.
+- Actual exits: explore-0001 1, explore-0003 1, explore-0004 1, explore-0006 1,
+  explore-0007 1 (script errors, not counted; no store_thm attempt failed);
+  explore-0002, 0005, 0008, 0009, 0010 0 (goal manager, nothing stored);
+  proof-0001 0 with four exports; import 0 (four exact statements rebuilt from
+  the published definitions, 343 closure nodes, four Boolean axioms); repeat 0
+  with byte-identical exports; missing-exclusion 1 at the intended mismatch;
+  wrong-return-register signal 24 at the 600 s CPU limit (resource stop, not
+  counted); wrong-return-register-v2 1 (bounded tactic proves the original
+  and fails for register 29); search-install-pc 0. Proof source
+  7162863d4bcfaab5343d6646d0cc6cdea96df1162226ee7b8ea2917e497ffb7d; theory data
+  a1438f1b0db21378a95678a9b535200cb8eb5bb1d0f6b6803c9c1e86257123da.
+- Limits: same machine, cached parents; the weak predicate is built by term
+  surgery on the unfolded definition and the import rebuilds it the same way,
+  so both share that construction. A control that fails to prove a statement
+  does not prove the statement false.
+- Evidence: proposals/refund-executable-feasibility/m1-exclusion-profile-20261113/
+  REPORT.md, records/install-handler.
+- Next check: lemma N1, by evaluation in HOL: Install_location is not in the
+  call-reachable set of the exact word program. NOT RUN; truth not known.
+
+## U361 — Profile comparison and installed-state obligations written; no profile approved
+
+- References: U356, U358, U360. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- PROFILES.md compares Profile A and Profile B over 13 assumptions, the
+  trusted boundaries and the form of the final theorem. Recommendation, not an
+  approval: Profile A for M1 with the read-error exclusion named in the claim;
+  the U298 exclusion as the installer assumption in either profile. The open
+  M1 blockers are the same in both profiles.
+- INSTALLED-STATE.md lists each clause of installed with its status for the
+  physical process and six missing obligations: one at model level (a complete
+  record and abstract state; the U290 route stays closed) and five physical
+  (start-up code, FFI code, installer, loader, processor and operating system).
+  installed for the physical process stays NOT_ESTABLISHED.
+- No profile is adopted. No assumption is accepted. Stage 12 stays unauthorized.
+- Evidence: m1-exclusion-profile-20261113/PROFILES.md, INSTALLED-STATE.md.
+- Next check: owner decision on the profile and on the installer assumption.
+
+## U362 — Clean-container replay of two ARM8 theorems passes; CakeML-dependent theorems not replayed
+
+- References: U350, U352, U357, U348, U359. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. The owner asked for the clean replay if all
+  prerequisites hold.
+- Prerequisites measured at the start: host free disk 39.1 GiB against the
+  20 GiB target; swap 3.8 GiB in use of 5 GiB; 398.7 GiB free inside the
+  Docker VM file system; no running container (23 stopped containers of
+  another project, not touched); no HOL process on the host. All held.
+- Method: a fresh debian:bookworm-slim container pinned by digest
+  734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc. PolyML
+  4557554077078decce4ce5f90da00a713cfc32e4 and HOL
+  9783a49979c94c401ff8c0e51b2eefae7ea95ae3 fetched from GitHub by commit, with
+  commit and tree IDs checked; both built from source; the ARM8 step heap
+  built by Holmake. No host toolchain, heap or cached theory was mounted. The
+  six proof sources have the hashes of the host records.
+- attempt-0001: container exit 30. Both proofs exit 0. The two imports and
+  two controls exit 1 because the agent's script passed the stored path of
+  the theory files (script error; not counted as rejections).
+- attempt-0002, one path line corrected: container exit 0. Twelve build steps
+  exit 0. compose-0001 0, compose-import 0 (97 closure nodes), wrong-status 1
+  at the intended mismatch, install-site-0001 0, install-import 0 (97 closure
+  nodes), wrong-target 1 at the intended mismatch.
+- The exported theory files of ffiread_error_return and install_call_site_step
+  are byte-identical to the macOS host exports of 2026-11-12, in both attempts
+  (theory data 2cd33309…daec841 and 0b23f5f8…a7c9af).
+- Evidence reader verify_cases_r4.py exits 0; it exits 1 on a copy with one
+  byte appended to a replayed export and on a copy with an acceptance marker
+  added to a control stream. It binds bytes, exits and markers only.
+- Limits: same physical host, same agent, same Docker VM. This is a clean
+  replay, not an independent replay. Debian packages are not pinned. Source
+  identity rests on Git SHA-1 and GitHub.
+- NOT RUN: clean replay of every CakeML-dependent theorem, including U345,
+  U347, U349, U351, U353, U354, U355, U358, the U298 bridge and U360. The
+  CakeML compiler proofs were not built from source: no measured time or
+  memory bound exists for that build on this host, and the Docker VM has
+  7.65 GiB of memory. Host swap in use rose to 7.8 GiB of 8 GiB at the end of
+  attempt-0002; free disk was 32 GiB at the end.
+- The agent removed the two containers that it created. Nothing else was
+  removed or pruned.
+- Evidence: m1-exclusion-profile-20261113/REPORT.md section 5,
+  records/clean-replay, records/verify_cases_r4.py.
+- Next check: owner decision on a host or memory budget for a from-source
+  CakeML build; an independent operator and host for independent replay.
+
+## U363 — Working-tree audit: additions only; ten ELF files have a mode change
+
+- References: U343, U350. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. Read-only audit; nothing discarded, reverted, staged or
+  committed.
+- Before this session the three tracked documents ROADMAP.md, unsure.md and
+  FORGE_MISSION_STATUS.md had 901 added lines and 0 removed lines against
+  HEAD 77a31eba.
+- Ten tracked files gcd-selftest.elf and gcd-selftest.rebuild.elf under
+  results/stage7 and results/stage9 show a mode change 100644 to 100755 and
+  no content change (same blob as HEAD, 1240 bytes). The cause was not
+  determined. The agent did not revert the mode: it is preserved evidence.
+- Nine untracked proposal packets of 2026-11-12: 642 manifest members, 0 hash
+  mismatches, 0 unlisted files. 350 untracked entries under results/ (36 GiB)
+  follow the snapshot commit's stated exclusion of results/; they were not
+  hashed in this audit.
+- New in this session: results/refund-install-handler-local-20261113,
+  results/m1-clean-replay-20261113 and the packet m1-exclusion-profile-20261113
+  (225 manifest members).
+- Next check: owner decision on the mode change and on a commit of the
+  2026-11-12 and 2026-11-13 packets. The records under results/ exist only on
+  this disk.
+
+## U364 — N1 as first stated is false; corrected N1 proved for every allocation oracle
+
+- References: U297, U355, U359, U360. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false. The U298 exclusion premise is not adopted
+  and not used.
+- N1 of U360, read as "no function other than Install_location refers to
+  Install_location", is FALSE. PROVED: refund_pre_alloc_not_closed_29. The
+  functions of the pre-allocation word program with a code label 29 are [31]
+  (refund_install_callers); those with a code label 31 are [31]
+  (refund_install_data_callers). 29 is Install_location and 31 is
+  InstallData_location. The pre-allocation program has 552 functions.
+- Corrected N1 is PROVED at local scope: forge_refundInstallReach.
+  install_stubs_unreferenced. For every allocation oracle, every function of
+  SND (to_word arm8_config (set_oracle arm8_backend_config orac) refund_prog)
+  other than the two installer stubs has neither stub in the published
+  wordConvs get_code_labels (direct call targets and LocValue constants,
+  through nested handlers).
+- Dependencies: published to_word_thm and
+  word_good_code_labels_word_to_word; new generic lemmas word_to_word_labels
+  and word_to_word_labels_single; to_word_0_oracle_independent;
+  to_word_0_arm8_link; refund_pre_alloc_closed by cv_eval; no_label_thm.
+  Three new checker constants; the final statement does not mention them. No
+  axiom or cheat. 477 closure nodes; four Boolean axioms. The trusted base
+  includes cv_compute and the published cv translation of the compiler.
+- Finding: forge_refundArm8Compile$oracle is a specified constant with no
+  available value. The exact post-allocation program cannot be evaluated
+  directly; the proof therefore quantifies over the oracle.
+- Scope limit: this is a syntactic closure fact. It does not show that the
+  installer stub is never executed. Not checked: return-label conventions;
+  the semantic origin of Loc values; lab-level fall-through. The U298
+  exclusion stays NOT ESTABLISHED.
+- Actual exits: explore-0001 0; explore-0002, 0004, 0005, 0011, 0015 1 each
+  (script errors, not counted; no store_thm attempt failed); explore-0003,
+  0006, 0008, 0009, 0010, 0012, 0013, 0014, 0016 0; explore-0007 signal 15
+  (the agent stopped a non-terminating EVAL_TAC after 614 s, not counted);
+  proof-0001 0 with eleven theorems and three exports; import 0 with ten
+  exact statements; repeat 0 with byte-identical exports; naive-statement 1
+  at the intended mismatch; naive-closure 1 (fresh evaluation rejects
+  Install_location alone with F after the harness accepts the pair). Three
+  shell-loop invocations failed in the runner before any HOL child and left
+  three stray directories, which are kept. verify_cases_r5.py first exited 1
+  by its own wrong export count, then 0; it exits 1 on two altered copies.
+  Proof source
+  82bac31188e0a8116dea4897c6df96d35c0d7b96cf2fe7f0103b0219383e6c9c; theory data
+  9566c1c595da7f236c206350b067f58c6c80d28678079bf17a2edc701d20c73a.
+- Limits: same machine, cached parents, no clean replay of this theory.
+- Evidence: proposals/refund-executable-feasibility/m1-n1-reachability-20261113/
+  REPORT.md, records/n1, records/verify_cases_r5.py.
+- Next check: P1 of U365 by evaluation with an explicit oracle.
+
+## U365 — Minimum instrumentation for the exclusion specified; not implemented
+
+- References: U298, U360, U364. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- The published label theorems below word level bound the union of all
+  labels by the set of all names, which holds 29 and 31. They cannot carry
+  the closure fact of U364 to lab level. The per-pass lemmas are local.
+- Three lemmas are PROPOSED and NOT RUN. P1: lab-level closure and no
+  fall-through into sections 29 and 31 for the exact lab program. P2: a
+  labSem invariant that the program counter never enters those sections from
+  an initial state with no such Loc value. P3: a strengthened lab-to-target
+  simulation in which a prefix state has PC = install_pc only at the Install
+  line; it needs a modified copy of the published compile_correct proof.
+  P1, P2 and P3 together give the U298 exclusion.
+- Installed-state obligations after U364: none of the six becomes
+  dischargeable. Obligation 4 (installer) is reduced to P1, P2 and P3; then
+  install_exclusion_suffices (U360) applies. Obligations 1, 2, 3, 5 and 6 do
+  not depend on N1.
+- Evidence: m1-n1-reachability-20261113/REPORT.md sections 4 and 7.
+- Next check: P1 by re-running the published in-logic compile with the
+  oracle definition kept and evaluating to_lab_all_arm8. Truth not known.

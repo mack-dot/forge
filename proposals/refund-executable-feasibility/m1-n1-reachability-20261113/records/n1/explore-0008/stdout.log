@@ -1,0 +1,15 @@
+<<HOL message: Created theory "forge_n1Explore">>
+ARM8_THM compile_0_arm8_def :: ⊢ compile_0_arm8 data_conf prog =
+  (let
+     data_conf = data_conf with <|has_fp_ops := F; has_fp_tern := F|>
+   in
+     stubs_md data_conf ++ MAP (compile_part data_conf) prog)
+OK..
+AFTER arm8-link: 0 goals, proved=true
+OK..
+AFTER oracle-indep: 0 goals, proved=true
+OK..
+AFTER singleton: 0 goals, proved=true
+OK..
+AFTER fst: 0 goals, proved=true
+EXPLORE_COMPLETE

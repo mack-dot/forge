@@ -1,0 +1,11 @@
+strip_tac >>
+  fs [installed_def, heap_regs_def, LET_THM, GSYM MAP_MAP_o] >>
+  qmatch_asmsub_abbrev_tac `good_init_state mc ms bytes cbspace t0 m0 dm0 sdm0` >>
+  map_every qexists_tac [`t0`,`m0`,`dm0`,`sdm0`] >>
+  conj_tac >- (first_assum ACCEPT_TAC) >>
+  match_mp_tac base_gen >>
+  conj_tac >- (first_assum ACCEPT_TAC) >>
+  simp [memory_assumption_def] >>
+  fs [Abbr `dm0`, Abbr `t0`, Abbr `m0`] >>
+  match_mp_tac (GEN_ALL heap_region_extends) >>
+  rpt conj_tac >> TRY (first_assum ACCEPT_TAC) >> fs [] >> EVAL_TAC

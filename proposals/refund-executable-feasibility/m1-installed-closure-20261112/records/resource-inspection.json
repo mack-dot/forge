@@ -1,0 +1,101 @@
+{
+ "measured_with": "df -k, du -sk, sysctl vm.swapusage, docker system df, docker images/ps, one plain container df, one read-only privileged du inside the Docker VM, find/lsof/ps for activity",
+ "disk_free_GiB_at_start": 6.6,
+ "disk_free_GiB_now": 12.28,
+ "target_free_GiB": 20,
+ "deficit_GiB_now": 7.72,
+ "swap_now": "total = 14336.00M  used = 13082.25M  free = 1253.75M  (encrypted)",
+ "deleted_by_agent": [],
+ "recovered_by_cleanup_GiB": 0,
+ "docker": {
+  "vm_data_filesystem_used_KiB": 30372192,
+  "docker_raw_allocated_GiB": 30.43,
+  "trim_gain": "about 0: the VM filesystem really uses 28.97 GiB",
+  "system_df": {
+   "images_GB": 1.615,
+   "images_reclaimable_MB": 350.1,
+   "containers": 21,
+   "containers_running": 2,
+   "volumes": 48,
+   "volumes_GB": 7.456,
+   "volumes_reclaimable_GB": 2.599,
+   "build_cache_kB": 955.9
+  },
+  "inside_vm_GiB": {
+   "/var/lib/desktop-containerd": 13.97,
+   "/var/lib/docker/volumes": 6.95,
+   "/var/lib/docker/overlay2": 5.17,
+   "/var/lib/docker/containers": 1.37,
+   "/var/lib/docker/buildkit": 0.37,
+   "/var/lib/swap": 1.0
+  },
+  "active_use": "two containers of another project started minutes before the inspection",
+  "pruned": "nothing; safe build-cache pruning would free under 1 MB"
+ },
+ "candidates": [
+  {
+   "path": "/private/tmp/claude-501/-Users-mackianni-spm-release-loop/f3faa3b8-b97f-4f66-997c-3332eaad3f8f",
+   "size_GiB_du": 14.34,
+   "owner": "another Claude session, project spm-release-loop",
+   "state": "ACTIVE: 8607 files changed in the last hour; a Postgres server (pid 13891) runs from a data directory inside it; copies in progress",
+   "kind": "unique live project state",
+   "risk": "destroys running work; du overstates the gain because cp -c makes APFS clones"
+  },
+  {
+   "path": "/private/tmp/claude-501/-Users-mackianni-spm/2eef8509-f261-4f49-890f-5c9f2be8ad38",
+   "size_GiB_du": 6.24,
+   "owner": "an earlier Claude session, project spm",
+   "state": "no file changed in the last hour; directory time 2026-11-08",
+   "kind": "directories named wt-* and monolith: probably git worktrees; may hold uncommitted work",
+   "risk": "loss of unpushed changes"
+  },
+  {
+   "path": "/private/tmp/claude-501/-Users-mackianni-spm/c624b68b-2cda-4aee-b7fd-5bf648162e61",
+   "size_GiB_du": 0.96,
+   "owner": "an earlier Claude session, project spm",
+   "state": "not inspected further",
+   "kind": "unknown",
+   "risk": "unknown"
+  },
+  {
+   "path": "Docker VM /var/lib/desktop-containerd",
+   "size_GiB": 13.97,
+   "owner": "Docker Desktop, all projects",
+   "state": "not listed by docker system df",
+   "kind": "image store content; may include unique images",
+   "risk": "needs a Docker Desktop level cleanup; content unknown"
+  },
+  {
+   "path": "Docker volumes",
+   "size_GiB": 6.95,
+   "owner": "other project databases and the Forge pinned builder cache",
+   "state": "21 of 48 in use",
+   "kind": "unique state and one cache volume",
+   "risk": "excluded by the owner rule: no volume removal"
+  },
+  {
+   "path": "/System/Volumes/VM swap files",
+   "size_GiB": "14 to 16",
+   "owner": "macOS",
+   "state": "in use",
+   "kind": "swap",
+   "risk": "released only by the system or a restart; a restart stops the active sessions"
+  },
+  {
+   "path": "~/Library/Caches",
+   "size_GiB": 3.1,
+   "owner": "other applications",
+   "state": "not inspected",
+   "kind": "application caches",
+   "risk": "low, but not Forge"
+  },
+  {
+   "path": "~/forge-* sibling clones",
+   "size_GiB": 2.44,
+   "owner": "Forge, earlier stages",
+   "state": "idle",
+   "kind": "clones; some hold controller.sqlite evidence context",
+   "risk": "earlier Tier 3: per-path approval"
+  }
+ ]
+}
