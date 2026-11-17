@@ -14891,3 +14891,31 @@ curl: (6) Could not resolve host: github.com
   Stage 12 unauthorized.
 - Next check: owner decisions (version 2 diff, Stage 6 record, Stage 9
   and 10 pins, rebuild budget, Docker).
+
+## U425 — Owner reports a malicious force-push on the main branch of ANOTHER repository; read-only check of this repository finds no sign of the same attack
+- Status: 2026-11-17. Refs U412, U424. Source: a screenshot from the owner
+  of another session: remote main of another repository was force-updated
+  to a commit with obfuscated payloads in init, mobile/init and
+  postcss.config.mjs, scripts changed to run "node init", and .env removed
+  from .gitignore. I did not see that repository.
+- Checked here (read-only): git ls-remote: 41 remote branches, every head
+  equal to the local tracking ref; main is f9eb1cbc (the known merge);
+  backup/forge-local-2026-11-11 is f4485466 (my last push). GitHub activity
+  API: the last pushes are the six to the backup branch on 2026-11-13 and
+  2026-11-17 that this work made; no push to main; one force-push in the
+  last 100 records, on integration/receipt-authentication-review, dated
+  2026-11-02. Branch protection on main: true. On main, on the backup
+  branch and at HEAD: no file init, mobile/init, postcss.config.mjs or
+  app-ads.txt; package.json has no scripts; no line with 200 or more
+  spaces followed by code in script or config files; .gitignore never had
+  an .env line. Working tree clean outside results/. No running process
+  that matches "node init".
+- Uncertainty: this shows no change in this repository at the time of the
+  check. It does not show that the GitHub account or this machine is
+  clean. A force-push to another repository means a credential with write
+  access is in other hands, or a collaborator did it. The 2026-11-02
+  force-push was not examined. Tags, releases, Actions secrets, deploy
+  keys and webhooks were not checked.
+- Impact: none on proof status. I hold five local commits (93712d2c to
+  bf5ed234) that are not pushed; no push until the owner says so.
+- Next check: owner rotates credentials; then re-run this comparison.
