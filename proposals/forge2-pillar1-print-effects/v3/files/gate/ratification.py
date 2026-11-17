@@ -5,11 +5,14 @@ The tree that runs is the trusted checkout plus exactly the ratified bytes; no o
    for a proof or audit reason, and must accept the trusted approved implementation;
 2. the ratified protected_manifest must return what the trusted one returns for the same tree, and the ratified
    authorize must still refuse a changed, an added and a removed protected file and pass an unchanged manifest.
-The main safeguard stays the owner's review of the exact bytes. The booking, refund, provenance and TypeScript gates
-are not exercised here.
+The main safeguard stays the owner's review of the exact bytes. Two independent reviews showed that bytes written on
+purpose pass these controls (a gate.py that only prints the expected words; functions that behave well only inside
+the probe). The controls catch accidents, not intent. The booking, refund, provenance and TypeScript gates are not
+exercised here, and the changed PR gate itself never runs: its modules are outside Tier-0 for that reason.
 """
 
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -20,6 +23,8 @@ from common import Rejected, digest
 COPIED = ('gate', 'spec', 'impl', 'toolchain', 'schemas', 'policy')
 BASELINE = 'impl/Ledger.dfy'
 PROOF_REASONS = ('VERIFICATION_REJECTED:', 'AUDIT_REJECTED:')
+ALLOWED_ENVIRONMENT = ('PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'LD_LIBRARY_PATH', 'DOTNET_ROOT')
+TIMEOUT_SECONDS = 1800
 PROBE = r"""
 import json, sys
 sys.path.insert(0, 'gate')
@@ -90,13 +95,16 @@ def materialize(root, candidate, ratification, tree):
 
 
 def run_controls(root, candidate, ratification, work, trusted_manifest, environment=None):
+    if environment is None:      # the ratified bytes never see the caller's full environment
+        environment = {name: os.environ[name] for name in ALLOWED_ENVIRONMENT if name in os.environ}
+        environment['PYTHONNOUSERSITE'] = '1'
     tree = Path(work) / 'ratified-tree'
     controls = materialize(root, candidate, ratification, tree)
     results = []
     for index, (path, expected, kind) in enumerate(controls):
         child = subprocess.run([sys.executable, 'gate/gate.py', '--impl', path,
                                 '--evidence', 'build/control-%02d.evidence.json' % index],
-                               cwd=tree, capture_output=True, text=True, env=environment)
+                               cwd=tree, capture_output=True, text=True, env=environment, timeout=TIMEOUT_SECONDS)
         (Path(work) / ('ratification-control-%02d.log' % index)).write_text(child.stdout + child.stderr)
         lines = [line for line in (child.stdout + child.stderr).splitlines() if line.strip()]
         last = lines[-1] if lines else ''
@@ -116,12 +124,15 @@ def run_controls(root, candidate, ratification, work, trusted_manifest, environm
     # The ratified protected-change functions, run in their own process inside the ratified tree.
     shutil.rmtree(tree / 'build', ignore_errors=True)
     expected_manifest = trusted_manifest(tree)
-    child = subprocess.run([sys.executable, '-B', '-c', PROBE], cwd=tree, capture_output=True, text=True, env=environment)
+    child = subprocess.run([sys.executable, '-B', '-c', PROBE], cwd=tree, capture_output=True, text=True, env=environment,
+                           timeout=TIMEOUT_SECONDS)
     (Path(work) / 'ratification-probe.log').write_text(child.stdout + child.stderr)
     marked = [line for line in child.stdout.splitlines() if line.startswith('PROBE ')]
     if child.returncode != 0 or len(marked) != 1:
         raise RuntimeError('RATIFICATION_CONTROL_ERROR: the probe of the ratified gate functions did not finish')
     probe = json.loads(marked[0][len('PROBE '):])
+    if not isinstance(probe, dict):
+        raise RuntimeError('RATIFICATION_CONTROL_ERROR: the probe of the ratified gate functions returned no object')
     if probe.get('manifest') != expected_manifest:
         raise Rejected('RATIFICATION_CONTROL: the ratified protected_manifest differs from the trusted one on the same tree')
     if probe.get('authorize') != EXPECTED_PROBE:

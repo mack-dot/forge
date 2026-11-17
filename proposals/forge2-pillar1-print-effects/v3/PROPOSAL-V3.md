@@ -8,7 +8,8 @@ authorized by this text.
 ## Step A — the rule (bootstrap; needs the owner's explicit merge)
 
 Files: `gate/approval.py`, `gate/ratification.py` (new),
-`gate/incremental.py`.
+`gate/incremental.py` (calls both; `governance` joins the protected
+directories).
 
 A pull request that changes protected files passes the PR gate only if
 the trusted base checkout holds a record
@@ -23,10 +24,19 @@ the trusted base checkout holds a record
   must reject. A control may not have the path of a planted bug of the
   trusted base.
 
-Scope: files under `gate/` and `toolchain/`, except `gate/approvals/`
-and `gate/provenance/`. One exception: a file named `spec.lock` whose
-new bytes are its old bytes with the digests of ratified `toolchain/`
-files replaced in one pass.
+Scope: files under `gate/` and `toolchain/`, except `gate/approvals/`,
+`gate/provenance/` and the PR gate's own modules (`gate/incremental.py`,
+`gate/approval.py`, `gate/ratification.py`, `gate/coverage.py`,
+`gate/obligations.py`, `gate/pr_check.py`, `gate/post_pr_report.py`,
+`gate/common.py`). Those change only by the owner's explicit merge,
+because no control runs a changed PR gate. One exception to the scope:
+a file named `spec.lock` whose new bytes are its old bytes with the
+digests of ratified `toolchain/` files replaced in one pass.
+
+The record folder `governance/` becomes a protected path and is outside
+the scope. So the PR gate rejects every pull request that adds or
+changes a record. A record reaches `main` only by the owner's explicit
+merge; that merge is the ratification.
 
 Floor controls, run in a tree made of the trusted checkout plus exactly
 the ratified bytes: the changed gate rejects every trusted planted bug
@@ -36,8 +46,9 @@ one returns for that tree; its `authorize` refuses a changed, an added
 and a removed protected file.
 
 The floor controls do NOT prove that the changed gate is not weaker.
-The owner's review of the exact bytes is the safeguard. A record in the
-candidate is never read.
+Two independent reviews showed that bytes written on purpose pass them.
+They catch accidents. The owner's review of the exact bytes is the
+safeguard. A record in the candidate is never read.
 
 ## Step B — print-effect tracking (the first change under the rule)
 

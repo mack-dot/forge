@@ -29,6 +29,10 @@ if 'a' in steps:
     for name in ('gate/approval.py', 'gate/ratification.py'):
         shutil.copyfile(HERE / 'files' / name, W / name)
     sub('gate/incremental.py', 'from approval import authorize\n', 'from approval import authorize\nfrom ratification import run_controls\n')
+    # Review 2, finding 2: the record folder is a protected path. Tier-0 does not cover it, so the PR gate never
+    # accepts a change there; records reach the trusted base only by the owner's explicit merge.
+    sub('gate/incremental.py', "PROTECTED_DIRS = ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github')",
+        "PROTECTED_DIRS = ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github', 'governance')")
     if MAIN_LINEAGE:
         sub('gate/incremental.py', "    approval = authorize(ROOT, trusted_before, proposed_before)\n    inventory = coverage.inventories(ROOT, candidate)\n    operation['spec_approval'] = approval\n",
             '    approval = authorize(ROOT, trusted_before, proposed_before, candidate)\n'

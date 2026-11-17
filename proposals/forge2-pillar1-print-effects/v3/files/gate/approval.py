@@ -3,7 +3,9 @@
 Two exact-bytes paths exist. Both read ONLY the trusted base checkout; nothing in the candidate authorizes anything.
 1. Spec approval (unchanged): gate/approvals/*.json for spec/LedgerSpec.dfy with spec.lock.
 2. Tier-0 gate ratification: governance/gate-ratifications/*.json for files under gate/ and toolchain/, except
-   gate/approvals/ and gate/provenance/. The record names every changed protected file with its old and new SHA-256.
+   gate/approvals/, gate/provenance/ and the PR gate's own modules (PR_GATE_FILES). The record folder is itself a
+   protected path and is outside Tier-0, so a record reaches the trusted base only by the owner's explicit merge.
+   The record names every changed protected file with its old and new SHA-256.
    A spec.lock file may be covered only when its new bytes are its old bytes with the digests of ratified toolchain
    files replaced (one pass).
 """
@@ -15,14 +17,19 @@ from common import Rejected, digest, read_json
 SPEC_PATHS = {'spec/LedgerSpec.dfy', 'spec.lock'}
 RATIFICATION_DIR = 'governance/gate-ratifications'
 RATIFIABLE_PREFIXES = ('gate/', 'toolchain/')
-# Not ratifiable at Tier 0: spec approval records and the provenance (signing) trust files.
+# Not ratifiable at Tier 0: spec approval records, the provenance (signing) trust files, and the modules of the
+# PR gate itself. No control runs the changed PR gate, so those files change only by the owner's explicit merge.
 EXCLUDED_PREFIXES = ('gate/approvals/', 'gate/provenance/')
+PR_GATE_FILES = ('gate/incremental.py', 'gate/approval.py', 'gate/ratification.py', 'gate/coverage.py',
+                 'gate/obligations.py', 'gate/pr_check.py', 'gate/post_pr_report.py', 'gate/common.py')
 CONTROL_PREFIX = 'bugs/'
 SHA256 = re.compile('[0-9a-f]{64}')
 
 
 def _ratifiable(name):
-    return name.startswith(RATIFIABLE_PREFIXES) and not name.startswith(EXCLUDED_PREFIXES)
+    lowered = name.lower()      # also on a file system that ignores letter case
+    return (lowered.startswith(RATIFIABLE_PREFIXES) and not lowered.startswith(EXCLUDED_PREFIXES)
+            and lowered not in PR_GATE_FILES)
 
 
 def _trusted_file(root, relative, label):
@@ -95,7 +102,7 @@ def _controls(record, root):
         path = control.get('path') if isinstance(control, dict) else None
         if (not isinstance(control, dict) or set(control) != {'path', 'sha256', 'expect'} or control['expect'] != 'rejected'
                 or not isinstance(path, str) or not path.startswith(CONTROL_PREFIX) or not path.endswith('.dfy')
-                or '/' in path[len(CONTROL_PREFIX):] or '..' in path or path in seen
+                or '/' in path[len(CONTROL_PREFIX):] or '..' in path or not path.isprintable() or path in seen
                 or not isinstance(control['sha256'], str) or not SHA256.fullmatch(control['sha256'])):
             raise Rejected('RATIFICATION_BINDING: malformed control in the trusted record')
         if (root / path).exists() or (root / path).is_symlink():

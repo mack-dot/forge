@@ -82,6 +82,12 @@ def scope_narrow(c):    # review case t6: bugs/ is refused for scope, and the au
     sub(c / 'gate/backends/dafny.py', "not in (ROOT / 'impl', ROOT / 'bugs'):", "not in (ROOT / 'impl',):")
     sub(c / 'gate/backends/dafny.py', "        if audit.returncode != 0:\n", "        if False:\n")
 def approval_record(c): (c / 'gate/approvals/extra.json').write_text('{}\n')
+def pr_gate_edit(c): p = c / 'gate/incremental.py'; p.write_text(p.read_text() + '\n# one more line\n')
+def only_a_record(c):
+    (c / 'governance/gate-ratifications').mkdir(parents=True, exist_ok=True)
+    (c / 'governance/gate-ratifications/planted.json').write_text(json.dumps({'tier': 0, 'decision': 'ratified_as_written', 'end_to_end': False, 'files': {}, 'controls': []}) + '\n')
+STUB = "#!/usr/bin/env python3\nimport sys\nimpl = sys.argv[sys.argv.index('--impl') + 1]\nif impl.startswith('bugs/'):\n    print('VERIFICATION_REJECTED: C1 C2 C3 C4 C5 not established; Dafny exit 4', file=sys.stderr)\n    sys.exit(1)\nprint('ACCEPTED: C1 C2 C3 C4 C5; backend=dafny; tier=critical; end_to_end=false')\n"
+def stub_gate(c): (c / 'gate/gate.py').write_text(STUB)
 def step_b(c): subprocess.run([sys.executable, '-I', '-B', str(HERE.parent / 'v2/build_v2.py'), str(c)], check=True, capture_output=True)
 def extra_comment_in_ratified_file(c): p = c / 'gate/backends/dafny.py'; p.write_text(p.read_text() + '\n# one more line\n')
 def lock_other_field(c): sub(c / 'spec/refund/spec.lock', '"dafny_version": "4.11.0"', '"dafny_version": "4.11.1"')
@@ -124,6 +130,9 @@ CASES = [
     ('record whose control replaces a trusted planted bug', [step_b], (PRINT_BUGS, control_replaces_trusted_bug), 1, 'review finding 1 (t4)'),
     ('record with "tier": false', [step_b], (PRINT_BUGS, tier_false), 1, 'review finding 4'),
     ('RATIFIED new file under gate/approvals/ (record matches exactly)', [approval_record], ([], None), 1, 'review finding 5: outside Tier-0'),
+    ('RATIFIED change of a module of the PR gate itself (record matches exactly)', [pr_gate_edit], ([], None), 1, 'review 2 finding 1: outside Tier-0'),
+    ('candidate that ONLY adds a ratification record', [only_a_record], None, 1, 'review 2 finding 2: the record folder is protected; records enter by the owner\'s merge only'),
+    ('KNOWN LIMIT: RATIFIED gate.py that only prints the expected words (record matches exactly)', [stub_gate], ([], None), 0, 'review 2 finding 4: floor controls do not stop bytes written on purpose; the owner ratified these bytes'),
     ('RATIFIED policy edit (record matches exactly)', [policy_scope], ([], None), 1, 'scope: Tier-0 covers gate/ and toolchain/ only'),
     ('RATIFIED step B + another field changed in spec/refund/spec.lock (record matches exactly)', [step_b, lock_other_field], (PRINT_BUGS, None), 1, 'scope: a lock may only be re-bound'),
 ]
@@ -141,10 +150,14 @@ for k, (name, edits, record, want, note) in enumerate(CASES):
     copy_tree(T, cand)
     for e in edits:
         e(cand)
+    if (cand / 'governance').exists() and not any(e in (own_record, only_a_record) for e in edits):
+        shutil.rmtree(cand / 'governance')
     if record is not None:
         controls, mutate = record
         # 'B' = the record ratifies exactly step B (the reference tree), while the candidate holds more than step B.
         record_for(STEP_B_TREE if controls == 'B' else cand, PRINT_BUGS if controls == 'B' else controls, mutate=mutate)
+    # The record folder is protected now: the candidate holds the same records as the trusted side (plus its own, if any).
+    shutil.copytree(T / 'governance', cand / 'governance', dirs_exist_ok=True)
     work = Path('build') / f'round3-pr-{out.name}-{k:02d}'
     shutil.rmtree(T / work, ignore_errors=True); (T / (str(work) + '-evidence.json')).unlink(missing_ok=True)
     run = subprocess.run([sys.executable, 'gate/incremental.py', '--profile', 'local', '--candidate', str(cand),
@@ -168,6 +181,7 @@ for k, (name, edits, record, want, note) in enumerate(CASES):
     print(f'{k:02d} gate exit {run.returncode} (expected {want}) {"PASS" if ok else "FAIL"} | {name} | {(lines[-1] if lines else "")[:120]}', flush=True)
 shutil.rmtree(RAT, ignore_errors=True); shutil.rmtree(STEP_B_TREE)
 summary['evasions'] = [c['name'] for c in summary['cases'] if c['expected_gate_exit'] == 1 and c['gate_exit'] == 0]
+summary['known_limits_shown'] = [c['name'] for c in summary['cases'] if c['name'].startswith('KNOWN LIMIT')]
 summary['scenario_exit'] = 1 if failed else 0
 (out / 'summary.json').write_text(json.dumps(summary, indent=1, sort_keys=True) + '\n')
 print(json.dumps({'attempt': out.name, 'scenario_exit': summary['scenario_exit'], 'evasions': summary['evasions']}))

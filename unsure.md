@@ -15282,3 +15282,49 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: whether the owner wants a governance ratification record
   for this override, as was done for earlier ones.
 - Next check: owner decision on such a record.
+
+## U436 — Second independent review: more defects in the ratification rule; scope narrowed, record folder protected; fresh Stage 6 passes on main's gate lineage; Stage 6 fails at unchanged main
+- Status: 2026-11-17. Refs U433, U435. A second fresh agent reviewed the
+  fixed code on both gates (28 tool calls; it wrote the records itself as
+  "owner").
+- Findings: F1 HIGH, CONFIRMED on main's gate: a ratified change of the PR
+  gate's own modules (authorize call removed, obligation list cleared)
+  got exit 0 VERIFIED, because no control runs the changed PR gate. F2
+  HIGH, CONFIRMED on the local gate: a candidate that only adds a
+  ratification record got exit 0; the record folder was not protected.
+  F3 MEDIUM, CONFIRMED: functions that behave well only inside the probe
+  pass it. F4 MEDIUM, CONFIRMED on the local gate: a gate.py that only
+  prints the expected words passes all controls (on main the obligations
+  then fail, exit 2). F5 LOW: a record binds file digests, not the base
+  commit; it is live again after a revert. F6 LOW: scope prefixes were
+  case-sensitive and gate/approval.py itself was ratifiable. F7 LOW: the
+  controls ran with the full environment and no time limit. F9: no
+  fail-open found; some malformed inputs end with exit 2.
+  Earlier defects: 2, 3, 4 fixed; 1 and 5 partly.
+- Reviewer's conclusion, which I accept: against bytes written on purpose
+  the floor controls add nothing; they catch accidents; the owner's
+  reading is the safeguard. Exact-digest binding held in both reviews.
+- Changes after this review (proposal files only): Tier-0 no longer
+  covers the PR gate's own modules (incremental, approval, ratification,
+  coverage, obligations, pr_check, post_pr_report, common); scope test
+  ignores letter case; governance/ joins the protected directories, so
+  the PR gate rejects every pull request that adds a record and a record
+  reaches main only by the owner's merge; controls run with an
+  allow-listed environment and a time limit; small input checks. NOT
+  changed: F3 and F4 (stated as limits in the module and in the proposal
+  text; F4 is a control case with expected exit 0, labelled KNOWN LIMIT);
+  F5 (stated).
+- This third version of the code has NOT been reviewed by an independent
+  reader.
+- Stage 6 on main's lineage: at unchanged main (f9eb1cbc) the EXIT
+  "exit_stage_6.py --case report" exits 1 (TRUSTED_INPUTS): the record
+  pins gate files that later merges on main changed. So Stage 6 has been
+  red on main since those merges, independent of my work. With version 3
+  and a fresh run on main's lineage: benchmark exit 0 (1,218 s under
+  load), controls exit 0, identity check exit 0, report exit 0 twice,
+  byte-identical. Resource counts equal the first run.
+- Stage EXIT cases on main's lineage: at unchanged main 24 of 25 exit 0
+  (all but Stage 6); with version 3: Stages 1, 2, 3, 4, 5, 8 all exit 0
+  (24 cases; run with the first version of step A).
+- Uncertainty: every later run must be repeated on the final commits.
+- Next check: control sets with the third version; final branches.

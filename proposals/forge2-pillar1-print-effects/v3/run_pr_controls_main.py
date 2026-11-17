@@ -80,8 +80,14 @@ def scope_narrow(c):
     sub(c / 'gate/backends/dafny.py', "        if audit.returncode != 0:\n", "        if False:\n")
 def approval_record(c): (c / 'gate/approvals/extra.json').write_text('{}\n')
 def tier_false(rec): rec['tier'] = False
+def pr_gate_edit(c): p = c / 'gate/incremental.py'; p.write_text(p.read_text() + '\n# one more line\n')
+def only_a_record(c):
+    (c / 'governance/gate-ratifications').mkdir(parents=True, exist_ok=True)
+    (c / 'governance/gate-ratifications/planted.json').write_text(json.dumps({'tier': 0, 'decision': 'ratified_as_written', 'end_to_end': False, 'files': {}, 'controls': []}) + '\n')
+STUB = "#!/usr/bin/env python3\nimport sys\nimpl = sys.argv[sys.argv.index('--impl') + 1]\nif impl.startswith('bugs/'):\n    print('VERIFICATION_REJECTED: C1 C2 C3 C4 C5 not established; Dafny exit 4', file=sys.stderr)\n    sys.exit(1)\nprint('ACCEPTED: C1 C2 C3 C4 C5; backend=dafny; tier=critical; end_to_end=false')\n"
+def stub_gate(c): (c / 'gate/gate.py').write_text(STUB)
 def own_record(c):
-    (c / 'governance/gate-ratifications').mkdir(parents=True)
+    (c / 'governance/gate-ratifications').mkdir(parents=True, exist_ok=True)
     a, b = manifest(T), manifest(c)
     files = {k: {'old_sha256': a.get(k), 'new_sha256': b.get(k)} for k in sorted(a.keys() | b.keys()) if a.get(k) != b.get(k)}
     (c / 'governance/gate-ratifications/self.json').write_text(json.dumps({'tier': 0, 'decision': 'ratified_as_written', 'end_to_end': False,
@@ -105,6 +111,9 @@ CASES = [
     ('record with a wrong proposal digest', [reduced], (None, [], wrong_proposal), 1, '(c) tampered record'),
     ('RATIFIED weakened gate: audit result ignored', [audit_off], (None, [], None), 1, 'controls: a planted bug would be accepted'),
     ('RATIFIED policy edit', [policy_scope], (None, [], None), 1, 'scope'),
+    ('RATIFIED change of a module of the PR gate itself', [pr_gate_edit], (None, [], None), 1, 'review 2 finding 1: outside Tier-0'),
+    ('candidate that ONLY adds a ratification record', [only_a_record], None, 1, 'review 2 finding 2: the record folder is protected'),
+    ('RATIFIED gate.py that only prints the expected words', [stub_gate], (None, [], None), 2, "review 2 finding 4: passes the floor controls; main's obligations then fail (no decision, not accepted)"),
     ('RATIFIED gate whose protected_manifest returns nothing', [manifest_off], (None, [], None), 1, 'review finding 1 (t3): function probe'),
     ('RATIFIED gate that refuses bugs/ for scope and ignores the audit', [scope_narrow], (None, [], None), 1, 'review finding 1 (t6)'),
     ('record with "tier": false', [reduced], (None, [], tier_false), 1, 'review finding 4'),
@@ -118,11 +127,14 @@ summary = {'attempt': out.name, 'trusted_tree': 'origin/main + step A, commit ' 
 failed = False
 
 
-def clone(path, edits):
+def checkout(path, edits):
     subprocess.run(['git', 'clone', '-q', '--no-checkout', str(FORGE), str(path)], check=True, capture_output=True)
     git(path, 'checkout', '-q', '--detach', BASE)
     for e in edits:
         e(path)
+
+
+def commit(path):
     git(path, 'add', '-A')
     if git(path, 'status', '--porcelain').strip():
         git(path, '-c', 'user.name=control', '-c', 'user.email=control@invalid', 'commit', '-q', '-m', 'control candidate')
@@ -131,16 +143,19 @@ def clone(path, edits):
 for k, (name, edits, record, want, note) in enumerate(CASES):
     shutil.rmtree(RAT, ignore_errors=True)
     cand = out / f'candidate-{k:02d}'
-    clone(cand, edits)
+    checkout(cand, edits)
     if record is not None:
         ref_edits, controls, mutate = record
         ref = cand
         if ref_edits is not None:
             ref = out / f'reference-{k:02d}'
-            clone(ref, ref_edits)
+            checkout(ref, ref_edits)
         record_for(ref, controls, mutate)
         if ref is not cand:
             shutil.rmtree(ref)
+        # The record folder is protected: the candidate holds the same record as the trusted side.
+        shutil.copytree(RAT, cand / 'governance/gate-ratifications', dirs_exist_ok=True)
+    commit(cand)
     work = Path('build') / f'round3-prmain-{out.name}-{k:02d}'
     shutil.rmtree(T / work, ignore_errors=True); (T / (str(work) + '-evidence.json')).unlink(missing_ok=True)
     run = subprocess.run([sys.executable, 'gate/incremental.py', '--profile', 'local', '--candidate', str(cand),
