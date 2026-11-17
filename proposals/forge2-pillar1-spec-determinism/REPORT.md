@@ -198,3 +198,38 @@ Shared and reusable: the runner, the opaque-`Post` pattern with
 projection lemmas, and the table-driven witness and receipt generators.
 NOT built: a generator of the general lemmas for an arbitrary pair. The
 general lemmas of both pairs are written by hand.
+
+## 7. Round 3: shared audit skeleton and the cost of W2 (U430)
+
+`experiments/run_round3.py`, attempt-0001, scenario exit 0. Records:
+`records/round3/`.
+
+**Skeleton.** `RelationalContractAudit.dfy` holds two abstract modules.
+`RelationalContractAudit`: an instance gives `Input`, `Result`,
+`Valid`, `Post` and ONE proof, `Deterministic`; `AtMostOne` is proved
+once. `RelationalSpecDiff`: for two audited specifications, lemma
+`OnePairDecides` is proved once: one pair of allowed results decides
+whether a change touches an input. `RelationalAuditInstances.dfy`
+makes the approved Ledger, Booking and Refund specifications instances
+by reuse of the existing lemmas: pinned Dafny exit 0, 39 verified.
+Control: the planted no-frame specification as an instance is rejected
+(exit 4, at the instance's `Deterministic`). NOT done: no spec PAIR is
+an instance of `RelationalSpecDiff` yet.
+
+**W2 cost.** Question: do two or three explicit map-key assertions
+bring W2 below 300,000 resource units?
+
+| Variant | Result | Batches | Largest batch | Sum |
+| --- | --- | --- | --- | --- |
+| Recorded W2 (isolated assertions, Round 2) | exit 0 | 61 | 707,136 | 6,319,497 |
+| A: three map-key assertions, one batch | OUT OF RESOURCE | 2 | above the limit | — |
+| B: the same with isolated assertions | OUT OF RESOURCE in 2 of 36 | 36 | above the limit | — |
+| C: no extra assertion, one batch (control) | OUT OF RESOURCE | 2 | above the limit | — |
+| D: split into four lemmas, no isolation | exit 0 | 8 in total | 307,402 | 1,117,102 |
+
+Answer: no. Map-key assertions alone do not help (A, B, C fail; an
+out-of-resource result is a failed attempt, not a proof of anything).
+A split into four small lemmas does: every lemma passes in one or two
+batches and the total is 5.7 times smaller. The largest batch is
+307,402, so "below 300,000" is NOT met (2.5% above). Resource counts do
+not depend on machine load. The recorded W2 is unchanged.

@@ -1,0 +1,458 @@
+{
+ "suite": "booking finality: 25 untrusted solvers, proved checker in the minter, Ed25519 receipts",
+ "kind": "FINITE TEST",
+ "end_to_end": false,
+ "solver_versions": 25,
+ "instances": 46,
+ "dafny_runs_in_this_suite": 0,
+ "checker_module_sha256": "e705ec490e30572cc783da2d7f927d5b4201f6bec0bc0a64c9cde507384b85f4",
+ "checker_source_sha256": "55e7df9f6c4989054a459e5aeadccec104e11f324ed3911d86b03c2b99b07f45",
+ "checks": {
+  "minter reports the hashes that the operator computes": true,
+  "checker module is the one verified and built in Round 2 (0 Dafny runs here)": true,
+  "committed counts per version equal the Round 2 benchmark's accepted counts (both gaps)": true
+ },
+ "totals": {
+  "proposals": 1150,
+  "crashed": 0,
+  "overbooked": 138,
+  "suboptimal": 167,
+  "optimal": 845,
+  "mint_requests": 2300,
+  "minted": 1227,
+  "committed": 1227,
+  "receipts_verified": 1227,
+  "overbooked_minted": 0,
+  "committed_outside_the_proved_bound": 0,
+  "suboptimal_minted_at_zero_gap": 0,
+  "optimal_refused_at_zero_gap": 299,
+  "value_mismatch": 0
+ },
+ "per_version": [
+  {
+   "version": 1,
+   "group": "naive greedy",
+   "name": "first fit, dual = all z",
+   "committed": {
+    "0": 0,
+    "2000": 0
+   },
+   "refused": {
+    "0": 46,
+    "2000": 46
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 2,
+   "group": "naive greedy",
+   "name": "heaviest first, dual = all z",
+   "committed": {
+    "0": 0,
+    "2000": 2
+   },
+   "refused": {
+    "0": 46,
+    "2000": 44
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 3,
+   "group": "naive greedy",
+   "name": "heaviest first, dual = slot maximum",
+   "committed": {
+    "0": 0,
+    "2000": 2
+   },
+   "refused": {
+    "0": 46,
+    "2000": 44
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 4,
+   "group": "naive greedy",
+   "name": "density first, dual = slot maximum",
+   "committed": {
+    "0": 0,
+    "2000": 2
+   },
+   "refused": {
+    "0": 46,
+    "2000": 44
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 5,
+   "group": "naive greedy",
+   "name": "shortest first, dual ascent 3 rounds",
+   "committed": {
+    "0": 2,
+    "2000": 20
+   },
+   "refused": {
+    "0": 44,
+    "2000": 26
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 6,
+   "group": "buggy",
+   "name": "off-by-one capacity (overbooks)",
+   "committed": {
+    "0": 0,
+    "2000": 0
+   },
+   "refused": {
+    "0": 46,
+    "2000": 46
+   },
+   "overbooked_proposals": 46
+  },
+  {
+   "version": 7,
+   "group": "buggy",
+   "name": "accepts every request",
+   "committed": {
+    "0": 0,
+    "2000": 0
+   },
+   "refused": {
+    "0": 46,
+    "2000": 46
+   },
+   "overbooked_proposals": 46
+  },
+  {
+   "version": 8,
+   "group": "buggy",
+   "name": "negative dual prices",
+   "committed": {
+    "0": 0,
+    "2000": 0
+   },
+   "refused": {
+    "0": 46,
+    "2000": 46
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 9,
+   "group": "buggy",
+   "name": "dual too small (claims optimality)",
+   "committed": {
+    "0": 0,
+    "2000": 0
+   },
+   "refused": {
+    "0": 46,
+    "2000": 46
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 10,
+   "group": "buggy",
+   "name": "books a request twice",
+   "committed": {
+    "0": 0,
+    "2000": 0
+   },
+   "refused": {
+    "0": 46,
+    "2000": 46
+   },
+   "overbooked_proposals": 46
+  },
+  {
+   "version": 11,
+   "group": "local search",
+   "name": "heaviest first + swap search, dual ascent 5",
+   "committed": {
+    "0": 17,
+    "2000": 39
+   },
+   "refused": {
+    "0": 29,
+    "2000": 7
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 12,
+   "group": "local search",
+   "name": "density first + swap search, dual ascent 10",
+   "committed": {
+    "0": 19,
+    "2000": 44
+   },
+   "refused": {
+    "0": 27,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 13,
+   "group": "local search",
+   "name": "shortest first + swap search, dual ascent 20",
+   "committed": {
+    "0": 20,
+    "2000": 44
+   },
+   "refused": {
+    "0": 26,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 14,
+   "group": "local search",
+   "name": "best of three greedy starts + search, dual ascent 50",
+   "committed": {
+    "0": 24,
+    "2000": 44
+   },
+   "refused": {
+    "0": 22,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 15,
+   "group": "local search",
+   "name": "best of three + search, dual ascent 200",
+   "committed": {
+    "0": 24,
+    "2000": 44
+   },
+   "refused": {
+    "0": 22,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 16,
+   "group": "exact primal-dual",
+   "name": "rational simplex, Bland rule",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 17,
+   "group": "exact primal-dual",
+   "name": "rational simplex, Dantzig rule",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 18,
+   "group": "exact primal-dual",
+   "name": "rational simplex, last-index rule",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 19,
+   "group": "exact primal-dual",
+   "name": "Bland + primal polish",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 20,
+   "group": "exact primal-dual",
+   "name": "Dantzig + primal polish",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 21,
+   "group": "exact primal-dual",
+   "name": "last-index + primal polish",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 22,
+   "group": "exact primal-dual",
+   "name": "Bland, dual tightened by ascent",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 23,
+   "group": "exact primal-dual",
+   "name": "Dantzig, primal = best of simplex and local search",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 24,
+   "group": "exact primal-dual",
+   "name": "Bland on reordered columns",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  },
+  {
+   "version": 25,
+   "group": "exact primal-dual",
+   "name": "Dantzig on reordered columns + polish",
+   "committed": {
+    "0": 44,
+    "2000": 44
+   },
+   "refused": {
+    "0": 2,
+    "2000": 2
+   },
+   "overbooked_proposals": 0
+  }
+ ],
+ "attacks": [
+  {
+   "name": "allocation changed after signing",
+   "expected": "rejected",
+   "observed": "rejected: signature does not verify",
+   "pass": true
+  },
+  {
+   "name": "receipt moved to another batch id",
+   "expected": "rejected",
+   "observed": "rejected: signature does not verify",
+   "pass": true
+  },
+  {
+   "name": "the unchanged receipt",
+   "expected": "committed",
+   "observed": "committed",
+   "pass": true
+  },
+  {
+   "name": "the same receipt a second time",
+   "expected": "rejected",
+   "observed": "rejected: batch is already allocated",
+   "pass": true
+  },
+  {
+   "name": "receipt for the original capacities, batch stored with capacity 0",
+   "expected": "rejected",
+   "observed": "rejected: stored instance is not the signed instance",
+   "pass": true
+  },
+  {
+   "name": "signature made with another key",
+   "expected": "rejected",
+   "observed": "rejected: signature does not verify",
+   "pass": true
+  },
+  {
+   "name": "receipt with gap 2000 offered to the zero-gap sink",
+   "expected": "rejected",
+   "observed": "rejected: gap is above the sink's policy",
+   "pass": true
+  },
+  {
+   "name": "mint request: allocation with the value 2",
+   "expected": "no signature",
+   "observed": "refused: checker: not accepted",
+   "pass": true
+  },
+  {
+   "name": "mint request: fractional allocation text",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true
+  },
+  {
+   "name": "mint request: every request accepted (overbooking)",
+   "expected": "no signature",
+   "observed": "refused: checker: not accepted",
+   "pass": true
+  },
+  {
+   "name": "mint request: negative dual values",
+   "expected": "no signature",
+   "observed": "refused: checker: not accepted",
+   "pass": true
+  },
+  {
+   "name": "raw UPDATE of a stored allocation, then public receipt check",
+   "expected": "receipt check fails",
+   "observed": "false",
+   "pass": true
+  }
+ ],
+ "scenario_exit": 0
+}

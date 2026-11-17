@@ -15057,3 +15057,46 @@ curl: (6) Could not resolve host: github.com
 - Impact: because (b) contradicts the statement "rotation complete", I
   hold all pushes and all gh API calls until the owner confirms.
 - Next check: after rotation, webhooks, deploy keys, secrets; then push.
+
+## U430 — Pillar I, Round 3: shared audit skeleton proved once; W2 cost question answered "no" for map-key assertions alone
+- Status: 2026-11-17. Refs U418, U426. Sources:
+  proposals/forge2-pillar1-spec-determinism/RelationalContractAudit.dfy,
+  RelationalAuditInstances.dfy, fixtures/AuditInstanceNoFrame.dfy,
+  experiments/W2Split.dfy, experiments/W2MapKeysOnly.dfy,
+  experiments/run_round3.py; REPORT.md section 7; records/round3.
+- Actual: runner scenario exit 0. Skeleton and three instances (Ledger,
+  Booking, Refund): pinned Dafny exit 0, 39 verified. Control (planted
+  no-frame specification as an instance): exit 4 at the instance's
+  Deterministic obligation.
+- W2: variants A (three map-key assertions, one batch), B (same,
+  isolated) and C (control) end OUT OF RESOURCE; file exit 4. That is a
+  failed attempt, not a proof. Variant D (four small lemmas, no isolation):
+  exit 0; largest batch 307,402; sum 1,117,102 against 6,319,497 for the
+  recorded W2. "Below 300,000" is NOT met: 2.5% above. Two attempts used of
+  five.
+- Uncertainty: no spec pair is an instance of RelationalSpecDiff yet;
+  OnePairDecides is proved only in general. Owner scope decision of
+  2026-11-17: no parser for arbitrary spec pairs.
+- Next check: instantiate the pair module for the fee change if wanted.
+
+## U431 — Pillar III + II: 25 untrusted solvers through a minter whose decision is the proved checker; signed receipts (finite test)
+- Status: 2026-11-17. Refs U421, U428. Sources:
+  proposals/forge2-pillar3-dual-certificate/finality (extract_solvers.py,
+  solvers.ts generated, booking_common.ts, minter3.ts, sink3.ts,
+  run_integrated.ts, REPORT.md, records).
+- Actual: run_integrated.ts exit 0 twice. 1,150 proposals (138 overbooked,
+  167 feasible but not optimal, 845 optimal by brute force); 2,300 mint
+  requests at gaps 0 and 2000; 1,227 signed, all committed, all receipts
+  verify with the public key alone. Signed overbookings 0. Signed
+  non-optimal proposals at gap 0: 0. Committed outside the proved bound: 0.
+  Committed counts per solver equal the Round 2 benchmark. 12 of 12 attacks
+  as expected. Dafny runs in the suite: 0; the checker module hash equals
+  the Round 2 build record.
+- Limit: 299 OPTIMAL proposals got no signature at gap 0 (the check is
+  sound, not complete). Different certified allocations can exist for one
+  batch; raw database access can exchange one for another.
+- Proved: only the Dafny checker and its quality theorem (source level).
+  Not proved: back end, wrapper, sink, SQLite, Node, key isolation.
+- Uncertainty: finite test; batches of at most 14 requests; the batch
+  booking problem is not an approved intent.
+- Next check: owner decision on an approved batch-booking intent.
