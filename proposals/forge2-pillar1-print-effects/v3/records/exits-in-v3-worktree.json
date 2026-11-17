@@ -1,0 +1,251 @@
+{
+ "worktree": "scratch git worktree at fd8b9608 + build_v3.py steps A and B + regenerated evidence.json",
+ "end_to_end": false,
+ "runs": [
+  {
+   "label": "v3-ab-stages-12358",
+   "head": "fd8b9608b4fbaea36da40f4db52d62cb19c43e2a",
+   "stages": [
+    {
+     "stage": 1,
+     "case": "reproducibility",
+     "script": "scripts/exit_stage_1.py --case reproducibility",
+     "exit": 0,
+     "wall_seconds": 17.8,
+     "last_line": "reproducibility: passed (expected raw failures retained in report)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 1,
+     "case": "planted-bugs",
+     "script": "scripts/exit_stage_1.py --case planted-bugs",
+     "exit": 0,
+     "wall_seconds": 33.5,
+     "last_line": "planted-bugs: passed (expected raw failures retained in report)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 1,
+     "case": "spec-lock",
+     "script": "scripts/exit_stage_1.py --case spec-lock",
+     "exit": 0,
+     "wall_seconds": 0.5,
+     "last_line": "spec-lock: passed (expected raw failures retained in report)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 1,
+     "case": "contract-binding",
+     "script": "scripts/exit_stage_1.py --case contract-binding",
+     "exit": 0,
+     "wall_seconds": 0.5,
+     "last_line": "contract-binding: passed (expected raw failures retained in report)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 1,
+     "case": "audit-controls",
+     "script": "scripts/exit_stage_1.py --case audit-controls",
+     "exit": 0,
+     "wall_seconds": 10.7,
+     "last_line": "audit-controls: passed (expected raw failures retained in report)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 2,
+     "case": "schema",
+     "script": "scripts/exit_stage_2.py --case schema",
+     "exit": 0,
+     "wall_seconds": 1.0,
+     "last_line": "schema: passed (actual commands and negative exits retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 2,
+     "case": "artifact-mismatch",
+     "script": "scripts/exit_stage_2.py --case artifact-mismatch",
+     "exit": 0,
+     "wall_seconds": 1.0,
+     "last_line": "artifact-mismatch: passed (actual commands and negative exits retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 2,
+     "case": "method-policy",
+     "script": "scripts/exit_stage_2.py --case method-policy",
+     "exit": 0,
+     "wall_seconds": 0.8,
+     "last_line": "method-policy: passed (actual commands and negative exits retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 2,
+     "case": "round-trip",
+     "script": "scripts/exit_stage_2.py --case round-trip",
+     "exit": 0,
+     "wall_seconds": 4.5,
+     "last_line": "round-trip: passed (actual commands and negative exits retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 2,
+     "case": "policy-controls",
+     "script": "scripts/exit_stage_2.py --case policy-controls",
+     "exit": 0,
+     "wall_seconds": 22.6,
+     "last_line": "policy-controls: passed (actual commands and negative exits retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 3,
+     "case": "correct-typescript",
+     "script": "scripts/exit_stage_3.py --case correct-typescript",
+     "exit": 0,
+     "wall_seconds": 22.7,
+     "last_line": "correct-typescript: passed (actual checker and gate codes retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 3,
+     "case": "self-transfer",
+     "script": "scripts/exit_stage_3.py --case self-transfer",
+     "exit": 0,
+     "wall_seconds": 69.6,
+     "last_line": "self-transfer: passed (actual checker and gate codes retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 3,
+     "case": "evidence-labels",
+     "script": "scripts/exit_stage_3.py --case evidence-labels",
+     "exit": 0,
+     "wall_seconds": 42.0,
+     "last_line": "evidence-labels: passed (actual checker and gate codes retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 3,
+     "case": "reproducibility",
+     "script": "scripts/exit_stage_3.py --case reproducibility",
+     "exit": 0,
+     "wall_seconds": 29.4,
+     "last_line": "reproducibility: passed (actual checker and gate codes retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 3,
+     "case": "loader-demo",
+     "script": "scripts/exit_stage_3.py --case loader-demo",
+     "exit": 0,
+     "wall_seconds": 0.6,
+     "last_line": "loader-demo: passed (actual checker and gate codes retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 3,
+     "case": "cli-demo",
+     "script": "scripts/exit_stage_3.py --case cli-demo",
+     "exit": 0,
+     "wall_seconds": 2.0,
+     "last_line": "cli-demo: passed (actual checker and gate codes retained)",
+     "stderr_tail": []
+    },
+    {
+     "stage": 5,
+     "case": "vacuity",
+     "script": "scripts/exit_stage_5.py --case vacuity",
+     "exit": 0,
+     "wall_seconds": 15.2,
+     "last_line": "STAGE_5_RESULT {\"case\": \"vacuity\", \"result\": \"passed\", \"exit_code\": 0}",
+     "stderr_tail": []
+    },
+    {
+     "stage": 5,
+     "case": "mutations",
+     "script": "scripts/exit_stage_5.py --case mutations",
+     "exit": 0,
+     "wall_seconds": 69.5,
+     "last_line": "STAGE_5_RESULT {\"case\": \"mutations\", \"result\": \"passed\", \"exit_code\": 0}",
+     "stderr_tail": []
+    },
+    {
+     "stage": 8,
+     "case": "wrapper-proof",
+     "script": "scripts/exit_stage_8.py --case wrapper-proof",
+     "exit": 0,
+     "wall_seconds": 44.4,
+     "last_line": "wrapper-proof: passed; end_to_end=false",
+     "stderr_tail": []
+    },
+    {
+     "stage": 8,
+     "case": "hostile-outputs",
+     "script": "scripts/exit_stage_8.py --case hostile-outputs",
+     "exit": 0,
+     "wall_seconds": 36.8,
+     "last_line": "hostile-outputs: passed; end_to_end=false",
+     "stderr_tail": []
+    },
+    {
+     "stage": 8,
+     "case": "evidence-separation",
+     "script": "scripts/exit_stage_8.py --case evidence-separation",
+     "exit": 0,
+     "wall_seconds": 43.0,
+     "last_line": "evidence-separation: passed; end_to_end=false",
+     "stderr_tail": []
+    }
+   ]
+  },
+  {
+   "label": "v3-ab-stage-4",
+   "head": "fd8b9608b4fbaea36da40f4db52d62cb19c43e2a",
+   "stages": [
+    {
+     "stage": 4,
+     "case": "affected-claims",
+     "script": "scripts/exit_stage_4.py --case affected-claims",
+     "exit": 0,
+     "wall_seconds": 21.9,
+     "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"1fdb02f8d2efe791611b121429954ed4d\\\",\\\"spec.lock\\\":\\\"3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae\\\",\\\"toolchain/linux-pins.json\\\":\\\"11128aa46f89391c39e6927f71dd1ba5ff8af1495ea0ad42253f7263294be819\\\",\\\"toolchain/requirements-linux.txt\\\":\\",
+     "stderr_tail": []
+    },
+    {
+     "stage": 4,
+     "case": "unapproved-spec",
+     "script": "scripts/exit_stage_4.py --case unapproved-spec",
+     "exit": 0,
+     "wall_seconds": 48.8,
+     "last_line": "FORGE_EXIT_CHUNK {\"offset\": 0, \"text\": \"{\\\"case\\\":\\\"unapproved-spec\\\",\\\"end_to_end\\\":false,\\\"exit_code\\\":0,\\\"result\\\":\\\"passed\\\",\\\"runs\\\":[{\\\"artifact_id\\\":12688689112,\\\"comment_url\\\":\\\"https://github.com/mack-dot/forge/pull/2#issuecomment-6427532824\\\",\\\"gate_exit_code\\\":1,\\\"pr_number\\\":2,\\\"receipt\\",
+     "stderr_tail": []
+    },
+    {
+     "stage": 4,
+     "case": "approved-spec",
+     "script": "scripts/exit_stage_4.py --case approved-spec",
+     "exit": 0,
+     "wall_seconds": 25.3,
+     "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"fe9b9132a90b39f5144ed749e6a866098f422837f8fda\\\",\\\"gate/backends/dafny.py\\\":\\\"ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe\\\",\\\"gate/common.py\\\":\\\"06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988\\\",\\\"gate/core.py\\\":\\\"bf8f0",
+     "stderr_tail": []
+    }
+   ]
+  },
+  {
+   "label": "v3-ab-stage-6",
+   "head": "fd8b9608b4fbaea36da40f4db52d62cb19c43e2a",
+   "stages": [
+    {
+     "stage": 6,
+     "case": "report",
+     "script": "scripts/exit_stage_6.py --case report",
+     "exit": 1,
+     "wall_seconds": 0.6,
+     "last_line": "",
+     "stderr_tail": [
+      "REPORT_REJECTED: TRUSTED_INPUTS: trusted input set or digests differ"
+     ]
+    }
+   ]
+  }
+ ]
+}

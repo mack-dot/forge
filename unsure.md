@@ -15100,3 +15100,56 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: finite test; batches of at most 14 requests; the batch
   booking problem is not an approved intent.
 - Next check: owner decision on an approved batch-booking intent.
+
+## U432 — Version 3 (gate ratification + print effects): built and measured in scratch worktrees; NOT APPLIED; Stage 10 records restored from the verified backup; Stage 9 renewal blocked
+- Status: 2026-11-17. Refs U419, U422, U423, U426, U429. Owner text of
+  the afternoon cleared the U425 hold ("the screenshot was external") and
+  set the order: gate first, then Pillar II and III, then M1. Sources:
+  proposals/forge2-pillar1-print-effects/v3 (build_v3.py, files/gate/
+  approval.py and ratification.py, run_pr_controls.py, REPORT-V3.md,
+  records).
+- Design (mine, not approved): a protected change passes the PR gate only
+  if the TRUSTED base holds a record that names every changed protected
+  file with old and new SHA-256; scope gate/ and toolchain/ plus a
+  spec.lock re-bind; then the ratified gate bytes must reject the trusted
+  planted bugs and the ratified controls and accept the trusted
+  implementation. A record in the candidate is never read. The owner's
+  word "accompanying manifest" could mean a record inside the same pull
+  request; I did not build that, because a pull request could then
+  approve itself.
+- Bootstrap gap: step A (the rule itself) cannot be ratified by the
+  present gate. It needs the owner's explicit merge on main.
+- Actual, PR-gate controls: run_pr_controls.py attempt-0001 (17 cases)
+  and attempt-0002 (18 cases): scenario exit 0, 0 evasions. Unratified
+  edits exit 1; split edits exit 1; tampered records exit 1; ratified step
+  B exit 0 with seven controls run; two ratified but weaker gates exit 1.
+- Actual, EXIT cases in the version 3 worktree: Stages 1, 2, 3, 4, 5, 8:
+  24 cases, exit 0 each (Stage 4 with a read-only token from the gh login;
+  not printed, not stored). Stage 6 report: exit 1 before the fresh run
+  (TRUSTED_INPUTS). The fresh Stage 6 run and Stage 7 were still running
+  when this entry was written.
+- Stage 10: the EXIT failed at HEAD first, because run records under
+  results/stage10 were missing since the cleanup of this morning (U413).
+  The raw backup of 2026-11-01 is intact (SHA-256 e2491743... as in U203).
+  I restored 682 files that were missing; no file was overwritten (record:
+  results/round3-stage10-restore-20261117/restore.json). After that the
+  recorded command "exit_stage_10.py --case report --run
+  results/stage10/run-0002" exits 0, at HEAD and with the version 3 tree,
+  with the report hashes of 2026-10-30. Correction to U423: the Stage 10
+  report EXIT does not check current gate bytes; it reports a frozen run.
+  A fresh Stage 10 benchmark with the new gate was NOT run.
+- Stage 9: BLOCKED. implementation.lock pins four files that step B
+  changes. Renewal needs a new signed release from the hosted workflow
+  (public Sigstore log entries); no approval for that exists. Also
+  .toolchain/stage9/controller.json and results/stage9/<case>/ are not on
+  this machine, so the six Stage 9 EXIT cases cannot run here now.
+- Result against the owner's rule: "all Stage 0-10 EXIT cases exit 0
+  together" is NOT met. Version 3 is NOT applied. The real tree has no
+  protected change.
+- Not run: gate/pr_check.py (needs a pull-request event and the linux
+  profile).
+- Uncertainty: the ratification code is new security-relevant code, read
+  only by me and tested by 18 cases. It needs an independent review before
+  any merge.
+- Next check: fresh Stage 6 result; Stage 7 result; owner decisions in
+  REPORT-V3.md section 8.
