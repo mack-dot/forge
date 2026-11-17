@@ -14938,3 +14938,35 @@ curl: (6) Could not resolve host: github.com
   Stage 9 needs hosted signing runs; after U425 I start no hosted workflow
   or signing action without asking.
 - Next check: steps in FORGE_ROUND3_PLAN.md.
+
+## U427 — M1 step A: the input premises are satisfiable for every input text (HOL, rebuilt basis only); one build started by mistake and stopped
+- Status: 2026-11-17. Refs U413, U424, U426. Source:
+  proposals/round3-20261117/m1/fs3-0001.sml; runner run_basis_case.py;
+  records in proposals/round3-20261117/m1/records/fs3-0001.
+- Result (actual): hol exit 0, 4.8 s, marker EXACT_COMPLETE, first attempt.
+  13 stored theorems, each with no hypothesis, no axiom tag, oracle
+  DISK_THM only. Main theorem refund_input_premises_satisfiable:
+  for all inp there are fs and cl with stdin_content fs = SOME inp, wfcl cl,
+  wfFS fs, STD_streams fs. Four controls proved: consumed standard input
+  has no content; a finite numchars stream is not live; the empty command
+  line is not wfcl; the model file system with a finite numchars stream is
+  not wfFS. Closure: 224 theories; axioms only bool.SELECT_AX,
+  INFINITY_AX, ETA_AX, BOOL_CASES_AX.
+- Scope: a statement about the HOL model of the file system and command
+  line. It uses HOL and CakeML basis only, no Forge M1 theory. It does NOT
+  yet say that ALL premises of refund_profile_a_sl hold together; that
+  joint statement (fs-0001 part 3) needs the M1 theories, which need the
+  compiler proofs. Not evidence about macOS. Not a native execution
+  witness.
+- Anomaly (mine): I first started the Round 2 build script unchanged. It
+  begins with the Poly/ML configure step, against the owner's rule "do not
+  rebuild Poly/ML". I stopped it after about 5 seconds. Three checkouts
+  and pin checks had run; ./configure had started in the Poly/ML source
+  tree. The installed poly, HOL and basis heap were not touched (file
+  times unchanged). Record: results/round2-m1-rebuild-20261117/attempt-0002
+  with a hand-written addendum. The script now skips each step whose
+  product exists.
+- Incremental build: started 15:10 with a budget of 10,800 s, order
+  compiler/backend/proofs, cv_translator (cake_compile_heap), HOL ARMv8
+  step heap. Result NOT YET KNOWN at the time of this entry.
+- Next check: the build record; then the M1 chain replay.

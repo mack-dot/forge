@@ -1,0 +1,24 @@
+{
+ "case": "fs3-0001",
+ "argv": [
+  "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=<FORGE>/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/basis-heap",
+  "<FORGE>/results/round3-m1-input-premise-20261117/fs3-0001/proof.sml"
+ ],
+ "source_sha256": "02aab9f7abb1cee1207060d9df47d6e5d9073c9030f34de0356e81b9e055f865",
+ "heap_sha256": "3c1ede12f95c4186960601df47aae9f5b8631c2c6c3b1fbb14ebc83e408008c5",
+ "actual_exit": 0,
+ "wall_seconds": 4.8,
+ "max_rss_mib": 239,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "ad74b274f0d9a4fdba94ec65a4e7d89f785367c7b91e186ea93b61dab024e231",
+ "objects": {
+  "forge_inputPremiseSatTheory.dat": "599721c805c82e71ed3757105ee3cd3faec5d9b7bb0cb4a2bafef9f2af5e7947",
+  "forge_inputPremiseSatTheory.sig": "d02415fe804f56d53e239d7b01eaee319b10c130f0b6f61eedc44f4c96d81cbd",
+  "forge_inputPremiseSatTheory.sml": "dfcf9d5ab39c3f0262fa6ed0172c13889aad039cddab43ba1b5dbaada548eef0"
+ },
+ "end_to_end": false
+}

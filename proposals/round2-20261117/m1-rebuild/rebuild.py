@@ -14,7 +14,7 @@ PREFIX = ROOT / 'poly-install'
 PINS = {'polyml': ('https://github.com/polyml/polyml', '4557554077078decce4ce5f90da00a713cfc32e4'),
         'HOL': ('https://github.com/HOL-Theorem-Prover/HOL', '9783a49979c94c401ff8c0e51b2eefae7ea95ae3'),
         'cakeml': ('https://github.com/CakeML/cakeml', 'cd9155694c16831373ab695a670794f23282ed62')}
-out_root = FORGE / 'results/round2-m1-rebuild-20261117'
+out_root = FORGE / ('results/' + (sys.argv[2] if len(sys.argv) > 2 else 'round2-m1-rebuild-20261117'))
 n = 1
 while (out_root / f'attempt-{n:04d}').exists():
     n += 1
@@ -74,14 +74,33 @@ for name, (url, sha) in PINS.items():
     commands.append({'label': f'pin-{name}', 'head': head, 'pinned': sha, 'match': head == sha}); save()
     if head != sha:
         save({'stopped': 'pin mismatch: ' + name}); raise SystemExit(1)
-run('poly-configure', ['./configure', '--prefix=' + str(PREFIX), '--enable-intinf-as-int', '--with-gmp'], ROOT / 'polyml')
-run('poly-make', ['make', '-j2'], ROOT / 'polyml')
-run('poly-compiler', ['make', 'compiler'], ROOT / 'polyml')
-run('poly-install', ['make', 'install'], ROOT / 'polyml')
+def skip(label, why):
+    commands.append({'label': label, 'result': 'SKIPPED: ' + why}); save()
+
+
+# Resume rule (owner, Round 3): never rebuild what is already built.
+if (PREFIX / 'bin/poly').is_file():
+    skip('poly-build', 'poly-install/bin/poly exists')
+else:
+    run('poly-configure', ['./configure', '--prefix=' + str(PREFIX), '--enable-intinf-as-int', '--with-gmp'], ROOT / 'polyml')
+    run('poly-make', ['make', '-j2'], ROOT / 'polyml')
+    run('poly-compiler', ['make', 'compiler'], ROOT / 'polyml')
+    run('poly-install', ['make', 'install'], ROOT / 'polyml')
 run('poly-version', [str(PREFIX / 'bin/poly'), '--version'], ROOT)
-run('hol-configure', [str(PREFIX / 'bin/poly'), '--script', 'tools/smart-configure.sml'], ROOT / 'HOL')
-run('hol-build', ['bin/build'], ROOT / 'HOL')
-# CakeML proof dependencies of the M1 chain. Incremental: a later run continues where this one stopped.
-for label, sub in [('cakeml-basis', 'basis'), ('cakeml-backend-proofs', 'compiler/backend/proofs')]:
-    run(label, ['nice', '-n', '15', str(ROOT / 'HOL/bin/Holmake'), '-j1'], ROOT / 'cakeml' / sub)
+if (ROOT / 'HOL/bin/hol').is_file() and (ROOT / 'HOL/bin/Holmake').is_file():
+    skip('hol-build', 'HOL/bin/hol and HOL/bin/Holmake exist')
+else:
+    run('hol-configure', [str(PREFIX / 'bin/poly'), '--script', 'tools/smart-configure.sml'], ROOT / 'HOL')
+    run('hol-build', ['bin/build'], ROOT / 'HOL')
+# CakeML proof dependencies of the M1 chain, in order. Holmake is incremental: a later run continues where this one stopped.
+# The chain needs cv_translator/cake_compile_heap (which depends on the compiler proofs) and the ARMv8 step heap of HOL.
+STEPS = [('cakeml-basis', ROOT / 'cakeml/basis', ROOT / 'cakeml/basis/basis-heap'),
+         ('cakeml-backend-proofs', ROOT / 'cakeml/compiler/backend/proofs', None),
+         ('cakeml-cv-translator', ROOT / 'cakeml/cv_translator', ROOT / 'cakeml/cv_translator/cake_compile_heap'),
+         ('hol-arm8-step', ROOT / 'HOL/examples/l3-machine-code/arm8/step', ROOT / 'HOL/examples/l3-machine-code/arm8/step/arm8-heap')]
+for label, cwd, product in STEPS:
+    if product is not None and product.is_file():
+        skip(label, str(product.relative_to(ROOT)) + ' exists')
+        continue
+    run(label, ['nice', '-n', '15', str(ROOT / 'HOL/bin/Holmake'), '-j1'], cwd)
 save({'stopped': 'all listed commands finished'})
