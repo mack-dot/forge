@@ -77,3 +77,79 @@ Superseded fixture versions: `superseded/`.
   (`gate/` is protected: needs a proposal with an exact diff).
 - F1.2, F1.3, F1.4.
 - Repeat on a clean checkout; Linux profile.
+
+## 5. Added on 2026-11-17, later (U413): items F1.1d and F1.3
+
+Raw logs: `results/forge2-pillar1-20261117/attempt-0004..0012`.
+Final run: attempt-0012, scenario exit 0, eleven cases.
+
+### 5.1 F1.1d — the planted bug is invisible with four accounts or fewer
+
+`fixtures/NoFrameFourAccounts.dfy`, lemma `DeterministicUpToFourAccounts`:
+for the planted no-frame spec, if the state has at most four accounts,
+two allowed results are equal. Checker exit 0 (25 verified, 0 errors).
+Balances and amounts are unbounded; only the number of accounts is
+bounded. Reason: C4 fixes sender, recipient and account 0, and
+conservation fixes the one account that is left.
+
+With section 2 this gives both sides: no witness exists with four
+accounts or fewer (proved), and a witness exists with five (proved).
+So a test or bounded check on four accounts cannot find this bug.
+Attempts: attempt-0004 and attempt-0005 out of resource; attempt-0006
+passed after the proof was split into small lemmas.
+
+### 5.2 F1.3 — spec-diff check on the approved fee change
+
+Old spec: `spec/LedgerSpec.dfy` at commit `c909a640`
+(`fixtures/LedgerSpecNoFee.dfy`, SHA-256 of the original `e9bdfd51…`,
+module renamed). New spec: the approved file. `SpecDiffFee.dfy`,
+checker exit 0 (59 verified, 0 errors); `dafny audit` exit 0, 0 findings.
+
+| Lemma | Statement (about results that the specs allow) |
+| --- | --- |
+| `UnchangedWhenOldDoesNotAccept` | Unchanged region: every retry and every request that the old spec rejects. Same state and same outcome under both. |
+| `FeeDeltaWhenBothAccept`, `BothAcceptResult` | Where both accept: the new result is the old result with one unit moved from the sender to account 0. |
+| `NewlyRejectedIff`, `NewlyRejected` | Accepted by the old spec and rejected by the new one exactly when: no account 0, or the sender is 0, or the recipient is 0, or the sender balance equals the amount. |
+| `ChangedWhenOldAccepts` | Changed region: every request that the old spec accepts as a fresh transfer. |
+| `OldPostSatisfiable`, `NewPostSatisfiable` | Both specs allow a result for every well-formed state (the statements are not vacuous). |
+
+So the fee change has no effect outside the old accept region, and its
+effect inside is fully described by two cases.
+
+Boundary witnesses (`gen_fee_witnesses.py` writes the lemmas and
+`records/fee-change-receipt.json` from one table; the receipt is data
+only):
+
+| Witness | Input | Old spec | New spec | Status |
+| --- | --- | --- | --- | --- |
+| W1 | balances `[0,5,0]`, 1→2 amount 5 (balance equals amount) | Ok `[0,0,5]` | Rejected | proved |
+| W2 | same, amount 4 (balance equals amount + 1) | Ok `[0,1,4]` | Ok `[1,0,4]` | **NOT PROVED**: out of resource after five attempts; the general lemma `BothAcceptResult` is proved |
+| W3 | `{0:5, 1:0}`, 0→1 amount 2 (sender is account 0) | Ok `{0:3, 1:2}` | Rejected | proved |
+| W4 | `{0:0, 1:5}`, 1→0 amount 2 (recipient is account 0) | Ok `{0:2, 1:3}` | Rejected | proved |
+| W5 | `{1:5, 2:0}`, 1→2 amount 2 (no account 0) | Ok `{1:3, 2:2}` | Rejected | proved |
+| W6 | `[0,5,0]`, 1→2 amount 6 (insufficient funds) | Rejected | Rejected | proved |
+
+Each proved witness says: every result that the old spec allows and
+every result that the new spec allows for this input are the stated
+ones, and both specs allow a result.
+
+Negative control: `fixtures/SpecDiffFalseClaim.dfy` claims "the specs
+agree whenever the new one does not accept". Rejected (exit 4, 1
+error). W1 is a proved counterexample to that claim.
+
+Limits. `Post` predicates are hand-written and opaque; the checked link
+is spec result ⇒ `Post`. The lemma files are hand-written for this one
+change; a generator for arbitrary spec pairs (`--semantic-diff`) is NOT
+built. Nothing is in the gate.
+
+### 5.3 Actual exits, attempts 0004–0012
+
+| Attempt | Scenario exit | Note |
+| --- | --- | --- |
+| 0004, 0005 | 1, 1 | four-accounts lemma out of resource |
+| 0006 | 0 | seven cases pass |
+| 0007 | 1 | spec-diff: two general lemmas and all witnesses out of resource |
+| 0008 | 1 | opaque predicates; three general lemmas out of resource; witness well-formedness errors (mine) |
+| 0009 | 1 | general lemmas pass; W2 out of resource; one expected-text defect in my runner |
+| 0010, 0011 | 1, 1 | W2 out of resource (attempts four and five) |
+| 0012 | 0 | W2 moved to `SpecDiffFeeWitnessesOpen.dfy`, recorded with its real exit 4 as OPEN, not counted as a pass |

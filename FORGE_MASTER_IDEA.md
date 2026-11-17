@@ -39,7 +39,9 @@ Corrected claims, costs and limits:
    not authorize it. Work items are the F-numbers below.
 2. **Protected paths.** `spec/**`, `spec.lock`, `policy/**`, `gate/**`
    change only by a proposal with an exact diff, approved by the owner
-   on its exact bytes. New gate modules, policy rules, schema fields and
+   on its exact bytes. The PR gate's own manifest is wider
+   (`gate/incremental.py`: also `toolchain/`, `schemas/`, `.github/`,
+   `AGENTS.md`); this work treats all of them as protected. New gate modules, policy rules, schema fields and
    specs are built and checked under `proposals/` first. "Let's do
    this" is not an exact-bytes approval.
 3. **Evidence classes stay separate.** `source_proof`, binary proof,
@@ -83,12 +85,12 @@ NEEDED (touches a protected path), OPEN.
 | --- | --- | --- | --- |
 | F1.1 | Two-run determinism lemma for the approved Ledger, Booking and Refund specs | DONE as a diagnostic outside the gate; pinned Dafny exit 0 for all three | [Pillar I report](proposals/forge2-pillar1-spec-determinism/REPORT.md) |
 | F1.1c | Planted no-frame ledger spec: two verified implementations with different results on five accounts; determinism lemma rejected; Trojan rejected by the approved spec | DONE (control) | same |
-| F1.1d | "Bounded blindness": the planted bug is invisible with four accounts or fewer | NOT RUN | — |
+| F1.1d | "Bounded blindness": the planted bug is invisible with four accounts or fewer | DONE (control): Dafny lemma, exit 0 | [Pillar I report](proposals/forge2-pillar1-spec-determinism/REPORT.md) §5.1 |
 | F1.1e | Generate the `Post` predicate from the spec text instead of writing it by hand (`gate/arbitrage.py`) | NOT RUN; PROPOSAL NEEDED for `gate/` | — |
-| F1.2 | Reject `print`, `{:extern}` and similar in compiled code; close the Stage 5 `print` survivor | NOT RUN; PROPOSAL NEEDED | — |
-| F1.3 | Spec-diff witnesses and receipt for a spec change (test on the no-fee to fee change) | NOT RUN | — |
-| F1.4 | Cumulative diff against the lock; split-edit control; compare with `gate/obligations.py` first | NOT RUN; PROPOSAL NEEDED | — |
-| F2.0 | Design note: token format, trusted base, exact claim text, reuse of M1 theorems | NOT RUN | — |
+| F1.2 | Reject `print`, `{:extern}` and similar in compiled code; close the Stage 5 `print` survivor | PROPOSAL READY for the ledger gate, NOT APPLIED: Dafny `--track-print-effects` plus one caller module; measured exits recorded. Awaits owner approval of the exact diff | [proposal](proposals/forge2-pillar1-print-effects/PROPOSAL.md) |
+| F1.3 | Spec-diff witnesses and receipt for a spec change (test on the no-fee to fee change) | DONE for the fee change as a diagnostic: general lemmas exit 0; five of six witnesses proved, W2 OPEN; false-claim control rejected. Generator for arbitrary spec pairs NOT built | same, §5.2 |
+| F1.4 | Cumulative diff against the approved base; split-edit control | ANALYSIS by reading only: the PR gate already checks the whole head tree against the base with trusted code from the base; no per-commit obligation exists. Two-pull-request control NOT RUN. No new module recommended yet | [analysis](proposals/forge2-pillar1-anchor-diff/ANALYSIS.md) |
+| F2.0 | Design note: token format, trusted base, exact claim text, reuse of M1 theorems | DONE as a design note plus a protocol MODEL: pinned Dafny exit 0 (22 verified) under four named assumptions; four weakened variants rejected. No program, key or store is proved | [design note](proposals/forge2-pillar2-finality-protocol/DESIGN.md) |
 | F2.1 | Checker and minter program; binary-level claim | NOT RUN | — |
 | F2.2 | Atomic sink with compare-and-swap and unique request id | NOT RUN | — |
 | F2.3 | Adversarial test suite (finite) | NOT RUN | — |
@@ -98,7 +100,7 @@ NEEDED (touches a protected path), OPEN.
 
 ## Order
 
-F1.1 (done) → F3.1 (done) → F1.1d, F1.3 (no protected path) → proposals with
+F1.1, F3.1, F1.1d, F1.3 (done as diagnostics) → proposals with
 exact diffs for F1.1e, F1.2, F1.4, F3.2 → F2.0 design note → F2 build →
 F4. Each step ends with real exits in the item's report and an
 `unsure.md` entry.
@@ -115,7 +117,8 @@ the owner's word of 2026-11-17.
 ## Open decisions for the owner
 
 1. Approve, change or reject each proposal for a protected path when
-   it is ready (none is ready yet).
+   it is ready. Ready now: [print effects](proposals/forge2-pillar1-print-effects/PROPOSAL.md)
+   (`candidate.diff`, three files).
 2. Is an optimizing batch-booking component wanted as an approved
    intent (new spec)? Pillar III needs it beyond the diagnostic.
 3. Commit and push: done once on your word of 2026-11-17 ("push what we

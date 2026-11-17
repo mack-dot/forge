@@ -1,0 +1,244 @@
+{
+ "boundary_witnesses": [
+  {
+   "dafny_lemmas": [
+    "SpecDiffFeeWitnesses.W1",
+    "SpecDiffFeeWitnesses.W1_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "new_spec": {
+    "balances": {
+     "0": 0,
+     "1": 5,
+     "2": 0
+    },
+    "outcome": "Rejected"
+   },
+   "old_spec": {
+    "balances": {
+     "0": 0,
+     "1": 0,
+     "2": 5
+    },
+    "outcome": "Ok"
+   },
+   "pre_balances": {
+    "0": 0,
+    "1": 5,
+    "2": 0
+   },
+   "request": {
+    "amount": 5,
+    "recipient": 2,
+    "sender": 1
+   },
+   "request_id": 7,
+   "status": "lemma in the checked file",
+   "title": "sender balance equals the amount",
+   "witness": "W1"
+  },
+  {
+   "dafny_lemmas": [
+    "SpecDiffFeeWitnessesOpen.W2",
+    "SpecDiffFeeWitnessesOpen.W2_NonVacuous"
+   ],
+   "kind": "both_accept",
+   "new_spec": {
+    "balances": {
+     "0": 1,
+     "1": 0,
+     "2": 4
+    },
+    "outcome": "Ok"
+   },
+   "old_spec": {
+    "balances": {
+     "0": 0,
+     "1": 1,
+     "2": 4
+    },
+    "outcome": "Ok"
+   },
+   "pre_balances": {
+    "0": 0,
+    "1": 5,
+    "2": 0
+   },
+   "request": {
+    "amount": 4,
+    "recipient": 2,
+    "sender": 1
+   },
+   "request_id": 7,
+   "status": "NOT PROVED (resource limit, five attempts); follows informally from SpecDiffFee.BothAcceptResult",
+   "title": "sender balance equals the amount plus one",
+   "witness": "W2"
+  },
+  {
+   "dafny_lemmas": [
+    "SpecDiffFeeWitnesses.W3",
+    "SpecDiffFeeWitnesses.W3_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "new_spec": {
+    "balances": {
+     "0": 5,
+     "1": 0
+    },
+    "outcome": "Rejected"
+   },
+   "old_spec": {
+    "balances": {
+     "0": 3,
+     "1": 2
+    },
+    "outcome": "Ok"
+   },
+   "pre_balances": {
+    "0": 5,
+    "1": 0
+   },
+   "request": {
+    "amount": 2,
+    "recipient": 1,
+    "sender": 0
+   },
+   "request_id": 7,
+   "status": "lemma in the checked file",
+   "title": "sender is account 0",
+   "witness": "W3"
+  },
+  {
+   "dafny_lemmas": [
+    "SpecDiffFeeWitnesses.W4",
+    "SpecDiffFeeWitnesses.W4_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "new_spec": {
+    "balances": {
+     "0": 0,
+     "1": 5
+    },
+    "outcome": "Rejected"
+   },
+   "old_spec": {
+    "balances": {
+     "0": 2,
+     "1": 3
+    },
+    "outcome": "Ok"
+   },
+   "pre_balances": {
+    "0": 0,
+    "1": 5
+   },
+   "request": {
+    "amount": 2,
+    "recipient": 0,
+    "sender": 1
+   },
+   "request_id": 7,
+   "status": "lemma in the checked file",
+   "title": "recipient is account 0",
+   "witness": "W4"
+  },
+  {
+   "dafny_lemmas": [
+    "SpecDiffFeeWitnesses.W5",
+    "SpecDiffFeeWitnesses.W5_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "new_spec": {
+    "balances": {
+     "1": 5,
+     "2": 0
+    },
+    "outcome": "Rejected"
+   },
+   "old_spec": {
+    "balances": {
+     "1": 3,
+     "2": 2
+    },
+    "outcome": "Ok"
+   },
+   "pre_balances": {
+    "1": 5,
+    "2": 0
+   },
+   "request": {
+    "amount": 2,
+    "recipient": 2,
+    "sender": 1
+   },
+   "request_id": 7,
+   "status": "lemma in the checked file",
+   "title": "no account 0",
+   "witness": "W5"
+  },
+  {
+   "dafny_lemmas": [
+    "SpecDiffFeeWitnesses.W6",
+    "SpecDiffFeeWitnesses.W6_NonVacuous"
+   ],
+   "kind": "unchanged",
+   "new_spec": {
+    "balances": {
+     "0": 0,
+     "1": 5,
+     "2": 0
+    },
+    "outcome": "Rejected"
+   },
+   "old_spec": {
+    "balances": {
+     "0": 0,
+     "1": 5,
+     "2": 0
+    },
+    "outcome": "Rejected"
+   },
+   "pre_balances": {
+    "0": 0,
+    "1": 5,
+    "2": 0
+   },
+   "request": {
+    "amount": 6,
+    "recipient": 2,
+    "sender": 1
+   },
+   "request_id": 7,
+   "status": "lemma in the checked file",
+   "title": "insufficient funds under both",
+   "witness": "W6"
+  }
+ ],
+ "change": "proposals/fees.md (no fee -> one-unit fee to account 0)",
+ "end_to_end": false,
+ "general_statements": [
+  {
+   "lemma": "SpecDiffFee.UnchangedWhenOldDoesNotAccept",
+   "text": "Unchanged region: every retry and every request that the old spec rejects. Same state, same outcome."
+  },
+  {
+   "lemma": "SpecDiffFee.FeeDeltaWhenBothAccept",
+   "text": "Where both accept: the new result is the old result with one unit moved from the sender to account 0."
+  },
+  {
+   "lemma": "SpecDiffFee.NewlyRejectedIff",
+   "text": "Accepted by the old spec and rejected by the new one exactly when: no account 0, or sender is 0, or recipient is 0, or sender balance equals the amount."
+  },
+  {
+   "lemma": "SpecDiffFee.ChangedWhenOldAccepts",
+   "text": "Changed region: every request that the old spec accepts as a fresh transfer."
+  },
+  {
+   "lemma": "SpecDiffFee.OldPostSatisfiable, SpecDiffFee.NewPostSatisfiable",
+   "text": "Both specs allow a result for every well-formed state (statements above are not vacuous)."
+  }
+ ],
+ "new_spec": "spec/LedgerSpec.dfy (approved)",
+ "old_spec": "spec/LedgerSpec.dfy at c909a640, SHA-256 e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f",
+ "status": "DATA ONLY. Each row and each general statement is a Dafny lemma; see the run summary for checker exits."
+}

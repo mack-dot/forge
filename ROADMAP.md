@@ -9,6 +9,57 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## Pillar II design note and protocol model checked outside the gate — U415
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. No protected edit, commit, push or replay.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 -I -B proposals/forge2-pillar2-finality-protocol/run_checks.py` (attempt-0002; attempt-0001 exit 1) |0|`FinalityProtocol.dfy` 22 verified, 0 errors; four weakened variants rejected (checker exit 4 each) |
+| `dafny audit` on `FinalityProtocol.dfy` |0|0 findings |
+| Checker program, MAC code, key isolation, sink code, encoding |NOT RUN|assumptions A1–A4 of the model |
+
+[Design note](proposals/forge2-pillar2-finality-protocol/DESIGN.md). A
+model result only. M1 and integration EXIT NOT_ESTABLISHED.
+F1.4: [analysis by reading](proposals/forge2-pillar1-anchor-diff/ANALYSIS.md); no command run (U416).
+
+## Exact-diff proposal for the Stage 5 `print` survivor prepared and measured; not applied — U414
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. No protected edit, commit, push or replay.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 -I -B proposals/forge2-pillar1-print-effects/run_checks.py` (attempt-0005; attempt-0001 exit 1; 0002–0004 exit 0) |0|print mutant: accepted now (0); rejected with `--track-print-effects` (2); `{:print}`-marked mutant accepted with the option alone (0), rejected with option plus caller module (2); approved implementations pass with the option (0) |
+| `git apply --check proposals/forge2-pillar1-print-effects/candidate.diff` |0|applies; NOT applied |
+| Candidate `gate/ContractBinding.dfy` with approved impl; with marked mutant |0; 2| |
+| Stage 0–8 and 11 EXIT commands with the candidate; evidence regeneration; booking and refund caller modules |NOT RUN|need owner approval of the exact diff first |
+
+[Proposal](proposals/forge2-pillar1-print-effects/PROPOSAL.md). M1 and
+integration EXIT NOT_ESTABLISHED.
+
+## Master idea items F1.1d and F1.3 checked outside the gate; M1 local HOL context removed by owner-directed cleanup — U413
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. No protected edit, commit, push or replay. No deletion by
+this session.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 -I -B proposals/forge2-pillar1-spec-determinism/run_checks.py` (attempt-0012; attempts 0004, 0005, 0007–0011 exit 1; 0006 exit 0) |0|eleven cases: three spec determinism lemmas; planted spec deterministic up to four accounts; fee-change spec diff (general lemmas, five witnesses, false-claim control) |
+| Fee-change witness W2 |4|OPEN: out of resource after five attempts; not counted as a pass |
+| `dafny audit` on `SpecDiffFee.dfy`, `SpecDiffFeeWitnesses.dfy` |0|0 findings each |
+| `go-fs.sh fs-0001` (M1 input-premise witness) |1|authoring |
+| `go-fs.sh fs-0002` |1|TOOL: inputs removed during the run by the cleanup |
+| Any further local HOL run |NOT POSSIBLE|pinned toolchain and parent theories removed on 2026-11-17 (owner's choice in another session) |
+| F1.1e, F1.2, F1.4, F2, F3.2, F4 |NOT RUN| |
+
+[Pillar I report](proposals/forge2-pillar1-spec-determinism/REPORT.md) §5;
+[S4–S6 report](proposals/refund-executable-feasibility/m1-slide-s4-s6-20261117/REPORT.md) §8.
+The M1 executable is intact (tracked copy, SHA-256 checked). M1 and
+integration EXIT NOT_ESTABLISHED.
+
 ## Master idea designated by the owner; first two items checked outside the gate — U410, U411
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

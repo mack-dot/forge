@@ -1,0 +1,94 @@
+{
+ "attempt": "attempt-0001",
+ "cases": [
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 0,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy",
+   "file_sha256": "611bc136195b243f4a8f8f1d57ecc11702662034d7b011965ea3b3bff110e1b6",
+   "first_errors": [
+    "proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy(38,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy(38,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 't' (of type 'Tag') may contain references (perhaps declare its type as 'Tag(!new)') (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy(49,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)"
+   ],
+   "last_line": "4 resolution/type errors detected in FinalityProtocol.dfy",
+   "name": "finality-protocol-model-verifies",
+   "result": "FAIL"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 4,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar2-finality-protocol/fixtures/NoNonceCheck.dfy",
+   "file_sha256": "84848f8d4fcc1b91ae4da4097f198717bd7d14fa94af27f50d58b1f0c60da361",
+   "first_errors": [
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoNonceCheck.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoNonceCheck.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 't' (of type 'Tag') may contain references (perhaps declare its type as 'Tag(!new)') (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoNonceCheck.dfy(36,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)"
+   ],
+   "last_line": "4 resolution/type errors detected in NoNonceCheck.dfy",
+   "name": "control-no-nonce-check-rejected",
+   "result": "FAIL"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 4,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar2-finality-protocol/fixtures/NoStateCheck.dfy",
+   "file_sha256": "de4af7c42f8c166fd0a6bfd7fb544598029857182e930bf44404c5b3b590dd89",
+   "first_errors": [
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoStateCheck.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoStateCheck.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 't' (of type 'Tag') may contain references (perhaps declare its type as 'Tag(!new)') (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoStateCheck.dfy(36,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)"
+   ],
+   "last_line": "4 resolution/type errors detected in NoStateCheck.dfy",
+   "name": "control-no-state-check-rejected",
+   "result": "FAIL"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 4,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdCheck.dfy",
+   "file_sha256": "a66d06ae70184cffb52e13631b8d86d31d6f19e2aa3f876f69c38c3b435d01c8",
+   "first_errors": [
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdCheck.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdCheck.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 't' (of type 'Tag') may contain references (perhaps declare its type as 'Tag(!new)') (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdCheck.dfy(36,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)"
+   ],
+   "last_line": "4 resolution/type errors detected in NoIdCheck.dfy",
+   "name": "control-no-id-check-rejected",
+   "result": "FAIL"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 4,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdealMac.dfy",
+   "file_sha256": "cf2738c2e70a6eddb73e473df5047e125b40bd4af3112c22359ee3dc05d1967b",
+   "first_errors": [
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdealMac.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdealMac.dfy(25,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 't' (of type 'Tag') may contain references (perhaps declare its type as 'Tag(!new)') (see documentation for 'older' parameters)",
+    "proposals/forge2-pillar2-finality-protocol/fixtures/NoIdealMac.dfy(36,4): Error: a forall expression involved in a predicate definition is not allowed to depend on the set of allocated references, but values of 'c' (of type 'Claim') may contain references (see documentation for 'older' parameters)"
+   ],
+   "last_line": "4 resolution/type errors detected in NoIdealMac.dfy",
+   "name": "control-no-ideal-mac-rejected",
+   "result": "FAIL"
+  }
+ ],
+ "dafny_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+ "end_to_end": false,
+ "gate_options": [
+  "--solver-path",
+  ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+  "--resource-limit",
+  "1000000",
+  "--verification-time-limit",
+  "0",
+  "--cores",
+  "1",
+  "--verify-included-files"
+ ],
+ "scenario_exit": 1
+}

@@ -14579,3 +14579,148 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on proof status. M1 open. No profile approved. Stage 12
   unauthorized. end_to_end=false.
 - Next check: none for this entry. Its own commit is not recorded again.
+
+## U413 — F1.1d and F1.3 run as diagnostics; M1 local HOL context removed by an owner-directed cleanup in another session; file-system witness not completed
+- Status: 2026-11-17. Refs U409, U410, U411, U412. Owner words: "keep
+  going please", "dont stop". Not committed.
+- F1.1d evidence (results/forge2-pillar1-20261117, pinned Dafny, gate
+  options): fixtures/NoFrameFourAccounts.dfy exit 0 (25 verified) in
+  attempt-0006 after attempt-0004 and attempt-0005 out of resource. The
+  planted no-frame spec is deterministic for states with at most four
+  accounts. With the five-account witness of U410 both sides are proved.
+- F1.3 evidence: SpecDiffFee.dfy exit 0 (59 verified) from attempt-0009
+  on: unchanged region, fee delta, exact newly-rejected boundary, changed
+  region, non-vacuity, for the approved fee change (old spec from commit
+  c909a640, SHA e9bdfd51...). Five of six generated boundary witnesses
+  proved (attempt-0012, 74 verified). Witness W2 (both accept) is NOT
+  proved: out of resource in five attempts; kept in a separate file and
+  recorded as OPEN with its real exit 4. False-claim control rejected.
+  dafny audit on the two new files: exit 0, 0 findings.
+- Uncertainty for F1.1d/F1.3: hand-written Post predicates; link checked
+  in one direction; lemma files hand-written for one change (no generator
+  for arbitrary spec pairs); one passing run; nothing in the gate.
+- Observation (cleanup): a message from another session of the owner
+  ("Atlas") says the owner chose to delete 382 old untracked entries under
+  results/ (about 31 GB) and .toolchain/experiments (about 6.3 GB) at
+  about 11:40 local time. I did not see the owner's instruction. I
+  verified: .toolchain/experiments is absent; of the local M1 run
+  folders only results/refund-slide-s3-local-20261117 remains; free disk
+  about 100 GB; no local snapshots listed by tmutil.
+- Impact on M1: the pinned PolyML/HOL/CakeML build and every local parent
+  theory (U345-U405) are gone. No local HOL run is possible. Extending or
+  repeating the chain now needs a toolchain rebuild and a full replay
+  (never authorized). The committed packets (statements, scripts, logs,
+  hashes) are intact. The executable is intact as a tracked copy
+  (proposals/.../native-execution-20261104/records/native-build-0001/
+  refund, SHA-256 b8ed5ec2...7bb8, checked after the cleanup). Records
+  that name a removed folder mean "removed by the owner on 2026-11-17",
+  not a failed run. The runner scripts name removed paths.
+- fs witness: fs-0001 exit 1 authoring (two tactics); fs-0002 exit 1 TOOL
+  (inputs removed during the run). The input premises of
+  refund_profile_a_sl stay NOT shown satisfiable.
+- Impact: none on stated theorems. M1 open. Profile A not approved.
+  Stage 12 unauthorized. end_to_end=false.
+- Next check: owner decision whether a toolchain rebuild and replay is
+  wanted for M1. Master idea: proposals with exact diffs for F1.1e, F1.2,
+  F1.4, F3.2; F2.0 design note; W2 with a different proof structure.
+
+## U414 — exact-diff proposal for the Stage 5 print survivor (F1.2): Dafny --track-print-effects plus one caller module; measured; NOT applied
+- Status: 2026-11-17. Refs Stage 5 (docs/spec-quality.md print_effect),
+  U410, U413. Owner words: "dont stop". No protected file changed. Not
+  committed.
+- Evidence (results/forge2-print-effects-20261117, pinned Dafny, gate
+  options; attempt-0001 scenario exit 1, attempts 0002-0005 exit 0):
+  the print mutant verifies with the current options (exit 0); with
+  --track-print-effects it is rejected (exit 2); with a {:print} attribute
+  on Apply (two spellings) the option alone ACCEPTS it (exit 0); with the
+  option and a caller of Ledger.Apply that has no {:print} attribute it is
+  rejected (exit 2) in both spellings; without the option the caller alone
+  does not reject (exit 0). The approved Ledger, Booking and Refund
+  implementations verify with the option (exit 0 each). The candidate
+  gate/ContractBinding.dfy verifies with the approved implementation (13
+  verified) and rejects the marked mutant (exit 2).
+- Proposal: proposals/forge2-pillar1-print-effects/PROPOSAL.md and
+  candidate.diff (gate/backends/dafny.py OPTIONS, gate/ContractBinding.dfy
+  new module, toolchain/pins.json). git apply --check exit 0. NOT applied.
+- Correction of my own expectation: I expected --enforce-determinism to
+  pass all approved implementations. It rejects impl/Booking.dfy (line 13,
+  assign-such-that in a compiled method). Not proposed.
+- Uncertainty: the booking and refund gates are not covered against the
+  {:print} attribute; evidence bytes change if applied (options are
+  recorded in evidence); no EXIT command was re-run with the candidate;
+  Linux pins not examined beyond presence of the same list.
+- Impact: none until approved. Stage 12 unauthorized. end_to_end=false.
+- Next check: owner decision on the exact diff; then regeneration of
+  evidence and re-run of Stage 0-8 and 11 EXIT commands.
+
+## U415 — Pillar II design note and protocol model (F2.0): sink logic proved in a Dafny model under four named assumptions; nothing about a real checker, key or store
+- Status: 2026-11-17. Refs U410, U413, U414, Stage 7, Stage 8. No protected
+  file changed. Not committed.
+- Evidence (results/forge2-pillar2-20261117, pinned Dafny, gate options):
+  attempt-0001 scenario exit 1 (checker exit 2: my file lacked a type
+  restriction); attempt-0002 exit 0. FinalityProtocol.dfy: 22 verified, 0
+  errors; dafny audit exit 0, 0 findings. Lemmas: CommitPreservesInv (any
+  claim, any tag, under ideal MAC), MintPreservesInv (under sound minter),
+  InvMeaning (settled transitions satisfy the relation, form one path
+  from the initial state, one effect each, distinct request ids), four
+  rejection lemmas, HonestCommitSettles.
+- Controls: the model without the nonce check, without the state check,
+  without the id check, and the lemma without the ideal-MAC assumption
+  are each rejected (exit 4) at an obligation that needs the removed part.
+- Assumptions (explicit): A1 ideal MAC; A2 minter mints only when the
+  relation holds; A3 atomic commit; A4 state comparison is faithful. A2 is
+  the whole checker correctness and is ASSUMED.
+- Uncertainty: it is a model. The adversary is exactly "any Commit call
+  and any replay"; timing, key theft, partial writes, encodings and hash
+  collisions are outside. A rejected control is "could not be proved",
+  not a proof that the weakened design is unsafe.
+- Impact: none on existing claims. The Pillar II target claim is NOT
+  established. Stage 12 unauthorized. end_to_end=false.
+- Next check: owner decisions in DESIGN.md section 5 (HMAC or signatures;
+  refund or ledger first; HOL rebuild).
+
+## U416 — F1.4 analysis by reading: the PR gate checks the whole head tree against the base; split across commits is not applicable; two-pull-request control not run
+- Status: 2026-11-17. Refs U410, U414, Stage 4, Stage 11. Reading only
+  (gate/pr_check.py, gate/incremental.py, gate/core.py; about 260 lines).
+  No test run. No file changed besides this record and the note.
+- Observation: pr_check.py requires the trusted checkout at the PR base
+  on main and the candidate at the PR head, then runs the trusted
+  incremental gate on the candidate tree. No per-commit obligation exists.
+  incremental.py protects gate, policy, spec, toolchain, schemas, .github,
+  spec.lock, AGENTS.md. This is wider than the ROADMAP hard-rule list.
+- Inference (not tested): a split across commits in one pull request does
+  not change the gate's input. A split across two pull requests must pass
+  the protected-path handling in the first one.
+- Open question: how a changed protected path in the candidate is judged
+  end to end; whether any non-protected helper influences a gate decision.
+- Correction: FORGE_MASTER_IDEA.md rule 2 now lists the wider protected
+  set. The U414 candidate diff touches toolchain/pins.json, which that set
+  covers.
+- Impact: none. No new gate module is recommended before a control test.
+- Next check: two-step simulation in a scratch clone (NOT RUN).
+
+## U417 — Round 2 opened by the owner: four decisions recorded; tracked plan file; checkpoint commit of the U413–U416 round
+- Status: 2026-11-17. Refs U413–U416. Owner text saved verbatim in
+  proposals/round2-20261117/OWNER_ROUND2_TEXT.md; owner words after it:
+  "make this an md we track and then /goal track the md and do it".
+  Working plan and status: FORGE_ROUND2_PLAN.md.
+- Decisions as given: (1) proposals/forge2-pillar1-print-effects/
+  candidate.diff APPROVED, to be applied as a separate step after a
+  commit of the U413–U416 round; evidence regenerated; Stage 0–8 EXIT
+  commands re-run; --enforce-determinism stays off; companion diff for
+  Booking and Refund prepared, not applied. (2) HOL/PolyML/CakeML rebuild
+  approved with a lock marker and a 90-minute wall-clock budget for
+  rebuild plus replay. (3) Pillar II: Ed25519 signatures; Refund first.
+  (4) commit at checkpoints; no push before the final table.
+- Interpretation (mine): decision 1 is an approval of the exact file
+  candidate.diff as it exists at this commit (SHA-256 recorded in the
+  next entry when applied). It covers no other protected change. Stage 12
+  stays unauthorized. end_to_end stays false.
+- Scrub: the owner allowed replacement of machine-identifying local paths
+  in newly committed files only. One new file had one such path
+  (records/fs/fs-0001.run.json in the S4–S6 packet): the home directory
+  was replaced by <HOME>; the packet manifest was recomputed; the
+  unscrubbed file remains under results/ (untracked). No failed-attempt
+  log, exit record or unsure.md entry was changed. Files already pushed
+  were not rewritten.
+- Next check: the commit below; then decision 1 step 1B.

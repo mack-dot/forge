@@ -18,7 +18,13 @@ CASES = [  # name, file, expected checker exit, required substring of the output
     ('approved-ledger-spec-is-deterministic', REL + 'LedgerDeterminism.dfy', 0, 'verified, 0 errors', 'positive'),
     ('approved-booking-spec-is-deterministic', REL + 'BookingDeterminism.dfy', 0, 'verified, 0 errors', 'positive'),
     ('approved-refund-spec-is-deterministic', REL + 'RefundDeterminism.dfy', 0, 'verified, 0 errors', 'positive'),
+    ('fee-change-spec-diff-general-lemmas', REL + 'SpecDiffFee.dfy', 0, 'verified, 0 errors', 'positive'),
+    ('fee-change-boundary-witnesses', REL + 'SpecDiffFeeWitnesses.dfy', 0, 'verified, 0 errors', 'positive'),
+    ('fee-change-boundary-witness-W2-OPEN', REL + 'SpecDiffFeeWitnessesOpen.dfy', None, 'out of resource', 'open'),
+    ('fee-change-false-diff-claim-rejected', REL + 'fixtures/SpecDiffFalseClaim.dfy', 4,
+     'SpecDiffFalseClaim.dfy(12,14): Related location: this is the postcondition that could not be proved', 'negative-control'),
     ('planted-noframe-spec-two-implementations-verify', REL + 'fixtures/NoFrameImpls.dfy', 0, 'verified, 0 errors', 'control-positive'),
+    ('planted-noframe-spec-deterministic-up-to-four-accounts', REL + 'fixtures/NoFrameFourAccounts.dfy', 0, 'verified, 0 errors', 'control-positive'),
     ('planted-noframe-spec-determinism-rejected', REL + 'fixtures/NoFrameDeterminism.dfy', 4,
      'NoFrameDeterminism.dfy(38,15): Related location: this is the postcondition that could not be proved', 'negative-control'),
     ('trojan-against-approved-spec-rejected', REL + 'fixtures/TrojanAgainstApprovedSpec.dfy', 4,
@@ -49,10 +55,12 @@ for name, path, want, needle, kind in CASES:
     (out / (name + '.stderr.log')).write_text(run.stderr)
     text = run.stdout + run.stderr
     ok = run.returncode == want and needle in text
-    failed = failed or not ok
+    if kind == 'open':          # recorded with its real exit; never counted as a pass; does not fail the scenario
+        ok = None
+    failed = failed or ok is False
     summary['cases'].append({'name': name, 'file': path, 'kind': kind, 'checker_exit': run.returncode,
                              'expected_checker_exit': want, 'required_output_text': needle,
-                             'required_output_text_found': needle in text, 'scenario_result': 'PASS' if ok else 'FAIL',
+                             'required_output_text_found': needle in text, 'scenario_result': 'OPEN (not proved)' if ok is None else ('PASS' if ok else 'FAIL'),
                              'last_line': (run.stdout.strip().splitlines() or [''])[-1]})
 summary['scenario_exit'] = 1 if failed else 0
 (out / 'summary.json').write_text(json.dumps(summary, indent=1, sort_keys=True) + '\n')

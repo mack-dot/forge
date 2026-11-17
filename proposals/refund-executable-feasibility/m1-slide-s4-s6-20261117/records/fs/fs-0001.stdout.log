@@ -1,0 +1,58 @@
+<<HOL message: Created theory "forge_refundInputSat">>
+USED always_coind
+⊢ ∀P always'.
+    (∀a0. always' a0 ⇒ ∃h t. a0 = h:::t ∧ P (h:::t) ∧ always' t) ⇒
+    ∀a0. always' a0 ⇒ always P a0
+USED LFINITE_INDUCTION
+⊢ ∀P. P [||] ∧ (∀h t. P t ⇒ P (h:::t)) ⇒ ∀a0. LFINITE a0 ⇒ P a0
+Saved theorem _______ "LREPEAT_one_unfold"
+CHECKED LREPEAT_one_unfold
+⊢ LREPEAT [1] = 1:::LREPEAT [1]
+SHOW NOTFIN
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundInputSat)>>
+  ASM ll ≠ LREPEAT [1]
+  GOAL h:::ll ≠ LREPEAT [1]
+LEMMA_FAILED LFINITE_not_LREPEAT_one HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Saved theorem _______ "always_eventually_LREPEAT_one"
+CHECKED always_eventually_LREPEAT_one
+⊢ ∀ll.
+    ll = LREPEAT [1] ⇒
+    always (eventually (λll. ∃k. LHD ll = SOME k ∧ k ≠ 0)) ll
+Saved ORACLE thm ____ "live_numchars_LREPEAT_one"
+LEMMA_FAILED live_numchars_LREPEAT_one Fail "Unexpected assumptions: live_numchars_LREPEAT_one oracles=DISK_THM,MK_THM"
+DEFINITION ⊢ ∀inp.
+    sat_fs inp =
+    <|inode_tbl :=
+        [(UStream «stdin»,inp); (UStream «stdout»,""); (UStream «stderr»,"")];
+      files := [];
+      infds :=
+        [(0,UStream «stdin»,ReadMode,0); (1,UStream «stdout»,WriteMode,0);
+         (2,UStream «stderr»,WriteMode,0)]; numchars := LREPEAT [1];
+      maxFD := 2|>
+Saved ORACLE thm ____ "sat_fs_wfFS"
+LEMMA_FAILED sat_fs_wfFS Fail "Unexpected assumptions: sat_fs_wfFS oracles=DISK_THM,MK_THM"
+LEMMA_FAILED sat_fs_STD_streams HOL_ERR (HOL_ERROR {message = "goal not an exists", origins = [{origin_function = "EXISTS_TAC", origin_structure = "Q", source_location = Loc_Unknown}]})
+Saved theorem _______ "sat_fs_stdin_content"
+CHECKED sat_fs_stdin_content
+⊢ ∀inp. stdin_content (sat_fs inp) = SOME inp
+Saved theorem _______ "sat_cl_wfcl"
+CHECKED sat_cl_wfcl
+⊢ wfcl [«refund»]
+Saved ORACLE thm ____ "refund_input_premises_satisfiable"
+LEMMA_FAILED refund_input_premises_satisfiable Fail "Unexpected assumptions: refund_input_premises_satisfiable oracles=DISK_THM,MK_THM"
+Saved theorem _______ "consumed_stdin_has_no_content"
+CHECKED consumed_stdin_has_no_content
+⊢ ∀inp.
+    stdin_content
+      (sat_fs inp with
+       infds :=
+         [(0,UStream «stdin»,ReadMode,1); (1,UStream «stdout»,WriteMode,0);
+          (2,UStream «stderr»,WriteMode,0)]) = NONE
+Saved theorem _______ "finite_numchars_is_not_live"
+CHECKED finite_numchars_is_not_live
+⊢ ¬live_numchars [||]
+INPUT_TEXT_TERM explode
+  (sexp_to_string
+     (refund_request charge request original remaining enabled opened
+        candidate amount reason))
+Saved ORACLE thm ____ "refund_profile_a_sl_conclusion_holds_for_a_constructed_model_state_at_0x4000"

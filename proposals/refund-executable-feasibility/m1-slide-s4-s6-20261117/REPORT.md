@@ -140,3 +140,29 @@ REVIEWED); `refund_env_ok_sl` for a real environment (refinement L1–L3
 of U405 not run); the entry state and the loader; the file-system
 witness; repeats and import check for U409; clean and independent
 replay.
+
+## 8. Added later on 2026-11-17 (U413): file-system witness attempts; local HOL context removed
+
+- `fs-0001`: exit 1, authoring. `LREPEAT_one_unfold` and
+  `always_eventually_LREPEAT_one` passed inside the run; two tactics
+  failed (`LFINITE_not_LREPEAT_one`, `sat_fs_STD_streams`). Nothing
+  exported.
+- `fs-0002`: exit 1, TOOL. The run lost its inputs while it ran
+  (`ENOENT` on a parent theory file and on the runner's preload file).
+  No proof result.
+- Cause: another session of the owner removed old untracked folders
+  under `results/` and the folder `.toolchain/experiments` at about
+  11:40 local time, on the owner's choice (message from that session;
+  I verified the folders are absent). That removed the pinned PolyML,
+  HOL and CakeML build and every local parent theory of the M1 chain
+  (U345–U405). Today's folder
+  `results/refund-slide-s3-local-20261117` remains.
+- Effect: no local HOL run is possible now. A new run needs the
+  toolchain rebuilt and the whole parent chain regenerated. That is a
+  full replay; it was never authorized.
+- Not lost: every statement, script, log and hash in the committed
+  packets; the executable (tracked copy
+  `proposals/refund-executable-feasibility/native-execution-20261104/records/native-build-0001/refund`,
+  SHA-256 `b8ed5ec2…7bb8`, checked after the cleanup).
+- The input-premise witness stays NOT shown. The exact missing lemma is
+  unchanged (section 4).

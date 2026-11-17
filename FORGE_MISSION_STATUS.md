@@ -11,6 +11,18 @@ labels remain historical and must not be treated as the current priority order.
 
 
 
+## Resume here — F1.1d and F1.3 done as diagnostics; local HOL context gone (U413)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved. U413 work is not committed.
+
+- Master idea: [FORGE_MASTER_IDEA.md](FORGE_MASTER_IDEA.md). Done outside the gate: F1.1, F1.1d, F1.3 (one witness
+  open), F3.1. F1.2: [exact-diff proposal](proposals/forge2-pillar1-print-effects/PROPOSAL.md) ready, NOT applied (U414).
+  F2.0: [design note and protocol model](proposals/forge2-pillar2-finality-protocol/DESIGN.md) (U415).
+  Next: proposals for F1.1e, F1.4, F3.2; owner decisions in the F1.2 proposal and the F2.0 note.
+- M1: no local HOL run is possible. `.toolchain/experiments` and the parent theory folders were removed on
+  2026-11-17 by the owner's choice in another session. Packets and the tracked executable are intact. A rebuild
+  and full replay needs the owner's decision and a budget.
+
 ## Resume here — master idea designated; Pillar I and III first checks pass; M1 model chain complete to S6 (U409–U411)
 
 M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved.
