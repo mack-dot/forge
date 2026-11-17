@@ -79,4 +79,37 @@ recorded), PARTIAL.
 
 ## Final report table
 
-(filled at the end of the round)
+"—" means that the kind of exit does not exist for that row. Checker =
+Dafny or HOL; gate = `gate/gate.py` or `gate/incremental.py`; scenario =
+the runner or suite that judges the case.
+
+| EXIT command/check | Checker exit | Gate exit | Scenario/Actual exit | Result & exact scope |
+| --- | --- | --- | --- | --- |
+| **1. Decision 1** | | | | |
+| `git apply candidate.diff` then `gate/gate.py --impl impl/Ledger.dfy` | 0 | 0 | — | accepted; evidence differs in five expected fields. Then REVERTED |
+| changed gate on `bugs/print_effect.dfy`, `bugs/print_effect_marked.dfy` | 2; 2 | 1; 1 | — | both rejected. Unchanged gate: gate exit 0 for both (accepted) |
+| 28 EXIT cases, baseline `93712d2c` | — | — | 22 × 0; Stage 4 × 3 = 1; Stage 7 × 3 = 1 | Stage 4: GitHub API HTTP 403. Stage 7: Docker not available. Both without any change |
+| Stage 4, three cases, rerun with read-only GitHub authentication (`GH_TOKEN` from the `gh` login; prior failed reports preserved) | — | — | 0; 0; 0 | passed: the first failure was an unauthenticated API limit. Baseline is 25 of 28; only Stage 7 (Docker image store removed) fails |
+| 28 EXIT cases, approved diff alone | — | — | Stages 1–3 = 0; 5 mutations, 6 report, 8 × 3 = 1 | regression; diff reverted (U419) |
+| 28 EXIT cases, version 2 in a scratch worktree | — | — | Stages 1, 2, 3, 5, 8 = 0 (19 cases); 6 report = 1; 4 and 7 as baseline | NOT APPLIED. Stage 6 `report` cannot pass after any gate change (U423) |
+| `check_booking_refund.py` | 0 (approved, with option); 2 (print-marked mutants, with option); 0 (mutants, without option) | — | 0 | booking and refund need no extra caller |
+| print-effects `run_checks.py` (attempt-0005, round 1) | 0 / 2 as expected | — | 0 | unchanged |
+| **2. Pillar I** | | | | |
+| `forge2-pillar1-spec-determinism/run_checks.py`, attempt-0014 | 0 for ten positive files; 4 for three negative controls | — | 0 | 13 cases: three spec determinism lemmas; planted spec (5-account witness, 4-account blindness); two spec pairs with witnesses and false-claim controls. Diagnostics outside the gate |
+| W2 (fee change, both accept) | 0 | — | 0 | proved with `{:isolate_assertions}` on W2 only: 61 batches, largest 707,136 of 1,000,000. Five earlier attempts: exit 4 |
+| **3. Split-edit** | | | | |
+| `forge2-pillar1-anchor-diff/run_control.py`, attempt-0001 | — | 0 for two legitimate cases; 1 for fourteen attack cases | 0 | 0 evasions; no new gate module. Local profile; GitHub wrapper not run |
+| **4. Pillar II** | | | | |
+| `forge2-pillar2-finality-protocol/run_checks.py` (round 1) | 0 model; 4 for four weakened variants | — | 0 | a MODEL: 22 verified under assumptions A1–A4 |
+| `node --import tsx forge2-pillar2-refund-finality/run_suite.ts`, attempts 0001 and 0002 | — | — | 0; 0 | FINITE TEST: 38 of 38 attacks as expected; 0 unauthorized settlements; valid sequence settles; 4 of 4 database-tamper cases detected by audit (not prevented). Ed25519; sink holds only the public key. Nothing proved about the minter or the sink |
+| **5. Pillar III** | | | | |
+| `benchmark/build_checker.py` | 0 (46 verified, 3.1 s); build 0 | — | 0 | the checker is the only proved part |
+| `node --import tsx benchmark/bench.ts`, attempt-0001 | — | — | 0 | FINITE BENCHMARK: 25 solver functions, 46 instances, 2,300 checks (mean 91 µs), 0 accepted overbookings, 0 Dafny runs per solver version. Stage 6 numbers measure a different quantity |
+| **6. M1** | | | | |
+| tracked executable SHA-256 | — | — | 0 | file identity `b8ed5ec2…7bb8` (checked after the cleanup). Not a rebuild of the executable |
+| `m1-rebuild/rebuild.py 5400` | T5_REBUILD_ROW | — | T5_SCENARIO | T5_RESULT |
+| replay of the M1 chain; `fs-0001`/`fs-0002` | NOT RUN | — | NOT RUN | T5_REPLAY |
+
+Not met against the round's conditions: "100% green Stage 0–8" (Stage
+6 structural; Stages 4 and 7 environment); a generator for arbitrary
+spec pairs; M1 replay within the budget.
