@@ -28,6 +28,7 @@ current branch by owner instruction; `main` and `results/` untouched.
 | U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
 
 [Report](proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/REPORT.md).
+Commit 19696fd1 pushed to `origin backup/forge-local-2026-11-11`, exit 0 (U406).
 Memory failures: none. Tool failures: none. M1 and integration EXIT
 NOT_ESTABLISHED.
 

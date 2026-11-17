@@ -14392,3 +14392,18 @@ curl: (6) Could not resolve host: github.com
 - Next check: S3 (frame lemma at a slide; installed-state clauses).
 - Evidence: proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/
   (REPORT.md, MANIFEST.json, records/).
+
+## U406 — owner-directed commit and push of the U367–U405 documents
+
+- Status: 2026-11-17. Refs U366, U405. Owner instructions during U405:
+  "push when we can as well" and "and update the main readme".
+- Action: commit 19696fd1 on branch backup/forge-local-2026-11-11 (parent
+  bddb811e): README.md, ROADMAP.md, unsure.md, FORGE_MISSION_STATUS.md and
+  proposals/ (2148 files). git push to origin, same branch: exit 0.
+- Not done: no change to main; no pull request; results/ not staged
+  (0 results/ paths in the commit); no tag; no release.
+- Note: evidence logs in proposals/ contain local absolute paths, as in
+  the U366 commit.
+- Impact: none on proof status. M1 open. No profile approved. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: none for this entry. Its own commit is not recorded again.
