@@ -166,12 +166,15 @@ def mutations(session):
                         require(bool(locations), 'Unclassified verifier failure; inspect real diagnostics for ' + name)
                         row.update(classification='killed', violated_claims=claims,
                                    violated_contract_locations=locations)
+                elif verified.returncode == 2 and 'print' in (verified.stdout + verified.stderr).lower():
+                    row.update(classification='effect_rejected',
+                               reason='Dafny print-effect tracking rejected the program; not a spec-proof kill.')
                 else:
                     raise RuntimeError('TOOLCHAIN_OR_INPUT_ERROR: unexpected verify exit ' + str(verified.returncode))
         rows.append(row)
         (session.folder / 'mutation-progress.json').write_bytes(canonical(rows))
     counts = {name: sum(x['classification'] == name for x in rows)
-              for name in ('killed', 'survived', 'invalid', 'audit_rejected', 'inconclusive')}
+              for name in ('killed', 'survived', 'invalid', 'audit_rejected', 'inconclusive', 'effect_rejected')}
     require(counts['killed'] > 0 and counts['survived'] > 0, 'Missing actual killed/surviving controls')
     require(next(x for x in rows if x['id'] == 'invalid_source')['classification'] == 'invalid', 'Invalid control misclassified')
     require(next(x for x in rows if x['id'] == 'sneaky_assume')['classification'] == 'audit_rejected', 'Audit control misclassified')
@@ -179,7 +182,7 @@ def mutations(session):
     rate = {'numerator': counts['killed'], 'denominator': denominator,
             'fraction': str(counts['killed']) + '/' + str(denominator),
             'percent': format(100 * counts['killed'] / denominator, '.2f'),
-            'excluded': ['invalid', 'audit_rejected', 'inconclusive']}
+            'excluded': ['invalid', 'audit_rejected', 'inconclusive', 'effect_rejected']}
     return {'result': 'passed', 'mutants': rows, 'counts': counts, 'spec_kill_rate': rate,
             'survivors': [x['id'] for x in rows if x['classification'] == 'survived'],
             'limits': ['This is a finite curated mutation set, not an estimate for arbitrary bugs.',
