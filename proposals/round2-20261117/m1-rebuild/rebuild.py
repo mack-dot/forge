@@ -51,7 +51,7 @@ def run(label, argv, cwd):
             os.killpg(p.pid, signal.SIGTERM); time.sleep(3)
             try:
                 os.killpg(p.pid, signal.SIGKILL)
-            except ProcessLookupError:
+            except (ProcessLookupError, PermissionError):   # the group has already exited (macOS reports EPERM)
                 pass
             p.wait(); killed = True
     commands.append({'label': label, 'argv': [str(a) for a in argv], 'cwd': str(cwd).replace(str(FORGE), '<FORGE>'),

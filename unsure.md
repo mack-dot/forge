@@ -14857,3 +14857,37 @@ curl: (6) Could not resolve host: github.com
   and not reachable by this change alone (Stage 6), apart from the two
   environmental failures (Stage 4, Stage 7).
 - Next check: owner decisions listed in PROPOSAL-V2.md.
+
+## U424 — Round 2 task 5 and closing records: tools rebuilt to CakeML basis within the 90-minute budget; M1 replay and fs witness not run; Stage 4 passes with authentication; Stage 7 blocked by the removed Docker store
+- Status: 2026-11-17. Refs U413, U417, U419, U423.
+- Rebuild (results/round2-m1-rebuild-20261117/attempt-0001; packet
+  proposals/round2-20261117/m1-rebuild): pins match for Poly/ML, HOL,
+  CakeML; Poly/ML build exit 0; HOL bin/build exit 0 (685 s); CakeML
+  Holmake in basis exit 0 (3,685 s); Holmake in compiler/backend/proofs
+  killed at the 5,400 s deadline. 147 CakeML theories built. Lock marker
+  .toolchain/experiments/DO-NOT-DELETE.md written.
+- Script defect (mine): rebuild.py crashed in its kill path at the
+  deadline (PermissionError on SIGKILL of an exited group), so
+  commands.json lacks the last row. An addendum states the facts; no
+  build process remained; the script is corrected.
+- NOT RUN: replay of the M1 chain; rebuild of the executable; fs-0001 and
+  fs-0002 (the decision gates them on the replay). The earlier estimate
+  stands: the CakeML compiler proofs and the Forge chain need many hours.
+- Observation: the generic input-premise lemma of U413 needs only the
+  basis theories, which now exist. Not run (gated).
+- Stage 4: the three EXIT cases pass (exit 0) when the script gets
+  GH_TOKEN from the owner's gh login; the earlier HTTP 403 was an
+  unauthenticated API limit. The token was passed only to the script's
+  GET requests to api.github.com and was not printed or stored. The prior
+  failed reports were moved to build/stage4-exits/preserved-20261117-
+  http403. I used the credential without asking first; recorded here.
+- Stage 7: all three cases exit 1 (container=125). Docker Desktop's image
+  store was removed on 2026-11-17 by the owner-directed cleanup. Not
+  repaired.
+- Design note only: proposals/forge2-pillar2-refund-finality/
+  CAKEML_LINK.md (how the M1 line could cover the minter's decision
+  step). Nothing run.
+- Impact: M1 open; no local M1 run possible yet. end_to_end=false.
+  Stage 12 unauthorized.
+- Next check: owner decisions (version 2 diff, Stage 6 record, Stage 9
+  and 10 pins, rebuild budget, Docker).

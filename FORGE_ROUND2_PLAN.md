@@ -59,9 +59,9 @@ recorded), PARTIAL.
 | T2 | Split-edit control against the existing PR gate | DONE | `run_control.py` attempt-0001 scenario exit 0; 16 cases; 0 evasions; no new gate module; U422 |
 | T3 | Refund minter (Ed25519) + SQLite sink + ≥ 30 attacks | DONE (finite test) | suite exit 0 twice; 38 of 38 attacks as expected; 0 unauthorized settlements; U420; [report](proposals/forge2-pillar2-refund-finality/REPORT.md) |
 | T4 | Pillar III: checker (done as F3.1) + 25-version solver benchmark | DONE (finite benchmark) | bench exit 0; 2,300 checks; 0 accepted overbookings; 0 Dafny runs per version; U421; [report](proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md) |
-| T5a | Toolchain rebuild and M1 replay within 90 minutes | RUNNING | started 12:42:33 local; hard stop at 5,400 s; `results/round2-m1-rebuild-20261117/attempt-0001/commands.json` |
-| T5b | `fs-0001`/`fs-0002` witness | TODO | |
-| F | Final report table; `FORGE_MASTER_IDEA.md` and `unsure.md` updated | TODO | |
+| T5a | Toolchain rebuild and M1 replay within 90 minutes | BLOCKED by budget | tools rebuilt as far as CakeML `basis` (exit 0); compiler proofs killed at 5,400 s; replay NOT RUN; U424; [report](proposals/round2-20261117/m1-rebuild/REPORT.md) |
+| T5b | `fs-0001`/`fs-0002` witness | BLOCKED | gated on the replay by decision 2; NOT RUN; U424 |
+| F | Final report table; `FORGE_MASTER_IDEA.md` and `unsure.md` updated | DONE | table below; U417–U424 |
 
 ## Notes that bind the execution
 
@@ -107,8 +107,8 @@ the runner or suite that judges the case.
 | `node --import tsx benchmark/bench.ts`, attempt-0001 | — | — | 0 | FINITE BENCHMARK: 25 solver functions, 46 instances, 2,300 checks (mean 91 µs), 0 accepted overbookings, 0 Dafny runs per solver version. Stage 6 numbers measure a different quantity |
 | **6. M1** | | | | |
 | tracked executable SHA-256 | — | — | 0 | file identity `b8ed5ec2…7bb8` (checked after the cleanup). Not a rebuild of the executable |
-| `m1-rebuild/rebuild.py 5400` | T5_REBUILD_ROW | — | T5_SCENARIO | T5_RESULT |
-| replay of the M1 chain; `fs-0001`/`fs-0002` | NOT RUN | — | NOT RUN | T5_REPLAY |
+| `m1-rebuild/rebuild.py 5400` | — | — | stopped by the budget (script crashed in its kill path at the deadline; addendum written) | TOOL BUILD only: pins match; Poly/ML exit 0; HOL build exit 0 (685 s); CakeML `basis` exit 0 (3,685 s); `compiler/backend/proofs` killed at the deadline. 147 CakeML theories built |
+| replay of the M1 chain; `fs-0001`/`fs-0002` | NOT RUN | — | NOT RUN | BLOCKED by the budget: the CakeML compiler proofs alone need hours. The `fs` step is gated on the replay by the decision. [report](proposals/round2-20261117/m1-rebuild/REPORT.md) |
 
 Not met against the round's conditions: "100% green Stage 0–8" (Stage
 6 structural; Stages 4 and 7 environment); a generator for arbitrary

@@ -11,6 +11,18 @@ labels remain historical and must not be treated as the current priority order.
 
 
 
+## Resume here — Round 2 finished except owner decisions (U417–U424)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved. Round 2 commits are on the backup branch, NOT pushed.
+
+- Plan, status and final table: [FORGE_ROUND2_PLAN.md](FORGE_ROUND2_PLAN.md).
+- Waiting for the owner: [print-effects version 2](proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md)
+  (six protected files; Stage 6 record; Stage 9 and 10 pins; how a gate change reaches `main`).
+- Done as diagnostics or finite tests: W2, second spec pair, split-edit control, refund minter and sink suite,
+  25-version solver benchmark.
+- M1: tools rebuilt to CakeML `basis` under `.toolchain/experiments` (lock marker). Compiler proofs and the Forge
+  chain are not rebuilt. Stage 7 EXITs need Docker again.
+
 ## Resume here — F1.1d and F1.3 done as diagnostics; local HOL context gone (U413)
 
 M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved. U413 work is not committed.

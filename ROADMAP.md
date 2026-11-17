@@ -9,6 +9,32 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## Round 2 of the master idea: tasks 1–4 done as diagnostics and finite tests; approved print-effects diff measured and reverted; tool rebuild stopped by budget — U417–U424
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Commits on the backup branch, not pushed. No protected
+file differs from before the round.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `git apply` of the owner-approved `candidate.diff`, then gate on `impl/Ledger.dfy` |0|accepted; then REVERTED (next rows) |
+| changed gate on two planted print bugs / unchanged gate |1, 1 / 0, 0|the change closes the ledger hole |
+| 28 stage EXIT cases at baseline `93712d2c` |22 × 0; Stage 4 × 3 = 1; Stage 7 × 3 = 1|Stage 4: unauthenticated GitHub API; Stage 7: Docker store removed |
+| Stage 4, three cases, with read-only GitHub authentication |0; 0; 0|baseline is 25 of 28 |
+| 28 cases with the approved diff alone |Stage 5 mutations, Stage 6 report, Stage 8 × 3 = 1|regression; diff reverted (U419) |
+| 28 cases with version 2 in a scratch worktree |Stages 1, 2, 3, 5, 8 = 0; Stage 6 report = 1|NOT APPLIED; Stage 6 record pins the old gate bytes (U423) |
+| `check_booking_refund.py` |0|booking and refund need no extra caller |
+| Pillar I `run_checks.py` attempt-0014 |0|13 cases; W2 proved; second spec pair |
+| `run_control.py` (split-edit) |0|16 cases; 0 evasions; no new gate module |
+| `run_suite.ts` (refund minter and sink), twice |0; 0|finite test: 38 of 38 attacks as expected; 0 unauthorized settlements |
+| `build_checker.py`; `bench.ts` |0; 0|finite benchmark: 25 solver functions; 0 accepted overbookings |
+| `rebuild.py 5400` |stopped by budget|tools rebuilt to CakeML `basis`; compiler proofs killed at the deadline |
+| M1 chain replay; `fs` witness; Stage 7 |NOT RUN / exit 1|budget; Docker |
+
+[Plan and final table](FORGE_ROUND2_PLAN.md). Decisions needed:
+[version 2 proposal](proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md).
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Pillar II design note and protocol model checked outside the gate — U415
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

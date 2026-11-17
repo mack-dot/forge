@@ -1,0 +1,27 @@
+{
+ "note": "Written by hand after the run (U424). rebuild.py reached its 5400 s deadline during cakeml-backend-proofs, sent SIGTERM to the process group, and then crashed in its own kill path (PermissionError on SIGKILL of a group that had already exited). So commands.json has no row for this command. No build process was left running (checked with pgrep).",
+ "command": {
+  "label": "cakeml-backend-proofs",
+  "argv": [
+   "nice",
+   "-n",
+   "15",
+   "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+   "-j1"
+  ],
+  "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/backend/proofs",
+  "started_at_elapsed_seconds": 4714.2,
+  "killed_at_deadline": true,
+  "actual_exit": "killed (no exit code recorded)",
+  "log_sha256": "b83aa811e8f9f05632f996c96cbee5f3b469e5108490da297b7c303bb118f364",
+  "log_bytes": 157291
+ },
+ "counts_after_stop": {
+  "cakeml_theory_dat_files": 147,
+  "under_compiler_backend": 44,
+  "basis_heap_exists": true
+ },
+ "budget_seconds": 5400,
+ "stopped": "budget",
+ "end_to_end": false
+}
