@@ -14919,3 +14919,22 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on proof status. I hold five local commits (93712d2c to
   bf5ed234) that are not pushed; no push until the owner says so.
 - Next check: owner rotates credentials; then re-run this comparison.
+
+## U426 — Round 3 opened by the owner: decisions recorded; tracked plan; push of the Round 2 commits authorized
+- Status: 2026-11-17. Refs U417, U423, U424, U425. Owner text saved
+  verbatim in proposals/round3-20261117/OWNER_ROUND3_TEXT.md. Working plan
+  and status: FORGE_ROUND3_PLAN.md.
+- Decisions as given: version 3 "gate epoch transition" (print effects,
+  gate ratification records, fresh Stage 6 experiment, renewed Stage 9 and
+  10 pins), to be built in a scratch worktree and applied only when all
+  Stage 0-10 EXIT cases and PR-gate controls exit 0 there; M1 input-premise
+  lemma first, then an incremental build with 10,800 s; Docker for Stage 7;
+  read-only gh for Stage 4; push the backup branch before long runs and at
+  the end, never main, never force.
+- Interpretation (mine): the approval to apply version 3 is conditional on
+  the owner's own "all green" condition. If the condition is not met I do
+  not apply it. A ratification record must be read from the trusted side;
+  I will not build a path where a candidate approves itself. Renewing
+  Stage 9 needs hosted signing runs; after U425 I start no hosted workflow
+  or signing action without asking.
+- Next check: steps in FORGE_ROUND3_PLAN.md.
