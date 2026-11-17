@@ -23,7 +23,7 @@ from backends import dafny
 APPROVED = {
     'spec/refund/RefundSpec.dfy': '90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57',
     'spec/refund/protocol.md': '5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4',
-    'spec/refund/spec.lock': '993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57',
+    'spec/refund/spec.lock': '8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b',
     'policy/refund.yaml': '4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83',
 }
 SOURCE_FILES = ('impl/Refund.dfy', 'spec/refund/RefundSpec.dfy')

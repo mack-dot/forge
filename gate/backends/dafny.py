@@ -39,7 +39,7 @@ def claim_statements(spec_sha):
 OPTIONS = [
     '--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1',
     '--resource-limit', '1000000', '--verification-time-limit', '0',
-    '--cores', '1', '--verify-included-files',
+    '--cores', '1', '--verify-included-files', '--track-print-effects',
 ]
 REQUIRED_RESULTS = {
     'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)',
