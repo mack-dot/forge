@@ -15229,3 +15229,31 @@ curl: (6) Could not resolve host: github.com
   profile and gate/pr_check.py are not run.
 - Next check: control sets with the fixed code on both lineages; stage
   EXIT cases and a fresh Stage 6 run on main's lineage; Stage 7; M1.
+
+## U434 — Owner: "get it in main" (the master idea); documents-only pull request 38 opened; NOT merged
+- Status: 2026-11-17. Refs U410, U433. The owner asked where the
+  finance-inspired mission from the morning is, then wrote: "get it in
+  main and what does it say".
+- Interpretation (mine): "it" is the master idea and its source texts.
+  main requires a pull request (rules: pull_request, non_fast_forward,
+  required_linear_history, deletion). So I opened a pull request and did
+  NOT merge. A merge with administrator rights would bypass the rule; I
+  did not do that and will not without the owner's explicit word.
+- Action: branch docs/master-idea-pcf from origin/main, one commit
+  6fa3e40c, five files: FORGE_MASTER_IDEA.md (with a note at the top that
+  its result links are on the backup branch) and
+  proposals/future-directions-20261117 (two source texts verbatim, the
+  corrected plans, the manifest). Protected paths changed: 0. Push exit 0.
+  gh pr create exit 0: https://github.com/mack-dot/forge/pull/38. This is
+  the first write call to the GitHub API from this session; the owner's
+  instruction is the authorization. Opening the pull request starts the
+  hosted proof-gate workflow (no signing).
+- Local check: main's gate from a clean checkout of main, local profile:
+  exit 3 UNSUPPORTED, five files are inputs of no obligation. That is the
+  normal answer of main's gate for a documents-only change. A first try
+  from a worktree with changed result files ended with exit 2
+  (REVISION_ERROR); not a result about the change.
+- Uncertainty: the hosted result was not known when this entry was
+  written. The result records (proposals/forge2-*, round plans, unsure
+  entries after U407) are NOT in the pull request.
+- Next check: hosted status of pull request 38; the owner's merge.
