@@ -153,3 +153,48 @@ built. Nothing is in the gate.
 | 0009 | 1 | general lemmas pass; W2 out of resource; one expected-text defect in my runner |
 | 0010, 0011 | 1, 1 | W2 out of resource (attempts four and five) |
 | 0012 | 0 | W2 moved to `SpecDiffFeeWitnessesOpen.dfy`, recorded with its real exit 4 as OPEN, not counted as a pass |
+
+## 6. Round 2 task 1 (U418): W2 proved; second spec pair
+
+Raw logs: `results/forge2-pillar1-20261117/attempt-0013..0014`.
+Final run: attempt-0014, scenario exit 0, thirteen cases.
+
+### 6.1 W2
+
+Cause found with `--isolate-assertions`: no single assertion of W2 is
+expensive; the lemma as ONE solver batch needs more than the per-batch
+limit. Fix: the attribute `{:isolate_assertions}` on W2 only. Each
+assertion is then its own batch at the unchanged limit of 1,000,000.
+Measured (Dafny CSV log): 61 batches, all passed; largest batch
+707,136; sum 6,319,497; solver time 2.87 s. The whole Dafny invocation
+took 5.5–6.5 s while two other heavy jobs ran, so "under 5 s" is shown
+for the solver time only. The global options are unchanged. The five
+earlier failures stay in attempts 0007–0011 and in `superseded/`.
+All six fee-change witnesses are now proved (136 verified, 0 errors).
+
+### 6.2 Second pair: approved refund spec versus a capped variant
+
+`fixtures/RefundSpecCapped.dfy` is the approved `RefundSpec` with one
+extra condition in `Eligible` (`amount * 2 <= original`). It is a
+fixture, not a proposed change. `SpecDiffRefundCap.dfy`: checker exit
+0 (23 verified, 0 errors).
+
+| Lemma | Statement |
+| --- | --- |
+| `EligibleNewIff` | Eligible under the variant exactly when eligible under the approved spec and within the cap. |
+| `UnchangedOutsideTheCap` | Same decision and plan for every input the approved spec rejects and every eligible input within the cap. |
+| `NewlyRejectedAboveTheCap` | Eligible and above the cap: the approved spec authorizes; the variant rejects with an empty plan. |
+| `OldDeterministic`, `NewDeterministic` | At most one result per input. |
+| `OldPostSatisfiable`, `NewPostSatisfiable` | A result exists for every input. |
+
+Eight generated boundary witnesses (R1–R8: at the cap, one above, odd
+original, full refund, zero, bad reason, missing response, disabled):
+39 verified, 0 errors. False-claim control ("the variant never changes
+the decision"): rejected, exit 4.
+
+### 6.3 What "harness" means here (PARTIAL against the task text)
+
+Shared and reusable: the runner, the opaque-`Post` pattern with
+projection lemmas, and the table-driven witness and receipt generators.
+NOT built: a generator of the general lemmas for an arbitrary pair. The
+general lemmas of both pairs are written by hand.

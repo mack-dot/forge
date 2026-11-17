@@ -39,8 +39,8 @@
   },
   {
    "dafny_lemmas": [
-    "SpecDiffFeeWitnessesOpen.W2",
-    "SpecDiffFeeWitnessesOpen.W2_NonVacuous"
+    "SpecDiffFeeWitnesses.W2",
+    "SpecDiffFeeWitnesses.W2_NonVacuous"
    ],
    "kind": "both_accept",
    "new_spec": {
@@ -70,7 +70,7 @@
     "sender": 1
    },
    "request_id": 7,
-   "status": "NOT PROVED (resource limit, five attempts); follows informally from SpecDiffFee.BothAcceptResult",
+   "status": "lemma in the checked file; assertions checked in separate batches",
    "title": "sender balance equals the amount plus one",
    "witness": "W2"
   },

@@ -9,7 +9,8 @@ import json
 
 HERE = Path(__file__).resolve().parent
 ID = 7
-OPEN = {'W2'}   # not proved at the gate's resource limit after five attempts (U413); kept in a separate file
+OPEN = set()     # witnesses kept out of the checked file (none since U418)
+ISOLATE = {'W2'}  # each assertion of these lemmas is checked in its own batch, at the unchanged per-batch limit (U418)
 W = [  # name, title, balances, accepted {id: (s, r, amt)}, (sender, recipient, amount), kind, old (outcome, balances), new (outcome, balances)
     ('W1', 'sender balance equals the amount', {0: 0, 1: 5, 2: 0}, {}, (1, 2, 5), 'newly_rejected',
      ('Ok', {0: 0, 1: 0, 2: 5}), ('Rejected', {0: 0, 1: 5, 2: 0})),
@@ -48,7 +49,7 @@ for name, title, bal, acc, (s, r, amt), kind, (oo, ob), (no, nb) in W:
     fresh_old = 'true' if oo == 'Ok' else 'false'
     target = open_out if name in OPEN else out
     target += [f'  // {name}: {title}. Kind: {kind}.',
-            f'  lemma {name}(n: D.O.State, o: D.O.Outcome, n\': D.N.State, o\': D.N.Outcome)',
+            f'  lemma {"{:isolate_assertions} " if name in ISOLATE else ""}{name}(n: D.O.State, o: D.O.Outcome, n\': D.N.State, o\': D.N.Outcome)',
             f'    requires D.PostO({S}, {ID}, {R}, n, o)',
             f'    requires D.PostN(D.StateN({S}), {ID}, D.ReqN({R}), n\', o\')',
             f'    ensures n.balances.Keys == {{{", ".join(str(k) for k in sorted(bal))}}} && n\'.balances.Keys == n.balances.Keys',
@@ -77,13 +78,16 @@ for name, title, bal, acc, (s, r, amt), kind, (oo, ob), (no, nb) in W:
                  'request': {'sender': s, 'recipient': r, 'amount': amt},
                  'old_spec': {'outcome': oo, 'balances': {str(k): v for k, v in sorted(ob.items())}},
                  'new_spec': {'outcome': no, 'balances': {str(k): v for k, v in sorted(nb.items())}},
-                 'status': 'NOT PROVED (resource limit, five attempts); follows informally from SpecDiffFee.BothAcceptResult' if name in OPEN else 'lemma in the checked file',
+                 'status': 'NOT PROVED' if name in OPEN else ('lemma in the checked file; assertions checked in separate batches' if name in ISOLATE else 'lemma in the checked file'),
                  'dafny_lemmas': [f'SpecDiffFeeWitnesses{"Open" if name in OPEN else ""}.{name}',
                                   f'SpecDiffFeeWitnesses{"Open" if name in OPEN else ""}.{name}_NonVacuous']})
 out.append('}')
 open_out.append('}')
 (HERE / 'SpecDiffFeeWitnesses.dfy').write_text('\n'.join(out) + '\n')
-(HERE / 'SpecDiffFeeWitnessesOpen.dfy').write_text('\n'.join(open_out) + '\n')
+if OPEN:
+    (HERE / 'SpecDiffFeeWitnessesOpen.dfy').write_text('\n'.join(open_out) + '\n')
+elif (HERE / 'SpecDiffFeeWitnessesOpen.dfy').exists():
+    (HERE / 'SpecDiffFeeWitnessesOpen.dfy').rename(HERE / 'superseded/attempt-0012/SpecDiffFeeWitnessesOpen.removed.dfy')
 receipt = {
     'change': 'proposals/fees.md (no fee -> one-unit fee to account 0)',
     'old_spec': 'spec/LedgerSpec.dfy at c909a640, SHA-256 e9bdfd511d3cffb04c533dcc62252cabf84a825d5577ea5999d18bc25e0bda0f',

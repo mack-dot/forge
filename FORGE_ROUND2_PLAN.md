@@ -51,15 +51,15 @@ recorded), PARTIAL.
 
 | # | Step | Status | Exits / record |
 | --- | --- | --- | --- |
-| 1A | Commit the U413–U416 round (paths in new files scrubbed) | TODO | |
-| 1B | Apply `candidate.diff`; regenerate evidence; Stage 0–8 EXITs; print control | TODO | |
+| 1A | Commit the U413–U416 round (paths in new files scrubbed) | DONE | commit `93712d2c`; one path scrubbed; U417 |
+| 1B | Apply `candidate.diff`; regenerate evidence; Stage 0–8 EXITs; print control | BLOCKED | applied, measured, REVERTED: Stages 5, 6, 8 regress (refund spec lock pins `toolchain/pins.json`). Ledger gate rejects both planted print bugs with the change (exit 1) and accepts them without it (exit 0). Needs a complete version 2 with further protected files. U419; [record](proposals/forge2-pillar1-print-effects/REGRESSION.md) |
 | 1C | Companion candidate diff for Booking and Refund gates (not applied) | TODO | |
-| T1a | W2 proved without a higher resource limit | TODO | |
-| T1b | Spec-pair diff harness on two pairs (Ledger fee; Refund variant) | TODO | |
+| T1a | W2 proved without a higher resource limit | DONE | attempt-0013 exit 0; 61 batches, largest 707,136; U418 |
+| T1b | Spec-pair diff harness on two pairs (Ledger fee; Refund variant) | PARTIAL | both pairs proved (attempt-0014 exit 0, 13 cases); witnesses generated from tables; general lemmas hand-written; U418 |
 | T2 | Split-edit control against the existing PR gate | TODO | |
-| T3 | Refund minter (Ed25519) + SQLite sink + ≥ 30 attacks | TODO | |
-| T4 | Pillar III: checker (done as F3.1) + 25-version solver benchmark | TODO | |
-| T5a | Toolchain rebuild and M1 replay within 90 minutes | TODO | |
+| T3 | Refund minter (Ed25519) + SQLite sink + ≥ 30 attacks | DONE (finite test) | suite exit 0 twice; 38 of 38 attacks as expected; 0 unauthorized settlements; U420; [report](proposals/forge2-pillar2-refund-finality/REPORT.md) |
+| T4 | Pillar III: checker (done as F3.1) + 25-version solver benchmark | DONE (finite benchmark) | bench exit 0; 2,300 checks; 0 accepted overbookings; 0 Dafny runs per version; U421; [report](proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md) |
+| T5a | Toolchain rebuild and M1 replay within 90 minutes | RUNNING | started 12:42:33 local; hard stop at 5,400 s; `results/round2-m1-rebuild-20261117/attempt-0001/commands.json` |
 | T5b | `fs-0001`/`fs-0002` witness | TODO | |
 | F | Final report table; `FORGE_MASTER_IDEA.md` and `unsure.md` updated | TODO | |
 

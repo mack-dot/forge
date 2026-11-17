@@ -38,6 +38,37 @@ abstract module SpecDiffFeeWitnesses {
     D.NewPostSatisfiable(D.StateN(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[])), 7, D.ReqN(D.O.TransferRequest(1, 2, 5)));
   }
 
+  // W2: sender balance equals the amount plus one. Kind: both_accept.
+  lemma {:isolate_assertions} W2(n: D.O.State, o: D.O.Outcome, n': D.N.State, o': D.N.Outcome)
+    requires D.PostO(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4), n, o)
+    requires D.PostN(D.StateN(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[])), 7, D.ReqN(D.O.TransferRequest(1, 2, 4)), n', o')
+    ensures n.balances.Keys == {0, 1, 2} && n'.balances.Keys == n.balances.Keys
+    ensures o == D.O.Ok && n.balances[0] == 0 && n.balances[1] == 1 && n.balances[2] == 4
+    ensures o' == D.N.Ok && n'.balances[0] == 1 && n'.balances[1] == 0 && n'.balances[2] == 4
+  {
+    assert D.O.WellFormed(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]));
+    assert D.O.IsFreshValid(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4)) == true;
+    D.KeysOf(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4), n, o, n', o');
+    D.NewFreshIff(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4));
+    assert D.N.IsFreshValid(D.StateN(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[])), 7, D.ReqN(D.O.TransferRequest(1, 2, 4)));
+    D.BothAcceptResult(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4), n, o, n', o');
+    assert n.balances[0] == 0;
+    assert n.balances[1] == 1;
+    assert n.balances[2] == 4;
+    assert n'.balances[0] == 1;
+    assert n'.balances[1] == 0;
+    assert n'.balances[2] == 4;
+  }
+
+  lemma W2_NonVacuous()
+    ensures exists n: D.O.State, o: D.O.Outcome :: D.PostO(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4), n, o)
+    ensures exists n': D.N.State, o': D.N.Outcome :: D.PostN(D.StateN(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[])), 7, D.ReqN(D.O.TransferRequest(1, 2, 4)), n', o')
+  {
+    D.OldPostSatisfiable(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]), 7, D.O.TransferRequest(1, 2, 4));
+    D.WellFormedCarries(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[]));
+    D.NewPostSatisfiable(D.StateN(D.O.LedgerState(map[0 := 0, 1 := 5, 2 := 0], map[])), 7, D.ReqN(D.O.TransferRequest(1, 2, 4)));
+  }
+
   // W3: sender is account 0. Kind: newly_rejected.
   lemma W3(n: D.O.State, o: D.O.Outcome, n': D.N.State, o': D.N.Outcome)
     requires D.PostO(D.O.LedgerState(map[0 := 5, 1 := 0], map[]), 7, D.O.TransferRequest(0, 1, 2), n, o)

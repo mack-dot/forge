@@ -1,0 +1,663 @@
+{
+ "end_to_end": false,
+ "head": "93712d2c1f108005887e9d610650db2f1a73113d",
+ "label": "after-candidate-diff",
+ "python": "3.10.11",
+ "stages": [
+  {
+   "case": "reproducibility",
+   "exit": 0,
+   "last_line": "reproducibility: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case reproducibility",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "4a55220cf43c5b63519868ede559ef7b56efbbe29beabd10fff00095ca3e22a0",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 6.1
+  },
+  {
+   "case": "planted-bugs",
+   "exit": 0,
+   "last_line": "planted-bugs: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case planted-bugs",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "ca93acb7e45dbd1407307b4407c44bd93f6291f21b70924ac696daace12d722b",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 13.3
+  },
+  {
+   "case": "spec-lock",
+   "exit": 0,
+   "last_line": "spec-lock: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case spec-lock",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "b09d572f31456ae5d20e8dca33d28995369fb398bd127db13c601221219cc53c",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.3
+  },
+  {
+   "case": "contract-binding",
+   "exit": 0,
+   "last_line": "contract-binding: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case contract-binding",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "e35c1cf85f40f6e9b4eb693e303f630bd8904233980583f2a010d57e78f9984f",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.3
+  },
+  {
+   "case": "audit-controls",
+   "exit": 0,
+   "last_line": "audit-controls: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case audit-controls",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "ce7f9afc5ce68ca742ada8536f3675454033619def6ce3e64f860eb9d547ae1d",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 7.8
+  },
+  {
+   "case": "schema",
+   "exit": 0,
+   "last_line": "schema: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case schema",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "f8bae36dfcf6f651c18578da43f180c0f8668069de625b699d523e40d0b387c9",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 1.0
+  },
+  {
+   "case": "artifact-mismatch",
+   "exit": 0,
+   "last_line": "artifact-mismatch: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case artifact-mismatch",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "5481900187fc6414c6643e3133eb16dea694d9d71beac35b8db443d315156787",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.9
+  },
+  {
+   "case": "method-policy",
+   "exit": 0,
+   "last_line": "method-policy: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case method-policy",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "79d3d332d425515a076ef9ffe3de2b67b8016ba32225b687e9129c255fe26152",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 1.0
+  },
+  {
+   "case": "round-trip",
+   "exit": 0,
+   "last_line": "round-trip: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case round-trip",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "2acd392694bf5ee73c9364bcea57145e687248497ea2283c6d10a8fc8b9dc228",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 3.4
+  },
+  {
+   "case": "policy-controls",
+   "exit": 0,
+   "last_line": "policy-controls: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case policy-controls",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "c232f7153ce6ae6e5689c5380468f67b5820af17da96768fa96876bc66f2c78f",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 6.0
+  },
+  {
+   "case": "correct-typescript",
+   "exit": 0,
+   "last_line": "correct-typescript: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case correct-typescript",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "8cd08ad5bf7a254ffaef701afdd5ee3360aae72f209bf09e625a4cbd9b3408b0",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 6.3
+  },
+  {
+   "case": "self-transfer",
+   "exit": 0,
+   "last_line": "self-transfer: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case self-transfer",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "8353d8ee9954deed733595ad884ea398ebd119e36cf0a10683955e819f4e21d7",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 7.7
+  },
+  {
+   "case": "evidence-labels",
+   "exit": 0,
+   "last_line": "evidence-labels: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case evidence-labels",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "8167dfe02a13f66f1a7c3c898a5ce77ee2e9ce582a83b0dceb753b3ccfda1921",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 16.2
+  },
+  {
+   "case": "reproducibility",
+   "exit": 0,
+   "last_line": "reproducibility: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case reproducibility",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "6a4546c755c162cb40d2d94576dc3e842a0624afc537eb33c6de027bc8ee416a",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 11.7
+  },
+  {
+   "case": "loader-demo",
+   "exit": 0,
+   "last_line": "loader-demo: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case loader-demo",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "e4c6d3515c205f5882995b4eeeef769caba8296fa11fc9837de74792665354f3",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.2
+  },
+  {
+   "case": "cli-demo",
+   "exit": 0,
+   "last_line": "cli-demo: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case cli-demo",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "226812e1e4f8173a4e91f79d76265f4002358ef7d51126b907aea58165a1b58e",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.8
+  },
+  {
+   "case": "affected-claims",
+   "exit": 1,
+   "last_line": "",
+   "script": "scripts/exit_stage_4.py --case affected-claims",
+   "stage": 4,
+   "stderr_tail": [
+    "    raise RuntimeError(message)",
+    "RuntimeError: Preserve the prior EXIT report before running again"
+   ],
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.1
+  },
+  {
+   "case": "unapproved-spec",
+   "exit": 1,
+   "last_line": "",
+   "script": "scripts/exit_stage_4.py --case unapproved-spec",
+   "stage": 4,
+   "stderr_tail": [
+    "    raise RuntimeError(message)",
+    "RuntimeError: Preserve the prior EXIT report before running again"
+   ],
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.1
+  },
+  {
+   "case": "approved-spec",
+   "exit": 1,
+   "last_line": "",
+   "script": "scripts/exit_stage_4.py --case approved-spec",
+   "stage": 4,
+   "stderr_tail": [
+    "    raise RuntimeError(message)",
+    "RuntimeError: Preserve the prior EXIT report before running again"
+   ],
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.1
+  },
+  {
+   "case": "vacuity",
+   "exit": 0,
+   "last_line": "STAGE_5_RESULT {\"case\": \"vacuity\", \"result\": \"passed\", \"exit_code\": 0}",
+   "script": "scripts/exit_stage_5.py --case vacuity",
+   "stage": 5,
+   "stderr_tail": [],
+   "stdout_sha256": "5644db4234b5c6372f2d4b38ae745175bc883f8b6d321b5c340055f1f6aff833",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 7.7
+  },
+  {
+   "case": "mutations",
+   "exit": 1,
+   "last_line": "STAGE_5_RESULT {\"case\": \"mutations\", \"result\": \"failed\", \"exit_code\": 1}",
+   "script": "scripts/exit_stage_5.py --case mutations",
+   "stage": 5,
+   "stderr_tail": [
+    "TOOLCHAIN_OR_INPUT_ERROR: unexpected verify exit 2"
+   ],
+   "stdout_sha256": "f6c9e76f1c7e8ee82dea17acaab077a576c9822ed8f26fe72ea951fc5c060752",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 32.4
+  },
+  {
+   "case": "report",
+   "exit": 1,
+   "last_line": "",
+   "script": "scripts/exit_stage_6.py --case report",
+   "stage": 6,
+   "stderr_tail": [
+    "REPORT_REJECTED: TRUSTED_INPUTS: trusted input set or digests differ"
+   ],
+   "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.5
+  },
+  {
+   "case": "upstream-replay",
+   "exit": 1,
+   "last_line": "STAGE7_NOT_ESTABLISHED: container=125, inspect=1, collect=1",
+   "script": "scripts/exit_stage_7.py --case upstream-replay",
+   "stage": 7,
+   "stderr_tail": [],
+   "stdout_sha256": "4a573ba5960bbd613a90ad77d47f2a78edcc804f866e78fb360226894c1b0e6c",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.5
+  },
+  {
+   "case": "invalid-proof",
+   "exit": 1,
+   "last_line": "STAGE7_NOT_ESTABLISHED: container=125, inspect=1, collect=1",
+   "script": "scripts/exit_stage_7.py --case invalid-proof",
+   "stage": 7,
+   "stderr_tail": [],
+   "stdout_sha256": "f0408576ac78649c87c729051a7aaa4dcbff120bfa8c235ac466091b464e0a23",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.5
+  },
+  {
+   "case": "own-proof",
+   "exit": 1,
+   "last_line": "STAGE7_NOT_ESTABLISHED: container=125, inspect=1, collect=1",
+   "script": "scripts/exit_stage_7.py --case own-proof",
+   "stage": 7,
+   "stderr_tail": [],
+   "stdout_sha256": "03c7ec4e7a9d40865c759aeab6cdabcf752e5d1f9bff640d3a3b3ac45d0854c1",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.5
+  },
+  {
+   "case": "wrapper-proof",
+   "exit": 1,
+   "last_line": "wrapper-proof: failed; end_to_end=false",
+   "script": "scripts/exit_stage_8.py --case wrapper-proof",
+   "stage": 8,
+   "stderr_tail": [
+    "    raise RuntimeError(message)",
+    "RuntimeError: source-positive: expected harness exit 0, observed 1"
+   ],
+   "stdout_sha256": "9b2f7449f2245872b33deeaa6ec6ad250140960a3ec3383ac75386326a0e850a",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.3
+  },
+  {
+   "case": "hostile-outputs",
+   "exit": 1,
+   "last_line": "hostile-outputs: failed; end_to_end=false",
+   "script": "scripts/exit_stage_8.py --case hostile-outputs",
+   "stage": 8,
+   "stderr_tail": [
+    "    raise RuntimeError(message)",
+    "RuntimeError: hostile-positive: expected harness exit 0, observed 1"
+   ],
+   "stdout_sha256": "d16aa3d70e8fd0edb99e9cdfd3ef2620560f6bc3e5a20add7581158b0ef50f36",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.9
+  },
+  {
+   "case": "evidence-separation",
+   "exit": 1,
+   "last_line": "evidence-separation: failed; end_to_end=false",
+   "script": "scripts/exit_stage_8.py --case evidence-separation",
+   "stage": 8,
+   "stderr_tail": [
+    "    raise RuntimeError(message)",
+    "RuntimeError: repeat-first-critical: expected harness exit 0, observed 1"
+   ],
+   "stdout_sha256": "5151da171cf6c25cd30d74f92151bffa145f8e952fab40b1068227ede2264939",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M gate/ContractBinding.dfy",
+    " M gate/backends/dafny.py",
+    " M proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+    " D proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+    " M proposals/forge2-pillar1-spec-determinism/gen_fee_witnesses.py",
+    " M proposals/forge2-pillar1-spec-determinism/records/fee-change-receipt.json",
+    " M proposals/forge2-pillar1-spec-determinism/run_checks.py",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json",
+    " M toolchain/pins.json"
+   ],
+   "wall_seconds": 0.4
+  }
+ ]
+}

@@ -14724,3 +14724,87 @@ curl: (6) Could not resolve host: github.com
   log, exit record or unsure.md entry was changed. Files already pushed
   were not rewritten.
 - Next check: the commit below; then decision 1 step 1B.
+
+## U418 — Round 2 task 1: witness W2 proved with isolated assertions on W2 only; second spec pair (refund versus capped variant) checked
+- Status: 2026-11-17. Refs U413, U417. Pinned Dafny, gate options
+  unchanged. results/forge2-pillar1-20261117/attempt-0013 and
+  attempt-0014: scenario exit 0 (thirteen cases in 0014).
+- W2: with --isolate-assertions every assertion passes, so no single
+  assertion is expensive; the lemma as one batch exceeds the per-batch
+  limit. Fix: attribute {:isolate_assertions} on W2 only. Dafny CSV log:
+  61 batches, all Passed, largest 707,136 of 1,000,000, sum 6,319,497,
+  solver time 2.87 s. Whole invocation 5.5-6.5 s under load from two other
+  jobs: "under 5 s" is shown for solver time only. All six fee-change
+  witnesses are proved. The five failed attempts stay recorded.
+- Correction of a suggested cause: the cost is not unfolding of the
+  recursive Total (the Post predicates are opaque in W2).
+- Second pair: fixtures/RefundSpecCapped.dfy (approved RefundSpec plus
+  amount * 2 <= original; a fixture, not a proposed change).
+  SpecDiffRefundCap.dfy 23 verified; eight generated witnesses 39 verified;
+  false-claim control rejected (exit 4).
+- Uncertainty: general lemmas are hand-written per pair; only witnesses and
+  receipts are generated. Post predicates hand-written; one-direction link.
+- Next check: none required; a generator for general lemmas is not built.
+
+## U419 — Decision 1 step 1B: approved candidate.diff applied, measured, and reverted because Stages 5, 6 and 8 regress; a complete change needs further protected files
+- Status: 2026-11-17. Refs U414, U417. candidate.diff SHA-256
+  5b1fd91dc12c5f1ca10e1a2777c343bdb7b2ac1a58d1bddfa70c5b10f6287436.
+- Baseline at 93712d2c (28 EXIT cases): Stages 1, 2, 3, 5, 6, 8 exit 0
+  (22 cases); Stage 4 exit 1 (HTTP 403 from the GitHub API; later runs:
+  "Preserve the prior EXIT report"); Stage 7 exit 1 (Docker not available:
+  container=125). Six environmental failures exist without any change.
+- With the diff applied: gate on impl/Ledger.dfy exit 0; evidence differs
+  in five expected fields. Real gate on two planted print bugs: exit 1
+  for both; unchanged gate (scratch worktree) exit 0 for both. The ledger
+  hole is closed by the change.
+- Regression with the diff applied: Stage 8 all three cases exit 1
+  (refund gate APPROVED_DEPENDENCY: spec/refund/spec.lock pins the digest
+  of toolchain/pins.json); Stage 6 report exit 1 (TRUSTED_INPUTS of the
+  stored report); Stage 5 mutations exit 1 (driver: unexpected verify exit
+  2 for print_effect). Stages 1, 2, 3 and Stage 5 vacuity exit 0.
+- My error: the U414 proposal listed evidence regeneration and Linux pins
+  as follow-up but did not find that the refund spec lock pins
+  toolchain/pins.json. The proposal was incomplete.
+- Action: reverted with git apply -R; evidence.json restored; gate output
+  equals the committed evidence again; protected paths equal HEAD. The two
+  planted bugs were moved to the proposal folder (the unchanged gate
+  accepts them, so they cannot stay in bugs/).
+- Decision needed: a complete candidate (version 2) touches
+  spec/refund/spec.lock, gate/refund.py, possibly the booking lock, and
+  toolchain/linux-pins.json. Those are outside the approval given.
+- Next check: build version 2 in a scratch copy, run the 28 cases there,
+  and present the exact diff with its measured result.
+
+## U420 — Round 2 task 3: refund minter (Ed25519, separate process) and SQLite sink; adversarial suite passes twice; finite test only
+- Status: 2026-11-17. Refs U415, U417. Research code under
+  proposals/forge2-pillar2-refund-finality. No protected file changed.
+- Evidence: node --import tsx run_suite.ts, attempt-0001 exit 0 and
+  attempt-0002 exit 0 (results/forge2-pillar2-refund-20261117): valid
+  sequence 4 of 4 committed with one effect each; 38 attack cases, all
+  with the expected outcome; 0 unauthorized settlements; audit of the
+  untampered database clean; 4 of 4 database-tamper cases detected by the
+  public-key audit.
+- Observation: in two cases the minter signed and only the sink rejected
+  (settled request id; stale pre-state). The sink checks are needed.
+- Limits: a compromised database is detected by audit, not prevented.
+  The key lives in process memory of the same user. Nothing in minter.ts,
+  sink.ts or the encoding is proved. The race winner is not deterministic.
+  The decision kernel is the Dafny-generated JavaScript, which is tested,
+  not proved.
+- Impact: none on claims. end_to_end=false.
+
+## U421 — Round 2 task 4: 25 untrusted solver functions against the Dafny-compiled checker; 0 accepted overbookings; no Dafny run between versions
+- Status: 2026-11-17. Refs U410 (F3.1), U417. Research code under
+  proposals/forge2-pillar3-dual-certificate/benchmark.
+- Evidence: build_checker.py exit 0 (dafny verify 46 verified in 3.1 s;
+  dafny build --target js exit 0; module SHA-256 e705ec49...). bench.ts
+  attempt-0001 exit 0 (results/forge2-pillar3-benchmark-20261117): 46
+  instances, 25 solver functions, 2,300 checks, mean 91 microseconds; 0
+  accepted overbookings (138 infeasible proposals from the buggy
+  versions, none accepted); 0 accepts that contradict brute force; exact
+  versions accepted at zero gap on 40 of 40 interval instances; 2 of 6
+  general instances have no zero-gap certificate and are rejected at 0.
+- Limits: one run; small instances; "versions" are functions in one file;
+  the Stage 6 comparison is between different quantities (re-proving
+  changed proofs versus checking answers).
+- Impact: none on claims. end_to_end=false.
