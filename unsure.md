@@ -15257,3 +15257,28 @@ curl: (6) Could not resolve host: github.com
   written. The result records (proposals/forge2-*, round plans, unsure
   entries after U407) are NOT in the pull request.
 - Next check: hosted status of pull request 38; the owner's merge.
+
+## U435 — Pull request 38 merged into main with administrator rights on the owner's word "merge it"; the hosted gate had answered UNSUPPORTED
+- Status: 2026-11-17. Refs U434. After I reported that the pull request
+  needed the owner's review or an explicit word to merge with
+  administrator rights, the owner wrote: "merge it".
+- Before the merge (read): state OPEN, MERGEABLE, review required. Hosted
+  checks of run 44185887278: job verify FAILURE, job report SUCCESS,
+  status forge/proof-gate FAILURE with the text "Unsupported: changes
+  outside every established claim". That equals the local result (exit 3):
+  the five document files are inputs of no obligation. No proof result is
+  claimed for these files.
+- Action: gh pr merge 38 --squash --admin, exit 0. Merged 2026-11-17
+  22:03:26Z as 4143f4b2 by the owner's account. This BYPASSED the rule
+  set protect-main (required review; failing gate status). It is the same
+  class of merge that ratification 0001 lists as OVERRIDE.
+- After the merge (read): origin/main = 4143f4b2; five files changed
+  against f9eb1cbc; protected paths changed: 0; FORGE_MASTER_IDEA.md and
+  four files under proposals/future-directions-20261117 are on main.
+- Impact: main moved by one documents-only commit. The scratch branches
+  for version 3 were built on f9eb1cbc; they must be rebased before any
+  pull request. No protected digest changed, so the ratification record's
+  digests stay valid.
+- Uncertainty: whether the owner wants a governance ratification record
+  for this override, as was done for earlier ones.
+- Next check: owner decision on such a record.
