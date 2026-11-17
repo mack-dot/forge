@@ -62,6 +62,10 @@ def record_for(candidate, controls, mutate=None):
 def reduced(c): git(c, 'checkout', REDUCED, '--', *REDUCED_FILES)
 def full(c): git(c, 'checkout', FULL, '--', '.'); git(c, 'checkout', REDUCED, '--', 'evidence.json')
 def benign(c): sub(c / 'impl/Ledger.dfy', 'var debit := state.balances[request.sender] - request.amount - 1;', 'var debit := state.balances[request.sender] - (request.amount + 1);')
+def regen_evidence(c):   # main's contract: a changed implementation needs evidence.json made again by the gate
+    (c / '.toolchain').symlink_to(FORGE / '.toolchain', target_is_directory=True)
+    subprocess.run([sys.executable, 'gate/gate.py', '--impl', 'impl/Ledger.dfy', '--evidence', 'evidence.json'], cwd=c, check=True, capture_output=True)
+    (c / '.toolchain').unlink(); shutil.rmtree(c / 'build', ignore_errors=True)
 def buggy(c): shutil.copyfile(T / 'bugs/off_by_one.dfy', c / 'impl/Ledger.dfy')
 def gate_code(c): sub(c / 'gate/backends/dafny.py', "'--resource-limit', '1000000'", "'--resource-limit', '1'")
 def pins(c): sub(c / 'toolchain/pins.json', '"--verify-included-files"', '"--verify-included-files", "--no-verify"')
@@ -70,6 +74,12 @@ def more_in_ratified(c): p = c / 'gate/backends/dafny.py'; p.write_text(p.read_t
 def audit_off(c): sub(c / 'gate/backends/dafny.py', "        if audit.returncode != 0:\n", "        if False:\n")
 def policy_scope(c):
     p = c / 'policy/tiers.yaml'; d = json.loads(p.read_text()); del d['tiers']['critical']['required_claims']['C4']; p.write_text(json.dumps(d, indent=2) + '\n')
+def manifest_off(c): sub(c / 'gate/incremental.py', "def protected_manifest(root):\n    result = {}\n", "def protected_manifest(root):\n    return {}\n    result = {}\n")
+def scope_narrow(c):
+    sub(c / 'gate/backends/dafny.py', "not in (ROOT / 'impl', ROOT / 'bugs'):", "not in (ROOT / 'impl',):")
+    sub(c / 'gate/backends/dafny.py', "        if audit.returncode != 0:\n", "        if False:\n")
+def approval_record(c): (c / 'gate/approvals/extra.json').write_text('{}\n')
+def tier_false(rec): rec['tier'] = False
 def own_record(c):
     (c / 'governance/gate-ratifications').mkdir(parents=True)
     a, b = manifest(T), manifest(c)
@@ -81,7 +91,8 @@ def wrong_proposal(rec): rec['proposal_sha256'] = '0' * 64
 PRINT = ['bugs/print_effect.dfy', 'bugs/print_effect_marked.dfy']
 # name, candidate edits, trusted record: None | (reference edits or None for "the candidate itself", controls, mutate), expected exit, note
 CASES = [
-    ('positive: benign implementation edit, no protected change', [benign], None, 0, 'legitimate change'),
+    ('positive: benign implementation edit with regenerated evidence.json, no protected change', [benign, regen_evidence], None, 0, 'legitimate change'),
+    ('benign implementation edit WITHOUT regenerated evidence.json', [benign], None, 1, "main's contract (attempt-0001 expected 0 here; that expectation was wrong)"),
     ('unratified gate code edit', [gate_code], None, 1, '(a)'),
     ('unratified toolchain pins edit', [pins], None, 1, '(a)'),
     ('reduced step B with NO record on the trusted side', [reduced], None, 1, '(a)'),
@@ -94,6 +105,10 @@ CASES = [
     ('record with a wrong proposal digest', [reduced], (None, [], wrong_proposal), 1, '(c) tampered record'),
     ('RATIFIED weakened gate: audit result ignored', [audit_off], (None, [], None), 1, 'controls: a planted bug would be accepted'),
     ('RATIFIED policy edit', [policy_scope], (None, [], None), 1, 'scope'),
+    ('RATIFIED gate whose protected_manifest returns nothing', [manifest_off], (None, [], None), 1, 'review finding 1 (t3): function probe'),
+    ('RATIFIED gate that refuses bugs/ for scope and ignores the audit', [scope_narrow], (None, [], None), 1, 'review finding 1 (t6)'),
+    ('record with "tier": false', [reduced], (None, [], tier_false), 1, 'review finding 4'),
+    ('RATIFIED new file under gate/approvals/', [approval_record], (None, [], None), 1, 'review finding 5: outside Tier-0'),
     ('RATIFIED FULL step B (adds linux pins, two planted print bugs, exit_stage_5.py)', [full], (None, PRINT, None), 3, "main's coverage rule: four files are inputs of no obligation; UNSUPPORTED, not accepted"),
 ]
 (T / PROPOSAL).parent.mkdir(parents=True, exist_ok=True)
@@ -133,9 +148,15 @@ for k, (name, edits, record, want, note) in enumerate(CASES):
     (out / f'case-{k:02d}.log').write_text((run.stdout + run.stderr).replace(str(Path.home()), '<HOME>'))
     lines = [l for l in (run.stdout + run.stderr).strip().splitlines() if l.strip()]
     op = json.loads((T / work / 'operation.json').read_text()) if (T / work / 'operation.json').is_file() else {}
-    ok = run.returncode == want
+    replay = None
+    if run.returncode == 0 and record is not None:      # what gate/pr_check.py does: run the saved command, compare bytes
+        bundle = json.loads((T / (str(work) + '-evidence.json')).read_text())
+        again = subprocess.run(bundle['evidence'][0]['reproduce_cmd'].split(), cwd=T, capture_output=True, text=True)
+        replay = {'exit': again.returncode, 'byte_identical': again.returncode == 0 and
+                  (T / 'build/change-evidence.json').read_bytes() == (T / (str(work) + '-evidence.json')).read_bytes()}
+    ok = run.returncode == want and (replay is None or replay['byte_identical'])
     failed = failed or not ok
-    summary['cases'].append({'case': k, 'name': name, 'note': note, 'edits': [e.__name__ for e in edits], 'trusted_record': record is not None,
+    summary['cases'].append({'replay_of_saved_command': replay, 'case': k, 'name': name, 'note': note, 'edits': [e.__name__ for e in edits], 'trusted_record': record is not None,
                              'gate_exit': run.returncode, 'expected_gate_exit': want, 'gate_last_line': (lines[-1][:300] if lines else '').replace(str(out), '<OUT>'),
                              'ratification_controls': [(c['path'], c['exit_code']) for c in op.get('ratification_controls', [])],
                              'obligations': {k2: v.get('result') for k2, v in (op.get('obligations') or {}).items()}, 'scenario_result': 'PASS' if ok else 'FAIL'})

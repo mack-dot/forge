@@ -2,17 +2,27 @@
 
 Two exact-bytes paths exist. Both read ONLY the trusted base checkout; nothing in the candidate authorizes anything.
 1. Spec approval (unchanged): gate/approvals/*.json for spec/LedgerSpec.dfy with spec.lock.
-2. Tier-0 gate ratification: governance/gate-ratifications/*.json for files under gate/ and toolchain/. The record
-   names every changed protected file with its old and new SHA-256. A spec.lock file may be covered only when its
-   new bytes are its old bytes with the digests of ratified toolchain files replaced.
+2. Tier-0 gate ratification: governance/gate-ratifications/*.json for files under gate/ and toolchain/, except
+   gate/approvals/ and gate/provenance/. The record names every changed protected file with its old and new SHA-256.
+   A spec.lock file may be covered only when its new bytes are its old bytes with the digests of ratified toolchain
+   files replaced (one pass).
 """
+
+import re
 
 from common import Rejected, digest, read_json
 
 SPEC_PATHS = {'spec/LedgerSpec.dfy', 'spec.lock'}
 RATIFICATION_DIR = 'governance/gate-ratifications'
 RATIFIABLE_PREFIXES = ('gate/', 'toolchain/')
+# Not ratifiable at Tier 0: spec approval records and the provenance (signing) trust files.
+EXCLUDED_PREFIXES = ('gate/approvals/', 'gate/provenance/')
 CONTROL_PREFIX = 'bugs/'
+SHA256 = re.compile('[0-9a-f]{64}')
+
+
+def _ratifiable(name):
+    return name.startswith(RATIFIABLE_PREFIXES) and not name.startswith(EXCLUDED_PREFIXES)
 
 
 def _trusted_file(root, relative, label):
@@ -60,15 +70,23 @@ def _lock_rebind_only(root, candidate, name, files, trusted, proposed):
         text = old_bytes.decode('utf-8')
     except UnicodeDecodeError:
         return False
-    replaced = 0
-    for other, entry in sorted(files.items()):
-        if other.startswith('toolchain/') and entry['old_sha256'] and entry['new_sha256'] and entry['old_sha256'] in text:
-            text = text.replace(entry['old_sha256'], entry['new_sha256'])
-            replaced += 1
-    return replaced > 0 and text.encode('utf-8') == new_bytes
+    # One pass, all digests at once: a new digest is never replaced again.
+    mapping = {}
+    for other, entry in files.items():
+        if other.startswith('toolchain/') and entry['old_sha256'] and entry['new_sha256']:
+            if mapping.get(entry['old_sha256'], entry['new_sha256']) != entry['new_sha256']:
+                return False
+            mapping[entry['old_sha256']] = entry['new_sha256']
+    replaced = []
+    def swap(match):
+        if match.group(0) in mapping:
+            replaced.append(match.group(0))
+            return mapping[match.group(0)]
+        return match.group(0)
+    return SHA256.sub(swap, text).encode('utf-8') == new_bytes and bool(replaced)
 
 
-def _controls(record):
+def _controls(record, root):
     controls = record.get('controls')
     if not isinstance(controls, list):
         raise Rejected('RATIFICATION_BINDING: the trusted record has no list of controls')
@@ -78,8 +96,10 @@ def _controls(record):
         if (not isinstance(control, dict) or set(control) != {'path', 'sha256', 'expect'} or control['expect'] != 'rejected'
                 or not isinstance(path, str) or not path.startswith(CONTROL_PREFIX) or not path.endswith('.dfy')
                 or '/' in path[len(CONTROL_PREFIX):] or '..' in path or path in seen
-                or not isinstance(control['sha256'], str) or len(control['sha256']) != 64):
+                or not isinstance(control['sha256'], str) or not SHA256.fullmatch(control['sha256'])):
             raise Rejected('RATIFICATION_BINDING: malformed control in the trusted record')
+        if (root / path).exists() or (root / path).is_symlink():
+            raise Rejected('RATIFICATION_BINDING: a control may not replace a planted bug of the trusted base: ' + path)
         seen.add(path)
     return controls
 
@@ -95,7 +115,9 @@ def _gate_ratification(root, trusted, proposed, changed, candidate):
             raise Rejected('RATIFICATION_BINDING: a trusted ratification record is not a plain file: ' + path.name)
         record = read_json(path)
         files = record.get('files') if isinstance(record, dict) else None
-        if (not isinstance(files, dict) or record.get('decision') != 'ratified_as_written' or record.get('tier') != 0
+        tier = record.get('tier') if isinstance(record, dict) else None
+        if (not isinstance(files, dict) or record.get('decision') != 'ratified_as_written'
+                or not isinstance(tier, int) or isinstance(tier, bool) or tier != 0
                 or record.get('end_to_end') is not False or set(files) != set(changed)):
             continue
         if not all(isinstance(files[name], dict) and set(files[name]) == {'old_sha256', 'new_sha256'}
@@ -103,7 +125,7 @@ def _gate_ratification(root, trusted, proposed, changed, candidate):
                    and files[name]['new_sha256'] == proposed.get(name) for name in changed):
             continue
         for name in changed:
-            if not name.startswith(RATIFIABLE_PREFIXES) and not _lock_rebind_only(root, candidate, name, files, trusted, proposed):
+            if not _ratifiable(name) and not _lock_rebind_only(root, candidate, name, files, trusted, proposed):
                 raise Rejected('RATIFICATION_SCOPE: a gate ratification cannot cover ' + name)
         proposal = _trusted_file(root, record.get('proposal'), 'RATIFICATION_BINDING')
         if digest(proposal.read_bytes()) != record.get('proposal_sha256'):
@@ -112,7 +134,7 @@ def _gate_ratification(root, trusted, proposed, changed, candidate):
                 'record': path.relative_to(root).as_posix(),
                 'record_sha256': digest(path.read_bytes()),
                 'proposal_sha256': record['proposal_sha256'],
-                'files': files, 'controls': _controls(record),
+                'files': files, 'controls': _controls(record, root),
                 # Same shape as a spec approval, for the code that treats approved files as verified inputs.
                 'base_inputs': {name: files[name]['old_sha256'] for name in changed if files[name]['old_sha256']},
                 'approved_inputs': {name: files[name]['new_sha256'] for name in changed if files[name]['new_sha256']}}

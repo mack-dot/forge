@@ -77,6 +77,11 @@ def schema(c): p = c / 'schemas/evidence.schema.json'; p.write_text(p.read_text(
 def policy_scope(c):
     p = c / 'policy/tiers.yaml'; d = json.loads(p.read_text()); del d['tiers']['critical']['required_claims']['C4']; p.write_text(json.dumps(d, indent=2) + '\n')
 def audit_off(c): sub(c / 'gate/backends/dafny.py', "        if audit.returncode != 0:\n", "        if False:\n")
+def manifest_off(c): sub(c / 'gate/incremental.py', "def protected_manifest(root):\n    result = {}\n", "def protected_manifest(root):\n    return {}\n    result = {}\n")
+def scope_narrow(c):    # review case t6: bugs/ is refused for scope, and the audit result is ignored
+    sub(c / 'gate/backends/dafny.py', "not in (ROOT / 'impl', ROOT / 'bugs'):", "not in (ROOT / 'impl',):")
+    sub(c / 'gate/backends/dafny.py', "        if audit.returncode != 0:\n", "        if False:\n")
+def approval_record(c): (c / 'gate/approvals/extra.json').write_text('{}\n')
 def step_b(c): subprocess.run([sys.executable, '-I', '-B', str(HERE.parent / 'v2/build_v2.py'), str(c)], check=True, capture_output=True)
 def extra_comment_in_ratified_file(c): p = c / 'gate/backends/dafny.py'; p.write_text(p.read_text() + '\n# one more line\n')
 def lock_other_field(c): sub(c / 'spec/refund/spec.lock', '"dafny_version": "4.11.0"', '"dafny_version": "4.11.1"')
@@ -92,6 +97,8 @@ PRINT_BUGS = ['bugs/print_effect.dfy', 'bugs/print_effect_marked.dfy']
 def wrong_digest(rec): rec['files']['gate/backends/dafny.py']['new_sha256'] = '0' * 64
 def wrong_proposal(rec): rec['proposal_sha256'] = '0' * 64
 def not_tier0(rec): rec['tier'] = 1
+def tier_false(rec): rec['tier'] = False
+def control_replaces_trusted_bug(rec): rec['controls'].append({'path': 'bugs/off_by_one.dfy', 'sha256': sha((T / 'bugs/off_by_one.dfy').read_bytes()), 'expect': 'rejected'})
 def control_outside_bugs(rec): rec['controls'].append({'path': 'impl/Ledger.dfy', 'sha256': '0' * 64, 'expect': 'rejected'})
 
 # name, candidate edits, trusted-side record (None | (controls, mutate)), expected gate exit, note
@@ -112,6 +119,11 @@ CASES = [
     ('record with a control outside bugs/', [step_b], (PRINT_BUGS, control_outside_bugs), 1, 'malformed record fails closed'),
     ('RATIFIED weakened gate: resource limit 1 (record matches exactly)', [gate_code], ([], None), 1, 'non-weakening controls: baseline no longer accepted'),
     ('RATIFIED weakened gate: audit result ignored (record matches exactly)', [audit_off], ([], None), 1, 'non-weakening controls: a planted bug would be accepted'),
+    ('RATIFIED gate whose protected_manifest returns nothing (record matches exactly)', [manifest_off], ([], None), 1, 'review finding 1 (t3): function probe'),
+    ('RATIFIED gate that refuses bugs/ for scope and ignores the audit (record matches exactly)', [scope_narrow], ([], None), 1, 'review finding 1 (t6): rejection reason must be a proof or audit result'),
+    ('record whose control replaces a trusted planted bug', [step_b], (PRINT_BUGS, control_replaces_trusted_bug), 1, 'review finding 1 (t4)'),
+    ('record with "tier": false', [step_b], (PRINT_BUGS, tier_false), 1, 'review finding 4'),
+    ('RATIFIED new file under gate/approvals/ (record matches exactly)', [approval_record], ([], None), 1, 'review finding 5: outside Tier-0'),
     ('RATIFIED policy edit (record matches exactly)', [policy_scope], ([], None), 1, 'scope: Tier-0 covers gate/ and toolchain/ only'),
     ('RATIFIED step B + another field changed in spec/refund/spec.lock (record matches exactly)', [step_b, lock_other_field], (PRINT_BUGS, None), 1, 'scope: a lock may only be re-bound'),
 ]
@@ -141,9 +153,15 @@ for k, (name, edits, record, want, note) in enumerate(CASES):
     lines = [l for l in (run.stdout + run.stderr).strip().splitlines() if l.strip()]
     op = json.loads((T / work / 'operation.json').read_text()) if (T / work / 'operation.json').is_file() else {}
     controls_run = [(c['path'], c['exit_code']) for c in op.get('ratification_controls', [])]
-    ok = run.returncode == want
+    replay = None
+    if run.returncode == 0 and record is not None:      # what gate/pr_check.py does: run the saved command, compare bytes
+        bundle = json.loads((T / (str(work) + '-evidence.json')).read_text())
+        again = subprocess.run(bundle['evidence'][0]['reproduce_cmd'].split(), cwd=T, capture_output=True, text=True)
+        replay = {'exit': again.returncode, 'byte_identical': again.returncode == 0 and
+                  (T / 'build/change-evidence.json').read_bytes() == (T / (str(work) + '-evidence.json')).read_bytes()}
+    ok = run.returncode == want and (replay is None or replay['byte_identical'])
     failed = failed or not ok
-    summary['cases'].append({'case': k, 'name': name, 'note': note, 'edits': [e.__name__ for e in edits], 'trusted_record': record is not None,
+    summary['cases'].append({'replay_of_saved_command': replay, 'case': k, 'name': name, 'note': note, 'edits': [e.__name__ for e in edits], 'trusted_record': record is not None,
                              'gate_exit': run.returncode, 'expected_gate_exit': want, 'gate_last_line': (lines[-1][:260] if lines else ''),
                              'ratification_controls': controls_run, 'scenario_result': 'PASS' if ok else 'FAIL'})
     shutil.rmtree(cand)

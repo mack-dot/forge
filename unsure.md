@@ -15153,3 +15153,79 @@ curl: (6) Could not resolve host: github.com
   any merge.
 - Next check: fresh Stage 6 result; Stage 7 result; owner decisions in
   REPORT-V3.md section 8.
+
+## U433 — Round 4 opened ("go go go"); fresh Stage 6 run passes with version 3; the backup branch is NOT main's gate; independent review found defects in my ratification code; refusal breakdown corrects a wrong readout
+- Status: 2026-11-17. Refs U430, U431, U432. Owner text saved verbatim:
+  proposals/round4-20261117/OWNER_ROUND4_TEXT.md (its first part is a
+  readout by another assistant). Decisions used: W2 at 307,402 accepted
+  as complete; trusted-base lookup approved; no hosted signing from this
+  session, Stage 9 recorded as deferred; apply version 3 on a dedicated
+  PR branch when all locally runnable checks pass; breakdown of the 299
+  refusals; one more M1 window of 14,400 s after Stage 6 and 7.
+- Corrections to the readout (stated to the owner): Pillar II and III are
+  not "fully proved" (only the Dafny core and checker are proved, source
+  level); two wrong cores were rejected, not four; the ratification
+  record is not signed.
+- Fresh Stage 6 run in the version 3 worktree (backup-branch gate):
+  benchmark_reuse.py exit 0 (75 pairs, 1,060 s); check_stage_6.py
+  (restored unchanged from commit 8159a79d) exit 0; post-run identity
+  check exit 0 (450 files); exit_stage_6.py --case report exit 0 twice,
+  report byte-identical. The old records were copied unchanged first
+  (file by file equal to HEAD). Solver resource counts are EQUAL to the
+  old run (342,198,540 cold and shared; 224,568,970 with the dependency
+  graph); 510 reused members as before. Wall time is 13 to 28 percent
+  higher; the machine was under load (HOL build, Docker, other sessions).
+  The benchmark's own commands do not use --track-print-effects; only the
+  booking source evidence does. So this run gives NO measure of the cost
+  of that option. accounting.json was not made again: it is the authoring
+  record of the first run.
+- FINDING, lineage: the backup branch descends from main, but its snapshot
+  commit 77a31eba removed main's Stage 11 gate files (gate/obligations.py,
+  gate/coverage.py, scripts/exit_stage_11.py) and changed
+  gate/incremental.py by about 150 lines. So every gate measurement of
+  Rounds 2 and 3 before this entry is about the OLDER LOCAL gate, not
+  about main's gate. A pull request against main must be built on main's
+  files. Earlier statements of mine "the existing PR gate" (U422, U432)
+  must be read as "the local gate".
+- Main's gate, first results (step A ported in a worktree at origin/main;
+  local profile): unchanged candidate exit 0; unratified edits exit 1;
+  ratified change reduced to the files that main's obligations list, with
+  regenerated evidence.json: exit 0 VERIFIED, six obligations
+  re-established with the ratified gate bytes; ratified FULL step B: exit
+  3 UNSUPPORTED, because toolchain/linux-pins.json, the two planted print
+  bugs and scripts/exit_stage_5.py are inputs of no obligation. I did not
+  waive main's coverage rule. First attempt of the control set had one
+  wrong EXPECTATION of mine (a benign implementation edit without
+  regenerated evidence.json is rejected by main's contract); corrected in
+  attempt 2 (15 cases, scenario exit 0, 0 evasions).
+- Independent review (a fresh agent, 55 tool calls, on the backup-lineage
+  code): CONFIRMED (1) the controls were too weak: a ratified gate whose
+  protected_manifest returns nothing, a record whose control replaces a
+  trusted planted bug, and a gate that refuses bugs/ for scope each
+  passed with exit 0 (all need an owner-written record for those bytes);
+  (2) the saved replay command failed for a record with controls, so
+  gate/pr_check.py would have ended with an error; (3) the spec.lock
+  re-bind used chained replacement; (4) "tier": false was accepted.
+  PLAUSIBLE (5) Tier-0 covered gate/approvals/ and gate/provenance/;
+  (6) pre-existing: protected_manifest skips .pyc files. Held: a record
+  in the candidate is not read; exact-digest binding; no error path to
+  exit 0.
+- Fixes (proposal files only): rejection reason must be a proof or audit
+  result; a probe runs the ratified protected_manifest and authorize; a
+  control may not replace a trusted planted bug; one-pass re-bind; tier
+  must be the integer 0; gate/approvals/ and gate/provenance/ excluded;
+  control files saved in the replay input (backup lineage). The module
+  text now says "floor controls": they do not prove that a gate is not
+  weaker. (6) is not fixed: it is outside this proposal.
+- Refusal breakdown (analyze_refusals.ts exit 0): of 299 optimal
+  proposals refused at gap 0, 239 are on interval batches and 60 on
+  general ones; 261 are refusals of a proposal whose own dual values were
+  too weak while another solver got a zero-gap certificate for the same
+  batch; 38 are on the 2 of 6 general batches for which no solver found
+  one. Exact solvers on interval batches: 400 of 400 accepted. The
+  readout's reason ("all on batches without integer duals") is false.
+- Uncertainty: the fixed code was reviewed only by me after the fixes. The
+  review covered the backup lineage, not the port to main. The linux
+  profile and gate/pr_check.py are not run.
+- Next check: control sets with the fixed code on both lineages; stage
+  EXIT cases and a fresh Stage 6 run on main's lineage; Stage 7; M1.

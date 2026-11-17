@@ -34,7 +34,7 @@ if 'a' in steps:
             '    approval = authorize(ROOT, trusted_before, proposed_before, candidate)\n'
             "    ratification = approval if approval and approval.get('kind') == 'gate_ratification' else None\n"
             '    if ratification:\n'
-            "        operation['ratification_controls'] = run_controls(ROOT, candidate, ratification, work)\n"
+            "        operation['ratification_controls'] = run_controls(ROOT, candidate, ratification, work, protected_manifest)\n"
             "        operation['gate_ratification'] = ratification\n"
             '    inventory = coverage.inventories(ROOT, candidate)\n'
             "    operation['spec_approval'] = None if ratification else approval\n")
@@ -45,7 +45,22 @@ if 'a' in steps:
             '    approval = authorize(ROOT, trusted_before, proposed_before, candidate)\n'
             "    ratification = approval if approval and approval.get('kind') == 'gate_ratification' else None\n"
             '    if ratification:\n'
-            "        operation['ratification_controls'] = run_controls(ROOT, candidate, ratification, work)\n")
+            "        operation['ratification_controls'] = run_controls(ROOT, candidate, ratification, work, protected_manifest)\n")
+        # Replay input (review finding 2): the control files that the record names are saved with the protected files.
+        sub('gate/incremental.py', 'def reproduction_input(baseline, proposed, protected, candidate):\n    identity = digest(canonical({\n',
+            'def reproduction_input(baseline, proposed, protected, candidate, controls=()):\n    identity = digest(canonical({\n'
+            "        **({'controls': sorted((c['path'], c['sha256']) for c in controls)} if controls else {}),\n")
+        sub('gate/incremental.py', '            for name, content in proposed.items():\n                target = staged / name\n',
+            '            for control in controls:\n'
+            "                content = (candidate / control['path']).read_bytes()\n"
+            "                if digest(content) != control['sha256']:\n"
+            "                    raise Rejected('INPUT_CHANGED: control file changed before reproduction capture')\n"
+            "                target = staged / control['path']\n"
+            '                target.parent.mkdir(parents=True, exist_ok=True)\n'
+            '                target.write_bytes(content)\n'
+            '            for name, content in proposed.items():\n                target = staged / name\n')
+        sub('gate/incremental.py', 'reproduction_input(baseline, proposed, proposed_before, candidate)',
+            "reproduction_input(baseline, proposed, proposed_before, candidate, ratification['controls'] if ratification else ())")
         sub('gate/incremental.py', "[Path(__file__).resolve(), ROOT / 'gate/approval.py']",
             "[Path(__file__).resolve(), ROOT / 'gate/approval.py', ROOT / 'gate/ratification.py']")
     sub('gate/incremental.py', "        'spec_approval': approval,\n",
