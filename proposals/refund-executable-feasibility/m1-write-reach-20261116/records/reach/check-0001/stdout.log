@@ -1,0 +1,36 @@
+<<HOL message: Created theory "forge_refundWriteReachCheck">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWriteReachCheck)>>
+Saved theorem _______ "constructed_model_run_has_write_event"
+CHECKED constructed_model_run_has_write_event
+⊢ ∃mc dm ffi ms k r ms' ffi'.
+    refund_static mc dm ∧ ffi.io_events = [] ∧ ms.PC = 0x100004090w ∧
+    evaluate mc ffi k ms = (r,ms',ffi') ∧ EXISTS write_event ffi'.io_events
+WITNESS_OK
+IMPORTED forge_refundWriteReach.write_event_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.refund_event_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.evaluate_trace_events EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.terminating_trace_with_write_event_reaches_write_call EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.replay_without_write_event_keeps_inodes EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.nonempty_output_needs_write_event EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.run_with_output_reaches_write_call EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.no_step_no_event EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.ffi_write_wrong_clen_is_a_silent_failure EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.replay_ignores_wrong_clen_write_event EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED_COUNT 10
+STORED_THEOREMS forge_refundWriteReach 27 AXIOMS 0
+CONTROL_OK both refund theorems keep as premises: installed state, refund_static, a run that terminates with Success, non-empty output
+CONTROL_OK no theorem asserts a reachable call state unconditionally; every machine_reach conclusion is under an implication
+CONTROL_OK in the trace theorem the call state is asserted only under EXISTS write_event on the appended events (absent or unrelated events give nothing)
+CONTROL_OK ffiwrite_call_pre and write_call_rel occur only in the composition theorem, and only as premises: clen = 8, the buffer bound and the separations are NOT derived
+CONTROL_OK no theorem concludes clen = 8; no theorem states source-level semantics (no source-level reachability claim)
+CONTROL_OK cake_ffiwrite_path_returns (U398) is loaded with its premise unchanged
+CLOSURE_NODES 535
+CLOSURE_HAS_COMPILE_CORRECT_CONTROL true
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundWriteReachCheck" ... done.
+Theory "forge_refundWriteReachCheck" took 8.7s to build
+AFTER_POSITIVE_AUDIT
+P3_IMPORT_COMPLETE

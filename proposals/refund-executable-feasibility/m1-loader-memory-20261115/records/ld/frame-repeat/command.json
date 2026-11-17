@@ -1,0 +1,38 @@
+{
+ "case": "frame-repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/frame-repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "frame-0001.sml",
+ "source_sha256": "199b5dbb4738707bfe6ae3bb7de419b5f729384dfc1af938a8f9b7904c5f0f43",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 14.492,
+ "child_user_cpu_seconds": 14.544,
+ "child_system_cpu_seconds": 1.182,
+ "child_max_rss_bytes": 877133824,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "88d84f821325e63cb78d4ab284e2e6a81b1e2d17fc0c020d529b94b8bd8f6fe9",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundCmlMainFrameTheory.html": "d7d1f071b64ff24a991f001d4b2e516f6d21437c8e870fa762b9fd419d92df21",
+  ".hol/objs/forge_refundCmlMainFrameTheory.dat": "6093a70b84e325c50c95c4c230fcd25b494333ffc38fc048a632e046f36faee0",
+  ".hol/objs/forge_refundCmlMainFrameTheory.sig": "5ea7a93e28f1b01fa2db9499c4593f4c386a23616b22812da5dfc621fe342417",
+  ".hol/objs/forge_refundCmlMainFrameTheory.sml": "6c261267aae60cff43f6af2958bcf2ea779804a420b970272313257238699c35"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

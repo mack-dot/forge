@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_refundFficloseStep">>
+CODE_BYTES 84
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0001/proof.sml:37: error: Type mismatch between then-part and else-part.
+   Then: (SOME tm, Arbnum.zero) : term option * num
+   Else:
+      let val (x, y) = wordsSyntax.dest_word_add tm in
+         if is_var x andalso null (free_vars y) then
+         (SOME x, wordsSyntax.uint_of_word y) else
+         raise ... ... "base_off" "form" end : term option * int
+   Reason:
+      Can't unify num (*Created from opaque signature*) with int (*In Basis*)
+         (Different type constructors)
+Found near
+  if is_var tm then (SOME tm, Arbnum.zero) else
+  let val (x, ...) = wordsSyntax.dest_word_add tm in
+     if is_var x andalso null (... ...) then (SOME x, ... ...) else
+     raise ... ... "form" end

@@ -1,0 +1,50 @@
+{
+ "case": "statement-repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/preload-heavy.sml",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/forge_refundLabClosureTheory.sig",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/forge_refundLabClosureTheory.sml",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/forge_targetInstallPrefixTheory.sig",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/forge_targetInstallPrefixTheory.sml",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/statement-repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "statement-0002.sml",
+ "source_sha256": "934c6ba10319e69edb773abfdd9ddcc558b98e29c67fdeffdc904648c4b08f19",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/preload-heavy.sml": "313c70c45cbd82a977e92b2e1b904f2e19724d4f30cd8c3e3a3fab4f53f7d045",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/.hol/objs/forge_refundLabClosureTheory.sig": "69c3ea6410de90eb14445010cf7f3284a2e6c818df4a6e575e51ec527024a2e6",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/.hol/objs/forge_refundLabClosureTheory.sml": "f337b84fa4520a6fde84aeff9432e418a10a0b0471ab4c48e2a71ffff6ffae48",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.sig": "b05e2b1177e0cdaec641be9e47d0e3563d13fd5092f2584f5bd3f3f7c5c533c5",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.sml": "9a23fbd4db536f7fcc8417ded8ecc5530cb07018e2e278edc2e1b14327572d94"
+ },
+ "resource_guard": {
+  "memory_free_percent": 47,
+  "disk_free_gib": 37.7,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 39.013,
+ "child_user_cpu_seconds": 47.582,
+ "child_max_rss_bytes": 2765422592,
+ "markers": [
+  "P3_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "6df0912cf4e5811bb9abab9aa9181542a19e6d8332d179bbace70b3a7fee6403",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundAllocBackendTheory.dat": "d11421aaa82b82b6f1f546893187a328fb89c165b8141e95cb7d9388ad177ccf",
+  ".hol/objs/forge_refundAllocBackendTheory.sig": "f9c436b0f089d42145cd91be3db795f8324e249a8a40aa3c92af032f13370c9c",
+  ".hol/objs/forge_refundAllocBackendTheory.sml": "7f8483a706e4340df41a518989e35c5659aa0bb2aeb7018ffd5a8785737c9dba"
+ },
+ "inputs_unchanged_after": true
+}

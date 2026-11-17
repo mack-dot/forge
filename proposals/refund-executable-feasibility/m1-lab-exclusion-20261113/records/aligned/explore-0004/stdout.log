@@ -1,0 +1,46 @@
+<<HOL message: Created theory "forge_alignedExplore">>
+Saved definition ____ "mval_inv_def"
+Saved definition ____ "load_covered_def"
+Saved definition ____ "region_inv2_def"
+OK..
+1 subgoal:
+STAGE_OK inst/all
+OK..
+6 subgoals:
+STAGE_OK inst/m1
+OK..
+
+Goal proved.
+ [....] ⊢ ∀r. G (if n = r then s.mem x else read_reg r s)
+
+Remaining subgoals:
+STAGE_OK inst/m2
+OK..
+
+Goal proved.
+ [.......] ⊢ ∀r. G (if n = r then Word (w2w x') else read_reg r s)
+
+Remaining subgoals:
+STAGE_OK inst/m3
+LEMMA_OPEN inst
+AFTER inst end: 4 goals, proved=false
+  ASM ¬s.failed
+  ASM mem_load_32 s.mem s.mem_domain s.be x = SOME x'
+  ASM addr a s = SOME x
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL ∀r. G (if n = r then Word (w2w x') else read_reg r s)
+----
+  ASM ¬s.failed
+  ASM x ∈ s.mem_domain
+  ASM w2n x MOD (dimindex (:α) DIV 8) = 0
+  ASM addr a s = SOME x
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL ∀a'. D a' ⇒ G (if x = a' then read_reg n s else s.mem a')
+----
+EXPLORE_COMPLETE

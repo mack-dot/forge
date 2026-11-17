@@ -1,0 +1,239 @@
+<<HOL message: Created theory "forge_p1Explore">>
+Saved definition ____ "forge8_config_def"
+Saved theorem _______ "inst_select_exp_forge8_def"
+Saved theorem _______ "inst_select_forge8_def"
+Saved theorem _______ "get_forced_forge8_def"
+Saved theorem _______ "comp_forge8_def"
+Saved theorem _______ "compile_prog_forge8_def"
+Saved theorem _______ "compile_word_to_stack_forge8_def"
+Saved theorem _______ "word_alloc_inlogic_forge8_def"
+Saved theorem _______ "each_inlogic_forge8_def"
+Saved theorem _______ "word_to_word_inlogic_forge8_def"
+LINK ⊢ word_to_word_inlogic forge8_config = word_to_word_inlogic_forge8
+LINK ⊢ each_inlogic forge8_config = each_inlogic_forge8
+LINK ⊢ word_alloc_inlogic forge8_config = word_alloc_inlogic_forge8
+LINK ⊢ compile_word_to_stack forge8_config = compile_word_to_stack_forge8
+LINK ⊢ compile_prog forge8_config = compile_prog_forge8
+LINK ⊢ comp forge8_config = comp_forge8
+LINK ⊢ get_forced forge8_config = get_forced_forge8
+LINK ⊢ inst_select bits forge8_config = inst_select_forge8 bits
+LINK ⊢ inst_select_exp bits forge8_config = inst_select_exp_forge8 bits
+Starting translation of comp_forge8 from forge_p1ExploreTheory.
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_p1Explore)>>
+Saved definition ____ "cv_comp_forge8_def"
+Saved induction _____ "cv_comp_forge8_ind"
+Saved theorem _______ "comp_forge8_pre_rules"
+Saved theorem _______ "comp_forge8_pre_ind"
+Saved theorem _______ "comp_forge8_pre_strongind"
+Saved theorem _______ "comp_forge8_pre_cases"
+Saved theorem _______ "cv_comp_forge8_thm"
+Finished translating comp_forge8, stored in cv_comp_forge8_thm
+
+WARNING: definition of cv_comp_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem comp_forge8_pre[cv_pre]:
+  ∀perf v bs kf. comp_forge8_pre perf v bs kf
+Proof
+  ho_match_mp_tac comp_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "comp_forge8_pre"
+Starting translation of compile_prog_forge8 from forge_p1ExploreTheory.
+Saved theorem _______ "cv_compile_prog_forge8_thm"
+Finished translating compile_prog_forge8, stored in cv_compile_prog_forge8_thm
+Starting translation of compile_word_to_stack_forge8 from forge_p1ExploreTheory.
+Saved definition ____ "cv_compile_word_to_stack_forge8_def"
+Saved induction _____ "cv_compile_word_to_stack_forge8_ind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_rules"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_ind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_strongind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_cases"
+Saved theorem _______ "cv_compile_word_to_stack_forge8_thm"
+Finished translating compile_word_to_stack_forge8, stored in cv_compile_word_to_stack_forge8_thm
+
+WARNING: definition of cv_compile_word_to_stack_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem compile_word_to_stack_forge8_pre[cv_pre]:
+  ∀perf k v bitmaps. compile_word_to_stack_forge8_pre perf k v bitmaps
+Proof
+  ho_match_mp_tac compile_word_to_stack_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "compile_word_to_stack_forge8_pre"
+Saved definition ____ "cv_get_forced_forge8_def"
+Saved induction _____ "cv_get_forced_forge8_ind"
+Saved theorem _______ "get_forced_forge8_pre_rules"
+Saved theorem _______ "get_forced_forge8_pre_ind"
+Saved theorem _______ "get_forced_forge8_pre_strongind"
+Saved theorem _______ "get_forced_forge8_pre_cases"
+Saved theorem _______ "cv_get_forced_forge8_thm"
+Finished translating get_forced_forge8, stored in cv_get_forced_forge8_thm
+
+WARNING: definition of cv_get_forced_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem get_forced_forge8_pre[cv_pre]:
+  ∀v acc. get_forced_forge8_pre v acc
+Proof
+  ho_match_mp_tac get_forced_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "get_forced_forge8_pre"
+Saved theorem _______ "cv_word_alloc_inlogic_forge8_thm"
+Finished translating word_alloc_inlogic_forge8, stored in cv_word_alloc_inlogic_forge8_thm
+Saved definition ____ "cv_inst_select_exp_forge8_def"
+Saved induction _____ "cv_inst_select_exp_forge8_ind"
+Saved theorem _______ "inst_select_exp_forge8_pre_rules"
+Saved theorem _______ "inst_select_exp_forge8_pre_ind"
+Saved theorem _______ "inst_select_exp_forge8_pre_strongind"
+Saved theorem _______ "inst_select_exp_forge8_pre_cases"
+Saved theorem _______ "cv_inst_select_exp_forge8_thm"
+Finished translating inst_select_exp_forge8, stored in cv_inst_select_exp_forge8_thm
+
+WARNING: definition of cv_inst_select_exp_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem inst_select_exp_forge8_pre[cv_pre]:
+  ∀bits tar temp v. inst_select_exp_forge8_pre bits tar temp v
+Proof
+  ho_match_mp_tac inst_select_exp_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "inst_select_exp_forge8_pre"
+Saved definition ____ "cv_inst_select_forge8_def"
+Saved induction _____ "cv_inst_select_forge8_ind"
+Saved theorem _______ "inst_select_forge8_pre_rules"
+Saved theorem _______ "inst_select_forge8_pre_ind"
+Saved theorem _______ "inst_select_forge8_pre_strongind"
+Saved theorem _______ "inst_select_forge8_pre_cases"
+Saved theorem _______ "cv_inst_select_forge8_thm"
+Finished translating inst_select_forge8, stored in cv_inst_select_forge8_thm
+
+WARNING: definition of cv_inst_select_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem inst_select_forge8_pre[cv_pre]:
+  ∀bits temp v. inst_select_forge8_pre bits temp v
+Proof
+  ho_match_mp_tac inst_select_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "inst_select_forge8_pre"
+Saved definition ____ "cv_each_inlogic_forge8_def"
+Saved induction _____ "cv_each_inlogic_forge8_ind"
+Saved theorem _______ "each_inlogic_forge8_pre_rules"
+Saved theorem _______ "each_inlogic_forge8_pre_ind"
+Saved theorem _______ "each_inlogic_forge8_pre_strongind"
+Saved theorem _______ "each_inlogic_forge8_pre_cases"
+Saved theorem _______ "cv_each_inlogic_forge8_thm"
+Finished translating each_inlogic_forge8, stored in cv_each_inlogic_forge8_thm
+
+WARNING: definition of cv_each_inlogic_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem each_inlogic_forge8_pre[cv_pre]:
+  ∀v. each_inlogic_forge8_pre v
+Proof
+  ho_match_mp_tac each_inlogic_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "each_inlogic_forge8_pre"
+Saved theorem _______ "cv_word_to_word_inlogic_forge8_thm"
+Finished translating word_to_word_inlogic_forge8, stored in cv_word_to_word_inlogic_forge8_thm
+Saved definition ____ "lab_forge8_def"
+W2W_INLOGIC_PROVED
+Starting translation of lab_forge8 from forge_p1ExploreTheory.
+Saved theorem _______ "cv_lab_forge8_thm"
+Finished translating lab_forge8, stored in cv_lab_forge8_thm
+LAB_F8_TRANSLATED
+OK..
+1 subgoal:
+AFTER l1: 1 goals, proved=false
+  ASM compile_word_to_stack_forge8 c0.stack_conf.perf_calls 24 wp
+  (if c0.stack_conf.perf_calls then (List [16],1) else (List [4],1)) =
+(progs,fs,bitmaps)
+  ASM word_to_word_inlogic_forge8 c0.word_to_word_conf p0 = SOME (col,wp)
+  ASM to_word_0 arm8_config c p = (c0,p0)
+  GOAL SND (SND (to_lab arm8_config c p)) =
+compile (arch_wordsize ARMv8) c0.stack_conf c0.data_conf
+  (2 * max_heap_limit 64 c0.data_conf − 1) 26 (-4351,4350)
+  ((raise_stub_location,raise_stub c0.stack_conf.perf_calls 24,
+    Metadata «_Raise» [Stub])::
+     (store_consts_stub_location,store_consts_stub 24,
+      Metadata «_StoreConsts» [Stub])::progs)
+----
+OK..
+1 subgoal:
+AFTER l2: 1 goals, proved=false
+  ASM compile_word_to_stack arm8_config c0.stack_conf.perf_calls 24 wp
+  (if c0.stack_conf.perf_calls then (List [16],1) else (List [4],1)) =
+(progs,fs,bitmaps)
+  ASM word_to_word_inlogic arm8_config c0.word_to_word_conf p0 = SOME (col,wp)
+  ASM to_word_0 arm8_config c p = (c0,p0)
+  GOAL SND (SND (to_lab arm8_config c p)) =
+compile (arch_wordsize ARMv8) c0.stack_conf c0.data_conf
+  (2 * max_heap_limit 64 c0.data_conf − 1) 26 (-4351,4350)
+  ((raise_stub_location,raise_stub c0.stack_conf.perf_calls 24,
+    Metadata «_Raise» [Stub])::
+     (store_consts_stub_location,store_consts_stub 24,
+      Metadata «_StoreConsts» [Stub])::progs)
+----
+OK..
+1 subgoal:
+AFTER l3: 1 goals, proved=false
+  ASM compile c0.word_to_word_conf arm8_config p0 = (col,wp)
+  ASM c0.word_to_word_conf = c0.word_to_word_conf
+  ASM compile_word_to_stack arm8_config c0.stack_conf.perf_calls 24 wp
+  (if c0.stack_conf.perf_calls then (List [16],1) else (List [4],1)) =
+(progs,fs,bitmaps)
+  ASM word_to_word_inlogic arm8_config c0.word_to_word_conf p0 = SOME (col,wp)
+  ASM to_word_0 arm8_config c p = (c0,p0)
+  GOAL SND (SND (to_lab arm8_config c p)) =
+compile (arch_wordsize ARMv8) c0.stack_conf c0.data_conf
+  (2 * max_heap_limit 64 c0.data_conf − 1) 26 (-4351,4350)
+  ((raise_stub_location,raise_stub c0.stack_conf.perf_calls 24,
+    Metadata «_Raise» [Stub])::
+     (store_consts_stub_location,store_consts_stub 24,
+      Metadata «_StoreConsts» [Stub])::progs)
+----
+OK..
+1 subgoal:
+AFTER l4: 1 goals, proved=false
+  ASM compile_word_to_stack arm8_config c0.stack_conf.perf_calls
+  (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5)) wp
+  (if c0.stack_conf.perf_calls then (List [16],1) else (List [4],1)) =
+(progs',fs'',bitmaps')
+  ASM compile c0.word_to_word_conf arm8_config p0 = (col,wp)
+  ASM compile_word_to_stack arm8_config c0.stack_conf.perf_calls 24 wp
+  (if c0.stack_conf.perf_calls then (List [16],1) else (List [4],1)) =
+(progs,fs,bitmaps)
+  ASM word_to_word_inlogic arm8_config c0.word_to_word_conf p0 = SOME (col,wp)
+  ASM to_word_0 arm8_config c p = (c0,p0)
+  GOAL compile (arch_wordsize arm8_config.ISA) c0.stack_conf c0.data_conf
+  (2 * max_heap_limit (isa_bits arm8_config) c0.data_conf − 1)
+  (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 3))
+  arm8_config.addr_offset
+  ((raise_stub_location,
+    raise_stub c0.stack_conf.perf_calls
+      (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5)),
+    Metadata «_Raise» [Stub])::
+     (store_consts_stub_location,
+      store_consts_stub
+        (arm8_config.reg_count − (LENGTH arm8_config.avoid_regs + 5)),
+      Metadata «_StoreConsts» [Stub])::progs') =
+compile (arch_wordsize ARMv8) c0.stack_conf c0.data_conf
+  (2 * max_heap_limit 64 c0.data_conf − 1) 26 (-4351,4350)
+  ((raise_stub_location,raise_stub c0.stack_conf.perf_calls 24,
+    Metadata «_Raise» [Stub])::
+     (store_consts_stub_location,store_consts_stub 24,
+      Metadata «_StoreConsts» [Stub])::progs)
+----
+OK..

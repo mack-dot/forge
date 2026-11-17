@@ -1,0 +1,62 @@
+[
+ {
+  "case": "site-0001",
+  "actual_exit": 0,
+  "wall_seconds": 112.28,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "exit 0: definitions, reachability lemma, normal-step inclusion; superseded"
+ },
+ {
+  "case": "site-0002",
+  "actual_exit": 1,
+  "wall_seconds": 134.028,
+  "markers": [],
+  "kind": "authoring (type of the oracle state; one lemma)"
+ },
+ {
+  "case": "site-0003",
+  "actual_exit": 1,
+  "wall_seconds": 88.1,
+  "markers": [],
+  "kind": "authoring (assembly of the main theorem)"
+ },
+ {
+  "case": "site-0004",
+  "actual_exit": 0,
+  "wall_seconds": 115.52,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "exit 0: main call-site theorem checked; superseded"
+ },
+ {
+  "case": "site-0005",
+  "actual_exit": 0,
+  "wall_seconds": 221.146,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: call-site theorem, model instance, composition with cake_fficlose_path, controls"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 156.573,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 133 statements (131 exact, 2 identical to published), structural checks, 526 closure nodes, controls"
+ },
+ {
+  "case": "site-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 111.391,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

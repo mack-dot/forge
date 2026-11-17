@@ -1,0 +1,198 @@
+IMPORTED forge_compileCorrectControl.compile_correct' IDENTICAL_TO_PUBLISHED true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_compileCorrectLabFacts.compile_correct_from_guard IDENTICAL_TO_PUBLISHED true
+IMPORTED forge_compileCorrectLabFacts.compile_correct_lab_facts EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_compileCorrectLabFacts.lab_facts_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_compileCorrectLabFacts.lab_guard_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionSource.refund_install_exclusion_source EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionSource.refund_u298_exclusion_source_any_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionReal.refund_u298_exclusion_real EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionReal.refund_compile_correct_no_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+CONTROL_OK refund_installed_no_handler has no install_interfer_ok, installed or good_init_state constant
+CONTROL_OK published good_init_state does contain install_interfer_ok
+CONTROL_OK weak predicate names the stored code and data constants
+DEFINITION ⊢ ∀mc0 ms cbspace data_sp.
+    refund_installed_no_handler mc0 ms cbspace data_sp ⇔
+    ∃t m bitmap_ptr bitmaps_dm sdm.
+      (let
+         heap_stack_dm = {w | t.regs 1 ≤₊ w ∧ w <₊ t.regs 3}
+       in
+         (target_state_rel mc0.target t ms ∧ target_configured t mc0 ∧
+          t.pc = mc0.target.get_pc ms ∧ start_pc_ok mc0 t.pc ∧
+          n2w (2 ** t.align − 1) && t.pc = 0w ∧
+          interference_ok mc0.next_interfer
+            (mc0.target.proj mc0.prog_addresses) ∧ ffi_interfer_ok t.pc mc0 ∧
+          T ∧ code_loaded code mc0 ms ∧
+          bytes_in_mem t.pc code t.mem t.mem_domain
+            (heap_stack_dm ∪ bitmaps_dm) ∧
+          heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+          (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+               a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc0.shared_addresses ∧
+          (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+          DISJOINT mc0.prog_addresses mc0.shared_addresses ∧
+          (∀a. ∃w.
+             t.mem a = get_byte a w mc0.target.config.big_endian ∧
+             m (byte_align a) = Word w) ∧
+          (∀n. n < cbspace ⇒
+               n2w (n + LENGTH code) + t.pc ∈ t.mem_domain ∧
+               n2w (n + LENGTH code) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+          cbspace + LENGTH code < dimword (:64)) ∧ byte_aligned (t.regs 1) ∧
+         byte_aligned (t.regs 3) ∧ byte_aligned bitmap_ptr ∧
+         t.regs 1 ≤₊ t.regs 3 ∧
+         1024w * bytes_in_word ≤₊ t.regs 3 − t.regs 1 ∧
+         DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs 1) = Word bitmap_ptr ∧
+         m (t.regs 1 + bytes_in_word) =
+         Word (bitmap_ptr + bytes_in_word * n2w (LENGTH data)) ∧
+         m (t.regs 1 + 2w * bytes_in_word) =
+         Word
+           (bitmap_ptr + bytes_in_word * n2w data_sp +
+            bytes_in_word * n2w (LENGTH data)) ∧
+         m (t.regs 1 + 3w * bytes_in_word) =
+         Word (mc0.target.get_pc ms + n2w (LENGTH code)) ∧
+         m (t.regs 1 + 4w * bytes_in_word) =
+         Word (mc0.target.get_pc ms + n2w cbspace + n2w (LENGTH code)) ∧
+         (word_list bitmap_ptr (MAP (Word ∘ n2w) data) *
+          word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH data))
+            data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+         refund_lab_conf2.ffi_names = SOME mc0.ffi_names ∧
+         ∀i. mmio_pcs_min_index mc0.ffi_names = SOME i ⇒
+             MAP (λrec. w2n (mc0.target.get_pc ms) + rec.entry_pc)
+               refund_lab_conf2.shmem_extra =
+             DROP i (MAP w2n mc0.ffi_entry_pcs) ∧
+             mc0.mmio_info =
+             ZIP
+               (GENLIST (λindex. index + i)
+                  (LENGTH refund_lab_conf2.shmem_extra),
+                MAP
+                  (λrec.
+                     (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                      n2w rec.exit_pc + mc0.target.get_pc ms))
+                  refund_lab_conf2.shmem_extra) ∧
+             cbspace + LENGTH code + ffi_offset * (i + 3) < dimword (:64))
+KEPT arm8_install_handler_ok installed_modulo_install_handler install_exclusion_suffices
+STORED_THEOREMS forge_compileCorrectControl 1 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_compileCorrectLabFacts 8 STORED_DEFINITIONS 3 AXIOMS 0
+STORED_THEOREMS forge_refundExclusionSource 4 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_refundExclusionReal 2 STORED_DEFINITIONS 1 AXIOMS 0
+STORED heap_regs ⊢ heap_regs
+    (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.reg_names =
+  (1,3)
+KEPT refund_install_exclusion_arm8 refund_install_exclusion_installed refund_u298_exclusion_any_handler refund_lab_good_code refund_lab_compile refund_lab_bitmaps
+NEGATIVE_CONTROL_KEPT wraparound ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+NEGATIVE_CONTROL_KEPT interior ⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+NEGATIVE_CONTROL_KEPT invariant ⊢ ¬lab_step_closed (λs. T)
+NEGATIVE_CONTROL_KEPT sharemem ⊢ ¬sm_free [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  ¬no_share_mem_inst [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  sm_count [Section 0 [Asm (ShareMem mop r ad) bs n] md] = 1
+NEGATIVE_CONTROL_KEPT region29 ⊢ ¬filt_walk [29] (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog
+NEGATIVE_CONTROL_KEPT handler ⊢ same_but_install forge_toy_mc forge_toy_mc3 ∧
+  evaluate forge_toy_mc io 3 0 ≠ evaluate forge_toy_mc3 io 3 0
+NEGATIVE_CONTROL_KEPT good_code ⊢ ¬gc_check [Section 5 [LabAsm (Jump (Lab 7 1)) 0 [] 0; Label 5 1 0] ARB]
+IMPORTED forge_refundSourceNonFail.refund_source_nonfail EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundSourceNonFail.refund_u298_exclusion_valid_request EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundSourceNonFail.refund_behavior_valid_request_no_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundSourceNonFail.semantics_prog_Fail_expanded EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupClause.refund_installed_startup EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupClause.refund_startup_clause_arm8 EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupClause.arm8_fix_is_arm8 EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupClause.is_arm8_iff_fix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS forge_refundSourceNonFail 4 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_refundStartupClause 5 STORED_DEFINITIONS 2 AXIOMS 0
+DEFINITION ⊢ ∀mc0 ms t m bitmap_ptr cbspace data_sp.
+    refund_startup_clause mc0 ms t m bitmap_ptr cbspace data_sp ⇔
+    t.pc = mc0.target.get_pc ms ∧ n2w (2 ** t.align − 1) && t.pc = 0w ∧
+    byte_aligned (t.regs 1) ∧ byte_aligned (t.regs 3) ∧
+    t.regs 1 ≤₊ t.regs 3 ∧ 1024w * bytes_in_word ≤₊ t.regs 3 − t.regs 1 ∧
+    m (t.regs 1) = Word bitmap_ptr ∧
+    m (t.regs 1 + bytes_in_word) =
+    Word (bitmap_ptr + bytes_in_word * n2w (LENGTH data)) ∧
+    m (t.regs 1 + 2w * bytes_in_word) =
+    Word
+      (bitmap_ptr + bytes_in_word * n2w data_sp +
+       bytes_in_word * n2w (LENGTH data)) ∧
+    m (t.regs 1 + 3w * bytes_in_word) =
+    Word (mc0.target.get_pc ms + n2w (LENGTH code)) ∧
+    m (t.regs 1 + 4w * bytes_in_word) =
+    Word (mc0.target.get_pc ms + n2w cbspace + n2w (LENGTH code))
+DEFINITION ⊢ ∀mc0.
+    arm8_fix mc0 =
+    mc0 with
+    <|target := arm8_target; len_reg := 1; ptr_reg := 0; len2_reg := 3;
+      ptr2_reg := 2;
+      callee_saved_regs := [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]|>
+CONTROL_OK source non-Fail is stated only for basis_ffi ext cl fs
+CONTROL_OK source non-Fail without the input premises, or for a general ffi, is not the stored statement
+CONTROL_OK no stored theorem states the start-up clause without premises
+IMPORTED forge_refundRejectNonFail.refund_source_nonfail_reject EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundRejectNonFail.refund_source_nonfail_stdin EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundRejectNonFail.refund_u298_exclusion_stdin EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundRejectNonFail.refund_behavior_stdin_no_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupBridge.refund_mc_is_arm8 EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupBridge.refund_mc_u298_exclusion_stdin EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupBridge.refund_mc_behavior_stdin_no_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupBridge.stdin_absent_characterised EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCmlMainStep.cml_main_run EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCmlMainStep.cml_main_wrong_target_refuted EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCmlMainSat.cml_main_pre_satisfiable EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundStartupBridge.refund_startup_established EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS forge_refundRejectNonFail 12 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_refundCmlMainStep 4 STORED_DEFINITIONS 3 AXIOMS 0
+STORED_THEOREMS forge_refundCmlMainSat 1 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_refundStartupBridge 7 STORED_DEFINITIONS 1 AXIOMS 0
+CONTROL_OK every stored source non-Fail theorem (3) has a stdin_content premise; none covers absent input or a general ffi
+CONTROL_OK the start-up theorem assumes cml_main_pre and concludes only the start-up clause, not the installed-state predicate
+CONTROL_OK refund_mc fixes no installer handler; install_interfer stays a parameter
+IMPORTED forge_refundLoaderMemory.refund_loader_startup EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundImage.refund_file_code EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundImage.refund_file_bitmaps EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundImage.refund_file_length EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundImage.refund_image_mem_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundImage.refund_image_code EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundImage.refund_image_bitmaps EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.refund_entry_pre_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.refund_entry_pre_IMP_cml_main_pre EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.refund_image_preserved EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.code_byte_change_rejected EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.code_overlap_rejected EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.bitmap_word_change_rejected EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.code_wrong_offset_rejected EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.bitmap_wrong_offset_rejected EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundLoaderMemory.header_on_bitmaps_refuted EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundEntrySat.refund_entry_pre_satisfiable EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS forge_refundCmlMainFrame 1 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_loaderMemLemmas 16 STORED_DEFINITIONS 1 AXIOMS 0
+STORED_THEOREMS forge_refundImage 13 STORED_DEFINITIONS 3 AXIOMS 0
+STORED_THEOREMS forge_refundLoaderMemory 13 STORED_DEFINITIONS 2 AXIOMS 0
+STORED_THEOREMS forge_refundEntrySat 7 STORED_DEFINITIONS 1 AXIOMS 0
+IMPORTED forge_refundCmlMainFrame.cml_main_run_frame has the frame conjunct for the 40 header bytes
+CONTROL_OK the loader theorem assumes refund_entry_pre; no U389 theorem states the installed-state predicate
+CONTROL_OK the image predicate is a premise in every U389 theorem that uses it; the only unconditional instance is the witness memory sat_mem of the non-vacuity control
+CONTROL_OK every U389 theorem about arm8_run (3) is at slide 0; no theorem composes the steps with a non-zero slide
+CONTROL_OK refund_image_mem is a predicate on a memory function only; it contains no loader or step model
+NEGATIVE_CONTROL_KEPT code_byte_change_rejected code_overlap_rejected bitmap_word_change_rejected code_wrong_offset_rejected bitmap_wrong_offset_rejected header_on_bitmaps_refuted
+IMPORTED forge_refundInstalledDomains.refund_code_dm_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_mem_dm_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_heap_clear_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_t_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_t_target_state_rel EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_t_target_configured EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_code_bytes_in_mem EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_heap_bitmaps_disjoint EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledDomains.refund_end_state_established EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledAssembly.refund_installed_from_end_state EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundInstalledAssembly.refund_installed_from_entry EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED refund_behavior_from_entry
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧
+    (refund_installed_rest (refund_mc base0 envmc) ms ⇒
+     ∃io_events.
+       machine_sem (refund_mc base0 envmc) (basis_ffi ext cl fs) ms ⊆
+       extend_with_resource_limit {Terminate Success io_events})

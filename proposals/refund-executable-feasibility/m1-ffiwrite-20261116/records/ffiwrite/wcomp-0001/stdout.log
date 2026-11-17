@@ -1,0 +1,38 @@
+<<HOL message: Created theory "forge_refundFfiwriteCompose">>
+Saved theorem _______ "cake_ffiwrite_reaches_call"
+CHECKED cake_ffiwrite_reaches_call
+⊢ ffiwrite_call_pre dm s b c a g ⇒
+  ∃s1. arm8_run 23 s = SOME s1 ∧ ffiwrite_at_call s b a g s1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwriteCompose)>>
+Saved theorem _______ "write_call_rel_gives_fail_return_state"
+CHECKED write_call_rel_gives_fail_return_state
+⊢ ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+  write_call_rel dm s1 s2 ∧ word_bit 31 (w2w (s2.REG 0w)) ⇒
+  ffiwrite_return_fail_pre s2 b a (s.REG 20w) (s.REG 19w) (s.REG 29w)
+    (s.REG 30w)
+Saved theorem _______ "ffiwrite_after_failed_call"
+CHECKED ffiwrite_after_failed_call
+⊢ ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+  write_call_rel dm s1 s2 ∧ word_bit 31 (w2w (s2.REG 0w)) ⇒
+  ∃s3.
+    arm8_run 6 s2 = SOME s3 ∧ s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧
+    arm8_user s3 ∧
+    (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+         s3.REG r = s.REG r) ∧
+    ∀q. q ∈ dm ⇒ s3.MEM q = if q = a then 1w else s.MEM q
+Saved theorem _______ "cake_ffiwrite_path_failed_write"
+CHECKED cake_ffiwrite_path_failed_write
+⊢ ffiwrite_call_pre dm s b c a g ⇒
+  ∃s1.
+    arm8_run 23 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002522Cw ∧
+    ∀s2.
+      write_call_rel dm s1 s2 ∧ word_bit 31 (w2w (s2.REG 0w)) ⇒
+      ∃s3.
+        arm8_run 6 s2 = SOME s3 ∧ s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧
+        arm8_user s3 ∧
+        (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+             s3.REG r = s.REG r) ∧
+        ∀q. q ∈ dm ⇒ s3.MEM q = if q = a then 1w else s.MEM q
+Exporting theory "forge_refundFfiwriteCompose" ... done.
+Theory "forge_refundFfiwriteCompose" took 16.3s to build
+EXACT_COMPLETE

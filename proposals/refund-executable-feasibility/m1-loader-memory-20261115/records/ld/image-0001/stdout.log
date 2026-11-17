@@ -1,0 +1,122 @@
+<<HOL message: Created theory "forge_refundImage">>
+STORED_TERMS_EVALUATED code 130436 data 2531
+STORED ⊢ LENGTH code = 130436 ; ⊢ LENGTH data = 2531
+IMAGE_PATH /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund BYTES 238776
+ROUNDTRIP_WRITTEN 238776
+BITMAP_BYTES_EVALUATED 20248
+/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/image-0001/proof.sml:57: warning: Pattern is not exhaustive. Found near val [P, S, Q, ...] = map (lit get) cs
+LAYOUT_OK refund_file = P ++ STUB ++ Q ++ code ++ T2 ++ M ++ FLAT (MAP dword_bytes (MAP n2w data)) ++ E
+LEN 16384
+LEN 108
+LEN 100
+LEN 130436
+LEN 16812
+LEN 16408
+LEN 20248
+CONTROL_OK changed code byte (file offset 17592) REJECTED: code slice differs from the stored code
+CONTROL_OK changed bitmap byte (file offset 180248) REJECTED: bitmap slice differs from the stored bitmaps
+CONTROL_OK code offset shifted by 4 REJECTED: code slice differs from the stored code
+CONTROL_OK bitmap offset shifted by 8 REJECTED: bitmap slice differs from the stored bitmaps
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundImage)>>
+Saved theorem _______ "layout_slices"
+CHECKED layout_slices
+⊢ ∀f p s q c t mm d e.
+    f = p ++ (s ++ (q ++ (c ++ (t ++ (mm ++ (d ++ e)))))) ∧
+    LENGTH p = 16384 ∧ LENGTH s = 108 ∧ LENGTH q = 100 ∧ LENGTH c = 130436 ∧
+    LENGTH t = 16812 ∧ LENGTH mm = 16408 ∧ LENGTH d = 20248 ⇒
+    TAKE 130436 (DROP 16592 f) = c ∧ TAKE 20248 (DROP 180248 f) = d ∧
+    TAKE 108 (DROP 16384 f) = s ∧ LENGTH (TAKE 163840 f) = 163840 ∧
+    LENGTH (TAKE 20248 (DROP 180248 f)) = 20248 ∧
+    ∀a m.
+      bytes_in_memory a (TAKE 163840 f) m 𝕌(:word64) ⇒
+      bytes_in_memory (a + 16384w) s m 𝕌(:word64) ∧
+      bytes_in_memory (a + 16592w) c m 𝕌(:word64)
+Saved theorem _______ "refund_file_code"
+CHECKED refund_file_code
+⊢ TAKE (LENGTH code) (DROP 16592 refund_file) = code
+Saved theorem _______ "refund_file_bitmaps"
+CHECKED refund_file_bitmaps
+⊢ TAKE 20248 (DROP 180248 refund_file) =
+  FLAT (MAP dword_bytes (MAP n2w data))
+Saved theorem _______ "refund_file_cml_main"
+CHECKED refund_file_cml_main
+⊢ TAKE 108 (DROP 16384 refund_file) =
+  [0w; 0w; 0w; 144w; 0w; 64w; 3w; 145w; 65w; 1w; 0w; 144w; 33w; 0w; 0w; 145w;
+   33w; 0w; 64w; 249w; 66w; 1w; 0w; 144w; 66w; 96w; 0w; 145w; 34w; 0w; 0w;
+   249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 4w; 0w; 249w; 98w; 1w;
+   0w; 144w; 66w; 192w; 60w; 145w; 34w; 8w; 0w; 249w; 226w; 0w; 0w; ... ]
+Saved theorem _______ "refund_file_length"
+CHECKED refund_file_length
+⊢ LENGTH refund_file = 238776
+Saved definition ____ "le_num_def"
+Saved theorem _______ "refund_macho_fields"
+CHECKED refund_macho_fields
+⊢ le_num (TAKE 4 (DROP 0 refund_file)) = 4277009103 ∧
+  le_num (TAKE 4 (DROP 12 refund_file)) = 2 ∧
+  le_num (TAKE 4 (DROP 16 refund_file)) = 18 ∧
+  le_num (TAKE 4 (DROP 24 refund_file)) = 2097285 ∧
+  le_num (TAKE 4 (DROP 104 refund_file)) = 25 ∧
+  le_num (TAKE 8 (DROP 128 refund_file)) = 4294967296 ∧
+  le_num (TAKE 8 (DROP 136 refund_file)) = 163840 ∧
+  le_num (TAKE 8 (DROP 144 refund_file)) = 0 ∧
+  le_num (TAKE 8 (DROP 152 refund_file)) = 163840 ∧
+  le_num (TAKE 4 (DROP 164 refund_file)) = 5 ∧
+  le_num (TAKE 4 (DROP 648 refund_file)) = 25 ∧
+  le_num (TAKE 8 (DROP 672 refund_file)) = 4295147520 ∧
+  le_num (TAKE 8 (DROP 680 refund_file)) = 32768 ∧
+  le_num (TAKE 8 (DROP 688 refund_file)) = 180224 ∧
+  le_num (TAKE 8 (DROP 696 refund_file)) = 32768 ∧
+  le_num (TAKE 4 (DROP 708 refund_file)) = 3 ∧
+  le_num (TAKE 4 (DROP 1192 refund_file)) = 2147483688 ∧
+  le_num (TAKE 8 (DROP 1200 refund_file)) = 152900 ∧
+  TAKE 6 (DROP 112 refund_file) = MAP (n2w ∘ ORD) "__TEXT" ∧
+  TAKE 6 (DROP 656 refund_file) = MAP (n2w ∘ ORD) "__DATA"
+DEFINITION ⊢ ∀sl m.
+    refund_image_mem sl m ⇔
+    bytes_in_memory (0x100000000w + sl) (TAKE 163840 refund_file) m
+      𝕌(:word64) ∧
+    bytes_in_memory (0x10002C018w + sl)
+      (TAKE 20248 (DROP 180248 refund_file)) m 𝕌(:word64)
+Saved theorem _______ "refund_image_code"
+CHECKED refund_image_code
+⊢ ∀sl m.
+    refund_image_mem sl m ⇒
+    bytes_in_memory (0x1000040D0w + sl) code m 𝕌(:word64)
+Saved theorem _______ "refund_image_cml_main"
+CHECKED refund_image_cml_main
+⊢ ∀sl m.
+    refund_image_mem sl m ⇒
+    bytes_in_memory (0x100004000w + sl)
+      [0w; 0w; 0w; 144w; 0w; 64w; 3w; 145w; 65w; 1w; 0w; 144w; 33w; 0w; 0w;
+       145w; 33w; 0w; 64w; 249w; 66w; 1w; 0w; 144w; 66w; 96w; 0w; 145w; 34w;
+       0w; 0w; 249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 4w; 0w;
+       249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 8w; 0w; ... ] m
+      𝕌(:word64)
+Saved theorem _______ "refund_image_bitmaps"
+CHECKED refund_image_bitmaps
+⊢ ∀sl m i.
+    refund_image_mem sl m ∧ i < LENGTH data ⇒
+    mem_dword m (0x10002C018w + sl + n2w (8 * i)) = n2w data❲i❳
+Saved theorem _______ "refund_file_text_length"
+Saved theorem _______ "refund_file_bitmap_length"
+Saved theorem _______ "refund_file_text_memory"
+CHECKED refund_file_text_memory
+⊢ ∀a m.
+    bytes_in_memory a (TAKE 163840 refund_file) m 𝕌(:word64) ⇒
+    bytes_in_memory (a + 16384w)
+      [0w; 0w; 0w; 144w; 0w; 64w; 3w; 145w; 65w; 1w; 0w; 144w; 33w; 0w; 0w;
+       145w; 33w; 0w; 64w; 249w; 66w; 1w; 0w; 144w; 66w; 96w; 0w; 145w; 34w;
+       0w; 0w; 249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 4w; 0w;
+       249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 8w; ... ] m
+      𝕌(:word64) ∧ bytes_in_memory (a + 16592w) code m 𝕌(:word64)
+Saved theorem _______ "refund_code_data_samples"
+CHECKED refund_code_data_samples
+⊢ code❲0❳ = 126w ∧ code❲4❳ = 222w ∧ data❲0❳ = 4 ∧ data❲1❳ = 16 ∧ HD data = 4
+CLOSURE_NODES 513
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundImage" ... done.
+Theory "forge_refundImage" took 6m57s to build
+EXACT_COMPLETE

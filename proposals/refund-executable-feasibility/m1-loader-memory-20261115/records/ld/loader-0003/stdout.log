@@ -1,0 +1,187 @@
+<<HOL message: Created theory "forge_refundLoaderMemory">>
+STORED_TERMS_EVALUATED code 130436 data 2531
+STORED ⊢ LENGTH code = 130436 ; ⊢ LENGTH data = 2531
+IMAGE_PATH /Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund BYTES 238776
+ROUNDTRIP_WRITTEN 238776
+BITMAP_BYTES_EVALUATED 20248
+/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/loader-0003/proof.sml:58: warning: Pattern is not exhaustive. Found near val [P, S, Q, ...] = map (lit get) cs
+LAYOUT_OK refund_file = P ++ STUB ++ Q ++ code ++ T2 ++ M ++ FLAT (MAP dword_bytes (MAP n2w data)) ++ E
+LEN 16384
+LEN 108
+LEN 100
+LEN 130436
+LEN 16812
+LEN 16408
+LEN 20248
+CONTROL_OK changed code byte (file offset 17592) REJECTED: code slice differs from the stored code
+CONTROL_OK changed bitmap byte (file offset 180248) REJECTED: bitmap slice differs from the stored bitmaps
+CONTROL_OK code offset shifted by 4 REJECTED: code slice differs from the stored code
+CONTROL_OK bitmap offset shifted by 8 REJECTED: bitmap slice differs from the stored bitmaps
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLoaderMemory)>>
+Saved theorem _______ "layout_slices"
+CHECKED layout_slices
+⊢ ∀f p s q c t mm d e.
+    f = p ++ (s ++ (q ++ (c ++ (t ++ (mm ++ (d ++ e)))))) ∧
+    LENGTH p = 16384 ∧ LENGTH s = 108 ∧ LENGTH q = 100 ∧ LENGTH c = 130436 ∧
+    LENGTH t = 16812 ∧ LENGTH mm = 16408 ∧ LENGTH d = 20248 ⇒
+    TAKE 130436 (DROP 16592 f) = c ∧ TAKE 20248 (DROP 180248 f) = d ∧
+    TAKE 108 (DROP 16384 f) = s ∧ LENGTH (TAKE 163840 f) = 163840 ∧
+    LENGTH (TAKE 20248 (DROP 180248 f)) = 20248 ∧
+    ∀a m.
+      bytes_in_memory a (TAKE 163840 f) m 𝕌(:word64) ⇒
+      bytes_in_memory (a + 16384w) s m 𝕌(:word64) ∧
+      bytes_in_memory (a + 16592w) c m 𝕌(:word64)
+Saved theorem _______ "refund_file_code"
+CHECKED refund_file_code
+⊢ TAKE (LENGTH code) (DROP 16592 refund_file) = code
+Saved theorem _______ "refund_file_bitmaps"
+CHECKED refund_file_bitmaps
+⊢ TAKE 20248 (DROP 180248 refund_file) =
+  FLAT (MAP dword_bytes (MAP n2w data))
+Saved theorem _______ "refund_file_cml_main"
+CHECKED refund_file_cml_main
+⊢ TAKE 108 (DROP 16384 refund_file) =
+  [0w; 0w; 0w; 144w; 0w; 64w; 3w; 145w; 65w; 1w; 0w; 144w; 33w; 0w; 0w; 145w;
+   33w; 0w; 64w; 249w; 66w; 1w; 0w; 144w; 66w; 96w; 0w; 145w; 34w; 0w; 0w;
+   249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 4w; 0w; 249w; 98w; 1w;
+   0w; 144w; 66w; 192w; 60w; 145w; 34w; 8w; 0w; 249w; 226w; 0w; 0w; ... ]
+Saved theorem _______ "refund_file_length"
+CHECKED refund_file_length
+⊢ LENGTH refund_file = 238776
+Saved definition ____ "le_num_def"
+Saved theorem _______ "refund_macho_fields"
+CHECKED refund_macho_fields
+⊢ le_num (TAKE 4 (DROP 0 refund_file)) = 4277009103 ∧
+  le_num (TAKE 4 (DROP 12 refund_file)) = 2 ∧
+  le_num (TAKE 4 (DROP 16 refund_file)) = 18 ∧
+  le_num (TAKE 4 (DROP 24 refund_file)) = 2097285 ∧
+  le_num (TAKE 4 (DROP 104 refund_file)) = 25 ∧
+  le_num (TAKE 8 (DROP 128 refund_file)) = 4294967296 ∧
+  le_num (TAKE 8 (DROP 136 refund_file)) = 163840 ∧
+  le_num (TAKE 8 (DROP 144 refund_file)) = 0 ∧
+  le_num (TAKE 8 (DROP 152 refund_file)) = 163840 ∧
+  le_num (TAKE 4 (DROP 164 refund_file)) = 5 ∧
+  le_num (TAKE 4 (DROP 648 refund_file)) = 25 ∧
+  le_num (TAKE 8 (DROP 672 refund_file)) = 4295147520 ∧
+  le_num (TAKE 8 (DROP 680 refund_file)) = 32768 ∧
+  le_num (TAKE 8 (DROP 688 refund_file)) = 180224 ∧
+  le_num (TAKE 8 (DROP 696 refund_file)) = 32768 ∧
+  le_num (TAKE 4 (DROP 708 refund_file)) = 3 ∧
+  le_num (TAKE 4 (DROP 1192 refund_file)) = 2147483688 ∧
+  le_num (TAKE 8 (DROP 1200 refund_file)) = 152900 ∧
+  TAKE 6 (DROP 112 refund_file) = MAP (n2w ∘ ORD) "__TEXT" ∧
+  TAKE 6 (DROP 656 refund_file) = MAP (n2w ∘ ORD) "__DATA"
+DEFINITION ⊢ ∀sl m.
+    refund_image_mem sl m ⇔
+    bytes_in_memory (0x100000000w + sl) (TAKE 163840 refund_file) m
+      𝕌(:word64) ∧
+    bytes_in_memory (0x10002C018w + sl)
+      (TAKE 20248 (DROP 180248 refund_file)) m 𝕌(:word64)
+Saved theorem _______ "refund_image_code"
+CHECKED refund_image_code
+⊢ ∀sl m.
+    refund_image_mem sl m ⇒
+    bytes_in_memory (0x1000040D0w + sl) code m 𝕌(:word64)
+Saved theorem _______ "refund_image_cml_main"
+CHECKED refund_image_cml_main
+⊢ ∀sl m.
+    refund_image_mem sl m ⇒
+    bytes_in_memory (0x100004000w + sl)
+      [0w; 0w; 0w; 144w; 0w; 64w; 3w; 145w; 65w; 1w; 0w; 144w; 33w; 0w; 0w;
+       145w; 33w; 0w; 64w; 249w; 66w; 1w; 0w; 144w; 66w; 96w; 0w; 145w; 34w;
+       0w; 0w; 249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 4w; 0w;
+       249w; 98w; 1w; 0w; 144w; 66w; 192w; 60w; 145w; 34w; 8w; 0w; ... ] m
+      𝕌(:word64)
+Saved theorem _______ "refund_image_bitmaps"
+CHECKED refund_image_bitmaps
+⊢ ∀sl m i.
+    refund_image_mem sl m ∧ i < LENGTH data ⇒
+    mem_dword m (0x10002C018w + sl + n2w (8 * i)) = n2w data❲i❳
+Saved theorem _______ "refund_bitmaps_dm_aligned"
+CHECKED refund_bitmaps_dm_aligned
+⊢ ∀x. x ∈ byte_aligned ∩ refund_bitmaps_dm ⇔
+      ∃i. i < LENGTH data ∧ x = 0x10002C018w + n2w i * 8w
+Saved theorem _______ "refund_bitmaps_dm_closed"
+CHECKED refund_bitmaps_dm_closed
+⊢ ∀a. byte_align a ∈ refund_bitmaps_dm ⇒ a ∈ refund_bitmaps_dm
+Saved theorem _______ "refund_image_bitmap_clause"
+CHECKED refund_image_bitmap_clause
+⊢ ∀m. refund_image_mem 0w m ⇒
+      (λm.
+         (word_list 0x10002C018w (MAP (Word ∘ n2w) data) *
+          word_list_exists (0x10002C018w + bytes_in_word * n2w (LENGTH data))
+            0)
+           (fun2set
+              ((λa. Word (mem_dword m a)),byte_aligned ∩ refund_bitmaps_dm)))
+        m
+Saved theorem _______ "code_loaded_from_memory"
+CHECKED code_loaded_from_memory
+⊢ ∀bs mc0 ms.
+    is_arm8_machine_config mc0 ∧ bytes_in_memory ms.PC bs ms.MEM 𝕌(:word64) ∧
+    (∀i. i < LENGTH bs ⇒ ms.PC + n2w i ∈ mc0.prog_addresses) ⇒
+    code_loaded bs mc0 ms
+Saved theorem _______ "refund_image_preserved"
+CHECKED refund_image_preserved
+⊢ ∀m m' h.
+    refund_image_mem 0w m ∧
+    (∀i a. i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ h + n2w i ≠ a) ∧
+    (∀a. (∀i. i < 40 ⇒ a ≠ h + n2w i) ⇒ m' a = m a) ⇒
+    refund_image_mem 0w m'
+DEFINITION ⊢ ∀s h stk e.
+    refund_entry_pre s h stk e ⇔
+    ¬s.SCTLR_EL1.E0E ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧
+    s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.PC = 0x100004000w ∧
+    mem_dword s.MEM 0x10002C000w = h ∧ mem_dword s.MEM 0x10002C008w = stk ∧
+    mem_dword s.MEM 0x10002C010w = e ∧ aligned 3 h ∧
+    (∀i a. i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ h + n2w i ≠ a) ∧
+    refund_image_mem 0w s.MEM
+LEMMA_FAILED refund_entry_pre_IMP_cml_main_pre HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+LEMMA_FAILED refund_loader_startup HOL_ERR (HOL_ERROR {message = "first subgoal not solved by second tactic", origins = [{origin_function = "THEN1", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Saved theorem _______ "code_byte_change_rejected"
+CHECKED code_byte_change_rejected
+⊢ ∀i a m md k.
+    i < LENGTH code ∧ m (a + n2w i) ≠ code❲i❳ ⇒ ¬bytes_in_mem a code m md k
+Saved theorem _______ "code_overlap_rejected"
+CHECKED code_overlap_rejected
+⊢ ∀i a m md k. i < LENGTH code ∧ a + n2w i ∈ k ⇒ ¬bytes_in_mem a code m md k
+Saved theorem _______ "bitmap_word_change_rejected"
+CHECKED bitmap_word_change_rejected
+⊢ ∀m dm r i.
+    i < LENGTH data ∧ mem_dword m (0x10002C018w + n2w (8 * i)) ≠ n2w data❲i❳ ⇒
+    ¬(word_list 0x10002C018w (MAP (Word ∘ n2w) data) * r)
+      (fun2set ((λa. Word (mem_dword m a)),dm))
+EL ⊢ code❲0❳ = 126w
+EL ⊢ code❲4❳ = 222w
+EL ⊢ data❲0❳ = 4
+EL ⊢ data❲1❳ = 16
+SHOW N3A
+  ASM m 0x1000040D8w = 222w
+  ASM m 0x1000040D4w = 126w
+  ASM 0x1000040D8w ∈ md
+  ASM 0x1000040D8w ∉ k
+  ASM 0x1000040D4w ∈ md
+  ASM 0x1000040D4w ∉ k
+  ASM refund_image_mem 0w m
+  GOAL ∃i. i < 130436 ∧ m (n2w i + 0x1000040D0w) ≠ code❲i❳
+LEMMA_FAILED code_wrong_offset_rejected HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Saved theorem _______ "bitmap_wrong_offset_rejected"
+CHECKED bitmap_wrong_offset_rejected
+⊢ ∀m dm r.
+    refund_image_mem 0w m ⇒
+    ¬(word_list 0x10002C020w (MAP (Word ∘ n2w) data) * r)
+      (fun2set ((λa. Word (mem_dword m a)),dm))
+SHOW N4B
+  ASM mem_dword s1.MEM (0x10002C018w + 32w) = 0x100024000w
+  ASM mem_dword s1.MEM (0x10002C018w + 24w) = 0x100023E54w
+  ASM mem_dword s1.MEM (0x10002C018w + 16w) = 0x100030F30w
+  ASM mem_dword s1.MEM (0x10002C018w + 8w) = 0x100030F30w
+  ASM mem_dword s1.MEM 0x10002C018w = 0x10002C018w
+  ASM s1.REG 3w = e
+  ASM s1.REG 2w = stk
+  ASM s1.REG 1w = 0x10002C018w
+  ASM s1.REG 0w = 0x1000040D0w
+  ASM s1.PC = 0x1000040D0w
+  ASM arm8_run 27 s = SOME s1
+  ASM cml_main_pre s 0x10002C018w stk e
+  GOAL 4295147544 ≠ HD data MOD 18446744073709551616
+LEMMA_FAILED header_on_bitmaps_refuted HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})

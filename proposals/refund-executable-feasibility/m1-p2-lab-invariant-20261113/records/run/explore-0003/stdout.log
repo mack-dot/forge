@@ -1,0 +1,33 @@
+<<HOL message: Created theory "forge_runExplore">>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_ok1_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_runExplore)>>
+Saved definition ____ "hyp_walk1_def"
+Saved induction _____ "hyp_walk1_ind"
+Saved definition ____ "walk_check_def"
+OK..
+STAGE_OK line1/all (proved)
+LEMMA_PROVED line1
+OK..
+STAGE_OK walk1/all (proved)
+LEMMA_PROVED walk1
+Starting translation of line_ok1 from forge_runExploreTheory.
+Saved theorem _______ "cv_line_ok1_thm"
+Finished translating line_ok1, stored in cv_line_ok1_thm
+Starting translation of hyp_walk1 from forge_runExploreTheory.
+Saved theorem _______ "cv_hyp_walk1_thm"
+Finished translating hyp_walk1, stored in cv_hyp_walk1_thm
+Starting translation of walk_check from forge_runExploreTheory.
+Saved theorem _______ "cv_walk_check_thm"
+Finished translating walk_check, stored in cv_walk_check_thm
+STEP_OK translate
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+WALK_CHECK_29_31 T
+STEP_OK check pair
+WALK_CHECK_29 F
+STEP_OK check single
+EXPLORE_COMPLETE

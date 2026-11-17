@@ -1,0 +1,56 @@
+(theory
+ ("forge_simZeroCase"
+  ("forge_targetInstallPrefix" .
+   "ab2d16446695e59e88dfb3a8401c1980e7f910f3")
+  ("lab_to_targetProof" . "9db32a52bd1fb1a044dacd02eb320beb3f07b87e"))
+ (core-data
+  (tables
+   (string-table "list" "labLang" "sec" "ffi" "ffi_state" "sptree" "spt"
+    "num" "targetSem" "machine_config" "fcp" "cart" "min" "bool" "labSem"
+    "state" "lab_to_target" "config" "asmSem" "asm_state" "!" "fun"
+    "arithmetic" "*" "+" "pair" "," "prod" "/\\" "0" "prim_rec" "<" "="
+    "bit0" "one" "==>" "BIT1" "BIT2" "NUMERAL" "ZERO" "words" "dimword"
+    "itself" "ffi_offset" "n2w" "forge_targetInstallPrefix"
+    "no_install_prefix" "lab_to_targetProof" "pos_val"
+    "recordtype.state.seldef.pc" "state_rel" "the_value" "word_add"
+    "word_sub" "~" "state_rel_no_install_prefix_zero"
+    "install_entry_wrap_example" "install_entry_distinct"
+    "forge_simZeroCase" "asmProps" "boolSimpsContext" "combin" "numeral"
+    "reduce")
+   (id-table (0 . 0) (1 . 2) (3 . 4) (5 . 6) (7 . 7) (8 . 9) (10 . 11)
+    (12 . 13) (14 . 15) (16 . 17) (18 . 19) (13 . 20) (12 . 21) (22 . 23)
+    (22 . 24) (25 . 26) (25 . 27) (13 . 28) (7 . 29) (30 . 31) (12 . 32)
+    (10 . 33) (34 . 34) (12 . 35) (22 . 36) (22 . 37) (22 . 38) (22 . 39)
+    (40 . 41) (13 . 42) (16 . 43) (40 . 44) (45 . 46) (47 . 48) (14 . 49)
+    (47 . 50) (13 . 51) (40 . 52) (40 . 53) (13 . 54))
+   (type-table (1) (0 0) "'d" (2 2) (4) (3 4) (3 5) "'b" "'state" "'a"
+    (5 9 8 7) (7) (6 11 9) "'c" (9) (8 9 14 13) (10 9) (12 12 11)
+    (12 17 11) (12 4 11) (12 19 11) (12 4 4) (12 4 21) (16 6 12) (16 1 23)
+    (12 23 24) (12 1 25) (16 10 24) (12 24 27) (12 10 28) (12 12 23)
+    (12 6 30) (12 11 11) (12 11 32) (12 4 19) (12 12 17) (22) (21 36)
+    (21 37) (21 38) (6 11 39) (12 40 11) (12 40 41) (29 9) (12 43 4)
+    (12 4 12) (12 4 40) (12 8 11) (12 4 47) (12 3 48) (12 10 49) (12 1 4)
+    (12 4 51) (12 4 52) (12 15 4) (12 16 47) (12 15 55) (12 27 56)
+    (12 12 12) (12 12 58) (12 40 40) (12 40 60))
+   (term-table ("code2" 1) ("ffi" 3) ("labs" 6) ("mc_conf" 10) ("ms1" 8)
+    ("p" 12) ("s1" 15) ("t1" 16) ("x" 4) (11 18) (11 20) (13 22) (14 22)
+    (15 26) (15 29) (15 31) (17 33) (18 4) (19 34) (20 35) (20 42) (23 33)
+    (24 21) (25 21) (26 21) (27 4) (28 44) (30 4) (31 45) (31 46) (32 50)
+    (33 53) (34 54) (35 57) (36 43) (37 59) (37 61) (38 59) (38 61)
+    (39 32))) exports (nil) (nil)
+  ((55
+    (((58 1) (22 30 31 95) (59 61) (18 27)
+      (13 25 35 50 51 52 54 56 58 63 105 128 133) (60 2 3) (61 13) (58 0)
+      (45 1) (47 77) (40 70 328 344)) "DISK_THM") (2 0)
+    ("%3%0%2%5B15B13B14%6B33%7@%4@%6U32%17B31%0@%25U23U24%27B11B12%34U26B18B16%3%1B30%17@%4@B21"))
+   (56
+    (((58 2) (13 8 14 25 50 56 58 63 154) (16 0)
+      (62 0 3 6 7 9 15 16 17 21 32 34 35 39 40) (63 2)
+      (40 70 143 156 663 744)) "DISK_THM") (2 0)
+    ("%17U29%25U23U23U22U22U22U22U23U24U29B36%17U29%25U23U24%27B11U29B38B20"))
+   (57
+    (((58 0) (22 101 265 267 300) (13 8 14 25 27 50 56 58 63 64 105 128)
+      (16 0) (62 0 3 6 9 21 32 34 35 39 40) (40 70 110 144 156 335 343))
+     "DISK_THM") (2 0)
+    ("%5%8$0%25U23U24%27B11B12%34U26B18$1$0U28B35$1%25U23U24%27B11U28B37B19U39B21|U10|U9"))))
+ (incorporate (incorporate-types) incorporate-consts) (loadable-thydata))

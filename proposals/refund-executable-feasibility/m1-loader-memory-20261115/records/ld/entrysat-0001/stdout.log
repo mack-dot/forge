@@ -1,0 +1,28 @@
+<<HOL message: Created theory "forge_refundEntrySat">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundEntrySat)>>
+SHOW SAT2
+  ASM ¬(0x10002C018w + n2w i − 0x100000000w <₊ 0x28000w)
+  ASM n2w i <₊ 20248w
+  ASM i < 20248
+  GOAL (if n2w i + 0x2C018w <₊ 0x28000w then
+   (TAKE 163840 refund_file)❲w2n (n2w i + 0x2C018w)❳
+ else (TAKE 20248 (DROP 180248 refund_file))❲i❳) =
+(TAKE 20248 (DROP 180248 refund_file))❲i❳
+LEMMA_FAILED sat_mem_image HOL_ERR (HOL_ERROR {message = "first subgoal not solved by second tactic", origins = [{origin_function = "THEN1", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Saved theorem _______ "sat_slot_0"
+CHECKED sat_slot_0
+⊢ mem_dword sat_mem 0x10002C000w = 0x200000000w
+Saved theorem _______ "sat_slot_8"
+CHECKED sat_slot_8
+⊢ mem_dword sat_mem 0x10002C008w = 0x200010000w
+Saved theorem _______ "sat_slot_16"
+CHECKED sat_slot_16
+⊢ mem_dword sat_mem 0x10002C010w = 0x200020000w
+Saved theorem _______ "sat_separation"
+CHECKED sat_separation
+⊢ ∀i a.
+    i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ 0x200000000w + n2w i ≠ a
+SHOW SAT
+  GOAL refund_image_mem 0w sat_mem
+LEMMA_FAILED refund_entry_pre_witness HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+LEMMA_FAILED refund_entry_pre_satisfiable HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "ACCEPT_TAC", origin_structure = "Tactic", source_location = Loc_Unknown}]})

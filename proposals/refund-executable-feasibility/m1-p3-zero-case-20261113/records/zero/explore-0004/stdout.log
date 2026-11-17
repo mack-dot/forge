@@ -1,0 +1,32 @@
+<<HOL message: Created theory "forge_zeroExplore">>
+OK..
+STAGE_OK distinct/all (proved)
+LEMMA_PROVED distinct
+OK..
+1 subgoal:
+STAGE_OK zero/z1
+OK..
+1 subgoal:
+STAGE_OK zero/z2
+OK..
+STAGE_FAILED zero/z3 :: 
+Exception raised at Tactic.MATCH_MP_TAC: No match
+
+AFTER zero/z3: 1 goals, proved=false
+  ASM mc_conf.install_pc = p − n2w (2 * ffi_offset)
+  ASM t1.pc = p + n2w (pos_val s1.pc 0 code2)
+  ASM mc_conf.target.get_pc ms1 = t1.pc
+  ASM pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword (:α)
+  ASM state_rel (mc_conf,code2,labs,p) s1 t1 ms1
+  GOAL mc_conf.target.get_pc ms1 ≠ mc_conf.install_pc
+----
+LEMMA_OPEN zero
+AFTER zero end: 1 goals, proved=false
+  ASM mc_conf.install_pc = p − n2w (2 * ffi_offset)
+  ASM t1.pc = p + n2w (pos_val s1.pc 0 code2)
+  ASM mc_conf.target.get_pc ms1 = t1.pc
+  ASM pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword (:α)
+  ASM state_rel (mc_conf,code2,labs,p) s1 t1 ms1
+  GOAL mc_conf.target.get_pc ms1 ≠ mc_conf.install_pc
+----
+EXPLORE_COMPLETE

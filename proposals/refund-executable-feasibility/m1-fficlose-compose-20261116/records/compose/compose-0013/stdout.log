@@ -1,0 +1,166 @@
+<<HOL message: Created theory "forge_refundFficloseCompose">>
+DEFINITION ⊢ ∀dm s1 s2.
+    close_call_rel dm s1 s2 ⇔
+    arm8_user s2 ∧ s2.PC = s1.REG 30w ∧ s2.SP_EL0 = s1.SP_EL0 ∧
+    (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+         s2.REG r = s1.REG r) ∧
+    (∀i. i < 32 ⇒ s2.MEM (s1.SP_EL0 + n2w i) = s1.MEM (s1.SP_EL0 + n2w i)) ∧
+    (∀q. 0x100000000w ≤₊ q ∧ q <₊ 0x100030F30w ⇒ s2.MEM q = s1.MEM q) ∧
+    ∀q. q ∈ dm ⇒ s2.MEM q = s1.MEM q
+DEFINITION ⊢ ∀dm s b c g.
+    fficlose_call_pre dm s b c g ⇔
+    (arm8_user s ∧ s.PC = 0x100004080w ∧ refund_image_mem 0w s.MEM ∧
+     s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 0w = c ∧ aligned 2 c ∧
+     s.REG 1w = 8w ∧ ¬word_msb (s.REG 3w) ∧ s.REG 3w ≠ 0w ∧
+     mem_dword s.MEM 0x100028020w = g ∧
+     (∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a) ∧
+     ∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j) ∧
+    (∀i. i < 32 ⇒ b + n2w i ∉ dm) ∧ (∀i. i < 32 ⇒ s.REG 2w ≠ b + n2w i) ∧
+    ¬(0x100000000w ≤₊ s.REG 2w ∧ s.REG 2w <₊ 0x100030F30w)
+DEFINITION ⊢ ∀x0. close_result_byte x0 = if w2w x0 = 0w then 0w else 1w
+DEFINITION ⊢ ∀s b g s1.
+    fficlose_at_call s b g s1 ⇔
+    arm8_user s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002528Cw ∧
+    s1.REG 19w = s.REG 2w ∧ s1.SP_EL0 = b ∧ mem_dword s1.MEM b = s.REG 20w ∧
+    mem_dword s1.MEM (b + 8w) = s.REG 19w ∧
+    mem_dword s1.MEM (b + 16w) = s.REG 29w ∧
+    mem_dword s1.MEM (b + 24w) = s.REG 30w ∧
+    (∀q. (∀i. i < 32 ⇒ q ≠ b + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 0w ∧ r ≠ 8w ∧ r ≠ 16w ∧ r ≠ 19w ∧ r ≠ 29w ∧ r ≠ 30w ⇒
+        s1.REG r = s.REG r
+DEFINITION ⊢ ∀dm s s3.
+    fficlose_path dm s s3 ⇔
+    ∃s1 s2.
+      arm8_run 15 s = SOME s1 ∧ close_call_rel dm s1 s2 ∧
+      arm8_run 6 s2 = SOME s3
+Saved theorem _______ "refund_image_mem_agree"
+CHECKED refund_image_mem_agree
+⊢ ∀m m'.
+    refund_image_mem 0w m ∧
+    (∀q. 0x100000000w ≤₊ q ∧ q <₊ 0x100030F30w ⇒ m' q = m q) ⇒
+    refund_image_mem 0w m'
+Saved theorem _______ "mem_dword_frame_agree"
+CHECKED mem_dword_frame_agree
+⊢ ∀m m' x.
+    (∀i. i < 32 ⇒ m' (x + n2w i) = m (x + n2w i)) ⇒
+    mem_dword m' x = mem_dword m x ∧
+    mem_dword m' (x + 8w) = mem_dword m (x + 8w) ∧
+    mem_dword m' (x + 16w) = mem_dword m (x + 16w) ∧
+    mem_dword m' (x + 24w) = mem_dword m (x + 24w)
+BYTE_FORM ⊢ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)) =
+  close_result_byte (s.REG 0w)
+Saved theorem _______ "cake_fficlose_reaches_call"
+CHECKED cake_fficlose_reaches_call
+⊢ fficlose_call_pre dm s b c g ⇒
+  ∃s1. arm8_run 15 s = SOME s1 ∧ fficlose_at_call s b g s1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFficloseCompose)>>
+Saved theorem _______ "close_call_rel_gives_return_state"
+CHECKED close_call_rel_gives_return_state
+⊢ fficlose_call_pre dm s b c g ∧ fficlose_at_call s b g s1 ∧
+  close_call_rel dm s1 s2 ⇒
+  fficlose_return_pre s2 b (s.REG 2w) (s.REG 20w) (s.REG 19w) (s.REG 29w)
+    (s.REG 30w)
+Saved theorem _______ "fficlose_after_call"
+CHECKED fficlose_after_call
+⊢ fficlose_call_pre dm s b c g ∧ fficlose_at_call s b g s1 ∧
+  close_call_rel dm s1 s2 ⇒
+  ∃s3.
+    arm8_run 6 s2 = SOME s3 ∧ s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧
+    arm8_user s3 ∧
+    (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+         s3.REG r = s.REG r) ∧
+    ∀q. q ∈ dm ⇒
+        s3.MEM q =
+        if q = s.REG 2w then close_result_byte (s2.REG 0w) else s.MEM q
+Saved theorem _______ "cake_fficlose_path"
+CHECKED cake_fficlose_path
+⊢ fficlose_call_pre dm s b c g ⇒
+  ∃s1.
+    arm8_run 15 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002528Cw ∧
+    ∀s2.
+      close_call_rel dm s1 s2 ⇒
+      ∃s3.
+        arm8_run 6 s2 = SOME s3 ∧ s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧
+        arm8_user s3 ∧
+        (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+             s3.REG r = s.REG r) ∧
+        ∀q. q ∈ dm ⇒
+            s3.MEM q =
+            if q = s.REG 2w then close_result_byte (s2.REG 0w) else s.MEM q
+Saved theorem _______ "read_bytearray_nonempty"
+CHECKED read_bytearray_nonempty
+⊢ ∀n x f bs.
+    read_bytearray x n f = SOME bs ∧ n ≠ 0 ⇒
+    ∃h t.
+      bs = h::t ∧ f x = SOME h ∧ read_bytearray (x + 1w) (n − 1) f = SOME t
+SHOW WB
+  ASM x ≠ q
+  ASM q ∈ dm
+  ASM ∀a. a ∈ dm ⇒ m a = tm a
+  ASM read_bytearray (x + 1w) n' (λa. if a ∈ dm then SOME (tm a) else NONE) =
+SOME bs
+  ASM x ∈ dm
+  ASM ∀n x m tm dm.
+  read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) = SOME bs ∧
+  (∀a. a ∈ dm ⇒ m a = tm a) ⇒
+  ∀q. q ∈ dm ⇒ asm_write_bytearray x bs tm q = tm q
+  GOAL asm_write_bytearray (x + 1w) bs tm q = tm q
+Saved theorem _______ "asm_write_bytearray_same_content"
+CHECKED asm_write_bytearray_same_content
+⊢ ∀bs n x m tm dm.
+    read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) = SOME bs ∧
+    (∀a. a ∈ dm ⇒ m a = tm a) ⇒
+    ∀q. q ∈ dm ⇒ asm_write_bytearray x bs tm q = tm q
+Saved theorem _______ "asm_write_bytearray_first_byte"
+CHECKED asm_write_bytearray_first_byte
+⊢ ∀bytes2 n x m tm dm v q.
+    read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) =
+    SOME bytes2 ∧ n ≠ 0 ∧ (∀a. a ∈ dm ⇒ m a = tm a) ∧ q ∈ dm ⇒
+    asm_write_bytearray x (v::TL bytes2) tm q = if q = x then v else m q
+SHOW K-IMP
+  ASM a ∈ t1.mem_domain
+  ASM s.REG 30w = t1.regs 30
+  ASM w2n (s.REG 3w) ≠ 0
+  ASM ¬(0x100000000w ≤₊ s.REG 2w ∧ s.REG 2w <₊ 0x100030F30w)
+  ASM ∀i. i < 32 ⇒ s.REG 2w ≠ b + n2w i
+  ASM ∀i. i < 32 ⇒ b + n2w i ∉ t1.mem_domain
+  ASM ∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j
+  ASM ∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a
+  ASM mem_dword s.MEM 0x100028020w = s1.PC
+  ASM s.REG 3w ≠ 0w
+  ASM ¬word_msb (s.REG 3w)
+  ASM s.REG 1w = 8w
+  ASM aligned 2 c
+  ASM s.REG 0w = c
+  ASM aligned 3 b
+  ASM s.SP_EL0 = b + 32w
+  ASM refund_image_mem 0w s.MEM
+  ASM arm8_user s
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ s.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ s.MEM a = t1.mem a
+  ASM s.PC = 0x100004080w
+  ASM arm8_ok s
+  ASM ∀q. q ∈ t1.mem_domain ⇒
+    s3.MEM q =
+    if q = s.REG 2w then close_result_byte (s2.REG 0w) else s.MEM q
+  ASM ∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+    s3.REG r = s.REG r
+  ASM arm8_user s3
+  ASM s3.SP_EL0 = s.SP_EL0
+  ASM s3.PC = s.REG 30w
+  ASM arm8_run 6 s2 = SOME s3
+  ASM s1.REG 30w = 0x10002528Cw
+  ASM arm8_run 15 s = SOME s1
+  ASM arm8_run 6 s2 = SOME s3
+  ASM close_call_rel t1.mem_domain s1 s2
+  ASM arm8_run 15 s = SOME s1
+  ASM fficlose_call_pre t1.mem_domain s b c s1.PC
+  ASM aligned 2 (t1.regs 30)
+  ASM target_state_rel arm8_target
+  (t1 with pc := 0x1000040D0w − n2w ((3 + 2) * 16)) s
+  ASM read_bytearray (s.REG 2w) (w2n (s.REG 3w))
+  (λa. if a ∈ t1.mem_domain then SOME (s.MEM a) else NONE) = SOME bytes2
+  GOAL read_bytearray (s.REG 2w) (w2n (s.REG 3w))
+  (λa. if a ∈ t1.mem_domain then SOME (s.MEM a) else NONE) = SOME bytes2 ∧
+(∀a. a ∈ t1.mem_domain ⇒ s.MEM a = t1.mem a) ∧ a ∈ t1.mem_domain
+LEMMA_FAILED cake_fficlose_path_contract_instance HOL_ERR (HOL_ERROR {message = "first subgoal not solved by second tactic", origins = [{origin_function = "THEN1", origin_structure = "Tactical", source_location = Loc_Unknown}]})

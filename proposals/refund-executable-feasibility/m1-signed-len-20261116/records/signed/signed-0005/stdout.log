@@ -1,0 +1,30 @@
+<<HOL message: Created theory "forge_refundSignedLen">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSignedLen)>>
+Saved theorem _______ "heap_premises_admit_huge_heap"
+CHECKED heap_premises_admit_huge_heap
+⊢ ∃h e.
+    aligned 3 h ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+    refund_heap_clear h e ∧ 0x8000000000000000w ≤₊ e − h
+Saved theorem _______ "read_bytearray_below_half_bound"
+CHECKED read_bytearray_below_half_bound
+⊢ ∀x n m dm bs q.
+    read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) = SOME bs ∧
+    addresses_below_half dm ∧ q ∉ dm ∧ q <₊ 0x8000000000000000w ⇒
+    n < 2 ** 63
+Saved theorem _______ "close_call_alen_below_half"
+CHECKED close_call_alen_below_half
+⊢ refund_static mc1 dm ∧
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+  addresses_below_half dm ⇒
+  w2n (ms1.REG 3w) < 2 ** 63
+Saved theorem _______ "close_call_site_signed_alen"
+CHECKED close_call_site_signed_alen
+⊢ machine_reach mc ffi ms mc1 ffi1 ms1 ∧ refund_static mc dm ∧
+  ffi.oracle = basis_ffi_oracle ext ∧
+  machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+  ms1.PC = 0x100004080w ∧ addresses_below_half dm ⇒
+  ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w ∧ ¬word_msb (ms1.REG 3w) ∧
+  0w < ms1.REG 3w
+Exporting theory "forge_refundSignedLen" ... done.
+Theory "forge_refundSignedLen" took 9.4s to build
+EXACT_COMPLETE

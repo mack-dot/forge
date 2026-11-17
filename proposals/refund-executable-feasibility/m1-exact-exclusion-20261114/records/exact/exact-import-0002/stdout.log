@@ -1,0 +1,45 @@
+IMPORTED forge_refundExactExclusion.refund_lab_sharemem_counts EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExactExclusion.refund_lab_no_share_mem EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExactExclusion.region2_lab_step EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExactExclusion.refund_lab_step_closed EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExactExclusion.refund_lab_inv_init EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExactExclusion.trivial_invariant_not_closed EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionChain.refund_compile_install_exclusion EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_installHandlerIrrelevant.no_install_prefix_same_but_install EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionFinal.refund_install_exclusion_any_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS forge_refundLabFiltered refund_prog_cv_thm refund_prog_cv_eq MAP_lam_LENGTH_Section_lines_ho MAP_lam_LENGTH_FILTER_line_is__ho FILTER_line_is_sharemem_Sectio_ho FILTER_lam_EXISTS_line_is_shar_ho filt_walk_single_eval filt_walk_pair_eval filt_info_eval EXISTS_line_is_sharemem_Sectio_ho EVERY_lam_EVERY_lam___line_is__ho EVERY_lam___line_is_sharemem_S_ho cv_sm_secs_thm cv_sm_free_thm cv_sm_count_thm cv_MAP_lam_LENGTH_Section_lines_thm cv_MAP_lam_LENGTH_Section_lines_ind cv_MAP_lam_LENGTH_Section_lines_def cv_MAP_lam_LENGTH_FILTER_line_is_'_thm cv_MAP_lam_LENGTH_FILTER_line_is_'_ind cv_MAP_lam_LENGTH_FILTER_line_is_'_def cv_line_is_sharemem_thm cv_line_count_thm cv_FILTER_line_is_sharemem_Sectio_thm cv_FILTER_line_is_sharemem_Sectio_ind cv_FILTER_line_is_sharemem_Sectio_def cv_FILTER_lam_EXISTS_line_is_shar_thm cv_FILTER_lam_EXISTS_line_is_shar_ind cv_FILTER_lam_EXISTS_line_is_shar_def cv_filt_walk_thm cv_filt_info_thm cv_EXISTS_line_is_sharemem_Sectio_thm cv_EVERY_lam_EVERY_lam___line_is__thm cv_EVERY_lam___line_is_sharemem_S_thm
+STORED_DEFINITIONS forge_refundLabFiltered sm_secs_def sm_free_def sm_count_def refund_prog_cv_def MAP_lam_LENGTH_Section_lines_def MAP_lam_LENGTH_FILTER_line_is__def line_is_sharemem_def line_count_def FILTER_line_is_sharemem_Sectio_def FILTER_lam_EXISTS_line_is_shar_def filt_walk_def filt_info_def EXISTS_line_is_sharemem_Sectio_def EVERY_lam_EVERY_lam___line_is__def EVERY_lam___line_is_sharemem_S_def cv_sm_secs_def cv_sm_free_def cv_sm_count_def cv_MAP_lam_LENGTH_Section_lines_def_primitive cv_MAP_lam_LENGTH_FILTER_line_is_'_def_primitive cv_line_is_sharemem_def cv_line_count_def cv_FILTER_line_is_sharemem_Sectio_def_primitive cv_FILTER_lam_EXISTS_line_is_shar_def_primitive cv_filt_walk_def cv_filt_info_def cv_EXISTS_line_is_sharemem_Sectio_def cv_EVERY_lam_EVERY_lam___line_is__def cv_EVERY_lam___line_is_sharemem_S_def
+STORED_THEOREMS forge_refundExactExclusion trivial_invariant_not_closed sm_free_no_share_mem_inst sharemem_line_detected region2_lab_step refund_target_install_exclusion refund_lab_step_closed refund_lab_sharemem_counts refund_lab_no_share_mem refund_lab_inv_init refund_filtered_walk_not_closed_29 refund_filtered_region_hyp
+STORED_DEFINITIONS forge_refundExactExclusion refund_lab_inv_def
+STORED_THEOREMS forge_refundExclusionChain refund_compile_install_exclusion nip_make_init IMP_state_rel_make_init exclusion_mid compile_install_exclusion
+STORED_DEFINITIONS forge_refundExclusionChain nip_goal_def
+STORED_THEOREMS forge_installHandlerIrrelevant no_install_prefix_same_but_install handler_matters_when_installer_reached evaluate_same_but_install
+STORED_DEFINITIONS forge_installHandlerIrrelevant same_but_install_def forge_toy_mc3_def
+STORED_THEOREMS forge_refundExclusionFinal refund_install_exclusion_any_handler
+STORED_DEFINITIONS forge_refundExclusionFinal 
+GENERIC_PREMISES 18 EXACT_PREMISES 16
+PUBLISHED_SEMANTICS_COMPILE_PREMISES 15 NOT_MATCHED_HERE 1
+  NOT_MATCHED good_code asm_conf c.labels code
+NEGATIVE_CONTROL_KEPT wraparound ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+NEGATIVE_CONTROL_KEPT interior ⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+NEGATIVE_CONTROL_KEPT invariant ⊢ ¬lab_step_closed (λs. T)
+NEGATIVE_CONTROL_KEPT sharemem ⊢ ¬sm_free [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  ¬no_share_mem_inst [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  sm_count [Section 0 [Asm (ShareMem mop r ad) bs n] md] = 1
+NEGATIVE_CONTROL_KEPT region29 ⊢ ¬filt_walk [29] (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog
+NEGATIVE_CONTROL_KEPT handler ⊢ same_but_install forge_toy_mc forge_toy_mc3 ∧
+  evaluate forge_toy_mc io 3 0 ≠ evaluate forge_toy_mc3 io 3 0
+AFTER_POSITIVE_AUDIT
+CONTROL_OK statements without the initial-state, handler-relation or compile-level premises are not the stored ones
+CLOSURE_NODES 404
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P3_IMPORT_COMPLETE

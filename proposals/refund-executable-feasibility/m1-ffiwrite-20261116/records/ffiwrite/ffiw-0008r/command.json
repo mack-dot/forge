@@ -1,0 +1,40 @@
+{
+ "case": "ffiw-0008r",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008r/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "ffiw-0008r.sml",
+ "source_sha256": "3913c483f1dfd35f7ff6548b713cfb4dffe4e53afb1168491f3336bb62bb00b9",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 23,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 94.385,
+ "child_user_cpu_seconds": 28.064,
+ "child_system_cpu_seconds": 3.181,
+ "child_max_rss_bytes": 559857664,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "6f54fc56b4964615692132af3f2234ac5ac4782b19170a48199c70a567c66b4b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFfiwriteStepTheory.html": "ed10e5745ef7fbe786c99735f2d8c7dab25e3386254df25894d89db66685dbd0",
+  ".hol/objs/forge_refundFfiwriteStepTheory.dat": "92a15d750117d42f4f41348d7ddefe039e0bb293eca56a4e4c5bac09d2360a07",
+  ".hol/objs/forge_refundFfiwriteStepTheory.sig": "e5cce74162aa14339d48ae710c80517951722f95ea4bfdc2100d34004849b8e8",
+  ".hol/objs/forge_refundFfiwriteStepTheory.sml": "039d86f88ddeffd71ed846df9cb05cbb080b9360cb239cbf88386c5949212dc9"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

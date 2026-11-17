@@ -1,0 +1,159 @@
+(theory
+ ("forge_refundExclusionReal"
+  ("forge_refundExclusionSource" .
+   "1d8c6d9bde605c31e2140ba94b60d516c32f9455")
+  ("forge_refundInstallHandler" .
+   "947e7a82eac2659676d969b2a7f3620a74d9a88d"))
+ (core-data
+  (tables
+   (string-table "fcp" "cart" "bit0" "one" "min" "bool" "fun" "num" "ffi"
+    "ffi_state" "wordSem" "word_loc" "targetSem" "machine_config" "pair"
+    "prod" "bit1" "arm8" "exception" "TCR_EL1" "SCTLRType" "ProcState"
+    "arm8_state" "lab_to_target" "shmem_info_num" "asmSem" "asm_state" "!"
+    "arithmetic" "*" "+" "," "asm" "addr" "list" "machine_result" "-" "/\\"
+    "0" "prim_rec" "<" "=" "option" "ffiname" "==>" "?" "Addr" "integer"
+    "int" "BIT1" "BIT2" "pred_set" "DISJOINT" "DROP" "EXP" "FST"
+    "semanticPrimitives" "state" "sem_env" "v" "Fail" "behaviour" "GENLIST"
+    "GSPEC" "IN" "INTER" "LENGTH" "LET" "MAP" "NUMERAL" "SND" "SOME"
+    "set_sep" "STAR" "SUBSET" "T" "THE" "TimeOut" "UNION" "Word" "ZERO"
+    "ZIP" "alignment" "byte_align" "byte_aligned" "misc" "bytes_in_mem"
+    "byte" "bytes_in_word" "forge_refundArm8Compile" "code" "code_loaded"
+    "data" "words" "dimword" "itself" "evaluate" "semanticsProps"
+    "extend_with_resource_limit" "ffi_interfer_ok" "ffi_offset" "fun2set"
+    "get_byte" "asmProps" "interference_ok" "arm8_configProof"
+    "is_arm8_machine_config" "machine_sem" "mmio_pcs_min_index" "n2w"
+    "combin" "o" "primTypes" "prim_sem_env"
+    "recordtype.asm_config.seldef.big_endian" "asm_config"
+    "recordtype.asm_state.seldef.align" "recordtype.asm_state.seldef.mem"
+    "recordtype.asm_state.seldef.mem_domain"
+    "recordtype.asm_state.seldef.pc" "recordtype.asm_state.seldef.regs"
+    "recordtype.config.seldef.ffi_names" "config"
+    "recordtype.config.seldef.shmem_extra"
+    "recordtype.machine_config.seldef.ffi_entry_pcs"
+    "recordtype.machine_config.seldef.ffi_names"
+    "recordtype.machine_config.seldef.install_pc"
+    "recordtype.machine_config.seldef.mmio_info"
+    "recordtype.machine_config.seldef.next_interfer"
+    "recordtype.machine_config.seldef.prog_addresses"
+    "recordtype.machine_config.seldef.shared_addresses"
+    "recordtype.machine_config.seldef.target" "target"
+    "recordtype.shmem_info_num.seldef.addr_off"
+    "recordtype.shmem_info_num.seldef.addr_reg"
+    "recordtype.shmem_info_num.seldef.entry_pc"
+    "recordtype.shmem_info_num.seldef.exit_pc"
+    "recordtype.shmem_info_num.seldef.nbytes"
+    "recordtype.shmem_info_num.seldef.reg"
+    "recordtype.target.seldef.config" "recordtype.target.seldef.get_pc"
+    "recordtype.target.seldef.proj" "forge_refundExclusionReal"
+    "refund_installed_no_handler" "forge_refundCompileFacts"
+    "refund_lab_conf2" "forge_refundWholeProg" "refund_prog" "ast" "dec"
+    "semantics" "semantics_prog" "start_pc_ok" "target_configured"
+    "target_state_rel" "the_value" "w2n" "word_add" "word_and" "word_list"
+    "word_list_exists" "word_lo" "word_ls" "word_mul" "word_sub" "~"
+    "refund_u298_exclusion_real" "refund_installed_no_handler_def"
+    "refund_compile_correct_no_handler" "arm8_config" "backend"
+    "backendProof" "boolSimpsContext" "flat_pattern" "folMappingContext"
+    "forge_installHandlerIrrelevant" "forge_refundExclusionSource"
+    "forge_refundInstallHandler" "indexedLists" "namespace"
+    "normalFormsContext" "numeral" "presLang" "source_to_flat" "sptree"
+    "stack_to_lab" "forge_refundLabClosure")
+   (id-table (0 . 1) (0 . 2) (3 . 3) (4 . 5) (4 . 6) (7 . 7) (8 . 9)
+    (10 . 11) (12 . 13) (14 . 15) (0 . 16) (17 . 18) (17 . 19) (17 . 20)
+    (17 . 21) (17 . 22) (23 . 24) (25 . 26) (5 . 27) (28 . 29) (28 . 30)
+    (14 . 31) (32 . 33) (34 . 34) (12 . 35) (28 . 36) (5 . 37) (7 . 38)
+    (39 . 40) (4 . 41) (42 . 42) (8 . 43) (4 . 44) (5 . 45) (32 . 46)
+    (47 . 48) (28 . 49) (28 . 50) (51 . 52) (34 . 53) (28 . 54) (14 . 55)
+    (56 . 57) (56 . 58) (56 . 59) (8 . 60) (8 . 61) (34 . 62) (51 . 63)
+    (5 . 64) (51 . 65) (34 . 66) (5 . 67) (34 . 68) (28 . 69) (14 . 70)
+    (42 . 71) (72 . 73) (51 . 74) (5 . 75) (42 . 76) (12 . 77) (51 . 78)
+    (10 . 79) (28 . 80) (34 . 81) (82 . 83) (82 . 84) (85 . 86) (87 . 88)
+    (89 . 90) (12 . 91) (89 . 92) (93 . 94) (5 . 95) (12 . 96) (97 . 98)
+    (12 . 99) (23 . 100) (72 . 101) (87 . 102) (103 . 104) (105 . 106)
+    (12 . 107) (12 . 108) (93 . 109) (110 . 111) (112 . 113) (32 . 114)
+    (32 . 115) (25 . 116) (25 . 117) (25 . 118) (25 . 119) (25 . 120)
+    (23 . 121) (23 . 122) (23 . 123) (12 . 124) (12 . 125) (12 . 126)
+    (12 . 127) (12 . 128) (12 . 129) (12 . 130) (12 . 131) (103 . 132)
+    (23 . 133) (23 . 134) (23 . 135) (23 . 136) (23 . 137) (23 . 138)
+    (103 . 139) (103 . 140) (103 . 141) (142 . 143) (144 . 145) (146 . 147)
+    (148 . 149) (150 . 151) (12 . 152) (12 . 153) (103 . 154) (5 . 155)
+    (93 . 156) (93 . 157) (93 . 158) (85 . 159) (85 . 160) (93 . 161)
+    (93 . 162) (93 . 163) (93 . 164) (5 . 165))
+   (type-table (2) (1 0) (1 1) (1 2) (1 3) (1 4) (1 5) (3) (0 7 6) (4 8 7)
+    (5) "'d" (6 11) (7 6) (4 8 13) (0 7 3) (9 8 15) (4 16 7) (9 17 8)
+    (10 1) (0 7 19) (4 20 8) (9 21 18) (11) (9 23 22) (12) (9 25 24) (13)
+    (9 27 26) (14) (9 29 28) (15) (8 6 31 30) (16) (17 6) (4 31 7) (4 35 7)
+    (4 9 7) (4 12 7) (4 38 7) (4 32 7) (4 40 7) (4 10 7) (4 42 7) (4 10 10)
+    (4 10 44) (9 10 8) (22) (9 47 46) (4 46 48) (4 47 49) (9 31 12)
+    (4 12 51) (4 31 52) (9 8 7) (4 7 54) (4 8 55) (9 15 48) (4 48 57)
+    (4 15 58) (9 14 9) (4 9 60) (4 14 61) (23 57) (23 10) (9 64 63)
+    (4 63 65) (4 64 66) (24) (9 68 51) (4 51 69) (4 68 70) (4 8 46)
+    (4 10 72) (4 7 7) (4 7 74) (4 10 42) (4 8 9) (4 15 7) (4 15 78)
+    (4 9 37) (4 64 7) (4 64 81) (9 10 57) (23 83) (4 84 7) (4 84 85) (31)
+    (23 87) (30 88) (4 89 7) (4 89 90) (30 10) (4 92 7) (4 92 93) (4 69 7)
+    (4 69 95) (4 13 7) (4 13 97) (4 34 7) (4 99 7) (4 37 7) (4 14 7)
+    (4 102 7) (35) (4 104 47) (4 10 105) (4 64 64) (4 10 107) (42 11) (44)
+    (43 110) (9 109 111) (4 112 109) (46) (4 10 64) (4 44 115) (4 8 54)
+    (4 117 9) (4 8 37) (4 9 9) (4 9 120) (23 15) (4 122 10) (4 64 10)
+    (23 33) (4 125 10) (4 37 37) (23 8) (4 128 64) (4 8 10) (4 130 129)
+    (23 13) (4 64 132) (4 10 13) (4 134 133) (4 125 64) (4 33 10)
+    (4 137 136) (4 125 63) (4 33 57) (4 140 139) (4 112 111) (4 88 89)
+    (4 10 92) (9 8 13) (4 145 7) (4 146 7) (4 147 147) (4 147 148)
+    (4 114 7) (4 150 7) (4 150 151) (30 112) (4 153 112) (4 65 84) (4 8 8)
+    (4 8 15) (4 157 80) (4 122 158) (4 8 159) (4 32 35) (4 122 161) (74 6)
+    (4 163 10) (4 31 69) (4 10 165) (4 12 166) (4 32 167) (4 150 150)
+    (4 8 40) (4 60 146) (4 7 15) (4 8 172) (4 8 173) (4 31 30) (4 175 7)
+    (4 31 31) (4 10 177) (4 178 176) (4 31 150) (4 12 180) (4 32 181)
+    (4 88 92) (4 10 8) (4 184 134) (4 14 185) (4 12 153) (89) (4 188 7)
+    (4 34 10) (4 34 157) (4 34 9) (4 34 8) (4 34 184) (96) (4 195 89)
+    (4 195 125) (4 32 128) (4 32 88) (4 32 8) (4 32 84) (4 32 178) (4 32 9)
+    (106 6 31 30) (4 32 204) (4 33 104) (4 33 15) (4 204 188) (4 31 8)
+    (4 204 209) (4 9 175) (4 204 211) (4 31 76) (4 32 213) (119) (23 215)
+    (4 216 150) (4 111 217) (4 109 218) (4 34 40) (4 34 35) (4 204 221)
+    (4 8 156) (4 132 147) (4 8 224) (4 10 147) (4 8 226))
+   (term-table ("a" 8) ("bitmap_ptr" 8) ("bitmaps_dm" 9) ("cbspace" 10)
+    ("data_sp" 10) ("ffi" 12) ("ffi'" 12) ("heap_stack_dm" 9) ("i" 10)
+    ("index" 10) ("j" 10) ("m" 14) ("mc0" 32) ("ms" 31) ("ms'" 31) ("n" 10)
+    ("rec" 33) ("sdm" 9) ("t" 34) ("w" 8) (18 36) (18 37) (18 39) (18 41)
+    (18 43) (19 45) (20 45) (21 50) (21 53) (21 56) (21 59) (21 62) (21 67)
+    (21 71) (21 73) (25 45) (26 75) (27 10) (28 76) (29 75) (29 77) (29 79)
+    (29 80) (29 82) (29 86) (29 91) (29 94) (29 96) (29 98) (32 75)
+    (33 100) (33 37) (33 101) (33 103) (34 106) (36 44) (37 44) (38 80)
+    (39 108) (40 45) (41 113) (45 114) (47 116) (48 118) (49 119) (50 121)
+    (51 123) (51 124) (51 126) (52 127) (53 131) (53 135) (53 138) (53 141)
+    (54 44) (55 142) (56 143) (56 144) (57 149) (58 152) (58 80) (59 7)
+    (60 154) (61 68) (62 121) (63 14) (64 10) (65 155) (66 156) (67 9)
+    (68 160) (69 8) (70 122) (71 162) (72 64) (73 164) (75 168) (76 169)
+    (77 170) (78 10) (79 171) (80 174) (81 179) (82 40) (83 182) (84 183)
+    (85 184) (86 186) (87 187) (88 189) (90 190) (91 191) (92 192) (93 193)
+    (94 194) (95 196) (97 197) (98 198) (99 199) (100 200) (101 201)
+    (102 202) (103 203) (104 203) (105 205) (107 206) (108 137) (109 137)
+    (110 137) (111 207) (112 137) (113 208) (114 210) (115 212) (116 214)
+    (117 195) (118 216) (120 219) (121 203) (122 220) (123 222) (124 163)
+    (125 130) (126 223) (127 223) (128 225) (129 227) (130 77) (131 77)
+    (132 223) (133 223) (134 74))) exports (nil) (nil)
+  ((166
+    (((142 1) (28 30 31) (17 697) (169 1 2) (105 0) (170 31 67) (171 12 14)
+      (5 8 14 25 26 50 52 54 55 56 58 63 96 105 128 148) (172 2 3)
+      (110 13 24) (173 28) (174 0 1 4) (175 0) (142 0) (176 3) (177 2)
+      (178 1 3) (23 153) (34 42 44 45 50 98 451 455 747) (85 94)
+      (179 97 101 104 107 116) (180 3 4 6 7) (181 0 3 5) (42 7) (14 3 22)
+      (51 6 60 66) (182 198) (112 0)
+      (183 46 49 145 181 198 199 201 217 220 221 228 246 247 249 265)
+      (184 143 144) (185 31 34) (12 68) (93 70 326 328 381 728))
+     "DISK_THM") (2 0)
+    ("%12U103%5U108U82U60%5U108U82U75B137%136@%61@U151%12%13B134%3@%4@B36B36%10%14%6%12%5B96$2@%13@%83$1$0B28B33B47%12U124$1B132%12U119B40U151B49|U22|U20|U24B49"))
+   (167 (((142 0))) (1 0)
+    ("%12%13%3%4$3$2B134$1@$0@%18%11%1%2%17%7$9U124$5B140$8@$5$9B139$5U113$9U124$8B132B40$9$5U113B138%86U56U74$5U110B59%86U55U74B35U106$5U113B144%37U106B40$9U121$9U124$9U122B133B102$5U113$9B98%81%92$9B93$8@$5U113%92B90$5U111@$5U112@$0$2B84@$0$2B84$5U112B80%0$0U88$1$3B84B64$0$1$3B84B64B49|U21$1$9U123B42%0$0U88$2B64$0$2B64B49|U21$9U122$9U123B57%0%19$7$1B111$1$0B101$11U124U131U109@B41$1U88u6$0U85B48B36|U51|U21%15$0$8B38$0%92U66B26U106$6U113B143$6U112B64$0%92U66B26U106$6U113B143$1$3B84B64U151B36B49|U24$7%92U66B26%141U95B38B36B36B36B36B36B36B36B36B36B36B36B36B36B36B36B36B36$5%86U55U74B114U89$5%86U55U55U74B114U89$3U89$5%86U55U74B114$5%86U55U55U74B114B148%86U55U55U55U55U55U55U55U55U55U56U74U106%91B149$5%86U55U55U74B114$5%86U55U74B114B150B148$0$2B57$5%86U55U74B114u4$3U85B48$5%86U55U74B114%91B143u4$3%91%94U67U106B149B143U85B48$5%86U55U74B114%86U56U74U106%91B149B143u4$3%91$6U106B149B143%91%94U67U106B149B143U85B48$5%86U55U74B114%86U55U55U74U106%91B149B143u4$9U124$8B132%92U66U106B143U85B48$5%86U55U74B114%86U55U56U74U106%91B149B143u4$9U124$8B132$7U106B143%92U66U106B143U85B48$3%85%106B107%94B71B145$3%91%94U67U106B149B143$6B146B78$4%89$2B65B31U100@%135U115$9U118U76B45%8$10U118U105$0U77B46%16$11U124$10B132U142$0U127B26|%135U116B72$0%142$10U117B70B58B43$10U120%9$0$1B26|%135U116U68B62%16$0U129$0U126$0U125B54$0U130$0U128U106$11U124$10B132B143B34B27B30|%135U116B73B32U87B44$8%92U66B26%99$0%86U55U55U74B26B25B26%141U95B38B36B36B49|U24B36B36B36B36B36B36B36B36B36B36B36B36B36B36|%19$0$5%86U55U74B114$0B148$0$5%86U55U55U74B114B147B36B29|U63B69|U52|U52|U51|U53|U50B39|U24|U24|U20|U23"))
+   (168
+    (((142 2) (169 1 2) (105 1 2 3) (170 31 67 153) (171 12 14 160)
+      (5 8 14 25 50 52 54 56 58 63 105 128) (172 2 3) (110 13 24) (173 28)
+      (144 14) (142 0 1) (176 0) (177 3) (186 248) (178 1 3) (23 153)
+      (34 42 44 45 50 98 451 455) (85 94) (179 97 101 104 107 116)
+      (181 0 3 5) (42 7 119) (14 4 5 8 9 22) (182 198) (112 0)
+      (183 46 49 145 181 198 199 201 217 220 221 228 246 247 249 265)
+      (184 143 144) (185 31 34)) "DISK_THM") (2 0)
+    ("%12U103%5U108U82U60%5U108U82U75B137%136@%61@U151%12%13B134%3@%4@B36B36%12%5B104%13@%5U108U82U60%5U108U82U75B137%136@U97B79B49"))))
+ (incorporate (incorporate-types) incorporate-consts
+  ("refund_installed_no_handler" . 214))
+ (loadable-thydata ("userdef.deltas" (tag-knm 142 . 167))
+  ("grammardelta" (OO "refund_installed_no_handler" (tag-tm . "%134")))))

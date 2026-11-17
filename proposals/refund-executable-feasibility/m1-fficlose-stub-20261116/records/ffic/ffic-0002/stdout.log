@@ -1,0 +1,36 @@
+<<HOL message: Created theory "forge_refundFficloseStep">>
+CODE_BYTES 84
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0002/proof.sml:55: error: Type error in function application.
+   Function: term_to_string : term -> string
+   Argument: x : ''a
+   Reason: Can't unify term to ''a (Requires equality type)
+Found near
+  raise
+  mk_HOL_ERR "forge" "decide"
+  ("no literal separation for " ^ term_to_string x)
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0002/proof.sml:66: error: Clauses in case have different types.
+   Clauses 1-2:
+      (NONE, NONE) => EVAL eq |
+      (SOME x, SOME y) =>
+      if aconv x y then
+      (let val ... = ... in if ... orelse ... then th else ... ... end) else
+      EQF_INTRO (... ... or') : term option * term option -> thm
+   Clause 3:
+      (SOME x, NONE) =>
+      EQF_INTRO (var_lit x ol (rhs (... ...) handle UNCHANGED => r)) :
+      ''a option * 'b option -> thm
+   Reason: Can't unify term to ''a (Requires equality type)
+Found near
+  case (bl, br) of
+     (NONE, NONE) => EVAL eq |
+     (SOME x, ... ...) =>
+     if ... ... y then (let val ... in if ... then ... else ... end) else
+     EQF_INTRO (... ...) |
+     (... ..., ...) => EQF_INTRO (... ...) |
+     (...) => ... ...
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0002/proof.sml:109: error: Type error in function application.
+   Function: #message : {message: 'a, ...} -> 'a
+   Argument: e : hol_error
+   Reason: Can't unify hol_error to {message: 'a, ...} (Incompatible types)
+Found near
+  (pr ((("STEP_ALTERNATIVE_REJECTED " ^ w) ^ " ") ^ #message e); first rest)

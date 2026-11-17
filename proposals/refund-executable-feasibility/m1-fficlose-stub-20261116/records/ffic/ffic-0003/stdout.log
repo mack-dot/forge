@@ -1,0 +1,37 @@
+<<HOL message: Created theory "forge_refundFficloseStep">>
+CODE_BYTES 84
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0003/proof.sml:82: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0003/proof.sml:96: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+STEP_OK 1 14008478 PC 0x100025260w
+STUB_STATE s with
+<|PC := 0x100025260w; REG := s.REG; branch_hint := SOME BranchType_JMP|>
+Saved theorem _______ "cake_fficlose_stub_run"
+CHECKED cake_fficlose_stub_run
+ []
+⊢ fficlose_stub_pre s ⇒
+  ∃s1.
+    arm8_run 1 s = SOME s1 ∧ s1.PC = 0x100025260w ∧ s1.REG = s.REG ∧
+    s1.MEM = s.MEM ∧ s1.SP_EL0 = s.SP_EL0 ∧ s1.PSTATE = s.PSTATE ∧
+    s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception
+Saved theorem _______ "cake_fficlose_stub_wrong_target_refuted"
+CHECKED cake_fficlose_stub_wrong_target_refuted
+ []
+⊢ fficlose_stub_pre s ⇒ ¬∃s1. arm8_run 1 s = SOME s1 ∧ s1.PC = 0x100025264w
+Saved theorem _______ "cake_fficlose_stub_does_not_return"
+CHECKED cake_fficlose_stub_does_not_return
+ []
+⊢ fficlose_stub_pre s ∧ s.REG 30w ≠ 0x100025260w ⇒
+  ∃s1. arm8_run 1 s = SOME s1 ∧ s1.PC ≠ s.REG 30w
+STEP_ALTERNATIVE_REJECTED 14008479 HOL_ERR (HOL_ERROR {message = "hypothesis: s.MEM s.PC = 121w ==> F", origins = [{origin_function = "step", origin_structure = "forge", source_location = Loc_Unknown}]})
+CONTROL_OK changed stub word (14008478 -> 14008479) rejected by the fetch hypotheses
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFficloseStep)>>
+STEP_OK 1 a9be4ff4 PC 0x100025264w
+STEP_OK 2 a9017bfd PC 0x100025268w
+STEP_OK 3 910043fd PC 0x10002526Cw
+STEP_OK 4 f100007f PC 0x100025270w
+STEP_OK 5 540001ad PC 0x100025274w
+STEP_OK 6 f100203f PC 0x100025278w
+STEP_OK 7 54000181 PC 0x10002527Cw
+STEP_OK 8 aa0203f3 PC 0x100025280w
+STEP_ALTERNATIVE_REJECTED b9400408 HOL_ERR (HOL_ERROR {message = "hypothesis: aligned 2\n  ((s with\n    <|MEM :=\n        s.MEM\226\166\135\n          b + 31w \226\134\166 (63 >< 56) (s.REG 30w); b + 30w \226\134\166 (55 >< 48) (s.REG 30w);\n          b + 29w \226\134\166 (47 >< 40) (s.REG 30w); b + 28w \226\134\166 (39 >< 32) (s.RE

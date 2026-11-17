@@ -1,0 +1,245 @@
+<<HOL message: Created theory "forge_p1Explore">>
+Saved definition ____ "forge8_config_def"
+Saved theorem _______ "inst_select_exp_forge8_def"
+Saved theorem _______ "inst_select_forge8_def"
+Saved theorem _______ "get_forced_forge8_def"
+Saved theorem _______ "comp_forge8_def"
+Saved theorem _______ "compile_prog_forge8_def"
+Saved theorem _______ "compile_word_to_stack_forge8_def"
+Saved theorem _______ "word_alloc_inlogic_forge8_def"
+Saved theorem _______ "each_inlogic_forge8_def"
+Saved theorem _______ "word_to_word_inlogic_forge8_def"
+LINK ⊢ word_to_word_inlogic forge8_config = word_to_word_inlogic_forge8
+LINK ⊢ each_inlogic forge8_config = each_inlogic_forge8
+LINK ⊢ word_alloc_inlogic forge8_config = word_alloc_inlogic_forge8
+LINK ⊢ compile_word_to_stack forge8_config = compile_word_to_stack_forge8
+LINK ⊢ compile_prog forge8_config = compile_prog_forge8
+LINK ⊢ comp forge8_config = comp_forge8
+LINK ⊢ get_forced forge8_config = get_forced_forge8
+LINK ⊢ inst_select bits forge8_config = inst_select_forge8 bits
+LINK ⊢ inst_select_exp bits forge8_config = inst_select_exp_forge8 bits
+W2W_F8 ⊢ word_to_word_inlogic_forge8 word_conf progs =
+  (let
+     (n_oracles,col) = next_n_oracle (LENGTH progs) word_conf.col_oracle;
+     progs = ZIP (progs,n_oracles)
+   in
+     case each_inlogic_forge8 progs of
+       NONE => NONE
+     | SOME res => SOME (col,res))
+CWTS_F8 ⊢ compile_word_to_stack_forge8 perf k v bitmaps =
+  case v of
+    [] => ([],[],bitmaps)
+  | (i,n,p,md)::progs =>
+    (let
+       (prog,f,bitmaps') = compile_prog_forge8 perf p n k bitmaps;
+       (progs',fs,bitmaps'') =
+         compile_word_to_stack_forge8 perf k progs bitmaps'
+     in
+       ((i,prog,md)::progs',f::fs,bitmaps''))
+STAMP before translations 1794598432.262
+Starting translation of comp_forge8 from forge_p1ExploreTheory.
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_p1Explore)>>
+Saved definition ____ "cv_comp_forge8_def"
+Saved induction _____ "cv_comp_forge8_ind"
+Saved theorem _______ "comp_forge8_pre_rules"
+Saved theorem _______ "comp_forge8_pre_ind"
+Saved theorem _______ "comp_forge8_pre_strongind"
+Saved theorem _______ "comp_forge8_pre_cases"
+Saved theorem _______ "cv_comp_forge8_thm"
+Finished translating comp_forge8, stored in cv_comp_forge8_thm
+
+WARNING: definition of cv_comp_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem comp_forge8_pre[cv_pre]:
+  ∀perf v bs kf. comp_forge8_pre perf v bs kf
+Proof
+  ho_match_mp_tac comp_forge8_ind (* for example *)
+  ...
+QED
+
+PRE_COMP ⊢ ∀perf v bs kf.
+    comp_forge8_pre perf v bs kf ⇔
+    (∀v0. v = MustTerminate v0 ⇒ comp_forge8_pre perf v0 bs kf) ∧
+    (∀v0 v1 v2 v3.
+       v = Call v0 v1 v2 v3 ⇒
+       ∀v. v = call_dest v1 v2 kf ⇒
+           ∀v0' v1.
+             v = (v0',v1) ⇒
+             ∀v0'.
+               v0 = SOME v0' ⇒
+               ∀v0'' v1.
+                 v0' = (v0'',v1) ⇒
+                 ∀v0' v1'.
+                   v1 = (v0',v1') ⇒
+                   ∀v0'³' v1.
+                     v1' = (v0'³',v1) ⇒
+                     ∀v0'⁴' v1'.
+                       v1 = (v0'⁴',v1') ⇒
+                       ∀v. v =
+                           wLive (arch_width_bits (arch_wordsize ARMv8)) v0'
+                             bs kf ⇒
+                           ∀v0' v1.
+                             v = (v0',v1) ⇒
+                             comp_forge8_pre perf v0'³' v1 kf ∧
+                             ∀v. v = comp_forge8 perf v0'³' v1 kf ⇒
+                                 ∀v0' v1.
+                                   v = (v0',v1) ⇒
+                                   ∀v. v =
+                                       (if perf then
+                                          perf_call_prefix v0'⁴' v1' (FST kf)
+                                        else Skip) ⇒
+                                       ∀v. v =
+                                           (if perf then perf_call_suffix
+                                            else Skip) ⇒
+                                           ∀v0'³'.
+                                             v3 = SOME v0'³' ⇒
+                                             ∀v0'⁴' v1'.
+                                               v0'³' = (v0'⁴',v1') ⇒
+                                               ∀v0'³' v1''.
+                                                 v1' = (v0'³',v1'') ⇒
+                                                 ∀v0'⁴' v1'.
+                                                   v1'' = (v0'⁴',v1') ⇒
+                                                   ∀v'.
+                                                     v' =
+                                                     Seq v
+                                                       (copy_ret perf T kf
+                                                          v0''
+                                                          (PopHandler perf kf
+                                                             v0')) ⇒
+                                                     comp_forge8_pre perf
+                                                       v0'³' v1 kf) ∧
+    (∀v0 v1.
+       v = Seq v0 v1 ⇒
+       comp_forge8_pre perf v0 bs kf ∧
+       ∀v. v = comp_forge8 perf v0 bs kf ⇒
+           ∀v0 v1'. v = (v0,v1') ⇒ comp_forge8_pre perf v1 v1' kf) ∧
+    (∀v0 v1 v2 v3 v4.
+       v = If v0 v1 v2 v3 v4 ⇒
+       ∀v. v = wReg1 v1 kf ⇒
+           ∀v0' v1.
+             v = (v0',v1) ⇒
+             comp_forge8_pre perf v3 bs kf ∧
+             ∀v. v = comp_forge8 perf v3 bs kf ⇒
+                 ∀v0' v1. v = (v0',v1) ⇒ comp_forge8_pre perf v4 v1 kf) ∧
+    ∀v0 v1 v2. v = Loop v0 v1 v2 ⇒ comp_forge8_pre perf v1 bs kf
+Saved theorem _______ "comp_forge8_pre"
+STEP_OK comp pre
+Starting translation of compile_prog_forge8 from forge_p1ExploreTheory.
+Saved theorem _______ "cv_compile_prog_forge8_thm"
+Finished translating compile_prog_forge8, stored in cv_compile_prog_forge8_thm
+STEP_OK compile_prog
+Starting translation of compile_word_to_stack_forge8 from forge_p1ExploreTheory.
+Saved definition ____ "cv_compile_word_to_stack_forge8_def"
+Saved induction _____ "cv_compile_word_to_stack_forge8_ind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_rules"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_ind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_strongind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_cases"
+Saved theorem _______ "cv_compile_word_to_stack_forge8_thm"
+Finished translating compile_word_to_stack_forge8, stored in cv_compile_word_to_stack_forge8_thm
+
+WARNING: definition of cv_compile_word_to_stack_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem compile_word_to_stack_forge8_pre[cv_pre]:
+  ∀perf k v bitmaps. compile_word_to_stack_forge8_pre perf k v bitmaps
+Proof
+  ho_match_mp_tac compile_word_to_stack_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "compile_word_to_stack_forge8_pre"
+STEP_OK cwts pre
+Saved definition ____ "cv_get_forced_forge8_def"
+Saved induction _____ "cv_get_forced_forge8_ind"
+Saved theorem _______ "get_forced_forge8_pre_rules"
+Saved theorem _______ "get_forced_forge8_pre_ind"
+Saved theorem _______ "get_forced_forge8_pre_strongind"
+Saved theorem _______ "get_forced_forge8_pre_cases"
+Saved theorem _______ "cv_get_forced_forge8_thm"
+Finished translating get_forced_forge8, stored in cv_get_forced_forge8_thm
+
+WARNING: definition of cv_get_forced_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem get_forced_forge8_pre[cv_pre]:
+  ∀v acc. get_forced_forge8_pre v acc
+Proof
+  ho_match_mp_tac get_forced_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "get_forced_forge8_pre"
+STEP_OK get_forced pre
+Saved theorem _______ "cv_word_alloc_inlogic_forge8_thm"
+Finished translating word_alloc_inlogic_forge8, stored in cv_word_alloc_inlogic_forge8_thm
+STEP_OK word_alloc
+Saved definition ____ "cv_inst_select_exp_forge8_def"
+Saved induction _____ "cv_inst_select_exp_forge8_ind"
+Saved theorem _______ "inst_select_exp_forge8_pre_rules"
+Saved theorem _______ "inst_select_exp_forge8_pre_ind"
+Saved theorem _______ "inst_select_exp_forge8_pre_strongind"
+Saved theorem _______ "inst_select_exp_forge8_pre_cases"
+Saved theorem _______ "cv_inst_select_exp_forge8_thm"
+Finished translating inst_select_exp_forge8, stored in cv_inst_select_exp_forge8_thm
+
+WARNING: definition of cv_inst_select_exp_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem inst_select_exp_forge8_pre[cv_pre]:
+  ∀bits tar temp v. inst_select_exp_forge8_pre bits tar temp v
+Proof
+  ho_match_mp_tac inst_select_exp_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "inst_select_exp_forge8_pre"
+STEP_OK inst_select_exp pre
+Saved definition ____ "cv_inst_select_forge8_def"
+Saved induction _____ "cv_inst_select_forge8_ind"
+Saved theorem _______ "inst_select_forge8_pre_rules"
+Saved theorem _______ "inst_select_forge8_pre_ind"
+Saved theorem _______ "inst_select_forge8_pre_strongind"
+Saved theorem _______ "inst_select_forge8_pre_cases"
+Saved theorem _______ "cv_inst_select_forge8_thm"
+Finished translating inst_select_forge8, stored in cv_inst_select_forge8_thm
+
+WARNING: definition of cv_inst_select_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem inst_select_forge8_pre[cv_pre]:
+  ∀bits temp v. inst_select_forge8_pre bits temp v
+Proof
+  ho_match_mp_tac inst_select_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "inst_select_forge8_pre"
+STEP_OK inst_select pre
+Saved definition ____ "cv_each_inlogic_forge8_def"
+Saved induction _____ "cv_each_inlogic_forge8_ind"
+Saved theorem _______ "each_inlogic_forge8_pre_rules"
+Saved theorem _______ "each_inlogic_forge8_pre_ind"
+Saved theorem _______ "each_inlogic_forge8_pre_strongind"
+Saved theorem _______ "each_inlogic_forge8_pre_cases"
+Saved theorem _______ "cv_each_inlogic_forge8_thm"
+Finished translating each_inlogic_forge8, stored in cv_each_inlogic_forge8_thm
+
+WARNING: definition of cv_each_inlogic_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem each_inlogic_forge8_pre[cv_pre]:
+  ∀v. each_inlogic_forge8_pre v
+Proof
+  ho_match_mp_tac each_inlogic_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "each_inlogic_forge8_pre"
+STEP_OK each pre
+Saved theorem _______ "cv_word_to_word_inlogic_forge8_thm"
+Finished translating word_to_word_inlogic_forge8, stored in cv_word_to_word_inlogic_forge8_thm
+STEP_OK w2w
+STAMP after translations 1794598435.626
+EXPLORE_COMPLETE

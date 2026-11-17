@@ -1,0 +1,127 @@
+<<HOL message: Created theory "forge_refundFfiwriteUnaligned">>
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0004/proof.sml:86: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0004/proof.sml:100: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+Saved theorem _______ "check_alignment_no_fault"
+CHECKED check_alignment_no_fault
+ []
+⊢ s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.A ∧ acctype ≠ AccType_ATOMIC ∧
+  acctype ≠ AccType_ORDERED ⇒
+  CheckAlignment (address,n,acctype,iswrite) s = s
+Saved theorem _______ "check_alignment_fault"
+CHECKED check_alignment_fault
+ []
+⊢ s.PSTATE.EL = 0w ∧ s.SCTLR_EL1.A ∧ ¬aligned 1 address ∧
+  s.exception = NoException ⇒
+  CheckAlignment (address,2,acctype,iswrite) s =
+  s with exception := ALIGNMENT_FAULT
+WM2_HYPS ¬s.SCTLR_EL1.A ; ¬s.SCTLR_EL1.E0E ; acctype ≠ AccType_ATOMIC ; acctype ≠ AccType_ORDERED ; s.PSTATE.EL = 0w
+Saved theorem _______ "write_mem2_no_alignment"
+CHECKED write_mem2_no_alignment
+ []
+⊢ (((s.PSTATE.EL = 0w ∧ acctype ≠ AccType_ORDERED) ∧
+    acctype ≠ AccType_ATOMIC) ∧ ¬s.SCTLR_EL1.E0E) ∧ ¬s.SCTLR_EL1.A ⇒
+  write'Mem (d,address,2,acctype) s =
+  s with MEM := s.MEM⦇address + 1w ↦ (15 >< 8) d; address + 0w ↦ (7 >< 0) d⦈
+DECODE  []
+⊢ Decode
+    (v2w
+       [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T;
+        F; F; T; T; F; T; F; F; T]) =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+        sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+        v2w [F; T; F; F; T]))
+ARGS (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+ v2w
+   [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+    F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+    F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T],v2w [T; F; F; T; T],
+ v2w [F; T; F; F; T])
+OPC  []
+⊢ v2w
+    [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T; F;
+     F; T; T; F; T; F; F; T] =
+  0x78001269w
+DECODE_N  []
+⊢ Decode 0x78001269w =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w))
+RUN_N  []
+⊢ ∀s. Run
+        (LoadStore
+           (LoadStoreImmediate@16
+              (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w))) s =
+      dfn'LoadStoreImmediate
+        (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w) s
+T4  [¬s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, s.PSTATE.EL = 0w]
+⊢ dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)
+    (s with branch_hint := NONE) =
+  s with
+  <|MEM :=
+      s.MEM⦇
+        s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+        s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+      ⦈; branch_hint := NONE|>
+NX  [s.exception = NoException]
+⊢ Fetch (s with branch_hint := NONE) = (w,s with branch_hint := NONE) ∧
+  Decode w = ast ∧ (∀s. Run ast s = f x s) ∧
+  f x (s with branch_hint := NONE) = s1 ∧ s1.exception = s.exception ⇒
+  NextStateARM8 s =
+  SOME (if s1.branch_hint = NONE then s1 with PC := s1.PC + 4w else s1)
+CONJ 
+[¬s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, s.MEM s.PC = 105w,
+ s.MEM (s.PC + 1w) = 18w, s.MEM (s.PC + 3w) = 120w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, aligned 2 s.PC]
+⊢ Fetch (s with branch_hint := NONE) =
+  (0x78001269w,s with branch_hint := NONE) ∧
+  Decode 0x78001269w =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)) ∧
+  (∀s. Run
+         (LoadStore
+            (LoadStoreImmediate@16
+               (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w))) s =
+       dfn'LoadStoreImmediate
+         (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w) s) ∧
+  dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)
+    (s with branch_hint := NONE) =
+  s with
+  <|MEM :=
+      s.MEM⦇
+        s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+        s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+      ⦈; branch_hint := NONE|> ∧
+  (s with
+   <|MEM :=
+       s.MEM⦇
+         s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+         s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+       ⦈; branch_hint := NONE|>).exception =
+  s.exception
+STEP_HYPS ¬s.SCTLR_EL1.A ; ¬s.SCTLR_EL1.E0E ; s.MEM s.PC = 105w ; s.MEM (s.PC + 1w) = 18w ; s.MEM (s.PC + 3w) = 120w ; s.MEM (s.PC + 2w) = 0w ; s.PSTATE.EL = 0w ; s.exception = NoException ; aligned 2 s.PC
+Saved theorem _______ "sturh_w9_x19_1_step_no_alignment"
+CHECKED sturh_w9_x19_1_step_no_alignment
+ []
+⊢ (((((((s.exception = NoException ∧ s.PSTATE.EL = 0w) ∧ ¬s.SCTLR_EL1.E0E) ∧
+       ¬s.SCTLR_EL1.A) ∧ aligned 2 s.PC) ∧ s.MEM s.PC = 105w) ∧
+    s.MEM (s.PC + 1w) = 18w) ∧ s.MEM (s.PC + 2w) = 0w) ∧
+  s.MEM (s.PC + 3w) = 120w ⇒
+  NextStateARM8 s =
+  SOME
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+           s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+         ⦈; PC := s.PC + 4w; branch_hint := NONE|>)
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0004/proof.sml:242: error: Can't unify thm to {} (Incompatible types)
+Found near
+  (
+     store_thm ("sturh_w9_x19_1_alignment_fault", ... ..., ...);
+     pr "CONTROL_OK alignment fault theorem checked"
+     ) handle e => (pr ("FAULT_STEP_NOT_PROVED " ^ ... ...); TRUTH)

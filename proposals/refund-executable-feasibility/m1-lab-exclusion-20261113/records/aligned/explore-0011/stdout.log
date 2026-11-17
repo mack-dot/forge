@@ -1,0 +1,61 @@
+<<HOL message: Created theory "forge_alignedExplore">>
+Saved definition ____ "mval_inv_def"
+Saved definition ____ "load_covered_def"
+Saved definition ____ "region_inv2_def"
+OK..
+STAGE_FAILED cov/a :: 
+Exception raised at BasicProvers.by: by's tactic failed to prove subgoal on line 62
+
+AFTER cov/a: 1 goals, proved=false
+
+  GOAL load_covered (λx. ∃a. x = byte_align a)
+----
+LEMMA_OPEN cov
+AFTER cov end: 1 goals, proved=false
+
+  GOAL load_covered (λx. ∃a. x = byte_align a)
+----
+OK..
+1 subgoal:
+STAGE_OK cov-staged/c1
+OK..
+1 subgoal:
+STAGE_OK cov-staged/c2
+OK..
+STAGE_FAILED cov-staged/c3 :: 
+Exception raised at BasicProvers.by: by's tactic failed to prove subgoal on line 70
+
+AFTER cov-staged/c3: 1 goals, proved=false
+  ASM w2n x MOD 8 = 0
+  GOAL x = n2w (8 * (w2n w DIV 8))
+----
+LEMMA_OPEN cov-staged
+AFTER cov-staged end: 1 goals, proved=false
+  ASM w2n x MOD 8 = 0
+  GOAL x = n2w (8 * (w2n w DIV 8))
+----
+OK..
+STAGE_OK not_all/all (proved)
+LEMMA_PROVED not_all
+OK..
+2 subgoals:
+STAGE_OK not_all-staged/n1
+OK..
+1 subgoal:
+STAGE_OK not_all-staged/n2
+OK..
+
+Goal proved.
+ [.] ⊢ ∃w. v0 = Word w
+
+Goal proved.
+ [..] ⊢ ∃w. v0 = Word w
+
+Remaining subgoals:
+STAGE_OK not_all-staged/n3
+LEMMA_OPEN not_all-staged
+AFTER not_all-staged end: 1 goals, proved=false
+  ASM ¬G v0
+  GOAL ∃a. ¬G (if a = 1w then v0 else Word 0w)
+----
+EXPLORE_COMPLETE

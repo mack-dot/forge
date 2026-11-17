@@ -1,0 +1,21 @@
+(* Canonical dump of a theory: names, statements with types, tags, parents. For repeat comparison. *)
+open HolKernel boolLib Parse;
+val thy = valOf (OS.Process.getEnv "FORGE_DUMP_THEORY");
+val _ = Globals.max_print_depth := ~1;
+val _ = show_types := true;
+fun pr s = print (s ^ "\n");
+fun tagstr th = let val (ors,axs) = Tag.dest_tag (Thm.tag th) in String.concatWith "," ors ^ "|" ^ String.concatWith "," axs end;
+fun dump kind (n, th) = pr ("DUMP " ^ kind ^ " " ^ n ^ " TAGS " ^ tagstr th ^ " HYPS " ^ Int.toString (length (hyp th)) ^ "\n" ^ term_to_string (concl th));
+val out = TextIO.openOut (valOf (OS.Process.getEnv "FORGE_P3_OUT") ^ "/dump.txt");
+fun w s = TextIO.output (out, s ^ "\n");
+fun dumpf kind (n, th) = w ("DUMP " ^ kind ^ " " ^ n ^ " TAGS " ^ tagstr th ^ " HYPS " ^ Int.toString (length (hyp th)) ^ "\n" ^ term_to_string (concl th));
+fun srt (l : (string * thm) list) = Listsort.sort (fn ((a,_),(b,_)) => String.compare (a,b)) l;
+val _ = List.app (dumpf "THEOREM") (srt (DB.theorems thy));
+val _ = List.app (dumpf "DEFINITION") (srt (DB.definitions thy));
+val _ = List.app (dumpf "AXIOM") (srt (DB.axioms thy));
+val _ = w ("PARENTS " ^ String.concatWith " " (Listsort.sort String.compare (Theory.parents thy)));
+val _ = w ("ANCESTRY " ^ Int.toString (length (Theory.ancestry thy)) ^ " " ^ String.concatWith " " (Listsort.sort String.compare (Theory.ancestry thy)));
+val _ = w ("CONSTANTS " ^ String.concatWith " " (Listsort.sort String.compare (map (fn c => #Name (dest_thy_const c)) (Theory.constants thy))));
+val _ = TextIO.closeOut out;
+val _ = pr "DUMP_COMPLETE";
+val _ = OS.Process.exit OS.Process.success;

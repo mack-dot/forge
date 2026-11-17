@@ -98,6 +98,30 @@ base, nothing more.
 | Compiled binary | Every valid execution of a 1,240-byte RISC-V ELF terminates with status 0 under the pinned LPS model; 579 modules independently checked | Rocq proof via Theorem's pipeline | [docs/stage7-binary.md](docs/stage7-binary.md) |
 | Spec quality | Success witness checked; 8 of 10 mutants killed, 2 survived | mutation diagnostics | [docs/spec-quality.md](docs/spec-quality.md) |
 
+### In progress: refund executable (mission M1, open)
+
+Local, machine-checked HOL4/CakeML results for the compiled refund program
+(Mach-O arm64, SHA256 `b8ed5ec2…7bb8`, never executed). They are single-machine
+runs with cached parent theories. No clean replay and no independent replay
+exist. No assurance profile is approved. `end_to_end=false`.
+
+- Model-machine theorem at load slide 0 (`refund_profile_a_slide0`, U404):
+  from an **assumed** entry state, an **assumed** environment predicate
+  (`refund_env_ok`) and a canonical request on standard input, every run of
+  the model machine ends with the specified six-field output or stops at a
+  resource limit; the installer entry is never reached.
+- Relocation, first steps (U405): the 27 start-up instructions and the memory
+  domains are proved for every page-aligned, non-wrapping load slide. The
+  remaining steps are not run.
+- Open: profile approval; review of the Dafny-to-HOL contract identification;
+  the rest of the slide proof; the real loader, C run-time, `libSystem` and
+  processor (assumed, not proved); replays.
+
+Records: [M1 closure audit](proposals/refund-executable-feasibility/m1-closure-audit-20261116/M1_CLOSURE_AUDIT.md),
+[U404 report](proposals/refund-executable-feasibility/m1-profile-a-slide0-20261117/REPORT.md),
+[U405 report](proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/REPORT.md),
+[status](FORGE_MISSION_STATUS.md).
+
 ## What is **not** established
 
 - **End to end.** All evidence keeps `end_to_end=false`. The Dafny proof does

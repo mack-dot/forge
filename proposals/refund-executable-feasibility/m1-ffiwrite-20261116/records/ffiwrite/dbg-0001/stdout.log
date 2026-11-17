@@ -1,0 +1,42 @@
+SUB ZERO HEAD ZERO NARGS 0
+SUB BIT1 HEAD BIT1 NARGS 0
+SUB <..num comp'n..> HEAD BIT1 NARGS 1
+SUB BIT1 HEAD BIT1 NARGS 0
+SUB <..num comp'n..> HEAD BIT1 NARGS 1
+SUB NUMERAL HEAD NUMERAL NARGS 0
+SUB 3 HEAD NUMERAL NARGS 1
+SUB n2w HEAD n2w NARGS 0
+SUB 3w HEAD n2w NARGS 1
+SUB s HEAD <nonconst> NARGS 0
+SUB arm8_state_REG HEAD recordtype.arm8_state.seldef.REG NARGS 0
+SUB s.REG HEAD recordtype.arm8_state.seldef.REG NARGS 1
+SUB s.REG 3w HEAD recordtype.arm8_state.seldef.REG NARGS 2
+SUB a HEAD <nonconst> NARGS 0
+SUB s HEAD <nonconst> NARGS 0
+SUB arm8_state_MEM HEAD recordtype.arm8_state.seldef.MEM NARGS 0
+SUB s.MEM HEAD recordtype.arm8_state.seldef.MEM NARGS 1
+SUB s.MEM a HEAD recordtype.arm8_state.seldef.MEM NARGS 2
+SUB ZERO HEAD ZERO NARGS 0
+SUB BIT1 HEAD BIT1 NARGS 0
+SUB <..num comp'n..> HEAD BIT1 NARGS 1
+SUB NUMERAL HEAD NUMERAL NARGS 0
+SUB 1 HEAD NUMERAL NARGS 1
+SUB n2w HEAD n2w NARGS 0
+SUB 1w HEAD n2w NARGS 1
+SUB a HEAD <nonconst> NARGS 0
+SUB $+ HEAD word_add NARGS 0
+SUB $+ a HEAD word_add NARGS 1
+SUB a + 1w HEAD word_add NARGS 2
+SUB s HEAD <nonconst> NARGS 0
+SUB arm8_state_MEM HEAD recordtype.arm8_state.seldef.MEM NARGS 0
+SUB s.MEM HEAD recordtype.arm8_state.seldef.MEM NARGS 1
+SUB s.MEM (a + 1w) HEAD recordtype.arm8_state.seldef.MEM NARGS 2
+SUB $@@ HEAD word_concat NARGS 0
+SUB $@@ (s.MEM (a + 1w)) HEAD word_concat NARGS 1
+SUB s.MEM (a + 1w) @@ s.MEM a HEAD word_concat NARGS 2
+SUB w2w HEAD w2w NARGS 0
+SUB w2w (s.MEM (a + 1w) @@ s.MEM a) HEAD w2w NARGS 1
+SUB $<=+ HEAD word_ls NARGS 0
+SUB $<=+ (w2w (s.MEM (a + 1w) @@ s.MEM a)) HEAD word_ls NARGS 1
+SUB w2w (s.MEM (a + 1w) @@ s.MEM a) ≤₊ s.REG 3w HEAD word_ls NARGS 2
+EXPLORE_COMPLETE

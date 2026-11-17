@@ -1,0 +1,228 @@
+<<HOL message: Created theory "forge_refundExactExclusion">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundExactExclusion)>>
+Saved theorem _______ "refund_lab_sharemem_counts"
+Saved theorem _______ "sm_free_no_share_mem_inst"
+Saved theorem _______ "refund_lab_no_share_mem"
+Saved theorem _______ "refund_filtered_region_hyp"
+Saved theorem _______ "refund_filtered_walk_not_closed_29"
+BRANCH callffi
+BRANCH halt
+BRANCH install
+BRANCH call
+BRANCH jump
+BRANCH jumpcmp
+BRANCH locvalue
+BRANCH label
+BRANCH inst
+BRANCH jumpreg
+BRANCH sharemem
+Saved theorem _______ "region2_lab_step"
+Saved theorem _______ "refund_lab_step_closed"
+Saved theorem _______ "refund_lab_inv_init"
+Saved theorem _______ "refund_target_install_exclusion"
+Saved theorem _______ "trivial_invariant_not_closed"
+Saved theorem _______ "sharemem_line_detected"
+CHECKED refund_lab_sharemem_counts
+⊢ sm_count
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  0 ∧
+  sm_secs
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  [] ∧
+  sm_free
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) ∧
+  line_count
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  33749 ∧
+  sm_count
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog)))) = 0 ∧
+  sm_free
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog)))) ∧
+  line_count
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog)))) = 33735 ∧
+  lab_stats
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog)))) = (558,[29],553,1206,[29; 31])
+CHECKED sm_free_no_share_mem_inst
+⊢ ∀secs. sm_free secs ⇒ no_share_mem_inst secs
+CHECKED refund_lab_no_share_mem
+⊢ no_share_mem_inst
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) ∧
+  no_share_mem_inst
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))))
+CHECKED refund_filtered_region_hyp
+⊢ region_hyp
+    (loc_good
+       (pc_ok [Install_location; InstallData_location]
+          (filter_skip
+             (SND
+                (SND
+                   (to_lab arm8_config
+                      (set_oracle arm8_backend_config refund_alloc_oracle)
+                      refund_prog)))))
+       (filter_skip
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog)))))
+    (pc_ok [Install_location; InstallData_location]
+       (filter_skip
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog)))))
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog)))) ∧
+  pc_ok [Install_location; InstallData_location]
+    (filter_skip
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog)))) 0
+CHECKED refund_filtered_walk_not_closed_29
+⊢ ¬(hyp_walk1 [29]
+     (filter_skip
+        (SND
+           (SND
+              (to_lab arm8_config
+                 (set_oracle arm8_backend_config refund_alloc_oracle)
+                 refund_prog)))) 0
+     (filter_skip
+        (SND
+           (SND
+              (to_lab arm8_config
+                 (set_oracle arm8_backend_config refund_alloc_oracle)
+                 refund_prog)))) ∧
+   pc_ok [29]
+     (filter_skip
+        (SND
+           (SND
+              (to_lab arm8_config
+                 (set_oracle arm8_backend_config refund_alloc_oracle)
+                 refund_prog)))) 0)
+CHECKED region2_lab_step
+⊢ ∀s s'.
+    region_inv2 G D OK lcode s ∧ no_share_mem_inst lcode ∧
+    lab_step s = SOME s' ⇒
+    region_inv2 G D OK lcode s'
+CHECKED refund_lab_step_closed
+⊢ lab_step_closed refund_lab_inv
+CHECKED refund_lab_inv_init
+⊢ good_init_state mc0 ms0 bytes0 cbs0 t0 m dm0 sdm0 ⇒
+  ∀k. refund_lab_inv
+        (make_init mc0 ffi0 t0 m dm1 sdm1 ms0
+           (filter_skip
+              (SND
+                 (SND
+                    (to_lab arm8_config
+                       (set_oracle arm8_backend_config refund_alloc_oracle)
+                       refund_prog)))) cmp0 cbpos0 cbspace0 coracle0 with
+         clock := k)
+CHECKED refund_target_install_exclusion
+⊢ good_init_state mc0 ms0 bytes0 cbs0 t0 m dm0 sdm0 ∧
+  (∀k. FST
+         (evaluate
+            (make_init mc0 ffi0 t0 m dm1 sdm1 ms0
+               (filter_skip
+                  (SND
+                     (SND
+                        (to_lab arm8_config
+                           (set_oracle arm8_backend_config
+                              refund_alloc_oracle) refund_prog)))) cmp0
+               cbpos0 cbspace0 coracle0 with clock := k)) ≠ Error) ∧
+  encoder_correct mc0.target ∧
+  state_rel (mc0,code2,labs,p)
+    (make_init mc0 ffi0 t0 m dm1 sdm1 ms0
+       (filter_skip
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog)))) cmp0 cbpos0 cbspace0 coracle0) t1 ms0 ∧
+  code_layout_ok (:64) code2 ⇒
+  ∀n. no_install_prefix mc0 ffi0 n ms0
+CHECKED trivial_invariant_not_closed
+⊢ ¬lab_step_closed (λs. T)
+CHECKED sharemem_line_detected
+⊢ ¬sm_free [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  ¬no_share_mem_inst [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  sm_count [Section 0 [Asm (ShareMem mop r ad) bs n] md] = 1
+DEFINITION refund_lab_inv_def
+⊢ ∀s. refund_lab_inv s ⇔
+      region_inv2
+        (loc_good
+           (pc_ok [Install_location; InstallData_location]
+              (filter_skip
+                 (SND
+                    (SND
+                       (to_lab arm8_config
+                          (set_oracle arm8_backend_config refund_alloc_oracle)
+                          refund_prog)))))
+           (filter_skip
+              (SND
+                 (SND
+                    (to_lab arm8_config
+                       (set_oracle arm8_backend_config refund_alloc_oracle)
+                       refund_prog))))) (λx. ∃a. x = byte_align a)
+        (pc_ok [Install_location; InstallData_location]
+           (filter_skip
+              (SND
+                 (SND
+                    (to_lab arm8_config
+                       (set_oracle arm8_backend_config refund_alloc_oracle)
+                       refund_prog)))))
+        (filter_skip
+           (SND
+              (SND
+                 (to_lab arm8_config
+                    (set_oracle arm8_backend_config refund_alloc_oracle)
+                    refund_prog)))) s
+Exporting theory "forge_refundExactExclusion" ... done.
+Theory "forge_refundExactExclusion" took 14.3s to build
+EXACT_COMPLETE

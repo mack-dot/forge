@@ -1,0 +1,41 @@
+FREE_VARS 
+CONJ ⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info)
+CONJ ⊢ ffis = ffinames_to_string_list (the [] info.lab_conf.ffi_names)
+CONJ ⊢ syms = info.symbols
+CONJ ⊢ LENGTH code = 130436
+CONJ ⊢ LENGTH data = 2531
+CONJ ⊢ info.lab_conf.shmem_extra = []
+CONJ ⊢ prog_syntax_ok refund_prog
+CONJ ⊢ conf = encode_backend_config info
+CONJ_COUNT 8
+DEF ffis_def ⊢ ffis =
+  to_list to_mlstring_mlstring
+    (cv$Pair
+       (cv$Pair (cv$Num 0)
+          (cv$Pair (cv$Num 114)
+             (cv$Pair (cv$Num 101)
+                (cv$Pair (cv$Num 97) (cv$Pair (cv$Num 100) (cv$Num 0))))))
+       (cv$Pair
+          (cv$Pair (cv$Num 0)
+             (cv$Pair (cv$Num 119)
+                (cv$Pair (cv$Num 114)
+                   (cv$Pair (cv$Num 105)
+                      (cv$Pair (cv$Num 116) (cv$Pair (cv$Num 101) (cv$Num 0)))))))
+          (cv$Pair
+             (cv$Pair (cv$Num 0)
+                (cv$Pair (cv$Num 99)
+                   (cv$Pair (cv$Num 108)
+   
+DEF compiled ⊢ compile arm8_config (set_oracle arm8_backend_config oracle) refund_prog =
+  SOME (code,data,info) ∧
+  ffis = ffinames_to_string_list (the [] info.lab_conf.ffi_names) ∧
+  syms = info.symbols ∧ LENGTH code = 130436 ∧ LENGTH data = 2531 ∧
+  info.lab_conf.shmem_extra = [] ∧ prog_syntax_ok refund_prog ∧
+  conf = encode_backend_config info
+EVAL_FFIS ⊢ ffis = ffis
+CONSTANTS temp_oracle_cv::cv -> cv temp_oracle::num sptree$num_map option list syms::(mlstring # num # num) list refund_prog_cv::cv -> cv oracle::num sptree$num_map option list info::config ffis::mlstring list data::num list conf::string code::word8 list
+ALLOC_COMPILED ⊢ ∃c1.
+    compile arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+      refund_prog = SOME (code,data,c1)
+EXPLORE_COMPLETE

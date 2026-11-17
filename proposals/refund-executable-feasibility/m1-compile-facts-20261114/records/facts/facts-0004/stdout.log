@@ -1,0 +1,218 @@
+<<HOL message: Created theory "forge_refundCompileFacts">>
+<<HOL message: mk_functional: 
+  pattern completion has added 3 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 3 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "refs_line_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "has_label_def"
+Saved definition ____ "lab_defined_def"
+Saved definition ____ "refs_ok_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "line_ok_pre8_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundCompileFacts)>>
+Saved definition ____ "ends_label_def"
+Saved induction _____ "ends_label_ind"
+Saved definition ____ "gc_check_def"
+Saved theorem _______ "asm_ok_arm8_link"
+Saved theorem _______ "gc_check_good_code"
+SOUNDNESS_PROVED
+Saved theorem _______ "to_lab_lab_conf"
+EVAL_LAB_CONF ⊢ arm8_backend_config.lab_conf =
+  <|labels := LN; sec_pos_len := []; pos := 0; init_clock := 5;
+    ffi_names := NONE; shmem_extra := []; hash_size := 104729|>
+Saved theorem _______ "refund_lab_conf_facts"
+Saved theorem _______ "refund_lab_compile"
+Saved theorem _______ "refund_lab_bitmaps"
+Saved theorem _______ "refund_lab_ffi_names"
+CONFIG_FACTS_PROVED
+Saved definition ____ "gc_eval_def"
+Starting translation of ends_label from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_ends_label_thm"
+Finished translating ends_label, stored in cv_ends_label_thm
+Starting translation of refs_line from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_refs_line_thm"
+Finished translating refs_line, stored in cv_refs_line_thm
+Starting translation of has_label from forge_refundCompileFactsTheory.
+Saved definition ____ "EXISTS_lam_line_CASE_lam_lam_l_1_def"
+Saved induction _____ "EXISTS_lam_line_CASE_lam_lam_l_1_ind"
+Starting translation of EXISTS_lam_line_CASE_lam_lam_l from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EXISTS_lam_line_CASE_lam_lam_l_thm"
+Finished translating EXISTS_lam_line_CASE_lam_lam_l, stored in cv_EXISTS_lam_line_CASE_lam_lam_l_thm
+Saved theorem _______ "EXISTS_lam_line_CASE_lam_lam_l_ho"
+Starting translation of has_label from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_has_label_thm"
+Finished translating has_label, stored in cv_has_label_thm
+Starting translation of lab_defined from forge_refundCompileFactsTheory.
+Saved definition ____ "EXISTS_lam______Section_num_ha_1_def"
+Saved induction _____ "EXISTS_lam______Section_num_ha_1_ind"
+Starting translation of EXISTS_lam______Section_num_ha from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EXISTS_lam______Section_num_ha_thm"
+Finished translating EXISTS_lam______Section_num_ha, stored in cv_EXISTS_lam______Section_num_ha_thm
+Saved theorem _______ "EXISTS_lam______Section_num_ha_ho"
+Starting translation of lab_defined from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_lab_defined_thm"
+Finished translating lab_defined, stored in cv_lab_defined_thm
+Starting translation of refs_ok from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_lam_EVERY_lam_EVERY_lam__1_def"
+Saved induction _____ "EVERY_lam_EVERY_lam_EVERY_lam__1_ind"
+Starting translation of EVERY_lam_EVERY_lam_EVERY_lam_ from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_lam_EVERY_lam______SND_0_1_def"
+Saved induction _____ "EVERY_lam_EVERY_lam______SND_0_1_ind"
+Starting translation of EVERY_lam_EVERY_lam______SND_0 from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_lam______SND_0_lab_defin_1_def"
+Saved induction _____ "EVERY_lam______SND_0_lab_defin_1_ind"
+Starting translation of EVERY_lam______SND_0_lab_defin from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_lam______SND_0_lab_defin_thm"
+Finished translating EVERY_lam______SND_0_lab_defin, stored in cv_EVERY_lam______SND_0_lab_defin_thm
+Saved theorem _______ "EVERY_lam______SND_0_lab_defin_ho"
+Starting translation of EVERY_lam_EVERY_lam______SND_0 from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_lam_EVERY_lam______SND_0_thm"
+Finished translating EVERY_lam_EVERY_lam______SND_0, stored in cv_EVERY_lam_EVERY_lam______SND_0_thm
+Saved theorem _______ "EVERY_lam_EVERY_lam______SND_0_ho"
+Starting translation of EVERY_lam_EVERY_lam_EVERY_lam_ from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_lam_EVERY_lam_EVERY_lam__thm"
+Finished translating EVERY_lam_EVERY_lam_EVERY_lam_, stored in cv_EVERY_lam_EVERY_lam_EVERY_lam__thm
+Saved theorem _______ "EVERY_lam_EVERY_lam_EVERY_lam__ho"
+Starting translation of refs_ok from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_refs_ok'_thm"
+Finished translating refs_ok, stored in cv_refs_ok'_thm
+Starting translation of line_ok_pre8 from forge_refundCompileFactsTheory.
+Starting translation of compile_shmem from lab_to_targetTheory.
+Saved theorem _______ "cv_compile_shmem_thm"
+Finished translating compile_shmem, stored in cv_compile_shmem_thm
+Starting translation of line_ok_pre8 from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_line_ok_pre8_thm"
+Finished translating line_ok_pre8, stored in cv_line_ok_pre8_thm
+Starting translation of gc_check from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_lam_EVERY_line_ok_pre8_S_1_def"
+Saved induction _____ "EVERY_lam_EVERY_line_ok_pre8_S_1_ind"
+Starting translation of EVERY_lam_EVERY_line_ok_pre8_S from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_line_ok_pre8_Section_lin_1_def"
+Saved induction _____ "EVERY_line_ok_pre8_Section_lin_1_ind"
+Starting translation of EVERY_line_ok_pre8_Section_lin from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_line_ok_pre8_Section_lin_thm"
+Finished translating EVERY_line_ok_pre8_Section_lin, stored in cv_EVERY_line_ok_pre8_Section_lin_thm
+Saved theorem _______ "EVERY_line_ok_pre8_Section_lin_ho"
+Starting translation of EVERY_lam_EVERY_line_ok_pre8_S from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_lam_EVERY_line_ok_pre8_S_thm"
+Finished translating EVERY_lam_EVERY_line_ok_pre8_S, stored in cv_EVERY_lam_EVERY_line_ok_pre8_S_thm
+Saved theorem _______ "EVERY_lam_EVERY_line_ok_pre8_S_ho"
+Starting translation of gc_check from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_lam_ALL_DISTINCT_extract_1_def"
+Saved induction _____ "EVERY_lam_ALL_DISTINCT_extract_1_ind"
+Starting translation of EVERY_lam_ALL_DISTINCT_extract from forge_refundCompileFactsTheory.
+Starting translation of extract_labels from labPropsTheory.
+Saved definition ____ "cv_extract_labels_def"
+Saved induction _____ "cv_extract_labels_ind"
+Saved theorem _______ "cv_extract_labels_thm"
+Finished translating extract_labels, stored in cv_extract_labels_thm
+Starting translation of EVERY_lam_ALL_DISTINCT_extract from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_lam_ALL_DISTINCT_extract_thm"
+Finished translating EVERY_lam_ALL_DISTINCT_extract, stored in cv_EVERY_lam_ALL_DISTINCT_extract_thm
+Saved theorem _______ "EVERY_lam_ALL_DISTINCT_extract_ho"
+Starting translation of gc_check from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_sec_labels_ok_1_def"
+Saved induction _____ "EVERY_sec_labels_ok_1_ind"
+Starting translation of EVERY_sec_labels_ok from forge_refundCompileFactsTheory.
+Starting translation of sec_labels_ok from labPropsTheory.
+Saved definition ____ "EVERY_sec_label_ok_1_def"
+Saved induction _____ "EVERY_sec_label_ok_1_ind"
+Starting translation of EVERY_sec_label_ok from forge_refundCompileFactsTheory.
+Starting translation of sec_label_ok from labPropsTheory.
+Saved theorem _______ "cv_sec_label_ok_thm"
+Finished translating sec_label_ok, stored in cv_sec_label_ok_thm
+Starting translation of EVERY_sec_label_ok from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_sec_label_ok_thm"
+Finished translating EVERY_sec_label_ok, stored in cv_EVERY_sec_label_ok_thm
+Saved theorem _______ "EVERY_sec_label_ok_ho"
+Starting translation of sec_labels_ok from labPropsTheory.
+Saved theorem _______ "cv_sec_labels_ok_thm"
+Finished translating sec_labels_ok, stored in cv_sec_labels_ok_thm
+Starting translation of EVERY_sec_labels_ok from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_sec_labels_ok_thm"
+Finished translating EVERY_sec_labels_ok, stored in cv_EVERY_sec_labels_ok_thm
+Saved theorem _______ "EVERY_sec_labels_ok_ho"
+Starting translation of gc_check from forge_refundCompileFactsTheory.
+Saved definition ____ "EVERY_lam_ends_label_Section_l_1_def"
+Saved induction _____ "EVERY_lam_ends_label_Section_l_1_ind"
+Starting translation of EVERY_lam_ends_label_Section_l from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_EVERY_lam_ends_label_Section_l_thm"
+Finished translating EVERY_lam_ends_label_Section_l, stored in cv_EVERY_lam_ends_label_Section_l_thm
+Saved theorem _______ "EVERY_lam_ends_label_Section_l_ho"
+Starting translation of gc_check from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_gc_check_thm"
+Finished translating gc_check, stored in cv_gc_check_thm
+Starting translation of gc_eval from forge_refundCompileFactsTheory.
+Saved theorem _______ "cv_gc_eval_thm"
+Finished translating gc_eval, stored in cv_gc_eval_thm
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+EVAL_GC ⊢ gc_eval (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog
+Saved theorem _______ "gc_eval_result"
+Saved theorem _______ "refund_lab_good_code"
+Saved theorem _______ "gc_check_rejects_undefined_label"
+CHECKED asm_ok_arm8_link
+⊢ ∀a. asm_ok_arm8 a ⇔ asm_ok a arm8_config
+CHECKED gc_check_good_code
+⊢ ∀secs. gc_check secs ⇒ good_code arm8_config LN secs
+CHECKED to_lab_lab_conf
+⊢ ∀asm_conf c p. (FST (SND (to_lab asm_conf c p))).lab_conf = c.lab_conf
+CHECKED refund_lab_conf_facts
+⊢ isEmpty
+    (FST
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+    lab_conf.labels ∧
+  (FST
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+  lab_conf.pos = 0 ∧
+  (FST
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+  lab_conf.ffi_names = NONE
+CHECKED refund_lab_compile
+⊢ compile arm8_config
+    (FST
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+    lab_conf
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  SOME (code,refund_lab_conf2)
+CHECKED refund_lab_bitmaps
+⊢ FST
+    (to_lab arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+       refund_prog) = data
+CHECKED refund_lab_ffi_names
+⊢ ∃ffi_names.
+    refund_lab_conf2.ffi_names = SOME ffi_names ∧
+    mmio_pcs_min_index ffi_names = SOME (LENGTH ffi_names)
+CHECKED refund_lab_good_code
+⊢ good_code arm8_config LN
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+CHECKED gc_check_rejects_undefined_label
+⊢ ¬gc_check [Section 5 [LabAsm (Jump (Lab 7 1)) 0 [] 0; Label 5 1 0] ARB]
+Exporting theory "forge_refundCompileFacts" ... done.
+Theory "forge_refundCompileFacts" took 51.9s to build
+EXACT_COMPLETE

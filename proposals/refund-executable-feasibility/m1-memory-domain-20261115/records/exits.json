@@ -1,0 +1,69 @@
+[
+ {
+  "case": "dom-0001",
+  "actual_exit": 0,
+  "wall_seconds": 93.385,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: domains, asm state, domain lemmas, target_state_rel, target_configured, end state"
+ },
+ {
+  "case": "asm-0001",
+  "actual_exit": 1,
+  "wall_seconds": 71.033,
+  "markers": [],
+  "kind": "authoring (clause classification by constant name; two closers)"
+ },
+ {
+  "case": "asm-0002",
+  "actual_exit": 0,
+  "wall_seconds": 75.817,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: 23 clauses proved, 7 residual; forward assembly; compositions; five negative controls; non-vacuity of premises"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 1,
+  "wall_seconds": 67.95,
+  "markers": [],
+  "kind": "authoring (expected term: conjunction nesting)"
+ },
+ {
+  "case": "import-0002",
+  "actual_exit": 1,
+  "wall_seconds": 64.584,
+  "markers": [],
+  "kind": "authoring (expected term: type annotation)"
+ },
+ {
+  "case": "import-0003",
+  "actual_exit": 0,
+  "wall_seconds": 55.732,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 65 exact statements, 518 closure nodes, controls"
+ },
+ {
+  "case": "dom-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 60.84,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "asm-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 71.117,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

@@ -1,0 +1,155 @@
+[
+ {
+  "case": "reachability-evidence-write.txt",
+  "actual_exit": 0,
+  "kind": "tool: grep and sed on the pinned sources; text inspection, not a proof"
+ },
+ {
+  "case": "steps-0001",
+  "actual_exit": 0,
+  "wall_seconds": 37.761,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "step theorems exist for all 30+3+1 words"
+ },
+ {
+  "case": "ffiw-0001",
+  "actual_exit": 1,
+  "wall_seconds": 147.395,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "ffiw-0002",
+  "actual_exit": 1,
+  "wall_seconds": 68.87,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "ffiw-0003",
+  "actual_exit": 1,
+  "wall_seconds": 52.259,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "ffiw-0004",
+  "actual_exit": 1,
+  "wall_seconds": 58.656,
+  "markers": [],
+  "kind": "authoring (branch hypothesis after cmp not discharged)"
+ },
+ {
+  "case": "ffiw-0005",
+  "actual_exit": -15,
+  "wall_seconds": 628.081,
+  "markers": [],
+  "kind": "diagnostic run, stopped by the agent with SIGTERM; no theorem used"
+ },
+ {
+  "case": "dbg-0001",
+  "actual_exit": 0,
+  "wall_seconds": 21.521,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "diagnostic (record selector constant names); no theorem stored"
+ },
+ {
+  "case": "ffiw-0006",
+  "actual_exit": 1,
+  "wall_seconds": 151.654,
+  "markers": [],
+  "kind": "authoring (multiplication form before bit-blasting)"
+ },
+ {
+  "case": "ffiw-0007",
+  "actual_exit": 1,
+  "wall_seconds": 118.396,
+  "markers": [],
+  "kind": "authoring (bit-field step theorem instantiation); prefix and failed suffix checked"
+ },
+ {
+  "case": "ffiw-0008",
+  "actual_exit": 0,
+  "wall_seconds": 185.032,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwriteStep (7 theorems, 7 definitions)"
+ },
+ {
+  "case": "ffiw-0008r",
+  "actual_exit": 0,
+  "wall_seconds": 94.385,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat of ffiw-0008; checked statements identical"
+ },
+ {
+  "case": "wpath-0001",
+  "actual_exit": 1,
+  "wall_seconds": 602.411,
+  "markers": [],
+  "kind": "authoring (wrong file offset for the import stub in the script)"
+ },
+ {
+  "case": "wpath-0002",
+  "actual_exit": 0,
+  "wall_seconds": 603.83,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwritePath"
+ },
+ {
+  "case": "wcomp-0001",
+  "actual_exit": 0,
+  "wall_seconds": 420.466,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwriteCompose"
+ },
+ {
+  "case": "wsite-0001",
+  "actual_exit": 1,
+  "wall_seconds": 503.032,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "wsite-0002",
+  "actual_exit": 1,
+  "wall_seconds": 446.451,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "wsite-0003",
+  "actual_exit": 0,
+  "wall_seconds": 354.309,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwriteSite (16 theorems)"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 432.954,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "PASS: import and control case; 531 closure nodes; only the four bool axioms"
+ },
+ {
+  "case": "repeat of wpath/wcomp/wsite/import",
+  "actual_exit": null,
+  "kind": "NOT RUN (swap near its limit: 10.4 of 11.3 GiB used)"
+ }
+]

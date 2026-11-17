@@ -1,0 +1,164 @@
+<<HOL message: Created theory "forge_alignedExplore">>
+Saved definition ____ "mval_inv_def"
+Saved definition ____ "load_covered_def"
+Saved definition ____ "region_inv2_def"
+OK..
+1 subgoal:
+STAGE_OK inst/all
+OK..
+6 subgoals:
+STAGE_OK inst/m1
+OK..
+1 subgoal:
+STAGE_OK inst/m2
+OK..
+
+Goal proved.
+ [....] ⊢ ∀r. G (if n = r then s.mem x else read_reg r s)
+
+Goal proved.
+ [.....]
+⊢ (∀r. G
+         (read_reg r
+            (case addr a s of
+               NONE => s with failed := T
+             | SOME w =>
+               s with
+               <|regs := s.regs⦇n ↦ s.mem w⦈;
+                 failed :=
+                   (w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒
+                    w ∉ s.mem_domain ∨ s.failed)|>))) ∧
+  ∀a'.
+    D a' ⇒
+    G
+      ((case addr a s of
+          NONE => s with failed := T
+        | SOME w =>
+          s with
+          <|regs := s.regs⦇n ↦ s.mem w⦈;
+            failed :=
+              (w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒
+               w ∉ s.mem_domain ∨ s.failed)|>).mem a')
+
+Remaining subgoals:
+STAGE_OK inst/m3
+OK..
+STAGE_FAILED inst/m4 :: 
+Exception raised at folTools.FOL_FIND: no solution found
+
+AFTER inst/m4: 5 goals, proved=false
+  ASM ¬(case addr a s of
+   NONE => s with failed := T
+ | SOME w =>
+   case mem_load_byte_aux s.mem s.mem_domain s.be w of
+     NONE => s with failed := T
+   | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).failed
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL (∀r. G
+       (read_reg r
+          (case addr a s of
+             NONE => s with failed := T
+           | SOME w =>
+             case mem_load_byte_aux s.mem s.mem_domain s.be w of
+               NONE => s with failed := T
+             | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈))) ∧
+∀a'.
+  D a' ⇒
+  G
+    ((case addr a s of
+        NONE => s with failed := T
+      | SOME w =>
+        case mem_load_byte_aux s.mem s.mem_domain s.be w of
+          NONE => s with failed := T
+        | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).mem a')
+----
+  ASM ¬(case addr a s of
+   NONE => s with failed := T
+ | SOME w =>
+   case mem_load_32 s.mem s.mem_domain s.be w of
+     NONE => s with failed := T
+   | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).failed
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL (∀r. G
+       (read_reg r
+          (case addr a s of
+             NONE => s with failed := T
+           | SOME w =>
+             case mem_load_32 s.mem s.mem_domain s.be w of
+               NONE => s with failed := T
+             | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈))) ∧
+∀a'.
+  D a' ⇒
+  G
+    ((case addr a s of
+        NONE => s with failed := T
+      | SOME w =>
+        case mem_load_32 s.mem s.mem_domain s.be w of
+          NONE => s with failed := T
+        | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).mem a')
+----
+LEMMA_OPEN inst
+AFTER inst end: 5 goals, proved=false
+  ASM ¬(case addr a s of
+   NONE => s with failed := T
+ | SOME w =>
+   case mem_load_byte_aux s.mem s.mem_domain s.be w of
+     NONE => s with failed := T
+   | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).failed
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL (∀r. G
+       (read_reg r
+          (case addr a s of
+             NONE => s with failed := T
+           | SOME w =>
+             case mem_load_byte_aux s.mem s.mem_domain s.be w of
+               NONE => s with failed := T
+             | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈))) ∧
+∀a'.
+  D a' ⇒
+  G
+    ((case addr a s of
+        NONE => s with failed := T
+      | SOME w =>
+        case mem_load_byte_aux s.mem s.mem_domain s.be w of
+          NONE => s with failed := T
+        | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).mem a')
+----
+  ASM ¬(case addr a s of
+   NONE => s with failed := T
+ | SOME w =>
+   case mem_load_32 s.mem s.mem_domain s.be w of
+     NONE => s with failed := T
+   | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).failed
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL (∀r. G
+       (read_reg r
+          (case addr a s of
+             NONE => s with failed := T
+           | SOME w =>
+             case mem_load_32 s.mem s.mem_domain s.be w of
+               NONE => s with failed := T
+             | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈))) ∧
+∀a'.
+  D a' ⇒
+  G
+    ((case addr a s of
+        NONE => s with failed := T
+      | SOME w =>
+        case mem_load_32 s.mem s.mem_domain s.be w of
+          NONE => s with failed := T
+        | SOME v => s with regs := s.regs⦇n ↦ Word (w2w v)⦈).mem a')
+----
+EXPLORE_COMPLETE

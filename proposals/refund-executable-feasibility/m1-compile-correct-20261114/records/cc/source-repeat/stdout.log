@@ -1,0 +1,70 @@
+<<HOL message: Created theory "forge_refundExclusionSource">>
+INSTANCE compile_correct_lab_facts
+⊢ compile arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog = SOME (code,data,c1) ⇒
+  (let
+     (s0,env) = THE (prim_sem_env ffi);
+     s = add_eval_state NONE s0
+   in
+     ¬semantics_prog s env refund_prog Fail ∧
+     backend_config_ok arm8_config
+       (set_oracle arm8_backend_config refund_alloc_oracle) ∧
+     mc_conf_ok mc_conf ∧
+     mc_init_ok arm8_config
+       (set_oracle arm8_backend_config refund_alloc_oracle) mc_conf ∧
+     opt_eval_config_wf (:64) arm8_config c1 NONE ∧
+     installed code cbspace data data_sp c1.lab_conf.ffi_names
+       (heap_regs
+          (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.
+          reg_names) mc_conf c1.lab_conf.shmem_extra ms ⇒
+     lab_facts arm8_config
+       (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog code
+       c1 mc_conf ffi ms cbspace)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundExclusionSource)>>
+Saved theorem _______ "compile_lab_conf"
+CHECKED compile_lab_conf
+⊢ compile asm_conf c prog = SOME (bytes,bitmaps,c') ⇒
+  compile asm_conf (FST (SND (to_lab asm_conf c prog))).lab_conf
+    (SND (SND (to_lab asm_conf c prog))) = SOME (bytes,c'.lab_conf) ∧
+  FST (to_lab asm_conf c prog) = bitmaps
+Saved theorem _______ "refund_install_exclusion_compiled"
+CHECKED refund_install_exclusion_compiled
+⊢ is_arm8_machine_config mc_conf ∧
+  compile arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog = SOME (code,data,c1) ∧
+  ¬semantics_prog (FST (THE (prim_sem_env ffi)))
+    (SND (THE (prim_sem_env ffi))) refund_prog Fail ∧
+  installed code cbspace data data_sp c1.lab_conf.ffi_names
+    (heap_regs
+       (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.
+       reg_names) mc_conf c1.lab_conf.shmem_extra ms ⇒
+  ∀n. no_install_prefix mc_conf ffi n ms
+Saved theorem _______ "refund_install_exclusion_source"
+CHECKED refund_install_exclusion_source
+⊢ is_arm8_machine_config mc_conf ∧
+  ¬semantics_prog (FST (THE (prim_sem_env ffi)))
+    (SND (THE (prim_sem_env ffi))) refund_prog Fail ∧
+  installed code cbspace data data_sp refund_lab_conf2.ffi_names
+    (heap_regs
+       (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.
+       reg_names) mc_conf refund_lab_conf2.shmem_extra ms ⇒
+  ∀n. no_install_prefix mc_conf ffi n ms
+Saved theorem _______ "refund_u298_exclusion_source_any_handler"
+CHECKED refund_u298_exclusion_source_any_handler
+⊢ same_but_install mc0 mc_conf ∧ is_arm8_machine_config mc_conf ∧
+  ¬semantics_prog (FST (THE (prim_sem_env ffi)))
+    (SND (THE (prim_sem_env ffi))) refund_prog Fail ∧
+  installed code cbspace data data_sp refund_lab_conf2.ffi_names
+    (heap_regs
+       (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.
+       reg_names) mc_conf refund_lab_conf2.shmem_extra ms ⇒
+  (∀j ms' ffi'.
+     evaluate mc0 ffi j ms = (TimeOut,ms',ffi') ⇒
+     mc0.target.get_pc ms' ≠ mc0.install_pc) ∧
+  ∀k. evaluate mc0 ffi k ms = evaluate mc_conf ffi k ms
+HEAP_REGS ⊢ heap_regs
+    (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.reg_names =
+  (1,3)
+Exporting theory "forge_refundExclusionSource" ... done.
+Theory "forge_refundExclusionSource" took 5.0s to build
+EXACT_COMPLETE

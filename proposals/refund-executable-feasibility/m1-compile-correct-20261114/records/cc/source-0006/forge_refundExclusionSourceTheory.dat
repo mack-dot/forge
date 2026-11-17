@@ -1,0 +1,93 @@
+(theory
+ ("forge_refundExclusionSource"
+  ("forge_compileCorrectLabFacts" .
+   "c759986115b1a3fd35f10a2e273d04c55b3d1126"))
+ (core-data
+  (tables
+   (string-table "asm" "asm_config" "list" "num" "fcp" "cart" "bit0" "one"
+    "min" "bool" "backend" "config" "ffi" "ffi_state" "targetSem"
+    "machine_config" "pair" "prod" "fun" "bit1" "arm8" "exception"
+    "TCR_EL1" "SCTLRType" "ProcState" "arm8_state" "ast" "dec" "!" ","
+    "lab_to_target" "machine_result" "/\\" "=" "option" "==>" "FST"
+    "labLang" "sec" "semanticPrimitives" "state" "sem_env" "v" "Fail"
+    "behaviour" "SND" "SOME" "THE" "TimeOut" "arm8_config"
+    "arm8_backend_config" "arm8_target" "forge_refundArm8Compile" "code"
+    "compile" "data" "evaluate" "backendProof" "heap_regs" "sptree" "spt"
+    "installed" "shmem_info_num" "ffiname" "arm8_configProof"
+    "is_arm8_machine_config" "forge_targetInstallPrefix"
+    "no_install_prefix" "primTypes" "prim_sem_env"
+    "recordtype.config.seldef.ffi_names"
+    "recordtype.config.seldef.lab_conf" "stack_to_lab"
+    "recordtype.config.seldef.reg_names"
+    "recordtype.config.seldef.shmem_extra"
+    "recordtype.config.seldef.stack_conf"
+    "recordtype.machine_config.seldef.install_pc"
+    "recordtype.machine_config.seldef.target" "asmProps" "target"
+    "recordtype.target.seldef.get_pc" "forge_refundLabClosure"
+    "refund_alloc_oracle" "forge_refundCompileFacts" "refund_lab_conf2"
+    "forge_refundWholeProg" "refund_prog" "forge_installHandlerIrrelevant"
+    "same_but_install" "semantics" "semantics_prog" "set_oracle" "to_lab"
+    "~" "refund_u298_exclusion_source_any_handler"
+    "refund_install_exclusion_source" "refund_install_exclusion_compiled"
+    "compile_lab_conf" "forge_refundExclusionSource" "arithmetic"
+    "boolSimpsContext" "forge_compileCorrectLabFacts"
+    "forge_refundExclusionArm8" "words" "combin")
+   (id-table (0 . 1) (2 . 2) (3 . 3) (4 . 5) (4 . 6) (7 . 7) (8 . 9)
+    (10 . 11) (12 . 13) (14 . 15) (16 . 17) (8 . 18) (4 . 19) (20 . 21)
+    (20 . 22) (20 . 23) (20 . 24) (20 . 25) (26 . 27) (9 . 28) (16 . 29)
+    (30 . 11) (14 . 31) (9 . 32) (8 . 33) (34 . 34) (8 . 35) (16 . 36)
+    (37 . 38) (39 . 40) (39 . 41) (39 . 42) (12 . 43) (12 . 44) (16 . 45)
+    (34 . 46) (34 . 47) (14 . 48) (49 . 50) (51 . 49) (52 . 53) (10 . 54)
+    (30 . 54) (52 . 55) (14 . 56) (57 . 58) (59 . 60) (14 . 61) (30 . 62)
+    (12 . 63) (64 . 65) (66 . 67) (68 . 69) (30 . 70) (10 . 71) (72 . 73)
+    (72 . 11) (30 . 74) (10 . 75) (14 . 76) (14 . 77) (78 . 79) (78 . 80)
+    (81 . 82) (83 . 84) (85 . 86) (87 . 88) (89 . 90) (10 . 91) (10 . 92)
+    (9 . 93))
+   (type-table (0) (2) (1 1) (5) (4 3) (4 4) (4 5) (6) (3 7 6) (1 8) (7)
+    "'d" (8 11) (4 6) (4 13) (4 14) (3 7 15) (10 16 8) (11 17 7) (10 18 16)
+    (12 4) (3 7 20) (11 21 16) (10 22 19) (13) (10 24 23) (14) (10 26 25)
+    (15) (10 28 27) (16) (10 30 29) (17) (9 15 32 31) (18) (1 34) (11 32 7)
+    (11 36 7) (11 12 7) (11 38 7) (11 1 7) (11 40 7) (10 32 12) (11 12 42)
+    (11 32 43) (21) (10 9 45) (11 45 46) (11 9 47) (10 2 10) (10 9 49)
+    (11 49 50) (11 9 51) (11 10 49) (11 2 53) (22) (10 55 42) (11 42 56)
+    (11 55 57) (11 7 7) (11 7 59) (11 16 7) (11 16 61) (11 2 7) (11 2 63)
+    (25 46) (11 65 7) (11 65 66) (25 50) (11 68 7) (11 68 69) (11 56 7)
+    (11 56 71) (28) (1 73) (10 10 74) (11 75 10) (10 2 75) (11 77 2)
+    (29 11) (31) (30 80) (10 79 81) (11 82 79) (33) (11 75 74) (11 77 75)
+    (11 82 81) (11 46 65) (11 50 68) (25 82) (11 90 82) (11 35 68)
+    (11 10 92) (11 0 93) (11 74 65) (11 45 95) (11 0 96) (11 32 56)
+    (11 1 98) (11 12 99) (11 33 100) (10 1 1) (46 1) (11 103 102) (48)
+    (1 105) (11 106 36) (11 33 107) (11 102 108) (49) (1 110) (25 111)
+    (11 112 109) (11 1 113) (11 2 114) (11 1 115) (11 9 116) (11 33 7)
+    (11 1 36) (11 12 119) (11 33 120) (11 12 90) (11 45 112) (11 10 45)
+    (56) (11 125 103) (11 45 106) (11 10 125) (11 33 16) (61 15 32 31)
+    (11 33 130) (11 32 16) (11 130 132) (25 103) (1 134) (11 33 118)
+    (11 84 7) (11 35 137) (11 81 138) (11 79 139) (11 135 10) (11 10 141)
+    (11 35 77) (11 10 143) (11 0 144))
+   (term-table ("asm_conf" 0) ("bitmaps" 2) ("bytes" 9) ("c" 10) ("c'" 10)
+    ("c1" 10) ("cbspace" 1) ("data_sp" 1) ("ffi" 12) ("ffi'" 12) ("j" 1)
+    ("k" 1) ("mc0" 33) ("mc_conf" 33) ("ms" 32) ("ms'" 32) ("n" 1)
+    ("prog" 35) (19 37) (19 39) (19 41) (20 44) (20 48) (20 52) (20 54)
+    (20 58) (23 60) (24 62) (24 64) (24 67) (24 70) (24 72) (26 60) (27 76)
+    (27 78) (27 83) (32 84) (34 85) (34 86) (34 87) (35 88) (35 89) (36 91)
+    (37 55) (38 10) (39 0) (40 9) (41 94) (42 97) (43 2) (44 101) (45 104)
+    (47 117) (50 118) (51 121) (52 122) (53 123) (54 124) (55 126) (57 127)
+    (58 128) (59 129) (60 131) (62 133) (63 135) (64 45) (65 35) (66 136)
+    (67 140) (68 142) (69 145) (70 59))) exports (nil) (nil)
+  ((94 (((98 3) (9 50 52 63) (87 2) (98 2) (66 3)) "DISK_THM") (2 0)
+    ("%12%13B67%13U53%8U55U42U35%8U55U42U39B68%66@%36@U71%46%6B52%49@%7@%65U56@%44%64B69U60U58U51@%13@%65U59@%14@B26B26B26%10%15%9%12%8B50$2@%14@%43$1$0B21B25B31%12U62$1B63%12U61B27U71B32|U19|U18|U20%11%12%8B50$0@%14@%13%8B50$0@%14@B31|U20B26B32"))
+   (95
+    (((98 2) (57 12) (9 25 50 52 54 56 63) (83 14) (98 0 1) (81 248)
+      (34 119) (16 4)) "DISK_THM") (2 0)
+    ("%13U53%8U55U42U35%8U55U42U39B68%66@%36@U71%46%6B52%49@%7@%65U56@%44%64B69U60U58U51@%13@%65U59@%14@B26B26%16%13%8B54$0@%14@|U20B32"))
+   (96
+    (((98 1) (99 30 31) (64 1 2 3) (10 153) (57 12 14 131 137)
+      (9 25 26 31 46 47 50 52 54 56 58 63 101 105 128 148 150) (100 2 3)
+      (101 1 9) (83 14 16) (102 0) (34 119) (16 4 5 8 9 22) (14 112)
+      (103 70 326 328 381 728)) "DISK_THM") (2 0)
+    ("%13U53%45%44%64B69B47%66@%46%49%5B24B23U41B30%8U55U42U35%8U55U42U39B68%66@%36@U71%46%6B52%49@%7@%5U57U56@%44%64B69U60U58U51@%13@%5U57U59@%14@B26B26B26%16%13%8B54$0@%14@|U20B32"))
+   (97
+    (((98 0) (10 31 53 65 66) (9 25 27 50 56 58 63 105 128 144) (100 2 3)
+      (104 13) (34 6 118 119) (16 4 6 8 9 22 34)) "DISK_THM") (2 0)
+    ("%0%3B47%17@%2%1%4B24B23U41B30%0%0%3B70%17@U38U33U57B48%0%3B70%17@U38U37@%2%4U57B22U40B29%0%3B70%17@U34%1B28B26B32"))))
+ (incorporate (incorporate-types) incorporate-consts) (loadable-thydata))

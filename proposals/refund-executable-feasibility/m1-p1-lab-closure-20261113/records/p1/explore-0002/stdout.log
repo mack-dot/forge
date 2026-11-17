@@ -1,0 +1,346 @@
+ARM8_THEOREMS word_to_word_inlogic_arm8_def word_internal_all_arm8_def word_alloc_inlogic_arm8_def to_word_all_arm8_def to_word_0_arm8_def to_stack_all_arm8_def to_livesets_arm8_def to_livesets_0_arm8_def to_lab_all_arm8_def sec_ok_light_arm8_def remove_labels_loop_arm8_def remove_labels_arm8_def reg_ok_arm8_def reg_imm_ok_arm8_def line_ok_light_arm8_def lab_to_target_arm8_def inst_select_exp_arm8_def inst_select_arm8_def inst_ok_arm8_def get_forced_arm8_def from_word_arm8_def from_word_0_arm8_def from_stack_arm8_def from_lab_arm8_def fp_reg_ok_arm8_def fp_ok_arm8_def enc_secs_again_arm8_def enc_sec_list_arm8_def enc_sec_arm8_def enc_lines_again_arm8_def enc_line_arm8_def each_inlogic_arm8_def compile_word_to_stack_arm8_def compile_prog_arm8_def compile_lab_arm8_def compile_cake_explore_arm8_def compile_cake_arm8_thm compile_cake_arm8_def compile_0_arm8_def comp_arm8_def cmp_ok_arm8_def asm_ok_arm8_def arith_ok_arm8_def
+ARM8_DEFINITIONS 
+ARM8_LINK compile_cake_arm8_thm :: ⊢ compile_cake_arm8 c p =
+  SOME (bytes,bytes_len,bm,bm_len,ffi_names,shmem_len,syms,conf_str) ⇒
+  ∃c1.
+    compile arm8_config c p = SOME (bytes,bm,c1) ∧
+    ffi_names = ffinames_to_string_list (the [] c1.lab_conf.ffi_names) ∧
+    syms = c1.symbols ∧ LENGTH bytes = bytes_len ∧ LENGTH 
+PUBLISHED labProps.get_code_labels_def
+⊢ ∀code.
+    get_code_labels code = BIGUNION (IMAGE sec_get_code_labels (set code))
+END
+PUBLISHED labProps.sec_get_code_labels_def
+⊢ ∀n1 lines v0.
+    sec_get_code_labels (Section n1 lines v0) =
+    (n1,0) INSERT
+    IMAGE (λn2. (n1,n2)) (BIGUNION (IMAGE line_get_code_labels (set lines)))
+END
+PUBLISHED labProps.get_labels_def
+⊢ ∀code. get_labels code = BIGUNION (IMAGE sec_get_labels (set code))
+END
+PUBLISHED stack_to_lab.compile_def
+⊢ ∀aw stack_conf data_conf max_heap sp offset prog.
+    compile aw stack_conf data_conf max_heap sp offset prog =
+    (let
+       prog = compile prog;
+       prog = compile aw data_conf prog;
+       prog =
+         compile aw stack_conf.jump offset (is_gen_gc data_conf.gc_kind)
+           max_heap sp InitGlobals_location prog;
+       prog = compile stack_conf.reg_names prog
+     in
+       MAP prog_to_section prog)
+END
+PUBLISHED stack_to_lab.prog_to_section_def
+⊢ ∀n p md.
+    prog_to_section (n,p,md) =
+    (let
+       (lines,_0,m) = flatten T p n (next_lab p 2) [] []
+     in
+       Section n
+         (append
+            (Append lines (List [Label n (if is_Seq p then m else 1) 0]))) md)
+END
+PUBLISHED word_to_stack.compile_def
+⊢ ∀asm_conf perf progs.
+    compile asm_conf perf progs =
+    (let
+       k = asm_conf.reg_count − (5 + LENGTH asm_conf.avoid_regs);
+       init_bitmaps = if perf then (List [16],1) else (List [4],1);
+       (progs,fs,bitmaps) =
+         compile_word_to_stack asm_conf perf k progs init_bitmaps;
+       sfs = fromAList (MAP (λ((i,_0,_1),n). (i,n)) (ZIP (progs,fs)))
+     in
+       (append (FST bitmaps),
+        <|bitmaps_length := SND bitmaps; stack_frame_size := sfs|>,0::fs,
+        (raise_stub_location,raise_stub perf k,Metadata «_Raise» [Stub])::
+          (store_consts_stub_location,store_consts_stub k,
+           Metadata «_StoreConsts» [Stub])::progs))
+END
+PUBLISHED backend.compile_eq_from_source
+⊢ compile = from_source
+END
+PUBLISHED labSem.evaluate_def
+⊢ ∀s. evaluate s =
+      if s.clock = 0 then (TimeOut,s)
+      else
+        case asm_fetch s of
+          NONE => (Error,s)
+        | SOME (Label v39 v40 v42) => (Error,s)
+        | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+          (let
+             s1 = asm_inst i s
+           in
+             if s1.failed then (Error,s)
+             else evaluate (inc_pc (dec_clock s1)))
+        | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+        | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+        | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+        | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+          (case read_reg r s of
+             Word v3 => (Error,s)
+           | Loc n1 n2 =>
+             case loc_to_pc n1 n2 s.code of
+               NONE => (Error,s)
+             | SOME p => evaluate (upd_pc p (dec_clock s)))
+        | SOME (Asm (Asmi (Loc v19 v20)) v44 v45) => (Error,s)
+        | SOME (Asm (ShareMem m r ad) v44 v45) =>
+          (case share_mem_op m r ad s of
+             NONE => (Error,s)
+           | SOME (FFI_return v3 v4,s') =>
+             evaluate
+               (s' with
+                <|io_regs := shift_seq 1 s'.io_regs;
+                  io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+           | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s'))
+        | SOME (LabAsm (Jump l) v47 v50 v51) =>
+          (case get_pc_value l s of
+             NONE => (Error,s)
+           | SOME p => evaluate (upd_pc p (dec_clock s)))
+        | SOME (LabAsm (JumpCmp c r'' ri l') v47 v50 v51) =>
+          (case word_cmp c (read_reg r'' s) (reg_imm ri s) of
+             NONE => (Error,s)
+           | SOME T =>
+             (case get_pc_value l' s of
+                NONE => (Error,s)
+              | SOME p => evaluate (upd_pc p (dec_clock s)))
+           | SOME F => evaluate (inc_pc (dec_clock s)))
+        | SOME (LabAsm (Call l'') v47 v50 v51) =>
+          (case get_pc_value l'' s of
+             NONE => (Error,s)
+           | SOME p =>
+             case get_ret_Loc s of
+               NONE => (Error,s)
+             | SOME k =>
+               (let
+                  s1 = upd_reg s.link_reg k s
+                in
+                  evaluate (upd_pc p (dec_clock s1))))
+        | SOME (LabAsm (LocValue r' lab) v47 v50 v51) =>
+          if get_pc_value lab s = NONE then (Error,s)
+          else
+            (let
+               s1 = upd_reg r' (lab_to_loc lab) s
+             in
+               evaluate (inc_pc (dec_clock s1)))
+        | SOME (LabAsm (CallFFI ffi_index) v47 v50 v51) =>
+          (case
+             (read_reg s.len_reg s,read_reg s.ptr_reg s,
+              read_reg s.len2_reg s,read_reg s.ptr2_reg s,
+              read_reg s.link_reg s)
+           of
+             (Word w,Word w2,Word w3,v36,Word v41) => (Error,s)
+           | (Word w,Word w2,Word w3,Word w4,Loc n1 n2) =>
+             (case
+                (read_bytearray w2 (w2n w)
+                   (mem_load_byte_aux s.mem s.mem_domain s.be),
+                 read_bytearray w4 (w2n w3)
+                   (mem_load_byte_aux s.mem s.mem_domain s.be),
+                 loc_to_pc n1 n2 s.code)
+              of
+                (NONE,v3) => (Error,s)
+              | (SOME bytes,NONE,v9) => (Error,s)
+              | (SOME bytes,SOME bytes2,NONE) => (Error,s)
+              | (SOME bytes,SOME bytes2,SOME new_pc) =>
+                case call_FFI s.ffi (ExtCall ffi_index) bytes bytes2 of
+                  FFI_return new_ffi new_bytes =>
+                    (let
+                       new_io_regs = shift_seq 1 s.io_regs;
+                       new_io_fp_regs = shift_seq 1 s.io_fp_regs;
+                       new_m =
+                         write_bytearray w4 new_bytes s.mem s.mem_domain s.be
+                     in
+                       evaluate
+                         (s with
+                          <|mem := new_m; ffi := new_ffi;
+                            io_regs := new_io_regs;
+                            io_fp_regs := new_io_fp_regs;
+                            regs :=
+                              (λa.
+                                 get_reg_value
+                                   (s.io_regs 0 (ExtCall ffi_index) a)
+                                   (read_reg a s) Word);
+                            fp_regs := (λn. s.io_fp_regs 0 n); pc := new_pc;
+                            clock := s.clock − 1|>))
+                | FFI_final outcome => (Halt (FFI_outcome outcome),s))
+           | (Word w,Word w2,Word w3,Loc v48 v49,Loc n1 n2) => (Error,s)
+           | (Word w,Word w2,Loc v32 v33,v27) => (Error,s)
+           | (Word w,Loc v22 v23,v17) => (Error,s)
+           | (Loc v12 v13,v5) => (Error,s))
+        | SOME (LabAsm Install v47 v50 v51) =>
+          (case
+             (code_buffer_install (SOME (read_reg s.ptr_reg s))
+                (SOME (read_reg s.len_reg s)) (SOME (read_reg s.ptr2_reg s))
+                (mem_load_byte_aux s.mem s.mem_domain s.be) s.code_buffer,
+              read_reg s.link_reg s)
+           of
+             (v4,Word v12) => (Error,s)
+           | (NONE,Loc n1 n2) => (Error,s)
+           | (SOME (bytes,cb),Loc n1 n2) =>
+             case loc_to_pc n1 n2 s.code of
+               NONE => (Error,s)
+             | SOME new_pc =>
+               (let
+                  (cfg,prog) = s.compile_oracle 0;
+                  new_oracle = shift_seq 1 s.compile_oracle
+                in
+                  case (s.compile cfg prog,prog) of
+                    (v2,[]) => (Error,s)
+                  | (NONE,v6::v7) => (Error,s)
+                  | (SOME (bytes',cfg'),Section k v14 v15::v7) =>
+                    if bytes = bytes' ∧ FST (new_oracle 0) = cfg' then
+                      evaluate
+                        (s with
+                         <|pc := new_pc; code_buffer := cb;
+                           code := s.code ++ prog;
+                           cc_regs := shift_seq 1 s.cc_regs;
+                           cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                           regs :=
+                             (λa.
+                                get_reg_value (s.cc_regs 0 a) (read_reg a s)
+                                  Word)⦇
+                               s.ptr_reg ↦ Loc k 0
+                             ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                           compile_oracle := new_oracle;
+                           clock := s.clock − 1|>)
+                    else (Error,s)))
+        | SOME (LabAsm Halt v47 v50 v51) =>
+          case read_reg s.ptr_reg s of
+            Word 0w => (Halt Success,s)
+          | Word v6 => (Halt Resource_limit_hit,s)
+          | Loc v4 v5 => (Error,s)
+END
+TO_TARGET_THM backend.compile_eq_to_target
+TO_TARGET_THM backend.to_target_def
+TO_TARGET_THM backend_arm8.lab_to_target_arm8_def
+TO_TARGET_THM backend_arm8_cv.cv_lab_to_target_arm8_def
+TO_TARGET_THM backend_arm8_cv.cv_lab_to_target_arm8_thm
+TO_TARGET_THM backend_asm.lab_to_target_def
+TO_TARGET_THM backend_cv.cv_backend_enc_dec_lab_to_target_config_enc_def
+TO_TARGET_THM backend_cv.cv_backend_enc_dec_lab_to_target_config_enc_thm
+TO_TARGET_THM backend_cv.cv_backend_enc_dec_lab_to_target_shmem_info_num_enc_def
+TO_TARGET_THM backend_cv.cv_backend_enc_dec_lab_to_target_shmem_info_num_enc_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_add_nop_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_add_nop_ind
+TO_TARGET_THM backend_cv.cv_lab_to_target_add_nop_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_compute_labels_alt_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_compute_labels_alt_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_find_ffi_names_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_find_ffi_names_def_primitive
+TO_TARGET_THM backend_cv.cv_lab_to_target_find_ffi_names_ind
+TO_TARGET_THM backend_cv.cv_lab_to_target_find_ffi_names_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_find_pos_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_find_pos_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_ffi_index_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_ffi_index_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_jump_offset_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_jump_offset_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_label_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_label_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_memop_info_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_memop_info_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_shmem_info_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_shmem_info_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_zero_labs_acc_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_get_zero_labs_acc_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_lab_inst_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_lab_inst_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_line_bytes_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_line_bytes_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_line_get_zero_labs_acc_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_line_get_zero_labs_acc_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_lines_upd_lab_len_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_lines_upd_lab_len_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_list_add_if_fresh_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_list_add_if_fresh_ind
+TO_TARGET_THM backend_cv.cv_lab_to_target_list_add_if_fresh_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_bytes_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_bytes_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_code_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_code_ind
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_code_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_section_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_pad_section_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_prog_to_bytes_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_prog_to_bytes_def_primitive
+TO_TARGET_THM backend_cv.cv_lab_to_target_prog_to_bytes_ind
+TO_TARGET_THM backend_cv.cv_lab_to_target_prog_to_bytes_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_ffi_names_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_ffi_names_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_hash_size_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_hash_size_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_init_clock_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_init_clock_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_labels_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_labels_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_pos_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_pos_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_sec_pos_len_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_sec_pos_len_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_shmem_extra_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_config_seldef_shmem_extra_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_addr_off_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_addr_off_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_addr_reg_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_addr_reg_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_entry_pc_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_entry_pc_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_exit_pc_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_exit_pc_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_nbytes_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_nbytes_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_reg_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_recordtype_shmem_info_num_seldef_reg_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_sec_get_zero_labs_acc_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_sec_get_zero_labs_acc_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_section_labels_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_section_labels_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_upd_lab_len_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_upd_lab_len_ind
+TO_TARGET_THM backend_cv.cv_lab_to_target_upd_lab_len_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_zero_labs_acc_exist_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_zero_labs_acc_exist_thm
+TO_TARGET_THM backend_cv.cv_lab_to_target_zero_labs_acc_of_def
+TO_TARGET_THM backend_cv.cv_lab_to_target_zero_labs_acc_of_thm
+TO_TARGET_THM backend_cv.cv_list_enc_lab_to_target_shmem_i_def
+TO_TARGET_THM backend_cv.cv_list_enc_lab_to_target_shmem_i_thm
+TO_TARGET_THM backend_cv.lab_to_target_get_shmem_info_pre
+TO_TARGET_THM backend_cv.lab_to_target_get_shmem_info_pre_cases
+TO_TARGET_THM backend_cv.lab_to_target_get_shmem_info_pre_ind
+TO_TARGET_THM backend_cv.lab_to_target_get_shmem_info_pre_rules
+TO_TARGET_THM backend_cv.lab_to_target_get_shmem_info_pre_strongind
+TO_TARGET_THM backend_cv.lab_to_target_pad_section_pre_cases
+TO_TARGET_THM backend_cv.lab_to_target_pad_section_pre_ind
+TO_TARGET_THM backend_cv.lab_to_target_pad_section_pre_rules
+TO_TARGET_THM backend_cv.lab_to_target_pad_section_pre_strongind
+TO_TARGET_THM backend_cv.lab_to_target_upd_lab_len_pre
+TO_TARGET_THM backend_cv.lab_to_target_upd_lab_len_pre_cases
+TO_TARGET_THM backend_cv.lab_to_target_upd_lab_len_pre_ind
+TO_TARGET_THM backend_cv.lab_to_target_upd_lab_len_pre_rules
+TO_TARGET_THM backend_cv.lab_to_target_upd_lab_len_pre_strongind
+TO_TARGET_THM backend_cv.list_enc_lab_to_target_shmem_i_def
+TO_TARGET_THM backend_cv.list_enc_lab_to_target_shmem_i_ho
+TO_TARGET_THM backend_enc_dec.lab_to_target_config_dec_def
+TO_TARGET_THM backend_enc_dec.lab_to_target_config_enc_def
+TO_TARGET_THM backend_enc_dec.lab_to_target_shmem_info_num_dec_def
+TO_TARGET_THM backend_enc_dec.lab_to_target_shmem_info_num_enc_def
+TO_TARGET_THM backend_passes.compile_eq_to_target_all
+TO_TARGET_THM backend_passes.to_target_all_def
+TO_TARGET_THM backend_passes.to_target_thm
+TO_TARGET_THM backend_x64.lab_to_target_x64_def
+TO_TARGET_THM backend_x64_cv.cv_lab_to_target_x64_def
+TO_TARGET_THM backend_x64_cv.cv_lab_to_target_x64_thm
+TO_TARGET_THM to_data_cv.cv_rep_lab_to_target_lab_to_target_config_datatype
+TO_TARGET_THM to_data_cv.cv_rep_lab_to_target_lab_to_target_shmem_info_num_datatype
+TO_TARGET_THM to_data_cv.from_lab_to_target_config_def
+TO_TARGET_THM to_data_cv.from_lab_to_target_lab_to_target_config_def
+TO_TARGET_THM to_data_cv.from_lab_to_target_lab_to_target_shmem_info_num_def
+TO_TARGET_THM to_data_cv.from_lab_to_target_shmem_info_num_def
+TO_TARGET_THM to_data_cv.from_lab_to_target_to_lab_to_target_config_thm
+TO_TARGET_THM to_data_cv.from_lab_to_target_to_lab_to_target_shmem_info_num_thm
+TO_TARGET_THM to_data_cv.to_lab_to_target_config
+TO_TARGET_THM to_data_cv.to_lab_to_target_config_def
+TO_TARGET_THM to_data_cv.to_lab_to_target_shmem_info_num
+TO_TARGET_THM to_data_cv.to_lab_to_target_shmem_info_num_def
+EXPLORE_COMPLETE

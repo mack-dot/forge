@@ -1,0 +1,52 @@
+# Reachability evidence for the write FFI call (text inspection of sources; NOT a proof)
+## command: grep -n '#(write)' basis/TextIOProgScript.sml
+182:        val a = #(write) fd iobuff in
+## command: sed -n 176,196p basis/TextIOProgScript.sml (writei / write)
+* write: idem, but keeps writing until the whole (specified part of the) buffer
+* is written *)
+Quote add_cakeml:
+  fun writei fd n i =
+    let val a = Marshalling.n2w2 n iobuff 0
+        val a = Marshalling.n2w2 i iobuff 2
+        val a = #(write) fd iobuff in
+        if Word8Array.sub iobuff 0 = Word8.fromInt 1
+        then raise InvalidFD
+        else
+          let val nw = Marshalling.w22n iobuff 1 in
+            if nw = 0 then writei fd n i
+            else nw
+          end
+    end
+    fun write fd n i =
+      if n = 0 then () else
+        let val nw = writei fd n i in
+          if nw < n then write fd (n-nw) (i+nw) else () end
+End
+
+## command: sed -n 205,219p basis/TextIOProgScript.sml (output, print)
+End
+
+val _ = ml_prog_update open_local_in_block;
+
+(* Output functions on given file descriptor *)
+Quote add_cakeml:
+  fun output1 fd c =
+    (Word8Array.update iobuff 4 (Word8.fromInt(Char.ord c)); write (get_out fd) 1 0; ())
+End
+
+(* writes a string into a stream *)
+Quote add_cakeml:
+  fun output fd s = output_aux fd s 0 (String.size s)
+  fun print s = output stdOut s
+  fun print_err s = output stdErr s
+## refund_main (forge_refundStdioProgScript.sml lines 10-16)
+
+Quote add_cakeml:
+  fun refund_main u =
+    case TextIO.inputAllFrom None of
+      None => raise Fail "refund: stdin unavailable"
+    | Some wire => TextIO.print (refund_dispatch wire);
+End
+## sha256
+e2ddab184379b211222ff2a6879e5f192a7f9146f2561b9022483886f57ddb6a  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/TextIOProgScript.sml
+e65a58121bcf7c32501ed01f75783f08ec30653192b2265665a9cdae199ab2a1  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/basis_ffi.c

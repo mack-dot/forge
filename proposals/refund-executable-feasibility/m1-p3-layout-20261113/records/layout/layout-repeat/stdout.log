@@ -1,0 +1,28 @@
+<<HOL message: Created theory "forge_simLayout">>
+Saved definition ____ "code_layout_ok_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simLayout)>>
+Saved theorem _______ "state_rel_no_install_prefix_layout"
+Saved theorem _______ "installed_bound_code_layout"
+CHECKED state_rel_no_install_prefix_layout
+⊢ state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧ code_layout_ok (:α) code2 ⇒
+  no_install_prefix mc_conf ffi 0 ms1
+CHECKED installed_bound_code_layout
+⊢ cbspace + LENGTH (prog_to_bytes code2) + ffi_offset * (i + 3) <
+  dimword (:α) ⇒
+  code_layout_ok (:α) code2
+STRENGTHENED_STATEMENT_V2 (PROPOSED, NOT PROVED)
+∀s1 res mc_conf s2 code2 labs t1 ms1.
+  (oracle_tie mc_conf ms1 s1 ∧ evaluate s1 = (res,s2) ∧ res ≠ Error ∧
+   encoder_correct mc_conf.target ∧
+   state_rel (mc_conf,code2,labs,p) s1 t1 ms1) ∧
+  (∀k r t.
+     evaluate (s1 with clock := k) = (r,t) ⇒
+     ∀i bs n. asm_fetch t ≠ SOME (LabAsm Install i bs n)) ∧
+  code_layout_ok (:α) code2 ⇒
+  ∃k t2 ms2.
+    evaluate mc_conf s1.ffi (s1.clock + k) ms1 = (res,ms2,s2.ffi) ∧
+    no_install_prefix mc_conf s1.ffi (s1.clock + k) ms1
+FIDELITY published statement recovered by removing the three additions
+Exporting theory "forge_simLayout" ... done.
+Theory "forge_simLayout" took 1.4s to build
+P3_PROOF_COMPLETE

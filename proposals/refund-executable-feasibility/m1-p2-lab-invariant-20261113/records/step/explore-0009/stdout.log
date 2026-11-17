@@ -1,0 +1,40 @@
+<<HOL message: Created theory "forge_p2Explore">>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_ok_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_p2Explore)>>
+Saved definition ____ "hyp_walk_def"
+Saved induction _____ "hyp_walk_ind"
+Saved definition ____ "loc_good_def"
+OK..
+STAGE_OK walk/all (proved)
+LEMMA_PROVED walk
+OK..
+STAGE_OK line/all (proved)
+LEMMA_PROVED line
+OK..
+3 subgoals:
+STAGE_OK hyp/h1
+OK..
+
+Goal proved.
+⊢ loc_good okp code (Word w)
+
+Remaining subgoals:
+STAGE_OK hyp/h2
+OK..
+
+Goal proved.
+ [...] ⊢ step_ok (loc_good okp code) okp code pc line
+
+Remaining subgoals:
+STAGE_OK hyp/h3
+OK..
+
+Goal proved.
+ [...] ⊢ okp p
+STAGE_OK hyp/h4 (proved)
+LEMMA_PROVED hyp
+EXPLORE_COMPLETE

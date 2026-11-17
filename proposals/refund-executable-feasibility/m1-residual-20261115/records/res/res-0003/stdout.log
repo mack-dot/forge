@@ -1,0 +1,101 @@
+<<HOL message: Created theory "forge_refundResidual">>
+DEFINITION ⊢ ∀mc0 ms.
+    refund_installed_rest2 mc0 ms ⇔
+    interference_ok mc0.next_interfer (mc0.target.proj mc0.prog_addresses) ∧
+    ffi_interfer_ok ms.PC mc0
+Saved theorem _______ "refund_mc_concrete_fields"
+CHECKED refund_mc_concrete_fields
+⊢ ∀names.
+    refund_lab_conf2.ffi_names = SOME names ∧ LENGTH names = 4 ⇒
+    (refund_mc 0x1000040D0w envmc).ffi_names = names ∧
+    (refund_mc 0x1000040D0w envmc).ffi_entry_pcs =
+    [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w] ∧
+    (refund_mc 0x1000040D0w envmc).halt_pc = 0x1000040C0w ∧
+    (refund_mc 0x1000040D0w envmc).install_pc = 0x1000040B0w ∧
+    (refund_mc 0x1000040D0w envmc).mmio_info = [] ∧
+    (refund_mc 0x1000040D0w envmc).shared_addresses = ∅ ∧
+    (refund_mc 0x1000040D0w envmc).prog_addresses = envmc.prog_addresses ∧
+    (refund_mc 0x1000040D0w envmc).target = arm8_target
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundResidual)>>
+Saved theorem _______ "refund_stub_outside_domain"
+CHECKED refund_stub_outside_domain
+⊢ ∀a h e.
+    refund_heap_clear h e ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x1000040D0w ⇒
+    a ∉ refund_mem_dm h e
+CLAUSE_PROVED 1 start_pc_ok (refund_mc 0x1000040D0w envmc) ms.PC
+CLAUSE_KEPT_UNPROVED 2 interference_ok (refund_mc 0x1000040D0w envmc).next_interfer
+  ((refund_mc 0x1000040D0w envmc).target.proj
+     (refund_mc 0x1000040D0w envmc).prog_addresses)
+CLAUSE_KEPT_UNPROVED 3 ffi_interfer_ok ms.PC (refund_mc 0x1000040D0w envmc)
+CLAUSE_PROVED 4 ∀a. byte_align a ∈ (refund_mc 0x1000040D0w envmc).shared_addresses ⇒
+    a ∈ (refund_mc 0x1000040D0w envmc).shared_addresses
+CLAUSE_PROVED 5 DISJOINT (refund_mc 0x1000040D0w envmc).prog_addresses
+  (refund_mc 0x1000040D0w envmc).shared_addresses
+CLAUSE_PROVED 6 refund_lab_conf2.ffi_names = SOME (refund_mc 0x1000040D0w envmc).ffi_names
+CLAUSE_PROVED 7 ∀i. mmio_pcs_min_index (refund_mc 0x1000040D0w envmc).ffi_names = SOME i ⇒
+    MAP
+      (λrec.
+         w2n ((refund_mc 0x1000040D0w envmc).target.get_pc 
+Saved theorem _______ "refund_installed_rest_reduced"
+CHECKED refund_installed_rest_reduced
+⊢ refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  ms.PC = 0x1000040D0w ∧
+  refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+  refund_installed_rest (refund_mc 0x1000040D0w envmc) ms
+Saved theorem _______ "refund_installed_from_entry_reduced"
+CHECKED refund_installed_from_entry_reduced
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+     refund_installed_no_handler (refund_mc 0x1000040D0w envmc) ms 428 0)
+Saved theorem _______ "refund_behavior_from_entry_reduced"
+CHECKED refund_behavior_from_entry_reduced
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+     ∃io_events.
+       machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms ⊆
+       extend_with_resource_limit {Terminate Success io_events})
+Saved theorem _______ "refund_u298_exclusion_from_entry_reduced"
+CHECKED refund_u298_exclusion_from_entry_reduced
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+     ∀j ms' ffi'.
+       evaluate (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) j ms =
+       (TimeOut,ms',ffi') ⇒
+       (refund_mc 0x1000040D0w envmc).target.get_pc ms' ≠
+       (refund_mc 0x1000040D0w envmc).install_pc)
+Saved theorem _______ "wrong_base0_rejected"
+CHECKED wrong_base0_rejected
+⊢ ∀base0 pc. base0 ≠ pc ⇒ ¬start_pc_ok (refund_mc base0 envmc) pc
+Saved theorem _______ "halt_stub_in_domain_rejected"
+CHECKED halt_stub_in_domain_rejected
+⊢ ∀base0 pc.
+    base0 − n2w ffi_offset ∈ envmc.prog_addresses ⇒
+    ¬start_pc_ok (refund_mc base0 envmc) pc
+Saved theorem _______ "heap_on_halt_stub_rejected"
+CHECKED heap_on_halt_stub_rejected
+⊢ h ≤₊ 0x1000040C0w ∧ 0x1000040C0w <₊ e ∧
+  envmc.prog_addresses = refund_mem_dm h e ⇒
+  ¬start_pc_ok (refund_mc 0x1000040D0w envmc) 0x1000040D0w
+Saved theorem _______ "ffi_entry_stub_in_domain_rejected"
+CHECKED ffi_entry_stub_in_domain_rejected
+⊢ 0x1000040A0w ∈ envmc.prog_addresses ⇒
+  ¬start_pc_ok (refund_mc 0x1000040D0w envmc) 0x1000040D0w
+CLOSURE_NODES 519
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundResidual" ... done.
+Theory "forge_refundResidual" took 30.0s to build
+EXACT_COMPLETE

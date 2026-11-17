@@ -1,0 +1,56 @@
+(theory
+ ("forge_refundAllocBackend"
+  ("forge_targetInstallPrefix" .
+   "ab2d16446695e59e88dfb3a8401c1980e7f910f3")
+  ("forge_refundLabClosure" . "7e78e735a3f8d80c29846db3101d290829a0957c")
+  ("forge_refundArm8Proof" . "9bdbc3b3b8a698a89fac83a5b2b4ba3eb396f30c"))
+ (core-data
+  (tables
+   (string-table "backend" "config" "num" "semanticPrimitives" "sem_env"
+    "v" "ffi" "ffi_state" "targetSem" "machine_config" "state" "bool" "!"
+    "min" "fun" "pair" "," "prod" "list" "fcp" "cart" "bit0" "one" "/\\"
+    "=" "option" "==>" "Fail" "behaviour" "LET" "SOME" "pred_set" "SUBSET"
+    "THE" "UNCURRY" "arm8_config" "arm8_backend_config" "arm8_target" "asm"
+    "asm_config" "backendProof" "backend_config_ok"
+    "forge_refundArm8Compile" "code" "compile" "ast" "dec" "data"
+    "semanticsProps" "extend_with_resource_limit" "heap_regs" "sptree"
+    "spt" "installed" "lab_to_target" "shmem_info_num" "ffiname"
+    "machine_sem" "lab_to_targetProof" "mc_conf_ok" "mc_init_ok"
+    "primTypes" "prim_sem_env" "recordtype.config.seldef.ffi_names"
+    "recordtype.config.seldef.lab_conf" "stack_to_lab"
+    "recordtype.config.seldef.reg_names"
+    "recordtype.config.seldef.shmem_extra"
+    "recordtype.config.seldef.stack_conf" "forge_refundLabClosure"
+    "refund_alloc_oracle" "forge_refundWholeProg" "refund_prog" "semantics"
+    "semantics_prog" "set_oracle" "~" "refund_alloc_backend_correct"
+    "forge_refundAllocBackend")
+   (id-table (0 . 1) (2 . 2) (3 . 4) (3 . 5) (6 . 7) (8 . 9) (3 . 10)
+    (11 . 12) (13 . 14) (13 . 11) (15 . 16) (15 . 17) (18 . 18) (19 . 20)
+    (19 . 21) (22 . 22) (11 . 23) (13 . 24) (25 . 25) (13 . 26) (6 . 27)
+    (6 . 28) (11 . 29) (25 . 30) (31 . 32) (25 . 33) (15 . 34) (35 . 36)
+    (37 . 35) (38 . 39) (40 . 41) (42 . 43) (0 . 44) (45 . 46) (42 . 47)
+    (48 . 49) (40 . 50) (51 . 52) (8 . 53) (54 . 55) (6 . 56) (8 . 57)
+    (58 . 59) (40 . 60) (61 . 62) (54 . 63) (54 . 1) (0 . 64) (65 . 66)
+    (65 . 1) (54 . 67) (0 . 68) (69 . 70) (71 . 72) (73 . 74) (0 . 75)
+    (11 . 76))
+   (type-table (0) (1) (3) (2 2) "'ffi" (4 4) "'c" "'b" "'a" (5 8 7 6)
+    (6 4) (9) (8 0 11) (8 12 11) (12 1) (11 14 0) (15) (14 16) (14 17)
+    (14 18) (13 11 19) (12 20) (11 21 15) (8 15 22) (8 21 23) (8 0 15)
+    (8 14 25) (8 11 11) (8 11 27) (18 22) (8 29 11) (8 29 30) (21)
+    (11 10 3) (8 33 11) (8 34 34) (8 22 29) (8 32 11) (8 37 11) (8 37 38)
+    (18 33) (8 40 33) (8 3 11) (8 10 42) (8 43 34) (29) (8 45 12) (33)
+    (12 47) (8 48 29) (8 0 49) (8 45 50) (8 37 37) (11 1 1) (37 1)
+    (8 54 53) (8 7 11) (39) (12 57) (8 58 56) (8 9 59) (8 53 60) (40)
+    (12 62) (18 63) (8 64 61) (8 1 65) (8 14 66) (8 1 67) (8 21 68)
+    (8 7 37) (8 5 70) (8 9 71) (8 9 11) (8 0 73) (8 45 74) (8 5 40) (46)
+    (8 77 64) (8 0 77) (49) (8 80 54) (8 77 58) (8 0 80) (18 54) (12 84)
+    (8 48 37) (8 3 86) (8 10 87) (8 85 0) (8 0 89))
+   (term-table ("c1" 0) ("cbspace" 1) ("data_sp" 1) ("env" 3) ("ffi" 5)
+    ("mc" 9) ("ms" 7) ("s" 10) (7 13) (10 24) (10 26) (16 28) (17 31)
+    (19 28) (20 32) (22 35) (23 36) (24 39) (25 41) (26 44) (27 0) (28 45)
+    (30 46) (31 21) (32 51) (34 14) (35 52) (36 55) (38 69) (41 72) (42 73)
+    (43 75) (44 76) (45 78) (47 79) (48 81) (50 82) (51 83) (52 85) (53 48)
+    (54 88) (55 90) (56 27))) exports (nil) (nil)
+  ((77 (((78 0) (40 160)) "DISK_THM") (2 0)
+    ("%0%21%20%38B41B24%39@%23%25$0B10B9U16B12%7%3$1$0B40%39@%14@U42%21%20%38B41B22%5U30%21%20%38B41B31%5@%23%1B28%25@%2@$2U34U33@%20%38B41U37U35U27@%5@$2U34U36@%6@B11B11B11B11%5%4B29%6@$1$0B40%39@U26B17B13||U19%4U32U18B15B13|U8"))))
+ (incorporate (incorporate-types) incorporate-consts) (loadable-thydata))

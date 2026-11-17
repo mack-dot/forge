@@ -1,0 +1,152 @@
+<<HOL message: Created theory "forge_refundInstalledAssembly">>
+SELECTOR ⊢ (refund_t ms).regs 1 = ms.REG 1w
+SELECTOR ⊢ (refund_t ms).regs 3 = ms.REG 3w
+SELECTOR ⊢ (refund_t ms).pc = ms.PC
+SELECTOR ⊢ (refund_t ms).mem = ms.MEM
+SELECTOR ⊢ (refund_t ms).mem_domain = refund_mem_dm (ms.REG 1w) (ms.REG 3w)
+SELECTOR ⊢ (refund_t ms).align = 2
+CLAUSES 30
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundInstalledAssembly)>>
+CLAUSE_PROVED 1 target_state_rel mc0.target (refund_t ms) ms
+CLAUSE_PROVED 2 target_configured (refund_t ms) mc0
+CLAUSE_PROVED 3 ms.PC = mc0.target.get_pc ms
+CLAUSE_RESIDUAL 4 start_pc_ok mc0 ms.PC
+CLAUSE_PROVED 5 n2w (2² − 1) && ms.PC = 0w
+CLAUSE_RESIDUAL 6 interference_ok mc0.next_interfer (mc0.target.proj mc0.prog_addresses)
+CLAUSE_RESIDUAL 7 ffi_interfer_ok ms.PC mc0
+CLAUSE_PROVED 8 code_loaded code mc0 ms
+CLAUSE_PROVED 9 bytes_in_mem ms.PC code ms.MEM (refund_mem_dm (ms.REG 1w) (ms.REG 3w))
+  ({w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} ∪ refund_bitmaps_dm)
+CLAUSE_PROVED 10 {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} ∪ refund_bitmaps_dm ⊆
+refund_mem_dm (ms.REG 1w) (ms.REG 3w)
+CLAUSE_PROVED 11 ∀a. byte_align a ∈ {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} ∪ refund_bitmaps_dm ⇒
+    a ∈ {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w}
+CLAUSE_RESIDUAL 12 ∀a. byte_align a ∈ mc0.shared_addresses ⇒ a ∈ mc0.shared_addresses
+CLAUSE_RESIDUAL 13 DISJOINT mc0.prog_addresses mc0.shared_addresses
+CLAUSE_PROVED 14 ∀a. ∃w.
+  ms.MEM a = get_byte a w mc0.target.config.big_endian ∧
+  Word (mem_dword ms.MEM (byte_align a)) = Word w
+CLAUSE_PROVED 15 ∀n. n < 428 ⇒
+    n2w (n + LENGTH code) + ms.PC ∈ refund_mem_dm (ms.REG 1w) (ms.REG 3w) ∧
+    n2w (n + LENGTH code) + ms.PC ∉
+    {w | ms.RE
+CLAUSE_PROVED 16 428 + LENGTH code < dimword (:64)
+CLAUSE_PROVED 17 byte_aligned (ms.REG 1w)
+CLAUSE_PROVED 18 byte_aligned (ms.REG 3w)
+CLAUSE_PROVED 19 byte_aligned 0x10002C018w
+CLAUSE_PROVED 20 ms.REG 1w ≤₊ ms.REG 3w
+CLAUSE_PROVED 21 1024w * bytes_in_word ≤₊ ms.REG 3w − ms.REG 1w
+CLAUSE_PROVED 22 DISJOINT {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} refund_bitmaps_dm
+CLAUSE_PROVED 23 Word (mem_dword ms.MEM (ms.REG 1w)) = Word 0x10002C018w
+CLAUSE_PROVED 24 Word (mem_dword ms.MEM (ms.REG 1w + bytes_in_word)) =
+Word (0x10002C018w + bytes_in_word * n2w (LENGTH data))
+CLAUSE_PROVED 25 Word (mem_dword ms.MEM (ms.REG 1w + 2w * bytes_in_word)) =
+Word (0x10002C018w + bytes_in_word * 0w + bytes_in_word * n2w (LENGTH data))
+CLAUSE_PROVED 26 Word (mem_dword ms.MEM (ms.REG 1w + 3w * bytes_in_word)) =
+Word (mc0.target.get_pc ms + n2w (LENGTH code))
+CLAUSE_PROVED 27 Word (mem_dword ms.MEM (ms.REG 1w + 4w * bytes_in_word)) =
+Word (mc0.target.get_pc ms + 428w + n2w (LENGTH code))
+CLAUSE_PROVED 28 (word_list 0x10002C018w (MAP (Word ∘ n2w) data) *
+ word_list_exists (0x10002C018w + bytes_in_word * n2w (LENGTH data)) 0)
+  (fun2set ((λa. Word (me
+CLAUSE_RESIDUAL 29 refund_lab_conf2.ffi_names = SOME mc0.ffi_names
+CLAUSE_RESIDUAL 30 ∀i. mmio_pcs_min_index mc0.ffi_names = SOME i ⇒
+    MAP (λrec. w2n (mc0.target.get_pc ms) + rec.entry_pc)
+      refund_lab_conf2.shmem_extra = DR
+RESIDUAL_CLAUSES 7 PROVED_CLAUSES 23
+DEFINITION ⊢ ∀mc0 ms.
+    refund_installed_rest mc0 ms ⇔
+    start_pc_ok mc0 ms.PC ∧
+    interference_ok mc0.next_interfer (mc0.target.proj mc0.prog_addresses) ∧
+    ffi_interfer_ok ms.PC mc0 ∧
+    (∀a. byte_align a ∈ mc0.shared_addresses ⇒ a ∈ mc0.shared_addresses) ∧
+    DISJOINT mc0.prog_addresses mc0.shared_addresses ∧
+    refund_lab_conf2.ffi_names = SOME mc0.ffi_names ∧
+    ∀i. mmio_pcs_min_index mc0.ffi_names = SOME i ⇒
+        MAP (λrec. w2n (mc0.target.get_pc ms) + rec.entry_pc)
+          refund_lab_conf2.shmem_extra = DROP i (MAP w2n mc0.ffi_entry_pcs) ∧
+        mc0.mmio_info =
+        ZIP
+          (GENLIST (λindex. index + i) (LENGTH refund_lab_conf2.shmem_extra),
+           MAP
+             (λrec.
+                (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                 n2w rec.exit_pc + mc0.target.get_pc ms))
+             refund_lab_conf2.shmem_extra) ∧
+        428 + LENGTH code + ffi_offset * (i + 3) < dimword (:64)
+Saved theorem _______ "refund_installed_from_end_state"
+CHECKED refund_installed_from_end_state
+⊢ is_arm8_machine_config mc0 ∧
+  mc0.prog_addresses = refund_mem_dm (ms.REG 1w) (ms.REG 3w) ∧
+  refund_end_state ms ∧ refund_installed_rest mc0 ms ⇒
+  refund_installed_no_handler mc0 ms 428 0
+Saved theorem _______ "refund_installed_from_entry"
+CHECKED refund_installed_from_entry
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧
+    ∀mc0.
+      is_arm8_machine_config mc0 ∧ mc0.prog_addresses = refund_mem_dm h e ∧
+      refund_installed_rest mc0 ms ⇒
+      refund_installed_no_handler mc0 ms 428 0
+/Users/mackianni/forge/results/refund-memory-domain-local-20261115/attempt-0001/asm-repeat/proof.sml:125: warning: Pattern is not exhaustive. Found near val (weak :: inputs) = strip_conj ant
+Saved theorem _______ "refund_behavior_from_entry"
+CHECKED refund_behavior_from_entry
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧
+    (refund_installed_rest (refund_mc base0 envmc) ms ⇒
+     ∃io_events.
+       machine_sem (refund_mc base0 envmc) (basis_ffi ext cl fs) ms ⊆
+       extend_with_resource_limit {Terminate Success io_events})
+Saved theorem _______ "refund_u298_exclusion_from_entry"
+CHECKED refund_u298_exclusion_from_entry
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧
+    (refund_installed_rest (refund_mc base0 envmc) ms ⇒
+     ∀j ms' ffi'.
+       evaluate (refund_mc base0 envmc) (basis_ffi ext cl fs) j ms =
+       (TimeOut,ms',ffi') ⇒
+       (refund_mc base0 envmc).target.get_pc ms' ≠
+       (refund_mc base0 envmc).install_pc)
+Saved theorem _______ "heap_on_code_rejected"
+CHECKED heap_on_code_rejected
+⊢ h ≤₊ 0x1000040D0w ∧ 0x1000040D0w <₊ e ⇒
+  ¬refund_heap_clear h e ∧
+  ∀m md.
+    ¬bytes_in_mem 0x1000040D0w code m md
+      ({w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm)
+Saved theorem _______ "heap_on_bitmaps_rejected"
+CHECKED heap_on_bitmaps_rejected
+⊢ h ≤₊ 0x10002C018w ∧ 0x10002C018w <₊ e ⇒
+  ¬DISJOINT {w | h ≤₊ w ∧ w <₊ e} refund_bitmaps_dm
+Saved theorem _______ "code_outside_domain_rejected"
+CHECKED code_outside_domain_rejected
+⊢ ∀i a m md k. i < LENGTH code ∧ a + n2w i ∉ md ⇒ ¬bytes_in_mem a code m md k
+Saved theorem _______ "prog_addresses_mismatch_rejected"
+CHECKED prog_addresses_mismatch_rejected
+⊢ ∀ms mc0.
+    mc0.prog_addresses ≠ (refund_t ms).mem_domain ⇒
+    ¬target_configured (refund_t ms) mc0
+Saved theorem _______ "unaligned_heap_end_not_closed"
+CHECKED unaligned_heap_end_not_closed
+⊢ ¬∀a. byte_align a ∈ {w | 0w ≤₊ w ∧ w <₊ 1w} ⇒ a ∈ {w | 0w ≤₊ w ∧ w <₊ 1w}
+Saved theorem _______ "refund_entry_and_heap_premises_satisfiable"
+CHECKED refund_entry_and_heap_premises_satisfiable
+⊢ ∃s h stk e.
+    refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+    refund_heap_clear h e
+CLOSURE_NODES 517
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundInstalledAssembly" ... done.
+Theory "forge_refundInstalledAssembly" took 10.3s to build
+EXACT_COMPLETE

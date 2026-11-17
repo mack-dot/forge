@@ -1,0 +1,94 @@
+[
+ {
+  "case": "steps-0001",
+  "actual_exit": 0,
+  "wall_seconds": 7.568,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "exploration: step-library theorems for all 24 distinct words; no theorem stored"
+ },
+ {
+  "case": "ffic-0001",
+  "actual_exit": 1,
+  "wall_seconds": 5.707,
+  "markers": [],
+  "kind": "authoring (ML types)"
+ },
+ {
+  "case": "ffic-0002",
+  "actual_exit": 1,
+  "wall_seconds": 5.924,
+  "markers": [],
+  "kind": "authoring (ML types)"
+ },
+ {
+  "case": "ffic-0003",
+  "actual_exit": 1,
+  "wall_seconds": 8.805,
+  "markers": [],
+  "kind": "authoring: stub theorems proved; the 32-bit load step needs an alignment hypothesis on the configuration pointer"
+ },
+ {
+  "case": "ffic-0004",
+  "actual_exit": 1,
+  "wall_seconds": 12.235,
+  "markers": [],
+  "kind": "authoring (ML typing of helpers); all 14 prefix steps passed"
+ },
+ {
+  "case": "ffic-0005",
+  "actual_exit": 0,
+  "wall_seconds": 15.947,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "exit 0 but DEFECTIVE: the suffix frame conjunct was vacuous (variable name clash in my script); not used"
+ },
+ {
+  "case": "ffic-0006",
+  "actual_exit": 0,
+  "wall_seconds": 11.848,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "final: stub (1 step), fficlose prefix (14 steps), fficlose suffix (6 steps), controls; ARMv8 context"
+ },
+ {
+  "case": "bridge-0001",
+  "actual_exit": 0,
+  "wall_seconds": 197.81,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: file-byte correspondence, image lemma, stub on the image, 15-step exit theorem, contract controls"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 108.588,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 106 statements (104 exact, 2 identical to published), 3 structural checks, 523 closure nodes, controls"
+ },
+ {
+  "case": "ffic-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 12.033,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "bridge-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 166.534,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

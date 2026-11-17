@@ -1,0 +1,332 @@
+<<HOL message: Created theory "forge_simRoot">>
+/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-repeat/proof.sml:90: warning: Pattern is not exhaustive.
+Found near val (_, [cc, ...]) = strip_comb (lhs (... ... cj))
+/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-repeat/proof.sml:91: warning: Pattern is not exhaustive.
+Found near val (_, [_, ...]) = strip_comb (el 3 cj)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simRoot)>>
+Saved theorem _______ "run_head_ordinary"
+Saved theorem _______ "run_interior_ordinary"
+Saved theorem _______ "segment_interior_ordinary"
+Saved theorem _______ "segment_end_no_install_prefix"
+Saved theorem _______ "segment_compose_no_install_prefix"
+Saved theorem _______ "asm_step_IMP_evaluate_step_find_next_prefix"
+Saved theorem _______ "asm_step_IMP_evaluate_step_nop_prefix"
+FIDELITY asm_step_IMP_evaluate_step_find_next_prefix: published statement recovered by removing the two added conjuncts
+FIDELITY asm_step_IMP_evaluate_step_nop_prefix: published statement recovered by removing the two added conjuncts
+Saved theorem _______ "asm_step_IMP_evaluate_step_prefix"
+FIDELITY asm_step_IMP_evaluate_step_prefix: published statement recovered by removing the two added conjuncts
+Saved theorem _______ "state_rel_segment_compose"
+Saved definition ____ "forge_toy_mc_def"
+Saved definition ____ "forge_toy_mc2_def"
+Saved theorem _______ "interior_install_example"
+Saved theorem _______ "endpoint_correspondence_insufficient"
+CHECKED endpoint_correspondence_insufficient
+⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+CHECKED run_head_ordinary
+⊢ l ≠ 0 ∧ find_next_interference c io l ms = NONE ∧
+  evaluate c io l ms = (TimeOut,ms2,io2) ⇒
+  c.target.get_pc ms ∈ c.prog_addresses DIFF set c.ffi_entry_pcs
+CHECKED run_interior_ordinary
+⊢ ∀l c io ms ms2 io2.
+    find_next_interference c io l ms = NONE ∧
+    evaluate c io l ms = (TimeOut,ms2,io2) ⇒
+    ∀j ms' io'.
+      j < l ∧ evaluate c io j ms = (TimeOut,ms',io') ⇒
+      c.target.get_pc ms' ∈ c.prog_addresses DIFF set c.ffi_entry_pcs
+CHECKED segment_interior_ordinary
+⊢ (∀k. evaluate c io (k + l) ms1 = evaluate c2 io2 k ms2 ∧
+       find_next_interference c io (k + l) ms1 =
+       find_next_interference c2 io2 k ms2) ⇒
+  ∀j ms' io'.
+    j < l ∧ evaluate c io j ms1 = (TimeOut,ms',io') ⇒
+    c.target.get_pc ms' ∈ c.prog_addresses DIFF set c.ffi_entry_pcs
+CHECKED segment_end_no_install_prefix
+⊢ (∀k. evaluate c io (k + l) ms1 = evaluate c2 io2 k ms2 ∧
+       find_next_interference c io (k + l) ms1 =
+       find_next_interference c2 io2 k ms2) ∧ l ≠ 0 ∧
+  c.install_pc ∉ c.prog_addresses ⇒
+  no_install_prefix c io (l − 1) ms1 ∧
+  (c.target.get_pc ms2 ≠ c.install_pc ⇒ no_install_prefix c io l ms1)
+CHECKED segment_compose_no_install_prefix
+⊢ (∀k. evaluate c io (k + l) ms1 = evaluate c2 io2 k ms2 ∧
+       find_next_interference c io (k + l) ms1 =
+       find_next_interference c2 io2 k ms2) ∧
+  c.install_pc ∉ c.prog_addresses ∧ c2.install_pc = c.install_pc ∧
+  c2.target = c.target ∧ no_install_prefix c2 io2 n ms2 ⇒
+  no_install_prefix c io (l + n) ms1
+CHECKED asm_step_IMP_evaluate_step_find_next_prefix
+⊢ ∀c s1 ms1 io i.
+    encoder_correct c.target ∧ c.prog_addresses = s1.mem_domain ∧
+    ffi_entry_pcs_disjoint c s1 (LENGTH (c.target.config.encode i)) ∧
+    interference_ok c.next_interfer (c.target.proj s1.mem_domain) ∧
+    asm_step c.target.config s1 i
+      (asm i (s1.pc + n2w (LENGTH (c.target.config.encode i))) s1) ∧
+    target_state_rel c.target s1 ms1 ⇒
+    ∃l ms2.
+      (∀k. evaluate c io (k + l) ms1 = evaluate (shift_interfer l c) io k ms2 ∧
+           find_next_interference c io (k + l) ms1 =
+           find_next_interference (shift_interfer l c) io k ms2 ∧
+           target_state_rel c.target
+             (asm i (s1.pc + n2w (LENGTH (c.target.config.encode i))) s1) ms2 ∧
+           l ≠ 0) ∧
+      (∀j ms' io'.
+         j < l ∧ evaluate c io j ms1 = (TimeOut,ms',io') ⇒
+         c.target.get_pc ms' ∈ c.prog_addresses DIFF set c.ffi_entry_pcs) ∧
+      (c.install_pc ∉ c.prog_addresses ⇒
+       no_install_prefix c io (l − 1) ms1 ∧
+       ((asm i (s1.pc + n2w (LENGTH (c.target.config.encode i))) s1).pc ≠
+        c.install_pc ⇒
+        no_install_prefix c io l ms1))
+CHECKED asm_step_IMP_evaluate_step_nop_prefix
+⊢ ∀c s1 ms1 io i s2 bytes.
+    encoder_correct c.target ∧ c.prog_addresses = s1.mem_domain ∧
+    ffi_entry_pcs_disjoint c s1 (LENGTH bytes) ∧
+    interference_ok c.next_interfer (c.target.proj s1.mem_domain) ∧
+    bytes_in_memory s1.pc bytes s2.mem s1.mem_domain ∧
+    asm_step_nop bytes c.target.config s1 i s2 ∧
+    s2 = asm i (s1.pc + n2w (LENGTH bytes)) s1 ∧
+    target_state_rel c.target s1 ms1 ∧ (∀x. i ≠ Call x) ⇒
+    ∃l ms2.
+      (∀k. evaluate c io (k + l) ms1 = evaluate (shift_interfer l c) io k ms2 ∧
+           find_next_interference c io (k + l) ms1 =
+           find_next_interference (shift_interfer l c) io k ms2 ∧
+           target_state_rel c.target s2 ms2 ∧ l ≠ 0) ∧
+      (∀j ms' io'.
+         j < l ∧ evaluate c io j ms1 = (TimeOut,ms',io') ⇒
+         c.target.get_pc ms' ∈ c.prog_addresses DIFF set c.ffi_entry_pcs) ∧
+      (c.install_pc ∉ c.prog_addresses ⇒
+       no_install_prefix c io (l − 1) ms1 ∧
+       (s2.pc ≠ c.install_pc ⇒ no_install_prefix c io l ms1))
+CHECKED asm_step_IMP_evaluate_step_prefix
+⊢ ∀c s1 ms1 io i.
+    encoder_correct c.target ∧ c.prog_addresses = s1.mem_domain ∧
+    ffi_entry_pcs_disjoint c s1 (LENGTH (c.target.config.encode i)) ∧
+    interference_ok c.next_interfer (c.target.proj s1.mem_domain) ∧
+    asm_step c.target.config s1 i
+      (asm i (s1.pc + n2w (LENGTH (c.target.config.encode i))) s1) ∧
+    target_state_rel c.target s1 ms1 ⇒
+    ∃l ms2.
+      ((∀k. evaluate c io (k + l) ms1 =
+            evaluate (shift_interfer l c) io k ms2) ∧
+       target_state_rel c.target
+         (asm i (s1.pc + n2w (LENGTH (c.target.config.encode i))) s1) ms2 ∧
+       l ≠ 0) ∧
+      (∀j ms' io'.
+         j < l ∧ evaluate c io j ms1 = (TimeOut,ms',io') ⇒
+         c.target.get_pc ms' ∈ c.prog_addresses DIFF set c.ffi_entry_pcs) ∧
+      (c.install_pc ∉ c.prog_addresses ⇒
+       no_install_prefix c io (l − 1) ms1 ∧
+       ((asm i (s1.pc + n2w (LENGTH (c.target.config.encode i))) s1).pc ≠
+        c.install_pc ⇒
+        no_install_prefix c io l ms1))
+CHECKED state_rel_segment_compose
+⊢ state_rel (c,code2,labs,p) s1 t1 ms1 ∧
+  (∀k. evaluate c io (k + l) ms1 = evaluate c2 io2 k ms2 ∧
+       find_next_interference c io (k + l) ms1 =
+       find_next_interference c2 io2 k ms2) ∧ c2.install_pc = c.install_pc ∧
+  c2.target = c.target ∧ no_install_prefix c2 io2 n ms2 ⇒
+  no_install_prefix c io (l + n) ms1
+CHECKED interior_install_example
+⊢ (∀k io. evaluate forge_toy_mc io (k + 2) 0 = evaluate forge_toy_mc2 io k 2) ∧
+  forge_toy_mc2.install_pc = forge_toy_mc.install_pc ∧
+  forge_toy_mc2.target = forge_toy_mc.target ∧
+  forge_toy_mc.install_pc ∉ forge_toy_mc.prog_addresses ∧
+  forge_toy_mc.target.get_pc 0 ≠ forge_toy_mc.install_pc ∧
+  forge_toy_mc.target.get_pc 2 ≠ forge_toy_mc.install_pc ∧
+  (∀io. ¬no_install_prefix forge_toy_mc io 2 0) ∧
+  ∀io.
+    find_next_interference forge_toy_mc io 2 0 ≠
+    find_next_interference forge_toy_mc2 io 0 2
+TYPED endpoint_correspondence_insufficient
+⊢ ¬∀(c :(8, num, unit) machine_config) (c2 :(8, num, unit) machine_config)
+      (io :'ffi ffi_state) (l :num) (ms1 :num) (ms2 :num).
+    (∀(k :num).
+       (evaluate c io (k + l) ms1 :machine_result # num # 'ffi ffi_state) =
+       (evaluate c2 io k ms2 :machine_result # num # 'ffi ffi_state)) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+TYPED run_head_ordinary
+⊢ (l :num) ≠ (0 :num) ∧
+  find_next_interference (c :(β, α, γ) machine_config) (io :δ ffi_state) l
+    (ms :α) =
+  (NONE :(α interference_app # (β, α, γ) machine_config # δ ffi_state) option) ∧
+  (evaluate c io l ms :machine_result # α # δ ffi_state) =
+  (TimeOut,(ms2 :α),(io2 :δ ffi_state)) ⇒
+  c.target.get_pc ms ∈
+  c.prog_addresses DIFF (set c.ffi_entry_pcs :β word -> bool)
+TYPED run_interior_ordinary
+⊢ ∀(l :num) (c :(α, β, γ) machine_config) (io :δ ffi_state) (ms :β) (ms2 :β)
+      (io2 :δ ffi_state).
+    find_next_interference c io l ms =
+    (NONE :(β interference_app # (α, β, γ) machine_config # δ ffi_state)
+           option) ∧
+    (evaluate c io l ms :machine_result # β # δ ffi_state) =
+    (TimeOut,ms2,io2) ⇒
+    ∀(j :num) (ms' :β) (io' :δ ffi_state).
+      j < l ∧
+      (evaluate c io j ms :machine_result # β # δ ffi_state) =
+      (TimeOut,ms',io') ⇒
+      c.target.get_pc ms' ∈
+      c.prog_addresses DIFF (set c.ffi_entry_pcs :α word -> bool)
+TYPED segment_interior_ordinary
+⊢ (∀(k :num).
+     (evaluate (c :(β, 'state, γ) machine_config) (io :α ffi_state)
+        (k + (l :num)) (ms1 :'state) :machine_result # 'state # α ffi_state) =
+     (evaluate (c2 :(β, 'state, γ) machine_config) (io2 :α ffi_state) k
+        (ms2 :'state) :machine_result # 'state # α ffi_state) ∧
+     find_next_interference c io (k + l) ms1 =
+     find_next_interference c2 io2 k ms2) ⇒
+  ∀(j :num) (ms' :'state) (io' :α ffi_state).
+    j < l ∧
+    (evaluate c io j ms1 :machine_result # 'state # α ffi_state) =
+    (TimeOut,ms',io') ⇒
+    c.target.get_pc ms' ∈
+    c.prog_addresses DIFF (set c.ffi_entry_pcs :β word -> bool)
+TYPED segment_end_no_install_prefix
+⊢ (∀(k :num).
+     (evaluate (c :(β, 'state, γ) machine_config) (io :α ffi_state)
+        (k + (l :num)) (ms1 :'state) :machine_result # 'state # α ffi_state) =
+     (evaluate (c2 :(β, 'state, γ) machine_config) (io2 :α ffi_state) k
+        (ms2 :'state) :machine_result # 'state # α ffi_state) ∧
+     find_next_interference c io (k + l) ms1 =
+     find_next_interference c2 io2 k ms2) ∧ l ≠ (0 :num) ∧
+  c.install_pc ∉ c.prog_addresses ⇒
+  no_install_prefix c io (l − (1 :num)) ms1 ∧
+  (c.target.get_pc ms2 ≠ c.install_pc ⇒ no_install_prefix c io l ms1)
+TYPED segment_compose_no_install_prefix
+⊢ (∀(k :num).
+     (evaluate (c :(β, 'state, γ) machine_config) (io :α ffi_state)
+        (k + (l :num)) (ms1 :'state) :machine_result # 'state # α ffi_state) =
+     (evaluate (c2 :(β, 'state, γ) machine_config) (io2 :α ffi_state) k
+        (ms2 :'state) :machine_result # 'state # α ffi_state) ∧
+     find_next_interference c io (k + l) ms1 =
+     find_next_interference c2 io2 k ms2) ∧ c.install_pc ∉ c.prog_addresses ∧
+  c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+  no_install_prefix c2 io2 (n :num) ms2 ⇒
+  no_install_prefix c io (l + n) ms1
+TYPED asm_step_IMP_evaluate_step_find_next_prefix
+⊢ ∀(c :(α, 'state, β) machine_config) (s1 :α asm_state) (ms1 :'state)
+      (io :γ ffi_state) (i :asm).
+    encoder_correct c.target ∧ c.prog_addresses = s1.mem_domain ∧
+    ffi_entry_pcs_disjoint c s1 (LENGTH (c.target.config.encode i)) ∧
+    interference_ok c.next_interfer (c.target.proj s1.mem_domain) ∧
+    asm_step c.target.config s1 i
+      (asm i (s1.pc + (n2w (LENGTH (c.target.config.encode i)) :α word)) s1) ∧
+    target_state_rel c.target s1 ms1 ⇒
+    ∃(l :num) (ms2 :'state).
+      (∀(k :num).
+         (evaluate c io (k + l) ms1 :machine_result # 'state # γ ffi_state) =
+         (evaluate (shift_interfer l c) io k ms2 :
+          machine_result # 'state # γ ffi_state) ∧
+         find_next_interference c io (k + l) ms1 =
+         find_next_interference (shift_interfer l c) io k ms2 ∧
+         target_state_rel c.target
+           (asm i (s1.pc + (n2w (LENGTH (c.target.config.encode i)) :α word))
+              s1) ms2 ∧ l ≠ (0 :num)) ∧
+      (∀(j :num) (ms' :'state) (io' :γ ffi_state).
+         j < l ∧
+         (evaluate c io j ms1 :machine_result # 'state # γ ffi_state) =
+         (TimeOut,ms',io') ⇒
+         c.target.get_pc ms' ∈
+         c.prog_addresses DIFF (set c.ffi_entry_pcs :α word -> bool)) ∧
+      (c.install_pc ∉ c.prog_addresses ⇒
+       no_install_prefix c io (l − (1 :num)) ms1 ∧
+       ((asm i (s1.pc + (n2w (LENGTH (c.target.config.encode i)) :α word)) s1).
+        pc ≠ c.install_pc ⇒
+        no_install_prefix c io l ms1))
+TYPED asm_step_IMP_evaluate_step_nop_prefix
+⊢ ∀(c :(α, 'state, β) machine_config) (s1 :α asm_state) (ms1 :'state)
+      (io :γ ffi_state) (i :asm) (s2 :α asm_state) (bytes :word8 list).
+    encoder_correct c.target ∧ c.prog_addresses = s1.mem_domain ∧
+    ffi_entry_pcs_disjoint c s1 (LENGTH bytes) ∧
+    interference_ok c.next_interfer (c.target.proj s1.mem_domain) ∧
+    bytes_in_memory s1.pc bytes s2.mem s1.mem_domain ∧
+    asm_step_nop bytes c.target.config s1 i s2 ∧
+    s2 = asm i (s1.pc + (n2w (LENGTH bytes) :α word)) s1 ∧
+    target_state_rel c.target s1 ms1 ∧ (∀(x :int). i ≠ (Call x :asm)) ⇒
+    ∃(l :num) (ms2 :'state).
+      (∀(k :num).
+         (evaluate c io (k + l) ms1 :machine_result # 'state # γ ffi_state) =
+         (evaluate (shift_interfer l c) io k ms2 :
+          machine_result # 'state # γ ffi_state) ∧
+         find_next_interference c io (k + l) ms1 =
+         find_next_interference (shift_interfer l c) io k ms2 ∧
+         target_state_rel c.target s2 ms2 ∧ l ≠ (0 :num)) ∧
+      (∀(j :num) (ms' :'state) (io' :γ ffi_state).
+         j < l ∧
+         (evaluate c io j ms1 :machine_result # 'state # γ ffi_state) =
+         (TimeOut,ms',io') ⇒
+         c.target.get_pc ms' ∈
+         c.prog_addresses DIFF (set c.ffi_entry_pcs :α word -> bool)) ∧
+      (c.install_pc ∉ c.prog_addresses ⇒
+       no_install_prefix c io (l − (1 :num)) ms1 ∧
+       (s2.pc ≠ c.install_pc ⇒ no_install_prefix c io l ms1))
+TYPED asm_step_IMP_evaluate_step_prefix
+⊢ ∀(c :(α, 'state, β) machine_config) (s1 :α asm_state) (ms1 :'state)
+      (io :γ ffi_state) (i :asm).
+    encoder_correct c.target ∧ c.prog_addresses = s1.mem_domain ∧
+    ffi_entry_pcs_disjoint c s1 (LENGTH (c.target.config.encode i)) ∧
+    interference_ok c.next_interfer (c.target.proj s1.mem_domain) ∧
+    asm_step c.target.config s1 i
+      (asm i (s1.pc + (n2w (LENGTH (c.target.config.encode i)) :α word)) s1) ∧
+    target_state_rel c.target s1 ms1 ⇒
+    ∃(l :num) (ms2 :'state).
+      ((∀(k :num).
+          (evaluate c io (k + l) ms1 :machine_result # 'state # γ ffi_state) =
+          (evaluate (shift_interfer l c) io k ms2 :
+           machine_result # 'state # γ ffi_state)) ∧
+       target_state_rel c.target
+         (asm i (s1.pc + (n2w (LENGTH (c.target.config.encode i)) :α word))
+            s1) ms2 ∧ l ≠ (0 :num)) ∧
+      (∀(j :num) (ms' :'state) (io' :γ ffi_state).
+         j < l ∧
+         (evaluate c io j ms1 :machine_result # 'state # γ ffi_state) =
+         (TimeOut,ms',io') ⇒
+         c.target.get_pc ms' ∈
+         c.prog_addresses DIFF (set c.ffi_entry_pcs :α word -> bool)) ∧
+      (c.install_pc ∉ c.prog_addresses ⇒
+       no_install_prefix c io (l − (1 :num)) ms1 ∧
+       ((asm i (s1.pc + (n2w (LENGTH (c.target.config.encode i)) :α word)) s1).
+        pc ≠ c.install_pc ⇒
+        no_install_prefix c io l ms1))
+TYPED state_rel_segment_compose
+⊢ (state_rel
+     ((c :(α, 'state, β) machine_config),(code2 :sec list),
+      (labs :num sptree$num_map sptree$num_map),(p :α word))
+     (s1 :(α, lab_to_target$config, γ) state) (t1 :α asm_state)
+     (ms1 :'state) :bool) ∧
+  (∀(k :num).
+     (evaluate c (io :δ ffi_state) (k + (l :num)) ms1 :
+      machine_result # 'state # δ ffi_state) =
+     (evaluate (c2 :(α, 'state, β) machine_config) (io2 :δ ffi_state) k
+        (ms2 :'state) :machine_result # 'state # δ ffi_state) ∧
+     find_next_interference c io (k + l) ms1 =
+     find_next_interference c2 io2 k ms2) ∧ c2.install_pc = c.install_pc ∧
+  c2.target = c.target ∧ no_install_prefix c2 io2 (n :num) ms2 ⇒
+  no_install_prefix c io (l + n) ms1
+TYPED interior_install_example
+⊢ (∀(k :num) (io :'ffi ffi_state).
+     (evaluate forge_toy_mc io (k + (2 :num)) (0 :num) :
+      machine_result # num # 'ffi ffi_state) =
+     (evaluate forge_toy_mc2 io k (2 :num) :
+      machine_result # num # 'ffi ffi_state)) ∧
+  forge_toy_mc2.install_pc = forge_toy_mc.install_pc ∧
+  forge_toy_mc2.target = forge_toy_mc.target ∧
+  forge_toy_mc.install_pc ∉ forge_toy_mc.prog_addresses ∧
+  forge_toy_mc.target.get_pc (0 :num) ≠ forge_toy_mc.install_pc ∧
+  forge_toy_mc.target.get_pc (2 :num) ≠ forge_toy_mc.install_pc ∧
+  (∀(io :'ffi ffi_state).
+     ¬no_install_prefix forge_toy_mc io (2 :num) (0 :num)) ∧
+  ∀(io :'ffi ffi_state).
+    find_next_interference forge_toy_mc io (2 :num) (0 :num) ≠
+    find_next_interference forge_toy_mc2 io (0 :num) (2 :num)
+Exporting theory "forge_simRoot" ... done.
+Theory "forge_simRoot" took 10.9s to build
+P3_PROOF_COMPLETE

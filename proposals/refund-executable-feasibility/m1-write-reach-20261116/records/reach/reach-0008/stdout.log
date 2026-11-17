@@ -1,0 +1,222 @@
+<<HOL message: Created theory "forge_refundWriteReach">>
+DEFINITION ⊢ ∀e. write_event e ⇔ ∃c b. e = IO_event (ExtCall «write») c b
+DEFINITION ⊢ ∀e. refund_event e ⇔
+      ∃n c b.
+        e = IO_event (ExtCall n) c b ∧
+        MEM n [«read»; «write»; «close»; «open_in»]
+Saved theorem _______ "refund_static_step"
+CHECKED refund_static_step
+⊢ refund_static mc dm ∧ machine_step mc ffi ms mc' ffi' ms' ⇒
+  refund_static mc' dm
+Saved theorem _______ "machine_step_reach"
+CHECKED machine_step_reach
+⊢ machine_step mc ffi ms mc' ffi' ms' ∧
+  machine_reach mc' ffi' ms' mc1 ffi1 ms1 ⇒
+  machine_reach mc ffi ms mc1 ffi1 ms1
+Saved theorem _______ "machine_step_evaluate"
+CHECKED machine_step_evaluate
+⊢ machine_step mc ffi ms mc' ffi' ms' ⇒
+  ∀k. evaluate mc ffi (SUC k) ms = evaluate mc' ffi' k ms'
+Saved theorem _______ "install_step_is_machine_step"
+CHECKED install_step_is_machine_step
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms = mc.install_pc ∧
+  read_ffi_bytearray mc mc.ptr_reg mc.len_reg ms = SOME bytes ⇒
+  machine_step mc ffi ms
+    (mc with install_interfer := shift_seq 1 mc.install_interfer) ffi
+    (mc.install_interfer 0 (bytes,ms))
+Saved theorem _______ "call_FFI_return_appends_one_event"
+CHECKED call_FFI_return_appends_one_event
+⊢ call_FFI ffi (ExtCall nm) cb ab = FFI_return new_ffi nb ∧ nm ≠ «» ⇒
+  new_ffi.io_events =
+  ffi.io_events ++ [IO_event (ExtCall nm) cb (ZIP (ab,nb))]
+Saved theorem _______ "refund_static_ffi_index"
+CHECKED refund_static_ffi_index
+⊢ refund_static mc dm ∧
+  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ⇒
+  ALOOKUP mc.mmio_info i = NONE ∧
+  ∃nm.
+    mc.ffi_names❲i❳ = ExtCall nm ∧ nm ≠ «» ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWriteReach)>>
+Saved theorem _______ "one_step_normal"
+CHECKED one_step_normal
+⊢ mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c b.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c b] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)
+Saved theorem _______ "one_step_halt"
+CHECKED one_step_halt
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms = mc.halt_pc ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c b.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c b] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)
+Saved theorem _______ "one_step_install"
+CHECKED one_step_install
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms = mc.install_pc ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c b.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c b] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)
+Saved theorem _______ "one_step_ffi"
+CHECKED one_step_ffi
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧
+  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧
+  mc.ffi_names❲i❳ = ExtCall nm ∧ ALOOKUP mc.mmio_info i = NONE ∧ nm ≠ «» ∧
+  MEM nm [«read»; «write»; «close»; «open_in»] ∧
+  (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c b.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c b] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)
+Saved theorem _______ "one_step_cases"
+CHECKED one_step_cases
+⊢ refund_static mc dm ∧ evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c b.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c b] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)
+Saved theorem _______ "evaluate_trace_events"
+CHECKED evaluate_trace_events
+⊢ ∀k mc ffi ms r ms' ffi'.
+    refund_static mc dm ∧ evaluate mc ffi k ms = (r,ms',ffi') ⇒
+    ∃l. ffi'.io_events = ffi.io_events ++ l ∧ EVERY refund_event l ∧
+        (EXISTS write_event l ⇒
+         ∃mc1 ffi1 ms1.
+           machine_reach mc ffi ms mc1 ffi1 ms1 ∧ ms1.PC = 0x100004090w)
+Saved theorem _______ "terminating_trace_with_write_event_reaches_write_call"
+CHECKED terminating_trace_with_write_event_reaches_write_call
+⊢ refund_static mc dm ∧ machine_sem mc ffi ms (Terminate t io) ∧
+  ffi.io_events = [] ⇒
+  EVERY refund_event io ∧
+  (EXISTS write_event io ⇒
+   ∃mc1 ffi1 ms1.
+     machine_reach mc ffi ms mc1 ffi1 ms1 ∧ ms1.PC = 0x100004090w)
+Saved theorem _______ "ffi_read_keeps_inodes"
+CHECKED ffi_read_keeps_inodes
+⊢ ffi_read c b fs = SOME (FFIreturn b' fs') ⇒ fs'.inode_tbl = fs.inode_tbl
+Saved theorem _______ "ffi_open_in_keeps_inodes"
+CHECKED ffi_open_in_keeps_inodes
+⊢ ffi_open_in c b fs = SOME (FFIreturn b' fs') ⇒ fs'.inode_tbl = fs.inode_tbl
+Saved theorem _______ "ffi_close_keeps_inodes"
+CHECKED ffi_close_keeps_inodes
+⊢ ffi_close c b fs = SOME (FFIreturn b' fs') ⇒ fs'.inode_tbl = fs.inode_tbl
+Saved theorem _______ "replay_without_write_event_keeps_inodes"
+CHECKED replay_without_write_event_keeps_inodes
+⊢ ∀l st st'.
+    extract_fs_with_numchars ext st l = SOME st' ∧ EVERY refund_event l ∧
+    ¬EXISTS write_event l ⇒
+    (SND st').inode_tbl = (SND st).inode_tbl
+Saved theorem _______ "add_stdout_changes_inodes"
+CHECKED add_stdout_changes_inodes
+⊢ STD_streams fs ∧
+  (add_stdout (fastForwardFD fs 0) out).inode_tbl = fs.inode_tbl ⇒
+  out = «»
+Saved theorem _______ "nonempty_output_needs_write_event"
+CHECKED nonempty_output_needs_write_event
+⊢ extract_fs ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out) ∧
+  STD_streams fs ∧ EVERY refund_event io ∧ out ≠ «» ⇒
+  EXISTS write_event io
+SHOW T2
+  ASM EXISTS write_event io
+  ASM EXISTS write_event io ⇒
+∃mc1 ffi1 ms1.
+  machine_reach mc (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+  ms1.PC = 0x100004090w
+  ASM EVERY refund_event io
+  ASM (basis_ffi ext cl fs).io_events = []
+  ASM out ≠ «»
+  ASM STD_streams fs
+  ASM extract_fs ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out)
+  ASM machine_sem mc (basis_ffi ext cl fs) ms (Terminate t io)
+  ASM refund_static mc dm
+  GOAL EXISTS write_event io ∧
+∃mc1 ffi1 ms1.
+  machine_reach mc (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+  ms1.PC = 0x100004090w
+Saved theorem _______ "run_with_output_reaches_write_call"
+CHECKED run_with_output_reaches_write_call
+⊢ refund_static mc dm ∧
+  machine_sem mc (basis_ffi ext cl fs) ms (Terminate t io) ∧
+  extract_fs ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out) ∧
+  STD_streams fs ∧ out ≠ «» ⇒
+  EXISTS write_event io ∧
+  ∃mc1 ffi1 ms1.
+    machine_reach mc (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+    ms1.PC = 0x100004090w
+Saved theorem _______ "no_step_no_event"
+CHECKED no_step_no_event
+⊢ evaluate mc ffi 0 ms = (TimeOut,ms,ffi)
+Saved theorem _______ "other_events_are_not_write_events"
+CHECKED other_events_are_not_write_events
+⊢ ¬write_event (IO_event (ExtCall «read») c b) ∧
+  ¬write_event (IO_event (ExtCall «close») c b) ∧
+  ¬write_event (IO_event (ExtCall «open_in») c b) ∧
+  ¬write_event (IO_event (SharedMem op) c b) ∧ ¬EXISTS write_event []
+Saved theorem _______ "write_call_step_appends_write_event"
+CHECKED write_call_step_appends_write_event
+⊢ refund_static mc dm ∧ ms.PC = 0x100004090w ∧
+  read_ffi_bytearrays mc ms = (SOME cb,SOME ab) ∧
+  call_FFI ffi (ExtCall «write») cb ab = FFI_return new_ffi nb ⇒
+  ∃ms2.
+    evaluate mc ffi 1 ms = (TimeOut,ms2,new_ffi) ∧
+    new_ffi.io_events =
+    ffi.io_events ++ [IO_event (ExtCall «write») cb (ZIP (ab,nb))]
+Saved theorem _______ "ffi_write_wrong_clen_is_a_silent_failure"
+CHECKED ffi_write_wrong_clen_is_a_silent_failure
+⊢ LENGTH c ≠ 8 ∧ 4 ≤ LENGTH bytes ⇒
+  ffi_write c bytes fs = SOME (FFIreturn bytes❲0 ↦ 1w❳ fs)
+Saved theorem _______ "replay_ignores_wrong_clen_write_event"
+CHECKED replay_ignores_wrong_clen_write_event
+⊢ LENGTH c ≠ 8 ∧ 4 ≤ LENGTH bytes ⇒
+  extract_fs_with_numchars ext st
+    (IO_event (ExtCall «write») c (ZIP (bytes,bytes❲0 ↦ 1w❳))::l) =
+  extract_fs_with_numchars ext st l
+OUTPUT_TERM refund_render_fields
+  (refund_fields charge request original remaining enabled opened candidate
+     amount reason)
+FFI_TERM basis_ffi ext cl fs
+RENDER_DEFS 4
+MARK prem3
+MARK T3
+INSTN_TYPE_MISMATCH t : :outcome VERSUS :α -> β -> (locs # γ) option -> (α, β, γ) pegresult

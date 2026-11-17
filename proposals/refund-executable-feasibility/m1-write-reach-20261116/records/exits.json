@@ -1,0 +1,82 @@
+[
+ {
+  "case": "reach-0001",
+  "actual_exit": 1,
+  "wall_seconds": 95.046,
+  "markers": [],
+  "kind": "authoring (term typing); six lemmas checked"
+ },
+ {
+  "case": "reach-0002",
+  "actual_exit": 1,
+  "wall_seconds": 90.757,
+  "markers": [],
+  "kind": "authoring; exploration with placeholder theorems, caught by the tag check; nothing exported"
+ },
+ {
+  "case": "reach-0003",
+  "actual_exit": 1,
+  "wall_seconds": 100.811,
+  "markers": [],
+  "kind": "authoring; trace theorem checked; nothing exported"
+ },
+ {
+  "case": "reach-0004",
+  "actual_exit": 1,
+  "wall_seconds": 165.874,
+  "markers": [],
+  "kind": "authoring; nothing exported"
+ },
+ {
+  "case": "reach-0005",
+  "actual_exit": -24,
+  "wall_seconds": 357.315,
+  "markers": [],
+  "kind": "CPU limit: the optional proof that the rendered output is non-empty did not terminate; nothing exported"
+ },
+ {
+  "case": "reach-0006",
+  "actual_exit": 1,
+  "wall_seconds": 84.302,
+  "markers": [],
+  "kind": "authoring (ML term construction)"
+ },
+ {
+  "case": "reach-0007",
+  "actual_exit": 1,
+  "wall_seconds": 80.935,
+  "markers": [],
+  "kind": "authoring (same)"
+ },
+ {
+  "case": "reach-0008",
+  "actual_exit": 1,
+  "wall_seconds": 105.235,
+  "markers": [],
+  "kind": "authoring (constructor name Success parsed at the wrong type)"
+ },
+ {
+  "case": "reach-0009",
+  "actual_exit": 0,
+  "wall_seconds": 139.915,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundWriteReach (27 theorems, 2 definitions); no placeholder used"
+ },
+ {
+  "case": "check-0001",
+  "actual_exit": 0,
+  "wall_seconds": 101.721,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "PASS: constructed model run with a write event; 10 exact statements; scope controls; 535 closure nodes; four bool axioms"
+ },
+ {
+  "case": "repeats; full 172-statement import (compile_correct identity re-check); proof that the rendered output is non-empty; source-level write-event existence; a terminating model run of refund",
+  "actual_exit": null,
+  "kind": "NOT RUN or NOT ESTABLISHED"
+ }
+]

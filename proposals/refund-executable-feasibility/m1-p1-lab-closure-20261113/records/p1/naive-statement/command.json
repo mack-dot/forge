@@ -1,0 +1,42 @@
+{
+ "case": "naive-statement",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/forge_refundLabClosureTheory.sig",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/forge_refundLabClosureTheory.sml",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/naive-statement/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "naive-statement.sml",
+ "source_sha256": "aea728d6bad407e4c785b494b15d715925dce42c0c648cbd4c78ef929ad4e7ac",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/preload.sml": "74ff67166df3faa08119dbd28789a2f7c5eff219b5fe4d6a206240f3097acf45",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/.hol/objs/forge_refundLabClosureTheory.sig": "69c3ea6410de90eb14445010cf7f3284a2e6c818df4a6e575e51ec527024a2e6",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/.hol/objs/forge_refundLabClosureTheory.sml": "f337b84fa4520a6fde84aeff9432e418a10a0b0471ab4c48e2a71ffff6ffae48"
+ },
+ "resource_guard": {
+  "memory_free_percent": 58,
+  "disk_free_gib": 38.88,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 31.006,
+ "child_user_cpu_seconds": 49.954,
+ "child_max_rss_bytes": 2182889472,
+ "markers": [
+  "AFTER_POSITIVE_AUDIT"
+ ],
+ "stdout_sha256": "9d3a5e8fb790a8155d66f2bd685db7f4323b01e5068ee628dcfb88a1937502cd",
+ "stderr_sha256": "f2951dc79f8e56ec74233732ac1f92861e3ad0edfbee07429c4782d420139ac0",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

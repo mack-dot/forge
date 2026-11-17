@@ -1,0 +1,84 @@
+<<HOL message: Created theory "forge_refundResidual">>
+DEFINITION ⊢ ∀mc0 ms.
+    refund_installed_rest2 mc0 ms ⇔
+    interference_ok mc0.next_interfer (mc0.target.proj mc0.prog_addresses) ∧
+    ffi_interfer_ok ms.PC mc0
+Saved theorem _______ "refund_mc_concrete_fields"
+CHECKED refund_mc_concrete_fields
+⊢ ∀names.
+    refund_lab_conf2.ffi_names = SOME names ∧ LENGTH names = 4 ⇒
+    (refund_mc 0x1000040D0w envmc).ffi_names = names ∧
+    (refund_mc 0x1000040D0w envmc).ffi_entry_pcs =
+    [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w] ∧
+    (refund_mc 0x1000040D0w envmc).halt_pc = 0x1000040C0w ∧
+    (refund_mc 0x1000040D0w envmc).install_pc = 0x1000040B0w ∧
+    (refund_mc 0x1000040D0w envmc).mmio_info = [] ∧
+    (refund_mc 0x1000040D0w envmc).shared_addresses = ∅ ∧
+    (refund_mc 0x1000040D0w envmc).prog_addresses = envmc.prog_addresses ∧
+    (refund_mc 0x1000040D0w envmc).target = arm8_target
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundResidual)>>
+Saved theorem _______ "refund_stub_outside_domain"
+CHECKED refund_stub_outside_domain
+⊢ ∀a h e.
+    refund_heap_clear h e ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x1000040D0w ⇒
+    a ∉ refund_mem_dm h e
+CLAUSE_FAILED 1 start_pc_ok (refund_mc 0x1000040D0w envmc) ms.PC
+SHOW CLAUSE
+  ASM 0x100004070w ∉ refund_mem_dm h e
+  ASM 0x100004080w ∉ refund_mem_dm h e
+  ASM 0x100004090w ∉ refund_mem_dm h e
+  ASM 0x1000040A0w ∉ refund_mem_dm h e
+  ASM 0x1000040B0w ∉ refund_mem_dm h e
+  ASM 0x1000040C0w ∉ refund_mem_dm h e
+  ASM (refund_mc 0x1000040D0w envmc).target = arm8_target
+  ASM (refund_mc 0x1000040D0w envmc).prog_addresses = envmc.prog_addresses
+  ASM (refund_mc 0x1000040D0w envmc).shared_addresses = ∅
+  ASM (refund_mc 0x1000040D0w envmc).mmio_info = []
+  ASM (refund_mc 0x1000040D0w envmc).install_pc = 0x1000040B0w
+  ASM (refund_mc 0x1000040D0w envmc).halt_pc = 0x1000040C0w
+  ASM (refund_mc 0x1000040D0w envmc).ffi_entry_pcs =
+[0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w]
+  ASM (refund_mc 0x1000040D0w envmc).ffi_names = names
+  ASM refund_lab_conf2.shmem_extra = []
+  ASM ffinames_to_string_list names = [«read»; «write»; «close»; «open_in»]
+  ASM mmio_pcs_min_index names = SOME 4
+  ASM LENGTH names = 4
+  ASM refund_lab_conf2.ffi_names = SOME names
+  ASM ms.PC = 0x1000040D0w
+  ASM envmc.prog_addresses = refund_mem_dm h e
+  ASM refund_heap_clear h e
+  GOAL (∀index.
+   index < 4 ⇒
+   n2w
+     ((18446744073709551616 − (3 + index) * 16 MOD 18446744073709551616) MOD
+      18446744073709551616) + 0x1000040D0w ∉ refund_mem_dm h e ∧
+   n2w
+     ((18446744073709551616 − (3 + index) * 16 MOD 18446744073709551616) MOD
+      18446744073709551616) + 0x1000040D0w ≠ 0x1000040C0w ∧
+   n2w
+     ((18446744073709551616 − (3 + index) * 16 MOD 18446744073709551616) MOD
+      18446744073709551616) + 0x1000040D0w ≠ 0x1000040B0w ∧
+   find_index
+     (n2w
+        ((18446744073709551616 − (3 + index) * 16 MOD 18446744073709551616) MOD
+         18446744073709551616) + 0x1000040D0w)
+     [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w] 0 = SOME index) ∧
+∀index.
+  index < 4 ∧ 4 ≤ index ⇒
+  0x1000040C0w ≠
+  [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w]❲index❳ ∧
+  0x1000040B0w ≠
+  [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w]❲index❳
+CLAUSE_KEPT_UNPROVED 2 interference_ok (refund_mc 0x1000040D0w envmc).next_interfer
+  ((refund_mc 0x1000040D0w envmc).target.proj
+     (refund_mc 0x1000040D0w envmc).prog_addresses)
+CLAUSE_KEPT_UNPROVED 3 ffi_interfer_ok ms.PC (refund_mc 0x1000040D0w envmc)
+CLAUSE_PROVED 4 ∀a. byte_align a ∈ (refund_mc 0x1000040D0w envmc).shared_addresses ⇒
+    a ∈ (refund_mc 0x1000040D0w envmc).shared_addresses
+CLAUSE_PROVED 5 DISJOINT (refund_mc 0x1000040D0w envmc).prog_addresses
+  (refund_mc 0x1000040D0w envmc).shared_addresses
+CLAUSE_PROVED 6 refund_lab_conf2.ffi_names = SOME (refund_mc 0x1000040D0w envmc).ffi_names
+CLAUSE_PROVED 7 ∀i. mmio_pcs_min_index (refund_mc 0x1000040D0w envmc).ffi_names = SOME i ⇒
+    MAP
+      (λrec.
+         w2n ((refund_mc 0x1000040D0w envmc).target.get_pc 

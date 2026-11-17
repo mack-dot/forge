@@ -1,0 +1,46 @@
+<<HOL message: Created theory "forge_dbgScratch">>
+SHOW decode
+ []
+⊢ Decode
+    (v2w
+       [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T;
+        F; F; T; T; F; T; F; F; T]) =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+        sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+        v2w [F; T; F; F; T]))
+SHOW run
+ []
+⊢ ∀s. Run
+        (LoadStore
+           (LoadStoreImmediate@16
+              (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+               sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+               v2w [F; T; F; F; T]))) s =
+      dfn'LoadStoreImmediate
+        (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+         sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+         v2w [F; T; F; F; T]) s
+SHOW mem4
+ [¬s.SCTLR_EL1.E0E, s.PSTATE.EL = 0w, aligned 2 address]
+⊢ Mem (address,4,acctype) s = (mem_word s.MEM address,s)
+SHOW write'mem2
+ [¬s.SCTLR_EL1.E0E, s.PSTATE.EL = 0w, aligned 1 address]
+⊢ write'Mem (d,address,2,acctype) s =
+  s with MEM := s.MEM⦇address + 1w ↦ (15 >< 8) d; address + 0w ↦ (7 >< 0) d⦈
+SHOW CheckAlignment_rwt
+ [Aligned (address,n)] ⊢ CheckAlignment (address,n,acctype,iswrite) s = s
+SHOW BigEndian_rwt
+ [¬s.SCTLR_EL1.E0E, s.PSTATE.EL = 0w] ⊢ BigEndian s ⇔ F
+SHOW X_rwt
+ [] ⊢ X n s = if n = 31w then 0w else w2w (s.REG n)
+SHOW ca_ok
+ []
+⊢ s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.A ∧ acctype ≠ AccType_ATOMIC ∧
+  acctype ≠ AccType_ORDERED ⇒
+  CheckAlignment (address,n,acctype,iswrite) s = s
+SHOW ca
+
+[¬s.SCTLR_EL1.A, acctype ≠ AccType_ATOMIC, acctype ≠ AccType_ORDERED,
+ s.PSTATE.EL = 0w] ⊢ CheckAlignment (address,n,acctype,iswrite) s = s

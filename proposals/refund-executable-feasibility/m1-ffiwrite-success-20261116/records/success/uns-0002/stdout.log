@@ -1,0 +1,126 @@
+<<HOL message: Created theory "forge_refundFfiwriteUnaligned">>
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0002/proof.sml:86: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0002/proof.sml:100: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+Saved theorem _______ "check_alignment_no_fault"
+CHECKED check_alignment_no_fault
+ []
+⊢ s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.A ∧ acctype ≠ AccType_ATOMIC ∧
+  acctype ≠ AccType_ORDERED ⇒
+  CheckAlignment (address,n,acctype,iswrite) s = s
+Saved theorem _______ "check_alignment_fault"
+CHECKED check_alignment_fault
+ []
+⊢ s.PSTATE.EL = 0w ∧ s.SCTLR_EL1.A ∧ ¬aligned 1 address ∧
+  s.exception = NoException ⇒
+  CheckAlignment (address,2,acctype,iswrite) s =
+  s with exception := ALIGNMENT_FAULT
+WM2_HYPS ¬s.SCTLR_EL1.A ; ¬s.SCTLR_EL1.E0E ; acctype ≠ AccType_ATOMIC ; acctype ≠ AccType_ORDERED ; s.PSTATE.EL = 0w
+Saved theorem _______ "write_mem2_no_alignment"
+CHECKED write_mem2_no_alignment
+ []
+⊢ (((s.PSTATE.EL = 0w ∧ acctype ≠ AccType_ORDERED) ∧
+    acctype ≠ AccType_ATOMIC) ∧ ¬s.SCTLR_EL1.E0E) ∧ ¬s.SCTLR_EL1.A ⇒
+  write'Mem (d,address,2,acctype) s =
+  s with MEM := s.MEM⦇address + 1w ↦ (15 >< 8) d; address + 0w ↦ (7 >< 0) d⦈
+DECODE  []
+⊢ Decode
+    (v2w
+       [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T;
+        F; F; T; T; F; T; F; F; T]) =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+        sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+        v2w [F; T; F; F; T]))
+ARGS (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+ v2w
+   [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+    F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+    F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T],v2w [T; F; F; T; T],
+ v2w [F; T; F; F; T])
+OPC  []
+⊢ v2w
+    [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T; F;
+     F; T; T; F; T; F; F; T] =
+  0x78001269w
+DECODE_N  []
+⊢ Decode 0x78001269w =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+        v2w
+          [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+           F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+           F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T],
+        v2w [T; F; F; T; T],v2w [F; T; F; F; T]))
+RUN_N  []
+⊢ ∀s. Run
+        (LoadStore
+           (LoadStoreImmediate@16
+              (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+               v2w
+                 [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+                  F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+                  F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+                  F; F; F; T],v2w [T; F; F; T; T],v2w [F; T; F; F; T]))) s =
+      dfn'LoadStoreImmediate
+        (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+         v2w
+           [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+            F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+            F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T],
+         v2w [T; F; F; T; T],v2w [F; T; F; F; T]) s
+T4 
+[¬(if v2w [T; F; F; T; T] = 31w then
+    CheckSPAlignment (s with branch_hint := NONE)
+  else (s with branch_hint := NONE)).SCTLR_EL1.A,
+ ¬(if v2w [T; F; F; T; T] = 31w then
+    CheckSPAlignment (s with branch_hint := NONE)
+  else (s with branch_hint := NONE)).SCTLR_EL1.E0E,
+ (if v2w [T; F; F; T; T] = 31w then
+    CheckSPAlignment (s with branch_hint := NONE)
+  else (s with branch_hint := NONE)).PSTATE.EL =
+ 0w]
+⊢ dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+     v2w
+       [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+        F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+        F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T],
+     v2w [T; F; F; T; T],v2w [F; T; F; F; T]) (s with branch_hint := NONE) =
+  (if v2w [T; F; F; T; T] = 31w then
+     CheckSPAlignment (s with branch_hint := NONE)
+   else s with branch_hint := NONE) with
+  MEM :=
+    (if v2w [T; F; F; T; T] = 31w then
+       CheckSPAlignment (s with branch_hint := NONE)
+     else (s with branch_hint := NONE)).MEM⦇
+      v2w
+          [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+           F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+           F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T] +
+        (if v2w [T; F; F; T; T] = 31w then
+           SP (CheckSPAlignment (s with branch_hint := NONE))
+         else s.REG (v2w [T; F; F; T; T])) + 1w ↦
+        (15 >< 8)
+          (if v2w [F; T; F; F; T] = 31w then 0w
+           else
+             w2w
+               ((if v2w [T; F; F; T; T] = 31w then
+                   CheckSPAlignment (s with branch_hint := NONE)
+                 else (s with branch_hint := NONE)).REG (v2w [F; T; F; F; T])));
+      v2w
+          [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+           F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+           F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T] +
+        (if v2w [T; F; F; T; T] = 31w then
+           SP (CheckSPAlignment (s with branch_hint := NONE))
+         else s.REG (v2w [T; F; F; T; T])) ↦
+        (7 >< 0)
+          (if v2w [F; T; F; F; T] = 31w then 0w
+           else
+             w2w
+               ((if v2w [T; F; F; T; T] = 31w then
+                   CheckSPAlignment (s with branch_hint := NONE)
+                 else (s with branch_hint := NONE)).REG (v2w [F; T; F; F; T])))
+    ⦈

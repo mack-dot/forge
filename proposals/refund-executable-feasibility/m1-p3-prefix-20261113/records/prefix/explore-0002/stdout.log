@@ -1,0 +1,51 @@
+<<HOL message: Created theory "forge_p3Explore">>
+Saved definition ____ "no_install_prefix_def"
+OK..
+STAGE_OK zero/all (proved)
+LEMMA_PROVED zero
+OK..
+STAGE_OK mono/all (proved)
+LEMMA_PROVED mono
+OK..
+STAGE_OK all/all (proved)
+LEMMA_PROVED all
+OK..
+STAGE_OK halt/all (proved)
+LEMMA_PROVED halt
+OK..
+STAGE_FAILED next/all :: 
+Exception raised at Tactical.THEN1: first subgoal not solved by second tactic
+
+AFTER next/all: 1 goals, proved=false
+
+  GOAL mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+  (mc.target.get_byte ms) mc.prog_addresses ∧
+mc.install_pc ∉ mc.prog_addresses ⇒
+(no_install_prefix mc ffi (SUC n) ms ⇔
+ EVERY mc.target.state_ok
+   [ms; mc.target.next ms; mc.next_interfer 0 (mc.target.next ms)] ∧
+ (∀x. x ∉ mc.prog_addresses ⇒
+      mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+ no_install_prefix (mc with next_interfer := shift_seq 1 mc.next_interfer)
+   ffi n (mc.next_interfer 0 (mc.target.next ms)))
+----
+LEMMA_OPEN next
+AFTER next end: 1 goals, proved=false
+
+  GOAL mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+  (mc.target.get_byte ms) mc.prog_addresses ∧
+mc.install_pc ∉ mc.prog_addresses ⇒
+(no_install_prefix mc ffi (SUC n) ms ⇔
+ EVERY mc.target.state_ok
+   [ms; mc.target.next ms; mc.next_interfer 0 (mc.target.next ms)] ∧
+ (∀x. x ∉ mc.prog_addresses ⇒
+      mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+ no_install_prefix (mc with next_interfer := shift_seq 1 mc.next_interfer)
+   ffi n (mc.next_interfer 0 (mc.target.next ms)))
+----
+OK..
+STAGE_OK segment/all (proved)
+LEMMA_PROVED segment
+EXPLORE_COMPLETE

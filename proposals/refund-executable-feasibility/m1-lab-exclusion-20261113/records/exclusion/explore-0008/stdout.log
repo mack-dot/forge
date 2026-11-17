@@ -1,0 +1,36 @@
+<<HOL message: Created theory "forge_initExplore">>
+GOOD_GOAL good_init_state mc0 ms0 bytes0 cbs0 t0 m dm0 sdm0 ∧
+evaluate
+  (make_init mc0 ffi0 t0 m dm1 sdm1 ms0
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config refund_alloc_oracle)
+              refund_prog))) cmp0 cbpos0 cbspace0 coracle0 with clock := k) =
+(res,s2) ⇒
+pc_ok [Install_location; InstallData_location]
+  (SND
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+  s2.pc ∧
+s2.code =
+SND
+  (SND
+     (to_lab arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+        refund_prog)) ∧ ∀i bs n. asm_fetch s2 ≠ SOME (LabAsm Install i bs n)
+PREF2 ⊢ ∀s k res t.
+    region_inv2
+      (loc_good
+         (pc_ok [Install_location; InstallData_location]
+            (SND
+               (SND
+                  (to_lab arm8_config
+                     (set_oracle arm8_backend_config refund_alloc_oracle)
+                     refund_prog))))
+       
+TYPE_GOAL_STATE :(α, ε, δ) state
+TYPE_THM_STATE :(64, β, γ) state
+TYPE_L :sec list
+TYPE_RUN_THM_STATE :(α, β, γ) state
+EXPLORE_COMPLETE

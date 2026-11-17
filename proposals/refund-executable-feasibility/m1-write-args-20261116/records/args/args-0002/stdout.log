@@ -1,0 +1,255 @@
+<<HOL message: Created theory "forge_refundWriteArgs">>
+USED ⊢ parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+  INR (refund_response ok a r c q n,"")
+USED ⊢ ∀input x rest. parse input = INR (x,rest) ⇒ STRLEN rest < STRLEN input
+MARK NE
+Saved theorem _______ "refund_render_fields_not_empty"
+CHECKED refund_render_fields_not_empty
+⊢ refund_render_fields flds ≠ «»
+Saved theorem _______ "empty_string_is_not_a_complete_sexp"
+CHECKED empty_string_is_not_a_complete_sexp
+⊢ parse (explode «») ≠ INR (x,"")
+MARK Wn
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWriteArgs)>>
+Saved theorem _______ "fs_write_needs_enough_chars"
+CHECKED fs_write_needs_enough_chars
+⊢ write fd n chars fs = SOME (nw,fs') ⇒ n ≤ STRLEN chars
+MARK W1
+Saved theorem _______ "ffi_write_return_cases"
+CHECKED ffi_write_return_cases
+⊢ ffi_write c bytes fs = SOME (FFIreturn bytes' fs') ⇒
+  bytes' = bytes❲0 ↦ 1w❳ ∧ fs' = fs ∨
+  LENGTH c = 8 ∧
+  ∃n1 n0 o1 o0 tll rest.
+    bytes = n1::n0::o1::o0::tll ∧ bytes' = 0w::rest ∧
+    w22n [n1; n0] + w22n [o1; o0] + 4 ≤ LENGTH bytes
+DEFINITION ⊢ ∀e. write_ok_event e ⇔
+      ∃c x bs. e = IO_event (ExtCall «write») c ((x,0w)::bs)
+MARK Lw
+LEMMA_FAILED failed_write_event_keeps_fs HOL_ERR (HOL_ERROR {message = "Not of pair type", origins = [{origin_function = "PairCases_on", origin_structure = "pairTools", source_location = Loc_Unknown}]})
+MARK F1b
+Saved ORACLE thm ____ "replay_without_successful_write_keeps_inodes"
+LEMMA_FAILED replay_without_successful_write_keeps_inodes Fail "Unexpected assumptions: replay_without_successful_write_keeps_inodes oracles=DISK_THM,MK_THM"
+MARK F2b
+Saved ORACLE thm ____ "nonempty_output_needs_successful_write_event"
+LEMMA_FAILED nonempty_output_needs_successful_write_event Fail "Unexpected assumptions: nonempty_output_needs_successful_write_event oracles=DISK_THM,MK_THM"
+MARK ONE
+Saved theorem _______ "one_step_normal_args"
+CHECKED one_step_normal_args
+⊢ mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c ab nb.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c (ZIP (ab,nb))] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+    read_ffi_bytearrays mc ms = (SOME c,SOME ab) ∧
+    call_FFI ffi (ExtCall nm) c ab = FFI_return ffi2 nb
+Saved theorem _______ "one_step_halt_args"
+CHECKED one_step_halt_args
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms = mc.halt_pc ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c ab nb.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c (ZIP (ab,nb))] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+    read_ffi_bytearrays mc ms = (SOME c,SOME ab) ∧
+    call_FFI ffi (ExtCall nm) c ab = FFI_return ffi2 nb
+Saved theorem _______ "one_step_install_args"
+CHECKED one_step_install_args
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms = mc.install_pc ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c ab nb.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c (ZIP (ab,nb))] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+    read_ffi_bytearrays mc ms = (SOME c,SOME ab) ∧
+    call_FFI ffi (ExtCall nm) c ab = FFI_return ffi2 nb
+Saved theorem _______ "one_step_ffi_args"
+CHECKED one_step_ffi_args
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧
+  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧
+  mc.ffi_names❲i❳ = ExtCall nm ∧ ALOOKUP mc.mmio_info i = NONE ∧ nm ≠ «» ∧
+  MEM nm [«read»; «write»; «close»; «open_in»] ∧
+  (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+  evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c ab nb.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c (ZIP (ab,nb))] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+    read_ffi_bytearrays mc ms = (SOME c,SOME ab) ∧
+    call_FFI ffi (ExtCall nm) c ab = FFI_return ffi2 nb
+Saved theorem _______ "one_step_cases_args"
+CHECKED one_step_cases_args
+⊢ refund_static mc dm ∧ evaluate mc ffi (SUC k) ms = (r,ms',ffi') ⇒
+  ffi' = ffi ∨
+  (∃mc2 ms2.
+     machine_step mc ffi ms mc2 ffi ms2 ∧
+     evaluate mc2 ffi k ms2 = (r,ms',ffi')) ∨
+  ∃mc2 ms2 ffi2 nm c ab nb.
+    machine_step mc ffi ms mc2 ffi2 ms2 ∧
+    evaluate mc2 ffi2 k ms2 = (r,ms',ffi') ∧
+    ffi2.io_events = ffi.io_events ++ [IO_event (ExtCall nm) c (ZIP (ab,nb))] ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w) ∧
+    read_ffi_bytearrays mc ms = (SOME c,SOME ab) ∧
+    call_FFI ffi (ExtCall nm) c ab = FFI_return ffi2 nb
+MARK MAIN2
+Saved theorem _______ "evaluate_trace_write_events_have_call_states"
+CHECKED evaluate_trace_write_events_have_call_states
+⊢ ∀k mc ffi ms r ms' ffi'.
+    refund_static mc dm ∧ evaluate mc ffi k ms = (r,ms',ffi') ⇒
+    ∃l. ffi'.io_events = ffi.io_events ++ l ∧
+        ∀c bs.
+          MEM (IO_event (ExtCall «write») c bs) l ⇒
+          ∃ab nb.
+            bs = ZIP (ab,nb) ∧
+            ∃mcw ffiw msw ffix.
+              machine_reach mc ffi ms mcw ffiw msw ∧ msw.PC = 0x100004090w ∧
+              read_ffi_bytearrays mcw msw = (SOME c,SOME ab) ∧
+              call_FFI ffiw (ExtCall «write») c ab = FFI_return ffix nb
+MARK BO
+SHOW BO
+  ASM LENGTH l = LENGTH ab
+  ASM ffi_write c ab r = SOME (FFIreturn l f)
+  ASM ffi1.ffi_state = (q,r)
+  ASM ffi1.oracle = basis_ffi_oracle ext
+  GOAL ffi1 with
+<|ffi_state := (q,f);
+  io_events := ffi1.io_events ++ [IO_event (ExtCall «write») c (ZIP (ab,l))]|> =
+ffi2 ∧ l = nb ⇒
+LENGTH nb = LENGTH ab
+LEMMA_FAILED basis_write_call_is_ffi_write HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+MARK RL
+LEMMA_FAILED write_call_arrays_are_the_register_arguments HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "Q_TAC0", origin_structure = "Tactical", source_location = Loc_Unknown}, {origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+MARK A0
+SHOW A0-ok
+  ASM ms1.REG 1w = 8w
+  ASM ms1.MEM (ms1.REG 2w + 3w) = o0
+  ASM ms1.MEM (ms1.REG 2w + 2w) = o1
+  ASM ms1.MEM (ms1.REG 2w + 1w) = n0
+  ASM ms1.MEM (ms1.REG 2w) = n1
+  ASM w22n [n1; n0] + (w22n [o1; o0] + 4) ≤ LENGTH ab
+  ASM rest = rest'
+  ASM ab = n1::n0::o1::o0::tll
+  ASM LENGTH c = 8
+  ASM SUC (SUC (SUC (SUC (LENGTH tll)))) = w2n (ms1.REG 3w)
+  ASM T
+  ASM SUC (LENGTH rest') = w2n (ms1.REG 3w)
+  ASM ffi_write c (n1::n0::o1::o0::tll) (SND ffi1.ffi_state) =
+SOME (FFIreturn (0w::rest') fs')
+  ASM call_FFI ffi1 (ExtCall «write») c (n1::n0::o1::o0::tll) =
+FFI_return ffi2 (0w::rest')
+  ASM read_ffi_bytearrays mc1 ms1 = (SOME c,SOME (n1::n0::o1::o0::tll))
+  ASM ffi1.oracle = basis_ffi_oracle ext
+  ASM refund_static mc1 dm
+  GOAL w22n [n1; n0] + (w22n [o1; o0] + 4) ≤ w2n (ms1.REG 3w)
+LEMMA_FAILED successful_write_call_state_has_valid_arguments HOL_ERR (HOL_ERROR {message = "first subgoal not solved by second tactic", origins = [{origin_function = "THEN1", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+MARK A1
+LEMMA_FAILED successful_write_events_have_valid_call_states HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 212", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+MARK T3b
+SHOW T3b-END
+  ASM ∀e. MEM e st'.io_events ∧ write_ok_event e ⇒
+    ∃mc1 ffi1 ms1.
+      machine_reach mc0 (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+      ms1.PC = 0x100004090w ∧ ms1.REG 1w = 8w ∧
+      w22n [ms1.MEM (ms1.REG 2w); ms1.MEM (ms1.REG 2w + 1w)] +
+      (w22n [ms1.MEM (ms1.REG 2w + 2w); ms1.MEM (ms1.REG 2w + 3w)] + 4) ≤
+      w2n (ms1.REG 3w)
+  ASM [] = (basis_ffi ext cl fs).io_events
+  ASM evaluate mc0 (basis_ffi ext cl fs) k ms = (Halt Success,ms',st')
+  ASM write_ok_event e
+  ASM MEM e st'.io_events
+  ASM (∃e. MEM e st'.io_events ∧ write_event e) ⇒
+∃mc1 ffi1 ms1.
+  machine_reach mc0 (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+  ms1.PC = 0x100004090w
+  ASM EVERY refund_event st'.io_events
+  ASM (basis_ffi ext cl fs).oracle = basis_ffi_oracle ext
+  ASM T
+  ASM Terminate Success st'.io_events ∈
+extend_with_resource_limit {Terminate Success st'.io_events}
+  ASM extract_fs ext (cl,fs) st'.io_events =
+SOME
+  (add_stdout (fastForwardFD fs 0)
+     (refund_render_fields
+        (refund_fields charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+extend_with_resource_limit {Terminate Success st'.io_events}
+  ASM refund_static mc0 dm
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_installed_no_handler mc0 ms cbspace data_sp
+  ASM is_arm8_machine_config mc0
+  GOAL ∃mc1 ffi1 ms1.
+  machine_reach mc0 (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+  ms1.PC = 0x100004090w ∧ ms1.REG 1w = 8w ∧
+  w22n [ms1.MEM (ms1.REG 2w); ms1.MEM (ms1.REG 2w + 1w)] +
+  (w22n [ms1.MEM (ms1.REG 2w + 2w); ms1.MEM (ms1.REG 2w + 3w)] + 4) ≤
+  w2n (ms1.REG 3w)
+Saved ORACLE thm ____ "refund_terminating_run_reaches_valid_write_call"
+LEMMA_FAILED refund_terminating_run_reaches_valid_write_call Fail "Unexpected assumptions: refund_terminating_run_reaches_valid_write_call oracles=DISK_THM,MK_THM"
+MARK T4b
+Saved ORACLE thm ____ "refund_reached_valid_write_call_and_path"
+LEMMA_FAILED refund_reached_valid_write_call_and_path Fail "Unexpected assumptions: refund_reached_valid_write_call_and_path oracles=DISK_THM,MK_THM"
+MARK controls
+Saved theorem _______ "empty_trace_has_no_successful_write_and_keeps_fs"
+CHECKED empty_trace_has_no_successful_write_and_keeps_fs
+⊢ ¬EXISTS write_ok_event [] ∧ extract_fs_with_numchars ext st [] = SOME st
+Saved theorem _______ "failed_write_event_is_not_successful"
+CHECKED failed_write_event_is_not_successful
+⊢ ¬write_ok_event (IO_event (ExtCall «write») c (ZIP (h::t,(h::t)❲0 ↦ 1w❳))) ∧
+  ¬write_ok_event (IO_event (ExtCall «read») c b) ∧
+  ¬write_ok_event (IO_event (ExtCall «write») c [])
+Saved theorem _______ "wrong_clen_write_never_succeeds"
+CHECKED wrong_clen_write_never_succeeds
+⊢ LENGTH c ≠ 8 ∧ ffi_write c bytes fs = SOME (FFIreturn bytes' fs') ⇒
+  bytes' = bytes❲0 ↦ 1w❳ ∧ fs' = fs
+Saved theorem _______ "out_of_bounds_write_never_succeeds"
+CHECKED out_of_bounds_write_never_succeeds
+⊢ LENGTH bytes < w22n [n1; n0] + w22n [o1; o0] + 4 ∧
+  bytes = n1::n0::o1::o0::tll ∧
+  ffi_write c bytes fs = SOME (FFIreturn bytes' fs') ⇒
+  bytes' = bytes❲0 ↦ 1w❳ ∧ fs' = fs
+LEMMA_FAILED short_array_write_is_rejected HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Saved theorem _______ "write_call_with_unreadable_arrays_is_an_error"
+CHECKED write_call_with_unreadable_arrays_is_an_error
+⊢ refund_static mc dm ∧ ms.PC = 0x100004090w ∧
+  ¬(∃cb ab. read_ffi_bytearrays mc ms = (SOME cb,SOME ab)) ⇒
+  FST (evaluate mc ffi 1 ms) = Error
+Saved ORACLE thm ____ "wrong_clen_register_gives_no_successful_write"
+LEMMA_FAILED wrong_clen_register_gives_no_successful_write Fail "Unexpected assumptions: wrong_clen_register_gives_no_successful_write oracles=DISK_THM,MK_THM"

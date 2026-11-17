@@ -1,0 +1,170 @@
+<<HOL message: Created theory "forge_p2Explore">>
+Saved definition ____ "val_inv_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "step_ok_def"
+Saved definition ____ "region_hyp_def"
+OK..
+AFTER inst: 0 goals, proved=true
+Saved definition ____ "region_inv_def"
+OK..
+AFTER wb: 0 goals, proved=true
+OK..
+1 subgoal:
+AFTER st-unfold: 1 goals, proved=false
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case asm_fetch s of
+   NONE => (Error,s)
+ | SOME (Label v39 v40 v42) => (Error,s)
+ | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | SOME (Asm (Asmi (Loc v19 v20)) v44 v45) => (Error,s)
+ | SOME (Asm (ShareMem m r ad) v44 v45) =>
+   (case share_mem_op m r ad s of
+      NONE => (Error,s)
+    | SOME (FFI_return v3 v4,s') =>
+      evaluate
+        (s' with
+         <|io_regs := shift_seq 1 s'.io_regs;
+           io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+    | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s'))
+ | SOME (LabAsm (Jump l) v47 v50 v51) =>
+   (case get_pc_value l s of
+      NONE => (Error,s)
+    | SOME p => evaluate 
+----
+OK..
+STEP_FAILED st-none 
+Exception raised at Tactical.THEN1: first subgoal not solved by second tactic
+
+AFTER failure of st-none: 1 goals, proved=false
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case asm_fetch s of
+   NONE => (Error,s)
+ | SOME (Label v39 v40 v42) => (Error,s)
+ | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | SOME (Asm (Asmi (Loc v19 v20)) v44 v45) => (Error,s)
+ | SOME (Asm (ShareMem m r ad) v44 v45) =>
+   (case share_mem_op m r ad s of
+      NONE => (Error,s)
+    | SOME (FFI_return v3 v4,s') =>
+      evaluate
+        (s' with
+         <|io_regs := shift_seq 1 s'.io_regs;
+           io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+    | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s'))
+ | SOME (LabAsm (Jump l) v47 v50 v51) =>
+   (case get_pc_value l s of
+      NONE => (Error,s)
+    | SOME p => evaluate 
+----
+OK..
+STEP_FAILED st-stepok 
+Exception raised at BasicProvers.by: by's tactic failed to prove subgoal on line 71
+
+AFTER failure of st-stepok: 1 goals, proved=false
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case asm_fetch s of
+   NONE => (Error,s)
+ | SOME (Label v39 v40 v42) => (Error,s)
+ | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | SOME (Asm (Asmi (Loc v19 v20)) v44 v45) => (Error,s)
+ | SOME (Asm (ShareMem m r ad) v44 v45) =>
+   (case share_mem_op m r ad s of
+      NONE => (Error,s)
+    | SOME (FFI_return v3 v4,s') =>
+      evaluate
+        (s' with
+         <|io_regs := shift_seq 1 s'.io_regs;
+           io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+    | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s'))
+ | SOME (LabAsm (Jump l) v47 v50 v51) =>
+   (case get_pc_value l s of
+      NONE => (Error,s)
+    | SOME p => evaluate 
+----
+OK..
+STEP_FAILED st-line 
+Exception raised at BasicProvers.Cases_on:
+at BasicProvers.find_subterm:
+  No var with name "x" free in goal, or in outer universal quantifiers
+
+AFTER failure of st-line: 1 goals, proved=false
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case asm_fetch s of
+   NONE => (Error,s)
+ | SOME (Label v39 v40 v42) => (Error,s)
+ | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | SOME (Asm (Asmi (Loc v19 v20)) v44 v45) => (Error,s)
+ | SOME (Asm (ShareMem m r ad) v44 v45) =>
+   (case share_mem_op m r ad s of
+      NONE => (Error,s)
+    | SOME (FFI_return v3 v4,s') =>
+      evaluate
+        (s' with
+         <|io_regs := shift_seq 1 s'.io_regs;
+           io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+    | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s'))
+ | SOME (LabAsm (Jump l) v47 v50 v51) =>
+   (case get_pc_value l s of
+      NONE => (Error,s)
+    | SOME p => evaluate 
+----
+EXPLORE_COMPLETE

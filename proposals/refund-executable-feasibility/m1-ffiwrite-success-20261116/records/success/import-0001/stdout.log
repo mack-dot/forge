@@ -1,0 +1,35 @@
+IMPORTED forge_refundFfiwriteUnaligned.check_alignment_no_fault EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteUnaligned.check_alignment_fault EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteUnaligned.sturh_w9_x19_1_step_no_alignment EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSuccess.cake_ffiwrite_path_successful_write EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSuccess.cake_ffiwrite_path_returns EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSuccess.write_success_result_bytes_exact EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSuccess.write_return_to_wrong_address_not_in_relation EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSuccess.write_result_bytes_in_image_not_covered EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSuccess.cake_ffiwrite_success_path_inhabited EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteFault.sturh_w9_x19_1_alignment_fault EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteCompose.cake_ffiwrite_path_failed_write EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwritePath.write_call_rel_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSite.ffi_write_accepts_wrong_clen EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSite.write_wrong_clen_not_covered EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSite.corrupted_return_state_not_in_write_relation EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSite.write_frame_in_protected_domain_not_covered EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteSite.write_result_bytes_in_frame_not_covered EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundFfiwriteStep.ffiwrite_ok_alignment_conflict EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED_COUNT 18
+STORED_THEOREMS forge_refundFfiwriteUnaligned 5 STORED_DEFINITIONS 1 AXIOMS 0
+STORED_THEOREMS forge_refundFfiwriteSuccess 12 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_refundFfiwriteFault 2 STORED_DEFINITIONS 0 AXIOMS 0
+CONTROL_OK the new step theorem, the new suffix theorem and its pre-state carry no 2-byte alignment condition
+CONTROL_OK the success theorem has the unchanged U397 call pre-state (aligned 1 a, so a + 1 is NOT 2-aligned) as its only premise
+CONTROL_OK the SCTLR_EL1.A premise on the return state is explicit in both composed theorems
+WRITE_CALL_REL_OCCURS_IN cake_ffiwrite_path_returns cake_ffiwrite_path_successful_write cake_ffiwrite_success_path_inhabited ffiwrite_after_successful_call write_call_rel_gives_ok_return_state write_call_rel_inhabited_ok write_return_to_wrong_address_not_in_relation write_success_caller_return_address_exact write_success_result_bytes_exact write_wrong_result_bytes_refuted
+CONTROL_OK write_call_rel occurs only under an implication, in a refutation, or with constructed inhabitants
+CONTROL_OK no U398 theorem mentions machine_reach, machine_sem, ffi_interfer_ok, refund_ffi_contract or ffi_write: no reachability, contract or oracle claim
+CLOSURE_NODES 533
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+AFTER_POSITIVE_AUDIT
+P3_IMPORT_COMPLETE

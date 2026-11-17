@@ -12413,3 +12413,1982 @@ curl: (6) Could not resolve host: github.com
   written and are superseded by this entry.
 - Next check: owner decision on a pull request to main and on an off-machine
   copy of results/.
+
+## U367 — Proposed: hardware-dependent computational and model-output variance
+
+- References: none prior; no earlier entry covers this subject. CURRENT none;
+  M1 open; Stage12 unauthorized; end_to_end=false. Status: PROPOSED by a
+  collaborator and relayed by the owner on 2026-11-13. The proposal suggested
+  ID 132; U132 is taken, so it is recorded here under the next free ID. The
+  wording below follows the proposal.
+- Unsure: whether observed differences in computational behavior and model
+  outputs across hardware originate from floating-point rounding, reduction
+  ordering, quantization, kernel scheduling, nondeterminism,
+  hardware-specific instructions, or interactions between these factors.
+- Impact: identical source and identical model weights do not necessarily
+  establish identical computational behavior or identical model outputs
+  across hardware configurations. For Forge this bears on any claim that a
+  result reproduces on another host when a model takes part in producing it.
+  It does not bear on the HOL kernel results, which are bit-exact symbolic
+  checks (U362: byte-identical exports on macOS and Linux).
+- Evidence: none in this repository. No experiment was run and no difference
+  was measured or recorded here. The proposal's phrase "observed differences"
+  is not backed by a record in this repository. The model, the hardware
+  configurations and the kernels in scope are not yet named.
+- Next check: controlled cross-hardware and cross-kernel experiments that
+  record logits, token IDs, numerical deviations, precision, hardware
+  identity, compiler versions, kernel hashes, seeds and deterministic
+  execution settings. Before a run: name the model, the hardware set and the
+  comparison metric, and add a same-hardware repeat as the baseline so that
+  run-to-run variance is separated from cross-hardware variance.
+- This entry grants no authority and starts no work. It is outside the M1
+  proof chain.
+
+## U368 — P1 proved: lab-level closure of the installer sections, with the allocation oracle kept as a defined constant
+
+- References: U364, U365. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The U298 exclusion premise is not adopted and not used.
+- The allocation oracle was recomputed with the published pipeline (in-logic
+  to_livesets, then the published external allocator, algorithm Irc) and kept
+  as the defined constant refund_alloc_oracle (552 entries). No oracle was
+  chosen by hand. PROVED refund_alloc_compiled: compile with this oracle
+  gives SOME (code,data,c1) with the existing constants code and data. The
+  script fails closed unless the recomputed code, data, FFI names and encoded
+  configuration are syntactically the stored constants.
+- Not shown: refund_alloc_oracle = oracle. Earlier Forge theorems name the
+  unspecified constant oracle and use only its compiled specification.
+  Re-stating them for refund_alloc_oracle is NOT RUN.
+- PROVED forge_refundLabClosure.refund_lab_install_closure: in the published
+  to_lab output L for that oracle, no section other than Install_location and
+  InstallData_location has a label of either in the published
+  sec_get_labels. The closed set is {29, 31}; for {29} alone the closure is
+  false (refund_lab_not_closed_29), because section 31 jumps to 29.
+- PROVED refund_lab_stats: 558 sections; the only section with an Install
+  line is 29; 553 JumpReg lines; 1206 LocValue lines.
+- Method: nine ARM8-specialised compiler functions were defined again with
+  their defining links kept (the published library overwrites those links),
+  translated, and the computed program was proved equal to the published
+  to_lab output (lab_forge8_to_lab). A published local lemma was re-proved
+  with its own tactic. No axiom or cheat.
+- Actual exits: twelve explorations 0, except explore-0004 signal 24 (CPU
+  limit in an over-broad tactic) and explore-0011 1 (script error); neither
+  counted. proof-0001 0 with nine theorems; import 0 with eight exact
+  statements and 384 closure nodes; repeat 0 with byte-identical exports;
+  naive-statement 1 at the intended mismatch; naive-closure 1 (fresh
+  evaluation rejects section 29 alone). No store_thm attempt failed. Source
+  e8c374be010e96186d241f786739ff39fccc7391f68c80c386619a48675defda; theory data
+  6899ad2a3e5469128087f6c4e947821ead95c0d11e683331f6de33833be1ae08.
+- Limits: same machine, cached parents, no clean replay. The trusted base
+  includes cv_compute, the published cv translation and the external
+  allocator's determinism only for reproducibility (its output is checked by
+  the in-logic compile, not trusted).
+- Evidence: proposals/refund-executable-feasibility/m1-p1-lab-closure-20261113/
+  REPORT.md, records/p1, records/verify_cases_r6.py.
+- Next check: U369 and U370.
+
+## U369 — P2 static part proved at program-counter level; a label-resolution hazard found and covered
+
+- References: U365, U368. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- Finding: in the published labSem loc_to_pc, a label at the end of a section
+  resolves to the first instruction of the next section. Label names alone
+  (U368) therefore do not bound where a jump lands.
+- PROVED forge_refundLabResolve.refund_lab_refs_resolve_outside: for every
+  labelled line outside sections 29 and 31, each label that resolves under
+  the published loc_to_pc resolves to a program counter outside those
+  sections. PROVED refund_lab_resolve_closed: no line outside them that is
+  followed by a line of 29 or 31 can fall through. PROVED counts: 29095
+  instruction lines, 5244 with a label reference, 0 Call lines. loc_pc_thm
+  proves the executable twin equal to the published loc_to_pc.
+- Actual exits: resolve-0001 0 with six theorems; resolve-import 0 with five
+  exact statements and 385 closure nodes; resolve-repeat 0 byte-identical;
+  resolve-naive 1 (fresh evaluation rejects section 29 alone). Source
+  665f0dcac1e85882cfb076deea028ce51d75eab59728180c37f7bdb1e339e3ab; theory data
+  b6246a203e9975a0bd56313f5c630bc5f6803dc0cb9b83c2192b617300f6c2d5.
+- This is static. It does not show that evaluation stays outside sections
+  29 and 31.
+- Evidence: m1-p1-lab-closure-20261113/REPORT.md section 3.
+
+## U370 — P2 semantic part not proved; P3 not run; installer exclusion not established
+
+- References: U298, U360, U365, U369. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false.
+- forge_labRegionInvariant defines a generic region invariant for the
+  published lab semantics (value predicate G, program-counter predicate OK,
+  static hypothesis region_hyp). PROVED: asm_inst_val_inv and
+  write_bytearray_val_inv. NOT PROVED: the one-step lemma and the whole-run
+  theorem; both are printed as PROPOSED in the proof log.
+- Failure point: branches for plain instructions, indirect jumps and
+  shared-memory operations closed one at a time in the goal manager. The
+  combined tactic ran to the 300 s CPU limit (explore-0017, signal 24) in
+  proof search on the labelled-instruction branches. No store_thm attempt
+  failed. No counterexample was found. Also open: the instantiation for the
+  exact lab program (two list lemmas and the initial-state fact).
+- The lab program has no Call line (U369), so return addresses are LocValue
+  constants and need no separate invariant.
+- P3 NOT RUN: it needs the P2 theorem and a modified copy of the published
+  lab_to_targetProof compile_correct proof. The U298 exclusion is NOT
+  ESTABLISHED; install_exclusion_suffices (U360) is not applicable yet. All
+  six installed-state obligations remain open.
+- Actual exits: seventeen explorations 0, except explore-0004 and
+  explore-0017 signal 24 and explore-0009 1 (script error); none counted.
+  lemmas-0001 0; lemmas-import 0 with two exact statements and 289 closure
+  nodes; lemmas-repeat 0 byte-identical; lemmas-missing-premise 1 at the
+  intended mismatch. verify_cases_r6.py exits 0 and exits 1 on two altered
+  copies. Theory data
+  bca9b622f6566e4443bc2e179f4e3ce4979c9ff8f93d18f8ccde26d7c4861777.
+- The owner supplied five research priorities during this run: close the
+  installer exclusion chain; close the physical installed-state obligations;
+  an independently reproducible M1 result; freeze M1 as a reference example;
+  a second program under unchanged rules. They set order only and grant no
+  authority.
+- Evidence: m1-p1-lab-closure-20261113/REPORT.md sections 4 to 8, records/p2.
+- Next check: the one-step lemma, labelled-instruction branches with explicit
+  tactics, CallFFI first.
+
+## U371 — P2 generic part proved: one-step, whole-run and every-prefix region invariant for the lab semantics
+
+- References: U370. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The U298 exclusion premise is not adopted and not used.
+- forge_labRegionStep, PROVED at local scope: eleven branch lemmas
+  region_step_* (Inst, JumpReg, ShareMem, Label, Halt, LocValue, Jump,
+  JumpCmp, Call, Install, CallFFI); region_one_step (the statement proposed
+  in U370, unchanged); region_run; region_prefix: for every clock k,
+  region_inv G OK code s and evaluate (s with clock := k) = (res,t) give
+  region_inv for t, OK t.pc, t.code = code and that t does not fetch an
+  Install line. region_hyp_witness shows the hypothesis is satisfiable. The
+  theorems are generic and name no program and no oracle.
+- CallFFI as modelled: the program counter goes to the resolution of the link
+  register, which satisfies the value invariant; registers become old values
+  or Words from the interference oracle; memory changes by write_bytearray,
+  which writes only Word cells. This holds for every returned byte list and
+  every oracle. That native FFI code behaves as the model is installed-state
+  obligation 3 and is not proved.
+- Cause of the U370 failure: one combined tactic with open-ended proof search
+  over two higher-order lemmas; it left no residue. Changed strategy: one
+  lemma per fetched line and explicit leaf tactics.
+- Counterexample search: none for the stated theorem (proved for all inputs).
+  For the claim without the static hypothesis a concrete counterexample is
+  proved in control step-refute-weakened-v3.
+- Actual exits: explore-0001 to explore-0009 0; step-0001 1 (script error in
+  a type annotation of the witness after the other proofs passed; nothing
+  exported; one failed run of the store script); step-0002 0 with seventeen
+  theorems; step-import 1 (reader-side quantifier order, not a theorem
+  failure); step-import-0002 0 with five statements and 290 closure nodes;
+  step-repeat 1 (repeat of the failed source); step-repeat-0002 0
+  byte-identical; step-missing-hyp 1 at the intended mismatch;
+  step-refute-weakened and -v2 1 and 1 (script errors after the
+  counterexample fact, not counted); step-refute-weakened-v3 1 as intended.
+  Source f57e63ea21b53a5ab14ef934f74a8e87b8dc8f25c68a894c7861b9c289a5c4bd;
+  theory data 7cf102992292a82c9c05efcfda13e908f4457fa9d21d00805426546d2ba42a53.
+- Evidence: proposals/refund-executable-feasibility/m1-p2-lab-invariant-20261113/
+  REPORT.md, records/step, records/verify_cases_r7.py.
+
+## U372 — P2 for the exact lab program: runs from the initial lab state never fetch Install, given one memory premise
+
+- References: U368, U369, U371. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- forge_labRegionWalk.hyp_walk_region_hyp (generic, PROVED): an executable
+  walk over a program implies the static hypothesis region_hyp.
+- forge_refundLabRun, PROVED: refund_lab_region_hyp (by in-logic evaluation
+  of the walk on the published to_lab output L for refund_alloc_oracle) and
+  refund_lab_run_avoids_install: a state with code L, the value invariant
+  and a program counter outside sections Install_location and
+  InstallData_location stays outside them for every clock and never fetches
+  an Install line. For section 29 alone the walk is false
+  (refund_lab_walk_not_closed_29).
+- forge_refundLabRunInit.refund_lab_init_run_avoids_install, PROVED: the same
+  for the published initial state lab_to_targetProof make_init, with one
+  premise: every cell of the initial memory m satisfies loc_good.
+- Remaining premise, OPEN: the published good_init_state gives Word values
+  at byte-aligned addresses only, so the premise over all addresses is not
+  yet discharged from installed. Next check: prove it, or restate the
+  invariant for aligned addresses.
+- Oracle audit: the only oracle constant in these statements is
+  refund_alloc_oracle (checked in the import logs). No theorem that names the
+  unspecified constant oracle is used, and no claim is made that such
+  theorems apply to refund_alloc_oracle.
+- This is a lab-level result. It is not the U298 exclusion, which is about
+  target evaluator prefixes.
+- Actual exits: application explore-0001 1 and explore-0002 1 (script
+  errors), explore-0003 0 (walk check T for {29,31}, F for {29}); run-0001 0
+  with five theorems on the first attempt; run-import 0 with four exact
+  statements and 389 closure nodes; run-repeat 0 byte-identical;
+  run-missing-premise 1 and run-naive 1 as intended; init-0001 1 (script
+  error, a variable name that is a constant); init-0002 0; init-import 0 with
+  394 closure nodes; init-repeat 0 byte-identical; walk-0001, walk-import,
+  walk-repeat 0. verify_cases_r7.py exits 0 and exits 1 on two altered
+  copies. Theory data: walk
+  9a16104455ea50a744d7a7ed28a18ec99a032fc33544275ac3c3618515dc758e, run
+  b83205b1a6b810bc6a2bd8c3ae64bf56b5e64f89c3a263e1bec13dac7b64e53a, init
+  e92e9541bf4718583bb89f621e1cc174cc183676d24a5933e7113220c74fe450.
+- Limits: same machine, cached parents, no clean replay.
+- Evidence: m1-p2-lab-invariant-20261113/REPORT.md sections 3 and 4, records/run.
+
+## U373 — P3 not run; exact modifications recorded; installer exclusion not established
+
+- References: U298, U360, U371, U372. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false.
+- P3 NOT RUN. The published lab_to_targetProof compile_correct concludes one
+  target result for some clock. P3 needs a strengthened conclusion: every
+  earlier TimeOut prefix has a program counter different from install_pc,
+  under the new premise that the lab run never fetches Install
+  (region_prefix). Intermediate counters of one lab line lie in
+  prog_addresses, and install_pc is outside by start_pc_ok. This needs a
+  modified copy of a proof of about 1700 lines, rebuilt in the CakeML proof
+  context. Not attempted.
+- Before the composition: the memory premise of U372, and the re-statement
+  of the backend chain for refund_alloc_oracle (NOT RUN).
+- The U298 exclusion is NOT ESTABLISHED. install_exclusion_suffices (U360) is
+  not applicable yet. All six installed-state obligations remain open;
+  obligation 4 is reduced to the memory premise and P3.
+- Evidence: m1-p2-lab-invariant-20261113/REPORT.md sections 5 and 6.
+- Next check: the memory premise; then P3.
+
+## U374 — The all-address memory premise does not follow from good_init_state; the invariant is restated on a covered address set
+
+- References: U372. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The U298 exclusion premise is not adopted and not used.
+- Memory model, read from labSemScript.sml: a word load or store asserts
+  w2n w MOD (dimindex DIV 8) = 0 and membership in mem_domain, and evaluate
+  returns Error when the assertion fails; byte and 32-bit operations use
+  byte_align and only read or write Word cells; FFI results are written by
+  byte stores. A Loc can therefore reach a register from memory only through
+  a successful word load at an aligned address.
+- PROVED forge_labRegionAligned.all_address_premise_not_implied: for any
+  value predicate with a bad value there is a 64-bit memory that meets the
+  aligned-address clause and breaks the all-address premise. The premise of
+  U372 was not assumed.
+- Revised invariant: mval_inv G D s constrains memory only on a set D;
+  load_covered D says D holds every address at which a word load can
+  succeed; region_inv2 adds these to the unchanged static hypothesis.
+  PROVED again for this invariant: asm_inst_mval_inv (with the non-failure
+  premise that evaluate checks), write_bytearray_mval_inv, eleven branch
+  lemmas region2_step_*, region2_one_step, region2_run, region2_prefix, and
+  load_covered_byte_align_64. The runtime conclusion is unchanged from U371.
+- Actual exits: explore-0001 to explore-0012 0 except 1 for 0001, 0003, 0005,
+  0007 and 0010 (explorations stopped at an open lemma or a missing library
+  load; not counted); aligned-0001 0 with twenty theorems on the first
+  attempt; aligned-import 0 with five exact statements and 290 closure nodes;
+  aligned-repeat 0 byte-identical; aligned-missing-coverage 1 at the intended
+  mismatch. Source
+  93745080501cb58b54b7edbed53c8223ba977cc4f86de7efbdd30988f5b8860f; theory data
+  0c735af977fb8a6043057f4a589fef08909f1687cc648b58ae1e8fa9756fba7d.
+- Evidence: proposals/refund-executable-feasibility/m1-lab-exclusion-20261113/
+  REPORT.md sections 1 to 3, records/aligned.
+
+## U375 — Lab-level installer exclusion proved from good_init_state with no extra memory premise
+
+- References: U368, U372, U374. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false.
+- PROVED forge_refundLabExclusion.refund_lab_good_init_avoids_install: if
+  good_init_state mc0 ms0 bytes0 cbs0 t0 m dm0 sdm0 holds and the published
+  lab evaluator, started from the published make_init state with memory m
+  and the exact lab program L at any clock k, returns (res,s2), then s2 has
+  its program counter outside sections Install_location and
+  InstallData_location, s2.code = L, and s2 does not fetch an Install line.
+  All other parameters of make_init are universally quantified.
+- PROVED refund_lab_aligned_init_avoids_install: the same with the exact
+  clause that is used, for every 64-bit address a there is w with
+  m (byte_align a) = Word w.
+- Structure audit in the import: two premises (good_init_state and the
+  evaluate equation); no loc_good, val_inv, mval_inv or region_hyp premise;
+  the only oracle constant is refund_alloc_oracle.
+- This closes U372's open premise. It adds no assumption about the initial
+  state beyond the published predicate. It is a lab-level result for
+  refund_alloc_oracle; it is not the U298 exclusion.
+- Actual exits: application explore-0001 to explore-0011 0 except 1 for
+  0001, 0002, 0003 and 0009 (type errors in goal construction; the lab
+  program type has no word-size parameter; not counted); excl-0001 0 with two
+  theorems on the first attempt; excl-import 0 with 395 closure nodes;
+  excl-repeat 0 byte-identical; excl-missing-init 1 at the intended
+  mismatch. verify_cases_r8.py exits 0 and exits 1 on two altered copies.
+  Source 392aae63223888f133a4e385ef89105545fcea64484a8e9afa64f29ff6928679;
+  theory data
+  41c11f8c7075f37bc40ebc53a107d865b90a757b8b52ce3f8c5362d465db1a80.
+- Limits: same machine, cached parents, no clean replay. The import rebuilds
+  the two expected statements with the proof script's term construction; the
+  structure audit is independent of it.
+- Evidence: m1-lab-exclusion-20261113/REPORT.md section 4, records/exclusion.
+
+## U376 — P3 preparation recorded; P3 not run; target-level exclusion not established
+
+- References: U298, U360, U373, U375. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false.
+- The published lab_to_targetProof semantics_compile has the premise
+  good_init_state and relates the machine to make_init with the same memory
+  m, which is the shape of U375.
+- Additions needed in compile_correct, none proved: a premise that the lab
+  run never fetches Install; a conclusion that every earlier TimeOut prefix
+  of the target evaluator has a program counter different from install_pc;
+  a per-line argument that intermediate counters stay in prog_addresses,
+  which excludes install_pc by start_pc_ok; clock bookkeeping for the
+  composition of cases.
+- Backend chain: backendProof compile_correct is generic in the
+  configuration and can be instantiated for refund_alloc_oracle; the Forge
+  theorems above it name the unspecified oracle and are not re-stated. NOT
+  RUN. No claim is made that they apply.
+- The U298 exclusion is NOT ESTABLISHED. install_exclusion_suffices (U360) is
+  not applicable yet. All six installed-state obligations remain open.
+- Evidence: m1-lab-exclusion-20261113/REPORT.md sections 5 and 6.
+- Next check: state the strengthened compile_correct and prove its base
+  cases in a copy of the published proof context.
+
+## U377 — Target-level prefix calculus proved; clock zero, Halt and one ordinary step at evaluator level
+
+- References: U298, U360, U376. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The U298 exclusion premise is not adopted and not used.
+- forge_targetInstallPrefix, PROVED at local scope, generic, published
+  targetSem only: no_install_prefix mc ffi n ms says every TimeOut prefix up
+  to clock n has a program counter different from install_pc.
+  no_install_prefix_all: for all n it equals the frozen U298 exclusion.
+  no_install_prefix_zero, _mono, _halt (needs halt_pc outside prog_addresses
+  and different from install_pc), _next (one target step from a program
+  address, with install_pc outside prog_addresses), and _segment: it composes
+  over the shape of the published step lemmas, for all k,
+  evaluate c io (k + l) ms1 = evaluate c2 io2 k ms2.
+- Scope: these are base cases at the level of the target evaluator. The base
+  cases of the strengthened simulation with state_rel are NOT RUN. The
+  per-segment statement for an instruction encoded as several target
+  instructions is NOT RUN. Nothing is inferred from endpoint correspondence.
+- Actual exits: explore-0001 to explore-0004 0; prefix-0001 0 with six
+  theorems on the first attempt; prefix-import 0 with six exact statements
+  and 288 closure nodes; prefix-repeat 0 byte-identical; prefix-missing-first
+  1 at the intended mismatch; prefix-invalid-layout 1 (a proved countermodel:
+  with halt_pc = install_pc the Halt claim is false). Source
+  35114df5ab49cbc06cd0cf79cf0d0a210093e77df83acc26378cf426710bc992; theory data
+  9082b36f082bef72b2ececd2c6e88778fcbf6ff995fce44cb18a27f1f36658ec.
+- Evidence: proposals/refund-executable-feasibility/m1-p3-prefix-20261113/
+  REPORT.md section 3, records/prefix.
+
+## U378 — Strengthened compile_correct stated and type-checked, not proved; first backend link for refund_alloc_oracle
+
+- References: U368, U375, U376, U377. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false.
+- The published lab_to_targetProofScript.sml was copied unchanged into the
+  packet (SHA256
+  6cfb4a5f85277e9e4de0ff83f14b515be5d100cedb9375f44e85b072d731b433); the
+  pinned tree is unmodified. Its compile_correct proof is a short main proof
+  with nine suspended cases over step lemmas.
+- PROPOSED, NOT PROVED: the strengthened statement adds the premise that no
+  lab prefix fetches an Install line and the conclusion
+  no_install_prefix mc_conf s1.ffi (s1.clock + k) ms1. A machine check shows
+  that removing the two additions gives exactly the published statement.
+- Correction: case statement-0001 printed the prefix bound as s1.clock, an
+  extraction error of the agent. statement-0002 has s1.clock + k. No proof
+  used the wrong form.
+- Not resolved: whether state_rel alone gives get_pc ms1 <> install_pc, which
+  the clock-zero case of the strengthened statement needs.
+- PROVED forge_refundAllocBackend.refund_alloc_backend_correct: the published
+  backendProof compile_correct instantiated for
+  set_oracle arm8_backend_config refund_alloc_oracle, for every c1 with
+  compile ... = SOME (code,data,c1). The only oracle constant is
+  refund_alloc_oracle. NOT RUN: backend_config_ok for this configuration and
+  the Forge theorems built on the old constant oracle. No fresh import of
+  this one-theorem theory was run.
+- Actual exits: statement-0001 0 (superseded statement); statement-0002 0;
+  statement-repeat 0 byte-identical. verify_cases_r9.py exits 0 and exits 1
+  on two altered copies; it checks the hash of the copied proof. Source
+  934c6ba10319e69edb773abfdd9ddcc558b98e29c67fdeffdc904648c4b08f19; theory data
+  d11421aaa82b82b6f1f546893187a328fb89c165b8141e95cb7d9388ad177ccf.
+- Evidence: m1-p3-prefix-20261113/REPORT.md sections 1, 2 and 4.
+
+## U379 — P3 not established; target-level installer exclusion not established
+
+- References: U298, U360, U375, U377, U378. CURRENT none; M1 open; Stage12
+  unauthorized; end_to_end=false.
+- P3 is NOT ESTABLISHED. Missing: per-segment prefix lemmas (strengthened
+  forms of the published step lemmas); the nine cases of the strengthened
+  compile_correct; the link from refund_lab_good_init_avoids_install to the
+  added lab premise; the strengthened semantics_compile and the backend chain
+  for refund_alloc_oracle.
+- The U298 exclusion at target level is NOT ESTABLISHED.
+  install_exclusion_suffices (U360) is not applicable. None of the six
+  installed-state obligations is discharged.
+- Unchanged gaps from runtime, loader and FFI assumptions: ffi_interfer_ok
+  for the native FFI code, installed from the loader and start-up code, and
+  the processor model.
+- Evidence: m1-p3-prefix-20261113/REPORT.md sections 5 and 6.
+- Next check: a strengthened asm_step_IMP_evaluate_step that also concludes
+  no_install_prefix for its segment, from the published encoder_correct;
+  before it, the clock-zero question of U378.
+
+## U380 — Clock-zero case of the strengthened simulation proved with a layout bound; the U378 statement needs that bound
+
+- References: U378, U379. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The U298 exclusion premise is not adopted and not used.
+  The request for this run arrived truncated and named U376 as the start;
+  work continued from U379.
+- forge_simZeroCase, PROVED at local scope: install_entry_distinct (for every
+  code start p and offset x with x + 2 * ffi_offset < dimword,
+  p + n2w x differs from p - n2w (2 * ffi_offset));
+  state_rel_no_install_prefix_zero (state_rel and
+  pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword at the word size of p give
+  no_install_prefix at clock 0); install_entry_wrap_example (an 8-bit
+  instance where the offset wraps onto the installer entry).
+- Answer to U378's open question: the published state_rel does not bound
+  pos_val, so it alone does not give get_pc ms1 <> install_pc. The published
+  installed predicate has a layout bound; state_rel does not carry it.
+- Consequence: the strengthened compile_correct of U378 is not provable as
+  written. It needs a layout-bound premise that holds for every lab state on
+  the run. It is not yet restated.
+- Failed attempt: zero-0001 exit 1, the first failing proof attempt for
+  state_rel_no_install_prefix_zero. Cause: the agent typed the bound at a
+  word size not tied to p. The statement was corrected, not weakened;
+  zero-0002 exit 0.
+- Actual exits: explore-0001 1 (script error, not counted); explore-0002
+  signal 24 (CPU-limit stop of an open proof search, not counted);
+  explore-0003, 0004, 0005 0; zero-0001 1; zero-repeat 1 (repeat of the
+  failed source); zero-0002 0 with three theorems; zero-import 0 with three
+  exact statements, 294 closure nodes and a statement control;
+  zero-repeat-0002 0 byte-identical. Source
+  6fded3dfb06a141877cba1eab9e11331dd5e369779a60c43c7a0ee5fb44e7fec; theory data
+  98325415a4c9d4921e6a0ba1fb14cf54c91045f211a32b08bbc936815fccb24d.
+- P3 and the target-level exclusion stay NOT ESTABLISHED. All six
+  installed-state obligations stay open. No evidence reader was written for
+  this packet; its manifest lists every member.
+- Evidence: proposals/refund-executable-feasibility/m1-p3-zero-case-20261113/
+  REPORT.md, records/zero.
+- Next check: restate the strengthened compile_correct with the layout bound
+  and show the bound is preserved along a lab run; then the strengthened
+  asm_step_IMP_evaluate_step.
+
+## U381 — Layout invariant established; strengthened compile_correct restated with it; simulation cases not run
+
+- References: U377, U378, U380. CURRENT none; M1 open; Stage12 unauthorized;
+  end_to_end=false. The U298 exclusion premise is not adopted and not used.
+- forge_simLayout, PROVED at local scope: code_layout_ok (:a) code2 is
+  LENGTH (prog_to_bytes code2) + 2 * ffi_offset < dimword (:a).
+  state_rel_no_install_prefix_layout: state_rel and code_layout_ok give
+  no_install_prefix at clock 0 for every related lab and target state, by the
+  published pos_val_bound and install_entry_distinct.
+  installed_bound_code_layout: the bound clause of the published installed
+  predicate implies code_layout_ok.
+- The condition is static. It does not mention the lab state, so it is
+  unchanged along a lab run while code2 is unchanged; only the Install line
+  changes the code and the lab premise excludes it. It covers lab-aligned
+  target states only. Intermediate target states inside one lab step are NOT
+  covered and need per-segment lemmas.
+- Not re-proved: that the bytes of semantics_compile are
+  prog_to_bytes code2; this identification is inside the published proof.
+- Corrected strengthened compile_correct, PROPOSED and NOT PROVED: the U378
+  statement plus the premise code_layout_ok (:a) code2. A machine check shows
+  that removing the three additions gives the published statement.
+- NOT RUN in this run, as a limit of the session and not a proof blocker:
+  the strengthened step lemma, the per-segment lemmas and all nine simulation
+  cases. The published asm_step_IMP_evaluate_step_nop is derived from
+  targetProps asm_step_IMP_evaluate_step_find_next (targetPropsScript.sml
+  line 936), which is the root for the per-segment statement.
+- Actual exits: explore-0001 0; layout-0001 0 with two theorems on the first
+  attempt; layout-import 0 with three exact statements, 295 closure nodes, a
+  statement control and the 8-bit wrap example re-read; layout-repeat 0
+  byte-identical. Source
+  d48f3001838032934aa39f14af4f290c461d696406f7c736a616bd3b6c8ac07d; theory data
+  9e934bbc1608279d39d566fe985460fddd50d7759f9bd723cab62d861f867683.
+- P3 and the target-level exclusion stay NOT ESTABLISHED. All six
+  installed-state obligations stay open. The backend chain for
+  refund_alloc_oracle is unchanged since U378.
+- Evidence: proposals/refund-executable-feasibility/m1-p3-layout-20261113/
+  REPORT.md, records/layout. No evidence reader for this packet; its manifest
+  lists every member.
+- Next check: a strengthened asm_step_IMP_evaluate_step_find_next that also
+  concludes no_install_prefix for its segment.
+
+## U382 — Strengthened root lemma proved: every interior target state of a simulation segment is ordinary; endpoint correspondence alone shown insufficient
+
+- Status: Phase 1 of the U381 next check is done. Local, same machine, same
+  agent, cached parents. No clean replay. Refs U377, U378, U380, U381, U298.
+- Finding: the published asm_step_IMP_evaluate_step_find_next already carries
+  an interference-trace equation (find_next_interference). A generic lemma
+  uses it: if a clock-l run ends in TimeOut and find_next_interference is
+  NONE, every state at step j < l has its counter in
+  prog_addresses DIFF ffi_entry_pcs (run_interior_ordinary). The encoder
+  proof was not re-done.
+- Proved, theory forge_simRoot (11 theorems): run_head_ordinary,
+  run_interior_ordinary, segment_interior_ordinary,
+  segment_end_no_install_prefix, segment_compose_no_install_prefix,
+  asm_step_IMP_evaluate_step_find_next_prefix,
+  asm_step_IMP_evaluate_step_nop_prefix, asm_step_IMP_evaluate_step_prefix,
+  state_rel_segment_compose, interior_install_example,
+  endpoint_correspondence_insufficient.
+- The three strengthened step lemmas keep every published conclusion. A
+  machine check recovers each published statement by removing the two added
+  conjuncts. Added: (a) interior states are ordinary, no extra premise;
+  (b) with install_pc outside prog_addresses, no_install_prefix c io (l-1) ms1,
+  and no_install_prefix c io l ms1 when the end state's counter is not the
+  installer entry.
+- Wraparound: interior counters need no layout bound. They are members of
+  prog_addresses, and state_rel states that install_pc is not. The layout
+  bound (U381) is needed only for the end state of a segment.
+- Correction found by the prover: segment_end without l <> 0 is false
+  (l - 1 truncates). The premise l <> 0 was added before the proof passed.
+  The published lemmas give l <> 0.
+- Negative controls: the 8-bit wrap example is kept. New model
+  forge_toy_mc: one ordinary step enters the installer entry and the
+  installer step leaves it. Both ends are safe and the evaluate equation
+  holds for every clock, yet no_install_prefix fails; the interference
+  equation is what fails. endpoint_correspondence_insufficient states this
+  as a refutation of the endpoint-only rule.
+- Not covered: evaluate_nop_steps is local to the published script and has no
+  strengthened form yet. The nine simulation cases and the strengthened
+  compile_correct are NOT RUN at this entry. No shortcut from the published
+  compile_correct statement was found: its conclusion has no trace
+  information, so the proof must be replayed with a stronger invariant.
+- Actual exits: explore-0001/0002 1 (my load order and file inclusion
+  errors); explore-0003..0005 0; explore-0006..0010 1 (goal typing and tactic
+  errors, and the false l - 1 form); explore-0011/0012/0014/0016/0017 0;
+  explore-0013/0015 1; root-0001..0003 1 (tactic errors, not counted);
+  root-0004 0 (ten theorems); root-0005 0 (eleven theorems, final);
+  root-import 0 (11 exact statements, 296 closure nodes, two statement
+  controls, both negative controls re-read); root-repeat 0, byte-identical.
+  Source 728469058d988c125c1241210b4eab854383d9ae5e717a6d7b29bbac21ef66c2;
+  theory data adbadc58fa0816e9f514278d78bc072df68af9c60138b01eefff8f49a084de05.
+- Uncertainty: the exact-statement check compares up to renaming of type
+  variables. The toy model uses ARB for unused record fields.
+- Impact: P3 and the U298 exclusion stay NOT ESTABLISHED. No assumption
+  adopted. All six installed-state obligations stay open.
+- Evidence: proposals/refund-executable-feasibility/m1-p3-root-20261113/,
+  results/refund-p3-root-local-20261113/attempt-0001.
+- Next check: replay the published compile_correct with the stronger
+  conclusion, case by case, using the strengthened step lemmas.
+
+## U383 — Prefix property proved through the simulation under a step-closed lab invariant; ShareMemOp excluded by premise; exact-program exclusion not established
+
+- Status: Phase 2 of the U381 next check is done in a changed form. Local,
+  same machine, same agent, cached parents. No clean replay. Refs U298,
+  U375, U378, U381, U382.
+- Proved, theory forge_simReplay: compile_no_install_prefix,
+  compile_correct_no_install_prefix, target_install_exclusion_conditional,
+  lab_step_evaluate, seg_finish, state_rel_ctx, step_nip, final_nip.
+  Definitions: lab_step, lab_step_closed, nip_ctx, halt_ctx.
+- Main statement: lab_step_closed Inv ==> for all s1 res mc_conf s2 code2
+  labs t1 ms1, the published compile_correct premises ==> Inv s1 and
+  code_layout_ok (:a) code2 ==> no_install_prefix mc_conf s1.ffi s1.clock ms1.
+  The corollary adds the published existential conclusion; a machine check
+  recovers the published compile_correct by removing the two added premises
+  and the added conclusion. The published theorem is used for that
+  conjunct, so behavior, termination and FFI results are not weakened.
+- All-clock corollary: with Inv at every clock of s1 and no Error at any
+  clock, no_install_prefix holds for every n from ms1.
+- Changed form, stated plainly: the U381 proposed statement is NOT PROVED as
+  written. The lab premise is now a step-closed invariant, not the all-clock
+  final-state condition. The prefix length is s1.clock, not s1.clock + k.
+- Named premise, not silent: lab_step_closed also excludes the ShareMem
+  line. The general ShareMemOp simulation case is NOT PROVED. Under the
+  premise that case and the Install case are vacuous. The other seven cases
+  are proved with the published tactic text up to the hypothesis use and a
+  Forge finish: Asm (Inst, JumpReg), Jump, JumpCmp (both branches), Call,
+  LocValue, CallFFI (FFI_return and FFI_final), Halt.
+- No shortcut exists from the published compile_correct statement alone: its
+  conclusion has no trace information, and state_rel forces any instrumented
+  machine to treat the installer correctly (analysis, not a theorem).
+- Method facts: 33 local lemmas of the published script are re-proved from
+  their published text; the published file is unchanged (hash prefix
+  6cfb4a5f checked). Control base-0003: the unchanged published
+  compile_correct text replays 7 cases in this context; its Install case
+  fails (exit 1). This is a limit of the control, not a counterexample.
+- Actual exits: base-0001/0002 1; base-0003 1 (control, 7 cases);
+  replay-0001..0016 1 except replay-0002 stopped by me (-15); skel-0001 1;
+  replay-0017 0 (7 case groups); replay-0018..0025 1; replay-0026 0
+  (CallFFI); final-0001 1; final-0002 0; final-0003 0 (final); final-import
+  1 (my expected term); final-import-0002 0 (5 exact statements, 297 closure
+  nodes, fidelity, two statement controls, both negative controls);
+  final-repeat 0. Repeat is NOT byte-identical: .sig identical; .dat
+  identical after replacing the case directory name, because the theory
+  data records the source path; .sml differs only in the embedded data hash.
+  Source aa7d6a1fa26032ea3a6cf2b8471b4d8582363722cae2ff474f746fd826bcb325;
+  theory data ae5ce5c25caa626c3d6c4c21273c729e9d24d5aaaaa49f98716303c46607ce6b.
+- Uncertainty: the run uses the cake_compile heap, not the heap of the
+  published build. The exact-statement check compares up to renaming of
+  type variables. lab_step is generated by text substitution from the
+  published evaluate_def; lab_step_evaluate checks one direction only.
+- Impact: the U298 exclusion for the exact refund program stays NOT
+  ESTABLISHED. Missing: an invariant for the exact lab program with
+  lab_step_closed (no bridge from the U375 region invariant yet; ShareMem
+  line count of the exact program not checked); the backend chain for
+  refund_alloc_oracle beyond the first link; no-Error for every clock; the
+  identification of installed bytes with prog_to_bytes code2. All six
+  installed-state obligations stay open. No assumption adopted. No profile
+  approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-p3-replay-20261113/,
+  results/refund-p3-replay-local-20261113/attempt-0001.
+- Next check: count ShareMem lines in the exact lab program by evaluation,
+  then show that the U375 region invariant is closed under lab_step.
+
+## U384 — Exact refund lab program: no ShareMem lines, step-closed invariant discharged, target-level installer exclusion proved under the published compile-level premises
+
+- Status: 2026-11-14. Local, same machine, same agent, cached parents. No
+  clean replay. Refs U298, U360, U368, U375, U378, U381, U382, U383.
+- ShareMem count, by in-logic evaluation: 0 of 33749 lines in the exact lab
+  program L (to_lab output for refund_alloc_oracle) and 0 of 33735 lines in
+  filter_skip L, the program that the published lab_to_target compile
+  encodes. Proved: no_share_mem_inst for both. The U383 named premise
+  excludes no reachable behavior of this program.
+- Correction to U383 next check: the target simulation runs filter_skip L,
+  not L. The region walk check was re-evaluated on filter_skip L (passes for
+  sections 29 and 31; fails for 29 alone, kept as a control).
+- Proved, forge_refundExactExclusion: region2_lab_step (U375 region
+  invariant closed under lab_step for code without ShareMem lines);
+  refund_lab_step_closed (lab_step_closed refund_lab_inv);
+  refund_lab_inv_init (from the published good_init_state, for every clock);
+  refund_target_install_exclusion (premises state_rel, encoder_correct,
+  layout, no Error).
+- Proved, forge_refundExclusionChain: the published local lemma
+  IMP_state_rel_make_init replayed unchanged; compile_install_exclusion
+  (premises of the published semantics_compile_lemma' plus the invariant
+  premises imply no_install_prefix for every n); and the exact instance
+  refund_compile_install_exclusion with 16 premises and no invariant
+  premise. state_rel, oracle_tie, encoder_correct, the layout bound and the
+  identification of the bytes with prog_to_bytes code2 are derived inside.
+- Finding on install_exclusion_suffices (U360): direct use is circular,
+  because the simulation's state_rel contains a correct installer handler.
+  Proved, forge_installHandlerIrrelevant: two configurations that differ
+  only in install_interfer have equal runs when one never reaches the
+  installer entry. Proved, forge_refundExclusionFinal:
+  refund_install_exclusion_any_handler gives the exact exclusion premise of
+  install_exclusion_suffices for any handler, from the 16 premises on a
+  handler-corrected configuration.
+- NOT established: the U298 exclusion without premises. The 16 compile-level
+  premises (good_code, compiler_oracle_ok, mc_conf_ok, compile equation and
+  configuration facts, ffi-name premises, good_init_state, lab semantics not
+  Fail) are NOT proved for the exact program. The backend chain from the
+  installed-level premises to them is NOT_RUN. install_exclusion_suffices
+  is applicable only under those premises.
+- Installed-state obligations: all six stay OPEN. Obligation 4 no longer
+  needs a correct installer handler once the 16 premises hold.
+- Replay determinism, verified: the U383 difference comes from the Theorem
+  syntax, which records the source path; the case directory name is in the
+  path. Canonical dumps of forge_simReplay (statements with types, tags,
+  parents, 296 ancestors, constants) are byte-identical for final-0003 and
+  final-repeat (SHA256 3b81eea57b88e828e9b11801c9d9e59163e61ffbd6432f5f74256f8aa8def59e).
+  Four theories of this entry stored without source paths repeat
+  byte-identically; the one with Theorem syntax shows the same path-only
+  difference. Replay on another machine or from clean sources: NOT_RUN.
+- Method risk found and handled: in the cake_compile heap the bare name
+  compile_lab parses to backend_asm$compile_lab, and code, data, ffis, conf,
+  info, name are constants. The chain run removes those mappings and checks
+  the origin of every constant in the stored statements. Three edits were
+  needed in the replayed published tail (pattern selection of one
+  hypothesis, one extra published rewrite, one explicit close); they are in
+  make_chain.py.
+- Actual exits: filtered-0001 0; exact-0001..0009 1; exact-0010 0;
+  chain-0001..0016 1 (chain-0015m is a marked copy); chain-0017 0;
+  chain-0018 0 (final); handler-explore-0001..0006 0 (lemma open until
+  0006); handler-0001 0; final-0001 1; final-0002 1 (interrupted while
+  loading after 10 s, not a proof result); final-0003 0; exact-import 1 (my
+  expected term); exact-import-0002 0 (9 exact statements, 404 closure
+  nodes, controls); exact-repeat, handler-repeat, chain-repeat,
+  final-repeat, filtered-repeat 0; dump-replay-a..a3 and b..b3 1 (my script
+  errors; their empty outputs are not evidence); dump-replay-a4 and b4 0.
+- Negative controls: trivial_invariant_not_closed; sharemem_line_detected;
+  refund_filtered_walk_not_closed_29; handler_matters_when_installer_reached;
+  endpoint_correspondence_insufficient and the 8-bit wrap example re-read;
+  three statement controls.
+- Uncertainty: lab_step is generated by text substitution and checked in one
+  direction (U383). The exact-statement check compares up to renaming of
+  type variables. Heap context differs from the published build.
+- Impact: M1 open. No assumption adopted. No profile approved. Nothing
+  committed. Stage 12 unauthorized.
+- Evidence: proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/,
+  results/refund-exact-exclusion-local-20261113/attempt-0001.
+- Next check: the computational compile-level premises for the exact
+  program (good_code arm8_config LN L, c.labels = LN, c.pos = 0, compile
+  equation without attach_bitmaps), then mc_conf_ok for the ARMv8 machine
+  configuration.
+
+## U385 — Exact compiler facts proved; the 16 compile-level premises reduced to installed, the machine configuration and two semantic premises
+
+- Status: 2026-11-14. Local, same machine, same agent, cached parents. No
+  clean replay. Refs U298, U360, U368, U378, U384.
+- Proved, forge_refundCompileFacts: refund_lab_good_code (good_code
+  arm8_config LN L, by an executable check gc_check, its soundness theorem
+  gc_check_good_code and in-logic evaluation); asm_ok_arm8_link (the
+  published arm8-specialised encoder check equals asm_ok at arm8_config);
+  to_lab_lab_conf; refund_lab_conf_facts (labels LN, pos 0, ffi_names NONE);
+  refund_lab_compile (lab_to_target compile of L gives the stored code and
+  refund_lab_conf2); refund_lab_bitmaps (bitmaps are the stored data);
+  refund_lab_ffi_names.
+- Proved, forge_refundExclusionArm8: refund_install_exclusion_arm8 (eight
+  premises), refund_install_exclusion_installed (premises:
+  is_arm8_machine_config, the published installed predicate, and for every
+  good_init_state witness compiler_oracle_ok and lab semantics not Fail),
+  refund_u298_exclusion_any_handler (the U298 form for any machine that
+  differs from such a configuration only in install_interfer).
+- Premise matrix: 1, 3, 4, 5, 6, 7, 12, 13, 15 discharged; 8, 9, 10, 11, 14
+  supplied by the published installed predicate; 2 open in its consequent
+  (compiler_oracle_ok); 16 open (lab semantics not Fail).
+- NOT established: the U298 exclusion without premises. installed and
+  is_arm8_machine_config are premises, not evidence. The two semantic
+  premises need a replay of the published backendProof compile_correct'
+  with the exclusion conclusion; analysis only, NOT_RUN. In that proof the
+  non-Fail fact for the lab level appears only after its stack_init and
+  limits steps.
+- install_exclusion_suffices was not applied. All six installed-state
+  obligations stay OPEN.
+- One published definition (sec_ends_with_label, with LAST) has a
+  translation precondition; an equivalent executable form with a proved
+  equivalence is used. This is recorded, not a weakening: the stored
+  theorem is about the published good_code.
+- Actual exits: gc-explore-0001/0003/0005 0; gc-explore-0002 1;
+  gc-explore-0004 did not start; facts-0001..0003 1; facts-0004 0;
+  arm8-0001, arm8-0002 1; arm8-0003 1 (PolyML out of store after 17 s while
+  loading, not a proof result); arm8-0004 1; arm8-0005 0; facts-import 1
+  (my expected terms); facts-import-0002 0 (9 exact statements, 499 closure
+  nodes, 7 negative controls re-read, 2 statement controls); facts-repeat 0
+  and arm8-repeat 0, exports byte-identical. A first comparison loop of
+  mine printed DIFFERS for empty names; it was wrong and is not evidence.
+- Hashes: facts-0004.sml
+  02d7e66d45363125e03595f649d181e2d5f0907feb5cbc4d374cf21b5421fa1f; arm8-0003.sml
+  4cb2d393f6d2b993e372f00bc8c4161b68e88926262e72d4f8f74eb0408922ff; theory data
+  38ed5524cb8c5925321e45d4db00b7c3b154c97d4ba88ee25f7fb16979638339 and
+  09234f42edd4e5fab31914bb1f3930c0185c547d7456683d62e54483e3fc36c5.
+- Uncertainty: host swap is nearly full; one run failed for memory. The
+  exact-statement check compares up to renaming of type variables.
+- Impact: M1 open. No assumption adopted. No profile approved. Nothing
+  committed. Stage 12 unauthorized.
+- Evidence: proposals/refund-executable-feasibility/m1-compile-facts-20261114/,
+  results/refund-compile-facts-local-20261114/attempt-0001.
+- Next check: extract the local lemmas of the published compile_correct'
+  and replay it unchanged as a control; then replay it with the exclusion
+  conclusion for refund_alloc_oracle.
+
+## U386 — compile_correct' replayed unchanged; premises 2 and 16 reduced to source non-Fail; U298 exclusion proved for the real machine record without an installer-handler clause, under three unproved premises
+
+- Status: 2026-11-14. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. Refs U298, U360, U384, U385.
+- Control, forge_compileCorrectControl (control-0001, exit 0): published
+  backendProofScript.sml lines 4007-4921 (SHA256 prefix 380ee3fa) replayed
+  byte for byte with the published context lines. The stored conclusion is
+  alpha-equivalent to backendProofTheory.compile_correct'. Tag DISK_THM only.
+  Closure 500 theory nodes; axioms only the four of bool. Limit: the replay
+  ran in the Forge heap, not in the published build context.
+- Variant, forge_compileCorrectLabFacts (variant-0001, exit 0): the same
+  proof text with three recorded edits (guarded conclusion lab_guard; one
+  marker lab_keep_word before line 4197; lines 4817-4822 replaced).
+  compile_correct_lab_facts: the published premises of compile_correct' give
+  lab_facts (a good_init_state witness, compiler_oracle_ok for the oracle of
+  the published proof, the lab compile equation, and lab semantics not Fail
+  for the unaligned state of premise 16). compile_correct_from_guard gives
+  the published statement again (fidelity). No published premise changed.
+- Exact program, forge_refundExclusionSource (source-0006, exit 0):
+  refund_install_exclusion_source and
+  refund_u298_exclusion_source_any_handler. Premises: is_arm8_machine_config,
+  source not Fail for refund_prog, published installed for the stored code
+  and data with registers (1,3).
+- Real record, forge_refundExclusionReal (real-0004, exit 0), with the U360
+  theorems: refund_u298_exclusion_real (the U298 exclusion for mc0 itself)
+  and refund_compile_correct_no_handler (machine_sem mc0 ffi ms is inside
+  extend_with_resource_limit of the source semantics). Premises:
+  is_arm8_machine_config mc0; source not Fail; refund_installed_no_handler
+  (the body of installed with the install_interfer_ok clause replaced by T).
+  install_exclusion_suffices is applied; its exclusion premise is proved, not
+  assumed.
+- Classification of premises 2 and 16: conditional consequences, NOT
+  independently proved facts. They are replaced by one source-level premise,
+  not semantics_prog ... refund_prog Fail. No stored Forge theorem states
+  that premise. The proof does not separate which published premises
+  compiler_oracle_ok needs.
+- Not established: the U298 exclusion without premises; installed;
+  refund_installed_no_handler; is_arm8_machine_config for a physical machine;
+  source non-Fail. The six installed-state obligations stay OPEN. Obligation 4
+  (installer) now has no clause; it depends on source non-Fail.
+- The U298 exclusion premise is not adopted. No axiom, no cheat, no changed
+  published statement, no changed word width.
+- Actual exits: control-0001 0; explore-0001..0003 1 (authoring);
+  lemmas-0001, lemmas-0002 1 (authoring); lemmas-0003 0; explore-0004 1 (the
+  simplifier split a union subset goal; fixed by the opaque constant
+  lab_guard); explore-0005 1 (deliberate stop at the edit site);
+  variant-0001 0; src-explore-0001 0; source-0001..0005 1 (authoring);
+  source-0006 0; real-0001, real-0003 1 (authoring); real-0002 0 (first
+  theorem only, superseded); real-0004 0; import-0001 1 (MEMORY: PolyML out
+  of store after 15 s while loading, no proof step ran); import-0002 1
+  (authoring); import-0003 0; import-0004 0 (9 exact statements, 504 closure
+  nodes, 7 negative controls re-read, 6 new controls); control-repeat 1
+  (MEMORY: Interrupt after 16 s while loading a parent theory);
+  control-repeat-0002 0; variant-repeat 0; source-repeat 0; real-repeat 0.
+- Repeat comparison: forge_refundExclusionSource and forge_refundExclusionReal
+  exports byte-identical. forge_compileCorrectControl and
+  forge_compileCorrectLabFacts data identical after the case directory name
+  is replaced and white space is normalized. One comparison line of mine
+  reported DIFFERS for files that did not exist; it is not evidence.
+- Hashes: control-0001.sml
+  99af1952261beec770cc11c6501af330bf2ced6d94bb3709cd6cb9ea8a1a140d;
+  variant-0001.sml
+  b38b554f508d11b32fc8e826730ae2097f343dba22de174361d0e2dec1593c91;
+  source-0006.sml
+  9a72f97ddb2f2fe2d03684209960ebf8ad617e5594076bed642c1a0b93760ae2;
+  real-0004.sml
+  4ac5060c4d76c4a57994d4032829d09c586d56115eea2bfd2e65fc6165fbb8e8;
+  import-0004.sml
+  04b80cddb41103e5c5751a21bbe9a55c11e511c873038e1ad98897b2c635e1a9.
+- Uncertainty: host swap is nearly full; two runs failed for memory. The
+  exact-statement check compares up to renaming of type variables. The
+  control is a replay in a larger ambient context.
+- Impact: M1 open. Integration EXIT NOT_ESTABLISHED. No profile approved.
+  Nothing committed. Stage 12 unauthorized. end_to_end=false.
+- Evidence: proposals/refund-executable-feasibility/m1-compile-correct-20261114/,
+  results/refund-compile-correct-local-20261114/attempt-0001.
+- Next check: search the stored refund source theories for an evaluation or
+  type-soundness theorem that gives source non-Fail for the exact
+  refund_prog; then installed-state obligation 2 (start-up code).
+
+## U387 — source non-Fail proved for valid-request input only; start-up clause isolated and reduced to ten ARMv8-state conditions, not proved; is_arm8_machine_config is six field equations
+
+- Status: 2026-11-15. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. Refs U298, U360, U385, U386.
+- Premise expanded: semantics_prog st env prog Fail holds iff some
+  pointer-equality oracle and some clock give Rerr (Rabort Rtype_error)
+  (semantics_prog_Fail_expanded). In U386 the premise has a free ffi.
+- Source non-Fail, forge_refundSourceNonFail (nonfail-0003, exit 0):
+  refund_source_nonfail. Premises: the standard-input equation for a
+  refund_request, wfcl cl, wfFS fs, STD_streams fs. Conclusion: the U386
+  premise at ffi = basis_ffi ext cl fs. Chain: stored refund_semantics
+  (U-series of 2026-11-04), published sem_satisfies_IMP_Terminate, stored
+  prog_syntax_ok refund_prog, published init_state_env_thm. No compilation
+  or execution fact is used.
+- Compositions: refund_u298_exclusion_valid_request and
+  refund_behavior_valid_request_no_handler. Premises: is_arm8_machine_config
+  mc0, refund_installed_no_handler mc0 ms cbspace data_sp, the input premises.
+- Uncertainty, source: non-Fail is NOT established for rejected input
+  (refund_run_wire = INL), for absent standard input, for a file system that
+  is not well formed, or for a general ffi. The input premises are assumed;
+  their joint satisfiability was not checked. No counterexample was
+  constructed; none is shown absent.
+- Start-up clause, forge_refundStartupClause (startup-0002, exit 0):
+  refund_startup_clause (eleven conjuncts of the stored predicate),
+  refund_installed_startup (fidelity), arm8_startup_fields,
+  refund_startup_clause_arm8 (equivalence to ten conditions on ms.PC,
+  ms.REG 1w, ms.REG 3w and the word memory m, with offsets 20248 and
+  0x1FD84). The clause is NOT proved for any state.
+- Text inspection of refund.S (SHA256 4c750e4f…5c3a1757), not a proof: cml_main
+  stores five words at [x1] … [x1,#32] in the order of the header words;
+  2531 .quad and 130436 .byte values agree with the stored lengths by count
+  only; data_sp is 0 without EVAL; cbspace is the .p2align 16 padding and is
+  fixed at link time; x1 and x3 come from the C run-time, not examined.
+- Machine record: arm8_fix_is_arm8 and is_arm8_iff_fix. The premise
+  is_arm8_machine_config mc0 is a choice of model record. It is not
+  discharged for a free mc0. No concrete record is defined.
+- Import (import-0001, exit 0): 17 exact statements, 507 closure nodes,
+  axioms only the four of bool, seven earlier negative controls re-read,
+  three new scope controls. Repeats nonfail-repeat and startup-repeat exit 0;
+  exports byte-identical.
+- Failed attempts, all authoring: nonfail-0001 (1), nonfail-0002 (1),
+  startup-0001 (1). Memory failures: none in this run.
+- Impact: the U386 final theorems now have a proved source premise on the
+  valid-request path. Installed-state obligations 1, 2, 3, 5, 6 stay OPEN.
+  M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved.
+- Evidence: proposals/refund-executable-feasibility/m1-source-nonfail-20261115/,
+  results/refund-source-nonfail-local-20261115/attempt-0001.
+- Next check: lift stored refund_main_error to semantics_prog for the reject
+  path; then define a concrete machine record; then an ARMv8 step proof of
+  cml_main for the ten start-up conditions.
+
+## U388 — source non-Fail proved for every text at standard-input offset 0 (reject path included); concrete machine record; 27 ARMv8 steps of cml_main proved from an assumed explicit pre-state; start-up clause established conditionally
+
+- Status: 2026-11-15. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U316,
+  U348, U386, U387.
+- Reject path, forge_refundRejectNonFail (reject-0009, exit 0): new lifting
+  lemmas call_main_exn1, call_main_exn2, exn_spec_IMP for an exception
+  post-condition (the published library covers normal return only).
+  Published local lemmas replayed unchanged: cfMainScript.sml lines 213-258,
+  basis_ffiScript.sml lines 861-961. The prove_sem_thm pipeline was re-run
+  with the stored refund_prog_def; the declaration list is checked identical.
+  refund_source_nonfail_reject (stdin text, refund_run_wire = INL err, wfcl,
+  wfFS, STD_streams); refund_source_nonfail_stdin (any text with
+  stdin_content fs = SOME text); refund_u298_exclusion_stdin;
+  refund_behavior_stdin_no_handler.
+- Input classes: valid PROVED; rejected PROVED; any text at offset 0 PROVED;
+  absent input OPEN and characterised (stdin_absent_characterised: under
+  STD_streams it is exactly a non-zero standard-input offset); file system
+  not wfFS or not STD_streams OPEN; general ffi OPEN. The input premises and
+  the basis_ffi model are assumed. No counterexample constructed; none shown
+  absent.
+- Machine record, forge_refundStartupBridge (mc-0001, exit 0): refund_mc
+  base0 envmc; refund_mc_is_arm8 (no premise); refund_mc_fields;
+  refund_mc_u298_exclusion_stdin and refund_mc_behavior_stdin_no_handler
+  (premises: refund_installed_no_handler at that record, four input
+  premises). base0, program addresses and interference functions stay
+  parameters. Uncertainty: the entry-stub layout agrees with refund.S by
+  text inspection only.
+- Machine steps, forge_refundCmlMainStep (cml-0012, exit 0), ARMv8 context of
+  U316: cml_main_run composes 27 L3 NextStateARM8 steps on the exact words of
+  the linked executable (SHA256 b8ed5ec2…39007bb8; words compared with the
+  file by program). End state: pc 0x1000040D0, x1 = h, x3 = e, five header
+  words written. cml_main_startup_conditions gives the ten U387 conditions
+  with bitmap pointer 0x10002C018, cbspace 428, data_sp 0. Controls:
+  cml_main_wrong_target_refuted; a changed word is rejected;
+  cml_main_pre_satisfiable (sat-0001, exit 0).
+- Bridge: refund_startup_from_cml_main; refund_startup_established (the
+  U387 start-up clause for the word memory λa. Word (mem_dword ms.MEM a)).
+- Uncertainty, start-up: cml_main_pre is assumed. No loader or C run-time
+  model. Addresses are unslid link addresses; no load slide. Conditions on
+  the value e at cml_stackend (aligned, order, 8192 distance) are assumed.
+  Symbol addresses come from the symbol table by tool. The executable was
+  never run. The theorem does not give the installed-state predicate.
+- Import (import-0001, exit 0): 29 exact statements, 511 closure nodes,
+  axioms only the four of bool, earlier negative controls re-read, three new
+  scope controls. Repeats (reject, mc, cml, sat) exit 0; three exports
+  byte-identical; forge_refundRejectNonFail identical after the case
+  directory name and white space are normalized.
+- Failures: tool: reject-0001 (libraries not loaded) and one generator line
+  check. Authoring: reject-0002, 0003, 0005-0008; cml-0001-0009, cml-0011.
+  Memory: none. Logical: none.
+- Impact: source non-Fail and is_arm8_machine_config are no longer premises
+  of the strongest theorems on the offset-0 input class. Installed-state
+  obligations 1 (rest), 2 (pre-state, slide), 3, 5, 6 stay OPEN. M1 open.
+  end_to_end=false. Stage 12 unauthorized. No profile approved.
+- Evidence: proposals/refund-executable-feasibility/m1-reject-startup-20261115/,
+  results/refund-reject-nonfail-local-20261115/attempt-0001,
+  results/refund-startup-step-local-20261115/attempt-0001.
+- Next check: loader clause (bytes_in_mem for code, bitmap word_list) for the
+  same end state from an explicit image predicate; then the load slide; then
+  the path from process entry to cml_main.
+
+## U389 — file bytes of the linked executable equal the stored code and bitmaps (kernel-checked); loader-memory content clauses proved from an explicit image premise and composed with the 27 cml_main steps at slide 0; loader behaviour and slide stay unproved
+
+- Status: 2026-11-15. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U316,
+  U386, U387, U388.
+- Artifact: the request names an ELF. The artifact is Mach-O 64-bit arm64,
+  238776 bytes, SHA256 b8ed5ec2…39007bb8, MH_PIE set, never executed.
+  Layout by tool (extract_macho.py, otool, nm, dyld_info): __TEXT vmaddr
+  0x100000000 file offset 0 size 163840; __DATA vmaddr 0x10002C000 file
+  offset 180224; code at file offset 16592 (130436 bytes); bitmaps at file
+  offset 180248 (2531 words); 23 chained-fixup binds, all in
+  __DATA_CONST,__got; none in __TEXT or in the bitmap range.
+- File constant, forge_refundImage (image-0001, exit 0): refund_file is the
+  238776 file bytes, read by ML code in the proof script (trusted reader).
+  Check: bytes written back from the stored term have the artifact's SHA256.
+  refund_file_code: TAKE (LENGTH code) (DROP 16592 refund_file) = code.
+  refund_file_bitmaps: TAKE 20248 (DROP 180248 refund_file) = FLAT (MAP
+  dword_bytes (MAP n2w data)). refund_macho_fields: 18 header fields and two
+  segment names evaluated from refund_file. Field offsets come from the
+  Python tool; HOL has no Mach-O parser.
+- Finding on term form: stored code is `to_list to_word <compute value>`,
+  not a list literal. loader-0001 failed its layout check for this reason
+  only. Kernel evaluation gives the literal (diag-0002). No byte differs.
+  Tool comparison: refund.S .byte lines equal the file slice, 0 differences.
+- Image predicate (ASSUMED of a memory): refund_image_mem sl m = the __TEXT
+  segment and the bitmap part of __DATA are in m at link address plus sl.
+  For every sl: refund_image_code, refund_image_bitmaps,
+  refund_image_cml_main.
+- Composition, forge_refundLoaderMemory (compose-0003, exit 0), slide 0 only:
+  cml_main_run_frame (frame-0001, ARMv8 context; stored definitions and the
+  stored cml_main_run statement re-derived identical) adds a memory frame
+  outside the 40 header bytes. refund_entry_pre replaces the 108 code-byte
+  equations of cml_main_pre by refund_image_mem 0w s.MEM and widens the
+  header separation to [0x100000000, 0x100030F30). refund_loader_startup:
+  from refund_entry_pre and the three U388 conditions on e, the state after
+  27 steps has pc 0x1000040D0, x1 = h, x3 = e, the image still in memory,
+  bytes_in_mem for code (given domain membership), code_loaded (given
+  prog_addresses membership), the bitmap word_list clause with bitmaps_dm =
+  refund_bitmaps_dm, the byte/word memory relation, and the U387 start-up
+  clause.
+- Counterexample found: header_on_bitmaps_refuted. U388 cml_main_pre
+  permits h = 0x10002C018; the 27 steps then overwrite the first bitmap word
+  and the bitmap clause is false. U388's pre-state is too weak for the
+  bitmap clause. U388's own conclusions are not affected.
+- Controls: code_byte_change_rejected, bitmap_word_change_rejected,
+  code_wrong_offset_rejected, bitmap_wrong_offset_rejected,
+  code_overlap_rejected, header_on_bitmaps_refuted; four ML-level rejections
+  in image-0001; refund_entry_pre_satisfiable (entrysat-0002, a constructed
+  state; not evidence about the loader). import-0002 (exit 0): 46 exact
+  statements, 516 closure nodes, axioms only the four of bool, earlier
+  negative controls re-read, compile_correct' control identical to the
+  published statement, four new scope controls. Five repeats exit 0; every
+  exported file byte-identical.
+- Uncertainty: (1) Nothing proves that a loader produces refund_image_mem,
+  or that the C run-time leaves the writable bitmap range unchanged before
+  cml_main. (2) Slide: MH_PIE is set, so a real process probably has a
+  non-zero slide; every theorem about arm8_run is at slide 0; not measured.
+  (3) The entry state (control bits, pc, slot values, separation, conditions
+  on e) is assumed. (4) The ML file reader and the Python field offsets are
+  outside the kernel. (5) Symbol names come from the symbol table by tool;
+  the proof uses addresses only.
+- Installed-state clauses: code_loaded, bytes_in_mem content, bitmap
+  word_list, byte/word relation: CONDITIONAL on refund_entry_pre and on a
+  later choice of t and domains. Domain clauses (subset, code buffer,
+  DISJOINT heap and bitmaps, size bounds), target_state_rel,
+  target_configured, start_pc_ok, interference_ok, ffi_interfer_ok: OPEN.
+  The installed-state predicate is not established for any state.
+- Failures: tool: diag-0001 (CPU limit, signal 24, while printing a large
+  term). Operator stop: lemmas-0002 (exit -15; a search did not end).
+  Authoring: lemmas-0001, loader-0001, loader-0002, loader-0003,
+  compose-0001, compose-0002, entrysat-0001, import-0001 (exit 1 each).
+  Memory: none. Logical: none.
+- Impact: obligation 5 is reduced to an explicit image premise plus domain
+  clauses. Obligations 1 (rest), 2 (pre-state, slide), 3, 6 stay OPEN. The
+  U298 exclusion holds for every handler; the exclusion premise is not
+  adopted. M1 open. end_to_end=false. Stage 12 unauthorized. No profile
+  approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-loader-memory-20261115/,
+  results/refund-loader-memory-local-20261115/attempt-0001.
+- Next check: construct the asm state t and explicit domains for the proved
+  end state at slide 0 and prove the domain clauses, with one new explicit
+  premise (heap range [h, e) does not meet the image); then
+  target_state_rel and target_configured; then the slide.
+
+## U390 — explicit asm state and memory domains for the start-up end state at slide 0; target_state_rel and target_configured proved; 23 of 30 installed-state clauses proved, 7 kept as one explicit unproved residual premise
+
+- Status: 2026-11-15. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay (not started; needs separate
+  authorization and a budget). No native execution. Refs U298, U386, U387,
+  U388, U389.
+- Definitions, forge_refundInstalledDomains (dom-0001, exit 0):
+  refund_code_dm (code and code buffer, [0x1000040D0, 0x100024000));
+  refund_mem_dm h e (code, heap-and-stack range [h, e), bitmaps);
+  refund_heap_clear h e (the range [h, e) does not meet
+  [0x100000000, 0x100030F30)); refund_t ms (asm state: regs, mem and pc of
+  ms, mem_domain refund_mem_dm of x1 and x3, lr 30, align 2, little-endian,
+  not failed); refund_end_state ms.
+- Premise status: refund_heap_clear is an explicit premise. It is not a fact
+  about a real loader or allocator. With the conditions on e it implies the
+  40-byte header separation (refund_heap_clear_IMP_header_separation).
+- Proved: refund_end_state_established (from refund_entry_pre, conditions on
+  e, refund_heap_clear: the state after 27 steps satisfies refund_end_state,
+  image preserved); refund_t_target_state_rel; refund_t_target_configured
+  (needs mc0.prog_addresses = refund_mem_dm of x1 and x3, because published
+  target_configured requires t.mem_domain = mc.prog_addresses); domain
+  lemmas for bytes_in_mem, subset, byte_align closure, code buffer,
+  DISJOINT heap bitmaps, code_loaded.
+- Assembly, forge_refundInstalledAssembly (asm-0002, exit 0): the stored
+  definition of refund_installed_no_handler is instantiated with explicit
+  witnesses (t = refund_t ms, word memory λa. Word (mem_dword ms.MEM a),
+  bitmap pointer 0x10002C018, refund_bitmaps_dm, cbspace 428, data_sp 0).
+  30 clauses: 23 proved; 7 collected unchanged in refund_installed_rest
+  (start_pc_ok, interference_ok, ffi_interfer_ok, two shared-address
+  clauses, the ffi_names equation, the mmio clause). The predicate is
+  derived forward in the kernel. refund_installed_from_end_state;
+  refund_installed_from_entry; refund_behavior_from_entry and
+  refund_u298_exclusion_from_entry (compositions with the U388 theorems at
+  refund_mc; the residual is a premise inside the existential).
+- Uncertainty: (1) refund_installed_rest is not proved and not shown
+  satisfiable; if it is false at the end state the composed theorems say
+  nothing. (2) envmc.prog_addresses = refund_mem_dm h e ties the machine
+  record to run-time heap bounds; assumed. (3) Entry state, image, slide 0,
+  heap premise: assumed as in U389. (4) Load slide OPEN: all addresses are
+  link addresses; MH_PIE is set; not measured. (5) No loader, C run-time,
+  allocator or OS model.
+- Scope statement from the owner (2026-11-15): three separate properties:
+  run-time code-installation exclusion, observable behavior containment,
+  FFI authorization and confinement. The U298 exclusion theorem is not
+  behavior containment; its exact narrower statement is preserved
+  (import-0003 checks it and checks that the new exclusion theorem contains
+  no behaviour-set statement). M1 is not expanded. A design proposal for
+  behavior containment is in proposals/archia-behavior-containment/
+  PROPOSAL.md; it is not an established guarantee.
+- Controls: heap_on_code_rejected, heap_on_bitmaps_rejected,
+  code_outside_domain_rejected, prog_addresses_mismatch_rejected,
+  unaligned_heap_end_not_closed; refund_entry_and_heap_premises_satisfiable
+  (constructed witness; not evidence about a loader; does not cover the
+  residual). import-0003 (exit 0): 65 exact statements, 518 closure nodes,
+  axioms only the four of bool, compile_correct' control identical to the
+  published statement, earlier negative and scope controls re-read, four
+  new scope controls. dom-repeat and asm-repeat exit 0, exports
+  byte-identical.
+- Failures: authoring: asm-0001, import-0001, import-0002 (exit 1 each).
+  Tool: none. Memory: none. Logical: none.
+- Impact: obligation 5 (content and domain clauses) is proved from explicit
+  premises; target_state_rel and target_configured are proved. Open:
+  start_pc_ok and the simple record clauses (obligation 1),
+  ffi_interfer_ok (3), interference_ok (6), entry state and slide (2),
+  loader behaviour. The installed-state predicate is not established
+  without the residual. M1 open. end_to_end=false. Stage 12 unauthorized.
+  No profile approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-memory-domain-20261115/,
+  results/refund-memory-domain-local-20261115/attempt-0001.
+- Next check: discharge the simple residual clauses at refund_mc with
+  base0 = 0x1000040D0 (shared set empty, ffi_names, mmio clause after
+  evaluating shmem_extra, start_pc_ok for the entry stubs below the code
+  domain); the residual is then interference_ok and ffi_interfer_ok.
+
+## U391 — five of the seven residual installed-state clauses proved at refund_mc 0x1000040D0 envmc; FFI names (4) and shmem_extra evaluated in the proof context; the residual is now interference_ok and ffi_interfer_ok, both unproved
+
+- Status: 2026-11-15. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U345,
+  U386, U388, U389, U390.
+- Finding (diag-0001): published refund_arm8_compiled is stated for the
+  specified constants `oracle` and `info`. Nothing relates `oracle` to the
+  recorded refund_alloc_oracle. So no stored theorem gave ffi_names or
+  shmem_extra of refund_lab_conf2. U390's plan ("shmem_extra by
+  evaluation") needed a recomputation.
+- FFI facts, forge_refundFfiFacts (ffi-0001, exit 0): compile_cake_arm8
+  evaluated again in the logic with refund_alloc_oracle (method of U345);
+  stored code, data, ffis, conf are syntactically the recomputed values.
+  refund_ffi_names: refund_lab_conf2.ffi_names = SOME names, LENGTH names =
+  4, mmio_pcs_min_index names = SOME 4, ffinames_to_string_list names =
+  [read; write; close; open_in], refund_lab_conf2.shmem_extra = [].
+- Residual, forge_refundResidual (res-0003, exit 0), record refund_mc
+  0x1000040D0w envmc, premises refund_heap_clear h e, envmc.prog_addresses =
+  refund_mem_dm h e, ms.PC = 0x1000040D0w. Proved one by one: start_pc_ok
+  (halt 0x1000040C0, install 0x1000040B0 and the four entry addresses
+  0x1000040A0..0x100004070 are outside the domain and the empty shared set;
+  pc equations; alignment bit; find_index for each index; lengths); the two
+  shared-address clauses; the ffi_names equation; the mmio clause.
+  refund_installed_rest2 = interference_ok and ffi_interfer_ok, taken
+  unchanged from the stored residual. refund_installed_rest_reduced;
+  refund_installed_from_entry_reduced; refund_behavior_from_entry_reduced;
+  refund_u298_exclusion_from_entry_reduced (exact U298 statement, every
+  handler, no behaviour-set statement).
+- Not established: interference_ok (for the record: arm8_proj on
+  refund_mem_dm is unchanged by envmc.next_interfer) and ffi_interfer_ok
+  (for each of the 4 names: return to x30, only the result bytes written at
+  x2, callee-saved registers kept, state still arm8_ok). No published ARMv8
+  lemma covers them. Satisfiability of the two-clause residual with the
+  other premises is not shown. No definition was changed; no failed proof
+  was replaced by an assumption.
+- Uncertainty: entry state, image premise, slide 0 (MH_PIE set; slide OPEN),
+  refund_heap_clear, the program-address equation: assumed as in U389 and
+  U390. The entry-address layout is now proved for the model record; that
+  the real stubs at those addresses implement the four names is part of
+  ffi_interfer_ok (open).
+- Controls: wrong_base0_rejected, halt_stub_in_domain_rejected,
+  heap_on_halt_stub_rejected, ffi_entry_stub_in_domain_rejected.
+  import-0001 (exit 0): 76 exact statements, 520 closure nodes, axioms only
+  the four of bool, compile_correct' control identical to the published
+  statement, all earlier negative and scope controls re-read, three new
+  scope controls. ffi-repeat and res-repeat exit 0, exports byte-identical.
+- Failures: authoring: res-0001, res-0002 (exit 1 each). Tool: none.
+  Memory: none. Logical: none.
+- Impact: installed-state obligation 1 is closed for the model record under
+  the explicit premises. Open: obligation 3 (ffi_interfer_ok), obligation 6
+  remainder (interference_ok), obligation 2 (entry state, slide), loader
+  behaviour. M1 open. end_to_end=false. Stage 12 unauthorized. No profile
+  approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-residual-20261115/,
+  results/refund-residual-local-20261115/attempt-0001.
+- Next check: owner decision on the two clauses: interference_ok as a
+  named environment assumption for a definite next_interfer; ffi_interfer_ok
+  starting with one name (one entry stub and one C function, ARMv8 step
+  proof).
+
+## U392 — interference_ok discharged for a concrete identity environment; exact FFI contract equivalent to ffi_interfer_ok; an abstract FFI model satisfies it; behaviour theorem without residual holds only for the abstract record
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U386,
+  U388, U389, U390, U391.
+- Environment, forge_refundEnvModel (env-0005, exit 0): refund_id_interfer
+  i ms = ms; refund_id_interfer_ok (interference_ok for every projection).
+  interference_ok_arm8_iff: for the ARMv8 projection on a domain dm the
+  clause is equivalent to: env keeps PSTATE, SCTLR_EL1, TCR_EL1, exception,
+  REG, PC and every byte in dm. This is the weakest sufficient relation.
+  refund_outside_interfer (writes only outside dm) satisfies it and is not
+  the identity.
+- FFI contract: refund_ffi_contract dm ffi_i (for index < 4, readable
+  argument arrays, a state related to an asm state at the entry address,
+  aligned x30: result state arm8_ok, pc = x30, memory in dm equals
+  asm_write_bytearray at x2 with new_bytes, registers 19-25, 27, 28 kept).
+  ffi_interfer_ok_iff_contract: ffi_interfer_ok 0x1000040D0 (refund_mc
+  0x1000040D0 envmc) is equivalent to refund_ffi_contract
+  envmc.prog_addresses envmc.ffi_interfer, for a general envmc.
+  refund_ffi_names_list: the four names in order read, write, close,
+  open_in.
+- Abstract model: refund_abs_ffi (pc := x30; memory := asm_write_bytearray
+  at x2) satisfies the contract (refund_abs_ffi_contract). refund_abs_env
+  sets next_interfer and ffi_interfer to these models; install_interfer
+  stays a parameter. refund_abs_env_rest2; refund_installed_abstract_env;
+  refund_behavior_abstract_env (no residual premise);
+  refund_u298_exclusion_abstract_env (exact U298 statement, every handler,
+  no behaviour-set statement).
+- Scope, must not be overstated: these three theorems are about a model
+  machine with an environment that does nothing between steps and FFI
+  calls replaced by one model transition. The identity environment is an
+  assumption, not a proof about the macOS scheduler, signals or other
+  threads. refund_abs_ffi is not related to any executable byte; the four C
+  functions, their entry stubs, libSystem and the kernel are not modelled.
+  ffi_interfer_ok and interference_ok are NOT established for the real
+  executable environment.
+- Uncertainty: (1) Observable-effect conformance (real call effects equal
+  the basis_ffi oracle's events and result bytes) is outside
+  ffi_interfer_ok, not stated in HOL, open. (2) Joint satisfiability of all
+  premises including the input premises is not shown. (3) Entry state,
+  image, slide 0 (MH_PIE set; slide OPEN), refund_heap_clear, the
+  program-address equation: assumed as before. (4) The published semantics
+  treats an FFI call as one transition; composing the real instruction
+  sequence into one transition is open.
+- Controls: protected_write_breaks_interference,
+  pc_change_breaks_interference, wrong_return_address_ffi_rejected,
+  protected_memory_write_ffi_rejected,
+  clobbered_callee_saved_register_ffi_rejected (the last three refute the
+  published predicate through the equivalence and
+  refund_ffi_contract_at_witness). import-0001 (exit 0): 94 statements (92
+  exact, 2 identical to published), 521 closure nodes, axioms only the four
+  of bool, all earlier negative and scope controls re-read, exact code and
+  data identity re-checked, four new scope controls. env-repeat exit 0,
+  exports byte-identical.
+- Failures: authoring and exploration: env-0001, env-0002, env-0003,
+  env-0004 (exit 1 each). Tool: none. Memory: none. Logical: none.
+- Impact: within the model, the installed-state predicate and the behaviour
+  theorem have no residual. For the real executable the open obligations are
+  now exactly named: real interference (processor, OS), the four FFI stubs
+  and C functions, oracle conformance, loader, entry state, slide. M1 open.
+  end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing
+  committed.
+- Evidence: proposals/refund-executable-feasibility/m1-env-model-20261116/,
+  results/refund-env-model-local-20261116/attempt-0001.
+- Next check: one FFI entry stub (cake_fficlose at 0x100004080) with the L3
+  ARMv8 model on the exact file bytes; or the load-slide version of the 27
+  start-up steps.
+
+## U393 — exact ARMv8 steps of the entry stub cake_fficlose (1 step), of fficlose up to the indirect branch into libSystem (15 steps from the entry address), and after an assumed return (6 steps); the stub alone meets no part of the FFI contract
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U316,
+  U388, U389, U391, U392.
+- Words (tool, then kernel): stub at 0x100004080 (file offset 16512) is
+  14008478 = b 0x100025260; fficlose main path is 17 words at 0x100025260
+  (file offset 152160); the import stub for close is 3 words at 0x1000258EC
+  (file offset 153836). refund_file_fficlose_words: the three slices of
+  refund_file are these 84 bytes (kernel evaluation).
+  refund_image_fficlose_code: refund_image_mem 0w m gives the 84 byte
+  equations.
+- Stub: cake_fficlose_stub_run (ARMv8 context, ffic-0006, exit 0) and
+  cake_fficlose_stub_exact (on the image, bridge-0001, exit 0): one step,
+  pc becomes 0x100025260; REG, MEM, SP_EL0, PSTATE, SCTLR_EL1, TCR_EL1,
+  exception unchanged.
+- fficlose_prefix_run and cake_fficlose_to_import_branch: with sp = b + 32,
+  aligned b, x0 = c aligned to 4, x1 = 8, x3 positive, got slot value g and
+  frame separations: after 15 steps from the entry address pc = g, x30 =
+  0x10002528C, x19 = old x2, sp = b, the four frame slots hold old x20, x19,
+  x29, x30, memory unchanged outside the 32 frame bytes, registers other
+  than 0, 8, 16, 19, 29, 30 unchanged.
+- Exit point: execution leaves the verified instructions at br x16 at
+  0x1000258F4; the target is the content of the __got slot 0x100028020,
+  bound by the dynamic loader. libSystem close, the kernel and the return
+  are not modelled.
+- fficlose_suffix_run: from an ASSUMED state at 0x10002528C (sp = b, x19 =
+  a, frame slots v20, v19, v29, v30): 6 steps, pc = v30, x19, x20, x29, x30
+  restored from the slots, sp = b + 32, one byte written at a (0 if w0 = 0,
+  else 1), nothing else written. No theorem joins the prefix to the suffix.
+- Contract parts: the stub establishes none (stub_only_ffi_rejected: the
+  model "set pc to 0x100025260" does not satisfy ffi_interfer_ok). The
+  fficlose instructions give: return to the saved x30 if the slot is kept;
+  x19 and x20 restored if their slots are kept; writes limited to the frame
+  and one byte at old x2. Obligations: the libSystem call (return address,
+  sp, x19-x28, frame and domain untouched, w0), the C stack outside the
+  protected domain, call-site facts clen = 8 and alen >= 1, oracle
+  conformance.
+- Finding, analysis only, not a theorem: published ffi_interfer_ok
+  quantifies over every call state with readable arrays; the real fficlose
+  returns only when clen = 8 and alen >= 1 (otherwise it branches to an
+  assertion block). A faithful model of the real function cannot satisfy
+  the clause for all call states. Needs call-site facts or a model that is
+  total by construction. Uncertainty: the assertion paths were read from the
+  disassembly, not stepped.
+- Own defect, corrected: ffic-0005 exited 0 with a vacuous frame conjunct in
+  the suffix theorem (the bound variable had the name of the free address
+  variable; the hypothesis became contradictory). ffic-0005 is not used.
+  ffic-0006 uses a fresh variable and fails closed on a contradictory frame
+  hypothesis. The U389 frame theorem was checked: its state has no free
+  variable of that name.
+- Model notes: aligned 2 c and aligned 3 b are hypotheses of the L3 step
+  theorems (32-bit load, stack pairs); explicit premises. Whether hardware
+  needs them is not examined.
+- Controls: cake_fficlose_stub_wrong_target_refuted,
+  cake_fficlose_stub_does_not_return, fficlose_suffix_wrong_return_refuted,
+  fficlose_corrupted_frame_slot_clobbers_x19, stub_only_ffi_rejected,
+  altered_stub_byte_rejected, altered_stub_word_not_in_file; two changed
+  words rejected in the step script. import-0001 (exit 0): 106 statements
+  (104 exact, 2 identical to published), 3 structural checks, 523 closure
+  nodes, axioms only the four of bool, all earlier negative and scope
+  controls re-read, exact code and data identity re-checked, three new
+  scope controls. ffic-repeat and bridge-repeat exit 0, exports
+  byte-identical.
+- Failures: authoring: ffic-0001, ffic-0002, ffic-0003, ffic-0004 (exit 1
+  each). Defective pass: ffic-0005 (exit 0, not used). Tool: none. Memory:
+  none. Logical: none.
+- Uncertainty kept open: image predicate and entry state assumed; slide 0
+  only (MH_PIE set); loader and dynamic binding; C stack placement; the
+  other three stubs read by inspection only; U392 environment and FFI
+  models are models.
+- Impact: obligation 3 (FFI code) has its first exact machine-level facts
+  for one name. ffi_interfer_ok is not established for the real code. M1
+  open. end_to_end=false. Stage 12 unauthorized. No profile approved.
+  Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-fficlose-stub-20261116/,
+  results/refund-fficlose-step-local-20261116/attempt-0001.
+- Next check: one explicit assumption relation for the close call and the
+  composition stub + prefix + call + suffix against the contract for index
+  2; or the two assertion paths as step theorems.
+
+## U394 — complete cake_fficlose path as one conditional machine-level theorem; the external close call is an explicit assumed relation (close_call_rel); contract conclusion for index 2 derived for the path; valid arguments are premises, not proved at the call site
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U389,
+  U391, U392, U393.
+- Scope: the name close only. Not modelled, not proved: libSystem close, the
+  kernel, dynamic binding of the __got, oracle conformance, the loader, the
+  PIE slide.
+- Definitions, forge_refundFficloseCompose (compose-0018, exit 0):
+  close_call_rel dm s1 s2 (user state; pc = s1's x30; same sp; x19-x28
+  kept; the 32 frame bytes, the image range and the domain dm unchanged; x0
+  free). fficlose_call_pre dm s b c g (U393 entry premises plus: frame
+  outside dm, result address outside the frame and the image range).
+  fficlose_path dm s s3 (15 steps, a permitted call transition, 6 steps).
+- cake_fficlose_path: from fficlose_call_pre, 15 steps reach pc = g with
+  x30 = 0x10002528C; for every s2 with close_call_rel dm s1 s2, 6 steps
+  give pc = the caller's x30, sp restored, user state, x19-x28 restored,
+  and the domain unchanged except the byte at old x2, which is 0 or 1 by
+  the 32-bit test of x0.
+- cake_fficlose_path_contract_instance: under the contract's own premises
+  for index 2 (target_state_rel at the entry address, readable result
+  array, aligned x30), fficlose_call_pre and fficlose_path, the final state
+  satisfies the contract's conclusion with new_bytes = v :: TL bytes2,
+  v in {0, 1}.
+- This is not refund_ffi_contract: the path is a relation with an assumed
+  call; the contract quantifies over every new_bytes and every call state;
+  only index 2 is treated. No U394 theorem states ffi_interfer_ok or
+  refund_ffi_contract.
+- Arguments: clen = 8 and alen >= 1 are NOT proved at the call site; they
+  are conjuncts of fficlose_call_pre. Other outcomes as step theorems
+  (assert-0001, exit 0): alen = 0 reaches 0x1000252A4 in 6 steps from the
+  entry address; clen <> 8 with positive alen reaches 0x1000252A8 in 8
+  steps. Both are calls into assertion blocks, which are not modelled. A
+  negative alen is NOT RUN. Oracle fact
+  ffi_close_accepts_only_valid_lengths: the basis_ffi component ffi_close
+  accepts only an 8-byte configuration and a non-empty array and returns
+  v :: TL arr. The link from oracle success to the register values at the
+  machine call state is NOT RUN.
+- Non-vacuity: fficlose_call_pre_satisfiable (constructed witness, 16
+  conjuncts proved one by one); close_call_rel_inhabited;
+  cake_fficlose_path_inhabited (a complete instance of the path).
+  overlapping_configuration_is_vacuous_case: the premise is false when the
+  configuration pointer is the frame base. The witnesses are constructed
+  states, not evidence about a real process.
+- Uncertainty: (1) close_call_rel is an assumption about libSystem and the
+  kernel (AAPCS64-style); no implementation evidence. (2) The frame and
+  stack premises are not derived. (3) The __got content g is a parameter;
+  that it is close is dynamic binding, open. (4) Conformance of the result
+  byte with the oracle is open. (5) Necessity of each relation conjunct is
+  not proved in general. (6) Entry state, image, slide 0 assumed; MH_PIE
+  set; slide open.
+- Controls: invalid_arguments_not_covered,
+  invalid_clen_reaches_assert_block, zero_alen_reaches_assert_block,
+  corrupted_return_state_not_in_relation,
+  frame_in_protected_domain_not_covered, prefix_writes_the_frame,
+  overlapping_configuration_is_vacuous_case. import-0001 (exit 0): 122
+  statements (120 exact, 2 identical to published), structural checks, 525
+  closure nodes, axioms only the four of bool, all earlier negative and
+  scope controls re-read, compile_correct' and code/data identity
+  re-checked, five new scope controls. assert-repeat and compose-repeat
+  exit 0, exports byte-identical.
+- Failures: authoring: compose-0001 to compose-0013 and compose-0015 to
+  compose-0017 (exit 1 each; proof structure, instantiation, two variable
+  names that are stored constants). Tool: none. Memory: none. Logical:
+  none. No failed proof was replaced by an assumption.
+- Impact: for one FFI name the real machine path is composed end to end at
+  machine level, with the external call as the single assumed relation and
+  the call-state conditions explicit. ffi_interfer_ok is not established.
+  M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved.
+  Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-fficlose-compose-20261116/,
+  results/refund-fficlose-compose-local-20261116/attempt-0001.
+- Next check: the call-site link in the model: an FFI step at index 2 with a
+  successful oracle call has x1 = 8 and x3 >= 1 (from read_ffi_bytearrays
+  and the oracle fact).
+
+## U395 — clen = 8 and alen <> 0 proved at every reachable close call state of the model machine, derived from the proved behaviour inclusion (no assumed oracle success); not connected to the real process; sign of alen and reachability of a close call open
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U298, U386,
+  U391, U392, U393, U394.
+- Scope: the name close (index 2) only.
+- Definitions, forge_refundCallSite (site-0005, exit 0): refund_static (the
+  record's static FFI fields); machine_step (one clock tick of published
+  targetSem evaluate, same oracle function, same static fields);
+  machine_reach (finitely many steps). machine_reach is an
+  over-approximation defined on the evaluation function.
+  normal_step_is_machine_step and extcall_step_is_machine_step show that
+  real ordinary steps and successful external-call steps are inside it.
+  Install and shared-memory transitions are not shown as steps.
+- close_call_site_arguments: machine_reach, refund_static, oracle =
+  basis_ffi_oracle, machine_sem within extend_with_resource_limit
+  {Terminate Success io}, and pc = 0x100004080 give x1 = 8, x3 <> 0, and
+  readable arrays of lengths 8 and at least 1. For every reachable call
+  state.
+- Non-circularity: no premise states oracle success. Unreadable arrays give
+  Error in one step (Fail in machine_sem); an ending oracle call gives Halt
+  with an FFI outcome; both are outside the behaviour set. So the oracle
+  returned; for close that needs the two lengths. The behaviour inclusion
+  is U392 refund_behavior_abstract_env, which rests on compile_correct',
+  the source specification and source non-Fail.
+- close_call_site_arguments_model: the instance at refund_mc 0x1000040D0
+  (refund_abs_env envmc) for the state after the 27 start-up steps.
+  cake_fficlose_path_at_reachable_call: composition with U394
+  cake_fficlose_path; premise fficlose_call_pre_no_len (14 of 16
+  conjuncts); close_call_rel kept as an explicit premise.
+- Premises removed for reachable model call states: x1 = 8; x3 <> 0.
+  Kept: the sign condition on x3; user state; image; stack pointer and
+  alignment; aligned configuration pointer; separations; __got content;
+  close_call_rel.
+- Uncertainty: (1) Model machine only (identity environment, abstract FFI
+  transition). A simulation between the real process and the model at call
+  states is not proved; this is the missing connection. (2) It is not
+  shown that any close call state is reachable; for the refund program the
+  set may be empty. (3) The compiled jump instruction to the stub was not
+  located in the code bytes; the code path is read from the published
+  definitions (CallFFI compiles to a jump to pc - 16(3 + index)), not
+  stepped. (4) The sign of alen is not derived (needs a size bound on the
+  domain). (5) Premises of the behaviour theorem, slide 0, loader,
+  libSystem, dynamic binding, oracle conformance: open as before.
+- Controls: ffi_close_rejects_invalid_lengths,
+  invalid_clen_call_halts_in_model, fail_not_in_success_limit,
+  ffi_outcome_not_in_success_limit, resource_limit_is_in_success_limit,
+  machine_reach_refl; U394 invalid-argument and vacuity controls re-read.
+  import-0001 (exit 0): 133 statements (131 exact, 2 identical to
+  published), structural checks, 526 closure nodes, axioms only the four of
+  bool, compile_correct' and code/data identity re-checked, three new scope
+  controls. site-repeat exit 0, exports byte-identical.
+- Failures: authoring: site-0002, site-0003 (exit 1 each). Tool: none.
+  Memory: none. Logical: none.
+- Also noted: the request arrived with an unrelated pasted chat fragment
+  (about volatility and correlation). It was treated as stray text and not
+  acted on.
+- Impact: the two length requirements of fficlose are no longer free
+  premises in the model. ffi_interfer_ok for the real code is not
+  established. M1 open. end_to_end=false. Stage 12 unauthorized. No profile
+  approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-callsite-20261116/,
+  results/refund-callsite-local-20261116/attempt-0001.
+- Next check: derive w2n x3 < 2^63 at a reachable call state from a size
+  bound on the program-address set, with one explicit heap-size premise.
+
+## U396 — signed alen >= 1 at reachable close call states of the model, only under a new explicit low-half premise; the bound is not derivable from earlier premises; no reachable close call is established and source inspection indicates there is none
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U390, U392,
+  U394, U395.
+- Scope: the name close only; model machine only.
+- Signed bound, not derivable: heap_premises_admit_huge_heap (the premises
+  on the heap range admit e - h >= 2^63). So the program-address set has no
+  size bound and the U395 proposal ("derive w2n x3 < 2^63 from a size bound
+  on the program-address set") does not go through from established
+  invariants. True origins, none a Forge theorem: the compiler's internal
+  heap limit (not exported by compile_correct'); the user address-space
+  size of a real process; in the basis source the array is the fixed
+  buffer iobuff.
+- Proved with one NEW explicit premise, forge_refundSignedLen (signed-0006,
+  exit 0): addresses_below_half dm (every program address below 2^63).
+  read_bytearray_below_half_bound; close_call_site_signed_alen (adds
+  not-msb and the signed 0 < x3 to the U395 conclusion);
+  refund_mem_dm_below_half (from e <= 2^63);
+  close_call_site_signed_alen_model;
+  cake_fficlose_path_at_reachable_call_signed (premise
+  fficlose_call_pre_no_len_sign, 13 conjuncts; close_call_rel explicit).
+  The new premise is unproved; the sign condition is traded, not
+  independently discharged.
+- Reachability: no reachable close call state is established. Text
+  inspection of the pinned sources (reachability-evidence.txt, commands and
+  hashes recorded): #(close) occurs only in raw_closeIn and closeOut;
+  refund_main uses inputAllFrom None (close action for standard input is
+  consume_rest) and print (write); no refund source calls closeIn or
+  closeOut. Verdict: by inspection the program never issues the close FFI
+  call. NOT a proof. A formal unreachability proof is NOT RUN; the
+  file-system-level output theorem cannot give it, because a failed close
+  leaves the file-system model unchanged.
+- Consequence, stated plainly: the U394-U396 theorems about close call
+  states are then vacuously true for refund executions. They remain
+  correct statements about the linked code and a worked method. The U394
+  witness is a constructed state; no theorem relates it to machine_reach.
+- Premise count: of the fourteen call-state premises left after U395, none
+  is independently discharged; one (the sign) is replaced by a static
+  premise. Thirteen remain, plus close_call_rel.
+- Controls: negative_alen_not_covered,
+  arbitrary_state_can_violate_arguments, universe_not_below_half,
+  high_heap_end_not_below_half, heap_premises_admit_huge_heap; U394 and
+  U395 invalid-length controls re-read. import-0002 (exit 0): 143
+  statements (141 exact, 2 identical to published), structural checks, 527
+  closure nodes, axioms only the four of bool, compile_correct' and
+  code/data identity re-checked; new scope controls: the signed bound
+  always carries the low-half premise; no theorem asserts a reachable close
+  call; the U394 witness is constructed. signed-repeat exit 0, exports
+  byte-identical.
+- Failures: authoring: signed-0001 to signed-0004, import-0001 (exit 1
+  each). Tool: none. Memory: none. Logical: none.
+- Uncertainty: the inspection covers the sources I read (TextIOProg and the
+  refund program scripts), not the compiled code; the model/real
+  simulation, libSystem, dynamic binding, loader, slide and oracle
+  conformance stay open as before.
+- Impact: work on close has reached its useful limit for M1; the FFI names
+  the program uses are read and write. M1 open. end_to_end=false. Stage 12
+  unauthorized. No profile approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-signed-len-20261116/,
+  results/refund-signed-len-local-20261116/attempt-0001.
+- Next check: owner decision: treat the write stub and ffiwrite as in U393
+  (the name is used on every successful run), or prove formally that no
+  close event occurs.
+
+## U397 — the real write FFI path: bytes, 23-step path to the external call, and a composed conditional theorem for the failed-write outcome only; the success outcome is not composed; no reachable write call is proved
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U393,
+  U394, U395, U396.
+- Scope: the name write only; slide 0; model machine for call-site facts.
+- Bytes (machine-checked against refund_file): cake_ffiwrite at
+  0x100004090 (offset 0x4090) is 14008454, b 0x1000251E0; ffiwrite is 30
+  words at 0x1000251E0 (offset 0x251E0); the import stub for write is 3
+  words at 0x1000259C4 (offset 0x259C4), reading the got slot 0x1000280B0.
+  refund_file_ffiwrite_words, refund_image_ffiwrite_code,
+  cake_ffiwrite_stub_exact, cake_ffiwrite_stub_does_not_return.
+- Path to the call: cake_ffiwrite_to_import_branch, 23 steps under
+  ffiwrite_call_pre (19 conjuncts), ends at pc = g (value of the got
+  slot, a variable), x30 = 0x10002522C, sp = b, x19 = a, 32-byte frame
+  written; x0 = fd, x1 = a + off + 4, x2 = n.
+- Composed theorem: cake_ffiwrite_path_failed_write. For every s2 with
+  write_call_rel dm s1 s2 and bit 31 of w0 set, 6 more steps return to the
+  caller with sp and x19-x28 restored and dm memory unchanged except
+  a[0] = 1. write_call_rel is an ASSUMED relation; no theorem derives it
+  from an implementation. It does not describe the output effect.
+- Non-vacuity: ffiwrite_call_pre_satisfiable,
+  write_call_rel_inhabited_fail, cake_ffiwrite_failed_path_inhabited. The
+  inhabitants are constructed states (sat_mem), not reachable states.
+- Limitation, success outcome: ffiwrite_suffix_ok_run (10 steps, a[0] = 0,
+  a[1..2] = result) is checked standalone only. It needs
+  aligned 1 (a + 1w); the prefix needs aligned 1 a (halfword loads).
+  ffiwrite_ok_alignment_conflict and write_success_suffix_premise_excluded
+  show the two cannot hold together. Cause: the step library gives step
+  theorems only under alignment hypotheses; the L3 model permits the
+  unaligned store when SCTLR_EL1.A is clear. This is a gap in the step
+  theorems, not evidence of a code fault. The composed theorem therefore
+  covers only the outcome that is not the normal one for refund.
+- Call-site facts from the published semantics: write_call_site_facts
+  (readable arrays, 4 <= LENGTH abytes, 4 <= w2n x3 at reachable model
+  states with pc 0x100004090). NOT derivable: clen = 8 and
+  n + off + 4 <= alen; ffi_write_accepts_wrong_clen shows the oracle does
+  not enforce them. They, alignment, not-msb x3, stack placement and the
+  separation conjuncts remain premises.
+- Reachability: source inspection (reachability-evidence-write.txt):
+  refund_main -> print -> output -> write -> writei -> #(write). NOT a
+  proof. Formal reachability NOT PROVED; a resource-limit stop before any
+  call is admitted. No witness for a reachable call was constructed.
+- Observable effects: specified in the report (fd, buffer a + off + 4,
+  count n; at most n bytes appended; w0 = count or negative). Not proved.
+  Not authorized. No theorem relates ffi_write to machine steps.
+- Controls: stub does not return; changed stub word rejected; clen <> 8
+  reaches the assert path and is not covered; length violation not
+  covered; corrupted return state (pc, sp, x19, frame) not in the
+  relation; frame in dm and result bytes in frame not covered; import
+  controls (no reachable write call asserted; write_call_rel only as a
+  premise; no ffi_interfer_ok or refund_ffi_contract claim).
+- Preserved: U394-U396 close theorems re-imported exact; the close
+  obligation stays in the published universal FFI contract;
+  compile_correct' re-checked. import-0001 exit 0: 531 closure nodes,
+  axioms only the four of bool.
+- Exits: steps-0001 0; ffiw-0001 to 0004, 0006, 0007 exit 1 (authoring);
+  ffiw-0005 -15 (diagnostic, stopped by the agent); dbg-0001 0; ffiw-0008
+  0; ffiw-0008r 0 (statements identical); wpath-0001 1 (authoring);
+  wpath-0002 0; wcomp-0001 0; wsite-0001, 0002 exit 1 (authoring);
+  wsite-0003 0; import-0001 0. Repeat of path/compose/site/import NOT RUN
+  (swap 10.4 of 11.3 GiB used).
+- Failures: authoring as listed. Tool: none. Memory: none. Logical: none.
+- Uncertainty: the alignment premises on c and a are plausible for CakeML
+  byte arrays but unproved; libSystem write, the kernel, dynamic binding,
+  loader, slide, oracle conformance and the real-process/model simulation
+  stay open.
+- Impact: the success criterion is met in part. M1 open.
+  end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing
+  committed.
+- Evidence: proposals/refund-executable-feasibility/m1-ffiwrite-20261116/,
+  results/refund-ffiwrite-local-20261116/attempt-0001.
+- Next check: derive a step theorem for the unaligned halfword store from
+  the L3 model with SCTLR_EL1.A clear as an explicit premise, then compose
+  the success outcome; or apply the method to read (owner decision).
+
+## U398 — the successful write path is composed: the unaligned halfword store is derived from the L3 definitions under the new explicit premise that SCTLR_EL1.A is clear; both outcomes in one conditional theorem; no reachable write call is proved
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U393,
+  U395, U396, U397.
+- Scope: the name write only; slide 0; ARMv8 L3 model.
+- Store: word 78001269 at 0x10002523C, sturh w9, [x19, #1]; 2 bytes at
+  a + 1; little-endian under not-E0E; no write-back.
+- Model finding: CheckAlignment_def raises ALIGNMENT_FAULT for an
+  unaligned access only for ATOMIC or ORDERED access or when SCTLR.A is
+  set (SCTLR_EL1 at EL0). The model has no Normal/Device memory
+  distinction; nothing is claimed about Device memory.
+- Proved from the definitions with the library evaluator, no axiom, no
+  alignment assumption (forge_refundFfiwriteUnaligned, uns-0007, exit 0):
+  check_alignment_no_fault, write_mem2_no_alignment,
+  sturh_w9_x19_1_step_no_alignment, ffiwrite_suffix_ok_unaligned_run (10
+  steps; a[0] = 0, a[1] = (15 >< 8) w0, a[2] = (7 >< 0) w0).
+- Composed (forge_refundFfiwriteSuccess, wsucc-0002, exit 0):
+  cake_ffiwrite_path_successful_write and cake_ffiwrite_path_returns
+  (both outcomes: n = 6 or n = 10; return pc = entry x30, sp and x19-x28
+  restored, dm memory unchanged outside a, a+1, a+2). This resolves the
+  U397 limitation "success outcome not composed".
+- Assumptions, exact: ffiwrite_call_pre (19 conjuncts, unchanged);
+  write_call_rel (ASSUMED, unchanged, says nothing about output); NEW
+  explicit premise not s2.SCTLR_EL1.A on the return state (the relation
+  does not preserve SCTLR_EL1); the L3 model.
+- Not strengthened: clen = 8 and the buffer bound stay premises; the
+  oracle contract is unchanged (ffi_write_accepts_wrong_clen re-imported).
+- Non-vacuity: cake_ffiwrite_success_path_inhabited (constructed state,
+  a + 1 odd, SCTLR_EL1.A clear). Not a reachable state.
+- Controls: check_alignment_fault; sturh_w9_x19_1_alignment_fault
+  (NextStateARM8 = NONE with A set and an unaligned address; premises
+  shown satisfiable; fault-0003, exit 0); write_success_result_bytes_exact;
+  write_wrong_result_bytes_refuted;
+  write_return_to_wrong_address_not_in_relation;
+  write_success_caller_return_address_exact;
+  write_result_bytes_in_image_not_covered; changed store word rejected;
+  the library alone rejects the store. U397 failed-write theorem and
+  U397 controls re-imported exact. import-0001 exit 0: 18 exact
+  statements, 533 closure nodes, axioms only the four of bool.
+- Defects found and excluded: fault-0001 exited 0 with a vacuous theorem
+  (contradictory BigEndian premise); the first form of
+  cake_ffiwrite_path_returns (wsucc-0001) had a failed-write branch that
+  asserted nothing. Neither is used.
+- Reachability: investigated, NOT proved
+  (reachability-investigation.txt). The exported top-level theorem has an
+  unconstrained existential io_events, so no write event and no reachable
+  write call follow from present theorems. Route, NOT RUN: (a) a new
+  write event in the target-semantics trace implies a reachable state at
+  pc 0x100004090; (b) non-empty output in the source specification
+  implies a write event, which needs the trace kept in the exported
+  theorem. No witness for a reachable call was constructed.
+- Exits: dbg-0001 1; dbg-0002 -15 (stopped by the agent); dbg-0003 0;
+  uns-0001 to 0004 and 0006 exit 1 (authoring); uns-0005 -24 (CPU limit);
+  uns-0007 0; uns-0007r 0 (statements identical); fault-0001 0
+  (DEFECTIVE); fault-0002 1; fault-0003 0; wsucc-0001 1; wsucc-0002 0;
+  import-0001 0. Repeats of wsucc and import, the full 172-statement
+  import and the reachability proof NOT RUN (swap 11.5 of 13.3 GiB used).
+- Failures: authoring as listed. Tool: none. Memory: none. Logical: two
+  defective statements, found and excluded.
+- Uncertainty: whether the real process runs with SCTLR_EL1.A clear is
+  not established here; libSystem write, the kernel, the output effect,
+  dynamic binding, loader, slide, oracle conformance and the
+  real-process/model simulation stay open.
+- Impact: the U397 success criterion is now met for both outcomes as a
+  conditional machine-level theorem. M1 open. end_to_end=false. Stage 12
+  unauthorized. No profile approved. Nothing committed.
+- Evidence:
+  proposals/refund-executable-feasibility/m1-ffiwrite-success-20261116/,
+  results/refund-ffiwrite-success-local-20261116/attempt-0001.
+- Next check: lemma (a), "a new write event in the target-semantics trace
+  implies a reachable state at pc 0x100004090" (owner decision; one
+  CakeML-context theory, no new assumption).
+
+## U399 — in the model machine a new write event implies a reachable state at pc 0x100004090; a refund run that terminates with Success and non-empty output reaches the call; no refund execution witness; clen = 8 not derivable
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U395,
+  U397, U398.
+- Scope: the MODEL machine of targetSem under refund_static; not the real
+  process.
+- Definitions: write_event (IO_event (ExtCall write) c b); refund_event
+  (ExtCall event with one of the four names). New means appended to
+  ffi.io_events by targetSem evaluate.
+- Proved (forge_refundWriteReach, reach-0009, exit 0): one_step_cases;
+  evaluate_trace_events (appended events are refund_events; a write event
+  among them implies machine_reach to a state with PC = 0x100004090);
+  terminating_trace_with_write_event_reaches_write_call. Other
+  event-producing paths are excluded by proof: normal, halt, install and
+  error branches append nothing; SharedMem cannot occur; the other entry
+  PCs append read, close or open_in events.
+- Proved, file-system model: ffi_read, ffi_open_in and ffi_close keep the
+  inode table; replay_without_write_event_keeps_inodes;
+  add_stdout_changes_inodes; nonempty_output_needs_write_event;
+  run_with_output_reaches_write_call.
+- Refund, conditional: refund_terminating_run_reaches_write_call.
+  Premises: those of refund_behavior_valid_request_no_handler (installed
+  state, valid request); refund_static; machine_sem ... (Terminate Success
+  io'); rendered output not empty.
+- NOT established: a terminating refund run (the published theorem admits
+  a resource-limit stop), so no admissible refund execution with a write
+  event is proved; non-emptiness of the rendered output (one attempt hit
+  the CPU limit, reach-0005); source-level existence of a write event
+  (needs event names for a general ext); any link from the model machine
+  to the real process.
+- Arguments: at the reached state only readable arrays, 4 <= LENGTH
+  abytes, 4 <= w2n x3. clen = 8 is not derivable from the file-system
+  specification: ffi_write_wrong_clen_is_a_silent_failure and
+  replay_ignores_wrong_clen_write_event (a wrong-clen write event can be
+  inserted in a trace without changing extract_fs). Smallest missing
+  lemma: an event-level specification of the program (8-byte
+  configuration, n + off + 4 <= LENGTH bytes) carried through
+  compile_correct'; separations need a memory-layout invariant at FFI
+  calls. Not introduced as assumptions.
+- Composition: refund_reached_write_call_facts_and_path joins the reached
+  state with cake_ffiwrite_path_returns. Only the PC conjunct of
+  ffiwrite_call_pre is discharged; the other 18 conjuncts,
+  write_call_rel, not-SCTLR_EL1.A, the OS write, loader and slide 0 stay
+  explicit.
+- Controls (check-0001, exit 0): no_step_no_event;
+  other_events_are_not_write_events; constructed_model_run_has_write_event
+  (constructed machine, oracle and state; not a refund execution); no
+  unconditional machine_reach conclusion; ffiwrite_call_pre and
+  write_call_rel only as premises; no theorem concludes clen = 8; no
+  source-semantics constant. 10 exact statements; 535 closure nodes;
+  axioms only the four of bool; forge_compileCorrectControl in the closure.
+- Method note: exploration runs used placeholder theorems after a failed
+  lemma; the tag check rejected dependent results and nothing was
+  exported. reach-0009 used none.
+- Exits: reach-0001 to 0004 and 0006 to 0008 exit 1 (authoring);
+  reach-0005 -24 (CPU limit); reach-0009 0; check-0001 0. Repeats and the
+  full 172-statement import NOT RUN (swap 10.6 of 11.3 GiB used).
+- Failures: authoring as listed. Tool: none. Memory: none. Logical: none.
+- Uncertainty: satisfiability of the refund theorem's premises is not
+  shown; refund_static and the installed-state premise are assumed.
+- Impact: write reachability is now a machine-checked conditional
+  statement instead of source inspection only. M1 open. end_to_end=false.
+  Stage 12 unauthorized. No profile approved. Nothing committed.
+- Evidence: proposals/refund-executable-feasibility/m1-write-reach-20261116/,
+  results/refund-write-reach-local-20261116/attempt-0001.
+- Next check: prove the rendered response is not empty (sexp_to_string on
+  Expr); then the event-level specification for clen and the buffer bound
+  (owner decision).
+
+## U400 — rendered refund output is never empty; a terminating refund run reaches a write call state with clen = 8 and the buffer bound (model machine); failed write events and 16 call-state conjuncts stay open
+
+- Status: 2026-11-16. Local, same machine, same agent, cached parents. No
+  clean replay. No independent replay. No native execution. Refs U397,
+  U398, U399.
+- Scope: the MODEL machine of targetSem under refund_static and the basis
+  oracle; not the real process.
+- Proved (forge_refundWriteArgs, args-0006, exit 0, 27 theorems):
+  refund_render_fields_not_empty (all field tuples; from
+  refund_render_fields_roundtrip and parse_IMP_LENGTH_LESS; resolves the
+  U399 open premise); ffi_write_return_cases (a returning ffi_write
+  either failed silently or had LENGTH c = 8 and n + off + 4 <= LENGTH
+  bytes with result byte 0); nonempty_output_needs_successful_write_event;
+  evaluate_trace_write_events_have_call_states (each write event has its
+  own reachable call state with the same arrays and call_FFI);
+  successful_write_events_have_valid_call_states;
+  refund_terminating_run_reaches_valid_write_call;
+  refund_reached_valid_write_call_and_path.
+- Definition: write_ok_event (a write event whose first result byte is 0).
+- Refund theorem premises: installed state and valid request; refund_static;
+  machine_sem ... (Terminate Success io'). The non-empty-output premise is
+  gone. Conclusion: a reachable model state at PC 0x100004090 with
+  REG 1 = 8 and w22n-form bound n + off + 4 <= w2n x3.
+- NOT established: a terminating refund run (resource-limit stop stays
+  admissible); joint satisfiability of the refund premises; argument
+  facts for failed write events (result byte 1); alignment, stack and
+  separation conjuncts; the equivalence of the numeric bound with the
+  word-form conjunct of ffiwrite_call_pre (NOT RUN); any link to the
+  real process. write_call_rel, OS write, loader, slide 0 and
+  not SCTLR_EL1.A stay explicit assumptions.
+- Where the argument facts stop (text inspection, not a proof): the
+  source event holds conf and bytes; cfHeapsBase IO hides the events
+  (SEP_EXISTS events); whole_prog_spec_semantics_prog exports only
+  extract_fs; extract_fs ignores failed writes. compile_correct' needs no
+  change.
+- Smallest missing invariant: every write event of a refund run has result
+  byte 0 (source level, event level, including prefixes). NOT RUN. Not
+  introduced as an assumption.
+- Controls: empty string and empty trace; wrong clen, out-of-bounds and
+  short arrays at the oracle; unreadable arrays; wrong clen register;
+  constructed_successful_write_call_state (constructed model state and
+  file system; NOT a refund execution). check-0002 exit 0: 14 exact
+  statements (4 of U399), 8 scope controls, 536 closure nodes, four bool
+  axioms, forge_compileCorrectControl in the closure.
+- Exits: args-0001..0005 exit 1 (authoring); args-0006 exit 0; check-0001
+  exit 1 (a control in the check script had a wrong expected count; not
+  a theorem defect); check-0002 exit 0. Repeats and the full
+  172-statement import NOT RUN.
+- Uncertainty: single local run of each passing case; cached parents;
+  the source trace of section 5 of the report is inspection only.
+- Impact: M1 stays open. No profile approved. Stage 12 unauthorized.
+  end_to_end=false. Nothing committed.
+- Next check: the bit-vector bridge from the numeric bound to the
+  ffiwrite_call_pre conjunct; then the source-level event invariant.
+- Evidence: proposals/refund-executable-feasibility/m1-write-args-20261116/
+  (REPORT.md, MANIFEST.json, records/).
+
+## U401 — M1 closure audit: M1 needs level B under an approved profile; seven blocking obligations; word-level write bound proved before the audit began
+
+- Status: 2026-11-16. Audit and plan. No replay started. Refs U298, U356,
+  U360, U386–U400.
+- Sequence: the owner first set U401 as a proof mission, then replaced it
+  by an audit. One proof case had finished by then (word-0003). It is
+  recorded; no further proof case was run.
+- Proof evidence (forge_refundWriteWord, word-0003, exit 0, 19 theorems,
+  one run; word-0001, word-0002 exit 1 authoring): the numeric write
+  bound is equivalent to the word-level conjunct of ffiwrite_call_pre
+  (sum below 2^18, unsigned); ffiwrite_call_pre at canonical parameters
+  is equivalent to PC, x1 = 8, the bound and a 12-conjunct residual;
+  the exported file-system specification cannot imply that every write
+  event is successful (replay_ignores_failed_write_with_valid_clen).
+  NOT derived: not word_msb x3. NOT RUN: exact-statement import, repeat,
+  any source-level event invariant.
+- Audit findings: (1) the mission text requires executable correctness
+  under explicit assumptions compatible with an APPROVED profile; no
+  profile is approved. (2) The link from the approved R1-R5 Unicode
+  contract to the HOL model was last recorded open and was not
+  re-audited. (3) Every composed theorem is at slide 0; the binary is
+  PIE; U389 judged slide 0 probably false for a real process (not
+  measured). (4) Premises of the final theorem are not shown jointly
+  satisfiable. (5) Discharge of backend_config_ok, mc_init_ok and
+  opt_eval_config_wf was NOT FOUND in the reports read. (6) Clean
+  replay of the CakeML-dependent chain and independent replay: NOT RUN.
+  (7) Under Profile A the U393-U401 FFI-path work is supporting
+  evidence, not an M1 obligation; the literal ffi_interfer_ok is
+  probably false for the real C code (U393 analysis), so the sound form
+  is the abstract-environment theorem plus one simulation assumption.
+- Uncertainty: U350-U396 were read through two extraction agents;
+  pre-U345 records were not read; "external result" entries in the TCB
+  file are from general knowledge, unchecked.
+- Impact: M1 stays open (PARTIAL by the mission text). No profile
+  approved. Stage 12 unauthorized. end_to_end=false. Nothing committed.
+- Next check: owner decisions (profile; M1 claim text); read-only
+  re-audit of the contract link; then the slide-generic chain.
+- Evidence: proposals/refund-executable-feasibility/m1-closure-audit-20261116/
+  (M1_CLOSURE_AUDIT.md, M1_PROOF_DEPENDENCIES.md,
+  M1_TRUSTED_COMPUTING_BASE.md, M1_CRITICAL_PATH.md, MANIFEST.json,
+  records/).
+
+## U402 — M1 profile decision packet prepared; U401 audit corrected on two points; no approval
+
+- Status: 2026-11-16. Decision preparation only. No proof case, no replay.
+  Refs U258, U262, U295, U327, U328, U356, U360, U386-U392, U401.
+- Correction of U401 (1): refund_behavior_abstract_env does not carry the
+  output equation; io_events is unconstrained (stored statement, env-0005).
+  The output equation is only in refund_behavior_valid_request_no_handler
+  (U387), which is not composed with the entry state. New blocking
+  obligation O3. The U401 files received an appended correction note;
+  their original text is unchanged.
+- Correction of U401 (2): backend_config_ok and mc_init_ok are discharged
+  inside the U386 proof scripts from published arm8_backend_config_ok and
+  arm8_init_ok (real-0004.sml lines 90-91, source-0006.sml lines 58-59);
+  opt_eval_config_wf by definition (source-0006.sml line 61). Not re-run.
+- Findings: Profile A permits the existing proof as a level B claim after
+  approval; Profile B needs a contract change that no document
+  authorizes. The read-error exclusion is free inside the model (U327)
+  but is not authorized: real read errors are documented OS behaviour.
+  The U360 profile text lacks three assumptions (entry state, simulation
+  form of the FFI assumption, file reader). Contract link (U295): both
+  sides are checked at a byte-list interface; the Dafny-HOL
+  identification is a review requirement, not a theorem.
+- Recommendation recorded, not an approval: Profile A with the listed
+  additions. Six questions need the owner's explicit answer.
+- Uncertainty: the slide-generic theorem is not run and may fail on an
+  absolute address; the rejection-case output term was not read from the
+  U388 statements; page alignment of the slide is to be confirmed.
+- Impact: M1 stays open. No profile approved. Stage 12 unauthorized.
+  end_to_end=false. Nothing committed.
+- Next check: owner answers Q1-Q6; then compose the output equation at
+  slide 0 (O3).
+- Evidence: proposals/refund-executable-feasibility/m1-profile-decision-20261116/
+  M1_PROFILE_DECISION.md, MANIFEST.json.
+
+## U403 — restricted Profile A candidate statement prepared for review; four items change the U360 profile; composition for the output equation identified, not run
+
+- Status: 2026-11-16. Document only. No proof case, no replay. Owner
+  accepted U402 as an audit result, not as a profile approval. Refs U295,
+  U327, U360, U387, U388, U389, U392, U401, U402.
+- Candidate claim: level B. Assumptions A1-A10 enumerated separately.
+  Read-error exclusion worded as an environmental precondition of the
+  run, not a macOS property. Domain: canonical nine-field request,
+  present; absent and malformed input outside the claim.
+- Items that CHANGE the U360 Profile A text (need approval as changes):
+  A2 entry state (replaces "state satisfies installed"); A3 FFI
+  simulation (re-forms row 8; informal, no HOL statement); A6 trusted
+  file reader (new); A8 Dafny-to-HOL identification, reviewed and not
+  machine-checked (new).
+- Composition for the slide-0 statement T_A0: refund_installed_abstract_env
+  (U392), refund_mc_is_arm8 (U388),
+  refund_behavior_valid_request_no_handler and
+  refund_u298_exclusion_valid_request (U387), by instantiation and modus
+  ponens. No new lemma expected. NOT RUN; three match checks listed.
+- Slide: T_A specified with free sl, aligned 3 sl and a no-wrap premise;
+  proof steps S1-S6 listed. NOT RUN. May fail on an absolute address.
+- Uncertainty: instantiation types (cbspace, data_sp) not checked by a
+  run; A3 has no formal statement; real slide alignment not used.
+- Impact: M1 stays open. No profile approved. Stage 12 unauthorized.
+  end_to_end=false. Nothing committed.
+- Next check: owner review of R1-R5. No proof run before that.
+- Evidence: proposals/refund-executable-feasibility/m1-profile-a-statement-20261116/
+  M1_PROFILE_A_RESTRICTED.md, MANIFEST.json.
+
+## U404 — A3 formalized as refund_env_ok; slide-0 composition with the output equation proved for every environment record that satisfies it; slide-generic proof prepared, not run
+
+- Status: 2026-11-17. Local, same machine, same agent, cached parents, one
+  run. No clean replay. No independent replay. No native execution.
+  Profile A NOT approved. Refs U387, U388, U391, U392, U393, U401-U403.
+- Definition: refund_env_ok envmc = interference_ok envmc.next_interfer
+  (arm8_target.proj envmc.prog_addresses) and refund_ffi_contract
+  envmc.prog_addresses envmc.ffi_interfer.
+- Proved (forge_refundProfileA, prof-0002, exit 0, 8 theorems):
+  refund_env_ok_iff_installed_residual (the predicate is exactly the U391
+  residual at PC 0x1000040D0); refund_abs_env_is_ok;
+  pc_changing_environment_is_not_ok; refund_profile_a_slide0 (entry
+  premises, refund_env_ok, canonical request, wfcl, wfFS, STD_streams
+  imply: 27 steps to ms, installer exclusion, machine_sem inclusion and
+  the extract_fs output equation, with one shared io_events);
+  refund_profile_a_slide0_abstract_env;
+  refund_profile_a_slide0_every_machine_run (every behaviour of that
+  machine from that state is Terminate Success with the output equation
+  or a resource-limit prefix; a behaviour exists; Fail is excluded).
+- Corrects the U402 gap O3: the output equation is now joined to the
+  entry-state result at slide 0.
+- Six structural controls passed in the run. 535 closure nodes; four
+  bool axioms; forge_compileCorrectControl in the closure.
+- NOT established: refund_env_ok for any real environment (U393 analysis
+  suggests it is false for an exact model of the real C code at
+  unreachable call states; a reachable-call variant needs a variant of
+  the compiler theorem: missing lemma, not added); the entry state;
+  joint satisfiability of all premises; any slide other than 0; the
+  contract link (A8 matrix prepared, 18 rows, all NOT REVIEWED).
+- Slide preparation: static otool disassembly (binary not executed; not
+  a proof) shows the 27 start-up words are PC-relative. adrp needs the
+  slide to be a page multiple: premise aligned 12 sl, which corrects the
+  aligned 3 sl of U403. Steps S1-S6 specified; NOT RUN.
+- Exits: prof-0001 exit 1 (authoring); prof-0002 exit 0; otool exit 0.
+  NOT RUN: repeat, separate import script, joint witness, S1-S6.
+- Uncertainty: one run; no separate statement checker; A8 rows are the
+  author's reading.
+- Impact: M1 stays open. No profile approved. Stage 12 unauthorized.
+  end_to_end=false. Nothing committed.
+- Next check: S1 and S2 of the slide proof; owner review of U403 R1-R5
+  and of the A8 matrix.
+- Evidence: proposals/refund-executable-feasibility/m1-profile-a-slide0-20261117/
+  (REPORT.md, A8_CONTRACT_REVIEW_MATRIX.md, MANIFEST.json, records/).
+
+## U405 — relocation steps S1 and S2 proved for every page-aligned, non-wrapping slide (model); S3-S6 open; reachable-call FFI refinement proposed, not implemented
+
+- Status: 2026-11-17. Local, same machine, same agent, cached parents, one
+  run each. No clean replay. No independent replay. No native execution.
+  Profile A NOT approved. Refs U388, U389, U390, U393, U399, U404.
+- Labels: the U404 plan and the U405 mission text use S1 and S2
+  differently. Both readings were done; the report has the mapping.
+- Definitions: slide_ok sl = aligned 12 sl and sl <=+ 0xFFFFFFFEFFFCF0CF;
+  refund_entry_pre_sl; refund_code_dm_sl, refund_bitmaps_dm_sl,
+  refund_mem_dm_sl, refund_heap_clear_sl (translation form a - sl).
+- Proved, S1 (forge_refundCmlMainSlide, s1-0001, ARMv8 context, exit 0):
+  cml_main_run_sl (27 steps from sl + 0x100004000 to sl + 0x1000040D0;
+  header words are the slide-0 values plus sl); page_of_relocated_address;
+  instances at 0, 0x4000, 0x2F8C000. Nine ADRP results bit-blasted from
+  the alignment fact.
+- Proved (forge_refundSlideEntry, s2-0003, CakeML context, exit 0, 18
+  theorems): refund_entry_pre_sl_IMP_cml_main_pre_sl (file image at the
+  relocated addresses supplies the code bytes); refund_entry_run_sl;
+  slide_zero_entry_is_the_old_entry; arm8_run_constants_agree; S2:
+  refund_code_dm_sl_range, refund_heap_clear_sl_range,
+  refund_shifted_domains_disjoint, shifted_domains_at_slide_zero,
+  relocated_code_addresses_in_shifted_domain.
+- Controls: misaligned slide (page identity false at 0x800); wrapping
+  slide (range form false at 0xFFFFFFFEFFFF0000); page identity not
+  provable without alignment; unrelocated target refuted; changed
+  instruction word rejected; U389 slide-0 theorem loaded unchanged. 536
+  closure nodes; four bool axioms; forge_compileCorrectControl present.
+- NOT established: S3-S6; a state satisfying refund_entry_pre_sl at a
+  nonzero slide (satisfiable at slide 0 only); anything about the
+  loader, dyld, C run-time or a real process.
+- Reachable-call FFI: proposal only. Totalise the real FFI effect on a
+  validity predicate V; L1 contract on V gives the full contract for the
+  totalised effect; L2 the real-effect and totalised machines agree if
+  every call reachable in the totalised machine satisfies V; L3 V at
+  reachable calls per FFI name. compile_correct' unchanged. NOT RUN.
+- Exits: s1-0001 0; s2-0000 1 (runner, source file missing: my shell
+  error); s2-0001 1 (authoring); s2-0002 -24 (CPU limit, metis);
+  s2-0003 0. NOT RUN: repeats, import script.
+- Owner instructions received during the run (2026-11-17): "push when we
+  can as well" and "and update the main readme". These replace the "no
+  commits, pushes" line of the pasted U405 text for documents on the
+  current branch. main is not modified. results/ is not pushed.
+- Impact: M1 stays open. No profile approved. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: S3 (frame lemma at a slide; installed-state clauses).
+- Evidence: proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/
+  (REPORT.md, MANIFEST.json, records/).

@@ -1,0 +1,37 @@
+<<HOL message: Created theory "forge_refundEntrySat">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundEntrySat)>>
+Saved theorem _______ "sat_mem_image"
+CHECKED sat_mem_image
+⊢ refund_image_mem 0w sat_mem
+Saved theorem _______ "sat_slot_0"
+CHECKED sat_slot_0
+⊢ mem_dword sat_mem 0x10002C000w = 0x200000000w
+Saved theorem _______ "sat_slot_8"
+CHECKED sat_slot_8
+⊢ mem_dword sat_mem 0x10002C008w = 0x200010000w
+Saved theorem _______ "sat_slot_16"
+CHECKED sat_slot_16
+⊢ mem_dword sat_mem 0x10002C010w = 0x200020000w
+Saved theorem _______ "sat_separation"
+CHECKED sat_separation
+⊢ ∀i a.
+    i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ 0x200000000w + n2w i ≠ a
+Saved theorem _______ "refund_entry_pre_witness"
+CHECKED refund_entry_pre_witness
+⊢ refund_entry_pre
+    <|MEM := sat_mem; PC := 0x100004000w; PSTATE := <|EL := 0w|>;
+      exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+    0x200020000w
+Saved theorem _______ "refund_entry_pre_satisfiable"
+CHECKED refund_entry_pre_satisfiable
+⊢ ∃s h stk e.
+    refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h
+CLOSURE_NODES 515
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundEntrySat" ... done.
+Theory "forge_refundEntrySat" took 8.6s to build
+EXACT_COMPLETE

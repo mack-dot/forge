@@ -1,0 +1,81 @@
+<<HOL message: Created theory "forge_dbgScratch">>
+SHOW ca
+
+[¬s.SCTLR_EL1.A, acctype ≠ AccType_ATOMIC, acctype ≠ AccType_ORDERED,
+ s.PSTATE.EL = 0w] ⊢ CheckAlignment (address,n,acctype,iswrite) s = s
+SHOW wm2
+
+[¬s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, acctype ≠ AccType_ATOMIC,
+ acctype ≠ AccType_ORDERED, s.PSTATE.EL = 0w]
+⊢ write'Mem (d,address,2,acctype) s =
+  s with MEM := s.MEM⦇address + 1w ↦ (15 >< 8) d; address + 0w ↦ (7 >< 0) d⦈
+SHOW NextStateARM8
+ [s.exception = NoException]
+⊢ Fetch (s with branch_hint := NONE) = (w,s with branch_hint := NONE) ∧
+  Decode w = ast ∧ (∀s. Run ast s = f x s) ∧
+  f x (s with branch_hint := NONE) = s1 ∧ s1.exception = s.exception ⇒
+  NextStateARM8 s =
+  SOME (if s1.branch_hint = NONE then s1 with PC := s1.PC + 4w else s1)
+SHOW wm2n
+ [¬s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, s.PSTATE.EL = 0w]
+⊢ write'Mem (d,address,2,AccType_NORMAL) s =
+  s with MEM := s.MEM⦇address + 1w ↦ (15 >< 8) d; address + 0w ↦ (7 >< 0) d⦈
+SHOW t4
+
+[¬(if v2w [T; F; F; T; T] = 31w then
+    CheckSPAlignment (s with branch_hint := NONE)
+  else (s with branch_hint := NONE)).SCTLR_EL1.A,
+ ¬(if v2w [T; F; F; T; T] = 31w then
+    CheckSPAlignment (s with branch_hint := NONE)
+  else (s with branch_hint := NONE)).SCTLR_EL1.E0E,
+ (if v2w [T; F; F; T; T] = 31w then
+    CheckSPAlignment (s with branch_hint := NONE)
+  else (s with branch_hint := NONE)).PSTATE.EL =
+ 0w]
+⊢ dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+     sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+     v2w [F; T; F; F; T]) (s with branch_hint := NONE) =
+  (if v2w [T; F; F; T; T] = 31w then
+     CheckSPAlignment (s with branch_hint := NONE)
+   else s with branch_hint := NONE) with
+  MEM :=
+    (if v2w [T; F; F; T; T] = 31w then
+       CheckSPAlignment (s with branch_hint := NONE)
+     else (s with branch_hint := NONE)).MEM⦇
+      sw2sw (v2w [F; F; F; F; F; F; F; F; T]) +
+        (if v2w [T; F; F; T; T] = 31w then
+           SP (CheckSPAlignment (s with branch_hint := NONE))
+         else s.REG (v2w [T; F; F; T; T])) + 1w ↦
+        (15 >< 8)
+          (if v2w [F; T; F; F; T] = 31w then 0w
+           else
+             w2w
+               ((if v2w [T; F; F; T; T] = 31w then
+                   CheckSPAlignment (s with branch_hint := NONE)
+                 else (s with branch_hint := NONE)).REG (v2w [F; T; F; F; T])));
+      sw2sw (v2w [F; F; F; F; F; F; F; F; T]) +
+        (if v2w [T; F; F; T; T] = 31w then
+           SP (CheckSPAlignment (s with branch_hint := NONE))
+         else s.REG (v2w [T; F; F; T; T])) ↦
+        (7 >< 0)
+          (if v2w [F; T; F; F; T] = 31w then 0w
+           else
+             w2w
+               ((if v2w [T; F; F; T; T] = 31w then
+                   CheckSPAlignment (s with branch_hint := NONE)
+                 else (s with branch_hint := NONE)).REG (v2w [F; T; F; F; T])))
+    ⦈
+SHOW m4
+
+[¬(s with branch_hint := NONE).SCTLR_EL1.E0E,
+ (s with branch_hint := NONE).PSTATE.EL = 0w, aligned 2 s.PC]
+⊢ Mem (s.PC,4,AccType_IFETCH) (s with branch_hint := NONE) =
+  (mem_word (s with branch_hint := NONE).MEM s.PC,s with branch_hint := NONE)
+SHOW f1
+
+[¬(s with branch_hint := NONE).SCTLR_EL1.E0E,
+ (s with branch_hint := NONE).PSTATE.EL = 0w, aligned 2 s.PC]
+⊢ Fetch (s with branch_hint := NONE) =
+  (mem_word s.MEM s.PC,s with branch_hint := NONE)
+EXPLORE_COMPLETE

@@ -1,0 +1,186 @@
+[
+ {
+  "case": "extract_macho.py",
+  "actual_exit": 0,
+  "kind": "tool: Mach-O layout extraction (read-only); output macho-layout.json"
+ },
+ {
+  "case": "frame-0001",
+  "actual_exit": 0,
+  "wall_seconds": 15.324,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "final: cml_main_run_frame (27 steps with memory frame), ARMv8 context"
+ },
+ {
+  "case": "lemmas-0001",
+  "actual_exit": 1,
+  "wall_seconds": 54.054,
+  "markers": [],
+  "kind": "authoring (induction step; wrapper did not catch store_thm exit)"
+ },
+ {
+  "case": "lemmas-0002",
+  "actual_exit": -15,
+  "wall_seconds": 254.967,
+  "markers": [],
+  "kind": "authoring: a metis call did not end; child stopped by SIGTERM from the operator shell (exit -15)"
+ },
+ {
+  "case": "lemmas-0003",
+  "actual_exit": 0,
+  "wall_seconds": 66.845,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: general memory lemmas"
+ },
+ {
+  "case": "loader-0001",
+  "actual_exit": 1,
+  "wall_seconds": 75.128,
+  "markers": [],
+  "kind": "authoring: stored code is a to_list term on a compute value, not a list literal; the layout check stopped. No byte difference (see REPORT 2)"
+ },
+ {
+  "case": "diag-0001",
+  "actual_exit": -24,
+  "wall_seconds": 152.721,
+  "markers": [],
+  "kind": "TOOL/diagnostic: CPU limit (signal 24) while printing a large term; no theorem"
+ },
+ {
+  "case": "diag-0002",
+  "actual_exit": 0,
+  "wall_seconds": 70.128,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "diagnostic: stored code and data evaluate to list literals (130436, 2531); no theorem stored"
+ },
+ {
+  "case": "loader-0002",
+  "actual_exit": 1,
+  "wall_seconds": 319.951,
+  "markers": [],
+  "kind": "authoring (two proofs); layout, header fields, image lemmas and ML controls passed"
+ },
+ {
+  "case": "loader-0003",
+  "actual_exit": 1,
+  "wall_seconds": 305.819,
+  "markers": [],
+  "kind": "authoring (four proofs)"
+ },
+ {
+  "case": "image-0001",
+  "actual_exit": 0,
+  "wall_seconds": 313.089,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: file constant, layout, Mach-O fields, image predicate"
+ },
+ {
+  "case": "compose-0001",
+  "actual_exit": 1,
+  "wall_seconds": 69.81,
+  "markers": [],
+  "kind": "authoring (entry lemma)"
+ },
+ {
+  "case": "compose-0002",
+  "actual_exit": 1,
+  "wall_seconds": 78.912,
+  "markers": [],
+  "kind": "authoring (main proof structure)"
+ },
+ {
+  "case": "compose-0003",
+  "actual_exit": 0,
+  "wall_seconds": 91.668,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: loader-memory clauses composed with the 27 steps; six negative controls"
+ },
+ {
+  "case": "entrysat-0001",
+  "actual_exit": 1,
+  "wall_seconds": 63.238,
+  "markers": [],
+  "kind": "authoring (normal form of an address)"
+ },
+ {
+  "case": "entrysat-0002",
+  "actual_exit": 0,
+  "wall_seconds": 69.401,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: non-vacuity control"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 1,
+  "wall_seconds": 76.711,
+  "markers": [],
+  "kind": "authoring (expected term not beta-reduced)"
+ },
+ {
+  "case": "import-0002",
+  "actual_exit": 0,
+  "wall_seconds": 62.316,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 46 exact statements, closure, controls"
+ },
+ {
+  "case": "frame-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 14.492,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "lemmas-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 73.04,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "image-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 328.994,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical; round-trip SHA256 equal"
+ },
+ {
+  "case": "compose-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 71.671,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "entrysat-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 72.541,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

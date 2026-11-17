@@ -1,0 +1,44 @@
+{
+ "case": "fault-0003",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008/forge_refundFfiwriteStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008/forge_refundFfiwriteStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0007/forge_refundFfiwriteUnalignedTheory.sig",
+  "/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0007/forge_refundFfiwriteUnalignedTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/fault-0003/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "fault-0003.sml",
+ "source_sha256": "eba26b7dc9fbd0a59cc76358398801746413b8c07274bbcbc38763d7fe45684d",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 31,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 17.767,
+ "child_user_cpu_seconds": 6.715,
+ "child_system_cpu_seconds": 1.223,
+ "child_max_rss_bytes": 573243392,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "c05c95b584a6b22f6621ec563b1fd2c452bba19f8f4cc59f8ec4c71f2b8dde8b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFfiwriteFaultTheory.html": "c4834909646ebf29475ba8de71d346bbc76192ce86622b3eebe41ca6cb4ca297",
+  ".hol/objs/forge_refundFfiwriteFaultTheory.dat": "9ec068607457e48a99c0b0bc77cc5c29dd6afad6a971d790fcf76dde6b7097bb",
+  ".hol/objs/forge_refundFfiwriteFaultTheory.sig": "25ed64c7c3f77a75f2da40006fd7f766363893d3c2053313b5dad6a9754dc8db",
+  ".hol/objs/forge_refundFfiwriteFaultTheory.sml": "20393ff6c868c0986215b59c8aa14f0c470db911e0aa7d915fa8a4ccd05454ac"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

@@ -1,0 +1,94 @@
+<<HOL message: Created theory "forge_refundFficloseBridge">>
+Saved theorem _______ "refund_file_fficlose_words"
+CHECKED refund_file_fficlose_words
+⊢ TAKE 4 (DROP 16512 refund_file) = [120w; 132w; 0w; 20w] ∧
+  TAKE 68 (DROP 152160 refund_file) =
+  [244w; 79w; 190w; 169w; 253w; 123w; 1w; 169w; 253w; 67w; 0w; 145w; 127w;
+   0w; 0w; 241w; 173w; 1w; 0w; 84w; 63w; 32w; 0w; 241w; 129w; 1w; 0w; 84w;
+   243w; 3w; 2w; 170w; 8w; 4w; 64w; 185w; 0w; 9w; 192w; 90w; 153w; 1w; 0w;
+   148w; 31w; 0w; 0w; 113w; 232w; 7w; 159w; 26w; 104w; 2w; 0w; 57w; 253w;
+   ... ] ∧
+  TAKE 12 (DROP 153836 refund_file) =
+  [16w; 0w; 0w; 240w; 16w; 18w; 64w; 249w; 0w; 2w; 31w; 214w]
+Saved theorem _______ "bytes_in_memory_slice"
+CHECKED bytes_in_memory_slice
+⊢ ∀f a m N off n.
+    bytes_in_memory a (TAKE N f) m 𝕌(:word64) ∧ off + n ≤ N ∧ N ≤ LENGTH f ⇒
+    bytes_in_memory (a + n2w off) (TAKE n (DROP off f)) m 𝕌(:word64)
+Saved theorem _______ "refund_image_fficlose_code"
+CHECKED refund_image_fficlose_code
+⊢ ∀m. refund_image_mem 0w m ⇒ fficlose_code_bytes m
+Saved theorem _______ "cake_fficlose_stub_exact"
+CHECKED cake_fficlose_stub_exact
+⊢ arm8_user s ∧ s.PC = 0x100004080w ∧ refund_image_mem 0w s.MEM ⇒
+  ∃s1.
+    arm8_run 1 s = SOME s1 ∧ s1.PC = 0x100025260w ∧ s1.REG = s.REG ∧
+    s1.MEM = s.MEM ∧ s1.SP_EL0 = s.SP_EL0 ∧ s1.PSTATE = s.PSTATE ∧
+    s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFficloseBridge)>>
+Saved theorem _______ "arm8_run_add"
+CHECKED arm8_run_add
+⊢ ∀n1 n2 s s1 s2.
+    arm8_run n1 s = SOME s1 ∧ arm8_run n2 s1 = SOME s2 ⇒
+    arm8_run (n1 + n2) s = SOME s2
+Saved theorem _______ "cake_fficlose_to_import_branch"
+CHECKED cake_fficlose_to_import_branch
+⊢ arm8_user s ∧ s.PC = 0x100004080w ∧ refund_image_mem 0w s.MEM ∧
+  s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 0w = c ∧ aligned 2 c ∧
+  s.REG 1w = 8w ∧ ¬word_msb (s.REG 3w) ∧ s.REG 3w ≠ 0w ∧
+  mem_dword s.MEM 0x100028020w = g ∧
+  (∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a) ∧
+  (∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j) ⇒
+  ∃s1.
+    arm8_run 15 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002528Cw ∧
+    s1.REG 19w = s.REG 2w ∧ s1.REG 29w = b + 16w ∧ s1.REG 16w = g ∧
+    s1.SP_EL0 = b ∧
+    s1.REG 0w =
+    w2w
+      ((7 >< 0)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (15 >< 8)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (23 >< 16)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (31 >< 24)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w))))) ∧
+    s1.PSTATE.EL = 0w ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧ mem_dword s1.MEM b = s.REG 20w ∧
+    mem_dword s1.MEM (b + 8w) = s.REG 19w ∧
+    mem_dword s1.MEM (b + 16w) = s.REG 29w ∧
+    mem_dword s1.MEM (b + 24w) = s.REG 30w ∧
+    (∀q. (∀i. i < 32 ⇒ q ≠ b + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 0w ∧ r ≠ 8w ∧ r ≠ 16w ∧ r ≠ 19w ∧ r ≠ 29w ∧ r ≠ 30w ⇒
+        s1.REG r = s.REG r
+Saved theorem _______ "stub_only_ffi_rejected"
+CHECKED stub_only_ffi_rejected
+⊢ ¬ffi_interfer_ok 0x1000040D0w
+    (refund_mc 0x1000040D0w (envmc with ffi_interfer := refund_stub_only_ffi))
+Saved theorem _______ "altered_stub_byte_rejected"
+CHECKED altered_stub_byte_rejected
+⊢ ∀m. m 0x100004080w ≠ 120w ⇒ ¬refund_image_mem 0w m
+Saved theorem _______ "altered_stub_word_not_in_file"
+CHECKED altered_stub_word_not_in_file
+⊢ TAKE 4 (DROP 16512 refund_file) ≠ [121w; 132w; 0w; 20w]
+CLOSURE_NODES 522
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundFficloseBridge" ... done.
+Theory "forge_refundFficloseBridge" took 1m48s to build
+EXACT_COMPLETE

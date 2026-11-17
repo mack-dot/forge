@@ -1,0 +1,30 @@
+<<HOL message: Created theory "forge_loaderMemLemmas">>
+Saved theorem _______ "bytes_in_memory_univ_EL"
+CHECKED bytes_in_memory_univ_EL
+⊢ ∀bs a m.
+    bytes_in_memory a bs m 𝕌(:α word) ⇔
+    ∀i. i < LENGTH bs ⇒ m (a + n2w i) = bs❲i❳
+Saved theorem _______ "bytes_in_memory_univ_frame"
+CHECKED bytes_in_memory_univ_frame
+⊢ ∀bs a m m'.
+    bytes_in_memory a bs m 𝕌(:α word) ∧
+    (∀i. i < LENGTH bs ⇒ m' (a + n2w i) = m (a + n2w i)) ⇒
+    bytes_in_memory a bs m' 𝕌(:α word)
+SHOW MEM2
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_loaderMemLemmas)>>
+  ASM a ∈ k
+  ASM bytes_in_memory (a + 1w) bs m 𝕌(:α word)
+  ASM m a = h
+  ASM ∀a m md k.
+  bytes_in_mem a bs m md k ⇔
+  bytes_in_memory a bs m 𝕌(:α word) ∧
+  ∀i. i < LENGTH bs ⇒ a + n2w i ∈ md ∧ a + n2w i ∉ k
+  GOAL i < LENGTH bs ∧ (a + n2w i + 1w ∉ md ∨ a + n2w i + 1w ∈ k)
+Proof of 
+
+∀bs a m md k.
+  bytes_in_mem a bs m md k ⇔
+  bytes_in_memory a bs m 𝕌(:α word) ∧
+  ∀i. i < LENGTH bs ⇒ a + n2w i ∈ md ∧ a + n2w i ∉ k
+
+failed.

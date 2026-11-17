@@ -1,0 +1,5 @@
+<<HOL message: Created theory "forge_refundWriteArgs">>
+USED ⊢ parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+  INR (refund_response ok a r c q n,"")
+USED ⊢ ∀input x rest. parse input = INR (x,rest) ⇒ STRLEN rest < STRLEN input
+MARK NE

@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_simZeroCase">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simZeroCase)>>
+Saved theorem _______ "install_entry_distinct"
+Saved theorem _______ "state_rel_no_install_prefix_zero"
+Saved theorem _______ "install_entry_wrap_example"
+CHECKED install_entry_distinct
+⊢ ∀p x.
+    x + 2 * ffi_offset < dimword (:α) ⇒ p + n2w x ≠ p − n2w (2 * ffi_offset)
+CHECKED state_rel_no_install_prefix_zero
+⊢ state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧
+  pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword (:α) ⇒
+  no_install_prefix mc_conf ffi 0 ms1
+CHECKED install_entry_wrap_example
+⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+Exporting theory "forge_simZeroCase" ... done.
+Theory "forge_simZeroCase" took 1.3s to build
+P3_PROOF_COMPLETE

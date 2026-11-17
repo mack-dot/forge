@@ -1,0 +1,42 @@
+IMPORTED run_head_ordinary EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED run_interior_ordinary EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED segment_interior_ordinary EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED segment_end_no_install_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED segment_compose_no_install_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED asm_step_IMP_evaluate_step_find_next_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED asm_step_IMP_evaluate_step_nop_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED asm_step_IMP_evaluate_step_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED state_rel_segment_compose EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED interior_install_example EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED endpoint_correspondence_insufficient EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS 11 EXPECTED 11
+DEFINITION forge_toy_mc_def
+⊢ forge_toy_mc =
+  <|prog_addresses := {0w}; ffi_entry_pcs := []; halt_pc := 5w;
+    install_pc := 1w; ptr_reg := 0; len_reg := 0;
+    next_interfer := (λk ms. ms); install_interfer := (λk x. 2);
+    target :=
+      <|get_pc := (λms. n2w ms); get_byte := (λms a. 0w);
+        get_reg := (λms r. 0w); next := SUC; state_ok := (λms. T);
+        config := <|encode := (λi. [0w]); code_alignment := 0|> |> |>
+DEFINITION forge_toy_mc2_def
+⊢ forge_toy_mc2 =
+  forge_toy_mc with
+  <|next_interfer := shift_seq 1 forge_toy_mc.next_interfer;
+    install_interfer := shift_seq 1 forge_toy_mc.install_interfer|>
+NEGATIVE_CONTROL_KEPT wraparound ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+NEGATIVE_CONTROL_KEPT interior ⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+AFTER_POSITIVE_AUDIT
+CONTROL_OK weaker-premise statements are not the stored ones
+CONTROL_OK checker rejects a changed statement
+CLOSURE_NODES 296
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P3_IMPORT_COMPLETE

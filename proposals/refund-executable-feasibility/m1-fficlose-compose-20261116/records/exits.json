@@ -1,0 +1,169 @@
+[
+ {
+  "case": "assert-0001",
+  "actual_exit": 0,
+  "wall_seconds": 10.805,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "final: two assertion paths of fficlose (alen = 0; clen <> 8), ARMv8 context"
+ },
+ {
+  "case": "compose-0001",
+  "actual_exit": 1,
+  "wall_seconds": 90.689,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0002",
+  "actual_exit": 1,
+  "wall_seconds": 63.921,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0003",
+  "actual_exit": 1,
+  "wall_seconds": 91.319,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0004",
+  "actual_exit": 1,
+  "wall_seconds": 112.354,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0005",
+  "actual_exit": 1,
+  "wall_seconds": 93.008,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0006",
+  "actual_exit": 1,
+  "wall_seconds": 72.791,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0007",
+  "actual_exit": 1,
+  "wall_seconds": 87.855,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0008",
+  "actual_exit": 1,
+  "wall_seconds": 90.645,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0009",
+  "actual_exit": 1,
+  "wall_seconds": 56.32,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0010",
+  "actual_exit": 1,
+  "wall_seconds": 58.461,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0011",
+  "actual_exit": 1,
+  "wall_seconds": 73.23,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0012",
+  "actual_exit": 1,
+  "wall_seconds": 94.196,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0013",
+  "actual_exit": 1,
+  "wall_seconds": 106.384,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0014",
+  "actual_exit": 0,
+  "wall_seconds": 89.675,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "exit 0: definitions, composed theorem and contract-instance theorem checked; superseded by compose-0018 (adds witnesses, oracle fact, controls)"
+ },
+ {
+  "case": "compose-0015",
+  "actual_exit": 1,
+  "wall_seconds": 106.438,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0016",
+  "actual_exit": 1,
+  "wall_seconds": 97.388,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0017",
+  "actual_exit": 1,
+  "wall_seconds": 158.243,
+  "markers": [],
+  "kind": "authoring (tactic structure, instantiation, variable names); no logical failure"
+ },
+ {
+  "case": "compose-0018",
+  "actual_exit": 0,
+  "wall_seconds": 146.297,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: composed path, contract instance for close, non-vacuity witnesses, oracle fact, negative controls"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 123.72,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 122 statements (120 exact, 2 identical to published), structural checks, 525 closure nodes, controls"
+ },
+ {
+  "case": "assert-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 10.201,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "compose-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 96.158,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

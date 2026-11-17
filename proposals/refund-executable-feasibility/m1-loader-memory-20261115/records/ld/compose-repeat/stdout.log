@@ -1,0 +1,112 @@
+<<HOL message: Created theory "forge_refundLoaderMemory">>
+SAMPLE ⊢ code❲0❳ = 126w
+SAMPLE ⊢ code❲4❳ = 222w
+SAMPLE ⊢ data❲0❳ = 4
+SAMPLE ⊢ data❲1❳ = 16
+SAMPLE ⊢ HD data = 4
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLoaderMemory)>>
+Saved theorem _______ "refund_bitmaps_dm_aligned"
+CHECKED refund_bitmaps_dm_aligned
+⊢ ∀x. x ∈ byte_aligned ∩ refund_bitmaps_dm ⇔
+      ∃i. i < LENGTH data ∧ x = 0x10002C018w + n2w i * 8w
+Saved theorem _______ "refund_bitmaps_dm_closed"
+CHECKED refund_bitmaps_dm_closed
+⊢ ∀a. byte_align a ∈ refund_bitmaps_dm ⇒ a ∈ refund_bitmaps_dm
+Saved theorem _______ "refund_image_bitmap_clause"
+CHECKED refund_image_bitmap_clause
+⊢ ∀m. refund_image_mem 0w m ⇒
+      (λm.
+         (word_list 0x10002C018w (MAP (Word ∘ n2w) data) *
+          word_list_exists (0x10002C018w + bytes_in_word * n2w (LENGTH data))
+            0)
+           (fun2set
+              ((λa. Word (mem_dword m a)),byte_aligned ∩ refund_bitmaps_dm)))
+        m
+Saved theorem _______ "code_loaded_from_memory"
+CHECKED code_loaded_from_memory
+⊢ ∀bs mc0 ms.
+    is_arm8_machine_config mc0 ∧ bytes_in_memory ms.PC bs ms.MEM 𝕌(:word64) ∧
+    (∀i. i < LENGTH bs ⇒ ms.PC + n2w i ∈ mc0.prog_addresses) ⇒
+    code_loaded bs mc0 ms
+Saved theorem _______ "refund_image_preserved"
+CHECKED refund_image_preserved
+⊢ ∀m m' h.
+    refund_image_mem 0w m ∧
+    (∀i a. i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ h + n2w i ≠ a) ∧
+    (∀a. (∀i. i < 40 ⇒ a ≠ h + n2w i) ⇒ m' a = m a) ⇒
+    refund_image_mem 0w m'
+DEFINITION ⊢ ∀s h stk e.
+    refund_entry_pre s h stk e ⇔
+    ¬s.SCTLR_EL1.E0E ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧
+    s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.PC = 0x100004000w ∧
+    mem_dword s.MEM 0x10002C000w = h ∧ mem_dword s.MEM 0x10002C008w = stk ∧
+    mem_dword s.MEM 0x10002C010w = e ∧ aligned 3 h ∧
+    (∀i a. i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ h + n2w i ≠ a) ∧
+    refund_image_mem 0w s.MEM
+Saved theorem _______ "refund_entry_pre_IMP_cml_main_pre"
+CHECKED refund_entry_pre_IMP_cml_main_pre
+⊢ refund_entry_pre s h stk e ⇒ cml_main_pre s h stk e
+Saved theorem _______ "refund_loader_startup"
+CHECKED refund_loader_startup
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧ ms.REG 1w = h ∧
+    ms.REG 3w = e ∧ refund_image_mem 0w ms.MEM ∧
+    bytes_in_memory ms.PC code ms.MEM 𝕌(:word64) ∧
+    (∀md k.
+       (∀i. i < LENGTH code ⇒ ms.PC + n2w i ∈ md ∧ ms.PC + n2w i ∉ k) ⇒
+       bytes_in_mem ms.PC code ms.MEM md k) ∧
+    (∀mc0.
+       is_arm8_machine_config mc0 ∧
+       (∀i. i < LENGTH code ⇒ ms.PC + n2w i ∈ mc0.prog_addresses) ⇒
+       code_loaded code mc0 ms) ∧
+    (word_list 0x10002C018w (MAP (Word ∘ n2w) data) *
+     word_list_exists (0x10002C018w + bytes_in_word * n2w (LENGTH data)) 0)
+      (fun2set
+         ((λa. Word (mem_dword ms.MEM a)),byte_aligned ∩ refund_bitmaps_dm)) ∧
+    (∀a. ∃w.
+       ms.MEM a = get_byte a w F ∧
+       Word (mem_dword ms.MEM (byte_align a)) = Word w) ∧
+    ∀mc0 t.
+      is_arm8_machine_config mc0 ∧ target_state_rel mc0.target t ms ∧
+      target_configured t mc0 ⇒
+      refund_startup_clause mc0 ms t (λa. Word (mem_dword ms.MEM a))
+        0x10002C018w 428 0
+Saved theorem _______ "code_byte_change_rejected"
+CHECKED code_byte_change_rejected
+⊢ ∀i a m md k.
+    i < LENGTH code ∧ m (a + n2w i) ≠ code❲i❳ ⇒ ¬bytes_in_mem a code m md k
+Saved theorem _______ "code_overlap_rejected"
+CHECKED code_overlap_rejected
+⊢ ∀i a m md k. i < LENGTH code ∧ a + n2w i ∈ k ⇒ ¬bytes_in_mem a code m md k
+Saved theorem _______ "bitmap_word_change_rejected"
+CHECKED bitmap_word_change_rejected
+⊢ ∀m dm r i.
+    i < LENGTH data ∧ mem_dword m (0x10002C018w + n2w (8 * i)) ≠ n2w data❲i❳ ⇒
+    ¬(word_list 0x10002C018w (MAP (Word ∘ n2w) data) * r)
+      (fun2set ((λa. Word (mem_dword m a)),dm))
+Saved theorem _______ "code_wrong_offset_rejected"
+CHECKED code_wrong_offset_rejected
+⊢ ∀m md k. refund_image_mem 0w m ⇒ ¬bytes_in_mem 0x1000040D4w code m md k
+Saved theorem _______ "bitmap_wrong_offset_rejected"
+CHECKED bitmap_wrong_offset_rejected
+⊢ ∀m dm r.
+    refund_image_mem 0w m ⇒
+    ¬(word_list 0x10002C020w (MAP (Word ∘ n2w) data) * r)
+      (fun2set ((λa. Word (mem_dword m a)),dm))
+Saved theorem _______ "header_on_bitmaps_refuted"
+CHECKED header_on_bitmaps_refuted
+⊢ cml_main_pre s 0x10002C018w stk e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧
+    ∀dm r.
+      ¬(word_list 0x10002C018w (MAP (Word ∘ n2w) data) * r)
+        (fun2set ((λa. Word (mem_dword ms.MEM a)),dm))
+CLOSURE_NODES 514
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundLoaderMemory" ... done.
+Theory "forge_refundLoaderMemory" took 16.8s to build
+EXACT_COMPLETE

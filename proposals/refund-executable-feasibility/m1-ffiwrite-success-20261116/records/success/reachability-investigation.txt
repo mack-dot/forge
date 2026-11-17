@@ -1,0 +1,47 @@
+# Formal reachability of the write call: investigation record (text inspection of theorem statements and sources; NOT a proof)
+## 1. The exported top-level theorem leaves the event trace unconstrained (U392, env-0005 stdout lines 181-190)
+CHECKED refund_behavior_abstract_env
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    ∃io_events.
+      machine_sem (refund_mc 0x1000040D0w (refund_abs_env envmc))
+        (basis_ffi ext cl fs) ms ⊆
+      extend_with_resource_limit {Terminate Success io_events}
+## 2. The source-level specification does constrain standard output (forge_refundStdioProgScript.sml)
+24:    (POSTv v. &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+27:  xlet ‘POSTv v. &OPTION_TYPE FILENAME NONE v * STDIO fs’
+29:  xlet ‘POSTv v. &OPTION_TYPE STRING_TYPE (SOME (implode text)) v *
+37:  xlet ‘POSTv v. &STRING_TYPE output v * STDIO (fastForwardFD fs 0)’
+49:  xlet ‘POSTv v. &OPTION_TYPE FILENAME NONE v * STDIO fs’
+51:  xlet ‘POSTv v. &OPTION_TYPE STRING_TYPE (SOME (implode text)) v *
+## 3. extract_fs replays events through the oracle functions (basis_ffiScript.sml 133-146, 177-181)
+Definition extract_fs_with_numchars_def:
+  (extract_fs_with_numchars ext (st:mlstring list # IO_fs) [] = SOME st) ∧
+  (extract_fs_with_numchars ext st ((IO_event (ExtCall name) conf bytes)::xs) =
+    case (ALOOKUP (SND(SND fs_ffi_part)) name) of
+    | SOME ffi_fun => (case ffi_fun conf (MAP FST bytes) (SND st) of
+                       | SOME (FFIreturn bytes' fs') =>
+                         if bytes' = MAP SND bytes then
+                           extract_fs_with_numchars ext (FST st,fs') xs
+                         else NONE
+                       | _ => NONE)
+    | NONE =>
+      if is_basis_ffi_name name then
+        extract_fs_with_numchars ext st xs
+      else
+Definition extract_fs_def:
+  extract_fs ext st events =
+    OPTION_MAP (numchars_fupd (K (SND st).numchars) o SND)
+    (extract_fs_with_numchars ext st events)
+End
+## 4. Target semantics: io_events grow only in the FFI branch of evaluate (targetSemScript.sml), and machine_step (U395) covers the normal and ExtCall branches
+169:                                       (case call_FFI ffi (EL ffi_index mc.ffi_names) [nb]
+190:                                       (case call_FFI ffi (EL ffi_index mc.ffi_names) [nb]
+210:                           (case call_FFI ffi (EL ffi_index mc.ffi_names) bytes bytes2 of
+## sha256
+74862cf9782eaca3cf07d4c4e9aa08305947800973fc0e5077cdff9a148948db  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/basis_ffiScript.sml
+3461ae187c37eec2b63c41608b69b880d65aceb397ff2c691c96ce5e86a63422  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/backend/semantics/targetSemScript.sml
+6f7aa17a5c671d83c94d2726932a7757083e30ee5508cce64f667f43138e0a68  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundStdioProg_experiment/forge_refundStdioProgScript.sml

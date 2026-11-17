@@ -1,0 +1,200 @@
+<<HOL message: Created theory "forge_refundExclusionChain">>
+Proved triviality ___ "enc_with_nop_thm"
+Proved triviality ___ "UPDATE_COND_PUSH"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundExclusionChain)>>
+Proved triviality ___ "all_enc_ok_prog_to_bytes_EVEN"
+Proved triviality ___ "i2w_sub_nat"
+Proved triviality ___ "i2w_neg_nat"
+Proved triviality ___ "find_index_MAP_w2n"
+Proved triviality ___ "all_enc_ok_pre_filter_skip"
+Saved definition ____ "nip_goal_def"
+Saved theorem _______ "exclusion_mid"
+<<HOL message: Stashing suspended theorem IMP_state_rel_make_init with pending subgoals: ISR1, ISR10, ISR11, ISR12, ISR13, ISR14, ISR15, ISR16, ISR17, ISR2, ISR3, ISR4, ISR5, ISR6, ISR7, ISR8, ISR9.>>
+Saved theorem _______ "IMP_state_rel_make_init"
+Saved theorem _______ "nip_make_init"
+NIP_MAKE_INIT
+⊢ encoder_correct mc_conf.target ∧ good_code mc_conf.target.config LN code ∧
+  mc_conf_ok mc_conf ∧
+  (no_share_mem_inst code ⇒
+   compiler_oracle_ok coracle labs (LENGTH (prog_to_bytes code2))
+     mc_conf.target.config mc_conf.ffi_names) ∧
+  list_subset (FILTER (λx. ∃s. x = ExtCall s) (find_ffi_names code))
+    (TAKE i mc_conf.ffi_names) ∧
+  remove_labels clock mc_conf.target.config 0 LN (TAKE i mc_conf.ffi_names)
+    code = SOME (code2,labs) ∧
+  good_init_state mc_conf ms (prog_to_bytes code2) cbspace t m dm sdm ∧
+  get_shmem_info code2 0 [] [] = (new_ffi_names,shmem_info) ∧
+  new_shmem_info =
+  MAP
+    (λrec.
+       rec with
+       <|entry_pc := w2n (mc_conf.target.get_pc ms) + rec.entry_pc;
+         exit_pc := w2n (mc_conf.target.get_pc ms) + rec.exit_pc|>)
+    shmem_info ∧ DROP i mc_conf.ffi_names = new_ffi_names ∧
+  mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+  MAP (λrec. rec.entry_pc) new_shmem_info =
+  DROP i (MAP w2n mc_conf.ffi_entry_pcs) ∧
+  mc_conf.mmio_info =
+  ZIP
+    (GENLIST (λindex. index + i) (LENGTH new_shmem_info),
+     MAP
+       (λrec.
+          (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,n2w rec.exit_pc))
+       new_shmem_info) ∧ no_install_or_no_share_mem code mc_conf.ffi_names ∧
+  (∀bn.
+     bn < cbspace ⇒
+     ¬MEM
+       (n2w bn + n2w (LENGTH (prog_to_bytes code2)) +
+        mc_conf.target.get_pc ms) (TAKE i mc_conf.ffi_entry_pcs)) ∧
+  semantics
+    (make_init mc_conf ffi t m dm sdm ms code
+       (compile_lab mc_conf.target.config)
+       (mc_conf.target.get_pc ms + n2w (LENGTH (prog_to_bytes code2)))
+       cbspace coracle) ≠ Fail ⇒
+  nip_goal Inv mc_conf ffi ms
+    (make_init mc_conf ffi t m dm sdm ms code
+       (compile_lab mc_conf.target.config)
+       (mc_conf.target.get_pc ms + n2w (LENGTH (prog_to_bytes code2)))
+       cbspace coracle) code2
+FIDELITY antecedent of nip_make_init equals antecedent of the published semantics_make_init
+FIDELITY simplified antecedents equal
+Saved theorem _______ "compile_install_exclusion"
+GENERIC_CHAIN_PROVED
+Saved theorem _______ "refund_compile_install_exclusion"
+CHECKED refund_compile_install_exclusion
+⊢ mc_conf_ok mc_conf ∧
+  (no_share_mem_inst
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config refund_alloc_oracle)
+              refund_prog))) ⇒
+   compiler_oracle_ok coracle c'.labels (LENGTH bytes) asm_conf
+     mc_conf.ffi_names) ∧
+  good_code mc_conf.target.config LN
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) ∧
+  asm_conf = mc_conf.target.config ∧ isEmpty c.labels ∧ c.pos = 0 ∧
+  compile asm_conf c
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  SOME (bytes,c') ∧ c'.ffi_names = SOME mc_conf.ffi_names ∧
+  good_init_state mc_conf ms bytes cbspace t m dm sdm ∧
+  MAP (λrec. w2n (mc_conf.target.get_pc ms) + rec.entry_pc) c'.shmem_extra =
+  DROP i (MAP w2n mc_conf.ffi_entry_pcs) ∧
+  mc_conf.mmio_info =
+  ZIP
+    (GENLIST (λindex. index + i) (LENGTH c'.shmem_extra),
+     MAP
+       (λrec.
+          (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+           n2w rec.exit_pc + mc_conf.target.get_pc ms)) c'.shmem_extra) ∧
+  no_install_or_no_share_mem
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+    mc_conf.ffi_names ∧ mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+  cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64) ∧
+  (∀ffis. c.ffi_names = SOME ffis ⇒ EVERY (λx. ∃s. x = ExtCall s) ffis) ∧
+  semantics
+    (make_init mc_conf ffi t m dm sdm ms
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))) (compile asm_conf)
+       (mc_conf.target.get_pc ms + n2w (LENGTH bytes)) cbspace coracle) ≠
+  Fail ⇒
+  ∀n. no_install_prefix mc_conf ffi n ms
+EXACT_PREMISE_COUNT 16 GENERIC_PREMISE_COUNT 18
+CONTROL_OK no invariant premise remains in the exact theorem
+CHECKED exclusion_mid
+⊢ ∀mc_conf p ms s1 code2 labs t1 Inv.
+    encoder_correct mc_conf.target ⇒
+    state_rel (mc_conf,code2,labs,p) s1 t1 ms ⇒
+    oracle_tie mc_conf ms s1 ⇒
+    semantics s1 ≠ Fail ⇒
+    nip_goal Inv mc_conf s1.ffi ms s1 code2
+CHECKED IMP_state_rel_make_init
+⊢ good_code mc_conf.target.config LN code ∧ mc_conf_ok mc_conf ∧
+  (no_share_mem_inst code ⇒
+   compiler_oracle_ok coracle labs (LENGTH (prog_to_bytes code2))
+     mc_conf.target.config mc_conf.ffi_names) ∧
+  list_subset (FILTER (λx. ∃s. x = ExtCall s) (find_ffi_names code))
+    (TAKE i mc_conf.ffi_names) ∧
+  remove_labels clock mc_conf.target.config 0 LN (TAKE i mc_conf.ffi_names)
+    code = SOME (code2,labs) ∧
+  good_init_state mc_conf ms (prog_to_bytes code2) cbspace t m dm sdm ∧
+  get_shmem_info code2 0 [] [] = (new_ffi_names,shmem_info) ∧
+  new_shmem_info =
+  MAP
+    (λrec.
+       rec with
+       <|entry_pc := w2n (mc_conf.target.get_pc ms) + rec.entry_pc;
+         exit_pc := w2n (mc_conf.target.get_pc ms) + rec.exit_pc|>)
+    shmem_info ∧ DROP i mc_conf.ffi_names = new_ffi_names ∧
+  mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+  MAP (λrec. rec.entry_pc) new_shmem_info =
+  DROP i (MAP w2n mc_conf.ffi_entry_pcs) ∧
+  mc_conf.mmio_info =
+  ZIP
+    (GENLIST (λindex. index + i) (LENGTH new_shmem_info),
+     MAP
+       (λrec.
+          (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,n2w rec.exit_pc))
+       new_shmem_info) ∧ no_install_or_no_share_mem code mc_conf.ffi_names ∧
+  (∀bn.
+     bn < cbspace ⇒
+     ¬MEM
+       (n2w bn + n2w (LENGTH (prog_to_bytes code2)) +
+        mc_conf.target.get_pc ms) (TAKE i mc_conf.ffi_entry_pcs)) ⇒
+  state_rel (mc_conf,code2,labs,mc_conf.target.get_pc ms)
+    (make_init mc_conf ffi t m dm sdm ms code
+       (compile_lab mc_conf.target.config)
+       (mc_conf.target.get_pc ms + n2w (LENGTH (prog_to_bytes code2)))
+       cbspace coracle) t ms
+CHECKED compile_install_exclusion
+⊢ mc_conf_ok mc_conf ∧
+  (no_share_mem_inst code ⇒
+   compiler_oracle_ok coracle c'.labels (LENGTH bytes) asm_conf
+     mc_conf.ffi_names) ∧ good_code mc_conf.target.config LN code ∧
+  asm_conf = mc_conf.target.config ∧ isEmpty c.labels ∧ c.pos = 0 ∧
+  compile asm_conf c code = SOME (bytes,c') ∧
+  c'.ffi_names = SOME mc_conf.ffi_names ∧
+  good_init_state mc_conf ms bytes cbspace t m dm sdm ∧
+  MAP (λrec. w2n (mc_conf.target.get_pc ms) + rec.entry_pc) c'.shmem_extra =
+  DROP i (MAP w2n mc_conf.ffi_entry_pcs) ∧
+  mc_conf.mmio_info =
+  ZIP
+    (GENLIST (λindex. index + i) (LENGTH c'.shmem_extra),
+     MAP
+       (λrec.
+          (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+           n2w rec.exit_pc + mc_conf.target.get_pc ms)) c'.shmem_extra) ∧
+  no_install_or_no_share_mem code mc_conf.ffi_names ∧
+  mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+  cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:α) ∧
+  (∀ffis. c.ffi_names = SOME ffis ⇒ EVERY (λx. ∃s. x = ExtCall s) ffis) ∧
+  semantics
+    (make_init mc_conf ffi t m dm sdm ms code (compile asm_conf)
+       (mc_conf.target.get_pc ms + n2w (LENGTH bytes)) cbspace coracle) ≠
+  Fail ∧ lab_step_closed Inv ∧
+  (∀k. Inv
+         (make_init mc_conf ffi t m dm sdm ms (filter_skip code)
+            (compile_lab mc_conf.target.config)
+            (mc_conf.target.get_pc ms + n2w (LENGTH bytes)) cbspace
+            ((λ(a,b). (a,filter_skip b)) ∘ coracle) with clock := k)) ⇒
+  ∀n. no_install_prefix mc_conf ffi n ms
+ORIGIN_OK exclusion_mid
+ORIGIN_OK IMP_state_rel_make_init
+ORIGIN_OK nip_make_init
+ORIGIN_OK compile_install_exclusion
+ORIGIN_OK refund_compile_install_exclusion
+Exporting theory "forge_refundExclusionChain" ... done.
+Theory "forge_refundExclusionChain" took 22.7s to build
+EXACT_COMPLETE

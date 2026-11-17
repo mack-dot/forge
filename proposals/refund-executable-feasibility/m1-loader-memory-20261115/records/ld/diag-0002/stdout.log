@@ -1,0 +1,16 @@
+CODE_HEAD to_list : :(cv -> word8) -> cv -> word8 list
+CODE_ARG head to_word nargs 0 size 1
+CODE_ARG head cv$Pair nargs 2 size 1091536
+DATA_HEAD to_list : :(cv -> num) -> cv -> num list
+DATA_ARG head cv$c2n nargs 0 size 1
+DATA_ARG head cv$Pair nargs 2 size 53473
+EVAL_CODE seconds 16.294
+CODE_LEN 130436
+EL 126w aconv_mk_wordii true
+EL 0w aconv_mk_wordii true
+EL 3w aconv_mk_wordii true
+EL 170w aconv_mk_wordii true
+EVAL_TAG oracles DISK_THM axioms 0 hyps 0
+EVAL_DATA seconds 0.182
+DATA_LEN 2531 first 4
+EXPLORE_COMPLETE

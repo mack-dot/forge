@@ -1,0 +1,49 @@
+<<HOL message: Created theory "forge_p2Explore">>
+Saved definition ____ "val_inv_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "step_ok_def"
+Saved definition ____ "region_hyp_def"
+OK..
+AFTER inst: 0 goals, proved=true
+Saved definition ____ "region_inv_def"
+OK..
+AFTER wb: 0 goals, proved=true
+OK..
+STEP_FAILED st-unfold 
+Exception raised at Tactical.THEN1: first subgoal not solved by second tactic
+
+AFTER failure of st-unfold: 1 goals, proved=false
+
+  GOAL ∀s. region_inv G OK code s ⇒
+    (∃s2.
+       evaluate s = evaluate s2 ∧ region_inv G OK code s2 ∧
+       s2.clock < s.clock) ∨ ∃res. evaluate s = (res,s)
+----
+OK..
+STEP_FAILED st-fetch 
+Exception raised at BasicProvers.by: by's tactic failed to prove subgoal on line 69
+
+AFTER failure of st-fetch: 1 goals, proved=false
+
+  GOAL ∀s. region_inv G OK code s ⇒
+    (∃s2.
+       evaluate s = evaluate s2 ∧ region_inv G OK code s2 ∧
+       s2.clock < s.clock) ∨ ∃res. evaluate s = (res,s)
+----
+OK..
+STEP_FAILED st-line 
+Exception raised at BasicProvers.Cases_on:
+at BasicProvers.find_subterm:
+  No var with name "x" free in goal, or in outer universal quantifiers
+
+AFTER failure of st-line: 1 goals, proved=false
+
+  GOAL ∀s. region_inv G OK code s ⇒
+    (∃s2.
+       evaluate s = evaluate s2 ∧ region_inv G OK code s2 ∧
+       s2.clock < s.clock) ∨ ∃res. evaluate s = (res,s)
+----
+EXPLORE_COMPLETE

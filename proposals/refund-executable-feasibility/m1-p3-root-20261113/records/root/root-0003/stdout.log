@@ -1,0 +1,34 @@
+<<HOL message: Created theory "forge_simRoot">>
+/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-0003/proof.sml:90: warning: Pattern is not exhaustive.
+Found near val (_, [cc, ...]) = strip_comb (lhs (... ... cj))
+/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-0003/proof.sml:91: warning: Pattern is not exhaustive.
+Found near val (_, [_, ...]) = strip_comb (el 3 cj)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simRoot)>>
+Saved theorem _______ "run_head_ordinary"
+Saved theorem _______ "run_interior_ordinary"
+Saved theorem _______ "segment_interior_ordinary"
+Saved theorem _______ "segment_end_no_install_prefix"
+Saved theorem _______ "segment_compose_no_install_prefix"
+Saved theorem _______ "asm_step_IMP_evaluate_step_find_next_prefix"
+Saved theorem _______ "asm_step_IMP_evaluate_step_nop_prefix"
+FIDELITY asm_step_IMP_evaluate_step_find_next_prefix: published statement recovered by removing the two added conjuncts
+FIDELITY asm_step_IMP_evaluate_step_nop_prefix: published statement recovered by removing the two added conjuncts
+Saved theorem _______ "asm_step_IMP_evaluate_step_prefix"
+FIDELITY asm_step_IMP_evaluate_step_prefix: published statement recovered by removing the two added conjuncts
+Saved theorem _______ "state_rel_segment_compose"
+Saved definition ____ "forge_toy_mc_def"
+Saved definition ____ "forge_toy_mc2_def"
+Proof of 
+
+(∀k io. evaluate forge_toy_mc io (k + 2) 0 = evaluate forge_toy_mc2 io k 2) ∧
+forge_toy_mc2.install_pc = forge_toy_mc.install_pc ∧
+forge_toy_mc2.target = forge_toy_mc.target ∧
+forge_toy_mc.install_pc ∉ forge_toy_mc.prog_addresses ∧
+forge_toy_mc.target.get_pc 0 ≠ forge_toy_mc.install_pc ∧
+forge_toy_mc.target.get_pc 2 ≠ forge_toy_mc.install_pc ∧
+(∀io. ¬no_install_prefix forge_toy_mc io 2 0) ∧
+∀io.
+  find_next_interference forge_toy_mc io 2 0 ≠
+  find_next_interference forge_toy_mc2 io 0 2
+
+failed.

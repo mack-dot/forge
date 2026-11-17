@@ -1,0 +1,801 @@
+<<HOL message: Created theory "forge_refundFficloseStep">>
+CODE_BYTES 84
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-repeat/proof.sml:83: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-repeat/proof.sml:97: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+STEP_OK 1 14008478 PC 0x100025260w
+STUB_STATE s with
+<|PC := 0x100025260w; REG := s.REG; branch_hint := SOME BranchType_JMP|>
+Saved theorem _______ "cake_fficlose_stub_run"
+CHECKED cake_fficlose_stub_run
+ []
+⊢ fficlose_stub_pre s ⇒
+  ∃s1.
+    arm8_run 1 s = SOME s1 ∧ s1.PC = 0x100025260w ∧ s1.REG = s.REG ∧
+    s1.MEM = s.MEM ∧ s1.SP_EL0 = s.SP_EL0 ∧ s1.PSTATE = s.PSTATE ∧
+    s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception
+Saved theorem _______ "cake_fficlose_stub_wrong_target_refuted"
+CHECKED cake_fficlose_stub_wrong_target_refuted
+ []
+⊢ fficlose_stub_pre s ⇒ ¬∃s1. arm8_run 1 s = SOME s1 ∧ s1.PC = 0x100025264w
+Saved theorem _______ "cake_fficlose_stub_does_not_return"
+CHECKED cake_fficlose_stub_does_not_return
+ []
+⊢ fficlose_stub_pre s ∧ s.REG 30w ≠ 0x100025260w ⇒
+  ∃s1. arm8_run 1 s = SOME s1 ∧ s1.PC ≠ s.REG 30w
+STEP_ALTERNATIVE_REJECTED 14008479 HOL_ERR (HOL_ERROR {message = "hypothesis: s.MEM s.PC = 121w ==> F", origins = [{origin_function = "step", origin_structure = "forge", source_location = Loc_Unknown}]})
+CONTROL_OK changed stub word (14008478 -> 14008479) rejected by the fetch hypotheses
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFficloseStep)>>
+STEP_OK 1 a9be4ff4 PC 0x100025264w
+STEP_OK 2 a9017bfd PC 0x100025268w
+STEP_OK 3 910043fd PC 0x10002526Cw
+STEP_OK 4 f100007f PC 0x100025270w
+STEP_OK 5 540001ad PC 0x100025274w
+STEP_OK 6 f100203f PC 0x100025278w
+STEP_OK 7 54000181 PC 0x10002527Cw
+STEP_OK 8 aa0203f3 PC 0x100025280w
+STEP_OK 9 b9400408 PC 0x100025284w
+STEP_OK 10 5ac00900 PC 0x100025288w
+STEP_OK 11 94000199 PC 0x1000258ECw
+STEP_OK 12 f0000010 PC 0x1000258F0w
+STEP_OK 13 f9401210 PC 0x1000258F4w
+STEP_OK 14 d61f0200 PC g
+PREFIX_STATE s with
+<|MEM :=
+    s.MEM⦇
+      b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+      b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+      b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+      b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+      b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+      b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+      b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+      b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+      b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+      b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+      b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+      b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+      b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+      b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+      b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+      b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+    ⦈; PC := g; PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+  REG :=
+    s.REG⦇
+      16w ↦ g; 30w ↦ 0x10002528Cw;
+      0w ↦
+        w2w
+          ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+           (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+           (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+           (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+      8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+    ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).PC =
+  g
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 30w =
+  0x10002528Cw
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 19w =
+  s.REG 2w
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 29w =
+  b + 16w
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 16w =
+  g
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).SP_EL0 =
+  b
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 0w =
+  w2w
+    ((7 >< 0)
+       (w2w
+          (w2w
+             (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+              s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+     (15 >< 8)
+       (w2w
+          (w2w
+             (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+              s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+     (23 >< 16)
+       (w2w
+          (w2w
+             (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+              s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+     (31 >< 24)
+       (w2w
+          (w2w
+             (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+              s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))))
+POST  [fficlose_entry_pre s b c g]
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).PSTATE.EL =
+  0w
+SLOT mem_dword
+  (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).MEM b = s.REG 20w
+SLOT mem_dword
+  (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).MEM (b + 8w) = s.REG 19w
+SLOT mem_dword
+  (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).MEM (b + 16w) = s.REG 29w
+SLOT mem_dword
+  (s with
+   <|MEM :=
+       s.MEM⦇
+         b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+         b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+         b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+         b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+         b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+         b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+         b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+         b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+         b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+         b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+         b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+         b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+         b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+         b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+         b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+         b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+       ⦈; PC := g;
+     PSTATE := s.PSTATE with <|C := T; N := F; V := F; Z := T|>;
+     REG :=
+       s.REG⦇
+         16w ↦ g; 30w ↦ 0x10002528Cw;
+         0w ↦
+           w2w
+             ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+              (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+         8w ↦ w2w (mem_word s.MEM (c + 4w)); 19w ↦ s.REG 2w; 29w ↦ b + 16w
+       ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).MEM (b + 24w) = s.REG 30w
+Saved theorem _______ "fficlose_prefix_run"
+CHECKED fficlose_prefix_run
+ []
+⊢ fficlose_entry_pre s b c g ⇒
+  ∃s1.
+    arm8_run 14 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002528Cw ∧
+    s1.REG 19w = s.REG 2w ∧ s1.REG 29w = b + 16w ∧ s1.REG 16w = g ∧
+    s1.SP_EL0 = b ∧
+    s1.REG 0w =
+    w2w
+      ((7 >< 0)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (15 >< 8)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (23 >< 16)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (31 >< 24)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w))))) ∧
+    s1.PSTATE.EL = 0w ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧ mem_dword s1.MEM b = s.REG 20w ∧
+    mem_dword s1.MEM (b + 8w) = s.REG 19w ∧
+    mem_dword s1.MEM (b + 16w) = s.REG 29w ∧
+    mem_dword s1.MEM (b + 24w) = s.REG 30w ∧
+    (∀q. (∀i. i < 32 ⇒ q ≠ b + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 0w ∧ r ≠ 8w ∧ r ≠ 16w ∧ r ≠ 19w ∧ r ≠ 29w ∧ r ≠ 30w ⇒
+        s1.REG r = s.REG r
+STEP_OK 1 7100001f PC 0x100025290w
+STEP_OK 2 1a9f07e8 PC 0x100025294w
+STEP_OK 3 39000268 PC 0x100025298w
+STEP_OK 4 a9417bfd PC 0x10002529Cw
+STEP_OK 5 a8c24ff4 PC 0x1000252A0w
+STEP_OK 6 d65f03c0 PC v30
+SUFFIX_STATE s with
+<|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+  PC := v30;
+  PSTATE :=
+    s.PSTATE with
+    <|C :=
+        ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1
+          else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+         w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+      N := word_msb (w2w (s.REG 0w));
+      V :=
+        (word_msb (w2w (s.REG 0w)) ∧
+         (word_msb (w2w (s.REG 0w)) ⇎
+          BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+      Z := (w2w (s.REG 0w) = 0w)|>;
+  REG :=
+    s.REG⦇
+      19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+      8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+    ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PC =
+  v30
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 30w =
+  v30
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 29w =
+  v29
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 19w =
+  v19
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 20w =
+  v20
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).SP_EL0 =
+  b + 32w
+POST  []
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).MEM a =
+  w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))
+POST  [fficlose_return_pre s b a v20 v19 v29 v30]
+⊢ (s with
+   <|MEM := s.MEM⦇a ↦ w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w))⦈;
+     PC := v30;
+     PSTATE :=
+       s.PSTATE with
+       <|C :=
+           ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+               w2n (w2w (s.REG 0w)) + 4294967295 + 1
+             else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+            w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+         N := word_msb (w2w (s.REG 0w));
+         V :=
+           (word_msb (w2w (s.REG 0w)) ∧
+            (word_msb (w2w (s.REG 0w)) ⇎
+             BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+         Z := (w2w (s.REG 0w) = 0w)|>;
+     REG :=
+       s.REG⦇
+         19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+         8w ↦ w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)
+       ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PSTATE.EL =
+  0w
+Saved theorem _______ "fficlose_suffix_run"
+CHECKED fficlose_suffix_run
+ []
+⊢ fficlose_return_pre s b a v20 v19 v29 v30 ⇒
+  ∃s1.
+    arm8_run 6 s = SOME s1 ∧ s1.PC = v30 ∧ s1.REG 30w = v30 ∧
+    s1.REG 29w = v29 ∧ s1.REG 19w = v19 ∧ s1.REG 20w = v20 ∧
+    s1.SP_EL0 = b + 32w ∧
+    s1.MEM a = w2w (w2w (if w2w (s.REG 0w) = 0w then 0w else 1w)) ∧
+    s1.PSTATE.EL = 0w ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧
+    (∀q. (∀i. i < 1 ⇒ q ≠ a + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 8w ∧ r ≠ 19w ∧ r ≠ 20w ∧ r ≠ 29w ∧ r ≠ 30w ⇒ s1.REG r = s.REG r
+Saved theorem _______ "fficlose_suffix_wrong_return_refuted"
+CHECKED fficlose_suffix_wrong_return_refuted
+ []
+⊢ fficlose_return_pre s b a v20 v19 v29 v30 ∧ x ≠ v30 ⇒
+  ¬∃s1. arm8_run 6 s = SOME s1 ∧ s1.PC = x
+Saved theorem _______ "fficlose_corrupted_frame_slot_clobbers_x19"
+CHECKED fficlose_corrupted_frame_slot_clobbers_x19
+ []
+⊢ fficlose_return_pre s b a v20 v19 v29 v30 ∧ v19 ≠ orig ⇒
+  ∃s1. arm8_run 6 s = SOME s1 ∧ s1.REG 19w ≠ orig
+STEP_OK 1 7100001f PC 0x100025290w
+STEP_OK 2 1a9f07e8 PC 0x100025294w
+STEP_ALTERNATIVE_REJECTED 39000269 HOL_ERR (HOL_ERROR {message = "hypothesis: (s with\n <|PC := 0x100025294w;\n   PSTATE :=\n     s.PSTATE with\n     <|C :=\n         ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then\n             w2n (w2w (s.REG 0w)) + 4294967295 + 1\n           else (w2n (w2w (s.REG 0w)) + 4294967295 + 1
+CONTROL_OK changed store word (39000268 -> 39000269) rejected by the fetch hypotheses
+DEFINITION  []
+⊢ ∀s. arm8_user s ⇔
+      ¬s.SCTLR_EL1.E0E ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.TCR_EL1.TBI0 ∧
+      ¬s.TCR_EL1.TBI1 ∧ s.PSTATE.EL = 0w ∧ s.exception = NoException
+DEFINITION  []
+⊢ ∀s. fficlose_stub_pre s ⇔
+      arm8_user s ∧ s.PC = 0x100004080w ∧ fficlose_code_bytes s.MEM
+DEFINITION  []
+⊢ ∀s b c g.
+    fficlose_entry_pre s b c g ⇔
+    arm8_user s ∧ s.PC = 0x100025260w ∧ fficlose_code_bytes s.MEM ∧
+    s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 0w = c ∧ aligned 2 c ∧
+    s.REG 1w = 8w ∧ ¬word_msb (s.REG 3w) ∧ s.REG 3w ≠ 0w ∧
+    mem_dword s.MEM 0x100028020w = g ∧
+    (∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a) ∧
+    ∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j
+DEFINITION  []
+⊢ ∀s b a v20 v19 v29 v30.
+    fficlose_return_pre s b a v20 v19 v29 v30 ⇔
+    arm8_user s ∧ s.PC = 0x10002528Cw ∧ fficlose_code_bytes s.MEM ∧
+    s.SP_EL0 = b ∧ aligned 3 b ∧ s.REG 19w = a ∧ mem_dword s.MEM b = v20 ∧
+    mem_dword s.MEM (b + 8w) = v19 ∧ mem_dword s.MEM (b + 16w) = v29 ∧
+    mem_dword s.MEM (b + 24w) = v30 ∧
+    (∀i x. i < 1 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x) ∧
+    ∀i j. i < 1 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j
+Exporting theory "forge_refundFficloseStep" ... done.
+Theory "forge_refundFficloseStep" took 6.3s to build
+NATIVE_STEP_COMPLETE

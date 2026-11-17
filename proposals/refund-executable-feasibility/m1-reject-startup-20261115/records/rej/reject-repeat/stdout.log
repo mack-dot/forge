@@ -1,0 +1,146 @@
+<<HOL message: Created theory "forge_refundRejectNonFail">>
+Loading translation: forge_refundStdioProg ... done.
+Proved triviality ___ "evaluate_dec_list_clock_result"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRejectNonFail)>>
+Proved triviality ___ "semantics_dec_list_determ_terminate_unique"
+Proved triviality ___ "semantics_dec_list_all_terminate"
+Proved triviality ___ "SPLIT_eq_SUBSET"
+Proved triviality ___ "IMP_STDIO_general"
+Proved triviality ___ "IMP_STDIO"
+Saved theorem _______ "call_main_exn1"
+CHECKED call_main_exn1
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var fname env2 = SOME mainv ⇒
+  app p mainv [Conv NONE []] P (POSTe exn. Q exn) ⇒
+  SPLIT (st2heap p st2) (h1,h2) ∧ P h1 ⇒
+  ∃st3 exn ck1 ck2.
+    evaluate_dec_list (st1 with clock := ck1) env1
+      (SNOC
+         (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+         prog) = (st3 with clock := ck2,Rerr (Rraise exn))
+Saved theorem _______ "call_main_exn2"
+CHECKED call_main_exn2
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var fname env2 = SOME mainv ⇒
+  app (proj1,proj2) mainv [Conv NONE []] P (POSTe exn. Q exn) ⇒
+  SPLIT (st2heap (proj1,proj2) st2) (h1,h2) ∧ P h1 ⇒
+  sem_satisfies
+    (semantics_dec_list st1 env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior. ∃io_events. behavior = Terminate Success io_events)
+Saved theorem _______ "star_split_lemma"
+Saved theorem _______ "exn_spec_IMP"
+CHECKED exn_spec_IMP
+⊢ app (basis_proj1,basis_proj2) main_v [Conv NONE []] (STDIO fs)
+    (POSTe exn. Q exn) ∧
+  Decls init_env (init_state (basis_ffi ext cl fs)) decs res_env res_st ⇒
+  ∀main_name.
+    (let
+       all_decs =
+         SNOC
+           (Dlet NoLocs (Pcon NONE [])
+              (App Opapp [Var (Short main_name); Unit])) decs
+     in
+       nsLookup res_env.v (Short main_name) = SOME main_v ⇒
+       res_st.ffi = basis_ffi ext cl fs ⇒
+       is_refs_basis res_st.refs ⇒
+       wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+       sem_satisfies
+         (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+            all_decs)
+         (λbehavior. ∃io_events. behavior = Terminate Success io_events))
+STORED refund_main_error
+⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTe exn. &Fail_exn err exn * STDIO (fastForwardFD fs 0))
+CODE_IDENTICAL_TO_refund_prog true
+Adding nsLookup representation thms for 602 consts [forge_refundStdioProg_env, forge_refundWireProg_env_13, ..., SexpProg_env]
+REJ_DEC ⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ∧
+  wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior. ∃io_events. behavior = Terminate Success io_events)
+CODE_IDENTICAL_TO_refund_prog true
+ACC_DEC ⊢ stdin_content fs = SOME text ∧
+  refund_run_wire (implode text) = INR output ∧ wfcl cl ∧ wfFS fs ∧
+  STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧
+         extract_fs ext (cl,fs) io_events =
+         SOME (add_stdout (fastForwardFD fs 0) output))
+Saved theorem _______ "sem_sat_weaken"
+Saved theorem _______ "refund_reject_semantics"
+CHECKED refund_reject_semantics
+⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ∧
+  wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior. ∃io_events. behavior = Terminate Success io_events)
+Saved theorem _______ "refund_accept_semantics"
+CHECKED refund_accept_semantics
+⊢ stdin_content fs = SOME text ∧
+  refund_run_wire (implode text) = INR output ∧ wfcl cl ∧ wfFS fs ∧
+  STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior. ∃io_events. behavior = Terminate Success io_events)
+Saved theorem _______ "refund_stdin_semantics"
+CHECKED refund_stdin_semantics
+⊢ stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior. ∃io_events. behavior = Terminate Success io_events)
+PUBT ⊢ sem_satisfies (semantics_dec_list s init_env prog)
+    (λb. ∃io. b = Terminate Success io) ⇒
+  prog_syntax_ok prog ⇒
+  ¬semantics_prog s init_env prog Fail ∧
+  (sem ⊆ extend_with_resource_limit (semantics_prog s init_env prog) ⇒
+   (∃b. sem = {b}) ⇒
+   ∃io. sem ⊆ extend_with_resource_limit {Terminate Success io})
+Saved theorem _______ "refund_source_nonfail_reject"
+CHECKED refund_source_nonfail_reject
+⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INL err ∧
+  wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ¬semantics_prog (FST (THE (prim_sem_env (basis_ffi ext cl fs))))
+    (SND (THE (prim_sem_env (basis_ffi ext cl fs)))) refund_prog Fail
+Saved theorem _______ "refund_source_nonfail_stdin"
+CHECKED refund_source_nonfail_stdin
+⊢ stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ¬semantics_prog (FST (THE (prim_sem_env (basis_ffi ext cl fs))))
+    (SND (THE (prim_sem_env (basis_ffi ext cl fs)))) refund_prog Fail
+PREMISE_FORM_IDENTICAL true
+Saved theorem _______ "refund_u298_exclusion_stdin"
+CHECKED refund_u298_exclusion_stdin
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀j ms' ffi'.
+    evaluate mc0 (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+    mc0.target.get_pc ms' ≠ mc0.install_pc
+MSEM machine_sem mc0 (basis_ffi ext cl fs) ms : :behaviour -> bool / :behaviour -> bool
+Saved theorem _______ "refund_behavior_stdin_no_handler"
+CHECKED refund_behavior_stdin_no_handler
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events}
+CLOSURE_NODES 508
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundRejectNonFail" ... done.
+Theory "forge_refundRejectNonFail" took 29.9s to build
+EXACT_COMPLETE

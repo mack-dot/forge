@@ -1,0 +1,100 @@
+<<HOL message: Created theory "forge_refundSourceNonFail">>
+STORED refund_semantics
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧
+         extract_fs ext (cl,fs) io_events =
+         SOME
+           (add_stdout (fastForwardFD fs 0)
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason))))
+STORED ⊢ prog_syntax_ok refund_prog
+FFI basis_ffi ext cl fs : :(mlstring list # IO_fs) ffi_state
+Saved theorem _______ "refund_source_nonfail"
+CHECKED refund_source_nonfail
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ¬semantics_prog (FST (THE (prim_sem_env (basis_ffi ext cl fs))))
+    (SND (THE (prim_sem_env (basis_ffi ext cl fs)))) refund_prog Fail
+Saved theorem _______ "semantics_prog_Fail_expanded"
+CHECKED semantics_prog_Fail_expanded
+⊢ semantics_prog st env prog Fail ⇔
+  ∃po k.
+    SND (evaluate_prog_with_clock (st with ptr_eq_oracle := po) env k prog) =
+    Rerr (Rabort Rtype_error)
+PREMISE_FORM_IDENTICAL true
+Saved theorem _______ "refund_u298_exclusion_valid_request"
+CHECKED refund_u298_exclusion_valid_request
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀j ms' ffi'.
+    evaluate mc0 (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+    mc0.target.get_pc ms' ≠ mc0.install_pc
+TERM2 ⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+  extend_with_resource_limit
+    (semantics_prog (init_state (basis_ffi ext cl fs)) init_env refund_prog) ⇒
+  (∃behavior. machine_sem mc0 (basis_ffi ext cl fs) ms = {behavior}) ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSourceNonFail)>>
+Saved theorem _______ "refund_behavior_valid_request_no_handler"
+CHECKED refund_behavior_valid_request_no_handler
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+Exporting theory "forge_refundSourceNonFail" ... done.
+Theory "forge_refundSourceNonFail" took 7.1s to build
+CLOSURE_NODES 506
+CLOSURE_PARENTS forge_refundExclusionReal forge_compileCorrectControl
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+EXACT_COMPLETE

@@ -1,0 +1,36 @@
+IMPORTED hyp_walk_region_hyp EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED hyp_walk_fetch EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+DEFINITION loc_good_def
+⊢ ∀okp code v.
+    loc_good okp code v ⇔
+    case v of
+      Word v => T
+    | Loc n1 n2 => ∀p. loc_to_pc n1 n2 code = SOME p ⇒ okp p
+DEFINITION line_ok_def
+⊢ ∀okp rs pc line.
+    line_ok okp rs pc line ⇔
+    case line of
+      Label v v1 v2 => T
+    | Asm (Asmi (Inst v24)) v4 v5 => okp (pc + 1)
+    | Asm (Asmi (Jump v25)) v4 v5 => T
+    | Asm (Asmi (JumpCmp v26 v27 v28 v29)) v4 v5 => T
+    | Asm (Asmi (Call v30)) v4 v5 => T
+    | Asm (Asmi (JumpReg v31)) v4 v5 => T
+    | Asm (Asmi (Loc v32 v33)) v4 v5 => T
+    | Asm (ShareMem v11 v12 v13) v4 v5 => okp (pc + 1)
+    | LabAsm (Jump (Lab n1' n2')) v7 v8 v9 =>
+      (case rs n1' n2' of NONE => T | SOME p => okp p)
+    | LabAsm (JumpCmp v35 v36 v37 (Lab n1'' n2'')) v7 v8 v9 =>
+      (case rs n1'' n2'' of NONE => T | SOME p => okp p) ∧ okp (pc + 1)
+    | LabAsm (Call v39) v7 v8 v9 => F
+    | LabAsm (LocValue r (Lab n1 n2)) v7 v8 v9 =>
+      (case rs n1 n2 of NONE => T | SOME p => okp p) ∧ okp (pc + 1)
+    | LabAsm (CallFFI v42) v7 v8 v9 => T
+    | LabAsm Install v7 v8 v9 => F
+    | LabAsm Halt v7 v8 v9 => T
+CLOSURE_NODES 291
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P2_IMPORT_COMPLETE

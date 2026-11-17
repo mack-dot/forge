@@ -1,0 +1,10 @@
+<<HOL message: Created theory "forge_simZeroCase">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simZeroCase)>>
+Saved theorem _______ "install_entry_distinct"
+Proof of 
+
+state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧
+pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword (:α) ⇒
+no_install_prefix mc_conf ffi 0 ms1
+
+failed.

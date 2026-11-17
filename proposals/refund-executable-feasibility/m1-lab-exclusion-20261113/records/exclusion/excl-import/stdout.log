@@ -1,0 +1,13 @@
+IMPORTED refund_lab_good_init_avoids_install EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED refund_lab_aligned_init_avoids_install EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+PREMISE_COUNT 2
+PREMISE_HEADS good_init_state,=evaluate
+PREMISES_MENTION loc_good=false val_inv=false mval_inv=false region_hyp=false
+ORACLE_CONSTANTS forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle
+GOOD_INIT_STATE_CONSTANT lab_to_targetProof$make_init,labSem$evaluate,targetSem$good_init_state
+CLOSURE_NODES 395
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+RUN_IMPORT_COMPLETE

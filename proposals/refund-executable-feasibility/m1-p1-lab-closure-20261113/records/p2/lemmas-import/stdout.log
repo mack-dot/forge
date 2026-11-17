@@ -1,0 +1,42 @@
+IMPORTED asm_inst_val_inv EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED write_bytearray_val_inv EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+DEFINITION val_inv_def
+⊢ ∀G s. val_inv G s ⇔ (∀r. G (read_reg r s)) ∧ ∀a. G (s.mem a)
+DEFINITION step_ok_def
+⊢ ∀G OK code pc line.
+    step_ok G OK code pc line ⇔
+    case line of
+      Label v v1 v2 => T
+    | Asm (Asmi (Inst v24)) v4 v5 => OK (pc + 1)
+    | Asm (Asmi (Jump v25)) v4 v5 => T
+    | Asm (Asmi (JumpCmp v26 v27 v28 v29)) v4 v5 => T
+    | Asm (Asmi (Call v30)) v4 v5 => T
+    | Asm (Asmi (JumpReg v31)) v4 v5 => T
+    | Asm (Asmi (Loc v32 v33)) v4 v5 => T
+    | Asm (ShareMem v11 v12 v13) v4 v5 => OK (pc + 1)
+    | LabAsm (Jump (Lab n1 n2)) v7 v8 v9 =>
+      ∀p. loc_to_pc n1 n2 code = SOME p ⇒ OK p
+    | LabAsm (JumpCmp v35 v36 v37 (Lab n1' n2')) v7 v8 v9 =>
+      (∀p. loc_to_pc n1' n2' code = SOME p ⇒ OK p) ∧ OK (pc + 1)
+    | LabAsm (Call v39) v7 v8 v9 => F
+    | LabAsm (LocValue r lab) v7 v8 v9 => G (lab_to_loc lab) ∧ OK (pc + 1)
+    | LabAsm (CallFFI v42) v7 v8 v9 => T
+    | LabAsm Install v7 v8 v9 => F
+    | LabAsm Halt v7 v8 v9 => T
+DEFINITION region_inv_def
+⊢ ∀G OK code s.
+    region_inv G OK code s ⇔
+    s.code = code ∧ region_hyp G OK code ∧ val_inv G s ∧ OK s.pc
+DEFINITION region_hyp_def
+⊢ ∀G OK code.
+    region_hyp G OK code ⇔
+    (∀w. G (Word w)) ∧
+    (∀pc line.
+       asm_fetch_aux pc code = SOME line ∧ OK pc ⇒ step_ok G OK code pc line) ∧
+    ∀n1 n2 p. G (Loc n1 n2) ∧ loc_to_pc n1 n2 code = SOME p ⇒ OK p
+CLOSURE_NODES 289
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P2_IMPORT_COMPLETE

@@ -1,0 +1,38 @@
+<<HOL message: Created theory "forge_refundAllocBackend">>
+STRENGTHENED_STATEMENT (PROPOSED, NOT PROVED)
+∀s1 res mc_conf s2 code2 labs t1 ms1.
+  (oracle_tie mc_conf ms1 s1 ∧ evaluate s1 = (res,s2) ∧ res ≠ Error ∧
+   encoder_correct mc_conf.target ∧
+   state_rel (mc_conf,code2,labs,p) s1 t1 ms1) ∧
+  (∀k r t.
+     evaluate (s1 with clock := k) = (r,t) ⇒
+     ∀i bs n. asm_fetch t ≠ SOME (LabAsm Install i bs n)) ⇒
+  ∃k t2 ms2.
+    evaluate mc_conf s1.ffi (s1.clock + k) ms1 = (res,ms2,s2.ffi) ∧
+    no_install_prefix mc_conf s1.ffi s1.clock ms1
+FIDELITY published statement recovered by removing the two additions
+PUBLISHED_FREE_VARS p
+Saved theorem _______ "refund_alloc_backend_correct"
+CHECKED refund_alloc_backend_correct
+⊢ ∀c1.
+    compile arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+      refund_prog = SOME (code,data,c1) ⇒
+    (let
+       (s,env) = THE (prim_sem_env ffi)
+     in
+       ¬semantics_prog s env refund_prog Fail ∧
+       backend_config_ok arm8_config
+         (set_oracle arm8_backend_config refund_alloc_oracle) ∧
+       mc_conf_ok mc ∧
+       mc_init_ok arm8_config
+         (set_oracle arm8_backend_config refund_alloc_oracle) mc ∧
+       installed code cbspace data data_sp c1.lab_conf.ffi_names
+         (heap_regs
+            (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.
+            reg_names) mc c1.lab_conf.shmem_extra ms ⇒
+       machine_sem mc ffi ms ⊆
+       extend_with_resource_limit (semantics_prog s env refund_prog))
+ORACLE_CONSTANTS forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle
+Exporting theory "forge_refundAllocBackend" ... done.
+Theory "forge_refundAllocBackend" took 5.1s to build
+P3_PROOF_COMPLETE

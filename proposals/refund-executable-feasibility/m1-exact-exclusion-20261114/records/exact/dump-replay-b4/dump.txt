@@ -1,0 +1,285 @@
+DUMP THEOREM compile_correct_no_install_prefix TAGS DISK_THM| HYPS 0
+lab_step_closed (Inv :(α, lab_to_target$config, 'ffi) state -> bool) ⇒
+∀(s1 :(α, lab_to_target$config, 'ffi) state) (res :machine_result)
+    (mc_conf :(α, 'state, β) machine_config)
+    (s2 :(α, lab_to_target$config, 'ffi) state) (code2 :sec list)
+    (labs :num sptree$num_map sptree$num_map) (t1 :α asm_state)
+    (ms1 :'state).
+  oracle_tie mc_conf ms1 s1 ∧
+  (evaluate s1 :machine_result # (α, lab_to_target$config, 'ffi) state) =
+  (res,s2) ∧ res ≠ Error ∧ encoder_correct mc_conf.target ∧
+  (state_rel (mc_conf,code2,labs,(p :α word)) s1 t1 ms1 :bool) ∧ Inv s1 ∧
+  code_layout_ok (:α) code2 ⇒
+  (∃(k :num) (t2 :γ) (ms2 :'state).
+     (evaluate mc_conf s1.ffi (s1.clock + k) ms1 :
+      machine_result # 'state # 'ffi ffi_state) = (res,ms2,s2.ffi)) ∧
+  no_install_prefix mc_conf s1.ffi s1.clock ms1
+DUMP THEOREM compile_no_install_prefix TAGS DISK_THM| HYPS 0
+lab_step_closed (Inv :(α, lab_to_target$config, 'ffi) state -> bool) ⇒
+∀(s1 :(α, lab_to_target$config, 'ffi) state) (res :machine_result)
+    (mc_conf :(α, 'state, β) machine_config)
+    (s2 :(α, lab_to_target$config, 'ffi) state) (code2 :sec list)
+    (labs :num sptree$num_map sptree$num_map) (t1 :α asm_state)
+    (ms1 :'state).
+  oracle_tie mc_conf ms1 s1 ∧
+  (evaluate s1 :machine_result # (α, lab_to_target$config, 'ffi) state) =
+  (res,s2) ∧ res ≠ Error ∧ encoder_correct mc_conf.target ∧
+  (state_rel (mc_conf,code2,labs,(p :α word)) s1 t1 ms1 :bool) ⇒
+  Inv s1 ∧ code_layout_ok (:α) code2 ⇒
+  no_install_prefix mc_conf s1.ffi s1.clock ms1
+DUMP THEOREM final_nip TAGS DISK_THM| HYPS 0
+(∀(n :num).
+   FST
+     (evaluate (c :(γ, α, δ) machine_config) (io :β ffi_state) (SUC n)
+        (ms :α) :machine_result # α # β ffi_state) ≠ TimeOut) ⇒
+c.target.get_pc ms ≠ c.install_pc ⇒
+∀(m :num). no_install_prefix c io m ms
+DUMP THEOREM lab_step_evaluate TAGS DISK_THM| HYPS 0
+∀(s :(α, β, γ) state) (s' :(α, β, γ) state).
+  lab_step s = SOME s' ⇒
+  (evaluate s :machine_result # (α, β, γ) state) =
+  (evaluate s' :machine_result # (α, β, γ) state)
+DUMP THEOREM seg_finish TAGS DISK_THM| HYPS 0
+(∀(k :num).
+   (evaluate (c :(γ, α, δ) machine_config) (io :β ffi_state) (k + (l :num))
+      (ms1 :α) :machine_result # α # β ffi_state) =
+   (evaluate (shift_interfer l c) io k (ms2 :α) :
+    machine_result # α # β ffi_state) ∧
+   find_next_interference c io (k + l) ms1 =
+   find_next_interference (shift_interfer l c) io k ms2) ⇒
+nip_ctx c ⇒
+l ≠ (0 :num) ⇒
+∀(n :num).
+  no_install_prefix (shift_interfer l c) io n ms2 ⇒
+  no_install_prefix c io (SUC n) ms1
+DUMP THEOREM state_rel_ctx TAGS DISK_THM| HYPS 0
+(state_rel
+   ((mc_conf :(α, β, γ) machine_config),(code2 :sec list),
+    (labs :num sptree$num_map sptree$num_map),(p :α word))
+   (s1 :(α, lab_to_target$config, δ) state) (t1 :α asm_state) (ms1 :β) :bool) ⇒
+nip_ctx mc_conf ∧ halt_ctx mc_conf
+DUMP THEOREM step_nip TAGS DISK_THM| HYPS 0
+(∀(n :num).
+   (evaluate (c :(γ, α, δ) machine_config) (io :β ffi_state) (SUC n)
+      (ms :α) :machine_result # α # β ffi_state) =
+   (evaluate (c' :(γ, α, δ) machine_config) (io' :β ffi_state) n (ms' :α) :
+    machine_result # α # β ffi_state)) ⇒
+c.target.get_pc ms ≠ c.install_pc ⇒
+c'.install_pc = c.install_pc ⇒
+c'.target = c.target ⇒
+∀(m :num). no_install_prefix c' io' m ms' ⇒ no_install_prefix c io (SUC m) ms
+DUMP THEOREM target_install_exclusion_conditional TAGS DISK_THM| HYPS 0
+lab_step_closed (Inv :(α, lab_to_target$config, 'ffi) state -> bool) ∧
+(∀(k :num). Inv ((s1 :(α, lab_to_target$config, 'ffi) state) with clock := k)) ∧
+(∀(k :num).
+   FST
+     (evaluate (s1 with clock := k) :
+      machine_result # (α, lab_to_target$config, 'ffi) state) ≠ Error) ∧
+oracle_tie (mc_conf :(α, 'state, β) machine_config) (ms1 :'state) s1 ∧
+encoder_correct mc_conf.target ∧
+(state_rel
+   (mc_conf,(code2 :sec list),(labs :num sptree$num_map sptree$num_map),
+    (p :α word)) s1 (t1 :α asm_state) ms1 :bool) ∧ code_layout_ok (:α) code2 ⇒
+∀(n :num). no_install_prefix mc_conf s1.ffi n ms1
+DUMP DEFINITION halt_ctx_def TAGS DISK_THM| HYPS 0
+∀(mc :(α, β, γ) machine_config).
+  halt_ctx mc ⇔ mc.halt_pc ∉ mc.prog_addresses ∧ mc.halt_pc ≠ mc.install_pc
+DUMP DEFINITION lab_step_closed_def TAGS DISK_THM| HYPS 0
+∀(Inv :(α, β, γ) state -> bool).
+  lab_step_closed Inv ⇔
+  (∀(s :(α, β, γ) state) (i :int) (bs :word8 list) (n :num).
+     Inv s ⇒ asm_fetch s ≠ SOME (LabAsm Install i bs n)) ∧
+  (∀(s :(α, β, γ) state) (m :memop) (r :num) (ad :addr) (bs :word8 list)
+       (n :num). Inv s ⇒ asm_fetch s ≠ SOME (Asm (ShareMem m r ad) bs n)) ∧
+  ∀(s :(α, β, γ) state) (s' :(α, β, γ) state).
+    Inv s ∧ lab_step s = SOME s' ⇒ Inv s'
+DUMP DEFINITION lab_step_def TAGS DISK_THM| HYPS 0
+∀(s :(α, γ, 'ffi) state).
+  lab_step s =
+  if s.clock = (0 :num) then (NONE :(α, γ, 'ffi) state option)
+  else
+    case asm_fetch s of
+      (NONE :line option) => (NONE :(α, γ, 'ffi) state option)
+    | SOME (Label v39 v40 v42 :line) => (NONE :(α, γ, 'ffi) state option)
+    | SOME (Asm (Asmi (Inst i :asm)) v44 v45) =>
+      (let
+         (s1 :(α, γ, 'ffi) state) = asm_inst i s
+       in
+         if s1.failed then (NONE :(α, γ, 'ffi) state option)
+         else SOME (inc_pc (dec_clock s1)))
+    | SOME (Asm (Asmi (Jump v12 :asm)) v44 v45) =>
+      (NONE :(α, γ, 'ffi) state option)
+    | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16 :asm)) v44 v45) =>
+      (NONE :(α, γ, 'ffi) state option)
+    | SOME (Asm (Asmi (Call v17 :asm)) v44 v45) =>
+      (NONE :(α, γ, 'ffi) state option)
+    | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+      (case (read_reg r s :α word_loc) of
+         (Word v3 :α word_loc) => (NONE :(α, γ, 'ffi) state option)
+       | (Loc n1 n2 :α word_loc) =>
+         case loc_to_pc n1 n2 s.code of
+           (NONE :num option) => (NONE :(α, γ, 'ffi) state option)
+         | SOME p => SOME (upd_pc p (dec_clock s)))
+    | SOME (Asm (Asmi (Loc v19 v20 :asm)) v44 v45) =>
+      (NONE :(α, γ, 'ffi) state option)
+    | SOME (Asm (ShareMem m r ad) v44 v45) =>
+      (case share_mem_op m r ad s of
+         (NONE :('ffi ffi$ffi_result # (α, γ, 'ffi) state) option) =>
+           (NONE :(α, γ, 'ffi) state option)
+       | SOME (FFI_return v3 v4,s') =>
+         SOME
+           (s' with
+            <|io_regs := shift_seq (1 :num) s'.io_regs;
+              io_fp_regs := shift_seq (1 :num) s'.io_fp_regs|>)
+       | SOME ((FFI_final outcome :'ffi ffi$ffi_result),s') =>
+         (NONE :(α, γ, 'ffi) state option))
+    | SOME (LabAsm (Jump l :asm_with_lab) v47 v50 v51) =>
+      (case get_pc_value l s of
+         (NONE :num option) => (NONE :(α, γ, 'ffi) state option)
+       | SOME p => SOME (upd_pc p (dec_clock s)))
+    | SOME (LabAsm (JumpCmp c r'' ri l' :asm_with_lab) v47 v50 v51) =>
+      (case
+         (word_cmp c (read_reg r'' s :α word_loc)
+            (reg_imm ri s :α word_loc) :bool option)
+       of
+         (NONE :bool option) => (NONE :(α, γ, 'ffi) state option)
+       | SOME T =>
+         (case get_pc_value l' s of
+            (NONE :num option) => (NONE :(α, γ, 'ffi) state option)
+          | SOME p => SOME (upd_pc p (dec_clock s)))
+       | SOME F => SOME (inc_pc (dec_clock s)))
+    | SOME (LabAsm (Call l'' :asm_with_lab) v47 v50 v51) =>
+      (case get_pc_value l'' s of
+         (NONE :num option) => (NONE :(α, γ, 'ffi) state option)
+       | SOME p =>
+         case (get_ret_Loc s :α word_loc option) of
+           (NONE :α word_loc option) => (NONE :(α, γ, 'ffi) state option)
+         | SOME k =>
+           (let
+              (s1 :(α, γ, 'ffi) state) = upd_reg s.link_reg k s
+            in
+              SOME (upd_pc p (dec_clock s1))))
+    | SOME (LabAsm (LocValue r' lab :asm_with_lab) v47 v50 v51) =>
+      if get_pc_value lab s = (NONE :num option) then
+        (NONE :(α, γ, 'ffi) state option)
+      else
+        (let
+           (s1 :(α, γ, 'ffi) state) =
+             upd_reg r' (lab_to_loc lab :α word_loc) s
+         in
+           SOME (inc_pc (dec_clock s1)))
+    | SOME (LabAsm (CallFFI ffi_index) v47 v50 v51) =>
+      (case
+         ((read_reg s.len_reg s :α word_loc),
+          (read_reg s.ptr_reg s :α word_loc),
+          (read_reg s.len2_reg s :α word_loc),
+          (read_reg s.ptr2_reg s :α word_loc),
+          (read_reg s.link_reg s :α word_loc))
+       of
+         ((Word w :α word_loc),(Word w2 :α word_loc),(Word w3 :α word_loc),
+          v36,(Word v41 :α word_loc)) =>
+           (NONE :(α, γ, 'ffi) state option)
+       | ((Word w :α word_loc),(Word w2 :α word_loc),(Word w3 :α word_loc),
+        (Word w4 :α word_loc),(Loc n1 n2 :α word_loc)) =>
+         (case
+            (read_bytearray w2 (w2n w)
+               (mem_load_byte_aux s.mem s.mem_domain s.be),
+             read_bytearray w4 (w2n w3)
+               (mem_load_byte_aux s.mem s.mem_domain s.be),
+             loc_to_pc n1 n2 s.code)
+          of
+            ((NONE :word8 list option),v3) =>
+              (NONE :(α, γ, 'ffi) state option)
+          | (SOME bytes,(NONE :word8 list option),v9) =>
+            (NONE :(α, γ, 'ffi) state option)
+          | (SOME bytes,SOME bytes2,(NONE :num option)) =>
+            (NONE :(α, γ, 'ffi) state option)
+          | (SOME bytes,SOME bytes2,SOME new_pc) =>
+            case call_FFI s.ffi (ExtCall ffi_index) bytes bytes2 of
+              FFI_return new_ffi new_bytes =>
+                (let
+                   (new_io_regs :num -> ffiname -> num -> α word option) =
+                     shift_seq (1 :num) s.io_regs;
+                   (new_io_fp_regs :num -> num -> word64) =
+                     shift_seq (1 :num) s.io_fp_regs;
+                   (new_m :α word -> α word_loc) =
+                     write_bytearray w4 new_bytes s.mem s.mem_domain s.be
+                 in
+                   SOME
+                     (s with
+                      <|mem := new_m; ffi := new_ffi; io_regs := new_io_regs;
+                        io_fp_regs := new_io_fp_regs;
+                        regs :=
+                          (λ(a :num).
+                             get_reg_value
+                               (s.io_regs (0 :num) (ExtCall ffi_index) a)
+                               (read_reg a s :α word_loc)
+                               (Word :α word -> α word_loc));
+                        fp_regs := (λ(n :num). s.io_fp_regs (0 :num) n);
+                        pc := new_pc; clock := s.clock − (1 :num)|>))
+            | (FFI_final outcome :'ffi ffi$ffi_result) =>
+              (NONE :(α, γ, 'ffi) state option))
+       | ((Word w :α word_loc),(Word w2 :α word_loc),(Word w3 :α word_loc),
+        (Loc v48 v49 :α word_loc),(Loc n1 n2 :α word_loc)) =>
+         (NONE :(α, γ, 'ffi) state option)
+       | ((Word w :α word_loc),(Word w2 :α word_loc),
+        (Loc v32 v33 :α word_loc),v27) =>
+         (NONE :(α, γ, 'ffi) state option)
+       | ((Word w :α word_loc),(Loc v22 v23 :α word_loc),v17) =>
+         (NONE :(α, γ, 'ffi) state option)
+       | ((Loc v12 v13 :α word_loc),v5) => (NONE :(α, γ, 'ffi) state option))
+    | SOME (LabAsm Install v47 v50 v51) =>
+      (case
+         ((code_buffer_install (SOME (read_reg s.ptr_reg s :α word_loc))
+             (SOME (read_reg s.len_reg s :α word_loc))
+             (SOME (read_reg s.ptr2_reg s :α word_loc))
+             (mem_load_byte_aux s.mem s.mem_domain s.be) s.code_buffer :
+           (word8 list # (α, 8) buffer) option),
+          (read_reg s.link_reg s :α word_loc))
+       of
+         (v4,(Word v12 :α word_loc)) => (NONE :(α, γ, 'ffi) state option)
+       | ((NONE :(word8 list # (α, 8) buffer) option),(Loc n1 n2 :α word_loc)) =>
+         (NONE :(α, γ, 'ffi) state option)
+       | (SOME (bytes,cb),(Loc n1 n2 :α word_loc)) =>
+         case loc_to_pc n1 n2 s.code of
+           (NONE :num option) => (NONE :(α, γ, 'ffi) state option)
+         | SOME new_pc =>
+           (let
+              ((cfg :γ),(prog :sec list)) =
+                (s.compile_oracle (0 :num) :γ # sec list);
+              (new_oracle :num -> γ # sec list) =
+                shift_seq (1 :num) s.compile_oracle
+            in
+              case ((s.compile cfg prog :(word8 list # γ) option),prog) of
+                (v2,([] :sec list)) => (NONE :(α, γ, 'ffi) state option)
+              | ((NONE :(word8 list # γ) option),v6::v7) =>
+                (NONE :(α, γ, 'ffi) state option)
+              | (SOME (bytes',cfg'),Section k v14 v15::v7) =>
+                if bytes = bytes' ∧ FST (new_oracle (0 :num)) = cfg' then
+                  SOME
+                    (s with
+                     <|pc := new_pc; code_buffer := cb;
+                       code := s.code ++ prog;
+                       cc_regs := shift_seq (1 :num) s.cc_regs;
+                       cc_fp_regs := shift_seq (1 :num) s.cc_fp_regs;
+                       regs :=
+                         (λ(a :num).
+                            get_reg_value (s.cc_regs (0 :num) a)
+                              (read_reg a s :α word_loc)
+                              (Word :α word -> α word_loc))⦇
+                           s.ptr_reg ↦ (Loc k (0 :num) :α word_loc)
+                         ⦈; fp_regs := (λ(n :num). s.cc_fp_regs (0 :num) n);
+                       compile_oracle := new_oracle;
+                       clock := s.clock − (1 :num)|>)
+                else (NONE :(α, γ, 'ffi) state option)))
+    | SOME (LabAsm Halt v47 v50 v51) =>
+      case (read_reg s.ptr_reg s :α word_loc) of
+        (Word (0w :α word) :α word_loc) => (NONE :(α, γ, 'ffi) state option)
+      | (Word v6 :α word_loc) => (NONE :(α, γ, 'ffi) state option)
+      | (Loc v4 v5 :α word_loc) => (NONE :(α, γ, 'ffi) state option)
+DUMP DEFINITION nip_ctx_def TAGS DISK_THM| HYPS 0
+∀(mc :(α, β, γ) machine_config).
+  nip_ctx mc ⇔ mc.install_pc ∉ mc.prog_addresses
+PARENTS forge_simRoot
+ANCESTRY 296 ASCIInumbers BoolconvContext Canon_Port_Context ConseqConv EnumTypeContext FormalLang InductiveDefinitionContext NumConvContext Omega RealFieldContext SubAndCondContext While address alignment alist alist_tree arithmetic asm asmProps asmSem ast backend backendProps backend_asm backend_common backend_cv backend_enc_dec backend_passes backend_word_cv backend_x64 backend_x64_cv bag balanced_map basicSize basis_cv binary_ieee bit bitstring blast bnfFixBNF bnfInitial bnfMutual bnfPrelims bool boolSimpsContext bvi bvi_inline bvi_let bvi_tailrec bvi_tmc bvi_to_data bvl bvl_const bvl_handle bvl_inline bvl_jump bvl_to_bvi byte canonContext cardinalityCore charset closLang clos_annotate clos_call clos_fvs clos_interp clos_known clos_letop clos_mti clos_number clos_op clos_ticks clos_to_bvl cmlPtreeConversion collapse combin commonUnif comparison container cooper cps cv cv_prim cv_rep cv_std cv_string_fmap cv_type dataLang data_live data_simp data_space data_to_word db_vars decompilerLibSupport displayLang divides evaluate evaluateProps evaluate_dec export export_x64 fcp ffi finite_map finite_set fixedPoint flatLang flat_pattern flat_ticks flat_to_clos fmsp folMappingContext folToolsContext forge_simLayout forge_simRoot forge_simZeroCase forge_targetInstallPrefix fpSem frac gcd gram grammar hol hrat hreal hurdUtilsContext indexedLists infer inferProps infer_cv infer_t intExtension intReduce int_arith int_bitwise integer integer_word intreal iterate jsonLang labLang labProps labSem lab_filter lab_filterProof lab_to_target lab_to_targetProof lexer_fun lifting linear_scan list llist location logroot lprefix_lub machine_ieee marker mc_multiword mergesort mesonLibContext min misc ml_monadBase ml_prog mlint mllist mloption mlsexp mlstring mlvector multiword namespace namespaceProps normalForms normalFormsContext normalizer num num_list_enc_dec num_tree_enc_dec numeral numeral_bit numpair numposrep one option ordinalBasic oset pair pairToolsContext parmove path patternMatches pattern_common pattern_comp pattern_exh pattern_semantics peg pegexec permutes poset pred_set presLang primSemEnv primTypes prim_rec primeFactor prog quantHeuristics quotient rat real real_arith realax reduce reg_alloc regexp regexp_compiler regexp_map relation res_quan rich_list rmfmap sat schneiderUtilsContext semanticPrimitives semanticPrimitivesProps semantics semanticsProps set_relation set_sep sorting source_cv source_dce source_let source_lift_consts source_to_flat source_to_source spt_closure sptree stackLang stack_alloc stack_names stack_rawcall stack_remove stack_to_lab state_transformer string subst sum sum_num tailrec targetProps targetSem tcallUnif temporal term ternaryComparisons to_data_cv tokenUtils tokens toto transfer typeSound typeSoundInvariants typeSysProps typeSystem unifDef unifProps unify unify_cv update utilsLibSupport vec_map walk walkstar weakening wellorder wordLang wordSem word_alloc word_bignum word_copy word_cse word_depth word_inst word_remove word_simp word_to_stack word_to_word word_unreach words x64 x64_config x64_eval_encode x64_step x64_target
+CONSTANTS halt_ctx lab_step lab_step_closed nip_ctx

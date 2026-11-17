@@ -1,0 +1,78 @@
+<<HOL message: Created theory "forge_refundStartupBridge">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStartupBridge)>>
+Saved theorem _______ "stdin_absent_characterised"
+CHECKED stdin_absent_characterised
+⊢ STD_streams fs ⇒
+  (stdin_content fs = NONE ⇔
+   ∃off. off ≠ 0 ∧ ALOOKUP fs.infds 0 = SOME (UStream «stdin»,ReadMode,off))
+Saved theorem _______ "refund_startup_from_cml_main"
+CHECKED refund_startup_from_cml_main
+⊢ (is_arm8_machine_config mc0 ∧ target_state_rel mc0.target t ms ∧
+   target_configured t mc0) ∧ cml_main_post ms ⇒
+  refund_startup_clause mc0 ms t (λa. Word (mem_dword ms.MEM a)) 0x10002C018w
+    428 0
+Saved theorem _______ "refund_startup_established"
+CHECKED refund_startup_established
+⊢ cml_main_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    ∀mc0 t.
+      is_arm8_machine_config mc0 ∧ target_state_rel mc0.target t ms ∧
+      target_configured t mc0 ⇒
+      refund_startup_clause mc0 ms t (λa. Word (mem_dword ms.MEM a))
+        0x10002C018w 428 0
+DEFINITION ⊢ ∀base0 envmc.
+    refund_mc base0 envmc =
+    arm8_fix
+      (envmc with
+       <|ffi_names := THE refund_lab_conf2.ffi_names;
+         ffi_entry_pcs :=
+           GENLIST (λi. base0 − n2w ((3 + i) * ffi_offset))
+             (LENGTH (THE refund_lab_conf2.ffi_names));
+         halt_pc := base0 − n2w ffi_offset;
+         install_pc := base0 − n2w (2 * ffi_offset); mmio_info := [];
+         shared_addresses := ∅ |>)
+Saved theorem _______ "refund_mc_is_arm8"
+CHECKED refund_mc_is_arm8
+⊢ is_arm8_machine_config (refund_mc base0 envmc)
+Saved theorem _______ "refund_mc_fields"
+CHECKED refund_mc_fields
+⊢ refund_lab_conf2.ffi_names = SOME (refund_mc base0 envmc).ffi_names ∧
+  (refund_mc base0 envmc).target = arm8_target ∧
+  (refund_mc base0 envmc).halt_pc = base0 − n2w ffi_offset ∧
+  (refund_mc base0 envmc).install_pc = base0 − n2w (2 * ffi_offset) ∧
+  (refund_mc base0 envmc).mmio_info = [] ∧
+  (refund_mc base0 envmc).shared_addresses = ∅ ∧
+  (refund_mc base0 envmc).prog_addresses = envmc.prog_addresses ∧
+  (refund_mc base0 envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc base0 envmc).ffi_interfer = envmc.ffi_interfer ∧
+  (refund_mc base0 envmc).install_interfer = envmc.install_interfer ∧
+  mmio_pcs_min_index (refund_mc base0 envmc).ffi_names =
+  SOME (LENGTH (refund_mc base0 envmc).ffi_names) ∧
+  LENGTH (refund_mc base0 envmc).ffi_entry_pcs =
+  LENGTH (refund_mc base0 envmc).ffi_names
+Saved theorem _______ "refund_mc_u298_exclusion_stdin"
+CHECKED refund_mc_u298_exclusion_stdin
+⊢ refund_installed_no_handler (refund_mc base0 envmc) ms cbspace data_sp ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀j ms' ffi'.
+    evaluate (refund_mc base0 envmc) (basis_ffi ext cl fs) j ms =
+    (TimeOut,ms',ffi') ⇒
+    (refund_mc base0 envmc).target.get_pc ms' ≠
+    (refund_mc base0 envmc).install_pc
+Saved theorem _______ "refund_mc_behavior_stdin_no_handler"
+CHECKED refund_mc_behavior_stdin_no_handler
+⊢ refund_installed_no_handler (refund_mc base0 envmc) ms cbspace data_sp ∧
+  stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem (refund_mc base0 envmc) (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events}
+SHMEM ⊢ refund_lab_conf2.shmem_extra = refund_lab_conf2.shmem_extra
+CLOSURE_NODES 510
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundStartupBridge" ... done.
+Theory "forge_refundStartupBridge" took 9.5s to build
+EXACT_COMPLETE

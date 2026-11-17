@@ -1,0 +1,196 @@
+<<HOL message: Created theory "forge_p2Explore">>
+Saved definition ____ "sec_at_def"
+Saved definition ____ "pc_ok_def"
+Saved definition ____ "ref_ok_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_refs_ok_def"
+Saved definition ____ "refs_ok_def"
+Saved definition ____ "flat_lines_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_p2Explore)>>
+Saved definition ____ "fall_pairs_def"
+Saved induction _____ "fall_pairs_ind"
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+Saved definition ____ "line_is_call_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_has_ref_def"
+Saved definition ____ "resolve_stats_def"
+Saved definition ____ "resolve_check_def"
+Saved definition ____ "resolve_info_def"
+Starting translation of loc_to_pc from labSemTheory.
+Starting translation of ? from boolTheory.
+cv translator encountered a function type: :(α -> bool) -> bool
+cv translator encountered a function type: :α -> bool
+Definition of ? is higher-order due to the following arguments:
+
+  (arg :α -> bool)
+
+STEP_FAILED translate loc_to_pc :: 
+Exception raised at ??.failwith: Argument contains function type
+
+Starting translation of sec_at from forge_p2ExploreTheory.
+Saved definition ____ "FILTER_lam___is_Label_Section__1_def"
+Saved induction _____ "FILTER_lam___is_Label_Section__1_ind"
+Starting translation of FILTER_lam___is_Label_Section_ from forge_p2ExploreTheory.
+Starting translation of is_Label from labSemTheory.
+Saved theorem _______ "cv_is_Label_thm"
+Finished translating is_Label, stored in cv_is_Label_thm
+Starting translation of FILTER_lam___is_Label_Section_ from forge_p2ExploreTheory.
+Saved definition ____ "cv_FILTER_lam___is_Label_Section__def"
+Saved induction _____ "cv_FILTER_lam___is_Label_Section__ind"
+Saved theorem _______ "cv_FILTER_lam___is_Label_Section__thm"
+Finished translating FILTER_lam___is_Label_Section_, stored in cv_FILTER_lam___is_Label_Section__thm
+Saved theorem _______ "FILTER_lam___is_Label_Section__ho"
+Starting translation of sec_at from forge_p2ExploreTheory.
+Saved theorem _______ "cv_sec_at_thm"
+Finished translating sec_at, stored in cv_sec_at_thm
+STEP_OK translate sec_at
+Starting translation of pc_ok from forge_p2ExploreTheory.
+Saved theorem _______ "cv_pc_ok_thm"
+Finished translating pc_ok, stored in cv_pc_ok_thm
+STEP_OK translate pc_ok
+Starting translation of ref_ok from forge_p2ExploreTheory.
+Starting translation of loc_to_pc from labSemTheory.
+Starting translation of ? from boolTheory.
+cv translator encountered a function type: :(α -> bool) -> bool
+cv translator encountered a function type: :α -> bool
+Definition of ? is higher-order due to the following arguments:
+
+  (arg :α -> bool)
+
+STEP_FAILED translate ref_ok :: 
+Exception raised at ??.failwith: Argument contains function type
+
+Starting translation of line_refs_ok from forge_p2ExploreTheory.
+Starting translation of ref_ok from forge_p2ExploreTheory.
+Starting translation of loc_to_pc from labSemTheory.
+Starting translation of ? from boolTheory.
+cv translator encountered a function type: :(α -> bool) -> bool
+cv translator encountered a function type: :α -> bool
+Definition of ? is higher-order due to the following arguments:
+
+  (arg :α -> bool)
+
+STEP_FAILED translate line_refs_ok :: 
+Exception raised at ??.failwith: Argument contains function type
+
+Starting translation of refs_ok from forge_p2ExploreTheory.
+Saved definition ____ "EVERY_lam____IN_Section_num_LI_1_def"
+Saved induction _____ "EVERY_lam____IN_Section_num_LI_1_ind"
+Starting translation of EVERY_lam____IN_Section_num_LI from forge_p2ExploreTheory.
+Saved definition ____ "EVERY_line_refs_ok_Section_lin_1_def"
+Saved induction _____ "EVERY_line_refs_ok_Section_lin_1_ind"
+Starting translation of EVERY_line_refs_ok_Section_lin from forge_p2ExploreTheory.
+Starting translation of line_refs_ok from forge_p2ExploreTheory.
+Starting translation of ref_ok from forge_p2ExploreTheory.
+Starting translation of loc_to_pc from labSemTheory.
+Starting translation of ? from boolTheory.
+cv translator encountered a function type: :(α -> bool) -> bool
+cv translator encountered a function type: :α -> bool
+Definition of ? is higher-order due to the following arguments:
+
+  (arg :α -> bool)
+
+STEP_FAILED translate refs_ok :: 
+Exception raised at ??.failwith: Argument contains function type
+
+Starting translation of flat_lines from forge_p2ExploreTheory.
+Saved definition ____ "MAP_lam_MAP_lam___Section_num__1_def"
+Saved induction _____ "MAP_lam_MAP_lam___Section_num__1_ind"
+Starting translation of MAP_lam_MAP_lam___Section_num_ from forge_p2ExploreTheory.
+Saved definition ____ "MAP_lam___Section_num_FILTER_l_1_def"
+Saved induction _____ "MAP_lam___Section_num_FILTER_l_1_ind"
+Starting translation of MAP_lam___Section_num_FILTER_l from forge_p2ExploreTheory.
+Saved definition ____ "cv_MAP_lam___Section_num_FILTER_l_def"
+Saved induction _____ "cv_MAP_lam___Section_num_FILTER_l_ind"
+Saved theorem _______ "cv_MAP_lam___Section_num_FILTER_l_thm"
+Finished translating MAP_lam___Section_num_FILTER_l, stored in cv_MAP_lam___Section_num_FILTER_l_thm
+Saved theorem _______ "MAP_lam___Section_num_FILTER_l_ho"
+Starting translation of MAP_lam_MAP_lam___Section_num_ from forge_p2ExploreTheory.
+Saved definition ____ "cv_MAP_lam_MAP_lam___Section_num__def"
+Saved induction _____ "cv_MAP_lam_MAP_lam___Section_num__ind"
+Saved theorem _______ "cv_MAP_lam_MAP_lam___Section_num__thm"
+Finished translating MAP_lam_MAP_lam___Section_num_, stored in cv_MAP_lam_MAP_lam___Section_num__thm
+Saved theorem _______ "MAP_lam_MAP_lam___Section_num__ho"
+Starting translation of flat_lines from forge_p2ExploreTheory.
+Saved theorem _______ "cv_flat_lines_thm"
+Finished translating flat_lines, stored in cv_flat_lines_thm
+STEP_OK translate flat_lines
+Starting translation of fall_pairs from forge_p2ExploreTheory.
+Saved theorem _______ "cv_fall_pairs_thm"
+Finished translating fall_pairs, stored in cv_fall_pairs_thm
+STEP_OK translate fall_pairs
+Starting translation of line_is_call from forge_p2ExploreTheory.
+Saved theorem _______ "cv_line_is_call_thm"
+Finished translating line_is_call, stored in cv_line_is_call_thm
+STEP_OK translate line_is_call
+Starting translation of line_has_ref from forge_p2ExploreTheory.
+Saved theorem _______ "cv_line_has_ref_thm"
+Finished translating line_has_ref, stored in cv_line_has_ref_thm
+STEP_OK translate line_has_ref
+Starting translation of resolve_stats from forge_p2ExploreTheory.
+Saved definition ____ "FILTER_lam_pair_CASE_lam_lam_l_1_def"
+Saved induction _____ "FILTER_lam_pair_CASE_lam_lam_l_1_ind"
+Starting translation of FILTER_lam_pair_CASE_lam_lam_l from forge_p2ExploreTheory.
+Saved definition ____ "cv_FILTER_lam_pair_CASE_lam_lam_l_def"
+Saved induction _____ "cv_FILTER_lam_pair_CASE_lam_lam_l_ind"
+Saved theorem _______ "cv_FILTER_lam_pair_CASE_lam_lam_l_thm"
+Finished translating FILTER_lam_pair_CASE_lam_lam_l, stored in cv_FILTER_lam_pair_CASE_lam_lam_l_thm
+Saved theorem _______ "FILTER_lam_pair_CASE_lam_lam_l_ho"
+Starting translation of resolve_stats from forge_p2ExploreTheory.
+Saved definition ____ "FILTER_lam_pair_CASE_lam_lam_l_1_1_def"
+Saved induction _____ "FILTER_lam_pair_CASE_lam_lam_l_1_1_ind"
+Starting translation of FILTER_lam_pair_CASE_lam_lam_l_1 from forge_p2ExploreTheory.
+Saved definition ____ "cv_FILTER_lam_pair_CASE_lam_lam_l_1_def"
+Saved induction _____ "cv_FILTER_lam_pair_CASE_lam_lam_l_1_ind"
+Saved theorem _______ "cv_FILTER_lam_pair_CASE_lam_lam_l_1_thm"
+Finished translating FILTER_lam_pair_CASE_lam_lam_l_1, stored in cv_FILTER_lam_pair_CASE_lam_lam_l_1_thm
+Saved theorem _______ "FILTER_lam_pair_CASE_lam_lam_l_1_ho"
+Starting translation of resolve_stats from forge_p2ExploreTheory.
+Saved theorem _______ "cv_resolve_stats_thm"
+Finished translating resolve_stats, stored in cv_resolve_stats_thm
+STEP_OK translate resolve_stats
+Starting translation of resolve_check from forge_p2ExploreTheory.
+Starting translation of refs_ok from forge_p2ExploreTheory.
+Saved definition ____ "EVERY_lam____IN_Section_num_LI_1_1_def"
+Saved induction _____ "EVERY_lam____IN_Section_num_LI_1_1_ind"
+Starting translation of EVERY_lam____IN_Section_num_LI_1 from forge_p2ExploreTheory.
+Saved definition ____ "EVERY_line_refs_ok_Section_lin_1_1_def"
+Saved induction _____ "EVERY_line_refs_ok_Section_lin_1_1_ind"
+Starting translation of EVERY_line_refs_ok_Section_lin_1 from forge_p2ExploreTheory.
+Starting translation of line_refs_ok from forge_p2ExploreTheory.
+Starting translation of ref_ok from forge_p2ExploreTheory.
+Starting translation of loc_to_pc from labSemTheory.
+Starting translation of ? from boolTheory.
+cv translator encountered a function type: :(α -> bool) -> bool
+cv translator encountered a function type: :α -> bool
+Definition of ? is higher-order due to the following arguments:
+
+  (arg :α -> bool)
+
+STEP_FAILED translate resolve_check :: 
+Exception raised at ??.failwith: Argument contains function type
+
+Starting translation of resolve_info from forge_p2ExploreTheory.
+Saved theorem _______ "cv_resolve_info_thm"
+Finished translating resolve_info, stored in cv_resolve_info_thm
+STEP_OK translate resolve_info
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+STAMP before info 1794599771.993
+RESOLVE_INFO SOME (29095,5244,0,SOME 0)
+STEP_OK info
+STAMP before check 1794599777.547
+STEP_FAILED check pair :: NeedsTranslation ([], ?)
+STAMP after check pair 1794599777.562
+STEP_FAILED check single :: NeedsTranslation ([], ?)
+STAMP after check single 1794599777.569
+EXPLORE_COMPLETE

@@ -1,0 +1,38 @@
+{
+ "case": "ffic-repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "ffic-0006.sml",
+ "source_sha256": "21e24b9ae737f0dbee7f49bf422c4bf620982e5799aa3b10f2169083b2c14420",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 12.033,
+ "child_user_cpu_seconds": 11.816,
+ "child_system_cpu_seconds": 1.113,
+ "child_max_rss_bytes": 672366592,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "e2320a767cfb82931579794672e7a4858aa862de9d37cc303c889d706118a515",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFficloseStepTheory.html": "5878601abcf3d51e01dffb8b5363428bd59948303221999cead6913ac852d7dd",
+  ".hol/objs/forge_refundFficloseStepTheory.dat": "1b8bb2849b37ab8c07fd1961286159ddf464099ae951075ec7974da6771e434d",
+  ".hol/objs/forge_refundFficloseStepTheory.sig": "dae1ed2a8a36fb7f4447ce5f7c2c1b9c7a98fcab2e824e22ab0272e5572da5d5",
+  ".hol/objs/forge_refundFficloseStepTheory.sml": "7ed3117d3ce39b92f93e948840c1b1e91482eef6f6af7d8a05f4594b488107a9"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

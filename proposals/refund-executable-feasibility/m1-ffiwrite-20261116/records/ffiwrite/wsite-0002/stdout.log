@@ -1,0 +1,14 @@
+<<HOL message: Created theory "forge_refundFfiwriteSite">>
+SHOW NV1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwriteSite)>>
+  ASM s1.exception = NoException
+  ASM s1.PSTATE.EL = 0w
+  ASM ¬s1.TCR_EL1.TBI1
+  ASM ¬s1.TCR_EL1.TBI0
+  ASM ¬s1.SCTLR_EL1.SA0
+  ASM ¬s1.SCTLR_EL1.E0E
+  GOAL ∀r. r = 19w ∨ r = 20w ∨ r = 21w ∨ r = 22w ∨ r = 23w ∨ r = 24w ∨ r = 25w ∨
+    r = 26w ∨ r = 27w ∨ r = 28w ⇒
+    (if 0w = r then 0x80000000w else s1.REG r) = s1.REG r
+LEMMA_FAILED write_call_rel_inhabited_fail HOL_ERR (HOL_ERROR {message = "first subgoal not solved by second tactic", origins = [{origin_function = "THEN1", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+WITNESS_CONJUNCTS 19

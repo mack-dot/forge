@@ -1,0 +1,22 @@
+<<HOL message: Created theory "forge_zeroExplore">>
+OK..
+1 subgoal:
+STAGE_OK distinct/d1
+OK..
+1 subgoal:
+STAGE_OK distinct/d2
+OK..
+1 subgoal:
+STAGE_OK distinct/d3
+OK..
+1 subgoal:
+STAGE_OK distinct/d4
+LEMMA_OPEN distinct
+AFTER distinct end: 1 goals, proved=false
+  ASM (x + 32) MOD dimword (:α) = 0
+  ASM n2w x = -32w
+  ASM x + 32 < dimword (:α)
+  GOAL F
+----
+WRAP_EXAMPLE ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset) ⇔ T
+EXPLORE_COMPLETE

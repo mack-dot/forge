@@ -1,0 +1,146 @@
+[
+ {
+  "case": "reachability-investigation.txt",
+  "actual_exit": 0,
+  "kind": "tool: grep and sed on theorem logs and pinned sources; text inspection, not a proof"
+ },
+ {
+  "case": "dbg-0001",
+  "actual_exit": 1,
+  "wall_seconds": 20.316,
+  "markers": [],
+  "kind": "diagnostic; no theorem"
+ },
+ {
+  "case": "dbg-0002",
+  "actual_exit": -15,
+  "wall_seconds": 440.005,
+  "markers": [],
+  "kind": "diagnostic; simplifier did not terminate; stopped by the agent"
+ },
+ {
+  "case": "dbg-0003",
+  "actual_exit": 0,
+  "wall_seconds": 18.08,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "diagnostic; unaligned write lemma found; no theorem exported"
+ },
+ {
+  "case": "uns-0001",
+  "actual_exit": 1,
+  "wall_seconds": 19.339,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "uns-0002",
+  "actual_exit": 1,
+  "wall_seconds": 22.79,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "uns-0003",
+  "actual_exit": 1,
+  "wall_seconds": 30.036,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "uns-0004",
+  "actual_exit": 1,
+  "wall_seconds": 21.576,
+  "markers": [],
+  "kind": "authoring (ML type error in a control)"
+ },
+ {
+  "case": "uns-0005",
+  "actual_exit": -24,
+  "wall_seconds": 552.167,
+  "markers": [],
+  "kind": "CPU limit: the first alignment-fault tactic did not terminate; four lemmas checked before it"
+ },
+ {
+  "case": "uns-0006",
+  "actual_exit": 1,
+  "wall_seconds": 21.058,
+  "markers": [],
+  "kind": "authoring (result-byte goal)"
+ },
+ {
+  "case": "uns-0007",
+  "actual_exit": 0,
+  "wall_seconds": 20.568,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwriteUnaligned (step without alignment; 10-step success suffix)"
+ },
+ {
+  "case": "fault-0001",
+  "actual_exit": 0,
+  "wall_seconds": 17.073,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "DEFECTIVE: exit 0 but the theorem has a contradictory BigEndian premise (vacuous); not used"
+ },
+ {
+  "case": "fault-0002",
+  "actual_exit": 1,
+  "wall_seconds": 19.161,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "fault-0003",
+  "actual_exit": 0,
+  "wall_seconds": 17.767,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwriteFault; premises shown satisfiable"
+ },
+ {
+  "case": "wsucc-0001",
+  "actual_exit": 1,
+  "wall_seconds": 340.079,
+  "markers": [],
+  "kind": "authoring; the first form of cake_ffiwrite_path_returns had a vacuous failed-write branch; not used"
+ },
+ {
+  "case": "wsucc-0002",
+  "actual_exit": 0,
+  "wall_seconds": 354.408,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "PASS: forge_refundFfiwriteSuccess (12 theorems)"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 257.85,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "PASS: narrow import and controls; 533 closure nodes; four bool axioms"
+ },
+ {
+  "case": "uns-0007r",
+  "actual_exit": 0,
+  "wall_seconds": 7.833,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat of uns-0007; checked statements identical"
+ },
+ {
+  "case": "repeats; full 172-statement import; formal reachability proof",
+  "actual_exit": null,
+  "kind": "NOT RUN (swap 11.2 of 12.3 GiB used)"
+ }
+]

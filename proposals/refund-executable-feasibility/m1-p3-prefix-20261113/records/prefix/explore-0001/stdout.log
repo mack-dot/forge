@@ -1,0 +1,100 @@
+<<HOL message: Created theory "forge_p3Explore">>
+Saved definition ____ "no_install_prefix_def"
+OK..
+STAGE_OK zero/all (proved)
+LEMMA_PROVED zero
+OK..
+STAGE_OK mono/all (proved)
+LEMMA_PROVED mono
+OK..
+STAGE_OK all/all (proved)
+LEMMA_PROVED all
+OK..
+STAGE_OK halt/all (proved)
+LEMMA_PROVED halt
+OK..
+2 subgoals:
+STAGE_OK next/n1
+OK..
+STAGE_FAILED next/n2 :: 
+Exception raised at Thm_cont.DISCH_THEN:
+
+AFTER next/n2: 2 goals, proved=false
+  ASM mc.target.get_pc ms' = mc.install_pc
+  ASM evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi j
+  (mc.next_interfer 0 (mc.target.next ms)) = (TimeOut,ms',ffi')
+  ASM j ≤ n
+  ASM ∀x. x ∉ mc.prog_addresses ⇒
+    mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x
+  ASM mc.target.state_ok (mc.next_interfer 0 (mc.target.next ms))
+  ASM mc.target.state_ok (mc.target.next ms)
+  ASM mc.target.state_ok ms
+  ASM ∀j ms' ffi'.
+  j ≤ SUC n ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM mc.install_pc ∉ mc.prog_addresses
+  ASM encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+  (mc.target.get_byte ms) mc.prog_addresses
+  ASM mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs
+  GOAL F
+----
+  ASM mc.target.get_pc ms' = mc.install_pc
+  ASM evaluate mc ffi j ms = (TimeOut,ms',ffi')
+  ASM j ≤ SUC n
+  ASM (mc.target.state_ok ms ∧ mc.target.state_ok (mc.target.next ms) ∧
+ mc.target.state_ok (mc.next_interfer 0 (mc.target.next ms))) ∧
+(∀x. x ∉ mc.prog_addresses ⇒
+     mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+∀j ms' ffi'.
+  j ≤ n ∧
+  evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi j
+    (mc.next_interfer 0 (mc.target.next ms)) = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM mc.install_pc ∉ mc.prog_addresses
+  ASM encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+  (mc.target.get_byte ms) mc.prog_addresses
+  ASM mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs
+  GOAL F
+----
+LEMMA_OPEN next
+AFTER next end: 2 goals, proved=false
+  ASM mc.target.get_pc ms' = mc.install_pc
+  ASM evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi j
+  (mc.next_interfer 0 (mc.target.next ms)) = (TimeOut,ms',ffi')
+  ASM j ≤ n
+  ASM ∀x. x ∉ mc.prog_addresses ⇒
+    mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x
+  ASM mc.target.state_ok (mc.next_interfer 0 (mc.target.next ms))
+  ASM mc.target.state_ok (mc.target.next ms)
+  ASM mc.target.state_ok ms
+  ASM ∀j ms' ffi'.
+  j ≤ SUC n ∧ evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM mc.install_pc ∉ mc.prog_addresses
+  ASM encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+  (mc.target.get_byte ms) mc.prog_addresses
+  ASM mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs
+  GOAL F
+----
+  ASM mc.target.get_pc ms' = mc.install_pc
+  ASM evaluate mc ffi j ms = (TimeOut,ms',ffi')
+  ASM j ≤ SUC n
+  ASM (mc.target.state_ok ms ∧ mc.target.state_ok (mc.target.next ms) ∧
+ mc.target.state_ok (mc.next_interfer 0 (mc.target.next ms))) ∧
+(∀x. x ∉ mc.prog_addresses ⇒
+     mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+∀j ms' ffi'.
+  j ≤ n ∧
+  evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi j
+    (mc.next_interfer 0 (mc.target.next ms)) = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+  ASM mc.install_pc ∉ mc.prog_addresses
+  ASM encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+  (mc.target.get_byte ms) mc.prog_addresses
+  ASM mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs
+  GOAL F
+----
+OK..
+STAGE_OK segment/all (proved)
+LEMMA_PROVED segment
+EXPLORE_COMPLETE

@@ -1,0 +1,175 @@
+IMPORTED lab_step_closed_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED compile_no_install_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED compile_correct_no_install_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED target_install_exclusion_conditional EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED lab_step_evaluate EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED seg_finish TAGS_ONLY HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED state_rel_ctx TAGS_ONLY HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED step_nip TAGS_ONLY HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED final_nip TAGS_ONLY HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS target_install_exclusion_conditional step_nip state_rel_ctx seg_finish lab_step_evaluate final_nip compile_no_install_prefix compile_correct_no_install_prefix
+STORED_DEFINITIONS nip_ctx_def lab_step_def lab_step_closed_def halt_ctx_def
+LAB_STEP_DEFINITION
+⊢ ∀s. lab_step s =
+      if s.clock = 0 then NONE
+      else
+        case asm_fetch s of
+          NONE => NONE
+        | SOME (Label v39 v40 v42) => NONE
+        | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+          (let
+             s1 = asm_inst i s
+           in
+             if s1.failed then NONE else SOME (inc_pc (dec_clock s1)))
+        | SOME (Asm (Asmi (Jump v12)) v44 v45) => NONE
+        | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => NONE
+        | SOME (Asm (Asmi (Call v17)) v44 v45) => NONE
+        | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+          (case read_reg r s of
+             Word v3 => NONE
+           | Loc n1 n2 =>
+             case loc_to_pc n1 n2 s.code of
+               NONE => NONE
+             | SOME p => SOME (upd_pc p (dec_clock s)))
+        | SOME (Asm (Asmi (Loc v19 v20)) v44 v45) => NONE
+        | SOME (Asm (ShareMem m r ad) v44 v45) =>
+          (case share_mem_op m r ad s of
+             NONE => NONE
+           | SOME (FFI_return v3 v4,s') =>
+             SOME
+               (s' with
+                <|io_regs := shift_seq 1 s'.io_regs;
+                  io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+           | SOME (FFI_final outcome,s') => NONE)
+        | SOME (LabAsm (Jump l) v47 v50 v51) =>
+          (case get_pc_value l s of
+             NONE => NONE
+           | SOME p => SOME (upd_pc p (dec_clock s)))
+        | SOME (LabAsm (JumpCmp c r'' ri l') v47 v50 v51) =>
+          (case word_cmp c (read_reg r'' s) (reg_imm ri s) of
+             NONE => NONE
+           | SOME T =>
+             (case get_pc_value l' s of
+                NONE => NONE
+              | SOME p => SOME (upd_pc p (dec_clock s)))
+           | SOME F => SOME (inc_pc (dec_clock s)))
+        | SOME (LabAsm (Call l'') v47 v50 v51) =>
+          (case get_pc_value l'' s of
+             NONE => NONE
+           | SOME p =>
+             case get_ret_Loc s of
+               NONE => NONE
+             | SOME k =>
+               (let
+                  s1 = upd_reg s.link_reg k s
+                in
+                  SOME (upd_pc p (dec_clock s1))))
+        | SOME (LabAsm (LocValue r' lab) v47 v50 v51) =>
+          if get_pc_value lab s = NONE then NONE
+          else
+            (let
+               s1 = upd_reg r' (lab_to_loc lab) s
+             in
+               SOME (inc_pc (dec_clock s1)))
+        | SOME (LabAsm (CallFFI ffi_index) v47 v50 v51) =>
+          (case
+             (read_reg s.len_reg s,read_reg s.ptr_reg s,
+              read_reg s.len2_reg s,read_reg s.ptr2_reg s,
+              read_reg s.link_reg s)
+           of
+             (Word w,Word w2,Word w3,v36,Word v41) => NONE
+           | (Word w,Word w2,Word w3,Word w4,Loc n1 n2) =>
+             (case
+                (read_bytearray w2 (w2n w)
+                   (mem_load_byte_aux s.mem s.mem_domain s.be),
+                 read_bytearray w4 (w2n w3)
+                   (mem_load_byte_aux s.mem s.mem_domain s.be),
+                 loc_to_pc n1 n2 s.code)
+              of
+                (NONE,v3) => NONE
+              | (SOME bytes,NONE,v9) => NONE
+              | (SOME bytes,SOME bytes2,NONE) => NONE
+              | (SOME bytes,SOME bytes2,SOME new_pc) =>
+                case call_FFI s.ffi (ExtCall ffi_index) bytes bytes2 of
+                  FFI_return new_ffi new_bytes =>
+                    (let
+                       new_io_regs = shift_seq 1 s.io_regs;
+                       new_io_fp_regs = shift_seq 1 s.io_fp_regs;
+                       new_m =
+                         write_bytearray w4 new_bytes s.mem s.mem_domain s.be
+                     in
+                       SOME
+                         (s with
+                          <|mem := new_m; ffi := new_ffi;
+                            io_regs := new_io_regs;
+                            io_fp_regs := new_io_fp_regs;
+                            regs :=
+                              (λa.
+                                 get_reg_value
+                                   (s.io_regs 0 (ExtCall ffi_index) a)
+                                   (read_reg a s) Word);
+                            fp_regs := (λn. s.io_fp_regs 0 n); pc := new_pc;
+                            clock := s.clock − 1|>))
+                | FFI_final outcome => NONE)
+           | (Word w,Word w2,Word w3,Loc v48 v49,Loc n1 n2) => NONE
+           | (Word w,Word w2,Loc v32 v33,v27) => NONE
+           | (Word w,Loc v22 v23,v17) => NONE
+           | (Loc v12 v13,v5) => NONE)
+        | SOME (LabAsm Install v47 v50 v51) =>
+          (case
+             (code_buffer_install (SOME (read_reg s.ptr_reg s))
+                (SOME (read_reg s.len_reg s)) (SOME (read_reg s.ptr2_reg s))
+                (mem_load_byte_aux s.mem s.mem_domain s.be) s.code_buffer,
+              read_reg s.link_reg s)
+           of
+             (v4,Word v12) => NONE
+           | (NONE,Loc n1 n2) => NONE
+           | (SOME (bytes,cb),Loc n1 n2) =>
+             case loc_to_pc n1 n2 s.code of
+               NONE => NONE
+             | SOME new_pc =>
+               (let
+                  (cfg,prog) = s.compile_oracle 0;
+                  new_oracle = shift_seq 1 s.compile_oracle
+                in
+                  case (s.compile cfg prog,prog) of
+                    (v2,[]) => NONE
+                  | (NONE,v6::v7) => NONE
+                  | (SOME (bytes',cfg'),Section k v14 v15::v7) =>
+                    if bytes = bytes' ∧ FST (new_oracle 0) = cfg' then
+                      SOME
+                        (s with
+                         <|pc := new_pc; code_buffer := cb;
+                           code := s.code ++ prog;
+                           cc_regs := shift_seq 1 s.cc_regs;
+                           cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                           regs :=
+                             (λa.
+                                get_reg_value (s.cc_regs 0 a) (read_reg a s)
+                                  Word)⦇
+                               s.ptr_reg ↦ Loc k 0
+                             ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                           compile_oracle := new_oracle;
+                           clock := s.clock − 1|>)
+                    else NONE))
+        | SOME (LabAsm Halt v47 v50 v51) =>
+          case read_reg s.ptr_reg s of
+            Word 0w => NONE
+          | Word v6 => NONE
+          | Loc v4 v5 => NONE
+FIDELITY published compile_correct recovered
+NEGATIVE_CONTROL_KEPT wraparound ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+NEGATIVE_CONTROL_KEPT interior ⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+AFTER_POSITIVE_AUDIT
+CONTROL_OK statements without the invariant premise or the shared-memory clause are not the stored ones
+CLOSURE_NODES 297
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P3_IMPORT_COMPLETE

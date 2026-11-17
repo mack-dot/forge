@@ -1,0 +1,34 @@
+<<HOL message: Created theory "forge_p2Explore">>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_ok_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_p2Explore)>>
+Saved definition ____ "hyp_walk_def"
+Saved induction _____ "hyp_walk_ind"
+Saved definition ____ "loc_good_def"
+OK..
+STAGE_OK walk/all (proved)
+LEMMA_PROVED walk
+OK..
+STAGE_OK line/all (proved)
+LEMMA_PROVED line
+OK..
+STAGE_FAILED hyp/all :: 
+Exception raised at Tactical.THEN1: goal completely solved by first tactic
+
+AFTER hyp/all: 1 goals, proved=false
+
+  GOAL ∀okp code.
+  hyp_walk okp (λn1 n2. loc_to_pc n1 n2 code) 0 code ⇒
+  region_hyp (loc_good okp code) okp code
+----
+LEMMA_OPEN hyp
+AFTER hyp end: 1 goals, proved=false
+
+  GOAL ∀okp code.
+  hyp_walk okp (λn1 n2. loc_to_pc n1 n2 code) 0 code ⇒
+  region_hyp (loc_good okp code) okp code
+----
+EXPLORE_COMPLETE

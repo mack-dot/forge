@@ -1,0 +1,74 @@
+<<HOL message: Created theory "forge_compileCorrectLabFacts">>
+Proved triviality ___ "FST_SND_EQ"
+Proved triviality ___ "PERMUTE_IMP_LINV"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_compileCorrectLabFacts)>>
+Proved triviality ___ "word_init_compile_oracle"
+Saved definition ____ "lab_guard_def"
+Saved definition ____ "lab_facts_def"
+Saved theorem _______ "lab_guard_elim"
+Saved theorem _______ "lab_guard_true"
+Saved theorem _______ "lab_nonfail_unaligned"
+Saved definition ____ "lab_keep_word_def"
+Saved theorem _______ "to_word_confs"
+LEMMA lab_nonfail_unaligned
+⊢ good_dimindex (:α) ∧
+  semantics
+    (lab_to_targetProof$make_init mc ffi t m (dm ∩ byte_aligned)
+       (sdm ∩ byte_aligned) ms lcode cmp cbpos cbspace coracle) ≠ Fail ⇒
+  semantics
+    (lab_to_targetProof$make_init mc ffi t m dm sdm ms lcode cmp cbpos
+       cbspace coracle) ≠ Fail
+<<HOL message: Stashing suspended theorem compile_correct_lab_guard with pending subgoal: data_word.>>
+Saved theorem _______ "compile_correct_lab_guard"
+CHECKED compile_correct_lab_guard
+⊢ compile asm_conf c prog = SOME (bytes,bitmaps,c') ⇒
+  (let
+     (s0,env) = THE (prim_sem_env ffi);
+     s = add_eval_state ev s0
+   in
+     ¬semantics_prog s env prog Fail ∧ backend_config_ok asm_conf c ∧
+     lab_to_targetProof$mc_conf_ok mc ∧ mc_init_ok asm_conf c mc ∧
+     opt_eval_config_wf (:α) asm_conf c' ev ∧
+     installed bytes cbspace bitmaps data_sp c'.lab_conf.ffi_names
+       (heap_regs c.stack_conf.reg_names) mc c'.lab_conf.shmem_extra ms ⇒
+     ∃po.
+       lab_guard (machine_sem mc ffi ms)
+         (lab_facts asm_conf c prog bytes c' mc ffi ms cbspace) ⊆
+       extend_with_resource_limit'
+         (is_safe_for_space (:α) ffi po asm_conf c prog
+            (read_limits asm_conf c mc ms))
+         (semantics_determ (s with ptr_eq_oracle := po) env prog))
+Saved theorem _______ "determ_not_fail"
+Saved theorem _______ "compile_correct_lab_facts"
+CHECKED compile_correct_lab_facts
+⊢ compile asm_conf c prog = SOME (bytes,bitmaps,c') ⇒
+  (let
+     (s0,env) = THE (prim_sem_env ffi);
+     s = add_eval_state ev s0
+   in
+     ¬semantics_prog s env prog Fail ∧ backend_config_ok asm_conf c ∧
+     lab_to_targetProof$mc_conf_ok mc ∧ mc_init_ok asm_conf c mc ∧
+     opt_eval_config_wf (:α) asm_conf c' ev ∧
+     installed bytes cbspace bitmaps data_sp c'.lab_conf.ffi_names
+       (heap_regs c.stack_conf.reg_names) mc c'.lab_conf.shmem_extra ms ⇒
+     lab_facts asm_conf c prog bytes c' mc ffi ms cbspace)
+Saved theorem _______ "compile_correct_from_guard"
+FIDELITY published statement recovered from the guarded theorem: true
+DEFINITION ⊢ ∀asm_conf c prog bytes c' mc ffi ms cbspace.
+    lab_facts asm_conf c prog bytes c' mc ffi ms cbspace ⇔
+    ∃t m dm sdm coracle tl.
+      tl = to_lab asm_conf c prog ∧
+      good_init_state mc ms bytes cbspace t m dm sdm ∧
+      lab_to_targetProof$compiler_oracle_ok coracle c'.lab_conf.labels
+        (LENGTH bytes) asm_conf mc.ffi_names ∧
+      compile asm_conf (FST (SND tl)).lab_conf (SND (SND tl)) =
+      SOME (bytes,c'.lab_conf) ∧
+      semantics
+        (lab_to_targetProof$make_init mc ffi t m dm sdm ms (SND (SND tl))
+           (compile asm_conf) (mc.target.get_pc ms + n2w (LENGTH bytes))
+           cbspace coracle) ≠ Fail
+DEFINITION ⊢ ∀x Q. lab_guard x Q = if Q then x else x ∪ {Fail}
+CLOSURE_NODES 500
+Exporting theory "forge_compileCorrectLabFacts" ... done.
+Theory "forge_compileCorrectLabFacts" took 1m41s to build
+REPLAY_COMPLETE

@@ -1,0 +1,244 @@
+[
+ {
+  "case": "make_rej.py first call",
+  "actual_exit": 1,
+  "kind": "tool: generator line check failed; no HOL run"
+ },
+ {
+  "case": "reject-0001",
+  "actual_exit": 1,
+  "wall_seconds": 46.421,
+  "markers": [],
+  "kind": "TOOL: libraries not loaded in the heap (static errors); no proof step ran"
+ },
+ {
+  "case": "reject-0002",
+  "actual_exit": 1,
+  "wall_seconds": 92.041,
+  "markers": [],
+  "kind": "authoring (variable named as a constant)"
+ },
+ {
+  "case": "reject-0003",
+  "actual_exit": 1,
+  "wall_seconds": 89.627,
+  "markers": [],
+  "kind": "authoring (rename not applied)"
+ },
+ {
+  "case": "reject-0004",
+  "actual_exit": 0,
+  "wall_seconds": 151.526,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "authoring: three lifting lemmas checked (exit 0, exploration)"
+ },
+ {
+  "case": "reject-0005",
+  "actual_exit": 1,
+  "wall_seconds": 86.546,
+  "markers": [],
+  "kind": "authoring (name clash from extra opens)"
+ },
+ {
+  "case": "reject-0006",
+  "actual_exit": 1,
+  "wall_seconds": 117.15,
+  "markers": [],
+  "kind": "authoring (last composition)"
+ },
+ {
+  "case": "reject-0007",
+  "actual_exit": 1,
+  "wall_seconds": 89.585,
+  "markers": [],
+  "kind": "authoring (variable not instantiated)"
+ },
+ {
+  "case": "reject-0008",
+  "actual_exit": 1,
+  "wall_seconds": 93.939,
+  "markers": [],
+  "kind": "authoring (ML Option)"
+ },
+ {
+  "case": "reject-0009",
+  "actual_exit": 0,
+  "wall_seconds": 97.598,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "mc-0001",
+  "actual_exit": 0,
+  "wall_seconds": 57.514,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 46.827,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "reject-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 116.547,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat pass"
+ },
+ {
+  "case": "mc-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 54.258,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat pass"
+ },
+ {
+  "case": "steps-0001",
+  "actual_exit": 0,
+  "wall_seconds": 4.933,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "exploration pass"
+ },
+ {
+  "case": "cml-0001",
+  "actual_exit": 1,
+  "wall_seconds": 5.26,
+  "markers": [],
+  "kind": "authoring (ML index base)"
+ },
+ {
+  "case": "cml-0002",
+  "actual_exit": 1,
+  "wall_seconds": 5.171,
+  "markers": [],
+  "kind": "authoring (hex parse)"
+ },
+ {
+  "case": "cml-0003",
+  "actual_exit": 1,
+  "wall_seconds": 5.918,
+  "markers": [],
+  "kind": "authoring (alignment fact form)"
+ },
+ {
+  "case": "cml-0004",
+  "actual_exit": 1,
+  "wall_seconds": 5.9,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "cml-0005",
+  "actual_exit": 1,
+  "wall_seconds": 6.005,
+  "markers": [],
+  "kind": "authoring (diagnostic)"
+ },
+ {
+  "case": "cml-0006",
+  "actual_exit": 1,
+  "wall_seconds": 6.008,
+  "markers": [],
+  "kind": "authoring"
+ },
+ {
+  "case": "cml-0007",
+  "actual_exit": 1,
+  "wall_seconds": 5.077,
+  "markers": [],
+  "kind": "authoring (ML static error)"
+ },
+ {
+  "case": "cml-0008",
+  "actual_exit": 1,
+  "wall_seconds": 5.607,
+  "markers": [],
+  "kind": "authoring (diagnostic)"
+ },
+ {
+  "case": "cml-0009",
+  "actual_exit": 1,
+  "wall_seconds": 5.518,
+  "markers": [],
+  "kind": "authoring (address normal form)"
+ },
+ {
+  "case": "cml-0010",
+  "actual_exit": 0,
+  "wall_seconds": 13.376,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "pass: 27 steps composed"
+ },
+ {
+  "case": "cml-0011",
+  "actual_exit": 1,
+  "wall_seconds": 13.24,
+  "markers": [],
+  "kind": "authoring (alignment premise)"
+ },
+ {
+  "case": "cml-0012",
+  "actual_exit": 0,
+  "wall_seconds": 14.023,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "dbg-0001",
+  "actual_exit": 0,
+  "wall_seconds": 4.683,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "diagnostic pass"
+ },
+ {
+  "case": "sat-0001",
+  "actual_exit": 0,
+  "wall_seconds": 5.855,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "cml-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 13.73,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat pass"
+ },
+ {
+  "case": "sat-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 5.615,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "kind": "repeat pass"
+ }
+]

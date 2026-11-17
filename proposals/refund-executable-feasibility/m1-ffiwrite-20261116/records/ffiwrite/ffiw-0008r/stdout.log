@@ -1,0 +1,3477 @@
+<<HOL message: Created theory "forge_refundFfiwriteStep">>
+CODE_BYTES 136
+/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008r/proof.sml:85: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008r/proof.sml:99: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+STEP_OK 1 14008454 PC 0x1000251E0w
+Saved theorem _______ "cake_ffiwrite_stub_run"
+CHECKED cake_ffiwrite_stub_run
+ []
+⊢ ffiwrite_stub_pre s ⇒
+  ∃s1.
+    arm8_run 1 s = SOME s1 ∧ s1.PC = 0x1000251E0w ∧ s1.REG = s.REG ∧
+    s1.MEM = s.MEM ∧ s1.SP_EL0 = s.SP_EL0 ∧ s1.PSTATE = s.PSTATE ∧
+    s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception
+Saved theorem _______ "cake_ffiwrite_stub_does_not_return"
+CHECKED cake_ffiwrite_stub_does_not_return
+ []
+⊢ ffiwrite_stub_pre s ∧ s.REG 30w ≠ 0x1000251E0w ⇒
+  ∃s1. arm8_run 1 s = SOME s1 ∧ s1.PC ≠ s.REG 30w
+STEP_ALTERNATIVE_REJECTED 14008455 HOL_ERR (HOL_ERROR {message = "hypothesis: s.MEM s.PC = 85w ==> F", origins = [{origin_function = "step", origin_structure = "forge", source_location = Loc_Unknown}]})
+CONTROL_OK changed stub word (14008454 -> 14008455) rejected by the fetch hypotheses
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwriteStep)>>
+STEP_OK 1 a9be4ff4 PC 0x1000251E4w
+STEP_OK 2 a9017bfd PC 0x1000251E8w
+STEP_OK 3 910043fd PC 0x1000251ECw
+STEP_OK 4 f100203f PC 0x1000251F0w
+STEP_OK 5 54000341 PC 0x1000251F4w
+STEP_OK 6 aa0203f3 PC 0x1000251F8w
+STEP_OK 7 79400048 PC 0x1000251FCw
+STEP_OK 8 5ac00502 PC 0x100025200w
+STEP_OK 9 79400668 PC 0x100025204w
+STEP_OK 10 5ac00508 PC 0x100025208w
+STEP_OK 11 0b080049 PC 0x10002520Cw
+STEP_OK 12 11001129 PC 0x100025210w
+LENGTH_TERM w2w
+  (w2w
+     (w2w
+        (w2w
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+               (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+               (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+               (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))))) +
+         w2w
+           (w2w
+              ((23 >< 16)
+                 (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+               (31 >< 24)
+                 (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+               (7 >< 0)
+                 (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+               (15 >< 8)
+                 (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))))))) +
+   4w)
+STEP_OK 1 a9be4ff4 PC 0x1000251E4w
+STEP_OK 2 a9017bfd PC 0x1000251E8w
+STEP_OK 3 910043fd PC 0x1000251ECw
+STEP_OK 4 f100203f PC 0x1000251F0w
+STEP_OK 5 54000341 PC 0x1000251F4w
+STEP_OK 6 aa0203f3 PC 0x1000251F8w
+STEP_OK 7 79400048 PC 0x1000251FCw
+STEP_OK 8 5ac00502 PC 0x100025200w
+STEP_OK 9 79400668 PC 0x100025204w
+STEP_OK 10 5ac00508 PC 0x100025208w
+STEP_OK 11 0b080049 PC 0x10002520Cw
+STEP_OK 12 11001129 PC 0x100025210w
+STEP_OK 13 eb03013f PC 0x100025214w
+STEP_OK 14 5400024c PC 0x100025218w
+STEP_OK 15 b9400409 PC 0x10002521Cw
+STEP_OK 16 5ac00920 PC 0x100025220w
+STEP_OK 17 8b284268 PC 0x100025224w
+STEP_OK 18 91001101 PC 0x100025228w
+STEP_OK 19 940001e7 PC 0x1000259C4w
+STEP_OK 20 f0000010 PC 0x1000259C8w
+STEP_OK 21 f9405a10 PC 0x1000259CCw
+STEP_OK 22 d61f0200 PC g
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).PC = g
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 30w = 0x10002522Cw
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 19w = a
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 29w = b + 16w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 16w = g
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).SP_EL0 = b
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 0w = w2w
+  ((7 >< 0)
+     (w2w
+        (w2w
+           (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+            s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+   (15 >< 8)
+     (w2w
+        (w2w
+           (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+            s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+   (23 >< 16)
+     (w2w
+        (w2w
+           (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+            s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+   (31 >< 24)
+     (w2w
+        (w2w
+           (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+            s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))))
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 1w = a +
+ExtendValue
+  (w2w
+     ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+      (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+      (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+      (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w)))))),
+   ExtendType_UXTW,0) + 4w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).REG 2w = w2w
+  ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+   (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+   (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+   (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))))
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       b + 31w ↦ (63 >< 56) (s.REG 30w); b + 30w ↦ (55 >< 48) (s.REG 30w);
+       b + 29w ↦ (47 >< 40) (s.REG 30w); b + 28w ↦ (39 >< 32) (s.REG 30w);
+       b + 27w ↦ (31 >< 24) (s.REG 30w); b + 26w ↦ (23 >< 16) (s.REG 30w);
+       b + 25w ↦ (15 >< 8) (s.REG 30w); b + 24w ↦ (7 >< 0) (s.REG 30w);
+       b + 23w ↦ (63 >< 56) (s.REG 29w); b + 22w ↦ (55 >< 48) (s.REG 29w);
+       b + 21w ↦ (47 >< 40) (s.REG 29w); b + 20w ↦ (39 >< 32) (s.REG 29w);
+       b + 19w ↦ (31 >< 24) (s.REG 29w); b + 18w ↦ (23 >< 16) (s.REG 29w);
+       b + 17w ↦ (15 >< 8) (s.REG 29w); b + 16w ↦ (7 >< 0) (s.REG 29w);
+       b + 15w ↦ (63 >< 56) (s.REG 19w); b + 14w ↦ (55 >< 48) (s.REG 19w);
+       b + 13w ↦ (47 >< 40) (s.REG 19w); b + 12w ↦ (39 >< 32) (s.REG 19w);
+       b + 11w ↦ (31 >< 24) (s.REG 19w); b + 10w ↦ (23 >< 16) (s.REG 19w);
+       b + 9w ↦ (15 >< 8) (s.REG 19w); b + 8w ↦ (7 >< 0) (s.REG 19w);
+       b + 7w ↦ (63 >< 56) (s.REG 20w); b + 6w ↦ (55 >< 48) (s.REG 20w);
+       b + 5w ↦ (47 >< 40) (s.REG 20w); b + 4w ↦ (39 >< 32) (s.REG 20w);
+       b + 3w ↦ (31 >< 24) (s.REG 20w); b + 2w ↦ (23 >< 16) (s.REG 20w);
+       b + 1w ↦ (15 >< 8) (s.REG 20w); b ↦ (7 >< 0) (s.REG 20w)
+     ⦈; PC := g;
+   PSTATE :=
+     s.PSTATE with
+     <|C :=
+         ((if
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1 < 18446744073709551616
+           then
+             w2n
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                         w2w
+                           (w2w
+                              ((23 >< 16)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (31 >< 24)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (7 >< 0)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                               (15 >< 8)
+                                 (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                   4w)) + w2n (¬s.REG 3w) + 1
+           else
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1) MOD 18446744073709551616) ≠
+          w2n
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) + w2n (¬s.REG 3w) + 1);
+       N :=
+         word_msb
+           (w2w
+              (w2w
+                 (w2w
+                    (w2w
+                       (w2w
+                          ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                           (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                     w2w
+                       (w2w
+                          ((23 >< 16)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (31 >< 24)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (7 >< 0)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                           (15 >< 8)
+                             (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+               4w) + -1w * s.REG 3w);
+       V :=
+         (word_msb
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (31 >< 24)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (7 >< 0)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                            (15 >< 8)
+                              (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                4w)) ∧
+          (word_msb
+             (w2w
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                             (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                       w2w
+                         (w2w
+                            ((23 >< 16)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (31 >< 24)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (7 >< 0)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                             (15 >< 8)
+                               (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                 4w)) ⇎
+           BIT 63
+             (w2n
+                (w2w
+                   (w2w
+                      (w2w
+                         (w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                          w2w
+                            (w2w
+                               ((23 >< 16)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (31 >< 24)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (7 >< 0)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                                (15 >< 8)
+                                  (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+                    4w)) + w2n (¬s.REG 3w) + 1)));
+       Z :=
+         (w2w
+            (w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+                         (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))))) +
+                   w2w
+                     (w2w
+                        ((23 >< 16)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (31 >< 24)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+                         (15 >< 8)
+                           (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))))))) +
+             4w) + -1w * s.REG 3w =
+          0w)|>;
+   REG :=
+     s.REG⦇
+       16w ↦ g; 30w ↦ 0x10002522Cw;
+       1w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0) + 4w;
+       8w ↦
+         a +
+         ExtendValue
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+               (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w)))))),
+            ExtendType_UXTW,0);
+       0w ↦
+         w2w
+           ((7 >< 0) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (15 >< 8) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (23 >< 16) (w2w (w2w (mem_word s.MEM (c + 4w)))) @@
+            (31 >< 24) (w2w (w2w (mem_word s.MEM (c + 4w)))));
+       9w ↦ w2w (mem_word s.MEM (c + 4w));
+       8w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM (a + 2w))))));
+       2w ↦
+         w2w
+           ((23 >< 16) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (31 >< 24) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (7 >< 0) (w2w (w2w (w2w (mem_half s.MEM a)))) @@
+            (15 >< 8) (w2w (w2w (w2w (mem_half s.MEM a)))));
+       8w ↦ w2w (w2w (mem_half s.MEM a)); 19w ↦ a; 29w ↦ b + 16w
+     ⦈; SP_EL0 := b; branch_hint := SOME BranchType_JMP|>).PSTATE.EL = 0w
+Saved theorem _______ "ffiwrite_prefix_run"
+CHECKED ffiwrite_prefix_run
+ []
+⊢ ffiwrite_entry_pre s b c a g ⇒
+  ∃s1.
+    arm8_run 22 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002522Cw ∧
+    s1.REG 19w = a ∧ s1.REG 29w = b + 16w ∧ s1.REG 16w = g ∧ s1.SP_EL0 = b ∧
+    s1.REG 0w =
+    w2w
+      ((7 >< 0)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (15 >< 8)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (23 >< 16)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (31 >< 24)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w))))) ∧
+    s1.REG 1w =
+    a +
+    ExtendValue
+      (w2w
+         ((23 >< 16)
+            (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+          (31 >< 24)
+            (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+          (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+          (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w)))))),
+       ExtendType_UXTW,0) + 4w ∧
+    s1.REG 2w =
+    w2w
+      ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+       (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+       (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+       (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a))))) ∧
+    s1.PSTATE.EL = 0w ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧ mem_dword s1.MEM b = s.REG 20w ∧
+    mem_dword s1.MEM (b + 8w) = s.REG 19w ∧
+    mem_dword s1.MEM (b + 16w) = s.REG 29w ∧
+    mem_dword s1.MEM (b + 24w) = s.REG 30w ∧
+    (∀q. (∀i. i < 32 ⇒ q ≠ b + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 0w ∧ r ≠ 1w ∧ r ≠ 2w ∧ r ≠ 8w ∧ r ≠ 9w ∧ r ≠ 16w ∧ r ≠ 19w ∧
+        r ≠ 29w ∧ r ≠ 30w ⇒
+        s1.REG r = s.REG r
+STEP_ALTERNATIVE_REJECTED 37f800c0 HOL_ERR (HOL_ERROR {message = "hypothesis: \194\172word_bit 31 (w2w (s.REG 0w)) ==> F", origins = [{origin_function = "step", origin_structure = "forge", source_location = Loc_Unknown}]})
+STEP_OK 1 37f800c0 PC 0x100025244w
+STEP_OK 2 52800028 PC 0x100025248w
+STEP_OK 3 39000268 PC 0x10002524Cw
+STEP_OK 4 a9417bfd PC 0x100025250w
+STEP_OK 5 a8c24ff4 PC 0x100025254w
+STEP_OK 6 d65f03c0 PC v30
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PC = v30
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 30w = v30
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 29w = v29
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 19w = v19
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 20w = v20
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).SP_EL0 = b + 32w
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).MEM a = 1w
+POST (s with
+ <|MEM := s.MEM⦇a ↦ 1w⦈; PC := v30;
+   REG := s.REG⦇19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29; 8w ↦ 1w⦈;
+   SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PSTATE.EL = 0w
+Saved theorem _______ "ffiwrite_suffix_fail_run"
+CHECKED ffiwrite_suffix_fail_run
+ []
+⊢ ffiwrite_return_fail_pre s b a v20 v19 v29 v30 ⇒
+  ∃s1.
+    arm8_run 6 s = SOME s1 ∧ s1.PC = v30 ∧ s1.REG 30w = v30 ∧
+    s1.REG 29w = v29 ∧ s1.REG 19w = v19 ∧ s1.REG 20w = v20 ∧
+    s1.SP_EL0 = b + 32w ∧ s1.MEM a = 1w ∧ s1.PSTATE.EL = 0w ∧
+    s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧
+    (∀q. (∀i. i < 1 ⇒ q ≠ a + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 8w ∧ r ≠ 19w ∧ r ≠ 20w ∧ r ≠ 29w ∧ r ≠ 30w ⇒ s1.REG r = s.REG r
+STEP_OK 1 37f800c0 PC 0x100025230w
+STEP_OK 2 52800008 PC 0x100025234w
+STEP_OK 3 5ac00809 PC 0x100025238w
+STEP_OK 4 53107d29 PC 0x10002523Cw
+STEP_OK 5 78001269 PC 0x100025240w
+STEP_OK 6 14000002 PC 0x100025248w
+STEP_OK 7 39000268 PC 0x10002524Cw
+STEP_OK 8 a9417bfd PC 0x100025250w
+STEP_OK 9 a8c24ff4 PC 0x100025254w
+STEP_OK 10 d65f03c0 PC v30
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PC = v30
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 30w = v30
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 29w = v29
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 19w = v19
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 20w = v20
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).SP_EL0 = b + 32w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).MEM a = 0w
+DECIDE_FAILED a = a + 1w
+DECIDE_FAILED a = a + 1w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).MEM (a + 1w) = if a = a + 1w then 0w
+else if a + 2w = a + 1w then
+  (15 >< 8)
+    (w2w
+       (w2w
+          (65535w &&
+           w2w
+             (w2w
+                ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                 (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+           16)))
+else
+  (7 >< 0)
+    (w2w
+       (w2w
+          (65535w &&
+           w2w
+             (w2w
+                ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                 (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+           16)))
+DECIDE_FAILED a = a + 2w
+DECIDE_FAILED a = a + 2w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).MEM (a + 2w) = if a = a + 2w then 0w
+else
+  (15 >< 8)
+    (w2w
+       (w2w
+          (65535w &&
+           w2w
+             (w2w
+                ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                 (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+           16)))
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PSTATE.EL = 0w
+Saved theorem _______ "ffiwrite_suffix_ok_run"
+CHECKED ffiwrite_suffix_ok_run
+ []
+⊢ ffiwrite_return_ok_pre s b a v20 v19 v29 v30 ⇒
+  ∃s1.
+    arm8_run 10 s = SOME s1 ∧ s1.PC = v30 ∧ s1.REG 30w = v30 ∧
+    s1.REG 29w = v29 ∧ s1.REG 19w = v19 ∧ s1.REG 20w = v20 ∧
+    s1.SP_EL0 = b + 32w ∧ s1.MEM a = 0w ∧
+    s1.MEM (a + 1w) =
+    (if a = a + 1w then 0w
+     else if a + 2w = a + 1w then
+       (15 >< 8)
+         (w2w
+            (w2w
+               (65535w &&
+                w2w
+                  (w2w
+                     ((7 >< 0) (w2w (s.REG 0w)) @@
+                      (15 >< 8) (w2w (s.REG 0w)) @@
+                      (23 >< 16) (w2w (s.REG 0w)) @@
+                      (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     else
+       (7 >< 0)
+         (w2w
+            (w2w
+               (65535w &&
+                w2w
+                  (w2w
+                     ((7 >< 0) (w2w (s.REG 0w)) @@
+                      (15 >< 8) (w2w (s.REG 0w)) @@
+                      (23 >< 16) (w2w (s.REG 0w)) @@
+                      (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))) ∧
+    s1.MEM (a + 2w) =
+    (if a = a + 2w then 0w
+     else
+       (15 >< 8)
+         (w2w
+            (w2w
+               (65535w &&
+                w2w
+                  (w2w
+                     ((7 >< 0) (w2w (s.REG 0w)) @@
+                      (15 >< 8) (w2w (s.REG 0w)) @@
+                      (23 >< 16) (w2w (s.REG 0w)) @@
+                      (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))) ∧
+    s1.PSTATE.EL = 0w ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧
+    (∀q. (∀i. i < 3 ⇒ q ≠ a + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 8w ∧ r ≠ 9w ∧ r ≠ 19w ∧ r ≠ 20w ∧ r ≠ 29w ∧ r ≠ 30w ⇒
+        s1.REG r = s.REG r
+Saved theorem _______ "ffiwrite_ok_alignment_conflict"
+CHECKED ffiwrite_ok_alignment_conflict
+ [] ⊢ ¬(aligned 1 a ∧ aligned 1 (a + 1w))
+STEP_OK 1 a9be4ff4 PC 0x1000251E4w
+STEP_OK 2 a9017bfd PC 0x1000251E8w
+STEP_OK 3 910043fd PC 0x1000251ECw
+STEP_OK 4 f100203f PC 0x1000251F0w
+STEP_ALTERNATIVE_REJECTED 54000341 HOL_ERR (HOL_ERROR {message = "hypothesis: (s with\n <|MEM :=\n     s.MEM\226\166\135\n       b + 31w \226\134\166 (63 >< 56) (s.REG 30w); b + 30w \226\134\166 (55 >< 48) (s.REG 30w);\n       b + 29w \226\134\166 (47 >< 40) (s.REG 30w); b + 28w \226\134\166 (39 >< 32) (s.REG 30w);\n       b + 27w \2
+STEP_OK 5 54000341 PC 0x100025258w
+Saved theorem _______ "ffiwrite_clen_bad_reaches_assert"
+CHECKED ffiwrite_clen_bad_reaches_assert
+ []
+⊢ ffiwrite_clen_bad_pre s b ⇒
+  ∃s1. arm8_run 5 s = SOME s1 ∧ s1.PC = 0x100025258w
+DEFINITION  []
+⊢ ∀s. ffiwrite_stub_pre s ⇔
+      arm8_user s ∧ s.PC = 0x100004090w ∧ ffiwrite_code_bytes s.MEM
+DEFINITION  []
+⊢ ∀s b c a g.
+    ffiwrite_entry_base s b c a g ⇔
+    arm8_user s ∧ s.PC = 0x1000251E0w ∧ ffiwrite_code_bytes s.MEM ∧
+    s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 0w = c ∧ aligned 2 c ∧
+    s.REG 2w = a ∧ aligned 1 a ∧ s.REG 1w = 8w ∧
+    mem_dword s.MEM 0x1000280B0w = g ∧
+    (∀i x. i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ b + n2w i ≠ x) ∧
+    (∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j) ∧
+    ∀i j. i < 32 ∧ j < 4 ⇒ b + n2w i ≠ a + n2w j
+DEFINITION  []
+⊢ ∀s b c a g.
+    ffiwrite_entry_pre s b c a g ⇔
+    ffiwrite_entry_base s b c a g ∧ ¬word_msb (s.REG 3w) ∧
+    w2w
+      (w2w
+         (w2w
+            (w2w
+               (w2w
+                  ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                   (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                   (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                   (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))))) +
+             w2w
+               (w2w
+                  ((23 >< 16)
+                     (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                   (31 >< 24)
+                     (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                   (7 >< 0)
+                     (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                   (15 >< 8)
+                     (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))))))) +
+       4w) ≤₊ s.REG 3w
+DEFINITION  []
+⊢ ∀s b a v20 v19 v29 v30.
+    ffiwrite_return_fail_pre s b a v20 v19 v29 v30 ⇔
+    (arm8_user s ∧ s.PC = 0x10002522Cw ∧ ffiwrite_code_bytes s.MEM ∧
+     s.SP_EL0 = b ∧ aligned 3 b ∧ s.REG 19w = a ∧ mem_dword s.MEM b = v20 ∧
+     mem_dword s.MEM (b + 8w) = v19 ∧ mem_dword s.MEM (b + 16w) = v29 ∧
+     mem_dword s.MEM (b + 24w) = v30 ∧
+     (∀i x. i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x) ∧
+     ∀i j. i < 3 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j) ∧
+    word_bit 31 (w2w (s.REG 0w))
+DEFINITION  []
+⊢ ∀s b a v20 v19 v29 v30.
+    ffiwrite_return_ok_pre s b a v20 v19 v29 v30 ⇔
+    (arm8_user s ∧ s.PC = 0x10002522Cw ∧ ffiwrite_code_bytes s.MEM ∧
+     s.SP_EL0 = b ∧ aligned 3 b ∧ s.REG 19w = a ∧ mem_dword s.MEM b = v20 ∧
+     mem_dword s.MEM (b + 8w) = v19 ∧ mem_dword s.MEM (b + 16w) = v29 ∧
+     mem_dword s.MEM (b + 24w) = v30 ∧
+     (∀i x. i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x) ∧
+     ∀i j. i < 3 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j) ∧
+    ¬word_bit 31 (w2w (s.REG 0w)) ∧ aligned 1 (a + 1w)
+DEFINITION  []
+⊢ ∀s b.
+    ffiwrite_clen_bad_pre s b ⇔
+    arm8_user s ∧ s.PC = 0x1000251E0w ∧ ffiwrite_code_bytes s.MEM ∧
+    s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 1w ≠ 8w ∧
+    ∀i x. i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ b + n2w i ≠ x
+Exporting theory "forge_refundFfiwriteStep" ... done.
+Theory "forge_refundFfiwriteStep" took 23.1s to build
+NATIVE_STEP_COMPLETE

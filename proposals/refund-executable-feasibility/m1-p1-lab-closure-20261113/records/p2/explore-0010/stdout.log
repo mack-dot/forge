@@ -1,0 +1,422 @@
+<<HOL message: Created theory "forge_p2Explore">>
+Saved definition ____ "val_inv_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "step_ok_def"
+Saved definition ____ "region_hyp_def"
+OK..
+AFTER inst: 0 goals, proved=true
+Saved definition ____ "region_inv_def"
+OK..
+AFTER wb: 0 goals, proved=true
+OK..
+1 subgoal:
+AFTER st-unfold: 1 goals, proved=false
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case asm_fetch s of
+   NONE => (Error,s)
+ | SOME (Label v39 v40 v42) => (Error,s)
+ | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | SOME (Asm (
+  ...
+                                   (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | SOME (LabAsm Halt v47 v50 v51) =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+OK..
+1 subgoal:
+AFTER st-none: 1 goals, proved=false
+  ASM asm_fetch s = SOME x
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case x of
+   Label v39 v40 v42 => (Error,s)
+ | Asm (Asmi (Inst i)) v44 v45 =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | Asm (Asmi (Jump v12)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45 => (Error,s)
+ | Asm (Asmi (Call v17)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpReg r)) v44 v45 =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | Asm (Asmi (Loc v19 v20)) v44 v45 => (Error,s)
+ | Asm (Sha
+  ...
+
+                                         (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | LabAsm Halt v47 v50 v51 =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+OK..
+1 subgoal:
+AFTER st-stepok: 1 goals, proved=false
+  ASM step_ok G OK code s.pc x
+  ASM asm_fetch s = SOME x
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case x of
+   Label v39 v40 v42 => (Error,s)
+ | Asm (Asmi (Inst i)) v44 v45 =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | Asm (Asmi (Jump v12)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45 => (Error,s)
+ | Asm (Asmi (Call v17)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpReg r)) v44 v45 =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | Asm (Asmi (Loc v19 v20)) v
+  ...
+
+                                         (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | LabAsm Halt v47 v50 v51 =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+OK..
+2 subgoals:
+AFTER st-line: 2 goals, proved=false
+  ASM case a of
+  Asmi (Inst v24) => OK (s.pc + 1)
+| Asmi (Jump v25) => T
+| Asmi (JumpCmp v26 v27 v28 v29) => T
+| Asmi (Call v30) => T
+| Asmi (JumpReg v31) => T
+| Asmi (Loc v32 v33) => T
+| ShareMem v11 v12 v13 => OK (s.pc + 1)
+  ASM asm_fetch s = SOME (Asm a l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case a of
+   Asmi (Inst i) =>
+     if (asm_inst i s).failed then (Error,s)
+     else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | Asmi (Jump v12) => (Error,s)
+ | Asmi (JumpCmp v13 v14 v15 v16) => (Error,s)
+ | Asmi (Call v17) => (Error,s)
+ | Asmi (JumpReg r) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+  
+  ...
+code s2 ∧ s2.clock < s.clock) ∨
+∃res.
+  (case a of
+     Asmi (Inst i) =>
+       if (asm_inst i s).failed then (Error,s)
+       else evaluate (inc_pc (dec_clock (asm_inst i s)))
+   | Asmi (Jump v12) => (Error,s)
+   | Asmi (JumpCmp v13 v14 v15 v16) => (Error,s)
+   | Asmi (Call v17) => (Error,s)
+   | Asmi (JumpReg r) =>
+     (case read_reg r s of
+        Word v3 => (Error,s)
+      | Loc n1 n2 =>
+        case loc_to_pc n1 n2 s.code of
+          NONE => (Error,s)
+        | SOME p => evaluate (upd_pc p (dec_clock s)))
+   | Asmi (Loc v19 v20) => (Error,s)
+   | ShareMem m r ad =>
+     case share_mem_op m r ad s of
+       NONE => (Error,s)
+     | SOME (FFI_return v3 v4,s') =>
+       evaluate
+         (s' with
+          <|io_regs := shift_seq 1 s'.io_regs;
+            io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+     | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) =
+  (res,s)
+----
+  ASM case a of
+  Jump (Lab n1 n2) => ∀p. loc_to_pc n1 n2 code = SOME p ⇒ OK p
+| JumpCmp v35 v36 v37 (Lab n1' n2') =>
+  (∀p. loc_to_pc n1' n2' code = SOME p ⇒ OK p) ∧ OK (s.pc + 1)
+| Call v39 => F
+| LocValue r lab => G (lab_to_loc lab) ∧ OK (s.pc + 1)
+| CallFFI v42 => T
+| Install => F
+| Halt => T
+  ASM asm_fetch s = SOME (LabAsm a i l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case a of
+   Jump l =>
+     (case get_pc_value l s of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | JumpCmp c r'' ri l' =>
+   (case word_cmp c (read_reg r'' s) (reg_imm ri s) of
+      NONE => (Error,s)
+    | SOME T =>
+      (case get_pc_value l' s of
+  ...
+lue (s.cc_regs 0 a)
+                                         (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | Halt =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+OK..
+3 subgoals:
+AFTER st-sub: 3 goals, proved=false
+  ASM OK (s.pc + 1)
+  ASM asm_fetch s = SOME (Asm (Asmi (Inst i)) l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(if (asm_inst i s).failed then (Error,s)
+ else evaluate (inc_pc (dec_clock (asm_inst i s)))) ⇒
+(∃s2.
+   (if (asm_inst i s).failed then (Error,s)
+    else evaluate (inc_pc (dec_clock (asm_inst i s)))) = evaluate s2 ∧
+   region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+∃res.
+  (if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))) = (res,s)
+----
+  ASM T
+  ASM asm_fetch s = SOME (Asm (Asmi (JumpReg n')) l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case read_reg n' s of
+   Word v3 => (Error,s)
+ | Loc n1 n2 =>
+   case loc_to_pc n1 n2 s.code of
+     NONE => (Error,s)
+   | SOME p => evaluate (upd_pc p (dec_clock s))) ⇒
+(∃s2.
+   (case read_reg n' s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s))) = evaluate s2 ∧
+   region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+∃res.
+  (case read_reg n' s of
+     Word v3 => (Error,s)
+   | Loc n1 n2 =>
+     case loc_to_pc n1 n2 s.code of
+       NONE => (Error,s)
+     | SOME p => evaluate (upd_pc p (dec_clock s))) = (res,s)
+----
+  ASM OK (s.pc + 1)
+  ASM asm_fetch s = SOME (Asm (ShareMem m n' a') l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case share_mem_op m n' a' s of
+   NONE => (Error,s)
+ | SOME (FFI_return v3 v4,s') =>
+   evaluate
+     (s' with
+      <|io_regs := shift_seq 1 s'.io_regs;
+        io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+ | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) ⇒
+(∃s2.
+   (case share_mem_op m n' a' s of
+      NONE => (Error,s)
+    | SOME (FFI_return v3 v4,s') =>
+      evaluate
+        (s' with
+         <|io_regs := shift_seq 1 s'.io_regs;
+           io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+    | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) =
+   evaluate s2 ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+∃res.
+  (case share_mem_op m n' a' s of
+     NONE => (Error,s)
+   | SOME (FFI_return v3 v4,s') =>
+     evaluate
+       (s' with
+        <|io_regs := shift_seq 1 s'.io_regs;
+          io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+   | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) =
+  (res,s)
+----
+GOAL_COUNT_SUB 3
+OK..
+1 subgoal:
+AFTER st-cases: 1 goals, proved=false
+  ASM ¬(asm_inst i s).failed
+  ASM OK (s.pc + 1)
+  ASM asm_fetch s = SOME (Asm (Asmi (Inst i)) l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr = evaluate (inc_pc (dec_clock (asm_inst i s))) ⇒
+(∃s2.
+   evaluate (inc_pc (dec_clock (asm_inst i s))) = evaluate s2 ∧
+   region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+∃res. evaluate (inc_pc (dec_clock (asm_inst i s))) = (res,s)
+----
+GOAL_COUNT_CASES 1
+OK..
+
+Goal proved.
+ [.....]
+⊢ rr = evaluate (inc_pc (dec_clock (asm_inst i s))) ⇒
+  (∃s2.
+     evaluate (inc_pc (dec_clock (asm_inst i s))) = evaluate s2 ∧
+     region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+  ∃res. evaluate (inc_pc (dec_clock (asm_inst i s))) = (res,s)
+
+Goal proved.
+ [....]
+⊢ rr =
+  (if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))) ⇒
+  (∃s2.
+     (if (asm_inst i s).failed then (Error,s)
+      else evaluate (inc_pc (dec_clock (asm_inst i s)))) = evaluate s2 ∧
+     region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+  ∃res.
+    (if (asm_inst i s).failed then (Error,s)
+     else evaluate (inc_pc (dec_clock (asm_inst i s)))) = (res,s)
+
+Remaining subgoals:
+AFTER st-fin: 2 goals, proved=false
+  ASM T
+  ASM asm_fetch s = SOME (Asm (Asmi (JumpReg n')) l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case read_reg n' s of
+   Word v3 => (Error,s)
+ | Loc n1 n2 =>
+   case loc_to_pc n1 n2 s.code of
+     NONE => (Error,s)
+   | SOME p => evaluate (upd_pc p (dec_clock s))) ⇒
+(∃s2.
+   (case read_reg n' s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s))) = evaluate s2 ∧
+   region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+∃res.
+  (case read_reg n' s of
+     Word v3 => (Error,s)
+   | Loc n1 n2 =>
+     case loc_to_pc n1 n2 s.code of
+       NONE => (Error,s)
+     | SOME p => evaluate (upd_pc p (dec_clock s))) = (res,s)
+----
+  ASM OK (s.pc + 1)
+  ASM asm_fetch s = SOME (Asm (ShareMem m n' a') l n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case share_mem_op m n' a' s of
+   NONE => (Error,s)
+ | SOME (FFI_return v3 v4,s') =>
+   evaluate
+     (s' with
+      <|io_regs := shift_seq 1 s'.io_regs;
+        io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+ | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) ⇒
+(∃s2.
+   (case share_mem_op m n' a' s of
+      NONE => (Error,s)
+    | SOME (FFI_return v3 v4,s') =>
+      evaluate
+        (s' with
+         <|io_regs := shift_seq 1 s'.io_regs;
+           io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+    | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) =
+   evaluate s2 ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+∃res.
+  (case share_mem_op m n' a' s of
+     NONE => (Error,s)
+   | SOME (FFI_return v3 v4,s') =>
+     evaluate
+       (s' with
+        <|io_regs := shift_seq 1 s'.io_regs;
+          io_fp_regs := shift_seq 1 s'.io_fp_regs|>)
+   | SOME (FFI_final outcome,s') => (Halt (FFI_outcome outcome),s')) =
+  (res,s)
+----
+GOAL_COUNT_FIN 2
+EXPLORE_COMPLETE

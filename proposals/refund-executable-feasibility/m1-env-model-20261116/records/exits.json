@@ -1,0 +1,58 @@
+[
+ {
+  "case": "env-0001",
+  "actual_exit": 1,
+  "wall_seconds": 70.432,
+  "markers": [],
+  "kind": "authoring/exploration: goal shapes for the contract equivalence; one control"
+ },
+ {
+  "case": "env-0002",
+  "actual_exit": 1,
+  "wall_seconds": 82.189,
+  "markers": [],
+  "kind": "authoring/exploration: both normal forms printed; one control"
+ },
+ {
+  "case": "env-0003",
+  "actual_exit": 1,
+  "wall_seconds": 92.298,
+  "markers": [],
+  "kind": "authoring (one direction of the equivalence; dependent proofs)"
+ },
+ {
+  "case": "env-0004",
+  "actual_exit": 1,
+  "wall_seconds": 96.483,
+  "markers": [],
+  "kind": "authoring (one negative control)"
+ },
+ {
+  "case": "env-0005",
+  "actual_exit": 0,
+  "wall_seconds": 103.785,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: identity environment, exact interference condition, FFI contract equivalence, abstract FFI model, compositions, five negative controls"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 76.799,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 94 exact statements, 521 closure nodes, controls"
+ },
+ {
+  "case": "env-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 131.98,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

@@ -1,0 +1,34 @@
+<<HOL message: Created theory "forge_compileCorrectControl">>
+Proved triviality ___ "FST_SND_EQ"
+Proved triviality ___ "PERMUTE_IMP_LINV"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_compileCorrectControl)>>
+Proved triviality ___ "word_init_compile_oracle"
+<<HOL message: Stashing suspended theorem compile_correct' with pending subgoal: data_word.>>
+Saved theorem _______ "compile_correct'"
+CONTROL_IDENTICAL_STATEMENT true
+CHECKED compile_correct'
+⊢ compile asm_conf c prog = SOME (bytes,bitmaps,c') ⇒
+  (let
+     (s0,env) = THE (prim_sem_env ffi);
+     s = add_eval_state ev s0
+   in
+     ¬semantics_prog s env prog Fail ∧ backend_config_ok asm_conf c ∧
+     lab_to_targetProof$mc_conf_ok mc ∧ mc_init_ok asm_conf c mc ∧
+     opt_eval_config_wf (:α) asm_conf c' ev ∧
+     installed bytes cbspace bitmaps data_sp c'.lab_conf.ffi_names
+       (heap_regs c.stack_conf.reg_names) mc c'.lab_conf.shmem_extra ms ⇒
+     ∃po.
+       machine_sem mc ffi ms ⊆
+       extend_with_resource_limit'
+         (is_safe_for_space (:α) ffi po asm_conf c prog
+            (read_limits asm_conf c mc ms))
+         (semantics_determ (s with ptr_eq_oracle := po) env prog))
+CLOSURE_NODES 500
+CLOSURE_PARENTS forge_refundExclusionArm8
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_compileCorrectControl" ... done.
+Theory "forge_compileCorrectControl" took 1m25s to build
+REPLAY_COMPLETE

@@ -1,0 +1,61 @@
+<<HOL message: Created theory "forge_refundCallSite">>
+Saved theorem _______ "machine_reach_n_compute"
+Saved definition ____ "machine_reach_n_def"
+DEFINITION ⊢ ∀mc dm.
+    refund_static mc dm ⇔
+    mc.ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    mc.ffi_entry_pcs =
+    [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w] ∧
+    mc.halt_pc = 0x1000040C0w ∧ mc.install_pc = 0x1000040B0w ∧
+    mc.mmio_info = [] ∧ mc.prog_addresses = dm ∧ 0x100004080w ∉ dm ∧
+    mc.target = arm8_target ∧ mc.ptr_reg = 0 ∧ mc.len_reg = 1 ∧
+    mc.ptr2_reg = 2 ∧ mc.len2_reg = 3
+DEFINITION ⊢ ∀mc mc'.
+    mc_static_eq mc mc' ⇔
+    mc'.ffi_names = mc.ffi_names ∧ mc'.ffi_entry_pcs = mc.ffi_entry_pcs ∧
+    mc'.halt_pc = mc.halt_pc ∧ mc'.install_pc = mc.install_pc ∧
+    mc'.mmio_info = mc.mmio_info ∧ mc'.prog_addresses = mc.prog_addresses ∧
+    mc'.target = mc.target ∧ mc'.ptr_reg = mc.ptr_reg ∧
+    mc'.len_reg = mc.len_reg ∧ mc'.ptr2_reg = mc.ptr2_reg ∧
+    mc'.len2_reg = mc.len2_reg
+DEFINITION ⊢ ∀mc ffi ms mc' ffi' ms'.
+    machine_step mc ffi ms mc' ffi' ms' ⇔
+    (∀k. evaluate mc ffi (k + 1) ms = evaluate mc' ffi' k ms') ∧
+    ffi'.oracle = ffi.oracle ∧ mc_static_eq mc mc'
+DEFINITION ⊢ (∀mc ffi ms mc1 ffi1 ms1.
+     machine_reach_n 0 mc ffi ms mc1 ffi1 ms1 ⇔
+     mc1 = mc ∧ ffi1 = ffi ∧ ms1 = ms) ∧
+  ∀n mc ffi ms mc1 ffi1 ms1.
+    machine_reach_n (SUC n) mc ffi ms mc1 ffi1 ms1 ⇔
+    ∃mc' ffi' ms'.
+      machine_step mc ffi ms mc' ffi' ms' ∧
+      machine_reach_n n mc' ffi' ms' mc1 ffi1 ms1
+DEFINITION ⊢ ∀mc ffi ms mc1 ffi1 ms1.
+    machine_reach mc ffi ms mc1 ffi1 ms1 ⇔
+    ∃n. machine_reach_n n mc ffi ms mc1 ffi1 ms1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundCallSite)>>
+Saved theorem _______ "machine_reach_n_evaluate"
+CHECKED machine_reach_n_evaluate
+⊢ ∀n mc ffi ms mc1 ffi1 ms1.
+    machine_reach_n n mc ffi ms mc1 ffi1 ms1 ⇒
+    (∀k. evaluate mc ffi (k + n) ms = evaluate mc1 ffi1 k ms1) ∧
+    ffi1.oracle = ffi.oracle ∧ mc_static_eq mc mc1
+Saved theorem _______ "normal_step_is_machine_step"
+CHECKED normal_step_is_machine_step
+⊢ mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+    (mc.target.get_byte ms) mc.prog_addresses ∧
+  EVERY mc.target.state_ok
+    [ms; mc.target.next ms; mc.next_interfer 0 (mc.target.next ms)] ∧
+  (∀x. x ∉ mc.prog_addresses ⇒
+       mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+  machine_step mc ffi ms
+    (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi
+    (mc.next_interfer 0 (mc.target.next ms))
+Saved theorem _______ "call_FFI_return_keeps_oracle"
+CHECKED call_FFI_return_keeps_oracle
+⊢ call_FFI st nm cbytes abytes = FFI_return st' nb ⇒ st'.oracle = st.oracle
+Exporting theory "forge_refundCallSite" ... done.
+Theory "forge_refundCallSite" took 9.9s to build
+EXACT_COMPLETE

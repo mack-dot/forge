@@ -1,0 +1,38 @@
+{
+ "unsure": "U401",
+ "end_to_end": false,
+ "cases": [
+  {
+   "case": "word-0001",
+   "actual_exit": 1,
+   "wall_seconds": 74.733,
+   "markers": [],
+   "kind": "authoring (quotation typing); three bridge lemmas checked; nothing exported"
+  },
+  {
+   "case": "word-0002",
+   "actual_exit": 1,
+   "wall_seconds": 80.657,
+   "markers": [],
+   "kind": "authoring (one tactic); nothing exported"
+  },
+  {
+   "case": "word-0003",
+   "actual_exit": 0,
+   "wall_seconds": 114.792,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "kind": "forge_refundWriteWord: 19 theorems, 1 definition; 536 closure nodes; four bool axioms. Started before the owner changed U401 to an audit. No separate exact-statement import was run."
+  }
+ ],
+ "not_run": [
+  "exact-statement import and scope-control script for forge_refundWriteWord",
+  "repeat",
+  "full 172-statement import",
+  "source-level event invariant",
+  "clean replay",
+  "independent replay",
+  "native execution"
+ ]
+}

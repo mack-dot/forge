@@ -1,0 +1,71 @@
+[
+ {
+  "case": "diag-0001",
+  "actual_exit": 0,
+  "wall_seconds": 77.476,
+  "markers": [
+   "EXPLORE_COMPLETE"
+  ],
+  "kind": "diagnostic: form of the stored compile theorem (oracle and info are specified constants); no theorem stored"
+ },
+ {
+  "case": "ffi-0001",
+  "actual_exit": 0,
+  "wall_seconds": 86.713,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: in-logic compile recomputed with the recorded oracle; FFI names (4) and shmem_extra of refund_lab_conf2"
+ },
+ {
+  "case": "res-0001",
+  "actual_exit": 1,
+  "wall_seconds": 73.417,
+  "markers": [],
+  "kind": "authoring (shape of the start_pc_ok goal)"
+ },
+ {
+  "case": "res-0002",
+  "actual_exit": 1,
+  "wall_seconds": 88.786,
+  "markers": [],
+  "kind": "authoring (one negative control)"
+ },
+ {
+  "case": "res-0003",
+  "actual_exit": 0,
+  "wall_seconds": 93.429,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: five residual clauses proved at refund_mc 0x1000040D0w envmc; two kept unproved; compositions; four negative controls"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 0,
+  "wall_seconds": 54.939,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 76 exact statements, 520 closure nodes, controls"
+ },
+ {
+  "case": "ffi-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 86.636,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ },
+ {
+  "case": "res-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 118.214,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

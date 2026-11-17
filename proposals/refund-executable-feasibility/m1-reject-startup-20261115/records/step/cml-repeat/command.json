@@ -1,0 +1,36 @@
+{
+ "case": "cml-repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "cml-0012.sml",
+ "source_sha256": "896a6cf5485a147aef4410b11e5cc0f89985885bf6560e9cab67f1fa637637d0",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 15,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 13.73,
+ "child_user_cpu_seconds": 14.49,
+ "child_system_cpu_seconds": 1.085,
+ "child_max_rss_bytes": 598507520,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "2cd2d8604e17fbd3c086505ace5f5bf7048cee925a227456e23f9ab6030dd489",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundCmlMainStepTheory.html": "2cd9a1436d9ed8b1cd90ec52a66a2aac37de25b1a15e5391d0bd5b08e0abe15c",
+  ".hol/objs/forge_refundCmlMainStepTheory.dat": "ff9d654e2c07ff6e978c6f798e6bb3d2881f4dbc78d0d8aadd8176e8432ec301",
+  ".hol/objs/forge_refundCmlMainStepTheory.sig": "4671de4c6112a036b6b354bccc63191eec678a34b56e5d18a525dee36b008320",
+  ".hol/objs/forge_refundCmlMainStepTheory.sml": "115bf1e34dc6ab29b66e5c3b6e919383e2b08ad0cd045dc57122b91a388a4969"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

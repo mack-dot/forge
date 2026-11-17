@@ -1,0 +1,97 @@
+<<HOL message: Created theory "forge_refundInstalledDomains">>
+DEFINITION ⊢ refund_code_dm = {a | 0x1000040D0w ≤₊ a ∧ a <₊ 0x100024000w}
+DEFINITION ⊢ ∀h e.
+    refund_mem_dm h e =
+    refund_code_dm ∪ {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm
+DEFINITION ⊢ ∀h e.
+    refund_heap_clear h e ⇔
+    ∀a. h ≤₊ a ∧ a <₊ e ⇒ ¬(0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w)
+DEFINITION ⊢ ∀ms.
+    refund_t ms =
+    <|regs := (λi. ms.REG (n2w i)); fp_regs := (λi. 0w); mem := ms.MEM;
+      mem_domain := refund_mem_dm (ms.REG 1w) (ms.REG 3w); pc := ms.PC;
+      lr := 30; align := 2; be := F; failed := F|>
+DEFINITION ⊢ ∀ms.
+    refund_end_state ms ⇔
+    ms.PSTATE.EL = 0w ∧ ¬ms.SCTLR_EL1.E0E ∧ ¬ms.SCTLR_EL1.SA0 ∧
+    ¬ms.TCR_EL1.TBI1 ∧ ¬ms.TCR_EL1.TBI0 ∧ ms.exception = NoException ∧
+    ms.PC = 0x1000040D0w ∧ aligned 3 (ms.REG 1w) ∧ aligned 3 (ms.REG 3w) ∧
+    ms.REG 1w ≤₊ ms.REG 3w ∧ 8192w ≤₊ ms.REG 3w − ms.REG 1w ∧
+    refund_heap_clear (ms.REG 1w) (ms.REG 3w) ∧ refund_image_mem 0w ms.MEM ∧
+    mem_dword ms.MEM (ms.REG 1w) = 0x10002C018w ∧
+    mem_dword ms.MEM (ms.REG 1w + 8w) = 0x100030F30w ∧
+    mem_dword ms.MEM (ms.REG 1w + 16w) = 0x100030F30w ∧
+    mem_dword ms.MEM (ms.REG 1w + 24w) = 0x100023E54w ∧
+    mem_dword ms.MEM (ms.REG 1w + 32w) = 0x100024000w
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundInstalledDomains)>>
+Saved theorem _______ "refund_bitmaps_dm_range"
+CHECKED refund_bitmaps_dm_range
+⊢ ∀x. x ∈ refund_bitmaps_dm ⇒ 0x10002C018w ≤₊ x ∧ x <₊ 0x100030F30w
+Saved theorem _______ "refund_heap_bitmaps_closed"
+CHECKED refund_heap_bitmaps_closed
+⊢ aligned 3 h ∧ aligned 3 e ⇒
+  ∀a. byte_align a ∈ {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm ⇒
+      a ∈ {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm
+Saved theorem _______ "refund_heap_bitmaps_disjoint"
+CHECKED refund_heap_bitmaps_disjoint
+⊢ refund_heap_clear h e ⇒ DISJOINT {w | h ≤₊ w ∧ w <₊ e} refund_bitmaps_dm
+Saved theorem _______ "refund_code_addr_in_dm"
+CHECKED refund_code_addr_in_dm
+⊢ ∀i h e. i < 130864 ⇒ 0x1000040D0w + n2w i ∈ refund_mem_dm h e
+Saved theorem _______ "refund_code_addr_not_excluded"
+CHECKED refund_code_addr_not_excluded
+⊢ ∀i h e.
+    refund_heap_clear h e ∧ i < 130864 ⇒
+    0x1000040D0w + n2w i ∉ {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm
+Saved theorem _______ "refund_code_bytes_in_mem"
+CHECKED refund_code_bytes_in_mem
+⊢ ∀m h e.
+    refund_heap_clear h e ∧ refund_image_mem 0w m ⇒
+    bytes_in_mem 0x1000040D0w code m (refund_mem_dm h e)
+      ({w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm)
+Saved theorem _______ "refund_code_buffer_in_dm"
+CHECKED refund_code_buffer_in_dm
+⊢ ∀h e.
+    refund_heap_clear h e ⇒
+    ∀n. n < 428 ⇒
+        n2w (n + 130436) + 0x1000040D0w ∈ refund_mem_dm h e ∧
+        n2w (n + 130436) + 0x1000040D0w ∉
+        {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm
+Saved theorem _______ "refund_heap_bitmaps_subset"
+CHECKED refund_heap_bitmaps_subset
+⊢ ∀h e. {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm ⊆ refund_mem_dm h e
+Saved theorem _______ "refund_heap_clear_IMP_header_separation"
+CHECKED refund_heap_clear_IMP_header_separation
+⊢ refund_heap_clear h e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ⇒
+  ∀i a. i < 40 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ h + n2w i ≠ a
+Saved theorem _______ "refund_t_target_state_rel"
+CHECKED refund_t_target_state_rel
+⊢ ∀ms. refund_end_state ms ⇒ target_state_rel arm8_target (refund_t ms) ms
+Saved theorem _______ "refund_t_target_configured"
+CHECKED refund_t_target_configured
+⊢ ∀ms mc0.
+    is_arm8_machine_config mc0 ∧
+    mc0.prog_addresses = refund_mem_dm (ms.REG 1w) (ms.REG 3w) ⇒
+    target_configured (refund_t ms) mc0
+Saved theorem _______ "refund_code_loaded"
+CHECKED refund_code_loaded
+⊢ ∀ms mc0.
+    is_arm8_machine_config mc0 ∧
+    mc0.prog_addresses = refund_mem_dm (ms.REG 1w) (ms.REG 3w) ∧
+    ms.PC = 0x1000040D0w ∧ refund_image_mem 0w ms.MEM ⇒
+    code_loaded code mc0 ms
+Saved theorem _______ "refund_end_state_established"
+CHECKED refund_end_state_established
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.REG 1w = h ∧ ms.REG 3w = e ∧
+    refund_end_state ms
+CLOSURE_NODES 516
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundInstalledDomains" ... done.
+Theory "forge_refundInstalledDomains" took 7.7s to build
+EXACT_COMPLETE

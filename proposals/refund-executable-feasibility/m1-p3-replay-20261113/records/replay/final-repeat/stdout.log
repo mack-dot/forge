@@ -1,0 +1,142 @@
+<<HOL message: Created theory "forge_simReplay">>
+Proved triviality ___ "enc_with_nop_thm"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simReplay)>>
+Proved triviality ___ "lab_lookup_IMP"
+Proved triviality ___ "prog_to_bytes_lemma"
+Proved triviality ___ "bytes_in_mem_APPEND"
+Proved triviality ___ "UPDATE_COND_SELF"
+Proved triviality ___ "word_loc_val_byte_labs_mono"
+Proved triviality ___ "IMP_bytes_in_memory"
+Proved triviality ___ "IMP_bytes_in_memory_JumpReg"
+Proved triviality ___ "IMP_bytes_in_memory_Jump"
+Proved triviality ___ "IMP_bytes_in_memory_JumpCmp"
+Proved triviality ___ "IMP_bytes_in_memory_JumpCmp_1"
+Proved triviality ___ "IMP_bytes_in_memory_Call"
+Proved triviality ___ "IMP_bytes_in_memory_LocValue"
+Proved triviality ___ "IMP_bytes_in_memory_Inst"
+Proved triviality ___ "IMP_bytes_in_memory_CallFFI"
+Proved triviality ___ "IMP_bytes_in_memory_Halt"
+Proved triviality ___ "IMP_bytes_in_memory_Install"
+Proved triviality ___ "bytes_in_mem_IMP_memory"
+Proved triviality ___ "read_bytearray_state_rel"
+Proved triviality ___ "IMP_has_io_name"
+Proved triviality ___ "bytes_in_mem_asm_write_bytearray_lemma"
+Proved triviality ___ "bytes_in_mem_asm_write_bytearray"
+Proved triviality ___ "write_bytearray_NOT_Loc"
+Proved triviality ___ "CallFFI_bytearray_lemma"
+Proved triviality ___ "line_length_MOD_0"
+Proved triviality ___ "pos_val_MOD_0_lemma"
+Proved triviality ___ "word_cmp_lemma"
+Proved triviality ___ "list_add_if_fresh_simp"
+Proved triviality ___ "find_index_append"
+Proved triviality ___ "has_io_name_find_index"
+Proved triviality ___ "all_enc_ok_prog_to_bytes_EVEN"
+Proved triviality ___ "loc_to_pc_append"
+Proved triviality ___ "find_ffi_names_append"
+<<HOL message: mk_functional: 
+  pattern completion has added 3 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 2 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "lab_step_def"
+Saved definition ____ "lab_step_closed_def"
+Saved theorem _______ "lab_step_evaluate"
+Saved definition ____ "nip_ctx_def"
+Saved theorem _______ "seg_finish"
+Saved definition ____ "halt_ctx_def"
+Saved theorem _______ "state_rel_ctx"
+Saved theorem _______ "step_nip"
+Saved theorem _______ "final_nip"
+<<HOL message: Stashing suspended theorem compile_no_install_prefix with pending subgoals: Asm, Call, CallFFI, Halt, Install, Jump, JumpCmp, LocValue, ShareMemOp.>>
+Proved triviality ___ "i2w_sub_nat"
+Proved triviality ___ "i2w_neg_nat"
+compile_no_install_prefix: Asm Inst
+compile_no_install_prefix: Asm JumpReg
+CASE_PROVED Asm
+compile_no_install_prefix: ShareMemOp (excluded by the invariant premise)
+CASE_PROVED ShareMemOp
+compile_no_install_prefix: Jump
+CASE_PROVED Jump
+compile_no_install_prefix: JumpCmp
+CASE_PROVED JumpCmp
+compile_no_install_prefix: Call
+CASE_PROVED Call
+compile_no_install_prefix: LocValue
+CASE_PROVED LocValue
+compile_no_install_prefix: CallFFI
+CASE_PROVED CallFFI
+compile_no_install_prefix: Install
+CASE_PROVED Install
+compile_no_install_prefix: Halt
+CASE_PROVED Halt
+Saved theorem _______ "compile_no_install_prefix"
+Saved theorem _______ "compile_correct_no_install_prefix"
+Saved theorem _______ "target_install_exclusion_conditional"
+CHECKED lab_step_evaluate
+⊢ ∀s s'. lab_step s = SOME s' ⇒ evaluate s = evaluate s'
+CHECKED seg_finish
+⊢ (∀k. evaluate c io (k + l) ms1 = evaluate (shift_interfer l c) io k ms2 ∧
+       find_next_interference c io (k + l) ms1 =
+       find_next_interference (shift_interfer l c) io k ms2) ⇒
+  nip_ctx c ⇒
+  l ≠ 0 ⇒
+  ∀n. no_install_prefix (shift_interfer l c) io n ms2 ⇒
+      no_install_prefix c io (SUC n) ms1
+CHECKED state_rel_ctx
+⊢ state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ⇒
+  nip_ctx mc_conf ∧ halt_ctx mc_conf
+CHECKED step_nip
+⊢ (∀n. evaluate c io (SUC n) ms = evaluate c' io' n ms') ⇒
+  c.target.get_pc ms ≠ c.install_pc ⇒
+  c'.install_pc = c.install_pc ⇒
+  c'.target = c.target ⇒
+  ∀m. no_install_prefix c' io' m ms' ⇒ no_install_prefix c io (SUC m) ms
+CHECKED final_nip
+⊢ (∀n. FST (evaluate c io (SUC n) ms) ≠ TimeOut) ⇒
+  c.target.get_pc ms ≠ c.install_pc ⇒
+  ∀m. no_install_prefix c io m ms
+CHECKED compile_no_install_prefix
+⊢ lab_step_closed Inv ⇒
+  ∀s1 res mc_conf s2 code2 labs t1 ms1.
+    oracle_tie mc_conf ms1 s1 ∧ evaluate s1 = (res,s2) ∧ res ≠ Error ∧
+    encoder_correct mc_conf.target ∧
+    state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ⇒
+    Inv s1 ∧ code_layout_ok (:α) code2 ⇒
+    no_install_prefix mc_conf s1.ffi s1.clock ms1
+CHECKED compile_correct_no_install_prefix
+⊢ lab_step_closed Inv ⇒
+  ∀s1 res mc_conf s2 code2 labs t1 ms1.
+    oracle_tie mc_conf ms1 s1 ∧ evaluate s1 = (res,s2) ∧ res ≠ Error ∧
+    encoder_correct mc_conf.target ∧
+    state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧ Inv s1 ∧
+    code_layout_ok (:α) code2 ⇒
+    (∃k t2 ms2. evaluate mc_conf s1.ffi (s1.clock + k) ms1 = (res,ms2,s2.ffi)) ∧
+    no_install_prefix mc_conf s1.ffi s1.clock ms1
+CHECKED target_install_exclusion_conditional
+⊢ lab_step_closed Inv ∧ (∀k. Inv (s1 with clock := k)) ∧
+  (∀k. FST (evaluate (s1 with clock := k)) ≠ Error) ∧
+  oracle_tie mc_conf ms1 s1 ∧ encoder_correct mc_conf.target ∧
+  state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧ code_layout_ok (:α) code2 ⇒
+  ∀n. no_install_prefix mc_conf s1.ffi n ms1
+DEFINITION lab_step_closed_def
+⊢ ∀Inv.
+    lab_step_closed Inv ⇔
+    (∀s i bs n. Inv s ⇒ asm_fetch s ≠ SOME (LabAsm Install i bs n)) ∧
+    (∀s m r ad bs n. Inv s ⇒ asm_fetch s ≠ SOME (Asm (ShareMem m r ad) bs n)) ∧
+    ∀s s'. Inv s ∧ lab_step s = SOME s' ⇒ Inv s'
+DEFINITION nip_ctx_def
+⊢ ∀mc. nip_ctx mc ⇔ mc.install_pc ∉ mc.prog_addresses
+DEFINITION halt_ctx_def
+⊢ ∀mc.
+    halt_ctx mc ⇔ mc.halt_pc ∉ mc.prog_addresses ∧ mc.halt_pc ≠ mc.install_pc
+FIDELITY published compile_correct recovered by removing the two added premises and the added conclusion
+Exporting theory "forge_simReplay" ... done.
+Theory "forge_simReplay" took 1m25s to build
+REPLAY_COMPLETE

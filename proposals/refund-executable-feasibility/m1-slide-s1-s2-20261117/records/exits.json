@@ -1,0 +1,53 @@
+{
+ "unsure": "U405",
+ "end_to_end": false,
+ "cases": [
+  {
+   "case": "s1-0001",
+   "actual_exit": 0,
+   "wall_seconds": 24.591,
+   "markers": [
+    "NATIVE_STEP_COMPLETE"
+   ],
+   "kind": "forge_refundCmlMainSlide (ARMv8 context): cml_main_run_sl, page lemmas, three slide instances, five controls; first run"
+  },
+  {
+   "case": "s2-0000-empty-aborted",
+   "actual_exit": 1,
+   "kind": "runner stopped before HOL: the source file did not exist (a shell glob failed before it was written); empty case directory kept"
+  },
+  {
+   "case": "s2-0001",
+   "actual_exit": 1,
+   "wall_seconds": 165.587,
+   "markers": [],
+   "kind": "authoring: three tactics (no statement change); 15 lemmas checked; nothing exported"
+  },
+  {
+   "case": "s2-0002",
+   "actual_exit": -24,
+   "wall_seconds": 571.543,
+   "markers": [],
+   "kind": "CPU limit: a metis call after the bit-blasted range lemmas did not terminate; nothing exported"
+  },
+  {
+   "case": "s2-0003",
+   "actual_exit": 0,
+   "wall_seconds": 117.205,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "kind": "forge_refundSlideEntry (CakeML context): 18 theorems, 6 definitions; 536 closure nodes; four bool axioms"
+  }
+ ],
+ "not_run": [
+  "repeat of s1-0001 and s2-0003",
+  "separate exact-statement import script",
+  "satisfiability witness for refund_entry_pre_sl at a nonzero slide",
+  "plan steps S3-S6",
+  "reachable-call FFI refinement lemma",
+  "clean replay",
+  "independent replay",
+  "native execution"
+ ]
+}

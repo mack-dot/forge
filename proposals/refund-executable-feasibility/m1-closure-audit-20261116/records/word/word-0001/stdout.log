@@ -1,0 +1,89 @@
+<<HOL message: Created theory "forge_refundWriteWord">>
+PRE_CONJUNCTS 19
+BOUND_LHS_GENERAL w2w
+  (w2w
+     (w2w
+        (w2w
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (m1 @@ m0)))) @@
+               (31 >< 24) (w2w (w2w (w2w (m1 @@ m0)))) @@
+               (7 >< 0) (w2w (w2w (w2w (m1 @@ m0)))) @@
+               (15 >< 8) (w2w (w2w (w2w (m1 @@ m0)))))) +
+         w2w
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (m3 @@ m2)))) @@
+               (31 >< 24) (w2w (w2w (w2w (m3 @@ m2)))) @@
+               (7 >< 0) (w2w (w2w (w2w (m3 @@ m2)))) @@
+               (15 >< 8) (w2w (w2w (w2w (m3 @@ m2)))))))) + 4w)
+BOUND_LHS_DEPENDS_ONLY_ON_FOUR_BYTES
+MARK E1
+Saved theorem _______ "write_bound_word_normal_form"
+CHECKED write_bound_word_normal_form
+⊢ w2w
+    (w2w
+       (w2w
+          (w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m1 @@ m0)))))) +
+           w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m3 @@ m2)))))))) + 4w) =
+  w2w m0 ≪ 8 + w2w m1 + (w2w m2 ≪ 8 + w2w m3) + 4w
+MARK E2
+Saved theorem _______ "write_bound_word_value_no_overflow"
+CHECKED write_bound_word_value_no_overflow
+⊢ w2n (w2w m0 ≪ 8 + w2w m1 + (w2w m2 ≪ 8 + w2w m3) + 4w) =
+  w22n [m0; m1] + w22n [m2; m3] + 4 ∧
+  w22n [m0; m1] + w22n [m2; m3] + 4 < 2 ** 18
+MARK BR
+Saved theorem _______ "write_bound_numeric_iff_word"
+CHECKED write_bound_numeric_iff_word
+⊢ w22n [m0; m1] + w22n [m2; m3] + 4 ≤ w2n x3 ⇔
+  w2w
+    (w2w
+       (w2w
+          (w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m1 @@ m0)))))) +
+           w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m3 @@ m2)))))))) + 4w) ≤₊ x3
+ALL_SEVEN_NAMED_CONJUNCTS_FOUND
+RESIDUAL_CONJUNCTS 12
+RESIDUAL arm8_user s
+RESIDUAL refund_image_mem 0w s.MEM
+RESIDUAL aligned 3 b
+RESIDUAL aligned 2 c
+RESIDUAL aligned 1 a
+RESIDUAL ∀i x. i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ b + n2w i ≠ x
+RESIDUAL ∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j
+RESIDUAL ∀i j. i < 32 ∧ j < 4 ⇒ b + n2w i ≠ a + n2w j
+RESIDUAL ¬word_msb (s.REG 3w)
+RESIDUAL ∀i. i < 32 ⇒ b + n2w i ∉ dm
+RESIDUAL ∀i x. i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x
+RESIDUAL ∀i j. i < 3 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j
+DEFINITION ⊢ ∀dm s.
+    write_call_residual dm s ⇔
+    arm8_user s ∧ refund_image_mem 0w s.MEM ∧ aligned 3 (s.SP_EL0 − 32w) ∧
+    aligned 2 (s.REG 0w) ∧ aligned 1 (s.REG 2w) ∧
+    (∀i x.
+       i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒
+       s.SP_EL0 − 32w + n2w i ≠ x) ∧
+    (∀i j. i < 32 ∧ j < 8 ⇒ s.SP_EL0 − 32w + n2w i ≠ s.REG 0w + n2w j) ∧
+    (∀i j. i < 32 ∧ j < 4 ⇒ s.SP_EL0 − 32w + n2w i ≠ s.REG 2w + n2w j) ∧
+    ¬word_msb (s.REG 3w) ∧ (∀i. i < 32 ⇒ s.SP_EL0 − 32w + n2w i ∉ dm) ∧
+    (∀i x.
+       i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ s.REG 2w + n2w i ≠ x) ∧
+    ∀i j. i < 3 ∧ j < 32 ⇒ s.REG 2w + n2w i ≠ s.SP_EL0 − 32w + n2w j

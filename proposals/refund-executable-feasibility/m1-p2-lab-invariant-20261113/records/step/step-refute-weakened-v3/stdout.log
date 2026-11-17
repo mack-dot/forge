@@ -1,0 +1,8 @@
+<<HOL message: Created theory "forge_labRegionStepControl">>
+AFTER_POSITIVE_AUDIT
+COUNTEREXAMPLE_TO_WEAKENED_CLAIM ⊢ (SND
+     (evaluate
+        <|pc := 0; clock := 1;
+          code :=
+            [Section 0 [LabAsm (Jump (Lab 1 0)) 0 [] 0] ARB;
+             Section 1 [LabAsm Halt 0 [] 0] ARB]|>)).pc = 1

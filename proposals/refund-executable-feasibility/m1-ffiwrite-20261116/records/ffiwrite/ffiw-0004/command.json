@@ -1,0 +1,33 @@
+{
+ "case": "ffiw-0004",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0004/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "ffiw-0004.sml",
+ "source_sha256": "1f5c2b05288379b698af0fff6361cc8b93c9b0e347349481eed0ae2187efe69a",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 23,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 58.656,
+ "child_user_cpu_seconds": 49.177,
+ "child_system_cpu_seconds": 12.775,
+ "child_max_rss_bytes": 2451144704,
+ "markers": [],
+ "stdout_sha256": "7ecd2169e3489192994a4bdf2bdf404e2be47726d07f5c6e27e301b141221463",
+ "stderr_sha256": "fe4b7d16ced737947f502c560cd732a09f2fbdd6c96acbede47e3fd2f84a54c8",
+ "objects": {},
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

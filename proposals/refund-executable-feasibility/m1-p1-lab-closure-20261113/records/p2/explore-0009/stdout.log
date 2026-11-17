@@ -1,0 +1,142 @@
+<<HOL message: Created theory "forge_p2Explore">>
+Saved definition ____ "val_inv_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "step_ok_def"
+Saved definition ____ "region_hyp_def"
+OK..
+AFTER inst: 0 goals, proved=true
+Saved definition ____ "region_inv_def"
+OK..
+AFTER wb: 0 goals, proved=true
+OK..
+1 subgoal:
+AFTER st-unfold: 1 goals, proved=false
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case asm_fetch s of
+   NONE => (Error,s)
+ | SOME (Label v39 v40 v42) => (Error,s)
+ | SOME (Asm (Asmi (Inst i)) v44 v45) =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | SOME (Asm (Asmi (Jump v12)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (Call v17)) v44 v45) => (Error,s)
+ | SOME (Asm (Asmi (JumpReg r)) v44 v45) =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | SOME (Asm (
+  ...
+                                   (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | SOME (LabAsm Halt v47 v50 v51) =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+OK..
+1 subgoal:
+AFTER st-none: 1 goals, proved=false
+  ASM asm_fetch s = SOME x
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case x of
+   Label v39 v40 v42 => (Error,s)
+ | Asm (Asmi (Inst i)) v44 v45 =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | Asm (Asmi (Jump v12)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45 => (Error,s)
+ | Asm (Asmi (Call v17)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpReg r)) v44 v45 =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | Asm (Asmi (Loc v19 v20)) v44 v45 => (Error,s)
+ | Asm (Sha
+  ...
+
+                                         (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | LabAsm Halt v47 v50 v51 =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+OK..
+1 subgoal:
+AFTER st-stepok: 1 goals, proved=false
+  ASM step_ok G OK code s.pc x
+  ASM asm_fetch s = SOME x
+  ASM s.clock ≠ 0
+  ASM region_inv G OK code s
+  GOAL rr =
+(case x of
+   Label v39 v40 v42 => (Error,s)
+ | Asm (Asmi (Inst i)) v44 v45 =>
+   if (asm_inst i s).failed then (Error,s)
+   else evaluate (inc_pc (dec_clock (asm_inst i s)))
+ | Asm (Asmi (Jump v12)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpCmp v13 v14 v15 v16)) v44 v45 => (Error,s)
+ | Asm (Asmi (Call v17)) v44 v45 => (Error,s)
+ | Asm (Asmi (JumpReg r)) v44 v45 =>
+   (case read_reg r s of
+      Word v3 => (Error,s)
+    | Loc n1 n2 =>
+      case loc_to_pc n1 n2 s.code of
+        NONE => (Error,s)
+      | SOME p => evaluate (upd_pc p (dec_clock s)))
+ | Asm (Asmi (Loc v19 v20)) v
+  ...
+
+                                         (read_reg a s) Word)⦇
+                                      s.ptr_reg ↦ Loc k 0
+                                    ⦈; fp_regs := (λn. s.cc_fp_regs 0 n);
+                                  pc := new_pc;
+                                  cc_regs := shift_seq 1 s.cc_regs;
+                                  cc_fp_regs := shift_seq 1 s.cc_fp_regs;
+                                  code := s.code ++ prog;
+                                  compile_oracle :=
+                                    shift_seq 1 s.compile_oracle;
+                                  code_buffer := cb; clock := s.clock − 1|>)
+                           else (Error,s)) (s.compile_oracle 0))
+   | LabAsm Halt v47 v50 v51 =>
+     case read_reg s.ptr_reg s of
+       Word 0w => (Halt Success,s)
+     | Word v3 => (Halt Resource_limit_hit,s)
+     | Loc v4 v5 => (Error,s)) = (res,s)
+----
+/Users/mackianni/forge/results/refund-p2-lab-invariant-local-20261113/attempt-0001/explore-0009/proof.sml:79: error: Value or constructor (wb) has not been declared
+Found near [inst_ok', wb, lab_to_loc_def]

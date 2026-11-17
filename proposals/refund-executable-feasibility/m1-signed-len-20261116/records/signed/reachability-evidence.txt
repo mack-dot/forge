@@ -1,0 +1,49 @@
+# Reachability evidence for the close FFI call (text inspection of sources; NOT a proof)
+## command: grep -n '#(close)' basis/TextIOProgScript.sml
+167:    let val a = #(close) (get_in fd) iobuff in
+238:    let val a = #(close) (get_out fd) iobuff in
+## command: grep -rn '#(close)' basis/*ProgScript.sml | grep -v TextIOProg
+## command: sed -n 10,16p compiler/dafny/forge_refundStdioProg_experiment/forge_refundStdioProgScript.sml
+
+Quote add_cakeml:
+  fun refund_main u =
+    case TextIO.inputAllFrom None of
+      None => raise Fail "refund: stdin unavailable"
+    | Some wire => TextIO.print (refund_dispatch wire);
+End
+## command: sed -n 515,533p basis/TextIOProgScript.sml (consume_rest, open_option)
+
+Quote add_cakeml:
+  fun consume_rest is =
+    case input1 is of
+      None => ()
+    | Some c => consume_rest is;
+End
+
+Quote add_cakeml:
+  fun open_option stdin_or_fname =
+    case stdin_or_fname of
+      None (* stdin *) =>
+                    (let
+                       val is = openStdIn ()
+                     in Some (is, (fn () => consume_rest is)) end)
+    | Some fname => (let
+                       val is = openIn fname
+                     in Some (is, (fn () => closeIn is)) end
+                     handle BadFileName => None)
+## command: sed -n 604,612p basis/TextIOProgScript.sml (inputAllFrom)
+
+Quote add_cakeml:
+  fun inputAllFrom stdin_or_fname =
+    case open_option stdin_or_fname of
+      None => None
+    | Some (is,close) => let
+        val content = inputAll is
+      in close (); Some content end
+      handle e => (close (); raise e)
+## command: grep -rn 'closeIn\|closeOut\|raw_closeIn' compiler/dafny/forge_refund*_experiment/*Script.sml
+/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundNormProg_experiment/forge_refundNormProgScript.sml:26:val _ = TextIO.closeOut ast_file;
+(end; empty output above means no match)
+## sha256 of inspected files
+e2ddab184379b211222ff2a6879e5f192a7f9146f2561b9022483886f57ddb6a  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis/TextIOProgScript.sml
+6f7aa17a5c671d83c94d2726932a7757083e30ee5508cce64f667f43138e0a68  /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundStdioProg_experiment/forge_refundStdioProgScript.sml

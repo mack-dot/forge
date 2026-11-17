@@ -1,0 +1,62 @@
+<<HOL message: Created theory "forge_refundExclusionFinal">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundExclusionFinal)>>
+Saved theorem _______ "refund_install_exclusion_any_handler"
+CHECKED refund_install_exclusion_any_handler
+⊢ same_but_install mc mc_conf ∧ mc_conf_ok mc_conf ∧
+  (no_share_mem_inst
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config refund_alloc_oracle)
+              refund_prog))) ⇒
+   compiler_oracle_ok coracle c'.labels (LENGTH bytes) asm_conf
+     mc_conf.ffi_names) ∧
+  good_code mc_conf.target.config LN
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) ∧
+  asm_conf = mc_conf.target.config ∧ isEmpty c.labels ∧ c.pos = 0 ∧
+  compile asm_conf c
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  SOME (bytes,c') ∧ c'.ffi_names = SOME mc_conf.ffi_names ∧
+  good_init_state mc_conf ms bytes cbspace t m dm sdm ∧
+  MAP (λrec. w2n (mc_conf.target.get_pc ms) + rec.entry_pc) c'.shmem_extra =
+  DROP i (MAP w2n mc_conf.ffi_entry_pcs) ∧
+  mc_conf.mmio_info =
+  ZIP
+    (GENLIST (λindex. index + i) (LENGTH c'.shmem_extra),
+     MAP
+       (λrec.
+          (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+           n2w rec.exit_pc + mc_conf.target.get_pc ms)) c'.shmem_extra) ∧
+  no_install_or_no_share_mem
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+    mc_conf.ffi_names ∧ mmio_pcs_min_index mc_conf.ffi_names = SOME i ∧
+  cbspace + LENGTH bytes + ffi_offset * (i + 3) < dimword (:64) ∧
+  (∀ffis. c.ffi_names = SOME ffis ⇒ EVERY (λx. ∃s. x = ExtCall s) ffis) ∧
+  semantics
+    (make_init mc_conf ffi t m dm sdm ms
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))) (compile asm_conf)
+       (mc_conf.target.get_pc ms + n2w (LENGTH bytes)) cbspace coracle) ≠
+  Fail ⇒
+  (∀j ms' ffi'.
+     evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+     mc.target.get_pc ms' ≠ mc.install_pc) ∧
+  ∀k. evaluate mc ffi k ms = evaluate mc_conf ffi k ms
+U298_FORM ∀j ms' ffi'.
+  evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+  mc.target.get_pc ms' ≠ mc.install_pc
+Exporting theory "forge_refundExclusionFinal" ... done.
+Theory "forge_refundExclusionFinal" took 5.1s to build
+EXACT_COMPLETE

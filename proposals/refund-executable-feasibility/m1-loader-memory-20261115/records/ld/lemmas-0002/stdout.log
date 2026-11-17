@@ -1,0 +1,73 @@
+<<HOL message: Created theory "forge_loaderMemLemmas">>
+Saved theorem _______ "bytes_in_memory_univ_EL"
+CHECKED bytes_in_memory_univ_EL
+⊢ ∀bs a m.
+    bytes_in_memory a bs m 𝕌(:α word) ⇔
+    ∀i. i < LENGTH bs ⇒ m (a + n2w i) = bs❲i❳
+Saved theorem _______ "bytes_in_memory_univ_frame"
+CHECKED bytes_in_memory_univ_frame
+⊢ ∀bs a m m'.
+    bytes_in_memory a bs m 𝕌(:α word) ∧
+    (∀i. i < LENGTH bs ⇒ m' (a + n2w i) = m (a + n2w i)) ⇒
+    bytes_in_memory a bs m' 𝕌(:α word)
+Saved theorem _______ "forall_lt_SUC_word"
+CHECKED forall_lt_SUC_word
+⊢ ∀P a n.
+    (∀i. i < SUC n ⇒ P (a + n2w i)) ⇔ P a ∧ ∀i. i < n ⇒ P (a + 1w + n2w i)
+Saved theorem _______ "bytes_in_mem_iff"
+CHECKED bytes_in_mem_iff
+⊢ ∀bs a m md k.
+    bytes_in_mem a bs m md k ⇔
+    bytes_in_memory a bs m 𝕌(:α word) ∧
+    ∀i. i < LENGTH bs ⇒ a + n2w i ∈ md ∧ a + n2w i ∉ k
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_loaderMemLemmas)>>
+Saved theorem _______ "read_bytearray_from_EL"
+CHECKED read_bytearray_from_EL
+⊢ ∀bs a f.
+    (∀i. i < LENGTH bs ⇒ f (a + n2w i) = SOME bs❲i❳) ⇒
+    read_bytearray a (LENGTH bs) f = SOME bs
+Saved definition ____ "dword_bytes_def"
+Saved theorem _______ "LENGTH_dword_bytes"
+CHECKED LENGTH_dword_bytes
+⊢ LENGTH (dword_bytes w) = 8
+Saved theorem _______ "mem_dword_join"
+CHECKED mem_dword_join
+⊢ ∀m a w.
+    m a = w2w w ∧ m (a + 1w) = w2w (w ⋙ 8) ∧ m (a + 2w) = w2w (w ⋙ 16) ∧
+    m (a + 3w) = w2w (w ⋙ 24) ∧ m (a + 4w) = w2w (w ⋙ 32) ∧
+    m (a + 5w) = w2w (w ⋙ 40) ∧ m (a + 6w) = w2w (w ⋙ 48) ∧
+    m (a + 7w) = w2w (w ⋙ 56) ⇒
+    mem_dword m a = w
+Saved theorem _______ "dword_bytes_in_memory"
+CHECKED dword_bytes_in_memory
+⊢ ∀ws a m.
+    bytes_in_memory a (FLAT (MAP dword_bytes ws)) m 𝕌(:word64) ⇒
+    ∀i. i < LENGTH ws ⇒ mem_dword m (a + n2w (8 * i)) = ws❲i❳
+Saved theorem _______ "byte_align_64"
+CHECKED byte_align_64
+⊢ byte_align a = align 3 a
+Saved theorem _______ "byte_align_split"
+CHECKED byte_align_split
+⊢ ∀a. a = byte_align a + n2w (w2n a MOD 8)
+Saved theorem _______ "mem_dword_bytes"
+CHECKED mem_dword_bytes
+⊢ ∀m b.
+    w2w (mem_dword m b) = m b ∧ w2w (mem_dword m b ⋙ 8) = m (b + 1w) ∧
+    w2w (mem_dword m b ⋙ 16) = m (b + 2w) ∧
+    w2w (mem_dword m b ⋙ 24) = m (b + 3w) ∧
+    w2w (mem_dword m b ⋙ 32) = m (b + 4w) ∧
+    w2w (mem_dword m b ⋙ 40) = m (b + 5w) ∧
+    w2w (mem_dword m b ⋙ 48) = m (b + 6w) ∧
+    w2w (mem_dword m b ⋙ 56) = m (b + 7w)
+Saved theorem _______ "mem_dword_get_byte"
+CHECKED mem_dword_get_byte
+⊢ ∀m a. m a = get_byte a (mem_dword m (byte_align a)) F
+Saved theorem _______ "mem_dword_word_memory_clause"
+CHECKED mem_dword_word_memory_clause
+⊢ ∀m a. ∃w.
+    m a = get_byte a w F ∧ (λa. Word (mem_dword m a)) (byte_align a) = Word w
+SHOW WL
+  ASM ∀i. i < LENGTH xs ⇒ m (a + n2w i * 8w) = xs❲i❳
+  ASM ∀x. x ∈ dm ⇔ ∃i. i < LENGTH xs ∧ x = a + n2w i * 8w
+  ASM w2n a + LENGTH xs * 8 < dimword (:64)
+  GOAL word_list a xs {(a',m a') | (∃i. i < LENGTH xs ∧ a' = a + 8w * n2w i)}

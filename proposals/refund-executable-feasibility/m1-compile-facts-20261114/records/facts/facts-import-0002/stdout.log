@@ -1,0 +1,50 @@
+IMPORTED forge_refundCompileFacts.refund_lab_good_code EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCompileFacts.refund_lab_conf_facts EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCompileFacts.refund_lab_compile EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCompileFacts.refund_lab_bitmaps EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCompileFacts.refund_lab_ffi_names EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCompileFacts.gc_check_good_code EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundCompileFacts.asm_ok_arm8_link EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionArm8.refund_install_exclusion_installed EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionArm8.refund_u298_exclusion_any_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS forge_refundCompileFacts 50 STORED_DEFINITIONS 44
+STORED_THEOREMS forge_refundExclusionArm8 3 STORED_DEFINITIONS 0
+ARM8_PREMISES 8
+DEFINITION ⊢ refund_lab_conf2 =
+  SND
+    (THE
+       (compile arm8_config
+          (FST
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog))).lab_conf
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog)))))
+NEGATIVE_CONTROL_KEPT wraparound ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+NEGATIVE_CONTROL_KEPT interior ⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+NEGATIVE_CONTROL_KEPT invariant ⊢ ¬lab_step_closed (λs. T)
+NEGATIVE_CONTROL_KEPT sharemem ⊢ ¬sm_free [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  ¬no_share_mem_inst [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  sm_count [Section 0 [Asm (ShareMem mop r ad) bs n] md] = 1
+NEGATIVE_CONTROL_KEPT region29 ⊢ ¬filt_walk [29] (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog
+NEGATIVE_CONTROL_KEPT handler ⊢ same_but_install forge_toy_mc forge_toy_mc3 ∧
+  evaluate forge_toy_mc io 3 0 ≠ evaluate forge_toy_mc3 io 3 0
+NEGATIVE_CONTROL_KEPT good_code ⊢ ¬gc_check [Section 5 [LabAsm (Jump (Lab 7 1)) 0 [] 0; Label 5 1 0] ARB]
+AFTER_POSITIVE_AUDIT
+CONTROL_OK statements without the installed premise or without the semantic premise are not the stored one
+CLOSURE_NODES 499
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P3_IMPORT_COMPLETE

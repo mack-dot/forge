@@ -1,0 +1,1139 @@
+<<HOL message: Created theory "forge_refundFfiwriteUnaligned">>
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0006/proof.sml:86: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0006/proof.sml:100: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+Saved theorem _______ "check_alignment_no_fault"
+CHECKED check_alignment_no_fault
+ []
+⊢ s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.A ∧ acctype ≠ AccType_ATOMIC ∧
+  acctype ≠ AccType_ORDERED ⇒
+  CheckAlignment (address,n,acctype,iswrite) s = s
+Saved theorem _______ "check_alignment_fault"
+CHECKED check_alignment_fault
+ []
+⊢ s.PSTATE.EL = 0w ∧ s.SCTLR_EL1.A ∧ ¬aligned 1 address ∧
+  s.exception = NoException ⇒
+  CheckAlignment (address,2,acctype,iswrite) s =
+  s with exception := ALIGNMENT_FAULT
+WM2_HYPS ¬s.SCTLR_EL1.A ; ¬s.SCTLR_EL1.E0E ; acctype ≠ AccType_ATOMIC ; acctype ≠ AccType_ORDERED ; s.PSTATE.EL = 0w
+Saved theorem _______ "write_mem2_no_alignment"
+CHECKED write_mem2_no_alignment
+ []
+⊢ (((s.PSTATE.EL = 0w ∧ acctype ≠ AccType_ORDERED) ∧
+    acctype ≠ AccType_ATOMIC) ∧ ¬s.SCTLR_EL1.E0E) ∧ ¬s.SCTLR_EL1.A ⇒
+  write'Mem (d,address,2,acctype) s =
+  s with MEM := s.MEM⦇address + 1w ↦ (15 >< 8) d; address + 0w ↦ (7 >< 0) d⦈
+DECODE  []
+⊢ Decode
+    (v2w
+       [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T;
+        F; F; T; T; F; T; F; F; T]) =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+        sw2sw (v2w [F; F; F; F; F; F; F; F; T]),v2w [T; F; F; T; T],
+        v2w [F; T; F; F; T]))
+ARGS (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,
+ v2w
+   [F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+    F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; F;
+    F; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T],v2w [T; F; F; T; T],
+ v2w [F; T; F; F; T])
+OPC  []
+⊢ v2w
+    [F; T; T; T; T; F; F; F; F; F; F; F; F; F; F; F; F; F; F; T; F; F; T; F;
+     F; T; T; F; T; F; F; T] =
+  0x78001269w
+DECODE_N  []
+⊢ Decode 0x78001269w =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w))
+RUN_N  []
+⊢ ∀s. Run
+        (LoadStore
+           (LoadStoreImmediate@16
+              (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w))) s =
+      dfn'LoadStoreImmediate
+        (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w) s
+T4  [¬s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, s.PSTATE.EL = 0w]
+⊢ dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)
+    (s with branch_hint := NONE) =
+  s with
+  <|MEM :=
+      s.MEM⦇
+        s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+        s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+      ⦈; branch_hint := NONE|>
+NX  [s.exception = NoException]
+⊢ Fetch (s with branch_hint := NONE) = (w,s with branch_hint := NONE) ∧
+  Decode w = ast ∧ (∀s. Run ast s = f x s) ∧
+  f x (s with branch_hint := NONE) = s1 ∧ s1.exception = s.exception ⇒
+  NextStateARM8 s =
+  SOME (if s1.branch_hint = NONE then s1 with PC := s1.PC + 4w else s1)
+CONJ 
+[¬s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, s.MEM s.PC = 105w,
+ s.MEM (s.PC + 1w) = 18w, s.MEM (s.PC + 3w) = 120w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, aligned 2 s.PC]
+⊢ Fetch (s with branch_hint := NONE) =
+  (0x78001269w,s with branch_hint := NONE) ∧
+  Decode 0x78001269w =
+  LoadStore
+    (LoadStoreImmediate@16
+       (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)) ∧
+  (∀s. Run
+         (LoadStore
+            (LoadStoreImmediate@16
+               (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w))) s =
+       dfn'LoadStoreImmediate
+         (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w) s) ∧
+  dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)
+    (s with branch_hint := NONE) =
+  s with
+  <|MEM :=
+      s.MEM⦇
+        s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+        s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+      ⦈; branch_hint := NONE|> ∧
+  (s with
+   <|MEM :=
+       s.MEM⦇
+         s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+         s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+       ⦈; branch_hint := NONE|>).exception =
+  s.exception
+STEP_HYPS ¬s.SCTLR_EL1.A ; ¬s.SCTLR_EL1.E0E ; s.MEM s.PC = 105w ; s.MEM (s.PC + 1w) = 18w ; s.MEM (s.PC + 3w) = 120w ; s.MEM (s.PC + 2w) = 0w ; s.PSTATE.EL = 0w ; s.exception = NoException ; aligned 2 s.PC
+Saved theorem _______ "sturh_w9_x19_1_step_no_alignment"
+CHECKED sturh_w9_x19_1_step_no_alignment
+ []
+⊢ s.exception = NoException ∧ s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.E0E ∧
+  ¬s.SCTLR_EL1.A ∧ aligned 2 s.PC ∧ s.MEM s.PC = 105w ∧
+  s.MEM (s.PC + 1w) = 18w ∧ s.MEM (s.PC + 2w) = 0w ∧ s.MEM (s.PC + 3w) = 120w ⇒
+  NextStateARM8 s =
+  SOME
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           s.REG 19w + 2w ↦ (15 >< 8) (w2w (s.REG 9w));
+           s.REG 19w + 1w ↦ (7 >< 0) (w2w (s.REG 9w))
+         ⦈; PC := s.PC + 4w; branch_hint := NONE|>)
+DEFINITION  []
+⊢ ∀s b a v20 v19 v29 v30.
+    ffiwrite_return_ok_na_pre s b a v20 v19 v29 v30 ⇔
+    (arm8_user s ∧ s.PC = 0x10002522Cw ∧ ffiwrite_code_bytes s.MEM ∧
+     s.SP_EL0 = b ∧ aligned 3 b ∧ s.REG 19w = a ∧ mem_dword s.MEM b = v20 ∧
+     mem_dword s.MEM (b + 8w) = v19 ∧ mem_dword s.MEM (b + 16w) = v29 ∧
+     mem_dword s.MEM (b + 24w) = v30 ∧
+     (∀i x. i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x) ∧
+     ∀i j. i < 3 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j) ∧
+    ¬word_bit 31 (w2w (s.REG 0w)) ∧ ¬s.SCTLR_EL1.A
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwriteUnaligned)>>
+STEP_OK 1 37f800c0 PC 0x100025230w
+STEP_OK 2 52800008 PC 0x100025234w
+STEP_OK 3 5ac00809 PC 0x100025238w
+STEP_OK 4 53107d29 PC 0x10002523Cw
+STEP_ALTERNATIVE_REJECTED 78001269 HOL_ERR (HOL_ERROR {message = "hypothesis: aligned 1\n  ((s with\n    <|PC := 0x10002523Cw;\n      REG :=\n        s.REG\226\166\135\n          9w \226\134\166\n            w2w\n              (65535w &&\n               w2w\n                 (w2w\n                    ((7 >< 0) (w2w (s.REG 0w)) @@\n  
+STEP_OK 5 78001269 PC 0x100025240w
+STEP_OK 6 14000002 PC 0x100025248w
+STEP_OK 7 39000268 PC 0x10002524Cw
+STEP_OK 8 a9417bfd PC 0x100025250w
+STEP_OK 9 a8c24ff4 PC 0x100025254w
+STEP_OK 10 d65f03c0 PC v30
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PC = v30
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 30w = v30
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 29w = v29
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 19w = v19
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).REG 20w = v20
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).SP_EL0 = b + 32w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).MEM a = 0w
+POST (s with
+ <|MEM :=
+     s.MEM⦇
+       a ↦ 0w;
+       a + 2w ↦
+         (15 >< 8)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)));
+       a + 1w ↦
+         (7 >< 0)
+           (w2w
+              (w2w
+                 (65535w &&
+                  w2w
+                    (w2w
+                       ((7 >< 0) (w2w (s.REG 0w)) @@
+                        (15 >< 8) (w2w (s.REG 0w)) @@
+                        (23 >< 16) (w2w (s.REG 0w)) @@
+                        (31 >< 24) (w2w (s.REG 0w)))) ⇄ 16)))
+     ⦈; PC := v30;
+   REG :=
+     s.REG⦇
+       19w ↦ v19; 20w ↦ v20; 30w ↦ v30; 29w ↦ v29;
+       9w ↦
+         w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w (s.REG 0w)) @@ (15 >< 8) (w2w (s.REG 0w)) @@
+                  (23 >< 16) (w2w (s.REG 0w)) @@ (31 >< 24) (w2w (s.REG 0w)))) ⇄
+            16); 8w ↦ 0w
+     ⦈; SP_EL0 := b + 32w; branch_hint := SOME BranchType_RET|>).PSTATE.EL = 0w
+DECIDE_FAILED a = a + 1w
+DECIDE_FAILED a = a + 1w
+Proof of 
+
+(if a = a + 1w then 0w
+ else if a + 2w = a + 1w then
+   (15 >< 8)
+     (w2w
+        (w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w atom0) @@ (15 >< 8) (w2w atom0) @@
+                  (23 >< 16) (w2w atom0) @@ (31 >< 24) (w2w atom0))) ⇄ 16)))
+ else
+   (7 >< 0)
+     (w2w
+        (w2w
+           (65535w &&
+            w2w
+              (w2w
+                 ((7 >< 0) (w2w atom0) @@ (15 >< 8) (w2w atom0) @@
+                  (23 >< 16) (w2w atom0) @@ (31 >< 24) (w2w atom0))) ⇄ 16)))) =
+(15 >< 8) atom0
+
+failed.
+First unsolved sub-goal is
+
+(atom0 ' 8 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 0) ∧
+(atom0 ' 9 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 1) ∧
+(atom0 ' 10 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 2) ∧
+(atom0 ' 11 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 3) ∧
+(atom0 ' 12 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 4) ∧
+(atom0 ' 13 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 5) ∧
+(atom0 ' 14 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 6) ∧
+(atom0 ' 15 ⇔
+ (if (FCP i. F) = FCP i. i = 0 then FCP i. F
+  else
+    (FCP i.
+       i < 16 ∧
+       (FCP i.
+          i ≤ 7 ∧
+          (FCP i.
+             i < 64 ∧
+             (FCP i.
+                i < 32 ∧
+                (FCP i.
+                   (FCP i.
+                      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+                      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨
+                      i = 13 ∨ i = 14 ∨ i = 15) ' i ∧
+                   (FCP i.
+                      (FCP i.
+                         i < 64 ∧
+                         (FCP i.
+                            i < 32 ∧
+                            (FCP i.
+                               i < 32 ∧
+                               (FCP i.
+                                  (FCP i.
+                                     i < 32 ∧ 24 ≤ i ∧
+                                     (FCP i.
+                                        i < 8 ∧
+                                        (FCP i.
+                                           i < 32 ∧
+                                           (FCP i.
+                                              i ≤ 7 ∧
+                                              (FCP i. i < 64 ∧ atom0 ' i) ' i) '
+                                           i) ' i) ' (i − 24)) ' i ∨
+                                  (FCP i.
+                                     i < 24 ∧
+                                     (FCP i.
+                                        i < 24 ∧
+                                        (FCP i.
+                                           (FCP i.
+                                              i < 24 ∧ 16 ≤ i ∧
+                                              (FCP i.
+                                                 i < 8 ∧
+                                                 (FCP i.
+                                                    i < 32 ∧
+                                                    (FCP i.
+                                                       i + 8 ≤ 15 ∧
+                                                       (FCP i.
+                                                          i < 64 ∧ atom0 ' i) '
+                                                       (i + 8)) ' i) ' i) '
+                                              (i − 16)) ' i ∨
+                                           (FCP i.
+                                              i < 16 ∧
+                                              (FCP i.
+                                                 i < 16 ∧
+                                                 (FCP i.
+                                                    (FCP i.
+                                                       i < 16 ∧ 8 ≤ i ∧
+                                                       (FCP i.
+                                                          i < 8 ∧
+                                                          (FCP i.
+                                                             i < 32 ∧
+                                                             (FCP i.
+                                                                i + 16 ≤ 23 ∧
+                                                                (FCP i.
+                                                                   i < 64 ∧
+                                                                   atom0 ' i) '
+                                                                (i + 16)) ' i) '
+                                                          i) ' (i − 8)) ' i ∨
+                                                    (FCP i.
+                                                       i < 8 ∧
+                                                       (FCP i.
+                                                          i < 32 ∧
+                                                          (FCP i.
+                                                             i + 24 ≤ 31 ∧
+                                                             (FCP i.
+                                                                i < 64 ∧
+                                                                atom0 ' i) '
+                                                             (i + 24)) ' i) '
+                                                       i) ' i) ' i) ' i) ' i) '
+                                        i) ' i) ' i) ' i) ' i) ' i) '
+                      ((i + 16) MOD 32)) ' i) ' i) ' i) ' i) ' i)) ' 7)
+

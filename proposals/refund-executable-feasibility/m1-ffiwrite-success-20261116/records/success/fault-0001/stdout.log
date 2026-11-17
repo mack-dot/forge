@@ -1,0 +1,48 @@
+<<HOL message: Created theory "forge_refundFfiwriteFault">>
+WM2F 
+[BigEndian (s with exception := ALIGNMENT_FAULT), s.SCTLR_EL1.A,
+ ¬s.SCTLR_EL1.E0E, ¬(s with exception := ALIGNMENT_FAULT).SCTLR_EL1.E0E,
+ ¬aligned 1 address, s.PSTATE.EL = 0w,
+ (s with exception := ALIGNMENT_FAULT).PSTATE.EL = 0w,
+ s.exception = NoException]
+⊢ write'Mem (d,address,2,acctype) s =
+  s with
+  <|MEM :=
+      s.MEM⦇
+        address + 1w ↦ v2w (field 15 8 (BigEndianReverse (w2v d)));
+        address + 0w ↦ v2w (field 7 0 (BigEndianReverse (w2v d)))
+      ⦈; exception := ALIGNMENT_FAULT|>
+NXF  []
+⊢ s.exception = NoException ∧
+  Fetch (s with branch_hint := NONE) = (w,s with branch_hint := NONE) ∧
+  Decode w = ast ∧ (∀s. Run ast s = f x s) ∧
+  f x (s with branch_hint := NONE) = s1 ∧ s1.exception ≠ NoException ⇒
+  NextStateARM8 s = NONE
+T4F 
+[BigEndian (s with <|branch_hint := NONE; exception := ALIGNMENT_FAULT|>),
+ s.SCTLR_EL1.A, ¬s.SCTLR_EL1.E0E, ¬aligned 1 (s.REG 19w + 1w),
+ s.PSTATE.EL = 0w, s.exception = NoException]
+⊢ dfn'LoadStoreImmediate
+    (1w,T,MemOp_STORE,AccType_NORMAL,F,F,F,F,F,F,1w,19w,9w)
+    (s with branch_hint := NONE) =
+  s with
+  <|MEM :=
+      s.MEM⦇
+        s.REG 19w + 2w ↦
+          v2w (field 15 8 (BigEndianReverse (w2v (w2w (s.REG 9w)))));
+        s.REG 19w + 1w ↦
+          v2w (field 7 0 (BigEndianReverse (w2v (w2w (s.REG 9w)))))
+      ⦈; branch_hint := NONE; exception := ALIGNMENT_FAULT|>
+FAULT_HYPS BigEndian (s with <|branch_hint := NONE; exception := ALIGNMENT_FAULT|>) ; s.SCTLR_EL1.A ; ¬s.SCTLR_EL1.E0E ; ¬aligned 1 (s.REG 19w + 1w) ; s.MEM s.PC = 105w ; s.MEM (s.PC + 1w) = 18w ; s.MEM (s.PC + 3w) = 120w ; s.MEM (s.PC + 2w) = 0w ; s.PSTATE.EL = 0w ; s.exception = NoException ; aligned 2 s.PC
+Saved theorem _______ "sturh_w9_x19_1_alignment_fault"
+CHECKED sturh_w9_x19_1_alignment_fault
+⊢ aligned 2 s.PC ∧ s.exception = NoException ∧ s.PSTATE.EL = 0w ∧
+  s.MEM (s.PC + 2w) = 0w ∧ s.MEM (s.PC + 3w) = 120w ∧
+  s.MEM (s.PC + 1w) = 18w ∧ s.MEM s.PC = 105w ∧ ¬aligned 1 (s.REG 19w + 1w) ∧
+  ¬s.SCTLR_EL1.E0E ∧ s.SCTLR_EL1.A ∧
+  BigEndian (s with <|branch_hint := NONE; exception := ALIGNMENT_FAULT|>) ⇒
+  NextStateARM8 s = NONE
+CONTROL_OK with SCTLR_EL1.A set and an unaligned address the store step has no next state
+Exporting theory "forge_refundFfiwriteFault" ... done.
+Theory "forge_refundFfiwriteFault" took 0.27853s to build
+NATIVE_STEP_COMPLETE

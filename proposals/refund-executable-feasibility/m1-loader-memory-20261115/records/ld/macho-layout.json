@@ -1,0 +1,269 @@
+{
+ "path": "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund",
+ "size": 238776,
+ "sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+ "header": {
+  "magic": "0xfeedfacf",
+  "cputype": "0x100000c",
+  "filetype": 2,
+  "ncmds": 18,
+  "sizeofcmds": 1288,
+  "flags": "0x200085",
+  "MH_PIE": true
+ },
+ "load_commands": [
+  {
+   "index": 0,
+   "file_offset": 32,
+   "cmd": "0x19",
+   "cmdsize": 72,
+   "segname": "__PAGEZERO",
+   "vmaddr": "0x0",
+   "vmsize": 4294967296,
+   "fileoff": 0,
+   "filesize": 0,
+   "maxprot": 0,
+   "initprot": 0,
+   "sections": []
+  },
+  {
+   "index": 1,
+   "file_offset": 104,
+   "cmd": "0x19",
+   "cmdsize": 392,
+   "segname": "__TEXT",
+   "vmaddr": "0x100000000",
+   "vmsize": 163840,
+   "fileoff": 0,
+   "filesize": 163840,
+   "maxprot": 5,
+   "initprot": 5,
+   "sections": [
+    {
+     "sectname": "__text",
+     "addr": "0x100004000",
+     "size": 137416,
+     "offset": 16384,
+     "nreloc": 0
+    },
+    {
+     "sectname": "__stubs",
+     "addr": "0x1000258c8",
+     "size": 264,
+     "offset": 153800,
+     "nreloc": 0
+    },
+    {
+     "sectname": "__cstring",
+     "addr": "0x1000259d0",
+     "size": 526,
+     "offset": 154064,
+     "nreloc": 0
+    },
+    {
+     "sectname": "__unwind_info",
+     "addr": "0x100025be0",
+     "size": 160,
+     "offset": 154592,
+     "nreloc": 0
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "file_offset": 496,
+   "cmd": "0x19",
+   "cmdsize": 152,
+   "segname": "__DATA_CONST",
+   "vmaddr": "0x100028000",
+   "vmsize": 16384,
+   "fileoff": 163840,
+   "filesize": 16384,
+   "maxprot": 3,
+   "initprot": 3,
+   "sections": [
+    {
+     "sectname": "__got",
+     "addr": "0x100028000",
+     "size": 184,
+     "offset": 163840,
+     "nreloc": 0
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "file_offset": 648,
+   "cmd": "0x19",
+   "cmdsize": 232,
+   "segname": "__DATA",
+   "vmaddr": "0x10002c000",
+   "vmsize": 32768,
+   "fileoff": 180224,
+   "filesize": 32768,
+   "maxprot": 3,
+   "initprot": 3,
+   "sections": [
+    {
+     "sectname": "__data",
+     "addr": "0x10002c000",
+     "size": 20272,
+     "offset": 180224,
+     "nreloc": 0
+    },
+    {
+     "sectname": "__common",
+     "addr": "0x100030f30",
+     "size": 16,
+     "offset": 0,
+     "nreloc": 0
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "file_offset": 880,
+   "cmd": "0x19",
+   "cmdsize": 72,
+   "segname": "__LINKEDIT",
+   "vmaddr": "0x100034000",
+   "vmsize": 32768,
+   "fileoff": 212992,
+   "filesize": 25784,
+   "maxprot": 1,
+   "initprot": 1,
+   "sections": []
+  },
+  {
+   "index": 5,
+   "file_offset": 952,
+   "cmd": "0x80000034",
+   "cmdsize": 16,
+   "dataoff": 212992,
+   "datasize": 368
+  },
+  {
+   "index": 6,
+   "file_offset": 968,
+   "cmd": "0x80000033",
+   "cmdsize": 16,
+   "dataoff": 213360,
+   "datasize": 640
+  },
+  {
+   "index": 7,
+   "file_offset": 984,
+   "cmd": "0x2",
+   "cmdsize": 24
+  },
+  {
+   "index": 8,
+   "file_offset": 1008,
+   "cmd": "0xb",
+   "cmdsize": 80
+  },
+  {
+   "index": 9,
+   "file_offset": 1088,
+   "cmd": "0xe",
+   "cmdsize": 32
+  },
+  {
+   "index": 10,
+   "file_offset": 1120,
+   "cmd": "0x1b",
+   "cmdsize": 24
+  },
+  {
+   "index": 11,
+   "file_offset": 1144,
+   "cmd": "0x32",
+   "cmdsize": 32
+  },
+  {
+   "index": 12,
+   "file_offset": 1176,
+   "cmd": "0x2a",
+   "cmdsize": 16
+  },
+  {
+   "index": 13,
+   "file_offset": 1192,
+   "cmd": "0x80000028",
+   "cmdsize": 24,
+   "entryoff": 152900,
+   "stacksize": 0
+  },
+  {
+   "index": 14,
+   "file_offset": 1216,
+   "cmd": "0xc",
+   "cmdsize": 56
+  },
+  {
+   "index": 15,
+   "file_offset": 1272,
+   "cmd": "0x26",
+   "cmdsize": 16,
+   "dataoff": 214000,
+   "datasize": 880
+  },
+  {
+   "index": 16,
+   "file_offset": 1288,
+   "cmd": "0x29",
+   "cmdsize": 16,
+   "dataoff": 214880,
+   "datasize": 0
+  },
+  {
+   "index": 17,
+   "file_offset": 1304,
+   "cmd": "0x1d",
+   "cmdsize": 16,
+   "dataoff": 236800,
+   "datasize": 1976
+  }
+ ],
+ "slices": {
+  "text_segment": {
+   "fileoff": 0,
+   "len": 163840,
+   "sha256": "0b79bc87815942e50c9a6c329fbf1179a6fb9066db179d44498420d80dc3cf71"
+  },
+  "cml_main_stub": {
+   "fileoff": 16384,
+   "vmaddr": "0x100004000",
+   "len": 108,
+   "sha256": "9e010ce30c58d7920ea1d4726af2a8b4f8a3f984a150f3b6d6b33ffcef107f86"
+  },
+  "code": {
+   "fileoff": 16592,
+   "vmaddr": "0x1000040d0",
+   "len": 130436,
+   "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb"
+  },
+  "codebuffer": {
+   "fileoff": 147028,
+   "len": 428,
+   "all_zero": false
+  },
+  "slots": {
+   "fileoff": 180224,
+   "len": 24,
+   "hex": "000000000000000000000000000000000000000000000000"
+  },
+  "bitmaps": {
+   "fileoff": 180248,
+   "vmaddr": "0x10002c018",
+   "words": 2531,
+   "len": 20248,
+   "sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76"
+  }
+ },
+ "controls": {
+  "first_bitmap_word": "0x4",
+  "code_index_differs_at_plus4": 0,
+  "bitmap_index_differs_at_plus1": 0
+ }
+}

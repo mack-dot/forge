@@ -1,0 +1,41 @@
+<<HOL message: Created theory "forge_refundWriteReach">>
+DEFINITION ⊢ ∀e. write_event e ⇔ ∃c b. e = IO_event (ExtCall «write») c b
+DEFINITION ⊢ ∀e. refund_event e ⇔
+      ∃n c b.
+        e = IO_event (ExtCall n) c b ∧
+        MEM n [«read»; «write»; «close»; «open_in»]
+Saved theorem _______ "refund_static_step"
+CHECKED refund_static_step
+⊢ refund_static mc dm ∧ machine_step mc ffi ms mc' ffi' ms' ⇒
+  refund_static mc' dm
+Saved theorem _______ "machine_step_reach"
+CHECKED machine_step_reach
+⊢ machine_step mc ffi ms mc' ffi' ms' ∧
+  machine_reach mc' ffi' ms' mc1 ffi1 ms1 ⇒
+  machine_reach mc ffi ms mc1 ffi1 ms1
+Saved theorem _______ "machine_step_evaluate"
+CHECKED machine_step_evaluate
+⊢ machine_step mc ffi ms mc' ffi' ms' ⇒
+  ∀k. evaluate mc ffi (SUC k) ms = evaluate mc' ffi' k ms'
+Saved theorem _______ "install_step_is_machine_step"
+CHECKED install_step_is_machine_step
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms = mc.install_pc ∧
+  read_ffi_bytearray mc mc.ptr_reg mc.len_reg ms = SOME bytes ⇒
+  machine_step mc ffi ms
+    (mc with install_interfer := shift_seq 1 mc.install_interfer) ffi
+    (mc.install_interfer 0 (bytes,ms))
+Saved theorem _______ "call_FFI_return_appends_one_event"
+CHECKED call_FFI_return_appends_one_event
+⊢ call_FFI ffi (ExtCall nm) cb ab = FFI_return new_ffi nb ∧ nm ≠ «» ⇒
+  new_ffi.io_events =
+  ffi.io_events ++ [IO_event (ExtCall nm) cb (ZIP (ab,nb))]
+Saved theorem _______ "refund_static_ffi_index"
+CHECKED refund_static_ffi_index
+⊢ refund_static mc dm ∧
+  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ⇒
+  ALOOKUP mc.mmio_info i = NONE ∧
+  ∃nm.
+    mc.ffi_names❲i❳ = ExtCall nm ∧ nm ≠ «» ∧
+    MEM nm [«read»; «write»; «close»; «open_in»] ∧
+    (nm = «write» ⇒ ms.PC = 0x100004090w)

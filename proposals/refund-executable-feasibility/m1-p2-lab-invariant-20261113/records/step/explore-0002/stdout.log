@@ -1,0 +1,84 @@
+<<HOL message: Created theory "forge_p2Explore">>
+HELPERS_PROVED
+OK..
+1 subgoal:
+STAGE_OK callffi/unfold
+OK..
+1 subgoal:
+STAGE_OK callffi/split
+OK..
+1 subgoal:
+STAGE_OK callffi/d1
+OK..
+1 subgoal:
+STAGE_OK callffi/d2
+OK..
+1 subgoal:
+STAGE_OK callffi/d3
+OK..
+1 subgoal:
+STAGE_OK callffi/d4
+OK..
+STAGE_FAILED callffi/d5 :: 
+Exception raised at Q.EXISTS_TAC: goal not an exists
+
+AFTER callffi/d5: 1 goals, proved=false
+  ASM evaluate
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) =
+(res,t)
+  ASM call_FFI s.ffi (ExtCall name) x x' = FFI_return f l
+  ASM loc_to_pc n' n0 s.code = SOME x''
+  ASM read_bytearray c'³' (w2n c'') (mem
+  ...
+ (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) ∧
+∃s'.
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>).code =
+  s'.code ∧ region_inv G OK s.code s'
+----
+LEMMA_OPEN callffi
+AFTER callffi end: 1 goals, proved=false
+  ASM evaluate
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) =
+(res,t)
+  ASM call_FFI s.ffi (ExtCall name) x x' = FFI_return f l
+  ASM loc_to_pc n' n0 s.code = SOME x''
+  ASM read_bytearray c'³' (w2n c'') (mem
+  ...
+ (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) ∧
+∃s'.
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>).code =
+  s'.code ∧ region_inv G OK s.code s'
+----
+EXPLORE_COMPLETE

@@ -1,0 +1,20 @@
+IMPORTED region2_prefix EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED region2_one_step EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED asm_inst_mval_inv EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED load_covered_byte_align_64 EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED all_address_premise_not_implied EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+DEFINITION mval_inv_def
+⊢ ∀G D s. mval_inv G D s ⇔ (∀r. G (read_reg r s)) ∧ ∀a. D a ⇒ G (s.mem a)
+DEFINITION load_covered_def
+⊢ ∀D. load_covered D ⇔ ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+DEFINITION region_inv2_def
+⊢ ∀G D OK code s.
+    region_inv2 G D OK code s ⇔
+    s.code = code ∧ region_hyp G OK code ∧ load_covered D ∧ mval_inv G D s ∧
+    OK s.pc
+CLOSURE_NODES 290
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P2_IMPORT_COMPLETE

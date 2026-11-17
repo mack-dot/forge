@@ -1,0 +1,104 @@
+<<HOL message: Created theory "forge_refundSignedLen">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSignedLen)>>
+Saved theorem _______ "heap_premises_admit_huge_heap"
+CHECKED heap_premises_admit_huge_heap
+⊢ ∃h e.
+    aligned 3 h ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+    refund_heap_clear h e ∧ 0x8000000000000000w ≤₊ e − h
+Saved theorem _______ "read_bytearray_below_half_bound"
+CHECKED read_bytearray_below_half_bound
+⊢ ∀x n m dm bs q.
+    read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) = SOME bs ∧
+    addresses_below_half dm ∧ q ∉ dm ∧ q <₊ 0x8000000000000000w ⇒
+    n < 2 ** 63
+Saved theorem _______ "close_call_alen_below_half"
+CHECKED close_call_alen_below_half
+⊢ refund_static mc1 dm ∧
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+  addresses_below_half dm ⇒
+  w2n (ms1.REG 3w) < 2 ** 63
+Saved theorem _______ "close_call_site_signed_alen"
+CHECKED close_call_site_signed_alen
+⊢ machine_reach mc ffi ms mc1 ffi1 ms1 ∧ refund_static mc dm ∧
+  ffi.oracle = basis_ffi_oracle ext ∧
+  machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+  ms1.PC = 0x100004080w ∧ addresses_below_half dm ⇒
+  ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w ∧ ¬word_msb (ms1.REG 3w) ∧
+  0w < ms1.REG 3w
+Saved theorem _______ "refund_mem_dm_below_half"
+CHECKED refund_mem_dm_below_half
+⊢ ∀h e. e ≤₊ 0x8000000000000000w ⇒ addresses_below_half (refund_mem_dm h e)
+Saved theorem _______ "close_call_site_signed_alen_model"
+CHECKED close_call_site_signed_alen_model
+⊢ (refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+   stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs) ∧
+  e ≤₊ 0x8000000000000000w ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    ∀mc1 ffi1 ms1.
+      machine_reach (refund_mc 0x1000040D0w (refund_abs_env envmc))
+        (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧ ms1.PC = 0x100004080w ⇒
+      ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w ∧ ¬word_msb (ms1.REG 3w) ∧
+      0w < ms1.REG 3w
+PREMISES_KEPT 13 DROPPED 1 (sign condition)
+DEFINITION ⊢ ∀dm s b c g.
+    fficlose_call_pre_no_len_sign dm s b c g ⇔
+    arm8_user s ∧ s.PC = 0x100004080w ∧ refund_image_mem 0w s.MEM ∧
+    s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 0w = c ∧ aligned 2 c ∧
+    mem_dword s.MEM 0x100028020w = g ∧
+    (∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a) ∧
+    (∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j) ∧
+    (∀i. i < 32 ⇒ b + n2w i ∉ dm) ∧ (∀i. i < 32 ⇒ s.REG 2w ≠ b + n2w i) ∧
+    ¬(0x100000000w ≤₊ s.REG 2w ∧ s.REG 2w <₊ 0x100030F30w)
+Saved theorem _______ "fficlose_call_pre_no_len_from_no_sign"
+CHECKED fficlose_call_pre_no_len_from_no_sign
+⊢ fficlose_call_pre_no_len_sign dm s b c g ∧ ¬word_msb (s.REG 3w) ⇒
+  fficlose_call_pre_no_len dm s b c g
+Saved theorem _______ "cake_fficlose_path_at_reachable_call_signed"
+CHECKED cake_fficlose_path_at_reachable_call_signed
+⊢ (refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+   stdin_content fs = SOME text ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs) ∧
+  e ≤₊ 0x8000000000000000w ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    ∀mc1 ffi1 ms1 dm b c g.
+      machine_reach (refund_mc 0x1000040D0w (refund_abs_env envmc))
+        (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+      fficlose_call_pre_no_len_sign dm ms1 b c g ⇒
+      ∃s1.
+        arm8_run 15 ms1 = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002528Cw ∧
+        ∀s2.
+          close_call_rel dm s1 s2 ⇒
+          ∃s3.
+            arm8_run 6 s2 = SOME s3 ∧ s3.PC = ms1.REG 30w ∧
+            s3.SP_EL0 = ms1.SP_EL0 ∧ arm8_user s3 ∧
+            (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+                 s3.REG r = ms1.REG r) ∧
+            ∀q. q ∈ dm ⇒
+                s3.MEM q =
+                if q = ms1.REG 2w then close_result_byte (s2.REG 0w)
+                else ms1.MEM q
+Saved theorem _______ "negative_alen_not_covered"
+CHECKED negative_alen_not_covered
+⊢ word_msb (s.REG 3w) ⇒ ¬fficlose_call_pre_no_len dm s b c g
+Saved theorem _______ "arbitrary_state_can_violate_arguments"
+CHECKED arbitrary_state_can_violate_arguments
+⊢ ∃ms1. ms1.PC = 0x100004080w ∧ ms1.REG 1w ≠ 8w ∧ word_msb (ms1.REG 3w)
+Saved theorem _______ "universe_not_below_half"
+CHECKED universe_not_below_half
+⊢ ¬addresses_below_half 𝕌(:word64)
+Saved theorem _______ "high_heap_end_not_below_half"
+CHECKED high_heap_end_not_below_half
+⊢ ∀h e.
+    h ≤₊ 0x8000000000000000w ∧ 0x8000000000000000w <₊ e ⇒
+    ¬addresses_below_half (refund_mem_dm h e)
+CLOSURE_NODES 526
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundSignedLen" ... done.
+Theory "forge_refundSignedLen" took 9.6s to build
+EXACT_COMPLETE

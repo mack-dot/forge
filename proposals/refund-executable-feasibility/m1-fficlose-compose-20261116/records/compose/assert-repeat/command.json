@@ -1,0 +1,40 @@
+{
+ "case": "assert-repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-compose-local-20261116/attempt-0001/assert-repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "assert-0001.sml",
+ "source_sha256": "10b68fa640ddef60be9ebc1bb427dc7843aac3a19832ce4e68f1e621c2c0c047",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 23,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 10.201,
+ "child_user_cpu_seconds": 9.695,
+ "child_system_cpu_seconds": 1.235,
+ "child_max_rss_bytes": 543850496,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "cdd17afe54f762ea28829d4365e8bf1498e8e5a655b93d790c3a6dfd336b6050",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFficloseAssertTheory.html": "9fb4e0b0bc08b237ce9b45fa4c09b211b873f690491e8fef2bccf0e4e6739c92",
+  ".hol/objs/forge_refundFficloseAssertTheory.dat": "9c79e5051f00fa568c07b0b8c2fdff16b030484ce766f88e8dd42e683b37e9eb",
+  ".hol/objs/forge_refundFficloseAssertTheory.sig": "548bb08b1b1295c52eecc7a621c75b8bade4c115d06cc4a0790db154561f2945",
+  ".hol/objs/forge_refundFficloseAssertTheory.sml": "a717c04ad8b52cd2d247ee25e6dde058d3078a2fa32ac34c08e6ab359fa9053b"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

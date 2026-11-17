@@ -9,6 +9,712 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## Relocation steps S1 and S2 proved for every page-aligned, non-wrapping slide; S3–S6 open — U405
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. Profile A not approved. No replay, hosted action,
+protected edit or deletion. Documents committed and pushed on the
+current branch by owner instruction; `main` and `results/` untouched.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_arm8_case.py s1-0001` |0|`cml_main_run_sl`; `page_of_relocated_address`; instances at 0, 0x4000, 0x2F8C000; five controls |
+| `go.sh s2-0003` (after `s2-0000` exit 1 runner/source missing, `s2-0001` exit 1 authoring, `s2-0002` −24 CPU limit) |0|`refund_entry_pre_sl_IMP_cml_main_pre_sl`; `refund_entry_run_sl`; `refund_code_dm_sl_range`; `refund_heap_clear_sl_range`; disjointness; slide-0 regression; controls; 536 closure nodes; four `bool` axioms |
+| Repeats; separate import script; nonzero-slide satisfiability witness |NOT RUN| |
+| S3–S6 of the slide proof |NOT RUN| |
+| Reachable-call FFI refinement (L1–L3) |NOT RUN|proposal only |
+| Loader, dyld, C run-time, real process; `refund_env_ok` for a real environment; A8 review; profile approval |NOT ESTABLISHED|assumed or open |
+| Clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/REPORT.md).
+Memory failures: none. Tool failures: none. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## A3 as `refund_env_ok`; slide-0 composition with the output equation proved; slide-generic proof prepared — U404
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL run. Profile A not approved. No commit, replay, hosted
+action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh prof-0002` (after `prof-0001` exit 1 authoring) |0|`refund_env_ok_iff_installed_residual`; `refund_abs_env_is_ok`; `refund_profile_a_slide0`; `refund_profile_a_slide0_every_machine_run`; 6 structural controls; 535 closure nodes; four `bool` axioms |
+| `otool` static disassembly of the 27 start-up words |0 (tool)|all PC-relative; not a proof; binary not executed |
+| Repeat; separate import script; joint satisfiability witness |NOT RUN| |
+| Slide-generic proof S1–S6 (premise `aligned 12 sl`) |NOT RUN|prepared |
+| `refund_env_ok` for a real environment; entry state; contract link (A8 matrix: 18 rows NOT REVIEWED) |NOT ESTABLISHED|assumed or open |
+| Profile approval; clean replay; independent replay |NOT ESTABLISHED / NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-profile-a-slide0-20261117/REPORT.md).
+Memory failures: none. Tool failures: none. Prior theorems are used as
+stored. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Restricted Profile A candidate statement prepared for review; no approval, no proof run — U403
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Document only. No profile approved. No proof case, replay, commit,
+hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `M1_PROFILE_A_RESTRICTED.md` |written|assumptions A1–A10; four change the U360 profile (A2, A3, A6, A8) |
+| Stored-statement readback (U387, U388, U392) |0 (read only)|composition for the output equation identified |
+| Slide-0 composition T_A0 |NOT RUN|waits for review |
+| Slide-generic T_A (S1–S6) |NOT RUN| |
+| Profile approval (R1–R5) |NOT ESTABLISHED|owner review |
+| Clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Statement](proposals/refund-executable-feasibility/m1-profile-a-statement-20261116/M1_PROFILE_A_RESTRICTED.md).
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## M1 profile decision packet prepared; two U401 audit points corrected; no approval — U402
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Decision preparation only. No profile approved. No proof case, replay,
+commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Decision packet `M1_PROFILE_DECISION.md` |written|no proof; no approval |
+| Stored-statement readback of `refund_behavior_abstract_env` |0 (read only)|`io_events` unconstrained: the output equation is NOT in the composed theorem |
+| Location of `backend_config_ok`, `mc_init_ok`, `opt_eval_config_wf` discharge |found (read only)|U386 scripts; not re-run |
+| Profile approval (Q1–Q6) |NOT ESTABLISHED|owner decision |
+| Output equation composed with the entry state (O3); slide-generic chain (O2); single acceptance statement (O4); contract link (O1) |NOT RUN| |
+| Clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Packet](proposals/refund-executable-feasibility/m1-profile-decision-20261116/M1_PROFILE_DECISION.md).
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## M1 closure audit; word-level `write` bound proved; seven obligations block M1 — U401
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Audit and plan. No profile approved. No commit, replay, hosted action,
+protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh word-0003` (after `word-0001`, `word-0002` exit 1 authoring; started before the audit instruction) |0|`write_bound_numeric_iff_word`; `write_call_pre_from_residual` (12 residual conjuncts); `replay_ignores_failed_write_with_valid_clen`; controls |
+| Exact-statement import and repeat for `forge_refundWriteWord` |NOT RUN| |
+| Audit documents (four files) |written|no proof; no approval |
+| Profile approval; contract-to-model link; slide-generic chain; single acceptance statement; compiler-premise ledger; clean replay; independent replay |NOT ESTABLISHED / NOT RUN|block M1 |
+| Source-level `write`-event invariant; 12 residual conjuncts; `read`, `open_in`; termination |NOT ESTABLISHED|do not block M1 under Profile A |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Audit](proposals/refund-executable-feasibility/m1-closure-audit-20261116/M1_CLOSURE_AUDIT.md).
+Memory failures: none. Tool failures: none. Prior theorems and controls
+are preserved. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Rendered output never empty; a terminating refund run reaches a `write` call state with `clen = 8` and the buffer bound (model machine) — U400
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh args-0006` (after `args-0001`–`0005` exit 1 authoring) |0|`refund_render_fields_not_empty`; `ffi_write_return_cases`; `nonempty_output_needs_successful_write_event`; `evaluate_trace_write_events_have_call_states`; `successful_write_events_have_valid_call_states`; `refund_terminating_run_reaches_valid_write_call`; `refund_reached_valid_write_call_and_path`; controls |
+| `go-chk.sh check-0002` (after `check-0001` exit 1, defect in a control of the check script) |0|constructed successful `write` call state; 14 exact statements; 8 scope controls; 536 closure nodes; four `bool` axioms |
+| A terminating refund run; joint satisfiability of the refund premises |NOT ESTABLISHED|the published theorem admits a resource-limit stop |
+| Argument facts for failed `write` events; alignment, stack, separations |NOT ESTABLISHED|source-level event invariant missing; memory-layout invariant missing |
+| Numeric bound ⇒ word-form conjunct of `ffiwrite_call_pre` |NOT RUN|next obligation |
+| Source-level event invariant; model-to-real-process simulation |NOT RUN| |
+| Repeats; full 172-statement import |NOT RUN| |
+| `write_call_rel` for the real `write`; OS implementation; loader; PIE slide; native execution; clean replay; independent replay |NOT RUN|explicit assumptions or open |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-write-args-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. U399 theorems and prior
+controls are preserved in the closure. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Model-machine trace theorem: a new `write` event implies a reachable state at `pc = 0x100004090`; refund link conditional on termination — U399
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh reach-0009` (after `reach-0001`–`0004`, `0006`–`0008` exit 1 authoring; `reach-0005` -24 CPU limit) |0|`evaluate_trace_events`; `nonempty_output_needs_write_event`; `run_with_output_reaches_write_call`; `refund_terminating_run_reaches_write_call`; `refund_reached_write_call_facts_and_path` |
+| `go-chk.sh check-0001` |0|constructed model run with a `write` event; 10 exact statements; scope controls; 535 closure nodes; four `bool` axioms |
+| A terminating refund run; an admissible refund execution with a `write` event |NOT ESTABLISHED|the published theorem admits a resource-limit stop |
+| Rendered output not empty |NOT ESTABLISHED|explicit premise; one attempt hit the CPU limit |
+| `clen = 8`, buffer bound, separations from reachable call states |NOT ESTABLISHED|`replay_ignores_wrong_clen_write_event`; event-level specification missing |
+| Source-level `write`-event existence; model-to-real-process simulation |NOT RUN| |
+| Repeats; full 172-statement import |NOT RUN|swap near its limit |
+| `write_call_rel` for the real `write`; OS implementation; loader; PIE slide; native execution; clean replay; independent replay |NOT RUN|explicit assumptions or open |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-write-reach-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. Prior theorems and controls
+are preserved in the closure. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Successful `write` path composed: unaligned store derived from the L3 model under explicit `¬SCTLR_EL1.A`; no reachable call proved — U398
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_arm8_case.py uns-0007` (after `uns-0001`–`0004`, `0006` exit 1 authoring; `uns-0005` -24 CPU limit) |0|`check_alignment_no_fault`, `write_mem2_no_alignment`, `sturh_w9_x19_1_step_no_alignment`, `ffiwrite_suffix_ok_unaligned_run` |
+| `uns-0007r` (repeat) |0|statements identical |
+| `run_arm8_case.py fault-0003` (after `fault-0001` exit 0 DEFECTIVE, not used; `fault-0002` exit 1) |0|`sturh_w9_x19_1_alignment_fault`; premises satisfiable |
+| `go.sh wsucc-0002` (after `wsucc-0001` exit 1 authoring) |0|`cake_ffiwrite_path_successful_write`, `cake_ffiwrite_path_returns`, controls, constructed inhabitant |
+| `go-imp.sh import-0001` |0|18 exact statements; 533 closure nodes; four `bool` axioms; controls |
+| Reachability investigation (`reachability-investigation.txt`) |0 (tool)|top-level theorem leaves `io_events` unconstrained; text inspection, not a proof |
+| Formal reachability of a `write` call state |NOT ESTABLISHED|two-lemma route identified; NOT RUN |
+| Repeats of `wsucc`/`import`; full 172-statement import |NOT RUN|swap near its limit |
+| `write_call_rel` for the real `write`; `SCTLR_EL1.A` of the real process; output effect; oracle conformance; `clen = 8` and buffer bound; `read`, `open_in` |NOT RUN|assumed or open |
+| Loader, dynamic binding, load slide; native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-ffiwrite-success-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. Two defective statements were
+found and excluded. The failed-write theorem and the U397 controls are
+preserved. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Real `write` FFI path: conditional theorem for the failed-write outcome; success outcome not composed; no reachable call proved — U397
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_arm8_case.py ffiw-0008` (after `ffiw-0001`–`0004`, `0006`, `0007` exit 1 authoring; `ffiw-0005` -15 diagnostic) |0|`ffiwrite_prefix_run` (22 steps), `ffiwrite_suffix_fail_run`, `ffiwrite_suffix_ok_run` (standalone), `ffiwrite_ok_alignment_conflict` |
+| `ffiw-0008r` (repeat) |0|statements identical |
+| `go.sh wpath-0002` (after `wpath-0001` exit 1 authoring) |0|file bytes; `cake_ffiwrite_stub_exact`; `cake_ffiwrite_to_import_branch` (23 steps) |
+| `go-c.sh wcomp-0001` |0|`cake_ffiwrite_path_failed_write` under assumed `write_call_rel` |
+| `go-s.sh wsite-0003` (after `wsite-0001`, `0002` exit 1 authoring) |0|non-vacuity (constructed states); `write_call_site_facts`; controls |
+| `go-imp.sh import-0001` |0|531 closure nodes; four `bool` axioms; controls |
+| Source inspection for the `write` FFI call (`reachability-evidence-write.txt`) |0 (tool)|`print` → `#(write)`; text inspection, not a proof |
+| Composition of the success outcome of `write` |NOT ESTABLISHED|no step theorem for the unaligned halfword store at `a + 1` |
+| `clen = 8` and `n + off + 4 ≤ alen` from the oracle |NOT ESTABLISHED|`ffi_write_accepts_wrong_clen`; they stay premises |
+| Formal reachability of a `write` call state; repeat of path/compose/site/import |NOT RUN| |
+| `write_call_rel` for the real `write`; output effect; oracle conformance; `read`, `open_in` |NOT RUN|assumed or open |
+| Loader, dynamic binding, load slide; native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-ffiwrite-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. The `close` theorems and the
+`close` contract obligation are preserved. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Signed `alen ≥ 1` only under a new explicit premise; no reachable `close` call established; sources indicate none — U396
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh signed-0006` (after `signed-0001`–`0004` exit 1 authoring; `signed-0005` exit 0, superseded) |0|`heap_premises_admit_huge_heap`; `close_call_site_signed_alen`; `cake_fficlose_path_at_reachable_call_signed`; controls |
+| `go-imp.sh import-0002` (after `import-0001` exit 1 authoring) |0|143 statements, 527 closure nodes, controls |
+| `signed-repeat` |0|exports byte-identical |
+| Source inspection for the `close` FFI call (`reachability-evidence.txt`) |0 (tool)|no call on any `refund_main` path; text inspection, not a proof |
+| `w2n x3 < 2^63` from established invariants |NOT ESTABLISHED|formally obstructed: the heap premises admit a heap of 2^63 bytes |
+| Reachable `close` call witness; formal unreachability |NOT RUN|inspection says unreachable |
+| Simulation between the real process and the model; `close_call_rel`; oracle conformance; `read`, `write`, `open_in` |NOT RUN|assumed or open |
+| Loader, dynamic binding, entry state, C stack placement; load slide |NOT RUN|explicit premises; slide open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-signed-len-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. The `close` theorems of
+U394–U396 are probably vacuous for refund executions. M1 and integration
+EXIT NOT_ESTABLISHED.
+
+## `clen = 8` and `alen ≠ 0` proved at every reachable `close` call state of the model machine — U395
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh site-0005` (after `site-0002`, `0003` exit 1 authoring; `site-0001`, `0004` exit 0, superseded) |0|`close_call_site_arguments`; `close_call_site_arguments_model`; `cake_fficlose_path_at_reachable_call`; controls |
+| `go-imp.sh import-0001` |0|133 statements, 526 closure nodes, controls |
+| `site-repeat` |0|exports byte-identical |
+| Simulation between the real process and the model machine at call states |NOT RUN|the missing connection |
+| Sign of `alen`; reachability of any `close` call; the compiled jump instruction |NOT RUN|open |
+| `close_call_rel` for the real call; oracle conformance; `read`, `write`, `open_in` |NOT RUN|assumed or open |
+| Loader, dynamic binding, entry state, C stack placement; load slide |NOT RUN|explicit premises; slide open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-callsite-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. The result is for the model
+machine; no oracle success is assumed. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Complete `cake_fficlose` path composed as one conditional theorem; the `close` call is an explicit assumed relation — U394
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_arm8_case.py assert-0001` |0|`fficlose_alen_zero_reaches_assert`; `fficlose_clen_bad_reaches_assert` |
+| `go.sh compose-0018` (after `compose-0001`–`0013`, `0015`–`0017` exit 1 authoring; `compose-0014` exit 0, superseded) |0|`cake_fficlose_path`; `cake_fficlose_path_contract_instance`; inhabitation theorems; seven negative controls |
+| `go-imp.sh import-0001` |0|122 statements, 525 closure nodes, controls |
+| `assert-repeat`, `compose-repeat` |0 each|exports byte-identical |
+| `close_call_rel` for the real `libSystem` call and kernel |NOT RUN|assumed relation |
+| `clen = 8`, `alen ≥ 1` at the call site; negative `alen` path; assertion blocks |NOT RUN|premises; oracle fact proved at model level only |
+| `refund_ffi_contract` / `ffi_interfer_ok` for the real code; oracle conformance; `read`, `write`, `open_in` |NOT RUN|open |
+| Loader, dynamic binding, entry state, C stack placement; load slide |NOT RUN|explicit premises; slide open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-fficlose-compose-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. The composed theorem is
+conditional and inhabited; it is not FFI correctness. M1 and integration
+EXIT NOT_ESTABLISHED.
+
+## Exact ARMv8 steps of the `cake_fficlose` stub and of `fficlose` up to and after the `libSystem` call; the call itself not modelled — U393
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_arm8_case.py steps-0001` |0|exploration: step theorems exist for all words |
+| `run_arm8_case.py ffic-0006` (after `ffic-0001`–`0004` exit 1 authoring; `ffic-0005` exit 0 defective, not used) |0|`cake_fficlose_stub_run`; `fficlose_prefix_run`; `fficlose_suffix_run`; controls |
+| `go.sh bridge-0001` |0|`refund_file_fficlose_words`; `cake_fficlose_stub_exact`; `cake_fficlose_to_import_branch`; `stub_only_ffi_rejected` |
+| `go-imp.sh import-0001` |0|106 statements, 523 closure nodes, controls |
+| `ffic-repeat`, `bridge-repeat` |0 each|exports byte-identical |
+| `libSystem` `close`, kernel, return to `0x10002528C` |NOT RUN|not modelled; post-call state is assumed |
+| Composition against `refund_ffi_contract`; assertion paths; other three stubs |NOT RUN|open |
+| `ffi_interfer_ok` and `interference_ok` for the real system; oracle conformance |NOT RUN|open |
+| Loader, entry state, heap premise for a real process; load slide |NOT RUN|explicit premises; slide open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-fficlose-stub-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. One own script defect found and
+corrected (`ffic-0005`). The stub alone meets no part of the FFI contract.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Identity environment discharges `interference_ok`; exact FFI contract; abstract FFI model; real environment and C code unproved — U392
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh env-0005` (after `env-0001`–`0004` exit 1, authoring) |0|`refund_id_interfer_ok`; `interference_ok_arm8_iff`; `ffi_interfer_ok_iff_contract`; `refund_abs_ffi_contract`; `refund_behavior_abstract_env`; five negative controls |
+| `go-imp.sh import-0001` |0|94 statements, 521 closure nodes, controls |
+| `env-repeat` |0|exports byte-identical |
+| `interference_ok` for the real processor and OS |NOT RUN|identity environment is a model assumption |
+| `ffi_interfer_ok` for the real stubs and C functions (read, write, close, open_in) |NOT RUN|only the abstract model satisfies the contract |
+| FFI conformance with the `basis_ffi` oracle |NOT RUN|not stated in HOL |
+| Loader, entry state, heap premise for a real process; load slide |NOT RUN|explicit premises; slide open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-env-model-20261116/REPORT.md).
+Memory failures: none. Tool failures: none. The theorems without a residual
+hold for the abstract record `refund_abs_env` only. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Residual reduced to `interference_ok` and `ffi_interfer_ok` at the concrete record; FFI names and `shmem_extra` evaluated — U391
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh diag-0001` |0|diagnostic: stored compile theorem uses an unrelated `oracle` constant |
+| `go.sh ffi-0001` |0|`refund_ffi_names` (4 names: read, write, close, open_in; `shmem_extra = []`) |
+| `go-res.sh res-0003` (after `res-0001`, `0002` exit 1 authoring) |0|five clauses proved; `refund_installed_rest_reduced`; `refund_behavior_from_entry_reduced`; four negative controls |
+| `go-imp.sh import-0001` |0|76 exact statements, 520 closure nodes, controls |
+| `ffi-repeat`, `res-repeat` |0 each|exports byte-identical |
+| `interference_ok` at `refund_mc 0x1000040D0w envmc` |NOT RUN|unproved premise (processor and OS) |
+| `ffi_interfer_ok 0x1000040D0w (refund_mc 0x1000040D0w envmc)` |NOT RUN|unproved premise (FFI code for 4 names) |
+| Loader, entry state, heap premise for a real process; load slide |NOT RUN|explicit premises; slide open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises; behavior containment against a policy |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-residual-20261115/REPORT.md).
+Memory failures: none. Tool failures: none. Interference and FFI correctness
+are not established. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Explicit asm state and memory domains; 23 of 30 installed-state clauses proved at slide 0, 7 kept as an explicit residual premise — U390
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh dom-0001` |0|domains, `refund_t`, `refund_t_target_state_rel`, `refund_t_target_configured`, `refund_end_state_established` |
+| `go-asm.sh asm-0002` (after `asm-0001` exit 1 authoring) |0|`refund_installed_from_entry`; `refund_behavior_from_entry`; five negative controls |
+| `go-imp.sh import-0003` (after `import-0001`, `0002` exit 1 authoring) |0|65 exact statements, 518 closure nodes, controls |
+| `dom-repeat`, `asm-repeat` |0 each|exports byte-identical |
+| Residual `refund_installed_rest` (`start_pc_ok`, `interference_ok`, `ffi_interfer_ok`, four record clauses) |NOT RUN|unproved premise; satisfiability not shown |
+| Loader produces the image; entry state; heap/image non-overlap for a real process |NOT RUN|explicit premises |
+| Load slide (`MH_PIE` is set) |NOT RUN|open; all theorems at slide 0 |
+| Native execution; clean replay; independent replay |NOT RUN|independent replay needs separate authorization and a budget |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+| Behavior containment against an authorization policy |NOT ESTABLISHED|design proposal only |
+
+[Report](proposals/refund-executable-feasibility/m1-memory-domain-20261115/REPORT.md).
+[Behavior-containment design proposal](proposals/archia-behavior-containment/PROPOSAL.md) (not a guarantee; M1 is not expanded).
+Memory failures: none. Tool failures: none. The installed-state predicate is
+established only under the residual premise. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Executable bytes equal stored code and bitmaps; loader-memory content clauses composed with the 27 steps at slide 0, under an assumed image premise — U389
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `extract_macho.py` |0|Mach-O layout (the artifact is not an ELF); tool evidence |
+| `run_arm8_case.py frame-0001` |0|`cml_main_run_frame` (27 steps with memory frame) |
+| `go.sh lemmas-0003` (after `lemmas-0001` exit 1 authoring; `lemmas-0002` exit -15, stopped by me) |0|general memory lemmas |
+| `go-ld.sh image-0001` (after `loader-0001`–`0003` exit 1 authoring; `diag-0001` exit -24 tool; `diag-0002` exit 0) |0|`refund_file_code`; `refund_file_bitmaps`; `refund_macho_fields`; image lemmas |
+| `go-cp.sh compose-0003` (after `compose-0001`, `0002` exit 1 authoring) |0|`refund_loader_startup`; six negative controls |
+| `go-sat.sh entrysat-0002` (after `entrysat-0001` exit 1 authoring) |0|`refund_entry_pre_satisfiable` |
+| `go-imp.sh import-0002` (after `import-0001` exit 1 authoring) |0|46 exact statements, 516 closure nodes, controls |
+| `frame-repeat`, `lemmas-repeat`, `image-repeat`, `compose-repeat`, `entrysat-repeat` |0 each|every exported file byte-identical |
+| Loader produces the image predicate; C run-time path to `cml_main` |NOT RUN|assumed premise |
+| Load slide (`MH_PIE` is set) |NOT RUN|open; all step theorems are at slide 0 |
+| Domain clauses, `target_state_rel`, `target_configured`, FFI and processor clauses |NOT RUN|obligations 1 (rest), 3, 5 (domains), 6 open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-loader-memory-20261115/REPORT.md).
+Memory failures: none. Tool failure: `diag-0001`. Counterexample found:
+`header_on_bitmaps_refuted` (the U388 pre-state permits a heap pointer on the
+bitmaps). The installed-state predicate is not established for any state.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Reject path and all present input proved; concrete machine record; 27 `cml_main` steps proved from an assumed pre-state — U388
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh reject-0009` (after `reject-0001` exit 1 tool; `0002`, `0003`, `0005`–`0008` exit 1 authoring; `0004` exit 0) |0|`refund_source_nonfail_reject`; `refund_source_nonfail_stdin`; compositions |
+| `run_arm8_case.py cml-0012` (after `cml-0001`–`0009`, `0011` exit 1 authoring; `cml-0010` exit 0) |0|`cml_main_run` (27 L3 ARMv8 steps); `cml_main_startup_conditions`; controls |
+| `run_arm8_case.py sat-0001` |0|`cml_main_pre_satisfiable` |
+| `go-mc.sh mc-0001` |0|`refund_mc_is_arm8`; `refund_startup_established`; `stdin_absent_characterised` |
+| `go-imp.sh import-0001` |0|29 exact statements, 511 closure nodes, controls |
+| `reject-repeat`, `mc-repeat`, `cml-repeat`, `sat-repeat` |0 each|three exports byte-identical; one after path and white-space normalization |
+| Source non-Fail for absent input, bad file system, general `ffi` |NOT RUN|open |
+| `cml_main_pre` from loader and C run-time; load slide |NOT RUN|open; pre-state is assumed |
+| Loader, FFI, processor clauses; rest of machine-record clauses |NOT RUN|obligations 1 (rest), 3, 5, 6 open |
+| Native execution; clean replay; independent replay |NOT RUN| |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+
+[Report](proposals/refund-executable-feasibility/m1-reject-startup-20261115/REPORT.md).
+Memory failures: none. Tool failures: `reject-0001` and one generator check.
+The step proof uses unslid link addresses of a linked executable that was
+never run. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Source non-Fail proved for valid-request input; start-up clause reduced, not proved — U387
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh nonfail-0003` (after `nonfail-0001`, `0002` exit 1, authoring) |0|`refund_source_nonfail`; exclusion and behaviour for valid-request input |
+| `go.sh startup-0002` (after `startup-0001` exit 1, authoring) |0|`refund_startup_clause_arm8`; `arm8_fix_is_arm8`; `is_arm8_iff_fix` |
+| `go-imp.sh import-0001` |0|17 exact statements, 507 closure nodes, controls |
+| `nonfail-repeat`, `startup-repeat` |0/0|byte-identical exports |
+| Source non-Fail for rejected input, absent input, general `ffi` |NOT RUN|open |
+| Start-up clause for a machine state (ARMv8 proof of `cml_main`) |NOT RUN|open; ten conditions stated |
+| Concrete machine record; other installed-state clauses |NOT RUN|obligations 1, 2, 3, 5, 6 open |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+| Clean replay; independent replay |NOT RUN| |
+
+[Report](proposals/refund-executable-feasibility/m1-source-nonfail-20261115/REPORT.md).
+Memory failures in this run: none. Source non-Fail is proved only under the
+input premises (valid request, `wfcl`, `wfFS`, `STD_streams`), which are
+assumed. The `refund.S` findings are text inspection, not proof. M1 and
+integration EXIT NOT_ESTABLISHED.
+
+## `compile_correct'` replayed; exclusion proved for the real machine record under three unproved premises — U386
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh control-0001` |0|published `compile_correct'` replayed unchanged; statement alpha-equivalent; 500 closure nodes |
+| `go.sh variant-0001` (after `explore-0001`–`0005`, `lemmas-0001`, `0002` exit 1; `lemmas-0003` exit 0) |0|`compile_correct_lab_facts`; fidelity theorem |
+| `go-src.sh source-0006` (after `source-0001`–`0005` exit 1) |0|`refund_install_exclusion_source`; any-handler form |
+| `go-real.sh real-0004` (after `real-0001`, `real-0003` exit 1; `real-0002` exit 0) |0|`refund_u298_exclusion_real`; `refund_compile_correct_no_handler` |
+| `go-imp2.sh import-0004` (after `import-0001` exit 1 memory, `import-0002` exit 1, `import-0003` exit 0) |0|9 exact statements, 504 closure nodes, controls |
+| `control-repeat` |1|memory: interrupt while loading; no proof step ran |
+| `control-repeat-0002`, `variant-repeat`, `source-repeat`, `real-repeat` |0 each|exports identical (two after path and white-space normalization) |
+| Source `¬semantics_prog … refund_prog Fail` |NOT RUN|new open premise; replaces premises 2 and 16 |
+| `refund_installed_no_handler`, `is_arm8_machine_config` from physical evidence |NOT RUN|six installed-state obligations open |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+| Clean replay; independent replay |NOT RUN| |
+
+[Report](proposals/refund-executable-feasibility/m1-compile-correct-20261114/REPORT.md).
+Failed attempts are listed with exit codes in the report and in U386.
+Premises 2 and 16 are conditional consequences, not independently proved
+facts. The installer-handler clause is removed from the installed-state
+premise. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Exact compiler facts proved; compile-level premises reduced to installed and two semantic premises — U385
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh facts-0004` (after `facts-0001`–`0003` exit 1) |0|`good_code arm8_config LN L`; configuration; exact compile equation; ffi names |
+| `go-arm8.sh arm8-0005` (after `arm8-0001`–`0004` exit 1) |0|`refund_install_exclusion_installed`; `refund_u298_exclusion_any_handler` |
+| `go-imp.sh facts-import-0002` (after `facts-import` exit 1) |0|9 exact statements, 499 closure nodes, controls |
+| `facts-repeat`, `arm8-repeat` |0/0|byte-identical exports |
+| `compiler_oracle_ok`; lab `semantics ≠ Fail` |NOT RUN|need a replay of published `compile_correct'` |
+| `installed`, `is_arm8_machine_config` from physical evidence |NOT RUN|six installed-state obligations open |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+| Clean replay; independent replay |NOT RUN| |
+
+[Report](proposals/refund-executable-feasibility/m1-compile-facts-20261114/REPORT.md).
+Failed attempts are listed with exit codes in the report and in U385. Of the
+16 compile-level premises, 9 are discharged, 5 come from the published
+`installed` predicate, and 2 semantic premises are open. M1 and integration
+EXIT NOT_ESTABLISHED.
+
+## Exact-program installer exclusion proved under the published compile-level premises — U384
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go.sh filtered-0001` |0|ShareMem lines: 0 of 33749 (exact lab program), 0 of 33735 (after `filter_skip`) |
+| `go.sh exact-0010` (after `exact-0001`–`0009` exit 1) |0|`lab_step_closed refund_lab_inv`; initialization; 11 theorems |
+| `go-chain.sh chain-0018` (after `chain-0001`–`0016` exit 1, `chain-0017` exit 0) |0|`compile_install_exclusion`; exact `refund_compile_install_exclusion` |
+| `go.sh handler-0001` |0|installer handler irrelevant when the entry is not reached |
+| `go-final.sh final-0003` (after `final-0001`, `final-0002` exit 1) |0|`refund_install_exclusion_any_handler` |
+| `go-import.sh exact-import-0002` (after `exact-import` exit 1) |0|9 exact statements, 404 closure nodes, controls |
+| `exact-repeat`, `handler-repeat`, `final-repeat`, `filtered-repeat` |0 each|byte-identical exports |
+| `chain-repeat` |0|data identical after replacing the case directory name |
+| `dump-replay-a4` / `dump-replay-b4` (after three failed pairs, exit 1) |0/0|canonical dumps of the U383 theory byte-identical |
+| 16 compile-level premises for the exact program |NOT RUN|backend chain |
+| U298 exclusion without premises |NOT ESTABLISHED| |
+| Clean replay; independent replay |NOT RUN| |
+
+[Report](proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/REPORT.md).
+Failed attempts are listed with exit codes in the report and in U384. The
+exact lab program has no shared-memory line. The invariant premises of U383
+are discharged for it. The exclusion now depends only on the premises of the
+published compile-level lemma. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Root lemma and simulation transport proved under a lab invariant; exact-program exclusion not established — U382–U383
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No commit, hosted action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_case.py root-0005` (after `root-0001`–`0003` exit 1, `root-0004` exit 0) |0|`forge_simRoot`, 11 theorems; strengthened `asm_step_IMP_evaluate_step_find_next` |
+| `run_case.py root-import` / `root-repeat` |0/0|11 exact statements, 296 closure nodes, controls; byte-identical |
+| `go.sh base-0003` (control: published text unchanged) |1|7 published cases replay; published Install case fails in this context |
+| `go.sh replay-0017` / `replay-0026` |0/0|7 case groups, then CallFFI, proved as subgoals |
+| `go.sh final-0003` (after `final-0001` exit 1, `final-0002` exit 0) |0|`forge_simReplay`: `compile_no_install_prefix`, corollaries; fidelity check |
+| `go.sh final-import-0002` (after `final-import` exit 1) |0|5 exact statements, 297 closure nodes, controls |
+| `go.sh final-repeat` |0|NOT byte-identical: data identical after replacing the case directory name |
+| General ShareMemOp case |NOT PROVED|Excluded by the invariant premise |
+| U381 statement as written |NOT PROVED|Proved form uses a step-closed invariant and prefix length `s1.clock` |
+| Lab bridge for the exact program; backend chain beyond the first link |NOT RUN|Next obligations |
+| U298 exclusion for the exact program |NOT ESTABLISHED|Link from the lab result to the transport theorem is missing |
+| Clean replay; independent replay |NOT RUN| |
+
+[Root report](proposals/refund-executable-feasibility/m1-p3-root-20261113/REPORT.md),
+[replay report](proposals/refund-executable-feasibility/m1-p3-replay-20261113/REPORT.md).
+Failed attempts are listed with exit codes in both reports and in U382 and
+U383. Every interior target state of a simulation segment is on an ordinary
+address. The prefix property holds through the simulation when a step-closed
+lab invariant excludes the Install and ShareMem lines. M1 and integration
+EXIT NOT_ESTABLISHED.
+
+## Layout invariant established; strengthened statement corrected; simulation cases not run — U381
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. No commit, hosted action or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_case.py explore-0001` |0|Both lemmas in the goal manager |
+| `python3 -I -B run_case.py layout-0001 layout-0001.sml …` |0|`state_rel_no_install_prefix_layout`, `installed_bound_code_layout`; corrected statement printed; fidelity check |
+| `run_case.py layout-import` / `layout-repeat` |0/0|Three exact statements, 295 closure nodes, statement control; byte-identical |
+| Strengthened `compile_correct` (with `code_layout_ok`) |NOT PROVED|Stated and type-checked only |
+| Strengthened step lemma; per-segment lemmas; nine simulation cases |NOT RUN|Next obligations |
+| U298 exclusion for the exact program |NOT ESTABLISHED|P3 not established |
+
+[Report](proposals/refund-executable-feasibility/m1-p3-layout-20261113/REPORT.md).
+The layout condition is a static bound on the encoded program length. With
+it every lab-aligned target state is off the installer entry, and the bound
+follows from the bound clause of `installed`. Intermediate target states are
+not covered yet. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Clock-zero simulation case proved with a layout bound; P3 not established — U380
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. No commit, hosted action or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_case.py explore-0001` / `0002` |1/−24|Script error; CPU-limit stop; not counted |
+| `run_case.py explore-0003` / `0004` / `0005` |0/0/0|Staged explorations |
+| `run_case.py zero-0001` / `zero-repeat` |1/1|Failed proof attempt (statement typed the bound at an unrelated word size); repeat of it |
+| `python3 -I -B run_case.py zero-0002 zero-0002.sml …` |0|`install_entry_distinct`, `state_rel_no_install_prefix_zero`, wrap example |
+| `run_case.py zero-import` / `zero-repeat-0002` |0/0|Three exact statements, 294 closure nodes; byte-identical |
+| Strengthened `compile_correct` |NOT PROVED|Needs a layout-bound premise; not yet restated |
+| U298 exclusion for the exact program |NOT ESTABLISHED|P3 not established |
+
+[Report](proposals/refund-executable-feasibility/m1-p3-zero-case-20261113/REPORT.md).
+The published `state_rel` does not bound the code offset, so the clock-zero
+case needs a layout bound. With it the case is proved. The statement of U378
+must gain that premise. M1 and integration EXIT NOT_ESTABLISHED.
+
+## P3 not established; target prefix calculus and first backend link for the new oracle — U377–U379
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No hosted action, protected edit, commit or deletion in this run.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_case.py explore-0001` … `explore-0004` |0 each|Staged explorations |
+| `python3 -I -B run_case.py prefix-0001 prefix-0001.sml` |0|`no_install_prefix` with zero, mono, all, halt, next, segment |
+| `run_case.py prefix-import` / `prefix-repeat` |0/0|Six exact statements, 288 closure nodes; byte-identical |
+| `run_case.py prefix-missing-first` / `prefix-invalid-layout` |1/1|Intended mismatch; Halt claim refuted for an invalid layout |
+| `run_case.py statement-0001` |0|Backend instance; proposed statement had a wrong prefix bound (superseded) |
+| `run_case.py statement-0002` / `statement-repeat` |0/0|Corrected proposed statement, fidelity check, `refund_alloc_backend_correct`; byte-identical |
+| `python3 -I -B verify_cases_r9.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| Strengthened `compile_correct` |NOT PROVED|Stated and type-checked only |
+| Per-segment prefix lemmas; nine simulation cases |NOT RUN|Next obligations |
+| U298 exclusion for the exact program |NOT ESTABLISHED|P3 not established |
+
+[Report](proposals/refund-executable-feasibility/m1-p3-prefix-20261113/REPORT.md).
+The published proof was copied unchanged. A small target-level calculus for
+"no prefix at the installer entry" is proved, with composition over the shape
+of the published step lemmas. The strengthened simulation is not proved. The
+published backend theorem is instantiated for `refund_alloc_oracle`. None of
+the six installed-state obligations is discharged. No frozen statement
+changed; no axiom or `cheat`. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Lab-level installer exclusion from `good_init_state`; P3 not run — U374–U376
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No hosted action, protected edit, commit or deletion in this run.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Generic `run_case.py explore-0001` … `explore-0012` |0, except 1 for five|Explorations; the exits 1 stopped at an open lemma or a missing load; not counted |
+| `python3 -I -B run_case.py aligned-0001 aligned-0001.sml …` |0|Twenty theorems: revised invariant, eleven branches, `region2_prefix`, coverage, countermodel |
+| `run_case.py aligned-import` / `aligned-repeat` |0/0|Five exact statements, 290 closure nodes; byte-identical |
+| `run_case.py aligned-missing-coverage` |1|Intended statement mismatch |
+| Application `run_case.py explore-0001` … `explore-0011` |0, except 1 for four|Type errors in goal construction; not counted |
+| `python3 -I -B run_case.py excl-0001 excl-0001.sml …` |0|`refund_lab_good_init_avoids_install`, `refund_lab_aligned_init_avoids_install` |
+| `run_case.py excl-import` / `excl-repeat` |0/0|Exact statements with structure audit, 395 closure nodes; byte-identical |
+| `run_case.py excl-missing-init` |1|Intended statement mismatch |
+| `python3 -I -B verify_cases_r8.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| P3 target prefix lemma |NOT RUN|Preparation recorded only |
+| U298 exclusion for the exact program |NOT ESTABLISHED|Needs P3 and the chain for `refund_alloc_oracle` |
+
+[Report](proposals/refund-executable-feasibility/m1-lab-exclusion-20261113/REPORT.md).
+The all-address memory premise of U372 does not follow from
+`good_init_state` (countermodel proved) and was replaced by an invariant on
+load-covered addresses. With it, the lab run of the exact program from the
+published initial state never fetches the `Install` line at any clock, under
+`good_init_state` alone. This is a lab-level result. All six installed-state
+obligations remain open. No frozen statement changed; no axiom or `cheat`.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## P2 proved at lab level with one memory premise; P3 not run — U371–U373
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No hosted action, protected edit, commit or deletion in this run.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| Generic `run_case.py explore-0001` … `explore-0009` |0 each|Staged explorations |
+| `run_case.py step-0001` |1|SCRIPT ERROR in the witness term after the other proofs passed; nothing exported |
+| `python3 -I -B run_case.py step-0002 step-0002.sml …` |0|Eleven branch lemmas, `region_one_step`, `region_run`, `region_prefix`, witness |
+| `run_case.py step-import` / `step-import-0002` |1/0|Reader-side quantifier order; then five statements, 290 closure nodes |
+| `run_case.py step-repeat` / `step-repeat-0002` |1/0|Repeat of the failed source; then byte-identical |
+| `run_case.py step-missing-hyp` / `step-refute-weakened-v3` |1/1|Intended mismatch; weakened claim refuted by a concrete run |
+| `run_case.py step-refute-weakened` / `-v2` |1/1|SCRIPT ERRORS, not counted |
+| `run_case.py walk-0001` / `walk-import` / `walk-repeat` |0/0/0|`hyp_walk_region_hyp`; byte-identical |
+| Application `run_case.py explore-0001` / `0002` / `0003` |1/1/0|Two script errors; then walk check `T` for {29, 31}, `F` for {29} |
+| `python3 -I -B run_case.py run-0001 run-0001.sml …` |0|`refund_lab_run_avoids_install` and four more |
+| `run_case.py run-import` / `run-repeat` |0/0|Four exact statements, 389 closure nodes; byte-identical |
+| `run_case.py run-missing-premise` / `run-naive` |1/1|Intended mismatch; fresh evaluation rejects section 29 alone |
+| `run_case.py init-0001` / `init-0002` |1/0|Script error; then `refund_lab_init_run_avoids_install` |
+| `run_case.py init-import` / `init-repeat` |0/0|Exact statement, 394 closure nodes; byte-identical |
+| `python3 -I -B verify_cases_r7.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| Memory premise of the initial lab state |OPEN|`good_init_state` covers aligned addresses only |
+| P3 target prefix lemma |NOT RUN|Needs a modified copy of a published proof |
+| U298 exclusion for the exact program |NOT ESTABLISHED|Needs the memory premise and P3 |
+
+[Report](proposals/refund-executable-feasibility/m1-p2-lab-invariant-20261113/REPORT.md).
+The one-step invariant holds for every instruction of the published lab
+semantics. For the exact lab program, a run from the published initial state
+never fetches the `Install` line at any clock, given that the initial memory
+holds no code pointer that resolves into the installer sections. This is a
+lab-level result. All six installed-state obligations remain open. No frozen
+statement changed; no axiom or `cheat`. M1 and integration EXIT NOT_ESTABLISHED.
+
+## P1 proved; P2 static part proved, semantic part open; P3 not run — U368–U370
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. No profile approved. The U298 exclusion premise is not
+adopted. No hosted action, protected edit, commit or deletion in this run.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| P1 `run_case.py explore-0001` … `explore-0012` |0, except −24 (`0004`) and 1 (`0011`)|Explorations; the two exceptions are a resource stop and a script error, not counted |
+| `python3 -I -B run_case.py proof-0001 proof-0001.sml` |0|`refund_lab_install_closure` and eight more; recomputed compile equals stored `code`, `data`, `ffis`, `conf` |
+| `run_case.py import` / `repeat` |0/0|Eight exact statements, 384 closure nodes; byte-identical |
+| `run_case.py naive-statement` / `naive-closure` |1/1|Intended mismatch; fresh evaluation rejects section 29 alone |
+| `run_case.py resolve-0001` / `resolve-import` / `resolve-repeat` |0/0/0|`refund_lab_refs_resolve_outside` and five more; five exact statements; byte-identical |
+| `run_case.py resolve-naive` |1|Fresh evaluation rejects section 29 alone |
+| P2 `run_case.py explore-0001` … `explore-0017` |0, except −24 (`0004`, `0017`) and 1 (`0009`)|Resource stops and one script error, not counted |
+| `run_case.py lemmas-0001` / `lemmas-import` / `lemmas-repeat` |0/0/0|`asm_inst_val_inv`, `write_bytearray_val_inv`; byte-identical |
+| `run_case.py lemmas-missing-premise` |1|Intended statement mismatch |
+| `python3 -I -B verify_cases_r6.py` / two altered copies |0/1/1|Byte, exit and marker binding only |
+| P2 one-step lemma and whole-run theorem |NOT PROVED|Proposed statements only; combined tactic hit the CPU limit |
+| P3 target prefix lemma |NOT RUN|Needs P2 and a modified copy of a published proof |
+| U298 exclusion for the exact program |NOT ESTABLISHED|Needs P2 semantic and P3 |
+
+[Report](proposals/refund-executable-feasibility/m1-p1-lab-closure-20261113/REPORT.md).
+The allocation oracle is now a kept, defined constant whose compile gives the
+stored `code`. P1 holds for the published `to_lab` output under that oracle.
+The static part of P2 holds at program-counter level with the published
+label resolution. The semantic invariant is not proved. All six
+installed-state obligations remain open. No frozen statement changed; no
+axiom or `cheat`. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## N1 corrected and proved for every oracle; exclusion still not established — U364–U365
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

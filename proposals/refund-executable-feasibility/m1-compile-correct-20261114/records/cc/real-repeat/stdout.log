@@ -1,0 +1,92 @@
+<<HOL message: Created theory "forge_refundExclusionReal">>
+HEAP_REGS ⊢ heap_regs
+    (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.reg_names =
+  (1,3)
+DEFINITION ⊢ ∀mc0 ms cbspace data_sp.
+    refund_installed_no_handler mc0 ms cbspace data_sp ⇔
+    ∃t m bitmap_ptr bitmaps_dm sdm.
+      (let
+         heap_stack_dm = {w | t.regs 1 ≤₊ w ∧ w <₊ t.regs 3}
+       in
+         (target_state_rel mc0.target t ms ∧ target_configured t mc0 ∧
+          t.pc = mc0.target.get_pc ms ∧ start_pc_ok mc0 t.pc ∧
+          n2w (2 ** t.align − 1) && t.pc = 0w ∧
+          interference_ok mc0.next_interfer
+            (mc0.target.proj mc0.prog_addresses) ∧ ffi_interfer_ok t.pc mc0 ∧
+          T ∧ code_loaded code mc0 ms ∧
+          bytes_in_mem t.pc code t.mem t.mem_domain
+            (heap_stack_dm ∪ bitmaps_dm) ∧
+          heap_stack_dm ∪ bitmaps_dm ⊆ t.mem_domain ∧
+          (∀a. byte_align a ∈ heap_stack_dm ∪ bitmaps_dm ⇒
+               a ∈ heap_stack_dm ∪ bitmaps_dm) ∧ sdm = mc0.shared_addresses ∧
+          (∀a. byte_align a ∈ sdm ⇒ a ∈ sdm) ∧
+          DISJOINT mc0.prog_addresses mc0.shared_addresses ∧
+          (∀a. ∃w.
+             t.mem a = get_byte a w mc0.target.config.big_endian ∧
+             m (byte_align a) = Word w) ∧
+          (∀n. n < cbspace ⇒
+               n2w (n + LENGTH code) + t.pc ∈ t.mem_domain ∧
+               n2w (n + LENGTH code) + t.pc ∉ heap_stack_dm ∪ bitmaps_dm) ∧
+          cbspace + LENGTH code < dimword (:64)) ∧ byte_aligned (t.regs 1) ∧
+         byte_aligned (t.regs 3) ∧ byte_aligned bitmap_ptr ∧
+         t.regs 1 ≤₊ t.regs 3 ∧
+         1024w * bytes_in_word ≤₊ t.regs 3 − t.regs 1 ∧
+         DISJOINT heap_stack_dm bitmaps_dm ∧ m (t.regs 1) = Word bitmap_ptr ∧
+         m (t.regs 1 + bytes_in_word) =
+         Word (bitmap_ptr + bytes_in_word * n2w (LENGTH data)) ∧
+         m (t.regs 1 + 2w * bytes_in_word) =
+         Word
+           (bitmap_ptr + bytes_in_word * n2w data_sp +
+            bytes_in_word * n2w (LENGTH data)) ∧
+         m (t.regs 1 + 3w * bytes_in_word) =
+         Word (mc0.target.get_pc ms + n2w (LENGTH code)) ∧
+         m (t.regs 1 + 4w * bytes_in_word) =
+         Word (mc0.target.get_pc ms + n2w cbspace + n2w (LENGTH code)) ∧
+         (word_list bitmap_ptr (MAP (Word ∘ n2w) data) *
+          word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH data))
+            data_sp) (fun2set (m,byte_aligned ∩ bitmaps_dm)) ∧
+         refund_lab_conf2.ffi_names = SOME mc0.ffi_names ∧
+         ∀i. mmio_pcs_min_index mc0.ffi_names = SOME i ⇒
+             MAP (λrec. w2n (mc0.target.get_pc ms) + rec.entry_pc)
+               refund_lab_conf2.shmem_extra =
+             DROP i (MAP w2n mc0.ffi_entry_pcs) ∧
+             mc0.mmio_info =
+             ZIP
+               (GENLIST (λindex. index + i)
+                  (LENGTH refund_lab_conf2.shmem_extra),
+                MAP
+                  (λrec.
+                     (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+                      n2w rec.exit_pc + mc0.target.get_pc ms))
+                  refund_lab_conf2.shmem_extra) ∧
+             cbspace + LENGTH code + ffi_offset * (i + 3) < dimword (:64))
+HANDLER_RECORD mc0 with
+install_interfer :=
+  (λk x.
+     SND x with
+     <|PC := (SND x).REG 30w;
+       MEM := asm_write_bytearray ((SND x).REG 2w) (FST x) (SND x).MEM;
+       REG := (SND x).REG⦇0w ↦ (SND x).REG 2w⦈|>)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundExclusionReal)>>
+Saved theorem _______ "refund_u298_exclusion_real"
+CHECKED refund_u298_exclusion_real
+⊢ is_arm8_machine_config mc0 ∧
+  ¬semantics_prog (FST (THE (prim_sem_env ffi)))
+    (SND (THE (prim_sem_env ffi))) refund_prog Fail ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ⇒
+  ∀j ms' ffi'.
+    evaluate mc0 ffi j ms = (TimeOut,ms',ffi') ⇒
+    mc0.target.get_pc ms' ≠ mc0.install_pc
+Saved theorem _______ "refund_compile_correct_no_handler"
+CHECKED refund_compile_correct_no_handler
+⊢ is_arm8_machine_config mc0 ∧
+  ¬semantics_prog (FST (THE (prim_sem_env ffi)))
+    (SND (THE (prim_sem_env ffi))) refund_prog Fail ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ⇒
+  machine_sem mc0 ffi ms ⊆
+  extend_with_resource_limit
+    (semantics_prog (FST (THE (prim_sem_env ffi)))
+       (SND (THE (prim_sem_env ffi))) refund_prog)
+Exporting theory "forge_refundExclusionReal" ... done.
+Theory "forge_refundExclusionReal" took 5.0s to build
+EXACT_COMPLETE

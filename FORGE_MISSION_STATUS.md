@@ -11,7 +11,567 @@ labels remain historical and must not be treated as the current priority order.
 
 
 
-## Resume here — N1 proved in corrected form; exclusion needs P1–P3 (U364–U365)
+## Resume here — slide steps S1, S2 proved; S3 is next (U405)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved.
+
+- [Report](proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/REPORT.md).
+- Proved (one local run each): `cml_main_run_sl`, `refund_entry_run_sl`,
+  shifted domains under `slide_ok sl`.
+- Open: S3–S6; nonzero-slide witness; reachable-call FFI refinement
+  (L1–L3, proposal); A8 review; profile approval; replays.
+
+## Resume here — slide-0 Profile A theorem proved with the output equation; slide proof is next (U404)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved. Nothing committed.
+
+- [Report](proposals/refund-executable-feasibility/m1-profile-a-slide0-20261117/REPORT.md);
+  [A8 matrix](proposals/refund-executable-feasibility/m1-profile-a-slide0-20261117/A8_CONTRACT_REVIEW_MATRIX.md).
+- Proved (one local run): `refund_profile_a_slide0` and
+  `refund_profile_a_slide0_every_machine_run` under `refund_entry_pre`,
+  heap premises, `refund_env_ok envmc`, canonical request.
+- Open: slide (S1–S6, premise `aligned 12 sl`); joint satisfiability;
+  `refund_env_ok` for a real environment; A8 review; profile approval;
+  replays.
+
+## Resume here — restricted Profile A statement ready for review; no proof run until reviewed (U403)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- [Statement](proposals/refund-executable-feasibility/m1-profile-a-statement-20261116/M1_PROFILE_A_RESTRICTED.md).
+- Four items change the U360 profile: A2 entry state, A3 informal FFI
+  simulation, A6 file reader, A8 reviewed contract identification.
+- After review: run the slide-0 composition T_A0, then S1–S6 (slide).
+
+## Resume here — profile decision packet ready; waiting for owner answers Q1–Q6 (U402)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- [Packet](proposals/refund-executable-feasibility/m1-profile-decision-20261116/M1_PROFILE_DECISION.md).
+- Recommendation (not an approval): Profile A with three additions.
+- Corrected: the composed abstract-environment theorem has no output
+  equation (new obligation O3); the three compiler premises are
+  discharged in the U386 scripts.
+- Next after approval: O3 (output equation at slide 0), then O2 (slide).
+
+## Resume here — M1 closure audit done; owner decisions needed before more proof work (U401)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- [Audit](proposals/refund-executable-feasibility/m1-closure-audit-20261116/M1_CLOSURE_AUDIT.md),
+  with dependency, TCB and critical-path files.
+- Blocking M1: profile approval; approved-contract-to-model link (Unicode);
+  slide (all composed theorems at slide 0, binary is PIE); one acceptance
+  statement with jointly satisfiable premises; compiler-premise ledger;
+  clean replay; independent replay.
+- Proved in U401 before the audit (one run): word-level `write` bound;
+  `ffiwrite_call_pre` reduced to 12 residual conjuncts.
+- Next: owner decides the profile and the claim text; read-only contract
+  re-audit; then the slide-generic chain.
+
+## Resume here — output non-emptiness proved; a terminating refund run reaches a `write` call state with `clen = 8` and the bound (U400)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_render_fields_not_empty`;
+  `successful_write_events_have_valid_call_states`;
+  `refund_terminating_run_reaches_valid_write_call`;
+  `refund_reached_valid_write_call_and_path`.
+- Premises not discharged: the run terminates with `Success`; installed
+  state; `refund_static`. No refund execution witness.
+- Open: failed `write` events (source-level event invariant); the
+  bit-vector bridge to the `ffiwrite_call_pre` bound conjunct; 16 other
+  conjuncts; `write_call_rel`, OS, loader, slide, real process.
+- [Report](proposals/refund-executable-feasibility/m1-write-args-20261116/REPORT.md).
+- Next: the bit-vector bridge; then the source-level event invariant.
+
+## Resume here — `write` reachability proved for the model machine, conditional on a terminating run with non-empty output (U399)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `evaluate_trace_events` (a new `write` event
+  implies a reachable model state at pc 0x100004090);
+  `nonempty_output_needs_write_event`;
+  `refund_terminating_run_reaches_write_call`;
+  `refund_reached_write_call_facts_and_path` (joined with
+  `cake_ffiwrite_path_returns`).
+- Premises not discharged: the run terminates with `Success`; the rendered
+  output is not empty; installed state; `refund_static`.
+- Not derivable: `clen = 8`, buffer bound, separations (event-level
+  specification missing). 18 conjuncts of `ffiwrite_call_pre` stay premises.
+- No refund execution witness. The only witness is a constructed model run.
+- Model machine only. No link to the real process.
+- Open: `write_call_rel`; OS `write`; `SCTLR_EL1.A`; loader; slide; `read`,
+  `open_in`; simulation; native execution; clean and independent replay.
+- Next (owner decision): prove the rendered response is not empty; then
+  the event-level specification for `clen` and the buffer bound.
+- Evidence: `proposals/refund-executable-feasibility/m1-write-reach-20261116/REPORT.md`; U399.
+
+## Earlier resume point (U398) — superseded by U399
+
+### U398 text — `write` path composed for both outcomes under `write_call_rel` and `¬SCTLR_EL1.A`; reachability not proved (U398)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `sturh_w9_x19_1_step_no_alignment` (from the L3
+  definitions, no axiom); `cake_ffiwrite_path_successful_write`;
+  `cake_ffiwrite_path_returns` (both outcomes).
+- Assumed, visible: `ffiwrite_call_pre` (19 conjuncts); `write_call_rel`;
+  NEW `¬s2.SCTLR_EL1.A` on the return state; slide 0.
+- Not strengthened: `clen = 8` and the buffer bound stay premises.
+- Controls: alignment fault with `A` set; exact result bytes; return
+  address; protected memory. U397 theorems and controls preserved.
+- Reachability: NOT proved. The exported top-level theorem leaves
+  `io_events` unconstrained.
+- Output effect and the real `write`: unverified.
+- Open: `write_call_rel` for the real call; `SCTLR_EL1.A` of the real
+  process; oracle conformance; reachability; `read`, `open_in`;
+  simulation; slide; loader; native execution; clean and independent replay.
+- Next (owner decision): the trace lemma "a new `write` event implies a
+  reachable state at pc 0x100004090".
+- Evidence: `proposals/refund-executable-feasibility/m1-ffiwrite-success-20261116/REPORT.md`; U398.
+
+## Earlier resume point (U397) — superseded by U398
+
+### U397 text — `write` path: failed-write outcome composed; success outcome blocked by a missing unaligned-store step theorem (U397)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): file bytes of `cake_ffiwrite`, `ffiwrite` and the
+  `write` import stub; `cake_ffiwrite_to_import_branch` (23 steps to
+  `pc = g`); `cake_ffiwrite_path_failed_write` under the assumed
+  `write_call_rel`; non-vacuity with constructed states;
+  `write_call_site_facts` (model: readable arrays, `alen ≥ 4`).
+- Not composed: the success outcome. `ffiwrite_suffix_ok_run` is standalone;
+  its premise `aligned 1 (a + 1w)` conflicts with `aligned 1 a`.
+- Not derivable from the oracle: `clen = 8`, `n + off + 4 ≤ alen`.
+- Reachability: source inspection only (`print` → `#(write)`). Not a proof.
+- Output effect: specified in the report only. Not proved. Not authorized.
+- Preserved: U394–U396 `close` theorems and the `close` contract obligation.
+- Open: unaligned-store step theorem; `write_call_rel` for the real call;
+  oracle conformance; `read`, `open_in`; simulation; slide; loader; native
+  execution; clean and independent replay.
+- Next (owner decision): the unaligned-store step theorem and the success
+  composition, or `read`.
+- Evidence: `proposals/refund-executable-feasibility/m1-ffiwrite-20261116/REPORT.md`; U397.
+
+## Earlier resume point (U396) — superseded by U397
+
+### U396 text — `close` work at its limit: signed bound needs a new premise; `close` is probably never called (U396)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `heap_premises_admit_huge_heap` (the earlier
+  premises do not bound `x3`); `close_call_site_signed_alen` and
+  `cake_fficlose_path_at_reachable_call_signed` under the NEW explicit
+  premise `e ≤₊ 2^63`.
+- Reachability: no reachable `close` call established. Source inspection:
+  `refund_main` uses `inputAllFrom None` (standard input, `consume_rest`)
+  and `print` (`write`); no path issues `close`. Not a proof.
+- Consequence: the U394–U396 `close` theorems are probably vacuous for
+  refund executions.
+- Assumed, visible: premises of `refund_behavior_abstract_env`; `e ≤₊ 2^63`;
+  13 call-state premises; `close_call_rel`.
+- Open: real-process/model simulation; `read` and `write` (the names the
+  program uses); oracle conformance; slide; loader and dynamic binding;
+  native execution; clean and independent replay.
+- Next (owner decision): the `write` stub and `ffiwrite` as in U393, or a
+  formal proof that no `close` event occurs.
+- Evidence: `proposals/refund-executable-feasibility/m1-signed-len-20261116/REPORT.md`; U396.
+
+## Earlier resume point (U395) — superseded by U396
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `close_call_site_arguments` (`x1 = 8`, `x3 ≠ 0`
+  at every reachable `close` call state, from the behaviour inclusion; no
+  assumed oracle success); its instance at the model record;
+  `cake_fficlose_path_at_reachable_call` (composition with the U394 path;
+  14 of 16 call-state premises kept; `close_call_rel` explicit).
+- Missing connection: a simulation between the real process and the model
+  machine at call states; the sign of `alen`; reachability of any `close`
+  call is not shown.
+- Assumed, visible: premises of `refund_behavior_abstract_env`;
+  `fficlose_call_pre_no_len`; `close_call_rel`.
+- Still models only (U392): identity `next_interfer`; `refund_abs_ffi`.
+- Open: `ffi_interfer_ok` for the real code; oracle conformance; the other
+  three FFI names; slide; loader and dynamic binding; native execution;
+  clean and independent replay.
+- Next: derive `w2n x3 < 2^63` at a reachable call state from a size bound
+  on the program-address set.
+- Evidence: `proposals/refund-executable-feasibility/m1-callsite-20261116/REPORT.md`; U395.
+
+## Earlier resume point (U394) — superseded by U395
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `cake_fficlose_path` (stub + 14 steps + assumed
+  `close_call_rel` + 6 steps); `cake_fficlose_path_contract_instance` (the
+  contract's conclusion for index 2 with `new_bytes = v :: TL bytes2`);
+  two assertion paths; `ffi_close_accepts_only_valid_lengths` (oracle
+  model); inhabitation theorems.
+- Assumed, visible: `close_call_rel` (the real call); the conjuncts of
+  `fficlose_call_pre` (image at slide 0, entry state, `clen = 8`, positive
+  `alen`, C stack and separation premises).
+- Not established: `ffi_interfer_ok` / `refund_ffi_contract` for the real
+  code; oracle conformance; the other three FFI names; arguments at the
+  call site.
+- Still models only (U392): identity `next_interfer`; `refund_abs_ffi`.
+- Open: slide; loader and dynamic binding; native execution; clean and
+  independent replay.
+- Next: call-site link in the model (oracle success at index 2 gives
+  `x1 = 8`, `x3 ≥ 1`).
+- Evidence: `proposals/refund-executable-feasibility/m1-fficlose-compose-20261116/REPORT.md`; U394.
+
+## Earlier resume point (U393) — superseded by U394
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_file_fficlose_words` (84 bytes of the
+  file); `cake_fficlose_stub_exact` (one step, pc only);
+  `cake_fficlose_to_import_branch` (15 steps to `br x16`, target = content
+  of the `__got` slot `0x100028020`); `fficlose_suffix_run` (6 steps from an
+  assumed post-call state); `stub_only_ffi_rejected`.
+- Not modelled: `libSystem` `close`, the kernel, the return. No theorem
+  joins the steps before and after the call.
+- Finding (analysis): the real `fficlose` returns only for `clen = 8`,
+  `alen ≥ 1`; the published clause quantifies over all call states.
+- Still models only (U392): identity `next_interfer`; `refund_abs_ffi`.
+- Explicit premises, not proved: image at slide 0, entry states, heap and
+  stack separations, machine-record equation, input premises.
+- Open: slide; loader and dynamic binding; C stack placement; oracle
+  conformance; the other three FFI names; native execution; clean and
+  independent replay.
+- Next: one explicit assumption relation for the `close` call and the
+  composition against `refund_ffi_contract` for index 2; or the two
+  assertion paths as step theorems.
+- Evidence: `proposals/refund-executable-feasibility/m1-fficlose-stub-20261116/REPORT.md`; U393.
+
+## Earlier resume point (U392) — superseded by U393
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_id_interfer_ok`;
+  `interference_ok_arm8_iff` (exact condition);
+  `ffi_interfer_ok_iff_contract` (exact FFI contract, general `envmc`);
+  `refund_abs_ffi_contract`; `refund_behavior_abstract_env`,
+  `refund_installed_abstract_env`, `refund_u298_exclusion_abstract_env`
+  (no residual; abstract record `refund_abs_env` only).
+- Model assumptions, not proofs about the real system: identity
+  `next_interfer`; `refund_abs_ffi` in place of the C FFI code.
+- Explicit premises, not proved: `refund_entry_pre` (image at slide 0, entry
+  state); conditions on `e`; `refund_heap_clear h e`;
+  `envmc.prog_addresses = refund_mem_dm h e`; input premises.
+- Open for the real executable: interference by processor and OS; the four
+  FFI stubs and C functions; conformance with the `basis_ffi` oracle;
+  loader and C run-time; slide; absent input and general `ffi`; native
+  execution; clean and independent replay.
+- Next: one FFI entry stub (`cake_fficlose`, `0x100004080`) with the L3
+  ARMv8 model on the exact file bytes; or the slide version of the 27 steps.
+- Evidence: `proposals/refund-executable-feasibility/m1-env-model-20261116/REPORT.md`; U392.
+
+## Earlier resume point (U391) — superseded by U392
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_ffi_names` (4 external-call names, no
+  shared-memory entry, `shmem_extra = []`); `start_pc_ok` and four record
+  clauses at `refund_mc 0x1000040D0w envmc`;
+  `refund_installed_from_entry_reduced`;
+  `refund_behavior_from_entry_reduced`;
+  `refund_u298_exclusion_from_entry_reduced`.
+- Unproved residual `refund_installed_rest2`: `interference_ok` (processor
+  and OS) and `ffi_interfer_ok` (C FFI code for read, write, close,
+  open_in). Satisfiability not shown.
+- Explicit premises, not proved: `refund_entry_pre` (image at slide 0, entry
+  state); conditions on `e`; `refund_heap_clear h e`;
+  `envmc.prog_addresses = refund_mem_dm h e`; input premises.
+- Open: slide; loader and C run-time; absent input and general `ffi`;
+  native execution; clean and independent replay.
+- Next: owner decision on the form of the two clauses (environment
+  assumption for `next_interfer`; one FFI name first for `ffi_interfer_ok`).
+- Evidence: `proposals/refund-executable-feasibility/m1-residual-20261115/REPORT.md`; U391.
+
+## Earlier resume point (U390) — superseded by U391
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_t_target_state_rel`,
+  `refund_t_target_configured`, all domain clauses of obligation 5;
+  `refund_installed_from_entry` (23 of 30 clauses; slide 0);
+  `refund_behavior_from_entry` and `refund_u298_exclusion_from_entry`
+  (the U388 final theorems from the entry pre-state, under the residual).
+- Explicit premises, not proved: `refund_entry_pre` (image at slide 0, entry
+  state); conditions on `e`; `refund_heap_clear h e`;
+  `envmc.prog_addresses = refund_mem_dm h e`; input premises.
+- Residual `refund_installed_rest`, unproved, satisfiability not shown:
+  `start_pc_ok`, `interference_ok`, `ffi_interfer_ok`, two shared-address
+  clauses, the `ffi_names` equation, the `mmio` clause.
+- Scope (owner, 2026-11-15): code-installation exclusion, behavior
+  containment and FFI confinement are three separate properties. U298 is
+  only the first. M1 is not expanded. Design proposal:
+  `proposals/archia-behavior-containment/PROPOSAL.md`.
+- Open: slide; loader and C run-time; absent input and general `ffi`;
+  native execution; clean and independent replay (needs authorization and a
+  budget).
+- Next: discharge the simple residual clauses at `refund_mc` with
+  `base0 = 0x1000040D0w`; the residual is then `interference_ok` and
+  `ffi_interfer_ok`.
+- Evidence: `proposals/refund-executable-feasibility/m1-memory-domain-20261115/REPORT.md`; U390.
+
+## Earlier resume point (U389) — superseded by U390
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_file_code` and `refund_file_bitmaps` (the
+  Mach-O file bytes at offsets 16592 and 180248 are the stored `code` and
+  `data`); `refund_image_code`, `refund_image_bitmaps` (every slide);
+  `cml_main_run_frame`; `refund_loader_startup` (slide 0: after the 27 steps
+  the image, `bytes_in_mem` content, `code_loaded`, the bitmap `word_list`
+  clause, the byte/word relation and the start-up clause hold).
+- Assumed, not proved: `refund_image_mem 0w s.MEM` at entry to `cml_main`
+  (loader, no earlier write, slide 0); the entry state (control bits, pc,
+  slot values, header separation, conditions on `e`); the ML file reader.
+- Counterexample: `header_on_bitmaps_refuted`. The U388 pre-state alone does
+  not give the bitmap clause.
+- Open: slide (`MH_PIE` is set); domain clauses of obligation 5;
+  `target_state_rel`, `target_configured`; obligations 1 (rest), 3, 6; absent
+  input and general `ffi`; native execution; clean and independent replay.
+- Next: asm state `t` and explicit domains for the end state, with the
+  premise that the heap range does not meet the image; then the slide.
+- Evidence: `proposals/refund-executable-feasibility/m1-loader-memory-20261115/REPORT.md`; U389.
+
+## Earlier resume point (U388) — superseded by U389
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_source_nonfail_stdin` (every text at
+  standard-input offset 0, reject path included); `refund_mc_is_arm8`;
+  `refund_mc_behavior_stdin_no_handler`; `cml_main_run` (27 ARMv8 steps on
+  the exact linked words); `refund_startup_established`.
+- Assumed, not proved: input premises and the `basis_ffi` model;
+  `refund_installed_no_handler` at `refund_mc base0 envmc`; the pre-state
+  `cml_main_pre` and the conditions on the stack-end value; unslid addresses.
+- Open: absent input and general `ffi`; installed-state obligations 1 (rest),
+  2 (pre-state, slide), 3, 5, 6; native execution; clean and independent replay.
+- Next: loader clause for the proved end state; load slide; path from process
+  entry to `cml_main`.
+- Evidence: `proposals/refund-executable-feasibility/m1-reject-startup-20261115/REPORT.md`; U388.
+
+## Earlier resume point (U387) — superseded by U388
+
+M1 open. end_to_end=false. Stage 12 unauthorized. No profile approved. Nothing committed.
+
+- Proved (local, exit 0): `refund_source_nonfail` for `basis_ffi ext cl fs`
+  under the input premises; `refund_u298_exclusion_valid_request`;
+  `refund_behavior_valid_request_no_handler`; `refund_startup_clause_arm8`
+  (equivalence to ten ARMv8-state conditions); `arm8_fix_is_arm8`.
+- Assumed, not proved: input premises; `is_arm8_machine_config mc0` (needs a
+  concrete record); `refund_installed_no_handler mc0 ms cbspace data_sp`.
+- Open: source non-Fail for rejected or absent input and for a general `ffi`;
+  installed-state obligations 1, 2, 3, 5, 6; clean and independent replay.
+- Next: reject path from stored `refund_main_error`; concrete machine record;
+  ARMv8 step proof of `cml_main`.
+- Evidence: `proposals/refund-executable-feasibility/m1-source-nonfail-20261115/REPORT.md`;
+  `results/refund-source-nonfail-local-20261115/attempt-0001`; U387.
+
+## Earlier resume point (U386) — superseded by U387
+
+CURRENT none; M1 open; Stage12 unauthorized; no profile approved; end_to_end=false.
+
+- Done (local, U386): published `compile_correct'` replayed unchanged as a
+  control. A guarded replay gives `compile_correct_lab_facts`. For the exact
+  program: `refund_u298_exclusion_real` and
+  `refund_compile_correct_no_handler`.
+- Premises that remain, none proved: `is_arm8_machine_config mc0`; source
+  `¬semantics_prog … refund_prog Fail`; `refund_installed_no_handler mc0 ms cbspace data_sp`
+  (published `installed` without the `install_interfer_ok` clause).
+- Premises 2 and 16 of U385 are conditional consequences, not facts.
+- Next: find or prove source non-Fail for the exact `refund_prog`; then
+  installed-state obligation 2 (start-up code).
+- Packet: `proposals/refund-executable-feasibility/m1-compile-correct-20261114`.
+  Run directory: `results/refund-compile-correct-local-20261114/attempt-0001`.
+- [ ] U367–U386 and eleven packets of 2026-11-13/14 are local and uncommitted.
+- [ ] Clean replay and independent replay: NOT RUN.
+- [ ] Owner decisions pending: commit and push; Profile A or B; replay budget.
+
+## Earlier resume point (U385) — superseded by U386
+
+Previous heading: compile-level premises reduced to installed and two semantic premises (U385)
+
+[Compiler facts report](proposals/refund-executable-feasibility/m1-compile-facts-20261114/REPORT.md).
+Owner's research priorities: see the U368–U370 section below; this is priority 1.
+
+- [x] `good_code arm8_config LN L`; `labels = LN`, `pos = 0`; exact
+  `lab_to_target$compile` equation with the stored `code`; ffi-name facts.
+- [x] `refund_install_exclusion_installed`: `is_arm8_machine_config`,
+  published `installed`, and (`compiler_oracle_ok` ∧ lab `semantics ≠ Fail`)
+  ⇒ `∀n. no_install_prefix`. `refund_u298_exclusion_any_handler` for any
+  installer handler.
+- [ ] **Next:** replay published `backendProof$compile_correct'` (control
+  first) and derive `compiler_oracle_ok` and lab `semantics ≠ Fail` for
+  `refund_alloc_oracle`.
+- [ ] `installed` and `is_arm8_machine_config` from physical evidence: OPEN
+  (six installed-state obligations).
+- [ ] U298 exclusion without premises: NOT ESTABLISHED.
+- [ ] Clean replay and independent replay: NOT_RUN.
+- [ ] U367–U385 and ten packets of 2026-11-13/14 are local and uncommitted.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U384) — superseded by U385
+
+[Exact exclusion report](proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/REPORT.md).
+Owner's research priorities: see the U368–U370 section below; this is priority 1.
+
+- [x] Exact lab program has 0 ShareMem lines (also after `filter_skip`);
+  `no_share_mem_inst` proved.
+- [x] `lab_step_closed refund_lab_inv`; invariant holds at the published
+  initial state for every clock.
+- [x] `refund_compile_install_exclusion`: 16 published compile-level
+  premises ⇒ `∀n. no_install_prefix mc_conf ffi n ms`. No invariant premise.
+- [x] `refund_install_exclusion_any_handler`: the exclusion premise of
+  `install_exclusion_suffices` for any installer handler, from those 16
+  premises on a handler-corrected configuration.
+- [x] Replay difference explained and verified (source path in theory data).
+- [ ] **Next:** computational compile-level premises for the exact program:
+  `good_code arm8_config LN L`, `c.labels = LN`, `c.pos = 0`, the `compile`
+  equation without `attach_bitmaps`; then `mc_conf_ok` for the ARMv8 machine.
+- [ ] Semantic premises through the published backend proof:
+  `compiler_oracle_ok`, `good_init_state` from `installed`, lab
+  `semantics ≠ Fail`.
+- [ ] U298 exclusion without premises: NOT ESTABLISHED. Six installed-state
+  obligations open.
+- [ ] Clean replay and independent replay: NOT_RUN.
+- [ ] U367–U384 and nine packets of 2026-11-13/14 are local and uncommitted.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U382–U383) — superseded by U384
+
+[Root lemma report](proposals/refund-executable-feasibility/m1-p3-root-20261113/REPORT.md),
+[replay report](proposals/refund-executable-feasibility/m1-p3-replay-20261113/REPORT.md).
+Owner's research priorities: see the U368–U370 section below; this is priority 1.
+
+- [x] `forge_simRoot`: strengthened `asm_step_IMP_evaluate_step_find_next`
+  and two sibling lemmas; every interior state of a segment is ordinary;
+  segment composition; endpoint correspondence alone shown insufficient
+  (U382).
+- [x] `forge_simReplay`: `compile_no_install_prefix`,
+  `compile_correct_no_install_prefix`,
+  `target_install_exclusion_conditional`, under a step-closed lab invariant
+  `Inv` (`lab_step_closed`) and `code_layout_ok` (U383). Eight simulation
+  cases proved; ShareMemOp is excluded by a named premise, general case NOT
+  proved. The U381 statement as written is NOT proved.
+- [ ] **Next:** lab bridge for the exact program: count ShareMem lines by
+  evaluation; show the U375 region invariant is closed under `lab_step`;
+  give `Inv` at the `make_init` state for every clock.
+- [ ] Backend chain for `refund_alloc_oracle` beyond the first link
+  (`state_rel`, `oracle_tie`, `encoder_correct` at the installed state);
+  strengthened `semantics_compile`.
+- [ ] General ShareMemOp case (only if the exact program needs it).
+- [ ] U298 exclusion at target level for the exact program: NOT ESTABLISHED.
+  Six installed-state obligations open.
+- [ ] Clean replay and independent replay of `forge_simRoot` and
+  `forge_simReplay`: NOT_RUN.
+- [ ] U367–U383 and eight packets of 2026-11-13 are local and uncommitted.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U377–U381) — superseded by U382–U383
+
+[Ninth continuation report](proposals/refund-executable-feasibility/m1-p3-prefix-20261113/REPORT.md).
+Owner's research priorities: see the U368–U370 section below; this is priority 1.
+
+- [x] `forge_targetInstallPrefix`: `no_install_prefix` with zero, halt,
+  one-step and segment-composition lemmas (U377).
+- [x] Strengthened `compile_correct` stated and type-checked; published proof
+  copied unchanged (U378). NOT proved.
+- [x] `refund_alloc_backend_correct`: published backend theorem at the new
+  oracle (U378).
+- [x] Clock-zero case: `state_rel_no_install_prefix_zero`, with a layout
+  bound that `state_rel` does not carry (U380).
+- [x] Layout invariant `code_layout_ok`: static bound; holds at every
+  lab-aligned target state; follows from the bound clause of `installed`;
+  strengthened `compile_correct` restated with it, not proved (U381).
+- [ ] **Next:** strengthened `targetProps$asm_step_IMP_evaluate_step_find_next`
+  with `no_install_prefix` for its segment; then the nine simulation cases.
+- [ ] Nine cases of the strengthened simulation; strengthened
+  `semantics_compile`; Forge chain for `refund_alloc_oracle`.
+- [ ] U298 exclusion at target level: NOT ESTABLISHED. Six installed-state
+  obligations open.
+- [ ] U367–U379 and four lab/target packets of 2026-11-13 are local and
+  uncommitted.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U374–U376) — superseded by U377–U379
+
+[Eighth continuation report](proposals/refund-executable-feasibility/m1-lab-exclusion-20261113/REPORT.md).
+Owner's research priorities: see the U368–U370 section below; this is priority 1.
+
+- [x] All-address memory premise shown not derivable; invariant restated on
+  load-covered addresses and re-proved for every instruction (U374).
+- [x] `refund_lab_good_init_avoids_install`: lab-level installer exclusion
+  under the published `good_init_state` alone (U375).
+- [ ] **P3:** strengthened `compile_correct` with prefix states. First step:
+  state it and prove the base cases (U376).
+- [ ] Re-state the backend chain for `refund_alloc_oracle`.
+- [ ] U298 exclusion at target level: NOT ESTABLISHED. Six installed-state
+  obligations open.
+- [ ] U367–U376 and the packets `m1-p1-lab-closure-20261113`,
+  `m1-p2-lab-invariant-20261113`, `m1-lab-exclusion-20261113` are local and
+  uncommitted.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U371–U373) — superseded by U374–U376
+
+[Seventh continuation report](proposals/refund-executable-feasibility/m1-p2-lab-invariant-20261113/REPORT.md).
+Owner's research priorities: see the section below (U368–U370); this is priority 1.
+
+- [x] `region_one_step`, `region_run`, `region_prefix` and eleven branch
+  lemmas, generic for the published lab semantics (U371).
+- [x] `refund_lab_run_avoids_install` and, for the published initial lab
+  state, `refund_lab_init_run_avoids_install` (U372).
+- [ ] **Memory premise:** every cell of the initial lab memory satisfies
+  `loc_good`. `good_init_state` covers aligned addresses only (U372).
+- [ ] **P3:** strengthened lab-to-target simulation with prefix states (U373).
+- [ ] Re-state the backend chain for `refund_alloc_oracle`.
+- [ ] U298 exclusion: NOT ESTABLISHED. Six installed-state obligations open.
+- [ ] U367–U373 and the packets `m1-p1-lab-closure-20261113` and
+  `m1-p2-lab-invariant-20261113` are local and uncommitted.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U368–U370) — superseded by U371–U373
+
+[Sixth continuation report](proposals/refund-executable-feasibility/m1-p1-lab-closure-20261113/REPORT.md).
+
+Owner's research priorities (2026-11-13, order only, no authority):
+1. Close the installer exclusion chain (P1, P2, P3; no silent assumptions).
+2. Close the physical installed-state obligations.
+3. An independently reproducible M1 result (approved profile, CakeML-dependent
+   checks, clean full-chain replay). Stage 12 stays blocked until then.
+4. Freeze M1 as a reference example.
+5. A second program under unchanged verification rules.
+
+- [x] Allocation oracle kept as `refund_alloc_oracle`; its compile gives the
+  stored `code` (U368).
+- [x] P1 `refund_lab_install_closure` (U368).
+- [x] P2 static: `refund_lab_refs_resolve_outside`, fall-through (U369).
+- [x] P2 lemmas `asm_inst_val_inv`, `write_bytearray_val_inv` (U370).
+- [ ] **P2 semantic:** one-step lemma (labelled-instruction branches,
+  `CallFFI` first), whole-run theorem, instantiation for the lab program.
+- [ ] **P3:** target prefix lemma. Not run.
+- [ ] Re-state the earlier theorems for `refund_alloc_oracle`.
+- [ ] U298 exclusion: NOT ESTABLISHED. Six installed-state obligations open.
+- [ ] U367 (proposed, hardware-dependent variance) is local and uncommitted,
+  like U368–U370 and this packet.
+
+M1 open; Stage12 unauthorized; end_to_end=false. This section grants no authority.
+
+## Earlier resume point (U364–U365) — superseded by U368–U370
 
 [Fifth continuation report](proposals/refund-executable-feasibility/m1-n1-reachability-20261113/REPORT.md).
 

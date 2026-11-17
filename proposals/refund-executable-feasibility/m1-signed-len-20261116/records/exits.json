@@ -1,0 +1,79 @@
+[
+ {
+  "case": "reachability-evidence.txt",
+  "actual_exit": 0,
+  "kind": "tool: grep and sed on the pinned sources; text inspection, not a proof"
+ },
+ {
+  "case": "signed-0001",
+  "actual_exit": 1,
+  "wall_seconds": 87.948,
+  "markers": [],
+  "kind": "authoring (instantiation of the bound lemma); two lemmas checked"
+ },
+ {
+  "case": "signed-0002",
+  "actual_exit": 1,
+  "wall_seconds": 102.523,
+  "markers": [],
+  "kind": "authoring (assumption forms)"
+ },
+ {
+  "case": "signed-0003",
+  "actual_exit": 1,
+  "wall_seconds": 139.418,
+  "markers": [],
+  "kind": "authoring (diagnostic output)"
+ },
+ {
+  "case": "signed-0004",
+  "actual_exit": 1,
+  "wall_seconds": 87.664,
+  "markers": [],
+  "kind": "authoring (instantiation)"
+ },
+ {
+  "case": "signed-0005",
+  "actual_exit": 0,
+  "wall_seconds": 99.972,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "exit 0: signed call-site theorem checked; superseded"
+ },
+ {
+  "case": "signed-0006",
+  "actual_exit": 0,
+  "wall_seconds": 83.302,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "final: signed bound under the low-half premise, model instance, composition, controls"
+ },
+ {
+  "case": "import-0001",
+  "actual_exit": 1,
+  "wall_seconds": 87.412,
+  "markers": [],
+  "kind": "authoring (conjunction nesting of one expected term)"
+ },
+ {
+  "case": "import-0002",
+  "actual_exit": 0,
+  "wall_seconds": 79.832,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "final: 143 statements (141 exact, 2 identical to published), structural checks, 527 closure nodes, controls"
+ },
+ {
+  "case": "signed-repeat",
+  "actual_exit": 0,
+  "wall_seconds": 97.397,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat: exports byte-identical"
+ }
+]

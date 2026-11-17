@@ -1,0 +1,115 @@
+<<HOL message: Created theory "forge_refundFfiwriteSite">>
+Saved theorem _______ "write_call_rel_inhabited_fail"
+CHECKED write_call_rel_inhabited_fail
+⊢ ∀dm s1.
+    arm8_user s1 ⇒
+    write_call_rel dm s1
+      (s1 with <|PC := s1.REG 30w; REG := s1.REG⦇0w ↦ 0x80000000w⦈|>) ∧
+    word_bit 31
+      (w2w
+         ((s1 with <|PC := s1.REG 30w; REG := s1.REG⦇0w ↦ 0x80000000w⦈|>).REG
+            0w))
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwriteSite)>>
+WITNESS_CONJUNCTS 19
+Saved theorem _______ "ffiwrite_call_pre_witness"
+CHECKED ffiwrite_call_pre_witness
+⊢ ffiwrite_call_pre {0x200000100w}
+    <|MEM := sat_mem; PC := 0x100004090w; SP_EL0 := 0x400000020w;
+      REG :=
+        (λr.
+           if r = 0w then 0x200000200w
+           else if r = 1w then 8w
+           else if r = 2w then 0x200000100w
+           else if r = 3w then 4w
+           else 0w); PSTATE := <|EL := 0w|>; exception := NoException;
+      SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x400000000w 0x200000200w
+    0x200000100w 0w
+Saved theorem _______ "ffiwrite_call_pre_satisfiable"
+CHECKED ffiwrite_call_pre_satisfiable
+⊢ ∃dm s b c a g. ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "cake_ffiwrite_failed_path_inhabited"
+CHECKED cake_ffiwrite_failed_path_inhabited
+⊢ ∃dm s b c a g s1 s2 s3.
+    ffiwrite_call_pre dm s b c a g ∧ arm8_run 23 s = SOME s1 ∧
+    write_call_rel dm s1 s2 ∧ word_bit 31 (w2w (s2.REG 0w)) ∧
+    arm8_run 6 s2 = SOME s3
+Saved theorem _______ "ffi_write_accepts_only_four_or_more"
+CHECKED ffi_write_accepts_only_four_or_more
+⊢ ffi_write cfg8 arr fsys = SOME r ⇒ 4 ≤ LENGTH arr
+Saved theorem _______ "ffi_write_accepts_wrong_clen"
+CHECKED ffi_write_accepts_wrong_clen
+⊢ ffi_write [] [0w; 0w; 0w; 0w] fsys = SOME (FFIreturn [1w; 0w; 0w; 0w] fsys)
+Saved theorem _______ "write_call_final_halts"
+CHECKED write_call_final_halts
+⊢ refund_static mc1 dm ∧ 0x100004090w ∉ dm ∧ ms1.PC = 0x100004090w ∧
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+  call_FFI ffi1 (ExtCall «write») cbytes abytes = FFI_final outcome ⇒
+  evaluate mc1 ffi1 1 ms1 = (Halt (FFI_outcome outcome),ms1,ffi1)
+Saved theorem _______ "write_call_unreadable_errors"
+CHECKED write_call_unreadable_errors
+⊢ refund_static mc1 dm ∧ 0x100004090w ∉ dm ∧ ms1.PC = 0x100004090w ∧
+  ¬(∃cbytes abytes. read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes)) ⇒
+  FST (evaluate mc1 ffi1 1 ms1) = Error
+Saved theorem _______ "write_call_return_length"
+CHECKED write_call_return_length
+⊢ ffi1.oracle = basis_ffi_oracle ext ∧
+  call_FFI ffi1 (ExtCall «write») cbytes abytes = FFI_return new_ffi nb ⇒
+  4 ≤ LENGTH abytes
+Saved theorem _______ "write_call_site_facts"
+CHECKED write_call_site_facts
+⊢ machine_reach mc ffi ms mc1 ffi1 ms1 ∧ refund_static mc dm ∧
+  0x100004090w ∉ dm ∧ ffi.oracle = basis_ffi_oracle ext ∧
+  machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+  ms1.PC = 0x100004090w ⇒
+  ∃cbytes abytes.
+    read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+    4 ≤ LENGTH abytes ∧ 4 ≤ w2n (ms1.REG 3w)
+Saved theorem _______ "write_length_violation_not_covered"
+CHECKED write_length_violation_not_covered
+⊢ ¬(w2w
+     (w2w
+        (w2w
+           (w2w
+              (w2w
+                 ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                  (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                  (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                  (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))))) +
+            w2w
+              (w2w
+                 ((23 >< 16)
+                    (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                  (31 >< 24)
+                    (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                  (7 >< 0)
+                    (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                  (15 >< 8)
+                    (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))))))) +
+      4w) ≤₊ s.REG 3w) ⇒
+  ¬ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "write_wrong_clen_not_covered"
+CHECKED write_wrong_clen_not_covered
+⊢ s.REG 1w ≠ 8w ⇒ ¬ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "corrupted_return_state_not_in_write_relation"
+CHECKED corrupted_return_state_not_in_write_relation
+⊢ s2.PC ≠ s1.REG 30w ∨ s2.SP_EL0 ≠ s1.SP_EL0 ∨ s2.REG 19w ≠ s1.REG 19w ∨
+  (∃i. i < 32 ∧ s2.MEM (s1.SP_EL0 + n2w i) ≠ s1.MEM (s1.SP_EL0 + n2w i)) ⇒
+  ¬write_call_rel dm s1 s2
+Saved theorem _______ "write_frame_in_protected_domain_not_covered"
+CHECKED write_frame_in_protected_domain_not_covered
+⊢ i < 32 ∧ b + n2w i ∈ dm ⇒ ¬ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "write_result_bytes_in_frame_not_covered"
+CHECKED write_result_bytes_in_frame_not_covered
+⊢ i < 3 ∧ j < 32 ∧ a + n2w i = b + n2w j ⇒ ¬ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "write_success_suffix_premise_excluded"
+CHECKED write_success_suffix_premise_excluded
+⊢ ffiwrite_call_pre dm s b c a g ⇒ ¬aligned 1 (a + 1w)
+CLOSURE_NODES 530
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundFfiwriteSite" ... done.
+Theory "forge_refundFfiwriteSite" took 14.2s to build
+EXACT_COMPLETE

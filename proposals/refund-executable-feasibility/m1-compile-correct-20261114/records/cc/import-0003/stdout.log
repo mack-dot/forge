@@ -1,0 +1,42 @@
+IMPORTED forge_compileCorrectControl.compile_correct' IDENTICAL_TO_PUBLISHED true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_compileCorrectLabFacts.compile_correct_from_guard IDENTICAL_TO_PUBLISHED true
+IMPORTED forge_compileCorrectLabFacts.compile_correct_lab_facts EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_compileCorrectLabFacts.lab_facts_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_compileCorrectLabFacts.lab_guard_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionSource.refund_install_exclusion_source EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundExclusionSource.refund_u298_exclusion_source_any_handler EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+STORED_THEOREMS forge_compileCorrectControl 1 STORED_DEFINITIONS 0 AXIOMS 0
+STORED_THEOREMS forge_compileCorrectLabFacts 8 STORED_DEFINITIONS 3 AXIOMS 0
+STORED_THEOREMS forge_refundExclusionSource 4 STORED_DEFINITIONS 0 AXIOMS 0
+STORED heap_regs ⊢ heap_regs
+    (set_oracle arm8_backend_config refund_alloc_oracle).stack_conf.reg_names =
+  (1,3)
+KEPT refund_install_exclusion_arm8 refund_install_exclusion_installed refund_u298_exclusion_any_handler refund_lab_good_code refund_lab_compile refund_lab_bitmaps
+NEGATIVE_CONTROL_KEPT wraparound ⊢ 0w + 224w = 0w − n2w (2 * ffi_offset)
+NEGATIVE_CONTROL_KEPT interior ⊢ ¬∀c c2 io l ms1 ms2.
+    (∀k. evaluate c io (k + l) ms1 = evaluate c2 io k ms2) ∧
+    c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+    c.install_pc ∉ c.prog_addresses ∧ c.target.get_pc ms1 ≠ c.install_pc ∧
+    c.target.get_pc ms2 ≠ c.install_pc ⇒
+    no_install_prefix c io l ms1
+NEGATIVE_CONTROL_KEPT invariant ⊢ ¬lab_step_closed (λs. T)
+NEGATIVE_CONTROL_KEPT sharemem ⊢ ¬sm_free [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  ¬no_share_mem_inst [Section 0 [Asm (ShareMem mop r ad) bs n] md] ∧
+  sm_count [Section 0 [Asm (ShareMem mop r ad) bs n] md] = 1
+NEGATIVE_CONTROL_KEPT region29 ⊢ ¬filt_walk [29] (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog
+NEGATIVE_CONTROL_KEPT handler ⊢ same_but_install forge_toy_mc forge_toy_mc3 ∧
+  evaluate forge_toy_mc io 3 0 ≠ evaluate forge_toy_mc3 io 3 0
+NEGATIVE_CONTROL_KEPT good_code ⊢ ¬gc_check [Section 5 [LabAsm (Jump (Lab 7 1)) 0 [] 0; Label 5 1 0] ARB]
+AFTER_POSITIVE_AUDIT
+<<HOL message: Created theory "forge_importScratch">>
+CONTROL_OK guard not vacuous ⊢ ¬Q ⇒ Fail ∈ lab_guard x Q
+CONTROL_OK statements without installed, without source non-Fail, or without premises are not the stored one
+CLOSURE_NODES 501
+CLOSURE_PARENTS forge_compileCorrectLabFacts
+CLOSURE_FORGE forge_refundExclusionSource forge_refundLabFiltered forge_refundExactExclusion forge_refundExclusionChain forge_refund forge_refund_compile forge_refund_call forge_refund_io forge_refundCertifiedProg forge_refundWireProg forge_refundStdioProg forge_refundWholeProg forge_refundArm8Compile forge_refundLabClosure forge_refundLabResolve forge_labRegionStep forge_labRegionWalk forge_refundLabRun forge_labRegionInvariant forge_labRegionAligned forge_targetInstallPrefix forge_simZeroCase forge_simLayout forge_simRoot forge_simReplay forge_installHandlerIrrelevant forge_refundExclusionFinal forge_refundCompileFacts forge_refundExclusionArm8 forge_compileCorrectLabFacts
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+P3_IMPORT_COMPLETE

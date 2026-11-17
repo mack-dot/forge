@@ -1,0 +1,117 @@
+<<HOL message: Created theory "forge_refundProfileA">>
+USED refund_installed_from_entry_reduced
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+     refund_installed_no_handler (refund_mc 0x1000040D0w envmc) ms 428 0)
+USED refund_mc_is_arm8
+⊢ is_arm8_machine_config (refund_mc base0 envmc)
+USED refund_behavior_valid_request_no_handler
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+USED refund_u298_exclusion_valid_request
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀j ms' ffi'.
+    evaluate mc0 (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+    mc0.target.get_pc ms' ≠ mc0.install_pc
+DEFINITION ⊢ ∀envmc.
+    refund_env_ok envmc ⇔
+    interference_ok envmc.next_interfer
+      (arm8_target.proj envmc.prog_addresses) ∧
+    refund_ffi_contract envmc.prog_addresses envmc.ffi_interfer
+MARK E1
+Saved theorem _______ "refund_mc_environment_fields"
+CHECKED refund_mc_environment_fields
+⊢ (refund_mc 0x1000040D0w envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc 0x1000040D0w envmc).target = arm8_target ∧
+  (refund_mc 0x1000040D0w envmc).prog_addresses = envmc.prog_addresses
+Saved theorem _______ "refund_env_ok_iff_installed_residual"
+CHECKED refund_env_ok_iff_installed_residual
+⊢ ∀ms.
+    ms.PC = 0x1000040D0w ⇒
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇔
+     refund_env_ok envmc)
+Saved theorem _______ "refund_abs_env_is_ok"
+CHECKED refund_abs_env_is_ok
+⊢ refund_env_ok (refund_abs_env envmc)
+INPUT_PREMISE stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+INPUT_PREMISE wfcl cl
+INPUT_PREMISE wfFS fs
+INPUT_PREMISE STD_streams fs
+MARK TA0
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundProfileA)>>
+SHOW TA0-rest2
+  ASM refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+refund_installed_no_handler (refund_mc 0x1000040D0w envmc) ms 428 0
+  ASM ms.PC = 0x1000040D0w
+  ASM arm8_run 27 s = SOME ms
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_env_ok envmc
+  ASM envmc.prog_addresses = refund_mem_dm h e
+  ASM refund_heap_clear h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre s h stk e
+  GOAL (∀envmc.
+   refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇔
+   refund_env_ok envmc) ⇒
+refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms
+LEMMA_FAILED refund_profile_a_slide0 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 77", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+Saved ORACLE thm ____ "refund_profile_a_slide0_abstract_env"
+LEMMA_FAILED refund_profile_a_slide0_abstract_env Fail "Unexpected assumptions: refund_profile_a_slide0_abstract_env oracles=DISK_THM,MK_THM"
+MACHINE_SEM_TERM machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms
+MARK RUNS
+Saved ORACLE thm ____ "refund_profile_a_slide0_every_machine_run"
+LEMMA_FAILED refund_profile_a_slide0_every_machine_run Fail "Unexpected assumptions: refund_profile_a_slide0_every_machine_run oracles=DISK_THM,MK_THM"
+MARK K
+Saved theorem _______ "pc_changing_environment_is_not_ok"
+CHECKED pc_changing_environment_is_not_ok
+⊢ ¬refund_env_ok
+    (envmc with next_interfer := (λi ms. ms with PC := ms.PC + 4w))
+USED wrong_return_address_ffi_rejected
+⊢ ¬ffi_interfer_ok 0x1000040D0w
+    (refund_mc 0x1000040D0w
+       (envmc with ffi_interfer := refund_bad_return_ffi))
+Saved theorem _______ "env_ok_needs_both_clauses"
+CHECKED env_ok_needs_both_clauses
+⊢ refund_env_ok envmc ⇒
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract envmc.prog_addresses envmc.ffi_interfer

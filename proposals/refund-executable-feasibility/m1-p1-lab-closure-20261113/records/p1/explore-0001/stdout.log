@@ -1,0 +1,325 @@
+BACKEND_ARM8 word_to_word_inlogic_arm8_def
+⊢ word_to_word_inlogic_arm8 word_conf progs =
+  (let
+     (n_oracles,col) = next_n_oracle (LENGTH progs) word_conf.col_oracle;
+     progs = ZIP (progs,n_oracles)
+   in
+     case each_inlogic_arm8 progs of
+       NONE => NONE
+     | SOME res => SOME (col,res))
+END
+BACKEND_ARM8 word_alloc_inlogic_arm8_def
+⊢ word_alloc_inlogic_arm8 prog col_opt =
+  (let
+     tree = get_clash_tree (arch_width_bits (arch_wordsize ARMv8)) prog [];
+     forced = get_forced_arm8 prog []
+   in
+     oracle_colour_ok 24 col_opt tree prog forced)
+END
+BACKEND_ARM8 to_lab_all_arm8_def
+⊢ to_lab_all_arm8 c p =
+  (let
+     (ps,bm,c,p) = to_stack_all_arm8 c p;
+     stack_conf = c.stack_conf;
+     data_conf = c.data_conf;
+     max_heap =
+       2 * max_heap_limit (arch_width_bits (arch_wordsize ARMv8)) c.data_conf −
+       1;
+     sp = 26;
+     offset = (-4351,4350);
+     prog = compile p;
+     ps = ps ++ [(«after stack_rawcall»,Stack prog)];
+     prog = compile (arch_wordsize ARMv8) data_conf prog;
+     ps = ps ++ [(«after stack_alloc»,Stack prog)];
+     prog =
+       compile (arch_wordsize ARMv8) stack_conf.jump offset
+         (is_gen_gc data_conf.gc_kind) max_heap sp InitGlobals_location prog;
+     ps = ps ++ [(«after stack_remove»,Stack prog)];
+     prog = compile stack_conf.reg_names prog;
+     ps = ps ++ [(«after stack_names»,Stack prog)];
+     p = MAP prog_to_section prog;
+     ps = ps ++ [(«after stack_to_lab»,Lab p)]
+   in
+     (ps,bm,c,p))
+END
+BACKEND_ARM8 lab_to_target_arm8_def
+⊢ lab_to_target_arm8 c sec_list = compile_lab_arm8 c (filter_skip sec_list)
+END
+BACKEND_ARM8 from_word_arm8_def
+⊢ from_word_arm8 c p =
+  (let
+     (bm,c',fs,p) =
+       (let
+          k = 24;
+          init_bitmaps =
+            if c.stack_conf.perf_calls then (List [16],1) else (List [4],1);
+          (progs,fs,bitmaps) =
+            compile_word_to_stack_arm8 c.stack_conf.perf_calls k p
+              init_bitmaps;
+          sfs = fromAList (MAP (λ((i,_0,_1),n). (i,n)) (ZIP (progs,fs)))
+        in
+          (append (FST bitmaps),
+           <|bitmaps_length := SND bitmaps; stack_frame_size := sfs|>,0::fs,
+           (raise_stub_location,raise_stub c.stack_conf.perf_calls k,
+            Metadata «_Raise» [Stub])::
+             (store_consts_stub_location,store_consts_stub k,
+              Metadata «_StoreConsts» [Stub])::progs));
+     c = c with word_conf := c'
+   in
+     from_stack_arm8 c p bm)
+END
+BACKEND_ARM8 from_word_0_arm8_def
+⊢ from_word_0_arm8 v =
+  case v of
+    (c,p) =>
+      case word_to_word_inlogic_arm8 c.word_to_word_conf p of
+        NONE => NONE
+      | SOME (col,prog) =>
+        (let
+           c =
+             c with
+             word_to_word_conf updated_by (λc. c with col_oracle := col)
+         in
+           from_word_arm8 c prog)
+END
+BACKEND_ARM8 from_stack_arm8_def
+⊢ from_stack_arm8 c p bm =
+  (let
+     p =
+       compile (arch_wordsize ARMv8) c.stack_conf c.data_conf
+         (2 *
+          max_heap_limit (arch_width_bits (arch_wordsize ARMv8)) c.data_conf −
+          1) 26 (-4351,4350) p
+   in
+     from_lab_arm8 c p bm)
+END
+BACKEND_ARM8 from_lab_arm8_def
+⊢ from_lab_arm8 c p bm =
+  attach_bitmaps c bm (lab_to_target_arm8 c.lab_conf p)
+END
+BACKEND_ARM8 each_inlogic_arm8_def
+⊢ each_inlogic_arm8 v =
+  case v of
+    [] => SOME []
+  | ((name_num,arg_count,prog,md),col_opt)::rest =>
+    (let
+       prog' = compile_exp (arch_width_bits (arch_wordsize ARMv8)) prog;
+       maxv = max_var (arch_width_bits (arch_wordsize ARMv8)) prog' + 1;
+       inst_prog =
+         inst_select_arm8 (arch_width_bits (arch_wordsize ARMv8)) maxv prog';
+       ssa_prog =
+         full_ssa_cc_trans (arch_width_bits (arch_wordsize ARMv8)) arg_count
+           inst_prog;
+       rm_ssa_prog =
+         remove_dead_prog (arch_width_bits (arch_wordsize ARMv8)) ssa_prog;
+       cse_prog = word_common_subexp_elim rm_ssa_prog;
+       cp_prog = copy_prop cse_prog;
+       two_prog = three_to_two_reg_prog F cp_prog;
+       unreach_prog = remove_unreach two_prog;
+       rm_prog =
+         remove_dead_prog (arch_width_bits (arch_wordsize ARMv8))
+           unreach_prog
+     in
+       case word_alloc_inlogic_arm8 rm_prog col_opt of
+         NONE => NONE
+       | SOME reg_prog =>
+         case each_inlogic_arm8 rest of
+           NONE => NONE
+         | SOME progs =>
+           SOME
+             ((name_num,arg_count,remove_must_terminate reg_prog,md)::progs))
+END
+BACKEND_ARM8 compile_word_to_stack_arm8_def
+⊢ compile_word_to_stack_arm8 perf k v bitmaps =
+  case v of
+    [] => ([],[],bitmaps)
+  | (i,n,p,md)::progs =>
+    (let
+       (prog,f,bitmaps') = compile_prog_arm8 perf p n k bitmaps;
+       (progs',fs,bitmaps'') =
+         compile_word_to_stack_arm8 perf k progs bitmaps'
+     in
+       ((i,prog,md)::progs',f::fs,bitmaps''))
+END
+BACKEND_ARM8 compile_lab_arm8_def
+⊢ compile_lab_arm8 c sec_list =
+  (let
+     current_ffis = find_ffi_names sec_list;
+     (ffis,ffis_ok) =
+       case c.ffi_names of
+         NONE => (current_ffis,T)
+       | SOME ffis => (ffis,list_subset current_ffis ffis)
+   in
+     if ffis_ok then
+       case remove_labels_arm8 c.init_clock c.pos c.labels ffis sec_list of
+         NONE => NONE
+       | SOME (sec_list,l1) =>
+         (let
+            bytes = prog_to_bytes sec_list;
+            (new_ffis,shmem_infos) = get_shmem_info sec_list c.pos [] []
+          in
+            SOME
+              (bytes,
+               c with
+               <|labels := l1; sec_pos_len := get_symbols c.pos sec_list;
+                 pos := LENGTH bytes + c.pos;
+                 ffi_names := SOME (ffis ++ new_ffis);
+                 shmem_extra := shmem_infos|>))
+     else NONE)
+END
+BACKEND_ARM8 compile_cake_arm8_thm
+⊢ compile_cake_arm8 c p =
+  SOME (bytes,bytes_len,bm,bm_len,ffi_names,shmem_len,syms,conf_str) ⇒
+  ∃c1.
+    compile arm8_config c p = SOME (bytes,bm,c1) ∧
+    ffi_names = ffinames_to_string_list (the [] c1.lab_conf.ffi_names) ∧
+    syms = c1.symbols ∧ LENGTH bytes = bytes_len ∧ LENGTH bm = bm_len ∧
+    LENGTH c1.lab_conf.shmem_extra = shmem_len ∧ prog_syntax_ok p ∧
+    conf_str = encode_backend_config c1
+END
+BACKEND_ARM8 compile_cake_arm8_def
+⊢ compile_cake_arm8 c p =
+  if prog_syntax_ok p then from_word_0_arm8 (to_word_0_arm8 c p) else NONE
+END
+BACKEND to_lab_def
+⊢ ∀asm_conf c p.
+    to_lab asm_conf c p =
+    (let
+       (bm,c,p) = to_stack asm_conf c p;
+       p =
+         compile (arch_wordsize asm_conf.ISA) c.stack_conf c.data_conf
+           (2 * max_heap_limit (isa_bits asm_conf) c.data_conf − 1)
+           (asm_conf.reg_count − (LENGTH asm_conf.avoid_regs + 3))
+           asm_conf.addr_offset p
+     in
+       (bm,c,p))
+END
+BACKEND to_stack_def
+⊢ ∀asm_conf c p.
+    to_stack asm_conf c p =
+    (let
+       (c,p) = to_word asm_conf c p;
+       (bm,c',fs,p) = compile asm_conf c.stack_conf.perf_calls p;
+       c = c with word_conf := c'
+     in
+       (bm,c,p))
+END
+BACKEND to_target_def
+⊢ ∀asm_conf c p.
+    to_target asm_conf c p =
+    (let
+       (bm,c,p) = to_lab asm_conf c p
+     in
+       attach_bitmaps c bm (compile asm_conf c.lab_conf p))
+END
+BACKEND compile_def
+⊢ ∀asm_conf c p.
+    compile asm_conf c p =
+    (let
+       p = compile p;
+       _0 = empty_ffi «finished: source_to_source»;
+       (c',p) = compile c.source_conf p;
+       _1 = empty_ffi «finished: source_to_flat»;
+       c = c with source_conf := c';
+       p = compile_prog p;
+       _2 = empty_ffi «finished: flat_to_clos»;
+       (c',p) = compile c.clos_conf p;
+       c = c with clos_conf := c';
+       _3 = empty_ffi «finished: clos_to_bvl»;
+       (s,p,l,bl,n1,n2,n3) = compile c.clos_conf.start c.bvl_conf p;
+       c = c with clos_conf updated_by (λc. c with start := s);
+       c =
+         c with
+         bvl_conf updated_by
+           (λc.
+              c with
+              <|inlines := l; bvi_inlines := bl; next_name1 := n1;
+                next_name2 := n2; next_name3 := n3|>);
+       _4 = empty_ffi «finished: bvl_to_bvi»;
+       p = compile_prog p;
+       _5 = empty_ffi «finished: bvi_to_data»;
+       (col,p) = compile c.data_conf c.word_to_word_conf asm_conf p;
+       c = c with word_to_word_conf updated_by (λc. c with col_oracle := col);
+       _6 = empty_ffi «finished: data_to_word»;
+       (bm,c',fs,p) = compile asm_conf c.stack_conf.perf_calls p;
+       c = c with word_conf := c';
+       _7 = empty_ffi «finished: word_to_stack»;
+       p =
+         compile (arch_wordsize asm_conf.ISA) c.stack_conf c.data_conf
+           (2 * max_heap_limit (isa_bits asm_conf) c.data_conf − 1)
+           (asm_conf.reg_count − (LENGTH asm_conf.avoid_regs + 3))
+           asm_conf.addr_offset p;
+       _8 = empty_ffi «finished: stack_to_lab»;
+       res = attach_bitmaps c bm (compile asm_conf c.lab_conf p);
+       _9 = empty_ffi «finished: lab_to_target»
+     in
+       res)
+END
+BACKEND from_lab_def
+⊢ ∀asm_conf c p bm.
+    from_lab asm_conf c p bm =
+    attach_bitmaps c bm (compile asm_conf c.lab_conf p)
+END
+BACKEND from_stack_def
+⊢ ∀asm_conf c p bm.
+    from_stack asm_conf c p bm =
+    (let
+       p =
+         compile (arch_wordsize asm_conf.ISA) c.stack_conf c.data_conf
+           (2 * max_heap_limit (isa_bits asm_conf) c.data_conf − 1)
+           (asm_conf.reg_count − (LENGTH asm_conf.avoid_regs + 3))
+           asm_conf.addr_offset p
+     in
+       from_lab asm_conf c p bm)
+END
+BACKEND from_word_def
+⊢ ∀asm_conf c p.
+    from_word asm_conf c p =
+    (let
+       (bm,c',fs,p) = compile asm_conf c.stack_conf.perf_calls p;
+       c = c with word_conf := c'
+     in
+       from_stack asm_conf c p bm)
+END
+BACKEND attach_bitmaps_def
+⊢ attach_bitmaps c bm (SOME (bytes,c')) =
+  SOME (bytes,bm,c with <|lab_conf := c'; symbols := c'.sec_pos_len|>) ∧
+  attach_bitmaps c bm NONE = NONE
+END
+PUBLISHED labProps.get_code_labels_def
+⊢ ∀code.
+    get_code_labels code = BIGUNION (IMAGE sec_get_code_labels (set code))
+END
+PUBLISHED labProps.sec_get_code_labels_def
+⊢ ∀n1 lines v0.
+    sec_get_code_labels (Section n1 lines v0) =
+    (n1,0) INSERT
+    IMAGE (λn2. (n1,n2)) (BIGUNION (IMAGE line_get_code_labels (set lines)))
+END
+PUBLISHED labProps.get_labels_def
+⊢ ∀code. get_labels code = BIGUNION (IMAGE sec_get_labels (set code))
+END
+PUBLISHED stack_to_lab.compile_def
+⊢ ∀aw stack_conf data_conf max_heap sp offset prog.
+    compile aw stack_conf data_conf max_heap sp offset prog =
+    (let
+       prog = compile prog;
+       prog = compile aw data_conf prog;
+       prog =
+         compile aw stack_conf.jump offset (is_gen_gc data_conf.gc_kind)
+           max_heap sp InitGlobals_location prog;
+       prog = compile stack_conf.reg_names prog
+     in
+       MAP prog_to_section prog)
+END
+PUBLISHED stack_to_lab.prog_to_section_def
+⊢ ∀n p md.
+    prog_to_section (n,p,md) =
+    (let
+       (lines,_0,m) = flatten T p n (next_lab p 2) [] []
+     in
+       Section n
+         (append
+            (Append lines (List [Label n (if is_Seq p then m else 1) 0]))) md)
+END
+EXPLORE_COMPLETE

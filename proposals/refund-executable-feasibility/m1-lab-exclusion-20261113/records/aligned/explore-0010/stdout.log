@@ -1,0 +1,10 @@
+<<HOL message: Created theory "forge_alignedExplore">>
+Saved definition ____ "mval_inv_def"
+Saved definition ____ "load_covered_def"
+Saved definition ____ "region_inv2_def"
+/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/explore-0010/proof.sml:65: error: Structure (blastLib) has not been declared
+Found near
+  (
+  ((rpt strip_tac >> qexists_tac [...]) >> rw []) >-
+  ((fs [...] >> pop_assum mp_tac) >> blastLib.BBLAST_TAC)) >-
+  (qexists_tac [QUOTE " (*#loc 66 21*)1w"] >> simp [])

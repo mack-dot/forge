@@ -1,0 +1,55 @@
+<<HOL message: Created theory "forge_alignedExplore">>
+Saved definition ____ "mval_inv_def"
+Saved definition ____ "load_covered_def"
+Saved definition ____ "region_inv2_def"
+OK..
+1 subgoal:
+STAGE_OK inst/all
+OK..
+2 subgoals:
+STAGE_OK inst/mem-bulk
+LEMMA_OPEN inst
+AFTER inst end: 2 goals, proved=false
+  ASM D a'
+  ASM ¬s.failed
+  ASM (case s.mem (byte_align x) of
+   Word v =>
+     if byte_align x ∈ s.mem_domain then
+       SOME s.mem⦇byte_align x ↦ Word (set_byte x (w2w c) v s.be)⦈
+     else NONE
+ | Loc v5 v6 => NONE) = SOME x'
+  ASM read_reg n s = Word c
+  ASM addr a s = SOME x
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL G (x' a')
+----
+  ASM D a'
+  ASM ¬s.failed
+  ASM (case s.mem (byte_align x) of
+   Word v =>
+     if byte_align x ∈ s.mem_domain then
+       SOME
+         s.mem⦇
+           byte_align x ↦
+             Word
+               (set_byte (x + 3w) (get_byte 3w (w2w c) s.be)
+                  (set_byte (x + 2w) (get_byte 2w (w2w c) s.be)
+                     (set_byte (x + 1w) (get_byte 1w (w2w c) s.be)
+                        (set_byte x (get_byte 0w (w2w c) s.be) v s.be) s.be)
+                     s.be) s.be)
+         ⦈
+     else NONE
+ | Loc v8 v9 => NONE) = SOME x'
+  ASM aligned 2 x
+  ASM read_reg n s = Word c
+  ASM addr a s = SOME x
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL G (x' a')
+----
+EXPLORE_COMPLETE

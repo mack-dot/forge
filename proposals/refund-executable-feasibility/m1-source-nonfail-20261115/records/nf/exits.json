@@ -1,0 +1,85 @@
+[
+ {
+  "case": "nonfail-0001",
+  "source": "nonfail-0001.sml",
+  "actual_exit": 1,
+  "wall_seconds": 58.141,
+  "max_rss_mib": 1948,
+  "markers": [],
+  "kind": "authoring (tactic)"
+ },
+ {
+  "case": "nonfail-0002",
+  "source": "nonfail-0002.sml",
+  "actual_exit": 1,
+  "wall_seconds": 51.525,
+  "max_rss_mib": 2075,
+  "markers": [],
+  "kind": "authoring (variable instantiation)"
+ },
+ {
+  "case": "nonfail-0003",
+  "source": "nonfail-0003.sml",
+  "actual_exit": 0,
+  "wall_seconds": 71.567,
+  "max_rss_mib": 2311,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "startup-0001",
+  "source": "startup-0001.sml",
+  "actual_exit": 1,
+  "wall_seconds": 56.847,
+  "max_rss_mib": 2423,
+  "markers": [],
+  "kind": "authoring (type annotation); first three theorems checked"
+ },
+ {
+  "case": "startup-0002",
+  "source": "startup-0002.sml",
+  "actual_exit": 0,
+  "wall_seconds": 53.845,
+  "max_rss_mib": 2732,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "import-0001",
+  "source": "import-0001.sml",
+  "actual_exit": 0,
+  "wall_seconds": 43.461,
+  "max_rss_mib": 2677,
+  "markers": [
+   "P3_IMPORT_COMPLETE",
+   "AFTER_POSITIVE_AUDIT"
+  ],
+  "kind": "pass"
+ },
+ {
+  "case": "nonfail-repeat",
+  "source": "nonfail-0003.sml",
+  "actual_exit": 0,
+  "wall_seconds": 47.289,
+  "max_rss_mib": 2603,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat pass"
+ },
+ {
+  "case": "startup-repeat",
+  "source": "startup-0002.sml",
+  "actual_exit": 0,
+  "wall_seconds": 46.505,
+  "max_rss_mib": 2538,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "kind": "repeat pass"
+ }
+]

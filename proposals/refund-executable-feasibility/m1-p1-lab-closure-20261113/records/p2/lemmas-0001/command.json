@@ -1,0 +1,40 @@
+{
+ "case": "lemmas-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "lemmas-0001.sml",
+ "source_sha256": "c63db5f286ae38c2ab35d3d7ff5ced28485a30b3fc1e7da13f2282bb0bd027e6",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743"
+ },
+ "resource_guard": {
+  "memory_free_percent": 57,
+  "disk_free_gib": 39.96,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 300,
+ "wall_seconds_limit": 600,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 9.52,
+ "child_user_cpu_seconds": 10.437,
+ "child_max_rss_bytes": 963051520,
+ "markers": [
+  "P2_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "595dd4aaf6c307f9c7fee07717f03f912f25dacb5a7b45b6f3b2734d96f18258",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_labRegionInvariantTheory.dat": "bca9b622f6566e4443bc2e179f4e3ce4979c9ff8f93d18f8ccde26d7c4861777",
+  ".hol/objs/forge_labRegionInvariantTheory.sig": "89f61d38c66be69d6b02f56d95c05a2425ddc41e91b94d40cc0294f116b33df5",
+  ".hol/objs/forge_labRegionInvariantTheory.sml": "2bd7a0c801e506571b428ec2c8f533a076206235bd5af3cd6f00d4b9c4328923"
+ },
+ "inputs_unchanged_after": true
+}

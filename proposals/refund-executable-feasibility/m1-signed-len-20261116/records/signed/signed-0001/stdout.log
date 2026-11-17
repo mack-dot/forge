@@ -1,0 +1,14 @@
+<<HOL message: Created theory "forge_refundSignedLen">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSignedLen)>>
+Saved theorem _______ "heap_premises_admit_huge_heap"
+CHECKED heap_premises_admit_huge_heap
+⊢ ∃h e.
+    aligned 3 h ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+    refund_heap_clear h e ∧ 0x8000000000000000w ≤₊ e − h
+Saved theorem _______ "read_bytearray_below_half_bound"
+CHECKED read_bytearray_below_half_bound
+⊢ ∀x n m dm bs q.
+    read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) = SOME bs ∧
+    addresses_below_half dm ∧ q ∉ dm ∧ q <₊ 0x8000000000000000w ⇒
+    n < 2 ** 63
+LEMMA_FAILED close_call_site_signed_alen HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 65", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})

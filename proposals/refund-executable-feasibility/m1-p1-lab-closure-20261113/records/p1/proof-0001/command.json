@@ -1,0 +1,40 @@
+{
+ "case": "proof-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "proof-0001.sml",
+ "source_sha256": "e8c374be010e96186d241f786739ff39fccc7391f68c80c386619a48675defda",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743"
+ },
+ "resource_guard": {
+  "memory_free_percent": 60,
+  "disk_free_gib": 38.89,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 108.708,
+ "child_user_cpu_seconds": 120.191,
+ "child_max_rss_bytes": 4040409088,
+ "markers": [
+  "P1_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "832c110c8d257033b762567aff41ba15d544fe7e855ff4b125cb125a95db2faa",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundLabClosureTheory.dat": "6899ad2a3e5469128087f6c4e947821ead95c0d11e683331f6de33833be1ae08",
+  ".hol/objs/forge_refundLabClosureTheory.sig": "69c3ea6410de90eb14445010cf7f3284a2e6c818df4a6e575e51ec527024a2e6",
+  ".hol/objs/forge_refundLabClosureTheory.sml": "f337b84fa4520a6fde84aeff9432e418a10a0b0471ab4c48e2a71ffff6ffae48"
+ },
+ "inputs_unchanged_after": true
+}

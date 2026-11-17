@@ -1,0 +1,51 @@
+IMPORTED refund_lab_run_avoids_install EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED refund_lab_region_hyp EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED refund_lab_walk_not_closed_29 EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED hyp_walk1_eq EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+DEFINITION line_ok1_def
+⊢ ∀ls whole pc line.
+    line_ok1 ls whole pc line ⇔
+    case line of
+      Label v v1 v2 => T
+    | Asm (Asmi (Inst v24)) v4 v5 => pc_ok ls whole (pc + 1)
+    | Asm (Asmi (Jump v25)) v4 v5 => T
+    | Asm (Asmi (JumpCmp v26 v27 v28 v29)) v4 v5 => T
+    | Asm (Asmi (Call v30)) v4 v5 => T
+    | Asm (Asmi (JumpReg v31)) v4 v5 => T
+    | Asm (Asmi (Loc v32 v33)) v4 v5 => T
+    | Asm (ShareMem v11 v12 v13) v4 v5 => pc_ok ls whole (pc + 1)
+    | LabAsm (Jump (Lab n1' n2')) v7 v8 v9 =>
+      (case loc_pc n1' n2' whole of NONE => T | SOME p => pc_ok ls whole p)
+    | LabAsm (JumpCmp v35 v36 v37 (Lab n1'' n2'')) v7 v8 v9 =>
+      (case loc_pc n1'' n2'' whole of NONE => T | SOME p => pc_ok ls whole p) ∧
+      pc_ok ls whole (pc + 1)
+    | LabAsm (Call v39) v7 v8 v9 => F
+    | LabAsm (LocValue r (Lab n1 n2)) v7 v8 v9 =>
+      (case loc_pc n1 n2 whole of NONE => T | SOME p => pc_ok ls whole p) ∧
+      pc_ok ls whole (pc + 1)
+    | LabAsm (CallFFI v42) v7 v8 v9 => T
+    | LabAsm Install v7 v8 v9 => F
+    | LabAsm Halt v7 v8 v9 => T
+DEFINITION hyp_walk1_def
+⊢ (∀whole pc ls. hyp_walk1 ls whole pc [] ⇔ T) ∧
+  (∀xs whole pc md ls k.
+     hyp_walk1 ls whole pc (Section k [] md::xs) ⇔ hyp_walk1 ls whole pc xs) ∧
+  ∀ys y xs whole pc md ls k.
+    hyp_walk1 ls whole pc (Section k (y::ys) md::xs) ⇔
+    if is_Label y then hyp_walk1 ls whole pc (Section k ys md::xs)
+    else
+      (pc_ok ls whole pc ⇒ line_ok1 ls whole pc y) ∧
+      hyp_walk1 ls whole (pc + 1) (Section k ys md::xs)
+DEFINITION walk_check_def
+⊢ ∀ls c p.
+    walk_check ls c p ⇔
+    case lab_forge8 c p of
+      NONE => F
+    | SOME L => hyp_walk1 ls L 0 L ∧ pc_ok ls L 0
+ORACLE_CONSTANTS forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle,forge_refundLabClosure$refund_alloc_oracle,backend$set_oracle
+CLOSURE_NODES 389
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+RUN_IMPORT_COMPLETE

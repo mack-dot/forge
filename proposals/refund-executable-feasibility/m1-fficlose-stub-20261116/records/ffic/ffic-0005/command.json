@@ -1,0 +1,38 @@
+{
+ "case": "ffic-0005",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0005/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "ffic-0005.sml",
+ "source_sha256": "37f27c20030ede2e78a74e8a5829fbee38bda6b2e2577efecdeeec80b410c1a1",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 15.947,
+ "child_user_cpu_seconds": 12.731,
+ "child_system_cpu_seconds": 1.951,
+ "child_max_rss_bytes": 518832128,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "a214d58f490f29ae0dea77bc416d46a1efa65272655c9f25ae4a84bc6a1dd0ce",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFficloseStepTheory.html": "fcb71461fd3ba6f08e24eab1d16352b97aa5a28ea1a604cd93f10a5079f6f97d",
+  ".hol/objs/forge_refundFficloseStepTheory.dat": "14234efd776615116ecea8bd1de7f177179ed194a4ee485555bbe59aa2754887",
+  ".hol/objs/forge_refundFficloseStepTheory.sig": "9db95b8ef9f3d10e122a775cc018308f8dab40c8f63aead7ab83d615bb224657",
+  ".hol/objs/forge_refundFficloseStepTheory.sml": "55b6a9f42f3a1e23f0ebfaa3cec5a250ea1973ceb0edcc21922f226419f04bd8"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

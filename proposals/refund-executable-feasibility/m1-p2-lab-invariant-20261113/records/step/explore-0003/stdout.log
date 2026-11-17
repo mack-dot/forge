@@ -1,0 +1,195 @@
+<<HOL message: Created theory "forge_p2Explore">>
+HELPERS_PROVED
+OK..
+1 subgoal:
+STAGE_OK callffi/unfold
+OK..
+1 subgoal:
+STAGE_OK callffi/split
+OK..
+1 subgoal:
+STAGE_OK callffi/d1
+OK..
+1 subgoal:
+STAGE_OK callffi/d2
+OK..
+1 subgoal:
+STAGE_OK callffi/d3
+OK..
+1 subgoal:
+STAGE_OK callffi/d4
+OK..
+2 subgoals:
+STAGE_OK callffi/d5
+OK..
+
+Goal proved.
+ [..................]
+⊢ OK
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>).pc
+
+Remaining subgoals:
+STAGE_OK callffi/g1
+OK..
+
+Goal proved.
+ [..................]
+⊢ val_inv G
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>)
+
+Goal proved.
+ [..................]
+⊢ OK
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>).pc ∧
+  val_inv G
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) ∧
+  ∃s'.
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>).code =
+    s'.code ∧ region_inv G OK s.code s'
+
+Goal proved.
+ [..................]
+⊢ region_inv G OK s.code
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>)
+
+Goal proved.
+ [..................]
+⊢ region_inv G OK s.code
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) ∧
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>).clock <
+  s.clock
+
+Goal proved.
+ [..................]
+⊢ ∃s2. evaluate s2 = (res,t) ∧ region_inv G OK s.code s2 ∧ s2.clock < s.clock
+
+Goal proved.
+ [.................]
+⊢ evaluate
+    (s with
+     <|regs :=
+         (λa.
+            get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+       fp_regs := (λn. s.io_fp_regs 0 n);
+       mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+       ffi := f; io_regs := shift_seq 1 s.io_regs;
+       io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) =
+  (res,t) ⇒
+  (∃s2.
+     evaluate s2 = (res,t) ∧ region_inv G OK s.code s2 ∧ s2.clock < s.clock) ∨
+  t = s
+
+Goal proved.
+ [.........]
+⊢ (case read_reg s.len_reg s of
+     Word w =>
+       (case read_reg s.ptr_reg s of
+          Word w2 =>
+            (case read_reg s.len2_reg s of
+               Word w3 =>
+                 (case read_reg s.link_reg s of
+                    Word v41 => (Error,s)
+                  | Loc n1 n2 =>
+                    case read_reg s.ptr2_reg s of
+                      Word w4 =>
+                        (case
+                           read_bytearray w2 (w2n w)
+                             (mem_load_byte_aux s.mem s.mem_domain s.be)
+                         of
+                           NONE => (Error,s)
+                         | SOME bytes =>
+                           case
+                             read_bytearray w4 (w2n w3)
+                               (mem_load_byte_aux s.mem s.mem_domain s.be)
+                           of
+                             NONE => (Error,s)
+                           | SOME bytes2 =>
+                             case loc_to_pc n1 n2 code of
+                               NONE => (Error,s)
+                             | SOME new_pc =>
+                               case
+                                 call_FFI s.ffi (ExtCall name) bytes bytes2
+                               of
+                                 FFI_return new_ffi new_bytes =>
+                                   evaluate
+                                     (s with
+                                      <|regs :=
+                                          (λa.
+                                             get_reg_value
+                                               (s.io_regs 0 (ExtCall name) a)
+                                               (read_reg a s) Word);
+                                        fp_regs := (λn. s.io_fp_regs 0 n);
+                                        mem :=
+                                          write_bytearray w4 new_bytes s.mem
+                                            s.mem_domain s.be; pc := new_pc;
+                                        ffi := new_ffi;
+                                        io_regs := shift_seq 1 s.io_regs;
+                                        io_fp_regs :=
+                                          shift_seq 1 s.io_fp_regs;
+                                        clock := s.clock − 1|>)
+                               | FFI_final outcome =>
+                                 (Halt (FFI_outcome outcome),s))
+                    | Loc v48 v49 => (Error,s))
+             | Loc v32 v33 => (Error,s))
+        | Loc v22 v23 => (Error,s))
+   | Loc v12 v13 => (Error,s)) = (res,t) ⇒
+  (∃s2. evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+  t = s
+STAGE_OK callffi/g2 (proved)
+LEMMA_PROVED callffi
+EXPLORE_COMPLETE

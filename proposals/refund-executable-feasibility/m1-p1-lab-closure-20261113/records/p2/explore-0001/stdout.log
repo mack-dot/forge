@@ -1,0 +1,40 @@
+<<HOL message: Created theory "forge_p2Explore">>
+Saved definition ____ "val_inv_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "step_ok_def"
+Saved definition ____ "region_hyp_def"
+OK..
+STEP_FAILED inst 
+Exception raised at BasicProvers.Cases_on:
+at BasicProvers.find_subterm:
+  No var with name "a" free in goal, or in outer universal quantifiers
+
+AFTER failure of inst: 1 goals, proved=false
+
+  GOAL ∀i s. (∀w. G (Word w)) ∧ val_inv G s ⇒ val_inv G (asm_inst i s)
+----
+EVALUATE_IND ⊢ ∀P. (∀s. (∀v11 v43 v44 v45 v56 i s1.
+              s.clock ≠ 0 ∧ asm_fetch s = SOME v11 ∧ v11 = Asm v43 v44 v45 ∧
+              v43 = Asmi v56 ∧ v56 = Inst i ∧ s1 = asm_inst i s ∧ ¬s1.failed ⇒
+              P (inc_pc (dec_clock s1))) ∧
+           (∀v11 v43 v44 v45 v56 r n1 n2 p.
+              s.clock ≠ 0 ∧ asm_fetch s = SOME v11 ∧ v11 = Asm v43 v44 v45 ∧
+              v43 = Asmi v56 ∧ v56 = JumpReg r ∧ read_reg r s = Loc n1 n2 ∧
+              loc_to_pc n1 n2 s.code = SOME p ⇒
+              P (upd_pc p (dec_clock s))) ∧
+           (∀v11 v43 v44 v45 m r ad v v1 s' v3 v4.
+              s.clock ≠ 0 ∧ asm_fetch s = SOME v11 ∧ v11 = Asm v43 v44 v45 ∧
+              v43 = ShareMem m r ad ∧ share_mem_op m r ad s = SOME v ∧
+              v = (v1,s') ∧ v1 = FFI_return v3 v4 ⇒
+              P
+                (s' with
+                 <|io_regs := shift_seq 1 s'.io_regs;
+                   io_fp_regs := shift_seq 1 s'.io_fp_regs|>)) ∧
+           (∀v11 v46 v47 v50 v51 c r'' ri l' v p.
+              s.clock ≠ 0 ∧ asm_fetch s = SOME v11 ∧
+              v11 = LabAsm v46 v47 v50 v51 ∧ v46 = JumpCmp c r'' ri l' ∧
+       
+EXPLORE_COMPLETE

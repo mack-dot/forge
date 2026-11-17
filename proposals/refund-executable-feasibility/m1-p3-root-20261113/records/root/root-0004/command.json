@@ -1,0 +1,54 @@
+{
+ "case": "root-0004",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/forge_targetInstallPrefixTheory.sig",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/forge_targetInstallPrefixTheory.sml",
+  "/Users/mackianni/forge/results/refund-p3-clock-zero-local-20261113/attempt-0001/zero-0002/forge_simZeroCaseTheory.sig",
+  "/Users/mackianni/forge/results/refund-p3-clock-zero-local-20261113/attempt-0001/zero-0002/forge_simZeroCaseTheory.sml",
+  "/Users/mackianni/forge/results/refund-p3-layout-local-20261113/attempt-0001/layout-0001/forge_simLayoutTheory.sig",
+  "/Users/mackianni/forge/results/refund-p3-layout-local-20261113/attempt-0001/layout-0001/forge_simLayoutTheory.sml",
+  "/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-0004/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "root-0004.sml",
+ "source_sha256": "bb1aad2a9b2c93367362cc233d17cb415e903575ccf65493b712600ce7ea1768",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/preload.sml": "eefd0b9c1c07b589661f600b9230388321d95bfad0b11eba738c6d4cc5a3d5f9",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.sig": "b05e2b1177e0cdaec641be9e47d0e3563d13fd5092f2584f5bd3f3f7c5c533c5",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.sml": "9a23fbd4db536f7fcc8417ded8ecc5530cb07018e2e278edc2e1b14327572d94",
+  "/Users/mackianni/forge/results/refund-p3-clock-zero-local-20261113/attempt-0001/zero-0002/.hol/objs/forge_simZeroCaseTheory.sig": "271357bec37872ca526cbbe9d07f7622f96f9fe4becb8aef6598b388a4f4a5d8",
+  "/Users/mackianni/forge/results/refund-p3-clock-zero-local-20261113/attempt-0001/zero-0002/.hol/objs/forge_simZeroCaseTheory.sml": "c6c38803f37dc9b8c8d5d012f035b6c6cb828a41141e781639118435e2d964a7",
+  "/Users/mackianni/forge/results/refund-p3-layout-local-20261113/attempt-0001/layout-0001/.hol/objs/forge_simLayoutTheory.sig": "9cfd62c7e0fd3b140a84eee51e844bc8ab0d7a0c5c19c2b02f47f826b24da5ee",
+  "/Users/mackianni/forge/results/refund-p3-layout-local-20261113/attempt-0001/layout-0001/.hol/objs/forge_simLayoutTheory.sml": "694f0142cb928addc1b4bf05a787253d10e0b962aaec6e4d2b248f964aefefbc"
+ },
+ "resource_guard": {
+  "memory_free_percent": 45,
+  "disk_free_gib": 31.14,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 400,
+ "wall_seconds_limit": 700,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 11.063,
+ "child_user_cpu_seconds": 12.676,
+ "child_max_rss_bytes": 1264025600,
+ "markers": [
+  "P3_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "77d489158316d53a3fd22c20c84c2325b362cf9041a40e4324546af4e646b40c",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_simRootTheory.dat": "4af49e1d039886c7377265b19e3d6b0c9d438e20b81de52b5162b3f841624263",
+  ".hol/objs/forge_simRootTheory.sig": "5b3f0e30c79d326a316e395b113506af99d569dba76f4a728b1f2dcc061e64d6",
+  ".hol/objs/forge_simRootTheory.sml": "8633f65caa5c30d040b19f67de81364edffd5f80ea65f93797d06f1b30b3ace5"
+ },
+ "inputs_unchanged_after": true
+}

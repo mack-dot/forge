@@ -1,0 +1,46 @@
+<<HOL message: Created theory "forge_refundWriteArgsCheck">>
+SHOW RD-0
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWriteArgsCheck)>>
+  GOAL read_bytearray 0w (SUC (SUC (SUC (SUC (SUC (SUC (SUC (SUC 0))))))))
+  (λa. if a ≠ 0x100004080w then SOME 0w else NONE) =
+SOME [0w; 0w; 0w; 0w; 0w; 0w; 0w; 0w] ∧
+read_bytearray 0w (SUC (SUC (SUC (SUC 0))))
+  (λa. if a ≠ 0x100004080w then SOME 0w else NONE) = SOME [0w; 0w; 0w; 0w]
+Saved theorem _______ "constructed_successful_write_call_state"
+CHECKED constructed_successful_write_call_state
+⊢ ∃mc dm ffi ext ms c ab ffi2 rest.
+    refund_static mc dm ∧ ffi.oracle = basis_ffi_oracle ext ∧
+    ms.PC = 0x100004090w ∧ read_ffi_bytearrays mc ms = (SOME c,SOME ab) ∧
+    call_FFI ffi (ExtCall «write») c ab = FFI_return ffi2 (0w::rest)
+WITNESS_OK
+IMPORTED forge_refundWriteArgs.refund_render_fields_not_empty EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.write_ok_event_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.ffi_write_return_cases EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.nonempty_output_needs_successful_write_event EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.evaluate_trace_write_events_have_call_states EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.successful_write_call_state_has_valid_arguments EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.successful_write_events_have_valid_call_states EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.wrong_clen_write_never_succeeds EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.short_array_write_is_rejected EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteArgs.wrong_clen_register_gives_no_successful_write EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.evaluate_trace_events EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.nonempty_output_needs_write_event EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.ffi_write_wrong_clen_is_a_silent_failure EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED forge_refundWriteReach.replay_ignores_wrong_clen_write_event EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0
+IMPORTED_COUNT 14
+STORED_THEOREMS forge_refundWriteArgs 27 AXIOMS 0
+CONTROL_OK both U400 refund theorems keep as premises: installed state, refund_static, a run that terminates with Success; the non-empty-output premise is gone
+CONTROL_OK the U399 refund theorem is unchanged (it still has the non-empty-output premise)
+CONTROL_OK no theorem asserts a reachable call state unconditionally
+UNEXPECTED_CONTROL_ACCEPTANCE reg8 wrong_clen_register_gives_no_successful_write successful_write_events_have_valid_call_states successful_write_call_state_has_valid_arguments refund_terminating_run_reaches_valid_write_call refund_reached_valid_write_call_and_path
+CONTROL_OK argument facts are given only for successful write events (result byte 0); failed write events give nothing
+CONTROL_OK ffiwrite_call_pre and write_call_rel occur only in the composition theorem, and only as premises (the other conjuncts are NOT derived)
+CONTROL_OK no theorem states source-level semantics; no theorem states alignment
+CONTROL_OK cake_ffiwrite_path_returns (U398) is loaded with its premise unchanged
+CLOSURE_NODES 536
+CLOSURE_HAS_COMPILE_CORRECT_CONTROL true
+CLOSURE_HAS_U399 true
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX

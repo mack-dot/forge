@@ -1,0 +1,17 @@
+<<HOL message: Created theory "forge_simRoot">>
+/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-0002/proof.sml:90: warning: Pattern is not exhaustive.
+Found near val (_, [cc, ...]) = strip_comb (lhs (... ... cj))
+/Users/mackianni/forge/results/refund-p3-root-local-20261113/attempt-0001/root-0002/proof.sml:91: warning: Pattern is not exhaustive.
+Found near val (_, [_, ...]) = strip_comb (el 3 cj)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_simRoot)>>
+Saved theorem _______ "run_head_ordinary"
+Saved theorem _______ "run_interior_ordinary"
+Saved theorem _______ "segment_interior_ordinary"
+Saved theorem _______ "segment_end_no_install_prefix"
+Saved theorem _______ "segment_compose_no_install_prefix"
+Saved theorem _______ "asm_step_IMP_evaluate_step_find_next_prefix"
+Saved theorem _______ "asm_step_IMP_evaluate_step_nop_prefix"
+FIDELITY asm_step_IMP_evaluate_step_find_next_prefix: published statement recovered by removing the two added conjuncts
+FIDELITY asm_step_IMP_evaluate_step_nop_prefix: published statement recovered by removing the two added conjuncts
+Saved theorem _______ "asm_step_IMP_evaluate_step_prefix"
+FIDELITY asm_step_IMP_evaluate_step_prefix: published statement recovered by removing the two added conjuncts

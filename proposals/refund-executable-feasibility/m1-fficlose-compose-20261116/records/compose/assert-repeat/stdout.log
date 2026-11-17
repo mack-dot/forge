@@ -1,0 +1,44 @@
+<<HOL message: Created theory "forge_refundFficloseAssert">>
+/Users/mackianni/forge/results/refund-fficlose-compose-local-20261116/attempt-0001/assert-repeat/proof.sml:72: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-fficlose-compose-local-20261116/attempt-0001/assert-repeat/proof.sml:86: warning: Pattern is not exhaustive. Found near val (c, [mm, ...]) = strip_comb t
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFficloseAssert)>>
+STEP_OK 1 a9be4ff4 PC 0x100025264w
+STEP_OK 2 a9017bfd PC 0x100025268w
+STEP_OK 3 910043fd PC 0x10002526Cw
+STEP_OK 4 f100007f PC 0x100025270w
+STEP_ALTERNATIVE_REJECTED 540001ad HOL_ERR (HOL_ERROR {message = "hypothesis: ((s with\n  <|MEM :=\n      s.MEM\226\166\135\n        b + 31w \226\134\166 (63 >< 56) (s.REG 30w); b + 30w \226\134\166 (55 >< 48) (s.REG 30w);\n        b + 29w \226\134\166 (47 >< 40) (s.REG 30w); b + 28w \226\134\166 (39 >< 32) (s.REG 30w);\n        b + 
+STEP_OK 5 540001ad PC 0x1000252A4w
+Saved theorem _______ "fficlose_alen_zero_reaches_assert"
+CHECKED fficlose_alen_zero_reaches_assert
+ []
+⊢ fficlose_alen_zero_pre s b ⇒
+  ∃s1. arm8_run 5 s = SOME s1 ∧ s1.PC = 0x1000252A4w ∧ s1.REG 30w = s.REG 30w
+STEP_OK 1 a9be4ff4 PC 0x100025264w
+STEP_OK 2 a9017bfd PC 0x100025268w
+STEP_OK 3 910043fd PC 0x10002526Cw
+STEP_OK 4 f100007f PC 0x100025270w
+STEP_OK 5 540001ad PC 0x100025274w
+STEP_OK 6 f100203f PC 0x100025278w
+STEP_ALTERNATIVE_REJECTED 54000181 HOL_ERR (HOL_ERROR {message = "hypothesis: (s with\n <|MEM :=\n     s.MEM\226\166\135\n       b + 31w \226\134\166 (63 >< 56) (s.REG 30w); b + 30w \226\134\166 (55 >< 48) (s.REG 30w);\n       b + 29w \226\134\166 (47 >< 40) (s.REG 30w); b + 28w \226\134\166 (39 >< 32) (s.REG 30w);\n       b + 27w \2
+STEP_OK 7 54000181 PC 0x1000252A8w
+Saved theorem _______ "fficlose_clen_bad_reaches_assert"
+CHECKED fficlose_clen_bad_reaches_assert
+ []
+⊢ fficlose_clen_bad_pre s b ⇒
+  ∃s1. arm8_run 7 s = SOME s1 ∧ s1.PC = 0x1000252A8w ∧ s1.REG 30w = s.REG 30w
+DEFINITION  []
+⊢ ∀s b.
+    fficlose_alen_zero_pre s b ⇔
+    arm8_user s ∧ s.PC = 0x100025260w ∧ fficlose_code_bytes s.MEM ∧
+    s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 3w = 0w ∧
+    ∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a
+DEFINITION  []
+⊢ ∀s b.
+    fficlose_clen_bad_pre s b ⇔
+    arm8_user s ∧ s.PC = 0x100025260w ∧ fficlose_code_bytes s.MEM ∧
+    s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ ¬word_msb (s.REG 3w) ∧ s.REG 3w ≠ 0w ∧
+    s.REG 1w ≠ 8w ∧
+    ∀i a. i < 32 ∧ 0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w ⇒ b + n2w i ≠ a
+Exporting theory "forge_refundFficloseAssert" ... done.
+Theory "forge_refundFficloseAssert" took 4.1s to build
+NATIVE_STEP_COMPLETE

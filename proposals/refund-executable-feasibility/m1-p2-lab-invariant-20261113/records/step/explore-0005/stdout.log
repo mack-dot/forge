@@ -1,0 +1,56 @@
+<<HOL message: Created theory "forge_p2Explore">>
+OK..
+STAGE_OK callffi/all (proved)
+LEMMA_PROVED callffi
+OK..
+STAGE_OK halt/all (proved)
+LEMMA_PROVED halt
+OK..
+STAGE_OK install/all (proved)
+LEMMA_PROVED install
+OK..
+STAGE_OK call/all (proved)
+LEMMA_PROVED call
+OK..
+STAGE_OK jump/all (proved)
+LEMMA_PROVED jump
+OK..
+STAGE_OK jumpcmp/all (proved)
+LEMMA_PROVED jumpcmp
+OK..
+STAGE_FAILED locvalue/all :: 
+Exception raised at Tactical.FAIL_TAC: NO_TAC
+
+AFTER locvalue/all: 1 goals, proved=false
+
+  GOAL ∀s res t.
+  region_inv G OK code s ∧ s.clock ≠ 0 ∧
+  asm_fetch s = SOME (LabAsm (LocValue r (Lab n1 n2)) i bs n) ∧
+  evaluate s = (res,t) ⇒
+  (∃s2. evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+  t = s
+----
+LEMMA_OPEN locvalue
+AFTER locvalue end: 1 goals, proved=false
+
+  GOAL ∀s res t.
+  region_inv G OK code s ∧ s.clock ≠ 0 ∧
+  asm_fetch s = SOME (LabAsm (LocValue r (Lab n1 n2)) i bs n) ∧
+  evaluate s = (res,t) ⇒
+  (∃s2. evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+  t = s
+----
+OK..
+STAGE_OK label/all (proved)
+LEMMA_PROVED label
+OK..
+STAGE_OK inst/all (proved)
+LEMMA_PROVED inst
+OK..
+STAGE_OK jumpreg/all (proved)
+LEMMA_PROVED jumpreg
+OK..
+STAGE_OK sharemem/all (proved)
+LEMMA_PROVED sharemem
+SUMMARY callffi=PROVED halt=PROVED install=PROVED call=PROVED jump=PROVED jumpcmp=PROVED locvalue=OPEN label=PROVED inst=PROVED jumpreg=PROVED sharemem=PROVED
+EXPLORE_COMPLETE

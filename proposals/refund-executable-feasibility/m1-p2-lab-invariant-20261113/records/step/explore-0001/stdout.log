@@ -1,0 +1,78 @@
+<<HOL message: Created theory "forge_p2Explore">>
+HELPERS_PROVED
+OK..
+1 subgoal:
+STAGE_OK callffi/unfold
+OK..
+1 subgoal:
+STAGE_OK callffi/split
+OK..
+STAGE_FAILED callffi/leaf-intro :: 
+Exception raised at Q.EXISTS_TAC: goal not an exists
+
+AFTER callffi/leaf-intro: 1 goals, proved=false
+  ASM call_FFI s.ffi (ExtCall name) x x' = FFI_return f l
+  ASM loc_to_pc n' n0 s.code = SOME x''
+  ASM read_bytearray c'³' (w2n c'') (mem_load_byte_aux s.mem s.mem_domain s.be) =
+SOME x'
+  ASM read_bytearray c' (w2n c) (mem_load_byte_aux s.mem s.mem_domain s.be) =
+SOME x
+  ASM read_reg s.ptr2_reg s = Word c'³'
+  ASM read_reg s.link_reg s = Loc n' n0
+  ASM read_reg s.len2_reg s = Word c''
+  ASM read_reg s.ptr_reg s = Word c'
+  ASM read_reg s.len_reg s = Word c
+  ASM step_ok G OK s.code s.pc (LabAsm (CallFFI name) i bs n)
+  ASM ∀n1 n2 p. G (Loc n1 n2) ∧ loc_to_pc n1 n2 s.code = SOME p ⇒ OK p
+  ASM OK s.pc
+  ASM val_inv G s
+  ASM ∀w. G (Word w)
+  ASM asm_fetch s = SOME (LabAsm (CallFFI name) i bs n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK s.code s
+  GOAL evaluate
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) =
+(res,t) ⇒
+(∃s2. evaluate s2 = (res,t) ∧ region_inv G OK s.code s2 ∧ s2.clock < s.clock) ∨
+t = s
+----
+LEMMA_OPEN callffi
+AFTER callffi end: 1 goals, proved=false
+  ASM call_FFI s.ffi (ExtCall name) x x' = FFI_return f l
+  ASM loc_to_pc n' n0 s.code = SOME x''
+  ASM read_bytearray c'³' (w2n c'') (mem_load_byte_aux s.mem s.mem_domain s.be) =
+SOME x'
+  ASM read_bytearray c' (w2n c) (mem_load_byte_aux s.mem s.mem_domain s.be) =
+SOME x
+  ASM read_reg s.ptr2_reg s = Word c'³'
+  ASM read_reg s.link_reg s = Loc n' n0
+  ASM read_reg s.len2_reg s = Word c''
+  ASM read_reg s.ptr_reg s = Word c'
+  ASM read_reg s.len_reg s = Word c
+  ASM step_ok G OK s.code s.pc (LabAsm (CallFFI name) i bs n)
+  ASM ∀n1 n2 p. G (Loc n1 n2) ∧ loc_to_pc n1 n2 s.code = SOME p ⇒ OK p
+  ASM OK s.pc
+  ASM val_inv G s
+  ASM ∀w. G (Word w)
+  ASM asm_fetch s = SOME (LabAsm (CallFFI name) i bs n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK s.code s
+  GOAL evaluate
+  (s with
+   <|regs :=
+       (λa. get_reg_value (s.io_regs 0 (ExtCall name) a) (read_reg a s) Word);
+     fp_regs := (λn. s.io_fp_regs 0 n);
+     mem := write_bytearray c'³' l s.mem s.mem_domain s.be; pc := x'';
+     ffi := f; io_regs := shift_seq 1 s.io_regs;
+     io_fp_regs := shift_seq 1 s.io_fp_regs; clock := s.clock − 1|>) =
+(res,t) ⇒
+(∃s2. evaluate s2 = (res,t) ∧ region_inv G OK s.code s2 ∧ s2.clock < s.clock) ∨
+t = s
+----
+EXPLORE_COMPLETE

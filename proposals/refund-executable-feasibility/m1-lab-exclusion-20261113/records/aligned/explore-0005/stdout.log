@@ -1,0 +1,20 @@
+<<HOL message: Created theory "forge_alignedExplore">>
+Saved definition ____ "mval_inv_def"
+Saved definition ____ "load_covered_def"
+Saved definition ____ "region_inv2_def"
+OK..
+1 subgoal:
+STAGE_OK inst/all
+LEMMA_OPEN inst
+AFTER inst end: 1 goals, proved=false
+  ASM ¬(mem_op m n a s).failed
+  ASM ∀a. D a ⇒ G (s.mem a)
+  ASM ∀r. G (read_reg r s)
+  ASM ∀w. w2n w MOD (dimindex (:α) DIV 8) = 0 ⇒ D w
+  ASM ∀w. G (Word w)
+  GOAL (∀r. G (read_reg r (mem_op m n a s))) ∧
+∀a'. D a' ⇒ G ((mem_op m n a s).mem a')
+----
+OK..
+STAGE_OK wb/all (proved)
+LEMMA_PROVED wb

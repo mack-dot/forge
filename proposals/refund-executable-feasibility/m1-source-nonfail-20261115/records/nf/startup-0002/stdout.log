@@ -1,0 +1,76 @@
+<<HOL message: Created theory "forge_refundStartupClause">>
+CLAUSES 31
+STARTUP_CLAUSE t.pc = mc0.target.get_pc ms
+STARTUP_CLAUSE n2w (2 ** t.align − 1) && t.pc = 0w
+STARTUP_CLAUSE byte_aligned (t.regs 1)
+STARTUP_CLAUSE byte_aligned (t.regs 3)
+STARTUP_CLAUSE t.regs 1 ≤₊ t.regs 3
+STARTUP_CLAUSE 1024w * bytes_in_word ≤₊ t.regs 3 − t.regs 1
+STARTUP_CLAUSE m (t.regs 1) = Word bitmap_ptr
+STARTUP_CLAUSE m (t.regs 1 + bytes_in_word) =
+Word (bitmap_ptr + bytes_in_word * n2w (LENGTH data))
+STARTUP_CLAUSE m (t.regs 1 + 2w * bytes_in_word) =
+Word
+  (bitmap_ptr + bytes_in_word * n2w data_sp +
+   bytes_in_word * n2w (LENGTH data))
+STARTUP_CLAUSE m (t.regs 1 + 3w * bytes_in_word) =
+Word (mc0.target.get_pc ms + n2w (LENGTH code))
+STARTUP_CLAUSE m (t.regs 1 + 4w * bytes_in_word) =
+Word (mc0.target.get_pc ms + n2w cbspace + n2w (LENGTH code))
+DEFINITION ⊢ ∀mc0 ms t m bitmap_ptr cbspace data_sp.
+    refund_startup_clause mc0 ms t m bitmap_ptr cbspace data_sp ⇔
+    t.pc = mc0.target.get_pc ms ∧ n2w (2 ** t.align − 1) && t.pc = 0w ∧
+    byte_aligned (t.regs 1) ∧ byte_aligned (t.regs 3) ∧
+    t.regs 1 ≤₊ t.regs 3 ∧ 1024w * bytes_in_word ≤₊ t.regs 3 − t.regs 1 ∧
+    m (t.regs 1) = Word bitmap_ptr ∧
+    m (t.regs 1 + bytes_in_word) =
+    Word (bitmap_ptr + bytes_in_word * n2w (LENGTH data)) ∧
+    m (t.regs 1 + 2w * bytes_in_word) =
+    Word
+      (bitmap_ptr + bytes_in_word * n2w data_sp +
+       bytes_in_word * n2w (LENGTH data)) ∧
+    m (t.regs 1 + 3w * bytes_in_word) =
+    Word (mc0.target.get_pc ms + n2w (LENGTH code)) ∧
+    m (t.regs 1 + 4w * bytes_in_word) =
+    Word (mc0.target.get_pc ms + n2w cbspace + n2w (LENGTH code))
+Saved theorem _______ "refund_installed_startup"
+CHECKED refund_installed_startup
+⊢ refund_installed_no_handler mc0 ms cbspace data_sp ⇒
+  ∃t m bitmap_ptr.
+    refund_startup_clause mc0 ms t m bitmap_ptr cbspace data_sp
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundStartupClause)>>
+Saved theorem _______ "arm8_startup_fields"
+CHECKED arm8_startup_fields
+⊢ is_arm8_machine_config mc0 ∧ target_state_rel mc0.target t ms ∧
+  target_configured t mc0 ⇒
+  t.regs 1 = ms.REG 1w ∧ t.regs 3 = ms.REG 3w ∧ t.pc = ms.PC ∧ t.align = 2 ∧
+  mc0.target.get_pc ms = ms.PC
+STORED ⊢ LENGTH code = 130436
+STORED ⊢ LENGTH data = 2531
+Saved theorem _______ "refund_startup_clause_arm8"
+CHECKED refund_startup_clause_arm8
+⊢ is_arm8_machine_config mc0 ∧ target_state_rel mc0.target t ms ∧
+  target_configured t mc0 ⇒
+  (refund_startup_clause mc0 ms t m bitmap_ptr cbspace data_sp ⇔
+   3w && ms.PC = 0w ∧ 7w && ms.REG 1w = 0w ∧ 7w && ms.REG 3w = 0w ∧
+   ms.REG 1w ≤₊ ms.REG 3w ∧ 8192w ≤₊ -1w * ms.REG 1w + ms.REG 3w ∧
+   m (ms.REG 1w) = Word bitmap_ptr ∧
+   m (ms.REG 1w + 8w) = Word (bitmap_ptr + 20248w) ∧
+   m (ms.REG 1w + 16w) = Word (bitmap_ptr + n2w (8 * data_sp) + 20248w) ∧
+   m (ms.REG 1w + 24w) = Word (ms.PC + 0x1FD84w) ∧
+   m (ms.REG 1w + 32w) = Word (n2w cbspace + ms.PC + 0x1FD84w))
+Saved theorem _______ "arm8_fix_is_arm8"
+Saved theorem _______ "is_arm8_iff_fix"
+CHECKED arm8_fix_is_arm8
+⊢ is_arm8_machine_config (arm8_fix mc0)
+CHECKED is_arm8_iff_fix
+⊢ is_arm8_machine_config mc0 ⇔ arm8_fix mc0 = mc0
+CLOSURE_NODES 506
+CLOSURE_PARENTS forge_refundExclusionReal forge_compileCorrectControl
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundStartupClause" ... done.
+Theory "forge_refundStartupClause" took 7.0s to build
+EXACT_COMPLETE

@@ -1,0 +1,37 @@
+{
+ "unsure": "U404",
+ "end_to_end": false,
+ "cases": [
+  {
+   "case": "prof-0001",
+   "actual_exit": 1,
+   "wall_seconds": 114.43,
+   "markers": [],
+   "kind": "authoring: one tactic generalized a variable; three helper lemmas and two controls checked; nothing exported"
+  },
+  {
+   "case": "prof-0002",
+   "actual_exit": 0,
+   "wall_seconds": 87.226,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "kind": "forge_refundProfileA: 8 theorems, 1 definition; 6 structural controls; 535 closure nodes; four bool axioms; forge_compileCorrectControl in the closure"
+  },
+  {
+   "case": "otool static disassembly of the 27 start-up words",
+   "actual_exit": 0,
+   "kind": "read-only; not a proof"
+  }
+ ],
+ "not_run": [
+  "repeat of prof-0002",
+  "separate exact-statement import script",
+  "joint satisfiability witness for the composed premises",
+  "slide-generic proof S1-S6",
+  "A8 review by an independent reviewer",
+  "clean replay",
+  "independent replay",
+  "native execution"
+ ]
+}

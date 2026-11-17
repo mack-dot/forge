@@ -1,0 +1,769 @@
+<<HOL message: Created theory "forge_refundCmlMainSlide">>
+ADDRESS_NORMAL_FORM sl + 0x100004000w
+Saved theorem _______ "arm8_run_compute"
+Saved definition ____ "arm8_run_def"
+SLIDE_FACT sl && 4095w = 0w
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundCmlMainSlide)>>
+/Users/mackianni/forge/results/refund-slide-local-20261117/attempt-0001/s1-0001/proof.sml:94: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+/Users/mackianni/forge/results/refund-slide-local-20261117/attempt-0001/s1-0001/proof.sml:106: warning: Pattern is not exhaustive. Found near val [m, a] = snd (strip_comb t)
+HYP_BY_SLIDE step 0 (63 '' 2) (sl + 0x100004000w) = sl + 0x100004000w
+SLIDE_NORMALISED 0xFFFFFFFFFFFFF000w && sl + 0x100004000w  =  sl + 0x100004000w
+STEP_OK 1 90000000 PC sl + 0x100004004w
+HYP_BY_SLIDE step 1 (63 '' 2) (sl + 0x100004004w) = sl + 0x100004004w
+STEP_OK 2 91034000 PC sl + 0x100004008w
+HYP_BY_SLIDE step 2 (63 '' 2) (sl + 0x100004008w) = sl + 0x100004008w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004008w) + 0x28000w  =  sl + 0x10002C000w
+STEP_OK 3 90000141 PC sl + 0x10000400Cw
+HYP_BY_SLIDE step 3 (63 '' 2) (sl + 0x10000400Cw) = sl + 0x10000400Cw
+STEP_OK 4 91000021 PC sl + 0x100004010w
+HYP_BY_SLIDE step 4 (63 '' 3) (sl + 0x10002C000w) = sl + 0x10002C000w
+HYP_BY_SLIDE step 4 (63 '' 2) (sl + 0x100004010w) = sl + 0x100004010w
+STEP_OK 5 f9400021 PC sl + 0x100004014w
+HYP_BY_SLIDE step 5 (63 '' 2) (sl + 0x100004014w) = sl + 0x100004014w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004014w) + 0x28000w  =  sl + 0x10002C000w
+STEP_OK 6 90000142 PC sl + 0x100004018w
+HYP_BY_SLIDE step 6 (63 '' 2) (sl + 0x100004018w) = sl + 0x100004018w
+STEP_OK 7 91006042 PC sl + 0x10000401Cw
+HYP_BY_SLIDE step 7 (63 '' 2) (sl + 0x10000401Cw) = sl + 0x10000401Cw
+STEP_OK 8 f9000022 PC sl + 0x100004020w
+HYP_BY_SLIDE step 8 (63 '' 2) (sl + 0x100004020w) = sl + 0x100004020w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004020w) + 0x2C000w  =  sl + 0x100030000w
+STEP_OK 9 90000162 PC sl + 0x100004024w
+HYP_BY_SLIDE step 9 (63 '' 2) (sl + 0x100004024w) = sl + 0x100004024w
+STEP_OK 10 913cc042 PC sl + 0x100004028w
+HYP_BY_SLIDE step 10 (63 '' 2) (sl + 0x100004028w) = sl + 0x100004028w
+STEP_OK 11 f9000422 PC sl + 0x10000402Cw
+HYP_BY_SLIDE step 11 (63 '' 2) (sl + 0x10000402Cw) = sl + 0x10000402Cw
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x10000402Cw) + 0x2C000w  =  sl + 0x100030000w
+STEP_OK 12 90000162 PC sl + 0x100004030w
+HYP_BY_SLIDE step 12 (63 '' 2) (sl + 0x100004030w) = sl + 0x100004030w
+STEP_OK 13 913cc042 PC sl + 0x100004034w
+HYP_BY_SLIDE step 13 (63 '' 2) (sl + 0x100004034w) = sl + 0x100004034w
+STEP_OK 14 f9000822 PC sl + 0x100004038w
+HYP_BY_SLIDE step 14 (63 '' 2) (sl + 0x100004038w) = sl + 0x100004038w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004038w) + 0x1F000w  =  sl + 0x100023000w
+STEP_OK 15 f00000e2 PC sl + 0x10000403Cw
+HYP_BY_SLIDE step 15 (63 '' 2) (sl + 0x10000403Cw) = sl + 0x10000403Cw
+STEP_OK 16 91395042 PC sl + 0x100004040w
+HYP_BY_SLIDE step 16 (63 '' 2) (sl + 0x100004040w) = sl + 0x100004040w
+STEP_OK 17 f9000c22 PC sl + 0x100004044w
+HYP_BY_SLIDE step 17 (63 '' 2) (sl + 0x100004044w) = sl + 0x100004044w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004044w) + 0x20000w  =  sl + 0x100024000w
+STEP_OK 18 90000102 PC sl + 0x100004048w
+HYP_BY_SLIDE step 18 (63 '' 2) (sl + 0x100004048w) = sl + 0x100004048w
+STEP_OK 19 91000042 PC sl + 0x10000404Cw
+HYP_BY_SLIDE step 19 (63 '' 2) (sl + 0x10000404Cw) = sl + 0x10000404Cw
+STEP_OK 20 f9001022 PC sl + 0x100004050w
+HYP_BY_SLIDE step 20 (63 '' 2) (sl + 0x100004050w) = sl + 0x100004050w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004050w) + 0x28000w  =  sl + 0x10002C000w
+STEP_OK 21 90000142 PC sl + 0x100004054w
+HYP_BY_SLIDE step 21 (63 '' 2) (sl + 0x100004054w) = sl + 0x100004054w
+STEP_OK 22 91002042 PC sl + 0x100004058w
+HYP_BY_SLIDE step 22 (63 '' 3) (sl + 0x10002C008w) = sl + 0x10002C008w
+HYP_BY_SLIDE step 22 (63 '' 2) (sl + 0x100004058w) = sl + 0x100004058w
+STEP_OK 23 f9400042 PC sl + 0x10000405Cw
+HYP_BY_SLIDE step 23 (63 '' 2) (sl + 0x10000405Cw) = sl + 0x10000405Cw
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x10000405Cw) + 0x28000w  =  sl + 0x10002C000w
+STEP_OK 24 90000143 PC sl + 0x100004060w
+HYP_BY_SLIDE step 24 (63 '' 2) (sl + 0x100004060w) = sl + 0x100004060w
+STEP_OK 25 91004063 PC sl + 0x100004064w
+HYP_BY_SLIDE step 25 (63 '' 3) (sl + 0x10002C010w) = sl + 0x10002C010w
+HYP_BY_SLIDE step 25 (63 '' 2) (sl + 0x100004064w) = sl + 0x100004064w
+STEP_OK 26 f9400063 PC sl + 0x100004068w
+HYP_BY_SLIDE step 26 (63 '' 2) (sl + 0x100004068w) = sl + 0x100004068w
+STEP_OK 27 1400001a PC sl + 0x1000040D0w
+SLIDE_NORMALISATIONS 9
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+         h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+         h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+         h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+         h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+         h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+         h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+         h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+         h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+         h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+         h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+         h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+         h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+         h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+         h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+         h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+         h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+         h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+         h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+         h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+         h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+         h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+         h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+         h ↦ (7 >< 0) (sl + 0x10002C018w)
+       ⦈; PC := sl + 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).PC =
+  sl + 0x1000040D0w
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+         h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+         h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+         h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+         h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+         h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+         h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+         h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+         h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+         h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+         h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+         h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+         h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+         h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+         h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+         h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+         h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+         h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+         h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+         h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+         h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+         h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+         h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+         h ↦ (7 >< 0) (sl + 0x10002C018w)
+       ⦈; PC := sl + 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 0w =
+  sl + 0x1000040D0w
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+         h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+         h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+         h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+         h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+         h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+         h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+         h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+         h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+         h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+         h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+         h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+         h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+         h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+         h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+         h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+         h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+         h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+         h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+         h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+         h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+         h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+         h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+         h ↦ (7 >< 0) (sl + 0x10002C018w)
+       ⦈; PC := sl + 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 1w =
+  h
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+         h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+         h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+         h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+         h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+         h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+         h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+         h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+         h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+         h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+         h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+         h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+         h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+         h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+         h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+         h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+         h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+         h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+         h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+         h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+         h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+         h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+         h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+         h ↦ (7 >< 0) (sl + 0x10002C018w)
+       ⦈; PC := sl + 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 2w =
+  stk
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+         h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+         h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+         h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+         h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+         h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+         h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+         h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+         h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+         h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+         h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+         h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+         h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+         h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+         h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+         h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+         h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+         h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+         h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+         h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+         h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+         h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+         h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+         h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+         h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+         h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+         h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+         h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+         h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+         h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+         h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+         h ↦ (7 >< 0) (sl + 0x10002C018w)
+       ⦈; PC := sl + 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 3w =
+  e
+SLIDE_NORMALISED (63 >< 56) (sl + 0x10002C018w) @@ (55 >< 48) (sl + 0x10002C018w) @@
+(47 >< 40) (sl + 0x10002C018w) @@ (39 >< 32) (sl + 0x10002C018w) @@
+(31 >< 24) (sl + 0x10002C018w) @@ (23 >< 16) (sl + 0x10002C018w) @@
+(15 >< 8) (sl + 0x10002C018w) @@ (7 >< 0) (sl + 0x10002C018w)  =  sl + 0x10002C018w
+POST  [cml_main_pre_sl sl s h stk e]
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+           h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+           h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+           h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+           h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+           h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+           h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+           h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+           h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+           h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+           h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+           h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+           h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+           h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+           h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+           h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+           h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+           h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+           h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+           h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+           h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+           h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+           h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+           h ↦ (7 >< 0) (sl + 0x10002C018w)
+         ⦈; PC := sl + 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM h =
+  sl + 0x10002C018w
+SLIDE_NORMALISED (63 >< 56) (sl + 0x100030F30w) @@ (55 >< 48) (sl + 0x100030F30w) @@
+(47 >< 40) (sl + 0x100030F30w) @@ (39 >< 32) (sl + 0x100030F30w) @@
+(31 >< 24) (sl + 0x100030F30w) @@ (23 >< 16) (sl + 0x100030F30w) @@
+(15 >< 8) (sl + 0x100030F30w) @@ (7 >< 0) (sl + 0x100030F30w)  =  sl + 0x100030F30w
+POST  [cml_main_pre_sl sl s h stk e]
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+           h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+           h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+           h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+           h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+           h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+           h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+           h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+           h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+           h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+           h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+           h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+           h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+           h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+           h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+           h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+           h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+           h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+           h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+           h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+           h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+           h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+           h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+           h ↦ (7 >< 0) (sl + 0x10002C018w)
+         ⦈; PC := sl + 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 8w) =
+  sl + 0x100030F30w
+SLIDE_NORMALISED (63 >< 56) (sl + 0x100030F30w) @@ (55 >< 48) (sl + 0x100030F30w) @@
+(47 >< 40) (sl + 0x100030F30w) @@ (39 >< 32) (sl + 0x100030F30w) @@
+(31 >< 24) (sl + 0x100030F30w) @@ (23 >< 16) (sl + 0x100030F30w) @@
+(15 >< 8) (sl + 0x100030F30w) @@ (7 >< 0) (sl + 0x100030F30w)  =  sl + 0x100030F30w
+POST  [cml_main_pre_sl sl s h stk e]
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+           h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+           h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+           h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+           h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+           h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+           h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+           h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+           h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+           h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+           h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+           h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+           h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+           h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+           h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+           h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+           h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+           h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+           h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+           h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+           h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+           h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+           h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+           h ↦ (7 >< 0) (sl + 0x10002C018w)
+         ⦈; PC := sl + 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 16w) =
+  sl + 0x100030F30w
+SLIDE_NORMALISED (63 >< 56) (sl + 0x100023E54w) @@ (55 >< 48) (sl + 0x100023E54w) @@
+(47 >< 40) (sl + 0x100023E54w) @@ (39 >< 32) (sl + 0x100023E54w) @@
+(31 >< 24) (sl + 0x100023E54w) @@ (23 >< 16) (sl + 0x100023E54w) @@
+(15 >< 8) (sl + 0x100023E54w) @@ (7 >< 0) (sl + 0x100023E54w)  =  sl + 0x100023E54w
+POST  [cml_main_pre_sl sl s h stk e]
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+           h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+           h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+           h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+           h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+           h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+           h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+           h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+           h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+           h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+           h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+           h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+           h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+           h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+           h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+           h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+           h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+           h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+           h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+           h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+           h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+           h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+           h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+           h ↦ (7 >< 0) (sl + 0x10002C018w)
+         ⦈; PC := sl + 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 24w) =
+  sl + 0x100023E54w
+SLIDE_NORMALISED (63 >< 56) (sl + 0x100024000w) @@ (55 >< 48) (sl + 0x100024000w) @@
+(47 >< 40) (sl + 0x100024000w) @@ (39 >< 32) (sl + 0x100024000w) @@
+(31 >< 24) (sl + 0x100024000w) @@ (23 >< 16) (sl + 0x100024000w) @@
+(15 >< 8) (sl + 0x100024000w) @@ (7 >< 0) (sl + 0x100024000w)  =  sl + 0x100024000w
+POST  [cml_main_pre_sl sl s h stk e]
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ (63 >< 56) (sl + 0x100024000w);
+           h + 38w ↦ (55 >< 48) (sl + 0x100024000w);
+           h + 37w ↦ (47 >< 40) (sl + 0x100024000w);
+           h + 36w ↦ (39 >< 32) (sl + 0x100024000w);
+           h + 35w ↦ (31 >< 24) (sl + 0x100024000w);
+           h + 34w ↦ (23 >< 16) (sl + 0x100024000w);
+           h + 33w ↦ (15 >< 8) (sl + 0x100024000w);
+           h + 32w ↦ (7 >< 0) (sl + 0x100024000w);
+           h + 31w ↦ (63 >< 56) (sl + 0x100023E54w);
+           h + 30w ↦ (55 >< 48) (sl + 0x100023E54w);
+           h + 29w ↦ (47 >< 40) (sl + 0x100023E54w);
+           h + 28w ↦ (39 >< 32) (sl + 0x100023E54w);
+           h + 27w ↦ (31 >< 24) (sl + 0x100023E54w);
+           h + 26w ↦ (23 >< 16) (sl + 0x100023E54w);
+           h + 25w ↦ (15 >< 8) (sl + 0x100023E54w);
+           h + 24w ↦ (7 >< 0) (sl + 0x100023E54w);
+           h + 23w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 22w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 21w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 20w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 19w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 18w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 17w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 16w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 15w ↦ (63 >< 56) (sl + 0x100030F30w);
+           h + 14w ↦ (55 >< 48) (sl + 0x100030F30w);
+           h + 13w ↦ (47 >< 40) (sl + 0x100030F30w);
+           h + 12w ↦ (39 >< 32) (sl + 0x100030F30w);
+           h + 11w ↦ (31 >< 24) (sl + 0x100030F30w);
+           h + 10w ↦ (23 >< 16) (sl + 0x100030F30w);
+           h + 9w ↦ (15 >< 8) (sl + 0x100030F30w);
+           h + 8w ↦ (7 >< 0) (sl + 0x100030F30w);
+           h + 7w ↦ (63 >< 56) (sl + 0x10002C018w);
+           h + 6w ↦ (55 >< 48) (sl + 0x10002C018w);
+           h + 5w ↦ (47 >< 40) (sl + 0x10002C018w);
+           h + 4w ↦ (39 >< 32) (sl + 0x10002C018w);
+           h + 3w ↦ (31 >< 24) (sl + 0x10002C018w);
+           h + 2w ↦ (23 >< 16) (sl + 0x10002C018w);
+           h + 1w ↦ (15 >< 8) (sl + 0x10002C018w);
+           h ↦ (7 >< 0) (sl + 0x10002C018w)
+         ⦈; PC := sl + 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 32w) =
+  sl + 0x100024000w
+Saved theorem _______ "cml_main_run_sl"
+CHECKED cml_main_run_sl
+ []
+⊢ cml_main_pre_sl sl s h stk e ⇒
+  ∃s1.
+    arm8_run 27 s = SOME s1 ∧ s1.PC = sl + 0x1000040D0w ∧
+    s1.REG 0w = sl + 0x1000040D0w ∧ s1.REG 1w = h ∧ s1.REG 2w = stk ∧
+    s1.REG 3w = e ∧ mem_dword s1.MEM h = sl + 0x10002C018w ∧
+    mem_dword s1.MEM (h + 8w) = sl + 0x100030F30w ∧
+    mem_dword s1.MEM (h + 16w) = sl + 0x100030F30w ∧
+    mem_dword s1.MEM (h + 24w) = sl + 0x100023E54w ∧
+    mem_dword s1.MEM (h + 32w) = sl + 0x100024000w
+DEFINITION  []
+⊢ ∀sl s h stk e.
+    cml_main_pre_sl sl s h stk e ⇔
+    ¬s.SCTLR_EL1.E0E ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧
+    s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.PC = sl + 0x100004000w ∧
+    mem_dword s.MEM (sl + 0x10002C000w) = h ∧
+    mem_dword s.MEM (sl + 0x10002C008w) = stk ∧
+    mem_dword s.MEM (sl + 0x10002C010w) = e ∧ aligned 3 h ∧
+    (∀i j. i < 40 ∧ j < 163864 ⇒ h + n2w i ≠ 0x100004000w + sl + n2w j) ∧
+    aligned 12 sl ∧ s.MEM (sl + 0x100004000w) = 0w ∧
+    s.MEM (sl + 0x100004001w) = 0w ∧ s.MEM (sl + 0x100004002w) = 0w ∧
+    s.MEM (sl + 0x100004003w) = 144w ∧ s.MEM (sl + 0x100004004w) = 0w ∧
+    s.MEM (sl + 0x100004005w) = 64w ∧ s.MEM (sl + 0x100004006w) = 3w ∧
+    s.MEM (sl + 0x100004007w) = 145w ∧ s.MEM (sl + 0x100004008w) = 65w ∧
+    s.MEM (sl + 0x100004009w) = 1w ∧ s.MEM (sl + 0x10000400Aw) = 0w ∧
+    s.MEM (sl + 0x10000400Bw) = 144w ∧ s.MEM (sl + 0x10000400Cw) = 33w ∧
+    s.MEM (sl + 0x10000400Dw) = 0w ∧ s.MEM (sl + 0x10000400Ew) = 0w ∧
+    s.MEM (sl + 0x10000400Fw) = 145w ∧ s.MEM (sl + 0x100004010w) = 33w ∧
+    s.MEM (sl + 0x100004011w) = 0w ∧ s.MEM (sl + 0x100004012w) = 64w ∧
+    s.MEM (sl + 0x100004013w) = 249w ∧ s.MEM (sl + 0x100004014w) = 66w ∧
+    s.MEM (sl + 0x100004015w) = 1w ∧ s.MEM (sl + 0x100004016w) = 0w ∧
+    s.MEM (sl + 0x100004017w) = 144w ∧ s.MEM (sl + 0x100004018w) = 66w ∧
+    s.MEM (sl + 0x100004019w) = 96w ∧ s.MEM (sl + 0x10000401Aw) = 0w ∧
+    s.MEM (sl + 0x10000401Bw) = 145w ∧ s.MEM (sl + 0x10000401Cw) = 34w ∧
+    s.MEM (sl + 0x10000401Dw) = 0w ∧ s.MEM (sl + 0x10000401Ew) = 0w ∧
+    s.MEM (sl + 0x10000401Fw) = 249w ∧ s.MEM (sl + 0x100004020w) = 98w ∧
+    s.MEM (sl + 0x100004021w) = 1w ∧ s.MEM (sl + 0x100004022w) = 0w ∧
+    s.MEM (sl + 0x100004023w) = 144w ∧ s.MEM (sl + 0x100004024w) = 66w ∧
+    s.MEM (sl + 0x100004025w) = 192w ∧ s.MEM (sl + 0x100004026w) = 60w ∧
+    s.MEM (sl + 0x100004027w) = 145w ∧ s.MEM (sl + 0x100004028w) = 34w ∧
+    s.MEM (sl + 0x100004029w) = 4w ∧ s.MEM (sl + 0x10000402Aw) = 0w ∧
+    s.MEM (sl + 0x10000402Bw) = 249w ∧ s.MEM (sl + 0x10000402Cw) = 98w ∧
+    s.MEM (sl + 0x10000402Dw) = 1w ∧ s.MEM (sl + 0x10000402Ew) = 0w ∧
+    s.MEM (sl + 0x10000402Fw) = 144w ∧ s.MEM (sl + 0x100004030w) = 66w ∧
+    s.MEM (sl + 0x100004031w) = 192w ∧ s.MEM (sl + 0x100004032w) = 60w ∧
+    s.MEM (sl + 0x100004033w) = 145w ∧ s.MEM (sl + 0x100004034w) = 34w ∧
+    s.MEM (sl + 0x100004035w) = 8w ∧ s.MEM (sl + 0x100004036w) = 0w ∧
+    s.MEM (sl + 0x100004037w) = 249w ∧ s.MEM (sl + 0x100004038w) = 226w ∧
+    s.MEM (sl + 0x100004039w) = 0w ∧ s.MEM (sl + 0x10000403Aw) = 0w ∧
+    s.MEM (sl + 0x10000403Bw) = 240w ∧ s.MEM (sl + 0x10000403Cw) = 66w ∧
+    s.MEM (sl + 0x10000403Dw) = 80w ∧ s.MEM (sl + 0x10000403Ew) = 57w ∧
+    s.MEM (sl + 0x10000403Fw) = 145w ∧ s.MEM (sl + 0x100004040w) = 34w ∧
+    s.MEM (sl + 0x100004041w) = 12w ∧ s.MEM (sl + 0x100004042w) = 0w ∧
+    s.MEM (sl + 0x100004043w) = 249w ∧ s.MEM (sl + 0x100004044w) = 2w ∧
+    s.MEM (sl + 0x100004045w) = 1w ∧ s.MEM (sl + 0x100004046w) = 0w ∧
+    s.MEM (sl + 0x100004047w) = 144w ∧ s.MEM (sl + 0x100004048w) = 66w ∧
+    s.MEM (sl + 0x100004049w) = 0w ∧ s.MEM (sl + 0x10000404Aw) = 0w ∧
+    s.MEM (sl + 0x10000404Bw) = 145w ∧ s.MEM (sl + 0x10000404Cw) = 34w ∧
+    s.MEM (sl + 0x10000404Dw) = 16w ∧ s.MEM (sl + 0x10000404Ew) = 0w ∧
+    s.MEM (sl + 0x10000404Fw) = 249w ∧ s.MEM (sl + 0x100004050w) = 66w ∧
+    s.MEM (sl + 0x100004051w) = 1w ∧ s.MEM (sl + 0x100004052w) = 0w ∧
+    s.MEM (sl + 0x100004053w) = 144w ∧ s.MEM (sl + 0x100004054w) = 66w ∧
+    s.MEM (sl + 0x100004055w) = 32w ∧ s.MEM (sl + 0x100004056w) = 0w ∧
+    s.MEM (sl + 0x100004057w) = 145w ∧ s.MEM (sl + 0x100004058w) = 66w ∧
+    s.MEM (sl + 0x100004059w) = 0w ∧ s.MEM (sl + 0x10000405Aw) = 64w ∧
+    s.MEM (sl + 0x10000405Bw) = 249w ∧ s.MEM (sl + 0x10000405Cw) = 67w ∧
+    s.MEM (sl + 0x10000405Dw) = 1w ∧ s.MEM (sl + 0x10000405Ew) = 0w ∧
+    s.MEM (sl + 0x10000405Fw) = 144w ∧ s.MEM (sl + 0x100004060w) = 99w ∧
+    s.MEM (sl + 0x100004061w) = 64w ∧ s.MEM (sl + 0x100004062w) = 0w ∧
+    s.MEM (sl + 0x100004063w) = 145w ∧ s.MEM (sl + 0x100004064w) = 99w ∧
+    s.MEM (sl + 0x100004065w) = 0w ∧ s.MEM (sl + 0x100004066w) = 64w ∧
+    s.MEM (sl + 0x100004067w) = 249w ∧ s.MEM (sl + 0x100004068w) = 26w ∧
+    s.MEM (sl + 0x100004069w) = 0w ∧ s.MEM (sl + 0x10000406Aw) = 0w ∧
+    s.MEM (sl + 0x10000406Bw) = 20w
+Saved theorem _______ "page_of_relocated_address"
+CHECKED page_of_relocated_address
+ []
+⊢ aligned 12 sl ⇒
+  a + sl && 0xFFFFFFFFFFFFF000w = (a && 0xFFFFFFFFFFFFF000w) + sl
+Saved theorem _______ "page_of_misaligned_slide_differs"
+CHECKED page_of_misaligned_slide_differs
+ []
+⊢ ∃sl a.
+    ¬aligned 12 sl ∧
+    a + sl && 0xFFFFFFFFFFFFF000w ≠ (a && 0xFFFFFFFFFFFFF000w) + sl
+Saved theorem _______ "cml_main_run_sl_at_zero"
+Saved theorem _______ "cml_main_run_sl_at_0x4000"
+Saved theorem _______ "cml_main_run_sl_at_0x2F8C000"
+CHECKED cml_main_run_sl_at_zero
+ []
+⊢ cml_main_pre_sl 0w s h stk e ⇒
+  ∃s1.
+    arm8_run 27 s = SOME s1 ∧ s1.PC = 0x1000040D0w ∧
+    s1.REG 0w = 0x1000040D0w ∧ s1.REG 1w = h ∧ s1.REG 2w = stk ∧
+    s1.REG 3w = e ∧ mem_dword s1.MEM h = 0x10002C018w ∧
+    mem_dword s1.MEM (h + 8w) = 0x100030F30w ∧
+    mem_dword s1.MEM (h + 16w) = 0x100030F30w ∧
+    mem_dword s1.MEM (h + 24w) = 0x100023E54w ∧
+    mem_dword s1.MEM (h + 32w) = 0x100024000w
+CHECKED cml_main_run_sl_at_0x4000
+ []
+⊢ cml_main_pre_sl 16384w s h stk e ⇒
+  ∃s1.
+    arm8_run 27 s = SOME s1 ∧ s1.PC = 0x1000080D0w ∧
+    s1.REG 0w = 0x1000080D0w ∧ s1.REG 1w = h ∧ s1.REG 2w = stk ∧
+    s1.REG 3w = e ∧ mem_dword s1.MEM h = 0x100030018w ∧
+    mem_dword s1.MEM (h + 8w) = 0x100034F30w ∧
+    mem_dword s1.MEM (h + 16w) = 0x100034F30w ∧
+    mem_dword s1.MEM (h + 24w) = 0x100027E54w ∧
+    mem_dword s1.MEM (h + 32w) = 0x100028000w
+CHECKED cml_main_run_sl_at_0x2F8C000
+ []
+⊢ cml_main_pre_sl 0x2F8C000w s h stk e ⇒
+  ∃s1.
+    arm8_run 27 s = SOME s1 ∧ s1.PC = 0x102F900D0w ∧
+    s1.REG 0w = 0x102F900D0w ∧ s1.REG 1w = h ∧ s1.REG 2w = stk ∧
+    s1.REG 3w = e ∧ mem_dword s1.MEM h = 0x102FB8018w ∧
+    mem_dword s1.MEM (h + 8w) = 0x102FBCF30w ∧
+    mem_dword s1.MEM (h + 16w) = 0x102FBCF30w ∧
+    mem_dword s1.MEM (h + 24w) = 0x102FAFE54w ∧
+    mem_dword s1.MEM (h + 32w) = 0x102FB0000w
+Saved theorem _______ "slide_values_are_aligned"
+ADRP_STEP_THEOREM 
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 0w, s.MEM (s.PC + 1w) = 0w,
+ s.MEM (s.PC + 3w) = 144w, s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG := s.REG⦇0w ↦ (s.PC && 0xFFFFFFFFFFFFF000w) + 0w⦈;
+       branch_hint := NONE|>)
+Found counterexample:
+
+sl -> 0x6000000224D08DE0w
+
+and
+
+a -> 0x200000063D508000w
+
+CONTROL_OK page arithmetic is not provable without the alignment premise
+Saved theorem _______ "misaligned_slide_not_covered"
+CHECKED misaligned_slide_not_covered
+ [] ⊢ ¬aligned 12 sl ⇒ ¬cml_main_pre_sl sl s h stk e
+Saved theorem _______ "cml_main_sl_unrelocated_target_refuted"
+CHECKED cml_main_sl_unrelocated_target_refuted
+ []
+⊢ cml_main_pre_sl sl s h stk e ∧ sl ≠ 0w ⇒
+  ¬∃s1. arm8_run 27 s = SOME s1 ∧ s1.PC = 0x1000040D0w
+HYP_BY_SLIDE step 0 (63 '' 2) (sl + 0x100004000w) = sl + 0x100004000w
+SLIDE_NORMALISED 0xFFFFFFFFFFFFF000w && sl + 0x100004000w  =  sl + 0x100004000w
+STEP_OK 1 90000000 PC sl + 0x100004004w
+HYP_BY_SLIDE step 1 (63 '' 2) (sl + 0x100004004w) = sl + 0x100004004w
+STEP_OK 2 91034000 PC sl + 0x100004008w
+HYP_BY_SLIDE step 2 (63 '' 2) (sl + 0x100004008w) = sl + 0x100004008w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004008w) + 0x28000w  =  sl + 0x10002C000w
+STEP_OK 3 90000141 PC sl + 0x10000400Cw
+HYP_BY_SLIDE step 3 (63 '' 2) (sl + 0x10000400Cw) = sl + 0x10000400Cw
+STEP_OK 4 91000021 PC sl + 0x100004010w
+HYP_BY_SLIDE step 4 (63 '' 3) (sl + 0x10002C000w) = sl + 0x10002C000w
+HYP_BY_SLIDE step 4 (63 '' 2) (sl + 0x100004010w) = sl + 0x100004010w
+STEP_OK 5 f9400021 PC sl + 0x100004014w
+HYP_BY_SLIDE step 5 (63 '' 2) (sl + 0x100004014w) = sl + 0x100004014w
+SLIDE_NORMALISED (0xFFFFFFFFFFFFF000w && sl + 0x100004014w) + 0x28000w  =  sl + 0x10002C000w
+STEP_OK 6 90000142 PC sl + 0x100004018w
+HYP_BY_SLIDE step 6 (63 '' 2) (sl + 0x100004018w) = sl + 0x100004018w
+STEP_OK 7 91006042 PC sl + 0x10000401Cw
+Found counterexample:
+
+sl -> 0w
+
+HYP_FAILED step 7 word f9000023
+(s with
+ <|PC := sl + 0x10000401Cw;
+   REG := s.REG⦇2w ↦ sl + 0x10002C018w; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+   branch_hint := NONE|>).MEM
+  (s with
+   <|PC := sl + 0x10000401Cw;
+     REG := s.REG⦇2w ↦ sl + 0x10002C018w; 1w ↦ h; 0w ↦ sl + 0x1000040D0w⦈;
+     branch_hint := NONE|>).PC =
+35w
+==> F
+CONTROL_OK changed instruction word rejected by the fetch hypotheses
+CONTROL_OK a byte fact at the unrelocated address does not discharge the fetch at the relocated PC
+Exporting theory "forge_refundCmlMainSlide" ... done.
+Theory "forge_refundCmlMainSlide" took 18.9s to build
+NATIVE_STEP_COMPLETE

@@ -1,0 +1,76 @@
+{
+ "unsure": "U400",
+ "end_to_end": false,
+ "cases": [
+  {
+   "case": "args-0001",
+   "actual_exit": 1,
+   "wall_seconds": 100.048,
+   "markers": [],
+   "kind": "authoring (variable name `fields` is a constant); nothing exported"
+  },
+  {
+   "case": "args-0002",
+   "actual_exit": 1,
+   "wall_seconds": 104.079,
+   "markers": [],
+   "kind": "authoring; exploration with placeholder theorems, caught by the tag check; nothing exported"
+  },
+  {
+   "case": "args-0003",
+   "actual_exit": 1,
+   "wall_seconds": 122.272,
+   "markers": [],
+   "kind": "authoring; nothing exported"
+  },
+  {
+   "case": "args-0004",
+   "actual_exit": 1,
+   "wall_seconds": 99.355,
+   "markers": [],
+   "kind": "authoring; nothing exported"
+  },
+  {
+   "case": "args-0005",
+   "actual_exit": 1,
+   "wall_seconds": 96.357,
+   "markers": [],
+   "kind": "authoring (one arithmetic goal); nothing exported"
+  },
+  {
+   "case": "args-0006",
+   "actual_exit": 0,
+   "wall_seconds": 114.115,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "kind": "forge_refundWriteArgs: 27 theorems, 1 definition; 535 closure nodes; four bool axioms"
+  },
+  {
+   "case": "check-0001",
+   "actual_exit": 1,
+   "wall_seconds": 82.313,
+   "markers": [],
+   "kind": "check-script defect: a scope control had a wrong expected count (it counted a negative control); witness and 14 imports had passed; nothing exported"
+  },
+  {
+   "case": "check-0002",
+   "actual_exit": 0,
+   "wall_seconds": 101.855,
+   "markers": [
+    "P3_IMPORT_COMPLETE",
+    "AFTER_POSITIVE_AUDIT"
+   ],
+   "kind": "constructed successful write call state; 14 exact statements; 8 scope controls; 536 closure nodes; four bool axioms"
+  }
+ ],
+ "not_run": [
+  "repeat of args-0006 and check-0002",
+  "full 172-statement import",
+  "bridge from the numeric bound to the word-form conjunct of ffiwrite_call_pre",
+  "source-level event invariant",
+  "clean replay",
+  "independent replay",
+  "native execution"
+ ]
+}

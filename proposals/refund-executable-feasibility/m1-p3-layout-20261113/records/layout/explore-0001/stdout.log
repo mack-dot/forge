@@ -1,0 +1,34 @@
+<<HOL message: Created theory "forge_layoutExplore">>
+Saved definition ____ "code_layout_ok_def"
+ZERO_GEN ⊢ ∀t1 s1 p ms1 mc_conf labs ffi code2.
+    state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧
+    pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword (:α) ⇒
+    no_install_prefix mc_conf ffi 0 ms1
+OK..
+1 subgoal:
+STAGE_OK static/s1
+OK..
+1 subgoal:
+STAGE_OK static/s2
+OK..
+1 subgoal:
+STAGE_OK static/s3
+OK..
+
+Goal proved.
+ [...] ⊢ 2 * ffi_offset + pos_val s1.pc 0 code2 < dimword (:α)
+
+Goal proved.
+ [..] ⊢ 2 * ffi_offset + pos_val s1.pc 0 code2 < dimword (:α)
+
+Goal proved.
+ [..]
+⊢ ∃t1 s1 p labs code2.
+    state_rel (mc_conf,code2,labs,p) s1 t1 ms1 ∧
+    pos_val s1.pc 0 code2 + 2 * ffi_offset < dimword (:α)
+STAGE_OK static/s4 (proved)
+LEMMA_PROVED static
+OK..
+STAGE_OK installed/all (proved)
+LEMMA_PROVED installed
+EXPLORE_COMPLETE

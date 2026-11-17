@@ -1,0 +1,160 @@
+<<HOL message: Created theory "forge_refundCallSite">>
+Saved theorem _______ "machine_reach_n_compute"
+Saved definition ____ "machine_reach_n_def"
+DEFINITION ⊢ ∀mc dm.
+    refund_static mc dm ⇔
+    mc.ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    mc.ffi_entry_pcs =
+    [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w] ∧
+    mc.halt_pc = 0x1000040C0w ∧ mc.install_pc = 0x1000040B0w ∧
+    mc.mmio_info = [] ∧ mc.prog_addresses = dm ∧ 0x100004080w ∉ dm ∧
+    mc.target = arm8_target ∧ mc.ptr_reg = 0 ∧ mc.len_reg = 1 ∧
+    mc.ptr2_reg = 2 ∧ mc.len2_reg = 3
+DEFINITION ⊢ ∀mc mc'.
+    mc_static_eq mc mc' ⇔
+    mc'.ffi_names = mc.ffi_names ∧ mc'.ffi_entry_pcs = mc.ffi_entry_pcs ∧
+    mc'.halt_pc = mc.halt_pc ∧ mc'.install_pc = mc.install_pc ∧
+    mc'.mmio_info = mc.mmio_info ∧ mc'.prog_addresses = mc.prog_addresses ∧
+    mc'.target = mc.target ∧ mc'.ptr_reg = mc.ptr_reg ∧
+    mc'.len_reg = mc.len_reg ∧ mc'.ptr2_reg = mc.ptr2_reg ∧
+    mc'.len2_reg = mc.len2_reg
+DEFINITION ⊢ ∀mc ffi ms mc' ffi' ms'.
+    machine_step mc ffi ms mc' ffi' ms' ⇔
+    (∀k. evaluate mc ffi (k + 1) ms = evaluate mc' ffi' k ms') ∧
+    ffi'.oracle = ffi.oracle ∧ mc_static_eq mc mc'
+DEFINITION ⊢ (∀mc ffi ms mc1 ffi1 ms1.
+     machine_reach_n 0 mc ffi ms mc1 ffi1 ms1 ⇔
+     mc1 = mc ∧ ffi1 = ffi ∧ ms1 = ms) ∧
+  ∀n mc ffi ms mc1 ffi1 ms1.
+    machine_reach_n (SUC n) mc ffi ms mc1 ffi1 ms1 ⇔
+    ∃mc' ffi' ms'.
+      machine_step mc ffi ms mc' ffi' ms' ∧
+      machine_reach_n n mc' ffi' ms' mc1 ffi1 ms1
+DEFINITION ⊢ ∀mc ffi ms mc1 ffi1 ms1.
+    machine_reach mc ffi ms mc1 ffi1 ms1 ⇔
+    ∃n. machine_reach_n n mc ffi ms mc1 ffi1 ms1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundCallSite)>>
+Saved theorem _______ "machine_reach_n_evaluate"
+CHECKED machine_reach_n_evaluate
+⊢ ∀n mc ffi ms mc1 ffi1 ms1.
+    machine_reach_n n mc ffi ms mc1 ffi1 ms1 ⇒
+    (∀k. evaluate mc ffi (k + n) ms = evaluate mc1 ffi1 k ms1) ∧
+    ffi1.oracle = ffi.oracle ∧ mc_static_eq mc mc1
+Saved theorem _______ "normal_step_is_machine_step"
+CHECKED normal_step_is_machine_step
+⊢ mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+    (mc.target.get_byte ms) mc.prog_addresses ∧
+  EVERY mc.target.state_ok
+    [ms; mc.target.next ms; mc.next_interfer 0 (mc.target.next ms)] ∧
+  (∀x. x ∉ mc.prog_addresses ⇒
+       mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+  machine_step mc ffi ms
+    (mc with next_interfer := shift_seq 1 mc.next_interfer) ffi
+    (mc.next_interfer 0 (mc.target.next ms))
+Saved theorem _______ "call_FFI_return_keeps_oracle"
+CHECKED call_FFI_return_keeps_oracle
+⊢ call_FFI st nm cbytes abytes = FFI_return st' nb ⇒ st'.oracle = st.oracle
+Saved theorem _______ "extcall_step_is_machine_step"
+CHECKED extcall_step_is_machine_step
+⊢ mc.target.get_pc ms ∉ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧
+  find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧
+  mc.ffi_names❲i❳ = ExtCall nm ∧ ALOOKUP mc.mmio_info i = NONE ∧
+  read_ffi_bytearrays mc ms = (SOME cbytes,SOME abytes) ∧
+  call_FFI ffi (ExtCall nm) cbytes abytes = FFI_return new_ffi nb ⇒
+  machine_step mc ffi ms
+    (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer) new_ffi
+    (mc.ffi_interfer 0 (i,nb,ms))
+Saved theorem _______ "machine_reach_refl"
+CHECKED machine_reach_refl
+⊢ machine_reach mc ffi ms mc ffi ms
+Saved theorem _______ "close_call_final_halts"
+CHECKED close_call_final_halts
+⊢ refund_static mc1 dm ∧ ms1.PC = 0x100004080w ∧
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+  call_FFI ffi1 (ExtCall «close») cbytes abytes = FFI_final outcome ⇒
+  evaluate mc1 ffi1 1 ms1 = (Halt (FFI_outcome outcome),ms1,ffi1)
+Saved theorem _______ "close_call_unreadable_errors"
+CHECKED close_call_unreadable_errors
+⊢ refund_static mc1 dm ∧ ms1.PC = 0x100004080w ∧
+  ¬(∃cbytes abytes. read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes)) ⇒
+  FST (evaluate mc1 ffi1 1 ms1) = Error
+Saved theorem _______ "close_call_return_lengths"
+CHECKED close_call_return_lengths
+⊢ ffi1.oracle = basis_ffi_oracle ext ∧
+  call_FFI ffi1 (ExtCall «close») cbytes abytes = FFI_return new_ffi nb ⇒
+  LENGTH cbytes = 8 ∧ 1 ≤ LENGTH abytes
+Saved theorem _______ "close_call_read_lengths"
+CHECKED close_call_read_lengths
+⊢ refund_static mc1 dm ∧
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ⇒
+  LENGTH cbytes = w2n (ms1.REG 1w) ∧ LENGTH abytes = w2n (ms1.REG 3w)
+Saved theorem _______ "fail_not_in_success_limit"
+CHECKED fail_not_in_success_limit
+⊢ Fail ∉ extend_with_resource_limit {Terminate Success io}
+Saved theorem _______ "ffi_outcome_not_in_success_limit"
+CHECKED ffi_outcome_not_in_success_limit
+⊢ Terminate (FFI_outcome fo) l ∉
+  extend_with_resource_limit {Terminate Success io}
+Saved theorem _______ "resource_limit_is_in_success_limit"
+CHECKED resource_limit_is_in_success_limit
+⊢ Terminate Resource_limit_hit [] ∈
+  extend_with_resource_limit {Terminate Success io}
+SHOW D1
+  ASM ms1.REG 1w = 8w
+  ASM ms1.REG 3w ≠ 0w
+  ASM ms1.REG 1w = n2w (w2n (ms1.REG 1w))
+  ASM LENGTH abytes = w2n (ms1.REG 3w)
+  ASM LENGTH cbytes = w2n (ms1.REG 1w)
+  ASM 1 ≤ LENGTH abytes
+  ASM LENGTH cbytes = 8
+  ASM call_FFI ffi1 (ExtCall «close») cbytes abytes = FFI_return f l
+  ASM read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes)
+  ASM ffi1.oracle = basis_ffi_oracle ext
+  ASM refund_static mc1 dm
+  ASM mc_static_eq mc mc1
+  ASM ffi1.oracle = ffi.oracle
+  ASM ∀k. evaluate mc ffi (k + n) ms = evaluate mc1 ffi1 k ms1
+  ASM ms1.PC = 0x100004080w
+  ASM machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+  ASM ffi.oracle = basis_ffi_oracle ext
+  ASM refund_static mc dm
+  ASM machine_reach_n n mc ffi ms mc1 ffi1 ms1
+  GOAL ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w ∧
+∃cbytes abytes.
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+  LENGTH cbytes = 8 ∧ 1 ≤ LENGTH abytes
+SHOW D2
+  ASM machine_sem mc ffi ms (Terminate (FFI_outcome fo) ffi1.io_events)
+  ASM evaluate mc1 ffi1 1 ms1 = (Halt (FFI_outcome fo),ms1,ffi1)
+  ASM call_FFI ffi1 (ExtCall «close») cbytes abytes = FFI_final fo
+  ASM read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes)
+  ASM ffi1.oracle = basis_ffi_oracle ext
+  ASM refund_static mc1 dm
+  ASM mc_static_eq mc mc1
+  ASM ffi1.oracle = ffi.oracle
+  ASM ∀k. evaluate mc ffi (k + n) ms = evaluate mc1 ffi1 k ms1
+  ASM ms1.PC = 0x100004080w
+  ASM machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+  ASM ffi.oracle = basis_ffi_oracle ext
+  ASM refund_static mc dm
+  ASM machine_reach_n n mc ffi ms mc1 ffi1 ms1
+  GOAL ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w ∧
+∃cbytes abytes.
+  read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+  LENGTH cbytes = 8 ∧ 1 ≤ LENGTH abytes
+Saved theorem _______ "close_call_site_arguments"
+CHECKED close_call_site_arguments
+⊢ machine_reach mc ffi ms mc1 ffi1 ms1 ∧ refund_static mc dm ∧
+  ffi.oracle = basis_ffi_oracle ext ∧
+  machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+  ms1.PC = 0x100004080w ⇒
+  ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w ∧
+  ∃cbytes abytes.
+    read_ffi_bytearrays mc1 ms1 = (SOME cbytes,SOME abytes) ∧
+    LENGTH cbytes = 8 ∧ 1 ≤ LENGTH abytes
+Exporting theory "forge_refundCallSite" ... done.
+Theory "forge_refundCallSite" took 15.3s to build
+EXACT_COMPLETE

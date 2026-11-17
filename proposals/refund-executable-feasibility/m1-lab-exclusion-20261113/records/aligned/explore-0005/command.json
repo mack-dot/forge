@@ -1,0 +1,40 @@
+{
+ "case": "explore-0005",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/forge_labRegionInvariantTheory.sig",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/forge_labRegionInvariantTheory.sml",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/explore-0005/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "explore-0005.sml",
+ "source_sha256": "f6fe768e4c90a820fac430279ddeb39fb274f14488d63c0207e0fe5d244ecd1a",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/preload.sml": "f023ab0a8c1f49660c57114c04003124e497f3b0aa4be7218f2f55fc5fb1fa60",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/.hol/objs/forge_labRegionInvariantTheory.sig": "89f61d38c66be69d6b02f56d95c05a2425ddc41e91b94d40cc0294f116b33df5",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/.hol/objs/forge_labRegionInvariantTheory.sml": "2bd7a0c801e506571b428ec2c8f533a076206235bd5af3cd6f00d4b9c4328923"
+ },
+ "resource_guard": {
+  "memory_free_percent": 52,
+  "disk_free_gib": 38.12,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 240,
+ "wall_seconds_limit": 540,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 11.313,
+ "child_user_cpu_seconds": 12.626,
+ "child_max_rss_bytes": 1380515840,
+ "markers": [],
+ "stdout_sha256": "9e7d1e0db12acbb4e1cf3734706f45af429399a88c834da87112992bb68d0bed",
+ "stderr_sha256": "e1ceb28bdcfa66f25875cca6317ad96e0ea5e44b304e6f51c33f8046c3a7486a",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

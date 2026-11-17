@@ -1,0 +1,42 @@
+{
+ "case": "prefix-missing-first",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/forge_targetInstallPrefixTheory.sig",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/forge_targetInstallPrefixTheory.sml",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-missing-first/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "prefix-missing-first.sml",
+ "source_sha256": "3323c6c7528abf32fbc04ea41ab012d508a56f249694af81f585007709032a8b",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/preload.sml": "9c30ba56cb560f6c2fa163063fb351e4a5f9584d40fd5198ffa299c2da8f7a95",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.sig": "b05e2b1177e0cdaec641be9e47d0e3563d13fd5092f2584f5bd3f3f7c5c533c5",
+  "/Users/mackianni/forge/results/refund-p3-target-prefix-local-20261113/attempt-0001/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.sml": "9a23fbd4db536f7fcc8417ded8ecc5530cb07018e2e278edc2e1b14327572d94"
+ },
+ "resource_guard": {
+  "memory_free_percent": 42,
+  "disk_free_gib": 37.93,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 300,
+ "wall_seconds_limit": 600,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 2.969,
+ "child_user_cpu_seconds": 2.949,
+ "child_max_rss_bytes": 370507776,
+ "markers": [
+  "AFTER_POSITIVE_AUDIT"
+ ],
+ "stdout_sha256": "9d3a5e8fb790a8155d66f2bd685db7f4323b01e5068ee628dcfb88a1937502cd",
+ "stderr_sha256": "52970ded0076c3b3e8cbb50f06bd20c2d9da63b82d520f828fbb8a08c2764682",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

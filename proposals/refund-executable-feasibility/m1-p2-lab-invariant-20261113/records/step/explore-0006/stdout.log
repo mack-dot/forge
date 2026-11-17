@@ -1,0 +1,66 @@
+<<HOL message: Created theory "forge_p2Explore">>
+OK..
+1 subgoal:
+STAGE_OK locvalue/unfold
+OK..
+1 subgoal:
+STAGE_OK locvalue/split
+OK..
+1 subgoal:
+STAGE_OK locvalue/l1
+OK..
+2 subgoals:
+STAGE_OK locvalue/l2
+OK..
+
+Goal proved.
+ [.]
+⊢ OK
+    (s with
+     <|regs := s.regs⦇r ↦ lab_to_loc (Lab n1 n2)⦈; pc := s.pc + 1;
+       clock := s.clock − 1|>).pc
+
+Remaining subgoals:
+STAGE_OK locvalue/l3
+OK..
+STAGE_FAILED locvalue/l4 :: 
+Exception raised at Tactical.FAIL_TAC: NO_TAC
+
+AFTER locvalue/l4: 1 goals, proved=false
+  ASM evaluate (inc_pc (dec_clock (upd_reg r (lab_to_loc (Lab n1 n2)) s))) =
+(res,t)
+  ASM loc_to_pc n1 n2 s.code ≠ NONE
+  ASM OK (s.pc + 1)
+  ASM G (Loc n1 n2)
+  ASM ∀n1 n2 p. G (Loc n1 n2) ∧ loc_to_pc n1 n2 s.code = SOME p ⇒ OK p
+  ASM OK s.pc
+  ASM val_inv G s
+  ASM ∀w. G (Word w)
+  ASM asm_fetch s = SOME (LabAsm (LocValue r (Lab n1 n2)) i bs n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK s.code s
+  GOAL val_inv G
+  (s with
+   <|regs := s.regs⦇r ↦ lab_to_loc (Lab n1 n2)⦈; pc := s.pc + 1;
+     clock := s.clock − 1|>)
+----
+LEMMA_OPEN locvalue
+AFTER locvalue end: 1 goals, proved=false
+  ASM evaluate (inc_pc (dec_clock (upd_reg r (lab_to_loc (Lab n1 n2)) s))) =
+(res,t)
+  ASM loc_to_pc n1 n2 s.code ≠ NONE
+  ASM OK (s.pc + 1)
+  ASM G (Loc n1 n2)
+  ASM ∀n1 n2 p. G (Loc n1 n2) ∧ loc_to_pc n1 n2 s.code = SOME p ⇒ OK p
+  ASM OK s.pc
+  ASM val_inv G s
+  ASM ∀w. G (Word w)
+  ASM asm_fetch s = SOME (LabAsm (LocValue r (Lab n1 n2)) i bs n)
+  ASM s.clock ≠ 0
+  ASM region_inv G OK s.code s
+  GOAL val_inv G
+  (s with
+   <|regs := s.regs⦇r ↦ lab_to_loc (Lab n1 n2)⦈; pc := s.pc + 1;
+     clock := s.clock − 1|>)
+----
+EXPLORE_COMPLETE

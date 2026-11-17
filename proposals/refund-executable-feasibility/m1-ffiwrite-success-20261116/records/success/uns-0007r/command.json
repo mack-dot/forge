@@ -1,0 +1,42 @@
+{
+ "case": "uns-0007r",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-startup-step-local-20261115/attempt-0001/cml-0012/forge_refundCmlMainStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-fficlose-step-local-20261116/attempt-0001/ffic-0006/forge_refundFficloseStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008/forge_refundFfiwriteStepTheory.sig",
+  "/Users/mackianni/forge/results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008/forge_refundFfiwriteStepTheory.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0007r/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "uns-0007r.sml",
+ "source_sha256": "f6f801cec75c9538f31331db6200868087719ac7933e77086ec666d919730c60",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 27,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 7.833,
+ "child_user_cpu_seconds": 7.624,
+ "child_system_cpu_seconds": 1.146,
+ "child_max_rss_bytes": 534806528,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "55dff54ae6e5b2e66b41a62ab40295277c36f84be0e6be027390cf908c36fc88",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundFfiwriteUnalignedTheory.html": "ec905ba8d333d821f34d42756221255ae46cbaeb88ed043e240e7ba7d992bd2f",
+  ".hol/objs/forge_refundFfiwriteUnalignedTheory.dat": "c05485de342477f11b67faa86ae26727ffa69349d132401491ba8b24eb499c0b",
+  ".hol/objs/forge_refundFfiwriteUnalignedTheory.sig": "5ebd958fa2d6c74aa2cbf8cfea21a165947e00c4cb28392ffba7282baca0a1f6",
+  ".hol/objs/forge_refundFfiwriteUnalignedTheory.sml": "d6ba0e43d59bfce36552ec759ca3ac4e3ad487215898f4775f91a3ba3781bd0a"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

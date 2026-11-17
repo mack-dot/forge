@@ -1,0 +1,46 @@
+{
+ "case": "aligned-repeat",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/preload.sml",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/forge_labRegionInvariantTheory.sig",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/forge_labRegionInvariantTheory.sml",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/aligned-repeat/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "aligned-0001.sml",
+ "source_sha256": "93745080501cb58b54b7edbed53c8223ba977cc4f86de7efbdd30988f5b8860f",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "1d2ce8f7d84eb2d26b2b1df5faa4df4e675d8c1f9d3c285b00217de1a37b0743",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/preload.sml": "8dbdea3be20da02c65aa785da06a09fc2f17ea1ed7d28f2f75ff01eb57c94c97",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/.hol/objs/forge_labRegionInvariantTheory.sig": "89f61d38c66be69d6b02f56d95c05a2425ddc41e91b94d40cc0294f116b33df5",
+  "/Users/mackianni/forge/results/refund-p2-lab-aligned-local-20261113/attempt-0001/../../refund-p2-lab-invariant-local-20261113/attempt-0001/lemmas-0001/.hol/objs/forge_labRegionInvariantTheory.sml": "2bd7a0c801e506571b428ec2c8f533a076206235bd5af3cd6f00d4b9c4328923"
+ },
+ "resource_guard": {
+  "memory_free_percent": 45,
+  "disk_free_gib": 38.08,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 240,
+ "wall_seconds_limit": 540,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 32.901,
+ "child_user_cpu_seconds": 22.517,
+ "child_max_rss_bytes": 1915437056,
+ "markers": [
+  "P2_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "e23d1daf85e84259af56f60b7f17a0f62671c6cb1cfc36549e948625910f6d8b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_labRegionAlignedTheory.dat": "0c735af977fb8a6043057f4a589fef08909f1687cc648b58ae1e8fa9756fba7d",
+  ".hol/objs/forge_labRegionAlignedTheory.sig": "7fa91c388701ebfe444e55ff0add99e4d4bb82c0f0cb4c4c869b8f8004b3d3ea",
+  ".hol/objs/forge_labRegionAlignedTheory.sml": "fc033f21a73cd3d893e2efa1b49c01284868ee4b3d544767cd0581baaf638060"
+ },
+ "inputs_unchanged_after": true
+}

@@ -1,0 +1,347 @@
+WORD 14008478 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 120w,
+ s.MEM (s.PC + 1w) = 132w, s.MEM (s.PC + 3w) = 20w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 0x211E0w; REG := s.REG;
+       branch_hint := SOME BranchType_JMP|>)
+WORD a9be4ff4 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 244w,
+ s.MEM (s.PC + 1w) = 79w, s.MEM (s.PC + 3w) = 169w, s.MEM (s.PC + 2w) = 190w,
+ s.PSTATE.EL = 0w, s.exception = NoException,
+ aligned 3 (s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w), aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 7w ↦ (63 >< 56) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 6w ↦ (55 >< 48) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 5w ↦ (47 >< 40) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 4w ↦ (39 >< 32) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 3w ↦ (31 >< 24) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 2w ↦ (23 >< 16) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w + 1w ↦ (15 >< 8) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 8w ↦ (7 >< 0) (s.REG 19w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 7w ↦ (63 >< 56) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 6w ↦ (55 >< 48) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 5w ↦ (47 >< 40) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 4w ↦ (39 >< 32) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 3w ↦ (31 >< 24) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 2w ↦ (23 >< 16) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w + 1w ↦ (15 >< 8) (s.REG 20w);
+           s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w ↦ (7 >< 0) (s.REG 20w)
+         ⦈; PC := s.PC + 4w; SP_EL0 := s.SP_EL0 + 0xFFFFFFFFFFFFFFE0w;
+       branch_hint := NONE|>)
+WORD a9017bfd THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 253w,
+ s.MEM (s.PC + 1w) = 123w, s.MEM (s.PC + 3w) = 169w, s.MEM (s.PC + 2w) = 1w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 3 (s.SP_EL0 + 16w),
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           s.SP_EL0 + 16w + 8w + 7w ↦ (63 >< 56) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w + 6w ↦ (55 >< 48) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w + 5w ↦ (47 >< 40) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w + 4w ↦ (39 >< 32) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w + 3w ↦ (31 >< 24) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w + 2w ↦ (23 >< 16) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w + 1w ↦ (15 >< 8) (s.REG 30w);
+           s.SP_EL0 + 16w + 8w ↦ (7 >< 0) (s.REG 30w);
+           s.SP_EL0 + 16w + 7w ↦ (63 >< 56) (s.REG 29w);
+           s.SP_EL0 + 16w + 6w ↦ (55 >< 48) (s.REG 29w);
+           s.SP_EL0 + 16w + 5w ↦ (47 >< 40) (s.REG 29w);
+           s.SP_EL0 + 16w + 4w ↦ (39 >< 32) (s.REG 29w);
+           s.SP_EL0 + 16w + 3w ↦ (31 >< 24) (s.REG 29w);
+           s.SP_EL0 + 16w + 2w ↦ (23 >< 16) (s.REG 29w);
+           s.SP_EL0 + 16w + 1w ↦ (15 >< 8) (s.REG 29w);
+           s.SP_EL0 + 16w ↦ (7 >< 0) (s.REG 29w)
+         ⦈; PC := s.PC + 4w; branch_hint := NONE|>)
+WORD 910043fd THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 253w, s.MEM (s.PC + 1w) = 67w,
+ s.MEM (s.PC + 3w) = 145w, s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w; REG := s.REG⦇29w ↦ s.SP_EL0 + 16w⦈;
+       branch_hint := NONE|>)
+WORD f100007f THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 127w, s.MEM (s.PC + 1w) = 0w,
+ s.MEM (s.PC + 3w) = 241w, s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       PSTATE :=
+         s.PSTATE with
+         <|V :=
+             (word_msb (s.REG 3w) ∧
+              (word_msb (s.REG 3w) ⇎
+               BIT 63 (w2n (s.REG 3w) + 18446744073709551615 + 1)));
+           C :=
+             ((if
+                 w2n (s.REG 3w) + 18446744073709551615 + 1 <
+                 18446744073709551616
+               then
+                 w2n (s.REG 3w) + 18446744073709551615 + 1
+               else
+                 (w2n (s.REG 3w) + 18446744073709551615 + 1) MOD
+                 18446744073709551616) ≠
+              w2n (s.REG 3w) + 18446744073709551615 + 1);
+           Z := (s.REG 3w + 0w = 0w); N := word_msb (s.REG 3w + 0w)|>;
+       branch_hint := NONE|>)
+WORD 540001ad THEOREMS 2
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1,
+ (s.PSTATE.N ⇔ s.PSTATE.V) ∧ ¬s.PSTATE.Z, s.MEM s.PC = 173w,
+ s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 84w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s = SOME (s with <|PC := s.PC + 4w; branch_hint := NONE|>)
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1,
+ ¬((s.PSTATE.N ⇔ s.PSTATE.V) ∧ ¬s.PSTATE.Z), s.MEM s.PC = 173w,
+ s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 84w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME (s with <|PC := s.PC + 52w; branch_hint := SOME BranchType_JMP|>)
+WORD f100203f THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 63w, s.MEM (s.PC + 1w) = 32w,
+ s.MEM (s.PC + 3w) = 241w, s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       PSTATE :=
+         s.PSTATE with
+         <|V :=
+             (word_msb (s.REG 1w) ∧
+              (word_msb (s.REG 1w) ⇎
+               BIT 63 (w2n (s.REG 1w) + 18446744073709551607 + 1)));
+           C :=
+             ((if
+                 w2n (s.REG 1w) + 18446744073709551607 + 1 <
+                 18446744073709551616
+               then
+                 w2n (s.REG 1w) + 18446744073709551607 + 1
+               else
+                 (w2n (s.REG 1w) + 18446744073709551607 + 1) MOD
+                 18446744073709551616) ≠
+              w2n (s.REG 1w) + 18446744073709551607 + 1);
+           Z := (s.REG 1w + 0xFFFFFFFFFFFFFFF8w = 0w);
+           N := word_msb (s.REG 1w + 0xFFFFFFFFFFFFFFF8w)|>;
+       branch_hint := NONE|>)
+WORD 54000181 THEOREMS 2
+
+[s.PSTATE.Z, ¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1,
+ s.MEM s.PC = 129w, s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 84w,
+ s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w, s.exception = NoException,
+ aligned 2 s.PC]
+⊢ NextStateARM8 s = SOME (s with <|PC := s.PC + 4w; branch_hint := NONE|>)
+
+[¬s.PSTATE.Z, ¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1,
+ s.MEM s.PC = 129w, s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 84w,
+ s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w, s.exception = NoException,
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME (s with <|PC := s.PC + 48w; branch_hint := SOME BranchType_JMP|>)
+WORD aa0203f3 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 243w, s.MEM (s.PC + 1w) = 3w,
+ s.MEM (s.PC + 3w) = 170w, s.MEM (s.PC + 2w) = 2w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w; REG := s.REG⦇19w ↦ s.REG 2w⦈; branch_hint := NONE|>)
+WORD b9400408 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 8w, s.MEM (s.PC + 1w) = 4w,
+ s.MEM (s.PC + 3w) = 185w, s.MEM (s.PC + 2w) = 64w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC, aligned 2 (s.REG 0w + 4w)]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG := s.REG⦇8w ↦ w2w (mem_word s.MEM (s.REG 0w + 4w))⦈;
+       branch_hint := NONE|>)
+WORD 5ac00900 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 0w, s.MEM (s.PC + 1w) = 9w,
+ s.MEM (s.PC + 3w) = 90w, s.MEM (s.PC + 2w) = 192w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG :=
+         s.REG⦇
+           0w ↦
+             w2w
+               ((7 >< 0) (w2w (s.REG 8w)) @@ (15 >< 8) (w2w (s.REG 8w)) @@
+                (23 >< 16) (w2w (s.REG 8w)) @@ (31 >< 24) (w2w (s.REG 8w)))
+         ⦈; branch_hint := NONE|>)
+WORD 94000199 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 153w,
+ s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 148w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 1636w; REG := s.REG⦇30w ↦ s.PC + 4w⦈;
+       branch_hint := SOME BranchType_CALL|>)
+WORD 90000010 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 16w, s.MEM (s.PC + 1w) = 0w,
+ s.MEM (s.PC + 3w) = 144w, s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG := s.REG⦇16w ↦ (s.PC && 0xFFFFFFFFFFFFF000w) + 0w⦈;
+       branch_hint := NONE|>)
+WORD f9401210 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 16w,
+ s.MEM (s.PC + 1w) = 18w, s.MEM (s.PC + 3w) = 249w, s.MEM (s.PC + 2w) = 64w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 3 (s.REG 16w + 32w),
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG := s.REG⦇16w ↦ mem_dword s.MEM (s.REG 16w + 32w)⦈;
+       branch_hint := NONE|>)
+WORD d61f0200 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 0w,
+ s.MEM (s.PC + 1w) = 2w, s.MEM (s.PC + 3w) = 214w, s.MEM (s.PC + 2w) = 31w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.REG 16w; REG := s.REG; branch_hint := SOME BranchType_JMP|>)
+WORD 7100001f THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 31w, s.MEM (s.PC + 1w) = 0w,
+ s.MEM (s.PC + 3w) = 113w, s.MEM (s.PC + 2w) = 0w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       PSTATE :=
+         s.PSTATE with
+         <|V :=
+             (word_msb (w2w (s.REG 0w)) ∧
+              (word_msb (w2w (s.REG 0w)) ⇎
+               BIT 31 (w2n (w2w (s.REG 0w)) + 4294967295 + 1)));
+           C :=
+             ((if w2n (w2w (s.REG 0w)) + 4294967295 + 1 < 4294967296 then
+                 w2n (w2w (s.REG 0w)) + 4294967295 + 1
+               else (w2n (w2w (s.REG 0w)) + 4294967295 + 1) MOD 4294967296) ≠
+              w2n (w2w (s.REG 0w)) + 4294967295 + 1);
+           Z := (w2w (s.REG 0w) + 0w = 0w);
+           N := word_msb (w2w (s.REG 0w) + 0w)|>; branch_hint := NONE|>)
+WORD 1a9f07e8 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 232w, s.MEM (s.PC + 1w) = 7w,
+ s.MEM (s.PC + 3w) = 26w, s.MEM (s.PC + 2w) = 159w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG := s.REG⦇8w ↦ w2w (if s.PSTATE.Z then 0w else 1w)⦈;
+       branch_hint := NONE|>)
+WORD 39000268 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 104w,
+ s.MEM (s.PC + 1w) = 2w, s.MEM (s.PC + 3w) = 57w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|MEM := s.MEM⦇s.REG 19w + 0w ↦ w2w (s.REG 8w)⦈; PC := s.PC + 4w;
+       branch_hint := NONE|>)
+WORD a9417bfd THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 253w,
+ s.MEM (s.PC + 1w) = 123w, s.MEM (s.PC + 3w) = 169w, s.MEM (s.PC + 2w) = 65w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 3 (s.SP_EL0 + 16w),
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG :=
+         s.REG⦇
+           30w ↦ mem_dword s.MEM (s.SP_EL0 + 16w + 8w);
+           29w ↦ mem_dword s.MEM (s.SP_EL0 + 16w)
+         ⦈; branch_hint := NONE|>)
+WORD a8c24ff4 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.SCTLR_EL1.SA0, s.MEM s.PC = 244w,
+ s.MEM (s.PC + 1w) = 79w, s.MEM (s.PC + 3w) = 168w, s.MEM (s.PC + 2w) = 194w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 3 (s.SP_EL0 + 0w),
+ aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 4w;
+       REG :=
+         s.REG⦇
+           19w ↦ mem_dword s.MEM (s.SP_EL0 + 0w + 8w);
+           20w ↦ mem_dword s.MEM (s.SP_EL0 + 0w)
+         ⦈; SP_EL0 := s.SP_EL0 + 32w; branch_hint := NONE|>)
+WORD d65f03c0 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 192w,
+ s.MEM (s.PC + 1w) = 3w, s.MEM (s.PC + 3w) = 214w, s.MEM (s.PC + 2w) = 95w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.REG 30w; REG := s.REG; branch_hint := SOME BranchType_RET|>)
+WORD 9400016b THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 107w,
+ s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 148w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 1452w; REG := s.REG⦇30w ↦ s.PC + 4w⦈;
+       branch_hint := SOME BranchType_CALL|>)
+WORD 94000160 THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, ¬s.TCR_EL1.TBI0, ¬s.TCR_EL1.TBI1, s.MEM s.PC = 96w,
+ s.MEM (s.PC + 1w) = 1w, s.MEM (s.PC + 3w) = 148w, s.MEM (s.PC + 2w) = 0w,
+ s.PSTATE.EL = 0w, s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s =
+  SOME
+    (s with
+     <|PC := s.PC + 1408w; REG := s.REG⦇30w ↦ s.PC + 4w⦈;
+       branch_hint := SOME BranchType_CALL|>)
+WORD d503201f THEOREMS 1
+
+[¬s.SCTLR_EL1.E0E, s.MEM s.PC = 31w, s.MEM (s.PC + 1w) = 32w,
+ s.MEM (s.PC + 3w) = 213w, s.MEM (s.PC + 2w) = 3w, s.PSTATE.EL = 0w,
+ s.exception = NoException, aligned 2 s.PC]
+⊢ NextStateARM8 s = SOME (s with <|PC := s.PC + 4w; branch_hint := NONE|>)
+EXPLORE_COMPLETE

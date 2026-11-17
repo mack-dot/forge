@@ -1,0 +1,2 @@
+<<HOL message: Created theory "forge_refundFfiwriteFault">>
+WM2F_ALT s.SCTLR_EL1.A ; ¬(s with exception := ALIGNMENT_FAULT).SCTLR_EL1.E0E ; ¬aligned 1 address ; s.PSTATE.EL = 0w ; (s with exception := ALIGNMENT_FAULT).PSTATE.EL = 0w ; s.exception = NoException

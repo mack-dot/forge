@@ -1,0 +1,55 @@
+(theory
+ ("forge_refundLabRunInit"
+  ("lab_to_targetProof" . "9db32a52bd1fb1a044dacd02eb320beb3f07b87e")
+  ("forge_refundLabRun" . "7049a61f0e21cb5277aabffc35600f95995d41fa"))
+ (core-data
+  (tables
+   (string-table "fcp" "cart" "min" "bool" "list" "bit0" "one" "num" "fun"
+    "option" "pair" "prod" "labLang" "sec" "ffi" "ffi_state" "integer"
+    "int" "wordSem" "word_loc" "targetSem" "machine_config"
+    "machine_result" "labSem" "state" "asmSem" "asm_state" "!" "," "/\\"
+    "=" "line" "==>" "CONS" "Install" "asm_with_lab" "data_to_word"
+    "InstallData_location" "Install_location" "combin" "K" "LabAsm" "NIL"
+    "SND" "backend" "config" "SOME" "arm8_config" "arm8_backend_config"
+    "arm8_target" "asm" "asm_config" "asm_fetch" "evaluate"
+    "forge_labRegionWalk" "loc_good" "lab_to_targetProof" "make_init"
+    "forge_refundLabResolve" "pc_ok" "recordtype.state.seldef.clock_fupd"
+    "recordtype.state.seldef.code" "recordtype.state.seldef.pc"
+    "forge_refundLabClosure" "refund_alloc_oracle" "sptree" "spt"
+    "forge_refundWholeProg" "refund_prog" "ast" "dec" "set_oracle" "to_lab"
+    "~" "refund_lab_init_run_avoids_install" "forge_refundLabRunInit"
+    "forge_labRegionInvariant" "forge_refundLabRun")
+   (id-table (0 . 1) (2 . 3) (4 . 4) (0 . 5) (6 . 6) (7 . 7) (2 . 8)
+    (9 . 9) (10 . 11) (12 . 13) (14 . 15) (16 . 17) (18 . 19) (20 . 21)
+    (20 . 22) (23 . 24) (25 . 26) (3 . 27) (10 . 28) (3 . 29) (2 . 30)
+    (12 . 31) (2 . 32) (4 . 33) (12 . 34) (12 . 35) (36 . 37) (36 . 38)
+    (39 . 40) (12 . 41) (4 . 42) (10 . 43) (44 . 45) (9 . 46) (47 . 48)
+    (49 . 47) (50 . 51) (23 . 52) (23 . 53) (54 . 55) (56 . 57) (58 . 59)
+    (23 . 60) (23 . 61) (23 . 62) (63 . 64) (65 . 66) (67 . 68) (69 . 70)
+    (44 . 71) (44 . 72) (3 . 73))
+   (type-table "'a" (1) (0 1 0) (4) (3 3) (3 4) (3 5) (0 1 6) (2 7) (5)
+    "'e" (8 8 10) (7 11) (9) (2 13) (6 14 12) (6 10 15) (8 10 14) (6 9 17)
+    (6 2 1) "'d" (10 20) (11) (12 0) (6 2 23) "'c" "'b" (13 0 26 25) (14)
+    (15 0 10 20) (16 0) (6 19 1) (6 22 1) (6 32 1) (6 8 1) (6 34 1) (6 9 1)
+    (6 36 1) (8 28 29) (6 29 38) (6 28 39) (6 1 1) (6 1 41) (6 14 1)
+    (6 14 43) (21) (7 45) (6 46 1) (6 46 47) (6 38 1) (6 38 49) (2 9)
+    (6 51 51) (6 9 52) (25) (6 9 9) (6 9 55) (6 9 45) (6 8 57) (6 22 58)
+    (6 54 59) (32) (8 61 14) (6 62 14) (8 51 62) (6 64 62) (6 45 46) (36)
+    (6 29 46) (6 23 1) (6 14 69) (6 36 70) (6 18 29) (6 9 72) (6 2 73)
+    (6 16 74) (6 14 75) (6 26 76) (6 19 77) (6 19 78) (6 24 79) (6 30 80)
+    (6 21 81) (6 27 82) (6 14 36) (6 51 84) (6 29 29) (6 55 86) (6 29 14)
+    (6 29 9) (46 9) (7 90) (2 91) (48) (2 93) (6 92 61) (6 61 95) (6 94 64)
+    (6 61 97) (6 67 98))
+   (term-table ("a" 2) ("bs" 8) ("cbpos0" 2) ("cbspace0" 9) ("cmp0" 16)
+    ("coracle0" 18) ("dm0" 19) ("ffi0" 21) ("i" 22) ("k" 9) ("m" 24)
+    ("mc0" 27) ("ms0" 26) ("n" 9) ("res" 28) ("s2" 29) ("sdm0" 19)
+    ("t0" 30) (17 31) (17 33) (17 35) (17 37) (18 40) (19 42) (20 44)
+    (20 48) (20 50) (22 42) (23 53) (24 54) (26 9) (27 9) (28 56) (29 60)
+    (30 51) (31 63) (31 65) (33 66) (34 61) (35 67) (37 68) (38 39) (39 71)
+    (40 83) (41 85) (42 87) (43 88) (44 89) (45 92) (47 94) (49 96) (50 99)
+    (51 41))) exports (nil) (nil)
+  ((74
+    (((75 0) (3 25 35 50 52 54 56 58 63 105 128) (39 13) (76 0) (54 5)
+      (77 17 19) (23 71 74) (56 392 419) (10 4) (18 9)) "DISK_THM") (2 0)
+    ("%0%31%30%34B28B28%39%38%48B50B51%49@U36U35B44%39%38%48B50B51%49@U36U35B42$0U10@|U18%9U32%11%7B43%17@%10@%6@%16@%12@%39%38%48B50B51%49@U36U35@%4@%2@%3@%5@B45U41%14%15B22B26B23%31%30%34B28B28%39%38%48B50B51%49@U36U35B44%15U47@%15U46%39%38%48B50B51%49@U36U35B24%8%1%13%15U40%29$2B33$1@$0@U37B25U52|U21|U20|U19B23B23B27"))))
+ (incorporate (incorporate-types) incorporate-consts) (loadable-thydata))

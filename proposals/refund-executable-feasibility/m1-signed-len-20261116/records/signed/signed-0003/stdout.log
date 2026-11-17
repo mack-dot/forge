@@ -1,0 +1,40 @@
+<<HOL message: Created theory "forge_refundSignedLen">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSignedLen)>>
+Saved theorem _______ "heap_premises_admit_huge_heap"
+CHECKED heap_premises_admit_huge_heap
+⊢ ∃h e.
+    aligned 3 h ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+    refund_heap_clear h e ∧ 0x8000000000000000w ≤₊ e − h
+Saved theorem _______ "read_bytearray_below_half_bound"
+CHECKED read_bytearray_below_half_bound
+⊢ ∀x n m dm bs q.
+    read_bytearray x n (λa. if a ∈ dm then SOME (m a) else NONE) = SOME bs ∧
+    addresses_below_half dm ∧ q ∉ dm ∧ q <₊ 0x8000000000000000w ⇒
+    n < 2 ** 63
+SHOW LB
+  ASM addresses_below_half mc1.prog_addresses
+  ASM read_bytearray (mc1.target.get_reg ms1 mc1.ptr2_reg)
+  (w2n (mc1.target.get_reg ms1 mc1.len2_reg))
+  (λa.
+     if a ∈ mc1.prog_addresses then SOME (mc1.target.get_byte ms1 a)
+     else NONE) = SOME abytes
+  ASM read_bytearray (mc1.target.get_reg ms1 mc1.ptr_reg)
+  (w2n (mc1.target.get_reg ms1 mc1.len_reg))
+  (λa.
+     if a ∈ mc1.prog_addresses then SOME (mc1.target.get_byte ms1 a)
+     else NONE) = SOME cbytes
+  ASM mc1.len2_reg = 3
+  ASM mc1.ptr2_reg = 2
+  ASM mc1.len_reg = 1
+  ASM mc1.ptr_reg = 0
+  ASM mc1.target = arm8_target
+  ASM 0x100004080w ∉ mc1.prog_addresses
+  ASM mc1.mmio_info = []
+  ASM mc1.install_pc = 0x1000040B0w
+  ASM mc1.halt_pc = 0x1000040C0w
+  ASM mc1.ffi_entry_pcs = [0x1000040A0w; 0x100004090w; 0x100004080w; 0x100004070w]
+  ASM mc1.ffi_names =
+[ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»]
+  GOAL w2n (ms1.REG 3w) < 9223372036854775808
+LEMMA_FAILED close_call_alen_below_half HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "Q_TAC0", origin_structure = "Tactical", source_location = Loc_Unknown}, {origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+LEMMA_FAILED close_call_site_signed_alen HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 73", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})

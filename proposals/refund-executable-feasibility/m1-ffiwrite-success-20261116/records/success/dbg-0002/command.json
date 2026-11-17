@@ -1,0 +1,29 @@
+{
+ "case": "dbg-0002",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-ffiwrite-success-local-20261116/attempt-0001/dbg-0002/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "dbg-0002.sml",
+ "source_sha256": "545e7378c7fcac6fc0149a0241278950f6093c1fab3e937380adda21ba1cbb6b",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 15,
+ "end_to_end": false,
+ "actual_exit": -15,
+ "wall_timeout": false,
+ "wall_seconds": 440.005,
+ "child_user_cpu_seconds": 127.591,
+ "child_system_cpu_seconds": 138.458,
+ "child_max_rss_bytes": 2550333440,
+ "markers": [],
+ "stdout_sha256": "af7a748240da7b054e0c53fbad23a644886fe61d5a37c8a6c4b9fc93fd7d2ec0",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {},
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}
