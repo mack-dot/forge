@@ -1,0 +1,269 @@
+{
+ "suite": "refund finality version 2",
+ "kind": "FINITE TEST",
+ "end_to_end": false,
+ "rows": [
+  {
+   "part": "setup",
+   "name": "minter reports the hashes that the operator computes independently",
+   "expected": "equal",
+   "observed": "true",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "differential grid: 84 (state, request) pairs against the gate-built kernel",
+   "expected": "0 disagreements; some signed, some refused",
+   "observed": "0 disagreements; 11 signed; 73 refused",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: extra key in the pre-state",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: amount is a JSON number",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: negative amount",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: amount with 25 digits",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: request missing",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: pre-state is an array",
+   "expected": "no signature",
+   "observed": "refused: shape",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "refused input: remaining above original",
+   "expected": "no signature",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "caller sends its own post-state and intent with the request",
+   "expected": "ignored: post and intent come from the core",
+   "observed": "core values signed",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "same request again for the same pre-state",
+   "expected": "same signature",
+   "observed": "same signature",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "minter",
+   "name": "another request for a pre-state that already has a signed claim",
+   "expected": "refused",
+   "observed": "refused: another request is already signed for this pre-state",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "sink",
+   "name": "version 2 claim with a changed post-state and the original signature",
+   "expected": "rejected",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "sink",
+   "name": "the unchanged version 2 claim",
+   "expected": "committed",
+   "observed": "committed",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D00 control: no change to the database",
+   "expected": "effects [rq_d00_1, rq_d00_2]; 0 unauthorized",
+   "observed": "effects [rq_d00_1, rq_d00_2]; 0 unauthorized; 0 lost; sum 300; refused 0; unchecked control: 0 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D00b second flush of the same outbox",
+   "expected": "0 new effects",
+   "observed": "0 new effects; 2 already dispatched",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D01 raw UPDATE: outbox amount 100 changed to 900",
+   "expected": "effects []; 0 unauthorized; unchecked control sends unauthorized effects",
+   "observed": "effects []; 0 unauthorized; 0 lost; sum 0; refused 2; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D02 raw INSERT: well-formed claim for the current state, signed with the attacker's key",
+   "expected": "effects [rq_d02_1, rq_d02_2]; 0 unauthorized; unchecked control sends unauthorized effects",
+   "observed": "effects [rq_d02_1, rq_d02_2]; 0 unauthorized; 0 lost; sum 300; refused 1; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D03 raw INSERT: outbox row without any settled row",
+   "expected": "effects [rq_d03_1, rq_d03_2]; 0 unauthorized; unchecked control sends unauthorized effects",
+   "observed": "effects [rq_d03_1, rq_d03_2]; 0 unauthorized; 0 lost; sum 300; refused 1; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D04 raw UPDATE: claim, claim hash, outbox and state rewritten consistently to 900; old signature kept",
+   "expected": "effects [rq_d04_1]; 0 unauthorized; unchecked control sends unauthorized effects",
+   "observed": "effects [rq_d04_1]; 0 unauthorized; 0 lost; sum 100; refused 1; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D05 raw INSERT: copy of a valid signed claim under a new request id",
+   "expected": "effects [rq_d05_1, rq_d05_2]; 0 unauthorized; unchecked control sends unauthorized effects",
+   "observed": "effects [rq_d05_1, rq_d05_2]; 0 unauthorized; 0 lost; sum 300; refused 1; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D06 replay after dispatch: outbox rows deleted and inserted again as new rows",
+   "expected": "effects [rq_d06_1, rq_d06_2]; 0 unauthorized",
+   "observed": "effects [rq_d06_1, rq_d06_2]; 0 unauthorized; 0 lost; sum 300; refused 0; unchecked control: 0 unauthorized; unchecked control run twice: 2 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D06b the unchecked control sends the re-inserted rows again",
+   "expected": "more than 0 duplicate effects",
+   "observed": "2 duplicate effects",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D07 raw UPDATE: signatures of the two settled rows swapped",
+   "expected": "effects []; 0 unauthorized",
+   "observed": "effects []; 0 unauthorized; 0 lost; sum 0; refused 2; unchecked control: 0 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0,
+   "note": "availability only: valid effects are held back"
+  },
+  {
+   "part": "dispatcher",
+   "name": "D08 raw INSERT: a claim validly signed by the minter for ANOTHER charge",
+   "expected": "effects [rq_d08_1, rq_d08_2]; 0 unauthorized; unchecked control sends unauthorized effects",
+   "observed": "effects [rq_d08_1, rq_d08_2]; 0 unauthorized; 0 lost; sum 300; refused 1; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D09 raw UPDATE: outbox order reversed",
+   "expected": "effects [rq_d09_1, rq_d09_2]; 0 unauthorized",
+   "observed": "effects [rq_d09_1, rq_d09_2]; 0 unauthorized; 0 lost; sum 300; refused 0; unchecked control: 1 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D10 raw DELETE: settled row of the first refund removed",
+   "expected": "effects []; 0 unauthorized",
+   "observed": "effects []; 0 unauthorized; 0 lost; sum 0; refused 2; unchecked control: 0 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0,
+   "note": "availability only: the chain cannot continue"
+  },
+  {
+   "part": "dispatcher",
+   "name": "D11 crash between the ledger line and the effect, then restart",
+   "expected": "effects [rq_d11_2]; 0 unauthorized",
+   "observed": "effects [rq_d11_2]; 0 unauthorized; 1 lost; sum 200; refused 0; unchecked control: 0 unauthorized; first run: simulated crash before the effect left",
+   "pass": true,
+   "unauthorizedEffects": 0,
+   "note": "at most once: the first effect is lost, never sent twice; it needs reconciliation by a person"
+  },
+  {
+   "part": "dispatcher",
+   "name": "D12 control: the dispatcher's own ledger is not one chain",
+   "expected": "effects []; 0 unauthorized",
+   "observed": "effects []; 0 unauthorized; 0 lost; sum 0; refused 0; stopped: dispatcher ledger is not one chain; unchecked control: 0 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0,
+   "note": "fail closed; the ledger is assumed out of the attacker's reach"
+  },
+  {
+   "part": "dispatcher",
+   "name": "D13 attack material: a second signed claim for the initial state (minter rule on)",
+   "expected": "the minter refuses",
+   "observed": "refused: another request is already signed for this pre-state",
+   "pass": true,
+   "unauthorizedEffects": 0
+  },
+  {
+   "part": "dispatcher",
+   "name": "D14 LIMIT (minter rule OFF): a second signed claim for the initial state is inserted before the committed one",
+   "expected": "effects [rq_d14_alt]; 0 unauthorized",
+   "observed": "effects [rq_d14_alt]; 0 unauthorized; 0 lost; sum 800; refused 2; unchecked control: 2 unauthorized",
+   "pass": true,
+   "unauthorizedEffects": 0,
+   "note": "the effect is signed for the chain head, so it counts as authorized; but it is NOT the refund the sink committed. With the rule off an attacker selects among signed claims."
+  }
+ ],
+ "counts": {
+  "rows": 31,
+  "failed": 0,
+  "dispatcher_cases": 17,
+  "unauthorized_effects_through_checked_dispatcher": 0
+ },
+ "core_module_sha256": "444da23d6d9c365b7a5a3f0d9f2712f74f10fa14950c411d570779eccc656584",
+ "spec_lock_sha256": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57",
+ "minter_sha256": "ffb827abbf86754bfbe7af156bfae88a6d62b62606c06bcee9b0cb71ce7554ef"
+}

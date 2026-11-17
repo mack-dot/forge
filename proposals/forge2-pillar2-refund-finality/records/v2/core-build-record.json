@@ -1,0 +1,47 @@
+{
+ "end_to_end": false,
+ "module_sha256": "444da23d6d9c365b7a5a3f0d9f2712f74f10fa14950c411d570779eccc656584",
+ "rows": [
+  {
+   "check": "core verifies",
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "last_line": "Dafny program verifier finished with 7 verified, 0 errors",
+   "result": "PASS"
+  },
+  {
+   "check": "control: core that signs everything is rejected",
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "last_line": "Dafny program verifier finished with 8 verified, 1 error",
+   "result": "PASS"
+  },
+  {
+   "check": "control: core that keeps the remaining amount is rejected",
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "last_line": "Dafny program verifier finished with 8 verified, 1 error",
+   "result": "PASS"
+  },
+  {
+   "check": "audit",
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "last_line": "Dafny program verifier did not attempt verification",
+   "result": "PASS"
+  },
+  {
+   "check": "compile to JavaScript",
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "last_line": "Dafny program verifier finished with 7 verified, 0 errors",
+   "result": "PASS"
+  }
+ ],
+ "scenario_exit": 0,
+ "sources": {
+  "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+  "proposals/forge2-pillar2-refund-finality/core/RefundMinterCore.dfy": "d2a0d01f6899d9fb58191bf83db442afe9305ec283927ded7153222aff53b764",
+  "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+ }
+}

@@ -14970,3 +14970,90 @@ curl: (6) Could not resolve host: github.com
   compiler/backend/proofs, cv_translator (cake_compile_heap), HOL ARMv8
   step heap. Result NOT YET KNOWN at the time of this entry.
 - Next check: the build record; then the M1 chain replay.
+
+## U428 — Pillar II version 2: minter decision core proved in Dafny; dispatcher checks before the effect; raw-database attacks (finite test)
+- Status: 2026-11-17. Refs U420, U426. Sources:
+  proposals/forge2-pillar2-refund-finality/core/RefundMinterCore.dfy,
+  core/build_core.py, minter2.ts, dispatcher.ts, run_suite_v2.ts; report
+  section "Version 2" in REPORT.md; records in records/v2.
+- Actual exits: build_core.py exit 0 (Dafny verify exit 0, 7 verified; two
+  wrong cores exit 4 each; audit 0 findings; build to JavaScript exit 0).
+  run_suite_v2.ts exit 0 twice (31 rows, 0 failed, 0 unauthorized effects
+  through the checked dispatcher; the unchecked control sends unauthorized
+  effects in 8 cases).
+- First trial run (scratch, not a recorded attempt): exit 1. Cause: my
+  test oracle counted a later valid effect as unauthorized after a
+  simulated crash lost the effect before it. I changed the ORACLE, not the
+  dispatcher: effects must be a subsequence of one signed chain; lost
+  effects are counted separately and must equal the expected number (1 in
+  the crash case, 0 elsewhere).
+- Proved: only Decide (source level) against the approved refund
+  specification. Not proved: the wrapper, the Dafny JavaScript back end,
+  dispatcher, sink, SQLite, Node, key isolation.
+- Limit found (case D14): if the minter signs two different requests for
+  one pre-state, an attacker with raw database access can make the
+  dispatcher send the one that the sink did NOT commit. The rule "one
+  signed request per pre-state hash" in minter2.ts removes the second
+  claim (case D13). The rule is unproved and is lost at minter restart
+  (the key is lost too in this experiment).
+- Uncertainty: the definition of "authorized" in the test is mine. A
+  finite test. The ledger file and dispatcher are assumed safe.
+- Next check: model the dispatcher chain rule in the Dafny protocol model;
+  owner decision whether the single-use rule is wanted.
+
+## U429 — Read-only security triage of this Mac and repository (the owner's text names it "U426"; that ID was already used)
+- Status: 2026-11-17. Refs U425, U426. The owner sent a triage text during
+  Round 3 work. I stopped other work, except the HOL build in the
+  background (no network, no Node), and ran six read-only checks. I ran no
+  npm, npx, pnpm or yarn.
+- Disclosure: one push had ALREADY happened before the triage text
+  arrived: f4485466..f63042e2 to the backup branch at the start of Round 3,
+  as the Round 3 text instructed. Nothing was pushed after that.
+- 1 Bundle: /tmp/forge-backup-c8a32c5f.bundle, range origin/main to the
+  backup branch head (there is no local branch main). git bundle verify
+  exit 0. Rewritten after this entry so that it holds every commit; the
+  final SHA-256 is in FORGE_ROUND3_PLAN.md.
+- 2 Host indicators: ~/.node_modules absent; no .npm-ws file; five npm
+  installations (Homebrew, /usr/local, two fnm versions, Homebrew Cellar):
+  0 of the named markers, 0 lines with 200 or more spaces before code in
+  cli.js, npm-cli.js, npx-cli.js and in all 5,417 script files; no
+  *.inz.* file in Cursor (other named apps absent); crontab has one entry
+  (a script in the owner's home); 55 user launch agents, none with the
+  implant pattern, newest dated 2026-11-10; no process with parent 1 that
+  is node -e, node -i or python3 -u -; shell profile files have no
+  download-and-run line. Node processes with outbound port 443: three in
+  another project folder of the owner (evaluation runs), not parent 1.
+- 3 Branch integration/receipt-authentication-review: one commit 9a0247e9
+  on top of main's history, author and committer the owner's GitHub
+  identity, 2026-11-02 13:23:50 -0500, one second before the recorded
+  force-push (18:23:51Z). Five files: gate/incremental.py,
+  gate/obligations.py, gate/provenance/implementation.lock and two
+  integration tests. No .vscode, font, workflow or hidden-whitespace
+  change. Consistent with the owner's own amend and force-push. All 139
+  commits on remote branches have committer zone -0400 or -0500.
+- 4 Hooks: 14 entries, all .sample; core.hooksPath unset at all levels; no
+  alias, sshCommand, fsmonitor or URL rewrite. Workflows: 41 remote
+  branches, 0 tags; 29 distinct files under .github; 0 with hidden
+  whitespace or download-and-run; pull_request_target appears in
+  proof-gate.yml (the known Stage 4 design, also on main). 32 commits touch
+  .github, all by the owner's identities or GitHub merges. No indicator
+  file name on any ref.
+- 5 Sibling folders under the home folder (depth 7; hidden folders,
+  Library, node_modules, build outputs skipped): 28,788 folders, 59 git
+  clones, 874 package.json, 185 config files, 0 tasks.json: 0 hits.
+- Extra findings: (a) ~/.git-credentials EXISTS: one github.com OAuth
+  token (kind gho_) in plain text, file dated 2026-03-03, mode 600; global
+  credential.helper=store. Any program that ran as this user could read
+  it. (b) gh auth status: two accounts, both OAuth tokens with scopes
+  gist, read:org, repo, workflow; hosts.yml dated 2026-11-16 20:19. That
+  is NOT "a fresh credential scoped to one repository". (c) Remote tags 0,
+  releases 0 (checked without a credential); 41 remote heads still equal
+  the local refs.
+- Verdict: 0 of the listed local persistence indicators on this Mac.
+- Uncertainty: an indicator scan cannot prove that a host is clean. I did
+  not see the attacked repository. Webhooks, deploy keys and Actions
+  secrets need an authenticated call: NOT RUN. Token values were not read
+  out or printed; only host and token kind.
+- Impact: because (b) contradicts the statement "rotation complete", I
+  hold all pushes and all gh API calls until the owner confirms.
+- Next check: after rotation, webhooks, deploy keys, secrets; then push.

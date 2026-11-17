@@ -75,3 +75,75 @@ deterministic, so the final remaining amount differs between runs.
 
 A minter compiled by CakeML; any proof of `minter.ts` or `sink.ts`;
 key storage outside process memory; crash and power-loss tests.
+
+## Version 2 (Round 3, U428): proved decision core and checked dispatcher
+
+Status: research test plus one Dafny proof. `end_to_end=false`. Nothing
+here is part of the gate. The version 1 files and records above are
+unchanged.
+
+### What is proved, and what is not
+
+| Part | Status |
+| --- | --- |
+| `core/RefundMinterCore.dfy`, method `Decide` | PROVED at source level with the pinned Dafny (exit 0, 7 verified, audit 0 findings). A `Sign` result satisfies `Authorizes`: the approved refund specification makes the request eligible, the post-state is the pre-state minus the amount, the intent is the bound one. A `Refuse` result means that no post-state and intent are authorized. It calls the gate-verified `Refund.Assess`. |
+| Two wrong cores (signs everything; keeps the remaining amount) | REJECTED by Dafny (exit 4 each) |
+| Rule "remaining decreases by the amount" | this experiment's choice; the approved specification has no stored state |
+| `dafny build --target js` and the Dafny JavaScript runtime | NOT proved |
+| `minter2.ts`: shape check, text and number conversion, canonical JSON, Ed25519 call, the rule "one signed request per pre-state hash" | NOT proved (tested) |
+| `dispatcher.ts`, `sink.ts`, SQLite, Node, OpenSSL, process isolation | NOT proved (tested) |
+
+The caller of minter version 2 sends only the pre-state and the
+request. Post-state and intent come from the core.
+
+### Dispatcher
+
+`dispatcher.ts` checks each outbox row before the effect, with the
+public key only: canonical claim, pinned ids, Ed25519 signature, the
+outbox intent is the signed intent, the claim continues the chain of
+dispatched claims (start: the pinned initial state hash), and the
+request id is not in the dispatcher's own ledger. The ledger is a file
+outside the database. The ledger line is written before the effect: at
+most once.
+
+### Test (finite): `run_suite_v2.ts`, attempts 0001 and 0002, exit 0 and 0
+
+31 rows, 0 failed, in both runs. Records: `records/v2/`.
+
+- Minter: 84 (state, request) pairs against the gate-built kernel, 0
+  disagreements (11 signed, 73 refused). Seven malformed inputs
+  refused. A caller-supplied post-state and intent are ignored.
+- Dispatcher, 12 cases with raw row changes through a second SQLite
+  connection: changed outbox amount; inserted claim signed by another
+  key; outbox row without a settled row; consistent rewrite of claim,
+  hash, outbox and state with the old signature; copy under a new
+  request id; rows re-inserted after dispatch; swapped signatures; a
+  valid claim of another charge; reversed order; deleted settled row;
+  a broken dispatcher ledger; crash between ledger line and effect.
+  Result: 0 unauthorized effects through the checked dispatcher. The
+  unchecked control dispatcher sends unauthorized effects in 8 of
+  these cases, so the attacks are real.
+- Three cases hold back valid effects (swapped signatures, deleted
+  settled row, broken ledger). That is loss of availability, not an
+  unauthorized effect.
+- Crash case: the first effect is lost and never sent twice. A person
+  must reconcile it.
+
+### Limits
+
+1. "Authorized" in this test means: signed by the minter for exactly
+   the dispatcher's chain head and not sent before. It does not mean
+   "the row that the sink committed".
+2. Case D14: with the minter rule "one signed request per pre-state"
+   switched OFF, an attacker with raw database access can insert a
+   second signed claim for the same state in front of the committed
+   one. The dispatcher then sends that one (800) and holds back the
+   committed ones. No effect is outside definition 1 and the sum stays
+   within the remaining amount, but the outside world and the sink's
+   history differ. With the rule ON (default, case D13) the minter
+   refuses the second claim. The rule is in unproved wrapper code and
+   lives only as long as the minter process.
+3. Assumed, not checked: the dispatcher's ledger file, the dispatcher
+   process and its pinned configuration are out of the attacker's
+   reach; the minter key does not leak.
+4. A finite test. No statement about all attacks.
