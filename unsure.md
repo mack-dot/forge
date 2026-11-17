@@ -14559,3 +14559,23 @@ curl: (6) Could not resolve host: github.com
   with atomic file replacement.
 - NOT RUN: repeat of e4-0001; file-system witness for the input premises.
 - Next check: free disk before heavy runs.
+
+## U412 — owner-directed commit and push of the U407–U411 documents
+- Status: 2026-11-17. Refs U366, U406, U407–U411. Owner instruction:
+  "push what we have btw here".
+- Action: commit 20e10394 on branch backup/forge-local-2026-11-11 (parent
+  7ef2801a): README.md, ROADMAP.md, unsure.md, FORGE_MISSION_STATUS.md,
+  FORGE_MASTER_IDEA.md and five proposals/ folders (148 files). git push
+  to origin, same branch: exit 0.
+- Checks before the push: 0 results/ paths staged; 0 protected paths
+  (spec, spec.lock, policy, gate, schemas) staged; 0 matches for token,
+  private-key or password patterns in the added lines; 0 e-mail-like
+  strings added.
+- Note: 58 of the pushed files contain local absolute paths with the home
+  directory, as in the U366 and U406 commits. No scrub was done; the scrub
+  scope is still the owner's decision (U407).
+- Not done: no change to main; no pull request; results/ not staged; no
+  tag; no release.
+- Impact: none on proof status. M1 open. No profile approved. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: none for this entry. Its own commit is not recorded again.

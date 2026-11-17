@@ -29,6 +29,7 @@ Reports: [Pillar I](proposals/forge2-pillar1-spec-determinism/REPORT.md),
 [Pillar III](proposals/forge2-pillar3-dual-certificate/REPORT.md).
 Diagnostics only: nothing is in the gate, a policy or an evidence
 bundle. M1 and integration EXIT NOT_ESTABLISHED.
+Commit 20e10394 pushed to `origin backup/forge-local-2026-11-11`, exit 0 (U412).
 
 ## Relocation steps S4–S6 proved: Profile A model theorem at every permitted slide; slide-0 regression identical to U404 — U409
 
