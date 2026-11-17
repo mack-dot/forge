@@ -112,7 +112,10 @@ def _gate_ratification(root, trusted, proposed, changed, candidate):
                 'record': path.relative_to(root).as_posix(),
                 'record_sha256': digest(path.read_bytes()),
                 'proposal_sha256': record['proposal_sha256'],
-                'files': files, 'controls': _controls(record)}
+                'files': files, 'controls': _controls(record),
+                # Same shape as a spec approval, for the code that treats approved files as verified inputs.
+                'base_inputs': {name: files[name]['old_sha256'] for name in changed if files[name]['old_sha256']},
+                'approved_inputs': {name: files[name]['new_sha256'] for name in changed if files[name]['new_sha256']}}
     return None
 
 

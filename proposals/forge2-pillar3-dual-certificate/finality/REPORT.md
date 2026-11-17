@@ -54,11 +54,48 @@ signing key; gap 2000 offered to the zero-gap sink; four malformed or
 overbooking mint requests; raw change of a stored allocation (the
 public receipt check fails).
 
+## Where the 299 zero-gap refusals come from (Round 4, U433)
+
+`analyze_refusals.ts` (exit 0; record `records/refusal-breakdown.json`).
+Decision: the compiled Dafny checker. Reference: brute force.
+
+| Optimal proposals | Count | Accepted at gap 0 | Refused at gap 0 | Accepted at gap 2000 |
+| --- | --- | --- | --- | --- |
+| Interval batches (40 batches) | 730 | 491 | 239 | 586 |
+| General batches (6 batches) | 115 | 55 | 60 | 61 |
+| Total | 845 | 546 | 299 | 647 |
+
+| Solver group, batch kind | Optimal | Accepted at gap 0 | Refused at gap 0 |
+| --- | --- | --- | --- |
+| Exact primal-dual, interval | 400 | 400 | 0 |
+| Exact primal-dual, general | 54 | 40 | 14 |
+| Local search, interval | 173 | 90 | 83 |
+| Local search, general | 29 | 14 | 15 |
+| Naive greedy, interval | 95 | 1 | 94 |
+| Naive greedy, general | 22 | 1 | 21 |
+| Buggy, interval | 62 | 0 | 62 |
+| Buggy, general | 10 | 0 | 10 |
+
+Reading:
+
+- The statement "all 299 refusals are on batches without an integer
+  dual" is FALSE. 239 of the 299 are on interval batches.
+- 261 of the 299 are refusals of a proposal whose OWN dual values are
+  too weak; another solver got a zero-gap certificate for the same
+  batch. 38 are on batches for which no solver found a zero-gap
+  certificate (2 of the 6 general batches).
+- With exact dual values on interval batches, completeness in this test
+  is 400 of 400. That is a test result, not a proof of completeness.
+- Soundness in the test: 0 overbooked and 0 non-optimal proposals
+  signed at gap 0 (the proved theorem says the same for all inputs).
+- At gap 2000 bps, 647 of 845 optimal proposals are accepted.
+
 ## Limits
 
-1. 299 optimal proposals got no signature at gap 0. The check is sound,
-   not complete: the solver's dual values were too weak, or the batch
-   has no zero-gap integer certificate. A system needs a fallback.
+1. The check is sound, not complete. 299 optimal proposals got no
+   signature at gap 0: 261 because the solver's dual values were too
+   weak, 38 on batches where no solver found a zero-gap certificate. A
+   system needs a fallback.
 2. Several different certified allocations can exist for one batch.
    The sink commits the first. An attacker with raw database access
    can exchange one certified allocation for another certified one.
