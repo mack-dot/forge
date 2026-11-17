@@ -54,3 +54,35 @@ module only if that control finds a gap.
 Everything above is from reading about 260 lines of gate code. The
 Stage 11 obligations logic and the approval flow were not re-read in
 full. The Linux CI path was not run.
+
+## Control run (Round 2 task 2, U422): the reading-level conclusion is now measured
+
+`run_control.py` builds candidate trees and runs the UNCHANGED
+`gate/incremental.py --profile local` with the trusted side at `HEAD`
+(`c430a5c1`, protected paths clean). attempt-0001: scenario exit 0,
+16 cases, 0 evasions.
+
+| Case group | Gate exit | Gate reason |
+| --- | --- | --- |
+| benign implementation edit only (positive control) | 0 | ACCEPTED |
+| buggy implementation only | 1 | VERIFICATION_REJECTED, Dafny exit 4 |
+| "step 1 alone" (implementation unchanged): policy scope, gate code, toolchain pins, schema, `.github`, `AGENTS.md`, contract binding (7 cases) | 1 each | UNAPPROVED_PROTECTED_CHANGE |
+| both halves in one head tree: policy scope, gate code or pins edit plus buggy implementation (3 cases) | 1 each | UNAPPROVED_PROTECTED_CHANGE |
+| weakened spec with recomputed lock plus buggy implementation | 1 | UNAPPROVED_PROTECTED_CHANGE |
+| the same plus an approval record forged inside the candidate | 1 | UNAPPROVED_PROTECTED_CHANGE (approvals are read from the trusted side) |
+| non-protected evidence metadata edit plus buggy implementation | 1 | VERIFICATION_REJECTED |
+| non-protected evidence metadata edit plus benign implementation | 0 | ACCEPTED (metadata is not an input) |
+
+Result: the first half of a split edit cannot become the new base,
+because every protected-path edit is rejected on its own. No new gate
+module is added. `gate/anchor_diff.py` is NOT needed for these cases.
+
+Limits: 16 cases; the local profile; the GitHub wrapper
+`gate/pr_check.py` was not run (it needs a pull-request event); the
+booking and refund gates were not driven; only the ledger PR gate.
+
+Consequence for gate changes: the same rule rejects EVERY change under
+`gate/` or `toolchain/` in a pull request, also an owner-approved one
+(only a spec plus lock change has an approval path). A gate change such
+as the print-effects diff must enter `main` by the owner's own merge
+outside this check.

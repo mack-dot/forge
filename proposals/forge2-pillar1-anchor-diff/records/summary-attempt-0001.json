@@ -1,0 +1,210 @@
+{
+ "attempt": "attempt-0001",
+ "cases": [
+  {
+   "case": 0,
+   "edits": [
+    "benign"
+   ],
+   "expected_gate_exit": 0,
+   "gate_exit": 0,
+   "gate_last_line": "ACCEPTED: C1 C2 C3 C4 C5; checked=2; reused=10; end_to_end=false",
+   "name": "positive: benign implementation edit only",
+   "note": "legitimate change",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 1,
+   "edits": [
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "VERIFICATION_REJECTED: C1 C2 C3 C4 C5 not established; Dafny exit 4",
+   "name": "buggy implementation only",
+   "note": "proof must fail",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 2,
+   "edits": [
+    "policy_scope"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: policy/tiers.yaml; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: policy scope edit, implementation unchanged",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 3,
+   "edits": [
+    "policy_scope",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: policy/tiers.yaml; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "both halves in one head tree: policy scope edit + buggy implementation",
+   "note": "split-edit",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 4,
+   "edits": [
+    "gate_code"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/backends/dafny.py; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: gate code edit",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 5,
+   "edits": [
+    "gate_code",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/backends/dafny.py; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "gate code edit + buggy implementation",
+   "note": "split-edit",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 6,
+   "edits": [
+    "pins"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: toolchain/pins.json; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: toolchain pins edit",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 7,
+   "edits": [
+    "pins",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: toolchain/pins.json; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "toolchain pins edit + buggy implementation",
+   "note": "split-edit",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 8,
+   "edits": [
+    "schema"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: schemas/evidence.schema.json; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: schema edit",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 9,
+   "edits": [
+    "workflow"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: .github/ISSUE_TEMPLATE/bug.yml; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: workflow edit",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 10,
+   "edits": [
+    "agents"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: AGENTS.md; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: AGENTS.md edit",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 11,
+   "edits": [
+    "contract_binding"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "step 1 alone: contract binding edit",
+   "note": "split-edit first half",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 12,
+   "edits": [
+    "weak_spec",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "weakened spec with recomputed lock + buggy implementation",
+   "note": "unapproved spec change",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 13,
+   "edits": [
+    "forged_approval",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/approvals/forged.json, spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it",
+   "name": "weakened spec + forged approval record in the candidate + buggy implementation",
+   "note": "approval must come from the trusted side",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 14,
+   "edits": [
+    "evidence_metadata",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "VERIFICATION_REJECTED: C1 C2 C3 C4 C5 not established; Dafny exit 4",
+   "name": "non-protected evidence metadata edit + buggy implementation",
+   "note": "metadata cannot rescue a failed proof",
+   "scenario_result": "PASS"
+  },
+  {
+   "case": 15,
+   "edits": [
+    "evidence_metadata",
+    "benign"
+   ],
+   "expected_gate_exit": 0,
+   "gate_exit": 0,
+   "gate_last_line": "ACCEPTED: C1 C2 C3 C4 C5; checked=2; reused=10; end_to_end=false",
+   "name": "non-protected evidence metadata edit + benign implementation",
+   "note": "metadata is not an input of the decision",
+   "scenario_result": "PASS"
+  }
+ ],
+ "end_to_end": false,
+ "evasions": [],
+ "gate": "gate/incremental.py --profile local",
+ "scenario_exit": 0,
+ "trusted_head": "c430a5c1849e13a4d265ec1321136c61a060980e",
+ "trusted_protected_paths_clean": true
+}

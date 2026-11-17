@@ -87,15 +87,15 @@ NEEDED (touches a protected path), OPEN.
 | F1.1c | Planted no-frame ledger spec: two verified implementations with different results on five accounts; determinism lemma rejected; Trojan rejected by the approved spec | DONE (control) | same |
 | F1.1d | "Bounded blindness": the planted bug is invisible with four accounts or fewer | DONE (control): Dafny lemma, exit 0 | [Pillar I report](proposals/forge2-pillar1-spec-determinism/REPORT.md) §5.1 |
 | F1.1e | Generate the `Post` predicate from the spec text instead of writing it by hand (`gate/arbitrage.py`) | NOT RUN; PROPOSAL NEEDED for `gate/` | — |
-| F1.2 | Reject `print`, `{:extern}` and similar in compiled code; close the Stage 5 `print` survivor | PROPOSAL READY for the ledger gate, NOT APPLIED: Dafny `--track-print-effects` plus one caller module; measured exits recorded. Awaits owner approval of the exact diff | [proposal](proposals/forge2-pillar1-print-effects/PROPOSAL.md) |
-| F1.3 | Spec-diff witnesses and receipt for a spec change (test on the no-fee to fee change) | DONE for the fee change as a diagnostic: general lemmas exit 0; five of six witnesses proved, W2 OPEN; false-claim control rejected. Generator for arbitrary spec pairs NOT built | same, §5.2 |
-| F1.4 | Cumulative diff against the approved base; split-edit control | ANALYSIS by reading only: the PR gate already checks the whole head tree against the base with trusted code from the base; no per-commit obligation exists. Two-pull-request control NOT RUN. No new module recommended yet | [analysis](proposals/forge2-pillar1-anchor-diff/ANALYSIS.md) |
+| F1.2 | Reject `print` in compiled code; close the Stage 5 `print` survivor | MEASURED, NOT APPLIED. Owner approved the three-file diff; it regresses Stages 5, 6, 8 and was reverted (U419). Version 2 (six protected files) passes Stages 1, 2, 3, 5, 8 in a scratch worktree; Stage 6 `report` cannot pass after any gate change. Booking and refund need no extra caller (U423). Awaits owner decisions | [version 2](proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md) |
+| F1.3 | Spec-diff witnesses and receipt for a spec change | DONE as diagnostics for two pairs: fee change (all six witnesses proved; W2 with isolated assertions, U418) and approved refund spec versus a capped variant (eight witnesses). General lemmas hand-written; generator for arbitrary pairs NOT built | [Pillar I report](proposals/forge2-pillar1-spec-determinism/REPORT.md) §5.2, §6 |
+| F1.4 | Cumulative diff against the approved base; split-edit control | DONE as a control: unchanged `gate/incremental.py`, 16 cases, 0 evasions (U422). No new gate module | [analysis and control](proposals/forge2-pillar1-anchor-diff/ANALYSIS.md) |
 | F2.0 | Design note: token format, trusted base, exact claim text, reuse of M1 theorems | DONE as a design note plus a protocol MODEL: pinned Dafny exit 0 (22 verified) under four named assumptions; four weakened variants rejected. No program, key or store is proved | [design note](proposals/forge2-pillar2-finality-protocol/DESIGN.md) |
-| F2.1 | Checker and minter program; binary-level claim | NOT RUN | — |
-| F2.2 | Atomic sink with compare-and-swap and unique request id | NOT RUN | — |
-| F2.3 | Adversarial test suite (finite) | NOT RUN | — |
+| F2.1 | Checker and minter program | RESEARCH TEST: `minter.ts`, a separate process with an Ed25519 key, signs only what the Dafny-generated refund kernel authorizes (U420). No binary-level claim; no proof of the minter | [refund finality report](proposals/forge2-pillar2-refund-finality/REPORT.md) |
+| F2.2 | Atomic sink with compare-and-swap and unique request id | RESEARCH TEST: `sink.ts` on SQLite, holds only the public key; not proved | same |
+| F2.3 | Adversarial test suite (finite) | DONE (finite): suite exit 0 twice; 38 of 38 attacks as expected; 0 unauthorized settlements; 4 of 4 database-tamper cases detected by audit, not prevented | same |
 | F3.1 | Integer weak-duality check with quality theorem, witnesses and controls | DONE as a diagnostic outside the gate; pinned Dafny exit 0 (46 verified); two controls rejected | [Pillar III report](proposals/forge2-pillar3-dual-certificate/REPORT.md) |
-| F3.2 | Solver evolution benchmark; new evidence method `certified_runtime_check` | NOT RUN; PROPOSAL NEEDED for `policy/`, `schemas/` | — |
+| F3.2 | Solver evolution benchmark; new evidence method `certified_runtime_check` | BENCHMARK DONE (finite): 25 solver functions, 2,300 checks, 0 accepted overbookings, 0 Dafny runs per version (U421). The evidence method is NOT proposed yet (needs `policy/`, `schemas/` proposal and an approved batch-booking intent) | [benchmark report](proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md) |
 | F4 | Schemas, three-regime benchmark, documents | NOT RUN | — |
 
 ## Order
@@ -104,6 +104,13 @@ F1.1, F3.1, F1.1d, F1.3 (done as diagnostics) → proposals with
 exact diffs for F1.1e, F1.2, F1.4, F3.2 → F2.0 design note → F2 build →
 F4. Each step ends with real exits in the item's report and an
 `unsure.md` entry.
+
+## Round 2 (owner decisions of 2026-11-17)
+
+Plan and live status: [FORGE_ROUND2_PLAN.md](FORGE_ROUND2_PLAN.md).
+Decisions: print-effects diff approved; HOL rebuild within 90 minutes;
+Ed25519 and Refund first for Pillar II; commit at checkpoints, no push
+before the final table.
 
 ## Relation to M1
 

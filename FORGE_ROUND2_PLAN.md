@@ -52,11 +52,11 @@ recorded), PARTIAL.
 | # | Step | Status | Exits / record |
 | --- | --- | --- | --- |
 | 1A | Commit the U413–U416 round (paths in new files scrubbed) | DONE | commit `93712d2c`; one path scrubbed; U417 |
-| 1B | Apply `candidate.diff`; regenerate evidence; Stage 0–8 EXITs; print control | BLOCKED | applied, measured, REVERTED: Stages 5, 6, 8 regress (refund spec lock pins `toolchain/pins.json`). Ledger gate rejects both planted print bugs with the change (exit 1) and accepts them without it (exit 0). Needs a complete version 2 with further protected files. U419; [record](proposals/forge2-pillar1-print-effects/REGRESSION.md) |
-| 1C | Companion candidate diff for Booking and Refund gates (not applied) | TODO | |
+| 1B | Apply `candidate.diff`; regenerate evidence; Stage 0–8 EXITs; print control | BLOCKED (owner decision) | Approved diff applied, measured, reverted (U419). Complete version 2 built and measured in a scratch worktree: Stages 1, 2, 3, 5, 8 exit 0; Stage 6 `report` exit 1 after ANY gate change (record pins the old gate bytes); Stage 4 and 7 fail in the baseline too (GitHub 403, Docker). Not applied. [PROPOSAL-V2](proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md); U423 |
+| 1C | Companion candidate diff for Booking and Refund gates (not applied) | DONE | no extra diff needed: existing gate inputs already call the methods; `check_booking_refund.py` scenario exit 0 (8 rows); U423 |
 | T1a | W2 proved without a higher resource limit | DONE | attempt-0013 exit 0; 61 batches, largest 707,136; U418 |
 | T1b | Spec-pair diff harness on two pairs (Ledger fee; Refund variant) | PARTIAL | both pairs proved (attempt-0014 exit 0, 13 cases); witnesses generated from tables; general lemmas hand-written; U418 |
-| T2 | Split-edit control against the existing PR gate | TODO | |
+| T2 | Split-edit control against the existing PR gate | DONE | `run_control.py` attempt-0001 scenario exit 0; 16 cases; 0 evasions; no new gate module; U422 |
 | T3 | Refund minter (Ed25519) + SQLite sink + ≥ 30 attacks | DONE (finite test) | suite exit 0 twice; 38 of 38 attacks as expected; 0 unauthorized settlements; U420; [report](proposals/forge2-pillar2-refund-finality/REPORT.md) |
 | T4 | Pillar III: checker (done as F3.1) + 25-version solver benchmark | DONE (finite benchmark) | bench exit 0; 2,300 checks; 0 accepted overbookings; 0 Dafny runs per version; U421; [report](proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md) |
 | T5a | Toolchain rebuild and M1 replay within 90 minutes | RUNNING | started 12:42:33 local; hard stop at 5,400 s; `results/round2-m1-rebuild-20261117/attempt-0001/commands.json` |

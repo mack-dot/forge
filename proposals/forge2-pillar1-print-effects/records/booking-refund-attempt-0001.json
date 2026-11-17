@@ -1,0 +1,79 @@
+{
+ "attempt": "attempt-0001",
+ "end_to_end": false,
+ "rows": [
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "first_error": "",
+   "gate_files": "refund",
+   "implementation": "approved",
+   "result": "PASS",
+   "track_print_effects": false
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "first_error": "",
+   "gate_files": "refund",
+   "implementation": "approved",
+   "result": "PASS",
+   "track_print_effects": true
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "first_error": "",
+   "gate_files": "booking",
+   "implementation": "approved",
+   "result": "PASS",
+   "track_print_effects": false
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "first_error": "",
+   "gate_files": "booking",
+   "implementation": "approved",
+   "result": "PASS",
+   "track_print_effects": true
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "first_error": "",
+   "gate_files": "refund",
+   "implementation": "print-marked mutant",
+   "result": "PASS",
+   "track_print_effects": false
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 2,
+   "first_error": "Error: to call a method with print effects, the enclosing method must be marked with {:print}",
+   "gate_files": "refund",
+   "implementation": "print-marked mutant",
+   "result": "PASS",
+   "track_print_effects": true
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "first_error": "",
+   "gate_files": "booking",
+   "implementation": "print-marked mutant",
+   "result": "PASS",
+   "track_print_effects": false
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": 2,
+   "first_error": "Error: to call a method with print effects, the enclosing method must be marked with {:print}",
+   "gate_files": "booking",
+   "implementation": "print-marked mutant",
+   "result": "PASS",
+   "track_print_effects": true
+  }
+ ],
+ "scenario_exit": 0
+}

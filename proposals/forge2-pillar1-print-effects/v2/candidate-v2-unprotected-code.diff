@@ -1,0 +1,148 @@
+diff --git a/bugs/print_effect.dfy b/bugs/print_effect.dfy
+new file mode 100644
+index 00000000..fa2c8d85
+--- /dev/null
++++ b/bugs/print_effect.dfy
+@@ -0,0 +1,53 @@
++include "../spec/LedgerSpec.dfy"
++
++module Ledger refines LedgerSpec {
++  // Planted bug (U419): a print statement in Apply (the Stage 5 print_effect mutant). The gate must reject it.
++  lemma TotalRemove(balances: map<int, int>, account: int)
++    requires account in balances
++    ensures Total(balances - {account}) == Total(balances) - balances[account]
++    decreases |balances|
++  {
++    var picked :| picked in balances &&
++      Total(balances) == balances[picked] + Total(balances - {picked});
++    if picked != account {
++      TotalRemove(balances - {picked}, account);
++      TotalRemove(balances - {account}, picked);
++      assert (balances - {picked}) - {account} ==
++        (balances - {account}) - {picked};
++    }
++  }
++
++  lemma TotalReplace(balances: map<int, int>, account: int, value: int)
++    requires account in balances
++    ensures Total(balances[account := value]) ==
++      Total(balances) - balances[account] + value
++  {
++    TotalRemove(balances, account);
++    TotalRemove(balances[account := value], account);
++    assert balances - {account} == balances[account := value] - {account};
++  }
++
++  method Apply ... {
++    print "unrequested diagnostic\n";
++    if IsRetry(state, id, request) {
++      next := state;
++      outcome := Ok;
++    } else if IsFreshValid(state, id, request) {
++      var debit := state.balances[request.sender] - request.amount - 1;
++      TotalReplace(state.balances, request.sender, debit);
++      var debited := state.balances[request.sender := debit];
++      var credit := state.balances[request.recipient] + request.amount;
++      TotalReplace(debited, request.recipient, credit);
++      var credited := debited[request.recipient := credit];
++      var fee := state.balances[0] + 1;
++      TotalReplace(credited, 0, fee);
++      next := LedgerState(
++        credited[0 := fee],
++        state.accepted[id := request]);
++      outcome := Ok;
++    } else {
++      next := state;
++      outcome := Rejected;
++    }
++  }
++}
+diff --git a/bugs/print_effect_marked.dfy b/bugs/print_effect_marked.dfy
+new file mode 100644
+index 00000000..67a4d130
+--- /dev/null
++++ b/bugs/print_effect_marked.dfy
+@@ -0,0 +1,53 @@
++include "../spec/LedgerSpec.dfy"
++
++module Ledger refines LedgerSpec {
++  // Planted bug (U419): a print statement in Apply and a {:print} attribute on Apply. The gate must reject it.
++  lemma TotalRemove(balances: map<int, int>, account: int)
++    requires account in balances
++    ensures Total(balances - {account}) == Total(balances) - balances[account]
++    decreases |balances|
++  {
++    var picked :| picked in balances &&
++      Total(balances) == balances[picked] + Total(balances - {picked});
++    if picked != account {
++      TotalRemove(balances - {picked}, account);
++      TotalRemove(balances - {account}, picked);
++      assert (balances - {picked}) - {account} ==
++        (balances - {account}) - {picked};
++    }
++  }
++
++  lemma TotalReplace(balances: map<int, int>, account: int, value: int)
++    requires account in balances
++    ensures Total(balances[account := value]) ==
++      Total(balances) - balances[account] + value
++  {
++    TotalRemove(balances, account);
++    TotalRemove(balances[account := value], account);
++    assert balances - {account} == balances[account := value] - {account};
++  }
++
++  method {:print} Apply ... {
++    print "unrequested diagnostic\n";
++    if IsRetry(state, id, request) {
++      next := state;
++      outcome := Ok;
++    } else if IsFreshValid(state, id, request) {
++      var debit := state.balances[request.sender] - request.amount - 1;
++      TotalReplace(state.balances, request.sender, debit);
++      var debited := state.balances[request.sender := debit];
++      var credit := state.balances[request.recipient] + request.amount;
++      TotalReplace(debited, request.recipient, credit);
++      var credited := debited[request.recipient := credit];
++      var fee := state.balances[0] + 1;
++      TotalReplace(credited, 0, fee);
++      next := LedgerState(
++        credited[0 := fee],
++        state.accepted[id := request]);
++      outcome := Ok;
++    } else {
++      next := state;
++      outcome := Rejected;
++    }
++  }
++}
+diff --git a/scripts/exit_stage_5.py b/scripts/exit_stage_5.py
+index 39e4113d..06f6ec73 100644
+--- a/scripts/exit_stage_5.py
++++ b/scripts/exit_stage_5.py
+@@ -166,12 +166,15 @@ def mutations(session):
+                         require(bool(locations), 'Unclassified verifier failure; inspect real diagnostics for ' + name)
+                         row.update(classification='killed', violated_claims=claims,
+                                    violated_contract_locations=locations)
++                elif verified.returncode == 2 and 'print' in (verified.stdout + verified.stderr).lower():
++                    row.update(classification='effect_rejected',
++                               reason='Dafny print-effect tracking rejected the program; not a spec-proof kill.')
+                 else:
+                     raise RuntimeError('TOOLCHAIN_OR_INPUT_ERROR: unexpected verify exit ' + str(verified.returncode))
+         rows.append(row)
+         (session.folder / 'mutation-progress.json').write_bytes(canonical(rows))
+     counts = {name: sum(x['classification'] == name for x in rows)
+-              for name in ('killed', 'survived', 'invalid', 'audit_rejected', 'inconclusive')}
++              for name in ('killed', 'survived', 'invalid', 'audit_rejected', 'inconclusive', 'effect_rejected')}
+     require(counts['killed'] > 0 and counts['survived'] > 0, 'Missing actual killed/surviving controls')
+     require(next(x for x in rows if x['id'] == 'invalid_source')['classification'] == 'invalid', 'Invalid control misclassified')
+     require(next(x for x in rows if x['id'] == 'sneaky_assume')['classification'] == 'audit_rejected', 'Audit control misclassified')
+@@ -179,7 +182,7 @@ def mutations(session):
+     rate = {'numerator': counts['killed'], 'denominator': denominator,
+             'fraction': str(counts['killed']) + '/' + str(denominator),
+             'percent': format(100 * counts['killed'] / denominator, '.2f'),
+-            'excluded': ['invalid', 'audit_rejected', 'inconclusive']}
++            'excluded': ['invalid', 'audit_rejected', 'inconclusive', 'effect_rejected']}
+     return {'result': 'passed', 'mutants': rows, 'counts': counts, 'spec_kill_rate': rate,
+             'survivors': [x['id'] for x in rows if x['classification'] == 'survived'],
+             'limits': ['This is a finite curated mutation set, not an estimate for arbitrary bugs.',

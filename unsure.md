@@ -14808,3 +14808,52 @@ curl: (6) Could not resolve host: github.com
   the Stage 6 comparison is between different quantities (re-proving
   changed proofs versus checking answers).
 - Impact: none on claims. end_to_end=false.
+
+## U422 — Round 2 task 2: split-edit control against the existing incremental PR gate: 16 cases, 0 evasions; no new gate module
+- Status: 2026-11-17. Refs U416, U417. No gate code added or changed.
+- Evidence: proposals/forge2-pillar1-anchor-diff/run_control.py,
+  results/round2-split-edit-20261117/attempt-0001, scenario exit 0. Trusted
+  side: HEAD c430a5c1, protected paths clean. Unchanged
+  gate/incremental.py --profile local on 16 candidate trees: benign
+  implementation edit accepted (gate exit 0); buggy implementation
+  rejected (1, Dafny exit 4); every protected-path edit alone or with a
+  buggy implementation rejected (1, UNAPPROVED_PROTECTED_CHANGE): policy
+  scope, gate code, toolchain pins, schema, .github, AGENTS.md, contract
+  binding, weakened spec with recomputed lock, forged approval record in
+  the candidate; evidence metadata edits have no effect on the decision.
+- Resolves U416's open question for these cases: the first half of a split
+  edit is rejected on its own.
+- Limits: 16 cases; local profile; pr_check.py (GitHub wrapper) not run;
+  booking and refund gates not driven.
+- Observation: the gate also rejects an owner-approved gate or toolchain
+  change inside a pull request; only spec plus lock has an approval path.
+- Impact: no new module. end_to_end=false.
+
+## U423 — Decision 1: complete print-effects change (version 2) built and measured in a scratch worktree; Stage 6 report cannot pass after any gate change; booking and refund need no new caller
+- Status: 2026-11-17. Refs U414, U419, U422. Nothing applied to the real
+  tree; protected paths equal HEAD.
+- Version 2 = approved three files + toolchain/linux-pins.json +
+  spec/refund/spec.lock (digest of toolchain/pins.json) + gate/refund.py
+  (digest of that lock) + scripts/exit_stage_5.py (class effect_rejected)
+  + two planted bugs. Diffs and build script in
+  proposals/forge2-pillar1-print-effects/v2.
+- Measured in the scratch worktree (28 cases): Stages 1, 2, 3, 5, 8 exit 0
+  (19 cases; Stage 5 mutations: 8 killed, 1 survived, 1 effect_rejected,
+  kill rate 8/9); Stage 4 exit 1 (HTTP 403) and Stage 7 exit 1 (Docker) as
+  in the baseline; Stage 6 report exit 1.
+- Stage 6: its report check pins the digests of the gate files of the
+  original experiment (TRUSTED_INPUTS). After a fresh benchmark run (exit
+  0) it fails with "Input identity check names another experiment". Any
+  change of gate/backends/dafny.py or toolchain/pins.json breaks this EXIT.
+  A repair is a decision about the Stage 6 record, not a mechanical step.
+- Also stale after the change, not touched: gate/provenance/
+  implementation.lock, spec/provenance/spec.lock (Stage 9), bench/
+  manifest.json, bench/freeze.py (Stage 10).
+- Step 1C: check_booking_refund.py scenario exit 0 (8 rows). The existing
+  refund bindings and the booking witness file already call the methods
+  from non-printing methods; with the option the print-marked mutants are
+  rejected (exit 2), without it accepted (exit 0). No extra caller diff.
+- Result against the owner's condition "100% green Stage 0-8": NOT met
+  and not reachable by this change alone (Stage 6), apart from the two
+  environmental failures (Stage 4, Stage 7).
+- Next check: owner decisions listed in PROPOSAL-V2.md.
