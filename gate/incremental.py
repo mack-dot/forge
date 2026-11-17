@@ -28,13 +28,14 @@ sys.dont_write_bytecode = True
 
 from common import ROOT, Rejected, canonical, digest, host_profile, pin_file, relative, read_json
 from approval import authorize
+from ratification import run_controls
 import coverage
 import obligations
 from dependencies import check_dependencies
 from backends import dafny
 
 
-PROTECTED_DIRS = ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github')
+PROTECTED_DIRS = ('gate', 'policy', 'spec', 'toolchain', 'schemas', '.github', 'governance')
 # Besides the protected trees, the files that obligations execute or that select what they
 # execute are protected: a PR cannot change the harness that tests it.
 PROTECTED_FILES = ('spec.lock', 'AGENTS.md', 'scripts/javascript_env.py', 'scripts/build_model.py',
@@ -231,13 +232,18 @@ def check(candidate, output, work, operation, profile='local', *, cache=None):
     state = dafny.prepare('impl/Ledger.dfy', profile)
     trusted_before = protected_manifest(ROOT)
     proposed_before = protected_manifest(candidate)
-    approval = authorize(ROOT, trusted_before, proposed_before)
+    approval = authorize(ROOT, trusted_before, proposed_before, candidate)
+    ratification = approval if approval and approval.get('kind') == 'gate_ratification' else None
+    if ratification:
+        operation['ratification_controls'] = run_controls(ROOT, candidate, ratification, work, protected_manifest)
+        operation['gate_ratification'] = ratification
     inventory = coverage.inventories(ROOT, candidate)
-    operation['spec_approval'] = approval
+    operation['spec_approval'] = None if ratification else approval
     baseline = source_bytes(ROOT)
     proposed = source_bytes(candidate)
     paths = framework_paths() + state['input_paths'] + [Path(__file__).resolve(), ROOT / 'gate/approval.py',
-                                                        ROOT / 'gate/coverage.py', ROOT / 'gate/obligations.py']
+                                                        ROOT / 'gate/coverage.py', ROOT / 'gate/obligations.py',
+                                                        ROOT / 'gate/ratification.py']
     if approval:
         paths += [ROOT / approval['record'], ROOT / read_json(ROOT / approval['record'])['proposal']]
     if profile == 'linux':
@@ -319,7 +325,8 @@ def check(candidate, output, work, operation, profile='local', *, cache=None):
         for claim in sorted(dafny.CLAIMS)
     ], backend_details={
         'toolchain_profile': profile,
-        'spec_approval': approval,
+        'spec_approval': None if ratification else approval,
+        **({'gate_ratification': ratification} if ratification else {}),
         'verification_options': SNAPSHOT_OPTIONS,
         'solver_sha256': state['pins']['z3']['executable_sha256'],
         'verified_obligations': names,
