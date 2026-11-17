@@ -1,0 +1,30 @@
+{
+ "case": "s2-repeat",
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "s2-repeat.sml",
+ "source_sha256": "ef489f30bde2b3fe61e88a4274c64a6e5ef9b509471468762c37baeb6fd94026",
+ "resource_guard": {
+  "memory_free_percent": 37,
+  "disk_free_gib": 9.01,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 121.916,
+ "child_user_cpu_seconds": 113.167,
+ "child_max_rss_bytes": 3221356544,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "40c8e4ea555a90d175869e76a333655d2621e188ccd73542f5d2be30803bf79c",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundSlideEntryTheory.dat": "41414daa1dc21f3fa1be0be9875353cc4d010292482f677d135332efc717b88f",
+  ".hol/objs/forge_refundSlideEntryTheory.sig": "d6465a5ddac3e854949181083733c3c021454c4fe9afe9ebd7775046821838e8",
+  ".hol/objs/forge_refundSlideEntryTheory.sml": "7102943e265788c3a5286df32acecc88cabd5148a22b8348b8e604e3fb35b41d"
+ },
+ "inputs_unchanged_after": true
+}

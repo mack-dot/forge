@@ -9,6 +9,69 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## Master idea designated by the owner; first two items checked outside the gate — U410, U411
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. No protected edit, replay or deletion.
+Record: [FORGE_MASTER_IDEA.md](FORGE_MASTER_IDEA.md).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 -I -B proposals/forge2-pillar1-spec-determinism/run_checks.py` (attempt-0003; attempt-0001 exit 1, attempt-0002 exit 0) |0|pinned Dafny: determinism lemma verifies for Ledger, Booking, Refund specs (checker exits 0); planted no-frame spec: two implementations verify, determinism lemma rejected (4), Trojan rejected by approved spec (4) |
+| `python3 -I -B proposals/forge2-pillar3-dual-certificate/run_checks.py` (attempt-0002; attempt-0001 exit 1) |0|`BookingDualCert.dfy` 46 verified, 0 errors; two planted-bug controls rejected (4) |
+| `dafny audit` on the four new positive files |0|0 findings each |
+| `go-imp4.sh imp4-0001` (M1, U409) |0|15 statements of the S4–S6 theory match; 0 mismatches |
+| First record update for U410/U411 |did not start|disk full (ENOSPC); redone later |
+| F1.1d, F1.1e, F1.2, F1.3, F1.4, F2, F3.2, F4 |NOT RUN|gate, policy and schema items need proposals with exact diffs |
+| Repeat of `e4-0001`; file-system witness |NOT RUN|disk |
+
+Reports: [Pillar I](proposals/forge2-pillar1-spec-determinism/REPORT.md),
+[Pillar III](proposals/forge2-pillar3-dual-certificate/REPORT.md).
+Diagnostics only: nothing is in the gate, a policy or an evidence
+bundle. M1 and integration EXIT NOT_ESTABLISHED.
+
+## Relocation steps S4–S6 proved: Profile A model theorem at every permitted slide; slide-0 regression identical to U404 — U409
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL run. Profile A not approved. No commit, push, replay, hosted
+action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `go-e4.sh e4-0001` |0|`ffi_interfer_ok_iff_contract_sl`; `refund_env_ok_sl_iff_installed_residual`; `refund_profile_a_sl`; `refund_profile_a_sl_every_machine_run`; slide-0 instances `aconv` to U404; premises 1–4 satisfiable at slide 0x4000; base-sensitivity control; 17 theorems |
+| Repeat; import check for the new theory; file-system witness |NOT RUN|disk below the runner guard |
+| `refund_env_ok_sl` for a real environment; entry state; loader |NOT ESTABLISHED|assumed |
+| Clean replay; independent replay |NOT RUN| |
+
+[Report](proposals/refund-executable-feasibility/m1-slide-s4-s6-20261117/REPORT.md).
+Memory failures: none. Tool failures: none. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Relocation step S3 proved at every permitted slide: 28 of 30 installed-state clauses from the entry premise; S4–S6 not started — U407
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Local HOL runs. Profile A not approved. No commit, push, replay, hosted
+action, protected edit or deletion.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `s1-repeat`; `s2-repeat` (U405 sources) |0; 0|theory objects byte-identical to U405 |
+| `run_arm8_case.py f1-0001` |0|`cml_main_run_frame_sl`; run statement identical to stored `cml_main_run_sl` |
+| `go-d3.sh d3-0003` (after `d3-0001`, `d3-0002` exit 1 authoring) |0|frame keeps image; shifted domain lemmas; `refund_end_state_sl_established`; 27 theorems |
+| `go-a3.sh a3-0006` (after `a3-0001`–`0003`, `0005` exit 1 authoring; `a3-0004` exit 1 memory) |0|23 + 5 clauses; `refund_installed_from_entry_reduced_sl`; residual identical to stored `rest2` |
+| `go-sat.sh sat-0002` (after two guard refusals exit 3, disk < 3 GiB; `sat-0001` exit 1 authoring) |0|entry and heap premises satisfiable at slide 0x4000 (constructed model state) |
+| `go-imp.sh imp-0002` (after `imp-0001` exit 1 check-script defect) |0|34 statements of U405 and U407 theories; 0 mismatches; 4 checker controls |
+| Repeats of U407 cases |NOT RUN| |
+| S4, S5, S6 of the slide proof |NOT RUN| |
+| `interference_ok`, `ffi_interfer_ok` at a slide |NOT ESTABLISHED|premise `refund_installed_rest2` |
+| Loader, dyld, C run-time, real process; A8 review; profile approval |NOT ESTABLISHED|assumed or open |
+| Clean replay; independent replay |NOT RUN| |
+| Scrub of pushed logs |NOT RUN|read-only scan only; needs owner decision |
+
+[Report](proposals/refund-executable-feasibility/m1-slide-s3-20261117/REPORT.md).
+Memory failures: one (`a3-0004`). Resource-guard refusals: two (not
+bypassed). Tool failures: none. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Relocation steps S1 and S2 proved for every page-aligned, non-wrapping slide; S3–S6 open — U405
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

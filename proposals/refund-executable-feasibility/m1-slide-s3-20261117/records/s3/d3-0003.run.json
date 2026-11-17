@@ -1,0 +1,30 @@
+{
+ "case": "d3-0003",
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "d3-0003.sml",
+ "source_sha256": "9611b3cbbdda9ff374111f90e68e767e9efbcbc4fa7f313b667488b33f336170",
+ "resource_guard": {
+  "memory_free_percent": 53,
+  "disk_free_gib": 5.69,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 111.14,
+ "child_user_cpu_seconds": 87.06,
+ "child_max_rss_bytes": 2866315264,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "df8d4e5deb6d5074bf56473fff325f150d4b445d07bbc51a55ca30e487595cb2",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundSlideDomainsTheory.dat": "439fe5149bb5c0894e626eddcfa4bfe98908b664bb9a705ff838aa075b5a7b15",
+  ".hol/objs/forge_refundSlideDomainsTheory.sig": "bc793c6c1c5dbc9ea780bb0496322f117b4b74bac557e460405506d84a9d5ee6",
+  ".hol/objs/forge_refundSlideDomainsTheory.sml": "91c73ec8b61921eae7f48249b8564d6b4a3832b331c9c7de3ada17fcc73be86c"
+ },
+ "inputs_unchanged_after": true
+}

@@ -1,0 +1,74 @@
+{
+ "attempt": "attempt-0001",
+ "cases": [
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/LedgerDeterminism.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 11 verified, 0 errors",
+   "name": "approved-ledger-spec-is-deterministic",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameImpls.dfy",
+   "kind": "control-positive",
+   "last_line": "Dafny program verifier finished with 23 verified, 0 errors, 1 out of resource",
+   "name": "planted-noframe-spec-two-implementations-verify",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "FAIL"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameDeterminism.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 10 verified, 1 error",
+   "name": "planted-noframe-spec-determinism-rejected",
+   "required_output_text": "SpecIsDeterministic",
+   "required_output_text_found": false,
+   "scenario_result": "FAIL"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/TrojanAgainstApprovedSpec.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 13 verified, 0 errors, 1 out of resource",
+   "name": "trojan-against-approved-spec-rejected",
+   "required_output_text": "postcondition",
+   "required_output_text_found": false,
+   "scenario_result": "FAIL"
+  }
+ ],
+ "dafny_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+ "dafny_version_exit": 0,
+ "dafny_version_pinned": true,
+ "end_to_end": false,
+ "inputs": {
+  "proposals/forge2-pillar1-spec-determinism/LedgerDeterminism.dfy": "4120586cc03dd33602edbde1e7da51f885baedcb7d89c93f58b2d2503a7fd2be",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/LedgerSpecNoFrame.dfy": "4fa6bdc3c80498f30d02a00783984c36aaa2e9be883840d720d62b9e12015d8e",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameDeterminism.dfy": "43413ced9840bf07501bda54aee1450c9c62d5f58469819cbe20e64fb4accab9",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameImpls.dfy": "b8de9fb09571aa117c8a715cadbab989a1c04d383b3ba0e5eb06e45237e1fcdd",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/TrojanAgainstApprovedSpec.dfy": "d00852f963c9e2342129de18441f57558dba62906e86c86cfb4bcc66a87553bb",
+  "spec.lock": "32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69",
+  "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+ },
+ "options": [
+  "--solver-path",
+  ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+  "--resource-limit",
+  "1000000",
+  "--verification-time-limit",
+  "0",
+  "--cores",
+  "1",
+  "--verify-included-files"
+ ],
+ "scenario_exit": 1
+}

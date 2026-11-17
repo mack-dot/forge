@@ -110,17 +110,34 @@ exist. No assurance profile is approved. `end_to_end=false`.
   (`refund_env_ok`) and a canonical request on standard input, every run of
   the model machine ends with the specified six-field output or stops at a
   resource limit; the installer entry is never reached.
-- Relocation, first steps (U405): the 27 start-up instructions and the memory
-  domains are proved for every page-aligned, non-wrapping load slide. The
-  remaining steps are not run.
+- Relocation (U405–U409): the same model theorem is proved for every
+  page-aligned, non-wrapping load slide (`refund_profile_a_sl`). The slide-0
+  instance is term-identical to the U404 theorem. The premises hold together
+  at one nonzero slide for a constructed model state; that is not a real run.
 - Open: profile approval; review of the Dafny-to-HOL contract identification;
-  the rest of the slide proof; the real loader, C run-time, `libSystem` and
-  processor (assumed, not proved); replays.
+  the environment predicate for the real FFI code; the real loader, C
+  run-time, `libSystem` and processor (assumed, not proved); replays.
 
 Records: [M1 closure audit](proposals/refund-executable-feasibility/m1-closure-audit-20261116/M1_CLOSURE_AUDIT.md),
 [U404 report](proposals/refund-executable-feasibility/m1-profile-a-slide0-20261117/REPORT.md),
 [U405 report](proposals/refund-executable-feasibility/m1-slide-s1-s2-20261117/REPORT.md),
+[U407 report](proposals/refund-executable-feasibility/m1-slide-s3-20261117/REPORT.md),
+[U409 report](proposals/refund-executable-feasibility/m1-slide-s4-s6-20261117/REPORT.md),
 [status](FORGE_MISSION_STATUS.md).
+
+### In progress: master idea (owner priority from 2026-11-17)
+
+[FORGE_MASTER_IDEA.md](FORGE_MASTER_IDEA.md): spec clearing, a small proved
+checker in front of each effect, and runtime certificates. It is not a stage
+and nothing from it is in the gate. First diagnostics with the pinned Dafny
+(one local run each):
+
+- The approved Ledger, Booking and Refund specs each allow at most one result
+  per input ([report](proposals/forge2-pillar1-spec-determinism/REPORT.md)).
+  This shows "no choice", not "matches intent".
+- An integer weak-duality check with a proved quality bound for a batch
+  booking problem ([report](proposals/forge2-pillar3-dual-certificate/REPORT.md)).
+  It is not an approved spec.
 
 ## What is **not** established
 

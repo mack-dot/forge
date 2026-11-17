@@ -11,6 +11,31 @@ labels remain historical and must not be treated as the current priority order.
 
 
 
+## Resume here — master idea designated; Pillar I and III first checks pass; M1 model chain complete to S6 (U409–U411)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved.
+
+- Owner priority (2026-11-17): [FORGE_MASTER_IDEA.md](FORGE_MASTER_IDEA.md). Next items: F1.1d, F1.3, then
+  proposals with exact diffs for gate, policy and schema changes; F2.0 design note.
+- M1: [S4–S6 report](proposals/refund-executable-feasibility/m1-slide-s4-s6-20261117/REPORT.md).
+  `refund_profile_a_sl` proved for every `slide_ok sl` (model). Open: profile approval; A8 review; real FFI
+  boundary; entry state; file-system witness; repeats; replays.
+- Blocker for heavy runs: free disk (0.1–5.9 GiB free on 2026-11-17).
+
+## Resume here — slide step S3 proved; S4 is next (U407)
+
+M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved. U407 not committed.
+
+- [Report](proposals/refund-executable-feasibility/m1-slide-s3-20261117/REPORT.md).
+- Proved (one local run each): `cml_main_run_frame_sl`,
+  `refund_end_state_sl_established`, `refund_installed_from_entry_reduced_sl`
+  (28 of 30 clauses at `refund_mc (sl + 0x1000040D0w) envmc`); premises
+  satisfiable at slide 0x4000 (constructed state). U405 repeats and import
+  check done.
+- Open: S4–S6; the two environment clauses; reachable-call FFI refinement;
+  A8 review; profile approval; replays; scrub decision for pushed logs;
+  free disk before heavy runs.
+
 ## Resume here — slide steps S1, S2 proved; S3 is next (U405)
 
 M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved.

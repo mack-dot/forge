@@ -1,0 +1,82 @@
+<<HOL message: Created theory "forge_refundSlideSat">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSlideSat)>>
+Saved theorem _______ "sat_mem_sl_image"
+CHECKED sat_mem_sl_image
+⊢ refund_image_mem 16384w sat_mem_sl
+Saved theorem _______ "sat_sl_slot_0"
+CHECKED sat_sl_slot_0
+⊢ mem_dword sat_mem_sl 0x100030000w = 0x200000000w
+Saved theorem _______ "sat_sl_slot_8"
+CHECKED sat_sl_slot_8
+⊢ mem_dword sat_mem_sl 0x100030008w = 0x200010000w
+Saved theorem _______ "sat_sl_slot_16"
+CHECKED sat_sl_slot_16
+⊢ mem_dword sat_mem_sl 0x100030010w = 0x200020000w
+Saved theorem _______ "sat_sl_separation"
+CHECKED sat_sl_separation
+⊢ ∀i j. i < 40 ∧ j < 200496 ⇒ 0x200000000w + n2w i ≠ 0x100004000w + n2w j
+Saved theorem _______ "refund_entry_pre_sl_witness_0x4000"
+CHECKED refund_entry_pre_sl_witness_0x4000
+⊢ refund_entry_pre_sl 16384w
+    <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+      exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+    0x200020000w
+Saved theorem _______ "sat_sl_heap_premises"
+CHECKED sat_sl_heap_premises
+⊢ aligned 3 0x200020000w ∧ 0x200000000w ≤₊ 0x200020000w ∧
+  8192w ≤₊ 0x200020000w − 0x200000000w ∧
+  refund_heap_clear_sl 16384w 0x200000000w 0x200020000w
+Saved theorem _______ "refund_entry_sl_premises_satisfiable_at_0x4000"
+CHECKED refund_entry_sl_premises_satisfiable_at_0x4000
+⊢ ∃s h stk e envmc.
+    refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+    8192w ≤₊ e − h ∧ refund_heap_clear_sl 16384w h e ∧
+    envmc.prog_addresses = refund_mem_dm_sl 16384w h e
+Saved theorem _______ "slide_0x4000_witness_reaches_installed_state_modulo_environment"
+CHECKED slide_0x4000_witness_reaches_installed_state_modulo_environment
+⊢ ∃ms.
+    arm8_run 27
+      <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+        exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+        TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> = SOME ms ∧
+    ms.PC = 0x1000080D0w ∧
+    (refund_installed_rest2
+       (refund_mc 0x1000080D0w
+          <|prog_addresses :=
+              refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>) ms ⇒
+     refund_installed_no_handler
+       (refund_mc 0x1000080D0w
+          <|prog_addresses :=
+              refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>) ms 428 0)
+Saved theorem _______ "sat_sl_witness_is_not_a_slide_zero_entry"
+CHECKED sat_sl_witness_is_not_a_slide_zero_entry
+⊢ ¬refund_entry_pre
+    <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+      exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+    0x200020000w ∧
+  ¬refund_entry_pre_sl 0w
+    <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+      exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+    0x200020000w
+Saved theorem _______ "sat_sl_witness_is_not_an_entry_for_slide_0x8000"
+CHECKED sat_sl_witness_is_not_an_entry_for_slide_0x8000
+⊢ ¬refund_entry_pre_sl 32768w
+    <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+      exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+    0x200020000w
+Saved theorem _______ "sat_sl_heap_on_relocated_image_rejected"
+CHECKED sat_sl_heap_on_relocated_image_rejected
+⊢ ¬refund_heap_clear_sl 16384w 0x100004000w 0x100008000w
+STORED_THEOREMS 12
+CLOSURE_NODES 540
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundSlideSat" ... done.
+Theory "forge_refundSlideSat" took 10.8s to build
+EXACT_COMPLETE

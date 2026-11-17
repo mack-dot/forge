@@ -1,0 +1,151 @@
+<<HOL message: Created theory "forge_refundSlideInstalled">>
+MARK 1
+WITNESS refund_t_sl sl ms
+WITNESS λa. Word (mem_dword ms.MEM a)
+WITNESS sl + 0x10002C018w
+WITNESS refund_bitmaps_dm_sl sl
+WITNESS mc0.shared_addresses
+SELECTOR ⊢ (refund_t_sl sl ms).regs 1 = ms.REG 1w
+SELECTOR ⊢ (refund_t_sl sl ms).regs 3 = ms.REG 3w
+SELECTOR ⊢ (refund_t_sl sl ms).pc = ms.PC
+SELECTOR ⊢ (refund_t_sl sl ms).mem = ms.MEM
+SELECTOR ⊢ (refund_t_sl sl ms).mem_domain =
+  refund_mem_dm_sl sl (ms.REG 1w) (ms.REG 3w)
+SELECTOR ⊢ (refund_t_sl sl ms).align = 2
+CLAUSES 30
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSlideInstalled)>>
+CLAUSE_PROVED 1 target_state_rel mc0.target (refund_t_sl sl ms) ms
+CLAUSE_PROVED 2 target_configured (refund_t_sl sl ms) mc0
+CLAUSE_PROVED 3 ms.PC = mc0.target.get_pc ms
+CLAUSE_RESIDUAL 4 start_pc_ok mc0 ms.PC
+CLAUSE_PROVED 5 n2w (2² − 1) && ms.PC = 0w
+CLAUSE_RESIDUAL 6 interference_ok mc0.next_interfer (mc0.target.proj mc0.prog_addresses)
+CLAUSE_RESIDUAL 7 ffi_interfer_ok ms.PC mc0
+CLAUSE_PROVED 8 code_loaded code mc0 ms
+CLAUSE_PROVED 9 bytes_in_mem ms.PC code ms.MEM (refund_mem_dm_sl sl (ms.REG 1w) (ms.REG 3w))
+  ({w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} ∪ refund_bitmaps_dm_sl
+CLAUSE_PROVED 10 {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} ∪ refund_bitmaps_dm_sl sl ⊆
+refund_mem_dm_sl sl (ms.REG 1w) (ms.REG 3w)
+CLAUSE_PROVED 11 ∀a. byte_align a ∈
+    {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} ∪ refund_bitmaps_dm_sl sl ⇒
+    a ∈ {w | ms.REG 1w ≤₊ w ∧ w <₊ 
+CLAUSE_RESIDUAL 12 ∀a. byte_align a ∈ mc0.shared_addresses ⇒ a ∈ mc0.shared_addresses
+CLAUSE_RESIDUAL 13 DISJOINT mc0.prog_addresses mc0.shared_addresses
+CLAUSE_PROVED 14 ∀a. ∃w.
+  ms.MEM a = get_byte a w mc0.target.config.big_endian ∧
+  Word (mem_dword ms.MEM (byte_align a)) = Word w
+CLAUSE_PROVED 15 ∀n. n < 428 ⇒
+    n2w (n + LENGTH code) + ms.PC ∈
+    refund_mem_dm_sl sl (ms.REG 1w) (ms.REG 3w) ∧
+    n2w (n + LENGTH code) + ms.PC ∉
+    
+CLAUSE_PROVED 16 428 + LENGTH code < dimword (:64)
+CLAUSE_PROVED 17 byte_aligned (ms.REG 1w)
+CLAUSE_PROVED 18 byte_aligned (ms.REG 3w)
+CLAUSE_PROVED 19 byte_aligned (sl + 0x10002C018w)
+CLAUSE_PROVED 20 ms.REG 1w ≤₊ ms.REG 3w
+CLAUSE_PROVED 21 1024w * bytes_in_word ≤₊ ms.REG 3w − ms.REG 1w
+CLAUSE_PROVED 22 DISJOINT {w | ms.REG 1w ≤₊ w ∧ w <₊ ms.REG 3w} (refund_bitmaps_dm_sl sl)
+CLAUSE_PROVED 23 Word (mem_dword ms.MEM (ms.REG 1w)) = Word (sl + 0x10002C018w)
+CLAUSE_PROVED 24 Word (mem_dword ms.MEM (ms.REG 1w + bytes_in_word)) =
+Word (sl + 0x10002C018w + bytes_in_word * n2w (LENGTH data))
+CLAUSE_PROVED 25 Word (mem_dword ms.MEM (ms.REG 1w + 2w * bytes_in_word)) =
+Word
+  (sl + 0x10002C018w + bytes_in_word * 0w + bytes_in_word * n2w (LENGTH data))
+CLAUSE_PROVED 26 Word (mem_dword ms.MEM (ms.REG 1w + 3w * bytes_in_word)) =
+Word (mc0.target.get_pc ms + n2w (LENGTH code))
+CLAUSE_PROVED 27 Word (mem_dword ms.MEM (ms.REG 1w + 4w * bytes_in_word)) =
+Word (mc0.target.get_pc ms + 428w + n2w (LENGTH code))
+CLAUSE_PROVED 28 (word_list (sl + 0x10002C018w) (MAP (Word ∘ n2w) data) *
+ word_list_exists (sl + 0x10002C018w + bytes_in_word * n2w (LENGTH data)) 0)
+  (fun2set
+   
+CLAUSE_RESIDUAL 29 refund_lab_conf2.ffi_names = SOME mc0.ffi_names
+CLAUSE_RESIDUAL 30 ∀i. mmio_pcs_min_index mc0.ffi_names = SOME i ⇒
+    MAP (λrec. w2n (mc0.target.get_pc ms) + rec.entry_pc)
+      refund_lab_conf2.shmem_extra = DR
+RESIDUAL_CLAUSES 7 PROVED_CLAUSES 23
+RESIDUAL_IDENTICAL_TO_STORED true
+Saved theorem _______ "refund_installed_from_end_state_sl"
+CHECKED refund_installed_from_end_state_sl
+⊢ is_arm8_machine_config mc0 ∧
+  mc0.prog_addresses = refund_mem_dm_sl sl (ms.REG 1w) (ms.REG 3w) ∧
+  refund_end_state_sl sl ms ∧ refund_installed_rest mc0 ms ⇒
+  refund_installed_no_handler mc0 ms 428 0
+MARK 3
+Saved theorem _______ "refund_mc_concrete_fields_sl"
+CHECKED refund_mc_concrete_fields_sl
+⊢ ∀names.
+    refund_lab_conf2.ffi_names = SOME names ∧ LENGTH names = 4 ⇒
+    (refund_mc (sl + 0x1000040D0w) envmc).ffi_names = names ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).ffi_entry_pcs =
+    [sl + 0x1000040A0w; sl + 0x100004090w; sl + 0x100004080w;
+     sl + 0x100004070w] ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).halt_pc = sl + 0x1000040C0w ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).install_pc = sl + 0x1000040B0w ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).mmio_info = [] ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).shared_addresses = ∅ ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).prog_addresses =
+    envmc.prog_addresses ∧
+    (refund_mc (sl + 0x1000040D0w) envmc).target = arm8_target
+Saved theorem _______ "refund_stub_outside_domain_sl"
+CHECKED refund_stub_outside_domain_sl
+⊢ ∀a h e.
+    refund_heap_clear_sl sl h e ∧ 0x100000000w ≤₊ a − sl ∧
+    a − sl <₊ 0x1000040D0w ⇒
+    a ∉ refund_mem_dm_sl sl h e
+CLAUSE2_PROVED 1 start_pc_ok (refund_mc (sl + 0x1000040D0w) envmc) ms.PC
+CLAUSE2_KEPT_UNPROVED 2 interference_ok (refund_mc (sl + 0x1000040D0w) envmc).next_interfer
+  ((refund_mc (sl + 0x1000040D0w) envmc).target.proj
+     (refund_mc (sl + 0x1000040D0w) env
+CLAUSE2_KEPT_UNPROVED 3 ffi_interfer_ok ms.PC (refund_mc (sl + 0x1000040D0w) envmc)
+CLAUSE2_PROVED 4 ∀a. byte_align a ∈ (refund_mc (sl + 0x1000040D0w) envmc).shared_addresses ⇒
+    a ∈ (refund_mc (sl + 0x1000040D0w) envmc).shared_addresses
+CLAUSE2_PROVED 5 DISJOINT (refund_mc (sl + 0x1000040D0w) envmc).prog_addresses
+  (refund_mc (sl + 0x1000040D0w) envmc).shared_addresses
+CLAUSE2_PROVED 6 refund_lab_conf2.ffi_names =
+SOME (refund_mc (sl + 0x1000040D0w) envmc).ffi_names
+CLAUSE2_PROVED 7 ∀i. mmio_pcs_min_index (refund_mc (sl + 0x1000040D0w) envmc).ffi_names =
+    SOME i ⇒
+    MAP
+      (λrec.
+         w2n ((refund_mc (sl + 0x1000040D0w) env
+Saved theorem _______ "refund_installed_rest_reduced_sl"
+CHECKED refund_installed_rest_reduced_sl
+⊢ refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  ms.PC = sl + 0x1000040D0w ∧ slide_ok sl ∧
+  refund_installed_rest2 (refund_mc (sl + 0x1000040D0w) envmc) ms ⇒
+  refund_installed_rest (refund_mc (sl + 0x1000040D0w) envmc) ms
+MARK 4
+Saved theorem _______ "refund_installed_from_entry_reduced_sl"
+CHECKED refund_installed_from_entry_reduced_sl
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc (sl + 0x1000040D0w) envmc) ms ⇒
+     refund_installed_no_handler (refund_mc (sl + 0x1000040D0w) envmc) ms 428
+       0)
+MARK 5
+USED ⊢ ∀base0 pc. base0 ≠ pc ⇒ ¬start_pc_ok (refund_mc base0 envmc) pc
+USED ⊢ ∀base0 pc.
+    base0 − n2w ffi_offset ∈ envmc.prog_addresses ⇒
+    ¬start_pc_ok (refund_mc base0 envmc) pc
+USED ⊢ ∀i a m md k. i < LENGTH code ∧ a + n2w i ∉ md ⇒ ¬bytes_in_mem a code m md k
+Saved theorem _______ "unrelocated_record_rejected_at_nonzero_slide"
+CHECKED unrelocated_record_rejected_at_nonzero_slide
+⊢ sl ≠ 0w ⇒ ¬start_pc_ok (refund_mc 0x1000040D0w envmc) (sl + 0x1000040D0w)
+Saved theorem _______ "heap_on_relocated_halt_stub_rejected"
+CHECKED heap_on_relocated_halt_stub_rejected
+⊢ h ≤₊ sl + 0x1000040C0w ∧ sl + 0x1000040C0w <₊ e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ⇒
+  ¬start_pc_ok (refund_mc (sl + 0x1000040D0w) envmc) (sl + 0x1000040D0w)
+LEMMA_FAILED code_start_outside_domain_rejected_sl HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+Saved theorem _______ "prog_addresses_mismatch_rejected_sl"
+CHECKED prog_addresses_mismatch_rejected_sl
+⊢ ∀ms mc0.
+    mc0.prog_addresses ≠ (refund_t_sl sl ms).mem_domain ⇒
+    ¬target_configured (refund_t_sl sl ms) mc0
+LEMMA_FAILED slide_zero_domain_misses_relocated_code HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})

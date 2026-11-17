@@ -14407,3 +14407,155 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on proof status. M1 open. No profile approved. Stage 12
   unauthorized. end_to_end=false.
 - Next check: none for this entry. Its own commit is not recorded again.
+
+## U407 — relocation step S3 proved for every page-aligned, non-wrapping slide (model): 28 of 30 installed-state clauses from the entry premise; U405 repeats and import check done; S4-S6 not started
+- Status: 2026-11-17. Refs U390, U391, U404, U405, U406. Local runs, same
+  machine, same agent, cached parents. No clean or independent replay. No
+  native execution. Nothing committed or pushed.
+- Evidence (run dir results/refund-slide-s3-local-20261117/attempt-0001;
+  packet proposals/refund-executable-feasibility/m1-slide-s3-20261117):
+  s1-repeat exit 0 and s2-repeat exit 0, theory objects byte-identical to
+  U405; f1-0001 exit 0 (cml_main_run_frame_sl); d3-0003 exit 0 after
+  d3-0001, d3-0002 exit 1 authoring (27 theorems: frame keeps the image,
+  shifted code/bitmap/heap domain lemmas, refund_t_sl, refund_end_state_sl,
+  refund_end_state_sl_established); a3-0006 exit 0 after a3-0001..0003,
+  a3-0005 exit 1 authoring and a3-0004 exit 1 memory ("Run out of store")
+  (refund_installed_from_end_state_sl 23 clauses,
+  refund_installed_rest_reduced_sl 5 clauses,
+  refund_installed_from_entry_reduced_sl); sat-0002 exit 0 after sat-0001
+  exit 1 authoring and two resource-guard refusals exit 3 (disk below 3 GiB;
+  guard not bypassed); imp-0002 exit 0 after imp-0001 exit 1 check-script
+  defect (34 statements, 0 mismatches). 540 closure nodes; four bool axioms.
+- Result: for every slide_ok sl, refund_entry_pre_sl and the heap premises
+  give an end state with 28 clauses of refund_installed_no_handler at
+  refund_mc (sl + 0x1000040D0w) envmc. The residual is the stored
+  refund_installed_rest2, term-identical: interference_ok and
+  ffi_interfer_ok stay UNPROVED.
+- Satisfiability: premises 1-3 hold for one CONSTRUCTED model state at
+  slide 0x4000. Not a native witness. Not evidence about macOS. The rest2
+  premise is not shown satisfiable at a slide (needs S4).
+- Uncertainty: refund_entry_pre_sl is fully assumed; no loader theorem.
+  One run per theory; U407 cases not repeated. One control
+  (code_start_outside_domain_rejected_sl) is stored at a general word
+  width. The plan listed refund_installed_from_entry_reduced_sl under S5;
+  it was proved here as the S3 summary and has no behaviour conclusion.
+- Author error caught: a control in a3-0001 claimed 0x1000080D0w is
+  outside refund_code_dm. False; HOL rejected it; address corrected.
+- Branch scan (read-only, HEAD 7ef2801a): 4,301 tracked files contain the
+  home path; 0 files match token or private-key patterns; e-mail
+  addresses present. No scrub done: it needs commits or a history rewrite,
+  not authorized.
+- Resource: free disk moved between 1.9 and 9.3 GiB; swap grew to about
+  13 GiB; cause outside the run directory (1.8 MB).
+- Impact: M1 open. Profile A not approved. Stage 12 unauthorized.
+  end_to_end=false. No theorem statement weakened; no axiom; no published
+  theorem changed.
+- Next check: S4 (FFI contract and refund_env_ok at the shifted base),
+  then S5, S6. Before heavy runs: free disk. Owner decisions: scrub scope;
+  U403 R1-R5; A8 review.
+
+## U408 — three external ideas saved as future plans (spec determinism check; small proved checker in front of the effect; runtime optimality certificates); nothing run, nothing authorized
+- Status: 2026-11-17. Refs U407, U390 (firewall scope), Stage 5, Stage 7,
+  Stage 8. Owner instruction: "save them for future plans". Source: text
+  from another AI model pasted by the owner. Its code results and its
+  literature citations are NOT verified and are NOT Forge evidence.
+- Record: proposals/future-directions-20261117/FUTURE_PLANS.md (plans A,
+  B, C with corrected claims, cost, first cheap check, entry condition).
+- Checked by reading only: spec/LedgerSpec.dfy C4 is a map update, so the
+  claimed five-account bystander theft does not apply to the stored spec;
+  LedgerSpec and BookingSpec look deterministic. NOT machine-checked.
+- Checked by hand only: the weak-duality inequality used by plan C.
+- Uncertainty: determinism of the stored specs; RefundSpec not read for
+  this; cited papers; relation of the split-edit attack to the Stage 11
+  gate; all cost estimates.
+- Impact: none on proof status. No stage, mission requirement, policy,
+  schema, gate or spec changed. M1 open. Stage 12 unauthorized.
+  end_to_end=false. Not committed.
+- Next check: only on the owner's word. Cheapest: the determinism lemma
+  for LedgerSpec with pinned Dafny under proposals/, with a negative
+  control (C4 without the frame must fail).
+
+## U409 — relocation steps S4, S5, S6 proved (model): environment predicate at the relocated base, Profile A statement at every permitted slide, slide-0 regression term-identical to U404
+- Status: 2026-11-17. Refs U392, U404, U405, U407. One local run, cached
+  parents. No clean or independent replay. No native execution. Not
+  committed. Owner instruction: "continue and dont stop working".
+- Evidence: results/refund-slide-s3-local-20261117/attempt-0001/e4-0001,
+  exit 0 on the first run; theory forge_refundSlideProfileA, 17 theorems,
+  3 definitions, 542 closure nodes, four bool axioms. Packet
+  proposals/refund-executable-feasibility/m1-slide-s4-s6-20261117.
+- Result: refund_ffi_contract_at (base as parameter; equal to the stored
+  contract at the link base); ffi_interfer_ok_iff_contract_sl;
+  refund_env_ok_sl equals the residual rest2 at the relocated record;
+  refund_profile_a_sl and refund_profile_a_sl_every_machine_run for every
+  slide_ok sl; the sl = 0w instances are aconv to the stored U404 theorems.
+- Satisfiability: entry, heap, domain and environment premises hold
+  together at slide 0x4000 for a CONSTRUCTED model state with the abstract
+  environment. The input premises (wfFS, STD_streams, stdin content) are
+  NOT shown satisfiable; exact missing lemma: a concrete fs with
+  live_numchars.
+- Control: an FFI effect correct only from the slide-0 stubs satisfies the
+  contract at its base and fails it at slide 0x4000.
+- Uncertainty: one run; no repeat; no separate import check for this
+  theory. refund_env_ok_sl is an assumption and is probably false for the
+  real C code at every state (U393 analysis). Entry state fully assumed.
+- NOT RUN: repeat; import check; fs witness (disk between 0.2 and 3.8 GiB
+  free; guard limit 3 GiB).
+- Impact: the slide-generic model chain S1-S6 is complete. M1 stays open.
+  Profile A not approved. Stage 12 unauthorized. end_to_end=false.
+- Next check: import check and repeat when disk allows; fs witness; then
+  the owner decisions (profile, A8) and the real FFI boundary.
+
+## U410 — owner designates the "Proof-Carrying Finality and Spec Clearing" text as the master idea; first two items run as diagnostics outside the gate (spec determinism for three approved specs; integer dual-certificate check)
+- Status: 2026-11-17. Refs U408, U409, Stage 5, Stage 6, Stage 8. Owner
+  words: "make this the masteridea please and lets do this". Recorded in
+  FORGE_MASTER_IDEA.md. Source texts saved verbatim in
+  proposals/future-directions-20261117 (SOURCE_MISSION_PROMPT.md,
+  SOURCE_ANALYSIS.md). No protected file changed.
+- Interpretation (mine): the owner's word starts the work. It is not an
+  exact-bytes approval of any protected-path change and it does not
+  authorize Stage 12. The source's stage numbers 9-11 are wrong for this
+  repository (those stages are DONE); work items are F-numbers.
+- F1.1 evidence (results/forge2-pillar1-20261117, pinned Dafny, gate
+  options): attempt-0001 scenario exit 1 (my Trojan proof out of resource;
+  one runner expected-text defect); attempt-0002 exit 0; attempt-0003
+  exit 0, six cases. SpecIsDeterministic verifies for LedgerSpec.Apply (11
+  verified), BookingSpec.Apply (18), RefundSpec.Assess (5). The planted
+  no-frame ledger spec has two verified implementations whose results
+  differ on a five-account state (proved lemma); its determinism lemma is
+  rejected; the Trojan body is rejected by the approved spec at C4.
+- F3.1 evidence (results/forge2-pillar3-20261117): attempt-0001 scenario
+  exit 1 (one nonlinear lemma out of resource); attempt-0002 exit 0.
+  BookingDualCert.dfy: 46 verified, 0 errors: weak duality, quality against
+  every feasible allocation, acceptance witness at zero gap, four rejection
+  witnesses; two planted-bug controls rejected at the planted lemma.
+- dafny audit on the four new positive files: exit 0, 0 findings.
+- Resolves from U408: "determinism of the stored specs is my reading" is
+  now machine-checked for the three specs (one run each).
+- Uncertainty: Post predicates are hand-written; only the direction
+  spec => Post is checked. Determinism is not intent. Accepts was not
+  compiled or run. Certificate existence is not proved for any problem
+  class. One passing run each, same machine. Nothing is in the gate, in a
+  policy or in an evidence bundle.
+- NOT RUN: F1.1d, F1.1e, F1.2, F1.3, F1.4, F2.*, F3.2, F4.
+- Impact: none on existing claims. M1 open. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: F1.1d and F1.3 (no protected path); then proposals with
+  exact diffs for the gate, policy and schema items; F2.0 design note.
+
+## U411 — import check for the S4-S6 theory passed; disk was the binding limit; one record update failed to start (ENOSPC) and was redone
+- Status: 2026-11-17. Refs U409. imp4-0001 exit 0: 15 stored statements of
+  forge_refundSlideProfileA match statements built in the check script; the
+  two slide theorems equal the stored U404 statements under five
+  substitutions; 0 mismatches; 3 checker controls; 542 closure nodes; four
+  bool axioms. Same machine, cached parents: not a replay.
+- Resource observation: free space on the data volume moved between 0.1
+  and 5.9 GiB during the day; swap 9-13 GiB. The work directories of this
+  session are a few MB. Cause not identified; outside this work. The HOL
+  runner guard (3 GiB) refused twice (U407). No guard was bypassed.
+  Nothing was deleted.
+- Failure: the first attempt to write U410, U411, the ROADMAP section, the
+  status file and memory did not start (disk full, ENOSPC). No partial
+  write happened. This entry and U410 were written later the same day
+  with atomic file replacement.
+- NOT RUN: repeat of e4-0001; file-system witness for the input premises.
+- Next check: free disk before heavy runs.

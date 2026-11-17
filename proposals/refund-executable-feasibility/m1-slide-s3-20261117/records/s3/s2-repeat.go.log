@@ -1,0 +1,30 @@
+exit 0
+wall 121.916 rss_mib 3072 ['EXACT_COMPLETE']
+18:CHECKED arm8_run_constants_agree
+22:CHECKED slide_ok_no_wrap
+25:CHECKED slide_ok_examples
+32:    s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.PC = sl + 0x100004000w ∧
+40:CHECKED entry_separation_covers_startup_range
+45:CHECKED refund_entry_pre_sl_IMP_cml_main_pre_sl
+48:CHECKED refund_entry_run_sl
+59:CHECKED refund_image_code_at_slide
+63:CHECKED slide_zero_entry_is_the_old_entry
+76:CHECKED refund_code_dm_sl_range
+81:CHECKED refund_heap_clear_sl_range
+86:CHECKED refund_shifted_domains_disjoint
+89:CHECKED shifted_domains_at_slide_zero
+95:CHECKED relocated_code_addresses_in_shifted_domain
+98:CHECKED shifted_heap_clear_keeps_heap_outside_code_and_bitmaps
+104:CHECKED wrapping_slide_breaks_the_range_form
+109:CHECKED nonzero_slide_moves_the_code_domain
+113:CHECKED misaligned_or_wrapping_slide_not_covered
+117:CHECKED entry_fixes_image_and_pc_to_one_slide
+120:CONTROL_OK the U389 slide-0 entry theorem is loaded unchanged
+121:STORED_THEOREMS 18
+122:CLOSURE_NODES 536
+123:CLOSURE_HAS_COMPILE_CORRECT_CONTROL true
+124:CLOSURE_AXIOM bool.SELECT_AX
+125:CLOSURE_AXIOM bool.INFINITY_AX
+126:CLOSURE_AXIOM bool.ETA_AX
+127:CLOSURE_AXIOM bool.BOOL_CASES_AX
+130:EXACT_COMPLETE

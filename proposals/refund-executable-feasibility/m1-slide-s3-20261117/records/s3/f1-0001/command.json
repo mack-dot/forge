@@ -1,0 +1,38 @@
+{
+ "case": "f1-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml",
+  "/Users/mackianni/forge/results/refund-slide-local-20261117/attempt-0001/s1-0001/forge_refundCmlMainSlideTheory.sig",
+  "/Users/mackianni/forge/results/refund-slide-local-20261117/attempt-0001/s1-0001/forge_refundCmlMainSlideTheory.sml",
+  "/Users/mackianni/forge/results/refund-slide-s3-local-20261117/attempt-0001/f1-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step",
+ "source": "f1-0001.sml",
+ "source_sha256": "ec03c5e7d05fdf36cfc81c888ae39f26c851f6f43745a43023f16bfd5a871e2c",
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "checked_input_files": 19,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 19.538,
+ "child_user_cpu_seconds": 18.618,
+ "child_system_cpu_seconds": 2.11,
+ "child_max_rss_bytes": 613531648,
+ "markers": [
+  "NATIVE_STEP_COMPLETE"
+ ],
+ "stdout_sha256": "bfd117bf2bd4c5b29f9d4476ed3f9074fd398322a37b966a6b0cc3efc756ea7b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundCmlMainFrameSlideTheory.html": "d8559f10a5c13bf762808dc7a199ae64ab48b69473a08910d866e4ea70200e97",
+  ".hol/objs/forge_refundCmlMainFrameSlideTheory.dat": "f6fe1b87e6ceb6c067bb289db921cd2f6989c0ffd0e451818b2f07a7063a12b7",
+  ".hol/objs/forge_refundCmlMainFrameSlideTheory.sig": "d52500e082878c4997bc93cc77dd1ad69fdd6dcc1d298ad102d4dd23248359e9",
+  ".hol/objs/forge_refundCmlMainFrameSlideTheory.sml": "969086c049cfd25a1fa27bed2dbf55ac09619b19cd566b78212b37436a265ca7"
+ },
+ "inputs_unchanged_after": true,
+ "cwd_listing_unchanged": true
+}

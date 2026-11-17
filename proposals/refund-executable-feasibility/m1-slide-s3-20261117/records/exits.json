@@ -1,0 +1,161 @@
+{
+ "a3-0001": {
+  "actual_exit": 1,
+  "wall_seconds": 110.654,
+  "max_rss_mib": 2578,
+  "markers": [],
+  "note": "two control lemmas failed: one tactic; one FALSE statement written by the author (rejected by HOL)"
+ },
+ "a3-0002": {
+  "actual_exit": 1,
+  "wall_seconds": 126.637,
+  "max_rss_mib": 3066,
+  "markers": [],
+  "note": "authoring: one control tactic"
+ },
+ "a3-0003": {
+  "actual_exit": 1,
+  "wall_seconds": 109.208,
+  "max_rss_mib": 2613,
+  "markers": [],
+  "note": "authoring: one control tactic"
+ },
+ "a3-0004": {
+  "actual_exit": 1,
+  "wall_seconds": 18.346,
+  "max_rss_mib": 1013,
+  "markers": [],
+  "note": "memory: Poly/ML \"Run out of store\" after 18 s; no proof result"
+ },
+ "a3-0005": {
+  "actual_exit": 1,
+  "wall_seconds": 152.241,
+  "max_rss_mib": 1895,
+  "markers": [],
+  "note": "authoring: control goal was parsed at a general word width"
+ },
+ "a3-0006": {
+  "actual_exit": 0,
+  "wall_seconds": 146.03,
+  "max_rss_mib": 2378,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "note": "forge_refundSlideInstalled; 10 theorems"
+ },
+ "d3-0001": {
+  "actual_exit": 1,
+  "wall_seconds": 110.084,
+  "max_rss_mib": 2528,
+  "markers": [],
+  "note": "authoring: four tactics"
+ },
+ "d3-0002": {
+  "actual_exit": 1,
+  "wall_seconds": 91.948,
+  "max_rss_mib": 2670,
+  "markers": [],
+  "note": "authoring: two tactics"
+ },
+ "d3-0003": {
+  "actual_exit": 0,
+  "wall_seconds": 111.14,
+  "max_rss_mib": 2733,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "note": "forge_refundSlideDomains; 27 theorems, 2 definitions"
+ },
+ "f1-0001": {
+  "actual_exit": 0,
+  "wall_seconds": 19.538,
+  "max_rss_mib": 585,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "note": "forge_refundCmlMainFrameSlide; ARMv8 context"
+ },
+ "imp-0001": {
+  "actual_exit": 1,
+  "wall_seconds": 110.478,
+  "max_rss_mib": 2898,
+  "markers": [],
+  "note": "check-script defect: nested conjunction in one expected term"
+ },
+ "imp-0002": {
+  "actual_exit": 0,
+  "wall_seconds": 87.206,
+  "max_rss_mib": 2641,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "note": "34 statements imported, 0 mismatches, 4 checker controls"
+ },
+ "s1-repeat": {
+  "actual_exit": 0,
+  "wall_seconds": 23.2,
+  "max_rss_mib": 495,
+  "markers": [
+   "NATIVE_STEP_COMPLETE"
+  ],
+  "note": "repeat of U405 s1-0001; 4 of 4 theory objects byte-identical"
+ },
+ "s2-repeat": {
+  "actual_exit": 0,
+  "wall_seconds": 121.916,
+  "max_rss_mib": 3072,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "note": "repeat of U405 s2-0003; 3 of 3 theory objects byte-identical"
+ },
+ "sat-0000-guard-refused": {
+  "actual_exit": 3,
+  "wall_seconds": null,
+  "max_rss_mib": 0,
+  "markers": null,
+  "note": "runner resource guard refused: disk 2.98 GiB free; no HOL process started",
+  "resource_guard_refused": {
+   "memory_free_percent": 39,
+   "disk_free_gib": 2.98,
+   "other_hol_pids": []
+  }
+ },
+ "sat-0001": {
+  "actual_exit": 1,
+  "wall_seconds": 117.936,
+  "max_rss_mib": 2019,
+  "markers": [],
+  "note": "authoring: type of the existential variable"
+ },
+ "sat-0002-guard-refused-1": {
+  "actual_exit": 3,
+  "wall_seconds": null,
+  "max_rss_mib": 0,
+  "markers": null,
+  "note": "runner resource guard refused: disk 1.87 GiB free; no HOL process started",
+  "resource_guard_refused": {
+   "memory_free_percent": 49,
+   "disk_free_gib": 1.87,
+   "other_hol_pids": []
+  }
+ },
+ "sat-0002": {
+  "actual_exit": 0,
+  "wall_seconds": 146.105,
+  "max_rss_mib": 2266,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "note": "forge_refundSlideSat; 12 theorems, 1 definition"
+ },
+ "NOT_RUN": [
+  "repeats of f1-0001, d3-0003, a3-0006, sat-0002, imp-0002",
+  "S4",
+  "S5",
+  "S6",
+  "clean replay",
+  "independent replay",
+  "native execution"
+ ]
+}
