@@ -13,11 +13,13 @@ labels remain historical and must not be treated as the current priority order.
 
 ## Resume here — Round 4 closed on `main`; M1 chain replayed on rebuilt tools; M1 stays open (U437–U442, M1R-1)
 
-- `main` = `201e63b1`: the owner merged pull requests 39 (gate
-  ratification rule and record 0001), 40 (Stage 6 records) and 41
-  (documents, Stage 11 records). Full check on a clean clone: 28 of 28
-  stage EXIT cases exit 0. The eight PR-gate modules are frozen. Stage 9
-  lock renewal and step B (print effects) are open owner decisions.
+- `main` = `9d587c7e`: pull requests 39 (gate ratification rule and
+  record 0001), 40 (Stage 6 records), 41 (documents, Stage 11 records),
+  43 (step B: print-effect tracking) and 42 (M1 replay record) are
+  merged. Full check on a clean clone: 28 of 28 stage EXIT cases exit 0;
+  the Stage 5 `print` survivor is closed. The eight PR-gate modules are
+  frozen. The Stage 9 lock renewal is an open owner decision (8 entries
+  differ).
 - M1: the pinned tools are rebuilt, and 71 of 71 theories of the chain
   up to `forge_refundSlideProfileA` were replayed with exit 0; their
   exports equal the old recorded SHA-256. New:

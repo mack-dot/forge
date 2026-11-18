@@ -389,3 +389,27 @@ have now run on Linux. Still not shown on a hosted runner: exit 0
 
 The M1 replay record is a separate pull request (records only):
 https://github.com/mack-dot/forge/pull/42
+
+## Actions 1 and 2 are DONE (2026-11-18 13:30Z)
+
+On the owner's words "merge them" and "i approve" the agent merged pull
+request 43 (step B, squash commit `d026e109`) and pull request 42 (M1
+record, `9d587c7e`) with administrator rights. Both merges bypass the
+review rule and a red gate status (UNSUPPORTED); they are recorded as
+the owner's overrides (`unsure.md` R4C-1). Decision D1 is taken: the
+coverage rule is unchanged and step B was merged as it is.
+
+Clean clone of `main` `9d587c7e` after the merges:
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) | 0 each | 28 of 28 |
+| `gate/gate.py` on `bugs/print_effect.dfy`; on `bugs/print_effect_marked.dfy` | 1; 1 | rejected |
+| Stage 5 mutation counts | — | `effect_rejected` 1, `survived` 1 (before step B: `survived` 2) |
+| `check_frozen_pr_gate.py`; link checks of `FORGE_MASTER_IDEA.md`, `ROADMAP.md` | 0; 0, 0 | passed |
+| record 0001 against `main` | — | each of its six files has the new SHA-256; the record is used up |
+| Stage 9 lock against `main` | — | 8 entries differ; action 3 stays the owner's decision |
+
+Open after this file: action 3 (Stage 9 lock renewal, hosted signing
+run); the 158 M1 controls and checks (`unsure.md` M1R-2); the limits F1
+to F5 of review 3; a hosted VERIFIED result for a ratified change.

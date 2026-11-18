@@ -9,10 +9,12 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## Step B (print effects) on the new `main`: pull request 43 open; first hosted run of the gate with a ratification record gives the expected result; M1 record is pull request 42
+## Step B (print effects) is on `main`: pull requests 43 and 42 merged on the owner's word; first hosted run of the gate with a ratification record gave the expected result — R4C-1
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
-Not a stage. Stage 9 deferred. Nothing is merged by the agent. Step B
+Not a stage. Stage 9 deferred. On 2026-11-18 13:21Z the agent merged
+pull requests 43 and 42 with administrator rights on the owner's words
+"merge them" and "i approve" (`main` = `9d587c7e`). Step B
 commit `ccb4e5e2` and its records `59189040` are on `main` at
 `201e63b1`; the step B files are byte-equal to the reviewed commit
 `f54e2507`; record 0001 on `main` regenerates byte for byte from
@@ -28,12 +30,17 @@ commit `ccb4e5e2` and its records `59189040` are on `main` at
 | `run_bootstrap_gate_cases.py` attempt-0005: trusted `main` `201e63b1` (holds record 0001), candidate `ccb4e5e2`; candidate `59189040` |3; 3|UNSUPPORTED; record matched; 8 of 8 floor controls as expected |
 | hosted `gate/pr_check.py`, pull request 43, run 44268104696 (Linux profile) |3|UNSUPPORTED; record 0001 matched; floor controls on Linux: 6 planted bugs rejected for a proof or audit reason, `impl/Ledger.dfy` accepted, function probe equal. First hosted run with a ratification record. On Linux `toolchain/pins.json` is the pins file that no obligation lists (two findings for it) |
 | hosted `gate/pr_check.py`, pull request 42 (M1 record), run 44265523794 |3|UNSUPPORTED, as expected for records |
+| `gh pr merge 43 --squash --admin`; `gh pr merge 42 --squash --admin` (owner's word) |0; 0|squash commits `d026e109` and `9d587c7e`; OVERRIDE of the review rule and of the red gate status; `main` content equal to the checked commits |
+| after the merges, clean clone of `main` `9d587c7e`: Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `gate/gate.py` on the two planted print bugs; Stage 5 mutation counts |1; 1|`effect_rejected` 1, `survived` 1 (before step B: `survived` 2): the `print` survivor is closed; the remaining survivor is the labelled algebraic rewrite control |
+| `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md` and `ROADMAP.md`; record 0001 against `main` |0; 0, 0; equal|every file that record 0001 names has its new SHA-256 on `main`; 2 older Stage 9 links without a target |
+| Stage 9 lock against `main` |8 entries differ|deferred |
 
 Not verified: VERIFIED (exit 0) for a ratified change on a hosted
-runner (step B has files that no obligation lists). After a merge of
-step B, eight entries of the Stage 9 lock do not match `main`. Open:
-the owner's merges of pull requests 42 and 43; decision D1 is taken by
-merging 43 as it is.
+runner (step B has files that no obligation lists). Eight entries of
+the Stage 9 lock do not match `main`. Decision D1 was taken by merging
+pull request 43 as it is. Record 0001 is used up: its old digests no
+longer match `main`.
 
 
 
