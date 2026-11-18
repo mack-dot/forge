@@ -1,6 +1,77 @@
 # Forge: proof-gated changes
 
-**CURRENT: Stage 9 — PROVENANCE**
+**CURRENT: none (Stage 9 deferred)**
+
+Status note of 2026-11-18 (owner decision; `unsure.md` U437 to U442). No
+stage is CURRENT. The full record lists Stages 9, 10 and 11 as DONE. For
+Stage 9 the renewal of its lock is deferred: it needs a hosted signing
+run that is not authorized, and two entries of
+`gate/provenance/implementation.lock` (`gate/approval.py`,
+`gate/incremental.py`) do not match `main` since pull request 39. Stage
+12 is unauthorized. `end_to_end=false`. The eight modules of the PR gate
+are frozen: protected paths change only by an exact-diff proposal and
+the owner's merge.
+
+Below the Round 4 section, this file is the record as it stood during
+Stage 9. It is not updated; its words "Stage 9 is CURRENT" describe
+that time. The full record after it (Stages 10 and 11, the M1 work,
+Rounds 2 to 4) is `ROADMAP.md` on branch `backup/forge-local-2026-11-11`
+(commit `692c9953` when this note was written). It is not copied here,
+because 160 of its links have no target on `main`. The uncertainty
+entries of that work are in `unsure.md` here. The work direction is
+`FORGE_MASTER_IDEA.md`; it approves nothing.
+
+The Stage 6 text below describes the first benchmark run. Since pull
+request 40 its files are in `results/stage6-epoch1` and
+`docs/reuse-benchmark-epoch1.md`; five links of that text now point
+there. The files under `results/stage6` are the run of 2026-11-18 for
+the present gate bytes.
+
+## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39) and the Stage 6 records (pull request 40) — U433, U436, U437, U438, U439, U440, U441, U442
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file of this tree or of
+this tree is changed. The owner merged pull request 39 on 2026-11-18
+03:20Z (`main` = `96d2ec77`) and pull request 40 (Stage 6 records) at
+03:34Z (`main` = `d0ce1942`); the agent merged nothing. Final
+commits on `main` at `4143f4b2`: rule `801777ea`, record `26410d46`,
+print effects `f54e2507`, its records `53534f64`.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_pr_controls.py` attempt 6 (older local gate, 26 cases) |0|0 evasions |
+| `run_pr_controls_main.py` attempt 7 (`main`'s gate, 22 cases) |0|0 evasions; attempts 5 and 6 failed by my defects, no acceptance (U437) |
+| `run_bootstrap_gate_cases.py` attempt-0001: record commit on present `main`; unchanged candidate after the bootstrap; print effects after the bootstrap |1; 0; 3|REJECTED; VERIFIED; UNSUPPORTED with 8 of 8 floor controls: each as expected |
+| hosted `gate/pr_check.py`, pull request 39, run 44213967396 |1|REJECTED; equal to the local result |
+| Stage EXIT cases 1, 2, 3, 4, 5, 8 at `26410d46` (24 cases) |0 each|passed |
+| `exit_stage_6.py --case report` at `main` `4143f4b2`; at `26410d46` |1; 1|`TRUSTED_INPUTS`; red before this work |
+| `stage6_epoch2.py` at `main`'s tree, run 2 on mains power: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|fresh records, local commit `4cab1868`; report byte-identical; run 1 on battery power also 0 (replaced) |
+| `exit_stage_6.py --case report` in a clean clone at `4cab1868`; at `26410d46` plus `4cab1868` |0; 0|repairs the Stage 6 record; needs the owner's merge |
+| `exit_stage_11.py`, three cases at `4143f4b2`: records from the verified backup; clean checkout |0, 0, 0; 1, 1, 1|the evaluation records are not on `main` |
+| `check_links.py origin/main FORGE_MASTER_IDEA.md` |1|10 of 13 relative links have no target on `main` |
+| `check_links.py docs/master-idea-records FORGE_MASTER_IDEA.md` (local documents branch, commit `45f8c24a`) |0|218 files, protected paths 0; needs the owner's merge |
+| step B `f54e2507`: `gate/gate.py --impl impl/Ledger.dfy` |0|ACCEPTED |
+| step B `f54e2507`: Stage EXIT cases 1, 2, 3, 4, 5, 8 (24 cases) |0 each|passed |
+| step B `f54e2507`: `stage6_epoch2.py`: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|records in commit `53534f64`; report byte-identical |
+| `run_bootstrap_gate_cases.py` attempt-0002: commit `53534f64` after the bootstrap |3|UNSUPPORTED with 8 of 8 floor controls, as expected |
+| `exit_stage_7.py --case own-proof`; `--case upstream-replay`; `--case invalid-proof` (scratch worktree `fd8b9608`, Docker) |0; 0; 0|attempts 2, 4, 2; Stage 7 reads none of the files that version 3 changes |
+| `rebuild.py 10800` (M1 tools) |stopped by budget|45 of 71 compiler-proof theories; no M1 replay possible yet |
+| `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |NOT FINISHED|started 2026-11-18 02:13Z on mains power; result in a later entry |
+| Stage 9, six EXIT cases |NOT RUN|deferred; after the bootstrap merge two lock entries are stale |
+| after the owner's merge: `check_frozen_pr_gate.py origin/main` |0|`main` = `96d2ec77`, tree equal to the record commit; the eight PR-gate modules are FROZEN |
+| `exit_stage_6.py --case report` at `96d2ec77`; clean clone with the records `1c21aa85` |1; 0|pull request 40 repairs the Stage 6 record |
+| `run_bootstrap_gate_cases.py` attempt-0003 (trusted `96d2ec77`, candidate `1c21aa85`); hosted `gate/pr_check.py`, pull request 40, run 44229894524 |3; 3|UNSUPPORTED, as expected for record files; first hosted run of the new gate code |
+| after the owner's merge of pull request 40: `exit_stage_6.py --case report`, clean clone of `main` `d0ce1942`; `check_frozen_pr_gate.py origin/main` |0; 0|Stage 6 is green on `main` |
+| `exit_stage_11.py`, three cases, clean clone with the path-free records in the tree (dry run) |0; 0; 0|records for the documents pull request |
+| third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
+
+[Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
+[Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
+This section comes to `main` with the documents pull request (Q2, Q3,
+Q4). After that merge: the full check Q5 from a clean checkout. Open:
+decision D1 for step B (print effects); the Stage 9 lock renewal. `ROADMAP.md` on `main` still
+says "CURRENT: Stage 9"; this file is the current one.
+M1 and integration EXIT NOT_ESTABLISHED.
 
 This is the execution plan and decision record. Stages 0–8 are DONE. Stage 6
 verified the approved booking matcher and its cancellation/retry trace. The
@@ -282,7 +353,7 @@ of PRs observed. A period with little activity cannot establish broad usefulness
 | 6 | SECOND DOMAIN + REUSE MEASUREMENT | DONE |
 | 7 | BINARY LAYER | DONE |
 | 8 | ML BOUNDARY | DONE |
-| 9 | PROVENANCE | CURRENT |
+| 9 | PROVENANCE | DONE in the full record; lock renewal DEFERRED (status note at the top) |
 | 10 | SHADOW MODE | NOT STARTED |
 
 ## EXIT command conventions
@@ -713,8 +784,8 @@ remain unchanged. [Behavior and scope](docs/booking.md).
 | `python3 scripts/benchmark_reuse.py` | Completed five repetitions of five cases under three conditions: 75 pairs. Every expected acceptance/rejection occurred. | 0 |
 | `python3 scripts/exit_stage_6.py --case report` | Recomputed measured totals, checked raw logs and source evidence, and reconciled all available runtime token categories in the stated interval. Generated the scoped report without extrapolation. | 0 |
 
-The [measured report](docs/reuse-benchmark.md), [raw experiment](results/stage6/benchmark.json),
-[source evidence](results/stage6/source-evidence.json), and [report EXIT receipt](results/stage6/report-exit-attempt1.json)
+The [measured report](docs/reuse-benchmark-epoch1.md), [raw experiment](results/stage6-epoch1/benchmark.json),
+[source evidence](results/stage6-epoch1/source-evidence.json), and [report EXIT receipt](results/stage6-epoch1/report-exit-attempt1.json)
 retain exact commands, real codes, digests, and limits. The hardware was Apple M1
 Pro / MacBookPro18,1, 16 GB, with 10 reported logical CPUs and macOS 27.0.1.
 The verifier used one worker, the existing pinned Dafny/Z3 builds, resource limit
@@ -749,7 +820,7 @@ Additional real checks:
 - A postrun inspection matched all 450 materialized source files to the frozen
   fixture bytes. The accepted source collection has its own canonical manifest.
 - A second report EXIT returned 0. Actual `cmp` commands returned 0 for both
-  `results/stage6/report.json` and `docs/reuse-benchmark.md`. See [replay](results/stage6/report-replay.json).
+  `results/stage6/report.json` and `docs/reuse-benchmark.md`. See [replay](results/stage6-epoch1/report-replay.json).
 
 The [usage record](results/stage6/accounting.json) includes all six available
 runtime categories for 76 responses in its declared interval. Total: 10146635

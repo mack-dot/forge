@@ -1,0 +1,195 @@
+{
+ "affected_obligations": [
+  "ledger-proof",
+  "ledger-model"
+ ],
+ "claim_apply_status": {
+  "C1": "reused",
+  "C2": "reused",
+  "C3": "reused",
+  "C4": "reused",
+  "C5": "reused"
+ },
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/warm/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/v0/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/v1/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-0007/e03-ts-fee-constant/root/build/warm/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/warm/snapshots.log"
+  }
+ ],
+ "coverage": {
+  "affected_obligations": [
+   "ledger-proof",
+   "ledger-model"
+  ],
+  "changed": [
+   {
+    "change": "modified",
+    "covered_by": [
+     "ledger-model"
+    ],
+    "path": "ts/ledger.ts"
+   }
+  ],
+  "claims": [
+   {
+    "affected": true,
+    "claims": {
+     "C1": "source_proof",
+     "C2": "source_proof",
+     "C3": "source_proof",
+     "C4": "source_proof",
+     "C5": "source_proof"
+    },
+    "obligation": "ledger-proof",
+    "scope": "impl/Ledger.dfy refines the approved ledger spec",
+    "status": "established (fresh snapshot proof on the candidate)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "C1": "source_proof",
+     "C2": "source_proof",
+     "C3": "source_proof",
+     "C4": "source_proof",
+     "C5": "source_proof"
+    },
+    "obligation": "ledger-evidence",
+    "scope": "committed root evidence.json reproduces from the candidate ledger source",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": true,
+    "claims": {
+     "C1": "tested_against_proved_model",
+     "C2": "tested_against_proved_model",
+     "C3": "tested_against_proved_model",
+     "C4": "tested_against_proved_model",
+     "C5": "tested_against_proved_model"
+    },
+    "obligation": "ledger-model",
+    "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "B1": "source_proof",
+     "B2": "source_proof",
+     "B3": "source_proof",
+     "B4": "source_proof"
+    },
+    "obligation": "booking",
+    "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "R1": "source_proof",
+     "R2": "source_proof",
+     "R3": "source_proof",
+     "R4": "source_proof",
+     "R5": "source_proof"
+    },
+    "obligation": "refund-proof",
+    "scope": "refund boundary source proof",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "T1": "property_tested",
+     "T2": "property_tested",
+     "T3": "property_tested"
+    },
+    "obligation": "refund-tests",
+    "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "W": "source_proof"
+    },
+    "obligation": "ledger-witness",
+    "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   }
+  ],
+  "covered": false,
+  "findings": [
+   {
+    "detail": "bound input of ledger-model: the obligation runs this file as part of its harness, so a changed copy cannot be judged by it; the change needs a gate update under review",
+    "path": "ts/ledger.ts",
+    "reason": "NOT_REESTABLISHABLE"
+   }
+  ],
+  "inventory": "walk/walk",
+  "obligations": {}
+ },
+ "end_to_end": false,
+ "error": "UNSUPPORTED: every obligation that ran holds, but 1 coverage finding(s) remain: NOT_REESTABLISHABLE ts/ledger.ts (bound input of ledger-model: the obligation runs this file as part of its harness, so a changed copy cannot be judged by it; the change needs a gate update under review)",
+ "exit_code": 3,
+ "obligations": {},
+ "outcome": "UNSUPPORTED",
+ "result": "unsupported",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

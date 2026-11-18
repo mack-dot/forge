@@ -1,0 +1,36 @@
+{
+ "cold": {
+  "affected": null,
+  "cpu_seconds": 10.134,
+  "evidence_written": false,
+  "exit": 3,
+  "findings": [
+   "UNCOVERED_CHANGE ts/ledger.ts"
+  ],
+  "obligations": {},
+  "outcome": "UNSUPPORTED",
+  "reason_prefix": "UNSUPPORTED",
+  "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)",
+  "wall_seconds": 12.59
+ },
+ "expected_exit": 2,
+ "expected_outcome": "NOT_ESTABLISHED",
+ "id": "e18-node-modules-missing",
+ "pass_ok": false,
+ "warm": {
+  "affected": null,
+  "cpu_seconds": 7.063,
+  "evidence_written": false,
+  "exit": 3,
+  "findings": [
+   "UNCOVERED_CHANGE ts/ledger.ts"
+  ],
+  "obligations": {},
+  "outcome": "UNSUPPORTED",
+  "reason_prefix": "UNSUPPORTED",
+  "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)",
+  "wall_seconds": 7.376
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

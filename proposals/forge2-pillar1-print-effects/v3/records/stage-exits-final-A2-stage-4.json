@@ -1,0 +1,53 @@
+{
+ "end_to_end": false,
+ "head": "26410d4639d80fb7d17232fa078027868d4d5573",
+ "label": "final-A2-26410d46-stage-4",
+ "python": "3.10.11",
+ "stages": [
+  {
+   "case": "affected-claims",
+   "exit": 0,
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"1fdb02f8d2efe791611b121429954ed4d\\\",\\\"spec.lock\\\":\\\"3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae\\\",\\\"toolchain/linux-pins.json\\\":\\\"11128aa46f89391c39e6927f71dd1ba5ff8af1495ea0ad42253f7263294be819\\\",\\\"toolchain/requirements-linux.txt\\\":\\",
+   "script": "scripts/exit_stage_4.py --case affected-claims",
+   "stage": 4,
+   "stderr_tail": [],
+   "stdout_sha256": "9bb8c661cc6d225af4d1f64ba7979838bef9140d2cdf1e2dee4decf9f37119ce",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 8.4
+  },
+  {
+   "case": "unapproved-spec",
+   "exit": 0,
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 0, \"text\": \"{\\\"case\\\":\\\"unapproved-spec\\\",\\\"end_to_end\\\":false,\\\"exit_code\\\":0,\\\"result\\\":\\\"passed\\\",\\\"runs\\\":[{\\\"artifact_id\\\":12688689112,\\\"comment_url\\\":\\\"https://github.com/mack-dot/forge/pull/2#issuecomment-6427532824\\\",\\\"gate_exit_code\\\":1,\\\"pr_number\\\":2,\\\"receipt\\",
+   "script": "scripts/exit_stage_4.py --case unapproved-spec",
+   "stage": 4,
+   "stderr_tail": [],
+   "stdout_sha256": "9b790d885e7ba76a4e0d8bc820ecc08d285cc25f51d32cb476b06a449b0245e1",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 19.3
+  },
+  {
+   "case": "approved-spec",
+   "exit": 0,
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"fe9b9132a90b39f5144ed749e6a866098f422837f8fda\\\",\\\"gate/backends/dafny.py\\\":\\\"ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe\\\",\\\"gate/common.py\\\":\\\"06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988\\\",\\\"gate/core.py\\\":\\\"bf8f0",
+   "script": "scripts/exit_stage_4.py --case approved-spec",
+   "stage": 4,
+   "stderr_tail": [],
+   "stdout_sha256": "ac027f9b8b7e98d39ff6e3352a764a8238e6847c8f9a91e7a11673fd80ff58d4",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 7.7
+  }
+ ]
+}

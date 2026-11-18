@@ -1,0 +1,69 @@
+{
+ "cold": {
+  "affected": [
+   "ledger-proof",
+   "refund-proof",
+   "refund-tests"
+  ],
+  "cpu_seconds": 28.581,
+  "evidence_written": true,
+  "exit": 0,
+  "findings": [],
+  "obligations": {
+   "refund-proof": {
+    "reason": "",
+    "result": "established",
+    "reused": false,
+    "wall_seconds": 4.897
+   },
+   "refund-tests": {
+    "reason": "",
+    "result": "established",
+    "reused": false,
+    "wall_seconds": 7.105
+   }
+  },
+  "outcome": "VERIFIED",
+  "reason_prefix": null,
+  "stderr_first_line": "",
+  "wall_seconds": 39.077
+ },
+ "expected_exit": 0,
+ "expected_outcome": "VERIFIED",
+ "id": "e05-refund-negated-branch",
+ "pass_ok": true,
+ "warm": {
+  "affected": [
+   "ledger-proof",
+   "refund-proof",
+   "refund-tests"
+  ],
+  "cpu_seconds": 11.331,
+  "evidence_written": true,
+  "exit": 0,
+  "findings": [],
+  "obligations": {
+   "refund-proof": {
+    "reason": "",
+    "result": "established",
+    "reused": true,
+    "wall_seconds": 4.897
+   },
+   "refund-tests": {
+    "reason": "",
+    "result": "established",
+    "reused": true,
+    "wall_seconds": 7.105
+   }
+  },
+  "outcome": "VERIFIED",
+  "reason_prefix": null,
+  "stderr_first_line": "",
+  "wall_seconds": 14.061
+ },
+ "warm_reused": [
+  "refund-proof",
+  "refund-tests"
+ ],
+ "warm_same_decision": true
+}

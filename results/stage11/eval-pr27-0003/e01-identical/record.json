@@ -1,0 +1,32 @@
+{
+ "cold": {
+  "affected": null,
+  "cpu_seconds": 12.861,
+  "evidence_written": true,
+  "exit": 0,
+  "findings": [],
+  "obligations": {},
+  "outcome": "VERIFIED",
+  "reason_prefix": null,
+  "stderr_first_line": "",
+  "wall_seconds": 21.686
+ },
+ "expected_exit": 0,
+ "expected_outcome": "VERIFIED",
+ "id": "e01-identical",
+ "pass_ok": false,
+ "warm": {
+  "affected": null,
+  "cpu_seconds": 8.179,
+  "evidence_written": true,
+  "exit": 0,
+  "findings": [],
+  "obligations": {},
+  "outcome": "VERIFIED",
+  "reason_prefix": null,
+  "stderr_first_line": "",
+  "wall_seconds": 11.509
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

@@ -1,0 +1,309 @@
+{
+ "affected_obligations": [
+  "ledger-proof",
+  "ledger-evidence",
+  "ledger-model",
+  "booking",
+  "ledger-witness"
+ ],
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/cold/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/v0/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/cold/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/v1/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/cold/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/cold/snapshots.log"
+  }
+ ],
+ "end_to_end": false,
+ "error": "OBLIGATION_REJECTED: ledger-evidence: ARTIFACT_MISMATCH: artifact differs from the current backend input bytes",
+ "exit_code": 1,
+ "obligations": {
+  "booking": {
+   "argument_inputs": [],
+   "artifact_sha256": "d58715783b57d10e0fcdb2f099c16a960a6a7b40af80f2cb93611578dfdcd75c",
+   "backend": "dafny-booking",
+   "cache_key": "8d6ab263a2c203cf34679d69043eab2b317b7642720d5a56e9c8422f2d2725c3",
+   "claims": {
+    "B1": "source_proof",
+    "B2": "source_proof",
+    "B3": "source_proof",
+    "B4": "source_proof"
+   },
+   "commands": [
+    {
+     "argv": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+     "exit_code": 0,
+     "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+     "log": "booking-0.log"
+    }
+   ],
+   "declared_inputs": [
+    "gate/ContractBinding.dfy",
+    "gate/backends/__init__.py",
+    "gate/backends/dafny.py",
+    "gate/booking-coverage.json",
+    "gate/booking.py",
+    "gate/common.py",
+    "gate/core.py",
+    "gate/dependencies.py",
+    "gate/expected-audit.md",
+    "gate/gate.py",
+    "impl/Booking.dfy",
+    "impl/Ledger.dfy",
+    "policy/booking.yaml",
+    "policy/tiers.yaml",
+    "proposals/booking-decision.md",
+    "schemas/evidence.schema.json",
+    "schemas/policy.schema.json",
+    "spec.lock",
+    "spec/LedgerSpec.dfy",
+    "spec/booking/BookingSpec.dfy",
+    "spec/booking/spec.lock",
+    "tests/booking/SuccessfulExecution.dfy",
+    "toolchain/pins.json",
+    "toolchain/requirements-stage2.txt",
+    "toolchain/validator-pins.json"
+   ],
+   "evidence_sha256": "3d105b03ca8568b75561ad9ccc5f422c5318863ebc0507d6967e8a5bd23bc856",
+   "obligation": "booking",
+   "result": "established",
+   "reused": false,
+   "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+   "subjects": [
+    "impl/Booking.dfy",
+    "impl/Ledger.dfy",
+    "spec/LedgerSpec.dfy",
+    "spec/booking/BookingSpec.dfy",
+    "tests/booking/SuccessfulExecution.dfy"
+   ],
+   "wall_seconds": 13.156
+  },
+  "ledger-evidence": {
+   "argument_inputs": [
+    "evidence.json"
+   ],
+   "cache_key": "848c32ed82f5405b9570f220887fe9521f50a7bf979947c6f364a68abffc0891",
+   "claims": {
+    "C1": "source_proof",
+    "C2": "source_proof",
+    "C3": "source_proof",
+    "C4": "source_proof",
+    "C5": "source_proof"
+   },
+   "commands": [
+    {
+     "argv": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 gate/gate.py --check-evidence evidence.json --evidence build/obligations/ledger-evidence.json",
+     "exit_code": 1,
+     "last_line": "ARTIFACT_MISMATCH: artifact differs from the current backend input bytes",
+     "log": "ledger-evidence-0.log"
+    }
+   ],
+   "declared_inputs": [
+    "evidence.json",
+    "gate/ContractBinding.dfy",
+    "gate/backends/__init__.py",
+    "gate/backends/dafny.py",
+    "gate/common.py",
+    "gate/core.py",
+    "gate/dependencies.py",
+    "gate/expected-audit.md",
+    "gate/gate.py",
+    "impl/Ledger.dfy",
+    "policy/tiers.yaml",
+    "schemas/evidence.schema.json",
+    "schemas/policy.schema.json",
+    "spec.lock",
+    "spec/LedgerSpec.dfy",
+    "toolchain/pins.json",
+    "toolchain/requirements-stage2.txt",
+    "toolchain/validator-pins.json"
+   ],
+   "obligation": "ledger-evidence",
+   "reason": "ARTIFACT_MISMATCH: artifact differs from the current backend input bytes",
+   "result": "rejected",
+   "reused": false,
+   "scope": "committed root evidence.json reproduces from the candidate ledger source",
+   "subjects": [
+    "evidence.json",
+    "impl/Ledger.dfy",
+    "spec/LedgerSpec.dfy"
+   ],
+   "wall_seconds": 0.786
+  },
+  "ledger-model": {
+   "argument_inputs": [],
+   "artifact_sha256": "f1b083ba262b96618a5d68936c46098f95ccfe6d73c19a276dd49e83d8773a47",
+   "backend": "typescript",
+   "cache_key": "08a88d0be6ec981cc3d3792753ecb334307c23c4c49d8a1e0ecdc1047bb2fca8",
+   "claims": {
+    "C1": "tested_against_proved_model",
+    "C2": "tested_against_proved_model",
+    "C3": "tested_against_proved_model",
+    "C4": "tested_against_proved_model",
+    "C5": "tested_against_proved_model"
+   },
+   "commands": [
+    {
+     "argv": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 gate/gate.py --backend typescript --impl ts/ledger.ts --tier standard --evidence build/obligations/ledger-model.json",
+     "exit_code": 0,
+     "last_line": "ACCEPTED: C1 C2 C3 C4 C5; backend=typescript; tier=standard; end_to_end=false",
+     "log": "ledger-model-0.log"
+    }
+   ],
+   "declared_inputs": [
+    "gate/ContractBinding.dfy",
+    "gate/backends/__init__.py",
+    "gate/backends/dafny.py",
+    "gate/backends/typescript.py",
+    "gate/common.py",
+    "gate/core.py",
+    "gate/dependencies.py",
+    "gate/expected-audit.md",
+    "gate/gate.py",
+    "impl/Ledger.dfy",
+    "interop/export.cjs",
+    "interop/model.ts",
+    "package-lock.json",
+    "package.json",
+    "policy/tiers.yaml",
+    "schemas/evidence.schema.json",
+    "schemas/policy.schema.json",
+    "scripts/build_model.py",
+    "scripts/javascript_env.py",
+    "spec.lock",
+    "spec/LedgerSpec.dfy",
+    "tests/ledger.property.ts",
+    "toolchain/javascript-pins.json",
+    "toolchain/pins.json",
+    "toolchain/requirements-stage2.txt",
+    "toolchain/validator-pins.json",
+    "ts/ledger.ts",
+    "ts/types.ts",
+    "tsconfig.json"
+   ],
+   "evidence_sha256": "314ce9a657f1b2b86ced76ef27904342bbdd0b48b83038c256ea2632a0afda33",
+   "obligation": "ledger-model",
+   "result": "established",
+   "reused": false,
+   "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+   "subjects": [],
+   "wall_seconds": 8.044
+  },
+  "ledger-witness": {
+   "argument_inputs": [],
+   "cache_key": "2b57d430e157f8b2ce0b4949935ff470071132a1fc511943121556212e5c60c6",
+   "claims": {
+    "W": "source_proof"
+   },
+   "commands": [
+    {
+     "argv": ".toolchain/dafny-4.11.0/dafny/dafny audit tests/stage5/SuccessfulExecution.dfy --report-format md --report-file build/obligations/ledger-witness-audit.md --compare-report",
+     "exit_code": 0,
+     "last_line": "Dafny program verifier did not attempt verification",
+     "log": "ledger-witness-0.log"
+    },
+    {
+     "argv": ".toolchain/dafny-4.11.0/dafny/dafny verify tests/stage5/SuccessfulExecution.dfy --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --log-format 'trx;LogFileName=$HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/verify/build/obligations/ledger-witness.trx'",
+     "exit_code": 0,
+     "last_line": "Results File: $HOME/forge-s11-eval-0007/e08-ledger-edit-stale-evidence/root/build/cold/verify/build/obligations/ledger-witness.trx",
+     "log": "ledger-witness-1.log"
+    }
+   ],
+   "declared_inputs": [
+    "gate/expected-audit.md",
+    "impl/Ledger.dfy",
+    "spec/LedgerSpec.dfy",
+    "tests/stage5/SuccessfulExecution.dfy",
+    "toolchain/pins.json"
+   ],
+   "obligation": "ledger-witness",
+   "result": "established",
+   "reused": false,
+   "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+   "self_reported_inputs": false,
+   "subject_sha256": {
+    "impl/Ledger.dfy": "d56e0e55d16d1804a70f85223f6e0b291c7760cfe23efd3f923d3353720a8997",
+    "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940"
+   },
+   "subjects": [
+    "impl/Ledger.dfy",
+    "spec/LedgerSpec.dfy"
+   ],
+   "verified_members": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)",
+    "SuccessfulExecution.Witness (correctness)"
+   ],
+   "wall_seconds": 3.001
+  }
+ },
+ "outcome": "REJECTED",
+ "result": "rejected",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

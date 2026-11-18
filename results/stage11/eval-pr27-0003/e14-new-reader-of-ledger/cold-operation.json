@@ -1,0 +1,162 @@
+{
+ "claim_apply_status": {
+  "C1": "reused",
+  "C2": "reused",
+  "C3": "reused",
+  "C4": "reused",
+  "C5": "reused"
+ },
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/cold/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/v0/impl/Ledger.dfy $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/cold/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/v1/impl/Ledger.dfy $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/cold/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-pr27/e14-new-reader-of-ledger/root/build/cold/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/cold/snapshots.log"
+  }
+ ],
+ "coverage": {
+  "changed": [
+   {
+    "change": "modified",
+    "path": "evidence.json"
+   },
+   {
+    "change": "added",
+    "path": "impl/Extra.dfy"
+   },
+   {
+    "change": "modified",
+    "path": "impl/Ledger.dfy"
+   }
+  ],
+  "covered": false,
+  "established_paths": [
+   "impl/Ledger.dfy"
+  ],
+  "findings": [
+   {
+    "detail": "modified; no claim established by this check covers it",
+    "path": "evidence.json",
+    "reason": "UNCOVERED_CHANGE"
+   },
+   {
+    "detail": "added; no claim established by this check covers it",
+    "path": "impl/Extra.dfy",
+    "reason": "UNCOVERED_CHANGE"
+   },
+   {
+    "detail": "impl/Booking.dfy includes it (directly or transitively); not re-checked here",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "impl/Extra.dfy includes it (directly or transitively); not re-checked here",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "tests/booking/SuccessfulExecution.dfy includes it (directly or transitively); not re-checked here",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "tests/stage5/SuccessfulExecution.dfy includes it (directly or transitively); not re-checked here",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "gate/booking.py: the booking gate audits and verifies against this file",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "gate/backends/typescript.py: tested_against_proved_model claims for ts/ledger.ts use the model compiled from this file",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "scripts/build_model.py: builds the JavaScript model from this file",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "scripts/stage5_tools.py: Stage 5 witness and spec-report checks read this file",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "tests/Basic.dfy: imports module Ledger without an include; compiled beside this file by scripts/exit_stage_1.py",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   },
+   {
+    "detail": "evidence.json: committed ledger evidence names the artifact that includes this file",
+    "path": "impl/Ledger.dfy",
+    "reason": "DEPENDENT_NOT_REESTABLISHED"
+   }
+  ],
+  "inventory": "walk/walk"
+ },
+ "end_to_end": false,
+ "error": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 12 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); UNCOVERED_CHANGE impl/Extra.dfy (added; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Extra.dfy includes it (directly or transitively); not re-checked here); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (tests/booking/SuccessfulExecution.dfy includes it (directly or transitively); not re-checked here); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (tests/stage5/SuccessfulExecution.dfy includes it (directly or transitively); not re-checked here); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (gate/booking.py: the booking gate audits and verifies against this file); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (gate/backends/typescript.py: tested_against_proved_model claims for ts/ledger.ts use the model compiled from this file); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (scripts/build_model.py: builds the JavaScript model from this file); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (scripts/stage5_tools.py: Stage 5 witness and spec-report checks read this file); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (tests/Basic.dfy: imports module Ledger without an include; compiled beside this file by scripts/exit_stage_1.py); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (evidence.json: committed ledger evidence names the artifact that includes this file)",
+ "exit_code": 3,
+ "outcome": "UNSUPPORTED",
+ "result": "unsupported",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

@@ -1,0 +1,52 @@
+{
+ "cold": {
+  "affected": [
+   "ledger-proof",
+   "booking"
+  ],
+  "cpu_seconds": 26.333,
+  "evidence_written": false,
+  "exit": 1,
+  "findings": [],
+  "obligations": {
+   "booking": {
+    "reason": "Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/cold/verify/build/obligatio",
+    "result": "rejected",
+    "reused": false,
+    "wall_seconds": 12.501
+   }
+  },
+  "outcome": "REJECTED",
+  "reason_prefix": "OBLIGATION_REJECTED",
+  "stderr_first_line": "OBLIGATION_REJECTED: booking: Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/cold/verify/build/obligations/booking-work/verification.trx",
+  "wall_seconds": 36.125
+ },
+ "expected_exit": 1,
+ "expected_outcome": "REJECTED",
+ "id": "e09-booking-active-not-updated",
+ "pass_ok": true,
+ "warm": {
+  "affected": [
+   "ledger-proof",
+   "booking"
+  ],
+  "cpu_seconds": 20.348,
+  "evidence_written": false,
+  "exit": 1,
+  "findings": [],
+  "obligations": {
+   "booking": {
+    "reason": "Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/verify/build/obligatio",
+    "result": "rejected",
+    "reused": false,
+    "wall_seconds": 11.769
+   }
+  },
+  "outcome": "REJECTED",
+  "reason_prefix": "OBLIGATION_REJECTED",
+  "stderr_first_line": "OBLIGATION_REJECTED: booking: Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/verify/build/obligations/booking-work/verification.trx",
+  "wall_seconds": 26.136
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

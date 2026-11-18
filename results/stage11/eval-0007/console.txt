@@ -1,0 +1,20 @@
+PASS e01-identical cold 0 VERIFIED None ['ledger-proof'] 21.6 | warm 0 VERIFIED 11.6 reused [] | same
+PASS e02-ledger-rename-local-plus-evidence cold 0 VERIFIED None ['ledger-proof', 'ledger-evidence', 'ledger-model', 'booking', 'ledger-witness'] 35.1 | warm 0 VERIFIED 16.2 reused ['booking', 'ledger-evidence', 'ledger-model', 'ledger-witness'] | same
+FAIL e03-ts-fee-constant cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof', 'ledger-model'] 15.7 | warm 3 UNSUPPORTED 7.8 reused [] | same
+PASS e04-booking-least-le cold 0 VERIFIED None ['ledger-proof', 'booking'] 38.1 | warm 0 VERIFIED 17.7 reused ['booking'] | same
+PASS e05-refund-negated-branch cold 0 VERIFIED None ['ledger-proof', 'refund-proof', 'refund-tests'] 39.1 | warm 0 VERIFIED 14.1 reused ['refund-proof', 'refund-tests'] | same
+FAIL e06-property-test-comment cold 1 REJECTED UNAPPROVED_PROTECTED_CHANGE None 0.3 | warm 1 REJECTED 0.2 reused [] | same
+FAIL e07-ts-retry-rejected cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof', 'ledger-model'] 15.7 | warm 3 UNSUPPORTED 11.0 reused [] | same
+PASS e08-ledger-edit-stale-evidence cold 1 REJECTED OBLIGATION_REJECTED ['ledger-proof', 'ledger-evidence', 'ledger-model', 'booking', 'ledger-witness'] 37.4 | warm 1 REJECTED 16.8 reused ['booking', 'ledger-model', 'ledger-witness'] | same
+PASS e09-booking-active-not-updated cold 1 REJECTED OBLIGATION_REJECTED ['ledger-proof', 'booking'] 36.1 | warm 1 REJECTED 26.1 reused [] | same
+FAIL e10-refund-ts-drops-bound cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof', 'refund-tests'] 19.0 | warm 3 UNSUPPORTED 7.4 reused [] | same
+PASS e11-weakened-spec-with-lock cold 1 REJECTED UNAPPROVED_PROTECTED_CHANGE None 0.3 | warm 1 REJECTED 0.4 reused [] | same
+HARNESS_ERROR e12-stale-witness ('anchor', 'tests/stage5/SuccessfulExecution.dfy')
+PASS e13-readme-only cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof'] 13.0 | warm 3 UNSUPPORTED 6.8 reused [] | same
+PASS e14-new-reader-of-ledger cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof', 'ledger-evidence', 'ledger-model', 'booking', 'ledger-witness'] 13.6 | warm 3 UNSUPPORTED 8.6 reused [] | same
+PASS e15-mixed-docs-plus-ts-refactor cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof', 'ledger-model'] 12.6 | warm 3 UNSUPPORTED 6.4 reused [] | same
+PASS e16-results-record-edit cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof'] 12.6 | warm 3 UNSUPPORTED 6.7 reused [] | same
+PASS e17-dafny-missing cold 2 NOT_ESTABLISHED None None 0.3 | warm 2 NOT_ESTABLISHED 0.2 reused [] | same
+FAIL e18-node-modules-missing cold 3 UNSUPPORTED UNSUPPORTED ['ledger-proof', 'ledger-model'] 13.6 | warm 3 UNSUPPORTED 7.4 reused [] | same
+records 18 not passing 6 warm differs 0
+runner exit 1

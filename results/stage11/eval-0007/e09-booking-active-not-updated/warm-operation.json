@@ -1,0 +1,136 @@
+{
+ "affected_obligations": [
+  "ledger-proof",
+  "booking"
+ ],
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/warm/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/v0/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/v1/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/warm/snapshots.log"
+  }
+ ],
+ "end_to_end": false,
+ "error": "OBLIGATION_REJECTED: booking: Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/verify/build/obligations/booking-work/verification.trx",
+ "exit_code": 1,
+ "obligations": {
+  "booking": {
+   "argument_inputs": [],
+   "cache_key": "87e74a1547488ec51a7d347e874d242654c316fc3845451678c9a128d839abd5",
+   "claims": {
+    "B1": "source_proof",
+    "B2": "source_proof",
+    "B3": "source_proof",
+    "B4": "source_proof"
+   },
+   "commands": [
+    {
+     "argv": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+     "exit_code": 1,
+     "last_line": "Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/verify/build/obligations/booking-work/verification.trx",
+     "log": "booking-0.log"
+    }
+   ],
+   "declared_inputs": [
+    "gate/ContractBinding.dfy",
+    "gate/backends/__init__.py",
+    "gate/backends/dafny.py",
+    "gate/booking-coverage.json",
+    "gate/booking.py",
+    "gate/common.py",
+    "gate/core.py",
+    "gate/dependencies.py",
+    "gate/expected-audit.md",
+    "gate/gate.py",
+    "impl/Booking.dfy",
+    "impl/Ledger.dfy",
+    "policy/booking.yaml",
+    "policy/tiers.yaml",
+    "proposals/booking-decision.md",
+    "schemas/evidence.schema.json",
+    "schemas/policy.schema.json",
+    "spec.lock",
+    "spec/LedgerSpec.dfy",
+    "spec/booking/BookingSpec.dfy",
+    "spec/booking/spec.lock",
+    "tests/booking/SuccessfulExecution.dfy",
+    "toolchain/pins.json",
+    "toolchain/requirements-stage2.txt",
+    "toolchain/validator-pins.json"
+   ],
+   "obligation": "booking",
+   "reason": "Results File: $HOME/forge-s11-eval-0007/e09-booking-active-not-updated/root/build/warm/verify/build/obligations/booking-work/verification.trx",
+   "result": "rejected",
+   "reused": false,
+   "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+   "subjects": [
+    "impl/Booking.dfy",
+    "impl/Ledger.dfy",
+    "spec/LedgerSpec.dfy",
+    "spec/booking/BookingSpec.dfy",
+    "tests/booking/SuccessfulExecution.dfy"
+   ],
+   "wall_seconds": 11.769
+  }
+ },
+ "outcome": "REJECTED",
+ "result": "rejected",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

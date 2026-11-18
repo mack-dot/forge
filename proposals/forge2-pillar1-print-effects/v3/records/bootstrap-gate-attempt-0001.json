@@ -1,0 +1,120 @@
+{
+ "cases": [
+  {
+   "candidate_commit": "26410d4639d80fb7d17232fa078027868d4d5573",
+   "coverage_findings": null,
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/approval.py, gate/incremental.py, gate/ratification.py; approval of exact spec text is required; PR labels do not authorize it",
+   "gate_ratification_record": null,
+   "matches_expectation": true,
+   "name": "action-1-bootstrap-on-present-main",
+   "obligations": {},
+   "outcome": "REJECTED",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "trusted_commit": "4143f4b2426efaf9499390ce12b9656e83ad872c"
+  },
+  {
+   "candidate_commit": "26410d4639d80fb7d17232fa078027868d4d5573",
+   "coverage_findings": [],
+   "expected_gate_exit": 0,
+   "gate_exit": 0,
+   "gate_last_line": "VERIFIED: C1 C2 C3 C4 C5; every change covered; re-established none; checked=0; reused=12; end_to_end=false",
+   "gate_ratification_record": null,
+   "matches_expectation": true,
+   "name": "unchanged-candidate-after-bootstrap",
+   "obligations": {},
+   "outcome": "VERIFIED",
+   "ratification_controls": [],
+   "replay_of_saved_command": {
+    "byte_identical": true,
+    "exit": 0
+   },
+   "trusted_commit": "26410d4639d80fb7d17232fa078027868d4d5573"
+  },
+  {
+   "candidate_commit": "f54e25070ba2f35a0a71934d96f28b4ab5111708",
+   "coverage_findings": [
+    {
+     "detail": "added; no obligation lists this path as an input",
+     "path": "bugs/print_effect.dfy",
+     "reason": "UNCOVERED_CHANGE"
+    },
+    {
+     "detail": "added; no obligation lists this path as an input",
+     "path": "bugs/print_effect_marked.dfy",
+     "reason": "UNCOVERED_CHANGE"
+    },
+    {
+     "detail": "modified; no obligation lists this path as an input",
+     "path": "scripts/exit_stage_5.py",
+     "reason": "UNCOVERED_CHANGE"
+    },
+    {
+     "detail": "modified; no obligation lists this path as an input",
+     "path": "toolchain/linux-pins.json",
+     "reason": "UNCOVERED_CHANGE"
+    }
+   ],
+   "expected_gate_exit": 3,
+   "gate_exit": 3,
+   "gate_last_line": "UNSUPPORTED: every obligation that ran holds, but 4 coverage finding(s) remain: UNCOVERED_CHANGE bugs/print_effect.dfy (added; no obligation lists this path as an input); UNCOVERED_CHANGE bugs/print_effect_marked.dfy (added; no obligation lists this path as an input); UNCOVERED_CHANGE scripts/exit_stage_5.py (modified; no obligation lists this path as an input); UNCOVERED_CHANGE toolchain/linux-pins.json (modified; no obligation lists this path as an input)",
+   "gate_ratification_record": "governance/gate-ratifications/0001-print-effects.json",
+   "matches_expectation": true,
+   "name": "action-2-step-B-after-bootstrap",
+   "obligations": {},
+   "outcome": "UNSUPPORTED",
+   "ratification_controls": [
+    [
+     "bugs/off_by_one.dfy",
+     "trusted planted bug",
+     1
+    ],
+    [
+     "bugs/retry_double.dfy",
+     "trusted planted bug",
+     1
+    ],
+    [
+     "bugs/self_transfer.dfy",
+     "trusted planted bug",
+     1
+    ],
+    [
+     "bugs/sneaky_assume.dfy",
+     "trusted planted bug",
+     1
+    ],
+    [
+     "bugs/print_effect.dfy",
+     "ratified control",
+     1
+    ],
+    [
+     "bugs/print_effect_marked.dfy",
+     "ratified control",
+     1
+    ],
+    [
+     "impl/Ledger.dfy",
+     "trusted approved implementation",
+     0
+    ],
+    [
+     "gate/incremental.py:protected_manifest, gate/approval.py:authorize",
+     "function probe",
+     0
+    ]
+   ],
+   "replay_of_saved_command": null,
+   "trusted_commit": "26410d4639d80fb7d17232fa078027868d4d5573"
+  }
+ ],
+ "end_to_end": false,
+ "gate": "gate/incremental.py --profile local, run from a clone of the trusted commit",
+ "label": "attempt-0001",
+ "profile_linux": "NOT RUN",
+ "scenario_exit": 0,
+ "wrapper_gate_pr_check_py": "NOT RUN"
+}

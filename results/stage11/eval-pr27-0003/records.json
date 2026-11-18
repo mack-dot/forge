@@ -1,0 +1,696 @@
+{
+ "cases_sha256": "ceec69ca99000f1c6fb1313892895734d07239da94edbeeb3c8cb007e2da9e1f",
+ "records": [
+  {
+   "id": "e01-identical",
+   "expected_exit": 0,
+   "expected_outcome": "VERIFIED",
+   "cold": {
+    "exit": 0,
+    "outcome": "VERIFIED",
+    "reason_prefix": null,
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": true,
+    "wall_seconds": 21.686,
+    "cpu_seconds": 12.861,
+    "stderr_first_line": ""
+   },
+   "warm": {
+    "exit": 0,
+    "outcome": "VERIFIED",
+    "reason_prefix": null,
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": true,
+    "wall_seconds": 11.509,
+    "cpu_seconds": 8.179,
+    "stderr_first_line": ""
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e02-ledger-rename-local-plus-evidence",
+   "expected_exit": 0,
+   "expected_outcome": "VERIFIED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "UNCOVERED_CHANGE evidence.json"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 15.378,
+    "cpu_seconds": 10.816,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 10 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "UNCOVERED_CHANGE evidence.json"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 8.91,
+    "cpu_seconds": 8.045,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 10 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e03-ts-fee-constant",
+   "expected_exit": 0,
+   "expected_outcome": "VERIFIED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 16.974,
+    "cpu_seconds": 11.732,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.73,
+    "cpu_seconds": 7.405,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e04-booking-least-le",
+   "expected_exit": 0,
+   "expected_outcome": "VERIFIED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE impl/Booking.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 14.687,
+    "cpu_seconds": 10.86,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Booking.dfy (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE impl/Booking.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.227,
+    "cpu_seconds": 7.225,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Booking.dfy (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e05-refund-negated-branch",
+   "expected_exit": 0,
+   "expected_outcome": "VERIFIED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE impl/Refund.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 16.211,
+    "cpu_seconds": 11.203,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Refund.dfy (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE impl/Refund.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 6.584,
+    "cpu_seconds": 6.934,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Refund.dfy (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e06-property-test-comment",
+   "expected_exit": 0,
+   "expected_outcome": "VERIFIED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE tests/ledger.property.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 17.45,
+    "cpu_seconds": 12.09,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE tests/ledger.property.ts (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE tests/ledger.property.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.454,
+    "cpu_seconds": 7.263,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE tests/ledger.property.ts (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e07-ts-retry-rejected",
+   "expected_exit": 1,
+   "expected_outcome": "REJECTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 16.85,
+    "cpu_seconds": 11.738,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.67,
+    "cpu_seconds": 7.214,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e08-ledger-edit-stale-evidence",
+   "expected_exit": 1,
+   "expected_outcome": "REJECTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 15.896,
+    "cpu_seconds": 11.883,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 9 coverage finding(s) remain: DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (tests/booking/SuccessfulExecution.dfy inclu"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 15.151,
+    "cpu_seconds": 9.439,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 9 coverage finding(s) remain: DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (tests/booking/SuccessfulExecution.dfy inclu"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e09-booking-active-not-updated",
+   "expected_exit": 1,
+   "expected_outcome": "REJECTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE impl/Booking.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 18.226,
+    "cpu_seconds": 11.995,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Booking.dfy (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE impl/Booking.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.738,
+    "cpu_seconds": 7.456,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE impl/Booking.dfy (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e10-refund-ts-drops-bound",
+   "expected_exit": 1,
+   "expected_outcome": "REJECTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/refund.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 18.237,
+    "cpu_seconds": 12.205,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/refund.ts (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/refund.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 8.265,
+    "cpu_seconds": 7.375,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/refund.ts (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e11-weakened-spec-with-lock",
+   "expected_exit": 1,
+   "expected_outcome": "REJECTED",
+   "cold": {
+    "exit": 1,
+    "outcome": "REJECTED",
+    "reason_prefix": "UNAPPROVED_PROTECTED_CHANGE",
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": false,
+    "wall_seconds": 0.388,
+    "cpu_seconds": 0.264,
+    "stderr_first_line": "UNAPPROVED_PROTECTED_CHANGE: spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it"
+   },
+   "warm": {
+    "exit": 1,
+    "outcome": "REJECTED",
+    "reason_prefix": "UNAPPROVED_PROTECTED_CHANGE",
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": false,
+    "wall_seconds": 0.232,
+    "cpu_seconds": 0.205,
+    "stderr_first_line": "UNAPPROVED_PROTECTED_CHANGE: spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it"
+   },
+   "pass_ok": true,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e12-stale-witness",
+   "expected_exit": 1,
+   "expected_outcome": "REJECTED",
+   "status": "harness_error",
+   "error": "('anchor', 'tests/stage5/SuccessfulExecution.dfy')",
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": [],
+   "cold": {
+    "exit": null,
+    "outcome": null,
+    "reason_prefix": null,
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": false,
+    "wall_seconds": 0.0,
+    "cpu_seconds": 0.0
+   },
+   "warm": {
+    "exit": null,
+    "outcome": null,
+    "reason_prefix": null,
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": false,
+    "wall_seconds": 0.0,
+    "cpu_seconds": 0.0
+   }
+  },
+  {
+   "id": "e13-readme-only",
+   "expected_exit": 3,
+   "expected_outcome": "UNSUPPORTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE README.md"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 14.103,
+    "cpu_seconds": 11.184,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE README.md (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE README.md"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.54,
+    "cpu_seconds": 7.131,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE README.md (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": true,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e14-new-reader-of-ledger",
+   "expected_exit": 3,
+   "expected_outcome": "UNSUPPORTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "UNCOVERED_CHANGE evidence.json",
+     "UNCOVERED_CHANGE impl/Extra.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 21.597,
+    "cpu_seconds": 12.814,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 12 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); UNCOVERED_CHANGE impl/Extra.dfy (added; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Le"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+     "UNCOVERED_CHANGE evidence.json",
+     "UNCOVERED_CHANGE impl/Extra.dfy"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 11.823,
+    "cpu_seconds": 8.388,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 12 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); UNCOVERED_CHANGE impl/Extra.dfy (added; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Le"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e15-mixed-docs-plus-ts-refactor",
+   "expected_exit": 3,
+   "expected_outcome": "UNSUPPORTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE docs/booking.md",
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 14.494,
+    "cpu_seconds": 11.254,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 2 coverage finding(s) remain: UNCOVERED_CHANGE docs/booking.md (modified; no claim established by this check covers it); UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE docs/booking.md",
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.815,
+    "cpu_seconds": 7.663,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 2 coverage finding(s) remain: UNCOVERED_CHANGE docs/booking.md (modified; no claim established by this check covers it); UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": true,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e16-results-record-edit",
+   "expected_exit": 3,
+   "expected_outcome": "UNSUPPORTED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE results/stage1.json"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 13.574,
+    "cpu_seconds": 10.657,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE results/stage1.json (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE results/stage1.json"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 6.686,
+    "cpu_seconds": 6.963,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE results/stage1.json (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": true,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e17-dafny-missing",
+   "expected_exit": 2,
+   "expected_outcome": "NOT_ESTABLISHED",
+   "cold": {
+    "exit": 2,
+    "outcome": "NOT_ESTABLISHED",
+    "reason_prefix": null,
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": false,
+    "wall_seconds": 0.279,
+    "cpu_seconds": 0.198,
+    "stderr_first_line": "[Errno 2] No such file or directory: '$HOME/forge-s11-eval-pr27/e17-dafny-missing/root/.toolchain/dafny-4.11.0/dafny/dafny'"
+   },
+   "warm": {
+    "exit": 2,
+    "outcome": "NOT_ESTABLISHED",
+    "reason_prefix": null,
+    "affected": null,
+    "obligations": {},
+    "findings": [],
+    "evidence_written": false,
+    "wall_seconds": 0.189,
+    "cpu_seconds": 0.173,
+    "stderr_first_line": "[Errno 2] No such file or directory: '$HOME/forge-s11-eval-pr27/e17-dafny-missing/root/.toolchain/dafny-4.11.0/dafny/dafny'"
+   },
+   "pass_ok": true,
+   "warm_same_decision": true,
+   "warm_reused": []
+  },
+  {
+   "id": "e18-node-modules-missing",
+   "expected_exit": 2,
+   "expected_outcome": "NOT_ESTABLISHED",
+   "cold": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 12.59,
+    "cpu_seconds": 10.134,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "warm": {
+    "exit": 3,
+    "outcome": "UNSUPPORTED",
+    "reason_prefix": "UNSUPPORTED",
+    "affected": null,
+    "obligations": {},
+    "findings": [
+     "UNCOVERED_CHANGE ts/ledger.ts"
+    ],
+    "evidence_written": false,
+    "wall_seconds": 7.376,
+    "cpu_seconds": 7.063,
+    "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)"
+   },
+   "pass_ok": false,
+   "warm_same_decision": true,
+   "warm_reused": []
+  }
+ ],
+ "end_to_end": false
+}

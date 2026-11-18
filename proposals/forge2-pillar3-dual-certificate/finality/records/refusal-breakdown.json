@@ -1,0 +1,81 @@
+{
+ "kind": "ANALYSIS of a finite test; decision by the compiled Dafny checker",
+ "end_to_end": false,
+ "instances": {
+  "interval": 40,
+  "general": 6
+ },
+ "instances_where_some_solver_got_a_zero_gap_certificate": {
+  "interval": 40,
+  "general": 4
+ },
+ "optimal_proposals_by_instance_kind": {
+  "interval": {
+   "optimal": 730,
+   "accepted0": 491,
+   "refused0": 239,
+   "accepted2000": 586
+  },
+  "general": {
+   "optimal": 115,
+   "accepted0": 55,
+   "refused0": 60,
+   "accepted2000": 61
+  }
+ },
+ "optimal_proposals_by_kind_and_solver_group": {
+  "interval | naive greedy": {
+   "optimal": 95,
+   "accepted0": 1,
+   "refused0": 94,
+   "accepted2000": 13
+  },
+  "general | naive greedy": {
+   "optimal": 22,
+   "accepted0": 1,
+   "refused0": 21,
+   "accepted2000": 2
+  },
+  "interval | buggy": {
+   "optimal": 62,
+   "accepted0": 0,
+   "refused0": 62,
+   "accepted2000": 0
+  },
+  "general | buggy": {
+   "optimal": 10,
+   "accepted0": 0,
+   "refused0": 10,
+   "accepted2000": 0
+  },
+  "interval | local search": {
+   "optimal": 173,
+   "accepted0": 90,
+   "refused0": 83,
+   "accepted2000": 173
+  },
+  "general | local search": {
+   "optimal": 29,
+   "accepted0": 14,
+   "refused0": 15,
+   "accepted2000": 19
+  },
+  "interval | exact primal-dual": {
+   "optimal": 400,
+   "accepted0": 400,
+   "refused0": 0,
+   "accepted2000": 400
+  },
+  "general | exact primal-dual": {
+   "optimal": 54,
+   "accepted0": 40,
+   "refused0": 14,
+   "accepted2000": 40
+  }
+ },
+ "optimal_refused_at_zero_gap": {
+  "total": 299,
+  "although_another_solver_got_a_zero_gap_certificate_for_that_batch": 261,
+  "no_solver_found_a_zero_gap_certificate_for_that_batch": 38
+ }
+}

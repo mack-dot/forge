@@ -1,0 +1,42 @@
+--- a/gate/backends/dafny.py	2026-11-17 11:55:24.214451622 -0500
++++ b/gate/backends/dafny.py	2026-11-17 11:55:24.262356735 -0500
+@@ -39,7 +39,7 @@
+ OPTIONS = [
+     '--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1',
+     '--resource-limit', '1000000', '--verification-time-limit', '0',
+-    '--cores', '1', '--verify-included-files',
++    '--cores', '1', '--verify-included-files', '--track-print-effects',
+ ]
+ REQUIRED_RESULTS = {
+     'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)',
+--- a/gate/ContractBinding.dfy	2026-11-17 11:55:24.217453759 -0500
++++ b/gate/ContractBinding.dfy	2026-11-17 11:55:24.262634028 -0500
+@@ -7,3 +7,16 @@
+ module BoundLedger refines RequiredLedger {
+   import L = Ledger
+ }
++
++// A caller of Ledger.Apply without a {:print} attribute. With --track-print-effects,
++// Dafny rejects the program when Apply, or anything it calls, has print effects.
++module NoPrintEffects {
++  import L = Ledger
++
++  method CallApply(state: L.State, id: int, request: L.Request)
++      returns (next: L.State, outcome: L.Outcome)
++    requires L.WellFormed(state)
++  {
++    next, outcome := L.Apply(state, id, request);
++  }
++}
+--- a/toolchain/pins.json	2026-11-17 11:55:24.220231604 -0500
++++ b/toolchain/pins.json	2026-11-17 11:55:24.262970071 -0500
+@@ -48,7 +48,8 @@
+     "--resource-limit", "1000000",
+     "--verification-time-limit", "0",
+     "--cores", "1",
+-    "--verify-included-files"
++    "--verify-included-files",
++    "--track-print-effects"
+   ],
+   "proof_checks_run": true,
+   "smoke_results": {

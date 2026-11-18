@@ -1,0 +1,160 @@
+{
+ "attempt": "attempt-0012",
+ "cases": [
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/LedgerDeterminism.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 11 verified, 0 errors",
+   "name": "approved-ledger-spec-is-deterministic",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/BookingDeterminism.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 18 verified, 0 errors",
+   "name": "approved-booking-spec-is-deterministic",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 5 verified, 0 errors",
+   "name": "approved-refund-spec-is-deterministic",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/SpecDiffFee.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 59 verified, 0 errors",
+   "name": "fee-change-spec-diff-general-lemmas",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 74 verified, 0 errors",
+   "name": "fee-change-boundary-witnesses",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": null,
+   "file": "proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy",
+   "kind": "open",
+   "last_line": "Dafny program verifier finished with 61 verified, 0 errors, 1 out of resource",
+   "name": "fee-change-boundary-witness-W2-OPEN",
+   "required_output_text": "out of resource",
+   "required_output_text_found": true,
+   "scenario_result": "OPEN (not proved)"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/SpecDiffFalseClaim.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 59 verified, 1 error",
+   "name": "fee-change-false-diff-claim-rejected",
+   "required_output_text": "SpecDiffFalseClaim.dfy(12,14): Related location: this is the postcondition that could not be proved",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameImpls.dfy",
+   "kind": "control-positive",
+   "last_line": "Dafny program verifier finished with 32 verified, 0 errors",
+   "name": "planted-noframe-spec-two-implementations-verify",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameFourAccounts.dfy",
+   "kind": "control-positive",
+   "last_line": "Dafny program verifier finished with 25 verified, 0 errors",
+   "name": "planted-noframe-spec-deterministic-up-to-four-accounts",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameDeterminism.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 10 verified, 1 error",
+   "name": "planted-noframe-spec-determinism-rejected",
+   "required_output_text": "NoFrameDeterminism.dfy(38,15): Related location: this is the postcondition that could not be proved",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/TrojanAgainstApprovedSpec.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 17 verified, 1 error",
+   "name": "trojan-against-approved-spec-rejected",
+   "required_output_text": "a postcondition could not be proved",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  }
+ ],
+ "dafny_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+ "dafny_version_exit": 0,
+ "dafny_version_pinned": true,
+ "end_to_end": false,
+ "inputs": {
+  "proposals/forge2-pillar1-spec-determinism/BookingDeterminism.dfy": "cbb8218bc9afec1f3b470e4888698d63ba88c6c01ea328800ad2d50b9e94e86b",
+  "proposals/forge2-pillar1-spec-determinism/LedgerDeterminism.dfy": "4120586cc03dd33602edbde1e7da51f885baedcb7d89c93f58b2d2503a7fd2be",
+  "proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy": "6902061697489a0e17ac5340eb0a02bc57d43e8c1067ea1ca295430f5fc9ae0c",
+  "proposals/forge2-pillar1-spec-determinism/SpecDiffFee.dfy": "dc9beea6c0f109d95e28256209f73ecebb5f73158770566669baee5cd1a7e7e7",
+  "proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnesses.dfy": "f2f8e5dfb324da3bfc6e1178e45f7d10a27115fc9b6eb203e3fb6e235da7a097",
+  "proposals/forge2-pillar1-spec-determinism/SpecDiffFeeWitnessesOpen.dfy": "1f4e31f2429973a7011a2fcad1aacea9094e14dabc67b3441b55d50adb5897ac",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/LedgerSpecNoFrame.dfy": "4fa6bdc3c80498f30d02a00783984c36aaa2e9be883840d720d62b9e12015d8e",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameDeterminism.dfy": "43413ced9840bf07501bda54aee1450c9c62d5f58469819cbe20e64fb4accab9",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameFourAccounts.dfy": "5d5051770ffab1700d9a09b61f64ec9bb3c78d6e0cb11740ec34e2a130cf012d",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameImpls.dfy": "0781571cb81be6040620fc8ba663d7ec65c1c89af8fd3794e29299a14fdf29b6",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/SpecDiffFalseClaim.dfy": "c55714c493465b746f9cc75eab5e99600759d7b33b6a54202e758a1da3ea2e24",
+  "proposals/forge2-pillar1-spec-determinism/fixtures/TrojanAgainstApprovedSpec.dfy": "7eb4d5c0965baa79911c3e94e137464164634ce0e28614c2f196a72b44220cf8",
+  "spec.lock": "32cf117f5bcaec2fb0c072650ceb9b535576ab409579a56c00979ed151b03b69",
+  "spec/LedgerSpec.dfy": "2ad0742dcbf81bf24f9235ed88f9728c7b078dfa6ed55632a90b6aa847b35940",
+  "spec/booking/BookingSpec.dfy": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319",
+  "spec/refund/RefundSpec.dfy": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+ },
+ "options": [
+  "--solver-path",
+  ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+  "--resource-limit",
+  "1000000",
+  "--verification-time-limit",
+  "0",
+  "--cores",
+  "1",
+  "--verify-included-files"
+ ],
+ "scenario_exit": 0
+}

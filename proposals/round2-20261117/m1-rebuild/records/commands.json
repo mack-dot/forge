@@ -1,0 +1,224 @@
+{
+ "budget_seconds": 5400.0,
+ "elapsed_seconds": 4714.2,
+ "pins": {
+  "polyml": "4557554077078decce4ce5f90da00a713cfc32e4",
+  "HOL": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+  "cakeml": "cd9155694c16831373ab695a670794f23282ed62"
+ },
+ "commands": [
+  {
+   "label": "clone-polyml",
+   "argv": [
+    "git",
+    "clone",
+    "--quiet",
+    "https://github.com/polyml/polyml",
+    "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/polyml"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 19.4,
+   "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "label": "checkout-polyml",
+   "argv": [
+    "git",
+    "-c",
+    "advice.detachedHead=false",
+    "checkout",
+    "--quiet",
+    "4557554077078decce4ce5f90da00a713cfc32e4"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/polyml",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 0.2,
+   "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "label": "pin-polyml",
+   "head": "4557554077078decce4ce5f90da00a713cfc32e4",
+   "pinned": "4557554077078decce4ce5f90da00a713cfc32e4",
+   "match": true
+  },
+  {
+   "label": "clone-HOL",
+   "argv": [
+    "git",
+    "clone",
+    "--quiet",
+    "https://github.com/HOL-Theorem-Prover/HOL",
+    "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 32.6,
+   "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "label": "checkout-HOL",
+   "argv": [
+    "git",
+    "-c",
+    "advice.detachedHead=false",
+    "checkout",
+    "--quiet",
+    "9783a49979c94c401ff8c0e51b2eefae7ea95ae3"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 0.4,
+   "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "label": "pin-HOL",
+   "head": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+   "pinned": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+   "match": true
+  },
+  {
+   "label": "clone-cakeml",
+   "argv": [
+    "git",
+    "clone",
+    "--quiet",
+    "https://github.com/CakeML/cakeml",
+    "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/cakeml"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 36.5,
+   "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "label": "checkout-cakeml",
+   "argv": [
+    "git",
+    "-c",
+    "advice.detachedHead=false",
+    "checkout",
+    "--quiet",
+    "cd9155694c16831373ab695a670794f23282ed62"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 0.3,
+   "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "label": "pin-cakeml",
+   "head": "cd9155694c16831373ab695a670794f23282ed62",
+   "pinned": "cd9155694c16831373ab695a670794f23282ed62",
+   "match": true
+  },
+  {
+   "label": "poly-configure",
+   "argv": [
+    "./configure",
+    "--prefix=<FORGE>/.toolchain/experiments/refund-cakeml-20261104/poly-install",
+    "--enable-intinf-as-int",
+    "--with-gmp"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/polyml",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 48.5,
+   "log_sha256": "9972a205aa6bf5874c1336e4ccb8fa5e54a0e3c01322ac3a6d18b1d7468e0fe6"
+  },
+  {
+   "label": "poly-make",
+   "argv": [
+    "make",
+    "-j2"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/polyml",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 170.9,
+   "log_sha256": "bdf34edb28e83b0fd69654127274ed05f569751b8df44f8cc50611e2e3d89b77"
+  },
+  {
+   "label": "poly-compiler",
+   "argv": [
+    "make",
+    "compiler"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/polyml",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 7.3,
+   "log_sha256": "90f40b906f8151ca228a4aca2a5f5ed010187fc51f0b149a92640f4ae434d08e"
+  },
+  {
+   "label": "poly-install",
+   "argv": [
+    "make",
+    "install"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/polyml",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 1.4,
+   "log_sha256": "5e701711dc869179ec542fa8ebc52fc23f0d337ef17192fed881c874273e1274"
+  },
+  {
+   "label": "poly-version",
+   "argv": [
+    "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly",
+    "--version"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 0.2,
+   "log_sha256": "aa5f15d1ec38c7628cc0da9c14deee2021d5443635a892586700319530ca0b07"
+  },
+  {
+   "label": "hol-configure",
+   "argv": [
+    "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin/poly",
+    "--script",
+    "tools/smart-configure.sml"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 26.0,
+   "log_sha256": "d394f1585d965a350078eaf1b50b18cf152771fca5acf72079c4cac57cbd9387"
+  },
+  {
+   "label": "hol-build",
+   "argv": [
+    "bin/build"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 685.2,
+   "log_sha256": "b6b50de6d88c037a86d04af631623503dfbd96fa43dd07d71878fcd7b46a62ea"
+  },
+  {
+   "label": "cakeml-basis",
+   "argv": [
+    "nice",
+    "-n",
+    "15",
+    "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+    "-j1"
+   ],
+   "cwd": "<FORGE>/.toolchain/experiments/refund-cakeml-20261104/cakeml/basis",
+   "actual_exit": 0,
+   "killed_at_deadline": false,
+   "wall_seconds": 3685.2,
+   "log_sha256": "f3c12578b054bcacd5c2c3282c6d441316a9eb9fb01826e3078e66f3e246d4b1"
+  }
+ ],
+ "end_to_end": false
+}
