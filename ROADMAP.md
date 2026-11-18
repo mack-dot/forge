@@ -28,7 +28,40 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Slice 1 of the master idea (F2.1 to F2.3): refund checker core proved at source level; token issuer and token-gated sink built; finite controls; one review, one check of the repairs, one last pass; pull request 45, NOT merged — U443, U444, U445, U446, U447, U448
+## Slice 2 of the master idea (F1.1, F1.3, with F1.2): spec clearing tool on the earlier Pillar I lemmas; solver-made witness candidates; one review with repairs — U449, U450, U451, U452
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Not gate
+evidence. `Post` and the general lemmas stay hand-written per
+specification (the owner's scope).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the go-ahead: pinned Dafny with `--extract-counterexample` on two existing fixtures that must be rejected |4; 4|refund pair: complete values; no-frame ledger: key facts of two maps only |
+| my own test of the first tool: a two-run lemma "proved" by a lemma with NO BODY in an abstract module: `dafny verify`; `dafny audit`; the first tool |0; 0 findings; NO_CHOICE|a FALSE verdict of my first tool; closed by a non-abstract instance (audit 1 finding, verify exit 2) (U450) |
+| `scripts/exit_slice2.py --case choice`, attempts 1 and 2 |0; 0|ledger, booking, refund: NO_CHOICE with exact `Post` and proved acceptance; planted loose refund and no-frame ledger: CHOICE; planted vacuous ledger: no choice, proved to accept nothing |
+| `--case diff`, attempts 1 and 2 |0; 0|rewritten refund variant: EQUIVALENT; refund cap and the real fee change: DIVERGES with before/after examples |
+| `--case effects`, attempt 1 |0|three gates exit 0; two printing implementations: gate exit 1, checker exit 2, print-effect errors only |
+| `--case controls`: attempt 1 (9 controls, before the review); attempt 2 (13 controls) |0; 0|each broken clearing input gets its non-pass verdict, the marked ones for their own reason |
+| the one fresh-context review of the clearing tool |6 false-verdict causes, 0 HIGH, 4 MEDIUM, 3 LOW|no shipped verdict shown false; a pass verdict could be made without a proof in six ways (U451) |
+| repairs in one pass; then the controls case against 11 copies of the tool with one check removed each (one-off) |non-zero for 11 of 11|each copy fails at the control of its removed check (before the review: 7 of 7) |
+| `--case evidence`: attempt 1 (before the review); attempt 2 (final) |0; 0|each: two runs byte-identical; final bundle SHA-256 `2721a293…` |
+| scratch clone of `136ad0bf` plus the Slice 2 files (`proposals/forge2-slice2-spec-clearing/run_regression.py`): Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 2 report; for all 84 Markdown files outside `results/` |0; 0, 0, 0; 1|only the 2 older Stage 9 links without a target |
+| the same clone: `scripts/exit_slice1.py --case evidence`; `scripts/exit_slice2.py --case evidence` |0; 0|Slice 1 bundle `c7f2f41c…` as on `main`; Slice 2 bundle equal to the working tree's (`2721a293…`) |
+| Stage 7; Stage 9; Stage 10 |NOT RUN|Docker time; deferred; no EXIT script on `main` |
+| push of branch `slice2/spec-clearing`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected exit 3 (UNSUPPORTED): no obligation lists the new files |
+
+[Slice 2 report](proposals/forge2-slice2-spec-clearing/REPORT.md).
+[Review text and disposition](proposals/forge2-slice2-spec-clearing/REVIEW.md).
+Proved by Dafny: the claim lemmas named above, for the Dafny sources.
+Not proved: the tool and the EXIT script. Open limits: a person must
+read the hand-written claim lemmas and the subject list (review F6); a
+specification with a ghost definition without a body is not detected
+(review F3, partly repaired). The repairs were not reviewed again.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Slice 1 of the master idea (F2.1 to F2.3): refund checker core proved at source level; token issuer and token-gated sink built; finite controls; one review, one check of the repairs, one last pass; pull request 45 merged by the owner as `136ad0bf` — U443, U444, U445, U446, U447, U448, U449
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Not gate
@@ -60,7 +93,9 @@ these files. The claim text for the core is not approved intent.
 | one-off: suite against ten copies with one check removed each |non-zero for 10 of 10|with the two new repairs |
 | `--case evidence` attempt 4 (final) |0|two runs byte-identical; final bundle SHA-256 `c7f2f41c…` |
 | control (e) for the last pass, scratch clone of `9af026df` plus the uncommitted files: 28 Stage EXIT cases; `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 1 report; for all 80 Markdown files outside `results/`; `scripts/exit_slice1.py --case evidence` |0 each (28 of 28); 0; 0, 0, 0; 1; 0|only the 2 older Stage 9 links without a target; bundle SHA-256 in the clone equal to the working tree's (`c7f2f41c…`) |
-| push of the last pass to pull request 45; hosted `gate/pr_check.py` for the new head |NOT RUN when this section was committed|expected exit 3 (UNSUPPORTED) |
+| push of the last pass to pull request 45 (`9af026df..2e39a100`, no force) |0|head `2e39a100` |
+| hosted `gate/pr_check.py`, pull request 45, head `2e39a100`, run 44369014309 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 33 `UNCOVERED_CHANGE` findings |
+| merge of pull request 45 by the owner (2026-11-18 18:32Z; the agent did not merge) |squash commit `136ad0bf`|`git diff --quiet origin/main 2e39a100` exit 0: the tree of `main` equals the checked commit (U449) |
 
 [Slice 1 report](proposals/forge2-slice1-refund-finality/REPORT.md).
 [Review text and disposition](proposals/forge2-slice1-refund-finality/REVIEW.md).

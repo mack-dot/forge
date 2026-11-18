@@ -1,0 +1,106 @@
+{
+ "copies": [
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-post-too-strong: UNDECIDED (expected LINK_BROKEN)"
+   ],
+   "copy": "any-failure-is-a-rejected-claim",
+   "message": "SLICE2 FAILED: control-post-too-strong: expected LINK_BROKEN, observed UNDECIDED",
+   "removed": "any failed member is read as \"only the claim failed\""
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-axiom-lemma: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "audit-ignored",
+   "message": "SLICE2 FAILED: control-axiom-lemma: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "the audit result is not read"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-axiom-in-included-file: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "audit-of-command-line-files-only",
+   "message": "SLICE2 FAILED: control-axiom-in-included-file: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "the audit gets only the checked files, not the files that they reach (review F1)"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-post-too-weak: CHOICE (expected UNDECIDED)"
+   ],
+   "copy": "candidate-not-checked",
+   "message": "SLICE2 FAILED: control-post-too-weak: expected UNDECIDED, observed CHOICE",
+   "removed": "a candidate counts without the Dafny check of its witness"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-forward-link-halts: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "halting-statement-allowed",
+   "message": "SLICE2 FAILED: control-forward-link-halts: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "the word `expect` is not refused (review F2)"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-lemma-without-body: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "instance-is-abstract",
+   "message": "SLICE2 FAILED: control-lemma-without-body: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "the tool writes its instance modules as abstract modules"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-equivalence-without-mapping-proof: EQUIVALENT (expected LINK_BROKEN)"
+   ],
+   "copy": "mapping-proof-not-required",
+   "message": "SLICE2 FAILED: control-equivalence-without-mapping-proof: expected LINK_BROKEN, observed EQUIVALENT",
+   "removed": "EQUIVALENT without a named mapping proof (review F4)"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-member-missing: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "members-not-required",
+   "message": "SLICE2 FAILED: control-member-missing: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "the required members need not be present"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-lemma-without-body: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "no-instance-check",
+   "message": "SLICE2 FAILED: control-lemma-without-body: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "a proved claim gives the verdict without the instance check"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-post-too-weak: CHOICE (expected UNDECIDED)"
+   ],
+   "copy": "rejected-claim-is-a-verdict",
+   "message": "SLICE2 FAILED: control-post-too-weak: expected UNDECIDED, observed CHOICE",
+   "removed": "a rejected claim gives CHOICE or DIVERGES without a verified example"
+  },
+  {
+   "controls_case_exit": 1,
+   "controls_with_a_wrong_verdict": [
+    "control-specification-leaves-a-definition-open: NO_CHOICE (expected LINK_BROKEN)"
+   ],
+   "copy": "specification-probe-skipped",
+   "message": "SLICE2 FAILED: control-specification-leaves-a-definition-open: expected LINK_BROKEN, observed NO_CHOICE",
+   "removed": "the specification probe always passes (review F3)"
+  }
+ ],
+ "copies_with_nonzero_exit": 11,
+ "end_to_end": false,
+ "what": "One-off check that the Slice 2 controls can fail (after the review repairs). Each copy of scripts/spec_clearing.py has one check removed; scripts/exit_slice2.py --case controls ran against it in a scratch tree. Not part of the EXIT script. A finite check: 11 removed checks."
+}

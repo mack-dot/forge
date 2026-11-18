@@ -1,0 +1,1302 @@
+{
+ "note": "Subjects of the spec clearing tool (scripts/spec_clearing.py). Data only. A subject names Dafny files, modules and members; the pinned Dafny judges every one of them. 'instances' binds the abstract imports of a module to implementations: ['Module', {import: bound module}], where '#M' means the tool's own instance of module M. The tool writes the instance modules itself. 'planted' subjects are fixtures, not approved specifications and not proposed changes. The expected verdicts are NOT here: they are in scripts/exit_slice2.py.",
+ "specs": [
+  {
+   "id": "ledger",
+   "title": "approved ledger specification",
+   "spec": "spec/LedgerSpec.dfy",
+   "planted": false,
+   "claim": {
+    "files": [
+     "proposals/forge2-pillar1-spec-determinism/LedgerDeterminism.dfy"
+    ],
+    "member": "LedgerDeterminism.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/LedgerExact.dfy",
+     "impl/Ledger.dfy"
+    ],
+    "instances": [
+     [
+      "LedgerDeterminism",
+      {
+       "L": "Ledger"
+      }
+     ],
+     [
+      "LedgerExact",
+      {
+       "D": "#LedgerDeterminism"
+      }
+     ]
+    ],
+    "members": [
+     "LedgerDeterminism.SpecIsDeterministic (correctness)",
+     "LedgerDeterminism.ApplyThenPost (correctness)",
+     "LedgerExact.PostIsExact (correctness)"
+    ]
+   },
+   "acceptance": {
+    "purpose": "a concrete accepted transfer (the Stage 5 witness)",
+    "files": [
+     "tests/stage5/SuccessfulExecution.dfy"
+    ],
+    "instances": [],
+    "members": [
+     "SuccessfulExecution.Witness (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/LedgerSpec.dfy"
+    ],
+    "modules": [
+     [
+      "LedgerSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "LedgerSpec.Apply"
+    ]
+   }
+  },
+  {
+   "id": "booking",
+   "title": "approved booking specification",
+   "spec": "spec/booking/BookingSpec.dfy",
+   "planted": false,
+   "claim": {
+    "files": [
+     "proposals/forge2-pillar1-spec-determinism/BookingDeterminism.dfy"
+    ],
+    "member": "BookingDeterminism.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/BookingExact.dfy",
+     "impl/Booking.dfy"
+    ],
+    "instances": [
+     [
+      "BookingDeterminism",
+      {
+       "B": "Booking"
+      }
+     ],
+     [
+      "BookingExact",
+      {
+       "D": "#BookingDeterminism"
+      }
+     ]
+    ],
+    "members": [
+     "BookingDeterminism.SpecIsDeterministic (correctness)",
+     "BookingDeterminism.ApplyThenPost (correctness)",
+     "BookingExact.PostIsExact (correctness)"
+    ]
+   },
+   "acceptance": {
+    "purpose": "a concrete accepted booking (the Stage 6 witness)",
+    "files": [
+     "tests/booking/SuccessfulExecution.dfy"
+    ],
+    "instances": [],
+    "members": [
+     "BookingSuccessfulExecution.First (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/booking/BookingSpec.dfy"
+    ],
+    "modules": [
+     [
+      "LedgerSpec",
+      {}
+     ],
+     [
+      "BookingSpec",
+      {
+       "Accounting": "#LedgerSpec"
+      }
+     ]
+    ],
+    "open": [
+     "LedgerSpec.Apply",
+     "BookingSpec.Apply"
+    ]
+   }
+  },
+  {
+   "id": "refund",
+   "title": "approved refund specification",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": false,
+   "claim": {
+    "files": [
+     "proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy"
+    ],
+    "member": "RefundDeterminism.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/RefundExact.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundDeterminism",
+      {
+       "R": "Refund"
+      }
+     ],
+     [
+      "RefundExact",
+      {
+       "D": "#RefundDeterminism"
+      }
+     ]
+    ],
+    "members": [
+     "RefundDeterminism.SpecIsDeterministic (correctness)",
+     "RefundDeterminism.AssessThenPost (correctness)",
+     "RefundExact.PostIsExact (correctness)"
+    ]
+   },
+   "acceptance": {
+    "purpose": "one concrete accepted refund and one concrete rejected proposal",
+    "files": [
+     "clearing/RefundExact.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundDeterminism",
+      {
+       "R": "Refund"
+      }
+     ],
+     [
+      "RefundExact",
+      {
+       "D": "#RefundDeterminism"
+      }
+     ]
+    ],
+    "members": [
+     "RefundExact.AcceptsAndRejects (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "id": "refund-loose",
+   "title": "PLANTED refund specification that lets the amount be anything up to the proposed one",
+   "spec": "clearing/planted/RefundSpecLoose.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/planted/RefundLooseClaim.dfy"
+    ],
+    "member": "RefundLooseClaim.SpecIsDeterministic (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "solver",
+     "shape": "refund-choice",
+     "template": "clearing/templates/RefundChoiceWitness.dfy.template",
+     "spec_include": "clearing/planted/RefundSpecLoose.dfy",
+     "spec_module": "RefundSpecLoose",
+     "files": [],
+     "instances": [],
+     "variables": {
+      "context": "context",
+      "response": "response",
+      "results": [
+       "d1",
+       "d2"
+      ]
+     }
+    },
+    {
+     "source": "supplied",
+     "shape": "refund-choice",
+     "template": "clearing/templates/RefundChoiceWitness.dfy.template",
+     "spec_include": "clearing/planted/RefundSpecLoose.dfy",
+     "spec_module": "RefundSpecLoose",
+     "files": [],
+     "instances": [],
+     "values": {
+      "context": {
+       "chargeId": "ch_1",
+       "requestId": "rq_1",
+       "original": "100",
+       "remaining": "60",
+       "refundEnabled": true,
+       "requestOpen": true
+      },
+      "response": {
+       "kind": "Candidate",
+       "amount": "40",
+       "reason": "duplicate_charge"
+      },
+      "results": [
+       {
+        "kind": "Authorized",
+        "amount": "40",
+        "reason": "duplicate_charge"
+       },
+       {
+        "kind": "Authorized",
+        "amount": "39",
+        "reason": "duplicate_charge"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ledger-noframe",
+   "title": "PLANTED ledger specification without the frame clause (three balance equations, nothing about other accounts)",
+   "spec": "proposals/forge2-pillar1-spec-determinism/fixtures/LedgerSpecNoFrame.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameDeterminism.dfy"
+    ],
+    "member": "NoFrameDeterminism.SpecIsDeterministic (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "supplied",
+     "witness": {
+      "files": [
+       "proposals/forge2-pillar1-spec-determinism/fixtures/NoFrameImpls.dfy"
+      ],
+      "instances": [],
+      "members": [
+       "NoFrameHonest.Apply (correctness)",
+       "NoFrameTrojan.Apply (correctness)",
+       "NoFrameWitness.TwoAllowedResultsDiffer (correctness)"
+      ],
+      "example": {
+       "input": "balances {0:1, 1:2, 2:2, 3:4, 4:0}, request 7: account 3 sends 3 to account 1",
+       "result_one": "balances {0:2, 1:5, 2:2, 3:0, 4:0}",
+       "result_two": "balances {0:2, 1:5, 2:0, 3:0, 4:2}"
+      }
+     }
+    }
+   ],
+   "no_solver_candidate": "the extractor of this tool reads flat records only; the counterexample for this subject is a set of facts about two maps"
+  },
+  {
+   "id": "ledger-vacuous",
+   "title": "PLANTED ledger specification whose two validity predicates are `false` (the Stage 5 vacuous fixture)",
+   "spec": "clearing/planted/LedgerSpecVacuous.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/planted/LedgerVacuousClearing.dfy"
+    ],
+    "member": "LedgerVacuousClearing.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/planted/LedgerVacuousClearing.dfy"
+    ],
+    "instances": [
+     [
+      "LedgerVacuousClearing",
+      {
+       "L": "LedgerVacuousRejectAll"
+      }
+     ]
+    ],
+    "members": [
+     "LedgerVacuousClearing.SpecIsDeterministic (correctness)",
+     "LedgerVacuousClearing.ApplyThenPost (correctness)",
+     "LedgerVacuousClearing.NeverAccepts (correctness)"
+    ]
+   },
+   "never_accepts": "LedgerVacuousClearing.NeverAccepts (correctness)",
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "clearing/planted/LedgerSpecVacuous.dfy"
+    ],
+    "modules": [
+     [
+      "LedgerSpecVacuous",
+      {}
+     ]
+    ],
+    "open": [
+     "LedgerSpecVacuous.Apply"
+    ]
+   }
+  }
+ ],
+ "pairs": [
+  {
+   "id": "refund-cap",
+   "title": "approved refund specification against a PLANTED variant with a cap of half the original charge",
+   "planted": true,
+   "old": "spec/refund/RefundSpec.dfy",
+   "new": "proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy",
+   "claim": {
+    "files": [
+     "clearing/pairs/RefundCapAgree.dfy"
+    ],
+    "member": "RefundCapAgree.Agree (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "solver",
+     "shape": "refund-pair",
+     "template": "clearing/templates/RefundPairWitness.dfy.template",
+     "base_include": "proposals/forge2-pillar1-spec-determinism/SpecDiffRefundCap.dfy",
+     "base_module": "SpecDiffRefundCap",
+     "files": [
+      "impl/Refund.dfy",
+      "clearing/planted/RefundVariantImpls.dfy"
+     ],
+     "instances": [
+      [
+       "SpecDiffRefundCap",
+       {
+        "O": "Refund",
+        "N": "RefundCappedHonest"
+       }
+      ],
+      [
+       "DivergenceWitness",
+       {
+        "D": "#SpecDiffRefundCap"
+       }
+      ]
+     ],
+     "variables": {
+      "context": "c",
+      "response": "r",
+      "results": [
+       "d",
+       "d'"
+      ]
+     }
+    },
+    {
+     "source": "supplied",
+     "shape": "refund-pair",
+     "template": "clearing/templates/RefundPairWitness.dfy.template",
+     "base_include": "proposals/forge2-pillar1-spec-determinism/SpecDiffRefundCap.dfy",
+     "base_module": "SpecDiffRefundCap",
+     "files": [
+      "impl/Refund.dfy",
+      "clearing/planted/RefundVariantImpls.dfy"
+     ],
+     "instances": [
+      [
+       "SpecDiffRefundCap",
+       {
+        "O": "Refund",
+        "N": "RefundCappedHonest"
+       }
+      ],
+      [
+       "DivergenceWitness",
+       {
+        "D": "#SpecDiffRefundCap"
+       }
+      ]
+     ],
+     "values": {
+      "context": {
+       "chargeId": "ch_1",
+       "requestId": "rq_1",
+       "original": "100",
+       "remaining": "100",
+       "refundEnabled": true,
+       "requestOpen": true
+      },
+      "response": {
+       "kind": "Candidate",
+       "amount": "51",
+       "reason": "duplicate_charge"
+      },
+      "results": [
+       {
+        "kind": "Authorized",
+        "amount": "51",
+        "reason": "duplicate_charge"
+       },
+       {
+        "kind": "Rejected"
+       }
+      ]
+     }
+    }
+   ],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy",
+     "proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ],
+     [
+      "RefundSpecCapped",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess",
+     "RefundSpecCapped.Assess"
+    ]
+   }
+  },
+  {
+   "id": "refund-rewrite",
+   "title": "approved refund specification against a PLANTED variant with the same rules in other words",
+   "planted": true,
+   "old": "spec/refund/RefundSpec.dfy",
+   "new": "clearing/planted/RefundSpecRewritten.dfy",
+   "claim": {
+    "files": [
+     "clearing/pairs/RefundRewriteAgree.dfy"
+    ],
+    "member": "RefundRewriteAgree.Agree (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/pairs/RefundRewriteAgree.dfy",
+     "impl/Refund.dfy",
+     "clearing/planted/RefundVariantImpls.dfy"
+    ],
+    "instances": [
+     [
+      "RefundRewrite",
+      {
+       "O": "Refund",
+       "N": "RefundRewrittenHonest"
+      }
+     ],
+     [
+      "RefundRewriteAgree",
+      {
+       "D": "#RefundRewrite"
+      }
+     ]
+    ],
+    "members": [
+     "RefundRewriteAgree.Agree (correctness)",
+     "RefundRewrite.OldAssessThenPost (correctness)",
+     "RefundRewrite.NewAssessThenPost (correctness)",
+     "RefundRewrite.OldDeterministic (correctness)",
+     "RefundRewrite.NewDeterministic (correctness)",
+     "RefundRewrite.OldPostSatisfiable (correctness)",
+     "RefundRewrite.NewPostSatisfiable (correctness)",
+     "RefundRewrite.MappingsAreOneToOneAndOnto (correctness)"
+    ],
+    "mappings": [
+     "RefundRewrite.MappingsAreOneToOneAndOnto (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy",
+     "clearing/planted/RefundSpecRewritten.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ],
+     [
+      "RefundSpecRewritten",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess",
+     "RefundSpecRewritten.Assess"
+    ]
+   }
+  },
+  {
+   "id": "ledger-fee",
+   "title": "ledger specification before the fee change (commit c909a640) against the approved one: a REAL approved change",
+   "planted": false,
+   "old": "proposals/forge2-pillar1-spec-determinism/fixtures/LedgerSpecNoFee.dfy",
+   "new": "spec/LedgerSpec.dfy",
+   "claim": {
+    "files": [
+     "clearing/pairs/FeeChangeAgree.dfy"
+    ],
+    "member": "FeeChangeAgree.Agree (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "supplied",
+     "witness": {
+      "files": [
+       "clearing/pairs/FeeChangeDivergence.dfy",
+       "clearing/planted/LedgerNoFeeImpl.dfy",
+       "impl/Ledger.dfy"
+      ],
+      "instances": [
+       [
+        "SpecDiffFee",
+        {
+         "O": "LedgerNoFeeImpl",
+         "N": "Ledger"
+        }
+       ],
+       [
+        "SpecDiffFeeWitnesses",
+        {
+         "D": "#SpecDiffFee"
+        }
+       ],
+       [
+        "FeeChangeDivergence",
+        {
+         "W": "#SpecDiffFeeWitnesses"
+        }
+       ]
+      ],
+      "members": [
+       "FeeChangeDivergence.AtThisInput (correctness)",
+       "FeeChangeDivergence.BothAllowAResult (correctness)",
+       "SpecDiffFeeWitnesses.W1 (correctness)",
+       "SpecDiffFee.OldApplyThenPost (correctness)",
+       "SpecDiffFee.NewApplyThenPost (correctness)"
+      ],
+      "example": {
+       "input": "balances {0:0, 1:5, 2:0}, request 7: account 1 sends 5 to account 2",
+       "before": "Ok, balances {0:0, 1:0, 2:5}",
+       "after": "Rejected, balances {0:0, 1:5, 2:0}"
+      }
+     }
+    }
+   ],
+   "no_solver_candidate": "the extractor of this tool reads flat records only; the states of this subject are maps",
+   "spec_probe": {
+    "files": [
+     "proposals/forge2-pillar1-spec-determinism/fixtures/LedgerSpecNoFee.dfy",
+     "spec/LedgerSpec.dfy"
+    ],
+    "modules": [
+     [
+      "LedgerSpecNoFee",
+      {}
+     ],
+     [
+      "LedgerSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "LedgerSpecNoFee.Apply",
+     "LedgerSpec.Apply"
+    ]
+   }
+  }
+ ],
+ "controls": [
+  {
+   "kind": "spec",
+   "id": "control-post-too-strong",
+   "title": "CONTROL: Post has a clause that the approved refund specification does not have",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundPostTooStrong.dfy"
+    ],
+    "member": "RefundPostTooStrong.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundPostTooStrong.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundPostTooStrong",
+      {
+       "R": "Refund"
+      }
+     ]
+    ],
+    "members": [
+     "RefundPostTooStrong.SpecIsDeterministic (correctness)",
+     "RefundPostTooStrong.AssessThenPost (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-post-too-weak",
+   "title": "CONTROL: Post is weaker than the approved refund specification; the solver's two amounts are not both allowed",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundWeakPostClaim.dfy"
+    ],
+    "member": "RefundWeakPostClaim.SpecIsDeterministic (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "solver",
+     "shape": "refund-choice",
+     "template": "clearing/templates/RefundChoiceWitness.dfy.template",
+     "spec_include": "spec/refund/RefundSpec.dfy",
+     "spec_module": "RefundSpec",
+     "files": [],
+     "instances": [],
+     "variables": {
+      "context": "context",
+      "response": "response",
+      "results": [
+       "d1",
+       "d2"
+      ]
+     }
+    }
+   ],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-lemma-without-body",
+   "title": "CONTROL: the two-run lemma is \"proved\" by a call of a lemma with NO BODY (accepted by verify and audit of the abstract module alone)",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundPostNoBody.dfy"
+    ],
+    "member": "RefundPostNoBody.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundPostNoBody.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundPostNoBody",
+      {
+       "R": "Refund"
+      }
+     ]
+    ],
+    "members": [
+     "RefundPostNoBody.SpecIsDeterministic (correctness)",
+     "RefundPostNoBody.AssessThenPost (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-axiom-lemma",
+   "title": "CONTROL: the two-run lemma is \"proved\" by a call of an {:axiom} lemma with no body (no warning from verify)",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundPostAxiom.dfy"
+    ],
+    "member": "RefundPostAxiom.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundPostAxiom.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundPostAxiom",
+      {
+       "R": "Refund"
+      }
+     ]
+    ],
+    "members": [
+     "RefundPostAxiom.SpecIsDeterministic (correctness)",
+     "RefundPostAxiom.AssessThenPost (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-assume",
+   "title": "CONTROL: the two-run lemma is \"proved\" by `assume false`",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundPostAssume.dfy"
+    ],
+    "member": "RefundPostAssume.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundPostAssume.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundPostAssume",
+      {
+       "R": "Refund"
+      }
+     ]
+    ],
+    "members": [
+     "RefundPostAssume.SpecIsDeterministic (correctness)",
+     "RefundPostAssume.AssessThenPost (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-member-missing",
+   "title": "CONTROL: the named claim member does not exist in the files (every file verifies)",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/RefundExact.dfy"
+    ],
+    "member": "RefundExact.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/RefundExact.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundDeterminism",
+      {
+       "R": "Refund"
+      }
+     ],
+     [
+      "RefundExact",
+      {
+       "D": "#RefundDeterminism"
+      }
+     ]
+    ],
+    "members": [
+     "RefundExact.SpecIsDeterministic (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-choice-not-allowed",
+   "title": "CONTROL: a supplied choice candidate for the planted loose specification whose second amount is ABOVE the proposed one",
+   "spec": "clearing/planted/RefundSpecLoose.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/planted/RefundLooseClaim.dfy"
+    ],
+    "member": "RefundLooseClaim.SpecIsDeterministic (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "supplied",
+     "shape": "refund-choice",
+     "template": "clearing/templates/RefundChoiceWitness.dfy.template",
+     "spec_include": "clearing/planted/RefundSpecLoose.dfy",
+     "spec_module": "RefundSpecLoose",
+     "files": [],
+     "instances": [],
+     "values": {
+      "context": {
+       "chargeId": "ch_1",
+       "requestId": "rq_1",
+       "original": "100",
+       "remaining": "60",
+       "refundEnabled": true,
+       "requestOpen": true
+      },
+      "response": {
+       "kind": "Candidate",
+       "amount": "40",
+       "reason": "duplicate_charge"
+      },
+      "results": [
+       {
+        "kind": "Authorized",
+        "amount": "40",
+        "reason": "duplicate_charge"
+       },
+       {
+        "kind": "Authorized",
+        "amount": "41",
+        "reason": "duplicate_charge"
+       }
+      ]
+     }
+    }
+   ],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "pair",
+   "id": "control-example-wrong",
+   "title": "CONTROL: a supplied before/after example for the cap pair with a wrong `after` (50 of 100 is at the cap; the variant still authorizes it)",
+   "planted": true,
+   "old": "spec/refund/RefundSpec.dfy",
+   "new": "proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy",
+   "claim": {
+    "files": [
+     "clearing/pairs/RefundCapAgree.dfy"
+    ],
+    "member": "RefundCapAgree.Agree (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "supplied",
+     "shape": "refund-pair",
+     "template": "clearing/templates/RefundPairWitness.dfy.template",
+     "base_include": "proposals/forge2-pillar1-spec-determinism/SpecDiffRefundCap.dfy",
+     "base_module": "SpecDiffRefundCap",
+     "files": [
+      "impl/Refund.dfy",
+      "clearing/planted/RefundVariantImpls.dfy"
+     ],
+     "instances": [
+      [
+       "SpecDiffRefundCap",
+       {
+        "O": "Refund",
+        "N": "RefundCappedHonest"
+       }
+      ],
+      [
+       "DivergenceWitness",
+       {
+        "D": "#SpecDiffRefundCap"
+       }
+      ]
+     ],
+     "values": {
+      "context": {
+       "chargeId": "ch_1",
+       "requestId": "rq_1",
+       "original": "100",
+       "remaining": "100",
+       "refundEnabled": true,
+       "requestOpen": true
+      },
+      "response": {
+       "kind": "Candidate",
+       "amount": "50",
+       "reason": "duplicate_charge"
+      },
+      "results": [
+       {
+        "kind": "Authorized",
+        "amount": "50",
+        "reason": "duplicate_charge"
+       },
+       {
+        "kind": "Rejected"
+       }
+      ]
+     }
+    }
+   ],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy",
+     "proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ],
+     [
+      "RefundSpecCapped",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess",
+     "RefundSpecCapped.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "pair",
+   "id": "control-false-equivalence",
+   "title": "CONTROL: the cap pair with no candidate at all: a rejected `agree` claim alone must not become a verdict",
+   "planted": true,
+   "old": "spec/refund/RefundSpec.dfy",
+   "new": "proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy",
+   "claim": {
+    "files": [
+     "clearing/pairs/RefundCapAgree.dfy"
+    ],
+    "member": "RefundCapAgree.Agree (correctness)"
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy",
+     "proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ],
+     [
+      "RefundSpecCapped",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess",
+     "RefundSpecCapped.Assess"
+    ]
+   }
+  },
+  {
+   "kind": "spec",
+   "id": "control-axiom-in-included-file",
+   "title": "CONTROL (review F1): the two-run lemma is \"proved\" by an {:axiom} lemma of ANOTHER, included file; an audit of the claim file alone reports nothing",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundPostIncludedAxiom.dfy"
+    ],
+    "member": "RefundPostIncludedAxiom.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundPostIncludedAxiom.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundPostIncludedAxiom",
+      {
+       "R": "Refund"
+      }
+     ]
+    ],
+    "members": [
+     "RefundPostIncludedAxiom.SpecIsDeterministic (correctness)",
+     "RefundPostIncludedAxiom.AssessThenPost (correctness)"
+    ]
+   },
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   },
+   "candidates": []
+  },
+  {
+   "kind": "spec",
+   "id": "control-forward-link-halts",
+   "title": "CONTROL (review F2): the forward link checks a false Post at run time and halts, in place of a proof; verify and audit report nothing",
+   "spec": "spec/refund/RefundSpec.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundPostExpect.dfy"
+    ],
+    "member": "RefundPostExpect.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundPostExpect.dfy",
+     "impl/Refund.dfy"
+    ],
+    "instances": [
+     [
+      "RefundPostExpect",
+      {
+       "R": "Refund"
+      }
+     ]
+    ],
+    "members": [
+     "RefundPostExpect.SpecIsDeterministic (correctness)",
+     "RefundPostExpect.AssessThenPost (correctness)"
+    ]
+   },
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess"
+    ]
+   },
+   "candidates": []
+  },
+  {
+   "kind": "spec",
+   "id": "control-specification-leaves-a-definition-open",
+   "title": "CONTROL (review F3): an honest Post and two-run lemma for a specification with a function that has NO BODY; two refinements can differ",
+   "spec": "clearing/controls/RefundSpecOpenLimit.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "clearing/controls/RefundOpenLimitClearing.dfy"
+    ],
+    "member": "RefundOpenLimitClearing.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/controls/RefundOpenLimitClearing.dfy"
+    ],
+    "instances": [
+     [
+      "RefundOpenLimitClearing",
+      {
+       "R": "RefundOpenLimitImpl"
+      }
+     ]
+    ],
+    "members": [
+     "RefundOpenLimitClearing.SpecIsDeterministic (correctness)",
+     "RefundOpenLimitClearing.AssessThenPost (correctness)"
+    ]
+   },
+   "spec_probe": {
+    "files": [
+     "clearing/controls/RefundSpecOpenLimit.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpecOpenLimit",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpecOpenLimit.Assess"
+    ]
+   },
+   "candidates": []
+  },
+  {
+   "kind": "pair",
+   "id": "control-equivalence-without-mapping-proof",
+   "title": "CONTROL (review F4): the rewritten pair, with no proof named that the mappings between the two sides are one-to-one and onto",
+   "planted": true,
+   "old": "spec/refund/RefundSpec.dfy",
+   "new": "clearing/planted/RefundSpecRewritten.dfy",
+   "claim": {
+    "files": [
+     "clearing/pairs/RefundRewriteAgree.dfy"
+    ],
+    "member": "RefundRewriteAgree.Agree (correctness)"
+   },
+   "proof": {
+    "files": [
+     "clearing/pairs/RefundRewriteAgree.dfy",
+     "impl/Refund.dfy",
+     "clearing/planted/RefundVariantImpls.dfy"
+    ],
+    "instances": [
+     [
+      "RefundRewrite",
+      {
+       "O": "Refund",
+       "N": "RefundRewrittenHonest"
+      }
+     ],
+     [
+      "RefundRewriteAgree",
+      {
+       "D": "#RefundRewrite"
+      }
+     ]
+    ],
+    "members": [
+     "RefundRewriteAgree.Agree (correctness)",
+     "RefundRewrite.OldAssessThenPost (correctness)",
+     "RefundRewrite.NewAssessThenPost (correctness)",
+     "RefundRewrite.OldDeterministic (correctness)",
+     "RefundRewrite.NewDeterministic (correctness)",
+     "RefundRewrite.OldPostSatisfiable (correctness)",
+     "RefundRewrite.NewPostSatisfiable (correctness)"
+    ]
+   },
+   "spec_probe": {
+    "files": [
+     "spec/refund/RefundSpec.dfy",
+     "clearing/planted/RefundSpecRewritten.dfy"
+    ],
+    "modules": [
+     [
+      "RefundSpec",
+      {}
+     ],
+     [
+      "RefundSpecRewritten",
+      {}
+     ]
+    ],
+    "open": [
+     "RefundSpec.Assess",
+     "RefundSpecRewritten.Assess"
+    ]
+   },
+   "candidates": []
+  }
+ ]
+}

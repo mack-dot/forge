@@ -16108,3 +16108,207 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false.
 - Next check: the hosted gate for the new head; then the owner's merge
   decision. The agent does not merge.
+
+## U449 — Pull request 45 (Slice 1) merged by the owner as 136ad0bf; hosted gate exit 3 for its last head; Slice 2 starts on the owner's go-ahead
+- Status: 2026-11-18, about 18:30Z to 18:40Z. Refs U447, U448.
+- Observation (gh pr view 45): state MERGED, 2026-11-18 18:32:13Z, by
+  the owner's account, squash commit 136ad0bf on main. The agent did not
+  merge. The owner then wrote "merged" (the owner's own word).
+- Observation: git diff --quiet origin/main 2e39a100 exit 0. The tree of
+  main equals the checked commit. So the results of U448 (28 of 28 Stage
+  EXIT cases in a scratch clone, evidence record c7f2f41c...) are
+  results for the content of main. They were not run again on main.
+- Hosted gate for the last head 2e39a100, run 44369014309 (Linux
+  profile): gate/pr_check.py exit code 3, outcome UNSUPPORTED; "every
+  obligation that ran holds"; 33 UNCOVERED_CHANGE findings. As expected
+  in U448. NOT a VERIFIED result. This result was only in the text of
+  the pull request until now.
+- Stale on main after the merge, repaired by the commit that holds this
+  entry: the Slice 1 section of ROADMAP.md said "NOT merged" and "NOT
+  RUN when this section was committed"; rows F2.1 to F2.3 of
+  FORGE_MASTER_IDEA.md did not name the merge. Not changed: the Slice 1
+  report in proposals/forge2-slice1-refund-finality/ (it describes the
+  state before the merge).
+- Slice 2 (master idea items F1.1 and F1.3, spec clearing): the owner's
+  prompt was a pasted text ("STEP 1 ... Print a 12-line plan"). I
+  printed the plan; no file was written. The owner's answer to the plan
+  was a pasted text: go ahead on branch slice2/spec-clearing from
+  136ad0bf; these records first; scope approved ("keep Post and general
+  lemmas in Dafny per spec ... add solver-made witness candidates.
+  Ensure Post binds to real spec/ predicates in Dafny (no silent drift)
+  and every solver witness candidate is concretely checked"); one
+  fresh-context review and the scratch-clone check before a stop for
+  push and pull request.
+- Diagnostic before the go-ahead (no file written): pinned Dafny with
+  the gate options and --extract-counterexample on two existing fixtures
+  that must be rejected: checker exit 4 and 4. For the refund pair the
+  output held concrete amounts and the reason. For the no-frame ledger
+  lemma it held key facts of the maps. Dafny warns that such a
+  counterexample can be invalid.
+- A further pasted text (a four-phase plan: M1 as a minter backend, a
+  Stage 9 run, packaged components, README, a paper) gave no instruction
+  and approves nothing. Stage 9 stays deferred. Stage 12 unauthorized.
+- Impact: none on existing claims. CURRENT none. end_to_end=false.
+- Next check: the Slice 2 build (next entries).
+
+## U450 — Slice 2 build: spec clearing tool on the earlier Pillar I lemmas; solver-made witness candidates verified by Dafny; a hole in my first design (a lemma without a body in an abstract module) found and closed
+- Status: 2026-11-18, about 18:40Z to 19:15Z. Refs U410, U413, U418,
+  U430, U449. Files: clearing/, scripts/spec_clearing.py,
+  scripts/exit_slice2.py; report
+  proposals/forge2-slice2-spec-clearing/REPORT.md. No protected file
+  changed. Not a stage. Not gate evidence. Not committed.
+- Reuse: the Post predicates, forward links and two-run lemmas of the
+  three approved specifications, the fee-change and refund-cap pair
+  files and the no-frame control of
+  proposals/forge2-pillar1-spec-determinism/ are used unchanged.
+- New Dafny results (pinned Dafny, gate options, first attempt each):
+  exactness (PostIsExact) for ledger, booking and refund; the planted
+  rewritten refund variant: lemma Agree proved (universal equivalence);
+  the planted vacuous ledger variant: two-run lemma and NeverAccepts
+  proved; the planted loose refund variant: two-run lemma rejected.
+- Solver-made candidates: with --extract-counterexample the pinned Dafny
+  printed complete values for the two refund-shaped rejected claims. The
+  tool wrote a witness file from them and Dafny verified it: CHOICE for
+  the loose variant (two refinements, amounts 2411 and 1641 for one
+  input), DIVERGES for the cap pair (before Authorized, after Rejected).
+  Observation: in that text the order of constructor arguments is not
+  the declared order and is not stable. The tool therefore reads fields
+  by name or by type, never by position.
+- Not solver-made: the candidates of the two ledger subjects (states are
+  maps; the reader handles flat records only). They are supplied by hand
+  and checked by Dafny in the same way.
+- HOLE in my first design, found by my own test before the review: in an
+  ABSTRACT module the pinned Dafny accepts a lemma that has no body
+  (`lemma Anything() ensures false`): dafny verify exit 0, dafny audit 0
+  findings. All clearing modules are abstract (they import the abstract
+  specification). So a two-run lemma could be "proved" by a call of such
+  a lemma, and my first tool answered NO_CHOICE for it. Observed with a
+  fixture. A non-abstract module that refines the module makes Dafny
+  report it (audit: 1 finding; verify: exit 2).
+- Closure: no verdict rests on an abstract module alone. For every
+  module that holds a required member the tool writes a non-abstract
+  instance (imports bound to implementations) and requires exit 0 and an
+  empty audit for that file. Control control-lemma-without-body: the
+  claim file alone passes verify and audit; the instance fails; verdict
+  LINK_BROKEN. The same check now covers the older Pillar I files that
+  the subjects use: their instances pass.
+- Consequence for older entries: U410, U413, U418 and U430 report
+  "checker exit 0" and "audit 0 findings" for abstract modules. Those
+  two facts alone did not exclude a lemma without a body. For the files
+  that Slice 2 uses, the instance check passed today. The other files of
+  that packet were not checked in this way.
+- Changes against the 12-line plan: no `:|` refinement (exactness by a
+  call of the specified method and the two-run lemma; a choice is shown
+  by two refinements of the specification); the instance check is new;
+  the vacuous variant is proved to accept nothing.
+- Actual exits: scripts/exit_slice2.py --case controls, choice, diff,
+  effects: 0, 0, 0, 0 (first attempt each); --case evidence attempt 1:
+  0, two runs byte-identical (SHA-256 134579e3...; before the review).
+  One-off: the controls case against seven copies of the tool with one
+  check removed each: non-zero exit for 7 of 7.
+- Limit: the tool does not check that a claim lemma states the right
+  claim or that a forward link calls the specified method. A person must
+  read those hand-written Dafny files. The subject list is trusted.
+- Impact: none on existing claims. end_to_end=false.
+- Next check: the one fresh-context review (next entry).
+
+## U451 — Slice 2 review: no shipped verdict shown false; six ways to a pass verdict without a proof; repairs in one pass; two limits stay open
+- Status: 2026-11-18, about 19:15Z to 19:55Z. Refs U450. Reviewer text
+  and the disposition of each finding:
+  proposals/forge2-slice2-spec-clearing/REVIEW.md.
+- Reviewer's summary (observations by the reviewer, with fixtures that it
+  ran through the real functions of the tool): none of the nine shipped
+  verdicts was shown false. Six causes let the tool print a pass verdict
+  that Dafny did not prove: F1 the Dafny audit reports only on the files
+  of its command line, so an assumption in an included file was not
+  seen; F2 an `expect` statement in a forward link is not reported by
+  verify or audit; F3 a specification with a function without a body
+  got NO_CHOICE while two refinements differ; F4 EQUIVALENT did not need
+  a proof that the mappings between the two sides are one-to-one and
+  onto; F5 the result cache ignored file content; F6 a verdict follows
+  the member NAME in the subject list (one wrong name gave NO_CHOICE for
+  the planted loose specification). MEDIUM: scope text wider than the
+  lemmas; "Post is exact" not checked by the EXIT script; "verified by
+  Dafny" over a description by hand.
+- F1 means: my closure of U450 was not complete. The instance check made
+  Dafny report a lemma without a body in the claim modules, but not an
+  assumption in a file that was only included.
+- Owner's rule (text C, OWNER_TEXTS.md of the Slice 2 packet): repair
+  confirmed FAIL-OPEN, HIGH and MEDIUM findings in one pass; leave LOW
+  items and the two stated limits.
+- Repairs: every audit gets every file that the checked files reach
+  (the reader of include lines fails closed); the word `expect` and the
+  attribute {:options are refused in those files; a specification probe
+  (the Dafny compiler must report "has no body" for exactly the
+  specified methods); a mapping proof is necessary for EQUIVALENT
+  (proved for the shipped pair); the cache is removed and a subject id
+  that is there twice is refused; the EXIT script pins the claim, proof
+  and witness members of every shipped subject; texts corrected.
+- Probe before the repair of F3 (observation): the Dafny audit does NOT
+  report a function without a body in a non-abstract refinement when
+  the function has no ensures clause. The compiler does (dafny build
+  --no-verify --allow-warnings: "has no body so it cannot be compiled").
+  A ghost function has no compiled form, so the probe cannot see it.
+- Actual exits after the repairs: --case controls (13 controls), choice,
+  diff: 0, 0, 0; --case evidence attempt 2: 0, two runs byte-identical,
+  SHA-256
+  2721a293023baf230ecb944ea3ad2a3c02d7be6d82f128f10d07cc2b0f91854e. One-off:
+  the controls case against 11 copies of the tool with one check removed
+  each: non-zero exit for 11 of 11, each at its own control.
+- OPEN, not repaired: F6 in the tool (the stated limit: a person reads
+  the claim lemmas and the subject list; the pins protect only the
+  shipped subjects); F3 for ghost functions and predicates without a
+  body, constants without a value and opaque types; other statements of
+  the kind of F2 were not searched; the reviewer's fixture for F4 (a new
+  input field) was not rebuilt as a control; three LOW findings.
+- NOT done: a second review of the repairs.
+- Uncertainty: the reviewer read the three approved specifications and
+  found a body for every function and predicate. I did not make an
+  independent mechanical check of that for ghost declarations.
+- Impact: none on existing claims. end_to_end=false.
+- Next check: the scratch-clone regression and the closeout (next entry).
+
+## U452 — Slice 2 closeout: final evidence record; regression on a scratch clone; commit, push and pull request on the owner's pasted text C
+- Status: 2026-11-18, about 19:55Z to 20:15Z. Refs U449, U450, U451.
+  Owner texts: proposals/forge2-slice2-spec-clearing/OWNER_TEXTS.md.
+- Authorization: text C (a pasted text, sent while the review was still
+  running) says: repair confirmed FAIL-OPEN, HIGH and MEDIUM findings in
+  one pass; confirm the removed-check copies, the 28 Stage EXIT cases,
+  the frozen-gate check and the matching bundle digest in a scratch
+  clone, and that the records of pull request 45 are included; then
+  "Push slice2/spec-clearing and open PR 46 without admin bypass or
+  merge". I take it as the owner's word for one commit, one push and one
+  pull request. It is not a word for a merge. Inference, not
+  observation: that the owner read the text. The owner's own words in
+  this part of the session: "merged", "so working right?", a question
+  about Rust, and "keep going bt e" (the message ends there).
+- Final evidence record: scripts/exit_slice2.py --case evidence, attempt
+  2, exit 0; two runs byte-identical; SHA-256
+  2721a293023baf230ecb944ea3ad2a3c02d7be6d82f128f10d07cc2b0f91854e. The record
+  134579e3... of U450 is replaced (the review made code changes
+  necessary).
+- Regression, scratch clone of 136ad0bf plus the Slice 2 files: 28 of 28
+  Stage EXIT cases exit 0 (Stages 1, 2, 3, 4, 5, 6, 8, 11);
+  check_frozen_pr_gate.py exit 0; link checks of FORGE_MASTER_IDEA.md,
+  ROADMAP.md and the Slice 2 report exit 0; all 84 Markdown files
+  outside results/: exit 1, the 2 older Stage 9 links only;
+  scripts/exit_slice1.py --case evidence exit 0 with the bundle
+  c7f2f41c... of main; scripts/exit_slice2.py --case evidence exit 0
+  with the same SHA-256 as the working tree.
+- Observation: git status shows 0 changed protected paths. README.md is
+  not changed. No new package.
+- The owner's question "should we instead of C or C++ be using rust":
+  answered in the session, no decision taken. Observations for it: the
+  repository has one C source file (examples/binary/gcd_selftest.c, the
+  Stage 7 fixture), no C++ and no Rust; the pinned Dafny 4.11.0 lists no
+  Rust compile target in `dafny build --help`. My recommendation was: no
+  general switch; if wanted, a later slice "sink in Rust with a proof by
+  a Rust verifier" after Slice 3. That needs new pins and dependencies
+  by an exact-diff proposal.
+- NOT RUN: Stage 7, Stage 9, Stage 10. The hosted gate (expected exit 3,
+  UNSUPPORTED). A second review.
+- Impact: master idea rows F1.1 and F1.3 updated. No existing claim
+  changes. CURRENT none. M1 open. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: the hosted gate result for the pull request; then the
+  owner's merge decision. The agent does not merge.
