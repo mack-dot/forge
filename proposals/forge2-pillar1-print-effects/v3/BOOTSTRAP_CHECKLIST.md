@@ -340,7 +340,7 @@ files that no obligation lists). Hosted `gate/pr_check.py` (run
 merge. The copy of this checklist inside pull request 41 ends before
 this paragraph.
 
-## Q5: full check after the merge of pull request 41 (2026-11-18 05:30Z)
+## Q5: full check after the merge of pull request 41 (2026-11-18, about 05:22Z)
 
 The owner merged pull request 41 at 05:16Z (`main` = `201e63b1`, content
 equal to `b61da60a`). Clean clone of `main`, local profile:
