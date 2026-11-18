@@ -339,3 +339,25 @@ files that no obligation lists). Hosted `gate/pr_check.py` (run
 44232116451, Linux profile): exit 3 UNSUPPORTED. It needs the owner's
 merge. The copy of this checklist inside pull request 41 ends before
 this paragraph.
+
+## Q5: full check after the merge of pull request 41 (2026-11-18 05:30Z)
+
+The owner merged pull request 41 at 05:16Z (`main` = `201e63b1`, content
+equal to `b61da60a`). Clean clone of `main`, local profile:
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| Stage EXIT cases 1, 2, 3, 5, 6, 8 (22 cases) | 0 each | passed |
+| Stage 4 (3 cases, read-only token from the `gh` login) | 0 each | passed |
+| Stage 11 (3 cases, recorded arguments) | 0 each | passed |
+| `check_frozen_pr_gate.py` | 0 | the eight PR-gate modules are FROZEN |
+| `check_links.py`: `FORGE_MASTER_IDEA.md`; `ROADMAP.md` | 0; 0 | no link without a target |
+| `check_links.py`, all 75 Markdown files outside `results/` | 1 | 2 of 200 links without a target: the two older Stage 9 links |
+| Stage 7 from the clean clone | NOT RUN | about 3.3 hours of Docker time; all Stage 7 inputs on `main` equal the tree where the three cases exited 0 today |
+| Stage 9 (six cases) | NOT RUN | deferred; two lock entries are stale |
+
+Limits of "green": 28 of 28 locally runnable cases exit 0 on macOS. No
+check here ran on Linux except the hosted gate runs of pull requests 39,
+40 and 41. The Stage 5 EXIT rewrites its two records with the local
+tool path, so a checkout is not clean after it. Round 4 is closed. Step
+B (action 2) and Stage 9 (action 3) stay the owner's decisions.

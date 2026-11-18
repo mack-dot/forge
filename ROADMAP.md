@@ -9,7 +9,7 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39) and the Stage 6 records (pull request 40) — U433, U436, U437, U438, U439, U440, U441, U442
+## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39), the Stage 6 records (pull request 40) and the documents (pull request 41); Q5 passes — U433, U436, U437, U438, U439, U440, U441, U442
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file of this tree or of
@@ -47,13 +47,18 @@ print effects `f54e2507`, its records `53534f64`.
 | `exit_stage_11.py`, three cases, clean clone with the path-free records in the tree (dry run) |0; 0; 0|records for the documents pull request |
 | documents pull request 41 (commit `b61da60a` on `d0ce1942`), clean clone: `check_links.py` for `FORGE_MASTER_IDEA.md`; for `ROADMAP.md`; `check_frozen_pr_gate.py`; `exit_stage_6.py --case report`; `exit_stage_11.py` three cases with the recorded arguments |0; 0; 0; 0; 0, 0, 0|protected paths 0; over all 75 Markdown files outside `results/`: 2 of 200 links without a target, both older Stage 9 links |
 | `run_bootstrap_gate_cases.py` attempt-0004 (trusted `d0ce1942`, candidate `b61da60a`); hosted `gate/pr_check.py`, pull request 41, run 44232116451 |3; 3|UNSUPPORTED, as expected for documents and records; needs the owner's merge |
+| Q5 after the owner's merge of pull request 41 (`main` = `201e63b1`, content equal to `b61da60a`), clean clone: Stage EXIT cases 1, 2, 3, 5, 6, 8 (22 cases); Stage 4 (3 cases); Stage 11 with the recorded arguments (3 cases) |0 each|28 of 28 cases exit 0; the Stage 5 EXIT rewrites its two records with the local tool path (two changed lines) |
+| Q5: `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`; for `ROADMAP.md`; for all 75 Markdown files outside `results/` |0; 0; 0; 1|record 0001 still binds the proposal text on `main`; the last check finds the 2 older Stage 9 links without a target (of 200) |
+| Q5: Stage 7 from the clean clone |NOT RUN|about 3.3 hours of Docker time; every Stage 7 script, pin, fixture, example and tracked record on `main` is equal to the tree where the three cases exited 0 today (`git diff --quiet`: exit 0) |
 | third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
 
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
 [Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
-This section comes to `main` with the documents pull request (Q2, Q3,
-Q4). After that merge: the full check Q5 from a clean checkout. Open:
-decision D1 for step B (print effects); the Stage 9 lock renewal. `ROADMAP.md` on `main` still
+This section came to `main` with the documents pull request 41 (merged
+by the owner on 2026-11-18 05:16Z); the copy on `main` ends before the
+Q5 rows. Round 4 is closed. Open: decision D1 for step B (print
+effects); the Stage 9 lock renewal; the M1 chain replay (owner decision
+of 2026-11-18: its own run with a budget of 21,600 s). `ROADMAP.md` on `main` still
 says "CURRENT: Stage 9"; this file is the current one.
 M1 and integration EXIT NOT_ESTABLISHED.
 
