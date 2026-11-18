@@ -15625,3 +15625,55 @@ curl: (6) Could not resolve host: github.com
   the second pull request comes; not tested.
 - Next check: the owner's merge of pull request 40; then the documents
   pull request; then Q5.
+
+## U442 — The owner merged pull request 40: Stage 6 is green on main; my Stage 6 records broke two links of main's roadmap (repaired in the documents pull request); content and checks of that pull request; entry numbers after this one
+- Status: 2026-11-18 03:45Z. Refs U440, U441. Owner text 3 saved in
+  proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md: one pull request
+  with Q2, Q3 and Q4; no administrator bypass; then pause.
+- Observation: pull request 40 MERGED at 03:34:17Z, squash commit
+  d0ce1942, content equal to 1c21aa85 (git diff --quiet exit 0).
+  exit_stage_6.py --case report in a clean clone of main d0ce1942: exit
+  0. check_frozen_pr_gate.py origin/main: exit 0. I merged nothing.
+- FINDING, my defect: pull request 40 removed
+  results/stage6/report-exit-attempt1.json and report-replay.json from
+  results/stage6 (the flow keeps them under results/stage6-epoch1). Two
+  links of main's ROADMAP.md lost their target by that. Measured with
+  check_links.py over all 54 Markdown files outside results/: 12 links
+  without a target before pull request 40, 14 after it; the two new
+  ones are these. I had not run that check before pull request 40.
+  Repair, in the documents pull request: five links of the Stage 6 text
+  in main's ROADMAP.md now point to the files of the first run
+  (results/stage6-epoch1, docs/reuse-benchmark-epoch1.md), with one
+  sentence in the status note.
+- Older links without a target on main, NOT repaired: docs/
+  stage9-history-audit.md and proposals/provenance-receipt-repair.md
+  each link to results/stage9/receipt-repair-published/README.md. That
+  file is not on main and not on the backup branch. Stage 9 material;
+  left for the owner.
+- Documents branch, first build (build_docs_branch.py, base d0ce1942):
+  402 files added, 3 changed (FORGE_MASTER_IDEA.md, ROADMAP.md,
+  unsure.md); protected paths changed 0; PROPOSAL-V3.md unchanged
+  (record 0001 binds it). Checks in a clean clone of that build:
+  FORGE_MASTER_IDEA.md 14 links, 0 without a target (exit 0); frozen
+  PR-gate modules exit 0; Stage 6 report EXIT exit 0; Stage 11
+  legitimate-change, stale-dependency, report: exit 0 each, with the
+  178 path-free records in the tree; the EXIT runs change no file; 0
+  record files with a home path. ROADMAP.md: 48 links, 2 without a
+  target (the finding above; repaired in the second build, which is the
+  one that is pushed).
+- Q3 as built: main's ROADMAP.md keeps its text. Changed: the CURRENT
+  line ("none (Stage 9 deferred)"), a status note, the Round 4 closeout
+  section, the Stage 9 row of the stage table, the five Stage 6 links.
+  The full backup ROADMAP.md is not copied (160 links without a target
+  on main). unsure.md is copied in full; main's file is a byte prefix.
+- Entry numbers: after the merge of the documents pull request, main's
+  unsure.md ends with this entry. The next free number is U443 on both
+  lines. To keep one number from getting two texts, I write later
+  closeout results (hosted run of the documents pull request, the full
+  check Q5, the end of the M1 window) as results in ROADMAP.md and in
+  the checklist on the backup branch, not as entries here. If a finding
+  needs an entry, it gets U443 and must go to main with the next
+  documents change.
+- Uncertainty: the hosted gate result of the documents pull request is
+  not known at the time of this entry; expected UNSUPPORTED (exit 3).
+- Next check: the hosted run; the owner's merge; then Q5 on main.

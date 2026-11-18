@@ -302,3 +302,27 @@ with Q2, Q3 and Q4:
   `--eval results/stage11/eval-0007 --baseline results/stage11/eval-pr27-0003`.
 
 Then Q5: the full check from a clean checkout of `main`.
+
+## State after the merge of pull request 40 (2026-11-18 03:45Z)
+
+The owner merged pull request 40 at 03:34Z (`main` = `d0ce1942`).
+
+| Item | Actual exit | Result |
+| --- | --- | --- |
+| `exit_stage_6.py --case report`, clean clone of `main` `d0ce1942` | 0 | Stage 6 is green on `main` |
+| `check_frozen_pr_gate.py origin/main` | 0 | the eight PR-gate modules are unchanged |
+| `check_links.py` over the 54 Markdown files of `main` outside `results/`: before pull request 40; after it | 1; 1 | 12 and 14 links without a target: pull request 40 broke two links of `ROADMAP.md` (my defect, U442) |
+| documents branch, first build, clean clone: link check of `FORGE_MASTER_IDEA.md`; frozen modules; Stage 6 report; Stage 11 (three cases) | 0; 0; 0; 0, 0, 0 | protected paths 0; `PROPOSAL-V3.md` unchanged |
+
+The documents pull request (Q2, Q3, Q4) is made by
+`proposals/round4-20261117/build_docs_branch.py`. Besides the content
+named above, it moves five Stage 6 links of `main`'s `ROADMAP.md` to the
+files of the first run (`results/stage6-epoch1`), which repairs the two
+broken links. Its number, the hosted result and the full check Q5 are
+recorded in `ROADMAP.md` on the backup branch.
+
+Still without a target on `main` after it, and not repaired:
+`docs/stage9-history-audit.md` and
+`proposals/provenance-receipt-repair.md` each link to
+`results/stage9/receipt-repair-published/README.md`, a file that is on
+no branch here (Stage 9 material).

@@ -1,7 +1,8 @@
 """Build the documents branch for main: queue items Q2, Q3, Q4 of the bootstrap checklist. Dispatch only; no verdict.
 
 Q2  the result packets and round plans that FORGE_MASTER_IDEA.md links to, and that file itself, from the backup commit.
-Q3  main's ROADMAP.md with three small changes (CURRENT line, status note plus the Round 4 section, one table row),
+Q3  main's ROADMAP.md with four small changes (CURRENT line, status note plus the Round 4 section, one table row,
+    five Stage 6 links moved to the files of the first run, which pull request 40 put under results/stage6-epoch1),
     and unsure.md in full from the backup commit (main's file must be a byte prefix of it).
 Q4  the path-free Stage 11 records: every file must have the SHA-256 of the owner's sanitized manifest of 2026-11-01
     and must not hold the home path.
@@ -36,7 +37,7 @@ old_unsure, new_unsure = git(FORGE, 'show', base + ':unsure.md'), git(FORGE, 'sh
 assert new_unsure.startswith(old_unsure), "main's unsure.md is not a byte prefix of the backup's file"
 (work / 'unsure.md').write_bytes(new_unsure)
 
-# Q3: ROADMAP.md of main, three changes.
+# Q3: ROADMAP.md of main, four changes.
 roadmap = git(FORGE, 'show', base + ':ROADMAP.md').decode()
 full = git(FORGE, 'show', backup + ':ROADMAP.md').decode()
 start = full.index('## Round 4 closeout')
@@ -65,9 +66,22 @@ because 160 of its links have no target on `main`. The uncertainty
 entries of that work are in `unsure.md` here. The work direction is
 `FORGE_MASTER_IDEA.md`; it approves nothing.
 
+The Stage 6 text below describes the first benchmark run. Since pull
+request 40 its files are in `results/stage6-epoch1` and
+`docs/reuse-benchmark-epoch1.md`; five links of that text now point
+there. The files under `results/stage6` are the run of 2026-11-18 for
+the present gate bytes.
+
 '''.replace('@BACKUP@', short(backup))
 roadmap = roadmap.replace(HEAD_OLD, NOTE + section)
 roadmap = roadmap.replace(ROW_OLD, '| 9 | PROVENANCE | DONE in the full record; lock renewal DEFERRED (status note at the top) |\n')
+MOVED = [('(results/stage6/report-exit-attempt1.json)', '(results/stage6-epoch1/report-exit-attempt1.json)'),
+         ('(results/stage6/report-replay.json)', '(results/stage6-epoch1/report-replay.json)'),
+         ('[measured report](docs/reuse-benchmark.md), [raw experiment](results/stage6/benchmark.json),\n[source evidence](results/stage6/source-evidence.json)',
+          '[measured report](docs/reuse-benchmark-epoch1.md), [raw experiment](results/stage6-epoch1/benchmark.json),\n[source evidence](results/stage6-epoch1/source-evidence.json)')]
+for old, new in MOVED:      # pull request 40 moved the files of the first Stage 6 run; two of these links had no target any more
+    assert roadmap.count(old) == 1, old
+    roadmap = roadmap.replace(old, new)
 (work / 'ROADMAP.md').write_text(roadmap)
 
 # Q4: path-free Stage 11 records, checked against the owner's sanitized manifest.
@@ -94,7 +108,8 @@ message = '''Documents and records for main: master idea records and round plans
 Queue items Q2, Q3 and Q4 of proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md.
 Made by proposals/round4-20261117/build_docs_branch.py from backup/forge-local-2026-11-11 at %s on main at %s.
 Q2: result packets and round plans that FORGE_MASTER_IDEA.md links to; its note about missing records is gone.
-Q3: ROADMAP.md: CURRENT line, status note, Round 4 closeout section, one table row; unsure.md brought forward in full.
+Q3: ROADMAP.md: CURRENT line, status note, Round 4 closeout section, one table row, five Stage 6 links moved to the
+    files of the first run (two had no target since pull request 40); unsure.md brought forward in full.
 Q4: results/stage11/eval-0007 and eval-pr27-0003, %d files, each with the SHA-256 of the sanitized manifest of 2026-11-01.
 No protected path changes. Nothing here is an approval. end_to_end=false.
 
