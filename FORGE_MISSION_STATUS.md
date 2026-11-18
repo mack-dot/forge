@@ -11,6 +11,27 @@ labels remain historical and must not be treated as the current priority order.
 
 
 
+## Resume here — Round 4 closed on `main`; M1 chain replayed on rebuilt tools; M1 stays open (U437–U442, M1R-1)
+
+- `main` = `201e63b1`: the owner merged pull requests 39 (gate
+  ratification rule and record 0001), 40 (Stage 6 records) and 41
+  (documents, Stage 11 records). Full check on a clean clone: 28 of 28
+  stage EXIT cases exit 0. The eight PR-gate modules are frozen. Stage 9
+  lock renewal and step B (print effects) are open owner decisions.
+- M1: the pinned tools are rebuilt, and 71 of 71 theories of the chain
+  up to `forge_refundSlideProfileA` were replayed with exit 0; their
+  exports equal the old recorded SHA-256. New:
+  `refund_profile_a_sl_all_premises_satisfiable_at_0x4000` (theory
+  `forge_refundInputSat`). Packet:
+  [m1-chain-replay-20261118](proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md).
+- M1 is NOT established. Open: Profile A approval (owner), the R1–R5
+  contract link, the compiler-premise ledger, a clean replay, an
+  independent replay, the joint-premise statement for every permitted
+  slide. `end_to_end=false`.
+- The run folders of the replay are under `results/` and in the tool
+  tree `.toolchain/experiments/refund-cakeml-20261104`; neither is
+  tracked. Do not delete them without the owner's word.
+
 ## Resume here — Round 2 finished except owner decisions (U417–U424)
 
 M1 open. end_to_end=false. Stage 12 unauthorized. Profile A not approved. Round 2 commits are on the backup branch, NOT pushed.

@@ -1,0 +1,30 @@
+{
+ "case": "reject-0009",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "reject-0009.sml",
+ "source_sha256": "ddc13bc1169b0e4c95fdbaebc1513e0ee667afdd732ce141c3523066a16a1bc1",
+ "resource_guard": {
+  "memory_free_percent": 48,
+  "disk_free_gib": 118.95,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 144.193,
+ "child_user_cpu_seconds": 138.712,
+ "child_max_rss_bytes": 3762470912,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "55a7156f99e1d5827bd81ca2b534361a7789c6fc7c44e169e1a0bbdba31cdc38",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundRejectNonFailTheory.dat": "cd31291ce36789d84259cafb629603f1628c5b65fd0ad75c0d23a8b70dc433cc",
+  ".hol/objs/forge_refundRejectNonFailTheory.sig": "8beb429a9e123bdecc5de03913bb4ef1e217f2db5ea8cad3a7455d08d78ea822",
+  ".hol/objs/forge_refundRejectNonFailTheory.sml": "a4f0facb4f9839803abf683cd35fdd8a99d6c96a339194f79b8ed9a6dfd47409"
+ },
+ "inputs_unchanged_after": true
+}

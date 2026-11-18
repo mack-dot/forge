@@ -1,0 +1,427 @@
+<<HOL message: Created theory "forge_refundLabClosure">>
+Saved definition ____ "forge8_config_def"
+Saved theorem _______ "inst_select_exp_forge8_def"
+Saved theorem _______ "inst_select_forge8_def"
+Saved theorem _______ "get_forced_forge8_def"
+Saved theorem _______ "comp_forge8_def"
+Saved theorem _______ "compile_prog_forge8_def"
+Saved theorem _______ "compile_word_to_stack_forge8_def"
+Saved theorem _______ "word_alloc_inlogic_forge8_def"
+Saved theorem _______ "each_inlogic_forge8_def"
+Saved theorem _______ "word_to_word_inlogic_forge8_def"
+LINK ⊢ word_to_word_inlogic forge8_config = word_to_word_inlogic_forge8
+LINK ⊢ each_inlogic forge8_config = each_inlogic_forge8
+LINK ⊢ word_alloc_inlogic forge8_config = word_alloc_inlogic_forge8
+LINK ⊢ compile_word_to_stack forge8_config = compile_word_to_stack_forge8
+LINK ⊢ compile_prog forge8_config = compile_prog_forge8
+LINK ⊢ comp forge8_config = comp_forge8
+LINK ⊢ get_forced forge8_config = get_forced_forge8
+LINK ⊢ inst_select bits forge8_config = inst_select_forge8 bits
+LINK ⊢ inst_select_exp bits forge8_config = inst_select_exp_forge8 bits
+Starting translation of comp_forge8 from forge_refundLabClosureTheory.
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLabClosure)>>
+Saved definition ____ "cv_comp_forge8_def"
+Saved induction _____ "cv_comp_forge8_ind"
+Saved theorem _______ "comp_forge8_pre_rules"
+Saved theorem _______ "comp_forge8_pre_ind"
+Saved theorem _______ "comp_forge8_pre_strongind"
+Saved theorem _______ "comp_forge8_pre_cases"
+Saved theorem _______ "cv_comp_forge8_thm"
+Finished translating comp_forge8, stored in cv_comp_forge8_thm
+
+WARNING: definition of cv_comp_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem comp_forge8_pre[cv_pre]:
+  ∀perf v bs kf. comp_forge8_pre perf v bs kf
+Proof
+  ho_match_mp_tac comp_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "comp_forge8_pre"
+Starting translation of compile_prog_forge8 from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_compile_prog_forge8_thm"
+Finished translating compile_prog_forge8, stored in cv_compile_prog_forge8_thm
+Starting translation of compile_word_to_stack_forge8 from forge_refundLabClosureTheory.
+Saved definition ____ "cv_compile_word_to_stack_forge8_def"
+Saved induction _____ "cv_compile_word_to_stack_forge8_ind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_rules"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_ind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_strongind"
+Saved theorem _______ "compile_word_to_stack_forge8_pre_cases"
+Saved theorem _______ "cv_compile_word_to_stack_forge8_thm"
+Finished translating compile_word_to_stack_forge8, stored in cv_compile_word_to_stack_forge8_thm
+
+WARNING: definition of cv_compile_word_to_stack_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem compile_word_to_stack_forge8_pre[cv_pre]:
+  ∀perf k v bitmaps. compile_word_to_stack_forge8_pre perf k v bitmaps
+Proof
+  ho_match_mp_tac compile_word_to_stack_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "compile_word_to_stack_forge8_pre"
+Saved definition ____ "cv_get_forced_forge8_def"
+Saved induction _____ "cv_get_forced_forge8_ind"
+Saved theorem _______ "get_forced_forge8_pre_rules"
+Saved theorem _______ "get_forced_forge8_pre_ind"
+Saved theorem _______ "get_forced_forge8_pre_strongind"
+Saved theorem _______ "get_forced_forge8_pre_cases"
+Saved theorem _______ "cv_get_forced_forge8_thm"
+Finished translating get_forced_forge8, stored in cv_get_forced_forge8_thm
+
+WARNING: definition of cv_get_forced_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem get_forced_forge8_pre[cv_pre]:
+  ∀v acc. get_forced_forge8_pre v acc
+Proof
+  ho_match_mp_tac get_forced_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "get_forced_forge8_pre"
+Saved theorem _______ "cv_word_alloc_inlogic_forge8_thm"
+Finished translating word_alloc_inlogic_forge8, stored in cv_word_alloc_inlogic_forge8_thm
+Saved definition ____ "cv_inst_select_exp_forge8_def"
+Saved induction _____ "cv_inst_select_exp_forge8_ind"
+Saved theorem _______ "inst_select_exp_forge8_pre_rules"
+Saved theorem _______ "inst_select_exp_forge8_pre_ind"
+Saved theorem _______ "inst_select_exp_forge8_pre_strongind"
+Saved theorem _______ "inst_select_exp_forge8_pre_cases"
+Saved theorem _______ "cv_inst_select_exp_forge8_thm"
+Finished translating inst_select_exp_forge8, stored in cv_inst_select_exp_forge8_thm
+
+WARNING: definition of cv_inst_select_exp_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem inst_select_exp_forge8_pre[cv_pre]:
+  ∀bits tar temp v. inst_select_exp_forge8_pre bits tar temp v
+Proof
+  ho_match_mp_tac inst_select_exp_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "inst_select_exp_forge8_pre"
+Saved definition ____ "cv_inst_select_forge8_def"
+Saved induction _____ "cv_inst_select_forge8_ind"
+Saved theorem _______ "inst_select_forge8_pre_rules"
+Saved theorem _______ "inst_select_forge8_pre_ind"
+Saved theorem _______ "inst_select_forge8_pre_strongind"
+Saved theorem _______ "inst_select_forge8_pre_cases"
+Saved theorem _______ "cv_inst_select_forge8_thm"
+Finished translating inst_select_forge8, stored in cv_inst_select_forge8_thm
+
+WARNING: definition of cv_inst_select_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem inst_select_forge8_pre[cv_pre]:
+  ∀bits temp v. inst_select_forge8_pre bits temp v
+Proof
+  ho_match_mp_tac inst_select_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "inst_select_forge8_pre"
+Saved definition ____ "cv_each_inlogic_forge8_def"
+Saved induction _____ "cv_each_inlogic_forge8_ind"
+Saved theorem _______ "each_inlogic_forge8_pre_rules"
+Saved theorem _______ "each_inlogic_forge8_pre_ind"
+Saved theorem _______ "each_inlogic_forge8_pre_strongind"
+Saved theorem _______ "each_inlogic_forge8_pre_cases"
+Saved theorem _______ "cv_each_inlogic_forge8_thm"
+Finished translating each_inlogic_forge8, stored in cv_each_inlogic_forge8_thm
+
+WARNING: definition of cv_each_inlogic_forge8 has a precondition.
+You can set up the precondition proof as follows:
+
+Theorem each_inlogic_forge8_pre[cv_pre]:
+  ∀v. each_inlogic_forge8_pre v
+Proof
+  ho_match_mp_tac each_inlogic_forge8_ind (* for example *)
+  ...
+QED
+
+Saved theorem _______ "each_inlogic_forge8_pre"
+Saved theorem _______ "cv_word_to_word_inlogic_forge8_thm"
+Finished translating word_to_word_inlogic_forge8, stored in cv_word_to_word_inlogic_forge8_thm
+Saved definition ____ "lab_forge8_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 2 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 2 clauses to the original specification.>>
+Saved definition ____ "asm_no_label_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "line_no_label_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 11 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 11 clauses to the original specification.>>
+Saved definition ____ "line_is_exit_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "is_label_def"
+Saved definition ____ "sec_ends_exit_def"
+Saved definition ____ "no_fall_def"
+Saved induction _____ "no_fall_ind"
+Saved definition ____ "lab_closed_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+Saved definition ____ "line_is_install_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+Saved definition ____ "line_is_jumpreg_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 7 clauses to the original specification.>>
+Saved definition ____ "line_is_locvalue_def"
+Saved definition ____ "lab_stats_def"
+Saved definition ____ "lab_names_def"
+Saved definition ____ "lab_check_def"
+Saved definition ____ "lab_info_def"
+Starting translation of lab_forge8 from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_lab_forge8_thm"
+Finished translating lab_forge8, stored in cv_lab_forge8_thm
+Starting translation of asm_no_label from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_asm_no_label_thm"
+Finished translating asm_no_label, stored in cv_asm_no_label_thm
+Starting translation of line_no_label from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_line_no_label_thm"
+Finished translating line_no_label, stored in cv_line_no_label_thm
+Starting translation of line_is_exit from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_line_is_exit_thm"
+Finished translating line_is_exit, stored in cv_line_is_exit_thm
+Starting translation of is_label from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_is_label_thm"
+Finished translating is_label, stored in cv_is_label_thm
+Starting translation of sec_ends_exit from forge_refundLabClosureTheory.
+Saved definition ____ "FILTER_lam___is_label_Section__1_def"
+Saved induction _____ "FILTER_lam___is_label_Section__1_ind"
+Starting translation of FILTER_lam___is_label_Section_ from forge_refundLabClosureTheory.
+Saved definition ____ "cv_FILTER_lam___is_label_Section__def"
+Saved induction _____ "cv_FILTER_lam___is_label_Section__ind"
+Saved theorem _______ "cv_FILTER_lam___is_label_Section__thm"
+Finished translating FILTER_lam___is_label_Section_, stored in cv_FILTER_lam___is_label_Section__thm
+Saved theorem _______ "FILTER_lam___is_label_Section__ho"
+Starting translation of sec_ends_exit from forge_refundLabClosureTheory.
+Starting translation of Section_lines from labLangTheory.
+Saved theorem _______ "cv_Section_lines_thm"
+Finished translating Section_lines, stored in cv_Section_lines_thm
+Starting translation of sec_ends_exit from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_sec_ends_exit_thm"
+Finished translating sec_ends_exit, stored in cv_sec_ends_exit_thm
+Starting translation of no_fall from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_no_fall_thm"
+Finished translating no_fall, stored in cv_no_fall_thm
+Starting translation of lab_closed from forge_refundLabClosureTheory.
+Saved definition ____ "EVERY_lam____IN_Section_num_LI_1_def"
+Saved induction _____ "EVERY_lam____IN_Section_num_LI_1_ind"
+Starting translation of EVERY_lam____IN_Section_num_LI from forge_refundLabClosureTheory.
+Saved definition ____ "EVERY_line_no_label_Section_li_1_def"
+Saved induction _____ "EVERY_line_no_label_Section_li_1_ind"
+Starting translation of EVERY_line_no_label_Section_li from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_EVERY_line_no_label_Section_li_thm"
+Finished translating EVERY_line_no_label_Section_li, stored in cv_EVERY_line_no_label_Section_li_thm
+Saved theorem _______ "EVERY_line_no_label_Section_li_ho"
+Starting translation of EVERY_lam____IN_Section_num_LI from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_EVERY_lam____IN_Section_num_LI_thm"
+Finished translating EVERY_lam____IN_Section_num_LI, stored in cv_EVERY_lam____IN_Section_num_LI_thm
+Saved theorem _______ "EVERY_lam____IN_Section_num_LI_ho"
+Starting translation of lab_closed from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_lab_closed_thm"
+Finished translating lab_closed, stored in cv_lab_closed_thm
+Starting translation of line_is_install from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_line_is_install_thm"
+Finished translating line_is_install, stored in cv_line_is_install_thm
+Starting translation of line_is_jumpreg from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_line_is_jumpreg_thm"
+Finished translating line_is_jumpreg, stored in cv_line_is_jumpreg_thm
+Starting translation of line_is_locvalue from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_line_is_locvalue_thm"
+Finished translating line_is_locvalue, stored in cv_line_is_locvalue_thm
+Starting translation of lab_stats from forge_refundLabClosureTheory.
+Saved definition ____ "MAP_Section_num_FILTER_lam___E_1_def"
+Saved induction _____ "MAP_Section_num_FILTER_lam___E_1_ind"
+Starting translation of MAP_Section_num_FILTER_lam___E from forge_refundLabClosureTheory.
+Saved definition ____ "cv_MAP_Section_num_FILTER_lam___E_def"
+Saved induction _____ "cv_MAP_Section_num_FILTER_lam___E_ind"
+Saved theorem _______ "cv_MAP_Section_num_FILTER_lam___E_thm"
+Finished translating MAP_Section_num_FILTER_lam___E, stored in cv_MAP_Section_num_FILTER_lam___E_thm
+Saved theorem _______ "MAP_Section_num_FILTER_lam___E_ho"
+Starting translation of lab_stats from forge_refundLabClosureTheory.
+Saved definition ____ "FILTER_lam___EVERY_line_no_lab_1_def"
+Saved induction _____ "FILTER_lam___EVERY_line_no_lab_1_ind"
+Starting translation of FILTER_lam___EVERY_line_no_lab from forge_refundLabClosureTheory.
+Saved definition ____ "cv_FILTER_lam___EVERY_line_no_lab_def"
+Saved induction _____ "cv_FILTER_lam___EVERY_line_no_lab_ind"
+Saved theorem _______ "cv_FILTER_lam___EVERY_line_no_lab_thm"
+Finished translating FILTER_lam___EVERY_line_no_lab, stored in cv_FILTER_lam___EVERY_line_no_lab_thm
+Saved theorem _______ "FILTER_lam___EVERY_line_no_lab_ho"
+Starting translation of lab_stats from forge_refundLabClosureTheory.
+Saved definition ____ "MAP_lam_LENGTH_FILTER_line_is__1_def"
+Saved induction _____ "MAP_lam_LENGTH_FILTER_line_is__1_ind"
+Starting translation of MAP_lam_LENGTH_FILTER_line_is_ from forge_refundLabClosureTheory.
+Saved definition ____ "FILTER_line_is_locvalue_Sectio_1_def"
+Saved induction _____ "FILTER_line_is_locvalue_Sectio_1_ind"
+Starting translation of FILTER_line_is_locvalue_Sectio from forge_refundLabClosureTheory.
+Saved definition ____ "cv_FILTER_line_is_locvalue_Sectio_def"
+Saved induction _____ "cv_FILTER_line_is_locvalue_Sectio_ind"
+Saved theorem _______ "cv_FILTER_line_is_locvalue_Sectio_thm"
+Finished translating FILTER_line_is_locvalue_Sectio, stored in cv_FILTER_line_is_locvalue_Sectio_thm
+Saved theorem _______ "FILTER_line_is_locvalue_Sectio_ho"
+Starting translation of MAP_lam_LENGTH_FILTER_line_is_ from forge_refundLabClosureTheory.
+Saved definition ____ "cv_MAP_lam_LENGTH_FILTER_line_is__def"
+Saved induction _____ "cv_MAP_lam_LENGTH_FILTER_line_is__ind"
+Saved theorem _______ "cv_MAP_lam_LENGTH_FILTER_line_is__thm"
+Finished translating MAP_lam_LENGTH_FILTER_line_is_, stored in cv_MAP_lam_LENGTH_FILTER_line_is__thm
+Saved theorem _______ "MAP_lam_LENGTH_FILTER_line_is__ho"
+Starting translation of lab_stats from forge_refundLabClosureTheory.
+Saved definition ____ "MAP_lam_LENGTH_FILTER_line_is__1_1_def"
+Saved induction _____ "MAP_lam_LENGTH_FILTER_line_is__1_1_ind"
+Starting translation of MAP_lam_LENGTH_FILTER_line_is__1 from forge_refundLabClosureTheory.
+Saved definition ____ "FILTER_line_is_jumpreg_Section_1_def"
+Saved induction _____ "FILTER_line_is_jumpreg_Section_1_ind"
+Starting translation of FILTER_line_is_jumpreg_Section from forge_refundLabClosureTheory.
+Saved definition ____ "cv_FILTER_line_is_jumpreg_Section_def"
+Saved induction _____ "cv_FILTER_line_is_jumpreg_Section_ind"
+Saved theorem _______ "cv_FILTER_line_is_jumpreg_Section_thm"
+Finished translating FILTER_line_is_jumpreg_Section, stored in cv_FILTER_line_is_jumpreg_Section_thm
+Saved theorem _______ "FILTER_line_is_jumpreg_Section_ho"
+Starting translation of MAP_lam_LENGTH_FILTER_line_is__1 from forge_refundLabClosureTheory.
+Saved definition ____ "cv_MAP_lam_LENGTH_FILTER_line_is__1_def"
+Saved induction _____ "cv_MAP_lam_LENGTH_FILTER_line_is__1_ind"
+Saved theorem _______ "cv_MAP_lam_LENGTH_FILTER_line_is__1_thm"
+Finished translating MAP_lam_LENGTH_FILTER_line_is__1, stored in cv_MAP_lam_LENGTH_FILTER_line_is__1_thm
+Saved theorem _______ "MAP_lam_LENGTH_FILTER_line_is__1_ho"
+Starting translation of lab_stats from forge_refundLabClosureTheory.
+Saved definition ____ "FILTER_lam_EXISTS_line_is_inst_1_def"
+Saved induction _____ "FILTER_lam_EXISTS_line_is_inst_1_ind"
+Starting translation of FILTER_lam_EXISTS_line_is_inst from forge_refundLabClosureTheory.
+Saved definition ____ "EXISTS_line_is_install_Section_1_def"
+Saved induction _____ "EXISTS_line_is_install_Section_1_ind"
+Starting translation of EXISTS_line_is_install_Section from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_EXISTS_line_is_install_Section_thm"
+Finished translating EXISTS_line_is_install_Section, stored in cv_EXISTS_line_is_install_Section_thm
+Saved theorem _______ "EXISTS_line_is_install_Section_ho"
+Starting translation of FILTER_lam_EXISTS_line_is_inst from forge_refundLabClosureTheory.
+Saved definition ____ "cv_FILTER_lam_EXISTS_line_is_inst_def"
+Saved induction _____ "cv_FILTER_lam_EXISTS_line_is_inst_ind"
+Saved theorem _______ "cv_FILTER_lam_EXISTS_line_is_inst_thm"
+Finished translating FILTER_lam_EXISTS_line_is_inst, stored in cv_FILTER_lam_EXISTS_line_is_inst_thm
+Saved theorem _______ "FILTER_lam_EXISTS_line_is_inst_ho"
+Starting translation of lab_stats from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_lab_stats_thm"
+Finished translating lab_stats, stored in cv_lab_stats_thm
+Starting translation of lab_names from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_lab_names_thm"
+Finished translating lab_names, stored in cv_lab_names_thm
+Starting translation of lab_check from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_lab_check_thm"
+Finished translating lab_check, stored in cv_lab_check_thm
+Starting translation of lab_info from forge_refundLabClosureTheory.
+Saved theorem _______ "cv_lab_info_thm"
+Finished translating lab_info, stored in cv_lab_info_thm
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+Saved theorem _______ "refund_alloc_oracle_cv_eq"
+Saved theorem _______ "refund_alloc_oracle_cv_thm"
+SAME_AS_STORED code data ffis conf
+Saved theorem _______ "forge8_links"
+CHECKED forge8_links
+⊢ word_to_word_inlogic forge8_config = word_to_word_inlogic_forge8 ∧
+  each_inlogic forge8_config = each_inlogic_forge8 ∧
+  word_alloc_inlogic forge8_config = word_alloc_inlogic_forge8 ∧
+  compile_word_to_stack forge8_config = compile_word_to_stack_forge8 ∧
+  compile_prog forge8_config = compile_prog_forge8 ∧
+  comp forge8_config = comp_forge8 ∧
+  get_forced forge8_config = get_forced_forge8 ∧
+  inst_select bits forge8_config = inst_select_forge8 bits ∧
+  inst_select_exp bits forge8_config = inst_select_exp_forge8 bits
+Saved theorem _______ "lab_forge8_to_lab"
+CHECKED lab_forge8_to_lab
+⊢ lab_forge8 c p = SOME L ⇒ SND (SND (to_lab arm8_config c p)) = L
+Saved theorem _______ "refund_alloc_compiled"
+CHECKED refund_alloc_compiled
+⊢ ∃c1.
+    compile arm8_config (set_oracle arm8_backend_config refund_alloc_oracle)
+      refund_prog = SOME (code,data,c1)
+Saved theorem _______ "refund_alloc_target"
+CHECKED refund_alloc_target
+⊢ ∃c1.
+    attach_bitmaps
+      (FST
+         (SND
+            (to_lab arm8_config
+               (set_oracle arm8_backend_config refund_alloc_oracle)
+               refund_prog)))
+      (FST
+         (to_lab arm8_config
+            (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))
+      (compile arm8_config
+         (FST
+            (SND
+               (to_lab arm8_config
+                  (set_oracle arm8_backend_config refund_alloc_oracle)
+                  refund_prog))).lab_conf
+         (SND
+            (SND
+               (to_lab arm8_config
+                  (set_oracle arm8_backend_config refund_alloc_oracle)
+                  refund_prog)))) = SOME (code,data,c1)
+Saved theorem _______ "lab_closed_labels"
+CHECKED lab_closed_labels
+⊢ ∀ls secs.
+    lab_closed ls secs ⇒
+    ∀sec n1 n2.
+      MEM sec secs ∧ ¬MEM (Section_num sec) ls ∧ (n1,n2) ∈ sec_get_labels sec ⇒
+      ¬MEM n1 ls
+Saved theorem _______ "refund_lab_closed"
+CHECKED refund_lab_closed
+⊢ lab_closed [29; 31]
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+Saved theorem _______ "refund_lab_not_closed_29"
+CHECKED refund_lab_not_closed_29
+⊢ ¬lab_closed [29]
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+Saved theorem _______ "refund_lab_stats"
+CHECKED refund_lab_stats
+⊢ lab_stats
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) =
+  (558,[29],553,1206,[29; 31])
+Saved theorem _______ "refund_lab_install_closure"
+CHECKED refund_lab_install_closure
+⊢ ∀sec n1 n2.
+    MEM sec
+      (SND
+         (SND
+            (to_lab arm8_config
+               (set_oracle arm8_backend_config refund_alloc_oracle)
+               refund_prog))) ∧ Section_num sec ≠ Install_location ∧
+    Section_num sec ≠ InstallData_location ∧ (n1,n2) ∈ sec_get_labels sec ⇒
+    n1 ≠ Install_location ∧ n1 ≠ InstallData_location
+ORACLE_ENTRIES 552
+Exporting theory "forge_refundLabClosure" ... done.
+Theory "forge_refundLabClosure" took 2m18s to build
+P1_PROOF_COMPLETE

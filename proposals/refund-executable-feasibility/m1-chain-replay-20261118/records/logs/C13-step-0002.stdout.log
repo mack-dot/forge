@@ -1,0 +1,128 @@
+<<HOL message: Created theory "forge_labRegionStep">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_labRegionStep)>>
+Saved theorem _______ "region_inv_facts"
+CHECKED region_inv_facts
+⊢ region_inv G OK code s ⇒
+  s.code = code ∧ (∀w. G (Word w)) ∧ val_inv G s ∧ OK s.pc ∧
+  (∀n1 n2 p. G (Loc n1 n2) ∧ loc_to_pc n1 n2 s.code = SOME p ⇒ OK p) ∧
+  ∀line. asm_fetch s = SOME line ⇒ step_ok G OK s.code s.pc line
+Saved theorem _______ "region_inv_next"
+CHECKED region_inv_next
+⊢ ∀s s2.
+    region_inv G OK code s ∧ s2.code = s.code ∧ val_inv G s2 ∧ OK s2.pc ⇒
+    region_inv G OK code s2
+Saved theorem _______ "region_step_callffi"
+CHECKED region_step_callffi
+⊢ ∀name n i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm (CallFFI name) i bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_halt"
+CHECKED region_step_halt
+⊢ ∀n i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm Halt i bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_install"
+CHECKED region_step_install
+⊢ ∀n i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm Install i bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_call"
+CHECKED region_step_call
+⊢ ∀n lab i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm (Call lab) i bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_jump"
+CHECKED region_step_jump
+⊢ ∀n2 n1 n i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm (Jump (Lab n1 n2)) i bs n) ∧
+    evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_jumpcmp"
+CHECKED region_step_jumpcmp
+⊢ ∀ri r n2 n1 n i code c bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm (JumpCmp c r ri (Lab n1 n2)) i bs n) ∧
+    evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_locvalue"
+CHECKED region_step_locvalue
+⊢ ∀r n2 n1 n i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (LabAsm (LocValue r (Lab n1 n2)) i bs n) ∧
+    evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_label"
+CHECKED region_step_label
+⊢ ∀k3 k2 k1 code OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (Label k1 k2 k3) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_inst"
+CHECKED region_step_inst
+⊢ ∀n i code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (Asm (Asmi (Inst i)) bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_jumpreg"
+CHECKED region_step_jumpreg
+⊢ ∀r n code bs OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (Asm (Asmi (JumpReg r)) bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_step_sharemem"
+CHECKED region_step_sharemem
+⊢ ∀r n m code bs ad OK G s res t.
+    region_inv G OK code s ∧ s.clock ≠ 0 ∧
+    asm_fetch s = SOME (Asm (ShareMem m r ad) bs n) ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_one_step"
+CHECKED region_one_step
+⊢ ∀s res t.
+    region_inv G OK code s ∧ evaluate s = (res,t) ⇒
+    (∃s2.
+       evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+    t = s
+Saved theorem _______ "region_run"
+CHECKED region_run
+⊢ ∀k s res t.
+    s.clock = k ∧ region_inv G OK code s ∧ evaluate s = (res,t) ⇒
+    region_inv G OK code t
+Saved theorem _______ "region_prefix"
+CHECKED region_prefix
+⊢ ∀s k res t.
+    region_inv G OK code s ∧ evaluate (s with clock := k) = (res,t) ⇒
+    region_inv G OK code t ∧ OK t.pc ∧ t.code = code ∧
+    ∀i bs n. asm_fetch t ≠ SOME (LabAsm Install i bs n)
+Saved theorem _______ "region_hyp_witness"
+CHECKED region_hyp_witness
+⊢ region_hyp (λv. T) (λp. T) []
+Exporting theory "forge_labRegionStep" ... done.
+Theory "forge_labRegionStep" took 10.2s to build
+P2_PROOF_COMPLETE

@@ -1,0 +1,30 @@
+{
+ "case": "root-0005",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "root-0005.sml",
+ "source_sha256": "728469058d988c125c1241210b4eab854383d9ae5e717a6d7b29bbac21ef66c2",
+ "resource_guard": {
+  "memory_free_percent": 55,
+  "disk_free_gib": 119.01,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 400,
+ "wall_seconds_limit": 700,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 10.681,
+ "child_user_cpu_seconds": 12.287,
+ "child_max_rss_bytes": 1363968000,
+ "markers": [
+  "P3_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "9a96616d4927e6ca373c5b01e1db4375a4316ff733ee5a2b8bc83c70990c92e5",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_simRootTheory.dat": "adbadc58fa0816e9f514278d78bc072df68af9c60138b01eefff8f49a084de05",
+  ".hol/objs/forge_simRootTheory.sig": "3fdc6c0de0faa63ea564f55fe06b4c7702e0315ec30587f05a1fbf71b026b168",
+  ".hol/objs/forge_simRootTheory.sml": "e84e4a38fbc9c1d452a5cf1330516fc68cc8e864e34a720766e54f39250b3c15"
+ },
+ "inputs_unchanged_after": true
+}

@@ -1,0 +1,30 @@
+{
+ "case": "wpath-0002",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "wpath-0002.sml",
+ "source_sha256": "7a3ca44a981fc225fdc1f547d31e16a5fb487b580111f1c4521ece3ef8944b76",
+ "resource_guard": {
+  "memory_free_percent": 63,
+  "disk_free_gib": 119.31,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 1500,
+ "wall_seconds_limit": 1800,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 119.061,
+ "child_user_cpu_seconds": 137.038,
+ "child_max_rss_bytes": 3602333696,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "3af0c45cdb04c9a972fe2dfaf2266827f961ce41f65e3fa1d375807d2fe2ff0f",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundFfiwritePathTheory.dat": "5cc31c306eade4095eaf61164d8486401b6886b062f0d728af29bff0dcbe1e0c",
+  ".hol/objs/forge_refundFfiwritePathTheory.sig": "7904b6a0104268a036de42715203da003695db7d4539b6f668b85f20d5de7ac6",
+  ".hol/objs/forge_refundFfiwritePathTheory.sml": "ff9a99ff0f7d1c28c2b95f3ce898ff9dbf1bfe8ad4d43f7eb8fb663e51a6478f"
+ },
+ "inputs_unchanged_after": true
+}

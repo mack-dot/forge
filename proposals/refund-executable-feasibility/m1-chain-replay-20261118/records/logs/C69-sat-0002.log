@@ -1,0 +1,30 @@
+{
+ "case": "sat-0002",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "sat-0002.sml",
+ "source_sha256": "d0aa84244cc656461ca88e89398dffc3a0e60d162d1aca236cd4edffb75beb83",
+ "resource_guard": {
+  "memory_free_percent": 49,
+  "disk_free_gib": 119.29,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 94.489,
+ "child_user_cpu_seconds": 115.164,
+ "child_max_rss_bytes": 3006464000,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "d2841b631ddc3eed5a1a46c385dccd6c901e6b331c97e8ed081ff5cea91f96a7",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundSlideSatTheory.dat": "ff192cd52b2ad32231d421dfd8c37321f7e58f37c68209a9a3b8593d8eb827f5",
+  ".hol/objs/forge_refundSlideSatTheory.sig": "6f3ff17bec6c52eba8d2123b466de82e72ca655c54fcd1abcf5bb1ddb7b8808b",
+  ".hol/objs/forge_refundSlideSatTheory.sml": "aa25a15d41278b00fd86caa1daa864d09a685a86e8aa977d24d17d90f6834b4f"
+ },
+ "inputs_unchanged_after": true
+}

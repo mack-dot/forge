@@ -1,0 +1,24 @@
+<<HOL message: Created theory "forge_installHandlerIrrelevant">>
+Saved definition ____ "same_but_install_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_installHandlerIrrelevant)>>
+Saved theorem _______ "evaluate_same_but_install"
+Saved theorem _______ "no_install_prefix_same_but_install"
+CHECKED evaluate_same_but_install
+⊢ ∀k mc mc2 ffi ms.
+    same_but_install mc mc2 ∧
+    (∀j ms' ffi'.
+       j < k ∧ evaluate mc2 ffi j ms = (TimeOut,ms',ffi') ⇒
+       mc.target.get_pc ms' ≠ mc.install_pc) ⇒
+    evaluate mc ffi k ms = evaluate mc2 ffi k ms
+CHECKED no_install_prefix_same_but_install
+⊢ same_but_install mc mc2 ∧ (∀n. no_install_prefix mc2 ffi n ms) ⇒
+  (∀n. no_install_prefix mc ffi n ms) ∧
+  ∀k. evaluate mc ffi k ms = evaluate mc2 ffi k ms
+Saved definition ____ "forge_toy_mc3_def"
+Saved theorem _______ "handler_matters_when_installer_reached"
+CHECKED handler_matters_when_installer_reached
+⊢ same_but_install forge_toy_mc forge_toy_mc3 ∧
+  evaluate forge_toy_mc io 3 0 ≠ evaluate forge_toy_mc3 io 3 0
+Exporting theory "forge_installHandlerIrrelevant" ... done.
+Theory "forge_installHandlerIrrelevant" took 17.1s to build
+EXACT_COMPLETE

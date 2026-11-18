@@ -1,0 +1,30 @@
+{
+ "case": "step-0002",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "step-0002.sml",
+ "source_sha256": "f57e63ea21b53a5ab14ef934f74a8e87b8dc8f25c68a894c7861b9c289a5c4bd",
+ "resource_guard": {
+  "memory_free_percent": 63,
+  "disk_free_gib": 117.9,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 240,
+ "wall_seconds_limit": 540,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 10.212,
+ "child_user_cpu_seconds": 12.286,
+ "child_max_rss_bytes": 1184727040,
+ "markers": [
+  "P2_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "a6e7c1630e5ebfbacbac8191672c2d501d2542c14200cbf140a141a09aea0c01",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_labRegionStepTheory.dat": "7cf102992292a82c9c05efcfda13e908f4457fa9d21d00805426546d2ba42a53",
+  ".hol/objs/forge_labRegionStepTheory.sig": "0065660de55c946e5463f07d2db1f0b6f7a075eb0776ade0e32dfb03d32e86de",
+  ".hol/objs/forge_labRegionStepTheory.sml": "c8ca8853a79b775cfd7758cb079fac4ce7b466f062dada3be2fe54566a62b9c5"
+ },
+ "inputs_unchanged_after": true
+}

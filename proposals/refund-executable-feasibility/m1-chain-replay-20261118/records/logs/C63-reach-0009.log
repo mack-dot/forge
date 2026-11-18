@@ -1,0 +1,30 @@
+{
+ "case": "reach-0009",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "reach-0009.sml",
+ "source_sha256": "70eeffc8f926323731151334e331f31e46ed40474a383e1ebc470b62a42ccfef",
+ "resource_guard": {
+  "memory_free_percent": 54,
+  "disk_free_gib": 119.31,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 76.682,
+ "child_user_cpu_seconds": 99.211,
+ "child_max_rss_bytes": 3925884928,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "02eb618cbda308108c259b28b066eadc85dbb02c939bb433584169d7c5714f7b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundWriteReachTheory.dat": "27dd64d320f9cff95b1d2b242ed144c302daebeb230bf3a07aad242e178c5885",
+  ".hol/objs/forge_refundWriteReachTheory.sig": "7cb8165eb29b0ec17eeb88da45afcbbf1e3aaf054bcc95ed924451ae39d01ae9",
+  ".hol/objs/forge_refundWriteReachTheory.sml": "ec9ec4ee0fb4d02bb24206ee13cdb5bb209c3c8ce69daef89baa9c001397b75f"
+ },
+ "inputs_unchanged_after": true
+}

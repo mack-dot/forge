@@ -9,6 +9,29 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## M1 chain replay on the rebuilt pinned tools: 71 of 71 theories exit 0, exports byte-equal to the old records; joint-premise theorem passes; M1 stays open — M1R-1
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Same machine, same pins: not a clean-room replay and not
+an independent replay. No M1 theorem is claimed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| upstream tool objects that the chain imports and that were missing (three Holmake commands, new files only) |0; 0; 0|16 theories and 3 library objects built; 0 of 1,913 existing theory files changed |
+| 9 trunk theories in the tool tree (recorded Holmake commands, `-j1`) |0 each|`.dat`, `.sig`, `.sml` equal the recorded SHA-256 |
+| 62 case runs of the chain up to `forge_refundSlideProfileA` (recorded commands) |0 each|71 of 71 theories equal to the recorded SHA-256; 0 different |
+| import check `imp4-0001` |0|IMPORTED_COUNT 15, MISMATCH_COUNT 0 |
+| `fs-0002.sml` unchanged (theory `forge_refundInputSat`); its import check |0; 0|first pass of the joint-premise theorem, for slide 0x4000 and one constructed state |
+| other commands of the run |1; stopped|one Holmake dry run (missing include folder; no HOL process); one launch stopped by the agent after 20 s and run again |
+| budget |7,034 s of 21,600 s|no sleep gap; one HOL process at a time |
+
+[Replay packet](proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md).
+M1 stays open: Profile A approval, the R1–R5 contract link, the
+compiler-premise ledger, a clean replay and an independent replay are
+not done. Integration EXIT NOT_ESTABLISHED.
+
+
+
 ## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39), the Stage 6 records (pull request 40) and the documents (pull request 41); Q5 passes — U433, U436, U437, U438, U439, U440, U441, U442
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

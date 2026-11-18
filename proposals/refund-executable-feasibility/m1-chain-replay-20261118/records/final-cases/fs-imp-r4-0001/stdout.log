@@ -1,0 +1,22 @@
+PARENT_CLEAN forge_refundSlideProfileA.refund_profile_a_sl
+PREMISE_CONJUNCTS 11
+IMPORTED forge_refundInputSat.refund_profile_a_sl_all_premises_satisfiable_at_0x4000
+IMPORTED forge_refundInputSat.refund_input_premises_satisfiable
+IMPORTED forge_refundInputSat.sat_fs_wfFS
+IMPORTED forge_refundInputSat.sat_fs_STD_streams
+IMPORTED forge_refundInputSat.sat_fs_stdin_content
+IMPORTED forge_refundInputSat.sat_cl_wfcl
+IMPORTED forge_refundInputSat.live_numchars_LREPEAT_one
+STRUCTURE_OK forge_refundInputSat.refund_profile_a_sl_conclusion_holds_for_a_constructed_model_state_at_0x4000
+NONVACUITY_FREE_VARS reason amount candidate opened enabled remaining original request charge ext
+THEORY forge_refundInputSat theorems 13 definitions 1 unclean 0
+CONTROL_OK the joint statement with the slide variable left free is not the stored theorem
+CONTROL_OK the joint statement at slide 0x8000 is not the stored theorem
+CONTROL_OK the input statement without STD_streams is not the stored theorem
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CLOSURE_NODES 543
+IMPORTED_COUNT 8 MISMATCH_COUNT 0
+EXACT_COMPLETE

@@ -1,0 +1,30 @@
+{
+ "case": "asm-0002",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "asm-0002.sml",
+ "source_sha256": "5df6db4ae3c6c4f841135c8b5c28656e965637fa57b396b78cf75a5c25a157ee",
+ "resource_guard": {
+  "memory_free_percent": 57,
+  "disk_free_gib": 117.93,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 61.759,
+ "child_user_cpu_seconds": 71.354,
+ "child_max_rss_bytes": 4323885056,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "b8fd66b9db188738b486c46df1cb77d7a7f17ef869e4bc5a2e87c85726c7bf7f",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundInstalledAssemblyTheory.dat": "26ac3856a3e5f02340c426c71af38cb6ab27eb4c231dc3a49c3924d10a9dece8",
+  ".hol/objs/forge_refundInstalledAssemblyTheory.sig": "a5a009d00bef83e0875415e36113d7da9dd0f3aa614d64361f66b12f3765cc31",
+  ".hol/objs/forge_refundInstalledAssemblyTheory.sml": "e005a47e37baae475b03096b3b3866d351dd399ca45ebfeaa4a713b0d997f2da"
+ },
+ "inputs_unchanged_after": true
+}

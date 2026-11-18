@@ -15677,3 +15677,64 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: the hosted gate result of the documents pull request is
   not known at the time of this entry; expected UNSUPPORTED (exit 3).
 - Next check: the hosted run; the owner's merge; then Q5 on main.
+
+## M1R-1 — M1 chain replay on the rebuilt pinned tools: 71 of 71 theories exit 0 with byte-equal exports; the joint-premise theorem passes for the first time; M1 stays open
+- Status: 2026-11-18 07:40Z. Refs U401, U409, U413, U424, U427, U439,
+  U440, U442. ID series: entries of the M1 replay on the backup branch
+  use "M1R-n", because main's unsure.md continues at U443 (U442).
+- Owner decision: text 4 in proposals/round4-20261117/
+  OWNER_CLOSEOUT_TEXTS.md (its own run, budget 21,600 s, no M1 claim
+  before the chain and the fs runs exit 0). Run by one background agent;
+  packet with its report and 297 record files:
+  proposals/refund-executable-feasibility/m1-chain-replay-20261118.
+- My error, corrected: I had reported the rebuilt tool context as
+  complete (after rebuild.py 14400 exit 0). It was not complete for the
+  chain. 16 upstream theories (Dafny front end, its semantics and
+  proofs, arm8_targetProof, arm8_configProof, asmSigned) and the
+  arm8_stepLib object were missing; rebuild.py never listed them. I
+  allowed their build with the recorded Holmake commands, new files
+  only. Result: exit 0 each; 0 of 1,913 existing theory files changed.
+- Actual: 71 theories planned (9 trunk theories in the tool tree, the
+  61 of deps-e4, forge_refundSlideProfileA); 71 replayed with exit 0; 0
+  failed; 0 blocked. Fresh .dat, .sig and .sml equal the SHA-256 of the
+  old packet records for 71 of 71. Import check imp4-0001: exit 0,
+  IMPORTED_COUNT 15, MISMATCH_COUNT 0. 92 commands: 90 exit 0; 1 exit 1
+  (a Holmake dry run, missing include folder, no HOL process); 1 stopped
+  by the agent after 20 s and run again. 7,034 s of 21,600 s used; no
+  sleep gap; one HOL process at a time; peak 4,768 MiB.
+- New result: fs-0002.sml, unchanged, exit 0 at the first attempt of
+  this replay (theory forge_refundInputSat, 13 theorems, 1 definition;
+  import check written in this run: exit 0, IMPORTED_COUNT 8,
+  MISMATCH_COUNT 0). Stored theorem
+  refund_profile_a_sl_all_premises_satisfiable_at_0x4000: the eleven
+  premises of refund_profile_a_sl hold together for one constructed
+  state at slide 0x4000. This answers the "exact missing lemma" of U409
+  for that one slide. Failing attempts for this proof in total: 1 of 5
+  (fs-0001 of 2026-11-17).
+- My own checks (spot checks, 2 of 71 theories plus the records): exit
+  counts in commands.json as reported; totals and 72 comparison rows
+  "equal"; tool tree compare: 0 existing files changed; fresh
+  forge_refundSlideProfileATheory (.dat, .sig, .sml) and fresh
+  forge_refundImageTheory (.dat, .sig) equal the packet hashes; the
+  restored executable equals b8ed5ec2...7bb8; the fs logs hold the saved
+  theorem and both EXACT_COMPLETE markers; 0 tracked files changed.
+- What this shows: the committed scripts give the same theories again
+  on tools rebuilt from the same pins on this machine. What it does NOT
+  show: that the statements are the right ones; a clean-room replay; an
+  independent replay. "Equal" compares with hashes that the earlier
+  runs here recorded.
+- Not replayed: theories outside the closure of
+  forge_refundSlideProfileA (for example forge_refundWriteArgs,
+  forge_refundWriteWord, forge_refundInstallReach), negative controls,
+  repeat cases, other import checks. The executable was not executed.
+- M1 stays OPEN. Blocking items of U401 that stay open: approval of
+  Profile A (owner), the link from the approved R1-R5 contract to the
+  HOL model, the compiler-premise ledger, a clean replay, an independent
+  replay. The joint-premise theorem covers one slide and one
+  constructed state, not every permitted slide.
+- Slip of the replay agent, reported by itself: one read-only git
+  status inside the CakeML checkout after it was told to run no git
+  command there; no file changed.
+- Next check: owner decisions on Profile A and on a clean or
+  independent replay; the joint-premise statement for a general
+  permitted slide.

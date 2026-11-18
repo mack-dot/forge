@@ -1,0 +1,30 @@
+{
+ "case": "wsucc-0002",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "wsucc-0002.sml",
+ "source_sha256": "bfcc0e273be3307c52a2003622a7d65fbfec343b8131b4f94390095f9a4af1ec",
+ "resource_guard": {
+  "memory_free_percent": 58,
+  "disk_free_gib": 119.32,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 74.553,
+ "child_user_cpu_seconds": 98.618,
+ "child_max_rss_bytes": 3532029952,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "8da652fc6d89f175e1781493f6062b5a3376fb21d92ce1b438af6507c6b36f1f",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundFfiwriteSuccessTheory.dat": "60664fffc7bbf888898c6c7bb23d8027e22542cb15f2728734f13fdcfa0b1dc3",
+  ".hol/objs/forge_refundFfiwriteSuccessTheory.sig": "5c0f6941e1be2f830f1b9205c2cff596726a4c078e4fcd51050195397ae006f8",
+  ".hol/objs/forge_refundFfiwriteSuccessTheory.sml": "1f947580f26ee29984bace3fe737db24a49cd987e4e95826e77129330540959f"
+ },
+ "inputs_unchanged_after": true
+}

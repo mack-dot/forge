@@ -1,0 +1,139 @@
+<<HOL message: Created theory "forge_refundExclusionArm8">>
+PREMISES_AFTER_INSTANTIATION 16
+PREMISE 1 mc_conf_ok mc_conf
+PREMISE 2 no_share_mem_inst
+  (SND
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) ⇒
+comp
+PREMISE 3 good_code mc_conf.target.config LN
+  (SND
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund
+PREMISE 4 arm8_config = mc_conf.target.config
+PREMISE 5 isEmpty
+  (FST
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+  lab_conf.labels
+PREMISE 6 (FST
+   (SND
+      (to_lab arm8_config
+         (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+lab_conf.pos = 0
+PREMISE 7 compile arm8_config
+  (FST
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+  lab
+PREMISE 8 refund_lab_conf2.ffi_names = SOME mc_conf.ffi_names
+PREMISE 9 good_init_state mc_conf ms code cbspace t m dm sdm
+PREMISE 10 MAP (λrec. w2n (mc_conf.target.get_pc ms) + rec.entry_pc)
+  refund_lab_conf2.shmem_extra =
+DROP (LENGTH mc_conf.ffi_names) (MAP w2n mc_conf.ffi_entry
+PREMISE 11 mc_conf.mmio_info =
+ZIP
+  (GENLIST (λindex. index + LENGTH mc_conf.ffi_names)
+     (LENGTH refund_lab_conf2.shmem_extra),
+   MAP
+     (λrec.
+       
+PREMISE 12 no_install_or_no_share_mem
+  (SND
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+PREMISE 13 mmio_pcs_min_index mc_conf.ffi_names = SOME (LENGTH mc_conf.ffi_names)
+PREMISE 14 cbspace + LENGTH code + ffi_offset * (LENGTH mc_conf.ffi_names + 3) <
+dimword (:64)
+PREMISE 15 ∀ffis.
+  (FST
+     (SND
+        (to_lab arm8_config
+           (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))).
+  lab_conf.ffi_n
+PREMISE 16 semantics
+  (make_init mc_conf ffi t m dm sdm ms
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config r
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundExclusionArm8)>>
+Saved theorem _______ "refund_install_exclusion_arm8"
+CHECKED refund_install_exclusion_arm8
+⊢ is_arm8_machine_config mc_conf ∧
+  compiler_oracle_ok coracle refund_lab_conf2.labels (LENGTH code)
+    arm8_config mc_conf.ffi_names ∧
+  refund_lab_conf2.ffi_names = SOME mc_conf.ffi_names ∧
+  good_init_state mc_conf ms code cbspace t m dm sdm ∧
+  MAP (λrec. w2n (mc_conf.target.get_pc ms) + rec.entry_pc)
+    refund_lab_conf2.shmem_extra =
+  DROP (LENGTH mc_conf.ffi_names) (MAP w2n mc_conf.ffi_entry_pcs) ∧
+  mc_conf.mmio_info =
+  ZIP
+    (GENLIST (λindex. index + LENGTH mc_conf.ffi_names)
+       (LENGTH refund_lab_conf2.shmem_extra),
+     MAP
+       (λrec.
+          (rec.nbytes,Addr rec.addr_reg rec.addr_off,rec.reg,
+           n2w rec.exit_pc + mc_conf.target.get_pc ms))
+       refund_lab_conf2.shmem_extra) ∧
+  cbspace + LENGTH code + ffi_offset * (LENGTH mc_conf.ffi_names + 3) <
+  dimword (:64) ∧
+  semantics
+    (make_init mc_conf ffi t m dm sdm ms
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))) (compile arm8_config)
+       (mc_conf.target.get_pc ms + n2w (LENGTH code)) cbspace coracle) ≠ Fail ⇒
+  ∀n. no_install_prefix mc_conf ffi n ms
+Saved theorem _______ "refund_install_exclusion_installed"
+CHECKED refund_install_exclusion_installed
+⊢ is_arm8_machine_config mc_conf ∧
+  installed code cbspace bitmaps data_sp refund_lab_conf2.ffi_names (r1,r2)
+    mc_conf refund_lab_conf2.shmem_extra ms ∧
+  (∀t m dm sdm.
+     good_init_state mc_conf ms code cbspace t m dm sdm ⇒
+     compiler_oracle_ok coracle refund_lab_conf2.labels (LENGTH code)
+       arm8_config mc_conf.ffi_names ∧
+     semantics
+       (make_init mc_conf ffi t m dm sdm ms
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog))) (compile arm8_config)
+          (mc_conf.target.get_pc ms + n2w (LENGTH code)) cbspace coracle) ≠
+     Fail) ⇒
+  ∀n. no_install_prefix mc_conf ffi n ms
+Saved theorem _______ "refund_u298_exclusion_any_handler"
+CHECKED refund_u298_exclusion_any_handler
+⊢ same_but_install mc0 mc_conf ∧ is_arm8_machine_config mc_conf ∧
+  installed code cbspace bitmaps data_sp refund_lab_conf2.ffi_names (r1,r2)
+    mc_conf refund_lab_conf2.shmem_extra ms ∧
+  (∀t m dm sdm.
+     good_init_state mc_conf ms code cbspace t m dm sdm ⇒
+     compiler_oracle_ok coracle refund_lab_conf2.labels (LENGTH code)
+       arm8_config mc_conf.ffi_names ∧
+     semantics
+       (make_init mc_conf ffi t m dm sdm ms
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog))) (compile arm8_config)
+          (mc_conf.target.get_pc ms + n2w (LENGTH code)) cbspace coracle) ≠
+     Fail) ⇒
+  (∀j ms' ffi'.
+     evaluate mc0 ffi j ms = (TimeOut,ms',ffi') ⇒
+     mc0.target.get_pc ms' ≠ mc0.install_pc) ∧
+  ∀k. evaluate mc0 ffi k ms = evaluate mc_conf ffi k ms
+Exporting theory "forge_refundExclusionArm8" ... done.
+Theory "forge_refundExclusionArm8" took 6.9s to build
+EXACT_COMPLETE

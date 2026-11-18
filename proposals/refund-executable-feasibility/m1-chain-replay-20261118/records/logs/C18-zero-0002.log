@@ -1,0 +1,30 @@
+{
+ "case": "zero-0002",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "zero-0002.sml",
+ "source_sha256": "6fded3dfb06a141877cba1eab9e11331dd5e369779a60c43c7a0ee5fb44e7fec",
+ "resource_guard": {
+  "memory_free_percent": 50,
+  "disk_free_gib": 119.01,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 180,
+ "wall_seconds_limit": 480,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 4.423,
+ "child_user_cpu_seconds": 4.811,
+ "child_max_rss_bytes": 491880448,
+ "markers": [
+  "P3_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "006cac9f818305bde3846c69d2b3c8ad58edfee938d5eefd6fa38f98576d8f47",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_simZeroCaseTheory.dat": "98325415a4c9d4921e6a0ba1fb14cf54c91045f211a32b08bbc936815fccb24d",
+  ".hol/objs/forge_simZeroCaseTheory.sig": "271357bec37872ca526cbbe9d07f7622f96f9fe4becb8aef6598b388a4f4a5d8",
+  ".hol/objs/forge_simZeroCaseTheory.sml": "c6c38803f37dc9b8c8d5d012f035b6c6cb828a41141e781639118435e2d964a7"
+ },
+ "inputs_unchanged_after": true
+}

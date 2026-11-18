@@ -1,0 +1,30 @@
+{
+ "case": "handler-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "handler-0001.sml",
+ "source_sha256": "43cefc158ebb66b1fba4f3e90d9302d9efcced893f37d2330168999d9fd9273f",
+ "resource_guard": {
+  "memory_free_percent": 48,
+  "disk_free_gib": 119.01,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 400,
+ "wall_seconds_limit": 700,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 49.413,
+ "child_user_cpu_seconds": 73.033,
+ "child_max_rss_bytes": 2547843072,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "e557956f32cf40032d01e50ba501be50c3288e0664f5165ce66e9d4dbacac773",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_installHandlerIrrelevantTheory.dat": "f4a7fbe23ec9311dea12e0bb2797323487258dd0f6b6372a2250c7b6416fdcda",
+  ".hol/objs/forge_installHandlerIrrelevantTheory.sig": "5a876b9db1c7ea2cc52c15b98f922e2b497b928370bc3094b688533a9479b325",
+  ".hol/objs/forge_installHandlerIrrelevantTheory.sml": "cae87a67009df76f6266fca8293ee61996c6f29c6e540f4faaa7716fa72cc889"
+ },
+ "inputs_unchanged_after": true
+}
