@@ -1,0 +1,35 @@
+{
+  "candidate_matches_resolved_bytes": true,
+  "commands": [
+    {
+      "command": "patch --batch --forward -p1 --directory build/stage6/proposal-check --input /Users/mackianni/forge/build/stage6/proposal.patch",
+      "exit_code": 0,
+      "log": "results/stage6/proposal/patch.log",
+      "log_sha256": "d998cf05e1046f9cb1d71689fc2817926d99e9e1ad360cd395e792f8149b6a13"
+    },
+    {
+      "command": "cmp proposals/booking/BookingSpec.dfy build/stage6/proposal-check/spec/booking/BookingSpec.dfy",
+      "exit_code": 0
+    },
+    {
+      "command": "cmp proposals/booking/spec.lock build/stage6/proposal-check/spec/booking/spec.lock",
+      "exit_code": 0
+    }
+  ],
+  "exact_proposed_patch_applies": true,
+  "exit_code": 0,
+  "files": {
+    "proposals/booking.md": "6406322ff47d69154c0daf023e8be5b7a527f7c52266034ccbbc7bd4f4710e5d",
+    "proposals/booking/BookingSpec.dfy": "6d10e909fc685eb28fc1d582dcb37b61294bf5ac2466236b06447a82a60d2319",
+    "proposals/booking/spec.lock": "c6ff76b98ef844d08e4255938414477d21c2be2dcb7e83ae7d8165c05061b88e",
+    "results/stage6/proposal/resolve-attempt1.json": "f85f2e966c57ae4f2bedcabfd4d66add21f8a6f8ba045fa017e747cb67089ed4",
+    "results/stage6/proposal/resolve-attempt1.log": "538eedd440944ed8acccf1fbb3ceb0715055debd1a7b13336f6fb7a5d566bd54"
+  },
+  "kind": "proposal_publication_validation",
+  "proof_claim": false,
+  "protected_file_count": 40,
+  "protected_inputs_unchanged": true,
+  "stage": 6,
+  "stage_exit": false,
+  "unsure_append_only": true
+}
