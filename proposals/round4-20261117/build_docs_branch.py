@@ -23,6 +23,7 @@ MANIFEST = Path.home() / 'forge-backups/forge-records-sanitized-2026-11-01.manif
 git = lambda cwd, *a: subprocess.run(['git', '-C', str(cwd), *a], capture_output=True, check=True).stdout
 sha = lambda data: hashlib.sha256(data).hexdigest()
 short = lambda commit: git(FORGE, 'rev-parse', '--short=8', commit).decode().strip()
+base, backup = (git(FORGE, 'rev-parse', '--verify', name + '^{commit}').decode().strip() for name in (base, backup))   # names are resolved in the main tree
 assert work != FORGE and not work.exists(), 'the scratch worktree must be a new folder'
 subprocess.run(['git', '-C', str(FORGE), 'branch', '-D', BRANCH], capture_output=True)
 git(FORGE, 'worktree', 'add', '-q', '-b', BRANCH, str(work), base)
