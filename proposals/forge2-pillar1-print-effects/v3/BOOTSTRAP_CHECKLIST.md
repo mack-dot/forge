@@ -361,3 +361,31 @@ check here ran on Linux except the hosted gate runs of pull requests 39,
 40 and 41. The Stage 5 EXIT rewrites its two records with the local
 tool path, so a checkout is not clean after it. Round 4 is closed. Step
 B (action 2) and Stage 9 (action 3) stay the owner's decisions.
+
+## Action 2 prepared on the new `main` (2026-11-18, about 08:40Z)
+
+Step B was built again on `main` `201e63b1`, because pull request 40
+changed the Stage 6 records: step B commit `ccb4e5e2` (files byte-equal
+to `f54e2507`), records commit `59189040` (Stage 6 epoch 3 by
+`stage6_next_epoch.py`; the records of `main` kept as
+`results/stage6-epoch2`). Branch `proposal/v3b-print-effects-on-main`
+(new; the older remote branch `proposal/v3b-print-effects` is
+superseded). Pull request: https://github.com/mack-dot/forge/pull/43
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| record 0001 on `main` against (`main`, `ccb4e5e2`) (`make_record_0001.py`, `cmp`) | 0 | the record names exactly the six protected files of step B |
+| `gate/gate.py`: `impl/Ledger.dfy`; two planted print bugs | 0; 1; 1 | as intended |
+| Stage EXIT cases 1, 2, 3, 4, 5, 8 and 11 (27 cases) | 0 each | passed |
+| fresh Stage 6 run (epoch 3), five steps | 0 each | report byte-identical |
+| real gate, trusted `main` with record 0001, local profile: `ccb4e5e2`; `59189040` | 3; 3 | UNSUPPORTED; 8 of 8 floor controls as expected |
+| hosted `gate/pr_check.py`, pull request 43 (run 44268104696, Linux profile) | 3 | UNSUPPORTED; record matched; 8 of 8 floor controls as expected on Linux |
+
+This closes two "not verified" points of this file: the hosted wrapper
+with a record on the trusted side has now run, and the floor controls
+have now run on Linux. Still not shown on a hosted runner: exit 0
+(VERIFIED) for a ratified change. Receipt of the hosted run:
+`records/hosted-receipt-pr43-run-44268104696.json`.
+
+The M1 replay record is a separate pull request (records only):
+https://github.com/mack-dot/forge/pull/42

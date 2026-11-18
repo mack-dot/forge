@@ -1,0 +1,311 @@
+{
+ "end_to_end": false,
+ "head": "ccb4e5e2f58ffc19b49ed6523e90c91bcca1e022",
+ "label": "stepB-on-main-ccb4e5e2",
+ "python": "3.10.11",
+ "stages": [
+  {
+   "case": "reproducibility",
+   "exit": 0,
+   "last_line": "reproducibility: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case reproducibility",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "4a55220cf43c5b63519868ede559ef7b56efbbe29beabd10fff00095ca3e22a0",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 5.5
+  },
+  {
+   "case": "planted-bugs",
+   "exit": 0,
+   "last_line": "planted-bugs: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case planted-bugs",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "ca93acb7e45dbd1407307b4407c44bd93f6291f21b70924ac696daace12d722b",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 12.3
+  },
+  {
+   "case": "spec-lock",
+   "exit": 0,
+   "last_line": "spec-lock: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case spec-lock",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "b09d572f31456ae5d20e8dca33d28995369fb398bd127db13c601221219cc53c",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 0.3
+  },
+  {
+   "case": "contract-binding",
+   "exit": 0,
+   "last_line": "contract-binding: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case contract-binding",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "e35c1cf85f40f6e9b4eb693e303f630bd8904233980583f2a010d57e78f9984f",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 0.3
+  },
+  {
+   "case": "audit-controls",
+   "exit": 0,
+   "last_line": "audit-controls: passed (expected raw failures retained in report)",
+   "script": "scripts/exit_stage_1.py --case audit-controls",
+   "stage": 1,
+   "stderr_tail": [],
+   "stdout_sha256": "ce7f9afc5ce68ca742ada8536f3675454033619def6ce3e64f860eb9d547ae1d",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 6.7
+  },
+  {
+   "case": "schema",
+   "exit": 0,
+   "last_line": "schema: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case schema",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "f8bae36dfcf6f651c18578da43f180c0f8668069de625b699d523e40d0b387c9",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 0.8
+  },
+  {
+   "case": "artifact-mismatch",
+   "exit": 0,
+   "last_line": "artifact-mismatch: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case artifact-mismatch",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "5481900187fc6414c6643e3133eb16dea694d9d71beac35b8db443d315156787",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 0.7
+  },
+  {
+   "case": "method-policy",
+   "exit": 0,
+   "last_line": "method-policy: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case method-policy",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "79d3d332d425515a076ef9ffe3de2b67b8016ba32225b687e9129c255fe26152",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 0.7
+  },
+  {
+   "case": "round-trip",
+   "exit": 0,
+   "last_line": "round-trip: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case round-trip",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "2acd392694bf5ee73c9364bcea57145e687248497ea2283c6d10a8fc8b9dc228",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 2.9
+  },
+  {
+   "case": "policy-controls",
+   "exit": 0,
+   "last_line": "policy-controls: passed (actual commands and negative exits retained)",
+   "script": "scripts/exit_stage_2.py --case policy-controls",
+   "stage": 2,
+   "stderr_tail": [],
+   "stdout_sha256": "c232f7153ce6ae6e5689c5380468f67b5820af17da96768fa96876bc66f2c78f",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 5.6
+  },
+  {
+   "case": "correct-typescript",
+   "exit": 0,
+   "last_line": "correct-typescript: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case correct-typescript",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "8cd08ad5bf7a254ffaef701afdd5ee3360aae72f209bf09e625a4cbd9b3408b0",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 6.4
+  },
+  {
+   "case": "self-transfer",
+   "exit": 0,
+   "last_line": "self-transfer: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case self-transfer",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "8353d8ee9954deed733595ad884ea398ebd119e36cf0a10683955e819f4e21d7",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 7.3
+  },
+  {
+   "case": "evidence-labels",
+   "exit": 0,
+   "last_line": "evidence-labels: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case evidence-labels",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "8167dfe02a13f66f1a7c3c898a5ce77ee2e9ce582a83b0dceb753b3ccfda1921",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 14.4
+  },
+  {
+   "case": "reproducibility",
+   "exit": 0,
+   "last_line": "reproducibility: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case reproducibility",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "6a4546c755c162cb40d2d94576dc3e842a0624afc537eb33c6de027bc8ee416a",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 11.5
+  },
+  {
+   "case": "loader-demo",
+   "exit": 0,
+   "last_line": "loader-demo: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case loader-demo",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "e4c6d3515c205f5882995b4eeeef769caba8296fa11fc9837de74792665354f3",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 0.3
+  },
+  {
+   "case": "cli-demo",
+   "exit": 0,
+   "last_line": "cli-demo: passed (actual checker and gate codes retained)",
+   "script": "scripts/exit_stage_3.py --case cli-demo",
+   "stage": 3,
+   "stderr_tail": [],
+   "stdout_sha256": "226812e1e4f8173a4e91f79d76265f4002358ef7d51126b907aea58165a1b58e",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json"
+   ],
+   "wall_seconds": 1.0
+  },
+  {
+   "case": "vacuity",
+   "exit": 0,
+   "last_line": "STAGE_5_RESULT {\"case\": \"vacuity\", \"result\": \"passed\", \"exit_code\": 0}",
+   "script": "scripts/exit_stage_5.py --case vacuity",
+   "stage": 5,
+   "stderr_tail": [],
+   "stdout_sha256": "5644db4234b5c6372f2d4b38ae745175bc883f8b6d321b5c340055f1f6aff833",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 7.2
+  },
+  {
+   "case": "mutations",
+   "exit": 0,
+   "last_line": "STAGE_5_RESULT {\"case\": \"mutations\", \"result\": \"passed\", \"exit_code\": 0}",
+   "script": "scripts/exit_stage_5.py --case mutations",
+   "stage": 5,
+   "stderr_tail": [],
+   "stdout_sha256": "70303349f2ae6c2adf113937185dc2407ddd86f90a4ee196b13e93968be4fc3a",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 32.4
+  },
+  {
+   "case": "wrapper-proof",
+   "exit": 0,
+   "last_line": "wrapper-proof: passed; end_to_end=false",
+   "script": "scripts/exit_stage_8.py --case wrapper-proof",
+   "stage": 8,
+   "stderr_tail": [],
+   "stdout_sha256": "59cb2615391ea29cd6bff59c3d26e8df02c4b6a575069afc08a20b22585d82f4",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 9.6
+  },
+  {
+   "case": "hostile-outputs",
+   "exit": 0,
+   "last_line": "hostile-outputs: passed; end_to_end=false",
+   "script": "scripts/exit_stage_8.py --case hostile-outputs",
+   "stage": 8,
+   "stderr_tail": [],
+   "stdout_sha256": "6d82c47f4584b4553bfddef12a0c92c358729cade1cfc745c9519f8c6b113a0e",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 16.2
+  },
+  {
+   "case": "evidence-separation",
+   "exit": 0,
+   "last_line": "evidence-separation: passed; end_to_end=false",
+   "script": "scripts/exit_stage_8.py --case evidence-separation",
+   "stage": 8,
+   "stderr_tail": [],
+   "stdout_sha256": "a2ce1e3e73b084cb70ff745aa4ec701b539d1f1d95b40c67ac537620aced117a",
+   "timed_out": false,
+   "tracked_files_differing_from_head": [
+    " M evidence.json",
+    " M results/stage5/mutations.json",
+    " M results/stage5/vacuity.json"
+   ],
+   "wall_seconds": 24.8
+  }
+ ]
+}

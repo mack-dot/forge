@@ -9,6 +9,34 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## Step B (print effects) on the new `main`: pull request 43 open; first hosted run of the gate with a ratification record gives the expected result; M1 record is pull request 42
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. Nothing is merged by the agent. Step B
+commit `ccb4e5e2` and its records `59189040` are on `main` at
+`201e63b1`; the step B files are byte-equal to the reviewed commit
+`f54e2507`; record 0001 on `main` regenerates byte for byte from
+(`main`, `ccb4e5e2`).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `gate/gate.py --impl impl/Ledger.dfy`; `--impl bugs/print_effect.dfy`; `--impl bugs/print_effect_marked.dfy` at `ccb4e5e2` |0; 1; 1|accepted; both planted print bugs rejected |
+| Stage EXIT cases 1, 2, 3, 4, 5, 8 (24 cases); Stage 11 (3 cases) at `ccb4e5e2` |0 each|passed |
+| `stage6_next_epoch.py <worktree> 3`: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|report byte-identical; process seconds −2.7 to −0.3 percent against the records on `main`; previous records kept as `results/stage6-epoch2` |
+| clean clone of `59189040`: `exit_stage_6.py --case report`; Stage 11 three cases; `check_frozen_pr_gate.py` |0; 0, 0, 0; 0|passed; the EXIT runs change no file |
+| `check_links.py`, all 76 Markdown files outside `results/` at `59189040` |1|only the 2 older Stage 9 links without a target; none new |
+| `run_bootstrap_gate_cases.py` attempt-0005: trusted `main` `201e63b1` (holds record 0001), candidate `ccb4e5e2`; candidate `59189040` |3; 3|UNSUPPORTED; record matched; 8 of 8 floor controls as expected |
+| hosted `gate/pr_check.py`, pull request 43, run 44268104696 (Linux profile) |3|UNSUPPORTED; record 0001 matched; floor controls on Linux: 6 planted bugs rejected for a proof or audit reason, `impl/Ledger.dfy` accepted, function probe equal. First hosted run with a ratification record. On Linux `toolchain/pins.json` is the pins file that no obligation lists (two findings for it) |
+| hosted `gate/pr_check.py`, pull request 42 (M1 record), run 44265523794 |3|UNSUPPORTED, as expected for records |
+
+Not verified: VERIFIED (exit 0) for a ratified change on a hosted
+runner (step B has files that no obligation lists). After a merge of
+step B, eight entries of the Stage 9 lock do not match `main`. Open:
+the owner's merges of pull requests 42 and 43; decision D1 is taken by
+merging 43 as it is.
+
+
+
 ## M1 chain replay on the rebuilt pinned tools: 71 of 71 theories exit 0, exports byte-equal to the old records; joint-premise theorem passes; M1 stays open — M1R-1, M1R-2
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
