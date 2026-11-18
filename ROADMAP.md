@@ -80,11 +80,11 @@ print effects `f54e2507`, its records `53534f64`.
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
 [Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
 This section came to `main` with the documents pull request 41 (merged
-by the owner on 2026-11-18 05:16Z); the copy on `main` ends before the
-Q5 rows. Round 4 is closed. Open: decision D1 for step B (print
-effects); the Stage 9 lock renewal; the M1 chain replay (owner decision
-of 2026-11-18: its own run with a budget of 21,600 s). `ROADMAP.md` on `main` still
-says "CURRENT: Stage 9"; this file is the current one.
+by the owner on 2026-11-18 05:16Z); the Q5 rows came with the M1 record
+pull request. Round 4 is closed. Open: decision D1 for step B (print
+effects); the Stage 9 lock renewal. The M1 chain replay is in the
+section above. On the backup branch this file is the full record; on
+`main` it is the record up to Stage 9 plus these two sections.
 M1 and integration EXIT NOT_ESTABLISHED.
 
 
