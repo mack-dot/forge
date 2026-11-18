@@ -28,7 +28,50 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Slice 2 of the master idea (F1.1, F1.3, with F1.2): spec clearing tool on the earlier Pillar I lemmas; solver-made witness candidates; one review with repairs — U449, U450, U451, U452
+## Slice 3 of the master idea (F3.1, F3.2): runtime certificates on batch booking; checker core proved at source level against a candidate specification; three untrusted optimizers exchanged against one compiled core; one review with repairs — U453, U454, U455, U456, U457
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No file of
+Slice 1 or Slice 2 changed. Not gate evidence. The check is sound, not
+complete; the batch model is not the approved booking specification
+(owner text E). Phase Gate 2 of the owner's directive (text D).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the go-ahead: pinned Dafny `verify` and `audit` of the Round 1 checker; its two controls; `rustc` probes (a safe program; a program with `unsafe`) |0, 0; 4, 4; 0, 1|46 verified, print-effect clean; controls rejected; `rustc 1.92.0` installed, not pinned |
+| pinned Dafny, core with claim lemmas: attempts 1 and 2 |4; 0|attempt 1: one non-vacuity lemma out of resource; attempt 2: 65 verified |
+| pinned Dafny, bridge lemma to `NoDoubleBooking`: attempts 1 and 2 (limit 5) |4; 0|attempt 1: one assertion; attempt 2: proved |
+| `scripts/exit_slice3.py --case core-proof`, attempt 1 |0|core against the candidate specification; claims; bridge; non-abstract instance; audit of every reached file |
+| `--case clearing`, attempt 1 |0|candidate specification: NO_CHOICE and ACCEPTS; planted loose specification: CHOICE |
+| `--case core-controls`: attempt 1 (20 wrong cores, before the review); attempt 2 (21) |0; 0|each wrong core refused for its own reason |
+| `--case sink-controls`: attempt 1 (93 rows, before the review); attempt 2 (104 rows) |0; 0|0 failed rows; 0 effects of rejection attempts |
+| `--case swap`: attempt 1 (17 optimizer runs, before the review); attempt 2 (18) |0; 0|v1: 49 of 70 committed; v2: 35 of 70; adversary: 0 tokens; compiled core and proof inputs keep their bytes |
+| the one fresh-context review |0 fail-open at the sink or in signing; 2 HIGH, 3 MEDIUM, 1 LOW to MEDIUM, 6 LOW|HIGH: an optimizer process wrote the sink's database behind the sink; the adversary runs passed with no adversary (U455) |
+| the repaired control suite, first run |1|my left-over-process check matched my own shell command; check corrected; next run 0 |
+| copies with one check removed (one-off, scratch tree): before the review; after the repairs |non-zero for 19 of 19; for 26 of 26|unchanged tree: 0, 0, 0; each copy fails at its own row |
+| `--case evidence`: attempt 1 (before the review); attempt 2 (after the repairs) |0; 0|each: two runs byte-identical; bundles `f42bb8c2…` and `4ed7a2c4…` (both replaced) |
+| first scratch-clone regression: 28 Stage EXIT cases; Slice 1 evidence; Slice 2 evidence; Slice 3 evidence |0 each; 0; 0; 0|28 of 28; Slice 1 and Slice 3 bundles equal; the Slice 2 bundle was `d0a9a621…`, NOT `2721a293…`: the Slice 2 script lists every Dafny file under `clearing/` in its manifest, and six new files of this slice were there (no verdict differs) (U456) |
+| the six files moved to a new folder `certificate/` (paths only); `--case evidence`, attempt 3 (final) |0|two runs byte-identical; final bundle SHA-256 `3cdfebfc…` |
+| copies with one check removed, again after the move (one-off) |non-zero for 26 of 26|unchanged tree: 0, 0, 0 |
+| second scratch clone of `462f9e2e` plus the Slice 3 files (`proposals/forge2-slice3-runtime-certificates/run_regression.py`): Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 3 report; for all 88 Markdown files outside `results/` |0; 0, 0, 0; 1|only the 2 older Stage 9 links without a target |
+| the same clone: `scripts/exit_slice1.py`, `exit_slice2.py`, `exit_slice3.py`, each `--case evidence` |0; 0; 0|bundles `c7f2f41c…` and `2721a293…` as on `main`; Slice 3 bundle equal to the working tree's (`3cdfebfc…`) |
+| Stage 7; Stage 9; Stage 10 |NOT RUN|Docker time; deferred; no EXIT script on `main` |
+| before the commit, on owner text G: SHA-256 of the evidence record file; the 60 input hashes of that record against the files of the tree (one-off) |`3cdfebfc…`; 60 of 60 equal|no code file changed after the final record; the EXIT cases and the regression were NOT run again (U457) |
+| the staged tree after the document changes of U457 (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the Slice 3 report, review and owner texts; for all 88 Markdown files outside `results/` |0; 0 each (6); 1|only the 2 older Stage 9 links without a target; 0 protected paths among the 54 staged files |
+| on owner text G: commit; push of branch `slice3/runtime-certificates`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|the owner's word is text G; expected hosted result: exit 3 (UNSUPPORTED) |
+
+[Slice 3 report](proposals/forge2-slice3-runtime-certificates/REPORT.md).
+[Review text and disposition](proposals/forge2-slice3-runtime-certificates/REVIEW.md).
+Proved by Dafny: the claim lemmas, for the Dafny sources. Not proved:
+the compilation, issuer, sink, runner, scripts and tests. Trusted and
+not proved since the review: the macOS sandbox tool that isolates an
+optimizer process. The owner accepted it for this slice as documented
+(text G, U457); that is an acceptance, not a proof. The repairs were not
+reviewed again.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Slice 2 of the master idea (F1.1, F1.3, with F1.2): spec clearing tool on the earlier Pillar I lemmas; solver-made witness candidates; one review with repairs; pull request 46 merged by the owner as `462f9e2e` — U449, U450, U451, U452, U453
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Not gate
@@ -50,7 +93,9 @@ specification (the owner's scope).
 | the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 2 report; for all 84 Markdown files outside `results/` |0; 0, 0, 0; 1|only the 2 older Stage 9 links without a target |
 | the same clone: `scripts/exit_slice1.py --case evidence`; `scripts/exit_slice2.py --case evidence` |0; 0|Slice 1 bundle `c7f2f41c…` as on `main`; Slice 2 bundle equal to the working tree's (`2721a293…`) |
 | Stage 7; Stage 9; Stage 10 |NOT RUN|Docker time; deferred; no EXIT script on `main` |
-| push of branch `slice2/spec-clearing`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected exit 3 (UNSUPPORTED): no obligation lists the new files |
+| push of branch `slice2/spec-clearing` (commit `b9f6739b`); `gh pr create` (pull request 46) |0; 0|no administrator rights (U452, U453) |
+| hosted `gate/pr_check.py`, head `b9f6739b`, run 44388151100 |3|UNSUPPORTED, as expected: every obligation that ran holds; 53 coverage findings (44 changed files that no obligation lists, 9 included files that no obligation depends on) |
+| merge of pull request 46 |by the owner, 2026-11-18 20:28Z, squash commit `462f9e2e`|`git diff --quiet origin/main b9f6739b` exit 0: the tree of `main` equals the checked commit |
 
 [Slice 2 report](proposals/forge2-slice2-spec-clearing/REPORT.md).
 [Review text and disposition](proposals/forge2-slice2-spec-clearing/REVIEW.md).

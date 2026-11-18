@@ -1,0 +1,110 @@
+{
+ "note": "Slice 3 subjects for scripts/spec_clearing.py (the Slice 2 tool, used by import). A trusted input of scripts/exit_slice3.py. The file clearing/subjects.json of Slice 2 is not changed.",
+ "specs": [
+  {
+   "id": "booking-certificate",
+   "title": "CANDIDATE specification of the certificate checker (Slice 3; not approved)",
+   "spec": "certificate/BookingCertificateSpec.dfy",
+   "planted": false,
+   "claim": {
+    "files": [
+     "certificate/BookingCertificateClearing.dfy"
+    ],
+    "member": "BookingCertificateClearing.SpecIsDeterministic (correctness)"
+   },
+   "proof": {
+    "files": [
+     "certificate/BookingCertificateClearing.dfy",
+     "impl/BookingCertificate.dfy"
+    ],
+    "instances": [
+     [
+      "BookingCertificateClearing",
+      {
+       "S": "BookingCertificate"
+      }
+     ]
+    ],
+    "members": [
+     "BookingCertificateClearing.SpecIsDeterministic (correctness)",
+     "BookingCertificateClearing.DecideThenPost (correctness)",
+     "BookingCertificateClearing.PostIsExact (correctness)",
+     "BookingCertificateClearing.IssueIsFeasible (correctness)",
+     "BookingCertificateClearing.IssueIsNearOptimal (correctness)",
+     "BookingCertificateClearing.IssueBindsTheToken (correctness)",
+     "BookingCertificate.Decide (correctness)"
+    ]
+   },
+   "acceptance": {
+    "purpose": "two concrete tokens (the optimum at gap 0; a suboptimal allocation at gap 2500) and five concrete refusals",
+    "files": [
+     "certificate/BookingCertificateClearing.dfy",
+     "impl/BookingCertificate.dfy"
+    ],
+    "instances": [
+     [
+      "BookingCertificateClearing",
+      {
+       "S": "BookingCertificate"
+      }
+     ]
+    ],
+    "members": [
+     "BookingCertificateClearing.IssueWitnesses (correctness)",
+     "BookingCertificateClearing.RefuseWitnesses (correctness)"
+    ]
+   },
+   "candidates": [],
+   "spec_probe": {
+    "files": [
+     "certificate/BookingCertificateSpec.dfy"
+    ],
+    "modules": [
+     [
+      "BookingCertificateSpec",
+      {}
+     ]
+    ],
+    "open": [
+     "BookingCertificateSpec.Decide"
+    ]
+   }
+  }
+ ],
+ "controls": [
+  {
+   "id": "control-certificate-spec-may-refuse",
+   "title": "CONTROL: PLANTED candidate specification that lets the checker refuse an accepted certificate",
+   "spec": "certificate/controls/BookingCertificateSpecLoose.dfy",
+   "planted": true,
+   "claim": {
+    "files": [
+     "certificate/controls/BookingCertificateLooseClearing.dfy"
+    ],
+    "member": "BookingCertificateLooseClearing.SpecIsDeterministic (correctness)"
+   },
+   "candidates": [
+    {
+     "source": "supplied",
+     "witness": {
+      "files": [
+       "certificate/controls/BookingCertificateLooseWitness.dfy"
+      ],
+      "instances": [],
+      "members": [
+       "LooseExact.Decide (correctness)",
+       "LooseRefusesAll.Decide (correctness)",
+       "LooseWitness.TwoAllowedVerdictsDiffer (correctness)"
+      ],
+      "example": {
+       "input": "two slots of capacity 1; request 0 (value 3) needs both, requests 1 and 2 (value 2 each) need one each; proposal x = [0,1,1], y = [2,2], z = [0,0,0], gap 0",
+       "result_one": "Issue([0,1,1], 0)",
+       "result_two": "Refuse"
+      }
+     }
+    }
+   ],
+   "no_solver_candidate": "the extractor of the clearing tool reads flat refund records only"
+  }
+ ]
+}

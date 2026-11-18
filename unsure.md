@@ -16312,3 +16312,364 @@ curl: (6) Could not resolve host: github.com
   end_to_end=false.
 - Next check: the hosted gate result for the pull request; then the
   owner's merge decision. The agent does not merge.
+
+## U453 — Pull request 46 (Slice 2) merged by the owner as 462f9e2e; hosted gate exit 3; master execution directive received; Slice 3 STEP 1: plan and probes only, no code
+- Status: 2026-11-18, about 20:05Z to 20:35Z. Refs U410, U421, U431,
+  U433, U449, U452. Owner text:
+  proposals/forge2-slice3-runtime-certificates/OWNER_TEXTS.md (text D).
+- Pull request 46 (observations): git push exit 0; gh pr create exit 0;
+  no administrator rights. Hosted run 44388151100, head b9f6739b:
+  gate/pr_check.py exit 3, outcome UNSUPPORTED, "every obligation that
+  ran holds". Its record (operation.json of the run's artifact) holds 53
+  findings: 44 UNCOVERED_CHANGE (the 44 changed files) and 9
+  UNKNOWN_DEPENDENCY (files under clearing/ that another new file
+  includes; no obligation depends on both). The pull request text said
+  "the kind of the other 9 was not read"; this entry settles it.
+- Merge (observation): the owner wrote "merged". gh pr view 46: MERGED,
+  2026-11-18T20:28:11Z, by the owner's account, squash commit 462f9e2e.
+  git diff --quiet origin/main b9f6739b: exit 0, so the tree of main
+  equals the commit that the checks of U452 ran on. Local main was moved
+  forward to 462f9e2e (fast-forward only). The agent did not merge.
+- The owner's message after that: the words "follow this and execute
+  all" and one pasted text (a "master execution directive" with four
+  phase gates). Inference, not observation: that the owner read the
+  whole text. My reading: the owner's word to follow the directive with
+  its gates. Phase Gate 1 (close Slice 2): skipped by its own condition.
+  Phase Gate 2 step 2: "print a 12-line plan ... Wait for my go-ahead".
+  I do not read "execute all" as a word to pass that gate, and not as a
+  word for any merge. Phase Gates 3 and 4 start after later merges by
+  their own text.
+- The directive answers the Rust question of U452: no Rust in the
+  proved parts; safe Rust only as an untrusted optimizer outside them,
+  and only if rustc is already installed.
+- Probes for the plan (observations; no file of the repository changed
+  by them):
+  - proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy
+    (SHA-256 55e7df9f...): pinned Dafny with the gate's present options
+    (print-effect tracking included): exit 0, 46 verified, 0 errors;
+    dafny audit exit 0, report equal to the empty baseline; the module
+    is not abstract; the word "expect" is not in the file.
+  - its two control fixtures: exit 4 and 4 (47 verified, 1 error; 48
+    verified, 1 error). My first shell line printed "exit 0" for both:
+    it read the exit variable after another command had run. Measured
+    again with a correct line.
+  - rustc 1.92.0 is installed (a rustup toolchain in the owner's home;
+    not pinned; not installed by the agent). In a scratch folder: a
+    program that uses the standard library only, with
+    #![forbid(unsafe_code)] and -D unsafe_code -D warnings: compile
+    exit 0, run exit 0; a program with an unsafe block: compile exit 1.
+  - scripts/spec_clearing.py takes a subject as a value (clear_spec), so
+    a Slice 3 subject can be cleared without a change to a Slice 2 file.
+- Finding from the reading (not new; the limit of U410 holds): the
+  batch problem of Rounds 2 and 3 (request j needs every slot of its
+  column; maximise the value) is NOT the approved booking specification
+  (one request gets the least free slot of its allowed set). No approved
+  intent for batch booking exists (open decision 2 of
+  FORGE_MASTER_IDEA.md). The check of Rounds 2 and 3 is sound and not
+  complete: it refused 299 of 845 optimal proposals at gap 0 (U433).
+- Statements of the directive that I did not check in this run: "579
+  modules", "1,240-byte", "~3 million lines", "71/71"; the pull request
+  numbers 47 and 48.
+- Not found: the file /tmp/forge_master_plan.md that the pasted text
+  names. The text was taken from the session record.
+- NOT done: any Slice 3 code; any F3 claim; any commit.
+- Impact: roadmap section of Slice 2 and master idea rows F1.1 and F1.3
+  updated for the merge. CURRENT none. M1 open. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: the owner's go-ahead on the plan (or changes to it); then
+  the build.
+
+## U454 — Slice 3 build: certificate checker core as a refinement of a candidate specification; issuer, sink, runner; three optimizers (TypeScript, safe Rust, Python adversary); first results before the review
+- Status: 2026-11-18, about 20:48Z to 21:45Z. Refs U410, U421, U431,
+  U450, U451, U453. Owner text E (the go-ahead):
+  proposals/forge2-slice3-runtime-certificates/OWNER_TEXTS.md.
+- Authorization: text E was the whole message of the owner (a pasted
+  text, no other word). It says: go ahead with the 12-line plan; lines 4
+  and 5 approved (soundness only; "IFF" only for the decision and the
+  predicate Accepts; the bridge lemma with at most 5 attempts); record
+  rustc 1.92.0 as not pinned and outside the proved parts; no hash of
+  the Rust binary and no working-tree path in the hashed record; stop
+  before push and pull request. Inference, not observation: that the
+  owner read the text.
+- Built (no protected file; no file of Slice 1 or Slice 2 changed):
+  clearing/certificate/ (candidate specification, claim lemmas, bridge,
+  one planted loose specification with its witness, subject list);
+  impl/BookingCertificate.dfy (the core, a refinement of the candidate
+  specification); ts/booking-certificate/ (encoding, issuer, sink,
+  runner); guests/booking/ (v1 TypeScript, v2 safe Rust, v3 Python
+  adversary); tests/booking-certificate/ (20 wrong cores, control
+  suite, swap run, reference, batches); scripts/exit_slice3.py.
+- Design decision (mine, inside the approved plan): the claim text is a
+  CANDIDATE specification with a method without a body, and the core
+  refines it. So a wrong core cannot weaken its own contract; Dafny
+  refuses it at the specified postcondition. The token also holds the
+  batch hash and the capacities that remain (the plan named only the
+  pre-state hash); without the batch hash a token could be used for
+  another batch on the same board.
+- Proof attempts (actual checker exits): core with the claim lemmas:
+  attempt 1 exit 4 (one non-vacuity lemma out of resource; 61 verified),
+  attempt 2 exit 0 (the lemma split in three; 65 verified). Bridge
+  lemma: attempt 1 exit 4 (one assertion), attempt 2 exit 0. Both under
+  the limit of five.
+- Observations about the pinned Dafny (each with a fixture that ran):
+  1. For a non-abstract instance of an abstract claim module, Dafny
+     makes NO new proof task for the inherited members (65 tasks with
+     and without the instance; no task named after the instance). The
+     proofs are those of the abstract module. The instance adds the
+     resolution of the bound implementation. This makes my words of
+     U450 and of the Slice 2 report more exact: "Dafny must verify the
+     instance file with exit 0" is true, but the instance is not a
+     second proof of the lemmas.
+  2. A refining method that prints and is marked {:print} passes dafny
+     verify and dafny audit when it is checked alone (exit 0, 0). The
+     instance of the claim module that is bound to it is refused (exit
+     2, "to call a method with print effects"). So the print-effect rule
+     needs a concrete caller without the attribute. The EXIT script has
+     this control (CorePrintsMarked).
+  3. A core with `expect` in place of the proof: verify exit 0, audit
+     exit 0 (as in U451). Only the refused word stops it.
+  4. A core with `assume {:axiom}`: verify exit 0; the audit reports 1
+     finding (exit 2).
+  5. A refining method cannot add a precondition (exit 2).
+- A control that my first suite did not have: with the check "the token
+  must be a text" removed from the sink, no row failed in my head-check
+  of the planned removed-check copies (later checks reject the value).
+  I added a row: an object whose conversion code must not run inside
+  the sink. The copy without the check now fails at that row.
+- Actual exits (first attempts, before the review):
+  scripts/exit_slice3.py --case core-proof, clearing, core-controls,
+  sink-controls, swap: 0, 0, 0, 0, 0. One-off in a scratch tree: the
+  unchanged tree: 0, 0, 0; 19 copies with one check removed each:
+  non-zero exit for 19 of 19, each at its own row. --case evidence,
+  attempt 1: exit 0, two runs byte-identical, SHA-256
+  f42bb8c289acfde0d76ea6386d0f801873c417794543cce83e6d8d012bc7f6ce (a
+  record from BEFORE the review; it is replaced if the review makes a
+  code change necessary).
+- Numbers of the recorded runs (finite; not a proof): 70 batches of at
+  most 14 requests; largest gap of the sink 2000 basis points. v1: 70
+  tokens, 49 committed (17 at gap 0). v2: 70 tokens, 35 committed (26 at
+  gap 0). v3 (15 modes): 0 tokens. Effects of attempts without a commit:
+  0. Starts of Dafny between the 17 optimizer runs: 0. Control suite: 94
+  rows, 0 failed.
+- rustc (observation): 1.92.0, not pinned, used only to build optimizer
+  v2. With --remap-path-prefix and no debug information the binary had
+  the same SHA-256 in three folders (two work folders and the scratch
+  tree) and holds no home path. The hashed record holds the version
+  text and the source hash only.
+- Limits that stay (approved in text E): sound, not complete (v1 has 21
+  and v2 has 35 of 70 tokens above the largest gap; a system needs a
+  fallback); the batch model is not the approved booking specification.
+- NOT done at this point: the review result (running), the scratch-clone
+  regression, documents, any commit.
+- Impact: none on existing claims. end_to_end=false.
+- Next check: the one fresh-context review; repairs in one pass.
+
+## U455 — Slice 3 review: no fail-open at the sink or in signing; 2 HIGH, 3 MEDIUM, 1 LOW-to-MEDIUM, 6 LOW; two of my statements were false; repairs in one pass; no second review
+- Status: 2026-11-18, about 21:20Z to 22:10Z. Refs U445, U451, U454.
+  Reviewer text and the disposition of each finding:
+  proposals/forge2-slice3-runtime-certificates/REVIEW.md.
+- Reviewer's summary (observations by the reviewer, with probes that it
+  ran on the real sink, a real issuer process and the compiled core):
+  no input to Sink.commit made an effect without a token of the issuer
+  (60,000 changed token texts; about 40 chosen cases), and the issuer
+  signed nothing that the compiled core did not issue (6,000 cases
+  against two other implementations of the check, with numbers of 18
+  digits and negative numbers). These are finite tests, not proofs.
+- HIGH R1: the runner started an optimizer as the same operating-system
+  user with no isolation. The reviewer's optimizer left a process that
+  wrote the board in the sink's database; the run reported PASS and the
+  audit reported nothing. My trusted-base sentence "It cannot make the
+  sink take an allocation without a token" was FALSE for such a process.
+  It was true only for the line that an optimizer sends.
+- HIGH R2: my 15 adversary runs passed when the adversary program did
+  not exist. The EXIT script checked only "0 tokens". A control that
+  passes with no adversary is no control.
+- MEDIUM R3: a line of control characters from an optimizer grew six
+  times in JSON, went over the line limit of the issuer, and the client
+  waited for ever. MEDIUM R4: the runner killed only the direct child.
+  MEDIUM R5: "0 starts of Dafny between the optimizers" was a count over
+  the EXIT script's own commands and could not fail; one record field
+  was a constant; the sink pins came from the issuer's own word.
+  LOW to MEDIUM R6: the audit took the first board hash from the same
+  database. LOW R7 to R12: see the review file.
+- Repairs (one pass, on the owner's rule of text D):
+  - R1: every optimizer now runs under the sandbox tool of macOS
+    (/usr/bin/sandbox-exec) with a profile that denies file writes,
+    network use, signals and the task port of other processes. Probes
+    before the change (observations): under that profile a Python
+    process and a detached child of a shell could not write a file
+    ("Operation not permitted"); a kill of another process was refused;
+    a network connection was refused; all three optimizers answered
+    (exit 0). The profile with "(deny signal (target others))" did NOT
+    stop the kill; "(deny signal)" did. The sink configuration pins the
+    hash of the first board. New rows in the suite.
+  - R2: exact counts and the two texts of every row are pinned for each
+    adversary mode.
+  - R3: local refusal and a time limit in the issuer client.
+  - R4: process group kill; streams closed.
+  - R5: ids computed again from the files in the suite, the swap run
+    and the EXIT script; claims Z1 and R1 reworded; constant removed.
+  - R6 in part; one row for R10; some items of R12; sentences corrected.
+- An error of mine during the repair: my first check for a left-over
+  process searched every command line for a text. It matched my own
+  shell command, and the suite failed (exit 1) for that reason. The
+  check now compares the whole command line. A second row changed its
+  expectation: with the sandbox tool in front, a missing optimizer
+  program gives "no line", not "did not start".
+- Actual exits after the repairs: scripts/exit_slice3.py --case
+  core-controls, sink-controls, swap (attempt 2 each): 0, 0, 0. The
+  suite has 104 rows; the swap has 18 optimizer runs (v1, v2, 16
+  adversary modes); 21 wrong cores.
+- What stays open (stated in the report):
+  - The sandbox tool is TRUSTED, not proved, and its vendor marks it as
+    deprecated. It is macOS only: on another platform the runner starts
+    no optimizer. Reading files is allowed for an optimizer. The control
+    rows for it are finite.
+  - The audit does not see a database that is set back as a whole to an
+    earlier state of its own chain, and not a waiting batch that is
+    changed before its commit.
+  - A token is not bound to one sink (R7). Negative needs, capacities
+    and values are allowed (R8). The issuer has no backpressure (R11).
+  - Processes that an optimizer run starts are not observed by the EXIT
+    script; "no new proof" rests on the bytes of the compiled core and
+    of the proof inputs, and on the design (no optimizer file is an
+    input of the proof).
+- NOT done: a second review of the repairs.
+- Impact: none on existing claims. end_to_end=false.
+- Next check: the final evidence record, the removed-check copies on the
+  repaired code, the scratch-clone regression (next entry).
+
+## U456 — Slice 3 closeout: the first regression showed that my new folder changed the Slice 2 record; six files moved; final evidence record; second regression passes; no commit, no push (they wait for the owner's word)
+- Status: 2026-11-18, about 22:10Z to 23:45Z. Refs U452, U453, U454,
+  U455. Owner texts D and E:
+  proposals/forge2-slice3-runtime-certificates/OWNER_TEXTS.md.
+- After the repairs of U455 (observations): scripts/exit_slice3.py
+  --case evidence, attempt 2: exit 0, two runs byte-identical, SHA-256
+  4ed7a2c4... ; one-off in a scratch tree: the three cases on the
+  unchanged tree 0, 0, 0, then 26 copies with one check removed each:
+  non-zero exit for 26 of 26, each at its own row.
+- First scratch-clone regression (clone of 462f9e2e plus the Slice 3
+  files): 28 of 28 Stage EXIT cases exit 0; Slice 1 bundle c7f2f41c...
+  as on main; Slice 3 bundle equal to the working tree's. But the Slice
+  2 bundle was d0a9a621..., NOT the 2721a293... of main. My plan (U453,
+  line 6) said that the two older bundles must not change, and my
+  statement "no file of Slice 2 changed" did not make that true.
+- Cause (observation, by a comparison of the two records key by key):
+  only the source manifest differs. scripts/exit_slice2.py lists every
+  Dafny file under clearing/ in its manifest. My six new Dafny files
+  were in clearing/certificate/. No verdict and no other field of the
+  Slice 2 record differs.
+- Repair: the folder moved to certificate/ at the top level (paths
+  only; no check changed). The entries U454 and U455 name the old
+  folder clearing/certificate/; read them with the new name. No file of
+  Slice 1 or Slice 2 is changed by this slice, and now no folder of
+  theirs has a new file.
+- Final results (observations):
+  - scripts/exit_slice3.py --case evidence, attempt 3: exit 0, two runs
+    byte-identical, SHA-256
+    3cdfebfc0ae96adafccc7f417bcd9113aaa63df9c9cd31583983c3b2e11bddb4. The
+    records f42bb8c2... (U454) and 4ed7a2c4... are replaced.
+  - second scratch clone: 28 of 28 Stage EXIT cases exit 0 (Stages 1,
+    2, 3, 4, 5, 6, 8, 11); check_frozen_pr_gate.py exit 0; link checks
+    of FORGE_MASTER_IDEA.md, ROADMAP.md and the Slice 3 report exit 0;
+    all 88 Markdown files outside results/: exit 1, the 2 older Stage 9
+    links only; exit_slice1.py --case evidence exit 0 with c7f2f41c...;
+    exit_slice2.py --case evidence exit 0 with 2721a293... (as on
+    main); exit_slice3.py --case evidence exit 0 with the same SHA-256
+    as the working tree.
+  - the removed-check copies again, on the moved files: unchanged tree
+    0, 0, 0; non-zero exit for 26 of 26.
+  - I wrote the row "26 of 26 after the move" into the report and the
+    roadmap while that run was still going. That was an expected result
+    in the place of an actual one. The run then gave 26 of 26; had it
+    not, the row would have been wrong. Recorded here as my error of
+    order.
+- Numbers of the final record (finite runs, not proofs): 21 wrong cores
+  refused; control suite 104 rows, 0 failed; 18 optimizer runs; 84
+  allocations committed, each for a token; adversary: 0 tokens in 16
+  modes; rustc 1.92.0 recorded as not pinned, no hash and no path of
+  its binary in the record.
+- Git state (observation): branch slice3/runtime-certificates at
+  462f9e2e; every Slice 3 file is uncommitted; 0 protected paths
+  changed; README.md not changed. Text E, point 3: stop before push and
+  pull request. I made no commit: a commit and a push need the owner's
+  word. The records of pull request 46 (U453) are part of the same
+  uncommitted set.
+- NOT RUN: Stage 7, Stage 9, Stage 10; the hosted gate (expected exit
+  3, UNSUPPORTED); a second review; any step of Phase Gates 3 and 4.
+- Open for the owner (not decided by me): (1) the word for commit, push
+  and pull request; (2) whether the macOS sandbox tool is acceptable as
+  the isolation of an optimizer process (trusted, not proved, one
+  platform), or whether another isolation is wanted before a merge;
+  (3) open decision 2 of FORGE_MASTER_IDEA.md (batch booking as an
+  approved intent) stays open.
+- Impact: master idea rows F3.1 and F3.2 and the roadmap section of
+  Slice 3 written. No existing claim changes. CURRENT none. M1 open.
+  Stage 12 unauthorized. end_to_end=false.
+- Next check: the owner's word; then commit, push, pull request, the
+  hosted gate result, and the owner's merge decision. The agent does
+  not merge.
+
+## U457 — Slice 3: the owner accepts the macOS sandbox tool as documented and gives the word for commit, push and pull request; a next-horizon text for the master idea arrived with a condition that is not yet true
+- Status: 2026-11-18, about 23:35Z to 23:55Z. Refs U455, U456. Owner
+  texts F and G:
+  proposals/forge2-slice3-runtime-certificates/OWNER_TEXTS.md.
+- Decision of the owner (text G, point 1; a pasted text, own words:
+  none): the macOS sandbox tool is accepted for Slice 3 as documented:
+  trusted, not proved, one platform. The text adds: do not change the
+  code or the bundle 3cdfebfc... . This closes question (2) of U456 for
+  this slice. It is an acceptance of a trusted part. It is not a proof
+  and it changes no evidence class.
+- Authorization (text G, points 2 and 3): "Commit all Slice 3 files
+  (including owed PR 46 records), push slice3/runtime-certificates, and
+  open PR 47 without administrator bypass and without merging", then
+  read the hosted gate result and stop for the owner's merge. I take it
+  as the owner's word for one commit, one push and one pull request. It
+  is not a word for a merge. Inference, not observation: that the owner
+  read the pasted text. This closes question (1) of U456.
+- Checks before the commit (observations, working tree at 462f9e2e plus
+  the uncommitted Slice 3 files):
+  - SHA-256 of
+    proposals/forge2-slice3-runtime-certificates/records/evidence.json:
+    3cdfebfc0ae96adafccc7f417bcd9113aaa63df9c9cd31583983c3b2e11bddb4, as
+    in U456.
+  - the 42 files of its source manifest and the 18 recorded approved,
+    reused and trusted inputs against the files of the tree: 60 of 60
+    SHA-256 values equal. The set of new source files is the set of the
+    manifest. No code file changed after the final record.
+  - the files to commit hold no home folder path, no mail address and
+    no private key text (text search); the report has no placeholder.
+  - NOT RUN again: scripts/exit_slice3.py, the scratch-clone regression
+    and the removed-check copies. Their inputs are byte-equal to the
+    inputs of the runs in U456; that is the basis, not a new run.
+- Changed after U456, documents only (none is in the bundle): this
+  entry; owner texts F and G; the roadmap section of Slice 3 (two rows
+  and one sentence); one sentence in master idea row F3.2; one sentence
+  in limit 7 of the Slice 3 report.
+- Text F (observation and inference): a pasted text asks for a new
+  section and four new work items in FORGE_MASTER_IDEA.md on a branch
+  docs/master-idea-v2-horizon "From clean origin/main (post-Slice 3 /
+  PR 47 merge)". The owner's own words after it: "Read
+  /tmp/update_master_idea.md in full and execute it from clean
+  origin/main." Observations: that file held one shell command, not the
+  text; origin/main was 462f9e2e; no pull request 47 existed; Slice 3
+  was not committed. I did not read the clipboard. Inference: the paste
+  is the text that the owner meant. I wrote no file and made no branch
+  for it. It waits for the merge of the Slice 3 pull request, because
+  the text names that state as its base and because this slice changes
+  four rows of the same table.
+- Uncertainty for the text F work (to resolve when it runs, not now):
+  its first bullet lists as "guarantees" several things that the
+  records do not show as proved: a cross-service reservation protocol
+  (no file exists), and behaviour under races and retries (the sinks
+  are tested, not proved; F2.2, F2.3). The section must state the class
+  of claim and the actual state separately. Do not turn that list into
+  a result.
+- NOT RUN: the hosted gate (expected exit 3, UNSUPPORTED); Stage 7,
+  Stage 9, Stage 10; a second review; any step of Phase Gates 3 and 4.
+- Impact: no claim changes. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: the hosted gate result for the pull request (it goes into
+  the pull request text and, with the next documents, into the
+  records); the owner's merge decision. The agent does not merge. After
+  the merge: the text F branch from the new origin/main.
