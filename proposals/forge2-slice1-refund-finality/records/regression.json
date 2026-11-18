@@ -1,0 +1,557 @@
+{
+ "base_commit": "9af026df53f3965e946c30b10ccfd8094bda0d39",
+ "copied_files_sha256": {
+  "FORGE_MASTER_IDEA.md": "89a25e7ec4694edf1d9bd621bc08042b7e3fdeca52a3eaf1d3b0b6f058afb8b1",
+  "ROADMAP.md": "916bf5896149e89eaf998eae1bda6ea59fd335cf44760c4c0b765bc6113665bb",
+  "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md": "b14d912f5f77417f66c9f182b2709773fa54589d79229c9cc0c2f9b417da7391",
+  "proposals/forge2-slice1-refund-finality/REPORT.md": "b97e26e81e0c6ba66aba3113e74994d3131787fa4a9efd22a2842acacf826b94",
+  "proposals/forge2-slice1-refund-finality/REVIEW.md": "b9462bc6df51329a1544abeb0cf9cd3e3eb70257deebbe6dcdaf76e433358c4d",
+  "proposals/forge2-slice1-refund-finality/records/evidence.json": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1",
+  "proposals/forge2-slice1-refund-finality/records/links-final.json": "6291db318484dfd453f6b267c4e28d48ae921104221f07df1f17a6f3e91a89ff",
+  "proposals/forge2-slice1-refund-finality/records/long-line-probe.json": "4a07dc16df5703ca7a9331aad8bc466ebe3417803ad7e3f3fe6d9e67c0362f99",
+  "proposals/forge2-slice1-refund-finality/records/removed-check-copies.json": "70c0ec29ed004807d2f55428418671fc165c35bb868113b4e0948fdd1b62b371",
+  "tests/refund-finality/suite.ts": "babbb3d155cd5a979c94aa3c099c138b49f130ea9cbb642c74400877abb13a9a",
+  "ts/refund-finality/dispatcher.ts": "5511cf68ba595da535324d1170dcec59d2ce368bb3efdd0470f3f6e0924ee605",
+  "ts/refund-finality/minter.ts": "714824d83fd660b4fa69d3bc8993a5b08cf79b396507cb026ce6563ef887e1df",
+  "ts/refund-finality/proposer.ts": "9b0be14cb6f8d711e9f7fa8c26cce44599ca082396adaf7e3eab27da3f57168f",
+  "unsure.md": "dfe270fa4cd9e24b05f7fc9ac826a6277923113a66ea1aa815e518ddb829f328"
+ },
+ "end_to_end": false,
+ "files_changed_by_the_stage_runs": [
+  "results/stage5/mutations.json",
+  "results/stage5/vacuity.json",
+  "results/stage8/evidence-separation/attempt-0003/",
+  "results/stage8/hostile-outputs/attempt-0004/",
+  "results/stage8/wrapper-proof/attempt-0005/"
+ ],
+ "links_without_target": {
+  "docs/stage9-history-audit.md": [
+   "../results/stage9/receipt-repair-published/README.md"
+  ],
+  "proposals/provenance-receipt-repair.md": [
+   "../results/stage9/receipt-repair-published/README.md"
+  ]
+ },
+ "markdown_files_checked": 80,
+ "not_run": [
+  "Stage 7 (Docker, about 3.3 hours)",
+  "Stage 9 (deferred; hosted signing)",
+  "Stage 10 (its EXIT script is not on main)"
+ ],
+ "rows": [
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "reproducibility"
+   ],
+   "check": "stage 1 reproducibility",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "reproducibility: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "planted-bugs"
+   ],
+   "check": "stage 1 planted-bugs",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "planted-bugs: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "spec-lock"
+   ],
+   "check": "stage 1 spec-lock",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "spec-lock: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "contract-binding"
+   ],
+   "check": "stage 1 contract-binding",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "contract-binding: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "audit-controls"
+   ],
+   "check": "stage 1 audit-controls",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "audit-controls: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "schema"
+   ],
+   "check": "stage 2 schema",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "schema: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "artifact-mismatch"
+   ],
+   "check": "stage 2 artifact-mismatch",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "artifact-mismatch: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "method-policy"
+   ],
+   "check": "stage 2 method-policy",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "method-policy: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "round-trip"
+   ],
+   "check": "stage 2 round-trip",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "round-trip: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "policy-controls"
+   ],
+   "check": "stage 2 policy-controls",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "policy-controls: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "correct-typescript"
+   ],
+   "check": "stage 3 correct-typescript",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "correct-typescript: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "self-transfer"
+   ],
+   "check": "stage 3 self-transfer",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "self-transfer: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "evidence-labels"
+   ],
+   "check": "stage 3 evidence-labels",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "evidence-labels: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "reproducibility"
+   ],
+   "check": "stage 3 reproducibility",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "reproducibility: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "loader-demo"
+   ],
+   "check": "stage 3 loader-demo",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "loader-demo: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "cli-demo"
+   ],
+   "check": "stage 3 cli-demo",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "cli-demo: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_5.py",
+    "--case",
+    "vacuity"
+   ],
+   "check": "stage 5 vacuity",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE_5_RESULT {\"case\": \"vacuity\", \"result\": \"passed\", \"exit_code\": 0}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_5.py",
+    "--case",
+    "mutations"
+   ],
+   "check": "stage 5 mutations",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE_5_RESULT {\"case\": \"mutations\", \"result\": \"passed\", \"exit_code\": 0}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_6.py",
+    "--case",
+    "report"
+   ],
+   "check": "stage 6 report",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "{\"exit_code\": 0, \"pairs_recomputed\": 75, \"usage_records\": 76, \"report\": \"results/stage6/report.json\", \"extrapolation\": false}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_8.py",
+    "--case",
+    "wrapper-proof"
+   ],
+   "check": "stage 8 wrapper-proof",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "wrapper-proof: passed; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_8.py",
+    "--case",
+    "hostile-outputs"
+   ],
+   "check": "stage 8 hostile-outputs",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "hostile-outputs: passed; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_8.py",
+    "--case",
+    "evidence-separation"
+   ],
+   "check": "stage 8 evidence-separation",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "evidence-separation: passed; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_4.py",
+    "--case",
+    "affected-claims"
+   ],
+   "check": "stage 4 affected-claims",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"1fdb02f8d2efe791611b121429954ed4d\\\",\\\"spec.lock\\\":\\\"3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae\\\",\\\"toolchain/linux-pins.json\\\":\\\"11128aa46f89391c39e6927f71dd1ba5ff8af1495ea0ad42253f7263294be819\\\",\\\"toolchain/requirements-linux.txt\\\":\\"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_4.py",
+    "--case",
+    "unapproved-spec"
+   ],
+   "check": "stage 4 unapproved-spec",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 0, \"text\": \"{\\\"case\\\":\\\"unapproved-spec\\\",\\\"end_to_end\\\":false,\\\"exit_code\\\":0,\\\"result\\\":\\\"passed\\\",\\\"runs\\\":[{\\\"artifact_id\\\":12688689112,\\\"comment_url\\\":\\\"https://github.com/mack-dot/forge/pull/2#issuecomment-6427532824\\\",\\\"gate_exit_code\\\":1,\\\"pr_number\\\":2,\\\"receipt\\"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_4.py",
+    "--case",
+    "approved-spec"
+   ],
+   "check": "stage 4 approved-spec",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"fe9b9132a90b39f5144ed749e6a866098f422837f8fda\\\",\\\"gate/backends/dafny.py\\\":\\\"ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe\\\",\\\"gate/common.py\\\":\\\"06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988\\\",\\\"gate/core.py\\\":\\\"bf8f0"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_11.py",
+    "--case",
+    "legitimate-change",
+    "--eval",
+    "results/stage11/eval-0007",
+    "--baseline",
+    "results/stage11/eval-pr27-0003"
+   ],
+   "check": "stage 11 legitimate-change",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE11_LEGITIMATE_CHANGE_PASSED: e02 VERIFIED with booking, ledger-evidence, ledger-model, ledger-witness re-established fresh; e04, e05 VERIFIED; e03 (bound TypeScript subject) UNSUPPORTED by contract"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_11.py",
+    "--case",
+    "stale-dependency",
+    "--eval",
+    "results/stage11/eval-0007",
+    "--baseline",
+    "results/stage11/eval-pr27-0003"
+   ],
+   "check": "stage 11 stale-dependency",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE11_STALE_DEPENDENCY_PASSED: 12 cases rejected, unsupported or not established as required"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_11.py",
+    "--case",
+    "report",
+    "--eval",
+    "results/stage11/eval-0007",
+    "--baseline",
+    "results/stage11/eval-pr27-0003"
+   ],
+   "check": "stage 11 report",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE11_REPORT_ESTABLISHED: cases 18; match 12; false_accept 0; false_reject 0; false_unsupported 0; other 0; superseded_by_design_change 5"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_frozen_pr_gate.py",
+    "HEAD"
+   ],
+   "check": "frozen PR-gate modules",
+   "exit_code": 0,
+   "group": "frozen-gate",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "FORGE_MASTER_IDEA.md"
+   ],
+   "check": "links FORGE_MASTER_IDEA.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "ROADMAP.md"
+   ],
+   "check": "links ROADMAP.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "proposals/forge2-slice1-refund-finality/REPORT.md"
+   ],
+   "check": "links proposals/forge2-slice1-refund-finality/REPORT.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "AGENTS.md",
+    "FORGE_MASTER_IDEA.md",
+    "FORGE_ROUND2_PLAN.md",
+    "FORGE_ROUND3_PLAN.md",
+    "README.md",
+    "ROADMAP.md",
+    "VISION.md",
+    "docs/booking.md",
+    "docs/claims.md",
+    "docs/reuse-benchmark-epoch1.md",
+    "docs/reuse-benchmark-epoch2.md",
+    "docs/reuse-benchmark.md",
+    "docs/spec-quality.md",
+    "docs/stage4-change-loop.md",
+    "docs/stage7-binary.md",
+    "docs/stage8-refund.md",
+    "docs/stage9-history-audit.md",
+    "docs/stage9-signing-preparation-audit.md",
+    "examples/binary/README.md",
+    "gate/README.md",
+    "gate/expected-audit.md",
+    "proposals/approval-integrity/PROPOSAL.md",
+    "proposals/booking-decision.md",
+    "proposals/booking.md",
+    "proposals/fees-decision.md",
+    "proposals/fees.md",
+    "proposals/forge2-pillar1-anchor-diff/ANALYSIS.md",
+    "proposals/forge2-pillar1-print-effects/PROPOSAL.md",
+    "proposals/forge2-pillar1-print-effects/REGRESSION.md",
+    "proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md",
+    "proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md",
+    "proposals/forge2-pillar1-print-effects/v3/PROPOSAL-V3.md",
+    "proposals/forge2-pillar1-print-effects/v3/REPORT-V3.md",
+    "proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md",
+    "proposals/forge2-pillar1-spec-determinism/REPORT.md",
+    "proposals/forge2-pillar2-finality-protocol/DESIGN.md",
+    "proposals/forge2-pillar2-refund-finality/CAKEML_LINK.md",
+    "proposals/forge2-pillar2-refund-finality/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/finality/REPORT.md",
+    "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md",
+    "proposals/forge2-slice1-refund-finality/REPORT.md",
+    "proposals/forge2-slice1-refund-finality/REVIEW.md",
+    "proposals/future-directions-20261117/FUTURE_PLANS.md",
+    "proposals/future-directions-20261117/SOURCE_ANALYSIS.md",
+    "proposals/future-directions-20261117/SOURCE_MISSION_PROMPT.md",
+    "proposals/github-ruleset/README.md",
+    "proposals/initial-ledger.md",
+    "proposals/provenance-decision.md",
+    "proposals/provenance-hosted-v33/INSTALL.md",
+    "proposals/provenance-hosted/candidate/spec/provenance/protocol.md",
+    "proposals/provenance-implementation-decision.md",
+    "proposals/provenance-implementation.md",
+    "proposals/provenance-integrity-repair.md",
+    "proposals/provenance-receipt-repair.md",
+    "proposals/provenance-v33/README.md",
+    "proposals/provenance.md",
+    "proposals/provenance/protocol.md",
+    "proposals/refund-decision.md",
+    "proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md",
+    "proposals/refund-gate-decision.md",
+    "proposals/refund-gate.md",
+    "proposals/refund-hostile-snapshot-decision.md",
+    "proposals/refund-hostile-snapshot.md",
+    "proposals/refund.md",
+    "proposals/refund/protocol.md",
+    "proposals/round2-20261117/OWNER_ROUND2_TEXT.md",
+    "proposals/round2-20261117/m1-rebuild/REPORT.md",
+    "proposals/round3-20261117/OWNER_ROUND3_TEXT.md",
+    "proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md",
+    "proposals/round4-20261117/OWNER_ROUND4_TEXT.md",
+    "proposals/stage9-hosted-runner.md",
+    "proposals/stage9-runner-admission.md",
+    "proposals/stage9-runner-provisioning.md",
+    "spec/provenance/protocol.md",
+    "spec/refund/protocol.md",
+    "toolchain/README.md",
+    "ts/README.md",
+    "unsure.md"
+   ],
+   "check": "links, all 80 Markdown files outside results/",
+   "exit_code": 1,
+   "group": "links-all",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_slice1.py",
+    "--case",
+    "evidence"
+   ],
+   "check": "slice 1 evidence",
+   "exit_code": 0,
+   "group": "slice1",
+   "last_line": "SLICE1 evidence: PASSED; end_to_end=false"
+  }
+ ],
+ "scratch_clone_commit": "2413b0e74485c5085dabdf4dc089d6a1989215c7",
+ "scratch_clone_commit_note": "exists only in the throwaway clone; not in the owner's repository; not pushed",
+ "slice1_bundle_sha256": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1",
+ "stage_exit_cases": 28,
+ "stage_exit_cases_exit_0": 28,
+ "what": "Slice 1 control (e): scratch clone of the present commit plus the uncommitted Slice 1 files"
+}

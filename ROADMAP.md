@@ -28,6 +28,50 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Slice 1 of the master idea (F2.1 to F2.3): refund checker core proved at source level; token issuer and token-gated sink built; finite controls; one review, one check of the repairs, one last pass; pull request 45, NOT merged — U443, U444, U445, U446, U447, U448
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Not gate
+evidence: no policy lists these claims and no gate obligation lists
+these files. The claim text for the core is not approved intent.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the owner's go-ahead: pinned Dafny, present gate options, on the research file `RefundMinterCore.dfy`: verify; audit |0; 0|7 verified; 0 findings (diagnostic) |
+| `scripts/exit_slice1.py --case core-proof` (refund gate `--tier critical`; audit; verify of `impl/RefundFinality.dfy` beside `tests/refund-finality/Bindings.dfy`), attempts 1 and 2 |0; 0|refund gate exit 0; 10 verified, 0 errors; audit 0 findings |
+| `--case core-controls`, attempts 1 and 2: nine wrong cores |0; 0|checker exit 4 for seven (failed members only in the binding file), exit 2 for two printing cores |
+| `--case sink-controls` attempt 1 (first code version, 94 rows) |0|before my own read of the sink |
+| suite with a new control on the first sink (object that changes while it is read) |1|FAIL-OPEN found by me: remaining 0 committed under a signature for 700; repaired (U444) |
+| the one fresh-context review of the unproved code |1 in-process fail-open, 1 HIGH, 2 MEDIUM, 4 LOW|outside the sink process no unauthorized effect found; two of my race rows could not fail (U445) |
+| after the repairs (one pass): type check; suite (113 rows) |0; 0|48 rejection attempts, 0 effects |
+| one-off: suite against eight copies with one check removed each |non-zero for 8 of 8|the race row fails on a sink with no transaction in 3 of 3 runs |
+| `--case core-proof`; `--case core-controls`; `--case sink-controls`, attempt 2 (code of `9af026df`) |0; 0; 0|passed |
+| `--case evidence` attempt 1 (97-row version); attempt 2 (manifest lacked two helper files); attempt 3 (code of `9af026df`) |0; 0; 0|each: two runs byte-identical; bundle of `9af026df`: SHA-256 `fffdd343…` (replaced by the last pass) |
+| control (e) for `9af026df`, scratch clone of `f6329211` plus the Slice 1 files (`run_regression.py`): Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 1 report; for all 80 Markdown files outside `results/` |0; 0, 0, 0; 1|only the 2 older Stage 9 links without a target |
+| the same clone: `scripts/exit_slice1.py --case evidence` |0|bundle SHA-256 equal to the working tree's (`fffdd343…`) |
+| Stage 7; Stage 9; Stage 10 |NOT RUN|Docker time; deferred; no EXIT script on `main` |
+| commit and push in one command (on owner text 7) |declined by the session's permission system|one local commit `9af026df`; no push at that time (U446) |
+| on owner text 8: `git push -u origin slice1/refund-finality`; `gh pr create` |0; 0|pull request 45, head `9af026df`; no administrator rights; NOT merged |
+| hosted `gate/pr_check.py`, pull request 45, run 44358528370 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 32 `UNCOVERED_CHANGE` findings, one for each file of the slice |
+| second fresh-context agent: check of the four repaired places only |FAIL-OPEN 0, HIGH 0, MEDIUM 1, LOW 1|repairs of F1, F2, F3 held; F4 held for the confirmed message. Found: a very long line with no line end ends the issuer process (MEDIUM); the dispatcher lock follows the path text (LOW). No code change at that time (U447) |
+| last pass on owner text 9 (NOT reviewed), one-off probe: a 600 MB line with no end to the issuer of `9af026df`; to the repaired issuer |issuer exit 1; still running|the MEDIUM finding is reproduced (the process ends after 513 MB); the repaired issuer answers once and signs the next request |
+| the last pass: type check; suite (115 rows); `--case sink-controls` attempt 3 |0; 0; 0|48 rejection attempts, 0 effects; new rows for the line limit and for three names of one ledger file |
+| one-off: suite against ten copies with one check removed each |non-zero for 10 of 10|with the two new repairs |
+| `--case evidence` attempt 4 (final) |0|two runs byte-identical; final bundle SHA-256 `c7f2f41c…` |
+| control (e) for the last pass, scratch clone of `9af026df` plus the uncommitted files: 28 Stage EXIT cases; `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 1 report; for all 80 Markdown files outside `results/`; `scripts/exit_slice1.py --case evidence` |0 each (28 of 28); 0; 0, 0, 0; 1; 0|only the 2 older Stage 9 links without a target; bundle SHA-256 in the clone equal to the working tree's (`c7f2f41c…`) |
+| push of the last pass to pull request 45; hosted `gate/pr_check.py` for the new head |NOT RUN when this section was committed|expected exit 3 (UNSUPPORTED) |
+
+[Slice 1 report](proposals/forge2-slice1-refund-finality/REPORT.md).
+[Review text and disposition](proposals/forge2-slice1-refund-finality/REVIEW.md).
+Proved: claims P1 to P4 for the Dafny source of the checker core.
+Tested on a finite set, not proved: issuer code, encoding, sink,
+dispatcher. Not proved: the compiled JavaScript and the hash in the
+token. The repairs after the review had one narrow check. Its one
+MEDIUM and one LOW finding were repaired in a last pass that had no
+review.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Step B (print effects) is on `main`: pull requests 43 and 42 merged on the owner's word; first hosted run of the gate with a ratification record gave the expected result — R4C-1
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
