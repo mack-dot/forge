@@ -9,7 +9,7 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438, U439, U440, U441, U442
+## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39) and the Stage 6 records (pull request 40) — U433, U436, U437, U438, U439, U440, U441, U442
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file of this tree or of
@@ -49,8 +49,9 @@ print effects `f54e2507`, its records `53534f64`.
 
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
 [Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
-Open: the documents pull request (Q2, Q3, Q4) and the owner's merge of
-it; then the full check Q5; decision D1 for step B (print effects). `ROADMAP.md` on `main` still
+This section comes to `main` with the documents pull request (Q2, Q3,
+Q4). After that merge: the full check Q5 from a clean checkout. Open:
+decision D1 for step B (print effects); the Stage 9 lock renewal. `ROADMAP.md` on `main` still
 says "CURRENT: Stage 9"; this file is the current one.
 M1 and integration EXIT NOT_ESTABLISHED.
 
