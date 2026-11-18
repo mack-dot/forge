@@ -1,8 +1,9 @@
 {
  "copies": [
   {
-   "copy": "sink-no-transaction-clean",
-   "removed": "ts/refund-finality/sink.ts: BEGIN, COMMIT and ROLLBACK do nothing (every statement commits alone)",
+   "copy": "sink-no-transaction",
+   "file": "ts/refund-finality/sink.ts",
+   "removed": "BEGIN, COMMIT and ROLLBACK do nothing (every statement commits alone)",
    "runs": [
     {
      "failed_rows": [
@@ -25,18 +26,6 @@
       "race: 6 valid tokens for one pre-state, committed by 6 processes that wait for one common start time",
       "audit after the race",
       "race: one valid token committed by 6 processes that wait for one common start time"
-     ],
-     "suite_exit": 1
-    }
-   ]
-  },
-  {
-   "copy": "dispatcher-no-lock",
-   "removed": "ts/refund-finality/dispatcher.ts: no lock file",
-   "runs": [
-    {
-     "failed_rows": [
-      "overlap: 4 dispatcher processes start at one common time on 4 pending refunds"
      ],
      "suite_exit": 1
     }
@@ -44,7 +33,8 @@
   },
   {
    "copy": "sink-no-id-check",
-   "removed": "ts/refund-finality/sink.ts: no comparison of the spec lock hash and the checker id with the pinned ones",
+   "file": "ts/refund-finality/sink.ts",
+   "removed": "no comparison of the spec lock hash and the checker id with the pinned ones",
    "runs": [
     {
      "failed_rows": [
@@ -58,32 +48,9 @@
    ]
   },
   {
-   "copy": "dispatcher-no-chain-check",
-   "removed": "ts/refund-finality/dispatcher.ts: no chain check",
-   "runs": [
-    {
-     "failed_rows": [
-      "raw INSERT: a validly signed token for an earlier state"
-     ],
-     "suite_exit": 1
-    }
-   ]
-  },
-  {
-   "copy": "dispatcher-no-request-id-check",
-   "removed": "ts/refund-finality/dispatcher.ts: no comparison of the outbox request id with the signed one",
-   "runs": [
-    {
-     "failed_rows": [
-      "raw INSERT: a copy of a committed token under a new request id"
-     ],
-     "suite_exit": 1
-    }
-   ]
-  },
-  {
    "copy": "sink-copies-objects",
-   "removed": "ts/refund-finality/sink.ts: a value that is not a text is copied to canonical text and used (the version before review finding F1)",
+   "file": "ts/refund-finality/sink.ts",
+   "removed": "a value that is not a text is copied to canonical text and used (the version before review finding F1)",
    "runs": [
     {
      "failed_rows": [
@@ -99,8 +66,62 @@
    ]
   },
   {
+   "copy": "dispatcher-no-lock",
+   "file": "ts/refund-finality/dispatcher.ts",
+   "removed": "no lock file",
+   "runs": [
+    {
+     "failed_rows": [
+      "overlap: 4 dispatcher processes start at one common time on 4 pending refunds",
+      "overlap through three names of one ledger file: 6 dispatcher processes start at one common time on 4 pending refunds"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "dispatcher-lock-by-path-text",
+   "file": "ts/refund-finality/dispatcher.ts",
+   "removed": "the lock is named after the path text (the version before the last repair)",
+   "runs": [
+    {
+     "failed_rows": [
+      "overlap through three names of one ledger file: 6 dispatcher processes start at one common time on 4 pending refunds"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "dispatcher-no-chain-check",
+   "file": "ts/refund-finality/dispatcher.ts",
+   "removed": "no chain check",
+   "runs": [
+    {
+     "failed_rows": [
+      "raw INSERT: a validly signed token for an earlier state"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "dispatcher-no-request-id-check",
+   "file": "ts/refund-finality/dispatcher.ts",
+   "removed": "no comparison of the outbox request id with the signed one",
+   "runs": [
+    {
+     "failed_rows": [
+      "raw INSERT: a copy of a committed token under a new request id"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
    "copy": "issuer-reflects-any-id",
-   "removed": "ts/refund-finality/minter.ts: any id value is sent back (the version before review finding F4)",
+   "file": "ts/refund-finality/minter.ts",
+   "removed": "any id value is sent back (the version before review finding F4)",
    "runs": [
     {
      "failed_rows": [],
@@ -109,8 +130,22 @@
    ]
   },
   {
+   "copy": "issuer-no-line-limit",
+   "file": "ts/refund-finality/minter.ts",
+   "removed": "no limit on the bytes of one line",
+   "runs": [
+    {
+     "failed_rows": [
+      "a line of 500,000 bytes: 300,000 bytes are sent, then 200,000 more, then the line end"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
    "copy": "encoding-allows-nul",
-   "removed": "ts/refund-finality/encoding.ts: U+0000 is allowed in text",
+   "file": "ts/refund-finality/encoding.ts",
+   "removed": "U+0000 is allowed in text",
    "runs": [
     {
      "failed_rows": [
@@ -123,8 +158,8 @@
    ]
   }
  ],
- "copies_with_nonzero_suite_exit": 8,
+ "copies_with_nonzero_suite_exit_in_every_run": 10,
  "end_to_end": false,
  "suite_exit_meaning": "1 = at least one row failed; 2 = the run did not finish (for issuer-reflects-any-id the issuer process ended)",
- "what": "One-off check that the control rows can fail. Each copy of the glue has one check removed; the suite ran against it in a scratch folder. Not part of the EXIT script. A finite check: 8 removed checks."
+ "what": "One-off check that the control rows can fail. Each copy of the glue has one check removed; the suite (final version, 115 rows) ran against it in a scratch folder. Not part of the EXIT script. A finite check: 10 removed checks."
 }

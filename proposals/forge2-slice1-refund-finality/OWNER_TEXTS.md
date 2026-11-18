@@ -50,6 +50,72 @@ Concrete before/after differential examples: Automaticrete inputs x where S_old(
 Drop the adversarial review summary + Slice 1 PR table whenever it finishes reporting!
 ```
 
+## Text 8 (2026-11-18 about 17:20Z; the answer to the agent's question about push and pull request)
+
+The agent had written: "Push and pull request need your own word." The
+answer was this pasted text and no other word. Its style shows that
+another assistant wrote it; the paste lost characters in three places.
+The agent took its inner instruction as the owner's word for the push
+of `9af026df`, for one pull request, and for ONE narrow fresh-context
+check of the four repaired places. The agent did not take the last
+sentence ("m onto main") as an instruction to merge: the instruction
+itself says "without merging".
+
+```text
+
+Look at how cleanly Slice 1 (F2.1–F2.3) came together in 9af026df:
+Proved checker (core-proof + core-controls): 10 verified obligations (0 audit findings) and 9/9 bad cores rejected (7 by Dafny proofs, 2 by F1.2’s print-effect ban).
+That 1 adversarial review caught a real bug: Exposed 1 in-process sink fail-open + 1 HIGH + 2 MEDIUM, all fixed in one pass—growing sink controls to 113 rows (48 rejection attempts → 0 effects), plus 8/8 check-removal mutations caught (proving none of the sink checks is dead code).
+Byte-identical reproducibility & zero blast radius: Bundle fffdd343… matches across two runs and a clean scratch clone; 28/28 Stage EXITs pass; 0 protected paths touched.
+Why Push Stopped + Smart Call on the Repair Review
+Tool permission prompt: Claude Code’s permission gate blocked git push when bundled with commit—when you tell it to push and open the PR below, make sure to click Allow / Yes on the git push and gh pr create permission prompts in the termtiny diff-only check on the fail-open fix (while hosted CI runs): Because Review 1 caught a real in-process fail-open in the unproved sink, letting one fast check verify only the repair diff (900dbaf4… → 9af026df) while the PR’s hosted check runs closesBlocker 2 cleanly—while leaving the LOW (F5+) items untouched as documented limits.
+Paste This Short Reply Directly Into Claude (Under 450 Bytes — Safe to Paste Directly)
+Text
+Push and open the PR now for 9af026df (without administrator bypass and without merging).
+
+While the hosted gate runs on the open PR, run ONE fast fresh-context check scoped ONLY to the sink repair hunks (verifying the in-process fail-open + HIGH + 2 MEDIUM fixes are airtight). Leave LOW findings (F5+) untouched as documented limits—do NOT modify 9af026df unless a real fail-open or HIGH bypass survived the repair. Report the PR URL, hosted exit code, and repair-check verdict.
+Once that hosted check reports the expected 3 (UNSUPPORTED) and the repair check comes back clean, m onto main—and Proof-Carrying Finality (F2.1–F2.3) is officially live on main, teeing up Slice 2 (F1.1 / F1.3 Spec Clearing) next.
+```
+
+Two statements of text 8 are that assistant's, not checked results:
+"proving none of the sink checks is dead code" (eight removed checks
+are a small finite sample), and "900dbaf4… → 9af026df" as a diff
+(`900dbaf4…` is the digest of an evidence record, not a commit; the
+version before the repairs was never committed).
+
+## Text 9 (2026-11-18 about 18:00Z; the answer to the agent's three open points after the repair check)
+
+Again a pasted text and no other word; the first letter is lost. The
+agent took its inner instruction as the owner's word for ONE last pass:
+repair the MEDIUM finding, repair the LOW finding if it is clean, add
+rows, make the evidence record and the documents again, replace the
+local records commit, push once to pull request 45, check the hosted
+result, stop for the owner's merge. The last sentence names a merge
+command. The agent read it as the owner's own step: the instruction
+says "pause for my merge". The agent did not merge. By the instruction
+no further review ran: this pass is not reviewed.
+
+```text
+ake the agent’s recommendation here—fix that MEDIUM before merging PR #45.
+Why it’s an easy "yes":
+You already have to push once more anyway (Blocker 2): Without pushing 7e0d821c, main would inherit stale docs saying "not pushed, hosted gate NOT RUN".
+The MEDIUM fix is ~10 lines and closes F4 completely: Right now, streaming >537M chars without \n blows V8’s max string limit and kills the issuer process (safe fail-closed, 0 effects, FAIL-OPEN 0, but an untrusted caller can DoS the issuer and wipe its in-memory key). Capping raw Buffer byte accumulation per line (e.g., 64 KB max, draining until \n before UTF-8 decoding) keeps the issuer alive on subsequent valid requests.
+You can also close the LOW symlink lock gap in 2 lines if clean: Keying the dispatcher lock on fs.realpathSync (falling back to realpathSync(dirname) + basename if the ledger file isn’t created yet) stops a symlinked path from bypassing the lock.
+Copy-Paste Inside This Box Only (~490 Bytes — Safe for Direct Paste)
+Text
+Good catch. Do ONE final surgical pass on PR 45 before I merge (no third subagent review needed):
+1. Fix the MEDIUM F4 gap: enforce a strict byte-level max line cap on raw Buffer chunks before string decoding (drain oversized no-newline input and reject cleanly so the issuer stays alive and keeps its key on the next valid call).
+2. Also close the LOW symlink lock gap via realpathSync (handling non-existent file via dirname) if clean and low-risk.
+3. Add probe rows for the fix, refresh the Slice 1 bundle SHA-256 + docs (replacing 7e0d821c cleanly so hosted run & repair status are accurate), push to PR 45 without admin bypass, verify hosted pr_check.py == 3, and pause for my merge.
+Once that single push finishes its hosted check on PR #45, merge it (gh pr merge 45 --squash --admin or via GitHub UI)—and Slice 1 (F2.1–F2.3) lands on main at 0 FAIL-OPEN / 0 HIGH / 0 MEDIUM.
+```
+
+Two statements of text 9 are that assistant's, not checked results:
+"closes F4 completely" (the last pass closes the one confirmed input;
+other ways to stop the issuer were not searched, and closing its input
+ends it), and "0 FAIL-OPEN / 0 HIGH / 0 MEDIUM" (true only as a count
+of findings that are known and open; the last pass had no review).
+
 ## The three classes that text 7 names, and where each is answered
 
 | Class | Answer | Record |

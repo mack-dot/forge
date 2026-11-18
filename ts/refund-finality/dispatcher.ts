@@ -8,7 +8,12 @@
 //   5. the request id is not in the dispatcher's own append-only ledger.
 // The ledger is a file OUTSIDE the database. A line is appended and synced BEFORE the effect: at most
 // once. A crash between the two loses that effect (it is never sent twice); a person must reconcile it.
-// One run at a time: flush() creates the lock file <ledger>.lock exclusively and removes it at its end.
+// One run at a time: flush() creates the lock file <resolved ledger path>.lock exclusively and removes
+// it at its end. The ledger path is resolved first (the ledger file is created empty if it is missing),
+// so a symbolic link to the ledger file or to a folder above it gives the same lock. (With a lock named
+// after the path text, two names for one ledger file had two locks: finding of the repair check.)
+// NOT covered: a hard link to the ledger file, and a file system that does not make exclusive creation
+// atomic.
 // A second run that starts meanwhile stops with an error and sends nothing. (Without the lock, two
 // overlapping runs each read the ledger once and both sent the same refunds: review finding F2.)
 // A process that dies inside a run leaves the lock file. Every later run then stops until a person
@@ -19,7 +24,7 @@
 // Known limit (U428, case D14): if the issuer signs two transitions for one pre-state and an attacker
 // can write the database file, the dispatcher can send the one that the sink did not commit.
 import { createPublicKey, verify, KeyObject } from "node:crypto";
-import { closeSync, existsSync, fsyncSync, openSync, readFileSync, unlinkSync, writeSync } from "node:fs";
+import { closeSync, existsSync, fsyncSync, openSync, readFileSync, realpathSync, unlinkSync, writeSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { Intent, canon, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
 
@@ -67,7 +72,8 @@ export class Dispatcher {
       postStateSha256: sha256hex(canon(body.post)), intentSha256: sha256hex(row.intent) } };
   }
   flush(): FlushResult {
-    const lockPath = this.ledgerPath + ".lock";
+    closeSync(openSync(this.ledgerPath, "a"));
+    const lockPath = realpathSync(this.ledgerPath) + ".lock";
     let lock: number;
     try { lock = openSync(lockPath, "wx"); } catch { throw new Error("dispatcher lock is held: another run is active, or a stopped run left the lock file"); }
     try { return this.flushLocked(); } finally { closeSync(lock); unlinkSync(lockPath); }

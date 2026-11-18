@@ -9,8 +9,9 @@ complete version of `ts/refund-finality/*.ts` and
 Section 1 is the reviewer's final text, saved by the build agent. Two
 path prefixes are replaced: the scratch folder is `<scratch>/`, and
 paths inside the repository are relative. Nothing else is changed.
-Section 2 is what the build agent did with each finding. No second
-review ran: the owner's rule allows one.
+Section 2 is what the build agent did with each finding. Section 3 is a
+later, narrow check of the four repaired places only. The owner asked
+for it in text 8 (`OWNER_TEXTS.md`), after the pull request was open.
 
 A review that finds nothing more is not a proof. The line numbers in
 section 1 are those of the reviewed version, not of the present files.
@@ -132,3 +133,99 @@ dispatcher with no lock; a sink with no id check; a dispatcher with no
 chain check; with no request id check; a sink that copies objects; an
 issuer that sends any id back; an encoding that allows U+0000. The
 suite ended with a non-zero exit for each of the eight.
+
+## 3. The check of the four repairs (second fresh-context agent; verbatim, paths replaced)
+
+Asked for by owner text 8, after commit `9af026df` was pushed. Scope:
+the four repaired places only (F1 to F4). The agent had no context of
+the build session. It was told to judge the code and not section 2
+above. It changed no repository file. Rule of text 8: no change to
+`9af026df` unless a real fail-open or HIGH bypass survived the repair.
+
+```text
+ADVERSARIAL CHECK of the four repairs, commit 9af026df, pinned Node v24.3.0. I changed no repository file (`git status` shows no tracked change; HEAD is unchanged). All probes and logs are in <scratch>/repair-check/ (logs in its out/ folder).
+
+Summary: F1, F2 and F3 hold in every probe. F4 holds for the confirmed message, but one other message still ends the issuer process (MEDIUM, run). F2 has one LOW gap that needs a trusted-side configuration.
+
+## 1. F1 — `Sink.commit` (sink.ts lines 77-86): HOLDS
+Probes run (p1_sink.ts, 68 attempts, effects counted by a full snapshot of state, settled and outbox):
+- 20 non-text values: 3 proxies that count 13 traps, an object with accessors plus `toString`, `valueOf`, `Symbol.toPrimitive`, `toJSON`, `String` objects, a `String` subclass, array, Buffer, token objects, symbol, function, bigint. Every answer: "token is not a text". Proxy operations: 0. Caller code runs inside `commit`: 0. Effects: 0.
+- 48 texts around one valid token and one forged body: attacker signature; forged body with the real signature; duplicate `body`, `signature`, `post`, `intent` keys in both orders; `__proto__` at top level, in the body and in the post-state; `constructor` key; leading space, trailing newline, trailing U+0000, BOM; a Unicode escape for one letter; escaped slash; other key orders; wrong value types; changed amounts with the real signature; base64url, no padding and non-canonical last bits in the signature; 9,000 characters; 1 MB; 16 MB; 8,192 nested arrays; lone surrogate raw and escaped. Every one: rejected, 0 effects.
+- The valid text: "committed". Stored state equals `canon(body.post)`, the settled token equals the input text, the outbox intent equals `canon(body.intent)`, audit is empty, and the dispatcher emitted exactly the signed intent. The same text again: "replayed".
+- Length cap: the longest token that the real issuer signed is 6,731 characters (charge id and request id both 256 x U+0001). No issued token reached the 8,192 cap.
+- Note on my own probe: the first run had a probe bug (one mutation did not change the text, so the valid token committed). I fixed the probe and ran all 68 again; the numbers above are from the second run.
+
+## 2. F2 — `Dispatcher.flush` lock (dispatcher.ts lines 69-74): HOLDS for runs that name the ledger by the same path; 1 LOW gap
+Probes run (p2_disp.ts with my own p2_cli.ts):
+- A: 6 trials, 8 processes, common start time, 5 pending rows, effect 100 ms. Each trial: 5 effects, 0 duplicates, 1 run sent all, 7 stopped at the lock, no lock left, a later run sent 0, 5 ledger lines.
+- B: 10 trials, 12 processes, 1 pending row, no delay. 10 effects, 0 duplicates. 3 runs took the lock after the first run ended and found the row already dispatched.
+- C: a second run starts 700 ms inside the first. It stopped at the lock. 6 effects, 0 duplicates.
+- D: the effect callback throws at row 2. `flush` threw, the lock was removed, the ledger had 2 lines. The next run sent 3. Row 2 was never sent again. 0 duplicates. Observation, not counted: row 2 is lost and the next run counts it as already dispatched; only the thrown error marks it, because no lock stays.
+- E: a run started from inside the callback stopped 3 times and did not remove the lock. With the inner error not caught, the outer run ended; the next run sent the rest. 0 duplicates.
+- F: a lock file made by another party. 3 runs stopped, sent 0, and the lock stayed.
+- G: a broken ledger. `flush` threw, sent 0, lock removed.
+- I: SIGKILL inside effect 2. The lock stayed and the next run stopped. After manual removal: 2 more sent, 4 of 4 in total, 0 duplicates.
+
+LOW (H, run): the lock name follows the path text, not the file. Steps: one process uses the ledger path, one uses a symbolic link to the same ledger file, common start time, 4 pending rows, 3 trials. Observed: 24 effects where 12 are correct; every refund sent twice. This needs the trusted side to give one ledger two names. The header does not state this limit.
+
+## 3. F3 — `text()` refuses U+0000 (encoding.ts lines 45-46): HOLDS
+Probes run:
+- p3_roundtrip.ts: every code point except surrogates, in 3 positions (3,336,192 texts), through `node:sqlite` with the sink's column definitions. 3,336,189 pass the shape check; the only refused code point is U+0000. Read-back mismatches: 0. Lookup misses by `WHERE request_id = ?`: 0. UNIQUE collisions: 0.
+- 170,288 random texts of 1 to 256 units from 70 awkward code points: 0 mismatches, 0 lookup misses, 0 collisions.
+- U+0000 in 4 places, lone surrogates in 8 forms and 257 units, each in 9 field positions of state, request, intent and token body: accepted 0 times.
+- p3_pipeline.ts, real issuer, sink and dispatcher with 3 runs: 85 awkward request ids (controls, BOM, U+2028, U+2029, NFC and NFD pairs, astral, 256-unit maxima, quotes, backslashes, SQL-like text, `__proto__`). All 85 committed, each sent once in order, 0 refused, audit empty. The same for charge ids of 256 x U+0001, 128 x U+10FFFF, a BOM, and line separators. The core refused the empty request id. `Sink.init` refused a charge id with U+0000. The issuer refused 3 request ids with U+0000 ("shape").
+
+## 4. F4 — issuer message handler (minter.ts lines 71-96): the id repair HOLDS; one message still ends the process: BROKEN, MEDIUM
+Probes that found nothing (p4_minter.ts, a liveness request with body and signature check after each):
+- 47 kill attempts: id of 10,000 and 30,000 nested arrays, 10,000 nested objects, 32,000 nested arrays at top level, deep nesting in `pre`, `transition` and the request id, a duplicate id whose last value is nested, 14 id variants, `__proto__` and `toJSON` keys, keys with commas, invalid UTF-8, NUL bytes, BOM, 65,537 characters, 1 MB, 8 MB, a 60,000-digit id, 19-digit money, 256-unit astral texts. The process stayed alive each time; every bad id was answered with id null.
+- A valid message padded to exactly 65,536 characters was signed. A burst of 3,000 valid messages was answered in full.
+- Signing matrix: 1,144 messages (8 pre-states x 13 requests x 11 mutations of post-state, intent and request). 19 signed, exactly the honest eligible ones. Disagreements with my oracle: 0. 4 raw messages with duplicate keys followed the last key; the dishonest transition was never signed.
+- `single-use on`: a second transition for one pre-state was refused in 7 forms (other request, other key order of the pre-state, other amount, other reason, amount 0, raw duplicate key, after 3,000 other pre-states). The same transition gave the same token again.
+- By reading only: line 91 fills the map only with `single-use on`.
+
+MEDIUM (run, p4_longline.ts, default issuer start with no extra flag): one line with no newline that is longer than 536,870,888 characters ends the issuer.
+- Steps: start the issuer, get one valid token, then write 1 MB blocks of the letter "a" with no newline.
+- Observed: the process ended in under 1 second, exit code 1, with `RangeError: Invalid string length` at `node:internal/readline/interface:656` (`this[kLine_buffer] += string`). No answer was written. The key is lost, as in the first F4.
+- Why: the length check on line 74 runs only after `readline` has collected the whole line, and the pinned Node sets no bound on that buffer (I printed its source). With 48 MB and then a newline, the issuer answered "message too long" once and stayed alive, so the limit is the engine's largest text.
+- The author's table lists "a very long line with no newline" as not done.
+
+Related note, not counted: closing the issuer's input ends the process with code 0 (run). A party that holds the pipe needs no message at all.
+
+## NOT RUN
+- F1: no probe with code loaded into the sink process (stated as trusted). No SQLite fault injection.
+- F2: no network file system, no hard-link alias (same mechanism as H), no power loss, no partial ledger line.
+- F3: not every multi-character text; only the full single-code-point set in 3 positions and the random set. No database with a non-UTF-8 encoding.
+- F4: memory growth of the map with `single-use on` over millions of pre-states. Memory in `off` mode was not measured (resident size is not reliable on this machine under compression). Issuer output that the peer does not read. No wider fuzz than the 1,144-message matrix.
+- U+2028 raw in a request makes `MinterClient.mint` wait for ever (first-review F5, out of scope); I used my own client that splits at "\n" only.
+
+## COUNTS
+FAIL-OPEN: 0. HIGH: 0. MEDIUM: 1 (F4, long line with no newline). LOW: 1 (F2, two names for one ledger file).
+```
+
+### What the build agent did with the result of the check
+
+| Result | Action |
+| --- | --- |
+| F1, F2, F3: HOLDS | none |
+| F4: the id repair holds. MEDIUM, OPEN: a line of more than about 537 million characters with no newline ends the issuer process; the key is lost. No token is signed and no effect is made by it | NO code change (rule of text 8: a change only for a fail-open or a HIGH bypass). It was listed as "not searched" in section 2; it is now a confirmed open defect of the issuer's availability |
+| F2: LOW, OPEN: the lock follows the path text. Two names for one ledger file (a symbolic link) give two locks, and every refund was sent twice | NO code change. It needs a trusted-side configuration error. Stated as a limit |
+
+`9af026df` was unchanged at that time. A check that finds no fail-open
+is not a proof.
+
+## 4. The last pass (owner text 9): the two findings of section 3 repaired; NOT reviewed
+
+Owner text 9 asked for one last pass and for no further review. The
+build agent made it. Nobody checked it.
+
+| Finding of section 3 | Repair | Evidence (run by the build agent) |
+| --- | --- | --- |
+| MEDIUM: a very long line with no end stops the issuer | `minter.ts` no longer uses Node's line reader. It cuts lines out of the raw bytes and holds at most 65,536 bytes of one line. A longer line is answered once, at that moment, with "message too long"; the rest of that line is dropped up to its end | one-off probe, `records/long-line-probe.json`: 600 MB with no line end. Issuer of `9af026df`: ended with exit code 1 after 513 MB. Repaired issuer: still running, 1 answer, the next valid request signed. New suite row; it fails when the limit is removed |
+| LOW: the lock follows the path text | `dispatcher.ts` creates the ledger file if it is missing, resolves its path and names the lock after the resolved path | new suite row: 6 runs at one common start time through three names of one ledger file (the file, a symbolic link to it, a symbolic link to its folder): 1 run sent 4, 5 stopped at the lock, each refund sent once. The row fails with the lock named after the path text |
+
+Not covered by the last pass: a hard link to the ledger file; memory
+growth of the issuer; an issuer whose input is closed (it ends). A side
+effect of the first repair: the issuer splits lines only at the byte
+0x0A now, so a request with U+2028 is no longer cut at the issuer. The
+line reader of the proposer-side client (`proposer.ts`) still cuts an
+answer at U+2028 (first review, F5, LOW).

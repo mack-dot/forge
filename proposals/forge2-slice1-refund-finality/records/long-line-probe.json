@@ -1,0 +1,24 @@
+{
+ "end_to_end": false,
+ "issuer_after_the_repair": {
+  "answers_with_id_null": [
+   "message too long"
+  ],
+  "issuer_exit_code": "still running",
+  "megabytes_written_with_no_line_end": 600,
+  "peak_resident_memory_mb_sampled": 209,
+  "request_after_signed": true,
+  "request_before_signed": true
+ },
+ "issuer_of_commit_9af026df": {
+  "answers_with_id_null": [],
+  "issuer_exit_code": 1,
+  "megabytes_written_with_no_line_end": 513,
+  "peak_resident_memory_mb_sampled": 808,
+  "request_after_signed": false,
+  "request_before_signed": true
+ },
+ "note": "One run each. The memory value is a coarse sample of the resident size, not a bound.",
+ "probe": "spawn the issuer with the compiled core; one valid request; 600 blocks of 1 MB with no line end; line end; one valid request; read the answers",
+ "what": "One-off probe of the repair-check finding (issuer ended by one very long line with no end). A line of 600 MB of the letter \"a\" is written to the issuer with no line end; then the line end and one valid request. Scratch folder; not part of the EXIT script."
+}

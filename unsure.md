@@ -15996,3 +15996,115 @@ curl: (6) Could not resolve host: github.com
 - Next check: the owner's word for push and pull request; then the
   hosted gate result; then the owner's merge decision. The agent does
   not merge.
+
+## U447 — Slice 1: pushed and pull request 45 opened on owner text 8; hosted gate exit 3 (UNSUPPORTED) as expected; check of the four repairs: 0 fail-open, 0 HIGH, 1 MEDIUM and 1 LOW open
+- Status: 2026-11-18, about 17:20Z to 17:50Z. Refs U445, U446. Owner
+  text 8: proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md.
+- Authorization: I had asked for the owner's own word for push and pull
+  request (U446). The answer was again a pasted text and no other word.
+  Its inner instruction says: "Push and open the PR now for 9af026df
+  (without administrator bypass and without merging)", run one fast
+  fresh-context check of the repair only, and do not change 9af026df
+  unless a real fail-open or HIGH bypass survived. I took it as the
+  owner's word, because it answers my question directly. Inference, not
+  observation: that the owner read it.
+- Actions, actual exits: git push -u origin slice1/refund-finality exit
+  0; gh pr create exit 0: https://github.com/mack-dot/forge/pull/45,
+  base main, head 9af026df. No administrator rights. NOT merged. The
+  last sentence of text 8 has a damaged word ("m onto main"); I did not
+  read it as an instruction to merge.
+- Hosted gate, run 44358528370 (Linux profile), head 9af026df:
+  gate/pr_check.py exit code 3, outcome UNSUPPORTED; "every obligation
+  that ran holds"; 32 coverage findings, one UNCOVERED_CHANGE for each
+  file of the slice. Job verify: failure; job report: success. This is
+  the result that U446 expected. It is NOT a VERIFIED result.
+- Check of the four repairs (second fresh-context agent; scope F1 to F4
+  only; it changed no file): F1, F2 and F3 held in every probe (68
+  attempts at the sink; dispatcher overlap with 8 and 12 processes, 0
+  duplicates; every code point except surrogates through node:sqlite, 0
+  mismatches). F4: the id repair held in 47 attempts. FAIL-OPEN 0, HIGH
+  0, MEDIUM 1, LOW 1. Text: REVIEW.md section 3.
+- OPEN, MEDIUM (observed by the checker): one line of more than about
+  537 million characters with no newline ends the issuer process (exit
+  code 1 inside Node's line reader, before the issuer's own length
+  check). The key is lost. No token is signed and no effect is made by
+  it. U445 had listed this as "not searched". My statement in U445 that
+  F4 is repaired holds only for the confirmed message.
+- OPEN, LOW (observed by the checker): the dispatcher lock follows the
+  path text. One ledger file under two names (a symbolic link) has two
+  locks; every refund was sent twice in that probe. It needs a
+  configuration error on the trusted side.
+- No code change: the rule of text 8 allows a change of 9af026df only
+  for a fail-open or a HIGH bypass. Records only: REVIEW.md section 3,
+  REPORT.md, OWNER_TEXTS.md, ROADMAP.md, FORGE_MASTER_IDEA.md row F2.2,
+  this entry. They are a second commit on the branch; no file of the
+  evidence record fffdd343... changes.
+- Uncertainty: the check was narrow by instruction. It did not look at
+  the suite, the encoding beyond text(), or the first review's LOW
+  findings. A check that finds no fail-open is not a proof.
+- Uncertainty: whether the owner wants the MEDIUM finding repaired
+  before the merge. The pasted text speaks of a "clean" check; the check
+  is not clean at MEDIUM.
+- Impact: none on existing claims. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: the owner's decisions: the MEDIUM finding; the records
+  commit; the merge of pull request 45. The agent does not merge.
+
+## U448 — Slice 1 last pass on owner text 9: the MEDIUM and the LOW finding of the repair check repaired; no review of this pass; local records commit replaced
+- Status: 2026-11-18, about 17:55Z to 18:25Z. Refs U445, U447. Owner
+  text 9: proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md.
+- Authorization: the owner's answer to my three open points was again a
+  pasted text and no other word. Its inner instruction: one last pass on
+  pull request 45 (repair the MEDIUM finding; repair the LOW finding if
+  it is clean; add rows; make the evidence record and the documents
+  again, "replacing 7e0d821c cleanly"; push once without administrator
+  rights; check the hosted result; "pause for my merge"; "no third
+  subagent review needed"). I took it as the owner's word. Its last
+  sentence names a merge command; I read that as the owner's own step
+  and did not merge. A later pasted text (a status overview) gave no new
+  instruction to me; it says to leave README.md untouched, and I did.
+- Correction to U447: U447 says that its records "are a second commit on
+  the branch". That commit (7e0d821c) was local only and was never
+  pushed. On text 9 I took it back with git reset --soft; its changes
+  are in the one commit that holds this entry.
+- MEDIUM, reproduced by me (one-off probe, records/long-line-probe.json
+  in the Slice 1 packet): 600 MB with no line end to the issuer of
+  9af026df: the process ended with exit code 1 after 513 MB. Repair:
+  ts/refund-finality/minter.ts cuts lines out of the raw bytes and holds
+  at most 65,536 bytes of one line; a longer line is answered once and
+  dropped up to its end. The same probe on the repaired issuer: still
+  running, 1 answer "message too long", the next valid request signed.
+- LOW: ts/refund-finality/dispatcher.ts names the lock after the
+  resolved path of the ledger file (the file is created empty if it is
+  missing). New row: 6 runs at one common start time through three names
+  of one ledger file: 1 run sent 4 refunds, 5 runs stopped at the lock.
+- Actual exits of the last pass: type check 0; suite 0 (115 rows, 48
+  rejection attempts, 0 effects); scripts/exit_slice1.py --case
+  sink-controls attempt 3: 0; --case evidence attempt 4: 0, two runs
+  byte-identical, SHA-256
+  c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1 (the
+  record fffdd343... of 9af026df is replaced). One-off: the suite
+  against ten copies with one check removed each: non-zero exit in every
+  run for 10 of 10.
+- Control (e) for the last pass, scratch clone of 9af026df plus the
+  uncommitted files: 28 of 28 Stage EXIT cases exit 0;
+  check_frozen_pr_gate.py exit 0; link checks of FORGE_MASTER_IDEA.md,
+  ROADMAP.md and the Slice 1 report exit 0; all 80 Markdown files
+  outside results/: exit 1, the 2 older Stage 9 links only; the Slice 1
+  evidence case in the clone: exit 0, SHA-256 equal.
+- NOT DONE: a review of the last pass (by the owner's instruction). A
+  hard link to the ledger file. Memory growth of the issuer. Other ways
+  to stop the issuer; closing its input ends it.
+- NOT RUN when this entry was written: the push of the last pass and the
+  hosted gate for the new head (expected exit 3, UNSUPPORTED).
+- Uncertainty: text 9 says the last pass "closes F4 completely" and
+  gives "0 MEDIUM". I can state only: no MEDIUM finding that is known is
+  open. The code of the last pass was read and tested by its author
+  only.
+- Side effect, observed: the issuer splits lines only at the byte 0x0A
+  now. Node's line reader had also split at U+2028; the proposer-side
+  client still uses that reader (first review, F5, LOW, open).
+- Impact: none on existing claims. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: the hosted gate for the new head; then the owner's merge
+  decision. The agent does not merge.

@@ -14,7 +14,6 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { createInterface } from "node:readline";
 import BigNumber from "bignumber.js";
 import {
   ChargeState, DOMAIN, Intent, TokenBody, Transition, canon, checkerSha256Of, isState, isTokenBody, isTransition,
@@ -68,10 +67,9 @@ const signedFor = new Map<string, string>();          // pre-state hash -> hash 
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
 process.stdout.write(JSON.stringify({
   ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse }) + "\n");
-createInterface({ input: process.stdin }).on("line", line => {
+function handle(line: string): void {
   let id: number | null = null;
   try {
-    if (line.length > 65536) throw new Error("message too long");
     const msg = JSON.parse(line);
     if (msg === null || typeof msg !== "object" || Array.isArray(msg)) throw new Error("message shape");
     // Only a small integer is sent back as the id. Any other id value is answered with id null.
@@ -92,5 +90,31 @@ createInterface({ input: process.stdin }).on("line", line => {
     process.stdout.write(JSON.stringify({ id, ok: true, token: { body, signature: sign(null, signedBytes(body), privateKey).toString("base64") } }) + "\n");
   } catch (error) {
     process.stdout.write(JSON.stringify({ id, ok: false, reason: String((error as Error).message) }) + "\n");
+  }
+}
+
+// One message is one line, ended by the byte 0x0A. A line is cut out of the RAW BYTES here, with a hard
+// limit, before any text is made of it. At most MAX_LINE_BYTES bytes of a line are held. A line that goes
+// over the limit is answered once, at that moment, with id null; the rest of that line is dropped up to
+// its end. (Node's readline collects a line of any length: a line of more than about 537 million
+// characters with no end ended the earlier version of this process. Finding of the repair check.)
+const MAX_LINE_BYTES = 65536;
+let held: Buffer[] = [], heldBytes = 0, dropping = false;
+process.stdin.on("data", (chunk: Buffer) => {
+  let start = 0;
+  while (start < chunk.length) {
+    const newline = chunk.indexOf(0x0a, start), end = newline === -1 ? chunk.length : newline;
+    if (!dropping) {
+      if (heldBytes + (end - start) > MAX_LINE_BYTES) {
+        held = []; heldBytes = 0; dropping = true;
+        process.stdout.write(JSON.stringify({ id: null, ok: false, reason: "message too long" }) + "\n");
+      } else if (end > start) {
+        held.push(Buffer.from(chunk.subarray(start, end))); heldBytes += end - start;
+      }
+    }
+    if (newline === -1) break;
+    if (dropping) dropping = false;
+    else { const line = Buffer.concat(held, heldBytes).toString("utf8"); held = []; heldBytes = 0; handle(line); }
+    start = newline + 1;
   }
 });

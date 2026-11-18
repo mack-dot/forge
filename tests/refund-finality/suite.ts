@@ -11,7 +11,7 @@
 // handed over as it is (not as text) is wrapped in AsIs.
 import { spawn } from "node:child_process";
 import { createPrivateKey, generateKeyPairSync, sign, verify, createPublicKey, KeyObject } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import {
@@ -76,6 +76,15 @@ class UncheckedSink {
 const verifies = (key: KeyObject, m: Minted): boolean => {
   try { return !!m.ok && !!m.token && verify(null, signedBytes(m.token.body), key, Buffer.from(m.token.signature, "base64")); } catch { return false; }
 };
+// Waits until the condition holds, at most `ms` milliseconds. Returns false at the time limit.
+async function until(condition: () => boolean, ms: number): Promise<boolean> {
+  const end = Date.now() + ms;
+  while (!condition()) {
+    if (Date.now() > end) return false;
+    await new Promise(done => setTimeout(done, 20));
+  }
+  return true;
+}
 function run(args: string[]): Promise<{ code: number | null; stdout: string }> {
   return new Promise(done => {
     const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: ROOT, stdio: ["ignore", "pipe", "ignore"] });
@@ -206,6 +215,20 @@ async function main() {
     add("issuer", "a message whose id is 10,000 nested arrays", "refused: message id; the issuer answers the next request",
       `${answer && !answer.ok ? "refused: " + answer.reason : "NO REFUSAL"}; ${after.ok ? "the issuer answers the next request" : "THE NEXT REQUEST FAILED"}`,
       !!answer && !answer.ok && answer.reason === "message id" && !!after.ok);
+    {
+      // Finding of the repair check: a line with no end ended the issuer inside Node's line reader. The issuer
+      // must refuse a line over its limit BEFORE the line ends, once, and go on.
+      const before = minter.unmatched.length, block = "a".repeat(100000);
+      minter.write(block + block + block);
+      const early = await until(() => minter.unmatched.length > before, 5000);
+      minter.write(block + block);
+      minter.raw("");
+      const next = await minter.mint(pre, honest), refusals = minter.unmatched.slice(before);
+      add("issuer", "a line of 500,000 bytes: 300,000 bytes are sent, then 200,000 more, then the line end",
+        "refused before the line ends: message too long; 1 answer for that line; the issuer answers the next request",
+        `${early ? "refused before the line ends" : "NO ANSWER BEFORE THE LINE END"}: ${refusals[0]?.reason ?? "-"}; ${refusals.length} answer for that line; ${next.ok ? "the issuer answers the next request" : "THE NEXT REQUEST FAILED"}`,
+        early && refusals.length === 1 && refusals[0].reason === "message too long" && !!next.ok);
+    }
   }
 
   // ---------------- Worlds: one sink database, one dispatcher ledger, one list of outbound effects. ----------------
@@ -530,6 +553,30 @@ async function main() {
         `all processes ready in time; 1 run sent 4; ${N - 1} runs stopped at the lock; each refund sent once; a later run sends 0`,
         `${onTime ? "all processes ready in time" : "A PROCESS WAS LATE"}; ${ran} run sent 4; ${stopped} runs stopped at the lock; ${canon(sent) === canon(["rq_x9_1", "rq_x9_2", "rq_x9_3", "rq_x9_4"]) ? "each refund sent once" : "SENT: " + sent.join(", ")}; a later run sends ${later}`,
         onTime && ran === 1 && stopped === N - 1 && canon(sent) === canon(["rq_x9_1", "rq_x9_2", "rq_x9_3", "rq_x9_4"]) && later === 0, sent.length); }
+  }
+
+  { // Finding of the repair check: one ledger file under two names had two locks. Six runs at a common start time:
+    // two name the ledger file, two name a symbolic link to it (the ledger does not exist yet), two reach it
+    // through a symbolic link to its folder.
+    const w = await world("x10", minter, []), N = 6;
+    for (const n of ["1", "2", "3", "4"]) { const token = await mustMint(minter, w.current(), req(`x10_${n}`, "100")); const s = w.sink(); s.commit(tokenText(token)); s.close(); }
+    const cfg = join(w.dir, "dispatcher-config.json"), effectsFile = join(w.dir, "effects.jsonl"), ledger = join(w.dir, "dispatch-ledger.jsonl");
+    writeFileSync(cfg, JSON.stringify(w.dispCfg)); writeFileSync(effectsFile, "");
+    const fileLink = join(w.dir, "ledger-link.jsonl"), folderLink = join(outDir, "x10-folder-link");
+    symlinkSync(ledger, fileLink); symlinkSync(w.dir, folderLink);
+    const names = [ledger, ledger, fileLink, fileLink, join(folderLink, "dispatch-ledger.jsonl"), join(folderLink, "dispatch-ledger.jsonl")];
+    const startAt = String(Date.now() + START_DELAY_MS);
+    const results = answers(await Promise.all(names.map(name => run([join(__dirname, "dispatch_cli.ts"), w.db, name, cfg, effectsFile, startAt]))));
+    const sent = readFileSync(effectsFile, "utf8").split("\n").filter(l => l.length > 0).map(l => (JSON.parse(l) as Effect).requestId).sort();
+    const want = ["rq_x10_1", "rq_x10_2", "rq_x10_3", "rq_x10_4"];
+    const ran = results.filter(r => r.emitted === 4).length, stopped = results.filter(r => typeof r.stopped === "string" && r.stopped.startsWith("dispatcher lock is held")).length;
+    const onTime = results.every(r => r.onTime === true);
+    let later = -1;
+    try { later = w.flush().emitted.length; } catch { /* a broken ledger: the row fails with -1 */ }
+    add("dispatcher", `overlap through three names of one ledger file: ${N} dispatcher processes start at one common time on 4 pending refunds`,
+      `all processes ready in time; 1 run sent 4; ${N - 1} runs stopped at the lock; each refund sent once; a later run sends 0`,
+      `${onTime ? "all processes ready in time" : "A PROCESS WAS LATE"}; ${ran} run sent 4; ${stopped} runs stopped at the lock; ${canon(sent) === canon(want) ? "each refund sent once" : "SENT: " + sent.join(", ")}; a later run sends ${later}`,
+      onTime && ran === 1 && stopped === N - 1 && canon(sent) === canon(want) && later === 0, sent.length);
   }
 
   // ---------------- Option: the issuer rule "one signed transition per pre-state". ----------------

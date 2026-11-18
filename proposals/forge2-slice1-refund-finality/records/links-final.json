@@ -1,15 +1,16 @@
 {
- "base_commit": "f632921194684640d1a4500a313ffbd335612b0a",
+ "base_commit": "9af026df53f3965e946c30b10ccfd8094bda0d39",
  "checked_files_sha256": {
-  "FORGE_MASTER_IDEA.md": "1796c730287a93bf2441c2fcb5820223779d7faf87949f56f7f1774f5826aaf9",
-  "ROADMAP.md": "85b319a35e4593c4988b203a829d36db69cca0f603589b3b9b04ce6ea2792c7c",
+  "FORGE_MASTER_IDEA.md": "43393a3dcd89a0510b434e90b5ea31373ccac0274887b2aea304a221fee5c951",
+  "ROADMAP.md": "f8575ad3ce824ed8b86bd46be0963985dc6074473df0c1fe6a6be990578155c6",
   "impl/RefundFinality.dfy": "2326934559f467883be97bd644da6a02fda60c0fac86ef2b3da6a8fa0071d41c",
-  "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md": "a7161e8a26290874692e1b6dee41db675dd3b352e6c4364c5fc4a60c4f9b023a",
-  "proposals/forge2-slice1-refund-finality/REPORT.md": "0f5f10843c461091d37a2a082cdea0db157435aed75a1b1d8259b2449685fb7a",
-  "proposals/forge2-slice1-refund-finality/REVIEW.md": "18afd91fcd526f3f15e9768ed484e12f7f7ddeceb4ade90fc180ffbedc51f8de",
-  "proposals/forge2-slice1-refund-finality/records/evidence.json": "fffdd3435c38864f06377d0b864e58a49d9432b7801481b791584f8b0737060c",
-  "proposals/forge2-slice1-refund-finality/records/regression.json": "64781eb2d93601d20e9ffe47dcd8301d5ac097e9950cf97bbb781e91dfe7409e",
-  "proposals/forge2-slice1-refund-finality/records/removed-check-copies.json": "75e4557838cb3c8c39ba43289e7104189a3950d0f5e4d62184dbe0e96db09a2c",
+  "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md": "b14d912f5f77417f66c9f182b2709773fa54589d79229c9cc0c2f9b417da7391",
+  "proposals/forge2-slice1-refund-finality/REPORT.md": "f0c1941dbbb32c2a7470ab1d37681f2d8658325e8ee34cafd01d9de5712b265c",
+  "proposals/forge2-slice1-refund-finality/REVIEW.md": "b9462bc6df51329a1544abeb0cf9cd3e3eb70257deebbe6dcdaf76e433358c4d",
+  "proposals/forge2-slice1-refund-finality/records/evidence.json": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1",
+  "proposals/forge2-slice1-refund-finality/records/long-line-probe.json": "4a07dc16df5703ca7a9331aad8bc466ebe3417803ad7e3f3fe6d9e67c0362f99",
+  "proposals/forge2-slice1-refund-finality/records/regression.json": "a2c27c7ac2673753b8a7e82e5ae7287a3f9460fa7b3a4c340be7ccfd0e1ae9b4",
+  "proposals/forge2-slice1-refund-finality/records/removed-check-copies.json": "70c0ec29ed004807d2f55428418671fc165c35bb868113b4e0948fdd1b62b371",
   "proposals/forge2-slice1-refund-finality/run_regression.py": "9a2b885f55d6fa8e40e7ef3c1fe9e8d4fee306694127ea0dc9ae729e02d48c91",
   "scripts/exit_slice1.py": "4cea7b69a4d74b61de7234c953c0d681bb8d5530acf84df4c908500b8b1680b9",
   "tests/refund-finality/Bindings.dfy": "03ed3e77d43973f176caa27467d2c94eba0d0fe6170e48ea8cd198fd81cea136",
@@ -25,13 +26,13 @@
   "tests/refund-finality/fixtures/CoreSkipsIntentCheck.dfy": "44d22b376844429a10c788b71782c60b3d33692f55b8c6b7065c5b30a1429121",
   "tests/refund-finality/fixtures/CoreWrongHash.dfy": "3acca5f7427d4e6af00288244316782ba70fa9474dc4fa84e1a71c6fe2512a7c",
   "tests/refund-finality/issuer_exports_probe.ts": "3db2b52c303a9ff37e56ba4b270f6abe85cb9fbeffbb30c591f6359d58f2e0bf",
-  "tests/refund-finality/suite.ts": "58f4aff1af2a329c957bbbb7068a181d22b74ca8f52ffab60d0cd479b3ce6f62",
-  "ts/refund-finality/dispatcher.ts": "ff4d9b8d7db2bb163bfb73475dc8f1d0c8cf4105aca3667d68b64f82da24f9ec",
+  "tests/refund-finality/suite.ts": "babbb3d155cd5a979c94aa3c099c138b49f130ea9cbb642c74400877abb13a9a",
+  "ts/refund-finality/dispatcher.ts": "5511cf68ba595da535324d1170dcec59d2ce368bb3efdd0470f3f6e0924ee605",
   "ts/refund-finality/encoding.ts": "f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7",
-  "ts/refund-finality/minter.ts": "7ff39c564168bd23e14df8653a863718ec90e1174fc78b876b047aec35c226a7",
-  "ts/refund-finality/proposer.ts": "bce908e530b0a8e16c914617a332ac9339cdc3b9c6fc13fd3f614a081e5e34cd",
+  "ts/refund-finality/minter.ts": "714824d83fd660b4fa69d3bc8993a5b08cf79b396507cb026ce6563ef887e1df",
+  "ts/refund-finality/proposer.ts": "9b0be14cb6f8d711e9f7fa8c26cce44599ca082396adaf7e3eab27da3f57168f",
   "ts/refund-finality/sink.ts": "0690a4269a38f49a9b053ab9a97a55d917b4a3758f39cbecd2edf91a78484de7",
-  "unsure.md": "7cb3f1b0b4b64f70dd0ba228276ec792e51b07369aad97042ce29362dadfce40"
+  "unsure.md": "2a58f0efbaeb556efdf05189471efcf812432afd1fdb92d3541f705b01810a77"
  },
  "end_to_end": false,
  "links_without_target": {
@@ -208,5 +209,5 @@
    "exit_code": 1
   }
  ],
- "what": "Slice 1: frozen-gate check and link checks on the final documents, in the scratch clone (scratch commits only; not in the owner's repository)"
+ "what": "Slice 1, last pass: frozen-gate check and link checks on the final documents, in the scratch clone (scratch commits only; not in the owner's repository)"
 }

@@ -9,10 +9,13 @@ Task text: owner text 6 in `proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md`
 on branch `backup/forge-local-2026-11-11`. The file that the owner named
 for the task held only a shell command; the owner approved the plan made
 from text 6 with the words "yes go ahead" (`unsure.md` U443). The
-closeout rule is text 7 in [OWNER_TEXTS.md](OWNER_TEXTS.md). Text 7 asks
-for a pull request. The session's permission system declined the push:
-the work is one local commit; push and pull request are NOT DONE and
-wait for the owner's own word (`unsure.md` U446).
+closeout rule is text 7 in [OWNER_TEXTS.md](OWNER_TEXTS.md). The
+session's permission system declined a first push (`unsure.md` U446).
+On text 8 the commit `9af026df` was pushed and pull request 45 was
+opened (`unsure.md` U447). On text 9 one last pass repaired the two
+findings of the repair check; that pass had no review (`unsure.md`
+U448). This report describes the state after the last pass. Pull
+request 45 is NOT merged.
 
 ## 1. The three parts
 
@@ -124,8 +127,8 @@ the sink answers with the expected reason and the effects are 0.
 | --- | --- | --- |
 | `dafny build impl/RefundFinality.dfy --target js` with the gate options | 0 | module SHA-256 `e6d5f5e5…`; byte-identical in every run |
 | `node node_modules/typescript/bin/tsc --noEmit` | 0 | all TypeScript of the repository, with the new files |
-| `node --import tsx tests/refund-finality/suite.ts` (final files) | 0 | 113 rows, 0 failed |
-| scenario `--case sink-controls` | 0 | attempt 2 (final files). Attempt 1 exit 0 was the first version of the code (94 rows); see section 5 |
+| `node --import tsx tests/refund-finality/suite.ts` (final files) | 0 | 115 rows, 0 failed |
+| scenario `--case sink-controls` | 0 | attempt 3 (final files). Attempt 1 (94 rows) and attempt 2 (113 rows) also exit 0; they were earlier versions of the code; see section 5 |
 
 | Group | Rows | What the rows show (all passed) |
 | --- | --- | --- |
@@ -133,17 +136,18 @@ the sink answers with the expected reason and the effects are 0.
 | (b) stale pre-state hash | 8 | a signed token for an old state, and for a state that the caller invented: rejected, 0 effects. Race: 6 valid tokens for one pre-state from 6 processes at one common start time: exactly 1 commits |
 | (c) duplicate request id | 13 | replay: 0 effects. A new signed token for the current state with a settled request id: rejected. Amount 0 leaves the state hash equal; only the request-id check stops its replay. Race: one token from 6 processes: exactly 1 commit |
 | (d) valid transition | 9 | exactly one effect each: state = post-state, 1 settled row, 1 outbox row, 1 outbound effect with the checked intent; five in order, sum = original − remaining |
-| issuer | 28 | 217 (pre-state, request) pairs against a test oracle: 0 disagreements (35 signed, 182 refused by the core). 10 wrong candidates for an eligible request refused by the core. 14 malformed messages refused. The module exports nothing. A message with a deeply nested id is refused and the issuer keeps running |
-| dispatcher | 10 | raw database changes (row without token, changed amount, attacker-signed token, signed token for an earlier state, copy under a new request id, re-inserted rows): 0 outbound effects. Broken ledger: stops. Crash between ledger line and effect: never sent twice. 4 runs at one common start time: each refund sent once |
+| issuer | 29 | 217 (pre-state, request) pairs against a test oracle: 0 disagreements (35 signed, 182 refused by the core). 10 wrong candidates for an eligible request refused by the core. 14 malformed messages refused. The module exports nothing. A message with a deeply nested id is refused and the issuer keeps running. A line of 500,000 bytes is refused before it ends, once, and the issuer answers the next request |
+| dispatcher | 11 | raw database changes (row without token, changed amount, attacker-signed token, signed token for an earlier state, copy under a new request id, re-inserted rows): 0 outbound effects. Broken ledger: stops. Crash between ledger line and effect: never sent twice. 4 runs at one common start time: each refund sent once. 6 runs through three names of one ledger file: each refund sent once |
 | option, setup | 3 | `single-use on` refuses a second transition for one pre-state; the issuer reports the ids that the operator computes |
 
 Totals of the final run: 48 rejection attempts in (a), (b), (c); 0
 effects. The column `uncheckedSinkEffects` of the report says only that
 an attempt asks for an effect; it describes the input, not the sink.
 
-That the rows can fail: eight copies of the glue with one check removed
-each (one-off, scratch folder). The suite ended with a non-zero exit for
-all eight: [records/removed-check-copies.json](records/removed-check-copies.json).
+That the rows can fail: ten copies of the glue with one check removed
+each (one-off, scratch folder, final suite). The suite ended with a
+non-zero exit in every run for all ten:
+[records/removed-check-copies.json](records/removed-check-copies.json).
 
 ## 5. Defects found during the work
 
@@ -157,10 +161,23 @@ all eight: [records/removed-check-copies.json](records/removed-check-copies.json
 | 6 | review | The two race rows could not fail: the processes did not overlap | reviewer: both passed on a sink with no transaction | common start time; against a sink with no transaction the rows now fail in 3 of 3 runs (5, 6 and 2 commits for one pre-state) |
 | 7 | build agent | The suite could end with exit 0 and no report when the issuer process died | seen with a removed-check copy | exit code 2 until the last line; a dead issuer answers waiting requests |
 
-The repairs 2 to 7 were made in one pass after the one review. No second
-review ran. The full review text and the disposition of every finding:
-[REVIEW.md](REVIEW.md). Not repaired (LOW, by the owner's rule): F5 to
-F8; they are limits 12 to 15 below.
+The repairs 2 to 7 were made in one pass after the one review. The full
+review text and the disposition of every finding: [REVIEW.md](REVIEW.md).
+Not repaired (LOW, by the owner's rule): F5 to F8; they are limits 12
+to 15 below.
+
+After the push, a second fresh-context agent checked the four repaired
+places only (owner text 8). Result: the repairs of F1, F2 and F3 held in
+every probe; the repair of F4 held for the confirmed message. FAIL-OPEN
+0, HIGH 0, MEDIUM 1, LOW 1. On owner text 9 the build agent repaired
+both findings in one last pass. THAT PASS HAD NO REVIEW.
+
+| # | Finding of the repair check | Observed | Repair in the last pass | Evidence |
+| --- | --- | --- | --- | --- |
+| 8 | MEDIUM: a line of more than about 537 million characters with no end | the issuer process ended with exit code 1 inside Node's line reader, before the issuer's own length check; the key was lost. No token signed, no effect | the issuer cuts lines out of the raw bytes and holds at most 65,536 bytes of one line; a longer line is answered once and dropped up to its end | one-off probe with 600 MB ([records/long-line-probe.json](records/long-line-probe.json)): issuer of `9af026df` exit code 1; repaired issuer still running and the next request signed. New suite row |
+| 9 | LOW: the dispatcher lock followed the path text | one ledger file under two names: every refund sent twice (24 effects where 12 are correct) | the lock is named after the resolved path of the ledger file | new suite row with three names of one ledger file: each refund sent once |
+
+Text and disposition: [REVIEW.md](REVIEW.md) sections 3 and 4.
 
 ## 6. What is not approved intent
 
@@ -186,24 +203,25 @@ twice in fresh folders and compares the two bundles byte for byte.
 
 | Run | Actual exit | Bundle SHA-256 |
 | --- | --- | --- |
-| working tree, final files | 0 | `fffdd3435c38864f06377d0b864e58a49d9432b7801481b791584f8b0737060c` (two runs, byte-identical) |
-| scratch clone (section 8) | 0 | `fffdd3435c38864f06377d0b864e58a49d9432b7801481b791584f8b0737060c (equal)` |
+| working tree, final files | 0 | `c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1` (two runs, byte-identical) |
+| scratch clone (section 8) | 0 | `c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1 (equal)` |
 
 The bundle is [records/evidence.json](records/evidence.json). It holds
 no time, no key, no signature and no absolute path. It names its own
 class: `gate_accepted: false`, `policy: null`, method `source_proof`
 for P1 to P4 and `unit_tested` for the four sink claims. Earlier
-bundles of this session (`900dbaf4…`, `d660b92b…`) belong to earlier
-file versions and are replaced.
+bundles of this session (`900dbaf4…`, `d660b92b…`, and `fffdd343…` of
+commit `9af026df`) belong to earlier file versions and are replaced.
 
 ## 8. Regression on a scratch clone (control e)
 
 `run_regression.py` makes a throwaway clone of the present commit,
-copies the uncommitted files of this slice into it, and commits them
-THERE so that the revision-based checks see them. That commit is not in
-the owner's repository.
+copies the uncommitted files into it, and commits them THERE so that
+the revision-based checks see them. That commit is not in the owner's
+repository. The table is the run for the last pass: a clone of
+`9af026df` plus the uncommitted files of the last pass.
 
-| Check (scratch clone of `f6329211` plus the files of this slice) | Actual exit | Result |
+| Check (scratch clone of `9af026df` plus the files of the last pass) | Actual exit | Result |
 | --- | --- | --- |
 | 28 Stage EXIT cases: Stage 1 (5), 2 (5), 3 (6), 5 (2), 6 (1), 8 (3), 4 (3), 11 (3) | 0 each | 28 of 28 |
 | `check_frozen_pr_gate.py HEAD` | 0 | the eight PR-gate modules equal the recorded digests |
@@ -212,24 +230,26 @@ the owner's repository.
 | `scripts/exit_slice1.py --case evidence` in the clone | 0 | bundle SHA-256 equal to the working tree's |
 
 Record: [records/regression.json](records/regression.json) (path-free).
-An earlier run of the same script on the 97-row version also gave 28 of
-28 and an equal bundle digest (`900dbaf4…`); that version is replaced.
+Two earlier runs of the same script gave the same results for their
+versions: the 97-row version (bundle `900dbaf4…`) and the version of
+`9af026df` (clone of `f6329211` plus the slice; bundle `fffdd343…`).
+Both versions are replaced.
 NOT RUN: Stage 7 (Docker, about 3.3 hours), Stage 9 (deferred), Stage
 10 (its EXIT script is not on `main`). The stage runs changed five
 record paths in the clone, as in earlier full checks: Stage 5 rewrites
 its two records with the local tool path, and Stage 8 adds three
 attempt folders.
 
-After this run only document files of this slice changed (this report,
-`ROADMAP.md`, `unsure.md`, and the two records of this section). No
-file of the bundle's source manifest changed. The frozen-gate check and
+After this run only document files changed (this report, `ROADMAP.md`,
+`unsure.md`, and the two records of this section). No file of the
+bundle's source manifest changed. The frozen-gate check and
 the link checks ran again on the final documents; their result is
 `records/links-final.json`.
 
 ## 9. Hosted gate
 
-NOT RUN: no pull request exists. Expected result of `gate/pr_check.py`
-for a pull request with these files: exit 3
+Expected result of `gate/pr_check.py` for a pull request with these
+files: exit 3
 (UNSUPPORTED). Reason: every file of this slice is new or a document,
 and no obligation in the frozen `gate/obligations.py` lists it
 (`UNCOVERED_CHANGE`). The files that the obligations `refund-proof` and
@@ -237,8 +257,15 @@ and no obligation in the frozen `gate/obligations.py` lists it
 obligation and a new ratification record. That is a separate exact-diff
 proposal for the owner. It is not written.
 
-An actual hosted result is to be recorded in `unsure.md` and in the
-Slice 1 section of `ROADMAP.md` when it exists.
+ACTUAL for the first head: pull request 45, head `9af026df`, hosted run
+44358528370 (Linux profile): `gate/pr_check.py` exit code 3, outcome
+UNSUPPORTED. The log says that every obligation that ran holds and
+lists 32 coverage findings, one `UNCOVERED_CHANGE` for each file of
+this slice. Job `verify`: failure (exit 3); job `report`: success. This
+is the expected result. It is not a VERIFIED result.
+
+For the head with the last pass (the commit that holds this report):
+NOT RUN when this report was committed. Expected: exit 3 again.
 
 ## 10. Limits
 
@@ -271,19 +298,25 @@ Slice 1 section of `ROADMAP.md` when it exists.
 9. A crash between the dispatcher's ledger line and the effect loses
    that effect. It is never sent twice. A process that dies inside a run
    also leaves the lock file; every later run stops. A person must
-   reconcile the last ledger line and remove the lock file.
+   reconcile the last ledger line and remove the lock file. An effect
+   callback that throws loses that effect too, and no lock stays: only
+   the thrown error marks it. The lock is named after the resolved path
+   of the ledger file; a hard link to the ledger file is not covered.
 10. The key is in the memory of a process of the same user. No hardware
     key store. A new issuer process has a new key; tokens of the old key
     that are committed but not dispatched are then refused by a
     dispatcher that pins the new key. There is no path over a key
-    change. Other ways to stop the issuer process (memory, a very long
-    line) were not searched.
+    change. The issuer holds at most 65,536 bytes of one line (section
+    5, row 8). Closing the issuer's input ends it. Memory growth was not
+    measured. Other ways to stop the issuer process were not searched.
 11. Code that runs inside the sink process is in the trusted base. The
     sink reads no property of a caller's value, but code that is loaded
     into its process can replace any function it uses.
-12. (review F5) U+2028 and U+2029 in an id break the line protocol
-    between the proposer side and the issuer. The reviewer could not
-    inject a valid line. Availability of the untrusted side only.
+12. (review F5) An issuer answer that holds U+2028 or U+2029 (in a
+    signed id) is cut by the line reader of the proposer-side client.
+    The reviewer could not inject a valid line. Availability of the
+    untrusted side only. Since the last pass the issuer itself cuts
+    lines only at the byte 0x0A.
 13. (review F7) A missing dispatcher ledger file is read as an empty
     ledger: a lost ledger sends everything again.
 14. (review F8) `Sink.init` is a trusted call and does not copy its
@@ -292,14 +325,14 @@ Slice 1 section of `ROADMAP.md` when it exists.
     dispatcher's read connection; a message over the length limit; more
     of `single-use on`.
 16. All tests are finite. The winner of a race is not deterministic;
-    the record holds only the counts. The removed-check copies are 8
+    the record holds only the counts. The removed-check copies are 10
     cases, not a mutation score. The reviewer's own count for the first
     version was 29 of 47 copies detected.
+17. The last pass (section 5, rows 8 and 9) had no review.
 
 ## 11. Open decisions for the owner
 
-1. Push and pull request (the owner's own word is necessary), then the
-   merge (the agent does not merge).
+1. The merge of pull request 45 (the agent does not merge).
 2. Whether the three rules of section 6 become approved intent (`spec/`
    and `policy/` proposal).
 3. Whether a gate obligation for the core is wanted (proposal for the

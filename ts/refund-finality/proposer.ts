@@ -54,5 +54,7 @@ export class MinterClient {
   mint(pre: unknown, transition: unknown): Promise<Minted> { return this.send({ pre, transition }); }
   // Writes one line as it is.
   raw(line: string): void { this.child.stdin.write(line + "\n"); }
+  // Writes text with no line end.
+  write(text: string): void { this.child.stdin.write(text); }
   stop(): void { this.child.removeAllListeners("exit"); this.child.stdin.end(); this.child.kill(); }
 }
