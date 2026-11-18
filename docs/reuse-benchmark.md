@@ -17,9 +17,9 @@ or dependency checker decides correctness.
 
 | Condition | Pairs | Verifier process seconds, including baseline | Checked members, including failures | Reused members | New solver resources |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| cold | 25 | 271.681 | 1100 | 0 | 342198540 |
-| shared_files | 25 | 265.038 | 1100 | 0 | 342198540 |
-| dependency_graph | 25 | 172.143 | 590 | 510 | 224568970 |
+| cold | 25 | 264.277 | 1100 | 0 | 342198540 |
+| shared_files | 25 | 263.325 | 1100 | 0 | 342198540 |
+| dependency_graph | 25 | 171.525 | 590 | 510 | 224568970 |
 
 The table includes the deliberately invalid helper and reject-all controls. Rejected
 candidates do not produce accepted artifacts. Member counts differ from assertion-batch
@@ -30,11 +30,11 @@ exclude them from new solver work. Process times are actual outer verifier durat
 
 | Case | Cold | Shared files | Dependency graph |
 | --- | ---: | ---: | ---: |
-| unchanged | 10.882 | 11.129 | 6.008 |
-| booking_body | 11.008 | 10.953 | 9.037 |
-| helper_body | 11.238 | 11.048 | 6.055 |
-| broken_helper | 10.973 | 10.852 | 6.117 |
-| reject_all | 9.028 | 8.992 | 6.956 |
+| unchanged | 10.987 | 11.004 | 6.074 |
+| booking_body | 11.013 | 10.985 | 8.791 |
+| helper_body | 10.882 | 10.833 | 6.038 |
+| broken_helper | 10.971 | 10.956 | 6.085 |
+| reject_all | 8.902 | 8.811 | 7.076 |
 
 The one-file condition concatenates the exact approved declarations and implementation
 bodies after removing only their fixed include lines. The shared condition retains their
