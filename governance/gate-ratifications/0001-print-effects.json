@@ -1,0 +1,48 @@
+{
+ "controls": [
+  {
+   "expect": "rejected",
+   "path": "bugs/print_effect.dfy",
+   "sha256": "e8ed05b5c508ecd261a6db51435a6ee237bc6caab470ce4d6be0bb4c85a9219d"
+  },
+  {
+   "expect": "rejected",
+   "path": "bugs/print_effect_marked.dfy",
+   "sha256": "a0fc6c64ac91cbe12c2d4d3978b0409eff6a0d1837d0ee9cff45a012d4a50cb3"
+  }
+ ],
+ "decision": "ratified_as_written",
+ "effective": "Only when this file and the proposal text are on main by the owner's merge. On a branch it authorizes nothing.",
+ "end_to_end": false,
+ "files": {
+  "gate/ContractBinding.dfy": {
+   "new_sha256": "575dca825c948f866fde2d1a41d081801e4c6551f6caf3cc34dc68f4ca9d38af",
+   "old_sha256": "da994efac59d9a4a7fd384c710f657002891298cf61beb459a98b85b1d32d4cc"
+  },
+  "gate/backends/dafny.py": {
+   "new_sha256": "a6e78cdcff7b79f9511c741de7d3c4c0c14239897279f29256eaab858829e3f6",
+   "old_sha256": "11b922b0da01ee9a273035ee34f91c6fd8b53305563682bfb87401eef783df0f"
+  },
+  "gate/refund.py": {
+   "new_sha256": "bafc1b72d07059f03a7afcba08940ad54ecf5fac01828ea55945cce438c21506",
+   "old_sha256": "9d91b7543c06dee42a46b9b3f1863e35bbf8bcbdea8088b4d10ee020d9d43871"
+  },
+  "spec/refund/spec.lock": {
+   "new_sha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+   "old_sha256": "993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57"
+  },
+  "toolchain/linux-pins.json": {
+   "new_sha256": "dbe9335f60f089abdbfcfee87f654a73aeae42f5cb2f3c3a5631ae1e6e9ae92b",
+   "old_sha256": "11128aa46f89391c39e6927f71dd1ba5ff8af1495ea0ad42253f7263294be819"
+  },
+  "toolchain/pins.json": {
+   "new_sha256": "4b612d8845e6b00c24be3d02c51557b1d2bd01a1db943ac6b87a0377ad5b7fbe",
+   "old_sha256": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c"
+  }
+ },
+ "id": "0001-print-effects",
+ "proposal": "proposals/forge2-pillar1-print-effects/v3/PROPOSAL-V3.md",
+ "proposal_sha256": "a686092c2da23bc5358e0c562eb4f8b74d033a80a8233d1509f67e270aff6676",
+ "tier": 0,
+ "trusted_origin": "Maintainer-controlled base checkout; candidate-owned metadata is not authorization"
+}
