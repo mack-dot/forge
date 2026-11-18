@@ -38,7 +38,7 @@ print effects `f54e2507`, its records `53534f64`.
 | `run_bootstrap_gate_cases.py` attempt-0002: commit `53534f64` after the bootstrap |3|UNSUPPORTED with 8 of 8 floor controls, as expected |
 | `exit_stage_7.py --case own-proof`; `--case upstream-replay`; `--case invalid-proof` (scratch worktree `fd8b9608`, Docker) |0; 0; 0|attempts 2, 4, 2; Stage 7 reads none of the files that version 3 changes |
 | `rebuild.py 10800` (M1 tools) |stopped by budget|45 of 71 compiler-proof theories; no M1 replay possible yet |
-| `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |NOT FINISHED|started 2026-11-18 02:13Z on mains power; result in a later entry |
+| `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |0|ended 2026-11-18 03:57Z, "all listed commands finished", 6,238 s of 14,400 s used: compiler proofs exit 0 (71 of 71 theories, 3,804 s); `cv_translator` exit 0 (2,434 s, `cake_compile_heap` built); ARMv8 step heap present. This is a tool build. The M1 chain replay and the `fs` runs are NOT STARTED; no M1 theorem is claimed |
 | Stage 9, six EXIT cases |NOT RUN|deferred; after the bootstrap merge two lock entries are stale |
 | after the owner's merge: `check_frozen_pr_gate.py origin/main` |0|`main` = `96d2ec77`, tree equal to the record commit; the eight PR-gate modules are FROZEN |
 | `exit_stage_6.py --case report` at `96d2ec77`; clean clone with the records `1c21aa85` |1; 0|pull request 40 repairs the Stage 6 record |

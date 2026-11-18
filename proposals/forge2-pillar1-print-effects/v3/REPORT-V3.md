@@ -158,7 +158,7 @@ a row says "hosted". Final commits on `main` at `4143f4b2`: A
 | Stage 7 (scratch worktree, Docker): `own-proof` | 0 | attempt 2, 2,285 s |
 | Stage 7: `upstream-replay`; `invalid-proof` | 0; 0 | replay attempt 4 (15,571 s wall-clock; the Mac slept about two hours inside that time); invalid-proof attempt 2, 168 s |
 | M1 build window `rebuild.py 10800` | stopped by budget | 45 of 71 compiler-proof theories built; the proof build was killed at the deadline; no M1 replay possible yet |
-| M1 build window `rebuild.py 14400 round4-m1-build-20261118` | NOT FINISHED | started 2026-11-18 02:13Z on mains power (U439) |
+| M1 build window `rebuild.py 14400 round4-m1-build-20261118` | 0 | ended 03:57Z after 6,238 s: 71 of 71 compiler-proof theories, `cake_compile_heap` and the ARMv8 step heap are built; the M1 chain replay is NOT STARTED |
 | Stage 9, six EXIT cases | NOT RUN | deferred; after action 1 two lock entries are stale |
 
 Third independent review (`REVIEW-3.md`): 0 fail-opens; 0 HIGH or
