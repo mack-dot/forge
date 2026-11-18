@@ -166,3 +166,54 @@ PR 41 is now merged on origin/main, and the Mac is confirmed on mains power and 
 
 3. Do NOT start Step B (`0001-print-effects`) or Stage 9 while the M1 chain replay runs so HOL/CakeML has full machine resources; once Q5 passes and the standalone M1 replay job is running cleanly, report the Q5 EXIT table + M1 PID/log path and monitor to completion.
 ```
+
+## Text 5 (2026-11-18 about 14:35Z; before it the owner wrote "merge them", "i approve", and "alright bypassed and kmerged" for pull request 44)
+
+The prompt inside this text is for a NEW session. It was not executed in
+the closeout session. One line of it lost words in the paste ("if so,
+stoed paths"); text 1 holds the full rules.
+
+```text
+ound 4 and Step B (F1.2) are officially in the books—and look at the payoff on a clean clone of main:
+28 of 28 Stage EXIT checks passing (0 across Stages 1–6, 8, and 11).
+The Stage 5 print mutant survivor is officially dead on main (survived: 2 → 1, effect_rejected: 1; both planted print bugs deterministically rejected 1; 1).
+8 PR-gate modules remain FROZEN, 0001-print-effects.json is cleanly consumed with exact SHA-256 matches across all 6 files, and PR #44 syncs FORGE_MASTER_IDEA.md (F1.2) and ROADMAP.md.
+30-Second Pre-Flight Before Starting Slice 1
+Close out those 2 shells still running in your old Round 4 session (jobs / exit cleanly) so no leftover background process hogs CPU or Docker, then exit that session.
+git checkout main && git pull origin main so your working tree starts right on merged PR #44.
+Open a brand-new agent session (100% clean context window—zero Round 4 history).
+Fresh-Session Prompt for Slice 1 (Proof-Carrying Finality on Refund)
+(Note: Your agent also saved yesterday’s Master Mission prompt as text 1 in proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md—this version below is synced to today’s exact post-PR-#44 main state so it already knows F1.2 is merged, 0001 is used up, M1 stays open per M1R-1, and Stage 9’s 8 stale lock entries stay deferred.)
+Text
+Start from a clean checkout of origin/main (post-PR 44). Read FORGE_MASTER_IDEA.md, proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md (text 1), AGENTS.md, and ROADMAP.md first.
+
+BASELINE & HARD RULES
+- State on main: Round 4 and F1.2 (Step B print-effects, PR 43) are merged; record 0001 is consumed; M1 record (PR 42) and closeout docs (PR 44) are merged.
+- Keep `CURRENT: none` (executing FORGE_MASTER_IDEA.md work items, not unauthorized stages); Stage 9 stays deferred (its 8 stale lock entries stay untouched); M1 stays open per M1R-1; Stage 12 stays unauthorized; `end_to_end=false`.
+- Freeze `gate/`: Do NOT touch the 8 frozen PR-gate modules or any ratifiable gate module unless a hard blocker is proved—if so, stoed paths (`spec/`, `spec.lock`, `policy/`, `governance/gate-ratifications/`) change ONLY via isolated exact-diff proposals for my review and merge; never use administrator bypass.
+- Epistemic separation: A test count is NEVER a proof. Keep `source_proof`, `runtime_certificate_checked`, `tested_against_proved_model`, `unit_tested`, and `floor_controls` strictly separate.
+- Single-loop discipline: Keep design, code, and solver repair in ONE main loop. Use background subagents ONLY for (a) long-running solver/test suites and (b) ONE fresh-context adversarial review on finished unproved sink/adapter code before opening a PR.
+
+ACTIVE TARGET: SLICE 1 — Pillar 2: Proof-Carrying Finality on the Refund Boundary
+1. Architecture:
+   - Untrusted proposer computes a candidate refund transition.
+   - A very small proved checker (compiled/extracted directly from verified source—no parallel handwritten business-rule copy in unproved glue, and zero hidden effects under F1.2) checks `(pre_state, transition)` against the ratified refund spec and issues a capability token bound to `pre_state_hash` and `request_id`.
+   - The store / outbound refund API sink accepts an effect IF AND ONLY IF given `(valid_token, matching pre_state_hash, fresh_request_id)`.
+
+2. Required EXIT Evidence for Slice 1:
+   - Universal `source_proof` on the checker (safety, exact acceptance of valid transitions, zero refund intent on rejection/fallback, clean under F1.2 print-effect check).
+   - Deterministic sink rejection controls + 1 fresh-context adversarial review verifying:
+     (a) direct sink call / forged or missing token fails with 0 effects,
+     (b) stale `pre_state_hash` (TOCTOU / concurrent state mutation) fails with 0 effects,
+     (c) duplicate `request_id` (replay / double-dispatch) fails with 0 effects,
+     (d) valid proposal executes once and produces a reproducible evidence bundle, and
+     (e) clean-clone `main` regression suite (the 28 Stage EXIT checks + frozen PR-gate check + link check) stays 100% green.
+
+FIRST STEP (PAUSE BEFORE CODING):
+Inspect Stage 8's current `spec/`, `impl/`, and refund boundary files alongside FORGE_MASTER_IDEA.md's Pillar 2 work-item IDs. Output a concise 12-line architecture & TCB plan stating:
+1. Which exact FORGE_MASTER_IDEA.md work-item row(s) Slice 1 targets,
+2. Whether Slice 1 works entirely under the existing ratified refund `spec.lock` (0 protected-path changes, targeting a hosted `exit 0 VERIFIED` PR!) OR requires an isolated `spec/` proposal first, and
+3. Exact files to create/modify for the extracted proved checker, capability token binding, and effect sink.
+Wait for my go-ahead on that 12-line plan before writing implementation files.
+Notice item 2 in that FIRST STEP check: if Slice 1 can keep existing ratified spec.lock untouched (putting the proved checker + sink inside impl/ obligations), its PR can also give you your first genuine hosted exit 0 (VERIFIED) PR badge on the new gate without needing any admin override.
+```
