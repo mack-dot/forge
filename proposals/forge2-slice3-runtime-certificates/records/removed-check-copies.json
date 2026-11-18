@@ -1,0 +1,336 @@
+{
+ "copies": [
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 10,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | a | a token for the same body, signed with another key | committed; effects 3",
+    "FAIL | a | the issued token with another allocation (request 0 in place of requests 1 and 2) (signature kept) | rejected: request id is already settled with another token; effects 0",
+    "FAIL | a | the issued token with a larger value (signature kept) | rejected: request id is already settled with another token; effects 0",
+    "FAIL | a | the issued token with more capacity left (signature kept) | rejected: request id is already settled with another token; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no signature check"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 2,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | a | the issued token with another checker id (signature kept) | rejected: signature does not verify; effects 0",
+    "FAIL | a | an untrusted token with another checker id, signed with another key | rejected: signature does not verify; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no pin of the checker id"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | a | the issued token with another specification id (signature kept) | rejected: signature does not verify; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no pin of the specification id"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 3,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | e | a token with the gap 2500 at a sink with the largest gap 2000 | committed; effects 3",
+    "FAIL | e | a token with the gap 2500 at a sink with the largest gap 0 | committed; effects 3",
+    "FAIL | e | a token with the gap 0 at a sink with the largest gap 0 | rejected: request id is already settled with another token; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no largest-gap check"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 3,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | c | the same token, use 2 | rejected: stored board is not the token's pre-state; effects 0",
+    "FAIL | c | the same token, use 3 | rejected: stored board is not the token's pre-state; effects 0",
+    "FAIL | c | another valid token (another allocation) for the settled request id | rejected: stored board is not the token's pre-state; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no check that the request id is fresh"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | b | a token for a batch with other values than the stored batch of that request id | committed; effects 3"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no comparison of the batch hash"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 6,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | b | second token for the board as it was (stale pre-state hash) | committed; effects 2",
+    "FAIL | b | a new token for the second batch on the present board | rejected: request id is already settled with another token; effects 0; remaining capacity 1, 1, 2",
+    "FAIL | b | a third batch on the board with no capacity left in its slots: the same allocation | TOKEN",
+    "FAIL | b | audit of the board after two commits (public key only) | row 2: chain"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: no comparison of the pre-state hash"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 3,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | a | the issued token text with a space added | committed; effects 3",
+    "FAIL | a | the issued token as JSON with other key order | rejected: request id is already settled with another token; effects 0",
+    "FAIL | a | after all those attempts: the issued token itself | rejected: request id is already settled with another token; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: a token text that is not canonical is taken"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 3,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | a | in place of a token: no value | THREW: TypeError: Cannot read properties of undefined (reading 'length'); effects 0",
+    "FAIL | a | in place of a token: null | THREW: TypeError: Cannot read properties of null (reading 'length'); effects 0",
+    "FAIL | a | an object whose conversion to text gives the issued token text | rejected: token text is not canonical; the caller's conversion code RAN; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: a value that is not a text is taken"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/encoding.ts",
+   "first_failed_rows": [
+    "FAIL | a | the issued token with another domain (signature kept) | rejected: signature does not verify; effects 0"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "encoding: no check of the token domain"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 16,
+   "file": "ts/booking-certificate/issuer.ts",
+   "first_failed_rows": [
+    "FAIL | issuer | an overbooked allocation, largest gap | TOKEN",
+    "FAIL | issuer | a request booked twice | TOKEN",
+    "FAIL | issuer | the optimum with slot prices that are too small (forged certificate) | TOKEN",
+    "FAIL | issuer | a negative slot price | TOKEN"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "issuer: signs a well-shaped proposal that the core refuses"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 13,
+   "file": "ts/booking-certificate/issuer.ts",
+   "first_failed_rows": [
+    "FAIL | issuer | an allocation entry with a decimal point | no token: token text check",
+    "FAIL | issuer | an allocation entry with a leading zero | no token: token text check",
+    "FAIL | issuer | an allocation entry with a plus sign | no token: token text check",
+    "FAIL | issuer | an allocation entry with an exponent | no token: token text check"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "issuer: no shape check of the proposal"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/issuer.ts",
+   "first_failed_rows": [
+    "FAIL | issuer | a message id that is not a whole number; a line of 70 kB; 70 kB with a late line end; then a good message | 3 answers with id null: message id | message shape | Unexpected token 'B', \"BBBBBBBBBB\"... is not valid JS"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "issuer: no byte limit for a line"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/issuer.ts",
+   "first_failed_rows": [
+    "FAIL | issuer | a message with a token of the caller in it | TOKEN"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "issuer: the keys of a message are not checked"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/guest.ts",
+   "first_failed_rows": [
+    "FAIL | runner | an optimizer that answers: oversize | A LINE WAS TAKEN"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "runner: no byte limit for the line of an optimizer"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 2,
+   "file": "ts/booking-certificate/guest.ts",
+   "first_failed_rows": [
+    "FAIL | runner | an optimizer that answers: silent | no line taken: no line",
+    "FAIL | runner | an optimizer that starts a child process and does not answer | no line taken: no line; no process of the optimizer is left"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "runner: no time limit for an optimizer"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | audit | raw: before any commit, the board and the stored hash of the first board are changed behind the sink | the audit reports: NO PROBLEM"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: the audit starts at the first hash of the database, not at the pinned one"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | audit | a first board that is not the pinned one | TAKEN"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "sink: any first board is taken"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/issuer.ts",
+   "first_failed_rows": [
+    "FAIL | issuer | values of 17 digits that differ by 1: the second best request at the gaps 0 and 1 | TOKEN at the gap 0; token with the value 100000000000000000 at the gap 1"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "issuer: numbers go through floating point"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/guest.ts",
+   "first_failed_rows": [
+    "FAIL | runner | an optimizer that answers with 16000 control characters (as JSON the message would be above the line limit of the issuer) | the line is handed on as text; no token: no answer from the issuer in time"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "issuer client: no local limit for a message (review R3)"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 2,
+   "file": "ts/booking-certificate/guest.ts",
+   "first_failed_rows": [
+    "FAIL | runner | an optimizer program that does not exist | no line taken: the optimizer did not start",
+    "FAIL | runner | an optimizer that writes a file, and leaves a detached process that writes a file one second later | the optimizer answers: the write was wrote; A FILE NOW; A FILE LATER"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "runner: no isolation of the optimizer process (review R1)"
+  },
+  {
+   "case": "sink-controls",
+   "case_exit": 1,
+   "failed_rows": 1,
+   "file": "ts/booking-certificate/guest.ts",
+   "first_failed_rows": [
+    "FAIL | runner | an optimizer that starts a child process and does not answer | no line taken: time limit; A PROCESS IS LEFT"
+   ],
+   "last_line": "SLICE3 FAILED: suite: expected exit 0, observed 1",
+   "removed_check": "runner: only the direct child is killed (review R4)"
+  },
+  {
+   "case": "swap",
+   "case_exit": 1,
+   "failed_rows": 0,
+   "file": "scripts/exit_slice3.py",
+   "first_failed_rows": [],
+   "last_line": "SLICE3 FAILED: swap v3-overbook: the adversary did not do what this mode does: {'answers': 0, 'proposals_not_feasible': 0, 'proposals_not_readable': 70, 'forged_offers': 0}",
+   "removed_check": "swap: the adversary program is missing; the run must not pass (review R2)"
+  },
+  {
+   "case": "swap",
+   "case_exit": 1,
+   "failed_rows": 70,
+   "file": "ts/booking-certificate/sink.ts",
+   "first_failed_rows": [
+    "FAIL | interval-0 | a token of the untrusted side was not rejected; A REFUSED PROPOSAL HAD AN EFFECT; sink audit: row 1: signature",
+    "FAIL | interval-1 | a token of the untrusted side was not rejected; A REFUSED PROPOSAL HAD AN EFFECT; sink audit: row 1: signature",
+    "FAIL | interval-2 | a token of the untrusted side was not rejected; A REFUSED PROPOSAL HAD AN EFFECT; sink audit: row 1: signature",
+    "FAIL | interval-3 | a token of the untrusted side was not rejected; A REFUSED PROPOSAL HAD AN EFFECT; sink audit: row 1: signature"
+   ],
+   "last_line": "SLICE3 FAILED: swap v3-overbook: expected exit 0, observed 1",
+   "removed_check": "sink: no signature check (optimizer runs)"
+  },
+  {
+   "case": "swap",
+   "case_exit": 1,
+   "failed_rows": 70,
+   "file": "ts/booking-certificate/issuer.ts",
+   "first_failed_rows": [
+    "FAIL | interval-0 | the issuer differs from the reference check; TOKEN FOR AN ALLOCATION THAT IS NOT FEASIBLE; token value or remaining capacity",
+    "FAIL | interval-1 | the issuer differs from the reference check; TOKEN FOR AN ALLOCATION THAT IS NOT FEASIBLE; token value or remaining capacity",
+    "FAIL | interval-2 | the issuer differs from the reference check; TOKEN FOR AN ALLOCATION THAT IS NOT FEASIBLE; token value or remaining capacity",
+    "FAIL | interval-3 | the issuer differs from the reference check; TOKEN FOR AN ALLOCATION THAT IS NOT FEASIBLE; token value or remaining capacity"
+   ],
+   "last_line": "SLICE3 FAILED: swap v3-overbook: expected exit 0, observed 1",
+   "removed_check": "issuer: signs a well-shaped proposal that the core refuses (optimizer runs)"
+  },
+  {
+   "case": "core-controls",
+   "case_exit": 1,
+   "failed_rows": 0,
+   "file": "scripts/exit_slice3.py",
+   "first_failed_rows": [],
+   "last_line": "SLICE3 FAILED: CorePrintsMarked: THE PROCEDURE ACCEPTS A WRONG CORE",
+   "removed_check": "EXIT script: the procedure accepts a core without the instance check"
+  }
+ ],
+ "copies_done": 26,
+ "copies_with_nonzero_exit": 26,
+ "end_to_end": false,
+ "unchanged_tree": [
+  {
+   "case": "sink-controls",
+   "exit_code": 0,
+   "last_line": "SLICE3 sink-controls: PASSED; end_to_end=false"
+  },
+  {
+   "case": "swap",
+   "exit_code": 0,
+   "last_line": "SLICE3 swap: PASSED; end_to_end=false"
+  },
+  {
+   "case": "core-controls",
+   "exit_code": 0,
+   "last_line": "SLICE3 core-controls: PASSED; end_to_end=false"
+  }
+ ],
+ "what": "One-off check that the Slice 3 controls can fail. Each copy of the unproved code has ONE check removed; one EXIT case of scripts/exit_slice3.py ran against it in a scratch tree. Not part of the EXIT script. A finite check: 26 removed checks."
+}
