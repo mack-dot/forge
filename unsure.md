@@ -15328,3 +15328,146 @@ curl: (6) Could not resolve host: github.com
   (24 cases; run with the first version of step A).
 - Uncertainty: every later run must be repeated on the final commits.
 - Next check: control sets with the third version; final branches.
+
+## U437 — Round 4 closeout, part 1: control sets pass on the final step A bytes on both gates; the third independent review ends Round 4 code work; pull request 39 opened, hosted gate REJECTED as expected; three facts that the checklist did not have
+- Status: 2026-11-18 UTC. Refs U432, U433, U435, U436. Owner text of this
+  run: close Round 4; one final review of the last code change with a
+  hard stop rule; prepare the bootstrap merge; queue the cleanup of main.
+- My defects, found by the failed attempts (no acceptance in any of
+  them): (1) the control environment forced PYTHONNOUSERSITE=1. On this
+  Mac the pinned attrs 25.3.0 is in the user site, so the ratified gate
+  ended with TOOLCHAIN_ERROR and exit 2: backup-lineage attempt 5 (5 of
+  26 cases different from the expectation), main-lineage attempt 5 (6
+  of 22). Change: the variable is passed through from the caller; the
+  hosted wrapper sets it. (2) Harness only: the new per-case trusted
+  clones had no node_modules link, and one function read the proposal
+  text from the wrong tree. Main-lineage attempt 6 stopped with a Python
+  error at case 05 and wrote no summary. Fixed in
+  run_pr_controls_main.py.
+- Actual, final step A bytes (gate/approval.py cabcbd5c..., gate/
+  ratification.py 93bb23bc..., gate/incremental.py 1086e97b... on main's
+  lineage): backup-lineage control set attempt 6: 26 cases, scenario
+  exit 0, 0 evasions (gate exits 3 x 0, 23 x 1). Main-lineage control
+  set attempt 7, trusted side 801777ea: 22 cases, scenario exit 0, 0
+  evasions (gate exits 2 x 0, 18 x 1, 1 x 2, 1 x 3). The ratified
+  reduced step B is VERIFIED with six obligations established again and
+  a byte-identical replay of the saved command.
+- Final commits on main at 4143f4b2 (origin checked): A 801777ea (step
+  A), A2 26410d46 (record 0001 and PROPOSAL-V3.md, SHA-256
+  a686092c...), B f54e2507 (step B). The record regenerates byte for
+  byte from A2 and B (make_record_0001.py; cmp exit 0).
+- Actual, real gate on the final commits (run_bootstrap_gate_cases.py
+  attempt-0001, local profile, scenario exit 0): A2 against present
+  main: exit 1 REJECTED. Unchanged candidate after the bootstrap: exit
+  0 VERIFIED, replay byte-identical. B after the bootstrap: exit 3
+  UNSUPPORTED, record 0001 matched, 8 of 8 floor controls as expected,
+  four files that no obligation lists.
+- Actual, stage EXIT cases at A2 (scratch worktree): Stages 1, 2, 3, 4,
+  5, 8: 24 cases, exit 0 each (Stage 4 with a read-only token from the
+  gh login; not printed, not stored). Stage 6 report: exit 1
+  (TRUSTED_INPUTS), the same as at unchanged main 4143f4b2 (run again
+  in this session: exit 1).
+- Third independent review (fresh agent, 33 tool calls; scope: the
+  change after review 2; the owner's boundary "do not report
+  intentional spoofing of the floor controls"): 0 fail-opens; 0 HIGH or
+  MEDIUM accidental defects. F1 MEDIUM, needs an owner-written record:
+  the list of eight excluded PR-gate modules is not complete. gate/
+  backends/dafny.py, gate/backends/__init__.py, gate/dependencies.py
+  and gate/core.py load in the PR-gate process and stay ratifiable. I
+  repeated the import measurement at A2: confirmed. Record 0001 names
+  gate/backends/dafny.py. F2 LOW, accident class: a floor control at
+  the 1800 s time limit ends the gate with exit 1 and no receipt
+  instead of exit 2; not an acceptance. F3, F4, F5 LOW, need intent: a
+  ratifiable package folder gate/common/ takes the place of
+  gate/common.py (that run stopped at exit 3 by the coverage rule, not
+  by the scope rule); lower() is not the file system's letter-case
+  rule; GOVERNANCE/ is not a protected path on Linux. Verbatim text:
+  proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md.
+- Decision by the owner's stop rule: Round 4 code work is STOPPED. No
+  gate byte changed after review 3. F1 to F5 are NOT fixed. The module
+  text of gate/ratification.py "the changed PR gate itself never runs"
+  is false for the four files of F1. I left it: a text change there is
+  a change of gate bytes.
+- Pull request 39 (branch proposal/v3a-gate-ratification-rule, commits
+  A and A2): push exit 0 (new branch, no force); gh pr create exit 0.
+  Authority: the owner's Round 4 text ("push all commits to the
+  backup/PR branches on origin (never main, never --force)") and this
+  run's words "run gate/pr_check.py end-to-end" and "pause for my
+  merge". The step from those words to "open the pull request" is my
+  interpretation. NOT merged. Hosted run 44213967396
+  (pull_request_target, Linux profile): gate/pr_check.py exit 1,
+  outcome REJECTED, UNAPPROVED_PROTECTED_CHANGE for the three gate
+  files; job verify failure, job report success, status
+  forge/proof-gate failure. Equal to the local result.
+- FINDING, Stage 9 lock: main's gate/provenance/implementation.lock
+  pins gate/approval.py and gate/incremental.py (all 100 entries match
+  at 4143f4b2). At A2 two entries differ; at B eight. So action 1 alone
+  makes the lock stale. The checklist and U432 named only step B; that
+  was measured on the backup lineage and is corrected here. The gate
+  pull requests 27, 29, 30 and 32 carried a new lock. The lock's
+  SHA-256 is also pinned in .github/workflows/booking-reuse.yml.
+- FINDING, Stage 11: scripts/exit_stage_11.py on main needs
+  results/stage11/eval-0007 and eval-pr27-0003. They are not on main
+  and not in the working tree. With the 178 files restored from the
+  verified backup (SHA-256 e2491743...) to a scratch folder: three
+  cases exit 0 at 4143f4b2. Without them: three cases exit 1.
+- FINDING, documents on main: ROADMAP.md on main says "CURRENT: Stage 9
+  — PROVENANCE" (1,740 lines). unsure.md on main ends at U131 and is a
+  byte prefix of this file. FORGE_MASTER_IDEA.md on main has 10 of 13
+  relative links without a target (check_links.py exit 1).
+- Stage 6 pins 20 files. Step A changes none of them. So a fresh Stage
+  6 run at main's tree stays valid after action 1.
+- Incident: the Mac slept for about two hours (about 22:53Z to 00:55Z)
+  during the runs. For the Stage 7 replay and the M1 build, run time is
+  not wall-clock time. I started caffeinate for the replay process.
+- Uncertainty: no result here is from Linux except the hosted run of
+  pull request 39. The hosted wrapper with a record on the trusted side
+  can run only after action 1. Review 3 made no run that ends with exit
+  0 and did not test the backup lineage.
+- Next check: fresh Stage 6 runs (main's tree; step B); commit C; Stage
+  7 result; the queued cleanup branches; then the owner's merge.
+
+## U438 — Round 4 closeout, part 2: fresh Stage 6 records for main's present gate bytes; M1 build window ended at 45 of 71 theories; the Mac was on battery power, step B runs stopped; Stage 7 replay still running
+- Status: 2026-11-18 UTC. Refs U436, U437.
+- Actual, Stage 6 at main's tree (scratch worktree at 4143f4b2,
+  stage6_epoch2.py, scenario exit 0): benchmark exit 0 (75 pairs,
+  1,163 s); controls exit 0; input identity check exit 0 (450 files);
+  report EXIT exit 0 twice, report byte-identical. The earlier records
+  were first copied unchanged to results/stage6-epoch1 (file by file
+  equal to HEAD). Solver resource counts equal the earlier run
+  (342,198,540 cold and shared; 224,568,970 with the dependency graph);
+  510 reused members as before. Process seconds are 15 to 44 percent
+  higher; the machine was under load and on battery power.
+- Local commit 0b3fb727 on branch records/stage6-epoch2-main (base
+  4143f4b2; 1,028 files; protected paths 0; not pushed). Report EXIT in
+  a clean clone at 0b3fb727 (no tools folder, no build folder): exit 0.
+  At 26410d46 plus this commit: exit 0. The 20 pinned inputs are equal
+  between 4143f4b2 and 26410d46 (git diff --quiet exit 0).
+- The new records hold local absolute paths of the scratch worktree. The
+  Stage 6 records on main hold local absolute paths already (309
+  files). The owner's scope decision on such paths is still open.
+- M1 tools: rebuild.py 10800 ended with "stopped: budget" (elapsed
+  10,803 s on the monotonic clock, which does not count the sleep). The
+  compiler-proof build was killed at the deadline (exit -15). Built: 45
+  of 71 theories. cv_translator and the ARMv8 step heap: not started.
+  So no M1 chain replay and no fs-0001/fs-0002 run are possible now.
+  The owner's Round 4 text grants one more window of 14,400 s when the
+  machine is free; NOT started.
+- Incident: at 01:21Z the Mac was on battery power at 33 percent (27
+  percent at 01:29Z). I notified the owner and stopped my queued runs
+  for step B after its first command, to keep power for the Stage 7
+  replay. Done at f54e2507: gate/gate.py --impl impl/Ledger.dfy exit 0
+  (ACCEPTED). NOT RUN at f54e2507: stage EXIT cases, fresh Stage 6 run,
+  commit C. The earlier run of that flow (U436) was on an earlier base
+  with byte-identical step B files.
+- Stage 7 (owned by the agent that started it before the session was
+  cleared): own-proof exit 0 (attempt 2, 2,285 s). upstream-replay
+  attempt 4 of 5 was still running; its proof library build was at 368
+  of 407 files at 01:04Z. invalid-proof runs after it. NOT FINISHED.
+- Prepared and not pushed: branch docs/master-idea-records for the 10
+  missing link targets of FORGE_MASTER_IDEA.md on main.
+- Uncertainty: if the battery runs out, the Mac hibernates or stops; the
+  replay may or may not continue afterwards.
+- Next check: Stage 7 result; the step B runs and commit C when the Mac
+  is on mains power; the owner's merge of pull request 39; then the
+  queue Q0 to Q5 of BOOTSTRAP_CHECKLIST.md.

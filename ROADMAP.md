@@ -9,6 +9,43 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
+## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file of this tree or of
+`main` is changed. Pull request 39 is open and NOT merged. Final
+commits on `main` at `4143f4b2`: rule `801777ea`, record `26410d46`,
+print effects `f54e2507`.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `run_pr_controls.py` attempt 6 (older local gate, 26 cases) |0|0 evasions |
+| `run_pr_controls_main.py` attempt 7 (`main`'s gate, 22 cases) |0|0 evasions; attempts 5 and 6 failed by my defects, no acceptance (U437) |
+| `run_bootstrap_gate_cases.py` attempt-0001: record commit on present `main`; unchanged candidate after the bootstrap; print effects after the bootstrap |1; 0; 3|REJECTED; VERIFIED; UNSUPPORTED with 8 of 8 floor controls: each as expected |
+| hosted `gate/pr_check.py`, pull request 39, run 44213967396 |1|REJECTED; equal to the local result |
+| Stage EXIT cases 1, 2, 3, 4, 5, 8 at `26410d46` (24 cases) |0 each|passed |
+| `exit_stage_6.py --case report` at `main` `4143f4b2`; at `26410d46` |1; 1|`TRUSTED_INPUTS`; red before this work |
+| `stage6_epoch2.py` at `main`'s tree: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|fresh records, local commit `0b3fb727`; report byte-identical |
+| `exit_stage_6.py --case report` in a clean clone at `0b3fb727`; at `26410d46` plus `0b3fb727` |0; 0|repairs the Stage 6 record; needs the owner's merge |
+| `exit_stage_11.py`, three cases at `4143f4b2`: records from the verified backup; clean checkout |0, 0, 0; 1, 1, 1|the evaluation records are not on `main` |
+| `check_links.py origin/main FORGE_MASTER_IDEA.md` |1|10 of 13 relative links have no target on `main` |
+| step B `f54e2507`: `gate/gate.py --impl impl/Ledger.dfy` |0|ACCEPTED |
+| step B `f54e2507`: stage EXIT cases, fresh Stage 6 run, commit C |NOT RUN|stopped: the Mac was on battery power |
+| Stage 7 `own-proof` (scratch worktree, Docker) |0|attempt 2 |
+| Stage 7 `upstream-replay`; `invalid-proof` |NOT FINISHED; NOT RUN|replay attempt 4 was running at the time of this entry |
+| `rebuild.py 10800` (M1 tools) |stopped by budget|45 of 71 compiler-proof theories; no M1 replay possible yet |
+| Stage 9, six EXIT cases |NOT RUN|deferred; after the bootstrap merge two lock entries are stale |
+| third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
+
+[Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
+[Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
+Blockers: the owner's merge of pull request 39; decisions D1, D2, D3
+and queue items Q3, Q4 of the checklist. `ROADMAP.md` on `main` still
+says "CURRENT: Stage 9"; this file is the current one.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+
+
 ## Round 2 of the master idea: tasks 1–4 done as diagnostics and finite tests; approved print-effects diff measured and reverted; tool rebuild stopped by budget — U417–U424
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

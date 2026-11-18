@@ -23,7 +23,7 @@ from common import Rejected, digest
 COPIED = ('gate', 'spec', 'impl', 'toolchain', 'schemas', 'policy')
 BASELINE = 'impl/Ledger.dfy'
 PROOF_REASONS = ('VERIFICATION_REJECTED:', 'AUDIT_REJECTED:')
-ALLOWED_ENVIRONMENT = ('PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'LD_LIBRARY_PATH', 'DOTNET_ROOT')
+ALLOWED_ENVIRONMENT = ('PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'LD_LIBRARY_PATH', 'DOTNET_ROOT', 'PYTHONNOUSERSITE')
 TIMEOUT_SECONDS = 1800
 PROBE = r"""
 import json, sys
@@ -97,7 +97,6 @@ def materialize(root, candidate, ratification, tree):
 def run_controls(root, candidate, ratification, work, trusted_manifest, environment=None):
     if environment is None:      # the ratified bytes never see the caller's full environment
         environment = {name: os.environ[name] for name in ALLOWED_ENVIRONMENT if name in os.environ}
-        environment['PYTHONNOUSERSITE'] = '1'
     tree = Path(work) / 'ratified-tree'
     controls = materialize(root, candidate, ratification, tree)
     results = []

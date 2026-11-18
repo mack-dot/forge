@@ -87,11 +87,12 @@ Record: `records/exits-in-v3-worktree.json`.
 
 ## 5. Stage 6, fresh run with the version 3 gate
 
-PENDING at the time of writing; see `records/stage6-epoch2.json`.
+PENDING at the time of writing (Round 3). Results: `records/stage6-epoch2.json`
+(backup lineage, U433) and section 9 (main's lineage, final commits).
 
 ## 6. Stage 7
 
-STAGE7_PENDING
+PENDING at the time of writing (Round 3). Result: section 9.
 
 ## 7. Why version 3 is not applied
 
@@ -124,3 +125,42 @@ PR-gate controls exit 0 together in the scratch worktree. Not met:
    the two Stage 6 scripts.
 5. Stage 9: approve a hosted signing run, or keep Stage 9 as a record
    of the old gate bytes.
+
+## 9. Round 4 closeout: results on the final bytes (U437, U438)
+
+Date: 2026-11-18 UTC. All runs are local (macOS, local profile) unless
+a row says "hosted". Final commits on `main` at `4143f4b2`: A
+`801777ea`, A2 `26410d46`, B `f54e2507`, C not built yet (see the last rows). Nothing is merged.
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| `run_pr_controls.py`, attempt 6 (older local gate, 26 cases) | 0 | 0 evasions; gate exits 3 × 0, 23 × 1 |
+| `run_pr_controls_main.py`, attempt 7 (`main`'s gate, trusted `801777ea`, 22 cases) | 0 | 0 evasions; gate exits 2 × 0, 18 × 1, 1 × 2, 1 × 3; ratified reduced step B VERIFIED, replay byte-identical |
+| attempts 5 (both gates) and attempt 6 (`main`'s gate) | 1, 1, Python error | my defects: forced `PYTHONNOUSERSITE`; harness links. No acceptance. Fixed (U437) |
+| real gate, A2 against present `main` | 1 | REJECTED, three gate files |
+| real gate, unchanged candidate after the bootstrap | 0 | VERIFIED; replay byte-identical |
+| real gate, B after the bootstrap | 3 | UNSUPPORTED; record 0001 matched; 8 of 8 floor controls as expected |
+| hosted `gate/pr_check.py`, pull request 39 (run 44213967396) | 1 | REJECTED, equal to the local result; job `report` success |
+| Stage EXIT cases 1, 2, 3, 4, 5, 8 at A2 (24 cases) | 0 each | passed |
+| Stage 6 `report` at unchanged `main` and at A2 | 1; 1 | `TRUSTED_INPUTS`; not caused by step A |
+| fresh Stage 6 run at `main`'s tree (`stage6_epoch2.py`): benchmark; controls; identity check; report EXIT twice | 0; 0; 0; 0, 0 | 75 pairs; 450 files; report byte-identical; solver resource counts equal the earlier run; local records commit `0b3fb727` |
+| Stage 6 `report` in a clean clone at `0b3fb727`; at A2 plus `0b3fb727` | 0; 0 | the red record on `main` is repaired by these records, before and after action 1 |
+| `exit_stage_11.py`, three cases at `4143f4b2`: with the records from the verified backup; clean checkout | 0, 0, 0; 1, 1, 1 | the evaluation records are not on `main` |
+| `check_links.py origin/main FORGE_MASTER_IDEA.md` | 1 | 10 of 13 relative links have no target on `main` |
+| `check_frozen_pr_gate.py 26410d46`; `... origin/main` | 0; 1 | the eight modules equal the recorded digests at A2; not yet on `main` |
+| step B `f54e2507`: `gate/gate.py --impl impl/Ledger.dfy` | 0 | ACCEPTED |
+| step B `f54e2507`: stage EXIT cases, fresh Stage 6 run, commit C | NOT RUN | stopped: the Mac was on battery power (U438) |
+| Stage 7 (scratch worktree, Docker): `own-proof` | 0 | attempt 2, 2,285 s |
+| Stage 7: `upstream-replay`; `invalid-proof` | NOT FINISHED; NOT RUN | replay attempt 4 was running when this section was written; the Mac slept about two hours during it |
+| M1 build window `rebuild.py 10800` | stopped by budget | 45 of 71 compiler-proof theories built; the proof build was killed at the deadline; no M1 replay possible yet |
+| Stage 9, six EXIT cases | NOT RUN | deferred; after action 1 two lock entries are stale |
+
+Third independent review (`REVIEW-3.md`): 0 fail-opens; 0 HIGH or
+MEDIUM accidental defects; F1 MEDIUM (needs an owner-written record):
+four more modules load in the PR-gate process and stay ratifiable; F2
+to F5 LOW. By the owner's stop rule no gate byte changed after it.
+
+NOT RUN: the hosted wrapper with a record on the trusted side (possible
+only after action 1); every local check on Linux; the six Stage 9 EXIT
+cases (deferred). Section 8, point 2 is answered: `gate/approvals/` and
+`gate/provenance/` are outside Tier-0 in the final bytes.
