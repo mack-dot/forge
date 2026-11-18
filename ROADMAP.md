@@ -28,6 +28,40 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Slice 1 of the master idea (F2.1 to F2.3): refund checker core proved at source level; token issuer and token-gated sink built; finite controls; one review with repairs; local commit, NOT pushed — U443, U444, U445, U446
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Not gate
+evidence: no policy lists these claims and no gate obligation lists
+these files. The claim text for the core is not approved intent.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the owner's go-ahead: pinned Dafny, present gate options, on the research file `RefundMinterCore.dfy`: verify; audit |0; 0|7 verified; 0 findings (diagnostic) |
+| `scripts/exit_slice1.py --case core-proof` (refund gate `--tier critical`; audit; verify of `impl/RefundFinality.dfy` beside `tests/refund-finality/Bindings.dfy`), attempts 1 and 2 |0; 0|refund gate exit 0; 10 verified, 0 errors; audit 0 findings |
+| `--case core-controls`, attempts 1 and 2: nine wrong cores |0; 0|checker exit 4 for seven (failed members only in the binding file), exit 2 for two printing cores |
+| `--case sink-controls` attempt 1 (first code version, 94 rows) |0|before my own read of the sink |
+| suite with a new control on the first sink (object that changes while it is read) |1|FAIL-OPEN found by me: remaining 0 committed under a signature for 700; repaired (U444) |
+| the one fresh-context review of the unproved code |1 in-process fail-open, 1 HIGH, 2 MEDIUM, 4 LOW|outside the sink process no unauthorized effect found; two of my race rows could not fail (U445) |
+| after the repairs (one pass): type check; suite (113 rows) |0; 0|48 rejection attempts, 0 effects |
+| one-off: suite against eight copies with one check removed each |non-zero for 8 of 8|the race row fails on a sink with no transaction in 3 of 3 runs |
+| `--case core-proof`; `--case core-controls`; `--case sink-controls`, attempt 2 (final code) |0; 0; 0|passed |
+| `--case evidence` attempt 1 (97-row version); attempt 2 (manifest lacked two helper files); attempt 3 (final) |0; 0; 0|each: two runs byte-identical; final bundle SHA-256 `fffdd343…` |
+| control (e), scratch clone of `f6329211` plus the Slice 1 files (`run_regression.py`): Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, the Slice 1 report; for all 80 Markdown files outside `results/` |0; 0, 0, 0; 1|only the 2 older Stage 9 links without a target |
+| the same clone: `scripts/exit_slice1.py --case evidence` |0|bundle SHA-256 equal to the working tree's (`fffdd343…`) |
+| Stage 7; Stage 9; Stage 10 |NOT RUN|Docker time; deferred; no EXIT script on `main` |
+| commit and push in one command |declined by the session's permission system|one local commit on branch `slice1/refund-finality`; push NOT DONE; pull request NOT DONE; they wait for the owner's own word (U446) |
+| hosted `gate/pr_check.py` for Slice 1 |NOT RUN|no pull request exists; expected exit 3 (UNSUPPORTED): no obligation lists the new files |
+
+[Slice 1 report](proposals/forge2-slice1-refund-finality/REPORT.md).
+[Review text and disposition](proposals/forge2-slice1-refund-finality/REVIEW.md).
+Proved: claims P1 to P4 for the Dafny source of the checker core.
+Tested on a finite set, not proved: issuer code, encoding, sink,
+dispatcher. Not proved: the compiled JavaScript and the hash in the
+token. The repairs after the review were not reviewed again.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Step B (print effects) is on `main`: pull requests 43 and 42 merged on the owner's word; first hosted run of the gate with a ratification record gave the expected result — R4C-1
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

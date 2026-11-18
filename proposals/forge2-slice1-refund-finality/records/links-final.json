@@ -1,0 +1,212 @@
+{
+ "base_commit": "f632921194684640d1a4500a313ffbd335612b0a",
+ "checked_files_sha256": {
+  "FORGE_MASTER_IDEA.md": "1796c730287a93bf2441c2fcb5820223779d7faf87949f56f7f1774f5826aaf9",
+  "ROADMAP.md": "85b319a35e4593c4988b203a829d36db69cca0f603589b3b9b04ce6ea2792c7c",
+  "impl/RefundFinality.dfy": "2326934559f467883be97bd644da6a02fda60c0fac86ef2b3da6a8fa0071d41c",
+  "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md": "a7161e8a26290874692e1b6dee41db675dd3b352e6c4364c5fc4a60c4f9b023a",
+  "proposals/forge2-slice1-refund-finality/REPORT.md": "0f5f10843c461091d37a2a082cdea0db157435aed75a1b1d8259b2449685fb7a",
+  "proposals/forge2-slice1-refund-finality/REVIEW.md": "18afd91fcd526f3f15e9768ed484e12f7f7ddeceb4ade90fc180ffbedc51f8de",
+  "proposals/forge2-slice1-refund-finality/records/evidence.json": "fffdd3435c38864f06377d0b864e58a49d9432b7801481b791584f8b0737060c",
+  "proposals/forge2-slice1-refund-finality/records/regression.json": "64781eb2d93601d20e9ffe47dcd8301d5ac097e9950cf97bbb781e91dfe7409e",
+  "proposals/forge2-slice1-refund-finality/records/removed-check-copies.json": "75e4557838cb3c8c39ba43289e7104189a3950d0f5e4d62184dbe0e96db09a2c",
+  "proposals/forge2-slice1-refund-finality/run_regression.py": "9a2b885f55d6fa8e40e7ef3c1fe9e8d4fee306694127ea0dc9ae729e02d48c91",
+  "scripts/exit_slice1.py": "4cea7b69a4d74b61de7234c953c0d681bb8d5530acf84df4c908500b8b1680b9",
+  "tests/refund-finality/Bindings.dfy": "03ed3e77d43973f176caa27467d2c94eba0d0fe6170e48ea8cd198fd81cea136",
+  "tests/refund-finality/commit_cli.ts": "76f9e5faa11cd6686b689b6f1367061ab70c5117af37d1c6d9f63049f5d0dc8c",
+  "tests/refund-finality/dispatch_cli.ts": "fc47ee56ad9baea48bcfbe3f067e6f8c4a9132eb5bfcf5828f68cbd6febe4ee5",
+  "tests/refund-finality/fixtures/CoreIntentOnRefusal.dfy": "0b7cf5c91e4f6e8900891c24471eb7aa8fd4951dc314ff09abdf05ecd56552a3",
+  "tests/refund-finality/fixtures/CoreIssuesEverything.dfy": "c75888bd5d0905850514609bef10599165851571b412ca9157c525184e825b40",
+  "tests/refund-finality/fixtures/CoreKeepsRemaining.dfy": "35362546d8ce2bebba08b6bf8ba55b26174c68011f82b348c5e58a80551a1db5",
+  "tests/refund-finality/fixtures/CoreNeedsPrecondition.dfy": "85ce79902385b885fb547eeb8823757568c48211f42379d90774bbdd47b773b0",
+  "tests/refund-finality/fixtures/CorePrints.dfy": "5194d0b3909def3a88aa9bc405da4190c0e27ce7f66ed6103807acc1600899a1",
+  "tests/refund-finality/fixtures/CorePrintsMarked.dfy": "e61762f4746fb958fb1c7473a40a0bfcf213800598dc37c892685c82e87be0da",
+  "tests/refund-finality/fixtures/CoreRefusesEverything.dfy": "409570c3ad029624a1c252ed308dbea708a3541c6d5598d1cdf17845eec862a5",
+  "tests/refund-finality/fixtures/CoreSkipsIntentCheck.dfy": "44d22b376844429a10c788b71782c60b3d33692f55b8c6b7065c5b30a1429121",
+  "tests/refund-finality/fixtures/CoreWrongHash.dfy": "3acca5f7427d4e6af00288244316782ba70fa9474dc4fa84e1a71c6fe2512a7c",
+  "tests/refund-finality/issuer_exports_probe.ts": "3db2b52c303a9ff37e56ba4b270f6abe85cb9fbeffbb30c591f6359d58f2e0bf",
+  "tests/refund-finality/suite.ts": "58f4aff1af2a329c957bbbb7068a181d22b74ca8f52ffab60d0cd479b3ce6f62",
+  "ts/refund-finality/dispatcher.ts": "ff4d9b8d7db2bb163bfb73475dc8f1d0c8cf4105aca3667d68b64f82da24f9ec",
+  "ts/refund-finality/encoding.ts": "f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7",
+  "ts/refund-finality/minter.ts": "7ff39c564168bd23e14df8653a863718ec90e1174fc78b876b047aec35c226a7",
+  "ts/refund-finality/proposer.ts": "bce908e530b0a8e16c914617a332ac9339cdc3b9c6fc13fd3f614a081e5e34cd",
+  "ts/refund-finality/sink.ts": "0690a4269a38f49a9b053ab9a97a55d917b4a3758f39cbecd2edf91a78484de7",
+  "unsure.md": "7cb3f1b0b4b64f70dd0ba228276ec792e51b07369aad97042ce29362dadfce40"
+ },
+ "end_to_end": false,
+ "links_without_target": {
+  "docs/stage9-history-audit.md": [
+   "../results/stage9/receipt-repair-published/README.md"
+  ],
+  "proposals/provenance-receipt-repair.md": [
+   "../results/stage9/receipt-repair-published/README.md"
+  ]
+ },
+ "markdown_files_checked": 80,
+ "note": "This record file itself was added after the check. It is JSON and holds no link.",
+ "rows": [
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_frozen_pr_gate.py",
+    "HEAD"
+   ],
+   "check": "frozen PR-gate modules",
+   "exit_code": 0
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "FORGE_MASTER_IDEA.md"
+   ],
+   "check": "links FORGE_MASTER_IDEA.md",
+   "exit_code": 0
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "ROADMAP.md"
+   ],
+   "check": "links ROADMAP.md",
+   "exit_code": 0
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md"
+   ],
+   "check": "links proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md",
+   "exit_code": 0
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "proposals/forge2-slice1-refund-finality/REPORT.md"
+   ],
+   "check": "links proposals/forge2-slice1-refund-finality/REPORT.md",
+   "exit_code": 0
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "proposals/forge2-slice1-refund-finality/REVIEW.md"
+   ],
+   "check": "links proposals/forge2-slice1-refund-finality/REVIEW.md",
+   "exit_code": 0
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "AGENTS.md",
+    "FORGE_MASTER_IDEA.md",
+    "FORGE_ROUND2_PLAN.md",
+    "FORGE_ROUND3_PLAN.md",
+    "README.md",
+    "ROADMAP.md",
+    "VISION.md",
+    "docs/booking.md",
+    "docs/claims.md",
+    "docs/reuse-benchmark-epoch1.md",
+    "docs/reuse-benchmark-epoch2.md",
+    "docs/reuse-benchmark.md",
+    "docs/spec-quality.md",
+    "docs/stage4-change-loop.md",
+    "docs/stage7-binary.md",
+    "docs/stage8-refund.md",
+    "docs/stage9-history-audit.md",
+    "docs/stage9-signing-preparation-audit.md",
+    "examples/binary/README.md",
+    "gate/README.md",
+    "gate/expected-audit.md",
+    "proposals/approval-integrity/PROPOSAL.md",
+    "proposals/booking-decision.md",
+    "proposals/booking.md",
+    "proposals/fees-decision.md",
+    "proposals/fees.md",
+    "proposals/forge2-pillar1-anchor-diff/ANALYSIS.md",
+    "proposals/forge2-pillar1-print-effects/PROPOSAL.md",
+    "proposals/forge2-pillar1-print-effects/REGRESSION.md",
+    "proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md",
+    "proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md",
+    "proposals/forge2-pillar1-print-effects/v3/PROPOSAL-V3.md",
+    "proposals/forge2-pillar1-print-effects/v3/REPORT-V3.md",
+    "proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md",
+    "proposals/forge2-pillar1-spec-determinism/REPORT.md",
+    "proposals/forge2-pillar2-finality-protocol/DESIGN.md",
+    "proposals/forge2-pillar2-refund-finality/CAKEML_LINK.md",
+    "proposals/forge2-pillar2-refund-finality/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/finality/REPORT.md",
+    "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md",
+    "proposals/forge2-slice1-refund-finality/REPORT.md",
+    "proposals/forge2-slice1-refund-finality/REVIEW.md",
+    "proposals/future-directions-20261117/FUTURE_PLANS.md",
+    "proposals/future-directions-20261117/SOURCE_ANALYSIS.md",
+    "proposals/future-directions-20261117/SOURCE_MISSION_PROMPT.md",
+    "proposals/github-ruleset/README.md",
+    "proposals/initial-ledger.md",
+    "proposals/provenance-decision.md",
+    "proposals/provenance-hosted-v33/INSTALL.md",
+    "proposals/provenance-hosted/candidate/spec/provenance/protocol.md",
+    "proposals/provenance-implementation-decision.md",
+    "proposals/provenance-implementation.md",
+    "proposals/provenance-integrity-repair.md",
+    "proposals/provenance-receipt-repair.md",
+    "proposals/provenance-v33/README.md",
+    "proposals/provenance.md",
+    "proposals/provenance/protocol.md",
+    "proposals/refund-decision.md",
+    "proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md",
+    "proposals/refund-gate-decision.md",
+    "proposals/refund-gate.md",
+    "proposals/refund-hostile-snapshot-decision.md",
+    "proposals/refund-hostile-snapshot.md",
+    "proposals/refund.md",
+    "proposals/refund/protocol.md",
+    "proposals/round2-20261117/OWNER_ROUND2_TEXT.md",
+    "proposals/round2-20261117/m1-rebuild/REPORT.md",
+    "proposals/round3-20261117/OWNER_ROUND3_TEXT.md",
+    "proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md",
+    "proposals/round4-20261117/OWNER_ROUND4_TEXT.md",
+    "proposals/stage9-hosted-runner.md",
+    "proposals/stage9-runner-admission.md",
+    "proposals/stage9-runner-provisioning.md",
+    "spec/provenance/protocol.md",
+    "spec/refund/protocol.md",
+    "toolchain/README.md",
+    "ts/README.md",
+    "unsure.md"
+   ],
+   "check": "links, all 80 Markdown files outside results/",
+   "exit_code": 1
+  }
+ ],
+ "what": "Slice 1: frozen-gate check and link checks on the final documents, in the scratch clone (scratch commits only; not in the owner's repository)"
+}

@@ -1,0 +1,130 @@
+{
+ "copies": [
+  {
+   "copy": "sink-no-transaction-clean",
+   "removed": "ts/refund-finality/sink.ts: BEGIN, COMMIT and ROLLBACK do nothing (every statement commits alone)",
+   "runs": [
+    {
+     "failed_rows": [
+      "race: 6 valid tokens for one pre-state, committed by 6 processes that wait for one common start time",
+      "audit after the race",
+      "race: one valid token committed by 6 processes that wait for one common start time"
+     ],
+     "suite_exit": 1
+    },
+    {
+     "failed_rows": [
+      "race: 6 valid tokens for one pre-state, committed by 6 processes that wait for one common start time",
+      "audit after the race",
+      "race: one valid token committed by 6 processes that wait for one common start time"
+     ],
+     "suite_exit": 1
+    },
+    {
+     "failed_rows": [
+      "race: 6 valid tokens for one pre-state, committed by 6 processes that wait for one common start time",
+      "audit after the race",
+      "race: one valid token committed by 6 processes that wait for one common start time"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "dispatcher-no-lock",
+   "removed": "ts/refund-finality/dispatcher.ts: no lock file",
+   "runs": [
+    {
+     "failed_rows": [
+      "overlap: 4 dispatcher processes start at one common time on 4 pending refunds"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "sink-no-id-check",
+   "removed": "ts/refund-finality/sink.ts: no comparison of the spec lock hash and the checker id with the pinned ones",
+   "runs": [
+    {
+     "failed_rows": [
+      "tampered: another spec lock hash (the signature does not fit either)",
+      "tampered: another checker id (the signature does not fit either)",
+      "a token with a VALID signature of the trusted key, issued with another spec lock",
+      "a token with a VALID signature of the trusted key, issued with another checker id"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "dispatcher-no-chain-check",
+   "removed": "ts/refund-finality/dispatcher.ts: no chain check",
+   "runs": [
+    {
+     "failed_rows": [
+      "raw INSERT: a validly signed token for an earlier state"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "dispatcher-no-request-id-check",
+   "removed": "ts/refund-finality/dispatcher.ts: no comparison of the outbox request id with the signed one",
+   "runs": [
+    {
+     "failed_rows": [
+      "raw INSERT: a copy of a committed token under a new request id"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "sink-copies-objects",
+   "removed": "ts/refund-finality/sink.ts: a value that is not a text is copied to canonical text and used (the version before review finding F1)",
+   "runs": [
+    {
+     "failed_rows": [
+      "missing token: undefined",
+      "missing token: null",
+      "missing token: an empty object",
+      "a valid token handed over as an object, not as its text",
+      "hostile object: a proxy over a valid token that counts every operation on it",
+      "positive control: the untampered token of this group, as its canonical text"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  },
+  {
+   "copy": "issuer-reflects-any-id",
+   "removed": "ts/refund-finality/minter.ts: any id value is sent back (the version before review finding F4)",
+   "runs": [
+    {
+     "failed_rows": [],
+     "suite_exit": 2
+    }
+   ]
+  },
+  {
+   "copy": "encoding-allows-nul",
+   "removed": "ts/refund-finality/encoding.ts: U+0000 is allowed in text",
+   "runs": [
+    {
+     "failed_rows": [
+      "refused message: U+0000 in the request id",
+      "refused message: U+0000 in the charge id",
+      "a body whose request id holds U+0000, signed with the attacker's key"
+     ],
+     "suite_exit": 1
+    }
+   ]
+  }
+ ],
+ "copies_with_nonzero_suite_exit": 8,
+ "end_to_end": false,
+ "suite_exit_meaning": "1 = at least one row failed; 2 = the run did not finish (for issuer-reflects-any-id the issuer process ended)",
+ "what": "One-off check that the control rows can fail. Each copy of the glue has one check removed; the suite ran against it in a scratch folder. Not part of the EXIT script. A finite check: 8 removed checks."
+}
