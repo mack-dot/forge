@@ -1,0 +1,123 @@
+<<HOL message: Created theory "forge_refundFfiwriteSuccess">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwriteSuccess)>>
+Saved theorem _______ "write_call_rel_gives_ok_return_state"
+CHECKED write_call_rel_gives_ok_return_state
+⊢ ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+  write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧ ¬word_bit 31 (w2w (s2.REG 0w)) ⇒
+  ffiwrite_return_ok_na_pre s2 b a (s.REG 20w) (s.REG 19w) (s.REG 29w)
+    (s.REG 30w)
+Saved theorem _______ "ffiwrite_after_successful_call"
+CHECKED ffiwrite_after_successful_call
+⊢ ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+  write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧ ¬word_bit 31 (w2w (s2.REG 0w)) ⇒
+  ∃s3.
+    arm8_run 10 s2 = SOME s3 ∧
+    (s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧ arm8_user s3 ∧
+     (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+          s3.REG r = s.REG r) ∧
+     ∀q. q ∈ dm ∧ q ≠ a ∧ q ≠ a + 1w ∧ q ≠ a + 2w ⇒ s3.MEM q = s.MEM q) ∧
+    s3.MEM a = 0w ∧ s3.MEM (a + 1w) = (15 >< 8) (s2.REG 0w) ∧
+    s3.MEM (a + 2w) = (7 >< 0) (s2.REG 0w)
+Saved theorem _______ "cake_ffiwrite_path_successful_write"
+CHECKED cake_ffiwrite_path_successful_write
+⊢ ffiwrite_call_pre dm s b c a g ⇒
+  ∃s1.
+    arm8_run 23 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002522Cw ∧
+    ∀s2.
+      write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧
+      ¬word_bit 31 (w2w (s2.REG 0w)) ⇒
+      ∃s3.
+        arm8_run 10 s2 = SOME s3 ∧
+        (s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧ arm8_user s3 ∧
+         (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+              s3.REG r = s.REG r) ∧
+         ∀q. q ∈ dm ∧ q ≠ a ∧ q ≠ a + 1w ∧ q ≠ a + 2w ⇒ s3.MEM q = s.MEM q) ∧
+        s3.MEM a = 0w ∧ s3.MEM (a + 1w) = (15 >< 8) (s2.REG 0w) ∧
+        s3.MEM (a + 2w) = (7 >< 0) (s2.REG 0w)
+Saved theorem _______ "cake_ffiwrite_path_returns"
+CHECKED cake_ffiwrite_path_returns
+⊢ ffiwrite_call_pre dm s b c a g ⇒
+  ∃s1.
+    arm8_run 23 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002522Cw ∧
+    ∀s2.
+      write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ⇒
+      ∃n s3.
+        arm8_run n s2 = SOME s3 ∧
+        (s3.PC = s.REG 30w ∧ s3.SP_EL0 = s.SP_EL0 ∧ arm8_user s3 ∧
+         (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+              s3.REG r = s.REG r) ∧
+         ∀q. q ∈ dm ∧ q ≠ a ∧ q ≠ a + 1w ∧ q ≠ a + 2w ⇒ s3.MEM q = s.MEM q) ∧
+        if word_bit 31 (w2w (s2.REG 0w)) then
+          n = 6 ∧ (a ∈ dm ⇒ s3.MEM a = 1w)
+        else
+          n = 10 ∧ s3.MEM a = 0w ∧ s3.MEM (a + 1w) = (15 >< 8) (s2.REG 0w) ∧
+          s3.MEM (a + 2w) = (7 >< 0) (s2.REG 0w)
+Saved theorem _______ "write_success_result_bytes_exact"
+CHECKED write_success_result_bytes_exact
+⊢ (ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+   write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧
+   ¬word_bit 31 (w2w (s2.REG 0w))) ∧ arm8_run 10 s2 = SOME s3 ⇒
+  s3.MEM a = 0w ∧ s3.MEM (a + 1w) = (15 >< 8) (s2.REG 0w) ∧
+  s3.MEM (a + 2w) = (7 >< 0) (s2.REG 0w)
+Saved theorem _______ "write_wrong_result_bytes_refuted"
+CHECKED write_wrong_result_bytes_refuted
+⊢ (ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+   write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧
+   ¬word_bit 31 (w2w (s2.REG 0w))) ∧ arm8_run 10 s2 = SOME s3 ∧
+  (s3.MEM a ≠ 0w ∨ s3.MEM (a + 1w) ≠ (15 >< 8) (s2.REG 0w) ∨
+   s3.MEM (a + 2w) ≠ (7 >< 0) (s2.REG 0w)) ⇒
+  F
+Saved theorem _______ "write_return_to_wrong_address_not_in_relation"
+CHECKED write_return_to_wrong_address_not_in_relation
+⊢ ffiwrite_at_call s b a g s1 ∧ s2.PC ≠ 0x10002522Cw ⇒
+  ¬write_call_rel dm s1 s2
+Saved theorem _______ "write_result_bytes_in_image_not_covered"
+CHECKED write_result_bytes_in_image_not_covered
+⊢ i < 3 ∧ 0x100000000w ≤₊ a + n2w i ∧ a + n2w i <₊ 0x100030F30w ⇒
+  ¬ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "write_success_caller_return_address_exact"
+CHECKED write_success_caller_return_address_exact
+⊢ (ffiwrite_call_pre dm s b c a g ∧ ffiwrite_at_call s b a g s1 ∧
+   write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧
+   ¬word_bit 31 (w2w (s2.REG 0w))) ∧ arm8_run 10 s2 = SOME s3 ∧
+  s3.PC ≠ s.REG 30w ⇒
+  F
+Saved theorem _______ "write_call_rel_inhabited_ok"
+CHECKED write_call_rel_inhabited_ok
+⊢ ∀dm s1.
+    arm8_user s1 ∧ ¬s1.SCTLR_EL1.A ⇒
+    write_call_rel dm s1
+      (s1 with <|PC := s1.REG 30w; REG := s1.REG⦇0w ↦ 5w⦈|>) ∧
+    ¬(s1 with <|PC := s1.REG 30w; REG := s1.REG⦇0w ↦ 5w⦈|>).SCTLR_EL1.A ∧
+    ¬word_bit 31
+      (w2w ((s1 with <|PC := s1.REG 30w; REG := s1.REG⦇0w ↦ 5w⦈|>).REG 0w))
+WITNESS_CONJUNCTS 19
+Saved theorem _______ "ffiwrite_call_pre_witness_A_clear"
+CHECKED ffiwrite_call_pre_witness_A_clear
+⊢ ffiwrite_call_pre {0x200000100w}
+    <|MEM := sat_mem; PC := 0x100004090w; SP_EL0 := 0x400000020w;
+      REG :=
+        (λr.
+           if r = 0w then 0x200000200w
+           else if r = 1w then 8w
+           else if r = 2w then 0x200000100w
+           else if r = 3w then 4w
+           else 0w); PSTATE := <|EL := 0w|>; exception := NoException;
+      SCTLR_EL1 := <|E0E := F; SA0 := F; A := F|>;
+      TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x400000000w 0x200000200w
+    0x200000100w 0w
+Saved theorem _______ "cake_ffiwrite_success_path_inhabited"
+CHECKED cake_ffiwrite_success_path_inhabited
+⊢ ∃dm s b c a g s1 s2 s3.
+    ffiwrite_call_pre dm s b c a g ∧ arm8_run 23 s = SOME s1 ∧
+    write_call_rel dm s1 s2 ∧ ¬s2.SCTLR_EL1.A ∧
+    ¬word_bit 31 (w2w (s2.REG 0w)) ∧ arm8_run 10 s2 = SOME s3 ∧
+    s3.MEM a = 0w ∧ s3.MEM (a + 2w) = 5w
+CLOSURE_NODES 532
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundFfiwriteSuccess" ... done.
+Theory "forge_refundFfiwriteSuccess" took 9.7s to build
+EXACT_COMPLETE

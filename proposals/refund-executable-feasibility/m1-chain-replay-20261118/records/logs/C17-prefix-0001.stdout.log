@@ -1,0 +1,42 @@
+<<HOL message: Created theory "forge_targetInstallPrefix">>
+Saved definition ____ "no_install_prefix_def"
+Saved theorem _______ "no_install_prefix_zero"
+Saved theorem _______ "no_install_prefix_mono"
+Saved theorem _______ "no_install_prefix_all"
+Saved theorem _______ "no_install_prefix_halt"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_targetInstallPrefix)>>
+Saved theorem _______ "no_install_prefix_next"
+Saved theorem _______ "no_install_prefix_segment"
+CHECKED no_install_prefix_zero
+⊢ no_install_prefix mc ffi 0 ms ⇔ mc.target.get_pc ms ≠ mc.install_pc
+CHECKED no_install_prefix_mono
+⊢ ∀n m. no_install_prefix mc ffi n ms ∧ m ≤ n ⇒ no_install_prefix mc ffi m ms
+CHECKED no_install_prefix_all
+⊢ (∀n. no_install_prefix mc ffi n ms) ⇔
+  ∀j ms' ffi'.
+    evaluate mc ffi j ms = (TimeOut,ms',ffi') ⇒
+    mc.target.get_pc ms' ≠ mc.install_pc
+CHECKED no_install_prefix_halt
+⊢ mc.target.get_pc ms = mc.halt_pc ∧ mc.halt_pc ∉ mc.prog_addresses ∧
+  mc.halt_pc ≠ mc.install_pc ⇒
+  ∀n. no_install_prefix mc ffi n ms
+CHECKED no_install_prefix_next
+⊢ mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+  encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+    (mc.target.get_byte ms) mc.prog_addresses ∧
+  mc.install_pc ∉ mc.prog_addresses ⇒
+  (no_install_prefix mc ffi (SUC n) ms ⇔
+   EVERY mc.target.state_ok
+     [ms; mc.target.next ms; mc.next_interfer 0 (mc.target.next ms)] ∧
+   (∀x. x ∉ mc.prog_addresses ⇒
+        mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x) ⇒
+   no_install_prefix (mc with next_interfer := shift_seq 1 mc.next_interfer)
+     ffi n (mc.next_interfer 0 (mc.target.next ms)))
+CHECKED no_install_prefix_segment
+⊢ (∀k. evaluate c io (k + l) ms1 = evaluate c2 io2 k ms2) ∧
+  c2.install_pc = c.install_pc ∧ c2.target = c.target ∧
+  no_install_prefix c io l ms1 ∧ no_install_prefix c2 io2 n ms2 ⇒
+  no_install_prefix c io (l + n) ms1
+Exporting theory "forge_targetInstallPrefix" ... done.
+Theory "forge_targetInstallPrefix" took 1.9s to build
+P3_PROOF_COMPLETE

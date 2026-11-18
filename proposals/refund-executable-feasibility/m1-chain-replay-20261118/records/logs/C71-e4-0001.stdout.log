@@ -1,0 +1,419 @@
+<<HOL message: Created theory "forge_refundSlideProfileA">>
+USED refund_installed_from_entry_reduced_sl
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc (sl + 0x1000040D0w) envmc) ms ⇒
+     refund_installed_no_handler (refund_mc (sl + 0x1000040D0w) envmc) ms 428
+       0)
+USED refund_behavior_valid_request_no_handler
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+USED refund_u298_exclusion_valid_request
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀j ms' ffi'.
+    evaluate mc0 (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+    mc0.target.get_pc ms' ≠ mc0.install_pc
+USED refund_ffi_contract_def
+⊢ ∀dm ffi_i.
+    refund_ffi_contract dm ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target
+        (t1 with pc := 0x1000040D0w − n2w ((3 + index) * 16)) ms2 ∧
+      aligned 2 (t1.regs 30) ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+MARK S4
+CONTRACT_BODY_PARAMETRISED true
+DEFINITION ⊢ ∀b dm ffi_i.
+    refund_ffi_contract_at b dm ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+Saved theorem _______ "refund_ffi_contract_at_link_base_is_the_old_contract"
+CHECKED refund_ffi_contract_at_link_base_is_the_old_contract
+⊢ ∀dm f. refund_ffi_contract_at 0x1000040D0w dm f ⇔ refund_ffi_contract dm f
+Saved theorem _______ "refund_mc_register_fields_sl"
+CHECKED refund_mc_register_fields_sl
+⊢ (refund_mc (sl + 0x1000040D0w) envmc).ffi_interfer = envmc.ffi_interfer ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).ptr_reg = 0 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).len_reg = 1 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).ptr2_reg = 2 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).len2_reg = 3 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).callee_saved_regs =
+  [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSlideProfileA)>>
+LHS_N ⊢ ffi_interfer_ok (sl + 0x1000040D0w) (refund_mc (sl + 0x1000040D0w) envmc) ⇔
+  ∀ms2 k index new_bytes t1 bytes bytes2.
+    index < 4 ∧ envmc.prog_addresses = t1.mem_domain ⇒
+    (read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+       (λa. if a ∈ t1.mem_domain then SOME (ms2.MEM a) else NONE) =
+     SOME bytes ∧
+     read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+       (λa. if a ∈ t1.mem_domain then SOME (ms2.MEM a) else NONE) =
+     SOME bytes2) ∧ LENGTH new_bytes = LENGTH bytes2 ∧
+    target_state_rel arm8_target
+      (t1 with
+       pc :=
+         sl +
+         n2w
+           ((18446744073709551616 − (3 + index) * 16 MOD 18446744073709551616) MOD
+            18446744073709551616) + 0x1000040D0w) ms2 ∧
+    aligned 2 (t1.regs 30) ⇒
+    arm8_ok (envmc.ffi_interfer k (index,new_bytes,ms2)) ∧
+    (envmc.ffi_interfer k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+    (∀a. a ∈ t1.mem_domain ⇒
+         (envmc.ffi_interfer k (index,new_bytes,ms2)).MEM a =
+         asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+    ∀r. (r = 19 ∨ r = 20 ∨ r = 21 ∨ r = 22 ∨ r = 23 ∨ r = 24 ∨ r = 25 ∨
+         r = 26 ∨ r = 27 ∨ r = 28) ∧ r < 32 ∧ r ≠ 18 ∧ r ≠ 26 ∧ r ≠ 31 ⇒
+        (envmc.ffi_interfer k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+RHS_N ⊢ refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+    envmc.ffi_interfer ⇔
+  ∀k index new_bytes ms2 t1 bytes bytes2.
+    index < 4 ∧ t1.mem_domain = envmc.prog_addresses ∧
+    read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+      (λa. if a ∈ envmc.prog_addresses then SOME (ms2.MEM a) else NONE) =
+    SOME bytes ∧
+    read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+      (λa. if a ∈ envmc.prog_addresses then SOME (ms2.MEM a) else NONE) =
+    SOME bytes2 ∧ LENGTH new_bytes = LENGTH bytes2 ∧
+    target_state_rel arm8_target
+      (t1 with
+       pc :=
+         sl +
+         n2w
+           ((18446744073709551616 − (3 + index) * 16 MOD 18446744073709551616) MOD
+            18446744073709551616) + 0x1000040D0w) ms2 ∧
+    aligned 2 (t1.regs 30) ⇒
+    arm8_ok (envmc.ffi_interfer k (index,new_bytes,ms2)) ∧
+    (envmc.ffi_interfer k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+    (∀a. a ∈ envmc.prog_addresses ⇒
+         (envmc.ffi_interfer k (index,new_bytes,ms2)).MEM a =
+         asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+    ∀r. r = 19 ∨ r = 20 ∨ r = 21 ∨ r = 22 ∨ r = 23 ∨ r = 24 ∨ r = 25 ∨
+        r = 27 ∨ r = 28 ⇒
+        (envmc.ffi_interfer k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+Saved theorem _______ "ffi_interfer_ok_iff_contract_sl"
+CHECKED ffi_interfer_ok_iff_contract_sl
+⊢ ffi_interfer_ok (sl + 0x1000040D0w) (refund_mc (sl + 0x1000040D0w) envmc) ⇔
+  refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+    envmc.ffi_interfer
+DEFINITION ⊢ ∀sl envmc.
+    refund_env_ok_sl sl envmc ⇔
+    interference_ok envmc.next_interfer
+      (arm8_target.proj envmc.prog_addresses) ∧
+    refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+      envmc.ffi_interfer
+Saved theorem _______ "refund_mc_environment_fields_sl"
+CHECKED refund_mc_environment_fields_sl
+⊢ (refund_mc (sl + 0x1000040D0w) envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).target = arm8_target ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).prog_addresses = envmc.prog_addresses
+Saved theorem _______ "refund_env_ok_sl_iff_installed_residual"
+CHECKED refund_env_ok_sl_iff_installed_residual
+⊢ ∀ms.
+    ms.PC = sl + 0x1000040D0w ⇒
+    (refund_installed_rest2 (refund_mc (sl + 0x1000040D0w) envmc) ms ⇔
+     refund_env_ok_sl sl envmc)
+SHOW AB1
+  ASM a ∈ dm
+  ASM ms2.REG 2w = t1.regs 2
+  ASM ms2.REG 30w = t1.regs 30
+  ASM ∀i. i < 32 ∧ i ≠ 18 ∧ i ≠ 26 ∧ i ≠ 31 ⇒ ms2.REG (n2w i) = t1.regs i
+  ASM ∀a. a ∈ t1.mem_domain ⇒ ms2.MEM a = t1.mem a
+  ASM ms2.PC =
+b +
+n2w
+  ((18446744073709551616 − 16 * (index + 3) MOD 18446744073709551616) MOD
+   18446744073709551616)
+  ASM aligned 2
+  (b +
+   n2w
+     ((18446744073709551616 − 16 * (index + 3) MOD 18446744073709551616) MOD
+      18446744073709551616))
+  ASM ms2.exception = NoException
+  ASM ¬ms2.TCR_EL1.TBI0
+  ASM ¬ms2.TCR_EL1.TBI1
+  ASM ¬ms2.SCTLR_EL1.SA0
+  ASM ¬ms2.SCTLR_EL1.E0E
+  ASM ms2.PSTATE.EL = 0w
+  ASM aligned 2 (t1.regs 30)
+  ASM target_state_rel arm8_target
+  (t1 with
+   pc :=
+     b +
+     n2w
+       ((18446744073709551616 − 16 * (index + 3) MOD 18446744073709551616) MOD
+        18446744073709551616)) ms2
+  ASM LENGTH new_bytes = LENGTH bytes2
+  ASM read_bytearray (t1.regs 2) (w2n (t1.regs 3))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+  ASM read_bytearray (t1.regs 0) (w2n (t1.regs 1))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+  ASM t1.mem_domain = dm
+  ASM index < 4
+  GOAL asm_write_bytearray (t1.regs 2) new_bytes ms2.MEM a =
+asm_write_bytearray (t1.regs 2) new_bytes t1.mem a
+Saved theorem _______ "refund_abs_ffi_contract_at"
+CHECKED refund_abs_ffi_contract_at
+⊢ ∀b dm. refund_ffi_contract_at b dm refund_abs_ffi
+Saved theorem _______ "refund_abs_env_is_ok_sl"
+CHECKED refund_abs_env_is_ok_sl
+⊢ refund_env_ok_sl sl (refund_abs_env envmc)
+Saved theorem _______ "refund_env_ok_sl_at_slide_zero"
+CHECKED refund_env_ok_sl_at_slide_zero
+⊢ refund_env_ok_sl 0w envmc ⇔ refund_env_ok envmc
+Saved theorem _______ "pc_changing_environment_is_not_ok_sl"
+CHECKED pc_changing_environment_is_not_ok_sl
+⊢ ¬refund_env_ok_sl sl
+    (envmc with next_interfer := (λi ms. ms with PC := ms.PC + 4w))
+Saved theorem _______ "stub_guard_ffi_satisfies_contract_at_its_base"
+CHECKED stub_guard_ffi_satisfies_contract_at_its_base
+⊢ ∀b dm. refund_ffi_contract_at b dm (refund_stub_guard_ffi b)
+Saved theorem _______ "slide_zero_stub_guard_ffi_fails_contract_at_slide_0x4000"
+CHECKED slide_zero_stub_guard_ffi_fails_contract_at_slide_0x4000
+⊢ ∀dm.
+    ¬refund_ffi_contract_at 0x1000080D0w dm
+      (refund_stub_guard_ffi 0x1000040D0w)
+MARK S5
+INPUT_PREMISE stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+INPUT_PREMISE wfcl cl
+INPUT_PREMISE wfFS fs
+INPUT_PREMISE STD_streams fs
+Saved theorem _______ "refund_profile_a_sl"
+CHECKED refund_profile_a_sl
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+         ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+       (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+        ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+Saved theorem _______ "refund_profile_a_sl_abstract_env"
+CHECKED refund_profile_a_sl_abstract_env
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) (refund_abs_env envmc))
+         (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) (refund_abs_env envmc)).target.get_pc
+         ms' ≠
+       (refund_mc (sl + 0x1000040D0w) (refund_abs_env envmc)).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) (refund_abs_env envmc))
+        (basis_ffi ext cl fs) ms ⊆
+      extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+MACHINE_SEM_TERM machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) ms
+Saved theorem _______ "refund_profile_a_sl_every_machine_run"
+CHECKED refund_profile_a_sl_every_machine_run
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi ext cl fs) ms b ⇒
+         (∃io.
+            b = Terminate Success io ∧
+            extract_fs ext (cl,fs) io =
+            SOME
+              (add_stdout (fastForwardFD fs 0)
+                 (refund_render_fields
+                    (refund_fields charge request original remaining enabled
+                       opened candidate amount reason)))) ∨
+         ∃io io'.
+           b = Terminate Resource_limit_hit io' ∧ io' ≼ io ∧
+           extract_fs ext (cl,fs) io =
+           SOME
+             (add_stdout (fastForwardFD fs 0)
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)))) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi ext cl fs) ms b) ∧
+    ¬machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+      ms Fail
+Saved theorem _______ "refund_profile_a_sl_machine_premises_satisfiable_at_0x4000"
+CHECKED refund_profile_a_sl_machine_premises_satisfiable_at_0x4000
+⊢ ∃s h stk e envmc.
+    refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+    8192w ≤₊ e − h ∧ refund_heap_clear_sl 16384w h e ∧
+    envmc.prog_addresses = refund_mem_dm_sl 16384w h e ∧
+    refund_env_ok_sl 16384w envmc
+MARK S6
+Saved theorem _______ "slide_zero_instance_is_refund_profile_a_slide0"
+CHECKED slide_zero_instance_is_refund_profile_a_slide0
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  refund_env_ok envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) j ms =
+       (TimeOut,ms',ffi') ⇒
+       (refund_mc 0x1000040D0w envmc).target.get_pc ms' ≠
+       (refund_mc 0x1000040D0w envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms ⊆
+      extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+Saved theorem _______ "slide_zero_instance_is_refund_profile_a_slide0_every_machine_run"
+CHECKED slide_zero_instance_is_refund_profile_a_slide0_every_machine_run
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  refund_env_ok envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w) ∧
+    (∀b. machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms
+           b ⇒
+         (∃io.
+            b = Terminate Success io ∧
+            extract_fs ext (cl,fs) io =
+            SOME
+              (add_stdout (fastForwardFD fs 0)
+                 (refund_render_fields
+                    (refund_fields charge request original remaining enabled
+                       opened candidate amount reason)))) ∨
+         ∃io io'.
+           b = Terminate Resource_limit_hit io' ∧ io' ≼ io ∧
+           extract_fs ext (cl,fs) io =
+           SOME
+             (add_stdout (fastForwardFD fs 0)
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)))) ∧
+    (∃b. machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms
+           b) ∧
+    ¬machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms Fail
+CONTROL_OK the slide-0 instances are term-identical to the stored U404 theorems
+CONTROL_OK the output term of the slide theorem is syntactically the U387 output term (not weakened, not restated)
+CONTROL_OK one io_events is bound for both the machine_sem inclusion and the extract_fs equation
+CONTROL_OK the machine_sem term is for refund_mc (sl + 0x1000040D0w) envmc, the basis oracle, and the state ms reached by arm8_run 27 s
+CONTROL_OK premises: entry state at a slide, refund_env_ok_sl, input; no premise mentions extract_fs, machine_sem or an installed-state predicate
+CONTROL_OK the slide statement mentions no source-semantics constant
+CONTROL_OK the abstract-environment instance has no environment premise
+CONTROL_OK the slide theorem has the same number of premises as the U404 theorem
+PUBLISHED compile_correct' loaded, tag clean
+STORED_THEOREMS 17
+CLOSURE_NODES 542
+CLOSURE_HAS_COMPILE_CORRECT_CONTROL true
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundSlideProfileA" ... done.
+Theory "forge_refundSlideProfileA" took 35.3s to build
+EXACT_COMPLETE

@@ -1,0 +1,30 @@
+<<HOL message: Created theory "forge_labRegionWalk">>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_ok_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_labRegionWalk)>>
+Saved definition ____ "hyp_walk_def"
+Saved induction _____ "hyp_walk_ind"
+Saved definition ____ "loc_good_def"
+Saved theorem _______ "hyp_walk_fetch"
+Saved theorem _______ "line_ok_step_ok"
+Saved theorem _______ "hyp_walk_region_hyp"
+CHECKED hyp_walk_fetch
+⊢ ∀okp rs k secs.
+    hyp_walk okp rs k secs ⇒
+    ∀pc line.
+      asm_fetch_aux pc secs = SOME line ∧ okp (k + pc) ⇒
+      line_ok okp rs (k + pc) line
+CHECKED line_ok_step_ok
+⊢ ∀line pc.
+    line_ok okp (λn1 n2. loc_to_pc n1 n2 code) pc line ⇒
+    step_ok (loc_good okp code) okp code pc line
+CHECKED hyp_walk_region_hyp
+⊢ ∀okp code.
+    hyp_walk okp (λn1 n2. loc_to_pc n1 n2 code) 0 code ⇒
+    region_hyp (loc_good okp code) okp code
+Exporting theory "forge_labRegionWalk" ... done.
+Theory "forge_labRegionWalk" took 6.8s to build
+P2_PROOF_COMPLETE

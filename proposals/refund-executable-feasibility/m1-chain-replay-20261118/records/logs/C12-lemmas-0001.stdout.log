@@ -1,0 +1,30 @@
+<<HOL message: Created theory "forge_labRegionInvariant">>
+Saved definition ____ "val_inv_def"
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "step_ok_def"
+Saved definition ____ "region_hyp_def"
+Saved definition ____ "region_inv_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_labRegionInvariant)>>
+Saved theorem _______ "asm_inst_val_inv"
+Saved theorem _______ "write_bytearray_val_inv"
+CHECKED asm_inst_val_inv
+⊢ ∀i s. (∀w. G (Word w)) ∧ val_inv G s ⇒ val_inv G (asm_inst i s)
+CHECKED write_bytearray_val_inv
+⊢ ∀bs w m.
+    (∀w. G (Word w)) ∧ (∀a. G (m a)) ⇒ ∀a. G (write_bytearray w bs m dm be a)
+PROPOSED_NOT_PROVED one_step
+∀s res t.
+  region_inv G OK code s ∧ evaluate s = (res,t) ⇒
+  (∃s2. evaluate s2 = (res,t) ∧ region_inv G OK code s2 ∧ s2.clock < s.clock) ∨
+  t = s
+PROPOSED_NOT_PROVED whole_run
+∀s res s'.
+  evaluate s = (res,s') ⇒
+  region_hyp G OK s.code ∧ val_inv G s ∧ OK s.pc ⇒
+  val_inv G s' ∧ OK s'.pc ∧ s'.code = s.code
+Exporting theory "forge_labRegionInvariant" ... done.
+Theory "forge_labRegionInvariant" took 8.3s to build
+P2_PROOF_COMPLETE

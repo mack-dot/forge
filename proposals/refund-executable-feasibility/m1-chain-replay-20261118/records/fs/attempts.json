@@ -1,0 +1,52 @@
+{
+ "rule": "At most five failing attempts for this proof in total (project hard rule). The failing attempt fs-0001 of 2026-11-17 counts as number 1. fs-0002 of 2026-11-17 never ran a proof: its parent theory files had been deleted (stderr: TextIO.openIn ENOENT).",
+ "prior_failing_attempts": [
+  {
+   "case": "fs-0001",
+   "date": "2026-11-17",
+   "exit": 1,
+   "record": "proposals/refund-executable-feasibility/m1-slide-s4-s6-20261117/records/fs/fs-0001.run.json",
+   "failed_lemmas": [
+    "LFINITE_not_LREPEAT_one",
+    "sat_fs_STD_streams"
+   ]
+  }
+ ],
+ "attempts": [
+  {
+   "case": "fs-r4-0001",
+   "source": "slide-s3-copy/attempt-0001/fs-r4-0001.sml",
+   "source_sha256": "e69e2753108a00a2be2626e69f2bcfaea984f0b7ecc8a8debf0b6fce16c5fe46",
+   "change": "none: byte-identical to the packet file fs-0002.sml (it holds the two fixes named in the memory file: LCONS_11 rewrite, explicit witnesses for STD_streams)",
+   "status": "PASSED",
+   "actual_exit": 0,
+   "wall_seconds": 84.3,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "lemma_failures": 0,
+   "oracle_theorems": 0,
+   "stored_theorems": 13,
+   "definitions": 1,
+   "case_folder": "slide-s3-copy/attempt-0001/fs-r4-0001",
+   "failing_attempts_in_this_replay": 0,
+   "theory_files_sha256": {
+    "dat": "d70d1a6554909ae0fff8ca29213cbd8f4de13151b6c873b533c5f08c947344bd",
+    "sig": "cb127ba1df6fc3096ae47dd8b2d4501284bf285f6143d182ee12271325782c1e",
+    "sml": "21e2bb171fd76167aed5f71299eef630a22012c3b148271a0646047d336652ad"
+   },
+   "statement_comparison": "no stored statement (the script never passed before)"
+  }
+ ],
+ "import_check": {
+  "case": "fs-imp-r4-0001",
+  "source": "slide-s3-copy/attempt-0001/fs-imp-r4-0001.sml",
+  "written_in_this_replay": true,
+  "actual_exit": 0,
+  "markers": [
+   "EXACT_COMPLETE"
+  ],
+  "result": "IMPORTED_COUNT 8 MISMATCH_COUNT 0; the stored joint statement equals (aconv) the antecedent of the stored forge_refundSlideProfileA.refund_profile_a_sl at sl = 0x4000w under seven existential quantifiers; 14 stored items clean; 3 controls rejected",
+  "limit": "the non-vacuity theorem (conclusion for one constructed model state) has a structural check only"
+ }
+}

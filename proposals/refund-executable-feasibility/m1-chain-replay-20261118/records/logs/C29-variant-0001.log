@@ -1,0 +1,30 @@
+{
+ "case": "variant-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "variant-0001.sml",
+ "source_sha256": "b38b554f508d11b32fc8e826730ae2097f343dba22de174361d0e2dec1593c91",
+ "resource_guard": {
+  "memory_free_percent": 44,
+  "disk_free_gib": 118.98,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 1500,
+ "wall_seconds_limit": 1800,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 171.712,
+ "child_user_cpu_seconds": 172.8,
+ "child_max_rss_bytes": 3178577920,
+ "markers": [
+  "REPLAY_COMPLETE"
+ ],
+ "stdout_sha256": "5ac2feeb18ad25134656dfdfa2251ab0a6f0b9a2017e7e6e67e0d3413ecaa57b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_compileCorrectLabFactsTheory.dat": "315941916bd398d0bdc31642c885c6cc36a0f14eefbcc46946b241c56ed59211",
+  ".hol/objs/forge_compileCorrectLabFactsTheory.sig": "8f5e2ce60063645ad157a31e11c76b064de4b1a9a66fc304b766dab4c4f693ae",
+  ".hol/objs/forge_compileCorrectLabFactsTheory.sml": "b9743765924150bb232f49476a07a6256cc5f9f50d1838f3c07664db3c24fcc0"
+ },
+ "inputs_unchanged_after": true
+}

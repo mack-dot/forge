@@ -1,0 +1,388 @@
+<<HOL message: Created theory "forge_refundWriteWord">>
+PRE_CONJUNCTS 19
+BOUND_LHS_GENERAL w2w
+  (w2w
+     (w2w
+        (w2w
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (m1 @@ m0)))) @@
+               (31 >< 24) (w2w (w2w (w2w (m1 @@ m0)))) @@
+               (7 >< 0) (w2w (w2w (w2w (m1 @@ m0)))) @@
+               (15 >< 8) (w2w (w2w (w2w (m1 @@ m0)))))) +
+         w2w
+           (w2w
+              ((23 >< 16) (w2w (w2w (w2w (m3 @@ m2)))) @@
+               (31 >< 24) (w2w (w2w (w2w (m3 @@ m2)))) @@
+               (7 >< 0) (w2w (w2w (w2w (m3 @@ m2)))) @@
+               (15 >< 8) (w2w (w2w (w2w (m3 @@ m2)))))))) + 4w)
+BOUND_LHS_DEPENDS_ONLY_ON_FOUR_BYTES
+MARK E1
+Saved theorem _______ "write_bound_word_normal_form"
+CHECKED write_bound_word_normal_form
+⊢ w2w
+    (w2w
+       (w2w
+          (w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m1 @@ m0)))))) +
+           w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m3 @@ m2)))))))) + 4w) =
+  w2w m0 ≪ 8 + w2w m1 + (w2w m2 ≪ 8 + w2w m3) + 4w
+MARK E2
+Saved theorem _______ "write_bound_word_value_no_overflow"
+CHECKED write_bound_word_value_no_overflow
+⊢ w2n (w2w m0 ≪ 8 + w2w m1 + (w2w m2 ≪ 8 + w2w m3) + 4w) =
+  w22n [m0; m1] + w22n [m2; m3] + 4 ∧
+  w22n [m0; m1] + w22n [m2; m3] + 4 < 2 ** 18
+MARK BR
+Saved theorem _______ "write_bound_numeric_iff_word"
+CHECKED write_bound_numeric_iff_word
+⊢ w22n [m0; m1] + w22n [m2; m3] + 4 ≤ w2n x3 ⇔
+  w2w
+    (w2w
+       (w2w
+          (w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m1 @@ m0)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m1 @@ m0)))))) +
+           w2w
+             (w2w
+                ((23 >< 16) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (31 >< 24) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (7 >< 0) (w2w (w2w (w2w (m3 @@ m2)))) @@
+                 (15 >< 8) (w2w (w2w (w2w (m3 @@ m2)))))))) + 4w) ≤₊ x3
+ALL_SEVEN_NAMED_CONJUNCTS_FOUND
+RESIDUAL_CONJUNCTS 12
+RESIDUAL arm8_user s
+RESIDUAL refund_image_mem 0w s.MEM
+RESIDUAL aligned 3 b
+RESIDUAL aligned 2 c
+RESIDUAL aligned 1 a
+RESIDUAL ∀i x. i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ b + n2w i ≠ x
+RESIDUAL ∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j
+RESIDUAL ∀i j. i < 32 ∧ j < 4 ⇒ b + n2w i ≠ a + n2w j
+RESIDUAL ¬word_msb (s.REG 3w)
+RESIDUAL ∀i. i < 32 ⇒ b + n2w i ∉ dm
+RESIDUAL ∀i x. i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x
+RESIDUAL ∀i j. i < 3 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j
+DEFINITION ⊢ ∀dm s.
+    write_call_residual dm s ⇔
+    arm8_user s ∧ refund_image_mem 0w s.MEM ∧ aligned 3 (s.SP_EL0 − 32w) ∧
+    aligned 2 (s.REG 0w) ∧ aligned 1 (s.REG 2w) ∧
+    (∀i x.
+       i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒
+       s.SP_EL0 − 32w + n2w i ≠ x) ∧
+    (∀i j. i < 32 ∧ j < 8 ⇒ s.SP_EL0 − 32w + n2w i ≠ s.REG 0w + n2w j) ∧
+    (∀i j. i < 32 ∧ j < 4 ⇒ s.SP_EL0 − 32w + n2w i ≠ s.REG 2w + n2w j) ∧
+    ¬word_msb (s.REG 3w) ∧ (∀i. i < 32 ⇒ s.SP_EL0 − 32w + n2w i ∉ dm) ∧
+    (∀i x.
+       i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ s.REG 2w + n2w i ≠ x) ∧
+    ∀i j. i < 3 ∧ j < 32 ⇒ s.REG 2w + n2w i ≠ s.SP_EL0 − 32w + n2w j
+BRIDGE_CONCLUSION_IS_THE_DEFINITION_CONJUNCT
+Saved theorem _______ "write_bound_at_call_state"
+CHECKED write_bound_at_call_state
+⊢ w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+  w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w) ⇔
+  w2w
+    (w2w
+       (w2w
+          (w2w
+             (w2w
+                ((23 >< 16)
+                   (w2w
+                      (w2w (w2w (s.MEM (s.REG 2w + 1w) @@ s.MEM (s.REG 2w))))) @@
+                 (31 >< 24)
+                   (w2w
+                      (w2w (w2w (s.MEM (s.REG 2w + 1w) @@ s.MEM (s.REG 2w))))) @@
+                 (7 >< 0)
+                   (w2w
+                      (w2w (w2w (s.MEM (s.REG 2w + 1w) @@ s.MEM (s.REG 2w))))) @@
+                 (15 >< 8)
+                   (w2w
+                      (w2w (w2w (s.MEM (s.REG 2w + 1w) @@ s.MEM (s.REG 2w))))))) +
+           w2w
+             (w2w
+                ((23 >< 16)
+                   (w2w
+                      (w2w
+                         (w2w
+                            (s.MEM (s.REG 2w + 2w + 1w) @@
+                             s.MEM (s.REG 2w + 2w))))) @@
+                 (31 >< 24)
+                   (w2w
+                      (w2w
+                         (w2w
+                            (s.MEM (s.REG 2w + 2w + 1w) @@
+                             s.MEM (s.REG 2w + 2w))))) @@
+                 (7 >< 0)
+                   (w2w
+                      (w2w
+                         (w2w
+                            (s.MEM (s.REG 2w + 2w + 1w) @@
+                             s.MEM (s.REG 2w + 2w))))) @@
+                 (15 >< 8)
+                   (w2w
+                      (w2w
+                         (w2w
+                            (s.MEM (s.REG 2w + 2w + 1w) @@
+                             s.MEM (s.REG 2w + 2w))))))))) + 4w) ≤₊ s.REG 3w
+MARK PRE
+Saved theorem _______ "write_call_pre_from_residual"
+CHECKED write_call_pre_from_residual
+⊢ s.PC = 0x100004090w ∧ s.REG 1w = 8w ∧
+  w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+  w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w) ∧
+  write_call_residual dm s ⇒
+  ffiwrite_call_pre dm s (s.SP_EL0 − 32w) (s.REG 0w) (s.REG 2w)
+    (mem_dword s.MEM 0x1000280B0w)
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundWriteWord)>>
+Saved theorem _______ "write_call_pre_gives_residual"
+CHECKED write_call_pre_gives_residual
+⊢ ffiwrite_call_pre dm s b c a g ⇒
+  b = s.SP_EL0 − 32w ∧ c = s.REG 0w ∧ a = s.REG 2w ∧
+  g = mem_dword s.MEM 0x1000280B0w ∧ s.PC = 0x100004090w ∧ s.REG 1w = 8w ∧
+  w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+  w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w) ∧
+  write_call_residual dm s
+Saved theorem _______ "write_call_residual_satisfiable"
+CHECKED write_call_residual_satisfiable
+⊢ ∃dm s.
+    s.PC = 0x100004090w ∧ s.REG 1w = 8w ∧
+    w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+    w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w) ∧
+    write_call_residual dm s
+MARK T5
+Saved theorem _______ "refund_terminating_run_write_path_under_residual"
+CHECKED refund_terminating_run_write_path_under_residual
+⊢ (is_arm8_machine_config mc0 ∧
+   refund_installed_no_handler mc0 ms cbspace data_sp ∧
+   stdin_content fs =
+   SOME
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+   STD_streams fs) ∧ refund_static mc0 dm ∧
+  machine_sem mc0 (basis_ffi ext cl fs) ms (Terminate Success io') ⇒
+  ∃mc1 ffi1 ms1.
+    machine_reach mc0 (basis_ffi ext cl fs) ms mc1 ffi1 ms1 ∧
+    ms1.PC = 0x100004090w ∧ ms1.REG 1w = 8w ∧
+    w2w
+      (w2w
+         (w2w
+            (w2w
+               (w2w
+                  ((23 >< 16)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w))))) @@
+                   (31 >< 24)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w))))) @@
+                   (7 >< 0)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w))))) @@
+                   (15 >< 8)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w))))))) +
+             w2w
+               (w2w
+                  ((23 >< 16)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w + 2w))))) @@
+                   (31 >< 24)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w + 2w))))) @@
+                   (7 >< 0)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w + 2w))))) @@
+                   (15 >< 8)
+                     (w2w
+                        (w2w
+                           (w2w
+                              (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                               ms1.MEM (ms1.REG 2w + 2w))))))))) + 4w) ≤₊
+    ms1.REG 3w ∧
+    ∀dm'.
+      write_call_residual dm' ms1 ⇒
+      ∃s1.
+        arm8_run 23 ms1 = SOME s1 ∧ s1.PC = mem_dword ms1.MEM 0x1000280B0w ∧
+        s1.REG 30w = 0x10002522Cw ∧
+        ∀s2.
+          write_call_rel dm' s1 s2 ∧ ¬s2.SCTLR_EL1.A ⇒
+          ∃n s3.
+            arm8_run n s2 = SOME s3 ∧
+            (s3.PC = ms1.REG 30w ∧ s3.SP_EL0 = ms1.SP_EL0 ∧ arm8_user s3 ∧
+             (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+                  s3.REG r = ms1.REG r) ∧
+             ∀q. q ∈ dm' ∧ q ≠ ms1.REG 2w ∧ q ≠ ms1.REG 2w + 1w ∧
+                 q ≠ ms1.REG 2w + 2w ⇒
+                 s3.MEM q = ms1.MEM q) ∧
+            if word_bit 31 (w2w (s2.REG 0w)) then
+              n = 6 ∧ (ms1.REG 2w ∈ dm' ⇒ s3.MEM (ms1.REG 2w) = 1w)
+            else
+              n = 10 ∧ s3.MEM (ms1.REG 2w) = 0w ∧
+              s3.MEM (ms1.REG 2w + 1w) = (15 >< 8) (s2.REG 0w) ∧
+              s3.MEM (ms1.REG 2w + 2w) = (7 >< 0) (s2.REG 0w)
+MARK O
+Saved theorem _______ "valid_write_to_open_fd_succeeds"
+CHECKED valid_write_to_open_fd_succeeds
+⊢ LENGTH c = 8 ∧ w22n [n1; n0] + w22n [o1; o0] ≤ LENGTH tll ∧
+  ALOOKUP fs.infds (w82n c) = SOME (ino,WriteMode,off) ∧
+  ALOOKUP fs.inode_tbl ino = SOME content ∧ fs.numchars ≠ [||] ⇒
+  ∃rest fs'.
+    ffi_write c (n1::n0::o1::o0::tll) fs = SOME (FFIreturn (0w::rest) fs')
+Saved theorem _______ "write_to_closed_fd_fails_with_valid_clen"
+CHECKED write_to_closed_fd_fails_with_valid_clen
+⊢ LENGTH c = 8 ∧ ALOOKUP fs.infds (w82n c) = NONE ⇒
+  ffi_write c (n1::n0::o1::o0::tll) fs =
+  SOME (FFIreturn (1w::n0::o1::o0::tll) fs)
+Saved theorem _______ "replay_ignores_failed_write_with_valid_clen"
+CHECKED replay_ignores_failed_write_with_valid_clen
+⊢ LENGTH c = 8 ∧ ALOOKUP (SND st).infds (w82n c) = NONE ⇒
+  extract_fs_with_numchars ext st
+    (IO_event (ExtCall «write») c
+       (ZIP (n1::n0::o1::o0::tll,1w::n0::o1::o0::tll))::l) =
+  extract_fs_with_numchars ext st l ∧
+  ¬write_ok_event
+    (IO_event (ExtCall «write») c
+       (ZIP (n1::n0::o1::o0::tll,1w::n0::o1::o0::tll)))
+Saved theorem _______ "basis_write_call_state_change"
+CHECKED basis_write_call_state_change
+⊢ ffi1.oracle = basis_ffi_oracle ext ∧
+  call_FFI ffi1 (ExtCall «write») c ab = FFI_return ffi2 nb ⇒
+  ∃fs'.
+    ffi_write c ab (SND ffi1.ffi_state) = SOME (FFIreturn nb fs') ∧
+    ffi2.ffi_state = (FST ffi1.ffi_state,fs')
+Saved theorem _______ "failed_write_call_keeps_the_file_system"
+CHECKED failed_write_call_keeps_the_file_system
+⊢ ffi1.oracle = basis_ffi_oracle ext ∧
+  call_FFI ffi1 (ExtCall «write») c ab = FFI_return ffi2 nb ∧
+  (∀rest. nb ≠ 0w::rest) ⇒
+  ffi2.ffi_state = ffi1.ffi_state ∧ nb = ab❲0 ↦ 1w❳
+MARK C1
+Saved theorem _______ "all_successful_trace_gives_valid_call_state_per_write_event"
+CHECKED all_successful_trace_gives_valid_call_state_per_write_event
+⊢ refund_static mc dm ∧ ffi.oracle = basis_ffi_oracle ext ∧
+  evaluate mc ffi k ms = (r,ms',ffi') ⇒
+  ∃l. ffi'.io_events = ffi.io_events ++ l ∧
+      ((∀e. MEM e l ∧ write_event e ⇒ write_ok_event e) ⇒
+       ∀e. MEM e l ∧ write_event e ⇒
+           ∃mc1 ffi1 ms1.
+             machine_reach mc ffi ms mc1 ffi1 ms1 ∧ ms1.PC = 0x100004090w ∧
+             ms1.REG 1w = 8w ∧
+             w2w
+               (w2w
+                  (w2w
+                     (w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w))))) @@
+                            (31 >< 24)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w))))) @@
+                            (7 >< 0)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w))))) @@
+                            (15 >< 8)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w))))))) +
+                      w2w
+                        (w2w
+                           ((23 >< 16)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w + 2w))))) @@
+                            (31 >< 24)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w + 2w))))) @@
+                            (7 >< 0)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w + 2w))))) @@
+                            (15 >< 8)
+                              (w2w
+                                 (w2w
+                                    (w2w
+                                       (ms1.MEM (ms1.REG 2w + 2w + 1w) @@
+                                        ms1.MEM (ms1.REG 2w + 2w))))))))) +
+                4w) ≤₊ ms1.REG 3w)
+MARK K
+Saved theorem _______ "sixteen_bit_sum_would_overflow"
+CHECKED sixteen_bit_sum_would_overflow
+⊢ n2w (65535 + 65535 + 4) = 2w ∧ 65535 + 65535 + 4 < 2 ** 18 ∧
+  ¬(65535 + 65535 + 4 < 2 ** 16)
+Saved theorem _______ "numeric_bound_does_not_give_sign_of_x3"
+CHECKED numeric_bound_does_not_give_sign_of_x3
+⊢ ∃x3. w22n [255w; 255w] + w22n [255w; 255w] + 4 ≤ w2n x3 ∧ word_msb x3
+Saved theorem _______ "negative_x3_not_covered"
+CHECKED negative_x3_not_covered
+⊢ word_msb (s.REG 3w) ⇒
+  ¬ffiwrite_call_pre dm s b c a g ∧ ¬write_call_residual dm s
+Saved theorem _______ "violated_numeric_bound_not_covered"
+CHECKED violated_numeric_bound_not_covered
+⊢ ¬(w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+   w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w)) ⇒
+  ¬ffiwrite_call_pre dm s b c a g
+Saved theorem _______ "failed_event_is_a_write_event_but_not_successful"
+CHECKED failed_event_is_a_write_event_but_not_successful
+⊢ write_event (IO_event (ExtCall «write») c (ZIP (h::t,(h::t)❲0 ↦ 1w❳))) ∧
+  ¬write_ok_event (IO_event (ExtCall «write») c (ZIP (h::t,(h::t)❲0 ↦ 1w❳)))
+STORED_THEOREMS 19
+CLOSURE_NODES 536
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundWriteWord" ... done.
+Theory "forge_refundWriteWord" took 9.0s to build
+EXACT_COMPLETE

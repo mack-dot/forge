@@ -1,0 +1,140 @@
+<<HOL message: Created theory "forge_refundLabRun">>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 4 clauses to the original specification.>>
+Saved definition ____ "line_ok1_def"
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLabRun)>>
+Saved definition ____ "hyp_walk1_def"
+Saved induction _____ "hyp_walk1_ind"
+Saved definition ____ "walk_check_def"
+Starting translation of line_ok1 from forge_refundLabRunTheory.
+Saved theorem _______ "cv_line_ok1_thm"
+Finished translating line_ok1, stored in cv_line_ok1_thm
+Starting translation of hyp_walk1 from forge_refundLabRunTheory.
+Saved theorem _______ "cv_hyp_walk1_thm"
+Finished translating hyp_walk1, stored in cv_hyp_walk1_thm
+Starting translation of walk_check from forge_refundLabRunTheory.
+Saved theorem _______ "cv_walk_check_thm"
+Finished translating walk_check, stored in cv_walk_check_thm
+Saved theorem _______ "refund_prog_cv_eq"
+Saved theorem _______ "refund_prog_cv_thm"
+WALK_CHECK_PAIR ⊢ walk_check [29; 31] (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog
+WALK_CHECK_SINGLE ⊢ ¬walk_check [29] (set_oracle arm8_backend_config refund_alloc_oracle)
+    refund_prog
+Saved theorem _______ "line_ok1_eq"
+CHECKED line_ok1_eq
+⊢ ∀line pc.
+    line_ok1 ls whole pc line ⇔
+    line_ok (pc_ok ls whole) (λn1 n2. loc_to_pc n1 n2 whole) pc line
+Saved theorem _______ "hyp_walk1_eq"
+CHECKED hyp_walk1_eq
+⊢ ∀ls whole pc secs.
+    hyp_walk1 ls whole pc secs ⇔
+    hyp_walk (pc_ok ls whole) (λn1 n2. loc_to_pc n1 n2 whole) pc secs
+Saved theorem _______ "refund_lab_region_hyp"
+CHECKED refund_lab_region_hyp
+⊢ region_hyp
+    (loc_good
+       (pc_ok [Install_location; InstallData_location]
+          (SND
+             (SND
+                (to_lab arm8_config
+                   (set_oracle arm8_backend_config refund_alloc_oracle)
+                   refund_prog))))
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))))
+    (pc_ok [Install_location; InstallData_location]
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))))
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog))) ∧
+  pc_ok [Install_location; InstallData_location]
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+    0
+Saved theorem _______ "refund_lab_walk_not_closed_29"
+CHECKED refund_lab_walk_not_closed_29
+⊢ ¬(hyp_walk1 [29]
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config refund_alloc_oracle)
+              refund_prog))) 0
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config refund_alloc_oracle)
+              refund_prog))) ∧
+   pc_ok [29]
+     (SND
+        (SND
+           (to_lab arm8_config
+              (set_oracle arm8_backend_config refund_alloc_oracle)
+              refund_prog))) 0)
+Saved theorem _______ "refund_lab_run_avoids_install"
+CHECKED refund_lab_run_avoids_install
+⊢ ∀s k res t.
+    s.code =
+    SND
+      (SND
+         (to_lab arm8_config
+            (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)) ∧
+    val_inv
+      (loc_good
+         (pc_ok [Install_location; InstallData_location]
+            (SND
+               (SND
+                  (to_lab arm8_config
+                     (set_oracle arm8_backend_config refund_alloc_oracle)
+                     refund_prog))))
+         (SND
+            (SND
+               (to_lab arm8_config
+                  (set_oracle arm8_backend_config refund_alloc_oracle)
+                  refund_prog)))) s ∧
+    pc_ok [Install_location; InstallData_location]
+      (SND
+         (SND
+            (to_lab arm8_config
+               (set_oracle arm8_backend_config refund_alloc_oracle)
+               refund_prog))) s.pc ∧ evaluate (s with clock := k) = (res,t) ⇒
+    pc_ok [Install_location; InstallData_location]
+      (SND
+         (SND
+            (to_lab arm8_config
+               (set_oracle arm8_backend_config refund_alloc_oracle)
+               refund_prog))) t.pc ∧
+    t.code =
+    SND
+      (SND
+         (to_lab arm8_config
+            (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)) ∧
+    val_inv
+      (loc_good
+         (pc_ok [Install_location; InstallData_location]
+            (SND
+               (SND
+                  (to_lab arm8_config
+                     (set_oracle arm8_backend_config refund_alloc_oracle)
+                     refund_prog))))
+         (SND
+            (SND
+               (to_lab arm8_config
+                  (set_oracle arm8_backend_config refund_alloc_oracle)
+                  refund_prog)))) t ∧
+    ∀i bs n. asm_fetch t ≠ SOME (LabAsm Install i bs n)
+Exporting theory "forge_refundLabRun" ... done.
+Theory "forge_refundLabRun" took 3m05s to build
+RUN_PROOF_COMPLETE

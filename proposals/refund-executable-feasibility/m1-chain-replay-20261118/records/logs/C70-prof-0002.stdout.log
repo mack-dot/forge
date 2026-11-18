@@ -1,0 +1,191 @@
+<<HOL message: Created theory "forge_refundProfileA">>
+USED refund_installed_from_entry_reduced
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇒
+     refund_installed_no_handler (refund_mc 0x1000040D0w envmc) ms 428 0)
+USED refund_mc_is_arm8
+⊢ is_arm8_machine_config (refund_mc base0 envmc)
+USED refund_behavior_valid_request_no_handler
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+USED refund_u298_exclusion_valid_request
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∀j ms' ffi'.
+    evaluate mc0 (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+    mc0.target.get_pc ms' ≠ mc0.install_pc
+DEFINITION ⊢ ∀envmc.
+    refund_env_ok envmc ⇔
+    interference_ok envmc.next_interfer
+      (arm8_target.proj envmc.prog_addresses) ∧
+    refund_ffi_contract envmc.prog_addresses envmc.ffi_interfer
+MARK E1
+Saved theorem _______ "refund_mc_environment_fields"
+CHECKED refund_mc_environment_fields
+⊢ (refund_mc 0x1000040D0w envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc 0x1000040D0w envmc).target = arm8_target ∧
+  (refund_mc 0x1000040D0w envmc).prog_addresses = envmc.prog_addresses
+Saved theorem _______ "refund_env_ok_iff_installed_residual"
+CHECKED refund_env_ok_iff_installed_residual
+⊢ ∀ms.
+    ms.PC = 0x1000040D0w ⇒
+    (refund_installed_rest2 (refund_mc 0x1000040D0w envmc) ms ⇔
+     refund_env_ok envmc)
+Saved theorem _______ "refund_abs_env_is_ok"
+CHECKED refund_abs_env_is_ok
+⊢ refund_env_ok (refund_abs_env envmc)
+INPUT_PREMISE stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+INPUT_PREMISE wfcl cl
+INPUT_PREMISE wfFS fs
+INPUT_PREMISE STD_streams fs
+MARK TA0
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundProfileA)>>
+Saved theorem _______ "refund_profile_a_slide0"
+CHECKED refund_profile_a_slide0
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  refund_env_ok envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) j ms =
+       (TimeOut,ms',ffi') ⇒
+       (refund_mc 0x1000040D0w envmc).target.get_pc ms' ≠
+       (refund_mc 0x1000040D0w envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms ⊆
+      extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+Saved theorem _______ "refund_profile_a_slide0_abstract_env"
+CHECKED refund_profile_a_slide0_abstract_env
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc 0x1000040D0w (refund_abs_env envmc))
+         (basis_ffi ext cl fs) j ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc 0x1000040D0w (refund_abs_env envmc)).target.get_pc ms' ≠
+       (refund_mc 0x1000040D0w (refund_abs_env envmc)).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc 0x1000040D0w (refund_abs_env envmc))
+        (basis_ffi ext cl fs) ms ⊆
+      extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+MACHINE_SEM_TERM machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms
+MARK RUNS
+Saved theorem _______ "refund_profile_a_slide0_every_machine_run"
+CHECKED refund_profile_a_slide0_every_machine_run
+⊢ refund_entry_pre s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear h e ∧ envmc.prog_addresses = refund_mem_dm h e ∧
+  refund_env_ok envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = 0x1000040D0w) ∧
+    (∀b. machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms
+           b ⇒
+         (∃io.
+            b = Terminate Success io ∧
+            extract_fs ext (cl,fs) io =
+            SOME
+              (add_stdout (fastForwardFD fs 0)
+                 (refund_render_fields
+                    (refund_fields charge request original remaining enabled
+                       opened candidate amount reason)))) ∨
+         ∃io io'.
+           b = Terminate Resource_limit_hit io' ∧ io' ≼ io ∧
+           extract_fs ext (cl,fs) io =
+           SOME
+             (add_stdout (fastForwardFD fs 0)
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)))) ∧
+    (∃b. machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms
+           b) ∧
+    ¬machine_sem (refund_mc 0x1000040D0w envmc) (basis_ffi ext cl fs) ms Fail
+MARK K
+Saved theorem _______ "pc_changing_environment_is_not_ok"
+CHECKED pc_changing_environment_is_not_ok
+⊢ ¬refund_env_ok
+    (envmc with next_interfer := (λi ms. ms with PC := ms.PC + 4w))
+USED wrong_return_address_ffi_rejected
+⊢ ¬ffi_interfer_ok 0x1000040D0w
+    (refund_mc 0x1000040D0w
+       (envmc with ffi_interfer := refund_bad_return_ffi))
+Saved theorem _______ "env_ok_needs_both_clauses"
+CHECKED env_ok_needs_both_clauses
+⊢ refund_env_ok envmc ⇒
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract envmc.prog_addresses envmc.ffi_interfer
+CONTROL_OK the output term of the composed theorem is syntactically the U387 output term (not weakened, not restated)
+CONTROL_OK one io_events is bound for both the machine_sem inclusion and the extract_fs equation
+CONTROL_OK the machine_sem term is for refund_mc 0x1000040D0w envmc, the basis oracle, and the state ms reached by arm8_run 27 s
+CONTROL_OK premises: entry state, refund_env_ok, input; no premise mentions extract_fs, machine_sem or refund_installed_no_handler
+CONTROL_OK the composed statement mentions no source-semantics constant: the conclusion is about the machine run only
+CONTROL_OK the abstract-environment instance has no environment premise
+STORED_THEOREMS 8
+CLOSURE_NODES 535
+CLOSURE_HAS_COMPILE_CORRECT_CONTROL true
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundProfileA" ... done.
+Theory "forge_refundProfileA" took 10.0s to build
+EXACT_COMPLETE

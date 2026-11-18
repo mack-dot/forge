@@ -1,0 +1,30 @@
+{
+ "case": "lemmas-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "lemmas-0001.sml",
+ "source_sha256": "c63db5f286ae38c2ab35d3d7ff5ced28485a30b3fc1e7da13f2282bb0bd027e6",
+ "resource_guard": {
+  "memory_free_percent": 58,
+  "disk_free_gib": 117.9,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 300,
+ "wall_seconds_limit": 600,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 8.715,
+ "child_user_cpu_seconds": 10.31,
+ "child_max_rss_bytes": 1095122944,
+ "markers": [
+  "P2_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "7e724f442eb688d8dbc9e979e4c063176c2c18f8fbd150ee57dc071ab3142ece",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_labRegionInvariantTheory.dat": "bca9b622f6566e4443bc2e179f4e3ce4979c9ff8f93d18f8ccde26d7c4861777",
+  ".hol/objs/forge_labRegionInvariantTheory.sig": "89f61d38c66be69d6b02f56d95c05a2425ddc41e91b94d40cc0294f116b33df5",
+  ".hol/objs/forge_labRegionInvariantTheory.sml": "2bd7a0c801e506571b428ec2c8f533a076206235bd5af3cd6f00d4b9c4328923"
+ },
+ "inputs_unchanged_after": true
+}

@@ -1,0 +1,30 @@
+{
+ "case": "aligned-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "aligned-0001.sml",
+ "source_sha256": "93745080501cb58b54b7edbed53c8223ba977cc4f86de7efbdd30988f5b8860f",
+ "resource_guard": {
+  "memory_free_percent": 52,
+  "disk_free_gib": 119.01,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 240,
+ "wall_seconds_limit": 540,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 18.637,
+ "child_user_cpu_seconds": 20.709,
+ "child_max_rss_bytes": 2525200384,
+ "markers": [
+  "P2_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "579fa5ea36cf3a70fd633dba125eaae6a9b5526e6ac95d90c83c624110c3c2d7",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_labRegionAlignedTheory.dat": "0c735af977fb8a6043057f4a589fef08909f1687cc648b58ae1e8fa9756fba7d",
+  ".hol/objs/forge_labRegionAlignedTheory.sig": "7fa91c388701ebfe444e55ff0add99e4d4bb82c0f0cb4c4c869b8f8004b3d3ea",
+  ".hol/objs/forge_labRegionAlignedTheory.sml": "fc033f21a73cd3d893e2efa1b49c01284868ee4b3d544767cd0581baaf638060"
+ },
+ "inputs_unchanged_after": true
+}

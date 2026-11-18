@@ -1,0 +1,130 @@
+<<HOL message: Created theory "forge_refundSlideEntry">>
+USED ⊢ LENGTH code = 130436
+USED ⊢ ∀sl m.
+    refund_image_mem sl m ⇔
+    bytes_in_memory (0x100000000w + sl) (TAKE 163840 refund_file) m
+      𝕌(:word64) ∧
+    bytes_in_memory (0x10002C018w + sl)
+      (TAKE 20248 (DROP 180248 refund_file)) m 𝕌(:word64)
+USED ⊢ refund_code_dm = {a | 0x1000040D0w ≤₊ a ∧ a <₊ 0x100024000w}
+USED ⊢ ∀h e.
+    refund_mem_dm h e =
+    refund_code_dm ∪ {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm
+USED ⊢ ∀h e.
+    refund_heap_clear h e ⇔
+    ∀a. h ≤₊ a ∧ a <₊ e ⇒ ¬(0x100000000w ≤₊ a ∧ a <₊ 0x100030F30w)
+USED ⊢ ∀x. x ∈ refund_bitmaps_dm ⇒ 0x10002C018w ≤₊ x ∧ x <₊ 0x100030F30w
+Saved theorem _______ "arm8_run_constants_agree"
+CHECKED arm8_run_constants_agree
+⊢ ∀n s. arm8_run n s = arm8_run n s
+DEFINITION ⊢ ∀sl. slide_ok sl ⇔ aligned 12 sl ∧ sl ≤₊ 0xFFFFFFFEFFFCF0CFw
+Saved theorem _______ "slide_ok_no_wrap"
+CHECKED slide_ok_no_wrap
+⊢ slide_ok sl ⇒ w2n sl + 4295167792 < 2 ** 64 ∧ aligned 12 sl
+Saved theorem _______ "slide_ok_examples"
+CHECKED slide_ok_examples
+⊢ slide_ok 0w ∧ slide_ok 16384w ∧ slide_ok 0x2F8C000w ∧ ¬slide_ok 2048w ∧
+  ¬slide_ok 4w ∧ ¬slide_ok 0xFFFFFFFEFFFF0000w ∧
+  aligned 12 0xFFFFFFFEFFFF0000w
+DEFINITION ⊢ ∀sl s h stk e.
+    refund_entry_pre_sl sl s h stk e ⇔
+    ¬s.SCTLR_EL1.E0E ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧
+    s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.PC = sl + 0x100004000w ∧
+    mem_dword s.MEM (sl + 0x10002C000w) = h ∧
+    mem_dword s.MEM (sl + 0x10002C008w) = stk ∧
+    mem_dword s.MEM (sl + 0x10002C010w) = e ∧ aligned 3 h ∧
+    (∀i j. i < 40 ∧ j < 200496 ⇒ h + n2w i ≠ 0x100000000w + sl + n2w j) ∧
+    refund_image_mem sl s.MEM ∧ slide_ok sl
+MARK E
+Saved theorem _______ "entry_separation_covers_startup_range"
+CHECKED entry_separation_covers_startup_range
+⊢ (∀i j. i < 40 ∧ j < 200496 ⇒ h + n2w i ≠ 0x100000000w + sl + n2w j) ⇒
+  ∀i j. i < 40 ∧ j < 163864 ⇒ h + n2w i ≠ 0x100004000w + sl + n2w j
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundSlideEntry)>>
+Saved theorem _______ "refund_entry_pre_sl_IMP_cml_main_pre_sl"
+CHECKED refund_entry_pre_sl_IMP_cml_main_pre_sl
+⊢ refund_entry_pre_sl sl s h stk e ⇒ cml_main_pre_sl sl s h stk e
+Saved theorem _______ "refund_entry_run_sl"
+CHECKED refund_entry_run_sl
+⊢ refund_entry_pre_sl sl s h stk e ⇒
+  ∃s1.
+    arm8_run 27 s = SOME s1 ∧ s1.PC = sl + 0x1000040D0w ∧
+    s1.REG 0w = sl + 0x1000040D0w ∧ s1.REG 1w = h ∧ s1.REG 2w = stk ∧
+    s1.REG 3w = e ∧ mem_dword s1.MEM h = sl + 0x10002C018w ∧
+    mem_dword s1.MEM (h + 8w) = sl + 0x100030F30w ∧
+    mem_dword s1.MEM (h + 16w) = sl + 0x100030F30w ∧
+    mem_dword s1.MEM (h + 24w) = sl + 0x100023E54w ∧
+    mem_dword s1.MEM (h + 32w) = sl + 0x100024000w
+Saved theorem _______ "refund_image_code_at_slide"
+CHECKED refund_image_code_at_slide
+⊢ refund_image_mem sl m ⇒
+  bytes_in_memory (0x1000040D0w + sl) code m 𝕌(:word64)
+Saved theorem _______ "slide_zero_entry_is_the_old_entry"
+CHECKED slide_zero_entry_is_the_old_entry
+⊢ refund_entry_pre s h stk e ⇒ refund_entry_pre_sl 0w s h stk e
+MARK D
+DEFINITION ⊢ ∀sl. refund_code_dm_sl sl = {a | a − sl ∈ refund_code_dm}
+DEFINITION ⊢ ∀sl. refund_bitmaps_dm_sl sl = {a | a − sl ∈ refund_bitmaps_dm}
+DEFINITION ⊢ ∀sl h e.
+    refund_mem_dm_sl sl h e =
+    refund_code_dm_sl sl ∪ {w | h ≤₊ w ∧ w <₊ e} ∪ refund_bitmaps_dm_sl sl
+DEFINITION ⊢ ∀sl h e.
+    refund_heap_clear_sl sl h e ⇔
+    ∀a. h ≤₊ a ∧ a <₊ e ⇒ ¬(0x100000000w ≤₊ a − sl ∧ a − sl <₊ 0x100030F30w)
+MARK D1
+Saved theorem _______ "refund_code_dm_sl_range"
+CHECKED refund_code_dm_sl_range
+⊢ slide_ok sl ⇒
+  ∀a. a ∈ refund_code_dm_sl sl ⇔
+      0x1000040D0w + sl ≤₊ a ∧ a <₊ 0x100024000w + sl
+Saved theorem _______ "refund_heap_clear_sl_range"
+CHECKED refund_heap_clear_sl_range
+⊢ slide_ok sl ⇒
+  (refund_heap_clear_sl sl h e ⇔
+   ∀a. h ≤₊ a ∧ a <₊ e ⇒ ¬(0x100000000w + sl ≤₊ a ∧ a <₊ 0x100030F30w + sl))
+Saved theorem _______ "refund_shifted_domains_disjoint"
+CHECKED refund_shifted_domains_disjoint
+⊢ DISJOINT (refund_code_dm_sl sl) (refund_bitmaps_dm_sl sl)
+Saved theorem _______ "shifted_domains_at_slide_zero"
+CHECKED shifted_domains_at_slide_zero
+⊢ refund_code_dm_sl 0w = refund_code_dm ∧
+  refund_bitmaps_dm_sl 0w = refund_bitmaps_dm ∧
+  refund_mem_dm_sl 0w h e = refund_mem_dm h e ∧
+  (refund_heap_clear_sl 0w h e ⇔ refund_heap_clear h e)
+Saved theorem _______ "relocated_code_addresses_in_shifted_domain"
+CHECKED relocated_code_addresses_in_shifted_domain
+⊢ ∀i. i < LENGTH code ⇒ 0x1000040D0w + sl + n2w i ∈ refund_code_dm_sl sl
+Saved theorem _______ "shifted_heap_clear_keeps_heap_outside_code_and_bitmaps"
+CHECKED shifted_heap_clear_keeps_heap_outside_code_and_bitmaps
+⊢ refund_heap_clear_sl sl h e ⇒
+  ∀a. h ≤₊ a ∧ a <₊ e ⇒
+      a ∉ refund_code_dm_sl sl ∧ a ∉ refund_bitmaps_dm_sl sl
+MARK K
+Saved theorem _______ "wrapping_slide_breaks_the_range_form"
+CHECKED wrapping_slide_breaks_the_range_form
+⊢ ∃sl a.
+    aligned 12 sl ∧ ¬slide_ok sl ∧ a ∈ refund_code_dm_sl sl ∧
+    ¬(0x1000040D0w + sl ≤₊ a ∧ a <₊ 0x100024000w + sl)
+Saved theorem _______ "nonzero_slide_moves_the_code_domain"
+CHECKED nonzero_slide_moves_the_code_domain
+⊢ 0x1000080D0w ∈ refund_code_dm_sl 16384w ∧
+  0x1000040D0w ∉ refund_code_dm_sl 16384w ∧ 0x1000040D0w ∈ refund_code_dm
+Saved theorem _______ "misaligned_or_wrapping_slide_not_covered"
+CHECKED misaligned_or_wrapping_slide_not_covered
+⊢ ¬aligned 12 sl ∨ 0xFFFFFFFEFFFCF0CFw <₊ sl ⇒
+  ¬refund_entry_pre_sl sl s h stk e
+Saved theorem _______ "entry_fixes_image_and_pc_to_one_slide"
+CHECKED entry_fixes_image_and_pc_to_one_slide
+⊢ refund_entry_pre_sl sl s h stk e ⇒
+  refund_image_mem sl s.MEM ∧ s.PC = sl + 0x100004000w
+CONTROL_OK the U389 slide-0 entry theorem is loaded unchanged
+STORED_THEOREMS 18
+CLOSURE_NODES 536
+CLOSURE_HAS_COMPILE_CORRECT_CONTROL true
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundSlideEntry" ... done.
+Theory "forge_refundSlideEntry" took 34.3s to build
+EXACT_COMPLETE

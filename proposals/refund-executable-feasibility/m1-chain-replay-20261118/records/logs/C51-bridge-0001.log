@@ -1,0 +1,30 @@
+{
+ "case": "bridge-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "bridge-0001.sml",
+ "source_sha256": "66638abe0411b30ac1f9417d1ca5e6c1abfd6d6ea05dd1bc56c85abdd293826d",
+ "resource_guard": {
+  "memory_free_percent": 59,
+  "disk_free_gib": 118.32,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 93.129,
+ "child_user_cpu_seconds": 100.084,
+ "child_max_rss_bytes": 3686825984,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "02741f4cdedf340daa6c1e582340d4756df0d5c8bbe161c01b2482909a497451",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundFficloseBridgeTheory.dat": "417a3d94fad2a38d60cdb1febdca3640ca640c92f8847a2ee4274e8d4969a726",
+  ".hol/objs/forge_refundFficloseBridgeTheory.sig": "db20cf22d9046cdb7a1678127d4133a72f6ad0c9aa0d10b1ce0674601e94c308",
+  ".hol/objs/forge_refundFficloseBridgeTheory.sml": "076725427fc50f1659c89c048aa2d69c4ebd7605027d36919c944d98917ab716"
+ },
+ "inputs_unchanged_after": true
+}

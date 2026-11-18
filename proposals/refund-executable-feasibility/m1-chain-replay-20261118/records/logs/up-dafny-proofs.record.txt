@@ -1,0 +1,38 @@
+{
+ "label": "up-dafny-proofs",
+ "kind": "upstream-build",
+ "argv": [
+  "nice",
+  "-n",
+  "15",
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/Holmake",
+  "--no-cache",
+  "-j1",
+  "dafny_to_cakemlProofTheory.uo"
+ ],
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/proofs",
+ "env_changes": {
+  "HOLDIR": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL",
+  "CAKEMLDIR": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml",
+  "PATH": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/poly-install/bin:/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.11/bin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:<HOME>/.local/state/fnm_multishells/992_1794581753735/bin:<HOME>/Library/pnpm:/opt/homebrew/opt/postgresql@17/bin:<HOME>/.local/bin:<HOME>/miniforge3/condabin:/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.11/bin:/Library/Frameworks/Python.framework/Versions/3.10/bin:<HOME>/.cargo/bin:<HOME>/.cursor/extensions/ms-python.debugpy-2026.6.0-darwin-arm64/bundled/scripts/noConfigScripts"
+ },
+ "status": "FINISHED",
+ "actual_exit": 0,
+ "note": "Recorded upstream command of packet verified-backend-20261104 (upstream-compiler-proof-command.json); -j 2 changed to -j1; nice -n 15 added; allowed by the coordinator (tool build, new files only)",
+ "wrapper": [
+  "caffeinate",
+  "-i",
+  "-s"
+ ],
+ "log": "<HOME>/forge/results/round4-m1-replay-20261118/logs/up-dafny-proofs.log",
+ "guard_refusals_before_start": [],
+ "start_utc": "2026-11-18T05:37:55Z",
+ "end_utc": "2026-11-18T05:39:44Z",
+ "wall_seconds": 108.4,
+ "awake_seconds": 108.4,
+ "sleep_gap_seconds": 0.0,
+ "children_max_rss_mib_so_far": 704,
+ "log_bytes": 61160,
+ "budget_seconds_used_after": 157.4
+}
+exit 0

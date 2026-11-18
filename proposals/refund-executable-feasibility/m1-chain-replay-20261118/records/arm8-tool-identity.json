@@ -1,0 +1,80 @@
+{
+ "note": "run_arm8_case.py compares these 15 files with SHA-256 values recorded on 2026-11-05 and refuses (exit 2) on any difference. After the tool rebuild the binaries differ, so the ARMv8-step cases ran in direct mode with the same argv, cwd and environment.",
+ "files": {
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.sml": {
+   "state": "same",
+   "recorded_sha256": "d06211cfc689511d525949cc447e6b5337d860e712dd875caeb44b3ac39a3642",
+   "now_sha256": "d06211cfc689511d525949cc447e6b5337d860e712dd875caeb44b3ac39a3642"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.sig": {
+   "state": "same",
+   "recorded_sha256": "132ebbdecd43d64e63ec13e2eca1302a8ee1ab0ec85837aedf13f640f7144b45",
+   "now_sha256": "132ebbdecd43d64e63ec13e2eca1302a8ee1ab0ec85837aedf13f640f7144b45"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepScript.sml": {
+   "state": "same",
+   "recorded_sha256": "5ce60a3e1ea882b5fb63fd420c4143bf470b4bc1aaf286b11a61c2cddedcd943",
+   "now_sha256": "5ce60a3e1ea882b5fb63fd420c4143bf470b4bc1aaf286b11a61c2cddedcd943"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/.hol/objs/arm8_stepLib.uo": {
+   "state": "same",
+   "recorded_sha256": "db1f6eef8156b7e21558ae7b7dceaf196e0c4898b4831652cf6c45521c7f9139",
+   "now_sha256": "db1f6eef8156b7e21558ae7b7dceaf196e0c4898b4831652cf6c45521c7f9139"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/.hol/objs/arm8_stepLib.ui": {
+   "state": "same",
+   "recorded_sha256": "515f50942ff75c3f86176158f2a98eabc45108e0dbc03839d942de5501c8638a",
+   "now_sha256": "515f50942ff75c3f86176158f2a98eabc45108e0dbc03839d942de5501c8638a"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": {
+   "state": "different",
+   "recorded_sha256": "736c669e220381ddb6042fda624db79326aaa0075fe6ff9de4751bad75e8c4dd",
+   "now_sha256": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": {
+   "state": "different",
+   "recorded_sha256": "36f7c254cab336ae1a331a76024c94925e03f9f6774ef545742be5cf9ebd8247",
+   "now_sha256": "66b1654b4e490d41953983b967e7501febba5b955e3bc562776569300846d1f2"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8-heap": {
+   "state": "different",
+   "recorded_sha256": "787499c5305260a0dcf93cab119e0cb2f830c539ddf9327c433758f0a92350a9",
+   "now_sha256": "9fc6514b6934f023e99ec2f5785d231e0ca0dc427acaecc6d117ffa81d1fb95e"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/l3-heap": {
+   "state": "different",
+   "recorded_sha256": "9a59e119969c4a180d1eaa19104f92237054ca5e81fe3298e5ad9843b440052c",
+   "now_sha256": "012e666f459c74765aa7eaaed46fbf91c3994fffcc2653bd41c211c4f51c716e"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/Holmakefile": {
+   "state": "same",
+   "recorded_sha256": "f503dc99b3c71e41453d22814510cee88298fe1a074a2114ad0c46fc7c63f73c",
+   "now_sha256": "f503dc99b3c71e41453d22814510cee88298fe1a074a2114ad0c46fc7c63f73c"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/utilsLib.sml": {
+   "state": "same",
+   "recorded_sha256": "52f3071e22662d4e4828ba426b255aedc7c63fba33c213f19e295547548ae9c9",
+   "now_sha256": "52f3071e22662d4e4828ba426b255aedc7c63fba33c213f19e295547548ae9c9"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/utilsLib.sig": {
+   "state": "same",
+   "recorded_sha256": "45eadc56c5a0c51fda452d28cc34948282499b65c5b8f88bafc4a1f1b546c91b",
+   "now_sha256": "45eadc56c5a0c51fda452d28cc34948282499b65c5b8f88bafc4a1f1b546c91b"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/.hol/objs/utilsLib.uo": {
+   "state": "same",
+   "recorded_sha256": "32e83e12a032f1b92887bad0c7c1361ebbb839e25081cbf4591ff4762b7e5c9c",
+   "now_sha256": "32e83e12a032f1b92887bad0c7c1361ebbb839e25081cbf4591ff4762b7e5c9c"
+  },
+  "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/common/.hol/objs/utilsLib.ui": {
+   "state": "same",
+   "recorded_sha256": "30da6be57e31bbe7da8b32edd8457341c4c5140e43c1925577b0ba5e396ecc71",
+   "now_sha256": "30da6be57e31bbe7da8b32edd8457341c4c5140e43c1925577b0ba5e396ecc71"
+  },
+  "<HOME>/forge/results/refund-native-audit-2026-11-04/attempt-0011/inspect-arm8-steps/preload.sml": {
+   "state": "same",
+   "recorded_sha256": "5ab3eb636441a99730c179ed3ca338d9893b092fd2d58ec1e56c659851c78e44",
+   "now_sha256": "5ab3eb636441a99730c179ed3ca338d9893b092fd2d58ec1e56c659851c78e44"
+  }
+ }
+}
