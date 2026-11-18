@@ -1,0 +1,22 @@
+{
+ "dry_run_log": "<HOME>/forge/results/round4-m1-replay-20261118/logs/up-arm8-config-proof-dryrun.log",
+ "planned_files": 23,
+ "planned_theories": [
+  "arm8_configProof",
+  "arm8_targetProof",
+  "arm8_targetProofLemmas",
+  "asmSigned"
+ ],
+ "planned_other_objects": [
+  "HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.ui",
+  "HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.uo",
+  "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofLib.uo"
+ ],
+ "planned_outputs_that_already_exist": [],
+ "other_log_lines": [
+  "Holmake: Executing <HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/asl-equiv/.hol_preexec:",
+  "  HOLORIG=<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/backend/arm8/proofs [ -d \"armv8.6-asl-snapshot\" ] || ./get-armv8.6-hol-snapshot",
+  "Holmake: Scanned 313 directories"
+ ],
+ "ok_new_files_only": true
+}

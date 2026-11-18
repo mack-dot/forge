@@ -1,0 +1,345 @@
+<<HOL message: Created theory "forge_refundCmlMainFrame">>
+PRE_DEFINITION_IDENTICAL true
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundCmlMainFrame)>>
+ALIGN_FACT  [cml_main_pre s h stk e] ⊢ aligned 3 h
+ALIGN_FACT  [cml_main_pre s h stk e] ⊢ aligned 3 (h + 8w)
+ALIGN_FACT  [cml_main_pre s h stk e] ⊢ aligned 3 (h + 16w)
+ALIGN_FACT  [cml_main_pre s h stk e] ⊢ aligned 3 (h + 24w)
+ALIGN_FACT  [cml_main_pre s h stk e] ⊢ aligned 3 (h + 32w)
+<HOME>/forge/results/refund-loader-memory-local-20261115/attempt-0001/frame-0001/proof.sml:64: warning: Pattern is not exhaustive. Found near val (_, [a, ...]) = strip_comb tm1
+<HOME>/forge/results/refund-loader-memory-local-20261115/attempt-0001/frame-0001/proof.sml:78: warning: Pattern is not exhaustive. Found near val [m, a] = snd (strip_comb t)
+STEP_OK 1 90000000 PC 0x100004004w
+STEP_OK 2 91034000 PC 0x100004008w
+STEP_OK 3 90000141 PC 0x10000400Cw
+STEP_OK 4 91000021 PC 0x100004010w
+STEP_OK 5 f9400021 PC 0x100004014w
+STEP_OK 6 90000142 PC 0x100004018w
+STEP_OK 7 91006042 PC 0x10000401Cw
+STEP_OK 8 f9000022 PC 0x100004020w
+STEP_OK 9 90000162 PC 0x100004024w
+STEP_OK 10 913cc042 PC 0x100004028w
+STEP_OK 11 f9000422 PC 0x10000402Cw
+STEP_OK 12 90000162 PC 0x100004030w
+STEP_OK 13 913cc042 PC 0x100004034w
+STEP_OK 14 f9000822 PC 0x100004038w
+STEP_OK 15 f00000e2 PC 0x10000403Cw
+STEP_OK 16 91395042 PC 0x100004040w
+STEP_OK 17 f9000c22 PC 0x100004044w
+STEP_OK 18 90000102 PC 0x100004048w
+STEP_OK 19 91000042 PC 0x10000404Cw
+STEP_OK 20 f9001022 PC 0x100004050w
+STEP_OK 21 90000142 PC 0x100004054w
+STEP_OK 22 91002042 PC 0x100004058w
+STEP_OK 23 f9400042 PC 0x10000405Cw
+STEP_OK 24 90000143 PC 0x100004060w
+STEP_OK 25 91004063 PC 0x100004064w
+STEP_OK 26 f9400063 PC 0x100004068w
+STEP_OK 27 1400001a PC 0x1000040D0w
+FINAL_STATE s with
+<|MEM :=
+    s.MEM⦇
+      h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w; h + 35w ↦ 0w;
+      h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w; h + 31w ↦ 0w; h + 30w ↦ 0w;
+      h + 29w ↦ 0w; h + 28w ↦ 1w; h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w;
+      h + 24w ↦ 84w; h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+      h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w; h + 15w ↦ 0w;
+      h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w; h + 11w ↦ 0w; h + 10w ↦ 3w;
+      h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w; h + 6w ↦ 0w; h + 5w ↦ 0w;
+      h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w; h + 1w ↦ 192w; h ↦ 24w
+    ⦈; PC := 0x1000040D0w;
+  REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+  branch_hint := SOME BranchType_JMP|>
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).PC =
+  0x1000040D0w
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 0w =
+  0x1000040D0w
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 1w =
+  h
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 2w =
+  stk
+POST  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).REG 3w =
+  e
+POST  []
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+           h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+           h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+           h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+           h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+           h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+           h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+           h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w;
+           h + 7w ↦ 0w; h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w;
+           h + 2w ↦ 2w; h + 1w ↦ 192w; h ↦ 24w
+         ⦈; PC := 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM h =
+  0x10002C018w
+POST  []
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+           h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+           h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+           h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+           h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+           h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+           h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+           h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w;
+           h + 7w ↦ 0w; h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w;
+           h + 2w ↦ 2w; h + 1w ↦ 192w; h ↦ 24w
+         ⦈; PC := 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 8w) =
+  0x100030F30w
+POST  []
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+           h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+           h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+           h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+           h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+           h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+           h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+           h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w;
+           h + 7w ↦ 0w; h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w;
+           h + 2w ↦ 2w; h + 1w ↦ 192w; h ↦ 24w
+         ⦈; PC := 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 16w) =
+  0x100030F30w
+POST  []
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+           h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+           h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+           h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+           h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+           h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+           h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+           h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w;
+           h + 7w ↦ 0w; h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w;
+           h + 2w ↦ 2w; h + 1w ↦ 192w; h ↦ 24w
+         ⦈; PC := 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 24w) =
+  0x100023E54w
+POST  []
+⊢ mem_dword
+    (s with
+     <|MEM :=
+         s.MEM⦇
+           h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+           h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+           h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+           h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+           h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+           h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+           h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+           h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w;
+           h + 7w ↦ 0w; h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w;
+           h + 2w ↦ 2w; h + 1w ↦ 192w; h ↦ 24w
+         ⦈; PC := 0x1000040D0w;
+       REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+       branch_hint := SOME BranchType_JMP|>).MEM (h + 32w) =
+  0x100024000w
+RUN_STATEMENT_IDENTICAL true
+FIELD  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).PSTATE =
+  s.PSTATE
+FIELD  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).SCTLR_EL1 =
+  s.SCTLR_EL1
+FIELD  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).TCR_EL1 =
+  s.TCR_EL1
+FIELD  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).exception =
+  s.exception
+Saved theorem _______ "cml_main_run_frame"
+CHECKED cml_main_run_frame
+ []
+⊢ cml_main_pre s h stk e ⇒
+  ∃s1.
+    arm8_run 27 s = SOME s1 ∧ s1.PC = 0x1000040D0w ∧
+    s1.REG 0w = 0x1000040D0w ∧ s1.REG 1w = h ∧ s1.REG 2w = stk ∧
+    s1.REG 3w = e ∧ mem_dword s1.MEM h = 0x10002C018w ∧
+    mem_dword s1.MEM (h + 8w) = 0x100030F30w ∧
+    mem_dword s1.MEM (h + 16w) = 0x100030F30w ∧
+    mem_dword s1.MEM (h + 24w) = 0x100023E54w ∧
+    mem_dword s1.MEM (h + 32w) = 0x100024000w ∧
+    (∀a. (∀i. i < 40 ⇒ a ≠ h + n2w i) ⇒ s1.MEM a = s.MEM a) ∧
+    s1.PSTATE = s.PSTATE ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧
+    s1.TCR_EL1 = s.TCR_EL1 ∧ s1.exception = s.exception
+CONTROL_OK header byte is written:  []
+⊢ (s with
+   <|MEM :=
+       s.MEM⦇
+         h + 39w ↦ 0w; h + 38w ↦ 0w; h + 37w ↦ 0w; h + 36w ↦ 1w;
+         h + 35w ↦ 0w; h + 34w ↦ 2w; h + 33w ↦ 64w; h + 32w ↦ 0w;
+         h + 31w ↦ 0w; h + 30w ↦ 0w; h + 29w ↦ 0w; h + 28w ↦ 1w;
+         h + 27w ↦ 0w; h + 26w ↦ 2w; h + 25w ↦ 62w; h + 24w ↦ 84w;
+         h + 23w ↦ 0w; h + 22w ↦ 0w; h + 21w ↦ 0w; h + 20w ↦ 1w;
+         h + 19w ↦ 0w; h + 18w ↦ 3w; h + 17w ↦ 15w; h + 16w ↦ 48w;
+         h + 15w ↦ 0w; h + 14w ↦ 0w; h + 13w ↦ 0w; h + 12w ↦ 1w;
+         h + 11w ↦ 0w; h + 10w ↦ 3w; h + 9w ↦ 15w; h + 8w ↦ 48w; h + 7w ↦ 0w;
+         h + 6w ↦ 0w; h + 5w ↦ 0w; h + 4w ↦ 1w; h + 3w ↦ 0w; h + 2w ↦ 2w;
+         h + 1w ↦ 192w; h ↦ 24w
+       ⦈; PC := 0x1000040D0w;
+     REG := s.REG⦇3w ↦ e; 2w ↦ stk; 1w ↦ h; 0w ↦ 0x1000040D0w⦈;
+     branch_hint := SOME BranchType_JMP|>).MEM h =
+  24w
+Exporting theory "forge_refundCmlMainFrame" ... done.
+Theory "forge_refundCmlMainFrame" took 9.2s to build
+NATIVE_STEP_COMPLETE

@@ -1,0 +1,30 @@
+{
+ "case": "prefix-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "prefix-0001.sml",
+ "source_sha256": "35114df5ab49cbc06cd0cf79cf0d0a210093e77df83acc26378cf426710bc992",
+ "resource_guard": {
+  "memory_free_percent": 47,
+  "disk_free_gib": 119.01,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 300,
+ "wall_seconds_limit": 600,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 3.833,
+ "child_user_cpu_seconds": 4.098,
+ "child_max_rss_bytes": 479444992,
+ "markers": [
+  "P3_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "dc46bd0c9d79e6f18b52d42adc5d8d95dbe3444b2949787ce4714810d667d2d3",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_targetInstallPrefixTheory.dat": "9082b36f082bef72b2ececd2c6e88778fcbf6ff995fce44cb18a27f1f36658ec",
+  ".hol/objs/forge_targetInstallPrefixTheory.sig": "b05e2b1177e0cdaec641be9e47d0e3563d13fd5092f2584f5bd3f3f7c5c533c5",
+  ".hol/objs/forge_targetInstallPrefixTheory.sml": "9a23fbd4db536f7fcc8417ded8ecc5530cb07018e2e278edc2e1b14327572d94"
+ },
+ "inputs_unchanged_after": true
+}

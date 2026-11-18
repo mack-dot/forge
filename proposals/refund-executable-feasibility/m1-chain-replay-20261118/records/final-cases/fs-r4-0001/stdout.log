@@ -1,0 +1,148 @@
+<<HOL message: Created theory "forge_refundInputSat">>
+USED always_coind
+⊢ ∀P always'.
+    (∀a0. always' a0 ⇒ ∃h t. a0 = h:::t ∧ P (h:::t) ∧ always' t) ⇒
+    ∀a0. always' a0 ⇒ always P a0
+USED LFINITE_INDUCTION
+⊢ ∀P. P [||] ∧ (∀h t. P t ⇒ P (h:::t)) ⇒ ∀a0. LFINITE a0 ⇒ P a0
+Saved theorem _______ "LREPEAT_one_unfold"
+CHECKED LREPEAT_one_unfold
+⊢ LREPEAT [1] = 1:::LREPEAT [1]
+Saved theorem _______ "LFINITE_not_LREPEAT_one"
+CHECKED LFINITE_not_LREPEAT_one
+⊢ ∀ll. LFINITE ll ⇒ ll ≠ LREPEAT [1]
+Saved theorem _______ "always_eventually_LREPEAT_one"
+CHECKED always_eventually_LREPEAT_one
+⊢ ∀ll.
+    ll = LREPEAT [1] ⇒
+    always (eventually (λll. ∃k. LHD ll = SOME k ∧ k ≠ 0)) ll
+Saved theorem _______ "live_numchars_LREPEAT_one"
+CHECKED live_numchars_LREPEAT_one
+⊢ live_numchars (LREPEAT [1])
+DEFINITION ⊢ ∀inp.
+    sat_fs inp =
+    <|inode_tbl :=
+        [(UStream «stdin»,inp); (UStream «stdout»,""); (UStream «stderr»,"")];
+      files := [];
+      infds :=
+        [(0,UStream «stdin»,ReadMode,0); (1,UStream «stdout»,WriteMode,0);
+         (2,UStream «stderr»,WriteMode,0)]; numchars := LREPEAT [1];
+      maxFD := 2|>
+Saved theorem _______ "sat_fs_wfFS"
+CHECKED sat_fs_wfFS
+⊢ ∀inp. wfFS (sat_fs inp)
+Saved theorem _______ "sat_fs_STD_streams"
+CHECKED sat_fs_STD_streams
+⊢ ∀inp. STD_streams (sat_fs inp)
+Saved theorem _______ "sat_fs_stdin_content"
+CHECKED sat_fs_stdin_content
+⊢ ∀inp. stdin_content (sat_fs inp) = SOME inp
+Saved theorem _______ "sat_cl_wfcl"
+CHECKED sat_cl_wfcl
+⊢ wfcl [«refund»]
+Saved theorem _______ "refund_input_premises_satisfiable"
+CHECKED refund_input_premises_satisfiable
+⊢ ∀inp. ∃fs cl.
+    stdin_content fs = SOME inp ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+Saved theorem _______ "consumed_stdin_has_no_content"
+CHECKED consumed_stdin_has_no_content
+⊢ ∀inp.
+    stdin_content
+      (sat_fs inp with
+       infds :=
+         [(0,UStream «stdin»,ReadMode,1); (1,UStream «stdout»,WriteMode,0);
+          (2,UStream «stderr»,WriteMode,0)]) = NONE
+Saved theorem _______ "finite_numchars_is_not_live"
+CHECKED finite_numchars_is_not_live
+⊢ ¬live_numchars [||]
+INPUT_TEXT_TERM explode
+  (sexp_to_string
+     (refund_request charge request original remaining enabled opened
+        candidate amount reason))
+Saved theorem _______ "refund_profile_a_sl_conclusion_holds_for_a_constructed_model_state_at_0x4000"
+CHECKED refund_profile_a_sl_conclusion_holds_for_a_constructed_model_state_at_0x4000
+⊢ ∃ms.
+    (arm8_run 27
+       <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+         exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+         TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> = SOME ms ∧
+     ms.PC = 0x1000080D0w) ∧
+    (∀j ms' ffi'.
+       evaluate
+         (refund_mc 0x1000080D0w
+            (refund_abs_env
+               <|prog_addresses :=
+                   refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>))
+         (basis_ffi ext [«refund»]
+            (sat_fs
+               (explode
+                  (sexp_to_string
+                     (refund_request charge request original remaining
+                        enabled opened candidate amount reason))))) j ms =
+       (TimeOut,ms',ffi') ⇒
+       (refund_mc 0x1000080D0w
+          (refund_abs_env
+             <|prog_addresses :=
+                 refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>)).target.
+       get_pc ms' ≠
+       (refund_mc 0x1000080D0w
+          (refund_abs_env
+             <|prog_addresses :=
+                 refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>)).
+       install_pc) ∧
+    ∃io_events.
+      machine_sem
+        (refund_mc 0x1000080D0w
+           (refund_abs_env
+              <|prog_addresses :=
+                  refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>))
+        (basis_ffi ext [«refund»]
+           (sat_fs
+              (explode
+                 (sexp_to_string
+                    (refund_request charge request original remaining enabled
+                       opened candidate amount reason))))) ms ⊆
+      extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext
+        ([«refund»],
+         sat_fs
+           (explode
+              (sexp_to_string
+                 (refund_request charge request original remaining enabled
+                    opened candidate amount reason)))) io_events =
+      SOME
+        (add_stdout
+           (fastForwardFD
+              (sat_fs
+                 (explode
+                    (sexp_to_string
+                       (refund_request charge request original remaining
+                          enabled opened candidate amount reason)))) 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+Saved theorem _______ "refund_profile_a_sl_all_premises_satisfiable_at_0x4000"
+CHECKED refund_profile_a_sl_all_premises_satisfiable_at_0x4000
+⊢ ∃s h stk e envmc fs cl.
+    refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+    8192w ≤₊ e − h ∧ refund_heap_clear_sl 16384w h e ∧
+    envmc.prog_addresses = refund_mem_dm_sl 16384w h e ∧
+    refund_env_ok_sl 16384w envmc ∧
+    stdin_content fs =
+    SOME
+      (explode
+         (sexp_to_string
+            (refund_request charge request original remaining enabled opened
+               candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+    STD_streams fs
+NONVACUITY_FREE_VARS reason amount candidate opened enabled remaining original request charge ext
+CONTROL_OK the non-vacuity theorem is an existential statement without premises
+STORED_THEOREMS 13
+CLOSURE_NODES 543
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_refundInputSat" ... done.
+Theory "forge_refundInputSat" took 8.2s to build
+EXACT_COMPLETE

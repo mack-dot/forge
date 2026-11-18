@@ -1,0 +1,30 @@
+{
+ "case": "compose-0018",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "compose-0018.sml",
+ "source_sha256": "8067d741444342fa9070a2724a2af43272e67b38b838551ca6fac416c06649d9",
+ "resource_guard": {
+  "memory_free_percent": 55,
+  "disk_free_gib": 118.3,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 72.708,
+ "child_user_cpu_seconds": 103.893,
+ "child_max_rss_bytes": 3974922240,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "6aeaea92aaf666479c227e966c8e12abdbab2a7b3275d8c226bf3c51009b2c3b",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundFficloseComposeTheory.dat": "339a426daa6a14ab4ddd443f5a23c7fdfe7f2a3a72039b5ded6c3569ed11d8ec",
+  ".hol/objs/forge_refundFficloseComposeTheory.sig": "a108e46c4bcf9f535b0d2785623a3dd8648b30d90b6589b33bc80820b6ebd98e",
+  ".hol/objs/forge_refundFficloseComposeTheory.sml": "4c6675d2a2c401a0f47713eea59b2a860a0944e4106cfaa09efc1e06e106524e"
+ },
+ "inputs_unchanged_after": true
+}

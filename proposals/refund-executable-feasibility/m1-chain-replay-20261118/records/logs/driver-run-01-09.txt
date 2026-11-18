@@ -1,0 +1,19 @@
+1 T01-forge_refund FAILED_UNCLASSIFIED 1 6.0 None
+STOP at T01-forge_refund {
+ "log": "<HOME>/forge/results/round4-m1-replay-20261118/logs/T01-forge_refund-dryrun.log",
+ "log_tail": [
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/32\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/32/proofs\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/64\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/bootstrap/compilation/x64/64/proofs\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/bootstrap/translation\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/dafny\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/dafny/compilation\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/dafny/examples\u001b[0m",
+  "Holmake: Scanning \u001b[1m$(CAKEMLDIR)/compiler/dafny/examples/output\u001b[0m",
+  "Holmake: Attempt to recurse into non-existent directory: $(CAKEMLDIR)/compiler/dafny/forge_refundProg_experiment",
+  "  (Probably a result of bad INCLUDES spec.)"
+ ]
+}
+driver exit 1

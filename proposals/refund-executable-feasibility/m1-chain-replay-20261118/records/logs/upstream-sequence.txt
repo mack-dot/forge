@@ -1,0 +1,38 @@
+{
+ "planned_theories": [
+  "sexp_to_dafny"
+ ],
+ "planned_other_objects": [],
+ "planned_outputs_that_already_exist": [],
+ "ok_new_files_only": true
+}
+
+{"label": "up-sexp-to-dafny", "status": "FINISHED", "actual_exit": 0, "wall_seconds": 14.0, "sleep_gap_seconds": 0.0, "watch_line": null}
+exit-sexp 0
+{
+ "planned_theories": [
+  "arm8_configProof",
+  "arm8_targetProof",
+  "arm8_targetProofLemmas",
+  "asmSigned"
+ ],
+ "planned_other_objects": [
+  "HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.ui",
+  "HOL/examples/l3-machine-code/arm8/step/arm8_stepLib.uo",
+  "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofLib.uo"
+ ],
+ "planned_outputs_that_already_exist": [],
+ "ok_new_files_only": true
+}
+
+{"label": "up-arm8-config-proof", "status": "FINISHED", "actual_exit": 0, "wall_seconds": 1174.1, "sleep_gap_seconds": 0.0, "watch_line": null}
+exit-arm8cfg 0
+{
+ "planned_theories": [],
+ "planned_other_objects": [],
+ "planned_outputs_that_already_exist": [],
+ "ok_new_files_only": true
+}
+
+NOTHING TO BUILD: target is up to date according to Holmake
+exit-steplib 0

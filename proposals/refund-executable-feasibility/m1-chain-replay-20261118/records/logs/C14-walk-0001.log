@@ -1,0 +1,30 @@
+{
+ "case": "walk-0001",
+ "cwd": "<HOME>/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "walk-0001.sml",
+ "source_sha256": "98081a71d2d143b2a19c1da8d36b8f278cfbc2e395886cb3b588857dabe31285",
+ "resource_guard": {
+  "memory_free_percent": 64,
+  "disk_free_gib": 117.9,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 240,
+ "wall_seconds_limit": 540,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 7.484,
+ "child_user_cpu_seconds": 9.456,
+ "child_max_rss_bytes": 995131392,
+ "markers": [
+  "P2_PROOF_COMPLETE"
+ ],
+ "stdout_sha256": "086ded89845fee1e719bbaee16518989e8a2d4681de7a6a453fb689f1c007788",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_labRegionWalkTheory.dat": "9a16104455ea50a744d7a7ed28a18ec99a032fc33544275ac3c3618515dc758e",
+  ".hol/objs/forge_labRegionWalkTheory.sig": "deb69117b752c7cc84bdc78abdf76b5532912d46d680712fec7e9a174fcc5bcf",
+  ".hol/objs/forge_labRegionWalkTheory.sml": "c7c86e00bb2eafea78459a469cb6da528b81f99f4aab78092f77ec1d404ab73c"
+ },
+ "inputs_unchanged_after": true
+}

@@ -1,0 +1,123 @@
+<<HOL message: Created theory "forge_refundFfiwritePath">>
+Saved theorem _______ "refund_file_ffiwrite_words"
+CHECKED refund_file_ffiwrite_words
+⊢ TAKE 4 (DROP 16528 refund_file) = [84w; 132w; 0w; 20w] ∧
+  TAKE 120 (DROP 152032 refund_file) =
+  [244w; 79w; 190w; 169w; 253w; 123w; 1w; 169w; 253w; 67w; 0w; 145w; 63w;
+   32w; 0w; 241w; 65w; 3w; 0w; 84w; 243w; 3w; 2w; 170w; 72w; 0w; 64w; 121w;
+   2w; 5w; 192w; 90w; 104w; 6w; 64w; 121w; 8w; 5w; 192w; 90w; 73w; 0w; 8w;
+   11w; 41w; 17w; 0w; 17w; 63w; 1w; 3w; 235w; 76w; 2w; 0w; 84w; 9w; ... ] ∧
+  TAKE 12 (DROP 154052 refund_file) =
+  [16w; 0w; 0w; 240w; 16w; 90w; 64w; 249w; 0w; 2w; 31w; 214w]
+Saved theorem _______ "refund_image_ffiwrite_code"
+CHECKED refund_image_ffiwrite_code
+⊢ ∀m. refund_image_mem 0w m ⇒ ffiwrite_code_bytes m
+Saved theorem _______ "cake_ffiwrite_stub_exact"
+CHECKED cake_ffiwrite_stub_exact
+⊢ arm8_user s ∧ s.PC = 0x100004090w ∧ refund_image_mem 0w s.MEM ⇒
+  ∃s1.
+    arm8_run 1 s = SOME s1 ∧ s1.PC = 0x1000251E0w ∧ s1.REG = s.REG ∧
+    s1.MEM = s.MEM ∧ s1.SP_EL0 = s.SP_EL0 ∧ s1.PSTATE = s.PSTATE ∧
+    s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception
+DEFINITION ⊢ ∀dm s b c a g.
+    ffiwrite_call_pre dm s b c a g ⇔
+    arm8_user s ∧ s.PC = 0x100004090w ∧ refund_image_mem 0w s.MEM ∧
+    (s.SP_EL0 = b + 32w ∧ aligned 3 b ∧ s.REG 0w = c ∧ aligned 2 c ∧
+     s.REG 2w = a ∧ aligned 1 a ∧ s.REG 1w = 8w ∧
+     mem_dword s.MEM 0x1000280B0w = g ∧
+     (∀i x. i < 32 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ b + n2w i ≠ x) ∧
+     (∀i j. i < 32 ∧ j < 8 ⇒ b + n2w i ≠ c + n2w j) ∧
+     (∀i j. i < 32 ∧ j < 4 ⇒ b + n2w i ≠ a + n2w j) ∧ ¬word_msb (s.REG 3w) ∧
+     w2w
+       (w2w
+          (w2w
+             (w2w
+                (w2w
+                   ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                    (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                    (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+                    (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))))) +
+              w2w
+                (w2w
+                   ((23 >< 16)
+                      (w2w
+                         (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                    (31 >< 24)
+                      (w2w
+                         (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                    (7 >< 0)
+                      (w2w
+                         (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+                    (15 >< 8)
+                      (w2w
+                         (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))))))) +
+        4w) ≤₊ s.REG 3w) ∧ (∀i. i < 32 ⇒ b + n2w i ∉ dm) ∧
+    (∀i x. i < 3 ∧ 0x100000000w ≤₊ x ∧ x <₊ 0x100030F30w ⇒ a + n2w i ≠ x) ∧
+    ∀i j. i < 3 ∧ j < 32 ⇒ a + n2w i ≠ b + n2w j
+DEFINITION ⊢ ∀dm s1 s2.
+    write_call_rel dm s1 s2 ⇔
+    arm8_user s2 ∧ s2.PC = s1.REG 30w ∧ s2.SP_EL0 = s1.SP_EL0 ∧
+    (∀r. MEM r [19w; 20w; 21w; 22w; 23w; 24w; 25w; 26w; 27w; 28w] ⇒
+         s2.REG r = s1.REG r) ∧
+    (∀i. i < 32 ⇒ s2.MEM (s1.SP_EL0 + n2w i) = s1.MEM (s1.SP_EL0 + n2w i)) ∧
+    (∀q. 0x100000000w ≤₊ q ∧ q <₊ 0x100030F30w ⇒ s2.MEM q = s1.MEM q) ∧
+    ∀q. q ∈ dm ⇒ s2.MEM q = s1.MEM q
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFfiwritePath)>>
+Saved theorem _______ "cake_ffiwrite_to_import_branch"
+CHECKED cake_ffiwrite_to_import_branch
+⊢ ffiwrite_call_pre dm s b c a g ⇒
+  ∃s1.
+    arm8_run 23 s = SOME s1 ∧ s1.PC = g ∧ s1.REG 30w = 0x10002522Cw ∧
+    s1.REG 19w = a ∧ s1.REG 29w = b + 16w ∧ s1.REG 16w = g ∧ s1.SP_EL0 = b ∧
+    s1.REG 0w =
+    w2w
+      ((7 >< 0)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (15 >< 8)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (23 >< 16)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w)))) @@
+       (31 >< 24)
+         (w2w
+            (w2w
+               (s.MEM (c + 4w + 3w) @@ s.MEM (c + 4w + 2w) @@
+                s.MEM (c + 4w + 1w) @@ s.MEM (c + 4w))))) ∧
+    s1.REG 1w =
+    a +
+    ExtendValue
+      (w2w
+         ((23 >< 16)
+            (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+          (31 >< 24)
+            (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+          (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w))))) @@
+          (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 2w + 1w) @@ s.MEM (a + 2w)))))),
+       ExtendType_UXTW,0) + 4w ∧
+    s1.REG 2w =
+    w2w
+      ((23 >< 16) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+       (31 >< 24) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+       (7 >< 0) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a)))) @@
+       (15 >< 8) (w2w (w2w (w2w (s.MEM (a + 1w) @@ s.MEM a))))) ∧
+    s1.PSTATE.EL = 0w ∧ s1.SCTLR_EL1 = s.SCTLR_EL1 ∧ s1.TCR_EL1 = s.TCR_EL1 ∧
+    s1.exception = s.exception ∧ mem_dword s1.MEM b = s.REG 20w ∧
+    mem_dword s1.MEM (b + 8w) = s.REG 19w ∧
+    mem_dword s1.MEM (b + 16w) = s.REG 29w ∧
+    mem_dword s1.MEM (b + 24w) = s.REG 30w ∧
+    (∀q. (∀i. i < 32 ⇒ q ≠ b + n2w i) ⇒ s1.MEM q = s.MEM q) ∧
+    ∀r. r ≠ 0w ∧ r ≠ 1w ∧ r ≠ 2w ∧ r ≠ 8w ∧ r ≠ 9w ∧ r ≠ 16w ∧ r ≠ 19w ∧
+        r ≠ 29w ∧ r ≠ 30w ⇒
+        s1.REG r = s.REG r
+Exporting theory "forge_refundFfiwritePath" ... done.
+Theory "forge_refundFfiwritePath" took 1m25s to build
+EXACT_COMPLETE

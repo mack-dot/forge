@@ -2,7 +2,8 @@
 
 **CURRENT: none (Stage 9 deferred)**
 
-Status note of 2026-11-18 (owner decision; `unsure.md` U437 to U442). No
+Status note of 2026-11-18 (owner decision; `unsure.md` U437 to U442,
+M1R-1, M1R-2). No
 stage is CURRENT. The full record lists Stages 9, 10 and 11 as DONE. For
 Stage 9 the renewal of its lock is deferred: it needs a hosted signing
 run that is not authorized, and two entries of
@@ -27,7 +28,30 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39) and the Stage 6 records (pull request 40) — U433, U436, U437, U438, U439, U440, U441, U442
+## M1 chain replay on the rebuilt pinned tools: 71 of 71 theories exit 0, exports byte-equal to the old records; joint-premise theorem passes; M1 stays open — M1R-1, M1R-2
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Same machine, same pins: not a clean-room replay and not
+an independent replay. No M1 theorem is claimed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| upstream tool objects that the chain imports and that were missing (three Holmake commands, new files only) |0; 0; 0|16 theories and 3 library objects built; 0 of 1,913 existing theory files changed |
+| 9 trunk theories in the tool tree (recorded Holmake commands, `-j1`) |0 each|`.dat`, `.sig`, `.sml` equal the recorded SHA-256 |
+| 62 case runs of the chain up to `forge_refundSlideProfileA` (recorded commands) |0 each|71 of 71 theories equal to the recorded SHA-256; 0 different |
+| import check `imp4-0001` |0|IMPORTED_COUNT 15, MISMATCH_COUNT 0 |
+| `fs-0002.sml` unchanged (theory `forge_refundInputSat`); its import check |0; 0|first pass of the joint-premise theorem, for slide 0x4000 and one constructed state |
+| other commands of the run |1; stopped|one Holmake dry run (missing include folder; no HOL process); one launch stopped by the agent after 20 s and run again |
+| phase 2: the other 19 theories of U345–U409 and 5 parent theories (25 commands) |0 each|24 of 24 equal to the recorded SHA-256; both phases: 95 theories |
+| recorded controls, repeat cases and import checks of the 41 packets (158 cases listed) |NOT RUN|deferred; no negative control is replayed yet |
+| budget |8,423 s of 21,600 s|no sleep gap; one HOL process at a time |
+
+[Replay packet](proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md).
+M1 stays open: Profile A approval, the R1–R5 contract link, the
+compiler-premise ledger, a clean replay and an independent replay are
+not done. Integration EXIT NOT_ESTABLISHED.
+
+## Round 4 closeout: final version 3 commits; third review ends the code work; the owner merged the bootstrap (pull request 39), the Stage 6 records (pull request 40) and the documents (pull request 41); Q5 passes — U433, U436, U437, U438, U439, U440, U441, U442
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file of this tree or of
@@ -56,21 +80,28 @@ print effects `f54e2507`, its records `53534f64`.
 | `run_bootstrap_gate_cases.py` attempt-0002: commit `53534f64` after the bootstrap |3|UNSUPPORTED with 8 of 8 floor controls, as expected |
 | `exit_stage_7.py --case own-proof`; `--case upstream-replay`; `--case invalid-proof` (scratch worktree `fd8b9608`, Docker) |0; 0; 0|attempts 2, 4, 2; Stage 7 reads none of the files that version 3 changes |
 | `rebuild.py 10800` (M1 tools) |stopped by budget|45 of 71 compiler-proof theories; no M1 replay possible yet |
-| `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |NOT FINISHED|started 2026-11-18 02:13Z on mains power; result in a later entry |
+| `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |0|ended 2026-11-18 03:57Z, "all listed commands finished", 6,238 s of 14,400 s used: compiler proofs exit 0 (71 of 71 theories, 3,804 s); `cv_translator` exit 0 (2,434 s, `cake_compile_heap` built); ARMv8 step heap present. This is a tool build. The M1 chain replay and the `fs` runs are NOT STARTED; no M1 theorem is claimed |
 | Stage 9, six EXIT cases |NOT RUN|deferred; after the bootstrap merge two lock entries are stale |
 | after the owner's merge: `check_frozen_pr_gate.py origin/main` |0|`main` = `96d2ec77`, tree equal to the record commit; the eight PR-gate modules are FROZEN |
 | `exit_stage_6.py --case report` at `96d2ec77`; clean clone with the records `1c21aa85` |1; 0|pull request 40 repairs the Stage 6 record |
 | `run_bootstrap_gate_cases.py` attempt-0003 (trusted `96d2ec77`, candidate `1c21aa85`); hosted `gate/pr_check.py`, pull request 40, run 44229894524 |3; 3|UNSUPPORTED, as expected for record files; first hosted run of the new gate code |
 | after the owner's merge of pull request 40: `exit_stage_6.py --case report`, clean clone of `main` `d0ce1942`; `check_frozen_pr_gate.py origin/main` |0; 0|Stage 6 is green on `main` |
 | `exit_stage_11.py`, three cases, clean clone with the path-free records in the tree (dry run) |0; 0; 0|records for the documents pull request |
+| documents pull request 41 (commit `b61da60a` on `d0ce1942`), clean clone: `check_links.py` for `FORGE_MASTER_IDEA.md`; for `ROADMAP.md`; `check_frozen_pr_gate.py`; `exit_stage_6.py --case report`; `exit_stage_11.py` three cases with the recorded arguments |0; 0; 0; 0; 0, 0, 0|protected paths 0; over all 75 Markdown files outside `results/`: 2 of 200 links without a target, both older Stage 9 links |
+| `run_bootstrap_gate_cases.py` attempt-0004 (trusted `d0ce1942`, candidate `b61da60a`); hosted `gate/pr_check.py`, pull request 41, run 44232116451 |3; 3|UNSUPPORTED, as expected for documents and records; needs the owner's merge |
+| Q5 after the owner's merge of pull request 41 (`main` = `201e63b1`, content equal to `b61da60a`), clean clone: Stage EXIT cases 1, 2, 3, 5, 6, 8 (22 cases); Stage 4 (3 cases); Stage 11 with the recorded arguments (3 cases) |0 each|28 of 28 cases exit 0; the Stage 5 EXIT rewrites its two records with the local tool path (two changed lines) |
+| Q5: `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`; for `ROADMAP.md`; for all 75 Markdown files outside `results/` |0; 0; 0; 1|record 0001 still binds the proposal text on `main`; the last check finds the 2 older Stage 9 links without a target (of 200) |
+| Q5: Stage 7 from the clean clone |NOT RUN|about 3.3 hours of Docker time; every Stage 7 script, pin, fixture, example and tracked record on `main` is equal to the tree where the three cases exited 0 today (`git diff --quiet`: exit 0) |
 | third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
 
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
 [Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
-This section comes to `main` with the documents pull request (Q2, Q3,
-Q4). After that merge: the full check Q5 from a clean checkout. Open:
-decision D1 for step B (print effects); the Stage 9 lock renewal. `ROADMAP.md` on `main` still
-says "CURRENT: Stage 9"; this file is the current one.
+This section came to `main` with the documents pull request 41 (merged
+by the owner on 2026-11-18 05:16Z); the Q5 rows came with the M1 record
+pull request. Round 4 is closed. Open: decision D1 for step B (print
+effects); the Stage 9 lock renewal. The M1 chain replay is in the
+section above. On the backup branch this file is the full record; on
+`main` it is the record up to Stage 9 plus these two sections.
 M1 and integration EXIT NOT_ESTABLISHED.
 
 This is the execution plan and decision record. Stages 0–8 are DONE. Stage 6
