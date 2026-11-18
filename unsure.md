@@ -15531,3 +15531,50 @@ curl: (6) Could not resolve host: github.com
   Hosted results: only pull request 39 (REJECTED, as expected).
 - Next check: the owner's merge of pull request 39, then queue Q0 to Q5
   of BOOTSTRAP_CHECKLIST.md; the result of the M1 window.
+
+## U440 — Owner pasted a readout with decisions and a post-merge prompt; pull request 39 was NOT merged then; five points of the readout corrected; path-free Stage 11 records pass; all 71 compiler-proof theories built
+- Status: 2026-11-18 03:16Z. Refs U437, U439. Text saved verbatim:
+  proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md (text 2). It holds
+  recommended decisions for Q1 to Q4, D2 and M1, and a prompt "to paste
+  right after you merge".
+- Observation: gh pr view 39: state OPEN, not merged; origin/main is
+  4143f4b2; check_frozen_pr_gate.py origin/main: exit 1. So the
+  precondition of that prompt ("PR 39 is merged") was false. I ran no
+  queue item that needs the merge and opened no pull request. The first
+  pull request that needs the owner's merge is 39 itself.
+- Corrections to the readout (for the owner's reading of the bytes):
+  (1) "governance" as a protected directory is in gate/incremental.py
+  (PROTECTED_DIRS), not in approval.py or ratification.py. (2) The
+  one-pass spec.lock re-bind is _lock_rebind_only in gate/approval.py,
+  not in incremental.py. (3) Record 0001 names SIX files with old and
+  new SHA-256 (ContractBinding.dfy, backends/dafny.py, refund.py,
+  spec/refund/spec.lock, two pins files), not one. (4) Q1 and step B are
+  two different things: Q1 is the Stage 6 records for main's PRESENT
+  gate (4cab1868); step B with its records (53534f64) is action 2 with
+  decision D1. If Q1 merges first, commit C must be made again; if step
+  B merges with C, Q1 is not needed. The owner must choose the order.
+  (5) "48 of 48 Stage EXIT cases" is right for Stages 1, 2, 3, 4, 5, 8
+  at two commits; Stage 6 report at main (exit 1) and Stage 11 on a
+  clean checkout (1, 1, 1) are outside that count.
+- F1: the readout's reason is right for AUTHORIZATION (a change of the
+  four files needs a record that only the owner's merge can put on
+  main). The limit stays: for those files the floor controls test only
+  the gate.py paths, so the owner's reading is the only check of their
+  behaviour inside the PR gate.
+- Q4, new measurement: the raw Stage 11 records hold the home path in
+  73 of 178 files (740 places); no token-shaped and no e-mail-shaped
+  string. The repository is PUBLIC. The path-free variant (home prefix
+  replaced; each of the 178 files has the SHA-256 of the owner's
+  sanitized manifest of 2026-11-01) passes the recorded EXIT commands
+  at main's tree: legitimate-change exit 0, stale-dependency exit 0,
+  report exit 0. So Q4 can use the path-free records. The EXIT needs its
+  recorded arguments (--eval .../eval-0007 --baseline
+  .../eval-pr27-0003); the script's default folders are other names.
+- M1 tools, window of 14,400 s (started 02:13Z): cakeml-backend-proofs
+  exit 0 after 3,804 s; 71 of 71 compiler-proof theories built. The
+  next step (cv_translator) was running; the ARMv8 step heap not
+  started. The readout's "on pace" was right for the 71 theories. No M1
+  theorem is claimed; the chain replay is not started.
+- Incident: at 03:16Z the Mac was on battery power again (33 percent).
+- Next check: the owner's merge of pull request 39 and the choice of
+  point (4); then Q0 to Q5.
