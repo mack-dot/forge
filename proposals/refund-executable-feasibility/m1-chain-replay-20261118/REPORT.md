@@ -8,8 +8,8 @@ It is not a clean-room replay and not an independent replay.
 Owner decision: text 4 in
 `proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md` (its own run, budget
 21,600 s). Run by one background agent, 170 tool calls, 2026-11-18
-05:37Z to 07:34Z. Entry: `unsure.md` M1R-1. Records: `records/` (297
-files, `MANIFEST.json`; in text files the home prefix is written
+05:37Z to 07:34Z (phase 1) and 07:49Z to 08:12Z (phase 2). Entries:
+`unsure.md` M1R-1, M1R-2. Records: `records/` (351 files, `MANIFEST.json`; in text files the home prefix is written
 `<HOME>`). The run folders themselves are under `results/` and are not
 tracked.
 
@@ -72,7 +72,61 @@ other 69 comparisons are the replay agent's.
   `git status` inside the CakeML checkout after it was told to run no
   git command there. No file changed.
 
-## Final report of the replay agent (its text; home prefix written `<HOME>`)
+## Addendum: phase 2 (2026-11-18 07:49Z to 08:12Z), from the run's records
+
+The owner wrote "keep going". The approved range names the work of
+entries U345 to U409, and phase 1 covered only the closure of
+`forge_refundSlideProfileA`. Phase 2 replayed the other theories of
+that range and the five earlier parent theories that they need.
+
+| Check | Actual exit / result |
+| --- | --- |
+| Theories planned; replayed with exit 0; failed; blocked | 24 (19 of U345–U409, 5 parents from before U345); 24; 0; 0 |
+| Fresh `.dat`, `.sig`, `.sml` equal to the SHA-256 in the old packet records | 24 of 24 equal |
+| Commands recorded in phase 2 | 25, each exit 0 |
+| Existing theory files of the tool tree changed | 0 of 1,913 |
+| Time used in phase 2 | 1,389 s; no sleep gap; peak 2,839 MiB |
+| Both phases together | 95 theories replayed with exit 0, 95 equal; 8,423 s of 21,600 s |
+
+Columns: order | theory | entry | source packet | exit | wall s | comparison.
+
+```
+ 1|forge_refundArm8Proof|pre-U345 parent (U276)|compiled-behavior-20261104|0|128.4|equal
+ 2|forge_refundReadBoundary|pre-U345 parent|read-runtime-20261105|0|6.0|equal
+ 3|forge_refundStdinDomain|pre-U345 parent|stdin-domain-20261107|0|8.0|equal
+ 4|forge_refundSuccessfulInitialization|pre-U345 parent|initialization-success-checkpoint-20261105|0|82.3|equal
+ 5|forge_refundInitializationStatic|pre-U345 parent|initialization-static-validation-20261105|0|78.3|equal
+ 6|forge_refundGenericReadError|U345|generic-read-local-20261112|0|46.2|equal
+ 7|forge_refundInitialStackCode|U347|initial-stack-code-local-20261112|0|76.3|equal
+ 8|forge_refundNativeReadError|U348|arm8-compose-local-20261112|0|6.0|equal
+ 9|forge_refundInitializerMachine|U349|initializer-machine-local-20261112|0|84.3|equal
+10|forge_refundFfiOracle|U351|m1-closure-20261112|0|44.2|equal
+11|forge_refundFfiInstance|U352|m1-replay-closure-20261112|0|46.1|equal
+12|forge_refundInitializerAligned|U353-U356|m1-replay-closure-20261112|0|88.3|equal
+13|forge_refundInstallStub|U353-U356|m1-replay-closure-20261112|0|16.1|equal
+14|forge_refundInitializerInstalled|U357|m1-installed-closure-20261112|0|86.3|equal
+15|forge_refundInstallSite|U358-U359|m1-installed-closure-20261112|0|6.0|equal
+16|forge_refundInstallReach|U364-U366|m1-n1-reachability-20261113|0|64.2|equal
+17|forge_refundLabRunInit|U371-U373|m1-p2-lab-invariant-20261113|0|44.1|equal
+18|forge_refundLabExclusion|U374-U376|m1-lab-exclusion-20261113|0|38.1|equal
+19|forge_refundAllocBackend|U377-U379|m1-p3-prefix-20261113|0|44.2|equal
+20|forge_refundCmlMainSat|U388|m1-reject-startup-20261115|0|8.0|equal
+21|forge_refundWriteReachCheck|U399|m1-write-reach-20261116|0|100.3|equal
+22|forge_refundWriteArgs|U400|m1-write-args-20261116|0|98.4|equal
+23|forge_refundWriteArgsCheck|U400|m1-write-args-20261116|0|96.3|equal
+24|forge_refundWriteWord|U401|m1-closure-audit-20261116|0|80.3|equal
+```
+
+NOT RUN, deferred by the coordinating agent because the machine was
+needed for a measured job: the recorded controls, repeat cases and
+import checks of the 41 packets. Listed in `records/plan-phase2.json`:
+158 cases (55 controls, 61 repeat cases, 42 import checks; 112 with a
+recorded exit 0 and 46 with a recorded non-zero exit). The classes come
+from the case names. Until these run, no negative control of the chain
+is replayed: this replay shows that the proofs build again, not that
+the checks can still fail.
+
+## Final report of phase 1 of the replay agent (its text; home prefix written `<HOME>`)
 
 M1 CHAIN REPLAY, 2026-11-18. end_to_end=false. No M1 theorem is claimed. "Replayed" = a fresh HOL run of a committed script exited 0 and exported its theory. It is not "proved end to end".
 

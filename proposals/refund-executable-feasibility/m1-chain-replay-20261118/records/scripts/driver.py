@@ -24,8 +24,12 @@ IMAGE = ROOT / 'results/refund-native-audit-2026-11-04/attempt-0004/native-build
 IMAGE_SHA = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
 plan = json.loads((OUT / 'plan.json').read_text())
 STEPS = plan['steps']
-BY_ID = {s['id']: s for s in STEPS}
 PRODUCER = {s['theory']: s['id'] for s in STEPS if s['theory']}
+if os.environ.get('FORGE_PLAN') == 'phase2':
+    # phase 2: steps of plan-phase2.json; parents may be phase 1 theories
+    STEPS = json.loads((OUT / 'plan-phase2.json').read_text())['B']['steps']
+    PRODUCER.update({s['theory']: s['id'] for s in STEPS if s['theory']})
+BY_ID = {s['id']: s for s in STEPS}
 BASE_ENV = {'HOLDIR': str(TC / 'HOL'), 'CAKEMLDIR': str(TC / 'cakeml'),
             'PATH': str(TC / 'poly-install/bin') + os.pathsep + os.environ['PATH']}
 
@@ -201,7 +205,7 @@ def run_case(step):
     run_folder = ROOT / step['run_folder']
     case_dir = run_folder / step['case']
     assert sha(IMAGE) == IMAGE_SHA, 'executable changed'
-    restored_only = case_dir.is_dir() and set(os.listdir(case_dir)) <= {'command.json'} and step['mode'] == 'direct'
+    restored_only = case_dir.is_dir() and set(os.listdir(case_dir)) <= {'command.json', 'preload.sml'} and step['mode'] == 'direct'
     if case_dir.exists() and not restored_only:
         st = load_status()['steps'].get(step['id'], {})
         n = st.get('runs', 0)
@@ -225,7 +229,7 @@ def run_case(step):
         # bridge-0005 holds the restored OLD command.json that every run_case.py reads; all other case folders must be new
         case_dir.mkdir(exist_ok=restored_only)
         shutil.copyfile(run_folder / step['source_name'], case_dir / 'proof.sml')
-        argv = [str(TC / 'HOL/bin/hol'), 'run', '--holstate=' + str(heap)] + extras + [str(case_dir / 'proof.sml')]
+        argv = [str(TC / 'HOL/bin/hol')] + list(step.get('hol_options') or []) + ['run', '--holstate=' + str(heap)] + extras + [str(case_dir / 'proof.sml')]
         env = dict(BASE_ENV)
         for var in step.get('env_out_variables') or []:
             env[var] = str(case_dir)

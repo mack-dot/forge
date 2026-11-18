@@ -18,9 +18,9 @@ import datetime, json, os, re, resource, signal, subprocess, sys, threading, tim
 HOME = str(Path.home())
 OUT = Path(__file__).resolve().parent.parent
 COMMANDS = OUT / 'commands.json'
-BUDGET = OUT / 'budget.json'
+BUDGET = OUT / os.environ.get('FORGE_BUDGET_FILE', 'budget.json')   # phase 2: budget-phase2.json
 LOGS = OUT / 'logs'
-BUDGET_SECONDS = 21600
+BUDGET_SECONDS = int(os.environ.get('FORGE_BUDGET_SECONDS', '21600'))
 HOL_PATTERN = r'poly|bin/hol |bin/Holmake|cakeml-heap|arm8-heap|cake_compile_heap|basis-heap'
 
 

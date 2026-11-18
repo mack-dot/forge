@@ -1,0 +1,52 @@
+<<HOL message: Created theory "forge_refundLabExclusion">>
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLabExclusion)>>
+Saved theorem _______ "refund_lab_aligned_init_avoids_install"
+CHECKED refund_lab_aligned_init_avoids_install
+⊢ (∀a. ∃w. m (byte_align a) = Word w) ∧
+  evaluate
+    (make_init mc0 ffi0 t0 m dm1 sdm1 ms0
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))) cmp0 cbpos0 cbspace0 coracle0 with clock := k) =
+  (res,s2) ⇒
+  pc_ok [Install_location; InstallData_location]
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+    s2.pc ∧
+  s2.code =
+  SND
+    (SND
+       (to_lab arm8_config
+          (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)) ∧
+  ∀i bs n. asm_fetch s2 ≠ SOME (LabAsm Install i bs n)
+Saved theorem _______ "refund_lab_good_init_avoids_install"
+CHECKED refund_lab_good_init_avoids_install
+⊢ good_init_state mc0 ms0 bytes0 cbs0 t0 m dm0 sdm0 ∧
+  evaluate
+    (make_init mc0 ffi0 t0 m dm1 sdm1 ms0
+       (SND
+          (SND
+             (to_lab arm8_config
+                (set_oracle arm8_backend_config refund_alloc_oracle)
+                refund_prog))) cmp0 cbpos0 cbspace0 coracle0 with clock := k) =
+  (res,s2) ⇒
+  pc_ok [Install_location; InstallData_location]
+    (SND
+       (SND
+          (to_lab arm8_config
+             (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)))
+    s2.pc ∧
+  s2.code =
+  SND
+    (SND
+       (to_lab arm8_config
+          (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog)) ∧
+  ∀i bs n. asm_fetch s2 ≠ SOME (LabAsm Install i bs n)
+GOOD_STATEMENT_VARS s2::(64, δ, γ) state res::machine_result coracle0::num -> δ # sec list cbspace0::num cbpos0::word64 cmp0::δ -> sec list -> (word8 list # δ) option sdm1::word64 -> bool dm1::word64 -> bool ffi0::γ ffi_state k::num sdm0::word64 -> bool dm0::word64 -> bool m::word64 -> 64 word_loc t0::64 asm_state cbs0::num bytes0::word8 list ms0::α mc0::(64, α, β) machine_config
+Exporting theory "forge_refundLabExclusion" ... done.
+Theory "forge_refundLabExclusion" took 4.9s to build
+RUN_PROOF_COMPLETE

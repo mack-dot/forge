@@ -1,0 +1,801 @@
+{
+ "end_to_end": false,
+ "claim": "No M1 theorem is claimed. Replayed is not proved end to end.",
+ "B_totals": {
+  "steps_planned": 24,
+  "theories_U345_U409": 19,
+  "pre_U345_parents": 5,
+  "replayed_exit_0": 24,
+  "failed": 0,
+  "blocked": 0,
+  "not_reached": 0,
+  "statement_comparison_equal": 24,
+  "all_three_files_equal": 24,
+  "exported_thm_names": 129,
+  "stdout_vs_packet": {
+   "identical": 1,
+   "identical_except_build_time_lines": 22,
+   "other": 0,
+   "other_detail": []
+  },
+  "budget_seconds": 14566,
+  "t0_utc": "2026-11-18T07:49:07Z",
+  "budget_seconds_used": 1388.6,
+  "sum_command_wall_seconds": 1386.7,
+  "commands_recorded_phase2": 25,
+  "sleep_gap_seconds": 0,
+  "nonzero_exits": [],
+  "peak_child_rss_mib": 2839
+ },
+ "tool_tree_check": "0 existing theory files changed",
+ "B_rows": [
+  {
+   "order": 1,
+   "id": "B01-forge_refundArm8Proof",
+   "theory": "forge_refundArm8Proof",
+   "entry": "pre-U345 parent (U276)",
+   "source_packet": "compiled-behavior-20261104",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 128.4,
+   "expected_wall_seconds": 112.6,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": null,
+   "runs": 1,
+   "note": "Holmake -j1; pre-U345 parent"
+  },
+  {
+   "order": 2,
+   "id": "B02-model-0007",
+   "theory": "forge_refundReadBoundary",
+   "entry": "pre-U345 parent",
+   "source_packet": "read-runtime-20261105",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 6.0,
+   "expected_wall_seconds": 60,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 4,
+   "markers": [],
+   "runs": 1,
+   "note": "direct mode; pre-U345 parent"
+  },
+  {
+   "order": 3,
+   "id": "B03-model-0004",
+   "theory": "forge_refundStdinDomain",
+   "entry": "pre-U345 parent",
+   "source_packet": "stdin-domain-20261107",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 8.0,
+   "expected_wall_seconds": 60,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 4,
+   "markers": [],
+   "runs": 1,
+   "note": "direct mode; pre-U345 parent"
+  },
+  {
+   "order": 4,
+   "id": "B04-success-0002",
+   "theory": "forge_refundSuccessfulInitialization",
+   "entry": "pre-U345 parent",
+   "source_packet": "initialization-success-checkpoint-20261105",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 82.3,
+   "expected_wall_seconds": 89.8,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 3,
+   "markers": [
+    "RUNTIME_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode; pre-U345 parent"
+  },
+  {
+   "order": 5,
+   "id": "B05-static-0003",
+   "theory": "forge_refundInitializationStatic",
+   "entry": "pre-U345 parent",
+   "source_packet": "initialization-static-validation-20261105",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 78.3,
+   "expected_wall_seconds": 73.4,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 4,
+   "markers": [
+    "RUNTIME_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode; parent argv paths mapped; pre-U345 parent"
+  },
+  {
+   "order": 6,
+   "id": "B06-proof-0001",
+   "theory": "forge_refundGenericReadError",
+   "entry": "U345",
+   "source_packet": "generic-read-local-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 46.2,
+   "expected_wall_seconds": 56.3,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 7,
+   "id": "B07-code-0004",
+   "theory": "forge_refundInitialStackCode",
+   "entry": "U347",
+   "source_packet": "initial-stack-code-local-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 76.3,
+   "expected_wall_seconds": 179.0,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 5,
+   "markers": [
+    "RUNTIME_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode; parent argv paths mapped"
+  },
+  {
+   "order": 8,
+   "id": "B08-compose-0001",
+   "theory": "forge_refundNativeReadError",
+   "entry": "U348",
+   "source_packet": "arm8-compose-local-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 6.0,
+   "expected_wall_seconds": 8.3,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "NATIVE_STEP_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 9,
+   "id": "B09-machine-0001",
+   "theory": "forge_refundInitializerMachine",
+   "entry": "U349",
+   "source_packet": "initializer-machine-local-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 84.3,
+   "expected_wall_seconds": 104.5,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "RUNTIME_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode; parent argv paths mapped"
+  },
+  {
+   "order": 10,
+   "id": "B10-oracle-0001",
+   "theory": "forge_refundFfiOracle",
+   "entry": "U351",
+   "source_packet": "m1-closure-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 44.2,
+   "expected_wall_seconds": 65.4,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 11,
+   "id": "B11-instance-0001",
+   "theory": "forge_refundFfiInstance",
+   "entry": "U352",
+   "source_packet": "m1-replay-closure-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 46.1,
+   "expected_wall_seconds": 50.1,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 12,
+   "id": "B12-aligned-0001",
+   "theory": "forge_refundInitializerAligned",
+   "entry": "U353-U356",
+   "source_packet": "m1-replay-closure-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 88.3,
+   "expected_wall_seconds": 116.1,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "RUNTIME_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode; parent argv paths mapped"
+  },
+  {
+   "order": 13,
+   "id": "B13-stub-0002",
+   "theory": "forge_refundInstallStub",
+   "entry": "U353-U356",
+   "source_packet": "m1-replay-closure-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 16.1,
+   "expected_wall_seconds": 21.4,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 2,
+   "markers": [],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 14,
+   "id": "B14-installed-0001",
+   "theory": "forge_refundInitializerInstalled",
+   "entry": "U357",
+   "source_packet": "m1-installed-closure-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 86.3,
+   "expected_wall_seconds": 104.4,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 3,
+   "markers": [
+    "RUNTIME_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode; parent argv paths mapped"
+  },
+  {
+   "order": 15,
+   "id": "B15-install-site-0001",
+   "theory": "forge_refundInstallSite",
+   "entry": "U358-U359",
+   "source_packet": "m1-installed-closure-20261112",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 6.0,
+   "expected_wall_seconds": 5.3,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "NATIVE_STEP_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 16,
+   "id": "B16-proof-0001",
+   "theory": "forge_refundInstallReach",
+   "entry": "U364-U366",
+   "source_packet": "m1-n1-reachability-20261113",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 64.2,
+   "expected_wall_seconds": 81.1,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 41,
+   "markers": [
+    "N1_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 17,
+   "id": "B17-init-0002",
+   "theory": "forge_refundLabRunInit",
+   "entry": "U371-U373",
+   "source_packet": "m1-p2-lab-invariant-20261113",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 44.1,
+   "expected_wall_seconds": 40.2,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "RUN_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 18,
+   "id": "B18-excl-0001",
+   "theory": "forge_refundLabExclusion",
+   "entry": "U374-U376",
+   "source_packet": "m1-lab-exclusion-20261113",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 38.1,
+   "expected_wall_seconds": 39.1,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 2,
+   "markers": [
+    "RUN_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 19,
+   "id": "B19-statement-0002",
+   "theory": "forge_refundAllocBackend",
+   "entry": "U377-U379",
+   "source_packet": "m1-p3-prefix-20261113",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 44.2,
+   "expected_wall_seconds": 38.3,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "P3_PROOF_COMPLETE"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 20,
+   "id": "B20-sat-0001",
+   "theory": "forge_refundCmlMainSat",
+   "entry": "U388",
+   "source_packet": "m1-reject-startup-20261115",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 8.0,
+   "expected_wall_seconds": 5.9,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "NATIVE_STEP_COMPLETE"
+   ],
+   "runs": 1,
+   "note": "direct mode"
+  },
+  {
+   "order": 21,
+   "id": "B21-check-0001",
+   "theory": "forge_refundWriteReachCheck",
+   "entry": "U399",
+   "source_packet": "m1-write-reach-20261116",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 100.3,
+   "expected_wall_seconds": 101.7,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "P3_IMPORT_COMPLETE",
+    "AFTER_POSITIVE_AUDIT"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 22,
+   "id": "B22-args-0006",
+   "theory": "forge_refundWriteArgs",
+   "entry": "U400",
+   "source_packet": "m1-write-args-20261116",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 98.4,
+   "expected_wall_seconds": 114.1,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 28,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 23,
+   "id": "B23-check-0002",
+   "theory": "forge_refundWriteArgsCheck",
+   "entry": "U400",
+   "source_packet": "m1-write-args-20261116",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 96.3,
+   "expected_wall_seconds": 101.9,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 1,
+   "markers": [
+    "P3_IMPORT_COMPLETE",
+    "AFTER_POSITIVE_AUDIT"
+   ],
+   "runs": 1,
+   "note": ""
+  },
+  {
+   "order": 24,
+   "id": "B24-word-0003",
+   "theory": "forge_refundWriteWord",
+   "entry": "U401",
+   "source_packet": "m1-closure-audit-20261116",
+   "status": "REPLAYED",
+   "actual_exit": 0,
+   "wall_seconds": 80.3,
+   "expected_wall_seconds": 114.8,
+   "statement_comparison": "equal",
+   "files_equal": {
+    "sig": true,
+    "sml": true,
+    "dat": true
+   },
+   "exported_thm_names": 20,
+   "markers": [
+    "EXACT_COMPLETE"
+   ],
+   "runs": 1,
+   "note": ""
+  }
+ ],
+ "C": {
+  "state": "NOT RUN: deferred by the coordinator (the machine is needed for another measured job)",
+  "listed_cases": 158,
+  "by_class": {
+   "control": 55,
+   "repeat": 61,
+   "import-check": 42
+  },
+  "recorded_exit_0": 112,
+  "recorded_exit_nonzero": 46,
+  "per_packet": {
+   "generic-read-local-20261112": {
+    "control": 2,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "local-context-20261112": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "initial-stack-code-local-20261112": {
+    "control": 3,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "arm8-step-local-20261112": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "arm8-compose-local-20261112": {
+    "control": 5,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "initializer-machine-local-20261112": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-closure-20261112": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "m1-replay-closure-20261112": {
+    "control": 9,
+    "repeat": 3,
+    "import-check": 3
+   },
+   "m1-installed-closure-20261112": {
+    "control": 3,
+    "repeat": 2,
+    "import-check": 2
+   },
+   "m1-exclusion-profile-20261113": {
+    "control": 4,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-n1-reachability-20261113": {
+    "control": 4,
+    "repeat": 1,
+    "import-check": 2
+   },
+   "m1-p1-lab-closure-20261113": {
+    "control": 4,
+    "repeat": 3,
+    "import-check": 3
+   },
+   "m1-p2-lab-invariant-20261113": {
+    "control": 6,
+    "repeat": 4,
+    "import-check": 4
+   },
+   "m1-lab-exclusion-20261113": {
+    "control": 2,
+    "repeat": 2,
+    "import-check": 2
+   },
+   "m1-p3-prefix-20261113": {
+    "control": 2,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-p3-zero-case-20261113": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-p3-layout-20261113": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-p3-root-20261113": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-p3-replay-20261113": {
+    "control": 3,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-exact-exclusion-20261114": {
+    "control": 0,
+    "repeat": 5,
+    "import-check": 1
+   },
+   "m1-compile-facts-20261114": {
+    "control": 0,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-compile-correct-20261114": {
+    "control": 0,
+    "repeat": 4,
+    "import-check": 1
+   },
+   "m1-source-nonfail-20261115": {
+    "control": 0,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-reject-startup-20261115": {
+    "control": 1,
+    "repeat": 4,
+    "import-check": 1
+   },
+   "m1-loader-memory-20261115": {
+    "control": 1,
+    "repeat": 5,
+    "import-check": 1
+   },
+   "m1-memory-domain-20261115": {
+    "control": 0,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-residual-20261115": {
+    "control": 0,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-env-model-20261116": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-fficlose-stub-20261116": {
+    "control": 1,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-fficlose-compose-20261116": {
+    "control": 0,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-callsite-20261116": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-signed-len-20261116": {
+    "control": 0,
+    "repeat": 1,
+    "import-check": 1
+   },
+   "m1-ffiwrite-20261116": {
+    "control": 3,
+    "repeat": 0,
+    "import-check": 1
+   },
+   "m1-ffiwrite-success-20261116": {
+    "control": 2,
+    "repeat": 0,
+    "import-check": 1
+   },
+   "m1-write-reach-20261116": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "m1-write-args-20261116": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "m1-closure-audit-20261116": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "m1-profile-a-slide0-20261117": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "m1-slide-s1-s2-20261117": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   },
+   "m1-slide-s3-20261117": {
+    "control": 0,
+    "repeat": 2,
+    "import-check": 1
+   },
+   "m1-slide-s4-s6-20261117": {
+    "control": 0,
+    "repeat": 0,
+    "import-check": 0
+   }
+  },
+  "not_listed": {
+   "exploration": 126,
+   "main-phase2": 19,
+   "earlier-attempt-of-a-import-check": 9,
+   "earlier-attempt-of-a-main-case": 98,
+   "earlier-attempt-of-a-control": 6,
+   "main-phase1": 62,
+   "earlier-attempt-of-a-repeat": 2
+  },
+  "classification_rule": "By case name, heuristic: \"repeat\" in the name = repeat; import, imp-, audit, check- = import check; explore, diagnose, inspect, dump = exploration (not listed); a numbered case with a later number of the same base name = earlier attempt (not listed); every other case that is not a main case = control. The packet reports were not read for this list."
+ }
+}

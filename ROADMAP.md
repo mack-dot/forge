@@ -9,7 +9,7 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## M1 chain replay on the rebuilt pinned tools: 71 of 71 theories exit 0, exports byte-equal to the old records; joint-premise theorem passes; M1 stays open — M1R-1
+## M1 chain replay on the rebuilt pinned tools: 71 of 71 theories exit 0, exports byte-equal to the old records; joint-premise theorem passes; M1 stays open — M1R-1, M1R-2
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Same machine, same pins: not a clean-room replay and not
@@ -23,7 +23,9 @@ an independent replay. No M1 theorem is claimed.
 | import check `imp4-0001` |0|IMPORTED_COUNT 15, MISMATCH_COUNT 0 |
 | `fs-0002.sml` unchanged (theory `forge_refundInputSat`); its import check |0; 0|first pass of the joint-premise theorem, for slide 0x4000 and one constructed state |
 | other commands of the run |1; stopped|one Holmake dry run (missing include folder; no HOL process); one launch stopped by the agent after 20 s and run again |
-| budget |7,034 s of 21,600 s|no sleep gap; one HOL process at a time |
+| phase 2: the other 19 theories of U345–U409 and 5 parent theories (25 commands) |0 each|24 of 24 equal to the recorded SHA-256; both phases: 95 theories |
+| recorded controls, repeat cases and import checks of the 41 packets (158 cases listed) |NOT RUN|deferred; no negative control is replayed yet |
+| budget |8,423 s of 21,600 s|no sleep gap; one HOL process at a time |
 
 [Replay packet](proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md).
 M1 stays open: Profile A approval, the R1–R5 contract link, the

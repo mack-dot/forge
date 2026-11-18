@@ -15738,3 +15738,32 @@ curl: (6) Could not resolve host: github.com
 - Next check: owner decisions on Profile A and on a clean or
   independent replay; the joint-premise statement for a general
   permitted slide.
+
+## M1R-2 — M1 replay, phase 2: the other 19 theories of U345–U409 and 5 parent theories exit 0 with byte-equal exports; 158 recorded controls and checks NOT run
+- Status: 2026-11-18 08:15Z. Refs M1R-1, U345–U409. The owner wrote
+  "keep going"; phase 1 had covered only the closure of
+  forge_refundSlideProfileA.
+- Actual (records of the run: summary-phase2.json, comparison-phase2.json,
+  commands.json): 24 theories planned: 19 of the U345–U409 packets
+  (among them forge_refundInstallReach, forge_refundLabExclusion,
+  forge_refundLabRunInit, forge_refundAllocBackend, forge_refundWriteArgs,
+  forge_refundWriteWord, forge_refundCmlMainSat) and 5 parents from
+  before U345 (forge_refundArm8Proof, forge_refundReadBoundary,
+  forge_refundStdinDomain, forge_refundSuccessfulInitialization,
+  forge_refundInitializationStatic). 24 replayed with exit 0; .dat, .sig
+  and .sml equal the recorded SHA-256 for 24 of 24; 25 commands, each
+  exit 0; 0 of 1,913 existing tool-tree theory files changed; 1,389 s.
+  Both phases: 95 theories, 95 equal, 8,423 s of 21,600 s.
+- NOT RUN: the recorded controls, repeat cases and import checks of the
+  41 packets. Listed for later in plan-phase2.json: 158 cases (55
+  controls, 61 repeat cases, 42 import checks; 112 with a recorded exit
+  0, 46 with a recorded non-zero exit). I deferred them: the owner's
+  order of work puts step B next and its Stage 6 benchmark must not run
+  beside HOL.
+- Impact: the replay shows that the proofs build again from the
+  committed scripts. No negative control is replayed, so it does not
+  show again that the checks reject wrong statements.
+- Uncertainty: the classes of the 158 cases come from case names, not
+  from the packet reports.
+- Next check: the 158 cases, on the owner's word, when the machine is
+  free; then the open M1 items of M1R-1.
