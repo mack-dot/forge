@@ -1,0 +1,59 @@
+{
+ "attempt": "attempt-0001",
+ "cases": [
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 0,
+   "file": "proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy",
+   "kind": "positive",
+   "last_line": "Dafny program verifier finished with 42 verified, 0 errors, 1 out of resource",
+   "name": "weak-duality-checker-and-witnesses-verify",
+   "required_output_text": "verified, 0 errors",
+   "required_output_text_found": true,
+   "scenario_result": "FAIL"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar3-dual-certificate/fixtures/NoUpperBoundOnAllocation.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 43 verified, 1 error, 1 out of resource",
+   "name": "bound-without-binary-allocation-rejected",
+   "required_output_text": "a postcondition could not be proved",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  },
+  {
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "file": "proposals/forge2-pillar3-dual-certificate/fixtures/QualityWithoutDualCheck.dfy",
+   "kind": "negative-control",
+   "last_line": "Dafny program verifier finished with 44 verified, 1 error, 1 out of resource",
+   "name": "quality-without-dual-check-rejected",
+   "required_output_text": "a postcondition could not be proved",
+   "required_output_text_found": true,
+   "scenario_result": "PASS"
+  }
+ ],
+ "dafny_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+ "dafny_version_exit": 0,
+ "dafny_version_pinned": true,
+ "end_to_end": false,
+ "inputs": {
+  "proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy": "0885898e17ec05b95f9250803de1b9a496287774f1cfd1f71ee905945c465bcf",
+  "proposals/forge2-pillar3-dual-certificate/fixtures/NoUpperBoundOnAllocation.dfy": "b4fff4c31e34cd9a9e2c1b1ab92494b6394077399f9d6e75d04ec508cd73a1ae",
+  "proposals/forge2-pillar3-dual-certificate/fixtures/QualityWithoutDualCheck.dfy": "a62161d7ea8e1e2488122bee54064831b260fa509378e7273bcff138579664c3"
+ },
+ "options": [
+  "--solver-path",
+  ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+  "--resource-limit",
+  "1000000",
+  "--verification-time-limit",
+  "0",
+  "--cores",
+  "1",
+  "--verify-included-files"
+ ],
+ "scenario_exit": 1
+}

@@ -1,0 +1,32 @@
+{
+ "cold": {
+  "affected": null,
+  "cpu_seconds": 0.0,
+  "evidence_written": false,
+  "exit": null,
+  "findings": [],
+  "obligations": {},
+  "outcome": null,
+  "reason_prefix": null,
+  "wall_seconds": 0.0
+ },
+ "error": "('anchor', 'tests/stage5/SuccessfulExecution.dfy')",
+ "expected_exit": 1,
+ "expected_outcome": "REJECTED",
+ "id": "e12-stale-witness",
+ "pass_ok": false,
+ "status": "harness_error",
+ "warm": {
+  "affected": null,
+  "cpu_seconds": 0.0,
+  "evidence_written": false,
+  "exit": null,
+  "findings": [],
+  "obligations": {},
+  "outcome": null,
+  "reason_prefix": null,
+  "wall_seconds": 0.0
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

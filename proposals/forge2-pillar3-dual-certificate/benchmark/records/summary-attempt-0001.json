@@ -1,0 +1,548 @@
+{
+ "format": "forge-round2-dualcert-benchmark/1",
+ "end_to_end": false,
+ "scope": "finite benchmark of untrusted solvers; the only proved part is the Dafny checker (Accepts => feasible and within the gap of every feasible allocation)",
+ "checker_module_sha256": "e705ec490e30572cc783da2d7f927d5b4201f6bec0bc0a64c9cde507384b85f4",
+ "checker_source_sha256": "55e7df9f6c4989054a459e5aeadccec104e11f324ed3911d86b03c2b99b07f45",
+ "dafny_runs_needed_per_solver_version": 0,
+ "solver_versions": 25,
+ "instances": {
+  "total": 46,
+  "interval": 40,
+  "general": 6
+ },
+ "runtime_checks": {
+  "count": 2300,
+  "mean_microseconds": 91.128
+ },
+ "accepted_overbookings": 0,
+ "accepts_contradicting_brute_force": 0,
+ "exact_versions_zero_gap_on_all_interval_instances": true,
+ "per_version": [
+  {
+   "version": 1,
+   "group": "naive greedy",
+   "name": "first fit, dual = all z",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 0
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 0
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": null
+   }
+  },
+  {
+   "version": 2,
+   "group": "naive greedy",
+   "name": "heaviest first, dual = all z",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 2
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 2
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 3,
+   "group": "naive greedy",
+   "name": "heaviest first, dual = slot maximum",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 2
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 2
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 4,
+   "group": "naive greedy",
+   "name": "density first, dual = slot maximum",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 2
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 2
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 5,
+   "group": "naive greedy",
+   "name": "shortest first, dual ascent 3 rounds",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 2,
+    "2000": 20
+   },
+   "accepted_interval": {
+    "0": 1,
+    "2000": 18
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 8235
+   }
+  },
+  {
+   "version": 6,
+   "group": "buggy",
+   "name": "off-by-one capacity (overbooks)",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 0
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 0
+   },
+   "infeasible_proposals": 46,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": null
+   }
+  },
+  {
+   "version": 7,
+   "group": "buggy",
+   "name": "accepts every request",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 0
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 0
+   },
+   "infeasible_proposals": 46,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": null
+   }
+  },
+  {
+   "version": 8,
+   "group": "buggy",
+   "name": "negative dual prices",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 0
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 0
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": null
+   }
+  },
+  {
+   "version": 9,
+   "group": "buggy",
+   "name": "dual too small (claims optimality)",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 0
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 0
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": null
+   }
+  },
+  {
+   "version": 10,
+   "group": "buggy",
+   "name": "books a request twice",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 0,
+    "2000": 0
+   },
+   "accepted_interval": {
+    "0": 0,
+    "2000": 0
+   },
+   "infeasible_proposals": 46,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": null,
+    "2000": null
+   }
+  },
+  {
+   "version": 11,
+   "group": "local search",
+   "name": "heaviest first + swap search, dual ascent 5",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 17,
+    "2000": 39
+   },
+   "accepted_interval": {
+    "0": 15,
+    "2000": 36
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 9285
+   }
+  },
+  {
+   "version": 12,
+   "group": "local search",
+   "name": "density first + swap search, dual ascent 10",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 19,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 16,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 9310
+   }
+  },
+  {
+   "version": 13,
+   "group": "local search",
+   "name": "shortest first + swap search, dual ascent 20",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 20,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 17,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 8888
+   }
+  },
+  {
+   "version": 14,
+   "group": "local search",
+   "name": "best of three greedy starts + search, dual ascent 50",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 24,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 21,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 9500
+   }
+  },
+  {
+   "version": 15,
+   "group": "local search",
+   "name": "best of three + search, dual ascent 200",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 24,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 21,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 9500
+   }
+  },
+  {
+   "version": 16,
+   "group": "exact primal-dual",
+   "name": "rational simplex, Bland rule",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 17,
+   "group": "exact primal-dual",
+   "name": "rational simplex, Dantzig rule",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 18,
+   "group": "exact primal-dual",
+   "name": "rational simplex, last-index rule",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 19,
+   "group": "exact primal-dual",
+   "name": "Bland + primal polish",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 20,
+   "group": "exact primal-dual",
+   "name": "Dantzig + primal polish",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 21,
+   "group": "exact primal-dual",
+   "name": "last-index + primal polish",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 22,
+   "group": "exact primal-dual",
+   "name": "Bland, dual tightened by ascent",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 23,
+   "group": "exact primal-dual",
+   "name": "Dantzig, primal = best of simplex and local search",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 24,
+   "group": "exact primal-dual",
+   "name": "Bland on reordered columns",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  },
+  {
+   "version": 25,
+   "group": "exact primal-dual",
+   "name": "Dantzig on reordered columns + polish",
+   "instances": 46,
+   "crashed": 0,
+   "accepted": {
+    "0": 44,
+    "2000": 44
+   },
+   "accepted_interval": {
+    "0": 40,
+    "2000": 40
+   },
+   "infeasible_proposals": 0,
+   "infeasible_accepted": 0,
+   "worst_true_ratio_bps_among_accepted": {
+    "0": 10000,
+    "2000": 10000
+   }
+  }
+ ]
+}

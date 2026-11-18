@@ -1,0 +1,508 @@
+{
+ "attempt": "attempt-0006",
+ "cases": [
+  {
+   "case": 0,
+   "edits": [
+    "benign"
+   ],
+   "expected_gate_exit": 0,
+   "gate_exit": 0,
+   "gate_last_line": "ACCEPTED: C1 C2 C3 C4 C5; checked=2; reused=10; end_to_end=false",
+   "name": "positive: benign implementation edit, no protected change",
+   "note": "legitimate change; no record needed",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": false
+  },
+  {
+   "case": 1,
+   "edits": [
+    "gate_code"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/backends/dafny.py; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base is required; PR labels and candidate files do not authorize it",
+   "name": "unratified gate code edit",
+   "note": "(a) rejecting by default",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": false
+  },
+  {
+   "case": 2,
+   "edits": [
+    "pins"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base is required; PR labels and candidate files do not authorize it",
+   "name": "unratified toolchain pins edit",
+   "note": "(a) rejecting by default",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": false
+  },
+  {
+   "case": 3,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base i",
+   "name": "unratified step B (print effects) with NO record on the trusted side",
+   "note": "no ratification, no entry",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": false
+  },
+  {
+   "case": 4,
+   "edits": [
+    "step_b",
+    "own_record"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, governance/gate-ratifications/self.json, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification ",
+   "name": "step B with a ratification record written by the CANDIDATE itself",
+   "note": "self-approval must fail",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": false
+  },
+  {
+   "case": 5,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 0,
+   "gate_exit": 0,
+   "gate_last_line": "ACCEPTED: C1 C2 C3 C4 C5; checked=1; reused=12; end_to_end=false",
+   "name": "RATIFIED step B, exact bytes",
+   "note": "(d) ratified change is accepted; controls run",
+   "ratification_controls": [
+    [
+     "bugs/off_by_one.dfy",
+     1
+    ],
+    [
+     "bugs/retry_double.dfy",
+     1
+    ],
+    [
+     "bugs/self_transfer.dfy",
+     1
+    ],
+    [
+     "bugs/sneaky_assume.dfy",
+     1
+    ],
+    [
+     "bugs/print_effect.dfy",
+     1
+    ],
+    [
+     "bugs/print_effect_marked.dfy",
+     1
+    ],
+    [
+     "impl/Ledger.dfy",
+     0
+    ],
+    [
+     "gate/incremental.py:protected_manifest, gate/approval.py:authorize",
+     0
+    ]
+   ],
+   "replay_of_saved_command": {
+    "byte_identical": true,
+    "exit": 0
+   },
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 6,
+   "edits": [
+    "step_b",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "VERIFICATION_REJECTED: C1 C2 C3 C4 C5 not established; Dafny exit 4",
+   "name": "ratified step B + buggy implementation",
+   "note": "ratification does not carry a bad implementation",
+   "ratification_controls": [
+    [
+     "bugs/off_by_one.dfy",
+     1
+    ],
+    [
+     "bugs/retry_double.dfy",
+     1
+    ],
+    [
+     "bugs/self_transfer.dfy",
+     1
+    ],
+    [
+     "bugs/sneaky_assume.dfy",
+     1
+    ],
+    [
+     "bugs/print_effect.dfy",
+     1
+    ],
+    [
+     "bugs/print_effect_marked.dfy",
+     1
+    ],
+    [
+     "impl/Ledger.dfy",
+     0
+    ],
+    [
+     "gate/incremental.py:protected_manifest, gate/approval.py:authorize",
+     0
+    ]
+   ],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 7,
+   "edits": [
+    "step_b",
+    "schema"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, schemas/evidence.schema.json, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact ga",
+   "name": "ratified step B + one more protected edit (schema)",
+   "note": "(b) split-edit in one head tree",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 8,
+   "edits": [
+    "step_b",
+    "policy_scope",
+    "buggy"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, policy/tiers.yaml, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in",
+   "name": "ratified step B + policy scope edit + buggy implementation",
+   "note": "(b) split-edit",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 9,
+   "edits": [
+    "step_b",
+    "extra_comment_in_ratified_file"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base i",
+   "name": "ratified step B + one more line in a ratified file",
+   "note": "bytes differ from the ratified digest",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 10,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base i",
+   "name": "record with one wrong digest (tampered record)",
+   "note": "(c) tampered ratification digest",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 11,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_BINDING: trusted proposal differs from the ratified text",
+   "name": "record whose proposal digest does not match the trusted text",
+   "note": "(c) tampered record",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 12,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base i",
+   "name": "record that is not tier 0",
+   "note": "wrong record class",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 13,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_BINDING: malformed control in the trusted record",
+   "name": "record with a control outside bugs/",
+   "note": "malformed record fails closed",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 14,
+   "edits": [
+    "gate_code"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_CONTROL: the ratified gate rejected bugs/off_by_one.dfy (trusted planted bug) for a reason that is not a proof or audit result: TOOLCHAIN_LOCK: verification options differ from the fixed Stage 1 policy",
+   "name": "RATIFIED weakened gate: resource limit 1 (record matches exactly)",
+   "note": "non-weakening controls: baseline no longer accepted",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 15,
+   "edits": [
+    "audit_off"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_CONTROL: the ratified gate accepted bugs/sneaky_assume.dfy (trusted planted bug)",
+   "name": "RATIFIED weakened gate: audit result ignored (record matches exactly)",
+   "note": "non-weakening controls: a planted bug would be accepted",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 16,
+   "edits": [
+    "manifest_off"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_SCOPE: a gate ratification cannot cover gate/incremental.py",
+   "name": "RATIFIED gate whose protected_manifest returns nothing (record matches exactly)",
+   "note": "review finding 1 (t3): function probe",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 17,
+   "edits": [
+    "scope_narrow"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_CONTROL: the ratified gate rejected bugs/off_by_one.dfy (trusted planted bug) for a reason that is not a proof or audit result: SOURCE_SCOPE: Stage 1 accepts one file in impl/ or bugs/",
+   "name": "RATIFIED gate that refuses bugs/ for scope and ignores the audit (record matches exactly)",
+   "note": "review finding 1 (t6): rejection reason must be a proof or audit result",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 18,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_BINDING: a control may not replace a planted bug of the trusted base: bugs/off_by_one.dfy",
+   "name": "record whose control replaces a trusted planted bug",
+   "note": "review finding 1 (t4)",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 19,
+   "edits": [
+    "step_b"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: gate/ContractBinding.dfy, gate/backends/dafny.py, gate/refund.py, spec/refund/spec.lock, toolchain/linux-pins.json, toolchain/pins.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base i",
+   "name": "record with \"tier\": false",
+   "note": "review finding 4",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 20,
+   "edits": [
+    "approval_record"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_SCOPE: a gate ratification cannot cover gate/approvals/extra.json",
+   "name": "RATIFIED new file under gate/approvals/ (record matches exactly)",
+   "note": "review finding 5: outside Tier-0",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 21,
+   "edits": [
+    "pr_gate_edit"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_SCOPE: a gate ratification cannot cover gate/incremental.py",
+   "name": "RATIFIED change of a module of the PR gate itself (record matches exactly)",
+   "note": "review 2 finding 1: outside Tier-0",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 22,
+   "edits": [
+    "only_a_record"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "UNAPPROVED_PROTECTED_CHANGE: governance/gate-ratifications/planted.json; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base is required; PR labels and candidate files do not authorize it",
+   "name": "candidate that ONLY adds a ratification record",
+   "note": "review 2 finding 2: the record folder is protected; records enter by the owner's merge only",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": false
+  },
+  {
+   "case": 23,
+   "edits": [
+    "stub_gate"
+   ],
+   "expected_gate_exit": 0,
+   "gate_exit": 0,
+   "gate_last_line": "ACCEPTED: C1 C2 C3 C4 C5; checked=0; reused=12; end_to_end=false",
+   "name": "KNOWN LIMIT: RATIFIED gate.py that only prints the expected words (record matches exactly)",
+   "note": "review 2 finding 4: floor controls do not stop bytes written on purpose; the owner ratified these bytes",
+   "ratification_controls": [
+    [
+     "bugs/off_by_one.dfy",
+     1
+    ],
+    [
+     "bugs/retry_double.dfy",
+     1
+    ],
+    [
+     "bugs/self_transfer.dfy",
+     1
+    ],
+    [
+     "bugs/sneaky_assume.dfy",
+     1
+    ],
+    [
+     "impl/Ledger.dfy",
+     0
+    ],
+    [
+     "gate/incremental.py:protected_manifest, gate/approval.py:authorize",
+     0
+    ]
+   ],
+   "replay_of_saved_command": {
+    "byte_identical": true,
+    "exit": 0
+   },
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 24,
+   "edits": [
+    "policy_scope"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_SCOPE: a gate ratification cannot cover policy/tiers.yaml",
+   "name": "RATIFIED policy edit (record matches exactly)",
+   "note": "scope: Tier-0 covers gate/ and toolchain/ only",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  },
+  {
+   "case": 25,
+   "edits": [
+    "step_b",
+    "lock_other_field"
+   ],
+   "expected_gate_exit": 1,
+   "gate_exit": 1,
+   "gate_last_line": "RATIFICATION_SCOPE: a gate ratification cannot cover spec/refund/spec.lock",
+   "name": "RATIFIED step B + another field changed in spec/refund/spec.lock (record matches exactly)",
+   "note": "scope: a lock may only be re-bound",
+   "ratification_controls": [],
+   "replay_of_saved_command": null,
+   "scenario_result": "PASS",
+   "trusted_record": true
+  }
+ ],
+ "end_to_end": false,
+ "evasions": [],
+ "gate": "gate/incremental.py --profile local (run from the trusted tree)",
+ "known_limits_shown": [
+  "KNOWN LIMIT: RATIFIED gate.py that only prints the expected words (record matches exactly)"
+ ],
+ "scenario_exit": 0,
+ "trusted_tree": "HEAD fd8b9608b4fbaea36da40f4db52d62cb19c43e2a + build_v3.py step A",
+ "wrapper_gate_pr_check_py": "NOT RUN (needs a pull-request event and the linux profile)"
+}

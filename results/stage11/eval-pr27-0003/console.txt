@@ -1,0 +1,20 @@
+FAIL e01-identical cold 0 VERIFIED None None 21.7 | warm 0 VERIFIED 11.5 reused [] | same
+FAIL e02-ledger-rename-local-plus-evidence cold 3 UNSUPPORTED UNSUPPORTED None 15.4 | warm 3 UNSUPPORTED 8.9 reused [] | same
+FAIL e03-ts-fee-constant cold 3 UNSUPPORTED UNSUPPORTED None 17.0 | warm 3 UNSUPPORTED 7.7 reused [] | same
+FAIL e04-booking-least-le cold 3 UNSUPPORTED UNSUPPORTED None 14.7 | warm 3 UNSUPPORTED 7.2 reused [] | same
+FAIL e05-refund-negated-branch cold 3 UNSUPPORTED UNSUPPORTED None 16.2 | warm 3 UNSUPPORTED 6.6 reused [] | same
+FAIL e06-property-test-comment cold 3 UNSUPPORTED UNSUPPORTED None 17.4 | warm 3 UNSUPPORTED 7.5 reused [] | same
+FAIL e07-ts-retry-rejected cold 3 UNSUPPORTED UNSUPPORTED None 16.9 | warm 3 UNSUPPORTED 7.7 reused [] | same
+FAIL e08-ledger-edit-stale-evidence cold 3 UNSUPPORTED UNSUPPORTED None 15.9 | warm 3 UNSUPPORTED 15.2 reused [] | same
+FAIL e09-booking-active-not-updated cold 3 UNSUPPORTED UNSUPPORTED None 18.2 | warm 3 UNSUPPORTED 7.7 reused [] | same
+FAIL e10-refund-ts-drops-bound cold 3 UNSUPPORTED UNSUPPORTED None 18.2 | warm 3 UNSUPPORTED 8.3 reused [] | same
+PASS e11-weakened-spec-with-lock cold 1 REJECTED UNAPPROVED_PROTECTED_CHANGE None 0.4 | warm 1 REJECTED 0.2 reused [] | same
+HARNESS_ERROR e12-stale-witness ('anchor', 'tests/stage5/SuccessfulExecution.dfy')
+PASS e13-readme-only cold 3 UNSUPPORTED UNSUPPORTED None 14.1 | warm 3 UNSUPPORTED 7.5 reused [] | same
+FAIL e14-new-reader-of-ledger cold 3 UNSUPPORTED UNSUPPORTED None 21.6 | warm 3 UNSUPPORTED 11.8 reused [] | same
+PASS e15-mixed-docs-plus-ts-refactor cold 3 UNSUPPORTED UNSUPPORTED None 14.5 | warm 3 UNSUPPORTED 7.8 reused [] | same
+PASS e16-results-record-edit cold 3 UNSUPPORTED UNSUPPORTED None 13.6 | warm 3 UNSUPPORTED 6.7 reused [] | same
+PASS e17-dafny-missing cold 2 NOT_ESTABLISHED None None 0.3 | warm 2 NOT_ESTABLISHED 0.2 reused [] | same
+FAIL e18-node-modules-missing cold 3 UNSUPPORTED UNSUPPORTED None 12.6 | warm 3 UNSUPPORTED 7.4 reused [] | same
+records 18 not passing 13 warm differs 0
+runner exit 1

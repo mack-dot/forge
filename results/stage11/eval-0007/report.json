@@ -1,0 +1,393 @@
+{
+ "baseline_pr27": {
+  "present": true,
+  "verified_here_unsupported_there": [
+   "e02-ledger-rename-local-plus-evidence",
+   "e04-booking-least-le",
+   "e05-refund-negated-branch"
+  ]
+ },
+ "case_count": 18,
+ "cases": [
+  {
+   "affected": [
+    "ledger-proof"
+   ],
+   "cold_cpu": 12.918,
+   "cold_wall": 21.575,
+   "expected": "VERIFIED",
+   "id": "e01-identical",
+   "kind": "match",
+   "observed": "VERIFIED",
+   "pr27_outcome": "VERIFIED",
+   "reused_warm": [],
+   "warm_cpu": 8.04,
+   "warm_wall": 11.568
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-evidence",
+    "ledger-model",
+    "booking",
+    "ledger-witness"
+   ],
+   "cold_cpu": 39.35,
+   "cold_wall": 35.096,
+   "expected": "VERIFIED",
+   "id": "e02-ledger-rename-local-plus-evidence",
+   "kind": "match",
+   "observed": "VERIFIED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [
+    "booking",
+    "ledger-evidence",
+    "ledger-model",
+    "ledger-witness"
+   ],
+   "warm_cpu": 11.975,
+   "warm_wall": 16.243
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-model"
+   ],
+   "cold_cpu": 11.544,
+   "cold_wall": 15.74,
+   "expected": "VERIFIED",
+   "id": "e03-ts-fee-constant",
+   "kind": "frozen_expectation_superseded_by_design_change",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 7.182,
+   "warm_wall": 7.79
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "booking"
+   ],
+   "cold_cpu": 27.312,
+   "cold_wall": 38.061,
+   "expected": "VERIFIED",
+   "id": "e04-booking-least-le",
+   "kind": "match",
+   "observed": "VERIFIED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [
+    "booking"
+   ],
+   "warm_cpu": 12.59,
+   "warm_wall": 17.737
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "refund-proof",
+    "refund-tests"
+   ],
+   "cold_cpu": 28.581,
+   "cold_wall": 39.077,
+   "expected": "VERIFIED",
+   "id": "e05-refund-negated-branch",
+   "kind": "match",
+   "observed": "VERIFIED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [
+    "refund-proof",
+    "refund-tests"
+   ],
+   "warm_cpu": 11.331,
+   "warm_wall": 14.061
+  },
+  {
+   "affected": null,
+   "cold_cpu": 0.211,
+   "cold_wall": 0.28,
+   "expected": "VERIFIED",
+   "id": "e06-property-test-comment",
+   "kind": "frozen_expectation_superseded_by_design_change",
+   "observed": "REJECTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 0.198,
+   "warm_wall": 0.211
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-model"
+   ],
+   "cold_cpu": 11.673,
+   "cold_wall": 15.677,
+   "expected": "REJECTED",
+   "id": "e07-ts-retry-rejected",
+   "kind": "frozen_expectation_superseded_by_design_change",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 7.712,
+   "warm_wall": 10.965
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-evidence",
+    "ledger-model",
+    "booking",
+    "ledger-witness"
+   ],
+   "cold_cpu": 35.987,
+   "cold_wall": 37.374,
+   "expected": "REJECTED",
+   "id": "e08-ledger-edit-stale-evidence",
+   "kind": "match",
+   "observed": "REJECTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [
+    "booking",
+    "ledger-model",
+    "ledger-witness"
+   ],
+   "warm_cpu": 11.155,
+   "warm_wall": 16.754
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "booking"
+   ],
+   "cold_cpu": 26.333,
+   "cold_wall": 36.125,
+   "expected": "REJECTED",
+   "id": "e09-booking-active-not-updated",
+   "kind": "match",
+   "observed": "REJECTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 20.348,
+   "warm_wall": 26.136
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "refund-tests"
+   ],
+   "cold_cpu": 12.655,
+   "cold_wall": 18.965,
+   "expected": "REJECTED",
+   "id": "e10-refund-ts-drops-bound",
+   "kind": "frozen_expectation_superseded_by_design_change",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 7.244,
+   "warm_wall": 7.353
+  },
+  {
+   "affected": null,
+   "cold_cpu": 0.23,
+   "cold_wall": 0.278,
+   "expected": "REJECTED",
+   "id": "e11-weakened-spec-with-lock",
+   "kind": "match",
+   "observed": "REJECTED",
+   "pr27_outcome": "REJECTED",
+   "reused_warm": [],
+   "warm_cpu": 0.25,
+   "warm_wall": 0.398
+  },
+  {
+   "affected": null,
+   "cold_cpu": 0.0,
+   "cold_wall": 0.0,
+   "expected": "REJECTED",
+   "id": "e12-stale-witness",
+   "kind": "not_constructible",
+   "observed": null,
+   "pr27_outcome": null,
+   "reused_warm": [],
+   "warm_cpu": 0.0,
+   "warm_wall": 0.0
+  },
+  {
+   "affected": [
+    "ledger-proof"
+   ],
+   "cold_cpu": 10.262,
+   "cold_wall": 12.956,
+   "expected": "UNSUPPORTED",
+   "id": "e13-readme-only",
+   "kind": "match",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 7.106,
+   "warm_wall": 6.836
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-evidence",
+    "ledger-model",
+    "booking",
+    "ledger-witness"
+   ],
+   "cold_cpu": 10.484,
+   "cold_wall": 13.575,
+   "expected": "UNSUPPORTED",
+   "id": "e14-new-reader-of-ledger",
+   "kind": "match",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 7.137,
+   "warm_wall": 8.64
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-model"
+   ],
+   "cold_cpu": 9.72,
+   "cold_wall": 12.632,
+   "expected": "UNSUPPORTED",
+   "id": "e15-mixed-docs-plus-ts-refactor",
+   "kind": "match",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 6.529,
+   "warm_wall": 6.372
+  },
+  {
+   "affected": [
+    "ledger-proof"
+   ],
+   "cold_cpu": 9.783,
+   "cold_wall": 12.601,
+   "expected": "UNSUPPORTED",
+   "id": "e16-results-record-edit",
+   "kind": "match",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 6.758,
+   "warm_wall": 6.709
+  },
+  {
+   "affected": null,
+   "cold_cpu": 0.204,
+   "cold_wall": 0.274,
+   "expected": "NOT_ESTABLISHED",
+   "id": "e17-dafny-missing",
+   "kind": "match",
+   "observed": "NOT_ESTABLISHED",
+   "pr27_outcome": "NOT_ESTABLISHED",
+   "reused_warm": [],
+   "warm_cpu": 0.184,
+   "warm_wall": 0.208
+  },
+  {
+   "affected": [
+    "ledger-proof",
+    "ledger-model"
+   ],
+   "cold_cpu": 10.38,
+   "cold_wall": 13.563,
+   "expected": "NOT_ESTABLISHED",
+   "id": "e18-node-modules-missing",
+   "kind": "frozen_expectation_superseded_by_design_change",
+   "observed": "UNSUPPORTED",
+   "pr27_outcome": "UNSUPPORTED",
+   "reused_warm": [],
+   "warm_cpu": 7.1,
+   "warm_wall": 7.371
+  }
+ ],
+ "cases_sha256": "ceec69ca99000f1c6fb1313892895734d07239da94edbeeb3c8cb007e2da9e1f",
+ "confusion_expected_by_observed": {
+  "NOT_ESTABLISHED": {
+   "NOT_ESTABLISHED": 1,
+   "None": 0,
+   "REJECTED": 0,
+   "UNSUPPORTED": 1,
+   "VERIFIED": 0
+  },
+  "REJECTED": {
+   "NOT_ESTABLISHED": 0,
+   "None": 1,
+   "REJECTED": 3,
+   "UNSUPPORTED": 2,
+   "VERIFIED": 0
+  },
+  "UNSUPPORTED": {
+   "NOT_ESTABLISHED": 0,
+   "None": 0,
+   "REJECTED": 0,
+   "UNSUPPORTED": 4,
+   "VERIFIED": 0
+  },
+  "VERIFIED": {
+   "NOT_ESTABLISHED": 0,
+   "None": 0,
+   "REJECTED": 1,
+   "UNSUPPORTED": 1,
+   "VERIFIED": 4
+  }
+ },
+ "design_change_note": "After the cases were frozen, an independent review (U185) showed that in-process TypeScript subjects and the witness file could rewrite a harness verdict; they became bound inputs and changes to them are UNSUPPORTED. The frozen expectations for e03-ts-fee-constant, e06-property-test-comment, e07-ts-retry-rejected, e10-refund-ts-drops-bound, e12-stale-witness, e18-node-modules-missing are kept and reported above; they were not edited.",
+ "end_to_end": false,
+ "kinds": {
+  "false_accept": 0,
+  "false_reject": 0,
+  "false_unsupported": 0,
+  "frozen_expectation_superseded_by_design_change": 5,
+  "match": 12,
+  "not_constructible": 1,
+  "other_mismatch": 0
+ },
+ "latency_cold": {
+  "cpu": {
+   "n": 18,
+   "p50": 10.484,
+   "p95": 39.35,
+   "total": 257.627
+  },
+  "wall": {
+   "n": 18,
+   "p50": 13.575,
+   "p95": 39.077,
+   "total": 323.849
+  }
+ },
+ "latency_warm": {
+  "cpu": {
+   "n": 18,
+   "p50": 7.137,
+   "p95": 20.348,
+   "total": 132.839
+  },
+  "wall": {
+   "n": 18,
+   "p50": 7.371,
+   "p95": 26.136,
+   "total": 165.352
+  }
+ },
+ "limits": [
+  "Internally authored cases; not independent generalization.",
+  "Warm runs reuse obligation records from the same host and the same root; CI caches are not measured.",
+  "Latency measured on the recorded host; concurrent load noted in the run record when present.",
+  "end_to_end=false."
+ ],
+ "reproducibility": {
+  "of": 18,
+  "warm_same_decision": 18
+ },
+ "scope": "frozen evaluation of the incremental PR gate",
+ "stage": 11,
+ "warm_reuse_cases": 4
+}

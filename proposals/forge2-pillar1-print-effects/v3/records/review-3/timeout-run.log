@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "<string>", line 7, in <module>
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/runpy.py", line 289, in run_path
+    return _run_module_code(code, init_globals, run_name,
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/runpy.py", line 96, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "gate/incremental.py", line 438, in <module>
+    sys.exit(main())
+  File "gate/incremental.py", line 418, in main
+    check(candidate, output, work, operation, args.profile or host_profile())
+  File "gate/incremental.py", line 238, in check
+    operation['ratification_controls'] = run_controls(ROOT, candidate, ratification, work, protected_manifest)
+  File "<R3>/tT/gate/ratification.py", line 104, in run_controls
+    child = subprocess.run([sys.executable, 'gate/gate.py', '--impl', path,
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py", line 505, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py", line 1154, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py", line 2022, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py", line 1198, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/Library/Frameworks/Python.framework/Versions/3.10/bin/python3', 'gate/gate.py', '--impl', 'bugs/off_by_one.dfy', '--evidence', 'build/control-00.evidence.json']' timed out after 3 seconds

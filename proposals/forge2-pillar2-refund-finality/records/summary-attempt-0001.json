@@ -1,0 +1,365 @@
+{
+ "format": "forge-round2-refund-finality-suite/1",
+ "end_to_end": false,
+ "scope": "finite adversarial test of research code; no universal claim",
+ "ids_agree_with_independent_hashes": true,
+ "valid_sequence": {
+  "requests": 4,
+  "all_committed_one_effect_each": true
+ },
+ "attacks": {
+  "total": 38,
+  "passed": 38,
+  "unauthorized_settlements": 0
+ },
+ "final_state": {
+  "chargeId": "ch_1",
+  "original": "1000",
+  "refundEnabled": true,
+  "remaining": "450"
+ },
+ "outbox_length": 6,
+ "audit_problems_untampered": [],
+ "sink_database_holds_private_key": false,
+ "compromised_database": {
+  "note": "not prevented by the sink; checked by audit with the public key",
+  "cases": [
+   {
+    "name": "row inserted into settled and outbox without a signature",
+    "detected": true,
+    "problems": [
+     "row 7: signature",
+     "stored state is not the end of the chain"
+    ]
+   },
+   {
+    "name": "stored state overwritten",
+    "detected": true,
+    "problems": [
+     "stored state is not the end of the chain"
+    ]
+   },
+   {
+    "name": "outbox intent amount edited",
+    "detected": true,
+    "problems": [
+     "outbox 1: not the settled intent"
+    ]
+   },
+   {
+    "name": "extra outbox row",
+    "detected": true,
+    "problems": [
+     "outbox length differs from settled length",
+     "outbox 7: not the settled intent"
+    ]
+   }
+  ]
+ },
+ "rows": [
+  {
+   "name": "commit with an empty signature",
+   "cls": "A bypass",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "commit with 64 random bytes",
+   "cls": "A bypass",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "commit with a non-string signature",
+   "cls": "A bypass",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature shape",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "valid signature of another claim",
+   "cls": "A bypass",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "claim with an extra field",
+   "cls": "A bypass",
+   "expected": "no state change, no effect",
+   "observed": "rejected: claim shape",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "signature by an attacker key",
+   "cls": "B forgery",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "public key bytes used as a private seed",
+   "cls": "B forgery",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "HMAC of the payload under the public key",
+   "cls": "B forgery",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "stored signature with one bit flipped",
+   "cls": "B forgery",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "every signature stored in the database tried on a new claim",
+   "cls": "B forgery",
+   "expected": "no state change, no effect",
+   "observed": "rejected,rejected,rejected,rejected",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "replay of a settled claim, 10 times in one process",
+   "cls": "C replay",
+   "expected": "no state change, no effect",
+   "observed": "replayed,replayed,replayed,replayed,replayed,replayed,replayed,replayed,replayed,replayed",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "settled request id with a different amount, old signature",
+   "cls": "C replay",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "settled request id, new validly signed claim",
+   "cls": "C replay",
+   "expected": "no state change, no effect",
+   "observed": "minter: signed; sink: rejected: request id already settled with another claim",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "valid old claim against an advanced state",
+   "cls": "D stale",
+   "expected": "no state change, no effect",
+   "observed": "replayed",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "validly signed claim for a stale pre-state",
+   "cls": "D stale",
+   "expected": "no state change, no effect",
+   "observed": "minter: signed; sink: rejected: stored state is not the claimed pre-state",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "valid claim at a sink pinned to another spec lock",
+   "cls": "E ids",
+   "expected": "no state change, no effect",
+   "observed": "rejected: spec lock is not the pinned one; other sink effects 0",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "valid claim at a sink pinned to another minter hash",
+   "cls": "E ids",
+   "expected": "no state change, no effect",
+   "observed": "rejected: minter is not the pinned one; other sink effects 0",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "claim signed by a minter for another spec lock",
+   "cls": "E ids",
+   "expected": "no state change, no effect",
+   "observed": "other minter: signed; sink: rejected: spec lock is not the pinned one",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "claim that names another spec lock, signed by nobody",
+   "cls": "E ids",
+   "expected": "no state change, no effect",
+   "observed": "rejected: spec lock is not the pinned one",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "refund above the remaining amount",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (refund kernel: Rejected); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "refund above the original amount",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (refund kernel: Rejected); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "reason outside the approved set",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (refund kernel: Rejected); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "empty request id",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (refund kernel: Rejected); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "refunds disabled in the pre-state",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (refund kernel: Rejected); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "post-state keeps the full remaining amount",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (post-state is not pre-state minus the authorized amount); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "post-state re-enables a larger remaining amount",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (post-state is not pre-state minus the authorized amount); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "intent amount larger than the request",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (intent is not the kernel's intent); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "intent for another charge",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (intent is not the kernel's intent); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "amount above the money bound",
+   "cls": "F spec",
+   "expected": "no state change, no effect",
+   "observed": "minter: refused (refund kernel: Rejected); sink: rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "intent amount changed after signing",
+   "cls": "G tamper",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "post-state changed after signing",
+   "cls": "G tamper",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "request id changed after signing",
+   "cls": "G tamper",
+   "expected": "no state change, no effect",
+   "observed": "rejected: signature does not verify",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "amount as a JavaScript number",
+   "cls": "G encoding",
+   "expected": "no state change, no effect",
+   "observed": "rejected: claim shape",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "amount beyond 2^53 as a number",
+   "cls": "G encoding",
+   "expected": "no state change, no effect",
+   "observed": "rejected: claim shape",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "amount with a leading zero",
+   "cls": "G encoding",
+   "expected": "no state change, no effect",
+   "observed": "rejected: claim shape",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "claim with a prototype",
+   "cls": "G encoding",
+   "expected": "no state change, no effect",
+   "observed": "rejected: claim shape",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "one valid claim sent by 10 processes at once",
+   "cls": "H concurrency",
+   "expected": "exactly 1 effect",
+   "observed": "committed,replayed,replayed,replayed,replayed,replayed,replayed,replayed,replayed,replayed",
+   "pass": true,
+   "unauthorized": false
+  },
+  {
+   "name": "two different valid claims on one pre-state, two processes",
+   "cls": "H concurrency",
+   "expected": "exactly 1 effect",
+   "observed": "committed,rejected",
+   "pass": true,
+   "unauthorized": false
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "cold": {
+  "affected": null,
+  "cpu_seconds": 10.816,
+  "evidence_written": false,
+  "exit": 3,
+  "findings": [
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "UNCOVERED_CHANGE evidence.json"
+  ],
+  "obligations": {},
+  "outcome": "UNSUPPORTED",
+  "reason_prefix": "UNSUPPORTED",
+  "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 10 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here)",
+  "wall_seconds": 15.378
+ },
+ "expected_exit": 0,
+ "expected_outcome": "VERIFIED",
+ "id": "e02-ledger-rename-local-plus-evidence",
+ "pass_ok": false,
+ "warm": {
+  "affected": null,
+  "cpu_seconds": 8.045,
+  "evidence_written": false,
+  "exit": 3,
+  "findings": [
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy",
+   "UNCOVERED_CHANGE evidence.json"
+  ],
+  "obligations": {},
+  "outcome": "UNSUPPORTED",
+  "reason_prefix": "UNSUPPORTED",
+  "stderr_first_line": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 10 coverage finding(s) remain: UNCOVERED_CHANGE evidence.json (modified; no claim established by this check covers it); DEPENDENT_NOT_REESTABLISHED impl/Ledger.dfy (impl/Booking.dfy includes it (directly or transitively); not re-checked here)",
+  "wall_seconds": 8.91
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

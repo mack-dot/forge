@@ -1,0 +1,70 @@
+<<HOL message: Created theory "forge_inputPremiseSat">>
+USED always_coind
+⊢ ∀P always'.
+    (∀a0. always' a0 ⇒ ∃h t. a0 = h:::t ∧ P (h:::t) ∧ always' t) ⇒
+    ∀a0. always' a0 ⇒ always P a0
+Saved theorem _______ "LREPEAT_one_unfold"
+CHECKED LREPEAT_one_unfold
+⊢ LREPEAT [1] = 1:::LREPEAT [1]
+Saved theorem _______ "LFINITE_not_LREPEAT_one"
+CHECKED LFINITE_not_LREPEAT_one
+⊢ ∀ll. LFINITE ll ⇒ ll ≠ LREPEAT [1]
+Saved theorem _______ "always_eventually_LREPEAT_one"
+CHECKED always_eventually_LREPEAT_one
+⊢ ∀ll.
+    ll = LREPEAT [1] ⇒
+    always (eventually (λll. ∃k. LHD ll = SOME k ∧ k ≠ 0)) ll
+Saved theorem _______ "live_numchars_LREPEAT_one"
+CHECKED live_numchars_LREPEAT_one
+⊢ live_numchars (LREPEAT [1])
+DEFINITION ⊢ ∀inp.
+    sat_fs inp =
+    <|inode_tbl :=
+        [(UStream «stdin»,inp); (UStream «stdout»,""); (UStream «stderr»,"")];
+      files := [];
+      infds :=
+        [(0,UStream «stdin»,ReadMode,0); (1,UStream «stdout»,WriteMode,0);
+         (2,UStream «stderr»,WriteMode,0)]; numchars := LREPEAT [1];
+      maxFD := 2|>
+Saved theorem _______ "sat_fs_wfFS"
+CHECKED sat_fs_wfFS
+⊢ ∀inp. wfFS (sat_fs inp)
+Saved theorem _______ "sat_fs_STD_streams"
+CHECKED sat_fs_STD_streams
+⊢ ∀inp. STD_streams (sat_fs inp)
+Saved theorem _______ "sat_fs_stdin_content"
+CHECKED sat_fs_stdin_content
+⊢ ∀inp. stdin_content (sat_fs inp) = SOME inp
+Saved theorem _______ "sat_cl_wfcl"
+CHECKED sat_cl_wfcl
+⊢ wfcl [«refund»]
+Saved theorem _______ "refund_input_premises_satisfiable"
+CHECKED refund_input_premises_satisfiable
+⊢ ∀inp. ∃fs cl.
+    stdin_content fs = SOME inp ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+Saved theorem _______ "consumed_stdin_has_no_content"
+CHECKED consumed_stdin_has_no_content
+⊢ ∀inp.
+    stdin_content
+      (sat_fs inp with
+       infds :=
+         [(0,UStream «stdin»,ReadMode,1); (1,UStream «stdout»,WriteMode,0);
+          (2,UStream «stderr»,WriteMode,0)]) = NONE
+Saved theorem _______ "finite_numchars_is_not_live"
+CHECKED finite_numchars_is_not_live
+⊢ ¬live_numchars [||]
+Saved theorem _______ "empty_command_line_is_not_wfcl"
+CHECKED empty_command_line_is_not_wfcl
+⊢ ¬wfcl []
+Saved theorem _______ "finite_numchars_file_system_is_not_wfFS"
+CHECKED finite_numchars_file_system_is_not_wfFS
+⊢ ∀inp. ¬wfFS (sat_fs inp with numchars := [||])
+STORED_THEOREMS 13
+CLOSURE_NODES 224
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+Exporting theory "forge_inputPremiseSat" ... done.
+Theory "forge_inputPremiseSat" took 2.0s to build
+EXACT_COMPLETE

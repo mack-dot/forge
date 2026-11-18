@@ -1,0 +1,87 @@
+{
+ "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+ "claim_apply_status": {
+  "C1": "reused",
+  "C2": "reused",
+  "C3": "reused",
+  "C4": "reused",
+  "C5": "reused"
+ },
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e01-identical/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/cold/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e01-identical/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/v0/impl/Ledger.dfy $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/cold/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e01-identical/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/v1/impl/Ledger.dfy $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/cold/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e01-identical/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-pr27/e01-identical/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-pr27/e01-identical/root/build/cold/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/cold/snapshots.log"
+  }
+ ],
+ "coverage": {
+  "changed": [],
+  "covered": true,
+  "established_paths": [],
+  "findings": [],
+  "inventory": "walk/walk"
+ },
+ "end_to_end": false,
+ "evidence_sha256": "c87c46c5571f5de94472fc5443d0bc8cf7c004779d8ac05bc809d75af70e3091",
+ "exit_code": 0,
+ "outcome": "VERIFIED",
+ "result": "verified",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

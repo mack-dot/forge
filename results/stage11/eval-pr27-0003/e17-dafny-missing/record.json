@@ -1,0 +1,32 @@
+{
+ "cold": {
+  "affected": null,
+  "cpu_seconds": 0.198,
+  "evidence_written": false,
+  "exit": 2,
+  "findings": [],
+  "obligations": {},
+  "outcome": "NOT_ESTABLISHED",
+  "reason_prefix": null,
+  "stderr_first_line": "[Errno 2] No such file or directory: '$HOME/forge-s11-eval-pr27/e17-dafny-missing/root/.toolchain/dafny-4.11.0/dafny/dafny'",
+  "wall_seconds": 0.279
+ },
+ "expected_exit": 2,
+ "expected_outcome": "NOT_ESTABLISHED",
+ "id": "e17-dafny-missing",
+ "pass_ok": true,
+ "warm": {
+  "affected": null,
+  "cpu_seconds": 0.173,
+  "evidence_written": false,
+  "exit": 2,
+  "findings": [],
+  "obligations": {},
+  "outcome": "NOT_ESTABLISHED",
+  "reason_prefix": null,
+  "stderr_first_line": "[Errno 2] No such file or directory: '$HOME/forge-s11-eval-pr27/e17-dafny-missing/root/.toolchain/dafny-4.11.0/dafny/dafny'",
+  "wall_seconds": 0.189
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

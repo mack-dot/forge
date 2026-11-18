@@ -1,0 +1,99 @@
+{
+ "cold": {
+  "affected": [
+   "ledger-proof",
+   "ledger-evidence",
+   "ledger-model",
+   "booking",
+   "ledger-witness"
+  ],
+  "cpu_seconds": 39.35,
+  "evidence_written": true,
+  "exit": 0,
+  "findings": [],
+  "obligations": {
+   "booking": {
+    "reason": "",
+    "result": "established",
+    "reused": false,
+    "wall_seconds": 12.868
+   },
+   "ledger-evidence": {
+    "reason": "",
+    "result": "established",
+    "reused": false,
+    "wall_seconds": 3.429
+   },
+   "ledger-model": {
+    "reason": "",
+    "result": "established",
+    "reused": false,
+    "wall_seconds": 7.413
+   },
+   "ledger-witness": {
+    "reason": "",
+    "result": "established",
+    "reused": false,
+    "wall_seconds": 2.816
+   }
+  },
+  "outcome": "VERIFIED",
+  "reason_prefix": null,
+  "stderr_first_line": "",
+  "wall_seconds": 35.096
+ },
+ "expected_exit": 0,
+ "expected_outcome": "VERIFIED",
+ "id": "e02-ledger-rename-local-plus-evidence",
+ "pass_ok": true,
+ "warm": {
+  "affected": [
+   "ledger-proof",
+   "ledger-evidence",
+   "ledger-model",
+   "booking",
+   "ledger-witness"
+  ],
+  "cpu_seconds": 11.975,
+  "evidence_written": true,
+  "exit": 0,
+  "findings": [],
+  "obligations": {
+   "booking": {
+    "reason": "",
+    "result": "established",
+    "reused": true,
+    "wall_seconds": 12.868
+   },
+   "ledger-evidence": {
+    "reason": "",
+    "result": "established",
+    "reused": true,
+    "wall_seconds": 3.429
+   },
+   "ledger-model": {
+    "reason": "",
+    "result": "established",
+    "reused": true,
+    "wall_seconds": 7.413
+   },
+   "ledger-witness": {
+    "reason": "",
+    "result": "established",
+    "reused": true,
+    "wall_seconds": 2.816
+   }
+  },
+  "outcome": "VERIFIED",
+  "reason_prefix": null,
+  "stderr_first_line": "",
+  "wall_seconds": 16.243
+ },
+ "warm_reused": [
+  "booking",
+  "ledger-evidence",
+  "ledger-model",
+  "ledger-witness"
+ ],
+ "warm_same_decision": true
+}

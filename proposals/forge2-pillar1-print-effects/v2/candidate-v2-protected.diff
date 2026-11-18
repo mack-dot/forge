@@ -1,0 +1,88 @@
+diff --git a/gate/ContractBinding.dfy b/gate/ContractBinding.dfy
+index 455770bb..f9aa19c6 100644
+--- a/gate/ContractBinding.dfy
++++ b/gate/ContractBinding.dfy
+@@ -7,3 +7,16 @@ abstract module RequiredLedger {
+ module BoundLedger refines RequiredLedger {
+   import L = Ledger
+ }
++
++// A caller of Ledger.Apply without a {:print} attribute. With --track-print-effects,
++// Dafny rejects the program when Apply, or anything it calls, has print effects.
++module NoPrintEffects {
++  import L = Ledger
++
++  method CallApply(state: L.State, id: int, request: L.Request)
++      returns (next: L.State, outcome: L.Outcome)
++    requires L.WellFormed(state)
++  {
++    next, outcome := L.Apply(state, id, request);
++  }
++}
+diff --git a/gate/backends/dafny.py b/gate/backends/dafny.py
+index e025227e..a8c3cf97 100644
+--- a/gate/backends/dafny.py
++++ b/gate/backends/dafny.py
+@@ -39,7 +39,7 @@ def claim_statements(spec_sha):
+ OPTIONS = [
+     '--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1',
+     '--resource-limit', '1000000', '--verification-time-limit', '0',
+-    '--cores', '1', '--verify-included-files',
++    '--cores', '1', '--verify-included-files', '--track-print-effects',
+ ]
+ REQUIRED_RESULTS = {
+     'Ledger.Apply (correctness)', 'Ledger.Apply (well-formedness)',
+diff --git a/gate/refund.py b/gate/refund.py
+index d6c8e22f..269607a9 100644
+--- a/gate/refund.py
++++ b/gate/refund.py
+@@ -23,7 +23,7 @@ from backends import dafny
+ APPROVED = {
+     'spec/refund/RefundSpec.dfy': '90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57',
+     'spec/refund/protocol.md': '5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4',
+-    'spec/refund/spec.lock': '993dade887f6141e9a9e27ae78e17b6cc2545923f334d83c17aad40bc3b28b57',
++    'spec/refund/spec.lock': '8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b',
+     'policy/refund.yaml': '4409904602e6b670c0fbf773b8f303426e22e0caac077f3d6ed5f016cecf2c83',
+ }
+ SOURCE_FILES = ('impl/Refund.dfy', 'spec/refund/RefundSpec.dfy')
+diff --git a/spec/refund/spec.lock b/spec/refund/spec.lock
+index b1da9195..a5301ad5 100644
+--- a/spec/refund/spec.lock
++++ b/spec/refund/spec.lock
+@@ -2,7 +2,7 @@
+   "dafny_build": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+   "dafny_version": "4.11.0",
+   "dependencies": {
+-    "toolchain/pins.json": "74dcc4b81e452c7422698e6032a3fd7f44186aa2ef1e8a85320e2c8eb03ce60c"
++    "toolchain/pins.json": "4b612d8845e6b00c24be3d02c51557b1d2bd01a1db943ac6b87a0377ad5b7fbe"
+   },
+   "domain": "refund-boundary",
+   "end_to_end": false,
+diff --git a/toolchain/linux-pins.json b/toolchain/linux-pins.json
+index 767c607e..7a3f1e8e 100644
+--- a/toolchain/linux-pins.json
++++ b/toolchain/linux-pins.json
+@@ -33,7 +33,8 @@
+     "0",
+     "--cores",
+     "1",
+-    "--verify-included-files"
++    "--verify-included-files",
++    "--track-print-effects"
+   ],
+   "validator_pins_file": "toolchain/validator-linux-pins.json",
+   "wheel_sha256": {
+diff --git a/toolchain/pins.json b/toolchain/pins.json
+index 6fc3a09a..83d19f2b 100644
+--- a/toolchain/pins.json
++++ b/toolchain/pins.json
+@@ -48,7 +48,8 @@
+     "--resource-limit", "1000000",
+     "--verification-time-limit", "0",
+     "--cores", "1",
+-    "--verify-included-files"
++    "--verify-included-files",
++    "--track-print-effects"
+   ],
+   "proof_checks_run": true,
+   "smoke_results": {

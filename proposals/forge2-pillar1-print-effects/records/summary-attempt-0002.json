@@ -1,0 +1,166 @@
+{
+ "attempt": "attempt-0002",
+ "cases": [
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar1-print-effects/fixtures/PrintEffect.dfy",
+   "file_sha256": "a9c6efb5cc2a403bd2e7154c9086b6273c5e5b385bef1ed00b4eca2b02eb2f87",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 12 verified, 0 errors",
+   "name": "print-mutant-survives-current-gate-options",
+   "result": "PASS"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": null,
+   "extra_options": [
+    "--track-print-effects"
+   ],
+   "file": "proposals/forge2-pillar1-print-effects/fixtures/PrintEffect.dfy",
+   "file_sha256": "a9c6efb5cc2a403bd2e7154c9086b6273c5e5b385bef1ed00b4eca2b02eb2f87",
+   "first_errors": [
+    "proposals/forge2-pillar1-print-effects/fixtures/PrintEffect.dfy(31,4): Error: to use a print statement, the enclosing method must be marked with {:print}"
+   ],
+   "last_line": "1 resolution/type errors detected in PrintEffect.dfy",
+   "name": "print-mutant-with-track-print-effects",
+   "result": "RECORDED (exploratory)"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": null,
+   "extra_options": [
+    "--track-print-effects"
+   ],
+   "file": "proposals/forge2-pillar1-print-effects/fixtures/PrintEffectMarked.dfy",
+   "file_sha256": "3e470ac3ae89c0e278af0df1d6f3e7226f732116ac00ca20b16ab26133e363b8",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 12 verified, 0 errors",
+   "name": "print-mutant-marked-with-track-print-effects",
+   "result": "RECORDED (exploratory)"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": null,
+   "extra_options": [],
+   "file": "proposals/forge2-pillar1-print-effects/fixtures/NondeterministicChoice.dfy",
+   "file_sha256": "7aaaee7e72c69d7001f7c1f65d632c4a8b748cdf4be001c0d1406d58786bcbbf",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 12 verified, 0 errors",
+   "name": "nondeterministic-choice-current-gate-options",
+   "result": "RECORDED (exploratory)"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": null,
+   "extra_options": [
+    "--enforce-determinism"
+   ],
+   "file": "proposals/forge2-pillar1-print-effects/fixtures/NondeterministicChoice.dfy",
+   "file_sha256": "7aaaee7e72c69d7001f7c1f65d632c4a8b748cdf4be001c0d1406d58786bcbbf",
+   "first_errors": [
+    "proposals/forge2-pillar1-print-effects/fixtures/NondeterministicChoice.dfy(31,22): Error: nondeterministic assignment forbidden by the --enforce-determinism option"
+   ],
+   "last_line": "1 resolution/type errors detected in NondeterministicChoice.dfy",
+   "name": "nondeterministic-choice-with-enforce-determinism",
+   "result": "RECORDED (exploratory)"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "extra_options": [
+    "--track-print-effects"
+   ],
+   "file": "impl/Ledger.dfy",
+   "file_sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 12 verified, 0 errors",
+   "name": "approved-ledger-impl-with-track-print-effects",
+   "result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "extra_options": [
+    "--track-print-effects"
+   ],
+   "file": "impl/Booking.dfy",
+   "file_sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 99 verified, 0 errors",
+   "name": "approved-booking-impl-with-track-print-effects",
+   "result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "extra_options": [
+    "--track-print-effects"
+   ],
+   "file": "impl/Refund.dfy",
+   "file_sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 4 verified, 0 errors",
+   "name": "approved-refund-impl-with-track-print-effects",
+   "result": "PASS"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": null,
+   "extra_options": [
+    "--enforce-determinism"
+   ],
+   "file": "impl/Ledger.dfy",
+   "file_sha256": "87b2b9dbca2ce2e647465259e88281fe45220dc1c89624178f4874b345c5a30d",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 12 verified, 0 errors",
+   "name": "approved-ledger-impl-with-enforce-determinism",
+   "result": "RECORDED (exploratory)"
+  },
+  {
+   "checker_exit": 2,
+   "expected_checker_exit": null,
+   "extra_options": [
+    "--enforce-determinism"
+   ],
+   "file": "impl/Booking.dfy",
+   "file_sha256": "b74aefbff41938eb52322869fb27fa9318abbb1a804bdcaea75735b978350bbd",
+   "first_errors": [
+    "impl/Booking.dfy(13,15): Error: assign-such-that statement forbidden by the --enforce-determinism option",
+    "impl/Booking.dfy(51,20): Error: assign-such-that statement forbidden by the --enforce-determinism option",
+    "impl/Booking.dfy(55,20): Error: assign-such-that statement forbidden by the --enforce-determinism option"
+   ],
+   "last_line": "5 resolution/type errors detected in Booking.dfy",
+   "name": "approved-booking-impl-with-enforce-determinism",
+   "result": "RECORDED (exploratory)"
+  },
+  {
+   "checker_exit": 0,
+   "expected_checker_exit": null,
+   "extra_options": [
+    "--enforce-determinism"
+   ],
+   "file": "impl/Refund.dfy",
+   "file_sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+   "first_errors": [],
+   "last_line": "Dafny program verifier finished with 4 verified, 0 errors",
+   "name": "approved-refund-impl-with-enforce-determinism",
+   "result": "RECORDED (exploratory)"
+  }
+ ],
+ "dafny_version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+ "end_to_end": false,
+ "gate_options": [
+  "--solver-path",
+  ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1",
+  "--resource-limit",
+  "1000000",
+  "--verification-time-limit",
+  "0",
+  "--cores",
+  "1",
+  "--verify-included-files"
+ ],
+ "scenario_exit": 0
+}

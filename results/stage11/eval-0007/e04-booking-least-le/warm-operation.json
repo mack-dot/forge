@@ -1,0 +1,312 @@
+{
+ "affected_obligations": [
+  "ledger-proof",
+  "booking"
+ ],
+ "artifact_sha256": "67fbe0f31b2a332aaae42adbedcee7402482381bde2610abe3ebc83384f1ba69",
+ "claim_apply_status": {
+  "C1": "reused",
+  "C2": "reused",
+  "C3": "reused",
+  "C4": "reused",
+  "C5": "reused"
+ },
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-0007/e04-booking-least-le/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/warm/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e04-booking-least-le/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/v0/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e04-booking-least-le/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/v1/impl/Ledger.dfy $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-0007/e04-booking-least-le/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-0007/e04-booking-least-le/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-0007/e04-booking-least-le/root/build/warm/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/warm/snapshots.log"
+  }
+ ],
+ "coverage": {
+  "affected_obligations": [
+   "ledger-proof",
+   "booking"
+  ],
+  "changed": [
+   {
+    "change": "modified",
+    "covered_by": [
+     "booking"
+    ],
+    "path": "impl/Booking.dfy"
+   }
+  ],
+  "claims": [
+   {
+    "affected": true,
+    "claims": {
+     "C1": "source_proof",
+     "C2": "source_proof",
+     "C3": "source_proof",
+     "C4": "source_proof",
+     "C5": "source_proof"
+    },
+    "obligation": "ledger-proof",
+    "scope": "impl/Ledger.dfy refines the approved ledger spec",
+    "status": "established (fresh snapshot proof on the candidate)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "C1": "source_proof",
+     "C2": "source_proof",
+     "C3": "source_proof",
+     "C4": "source_proof",
+     "C5": "source_proof"
+    },
+    "obligation": "ledger-evidence",
+    "scope": "committed root evidence.json reproduces from the candidate ledger source",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "C1": "tested_against_proved_model",
+     "C2": "tested_against_proved_model",
+     "C3": "tested_against_proved_model",
+     "C4": "tested_against_proved_model",
+     "C5": "tested_against_proved_model"
+    },
+    "obligation": "ledger-model",
+    "scope": "ts/ledger.ts (trusted-base bytes) compared with the model compiled from the candidate ledger (finite tests)",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": true,
+    "claims": {
+     "B1": "source_proof",
+     "B2": "source_proof",
+     "B3": "source_proof",
+     "B4": "source_proof"
+    },
+    "obligation": "booking",
+    "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+    "status": "established (reused: identical input digests)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "R1": "source_proof",
+     "R2": "source_proof",
+     "R3": "source_proof",
+     "R4": "source_proof",
+     "R5": "source_proof"
+    },
+    "obligation": "refund-proof",
+    "scope": "refund boundary source proof",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "T1": "property_tested",
+     "T2": "property_tested",
+     "T3": "property_tested"
+    },
+    "obligation": "refund-tests",
+    "scope": "refund wrapper (trusted-base bytes) hostile tests against the model compiled from the candidate refund source",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   },
+   {
+    "affected": false,
+    "claims": {
+     "W": "source_proof"
+    },
+    "obligation": "ledger-witness",
+    "scope": "Stage 5 successful-execution witness (trusted-base bytes) re-verifies against the candidate ledger (audit + named members)",
+    "status": "not affected by this change (not re-run; no new claim made)"
+   }
+  ],
+  "covered": true,
+  "findings": [],
+  "inventory": "walk/walk",
+  "obligations": {
+   "booking": {
+    "argument_inputs": [],
+    "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+    "backend": "dafny-booking",
+    "cache_key": "2d3e681c7195e238f7bd7cbb83f71a063fe06dc39c6380df258f38dfb1a08b8e",
+    "claims": {
+     "B1": "source_proof",
+     "B2": "source_proof",
+     "B3": "source_proof",
+     "B4": "source_proof"
+    },
+    "commands": [
+     {
+      "argv": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+      "exit_code": 0,
+      "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+      "log": "booking-0.log"
+     }
+    ],
+    "declared_inputs": [
+     "gate/ContractBinding.dfy",
+     "gate/backends/__init__.py",
+     "gate/backends/dafny.py",
+     "gate/booking-coverage.json",
+     "gate/booking.py",
+     "gate/common.py",
+     "gate/core.py",
+     "gate/dependencies.py",
+     "gate/expected-audit.md",
+     "gate/gate.py",
+     "impl/Booking.dfy",
+     "impl/Ledger.dfy",
+     "policy/booking.yaml",
+     "policy/tiers.yaml",
+     "proposals/booking-decision.md",
+     "schemas/evidence.schema.json",
+     "schemas/policy.schema.json",
+     "spec.lock",
+     "spec/LedgerSpec.dfy",
+     "spec/booking/BookingSpec.dfy",
+     "spec/booking/spec.lock",
+     "tests/booking/SuccessfulExecution.dfy",
+     "toolchain/pins.json",
+     "toolchain/requirements-stage2.txt",
+     "toolchain/validator-pins.json"
+    ],
+    "evidence_sha256": "d2d852cf2452b72c6656bbf2073c8e806382d2cc9f93365023faccff748f30e2",
+    "obligation": "booking",
+    "result": "established",
+    "reused": true,
+    "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+    "subjects": [
+     "impl/Booking.dfy",
+     "impl/Ledger.dfy",
+     "spec/LedgerSpec.dfy",
+     "spec/booking/BookingSpec.dfy",
+     "tests/booking/SuccessfulExecution.dfy"
+    ],
+    "wall_seconds": 12.005
+   }
+  }
+ },
+ "end_to_end": false,
+ "evidence_sha256": "dbee1ee631e2128879cd01702127d8329b7a79ea6339c08749efe518004963df",
+ "exit_code": 0,
+ "obligations": {
+  "booking": {
+   "argument_inputs": [],
+   "artifact_sha256": "627b4ee0998fc14258ac935f1bc82a2c6c2612f5428cf0a6f2109c12821ea0bb",
+   "backend": "dafny-booking",
+   "cache_key": "2d3e681c7195e238f7bd7cbb83f71a063fe06dc39c6380df258f38dfb1a08b8e",
+   "claims": {
+    "B1": "source_proof",
+    "B2": "source_proof",
+    "B3": "source_proof",
+    "B4": "source_proof"
+   },
+   "commands": [
+    {
+     "argv": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 gate/booking.py --evidence build/obligations/booking.json --work build/obligations/booking-work",
+     "exit_code": 0,
+     "last_line": "ACCEPTED: B1 B2 B3 B4; source_proof; end_to_end=false",
+     "log": "booking-0.log"
+    }
+   ],
+   "declared_inputs": [
+    "gate/ContractBinding.dfy",
+    "gate/backends/__init__.py",
+    "gate/backends/dafny.py",
+    "gate/booking-coverage.json",
+    "gate/booking.py",
+    "gate/common.py",
+    "gate/core.py",
+    "gate/dependencies.py",
+    "gate/expected-audit.md",
+    "gate/gate.py",
+    "impl/Booking.dfy",
+    "impl/Ledger.dfy",
+    "policy/booking.yaml",
+    "policy/tiers.yaml",
+    "proposals/booking-decision.md",
+    "schemas/evidence.schema.json",
+    "schemas/policy.schema.json",
+    "spec.lock",
+    "spec/LedgerSpec.dfy",
+    "spec/booking/BookingSpec.dfy",
+    "spec/booking/spec.lock",
+    "tests/booking/SuccessfulExecution.dfy",
+    "toolchain/pins.json",
+    "toolchain/requirements-stage2.txt",
+    "toolchain/validator-pins.json"
+   ],
+   "evidence_sha256": "d2d852cf2452b72c6656bbf2073c8e806382d2cc9f93365023faccff748f30e2",
+   "obligation": "booking",
+   "result": "established",
+   "reused": true,
+   "scope": "booking matcher source proof, including its reuse of the ledger lemmas",
+   "subjects": [
+    "impl/Booking.dfy",
+    "impl/Ledger.dfy",
+    "spec/LedgerSpec.dfy",
+    "spec/booking/BookingSpec.dfy",
+    "tests/booking/SuccessfulExecution.dfy"
+   ],
+   "wall_seconds": 12.005
+  }
+ },
+ "outcome": "VERIFIED",
+ "result": "verified",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

@@ -1,0 +1,89 @@
+{
+ "epoch1_archive_equals_HEAD_file_by_file": true,
+ "steps": [
+  {
+   "label": "benchmark",
+   "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "scripts/benchmark_reuse.py"
+   ],
+   "exit": 0,
+   "wall_seconds": 1060.5,
+   "last_line": "REPORT results/stage6/runs/run-0001/report.json"
+  },
+  {
+   "label": "controls",
+   "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "scripts/check_stage_6.py"
+   ],
+   "exit": 0,
+   "wall_seconds": 42.0,
+   "last_line": "changed-witness: exit 1"
+  },
+  {
+   "label": "input-identities",
+   "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "<FORGE>/proposals/forge2-pillar1-print-effects/v3/check_stage6_inputs.py"
+   ],
+   "exit": 0,
+   "wall_seconds": 0.3,
+   "last_line": "{\"checked_input_files\": 450, \"all_match_frozen_fixture_bytes\": true, \"exit_code\": 0}"
+  },
+  {
+   "label": "report EXIT, call 1",
+   "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "scripts/exit_stage_6.py",
+    "--case",
+    "report"
+   ],
+   "exit": 0,
+   "wall_seconds": 0.4,
+   "last_line": "{\"exit_code\": 0, \"pairs_recomputed\": 75, \"usage_records\": 76, \"report\": \"results/stage6/report.json\", \"extrapolation\": false}"
+  },
+  {
+   "label": "report EXIT, call 2",
+   "argv": [
+    "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+    "scripts/exit_stage_6.py",
+    "--case",
+    "report"
+   ],
+   "exit": 0,
+   "wall_seconds": 0.4,
+   "last_line": "{\"exit_code\": 0, \"pairs_recomputed\": 75, \"usage_records\": 76, \"report\": \"results/stage6/report.json\", \"extrapolation\": false}"
+  }
+ ],
+ "end_to_end": false,
+ "report_reproduced_byte_identical": true,
+ "check_stage_6_sha256": "a718d948b5c1b4d5e1de9db3c6292b69cc94444dec9ba58beb6d10bd17e361c7",
+ "scenario_exit": 0,
+ "conditions": {
+  "cold": {
+   "epoch1_verifier_process_s": 269.7,
+   "epoch2_verifier_process_s": 304.6,
+   "epoch1_solver_resources": 342198540,
+   "epoch2_solver_resources": 342198540,
+   "epoch1_reused_members": 0,
+   "epoch2_reused_members": 0
+  },
+  "dependency_graph": {
+   "epoch1_verifier_process_s": 175.8,
+   "epoch2_verifier_process_s": 224.7,
+   "epoch1_solver_resources": 224568970,
+   "epoch2_solver_resources": 224568970,
+   "epoch1_reused_members": 510,
+   "epoch2_reused_members": 510
+  },
+  "shared_files": {
+   "epoch1_verifier_process_s": 271.1,
+   "epoch2_verifier_process_s": 316.6,
+   "epoch1_solver_resources": 342198540,
+   "epoch2_solver_resources": 342198540,
+   "epoch1_reused_members": 0,
+   "epoch2_reused_members": 0
+  }
+ }
+}

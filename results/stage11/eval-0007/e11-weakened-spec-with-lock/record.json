@@ -1,0 +1,32 @@
+{
+ "cold": {
+  "affected": null,
+  "cpu_seconds": 0.23,
+  "evidence_written": false,
+  "exit": 1,
+  "findings": [],
+  "obligations": {},
+  "outcome": "REJECTED",
+  "reason_prefix": "UNAPPROVED_PROTECTED_CHANGE",
+  "stderr_first_line": "UNAPPROVED_PROTECTED_CHANGE: spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it",
+  "wall_seconds": 0.278
+ },
+ "expected_exit": 1,
+ "expected_outcome": "REJECTED",
+ "id": "e11-weakened-spec-with-lock",
+ "pass_ok": true,
+ "warm": {
+  "affected": null,
+  "cpu_seconds": 0.25,
+  "evidence_written": false,
+  "exit": 1,
+  "findings": [],
+  "obligations": {},
+  "outcome": "REJECTED",
+  "reason_prefix": "UNAPPROVED_PROTECTED_CHANGE",
+  "stderr_first_line": "UNAPPROVED_PROTECTED_CHANGE: spec.lock, spec/LedgerSpec.dfy; approval of exact spec text is required; PR labels do not authorize it",
+  "wall_seconds": 0.398
+ },
+ "warm_reused": [],
+ "warm_same_decision": true
+}

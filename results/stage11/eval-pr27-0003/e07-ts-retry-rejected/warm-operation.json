@@ -1,0 +1,97 @@
+{
+ "claim_apply_status": {
+  "C1": "reused",
+  "C2": "reused",
+  "C3": "reused",
+  "C4": "reused",
+  "C5": "reused"
+ },
+ "commands": [
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/.toolchain/dafny-4.11.0/dafny/dafny --version",
+   "exit_code": 0,
+   "log": "build/warm/version.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/v0/impl/Ledger.dfy $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/v0/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/audit-0.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-0.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/.toolchain/dafny-4.11.0/dafny/dafny audit $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/v1/impl/Ledger.dfy $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/v1/gate/ContractBinding.dfy --report-format md --report-file $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/audit-1.md --compare-report",
+   "exit_code": 0,
+   "log": "build/warm/audit-1.log"
+  },
+  {
+   "command": "$HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/.toolchain/dafny-4.11.0/dafny/dafny /compile:0 /verifySnapshots:1 /trace /rlimit:1000000 /timeLimit:0 /vcsCores:1 /verifyAllModules /proverOpt:PROVER_PATH=$HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 $HOME/forge-s11-eval-pr27/e07-ts-retry-rejected/root/build/warm/Snapshot.dfy",
+   "exit_code": 0,
+   "log": "build/warm/snapshots.log"
+  }
+ ],
+ "coverage": {
+  "changed": [
+   {
+    "change": "modified",
+    "path": "ts/ledger.ts"
+   }
+  ],
+  "covered": false,
+  "established_paths": [],
+  "findings": [
+   {
+    "detail": "modified; no claim established by this check covers it",
+    "path": "ts/ledger.ts",
+    "reason": "UNCOVERED_CHANGE"
+   }
+  ],
+  "inventory": "walk/walk"
+ },
+ "end_to_end": false,
+ "error": "UNSUPPORTED: C1 C2 C3 C4 C5 hold for impl/Ledger.dfy, but 1 coverage finding(s) remain: UNCOVERED_CHANGE ts/ledger.ts (modified; no claim established by this check covers it)",
+ "exit_code": 3,
+ "outcome": "UNSUPPORTED",
+ "result": "unsupported",
+ "snapshots": [
+  {
+   "checked": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "checked_count": 12,
+   "reused": [],
+   "reused_count": 0
+  },
+  {
+   "checked": [],
+   "checked_count": 0,
+   "reused": [
+    "Ledger.Apply (correctness)",
+    "Ledger.Apply (well-formedness)",
+    "Ledger.TotalRemove (correctness)",
+    "Ledger.TotalRemove (well-formedness)",
+    "Ledger.TotalReplace (correctness)",
+    "Ledger.TotalReplace (well-formedness)",
+    "LedgerSpec.Apply (well-formedness)",
+    "LedgerSpec.IsFreshValid (well-formedness)",
+    "LedgerSpec.IsRetry (well-formedness)",
+    "LedgerSpec.NonNegative (well-formedness)",
+    "LedgerSpec.Total (well-formedness)",
+    "LedgerSpec.WellFormed (well-formedness)"
+   ],
+   "reused_count": 12
+  }
+ ],
+ "spec_approval": null,
+ "stage": 4,
+ "stage_exit": false
+}

@@ -1,0 +1,194 @@
+{
+ "boundary_witnesses": [
+  {
+   "approved_spec": "Authorized",
+   "capped_variant": "Authorized",
+   "context": {
+    "original": 100,
+    "refundEnabled": true,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R1",
+    "SpecDiffRefundCapWitnesses.R1_NonVacuous"
+   ],
+   "kind": "unchanged",
+   "response": {
+    "amount": 50,
+    "reason": "duplicate_charge"
+   },
+   "title": "amount exactly at the cap",
+   "witness": "R1"
+  },
+  {
+   "approved_spec": "Authorized",
+   "capped_variant": "Rejected",
+   "context": {
+    "original": 100,
+    "refundEnabled": true,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R2",
+    "SpecDiffRefundCapWitnesses.R2_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "response": {
+    "amount": 51,
+    "reason": "duplicate_charge"
+   },
+   "title": "amount one above the cap",
+   "witness": "R2"
+  },
+  {
+   "approved_spec": "Authorized",
+   "capped_variant": "Rejected",
+   "context": {
+    "original": 101,
+    "refundEnabled": true,
+    "remaining": 101,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R3",
+    "SpecDiffRefundCapWitnesses.R3_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "response": {
+    "amount": 51,
+    "reason": "returned_item"
+   },
+   "title": "odd original, amount at half rounded up",
+   "witness": "R3"
+  },
+  {
+   "approved_spec": "Authorized",
+   "capped_variant": "Rejected",
+   "context": {
+    "original": 100,
+    "refundEnabled": true,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R4",
+    "SpecDiffRefundCapWitnesses.R4_NonVacuous"
+   ],
+   "kind": "newly_rejected",
+   "response": {
+    "amount": 100,
+    "reason": "service_not_delivered"
+   },
+   "title": "full refund of the original",
+   "witness": "R4"
+  },
+  {
+   "approved_spec": "Authorized",
+   "capped_variant": "Authorized",
+   "context": {
+    "original": 100,
+    "refundEnabled": true,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R5",
+    "SpecDiffRefundCapWitnesses.R5_NonVacuous"
+   ],
+   "kind": "unchanged",
+   "response": {
+    "amount": 0,
+    "reason": "duplicate_charge"
+   },
+   "title": "zero amount",
+   "witness": "R5"
+  },
+  {
+   "approved_spec": "Rejected",
+   "capped_variant": "Rejected",
+   "context": {
+    "original": 100,
+    "refundEnabled": true,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R6",
+    "SpecDiffRefundCapWitnesses.R6_NonVacuous"
+   ],
+   "kind": "unchanged",
+   "response": {
+    "amount": 10,
+    "reason": "goodwill"
+   },
+   "title": "reason not allowed",
+   "witness": "R6"
+  },
+  {
+   "approved_spec": "Rejected",
+   "capped_variant": "Rejected",
+   "context": {
+    "original": 100,
+    "refundEnabled": true,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R7",
+    "SpecDiffRefundCapWitnesses.R7_NonVacuous"
+   ],
+   "kind": "unchanged",
+   "response": "Missing",
+   "title": "model response missing",
+   "witness": "R7"
+  },
+  {
+   "approved_spec": "Rejected",
+   "capped_variant": "Rejected",
+   "context": {
+    "original": 100,
+    "refundEnabled": false,
+    "remaining": 100,
+    "requestOpen": true
+   },
+   "dafny_lemmas": [
+    "SpecDiffRefundCapWitnesses.R8",
+    "SpecDiffRefundCapWitnesses.R8_NonVacuous"
+   ],
+   "kind": "unchanged",
+   "response": {
+    "amount": 10,
+    "reason": "duplicate_charge"
+   },
+   "title": "refunds disabled",
+   "witness": "R8"
+  }
+ ],
+ "change": "approved spec/refund/RefundSpec.dfy versus fixtures/RefundSpecCapped.dfy (variant: amount * 2 <= original)",
+ "end_to_end": false,
+ "general_statements": [
+  {
+   "lemma": "SpecDiffRefundCap.EligibleNewIff",
+   "text": "Eligible under the variant exactly when eligible under the approved spec and amount * 2 <= original."
+  },
+  {
+   "lemma": "SpecDiffRefundCap.UnchangedOutsideTheCap",
+   "text": "Unchanged region: every input the approved spec rejects, and every eligible input within the cap. Same decision and plan."
+  },
+  {
+   "lemma": "SpecDiffRefundCap.NewlyRejectedAboveTheCap",
+   "text": "Changed region: eligible and above the cap. The approved spec authorizes; the variant rejects with an empty plan."
+  },
+  {
+   "lemma": "SpecDiffRefundCap.OldDeterministic, NewDeterministic",
+   "text": "Both specifications allow at most one result per input."
+  },
+  {
+   "lemma": "SpecDiffRefundCap.OldPostSatisfiable, NewPostSatisfiable",
+   "text": "Both allow a result for every input."
+  }
+ ],
+ "status": "DATA ONLY. The capped specification is a fixture, not a proposed change. Each row and statement is a Dafny lemma."
+}

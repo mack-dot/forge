@@ -1,0 +1,123 @@
+{
+ "rows": [
+  {
+   "case": "skeleton and three instances",
+   "file": "proposals/forge2-pillar1-spec-determinism/RelationalAuditInstances.dfy",
+   "sha256": "aa249116177f6365aa55ba124efb3e34775dc95fe3c8130e5ad8a78206026531",
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "result": "AS EXPECTED",
+   "summary": "Dafny program verifier finished with 39 verified, 0 errors",
+   "resources": {}
+  },
+  {
+   "case": "control: planted no-frame specification as an instance",
+   "file": "proposals/forge2-pillar1-spec-determinism/fixtures/AuditInstanceNoFrame.dfy",
+   "sha256": "9acd49bd528089b0a495a3c3e5af2dbd0ac804ed815b47b797836391cdf1d841",
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "result": "AS EXPECTED",
+   "summary": "Dafny program verifier finished with 17 verified, 2 errors",
+   "resources": {}
+  },
+  {
+   "case": "W2 split into four lemmas",
+   "file": "proposals/forge2-pillar1-spec-determinism/experiments/W2Split.dfy",
+   "sha256": "69d980260c7744ade71b8df78739605007e49bbb9d21c10a679eb2ae241e8948",
+   "checker_exit": 0,
+   "expected_checker_exit": 0,
+   "result": "AS EXPECTED",
+   "summary": "Dafny program verifier finished with 8 verified, 0 errors",
+   "resources": {
+    "W2Split.BothAcceptNumbers": {
+     "batches": 2,
+     "largest": 307402,
+     "sum": 389952,
+     "outcomes": {
+      "Passed": 2
+     }
+    },
+    "W2Split.MapFacts": {
+     "batches": 2,
+     "largest": 52266,
+     "sum": 76839,
+     "outcomes": {
+      "Passed": 2
+     }
+    },
+    "W2Split.NewFacts": {
+     "batches": 1,
+     "largest": 240768,
+     "sum": 240768,
+     "outcomes": {
+      "Passed": 1
+     }
+    },
+    "W2Split.OldFacts": {
+     "batches": 1,
+     "largest": 154409,
+     "sum": 154409,
+     "outcomes": {
+      "Passed": 1
+     }
+    },
+    "W2Split.W2D": {
+     "batches": 2,
+     "largest": 168304,
+     "sum": 255134,
+     "outcomes": {
+      "Passed": 2
+     }
+    }
+   }
+  },
+  {
+   "case": "W2 with map-key assertions only (failed attempt, kept)",
+   "file": "proposals/forge2-pillar1-spec-determinism/experiments/W2MapKeysOnly.dfy",
+   "sha256": "f4f4c9ac1b82f727e553ce4f62ceda4a9f6087a9e15763c8a731d8b78328534b",
+   "checker_exit": 4,
+   "expected_checker_exit": 4,
+   "result": "AS EXPECTED",
+   "summary": "Dafny program verifier finished with 38 verified, 0 errors, 4 out of resource",
+   "resources": {
+    "W2MapKeysOnly.StateFacts": {
+     "batches": 2,
+     "largest": 300781,
+     "sum": 347819,
+     "outcomes": {
+      "Passed": 2
+     }
+    },
+    "W2MapKeysOnly.W2A": {
+     "batches": 2,
+     "largest": 1076668,
+     "sum": 1163498,
+     "outcomes": {
+      "Failed": 1,
+      "Passed": 1
+     }
+    },
+    "W2MapKeysOnly.W2B": {
+     "batches": 36,
+     "largest": 1076020,
+     "sum": 5945581,
+     "outcomes": {
+      "Passed": 34,
+      "Failed": 2
+     }
+    },
+    "W2MapKeysOnly.W2C": {
+     "batches": 2,
+     "largest": 1076462,
+     "sum": 1163292,
+     "outcomes": {
+      "Failed": 1,
+      "Passed": 1
+     }
+    }
+   }
+  }
+ ],
+ "scenario_exit": 0,
+ "end_to_end": false
+}
