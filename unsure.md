@@ -15471,3 +15471,63 @@ curl: (6) Could not resolve host: github.com
 - Next check: Stage 7 result; the step B runs and commit C when the Mac
   is on mains power; the owner's merge of pull request 39; then the
   queue Q0 to Q5 of BOOTSTRAP_CHECKLIST.md.
+
+## U439 — Round 4 closeout, part 3: Stage 7 passes (three EXIT cases); step B records made on the final commit (commit C); clean Stage 6 records for main replace the first run; documents branch for main prepared; M1 window of 14,400 s started
+- Status: 2026-11-18 UTC. Refs U432, U436, U437, U438. The Mac was put on
+  mains power at 01:36Z.
+- Actual, Stage 7 (scratch worktree at fd8b9608, Docker restored from the
+  pinned digests; one try per case; run by the agent that the earlier
+  session started): exit_stage_7.py --case own-proof exit 0 (attempt 2,
+  2,285 s); --case upstream-replay exit 0 (attempt 4; 15,571 s
+  wall-clock, of which about 7,596 s was the Mac's sleep; both rocqchk
+  commands 0; identity before = after, 149,053 files); --case
+  invalid-proof exit 0 (attempt 2, 168 s; checker exit 1 with the
+  intended type error). The Stage 7 scripts, pins and fixtures are equal
+  at the backup branch's HEAD. Records: results/round3-stage7-restore-
+  20261117 (32 commands; one failed probe of the agent, record 019, exit
+  1, repeated with exit 0).
+- Not verified for Stage 7: no EXIT ran in the main tree (upstream-replay
+  is at its limit of five attempts there); no new build of the own ELF;
+  publisher provenance of the images; own-proof ran before the new
+  replay and uses the tracked October prerequisites; not a clean-host
+  replay.
+- Actual, step B at f54e2507 (scratch worktree, mains power): Stage EXIT
+  cases 1, 2, 3, 4, 5, 8: 24 cases, exit 0 each. A first try of my
+  runner did not start (FileExistsError: a folder left by the run that I
+  had stopped); that is a harness error, not a stage result.
+  stage6_epoch2.py: benchmark exit 0 (75 pairs, 905 s), controls exit 0,
+  identity check exit 0 (450 files), report EXIT exit 0 twice, report
+  byte-identical; process seconds 1 to 3 percent above the earlier
+  record; solver resource counts and reused members equal.
+- Commit C 53534f64 on B (1,031 files; protected paths 0): evidence.json
+  (byte-equal to the control candidate's file), the two Stage 5 records,
+  the fresh Stage 6 records, the earlier Stage 6 records as
+  results/stage6-epoch1. Stage 6 report EXIT in a clean clone at C: exit
+  0. Real gate, trusted side 26410d46, candidate C
+  (run_bootstrap_gate_cases.py attempt-0002): exit 3 UNSUPPORTED, record
+  0001 matched, 8 of 8 floor controls as expected, 1,693 files that no
+  obligation lists. Branch proposal/v3b-print-effects pushed (new
+  branch, then fast-forward; no force). No pull request for it.
+- Stage 6 for main, run 2 on mains power (new scratch worktree at
+  4143f4b2): all five steps exit 0, report byte-identical, 868 s;
+  process seconds within -2.3 to +0.7 percent of the earlier record. So
+  the higher values of run 1 (U438) came from the load and the battery
+  state, not from the gate bytes. Local commit 4cab1868 replaces
+  0b3fb727 on branch records/stage6-epoch2-main (not pushed). Report
+  EXIT in a clean clone at 4cab1868: exit 0; at 26410d46 plus 4cab1868:
+  exit 0.
+- Documents branch for main: docs/master-idea-records, local commit
+  45f8c24a on 4143f4b2, 218 files, protected paths 0, made from the
+  backup branch at 4e7f0a38. check_links.py on it: exit 0 (14 relative
+  links, 0 without a target). PROPOSAL-V3.md there is byte-equal to the
+  copy that record 0001 binds. Not pushed.
+- M1: with Stage 6 and Stage 7 finished and the Mac on mains power, I
+  started the window that the owner's Round 4 text grants: rebuild.py
+  14400 round4-m1-build-20261118 (resume; 45 of 71 compiler-proof
+  theories were built). Reading "run it now" from that text is my
+  interpretation; the build is incremental, so a stop loses no finished
+  theory. No M1 theorem is claimed.
+- Uncertainty: every local result is macOS and the local profile.
+  Hosted results: only pull request 39 (REJECTED, as expected).
+- Next check: the owner's merge of pull request 39, then queue Q0 to Q5
+  of BOOTSTRAP_CHECKLIST.md; the result of the M1 window.

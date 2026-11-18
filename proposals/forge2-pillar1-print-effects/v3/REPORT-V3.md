@@ -126,11 +126,11 @@ PR-gate controls exit 0 together in the scratch worktree. Not met:
 5. Stage 9: approve a hosted signing run, or keep Stage 9 as a record
    of the old gate bytes.
 
-## 9. Round 4 closeout: results on the final bytes (U437, U438)
+## 9. Round 4 closeout: results on the final bytes (U437, U438, U439)
 
 Date: 2026-11-18 UTC. All runs are local (macOS, local profile) unless
 a row says "hosted". Final commits on `main` at `4143f4b2`: A
-`801777ea`, A2 `26410d46`, B `f54e2507`, C not built yet (see the last rows). Nothing is merged.
+`801777ea`, A2 `26410d46`, B `f54e2507`, C `53534f64`. Nothing is merged.
 
 | Check | Actual exit | Result |
 | --- | --- | --- |
@@ -143,17 +143,22 @@ a row says "hosted". Final commits on `main` at `4143f4b2`: A
 | hosted `gate/pr_check.py`, pull request 39 (run 44213967396) | 1 | REJECTED, equal to the local result; job `report` success |
 | Stage EXIT cases 1, 2, 3, 4, 5, 8 at A2 (24 cases) | 0 each | passed |
 | Stage 6 `report` at unchanged `main` and at A2 | 1; 1 | `TRUSTED_INPUTS`; not caused by step A |
-| fresh Stage 6 run at `main`'s tree (`stage6_epoch2.py`): benchmark; controls; identity check; report EXIT twice | 0; 0; 0; 0, 0 | 75 pairs; 450 files; report byte-identical; solver resource counts equal the earlier run; local records commit `0b3fb727` |
-| Stage 6 `report` in a clean clone at `0b3fb727`; at A2 plus `0b3fb727` | 0; 0 | the red record on `main` is repaired by these records, before and after action 1 |
+| fresh Stage 6 run at `main`'s tree (`stage6_epoch2.py`), run 1 on battery power: benchmark; controls; identity check; report EXIT twice | 0; 0; 0; 0, 0 | local commit `0b3fb727`; process seconds 15 to 44 percent above the earlier record; replaced by run 2 |
+| the same, run 2 on mains power | 0; 0; 0; 0, 0 | 75 pairs, 868 s; 450 files; report byte-identical; solver resource counts and reused members equal the earlier record; process seconds within −2.3 to +0.7 percent; local records commit `4cab1868` |
+| Stage 6 `report` in a clean clone at `4cab1868`; at A2 plus `4cab1868` | 0; 0 | the red record on `main` is repaired by these records, before and after action 1 |
 | `exit_stage_11.py`, three cases at `4143f4b2`: with the records from the verified backup; clean checkout | 0, 0, 0; 1, 1, 1 | the evaluation records are not on `main` |
 | `check_links.py origin/main FORGE_MASTER_IDEA.md` | 1 | 10 of 13 relative links have no target on `main` |
 | `check_links.py docs/master-idea-records FORGE_MASTER_IDEA.md` | 0 | local documents branch for `main`, commit `45f8c24a` on `4143f4b2`: 218 files, protected paths 0, 14 links, 0 without a target; not pushed |
 | `check_frozen_pr_gate.py 26410d46`; `... origin/main` | 0; 1 | the eight modules equal the recorded digests at A2; not yet on `main` |
 | step B `f54e2507`: `gate/gate.py --impl impl/Ledger.dfy` | 0 | ACCEPTED |
-| step B `f54e2507`: stage EXIT cases, fresh Stage 6 run, commit C | NOT RUN | stopped: the Mac was on battery power (U438) |
+| step B `f54e2507`: Stage EXIT cases 1, 2, 3, 4, 5, 8 (24 cases) | 0 each | passed (second try of the runner; the first try did not start: my harness error) |
+| step B `f54e2507`: `stage6_epoch2.py`: benchmark; controls; identity check; report EXIT twice | 0; 0; 0; 0, 0 | 75 pairs, 905 s; report byte-identical; records in commit C `53534f64` |
+| Stage 6 `report` in a clean clone at `53534f64` | 0 | passed |
+| real gate, commit C `53534f64` after the bootstrap | 3 | UNSUPPORTED; record 0001 matched; 8 of 8 floor controls as expected; 1,693 files that no obligation lists |
 | Stage 7 (scratch worktree, Docker): `own-proof` | 0 | attempt 2, 2,285 s |
-| Stage 7: `upstream-replay`; `invalid-proof` | NOT FINISHED; NOT RUN | replay attempt 4 was running when this section was written; the Mac slept about two hours during it |
+| Stage 7: `upstream-replay`; `invalid-proof` | 0; 0 | replay attempt 4 (15,571 s wall-clock; the Mac slept about two hours inside that time); invalid-proof attempt 2, 168 s |
 | M1 build window `rebuild.py 10800` | stopped by budget | 45 of 71 compiler-proof theories built; the proof build was killed at the deadline; no M1 replay possible yet |
+| M1 build window `rebuild.py 14400 round4-m1-build-20261118` | NOT FINISHED | started 2026-11-18 02:13Z on mains power (U439) |
 | Stage 9, six EXIT cases | NOT RUN | deferred; after action 1 two lock entries are stale |
 
 Third independent review (`REVIEW-3.md`): 0 fail-opens; 0 HIGH or

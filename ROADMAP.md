@@ -9,13 +9,13 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438
+## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438, U439
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file of this tree or of
 `main` is changed. Pull request 39 is open and NOT merged. Final
 commits on `main` at `4143f4b2`: rule `801777ea`, record `26410d46`,
-print effects `f54e2507`.
+print effects `f54e2507`, its records `53534f64`.
 
 | EXIT command/check | Actual exit/result | Result |
 | --- | --- | --- |
@@ -25,15 +25,18 @@ print effects `f54e2507`.
 | hosted `gate/pr_check.py`, pull request 39, run 44213967396 |1|REJECTED; equal to the local result |
 | Stage EXIT cases 1, 2, 3, 4, 5, 8 at `26410d46` (24 cases) |0 each|passed |
 | `exit_stage_6.py --case report` at `main` `4143f4b2`; at `26410d46` |1; 1|`TRUSTED_INPUTS`; red before this work |
-| `stage6_epoch2.py` at `main`'s tree: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|fresh records, local commit `0b3fb727`; report byte-identical |
-| `exit_stage_6.py --case report` in a clean clone at `0b3fb727`; at `26410d46` plus `0b3fb727` |0; 0|repairs the Stage 6 record; needs the owner's merge |
+| `stage6_epoch2.py` at `main`'s tree, run 2 on mains power: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|fresh records, local commit `4cab1868`; report byte-identical; run 1 on battery power also 0 (replaced) |
+| `exit_stage_6.py --case report` in a clean clone at `4cab1868`; at `26410d46` plus `4cab1868` |0; 0|repairs the Stage 6 record; needs the owner's merge |
 | `exit_stage_11.py`, three cases at `4143f4b2`: records from the verified backup; clean checkout |0, 0, 0; 1, 1, 1|the evaluation records are not on `main` |
 | `check_links.py origin/main FORGE_MASTER_IDEA.md` |1|10 of 13 relative links have no target on `main` |
+| `check_links.py docs/master-idea-records FORGE_MASTER_IDEA.md` (local documents branch, commit `45f8c24a`) |0|218 files, protected paths 0; needs the owner's merge |
 | step B `f54e2507`: `gate/gate.py --impl impl/Ledger.dfy` |0|ACCEPTED |
-| step B `f54e2507`: stage EXIT cases, fresh Stage 6 run, commit C |NOT RUN|stopped: the Mac was on battery power |
-| Stage 7 `own-proof` (scratch worktree, Docker) |0|attempt 2 |
-| Stage 7 `upstream-replay`; `invalid-proof` |NOT FINISHED; NOT RUN|replay attempt 4 was running at the time of this entry |
+| step B `f54e2507`: Stage EXIT cases 1, 2, 3, 4, 5, 8 (24 cases) |0 each|passed |
+| step B `f54e2507`: `stage6_epoch2.py`: benchmark; controls; identity check; report EXIT twice |0; 0; 0; 0, 0|records in commit `53534f64`; report byte-identical |
+| `run_bootstrap_gate_cases.py` attempt-0002: commit `53534f64` after the bootstrap |3|UNSUPPORTED with 8 of 8 floor controls, as expected |
+| `exit_stage_7.py --case own-proof`; `--case upstream-replay`; `--case invalid-proof` (scratch worktree `fd8b9608`, Docker) |0; 0; 0|attempts 2, 4, 2; Stage 7 reads none of the files that version 3 changes |
 | `rebuild.py 10800` (M1 tools) |stopped by budget|45 of 71 compiler-proof theories; no M1 replay possible yet |
+| `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |NOT FINISHED|started 2026-11-18 02:13Z on mains power; result in a later entry |
 | Stage 9, six EXIT cases |NOT RUN|deferred; after the bootstrap merge two lock entries are stale |
 | third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
 

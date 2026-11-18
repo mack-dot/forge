@@ -14,15 +14,19 @@ defects. No gate byte changed after that review.
 | Branch | Commits on top of `main` | Content |
 | --- | --- | --- |
 | `proposal/v3a-gate-ratification-rule` (pushed; pull request 39) | `801777ea` then `26410d46` | step A (the rule); then record 0001 and the proposal text that it names |
-| `proposal/v3b-print-effects` | the two above, then `f54e2507`, then commit C | step B (print effects); then records made again by real runs at `f54e2507` (evidence, Stage 5, fresh Stage 6 with the old Stage 6 records kept as `results/stage6-epoch1`) |
+| `proposal/v3b-print-effects` (pushed; no pull request yet) | the two above, then `f54e2507`, then `53534f64` (commit C) | step B (print effects); then records made again by real runs at `f54e2507` (evidence, Stage 5, fresh Stage 6 with the old Stage 6 records kept as `results/stage6-epoch1`) |
 
-Commit C is NOT built yet. Its runs were stopped when the Mac was found
-on battery power (27 percent), to keep power for the Stage 7 replay
-(U438). Measured at `f54e2507` before the stop: `gate/gate.py --impl
-impl/Ledger.dfy --evidence evidence.json`: exit 0 (ACCEPTED). NOT RUN at
-`f54e2507`: the stage EXIT cases and the fresh Stage 6 run. An earlier
-run of the same flow on an earlier base passed (U436); step B is
-byte-identical there.
+Commit C `53534f64` (1,031 files; protected paths: 0) holds the records
+made at `f54e2507` on mains power: `gate/gate.py --impl impl/Ledger.dfy`
+exit 0 (`evidence.json`, byte-equal to the file of the control
+candidate); Stage EXIT cases 1, 2, 3, 4, 5, 8: 24 cases, exit 0 each;
+`stage6_epoch2.py`: benchmark exit 0 (75 pairs, 905 s), controls exit 0,
+identity check exit 0 (450 files), report EXIT exit 0 twice, report
+byte-identical. Process seconds are 1 to 3 percent above the earlier
+run; solver resource counts and reused members are equal. Stage 6
+report EXIT in a clean clone at `53534f64`: exit 0. A first try of the
+stage EXIT runner did not start (my harness error: a leftover folder
+name); the cases ran in the second try.
 
 The backup branch `backup/forge-local-2026-11-11` is NOT a base for
 these. Its gate is an older local version without `main`'s Stage 11
@@ -145,8 +149,9 @@ a record on the trusted side.
       rejected, `impl/Ledger.dfy` accepted, function probe equal); four
       files that no obligation lists: `bugs/print_effect.dfy`,
       `bugs/print_effect_marked.dfy`, `scripts/exit_stage_5.py`,
-      `toolchain/linux-pins.json`. With commit C the list is longer
-      (record files).
+      `toolchain/linux-pins.json`. Measured with
+      candidate `53534f64` (commit C): exit 3, 8 of 8 floor controls as
+      expected, 1,693 files that no obligation lists (the records).
 - [ ] NOT measured: the hosted Linux profile. There
       `toolchain/pins.json` (the macOS pins) is probably the file that
       no obligation lists, instead of `toolchain/linux-pins.json`.
@@ -187,19 +192,21 @@ Q1. Stage 6 record on `main`. The EXIT `exit_stage_6.py --case report`
     exits 1 at `main` today (`TRUSTED_INPUTS`), since earlier merges
     changed pinned gate files. Step A changes none of the 20 pinned
     files. Prepared: local
-    branch `records/stage6-epoch2-main`, commit `0b3fb727` on `4143f4b2`
+    branch `records/stage6-epoch2-main`, commit `4cab1868` on `4143f4b2`
     (1,028 files: fresh records; the earlier records moved unchanged to
     `results/stage6-epoch1`; protected paths: 0; not pushed). Made by
-    `stage6_epoch2.py` at `main`'s tree: benchmark exit 0 (75 pairs,
-    1,163 s), controls exit 0, identity check exit 0 (450 files), report
-    EXIT exit 0 twice, report byte-identical. Solver resource counts and
-    reused members equal the earlier run. Report EXIT in a clean clone
-    at `0b3fb727`: exit 0; at `26410d46` plus this commit: exit 0. After
-    action 1: rebase (no common path), run the report EXIT again, open
-    the pull request. Limits: the run was under load and on battery
-    power, so process seconds are 15 to 44 percent higher than in the
-    earlier run; the records hold local absolute paths, as the Stage 6
-    records on `main` do now.
+    `stage6_epoch2.py` at `main`'s tree on mains power: benchmark exit 0
+    (75 pairs, 868 s), controls exit 0, identity check exit 0 (450
+    files), report EXIT exit 0 twice, report byte-identical. Solver
+    resource counts and reused members equal the earlier run; process
+    seconds are within −2.3 to +0.7 percent of it. Report EXIT in a
+    clean clone at `4cab1868`: exit 0; at `26410d46` plus this commit:
+    exit 0. After action 1: rebase (no common path), run the report
+    EXIT again, open the pull request. A first run of the same flow
+    (local commit `0b3fb727`, all exits 0) was made under load and on
+    battery power; its process seconds were 15 to 44 percent higher,
+    so this run replaces it. Limit: the records hold local absolute
+    paths, as the Stage 6 records on `main` do now.
 
 Q2. Links of `FORGE_MASTER_IDEA.md`. On `main` 10 of its 13 relative
     links have no target
