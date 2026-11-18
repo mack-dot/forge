@@ -35,6 +35,8 @@ commit `ccb4e5e2` and its records `59189040` are on `main` at
 | the same clone: `gate/gate.py` on the two planted print bugs; Stage 5 mutation counts |1; 1|`effect_rejected` 1, `survived` 1 (before step B: `survived` 2): the `print` survivor is closed; the remaining survivor is the labelled algebraic rewrite control |
 | `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md` and `ROADMAP.md`; record 0001 against `main` |0; 0, 0; equal|every file that record 0001 names has its new SHA-256 on `main`; 2 older Stage 9 links without a target |
 | Stage 9 lock against `main` |8 entries differ|deferred |
+| pull request 44 (closeout documents, commit `d7927f89`): hosted gate; then merged by the owner with a bypass on 2026-11-18 14:29Z as `f6329211` |3|UNSUPPORTED, as expected; `main` content equal to `d7927f89`; no gate, spec, record or result path changed since the full check at `9d587c7e` |
+| clean clone of `main` `f6329211`: `check_frozen_pr_gate.py`; link checks of `FORGE_MASTER_IDEA.md`, `ROADMAP.md`; `exit_stage_6.py --case report`; Stage 11 three cases |0; 0, 0; 0; 0, 0, 0|`main` and its tracking documents agree; no pull request of this closeout is open |
 
 Not verified: VERIFIED (exit 0) for a ratified change on a hosted
 runner (step B has files that no obligation lists). Eight entries of

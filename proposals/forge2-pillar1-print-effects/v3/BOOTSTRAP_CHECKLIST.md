@@ -413,3 +413,8 @@ Clean clone of `main` `9d587c7e` after the merges:
 Open after this file: action 3 (Stage 9 lock renewal, hosted signing
 run); the 158 M1 controls and checks (`unsure.md` M1R-2); the limits F1
 to F5 of review 3; a hosted VERIFIED result for a ratified change.
+
+Later the same day the owner merged pull request 44 (closeout documents)
+with a bypass: `main` = `f6329211`, content equal to the checked commit
+`d7927f89`. No pull request of this closeout is open. The copy of this
+file on `main` ends before this paragraph.
