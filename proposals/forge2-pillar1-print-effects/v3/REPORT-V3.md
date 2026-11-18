@@ -147,6 +147,7 @@ a row says "hosted". Final commits on `main` at `4143f4b2`: A
 | Stage 6 `report` in a clean clone at `0b3fb727`; at A2 plus `0b3fb727` | 0; 0 | the red record on `main` is repaired by these records, before and after action 1 |
 | `exit_stage_11.py`, three cases at `4143f4b2`: with the records from the verified backup; clean checkout | 0, 0, 0; 1, 1, 1 | the evaluation records are not on `main` |
 | `check_links.py origin/main FORGE_MASTER_IDEA.md` | 1 | 10 of 13 relative links have no target on `main` |
+| `check_links.py docs/master-idea-records FORGE_MASTER_IDEA.md` | 0 | local documents branch for `main`, commit `45f8c24a` on `4143f4b2`: 218 files, protected paths 0, 14 links, 0 without a target; not pushed |
 | `check_frozen_pr_gate.py 26410d46`; `... origin/main` | 0; 1 | the eight modules equal the recorded digests at A2; not yet on `main` |
 | step B `f54e2507`: `gate/gate.py --impl impl/Ledger.dfy` | 0 | ACCEPTED |
 | step B `f54e2507`: stage EXIT cases, fresh Stage 6 run, commit C | NOT RUN | stopped: the Mac was on battery power (U438) |
