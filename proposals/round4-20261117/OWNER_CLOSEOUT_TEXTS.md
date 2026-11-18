@@ -217,3 +217,73 @@ Inspect Stage 8's current `spec/`, `impl/`, and refund boundary files alongside 
 Wait for my go-ahead on that 12-line plan before writing implementation files.
 Notice item 2 in that FIRST STEP check: if Slice 1 can keep existing ratified spec.lock untouched (putting the proved checker + sink inside impl/ obligations), its PR can also give you your first genuine hosted exit 0 (VERIFIED) PR badge on the new gate without needing any admin override.
 ```
+
+## Text 6 (2026-11-18 about 14:50Z)
+
+The prompt inside this text is for a NEW session and was not executed in
+the closeout session. Checked against `main` `f6329211` by the closeout
+agent: rule 4 lost words in the paste ("in code ans."); `app/refund`
+does not exist (the refund files are `impl/Refund.dfy`, `ts/refund.ts`,
+`tests/refund.*.ts`, `gate/refund.py`, `gate/refund/`,
+`policy/refund.yaml`, `spec/refund/`, `docs/stage8-refund.md`); the 10
+ELF files differ in mode only.
+
+```text
+Those three catches at the bottom of the report are also spot-on:
+Terminal paste dropped bytes ("stoed paths"): Long lines + UTF-8 symbols (—, →) can drop characters in TUI paste buffers. The prompt below is compact, pure ASCII, and short-lined so nothing gets eaten on paste.
+gate/obligations.py is one of the 8 frozen files: Any new checker/sink file not already listed as an obligation input in gate/obligations.py will rightly return 3 (UNSUPPORTED) on the hosted PR gate unless we later choose to register a new obligation. That’s expected, not an error.
+GitHub single-account rule: Since PRs open under your GitHub account, GitHub won’t let you self-approve CODEOWNERS, so final merges will still use your owner override unless you later add a separate bot account.
+Next Step: Exit This Session, Open a Fresh claude Session in /Users/mackianni/forge, and Paste This
+(Plug in power once coding starts since the Mac is back on battery.)
+Text
+Start Slice 1 from main (f6329211) in a new branch. Do NOT touch untracked
+.toolchain, node_modules, or results/. If the 10 ELF files have mode-only
+drift (0 content diff), reset their file modes cleanly before branching.
+
+Read first: FORGE_MASTER_IDEA.md, AGENTS.md, ROADMAP.md, gate/obligations.py,
+and proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md (text 1).
+
+HARD RULES
+1. Keep CURRENT: none. Stage 9 stays deferred (8 stale locks untouched).
+   M1 stays open per M1R-1. Stage 12 is unauthorized. end_to_end=false.
+2. Freeze gate/: Do NOT edit the 8 frozen PR-gate modules (including
+   gate/obligations.py) or ratifiable gate modules. If a gate edit seems
+   required, stop and ask first.
+3. Protected paths (spec/, spec.lock, policy/, governance/gate-ratifications/)
+   change ONLY via isolated exact-diff proposals for my review and merge.
+   Never use administrator bypass.
+4. Epistemic separation: A test count is NEVER a proof. Keep source_proof,
+   runtime_certificate_checked, tested_against_proved_model, unit_tested,
+   and floor_controls strictly separate in code ans.
+5. Single-loop execution: Keep design, code, and solver repair in ONE main
+   loop. Spawn background subagents ONLY for (a) long solver/test runs and
+   (b) ONE fresh-context adversarial review on finished unproved sink/glue
+   code before opening a PR.
+
+TARGET: SLICE 1 -- Pillar 2 (Proof-Carrying Finality on Refund Boundary)
+1. Untrusted proposer computes a candidate refund transition.
+2. A minimal proved checker (compiled/extracted directly from verified source
+   with no handwritten business-rule copy in unproved glue, clean under F1.2
+   print-effect check) checks (pre_state, transition) against the ratified
+   refund spec and issues a token bound to pre_state_hash and request_id.
+3. The store / outbound refund sink accepts an effect IF AND ONLY IF given
+   (valid_token, matching pre_state_hash, fresh_request_id).
+4. Required EXIT evidence:
+   - Universal source_proof on the checker (safety, exact valid acceptance,
+     zero refund intent on rejection/fallback, F1.2 print-effect clean).
+   - Deterministic sink controls + 1 fresh-context adversarial review showing:
+     (a) missing/forged/tampered token -> 0 effects,
+     (b) stale pre_state_hash (TOCTOU race) -> 0 effects,
+     (c) duplicate request_id (replay) -> 0 effects,
+     (d) valid transition -> 1 effect + reproducible evidence bundle,
+     (e) all 28 clean-clone Stage EXIT checks + frozen-gate + link checks pass.
+
+STEP 1 (STOP AND WAIT FOR MY GO-AHEAD BEFORE WRITING CODE):
+Inspect Stage 8's spec/, impl/, and app/refund files plus gate/obligations.py.
+Print a 12-line plan covering:
+1. Exact FORGE_MASTER_IDEA.md work-item ID(s) targeted by Slice 1.
+2. Whether existing ratified refund spec.lock suffices (0 protected edits) or
+   a spec/ proposal is needed first.
+3. Exact files to touch/add, and which are covered by existing obligations in
+   gate/obligations.py vs. expected to return 3 (UNSUPPORTED) on hosted gate.
+```
