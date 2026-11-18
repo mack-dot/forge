@@ -124,3 +124,16 @@ Execute queue Q0–Q5 from proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_C
 Stop at the first PR in Q0–Q5 that requires my merge, print the compact EXIT table + PR URL + M1 (PID 3883) progress, and wait for my merge.
 Once those two cleanup merges (Q1 + Q2/Q4) land and main is 100% green from a clean checkout, you’re completely done with gate plumbing—open a fresh session and drop Prompt 2 to go straight at Proof-Carrying Finality.
 ```
+
+## Text 3 (2026-11-18 about 03:35Z; between text 2 and this text the owner wrote "merged" for pull request 39)
+
+```text
+PR 40 is now merged on origin/main. Keep M1 rebuild.py 14400 (PID 3883, cv_translator) running—do NOT kill it.
+
+Proceed with the single combined documents & path-free records PR (Q2 + Q3 + Q4) exactly as you prepared:
+- Q2: Repair FORGE_MASTER_IDEA.md links (`14` links, `0` dangling, `0` protected paths).
+- Q3: Surgical update to main's ROADMAP.md (`CURRENT: none (Stage 9 deferred)` + Round 4 section + pointer, avoiding the 160 dangling backup links) and bring unsure.md forward in full.
+- Q4: Include the clean-clone verified path-free Stage 11 records (`0; 0; 0`).
+
+Open that single PR without administrator bypass, verify clean-clone link & Stage 6 / Stage 11 checks, print the compact EXIT table + PR URL + M1 (`cv_translator`) progress + Mac charging/battery status, and pause for my merge.
+```

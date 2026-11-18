@@ -9,13 +9,13 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438, U439, U440, U441
+## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438, U439, U440, U441, U442
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file of this tree or of
 this tree is changed. The owner merged pull request 39 on 2026-11-18
-03:20Z (`main` = `96d2ec77`); the agent merged nothing. Pull request 40
-(Stage 6 records) is open and NOT merged. Final
+03:20Z (`main` = `96d2ec77`) and pull request 40 (Stage 6 records) at
+03:34Z (`main` = `d0ce1942`); the agent merged nothing. Final
 commits on `main` at `4143f4b2`: rule `801777ea`, record `26410d46`,
 print effects `f54e2507`, its records `53534f64`.
 
@@ -43,13 +43,14 @@ print effects `f54e2507`, its records `53534f64`.
 | after the owner's merge: `check_frozen_pr_gate.py origin/main` |0|`main` = `96d2ec77`, tree equal to the record commit; the eight PR-gate modules are FROZEN |
 | `exit_stage_6.py --case report` at `96d2ec77`; clean clone with the records `1c21aa85` |1; 0|pull request 40 repairs the Stage 6 record |
 | `run_bootstrap_gate_cases.py` attempt-0003 (trusted `96d2ec77`, candidate `1c21aa85`); hosted `gate/pr_check.py`, pull request 40, run 44229894524 |3; 3|UNSUPPORTED, as expected for record files; first hosted run of the new gate code |
+| after the owner's merge of pull request 40: `exit_stage_6.py --case report`, clean clone of `main` `d0ce1942`; `check_frozen_pr_gate.py origin/main` |0; 0|Stage 6 is green on `main` |
 | `exit_stage_11.py`, three cases, clean clone with the path-free records in the tree (dry run) |0; 0; 0|records for the documents pull request |
 | third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
 
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
 [Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
-Blockers: the owner's merge of pull request 40; then the documents
-pull request (Q2, Q3, Q4) and its merge; decision D1 for step B. `ROADMAP.md` on `main` still
+Open: the documents pull request (Q2, Q3, Q4) and the owner's merge of
+it; then the full check Q5; decision D1 for step B (print effects). `ROADMAP.md` on `main` still
 says "CURRENT: Stage 9"; this file is the current one.
 M1 and integration EXIT NOT_ESTABLISHED.
 
