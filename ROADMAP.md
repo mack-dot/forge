@@ -45,6 +45,8 @@ print effects `f54e2507`, its records `53534f64`.
 | `run_bootstrap_gate_cases.py` attempt-0003 (trusted `96d2ec77`, candidate `1c21aa85`); hosted `gate/pr_check.py`, pull request 40, run 44229894524 |3; 3|UNSUPPORTED, as expected for record files; first hosted run of the new gate code |
 | after the owner's merge of pull request 40: `exit_stage_6.py --case report`, clean clone of `main` `d0ce1942`; `check_frozen_pr_gate.py origin/main` |0; 0|Stage 6 is green on `main` |
 | `exit_stage_11.py`, three cases, clean clone with the path-free records in the tree (dry run) |0; 0; 0|records for the documents pull request |
+| documents pull request 41 (commit `b61da60a` on `d0ce1942`), clean clone: `check_links.py` for `FORGE_MASTER_IDEA.md`; for `ROADMAP.md`; `check_frozen_pr_gate.py`; `exit_stage_6.py --case report`; `exit_stage_11.py` three cases with the recorded arguments |0; 0; 0; 0; 0, 0, 0|protected paths 0; over all 75 Markdown files outside `results/`: 2 of 200 links without a target, both older Stage 9 links |
+| `run_bootstrap_gate_cases.py` attempt-0004 (trusted `d0ce1942`, candidate `b61da60a`); hosted `gate/pr_check.py`, pull request 41, run 44232116451 |3; 3|UNSUPPORTED, as expected for documents and records; needs the owner's merge |
 | third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
 
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).

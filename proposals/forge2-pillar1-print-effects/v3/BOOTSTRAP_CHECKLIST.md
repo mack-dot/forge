@@ -326,3 +326,16 @@ Still without a target on `main` after it, and not repaired:
 `proposals/provenance-receipt-repair.md` each link to
 `results/stage9/receipt-repair-published/README.md`, a file that is on
 no branch here (Stage 9 material).
+
+Documents pull request: https://github.com/mack-dot/forge/pull/41
+(branch `docs/master-idea-records`, one commit `b61da60a` on `d0ce1942`,
+made from the backup branch at `692c9953`; 402 files added, 3 changed;
+protected paths 0). Checks in a clean clone of `b61da60a`: link check of
+`FORGE_MASTER_IDEA.md` exit 0 (14 links); link check of `ROADMAP.md`
+exit 0 (48 links); frozen PR-gate modules exit 0; Stage 6 report EXIT
+exit 0; Stage 11 three cases exit 0 each; the EXIT runs change no file.
+Real gate, trusted `d0ce1942`, local profile: exit 3 UNSUPPORTED (425
+files that no obligation lists). Hosted `gate/pr_check.py` (run
+44232116451, Linux profile): exit 3 UNSUPPORTED. It needs the owner's
+merge. The copy of this checklist inside pull request 41 ends before
+this paragraph.
