@@ -326,3 +326,90 @@ Still without a target on `main` after it, and not repaired:
 `proposals/provenance-receipt-repair.md` each link to
 `results/stage9/receipt-repair-published/README.md`, a file that is on
 no branch here (Stage 9 material).
+
+Documents pull request: https://github.com/mack-dot/forge/pull/41
+(branch `docs/master-idea-records`, one commit `b61da60a` on `d0ce1942`,
+made from the backup branch at `692c9953`; 402 files added, 3 changed;
+protected paths 0). Checks in a clean clone of `b61da60a`: link check of
+`FORGE_MASTER_IDEA.md` exit 0 (14 links); link check of `ROADMAP.md`
+exit 0 (48 links); frozen PR-gate modules exit 0; Stage 6 report EXIT
+exit 0; Stage 11 three cases exit 0 each; the EXIT runs change no file.
+Real gate, trusted `d0ce1942`, local profile: exit 3 UNSUPPORTED (425
+files that no obligation lists). Hosted `gate/pr_check.py` (run
+44232116451, Linux profile): exit 3 UNSUPPORTED. It needs the owner's
+merge. The copy of this checklist inside pull request 41 ends before
+this paragraph.
+
+## Q5: full check after the merge of pull request 41 (2026-11-18, about 05:22Z)
+
+The owner merged pull request 41 at 05:16Z (`main` = `201e63b1`, content
+equal to `b61da60a`). Clean clone of `main`, local profile:
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| Stage EXIT cases 1, 2, 3, 5, 6, 8 (22 cases) | 0 each | passed |
+| Stage 4 (3 cases, read-only token from the `gh` login) | 0 each | passed |
+| Stage 11 (3 cases, recorded arguments) | 0 each | passed |
+| `check_frozen_pr_gate.py` | 0 | the eight PR-gate modules are FROZEN |
+| `check_links.py`: `FORGE_MASTER_IDEA.md`; `ROADMAP.md` | 0; 0 | no link without a target |
+| `check_links.py`, all 75 Markdown files outside `results/` | 1 | 2 of 200 links without a target: the two older Stage 9 links |
+| Stage 7 from the clean clone | NOT RUN | about 3.3 hours of Docker time; all Stage 7 inputs on `main` equal the tree where the three cases exited 0 today |
+| Stage 9 (six cases) | NOT RUN | deferred; two lock entries are stale |
+
+Limits of "green": 28 of 28 locally runnable cases exit 0 on macOS. No
+check here ran on Linux except the hosted gate runs of pull requests 39,
+40 and 41. The Stage 5 EXIT rewrites its two records with the local
+tool path, so a checkout is not clean after it. Round 4 is closed. Step
+B (action 2) and Stage 9 (action 3) stay the owner's decisions.
+
+## Action 2 prepared on the new `main` (2026-11-18, about 08:40Z)
+
+Step B was built again on `main` `201e63b1`, because pull request 40
+changed the Stage 6 records: step B commit `ccb4e5e2` (files byte-equal
+to `f54e2507`), records commit `59189040` (Stage 6 epoch 3 by
+`stage6_next_epoch.py`; the records of `main` kept as
+`results/stage6-epoch2`). Branch `proposal/v3b-print-effects-on-main`
+(new; the older remote branch `proposal/v3b-print-effects` is
+superseded). Pull request: https://github.com/mack-dot/forge/pull/43
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| record 0001 on `main` against (`main`, `ccb4e5e2`) (`make_record_0001.py`, `cmp`) | 0 | the record names exactly the six protected files of step B |
+| `gate/gate.py`: `impl/Ledger.dfy`; two planted print bugs | 0; 1; 1 | as intended |
+| Stage EXIT cases 1, 2, 3, 4, 5, 8 and 11 (27 cases) | 0 each | passed |
+| fresh Stage 6 run (epoch 3), five steps | 0 each | report byte-identical |
+| real gate, trusted `main` with record 0001, local profile: `ccb4e5e2`; `59189040` | 3; 3 | UNSUPPORTED; 8 of 8 floor controls as expected |
+| hosted `gate/pr_check.py`, pull request 43 (run 44268104696, Linux profile) | 3 | UNSUPPORTED; record matched; 8 of 8 floor controls as expected on Linux |
+
+This closes two "not verified" points of this file: the hosted wrapper
+with a record on the trusted side has now run, and the floor controls
+have now run on Linux. Still not shown on a hosted runner: exit 0
+(VERIFIED) for a ratified change. Receipt of the hosted run:
+`records/hosted-receipt-pr43-run-44268104696.json`.
+
+The M1 replay record is a separate pull request (records only):
+https://github.com/mack-dot/forge/pull/42
+
+## Actions 1 and 2 are DONE (2026-11-18 13:30Z)
+
+On the owner's words "merge them" and "i approve" the agent merged pull
+request 43 (step B, squash commit `d026e109`) and pull request 42 (M1
+record, `9d587c7e`) with administrator rights. Both merges bypass the
+review rule and a red gate status (UNSUPPORTED); they are recorded as
+the owner's overrides (`unsure.md` R4C-1). Decision D1 is taken: the
+coverage rule is unchanged and step B was merged as it is.
+
+Clean clone of `main` `9d587c7e` after the merges:
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) | 0 each | 28 of 28 |
+| `gate/gate.py` on `bugs/print_effect.dfy`; on `bugs/print_effect_marked.dfy` | 1; 1 | rejected |
+| Stage 5 mutation counts | — | `effect_rejected` 1, `survived` 1 (before step B: `survived` 2) |
+| `check_frozen_pr_gate.py`; link checks of `FORGE_MASTER_IDEA.md`, `ROADMAP.md` | 0; 0, 0 | passed |
+| record 0001 against `main` | — | each of its six files has the new SHA-256; the record is used up |
+| Stage 9 lock against `main` | — | 8 entries differ; action 3 stays the owner's decision |
+
+Open after this file: action 3 (Stage 9 lock renewal, hosted signing
+run); the 158 M1 controls and checks (`unsure.md` M1R-2); the limits F1
+to F5 of review 3; a hosted VERIFIED result for a ratified change.
