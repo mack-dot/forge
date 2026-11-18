@@ -15578,3 +15578,50 @@ curl: (6) Could not resolve host: github.com
 - Incident: at 03:16Z the Mac was on battery power again (33 percent).
 - Next check: the owner's merge of pull request 39 and the choice of
   point (4); then Q0 to Q5.
+
+## U441 — The owner merged pull request 39 (bootstrap); Q0 passes; Q1 is pull request 40, hosted gate UNSUPPORTED as expected; documents pull request planned with a minimal roadmap change
+- Status: 2026-11-18 03:25Z. Refs U437, U439, U440. Owner's word in the
+  session: "merged". Decisions: text 2 of OWNER_CLOSEOUT_TEXTS.md. For
+  the order of Q1 and step B no choice was given; I used my stated
+  recommendation (Q1 first; step B stays action 2).
+- Observation, Q0: pull request 39 state MERGED at 03:20:06Z, squash
+  commit 96d2ec77 on main, parent 4143f4b2, tree 7ba590b8... (the tree
+  that the checklist named), content equal to 26410d46 (git diff
+  --quiet exit 0). check_frozen_pr_gate.py origin/main: exit 0. I did
+  not merge; I used no administrator right.
+- Actual, Q1: records cherry-picked onto 96d2ec77 (exit 0, no common
+  path): commit 1c21aa85, 1,028 files, protected paths 0; the 20 pinned
+  inputs equal main's files. exit_stage_6.py --case report: exit 1 at
+  96d2ec77; exit 0 in a clean clone at 1c21aa85. Real gate, trusted
+  96d2ec77, candidate 1c21aa85, local profile
+  (run_bootstrap_gate_cases.py attempt-0003): exit 3 UNSUPPORTED, 1,687
+  files that no obligation lists. Push exit 0 (new branch
+  records/stage6-epoch2-main); gh pr create exit 0: pull request 40.
+  Hosted run 44229894524 (base 96d2ec77, Linux profile):
+  gate/pr_check.py exit 3, outcome UNSUPPORTED; job verify failure, job
+  report success. This is the first hosted run of the new gate code; it
+  ended without a tool error. No record was involved, so the hosted
+  wrapper with a ratification record is still NOT RUN.
+- The new Stage 6 records hold the absolute path of the scratch
+  worktree (5,313 places; it contains the user name in a folder name);
+  no token-shaped string. The Stage 6 records on main hold the home
+  path already. Stated in the pull request text.
+- Dry run of the documents branch on 96d2ec77 (local, removed again):
+  FORGE_MASTER_IDEA.md 14 links, 0 without a target; protected paths 0.
+  The full backup ROADMAP.md would have 160 of 217 links without a
+  target on main (150 into the M1 packets); FORGE_MISSION_STATUS.md 138
+  of 145. main's ROADMAP.md has 46 links, 0 without a target today.
+  unsure.md has no relative link. So for Q3 I plan the small change the
+  owner chose (CURRENT line, plus the Round 4 section and a pointer),
+  and unsure.md in full, because a new session on main would otherwise
+  give new entries the numbers U132 and up a second time.
+- Stage 11 with the path-free records inside a clean clone: three cases
+  exit 0; the run changes no file.
+- M1 tools: the window was at the cv_translator step (compiler proofs
+  finished with exit 0). Result: later entry.
+- Incident: the Mac was on battery power again (27 percent at 03:23Z)
+  while the M1 build ran.
+- Uncertainty: branch protection may ask for an up-to-date branch when
+  the second pull request comes; not tested.
+- Next check: the owner's merge of pull request 40; then the documents
+  pull request; then Q5.

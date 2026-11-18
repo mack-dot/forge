@@ -1,7 +1,9 @@
 # Bootstrap checklist for version 3 (three human actions)
 
-Date: 2026-11-18 UTC (closeout of Round 4). Nothing below is merged.
-Pull request 39 is open for action 1. Stage 12 unauthorized. Stage 9
+Date: 2026-11-18 UTC (closeout of Round 4). Action 1 is DONE: the owner
+merged pull request 39 at 03:20Z (`main` = `96d2ec77`). The newest state
+is in the last section, "State after action 1". The sections before it
+are kept as they were written before the merge. Stage 12 unauthorized. Stage 9
 deferred. `end_to_end=false`. Measured facts and their limits:
 `REPORT-V3.md` section 9. Review text: `REVIEW-3.md`.
 
@@ -253,3 +255,50 @@ your merge.
 - Review 3 did not run on Linux or on a file system that keeps letter
   case apart (findings F4, F5).
 - Stage 7 with these branches (Stage 7 reads none of the changed files).
+
+## State after action 1 (2026-11-18 03:25Z)
+
+Owner decisions used (saved verbatim in
+`proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md`, text 2, and the
+owner's word "merged"): F1 accepted as a stated limit, no further code
+change; Q1 and Q2 proceed; Q3: `ROADMAP.md` on `main` gets a CURRENT
+line "none (Stage 9 deferred)" in the documents pull request; D2: the
+Stage 9 lock stays deferred; Q4: the Stage 11 records go to `main`; M1
+build keeps running. Order for Q1 and step B: Q1 first (my
+recommendation; no other choice was given). Step B stays action 2.
+
+| Item | Actual exit | Result |
+| --- | --- | --- |
+| Q0: `origin/main` after the merge | — | squash commit `96d2ec77`, tree `7ba590b8…`, content equal to `26410d46` (`git diff --quiet`: exit 0) |
+| Q0: `check_frozen_pr_gate.py origin/main` | 0 | the eight PR-gate modules equal the recorded digests: FROZEN from here |
+| Q1: `exit_stage_6.py --case report` at `96d2ec77`; in a clean clone with the records (`1c21aa85`) | 1; 0 | the records repair the Stage 6 record |
+| Q1: real gate, trusted `96d2ec77`, candidate `1c21aa85`, local profile | 3 | UNSUPPORTED: 1,687 record files that no obligation lists |
+| Q1: hosted `gate/pr_check.py`, pull request 40 (run 44229894524, base `96d2ec77`, Linux profile) | 3 | UNSUPPORTED, equal to the local result; the first hosted run of the new gate code |
+| Q4 (prepared): Stage 11, three cases, clean clone with the path-free records in the tree | 0; 0; 0 | the EXIT run changes no file |
+| Q2 (dry run, local only): link check of `FORGE_MASTER_IDEA.md` on `main` plus the documents | 0 | 14 links, 0 without a target; protected paths 0 |
+
+Q1 is pull request 40: https://github.com/mack-dot/forge/pull/40
+(branch `records/stage6-epoch2-main`, one commit `1c21aa85` on
+`96d2ec77`, 1,028 files, protected paths 0). It needs the owner's merge:
+the gate answers UNSUPPORTED for record files.
+
+Next, after the merge of pull request 40: one documents pull request
+with Q2, Q3 and Q4:
+
+- Q2: the six `proposals/forge2-*` packets, the three round folders, the
+  two round plans, the present `FORGE_MASTER_IDEA.md`.
+- Q3: `ROADMAP.md` of `main` with a new CURRENT line "none (Stage 9
+  deferred)", the Round 4 closeout section, and a pointer to the backup
+  branch for the full record. NOT the full backup `ROADMAP.md`: measured
+  in a dry run, it would bring 160 links without a target to `main`
+  (150 into the M1 packets), and `FORGE_MISSION_STATUS.md` 138.
+  `unsure.md` goes to `main` in full (U132 to the newest entry): `main`'s
+  file is a byte prefix, it has no relative link, and a new session on
+  `main` must not use an entry number twice.
+- Q4: the path-free Stage 11 records (`results/stage11/eval-0007`,
+  `eval-pr27-0003`, 178 files, each with the SHA-256 of the owner's
+  sanitized manifest of 2026-11-01). The raw records hold the home path
+  in 73 files; they are not used. The EXIT needs its recorded arguments:
+  `--eval results/stage11/eval-0007 --baseline results/stage11/eval-pr27-0003`.
+
+Then Q5: the full check from a clean checkout of `main`.

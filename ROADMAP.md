@@ -9,11 +9,13 @@ work is supporting evidence. This introduces no new repository stage or authorit
 
 
 
-## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438, U439
+## Round 4 closeout: final version 3 commits; third review ends the code work; pull request 39 waits for the owner's bootstrap merge — U433, U436, U437, U438, U439, U440, U441
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file of this tree or of
-`main` is changed. Pull request 39 is open and NOT merged. Final
+this tree is changed. The owner merged pull request 39 on 2026-11-18
+03:20Z (`main` = `96d2ec77`); the agent merged nothing. Pull request 40
+(Stage 6 records) is open and NOT merged. Final
 commits on `main` at `4143f4b2`: rule `801777ea`, record `26410d46`,
 print effects `f54e2507`, its records `53534f64`.
 
@@ -38,12 +40,16 @@ print effects `f54e2507`, its records `53534f64`.
 | `rebuild.py 10800` (M1 tools) |stopped by budget|45 of 71 compiler-proof theories; no M1 replay possible yet |
 | `rebuild.py 14400 round4-m1-build-20261118` (M1 tools; the window that the owner's Round 4 text grants) |NOT FINISHED|started 2026-11-18 02:13Z on mains power; result in a later entry |
 | Stage 9, six EXIT cases |NOT RUN|deferred; after the bootstrap merge two lock entries are stale |
+| after the owner's merge: `check_frozen_pr_gate.py origin/main` |0|`main` = `96d2ec77`, tree equal to the record commit; the eight PR-gate modules are FROZEN |
+| `exit_stage_6.py --case report` at `96d2ec77`; clean clone with the records `1c21aa85` |1; 0|pull request 40 repairs the Stage 6 record |
+| `run_bootstrap_gate_cases.py` attempt-0003 (trusted `96d2ec77`, candidate `1c21aa85`); hosted `gate/pr_check.py`, pull request 40, run 44229894524 |3; 3|UNSUPPORTED, as expected for record files; first hosted run of the new gate code |
+| `exit_stage_11.py`, three cases, clean clone with the path-free records in the tree (dry run) |0; 0; 0|records for the documents pull request |
 | third independent review |0 fail-opens; 0 HIGH or MEDIUM accidental defects|one MEDIUM limit that needs an owner-written record; code work stopped by the owner's rule |
 
 [Bootstrap checklist with the queued cleanup](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md).
 [Review 3](proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md).
-Blockers: the owner's merge of pull request 39; decisions D1, D2, D3
-and queue items Q3, Q4 of the checklist. `ROADMAP.md` on `main` still
+Blockers: the owner's merge of pull request 40; then the documents
+pull request (Q2, Q3, Q4) and its merge; decision D1 for step B. `ROADMAP.md` on `main` still
 says "CURRENT: Stage 9"; this file is the current one.
 M1 and integration EXIT NOT_ESTABLISHED.
 
