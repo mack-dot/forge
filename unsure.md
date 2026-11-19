@@ -18423,3 +18423,12 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: every provider here is a local fake; the properties of a real provider stay assumptions. One helper of my test was adapted by B (the money check uses the key that the adapter sends); I read the change.
 - Also final: my launcher conformance tests on A's launcher_v2.py: exit 0 in five runs (24 tests); on the first launcher exit 1 (2 failures). The re-tests of owner decisions D-1 and D-2 are NOT RUN: no commit yet.
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false.
+
+## U601 — red team: re-test of owner decision D-2 (a refusal closes only the attempt): the request-id squat by spray or state oracle is closed; one token and one effect per request id held in my tests
+- Status: 2026-11-19T17:35Z (inserted by the shell from `date -u`). Refs U597, B's U629, owner items D-2, B-19. Evidence: results/night-shift-20261119/orch-C/refix/219bf0ca, orch-C/c24-minter2 (s11, s8, s4, s2, s1, s6, d2_two_tokens.ts); ATTACKS.md (the D-2 re-test table).
+- TESTED, my own runs on B's 219bf0ca: the spray (1,001 refused requests) and the state-oracle squat no longer block the victim (exit 0; the victim's request is issued and commits); a store replaced by mv and the identical retry in off mode are fixed (exit 0); honest flows and a 2,000-case decision check show no false rejection.
+- TESTED, new script d2_two_tokens.ts (exit 0, two runs): refusals before a valid mint, a refusal between two candidates, a burst of 12 candidates in one write, commits in two orders: one distinct token per request id from one minter process and one effect per request id at the sink.
+- STILL PRESENT, stated by B: an authorized zero-amount mint on the real state with the victim's request id takes that id (B's test exit 1); there is no caller identity.
+- Reading for owner decision D-1: a restarted minter loses its memory and issues another token for a request id that is not yet committed. Today that token has another key. With a persistent key it will be a second valid token for one request id; the sink's one-row rule must then carry it. Not tested with one key: D-1 has no commit yet.
+- Uncertainty: finite tests; "one effect per request id" at the composed level is tested, not proved (B says the same).
+- Impact: none on stage labels. M1-B OPEN. end_to_end=false. Next check: B's D-1 commit.

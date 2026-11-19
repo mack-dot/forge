@@ -1,0 +1,4 @@
+(node:54888) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"A_refusals":["refused","refused","refused"],"A_first":"issued","A_other":"refused","B_first":"issued","B_refusal":"refused","B_other":"refused","B_identical":"issued","C_burst":"1 of 12 issued","E_newKeyAfterRestart":true,"E_afterRestart":["issued","issued"],"commits":["rq_A/m1:committed"],"D_otherAfterCommit":"issued -> rejected","outboxRowsPerId":{"rq_A":1},"distinctTokensPerIdFromOneMinter":{"rq_A":1,"rq_B":1,"rq_C":1},"note":"tokens issued by the restarted minter: 2 (signed with another key today; the sink pinned to the first key refuses them)","twoTokensFromOneMinter":false,"twoEffectsForOneId":false}
+SAFE (exit 0)
