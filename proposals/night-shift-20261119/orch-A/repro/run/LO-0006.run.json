@@ -1,0 +1,30 @@
+{
+ "case": "LO-0006",
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "LO-0006.sml",
+ "source_sha256": "644166686c78e36c2ca7c256d4d89fdaef6b082654a11d6872b3c2f64dd9051a",
+ "resource_guard": {
+  "memory_free_percent": 51,
+  "disk_free_gib": 85.17,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 141.677,
+ "child_user_cpu_seconds": 121.776,
+ "child_max_rss_bytes": 2851373056,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "e48a810e373ce3be08e9c1e8c664d15ca73f7903ed4c67c2eaa54628a44b0c5c",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_refundLOutTheory.dat": "c77cfc0b05a58a668d86e8f2ac3194c75f6d2808a9f7f6f225ae3e7d626965a4",
+  ".hol/objs/forge_refundLOutTheory.sig": "37c9a04ba7f577eb8048cc3d75674ce5c413eb17df1d9f2f91f16eaf106dc9c3",
+  ".hol/objs/forge_refundLOutTheory.sml": "7b3ddca11b563905b473a1754b2a2698d47ce2a7c9e070bb2c844620ba3c66ef"
+ },
+ "inputs_unchanged_after": true
+}

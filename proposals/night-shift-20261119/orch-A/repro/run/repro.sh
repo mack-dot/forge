@@ -55,7 +55,10 @@ for spec in $CASES; do
   [[ $started -eq 0 ]] && continue
   if pgrep -f 'cakeml-heap|arm8-heap|cake_compile_heap|bin/hol |poly-install|bin/poly' > /dev/null; then say "STOP before $c: another HOL/poly process runs"; exit 98; fi
   [[ -e /Users/mackianni/forge/results/night-shift-20261119/locks/heavy.lock ]] && { say "STOP before $c: locks/heavy.lock exists"; exit 95; }
-  pmset -g batt | head -1 | grep -q Battery && { say "STOP before $c: battery power"; exit 97; }
+  # resume 2026-11-19 (orchestrator, owner amendment in PROTOCOL.md): power state no longer blocks a start in this driver
+  # (queue.sh and nightshift-run.sh are unchanged runner copies and still wait for / refuse battery power). Disk rule added.
+  dfree=$(df -g /System/Volumes/Data | tail -1 | awk '{print $4}')
+  [[ $dfree -lt 30 ]] && { say "STOP before $c: disk free ${dfree} GiB < 30"; exit 94; }
   say "BEGIN $c cpu=$cpu deps=$deps"
   if [[ $deps == LINK ]]; then
     waitslot || exit 1
@@ -64,9 +67,22 @@ for spec in $CASES; do
     say "go.sh H1 exit $rc"
     check $RUN/link/contract-0001 EXPORTED_CONTRACT_COMPLETE || { say "STOP after $c"; exit 1; }
   else
-    ./queue.sh repro-$c "$c $cpu $deps"; rc=$?
-    say "queue exit $rc; $(tail -1 $c.go.log)"
-    check $RUN/$c EXACT_COMPLETE || { say "STOP after $c"; exit 1; }
+    try=1
+    while true; do
+      ./queue.sh repro-$c "$c $cpu $deps"; rc=$?
+      say "queue exit $rc; $(tail -1 $c.go.log) (try $try)"
+      check $RUN/$c EXACT_COMPLETE && break
+      if grep -q 'Run out of store' $c/stderr.log 2>/dev/null && [[ $try -lt 3 ]]; then
+        n=1; while [[ -e $c.fail-$n ]]; do n=$((n+1)); done
+        mv $c $c.fail-$n
+        for s in go.log hashes.json run.json used-files.pre.txt used-files.post.txt; do [[ -e $c.$s ]] && mv $c.$s $c.fail-$n.$s; done
+        [[ -e queue-repro-$c.log ]] && mv queue-repro-$c.log queue-repro-$c.fail-$n.log
+        [[ -e QUEUE_repro-${c}_DONE ]] && mv QUEUE_repro-${c}_DONE QUEUE_repro-${c}.fail-${n}_DONE
+        say "INFRA_STOP $c 'Run out of store' (try $try); moved to $c.fail-$n*; wait 120 s, then try again"
+        sleep 120; try=$((try+1)); continue
+      fi
+      say "STOP after $c"; exit 1
+    done
   fi
 done
 say "ALL_DONE"

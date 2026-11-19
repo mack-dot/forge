@@ -18286,3 +18286,41 @@ curl: (6) Could not resolve host: github.com
   machine. R6 stays open.
 - The review of R6w-0004 is not finished at this entry.
 - Next check: the review; the read side.
+
+## U499 — second directive, proof track: ten HOL cases reproduced from the branch; the shortest boundary to the real executable restated; two explorations hung (refers to U492, U494, U498)
+
+- Evidence: `proposals/night-shift-20261119/orch-A/repro/`
+  (`RESULT.json`, `run/`); `orch-A/x8-x11/` (statement drafts, two
+  reviews, static tests); `orch-A/END_TO_END_GAPS.md`;
+  `orch-A/r6/preflight/`.
+- Reproduction by a separate worker, from the sources committed at
+  branch head `dae1b93e`, in a fresh folder, on top of the 62 stored
+  older parent theories: 10 of 18 cases so far: exit 0 each, every
+  printed statement equal, the exported `.sig`, `.sml` and `.dat`
+  byte-identical: L1-0001, L2-0003, L2b-0003, L2c-0001, PF-0004,
+  PX-0001, LO-0006, LE-0004, the link case contract-0001, MF-0002.
+  The eleventh (MG-0001) stopped once in the Poly/ML run-time
+  ("Run out of store" during theory load); it runs again. Same
+  machine; not a clean replay; not another machine.
+- By reading, reviewed twice, NOT machine-checked: for a statement
+  about a real run, the FFI premise can be met by an environment
+  built from that run (the real effect at the calls the run makes,
+  the abstract effect elsewhere: the guard of U482); statement R6 is
+  then not needed. What is needed instead: lemmas about a trace (not
+  written yet), and native assumptions at the calls the run makes,
+  some of which a launcher must ENFORCE (blocking descriptors, no
+  injected code). The red team found four defects in the first
+  draft (a system-register bit read at EL0, an index error, a false
+  clause for killed runs, an overclaim); they are recorded and not
+  yet repaired in the draft.
+- Static tests on the executable file (finite, tested only): the
+  proved code slice names register 18 in no instruction, uses the
+  stack pointer in none, has no system instruction; the text
+  segment is read-execute; the image has no hardened run-time.
+- Two exploration runs (R6rx-0001, R6tx-0001) hung in one step past
+  their time limit; I stopped my own processes; repaired copies with
+  a watchdog are staged, not run.
+- The push of the branch was denied by the session's permission
+  system (owner item A-4); nothing is pushed.
+- Impact: none on any stage label. M1-B OPEN. end_to_end=false.
+- Next check: the rest of the reproduction; the staged cases.

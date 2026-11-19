@@ -280,3 +280,19 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   link are staged, not run.
 - A's lock error (disclosed to B): at about 12:50:30Z A removed `hol.lock` for seven seconds while a HOL case still ran;
   restored at 12:50:37Z; B confirmed that nothing of B started.
+
+## Addendum 13 (Orchestrator A, 2026-11-19T14:57:34Z): second directive — reproduction, the shortest boundary, red-team notes
+- Reproduction from the branch by a separate worker (same machine, stored older parents; not a clean replay): 10 of 18
+  HOL cases so far: exit 0, statements equal, exported theory files byte-identical (L1, L2, L2b, L2c, PF, PX, L-OUT,
+  L-EXIT, the link contract case, the composed theorem MF-0002). MG-0001 stopped once in the Poly/ML run-time during
+  theory load and runs again. Record: `orch-A/repro/RESULT.json`.
+- The exact list of unproven transitions to `end_to_end=true`: `orch-A/END_TO_END_GAPS.md` (17 transitions).
+  Smallest missing boundary (by reading, reviewed by A's worker and by the red team; NOT machine-checked): one statement,
+  "the real process is a run of the machine with an environment built from that run", with a model part (lemmas in
+  work) and a native part (named assumptions; some must be ENFORCED by the launcher). Statement R6 and the C patch are then
+  not on the shortest path. Four defects of the first draft found by the red team are recorded
+  (`orch-A/x8-x11/CORRECTIONS.md`).
+- Static tests on the executable file (tested only): no instruction of the proved slice names x18 or SP; no system
+  instruction; `__TEXT` read-execute; no hardened runtime (the launch environment stays a launcher duty).
+- Red team's premise audit of A's theorems: no undisclosed false premise; a joint non-vacuity witness is missing (staged).
+- NOT pushed: the push was denied by the permission system (owner item A-4).

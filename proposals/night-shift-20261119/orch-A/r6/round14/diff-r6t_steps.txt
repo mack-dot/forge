@@ -1,0 +1,117 @@
+--- ../round11/r6t_steps.sml	2026-11-19 07:25:19.895439003 -0500
++++ r6t_steps.sml	2026-11-19 09:40:46.522253179 -0500
+@@ -1,3 +1,5 @@
++(* round14 (worker W-top): T1 PARTS_STEPS replaced and the PART_IN EVAL alternatives changed (CHANGES.txt C3, C4).
++   Nothing else changed. UNCHECKED. *)
+ (* r6t_steps.sml (worker A36, round 11). The ONE file of step lists, read with use by BOTH R6tx-0001.sml (exploration)
+    and R6t-0001.sml (proof). Needs r6t_common.sml (read before). Every tactic UNCHECKED (none of them ever ran).
+    Method as round9: a step = (label, main, alternatives); exploration prints goals; the proof takes
+@@ -13,38 +15,59 @@
+ 
+ (* ================= (c) INITIAL HEAP ================= *)
+ 
+-(* T1 parts_ok_basis_ffi. Tail = basis_ffiScript.sml 887-904 (inside IMP_STDIO_general), with res_st -> st; the
+-   two leading ">- EVAL_TAC" and the ">~ [_ |++ _]" branch are written as TRY (... \\ NO_TAC), because >~ is not
+-   used in a used file. *)
+-fun parts_tail () : tactic =
+-  qpat_x_assum (Q "MEM _ basis_proj2") mp_tac
+-  \\ simp [basis_ffiTheory.basis_proj2_def, basis_ffiTheory.basis_ffi_part_defs, cfHeapsBaseTheory.mk_proj2_def]
+-  \\ TRY (qpat_x_assum (Q "_ = SOME _") mp_tac)
+-  \\ simp [basis_ffiTheory.basis_proj1_def, basis_ffiTheory.basis_ffi_part_defs, cfHeapsBaseTheory.mk_proj1_def,
+-           finite_mapTheory.FUPDATE_LIST_THM]
+-  \\ rw [] \\ rw [] \\ pairarg_tac \\ fs [finite_mapTheory.FLOOKUP_UPDATE] \\ rw []
+-  \\ fs [AllCaseEqs (), SF DNF_ss, basis_ffiTheory.basis_ffi_def]
+-  \\ fs [finite_mapTheory.FAPPLY_FUPDATE_THM, cfHeapsBaseTheory.mk_ffi_next_def]
+-  \\ TRY PURE_FULL_CASE_TAC
+-  \\ fs []
+-  \\ EVERY (map imp_res_tac (CONJUNCTS basis_ffiTheory.basis_ffi_length_thms))
+-  \\ fs [basis_ffiTheory.fs_ffi_no_ffi_div, basis_ffiTheory.cl_ffi_no_ffi_div]
+-  \\ srw_tac [DNF_ss] [] \\ simp [basis_ffiTheory.basis_ffi_oracle_def];
+-fun parts_head () : tactic =
+-  rw [cfStoreTheory.parts_ok_def]
+-  \\ TRY (EVAL_TAC \\ NO_TAC)
+-  \\ TRY (imp_res_tac basis_ffiTheory.oracle_parts \\ first_x_assum (qspec_then (Q "st") mp_tac) \\
+-          fs [basis_ffiTheory.basis_ffi_def] \\ NO_TAC);
++(* T1 parts_ok_basis_ffi (round14, worker W-top). The round11 copy of the parts_ok tail of IMP_STDIO_general
++   (basis_ffiScript.sml 887-904) is REMOVED: in R6tx-0001 (stdout 170-171) its step 2 ran > 6 min past the 240 s limit.
++   New route, no copied proof: the STORED theorem basis_ffiTheory.parts_ok_basis_st (basis_ffiScript.sml 809-829;
++   basis_ffiTheory.sig 45) says parts_ok (st).ffi (basis_proj1,basis_proj2) for st = the last TextIOProg state applied to
++   (basis_ffi ext cls fs, po) (basis_ffiScript.sml 805-806). CakeML derives the basis_ffi form from it in
++   compiler/repl/repl_initScript.sml 170-175 (Theorem parts_ok_basis_ffi: mp_tac basis_ffiTheory.parts_ok_basis_st
++   \\ fs (DB.find "TextIOProg_st" |> map (#1 o #2))); repl_initTheory is not built in this toolchain, so the recipe is
++   replayed here. Only the ffi term x of the stored fact is rewritten (x = basis_ffi ext cls fs, checked with aconv), then
++   EQ_MP gives parts_ok (basis_ffi ext cls fs) (basis_proj1,basis_proj2); GEN_ALL closes it. No EVAL of the oracle. *)
++fun is_basis_ffi_app (t : term) : bool =
++  (case strip_comb t of
++     (c, [_, _, _]) => is_const c andalso fst (dest_const c) = "basis_ffi"
++   | _ => false);
++(* pobs_from eqf: eqf x bf must prove x = bf; x = the ffi term of the stored fact, bf = its basis_ffi subterm *)
++fun pobs_from (tag : string) (eqf : term -> term -> thm) : thm =
++  let
++    val th = SPEC_ALL basis_ffiTheory.parts_ok_basis_st
++    val (f, args) = strip_comb (concl th)
++    val (x, p) = (case args of [a, b] => (a, b)
++                               | _ => raise mk_HOL_ERR "r6t_steps" "pobs_from" "not parts_ok x p")
++    val bf = find_term is_basis_ffi_app x
++    val eq = eqf x bf
++    val _ = if aconv (concl eq) (mk_eq (x, bf)) then ()
++            else raise mk_HOL_ERR "r6t_steps" "pobs_from"
++                       (tag ^ " gave " ^ trunc 400 (term_to_string (rhs (concl eq))))
++    val th2 = EQ_MP (AP_THM (AP_TERM f eq) p) th
++    val _ = pr ("PARTS_STORED_FACT " ^ tag ^ " " ^ trunc 600 (term_to_string (concl th2)))
++  in GEN_ALL th2 end;
++fun defs_named (s : string) : thm list =
++  map (#1 o #2) (List.filter (fn ((_, n), _) => String.isSuffix "_def" n) (DB.find s));
++fun eq_by_simp (s : string) (x : term) (_ : term) : thm =
++  let val ds = defs_named s
++  in pr ("PARTS_DEFS " ^ s ^ " " ^ Int.toString (length ds)); SIMP_CONV (srw_ss ()) ds x end;
++fun eq_by_restr_eval (x : term) (_ : term) : thm =
++  computeLib.RESTR_EVAL_CONV [prim_mk_const {Thy = "basis_ffi", Name = "basis_ffi"},
++                              prim_mk_const {Thy = "basis_ffi", Name = "basis_ffi_oracle"}] x;
+ val PARTS_STEPS : step list =
+   [("intro", rpt strip_tac \\ fs [], []),
+-   ("parts_ok_def + tail (887-904)",
+-      closing (LATE parts_head \\ LATE parts_tail),
+-      [closing (LATE parts_head \\ TRY (LATE parts_tail) \\ fs [basis_ffiTheory.basis_ffi_def] \\ EVAL_TAC),
+-       closing (rw [cfStoreTheory.parts_ok_def] \\ fs [basis_ffiTheory.basis_ffi_def] \\
+-                TRY (EVAL_TAC \\ NO_TAC) \\
+-                TRY (imp_res_tac basis_ffiTheory.oracle_parts \\ first_x_assum (qspec_then (Q "st") mp_tac) \\
+-                     fs [basis_ffiTheory.basis_ffi_def] \\ NO_TAC) \\
+-                LATE parts_tail)])];
++   ("stored parts_ok_basis_st (repl_initScript.sml 170-175 recipe)",
++      LATE (fn () => assume_tac (pobs_from "simp TextIOProg_st defs" (eq_by_simp "TextIOProg_st"))),
++      [LATE (fn () => assume_tac (pobs_from "RESTR_EVAL" eq_by_restr_eval)),
++       LATE (fn () => assume_tac (pobs_from "simp Prog_st defs" (eq_by_simp "Prog_st")))]),
++   ("close by the stored fact",
++      closing (TRY (qpat_x_assum (Q "_ = basis_ffi _ _ _") SUBST1_TAC) \\ first_x_assum MATCH_ACCEPT_TAC),
++      [closing (rfs []),
++       closing (metis_tac [])])];
++
++(* round14: EVAL with the FFI oracle and parts_ok kept folded (computeLib.RESTR_EVAL_TAC, computeLib.sig 47-49).
++   Reason: fsFFI nextFD_def (fsFFIScript.sml 121-122) is LEAST n. ..., so a symbolic EVAL of the oracle (ffi_open_in,
++   ffi_open_out) can unfold WHILE without end. Built at run time (LATE). *)
++fun SAFE_EVAL_TAC () : tactic =
++  computeLib.RESTR_EVAL_TAC [prim_mk_const {Thy = "basis_ffi", Name = "basis_ffi_oracle"},
++                             prim_mk_const {Thy = "cfStore", Name = "parts_ok"}];
+ 
+ (* T2 init_fs_part_IN / init_cl_part_IN / init_rt_part_IN: one shared step list.
+    The close step is the membership part of IMP_STDIO_general (basis_ffiScript.sml 925-933). *)
+@@ -60,11 +83,14 @@
+                     alistTheory.flookup_fupdate_list, basis_ffiTheory.basis_proj2_def,
+                     cfHeapsBaseTheory.mk_proj2_def, cfHeapsBaseTheory.mk_proj1_def, clFFITheory.cl_ffi_part_def,
+                     fsFFITheory.fs_ffi_part_def, runtimeFFITheory.runtime_ffi_part_def]),
+-      [closing (simp [basis_ffiTheory.basis_ffi_def] \\ EVAL_TAC),
+-       closing (rw [] \\ EVAL_TAC),
+-       closing (simp [basis_ffiTheory.basis_ffi_def, basis_ffiTheory.basis_proj2_def, cfHeapsBaseTheory.mk_proj2_def,
++      (* round14: each EVAL alternative first uses the assumptions (rfs []), and evaluates with the oracle and parts_ok
++         NOT unfolded (SAFE_EVAL_TAC), so that no symbolic run of the FFI oracle is started (CHANGES.txt C4) *)
++      [closing (rfs [] \\ simp [basis_ffiTheory.basis_ffi_def] \\ LATE SAFE_EVAL_TAC),
++       closing (rfs [] \\ rw [] \\ LATE SAFE_EVAL_TAC),
++       closing (rfs [] \\
++                simp [basis_ffiTheory.basis_ffi_def, basis_ffiTheory.basis_proj2_def, cfHeapsBaseTheory.mk_proj2_def,
+                       clFFITheory.cl_ffi_part_def, fsFFITheory.fs_ffi_part_def,
+-                      runtimeFFITheory.runtime_ffi_part_def] \\ rw [] \\ EVAL_TAC)])];
++                      runtimeFFITheory.runtime_ffi_part_def] \\ rw [] \\ LATE SAFE_EVAL_TAC)])];
+ 
+ (* T3 init_iobuff_IN (store2heap_aux_def, cfStoreScript.sml 14-17) *)
+ val IOB_STEPS : step list =

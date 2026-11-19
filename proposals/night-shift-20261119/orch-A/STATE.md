@@ -242,3 +242,32 @@ W-static done: T1 PASS, T5 PASS (static, TESTED-UNPROVED): code slice has 0 uses
 
 ## CHECKPOINT (2026-11-19T14:34:33Z)
 W-x8rev verdict (by reading): the constructed-environment route holds; R6 is NOT needed for the real-process claim; T-ENV is essentially tonight's L1. Report `orch-A/x8-x11/review/REPORT.md`; `END_TO_END_GAPS.md` updated. Worker W-mt writes the composed theorem for the totalised machine (`orch-A/mt/`, case MT-0001). PICK CHANGE: after the reproduction, run MT-0001 and the non-vacuity witness before further R6 read-side work.
+
+## CHECKPOINT (2026-11-19T14:39:19Z)
+W-mt delivered `orch-A/mt/mt_v1.sml` (10d04ec9…): staged as `MT-0001` (deps `deps-MG.txt`; `./nightshift-run.sh MT-0001 900 deps-MG.txt`), NOT RUN: it waits for the HOL slot (W-repro has it). Statements: MT1 `refund_model_frame_totalised`, MT2, MT3, MT4.
+
+## CHECKPOINT (2026-11-19T14:40:01Z)
+Workers running: W-repro (HOL slot; reproduction), W-top (round14), W-nv (non-vacuity witness), W-trace (T-TRACE lemma, `orch-A/trace/`). Staged for the slot after the reproduction: MT-0001, then W-nv's and W-top's explorations, then the read side (R6rx-0003).
+
+## CHECKPOINT (2026-11-19T14:42:01Z) — POWER AMENDMENT
+Owner (PROTOCOL.md): battery no longer blocks heavy steps. A removed the battery refusal from `nightshift-run.sh` (exit 97) and the battery wait from `queue.sh`, `linkq.sh`, `linkq2.sh`; pmset is still logged; added a disk gate (refuse below 30 GiB free, exit 95). Swap and memory gates unchanged. The reproduction folder `orch-A/repro/run/` keeps its committed copies of the scripts (with the old battery wait): on battery its queue would wait; A patches that copy only if needed and records it.
+RULE: checkpoint STATE.md before each heavy step.
+
+## CHECKPOINT (2026-11-19T14:42:30Z)
+W-top delivered `orch-A/r6/round14/` (watchdog; the copied parts_ok proof replaced by a derivation from stored `parts_ok_basis_st`; a statement PARSE defect fixed: the name `fv` parsed as a constant, so R6tx-0001 had used `T` for two statements). Staged, NOT RUN: `R6tx-0002` (exploration), `R6t-0002` (proof), deps `deps-R6t.txt`. Review point for a later reviewer: the new `parse_free` changes how statements are parsed.
+Slot order after the reproduction: MT-0001; R6tx-0002; W-nv's cases; R6rx-0003.
+
+## CHECKPOINT (2026-11-19T14:44:42Z)
+Red team C attacked the X8 draft (C-PREM-01): not circular; four changes needed (A-F0-REAL; interference indexing; killed-run clause false as written; fail-closed overclaim). Recorded in `orch-A/x8-x11/CORRECTIONS.md`; points 2 and 3 sent to W-trace.
+
+## CHECKPOINT (2026-11-19T14:46:49Z)
+W-nv delivered `orch-A/nonvacuity/` : staged, NOT RUN: `NVx-0001` (exploration), `NV-0001` (proof), deps `deps-NV.txt` (digest 84e124e4… as reported). Slot order after the reproduction: MT-0001; NVx-0001 → NV-0001; R6tx-0002 → R6t-0002; R6rx-0003 → R6r-0003.
+
+## CHECKPOINT (2026-11-19T14:49:30Z)
+Reproduction (W-repro) progress: see `orch-A/repro/run/queue-repro-*.log`. W-trace works. Nothing else runs in the HOL slot.
+
+## CHECKPOINT (2026-11-19T14:56:07Z)
+Reproduction continues (W-repro). W-trace works.
+
+## CHECKPOINT (2026-11-19T14:57:13Z)
+Reproduction from the branch (head dae1b93e): 10 of 18 cases REPRODUCED (L1-0001, L2-0003, L2b-0003, L2c-0001, PF-0004, PX-0001, LO-0006, LE-0004, contract-0001, MF-0002): exit 0 each; statements equal; `.sig/.sml/.dat` byte-identical (A checked `RESULT.json` and the MF-0002 `.dat` digest). MG-0001: first run stopped with Poly/ML `Run out of store` during parent load (14 s; infrastructure; not a proof failure). A tells W-repro to keep that folder as `MG-0001.fail-1` and resume; HOL slot stays with W-repro. Swap free 1283 MiB, memory free 56 %.

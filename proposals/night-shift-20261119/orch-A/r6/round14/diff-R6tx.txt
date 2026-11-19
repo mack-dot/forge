@@ -1,0 +1,100 @@
+--- ../round11/R6tx-0001.sml	2026-11-19 07:20:40.045877184 -0500
++++ R6tx-0002.sml	2026-11-19 09:36:17.443692343 -0500
+@@ -1,3 +1,7 @@
++(* R6tx-0002.sml (worker W-top, round14). EXPLORATION, NOT RUN. = round11/R6tx-0001.sml with only: this comment, the
++   round13 guard block after trunc (guarded_apply replaces Timeout.apply in run_ts, explore_head, tlim), the theory
++   name forge_refundR6TExplore2, R6TDIR = round14/. Shared files changed: round14/CHANGES.txt. Every tactic and the
++   guard are UNCHECKED. Round 11 header follows. *)
+ (* R6tx-0001.sml (worker A36, Night-Shift Orchestrator A, round 11). EXPLORATION run, not a proof. NOT RUN.
+    Base = round9/R6wx-0004.sml (ran as R6wx-0004: exit 0, EXPLORE_COMPLETE), kept byte-identical except: this header,
+    the scratch theory name (forge_refundR6TExplore1), NAMED_CONSTS, the replay-helper error tag (A33 -> A36) and the
+@@ -11,6 +15,46 @@
+ val _ = (load "Timeout"; pr "TIMEOUT_HELPER Timeout.apply loaded")
+   handle e => (pr ("TIMEOUT_LOAD_FAILED " ^ General.exnMessage e); raise e);
+ fun trunc n s = if size s <= n then s else String.substring (s, 0, n) ^ " ...";
++(* ===== round13 guard (worker W-pre, static, UNCHECKED by HOL). Timeout.apply (HOL portableML/poly/concurrent/Timeout.sml
++   12-31) sends ONE interrupt at the limit. In R6rx-0001 the same step stopped twice at 240 s (stdout 222, 776) and the
++   third time ran on for > 25 min (stdout ends at 1096; actual_exit -15). Same pattern in R6tx-0001 (stdout ends at
++   171, actual_exit -15). guarded_apply = Timeout.apply plus a watchdog
++   thread: GUARD_GRACE s after the limit it interrupts the step again every 5 s (interrupt state InterruptAsynch inside
++   the step); GUARD_HARD s after the limit it prints WATCHDOG_HARD_EXIT and ends the process with exit code 3 (no export
++   can follow). A step that ends in time is not changed. ===== *)
++val GUARD_GRACE = 15;
++val GUARD_HARD = 300;
++fun guarded_apply (secs : int) (f : unit -> 'a) : 'a =
++  let
++    val self = Thread.Thread.self ()
++    val lock = Thread.Mutex.mutex ()
++    val finished = ref false
++    val start = Time.now ()
++    fun is_finished () : bool =
++      (Thread.Mutex.lock lock; let val b = !finished in Thread.Mutex.unlock lock; b end)
++    fun since () : int = LargeInt.toInt (Time.toSeconds (Time.- (Time.now (), start)))
++    fun dog () : unit =
++      if is_finished () then ()
++      else if since () < secs + GUARD_GRACE then (OS.Process.sleep (Time.fromSeconds 1); dog ())
++      else if since () >= secs + GUARD_HARD then
++        (pr ("WATCHDOG_HARD_EXIT step still running after " ^ Int.toString (since ()) ^ " s (limit " ^
++             Int.toString secs ^ " s)");
++         Posix.Process.exit 0w3)
++      else
++        (Thread.Mutex.lock lock;
++         (if !finished then () else (Thread.Thread.interrupt self handle _ => ()));
++         Thread.Mutex.unlock lock;
++         pr ("WATCHDOG_INTERRUPT_AGAIN after " ^ Int.toString (since ()) ^ " s (limit " ^ Int.toString secs ^ " s)");
++         OS.Process.sleep (Time.fromSeconds 5);
++         dog ())
++    val _ = Thread.Thread.fork (fn () => (dog () handle _ => ()), [])
++    fun finish () : unit = (Thread.Mutex.lock lock; finished := true; Thread.Mutex.unlock lock)
++    fun run () = (Thread.Thread.setAttributes [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch]; f ())
++  in
++    (Timeout.apply (Time.fromSeconds (Int.toLarge secs)) run () before finish ())
++    handle e => (finish (); raise e)
++  end;
++val _ = pr "GUARD_DEFINED guarded_apply";
+ 
+ (* ================= LOAD ================= *)
+ val _ = pr "MARK LOAD";
+@@ -28,7 +72,7 @@
+    the runner from their files; THEORY_NAMES lines below show whether they are present. *)
+ 
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val _ = new_theory "forge_refundR6TExplore1";
++val _ = new_theory "forge_refundR6TExplore2";
+ val _ = pr "EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)";
+ 
+ (* fth : string -> string -> thm. A missing name prints FETCH_FAILED and gives TRUTH (no static error). *)
+@@ -81,7 +125,7 @@
+ fun prefix_of (ts : tactic list) : tactic = List.foldl (fn (t, acc) => acc \\ t) ALL_TAC ts;
+ fun run_ts (ts : tactic list) (g : goal) : goal list * (thm list -> thm) =
+   let val ctxt = Context.snapshot ()
+-  in Timeout.apply (Time.fromSeconds (Int.toLarge STEP_SECS)) (fn () => prefix_of ts g ctxt) () end;
++  in guarded_apply STEP_SECS (fn () => prefix_of ts g ctxt) end;
+ fun check_validation (lemma : string) (gt : term) (v : thm list -> thm) : unit =
+   (let val th = v [] in
+      pr ("VALIDATION " ^ lemma ^ " concl_aconv_goal " ^ Bool.toString (aconv (concl th) gt) ^
+@@ -154,7 +198,7 @@
+         [] => raise mk_HOL_ERR "R6x2" "explore_head" "no goal left"
+       | g :: rest =>
+           let val ctxt = Context.snapshot ()
+-              val (gs1, _) = Timeout.apply (Time.fromSeconds (Int.toLarge HEAD_SECS)) (fn () => tac g ctxt) ()
++              val (gs1, _) = guarded_apply HEAD_SECS (fn () => tac g ctxt)
+           in gs1 @ rest end
+     fun attempt (tac : tactic) (gs : goal list) : goal list option * string =
+       (SOME (app1 tac gs), "")
+@@ -201,13 +245,13 @@
+    List.app (fn a => pr ("  ASM " ^ trunc 600 (term_to_string a))) asl;
+    pr ("  GOAL " ^ trunc 2500 (term_to_string w)));
+ fun tlim secs (tac : tactic) (g : goal) (ctxt : Context.t) =
+-  Timeout.apply (Time.fromSeconds (Int.toLarge secs)) (fn () => tac g ctxt) ()
++  guarded_apply secs (fn () => tac g ctxt)
+   handle Timeout.TIMEOUT _ => (pr ("TIMEOUT_CANDIDATE after " ^ Int.toString secs ^ " s");
+                                raise mk_HOL_ERR "A36" "tlim" "time limit");
+ 
+ (* ================= shared files ================= *)
+ val R6T_PROOF_MODE = false;
+-val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round11/";
++val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round14/";
+ fun use_part (f : string) : bool =
+   (pr ("MARK USE " ^ f); use (R6TDIR ^ f); pr ("PART_DONE " ^ f); true)
+   handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

@@ -1,0 +1,45 @@
+--- ../round11/r6t_common.sml	2026-11-19 07:22:42.647210853 -0500
++++ r6t_common.sml	2026-11-19 09:36:30.842470122 -0500
+@@ -1,3 +1,5 @@
++(* round14 (worker W-top): MAINV and INITV are parsed through parse_free (below); the reason is in CHANGES.txt (C2).
++   The intended statements do not change. Nothing else in this file changed. UNCHECKED. *)
+ (* r6t_common.sml (worker A36, round 11). NOT RUN as a file. Shared by R6tx-0001.sml (exploration) and R6t-0001.sml (proof);
+    both read it with use AFTER new_theory and AFTER the theories of deps-R6t.txt are loaded (forge_refundR6Write and its
+    ancestors forge_refundR6Ffi, forge_refundR6Base, forge_refundRouteA2c).
+@@ -191,10 +193,26 @@
+   ("!(Inv:io_event -> bool) fs' (st3:" ^ ST_TY ^ ") h2 h3 h4 s1 u1 s3 u3. " ^
+    "SPLIT3 (cfStore$st2heap " ^ BP ^ " st3) (h3,h2,h4) /\\ STDIO_V Inv fs' h3 /\\ " ^
+    "FFI_part s1 u1 " ^ CL_NS ^ " [] IN h2 /\\ FFI_part s3 u3 " ^ RT_NS ^ " [] IN h2 ==> EVERY Inv st3.ffi.io_events"));
++(* round14 parse_free: R6tx-0001 stdout 51-52: STATEMENT_PARSE_FAILED for MAINV and INITV, because the text name "fv"
++   parses as a CONSTANT of this heap (type num -> closLang$exp list -> bool), not as the variable fv : v of the
++   antiquoted lookup_var term. parse_free parses the quotation as the body of a lambda over the given names (a bound
++   name is always a variable), then removes exactly these lambdas. A bound name that is the same name and type as a free
++   variable of an antiquoted term is the same variable after the lambdas are removed (as without the lambda). *)
++fun parse_free (ns : string list) (q : term frag list) : term =
++  let val t = Parse.Term (QUOTE ("(\\" ^ String.concatWith " " ns ^ ". ") :: q @ [QUOTE ")"])
++      fun strip 0 x = x
++        | strip k x = strip (k - 1) (snd (dest_abs x))
++  in strip (length ns) t end;
++(* names of the text parts of MAINV/INITV that are also constants in this heap (diagnostic only) *)
++val _ = List.app (fn n => case Term.decls n of
++                            [] => ()
++                          | cs => pr ("NAME_IS_CONST " ^ n ^ " " ^ String.concatWith " "
++                                        (map (fn c => #Thy (dest_thy_const c)) cs)))
++          ["Inv", "fv", "fs", "fs'", "st2", "h1", "h2", "s1", "u1", "s3", "u3", "ext", "cl", "bs1", "bs2", "rest", "uv"];
+ (* D4 = deliverable (d). Mirror of whole_prog_spec_semantics_prog with STDIO_V and the frame parts *)
+ val MAINV = r6t_term "whole_prog_spec_V_events" (fn () =>
+   let val (d, l, s) = wps_parts ()
+-      val body = Parse.Term [QUOTE "", ANTIQUOTE d, QUOTE " /\\ ", ANTIQUOTE l,
++      val body = parse_free ["Inv", "fv", "fs", "fs'", "st2", "h1", "h2", "s1", "u1", "s3", "u3"] [QUOTE "", ANTIQUOTE d, QUOTE " /\\ ", ANTIQUOTE l,
+         QUOTE (" /\\ " ^ APP_V ^ " /\\ SPLIT (cfStore$st2heap " ^ BP ^ " st2) (h1,h2) /\\ STDIO_V Inv fs h1 /\\ " ^
+                "FFI_part s1 u1 " ^ CL_NS ^ " [] IN h2 /\\ FFI_part s3 u3 " ^ RT_NS ^ " [] IN h2 ==> sem_satisfies "),
+         ANTIQUOTE s, QUOTE (" " ^ EVERY_LAM)]
+@@ -203,7 +221,7 @@
+ (* T7 (composite, optional): (c) + (d) *)
+ val INITV = r6t_term "whole_prog_spec_V_init" (fn () =>
+   let val (d, l, s) = wps_parts ()
+-      val body = Parse.Term [QUOTE "", ANTIQUOTE d, QUOTE " /\\ ", ANTIQUOTE l,
++      val body = parse_free ["Inv", "fv", "fs", "fs'", "st2", "ext", "cl", "bs1", "bs2", "rest"] [QUOTE "", ANTIQUOTE d, QUOTE " /\\ ", ANTIQUOTE l,
+         QUOTE (" /\\ st2.ffi = basis_ffi ext cl fs /\\ st2.refs = W8array bs1 :: W8array bs2 :: rest /\\ " ^
+                "LENGTH bs2 = 2052 /\\ wfFS fs /\\ STD_streams fs /\\ " ^ APP_V ^ " ==> sem_satisfies "),
+         ANTIQUOTE s, QUOTE (" " ^ EVERY_LAM)]

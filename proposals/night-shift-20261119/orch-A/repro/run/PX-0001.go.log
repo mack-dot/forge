@@ -1,0 +1,36 @@
+2026-11-19T14:46:41Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8656.50M  free = 1583.50M  (encrypted)
+System-wide memory free percentage: 54%
+START_STATE swap_free_mib=1583 memory_free_percent=54
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 161.78 cpu 123.245 rss_mib 2212 ['EXACT_COMPLETE'] inputs_unchanged_after True
+24:IMPORTED_OK refund_strict_parse_complete
+25:IMPORTED_OK refund_render_fields_prefix_code
+26:IMPORTED_OK refund_strict_parse_no_strict_prefix
+31:CHECKED refund_strict_parse_SOME_render
+35:CHECKED refund_strict_parse_exact
+39:CHECKED refund_strict_parse_accepts_only_one_frame
+46:CHECKED refund_strict_parse_rejects_extension
+52:CHECKED refund_frame_decision
+58:CHECKED refund_strict_parse_witness
+64:CHECKED refund_strict_parse_not_reject_all
+68:CHECKED refund_frame_decision_needs_prefix
+72:CHECKED refund_strict_parse_extension_needs_nonempty
+82:CONTROL_OK refund_strict_parse_exact statement is the literal planned statement
+83:CONTROL_OK refund_strict_parse_rejects_extension statement is the literal planned statement
+84:CONTROL_OK refund_strict_parse_accepts_only_one_frame statement is the literal planned statement
+85:CONTROL_OK refund_frame_decision statement is the literal planned statement
+86:CONTROL_OK C1 witness is accepted (SOME)
+87:CONTROL_OK C2 is a proved negation
+88:CONTROL_OK C3 is a proved negation
+89:CONTROL_OK C4 is a proved negation
+90:CLOSURE_AXIOM bool.SELECT_AX
+91:CLOSURE_AXIOM bool.INFINITY_AX
+92:CLOSURE_AXIOM bool.ETA_AX
+93:CLOSURE_AXIOM bool.BOOL_CASES_AX
+98:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

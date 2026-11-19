@@ -6,7 +6,7 @@ for spec in "$@"; do
   a=(${=spec}); c=$a[1]; n=0
   while true; do
     sw=$(sysctl -n vm.swapusage | sed -E 's/.*free = ([0-9]+)\..*/\1/'); mf=$(memory_pressure | tail -1 | sed -E 's/.*: ([0-9]+)%.*/\1/')
-    if { [[ $sw -ge 1024 ]] || { [[ $mf -ge 40 ]] && [[ $sw -ge 512 ]]; }; } && ! pmset -g batt | head -1 | grep -q Battery \
+    if { [[ $sw -ge 1024 ]] || { [[ $mf -ge 40 ]] && [[ $sw -ge 512 ]]; }; } \
        && ! pgrep -f 'cake_compile_heap|arm8-heap|cakeml-heap' >/dev/null; then break; fi
     n=$((n+1)); [[ $n -ge 480 ]] && { echo "$(date -u +%FT%TZ) GAVE_UP before $c" >> linkq-r.log; date -u > LINKQ_r_DONE; exit 1; }
     sleep 20

@@ -1,0 +1,31 @@
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/link/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+Thu Nov 19 09:53:36 EST 2026
+System-wide memory free percentage: 50%
+vm.swapusage: total = 9216.00M  used = 8305.12M  free = 910.88M  (encrypted)
+/dev/disk3s5       460  341        85    81% 8106940 892299320    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 90
+COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=1200 python3 -I -B run_case.py contract-0001 forge_refundExportedContractScript.sml
+RUNNER EXIT 0 (a signal or CPU-limit stop also gives 1; read actual_exit in contract-0001/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+8:FORGE_BEGIN exported_ens2_value
+10:FORGE_BEGIN exported_ens3_value
+12:FORGE_BEGIN exported_contract_value
+14:FORGE_BEGIN exported_contract_on_refund_fields
+16:FORGE_BEGIN exported_contract_exact
+18:FORGE_BEGIN exported_contract_witnesses
+20:FORGE_THEOREM exported_contract_decode
+27:FORGE_THEOREM exported_contract_shape
+42:FORGE_THEOREM exported_ens1_value
+56:FORGE_THEOREM exported_ens2_value
+67:FORGE_THEOREM exported_ens3_value
+77:FORGE_THEOREM exported_contract_value
+93:FORGE_THEOREM exported_contract_on_refund_fields
+104:FORGE_THEOREM exported_contract_exact
+115:FORGE_THEOREM exported_contract_witnesses
+  info: actual_exit=0 markers=['EXPORTED_CONTRACT_COMPLETE'] last FORGE_BEGIN='exported_contract_witnesses' *_COMPLETE lines=['EXPORTED_CONTRACT_COMPLETE'] wall=26.043
+VERDICT H1 contract-0001 PASS
+GO.SH EXIT 0

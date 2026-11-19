@@ -5,3 +5,32 @@ actual_exit 0 markers ['EXACT_COMPLETE'] cpu 110.414 wall 108.046
 2026-11-19T14:30:03Z queue exit 0; go exit 0
 actual_exit 0 markers ['EXACT_COMPLETE'] cpu 143.681 wall 151.102
 2026-11-19T14:30:03Z BEGIN L2b-0003 cpu=1500 deps=deps-L2b2.txt
+2026-11-19T14:35:56Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 238.563 wall 321.865
+2026-11-19T14:35:56Z BEGIN L2c-0001 cpu=1500 deps=deps-L2c.txt
+2026-11-19T14:43:32Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 294.709 wall 454.664
+2026-11-19T14:43:32Z BEGIN PF-0004 cpu=600 deps=deps-L1.txt
+2026-11-19T14:46:40Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 98.142 wall 187.251
+2026-11-19T14:46:40Z BEGIN PX-0001 cpu=600 deps=deps-PX.txt
+2026-11-19T14:49:24Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 123.245 wall 161.78
+2026-11-19T14:49:24Z BEGIN LO-0006 cpu=900 deps=deps-L1.txt
+2026-11-19T14:51:46Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 121.776 wall 141.677
+2026-11-19T14:51:46Z BEGIN LE-0004 cpu=1200 deps=deps-LE.txt
+2026-11-19T14:53:36Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 110.014 wall 108.75
+2026-11-19T14:53:36Z BEGIN contract-0001 cpu=1200 deps=LINK
+2026-11-19T14:53:36Z LINK_PRESTATE Now drawing from 'AC Power' swap_free_mib=910 memory_free_percent=50 ALLOW_SWAP=1 (orchestrator permission)
+2026-11-19T14:54:03Z go.sh H1 exit 0
+actual_exit 0 markers ['EXPORTED_CONTRACT_COMPLETE'] cpu 27.221 wall 26.043
+2026-11-19T14:54:03Z BEGIN MF-0002 cpu=900 deps=deps-MF2.txt
+2026-11-19T14:56:04Z queue exit 0; go exit 0
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 114.996 wall 120.051
+2026-11-19T14:56:04Z BEGIN MG-0001 cpu=900 deps=deps-MG.txt
+2026-11-19T14:56:19Z queue exit 0; go exit 1
+actual_exit 1 markers [] cpu 17.645 wall 14.378
+2026-11-19T14:56:19Z STOP after MG-0001
+2026-11-19T14:57:27Z MOVED MG-0001 first run (actual_exit 1, 'Run out of store' during parent load) to MG-0001.fail-1* (orchestrator decision); driver change: repro.sh.resume-change.diff

@@ -1,0 +1,157 @@
+--- committed
++++ repro
+@@ -1,154 +0,0 @@
+-CHECKED refund_frame_contract_upgrade
+-⊢ (∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+-       g =
+-       refund_fields charge request original remaining enabled opened
+-         candidate amount reason ∧
+-       fd1_written io =
+-       explode
+-         (refund_render_fields
+-            (refund_fields charge request original remaining enabled opened
+-               candidate amount reason))) ⇒
+-  ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+-      g =
+-      refund_fields charge request original remaining enabled opened
+-        candidate amount reason ∧
+-      fd1_written io =
+-      explode
+-        (refund_render_fields
+-           (refund_fields charge request original remaining enabled opened
+-              candidate amount reason)) ∧
+-      ∀ok a r c q n.
+-        g = (ok,a,r,c,q,n) ⇒
+-        evaluate_exps
+-          (exported_contract_state dafny_heap charge request original
+-             remaining enabled opened candidate amount reason ok a r c q n)
+-          dafny_env exported_ensures =
+-        (exported_contract_state dafny_heap charge request original remaining
+-           enabled opened candidate amount reason ok a r c q n,
+-         Rval [BoolV T; BoolV T; BoolV T])
+-CHECKED refund_model_frame_contract_of_reach
+-⊢ (∃ms.
+-     (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+-     ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+-           (basis_ffi no_ext cl fs) ms b ⇒
+-         ∃t io.
+-           b = Terminate t io ∧
+-           ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+-               g =
+-               refund_fields charge request original remaining enabled opened
+-                 candidate amount reason ∧
+-               fd1_written io =
+-               explode
+-                 (refund_render_fields
+-                    (refund_fields charge request original remaining enabled
+-                       opened candidate amount reason))) ⇒
+-  ∃ms.
+-    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+-    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+-          (basis_ffi no_ext cl fs) ms b ⇒
+-        ∃t io.
+-          b = Terminate t io ∧
+-          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+-              g =
+-              refund_fields charge request original remaining enabled opened
+-                candidate amount reason ∧
+-              fd1_written io =
+-              explode
+-                (refund_render_fields
+-                   (refund_fields charge request original remaining enabled
+-                      opened candidate amount reason)) ∧
+-              ∀ok a r c q n.
+-                g = (ok,a,r,c,q,n) ⇒
+-                evaluate_exps
+-                  (exported_contract_state dafny_heap charge request original
+-                     remaining enabled opened candidate amount reason ok a r
+-                     c q n) dafny_env exported_ensures =
+-                (exported_contract_state dafny_heap charge request original
+-                   remaining enabled opened candidate amount reason ok a r c
+-                   q n,Rval [BoolV T; BoolV T; BoolV T])
+-CHECKED refund_model_frame_decision_events
+-⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+-  refund_heap_clear_sl sl h e ∧
+-  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+-  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+-  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+-    envmc.ffi_interfer ∧
+-  (∀ms j.
+-     arm8_run 27 s = SOME ms ⇒
+-     EVERY refund_valid_event
+-       (SND
+-          (SND
+-             (evaluate
+-                (refund_mc (sl + 0x1000040D0w)
+-                   (envmc with
+-                    ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+-                (basis_ffi no_ext cl fs) j ms))).io_events) ∧
+-  stdin_content fs =
+-  SOME
+-    (explode
+-       (sexp_to_string
+-          (refund_request charge request original remaining enabled opened
+-             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+-  ∃ms.
+-    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+-    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+-          (basis_ffi no_ext cl fs) ms b ⇒
+-        ∃t io.
+-          b = Terminate t io ∧
+-          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+-              g =
+-              refund_fields charge request original remaining enabled opened
+-                candidate amount reason ∧
+-              fd1_written io =
+-              explode
+-                (refund_render_fields
+-                   (refund_fields charge request original remaining enabled
+-                      opened candidate amount reason)) ∧
+-              ∀ok a r c q n.
+-                g = (ok,a,r,c,q,n) ⇒
+-                evaluate_exps
+-                  (exported_contract_state dafny_heap charge request original
+-                     remaining enabled opened candidate amount reason ok a r
+-                     c q n) dafny_env exported_ensures =
+-                (exported_contract_state dafny_heap charge request original
+-                   remaining enabled opened candidate amount reason ok a r c
+-                   q n,Rval [BoolV T; BoolV T; BoolV T])
+-CHECKED refund_success_accept_of_run
+-⊢ ∀io0 io1 f.
+-    (Terminate Success io0 = Terminate Success io1 ∨
+-     ∃io'.
+-       Terminate Success io0 = Terminate Resource_limit_hit io' ∧ io' ≼ io1) ∧
+-    fd1_written io1 = explode (refund_render_fields f) ⇒
+-    refund_strict_parse (fd1_written io0) = SOME f
+-CHECKED refund_model_success_gives_frame_events
+-⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+-  refund_heap_clear_sl sl h e ∧
+-  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+-  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+-  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+-    envmc.ffi_interfer ∧
+-  (∀ms j.
+-     arm8_run 27 s = SOME ms ⇒
+-     EVERY refund_valid_event
+-       (SND
+-          (SND
+-             (evaluate
+-                (refund_mc (sl + 0x1000040D0w)
+-                   (envmc with
+-                    ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+-                (basis_ffi no_ext cl fs) j ms))).io_events) ∧
+-  stdin_content fs =
+-  SOME
+-    (explode
+-       (sexp_to_string
+-          (refund_request charge request original remaining enabled opened
+-             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+-  ∃ms.
+-    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+-    ∀io.
+-      machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+-        (basis_ffi no_ext cl fs) ms (Terminate Success io) ⇒
+-      refund_strict_parse (fd1_written io) =
+-      SOME
+-        (refund_fields charge request original remaining enabled opened
+-           candidate amount reason)

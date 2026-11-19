@@ -5,7 +5,9 @@ cd ${0:A:h}
 c=$1; cpu=$2; deps=$3
 {
   date -u +%FT%TZ; pmset -g batt | head -1; sysctl -n vm.swapusage; memory_pressure | tail -1
-  if pmset -g batt | head -1 | grep -q Battery; then echo "PRECHECK_REFUSED battery"; echo "go exit 97"; exit 97; fi
+  # POWER AMENDMENT (owner, PROTOCOL.md): battery power no longer blocks a start; the pmset state is logged above.
+  df -g /System/Volumes/Data | tail -1 | awk '{print "DISK_FREE_GIB " $4}'
+  if [[ $(df -g /System/Volumes/Data | tail -1 | awk '{print $4}') -lt 30 ]]; then echo "PRECHECK_REFUSED disk free below 30 GiB"; echo "go exit 95"; exit 95; fi
   # added 2026-11-19T08:50Z: PROTOCOL.md rule "swap free < 1 GB: start no heavy step". Before this line was added, ten cases
   # (PF-0001, E1-0001..0003, E1neg-0001, L2-0002, L2-0003, L2b-0001, LO-0002, LO-0003, PF-0002) started below 1 GB free.
   swfree=$(sysctl -n vm.swapusage | sed -E 's/.*free = ([0-9]+)\..*/\1/')
