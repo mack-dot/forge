@@ -11,7 +11,7 @@ A SIGKILL is not a power loss.
 
 Directive and owner decisions: [OWNER_TEXTS.md](OWNER_TEXTS.md).
 Review and its disposition: [REVIEW.md](REVIEW.md).
-Entries: `unsure.md` U700 to U706.
+Entries: `unsure.md` U700 to U708.
 
 ## 1. What was built
 
@@ -47,8 +47,9 @@ The 248 lines are in a hand-made compact layout: lines up to 152
 characters, short functions on one line, four or five constants on one
 line. `rustfmt` with its default settings prints the same code on 521
 lines. The owner's limit ("up to 250 lines") is met for the file as
-written. It is NOT met for the `rustfmt` layout. This is for the owner
-to judge.
+written. It is NOT met for the `rustfmt` layout. The owner was asked
+after the merge and answered "Final as they are" (text 6 of the
+owner's texts).
 
 Record of `ledger.wal` (64 bytes, little-endian):
 
@@ -257,7 +258,7 @@ Explicit assumptions (`os_kernel_assumption`):
 | order: state hash and request id, then epoch | ratchet first, then request id, then state | a rolled-back WAL cannot answer the other two questions; a repeated request must get `DUPLICATE_REQUEST_ID`. Specification item 8, approved |
 | five kill points | six: a, b, c, r, d, e | two syncs make one more point (r: between them) |
 | "effect callback" | one `COMMITTED` line on stdout; `replay` prints committed effects again | specification items 9 and 11, approved. Delivery is at most once per commit |
-| exit codes 0 and 10 to 18 (specification item 12) | two more: 19 `OUTCOME_UNKNOWN`, 20 `DISPATCH_FAILED`; the stream ends at the first code from 17 up | from the review (R1, R2). NOT in the approved specification: for the owner to accept or change |
+| exit codes 0 and 10 to 18 (specification item 12) | two more: 19 `OUTCOME_UNKNOWN`, 20 `DISPATCH_FAILED`; the stream ends at the first code from 17 up | from the review (R1, R2). Not in the specification that the owner approved first; accepted by the owner after the merge (text 6 of the owner's texts) |
 | "A refusal writes nothing" | true for codes 10 to 18. Code 19 can leave a record; code 20 follows a commit | from the review (R1) |
 | Rust and Python only | one C file of 148 lines for tests | a SIGKILL cannot show a missing sync; an interposer can. Specification item 14, approved. Not in the trusted base |
 
@@ -339,7 +340,9 @@ second commit (entry U706): documents only again.
 | `git push -u origin feat/native-silicon-sink`; `gh pr create` (pull request 62) |0; 0|no administrator rights used; the agent did not merge |
 | `check_links.py` for `ROADMAP.md`, `unsure.md`, this report, the review, the owner's texts; `check_frozen_pr_gate.py HEAD`, on the second commit |0 each (5); 0|run in the working repository, not in a clone |
 | hosted `gate/pr_check.py`, pull request 62, head `c3889be2`, run 44591773836 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 14 coverage findings (changed paths that no obligation lists) |
-| hosted `gate/pr_check.py` for the third commit (this record) |NOT RECORDED here|it runs after the push of this record; expected 3 |
+| hosted `gate/pr_check.py`, pull request 62, head `e280addf` (the third commit), run 44592215424 |3|UNSUPPORTED, as expected: 14 coverage findings |
+| merge of pull request 62 |done by the account `mack-dot` on 2026-11-19T18:52:51Z; commit `6d66a558`|the agent did not merge and used no administrator right. After the merge: the files of this work on `main` are equal to the branch head `e280addf` (`git diff`: no difference); the bundle on `main` is `1f569fcf…` |
+| this row and entry U707 (a later pull request, documents only): its own hosted run |NOT RECORDED|the chain of records stops here by statement |
 
 The Stage runs wrote result files under `results/` in the clone only.
 The clone is a throwaway folder; nothing of it is in the repository.
