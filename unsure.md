@@ -18152,3 +18152,34 @@ curl: (6) Could not resolve host: github.com
   exported contract now rests on two named open premises: R6 and the
   native FFI contract at valid calls. M1-B OPEN. end_to_end=false.
 - Next check: R6.
+
+## U494 — night shift, proof track: with an oracle-only valid-call predicate the program-behaviour premise is discharged; R6 for the present executable is a multi-day proof (refers to U491, U493)
+
+- Evidence: `L2dx-0001` (exploration, exit 0, no export);
+  `L2d-0001` (exit 0, 29 theorems); `orch-A/r6/` (a worker's study
+  by reading; its exploration run is not finished at this entry).
+- Proved: for the predicate "argument shapes that the basis oracle
+  accepts" (read and write: array of at least 4 bytes; close:
+  configuration of 8 bytes and a non-empty array; open_in: a
+  non-empty array), every returning FFI call of every run is valid,
+  from the oracle definition alone
+  (`refund_ffi_calls_ok_shape_totalised`).
+  `refund_profile_a_sl_shape`: the machine-model theorem with one
+  FFI premise, the contract at shape-valid calls.
+  `refund_model_frame_decision_shape`: the composed theorem of U492
+  from the same premises.
+- Meaning: the remaining FFI premise is about native code only. For
+  the present C code it fails at shape-valid calls where the C code
+  aborts and the model returns an error byte (U491). For a C code
+  that follows the model there (the unapplied patch of owner item
+  A-3) it is plausible; that is tested, not proved.
+- Study result (not machine-checked): for the present executable the
+  statement R6 needs the TextIO specifications proved again with an
+  event invariant: about 1,700 to 1,900 lines, 4 to 7 working days.
+  A shortcut through the stored replay equation is refuted by
+  reading the oracle definition.
+- The review of L2d-0001 is not finished at this entry.
+- Impact: two routes to close the FFI premise at model level exist:
+  a long proof for the present executable, or an owner-approved
+  change of the C code. M1-B OPEN. end_to_end=false.
+- Next check: the review; the R6 exploration run.

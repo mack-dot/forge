@@ -1,0 +1,287 @@
+--- routeA-L2d.draft-650b7dce.sml	2026-11-19 05:12:26.676384341 -0500
++++ routeA-L2d.sml	2026-11-19 05:13:20.697539083 -0500
+@@ -16,7 +16,12 @@
+    meets premise 3 of refund_profile_a_sl_reach FROM THE ORACLE ALONE, for every ext cl fs (the four names are
+    dispatched before the ext fall-through, basis_ffiScript.sml 22-55; no premise on ext). No program behaviour (no L3).
+    Assembly refund_profile_a_sl_shape: refund_profile_a_sl_reach with Vok := VokS and premise 3 discharged.
+-   Harness: the one of L2b-0003.sml (sha256 cb6efb52...af95), lines 51-120, copied; fwd from L2c-0001.sml. *)
++   Harness: the one of L2b-0003.sml (sha256 cb6efb52...af95), lines 51-120, copied; fwd from L2c-0001.sml.
++   FINAL (case L2d-0001): FAITHFUL REPLAY of exploration L2dx-0001 (actual exit 0, EXPLORE_COMPLETE; source sha256
++   183b8ded...3ae9). Each required lemma keeps exactly the alternative printed TACTIC_USED <name> 1 (pv) or the step
++   sequence printed EXPLORE_CLOSED ... hyps 0. Changes against L2dx: none in statements; PF typed (i:num);
++   ERR2 and NFAIL OPTIONAL (not closed / not explored); new OPTIONAL section MODEL_FRAME (MG-0001 construction).
++   Deps: deps-MG.txt (superset of deps-L2c.txt). NOT RUN. UNCHECKED. *)
+ open preamble targetSemTheory targetPropsTheory ffiTheory semanticsPropsTheory fsFFITheory basis_ffiTheory TextIOProofTheory
+      backendTheory asmPropsTheory lab_to_targetTheory arm8Theory arm8_targetTheory alignmentTheory miscTheory set_sepTheory
+      backendProofTheory arm8_configProofTheory wordsLib blastLib forge_refundArm8CompileTheory forge_refundExclusionRealTheory
+@@ -116,30 +121,17 @@
+ val _ = pr "MARK MODEL";
+ val RD_LEN = thmA "ffi_read_return_length"
+   ``!c ab fsys nb fsys'. ffi_read c ab fsys = SOME (FFIreturn nb fsys') ==> 4 <= LENGTH ab``
+-  [(rpt gen_tac >> simp [ffi_read_def] >> strip_tac >> gvs [AllCaseEqs()]),
+-   (rpt gen_tac >> simp [ffi_read_def] >> BasicProvers.every_case_tac >> simp []),
+-   (rpt gen_tac >> Cases_on `4 <= LENGTH ab` >> simp [] >>
+-    `LENGTH ab = 0 \/ LENGTH ab = 1 \/ LENGTH ab = 2 \/ LENGTH ab = 3` by decide_tac >>
+-    gvs [listTheory.LENGTH_EQ_NUM_compute, ffi_read_def])];
++  [(rpt gen_tac >> simp [ffi_read_def] >> strip_tac >> gvs [AllCaseEqs()])];
+ val WR_LEN = thmA "ffi_write_return_length"
+   ``!c ab fsys nb fsys'. ffi_write c ab fsys = SOME (FFIreturn nb fsys') ==> 4 <= LENGTH ab``
+-  [(rpt gen_tac >> simp [ffi_write_def] >> strip_tac >> gvs [AllCaseEqs()]),
+-   (rpt gen_tac >> simp [ffi_write_def] >> BasicProvers.every_case_tac >> simp []),
+-   (rpt gen_tac >> Cases_on `4 <= LENGTH ab` >> simp [] >>
+-    `LENGTH ab = 0 \/ LENGTH ab = 1 \/ LENGTH ab = 2 \/ LENGTH ab = 3` by decide_tac >>
+-    gvs [listTheory.LENGTH_EQ_NUM_compute, ffi_write_def])];
++  [(rpt gen_tac >> simp [ffi_write_def] >> strip_tac >> gvs [AllCaseEqs()])];
+ val OI_LEN = thmA "ffi_open_in_return_length"
+   ``!c ab fsys nb fsys'. ffi_open_in c ab fsys = SOME (FFIreturn nb fsys') ==> 1 <= LENGTH ab``
+-  [(rpt gen_tac >> Cases_on `ab` >> simp [ffi_open_in_def]),
+-   (rw [ffi_open_in_def] >> gvs [OPTION_CHOICE_EQUALS_OPTION] >> rpt (pairarg_tac >> gvs []) >> TRY decide_tac),
+-   (rpt gen_tac >> Cases_on `ab` >>
+-    simp [ffi_open_in_def, optionTheory.OPTION_GUARD_def, optionTheory.OPTION_CHOICE_def])];
++  [(rpt gen_tac >> Cases_on `ab` >> simp [ffi_open_in_def])];
+ (* basis oracle: a returning call at name N has the length fact (pattern: L2b basis_close_return_lengths, passed) *)
+ fun ret_tacs lenTh =
+   [(rpt gen_tac >> strip_tac >> gvs [call_FFI_def, basis_ffi_oracle_def, pairTheory.UNCURRY, AllCaseEqs()] >>
+-    imp_res_tac lenTh >> fs []),
+-   (rpt gen_tac >> strip_tac >> fs [call_FFI_def] >> Cases_on `st.ffi_state` >> fs [basis_ffi_oracle_def] >>
+-    BasicProvers.every_case_tac >> fs [] >> imp_res_tac lenTh >> fs [])];
++    imp_res_tac lenTh >> fs [])];
+ val RD_RET = thmA "basis_read_return_length"
+   ``!ext (st:(mlstring list # IO_fs) ffi_state) c ab st' nb.
+       st.oracle = basis_ffi_oracle ext /\ call_FFI st (ExtCall «read») c ab = FFI_return st' nb ==> 4 <= LENGTH ab``
+@@ -160,9 +152,7 @@
+                   LENGTH c = w2n (ms1.REG 1w) /\ LENGTH ab = w2n (ms1.REG 3w)``
+   [(rpt gen_tac >> strip_tac >> qpat_x_assum `read_ffi_bytearrays _ _ = _` mp_tac >>
+     asm_simp_tac (srw_ss()) [read_ffi_bytearrays_def, read_ffi_bytearray_def, arm8_target_def] >>
+-    strip_tac >> imp_res_tac read_bytearray_LENGTH >> fs []),
+-   (rw [read_ffi_bytearrays_def, read_ffi_bytearray_def] >> gvs [arm8_target_def] >>
+-    imp_res_tac read_bytearray_LENGTH >> gvs [])];
++    strip_tac >> imp_res_tac read_bytearray_LENGTH >> fs [])];
+ (* the four case endings *)
+ val fin_rw = FIRST [(fs [] >> NO_TAC), decide_tac, metis_tac []];
+ val fin_close =
+@@ -195,10 +185,7 @@
+     `LENGTH c = w2n (ms1.REG 1w) /\ LENGTH ab = w2n (ms1.REG 3w)` by metis_tac [LENS] >>
+     rpt conj_tac >> strip_tac >> rveq >>
+     qpat_x_assum `call_FFI _ _ _ _ = _` mp_tac >> asm_rewrite_tac [] >> strip_tac >>
+-    CL "shape-call-1" ret_any),
+-   (rpt gen_tac >> strip_tac >> BETA_TAC >> drule_all LENS >> strip_tac >>
+-    rpt conj_tac >> strip_tac >> rveq >> fs [] >>
+-    CL "shape-call-2" ret_any)];
++    CL "shape-call-1" ret_any)];
+ (* ================= premise 3 from the oracle alone ================= *)
+ val _ = pr "MARK CALLS";
+ val SHAPE_OK_goal =
+@@ -214,21 +201,15 @@
+     rpt gen_tac >> strip_tac >> BETA_TAC >>
+     qspecl_then [`ext`, `mc`, `ffi1`, `ms1`, `i`, `c`, `ab`, `ffi2`, `nb`] mp_tac SHAPE_CALL >>
+     impl_tac >- (rpt conj_tac >> FIRST [first_assum ACCEPT_TAC, metis_tac []]) >>
+-    disch_then (ACCEPT_TAC o BETA_RULE)),
+-   (rpt gen_tac >> strip_tac >> match_mp_tac G >> conj_tac >- first_assum ACCEPT_TAC >>
+-    rpt gen_tac >> strip_tac >> irule SHAPE_CALL >> metis_tac []),
+-   (rpt gen_tac >> strip_tac >> irule G >> conj_tac >- metis_tac [] >>
+-    rpt gen_tac >> strip_tac >> BETA_TAC >> metis_tac [BETA_RULE SHAPE_CALL])];
++    disch_then (ACCEPT_TAC o BETA_RULE))];
+ val REFS = thmA "refund_ffi_calls_ok_shape"
+   ``!b envmc ext ffi k ms. ffi.oracle = basis_ffi_oracle ext ==> ffi_calls_ok ^VokS (refund_mc b envmc) ffi k ms``
+-  [(rpt strip_tac >> match_mp_tac SHAPE_OK >> qexists_tac `ext` >> fs [RMF, EXT4] >> TRY EVAL_TAC),
+-   (rpt strip_tac >> irule SHAPE_OK >> qexists_tac `ext` >> rpt conj_tac >> fs [RMF, EXT4] >> EVAL_TAC)];
++  [(rpt strip_tac >> match_mp_tac SHAPE_OK >> qexists_tac `ext` >> fs [RMF, EXT4] >> TRY EVAL_TAC)];
+ val REFST = thmA "refund_ffi_calls_ok_shape_totalised"
+   ``!sl envmc Vok ext cl fs k ms.
+       ffi_calls_ok ^VokS (refund_mc (sl + 0x1000040D0w) (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+                    (basis_ffi ext cl fs) k ms``
+-  [(rpt gen_tac >> match_mp_tac REFS >> qexists_tac `ext` >> simp [basis_ffi_def]),
+-   (rpt gen_tac >> irule REFS >> qexists_tac `ext` >> simp [basis_ffi_def])];
++  [(rpt gen_tac >> match_mp_tac REFS >> qexists_tac `ext` >> simp [basis_ffi_def])];
+ (* ================= structure: terms from the stored theorem ================= *)
+ val _ = pr "MARK STRUCT";
+ val VokV = (case List.find (fn v => fst (dest_var v) = "Vok") (free_vars (concl RCH)) of
+@@ -245,9 +226,7 @@
+ val _ = pr ("L2R_THIRD_PREMISE_WITH_VOKS " ^ term_to_string p3);
+ val p3fv = free_vars p3;
+ val P3S = thmA "refund_l2r_third_premise_shape" (list_mk_forall (p3fv, p3))
+-  [(rpt gen_tac >> rpt strip_tac >> match_mp_tac REFS >> qexists_tac `ext` >> simp [basis_ffi_def]),
+-   (rpt gen_tac >> rpt strip_tac >> MATCH_ACCEPT_TAC REFST),
+-   (rpt gen_tac >> rpt strip_tac >> irule REFS >> simp [basis_ffi_def])];
++  [(rpt gen_tac >> rpt strip_tac >> match_mp_tac REFS >> qexists_tac `ext` >> simp [basis_ffi_def])];
+ fun strip_n 0 t = t | strip_n n t = strip_n (n - 1) (snd (dest_forall t));
+ val _ = if aconv (strip_n (length p3fv) (concl P3S)) p3
+         then pr "CONTROL_OK P3S is premise 3 of refund_profile_a_sl_reach with Vok := VokS (term from the stored theorem)"
+@@ -264,12 +243,7 @@
+       val th3 = SPECL p3fv P3S
+       val olds = map (fn p => if aconv p p3 then th3 else find p) oldPrems
+   in DISCH na (MP RCHS (LIST_CONJ olds)) end;
+-val ASM = thmA "refund_profile_a_sl_shape" ASM_goal
+-  [fwd build_asm,
+-   (strip_tac >> mp_tac RCHS >> impl_tac
+-    >- (rpt conj_tac >> FIRST [first_assum ACCEPT_TAC, MATCH_ACCEPT_TAC (SPECL p3fv P3S),
+-                               (rpt gen_tac >> strip_tac >> MATCH_ACCEPT_TAC REFST)])
+-    >> disch_then ACCEPT_TAC)];
++val ASM = thmA "refund_profile_a_sl_shape" ASM_goal [fwd build_asm];
+ (* ================= controls ================= *)
+ val _ = pr "MARK CONTROLS";
+ val MC4 = ``<| prog_addresses := UNIV; shared_addresses := {}; ffi_entry_pcs := [0w; 16w; 32w; 48w];
+@@ -292,51 +266,47 @@
+ val MSUc = ``(ARB:arm8_state) with <| PC := 32w; REG := (\r. 0w); MEM := (\a. 0w) |>``;
+ val Pne0 = ``\i (nb:word8 list) (s:arm8_state). i <> 0``;
+ val Pne1 = ``\i (nb:word8 list) (s:arm8_state). i <> 1``;
+-val PF = ``\i (nb:word8 list) (s:arm8_state). F``;
++val PF = ``\(i:num) (nb:word8 list) (s:arm8_state). F``;   (* L2dx: untyped i gave a type error *)
+ (* L2b conc_tacs (alternative 1 passed for NV-B and N2 in L2b-0003) *)
+ val conc_tacs =
+   [(simp [calls_def, arm8_target_def, find_index_def, read_ffi_bytearrays_def, read_ffi_bytearray_def,
+-          read_bytearray_def, call_FFI_def] >> TRY EVAL_TAC),
+-   (rewrite_tac [calls_def] >> EVAL_TAC),
+-   (simp [calls_def, arm8_target_def, find_index_def, read_ffi_bytearrays_def, read_ffi_bytearray_def, call_FFI_def,
+-          basis_ffi_def, basis_ffi_oracle_def, ffi_read_def, ffi_write_def, ffi_close_def] >> EVAL_TAC)];
++          read_bytearray_def, call_FFI_def] >> TRY EVAL_TAC)];
+ val NVR = thmA "basis_read_call_returns_at_a_concrete_state" ``~ffi_calls_ok ^Pne0 ^MC4 ^FFIB (SUC 0) ^MSR`` conc_tacs;
+-val NVRok = thmA "shape_predicate_holds_at_the_concrete_read_call" ``ffi_calls_ok ^VokS ^MC4 ^FFIB (SUC 0) ^MSR``
+-  (conc_tacs @ [(match_mp_tac SHAPE_OK >> qexists_tac `no_ext` >> simp [basis_ffi_def] >> EVAL_TAC)]);
++val NVRok = thmA "shape_predicate_holds_at_the_concrete_read_call" ``ffi_calls_ok ^VokS ^MC4 ^FFIB (SUC 0) ^MSR`` conc_tacs;
+ val NVW = thmA "basis_write_call_returns_at_a_concrete_state" ``~ffi_calls_ok ^Pne1 ^MC4 ^FFIB (SUC 0) ^MSW`` conc_tacs;
+-val NVWok = thmA "shape_predicate_holds_at_the_concrete_write_call" ``ffi_calls_ok ^VokS ^MC4 ^FFIB (SUC 0) ^MSW``
+-  (conc_tacs @ [(match_mp_tac SHAPE_OK >> qexists_tac `no_ext` >> simp [basis_ffi_def] >> EVAL_TAC)]);
++val NVWok = thmA "shape_predicate_holds_at_the_concrete_write_call" ``ffi_calls_ok ^VokS ^MC4 ^FFIB (SUC 0) ^MSW`` conc_tacs;
+ (* the read with x1 = 0 RETURNS under the basis oracle (error byte): premise 2 is demanded there *)
+ val NVR0 = thmA "basis_read_call_with_conf_length_0_returns" ``~ffi_calls_ok ^Pne0 ^MC4 ^FFIB (SUC 0) ^MSR0`` conc_tacs;
+ val NEG = thmA "shape_predicate_rejects_u393_and_zero_length_states"
+   ``~(^VokS) 2 nb ^MSU /\ ~(^VokS) 0 nb ^MSU /\ ~(^VokS) 1 nb ^MSU /\ ~(^VokS) 3 nb ^MSU /\
+     (^VokS) 0 nb ^MSR /\ (^VokS) 0 nb ^MSR0``
+-  [(simp [] >> TRY EVAL_TAC), (CONV_TAC (DEPTH_CONV BETA_CONV) >> EVAL_TAC)];
++  [(simp [] >> TRY EVAL_TAC)];
+ (* the shape predicate does not hold by itself: under an always-returning oracle the zero-length read violates it *)
+ val NEGO = thmA "shape_predicate_needs_the_basis_oracle" ``~ffi_calls_ok ^VokS ^MC4 ^FFIR (SUC 0) ^MSU`` conc_tacs;
+ (* under the basis oracle the zero-length read and the U393 close call do NOT return (FFI_failed) *)
+-val NFAIL = thmA "basis_oracle_fails_at_zero_length_read_and_u393_close"
++(* OPTIONAL: not explored (L2dx statement type error, now fixed in PF); UNCHECKED *)
++val NFAIL = thmO "basis_oracle_fails_at_zero_length_read_and_u393_close"
+   ``ffi_calls_ok ^PF ^MC4 ^FFIB (SUC 0) ^MSU /\ ffi_calls_ok ^PF ^MC4 ^FFIB (SUC 0) ^MSUc``
+   (map (fn t => rpt conj_tac >> t) conc_tacs);
+-(* OPTIONAL: error-byte answers at shape-valid calls (the states where the ORIGINAL C aborts) *)
+-val err_tacs = [(simp [ffi_read_def, ffi_write_def, ffi_open_in_def]), (rpt gen_tac >> EVAL_TAC),
+-                (rpt gen_tac >> simp [ffi_read_def, ffi_write_def, ffi_open_in_def] >> EVAL_TAC)];
+-val ERR1 = thmO "ffi_read_conf_length_0_returns_error_byte"
++(* error-byte answers at shape-valid calls (the states where the ORIGINAL C aborts). L2dx: ERR1, ERR3, ERR4 closed with
++   simp then TRY EVAL_TAC; ERR2 was left at `!fsys. T` after EVAL_TAC, so it is OPTIONAL with a final simp [] (UNCHECKED). *)
++val err_tacs = [(simp [ffi_read_def, ffi_write_def, ffi_open_in_def] >> TRY EVAL_TAC)];
++val ERR1 = thmA "ffi_read_conf_length_0_returns_error_byte"
+   ``!fsys. ffi_read [] [0w;0w;0w;0w] fsys = SOME (FFIreturn [1w;0w;0w;0w] fsys)`` err_tacs;
+ val ERR2 = thmO "ffi_read_short_array_returns_error_byte"
+-  ``!fsys. ffi_read [0w;0w;0w;0w;0w;0w;0w;0w] [0w;16w;0w;0w] fsys = SOME (FFIreturn [1w;16w;0w;0w] fsys)`` err_tacs;
+-val ERR3 = thmO "ffi_write_conf_length_0_returns_error_byte"
++  ``!fsys. ffi_read [0w;0w;0w;0w;0w;0w;0w;0w] [0w;16w;0w;0w] fsys = SOME (FFIreturn [1w;16w;0w;0w] fsys)``
++  [(simp [ffi_read_def, ffi_write_def, ffi_open_in_def] >> TRY EVAL_TAC >> simp [])];
++val ERR3 = thmA "ffi_write_conf_length_0_returns_error_byte"
+   ``!fsys. ffi_write [] [0w;0w;0w;0w] fsys = SOME (FFIreturn [1w;0w;0w;0w] fsys)`` err_tacs;
+-val ERR4 = thmO "ffi_open_in_one_byte_array_returns_error_byte"
++val ERR4 = thmA "ffi_open_in_one_byte_array_returns_error_byte"
+   ``!c fsys. ffi_open_in c [0w] fsys = SOME (FFIreturn [1w] fsys)`` err_tacs;
+-(* OPTIONAL: the remaining premise is satisfiable (by the stored abstract effect) *)
+-val SAT = thmO "remaining_premise_met_by_the_abstract_effect"
++(* the remaining premise is satisfiable (by the stored abstract effect); L2dx: closed in 5 steps *)
++val SAT = thmA "remaining_premise_met_by_the_abstract_effect"
+   ``!b dm. refund_ffi_contract_on b dm ^VokS refund_abs_ffi``
+   [(rpt gen_tac >> rewrite_tac [on_def] >> rpt gen_tac >> strip_tac >>
+     mp_tac (Q.SPECL [`b`, `dm`] AB) >> rewrite_tac [contract_at_def] >>
+     disch_then (qspecl_then [`k`, `index`, `new_bytes`, `ms2`, `t1`, `bytes`, `bytes2`] mp_tac) >>
+-    impl_tac >- (rpt conj_tac >> first_assum ACCEPT_TAC) >> disch_then ACCEPT_TAC),
+-   (rpt gen_tac >> mp_tac (Q.SPECL [`b`, `dm`] AB) >> rewrite_tac [contract_at_def, on_def] >> metis_tac [])];
++    impl_tac >- (rpt conj_tac >> first_assum ACCEPT_TAC) >> disch_then ACCEPT_TAC)];
+ (* ===== structural checks of the assembly ===== *)
+ val (asmAnte, asmConc) = dest_imp (concl ASM);
+ val newA = strip_conj asmAnte;
+@@ -368,6 +338,92 @@
+         handle e => pr ("UNFOLD_PRINT_FAILED " ^ General.exnMessage e);
+ val _ = if length contractPs = 1 then pr "CONTROL_OK exactly one contract premise" else bad "contract-premise-count";
+ val _ = pr ("ASSEMBLY_FREE_VARS " ^ String.concatWith " " (map (fst o dest_var) (free_vars (concl ASM))));
++(* ================= OPTIONAL: the composed model theorem at ext := no_ext (MG-0001 construction) =================
++   Inputs (deps-MG.txt): forge_refundModelFrame (MF-0002) refund_model_frame_decision_reach (M1b),
++   refund_model_frame_meets_exported_contract (M3); forge_refundExportedContract exported_contract_on_refund_fields.
++   UP and UPC are the passed MG-0001 proofs (MG-0001.sml lines 117-150), copied with their two alternatives and stored
++   here under l2d_ names (forge_refundModelFrameEvents is not in deps-MG). G3 replays MG-0001 G1 with Vok := VokS and
++   premise 3 given by REFST. Every item OPTIONAL: a failure prints OPTIONAL_FAILED and does not block the export. *)
++val _ = pr "MARK MODEL_FRAME";
++val MF_results = (let
++  fun MF n = DB.fetch "forge_refundModelFrame" n
++  val M1B = MF "refund_model_frame_decision_reach"
++  val M3 = MF "refund_model_frame_meets_exported_contract"
++  val ECON0 = DB.fetch "forge_refundExportedContract" "exported_contract_on_refund_fields"
++  fun at_no_ext th =
++    let val v = valOf (List.find (fn v => fst (dest_var v) = "ext") (free_vars (concl th)))
++        val c = mk_thy_const {Thy = "basis_ffi", Name = "no_ext", Ty = type_of v}
++    in INST [v |-> c] th end
++  val ASM_NE = at_no_ext ASM
++  val VokM = valOf (List.find (fn v => fst (dest_var v) = "Vok") (free_vars (concl M1B)))
++  val M1B_S = INST [VokM |-> VokS] M1B
++  val (ANTE_S, M1BC) = dest_imp (concl M1B_S)
++  val M3C = snd (dest_imp (concl M3))
++  fun pieces c =
++    let val (ms, B) = dest_exists c
++        val (C1, ALLB) = dest_conj B
++        val (b, I) = dest_forall ALLB
++        val (_, E) = dest_imp I
++        val (tio, body) = strip_exists E
++        val (_, N) = dest_conj body
++    in (ms, b, List.nth (tio, 0), List.nth (tio, 1), N) end
++  val (msv, bv, tv, iov, N1) = pieces M1BC
++  val (msv3, bv3, tv3, iov3, N3) = pieces M3C
++  val _ = if aconv msv msv3 andalso aconv bv bv3 andalso aconv tv tv3 andalso aconv iov iov3
++          then pr "CONTROL_OK M1b and M3 conclusions use the same bound variables" else bad "MF-bound-variables-differ"
++  val gv3 = fst (dest_forall N3)
++  fun fv n = List.find (fn v => fst (dest_var v) = n) (free_vars (concl ECON0))
++  val ECON = INST (List.mapPartial (fn (n, n') => case fv n of SOME v => SOME (v |-> mk_var (n', type_of v)) | NONE => NONE)
++                     [("h", "dafny_heap"), ("env", "dafny_env")]) ECON0
++  val UPo = thmO "l2d_frame_contract_upgrade" (mk_imp (N1, N3))
++     [DISCH_TAC \\ X_GEN_TAC gv3 \\ DISCH_TAC
++        \\ first_x_assum (fn th => first_assum (STRIP_ASSUME_TAC o MATCH_MP th))
++        \\ CONJ_TAC >- FIRST_ASSUM ACCEPT_TAC
++        \\ CONJ_TAC >- FIRST_ASSUM ACCEPT_TAC
++        \\ rpt gen_tac \\ DISCH_TAC \\ MATCH_MP_TAC ECON \\ metis_tac [],
++      DISCH_TAC \\ X_GEN_TAC gv3 \\ rpt strip_tac \\ res_tac \\ TRY (FIRST_ASSUM ACCEPT_TAC)
++        \\ MATCH_MP_TAC ECON \\ metis_tac []]
++  val UP = valOf UPo
++  val UPCo = thmO "l2d_model_frame_contract_of_reach" (mk_imp (M1BC, M3C))
++     [DISCH_THEN (X_CHOOSE_THEN msv STRIP_ASSUME_TAC)
++        \\ EXISTS_TAC msv \\ CONJ_TAC >- (CONJ_TAC \\ FIRST_ASSUM ACCEPT_TAC)
++        \\ X_GEN_TAC bv \\ DISCH_TAC
++        \\ first_x_assum drule
++        \\ DISCH_THEN (X_CHOOSE_THEN tv (X_CHOOSE_THEN iov (fn th =>
++             EXISTS_TAC tv \\ EXISTS_TAC iov \\ ACCEPT_TAC (CONJ (CONJUNCT1 th) (MATCH_MP UP (CONJUNCT2 th)))))),
++      ho_match_mp_tac boolTheory.MONO_EXISTS \\ gen_tac \\ BETA_TAC
++        \\ ho_match_mp_tac boolTheory.MONO_AND \\ CONJ_TAC >- REWRITE_TAC []
++        \\ ho_match_mp_tac boolTheory.MONO_ALL \\ gen_tac \\ BETA_TAC
++        \\ ho_match_mp_tac boolTheory.MONO_IMP \\ CONJ_TAC >- REWRITE_TAC []
++        \\ ho_match_mp_tac boolTheory.MONO_EXISTS \\ gen_tac \\ BETA_TAC
++        \\ ho_match_mp_tac boolTheory.MONO_EXISTS \\ gen_tac \\ BETA_TAC
++        \\ ho_match_mp_tac boolTheory.MONO_AND \\ CONJ_TAC >- REWRITE_TAC []
++        \\ MATCH_ACCEPT_TAC UP]
++  val UPC = valOf UPCo
++  val G3A = fst (dest_imp (concl ASM_NE))
++  val PREM_TAC = FIRST [FIRST_ASSUM ACCEPT_TAC, (rpt gen_tac \\ strip_tac \\ MATCH_ACCEPT_TAC REFST)]
++  val G3o = thmO "refund_model_frame_decision_shape" (mk_imp (G3A, M3C))
++     [DISCH_THEN STRIP_ASSUME_TAC
++        \\ MATCH_MP_TAC UPC
++        \\ SUBGOAL_THEN ANTE_S (fn a => ACCEPT_TAC (MP M1B_S a))
++        \\ rpt conj_tac \\ PREM_TAC,
++      DISCH_THEN STRIP_ASSUME_TAC
++        \\ SUBGOAL_THEN ANTE_S (fn a => ACCEPT_TAC (MP UPC (MP M1B_S a)))
++        \\ rpt conj_tac \\ PREM_TAC]
++  val G3 = valOf G3o
++  val _ = if aconv (snd (dest_imp (concl G3))) M3C
++          then pr "CONTROL_OK G3 conclusion is term-identical to the conclusion of refund_model_frame_meets_exported_contract"
++          else bad "G3-conclusion"
++  val _ = if aconv (fst (dest_imp (concl G3))) G3A
++          then pr "CONTROL_OK G3 antecedent is term-identical to the antecedent of refund_profile_a_sl_shape at ext := no_ext"
++          else bad "G3-antecedent"
++  val _ = if not (has_const "ffi_calls_ok" G3A) andalso not (has_const "refund_env_ok_sl" G3A)
++             andalso not (Lib.mem "ext" (map (fst o dest_var) (free_vars (concl G3))))
++          then pr "CONTROL_OK G3 antecedent has neither ffi_calls_ok nor refund_env_ok_sl; no free ext" else bad "G3-scope"
++  val _ = List.app (fn t => pr ("G3_REMAINING_NATIVE_PREMISE " ^ term_to_string t))
++                   (List.filter (has_const "refund_ffi_contract_on") (strip_conj G3A))
++  in pr "MF_SECTION_DONE"; [UP, UPC, G3] end)
++  handle e => (pr ("OPTIONAL_FAILED MODEL_FRAME section " ^ General.exnMessage e); []);
+ (* ================= checks ================= *)
+ val _ = pr "MARK CHECKS";
+ val _ = pr ("FAILED_LIST " ^ String.concatWith " " (rev (!failed)));
