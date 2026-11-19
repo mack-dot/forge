@@ -1,0 +1,7 @@
+Now drawing from 'AC Power'
+(node:52421) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+EXPECTATION CHANGED by rule 2: without a store the same request id on a NEW pre-state is a new key and is signed (signed; sink: rejected; rq_x settled 0 time(s)); the Store mode refuses it (SINGLE_USE_2.md, OQ-H2-2)
+{"noStoreFirst":true,"noStoreOtherRequest":"mint refused: another transition is already signed for this pre-state","noStoreSameIdSamePreOtherCandidate":"refused: another transition is already signed for this pre-state","noStoreSameIdNewPre":"signed; sink: rejected","noStoreRqXSettled":0,"storeOtherRequest":"refused: another transition is already signed for this pre-state","storeSameIdNewState":"refused: another transition is already signed for this pre-state","storeFreshId":"refused: another transition is already signed for this pre-state"}
+FAIL
+exit 1

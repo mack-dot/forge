@@ -62,12 +62,12 @@ ACT1 = [
 ]
 REFUND_CORE = 'impl/RefundFinality.dfy'
 REFUND_FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
-# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueOnce (the (charge id,
-# request id) memory rule around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
+# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueAuth (rule 2: the
+# memory rule with the authoritative stored state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
 # scripts/exit_slice1.py builds it. The Slice 1 evidence record pins only the RefundFinality module above; this module
 # is compiled from the same RefundFinality source and is NOT in that record (its SHA-256 is reported).
-ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
-ISSUER_FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
+ISSUER_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
 SLICE1_RECORD = 'proposals/forge2-slice1-refund-finality/records/evidence.json'
 ISSUER = 'ts/refund-finality/minter.ts'
 SPEC_LOCK = 'spec/refund/spec.lock'
@@ -141,12 +141,12 @@ def compile_core(run, source, footer, name, record_path):
 
 
 def compile_issuer_core(run):
-    """Compiles the issuer's module (IssueOnce) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
+    """Compiles the issuer's module (IssueAuth) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
     out = run.work / 'issuer-core'
     out.mkdir()
     built = run.execute([dafny.DAFNY, 'build', ISSUER_CORE, '--target', 'js', '--output', rel(out / 'model'), *dafny.OPTIONS],
                         'compile-issuer-core')
-    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueOnce (exit %d)' % built.returncode)
+    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueAuth (exit %d)' % built.returncode)
     module = out / 'model.cjs'
     module.write_bytes((out / 'model.js').read_bytes() + ISSUER_FOOTER)
     return module, digest(module.read_bytes())
@@ -262,7 +262,7 @@ def act2(run, flood_mib):
     module, module_sha = compile_core(run, REFUND_CORE, REFUND_FOOTER, 'refund-core', SLICE1_RECORD)
     say('  checker core compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
     issuer_module, issuer_sha = compile_issuer_core(run)
-    say('  issuer module (IssueOnce, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
+    say('  issuer module (IssueAuth, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
     work = run.work / 'act2'
     work.mkdir()
     issuer = Issuer(run, issuer_module)

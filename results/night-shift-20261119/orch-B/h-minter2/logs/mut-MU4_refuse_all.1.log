@@ -1,0 +1,153 @@
+# owner=h-minter2 start=2026-11-19T16:00:40Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1684
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU4_refuse_all.dfy
+# memory free percent: 45
+MU4_refuse_all.dfy(253,6): Error: assertion might not hold
+    |
+253 |       assert StepFacts(m, m2, c, o) by { reveal StepFacts(); reveal SignsOk(); }
+    |       ^^^^^^
+
+MU4_refuse_all.dfy(266,2): Error: a postcondition could not be proved on this return path
+    |
+266 |   {
+    |   ^
+
+MU4_refuse_all.dfy(265,14): Related location: this is the postcondition that could not be proved
+    |
+265 |     ensures o.Issued? && IB.ToInts(o.bytes) == Expected(t, sh, ch, h)
+    |               ^^^^^^^
+
+MU4_refuse_all.dfy(293,2): Error: a postcondition could not be proved on this return path
+    |
+293 |   {
+    |   ^
+
+MU4_refuse_all.dfy(292,15): Related location: this is the postcondition that could not be proved
+    |
+292 |     ensures ov.Issued? && IB.ToInts(ov.bytes) == Expected(v.t, v.sh, v.ch, v.h)
+    |                ^^^^^^^
+
+MU4_refuse_all.dfy(355,2): Error: a postcondition could not be proved on this return path
+    |
+355 |   {
+    |   ^
+
+MU4_refuse_all.dfy(354,14): Related location: this is the postcondition that could not be proved
+    |
+354 |     ensures o.Issued? && IB.ToInts(o.bytes) == Expected(t, sh, ch, h) && m2 == m[KeyFor(a, pre, t, h) := Signed(o.bytes)]
+    |               ^^^^^^^
+
+MU4_refuse_all.dfy(364,2): Error: a postcondition could not be proved on this return path
+    |
+364 |   {
+    |   ^
+
+MU4_refuse_all.dfy(362,45): Related location: this is the postcondition that could not be proved
+    |
+362 |     ensures a.Store? && a.state != pre ==> o.RefusedNotAuthoritative?
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+MU4_refuse_all.dfy(364,2): Error: a postcondition could not be proved on this return path
+    |
+364 |   {
+    |   ^
+
+MU4_refuse_all.dfy(363,45): Related location: this is the postcondition that could not be proved
+    |
+363 |     ensures a.Store? && a.state == pre ==> o.RefusedCompleted?
+    |                                              ^^^^^^^^^^^^^^^^^
+
+MU4_refuse_all.dfy(376,2): Error: a postcondition could not be proved on this return path
+    |
+376 |   {
+    |   ^
+
+MU4_refuse_all.dfy(371,50): Related location: this is the postcondition that could not be proved
+    |
+371 |     ensures m[KeyFor(a, pre, t, h)].Closed? ==> o.RefusedClosed?
+    |                                                   ^^^^^^^^^^^^^^
+
+MU4_refuse_all.dfy(376,2): Error: a postcondition could not be proved on this return path
+    |
+376 |   {
+    |   ^
+
+MU4_refuse_all.dfy(373,16): Related location: this is the postcondition that could not be proved
+    |
+373 |               o.RefusedOtherCandidate?
+    |                 ^^^^^^^^^^^^^^^^^^^^^^
+
+MU4_refuse_all.dfy(382,20): Error: assertion might not hold
+    |
+382 |       assert o.Signs();
+    |                     ^
+
+MU4_refuse_all.dfy(64,32): Related location: this proposition could not be proved
+   |
+64 |     predicate Signs() { Issued? || Replayed? }
+   |                                 ^^
+
+MU4_refuse_all.dfy(389,2): Error: a postcondition could not be proved on this return path
+    |
+389 |   {
+    |   ^
+
+MU4_refuse_all.dfy(388,14): Related location: this is the postcondition that could not be proved
+    |
+388 |     ensures o.Replayed? && o.bytes == m[KeyFor(a, pre, t, h)].bytes && m2 == m
+    |               ^^^^^^^^^
+
+MU4_refuse_all.dfy(396,2): Error: a postcondition could not be proved on this return path
+    |
+396 |   {
+    |   ^
+
+MU4_refuse_all.dfy(395,14): Related location: this is the postcondition that could not be proved
+    |
+395 |     ensures o.RefusedByCore? && m2 == m[KeyFor(a, pre, t, h) := Closed]
+    |               ^^^^^^^^^^^^^^
+
+MU4_refuse_all.dfy(396,2): Error: a postcondition could not be proved on this return path
+    |
+396 |   {
+    |   ^
+
+MU4_refuse_all.dfy(395,35): Related location: this is the postcondition that could not be proved
+    |
+395 |     ensures o.RefusedByCore? && m2 == m[KeyFor(a, pre, t, h) := Closed]
+    |                                    ^^
+
+MU4_refuse_all.dfy(492,2): Error: a postcondition could not be proved on this return path
+    |
+492 |   {
+    |   ^
+
+MU4_refuse_all.dfy(491,66): Related location: this is the postcondition that could not be proved
+    |
+491 |     ensures a.Issued? && a2.Replayed? && a2.bytes == a.bytes && b.RefusedCompleted?
+    |                                                                   ^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 175 verified, 13 errors
+       34.73 real        12.72 user         2.04 sys
+           201244672  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               94068  page reclaims
+                 280  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                1235  voluntary context switches
+              353694  involuntary context switches
+         95668990135  instructions retired
+         43815972086  cycles elapsed
+           206750992  peak memory footprint
+# end=2026-11-19T16:01:15Z
+exit 4

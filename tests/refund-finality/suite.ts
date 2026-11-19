@@ -734,6 +734,50 @@ async function main() {
     strict.stop();
   }
 
+  // ---- h-minter2 (rule 2, IssueAuth): the issuer in STORE mode reads the sink's store (4th argument, read only).
+  // Every row above starts the issuer without a store (NoStore mode). MinterClient.start passes no store path, so these
+  // rows start the issuer process here, with the same 0x0A framing.
+  {
+    const path = join(outDir, "option-store.sqlite");
+    const child = spawn(process.execPath, ["--import", "tsx", join(GLUE, "minter.ts"), CORE, SPEC_LOCK, "on", path],
+      { cwd: ROOT, stdio: ["pipe", "pipe", "ignore"] });
+    const answers: any[] = []; let wake: (() => void) | null = null, buf = "";
+    child.stdout.on("data", (c: Buffer) => {
+      buf += c.toString("utf8");
+      for (let i = buf.indexOf("\n"); i >= 0; i = buf.indexOf("\n")) { answers.push(JSON.parse(buf.slice(0, i))); buf = buf.slice(i + 1); }
+      if (wake) { const w = wake; wake = null; w(); }
+    });
+    const nth = async (n: number): Promise<any> => {
+      const end = Date.now() + 30000;
+      while (answers.length <= n && Date.now() < end) await new Promise<void>(r => { wake = r; setTimeout(r, 100); });
+      if (answers.length <= n) throw new Error("store-mode issuer: no answer");
+      return answers[n];
+    };
+    const ready = await nth(0);
+    let n = 0;
+    const mintS = async (pre: ChargeState, t: Transition): Promise<Minted> => { n++; child.stdin.write(JSON.stringify({ id: n, pre, transition: t }) + "\n"); return nth(n); };
+    const s0 = state("opt_store");
+    const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
+    sink.init(s0);
+    const fake = state("opt_store", "5", true, "5");
+    const squat = await mintS(fake, propose(fake, req("opt_victim", "0")));
+    add("option", "store mode: a zero-amount request for a victim's request id on an INVENTED pre-state (red team C-ATT-30)",
+      "refused: pre-state is not the authoritative stored state", squat.ok ? "SIGNED" : "refused: " + squat.reason,
+      !squat.ok && squat.reason === "pre-state is not the authoritative stored state");
+    const victim = await mintS(s0, propose(s0, req("opt_victim", "700")));
+    const vc = victim.ok && victim.token ? sink.commit(tokenText(victim.token)).status : "refused: " + victim.reason;
+    add("option", "store mode: then the victim's request on the stored state", "committed", vc, vc === "committed");
+    const s1 = JSON.parse(sink.stateBlob()) as ChargeState;
+    const stale = await mintS(s1, propose(s1, req("opt_victim", "100")));
+    add("option", "store mode: the settled request id with another candidate on the new stored state (completion closes it: protocol.md:61-62)",
+      "refused: attempt completed: use a new request id", stale.ok ? "SIGNED" : "refused: " + stale.reason,
+      !stale.ok && stale.reason === "attempt completed: use a new request id");
+    const zero = await mintS(s1, propose(s1, req("opt_zero", "0")));
+    const zc = zero.ok && zero.token ? sink.commit(tokenText(zero.token)).status : "refused: " + zero.reason;
+    add("option", "store mode: a zero-amount request with a new id on the new stored state", "committed", zc, zc === "committed");
+    sink.close(); child.stdin.end(); child.kill();
+  }
+
   minter.stop();
   const failed = rows.filter(r => !r.pass);
   const of = (control: string) => rows.filter(r => r.control === control);

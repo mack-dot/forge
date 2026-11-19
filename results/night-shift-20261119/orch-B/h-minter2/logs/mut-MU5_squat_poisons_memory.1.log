@@ -1,0 +1,49 @@
+# owner=h-minter2 start=2026-11-19T16:01:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1070
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU5_squat_poisons_memory.dfy
+# memory free percent: 39
+MU5_squat_poisons_memory.dfy(305,6): Error: assertion might not hold
+    |
+305 |       assert StepFacts(m, m2, c, o) by { reveal StepFacts(); reveal SignsOk(); }
+    |       ^^^^^^
+
+MU5_squat_poisons_memory.dfy(351,29): Error: this invariant could not be proved to be maintained by the loop
+ Related message: loop invariant violation
+    |
+351 |       invariant KeyOfCall(v) !in m
+    |                              ^^^
+
+MU5_squat_poisons_memory.dfy(416,2): Error: a postcondition could not be proved on this return path
+    |
+416 |   {
+    |   ^
+
+MU5_squat_poisons_memory.dfy(413,15): Related location: this is the postcondition that could not be proved
+    |
+413 |     ensures m2 == m && !o.Signs()
+    |                ^^
+
+
+Dafny program verifier finished with 181 verified, 3 errors
+       24.72 real        14.82 user         1.98 sys
+           206487552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               71387  page reclaims
+                 909  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                1810  voluntary context switches
+              337254  involuntary context switches
+         95622334626  instructions retired
+         45392733721  cycles elapsed
+           221021432  peak memory footprint
+# end=2026-11-19T16:01:48Z
+exit 4

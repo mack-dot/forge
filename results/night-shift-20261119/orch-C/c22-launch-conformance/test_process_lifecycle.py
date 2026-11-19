@@ -7,7 +7,7 @@ is the launcher owner's work.
 What each group checks:
   1. Decision rule (no process is started): stdout must be the complete expected frame (exact bytes, exact
      length); the exit status must be 0; a signal, a time-out, text on stderr, or too much output is refused.
-  2. Process lifecycle with a harmless test child (a small /bin/sh script, NOT the refund program):
+  2. Process lifecycle with a harmless test child (a small /bin/bash script, NOT the refund program):
      the child gets an empty environment; a non-zero exit status is refused; a child that ends by SIGABRT
      (the way a C abort ends a process) is refused; a child that writes half a frame and exits 0 is refused;
      a child that does not end is stopped by the time limit and refused.
@@ -15,8 +15,8 @@ What each group checks:
      still see that the child failed.
 
 Run:  /usr/bin/python3 -B -I test_process_lifecycle.py     (exit 0 = every check holds; exit 1 = a gap is shown)
-The image-identity check of the launcher (code signature hash) is switched off for the test child by passing
-pinned_cdhash=None, because the test child is a shell script and not the pinned program.
+The launcher's image-identity check stays ON: the tests give it the code-directory hash of /bin/bash (the image of
+the test child), read with the launcher's own kernel_cdhash. Set C22_LAUNCHER=<path> to test another launcher file.
 """
 import importlib.util
 import os
@@ -26,7 +26,8 @@ import sys
 import tempfile
 import unittest
 
-LAUNCHER = '<REPO>/results/night-shift-20261119/orch-A/launch/launcher.py'
+# The launcher file under test. Default: launcher.py. Set C22_LAUNCHER to test another version (launcher_v2.py).
+LAUNCHER = os.environ.get('C22_LAUNCHER', '<REPO>/results/night-shift-20261119/orch-A/launch/launcher.py')
 _spec = importlib.util.spec_from_file_location('launcher_under_test', LAUNCHER)
 L = importlib.util.module_from_spec(_spec)
 sys.dont_write_bytecode = True
@@ -36,6 +37,22 @@ REQUEST = dict(charge=b'ch_1', request=b'rq_1', original=1000, remaining=1000, e
                candidate=True, amount=100, reason=b'duplicate_charge')
 EXPECTED = L.expected_accept(REQUEST)
 BOUND = L.output_bound(REQUEST)
+
+
+def image_hash_of_test_child():
+    """The test child is a /bin/bash script, so its running image is /bin/bash. Read that image's code-directory
+    hash with the launcher's own kernel_cdhash, from a short-lived /bin/bash process. The launcher then checks the
+    test child against this value, as it checks the refund program against its pinned value."""
+    import subprocess
+    probe = subprocess.Popen(['/bin/bash', '-c', 'read line'], stdin=subprocess.PIPE, env={})
+    try:
+        return L.kernel_cdhash(probe.pid)[1]
+    finally:
+        probe.stdin.close()
+        probe.wait()
+
+
+CHILD_IMAGE_HASH = image_hash_of_test_child()
 
 
 def result(exit_code=0, sig=None, timed_out=False, stdout=EXPECTED, stderr=b'', overflow=False):
@@ -89,7 +106,7 @@ class DecisionRule(unittest.TestCase):
 
 
 class ProcessLifecycle(unittest.TestCase):
-    """Group 2: the launcher's process handling, with a harmless /bin/sh test child."""
+    """Group 2: the launcher's process handling, with a harmless /bin/bash test child."""
 
     def setUp(self):
         self.dir = tempfile.mkdtemp(prefix='c22-lifecycle-')
@@ -106,12 +123,12 @@ class ProcessLifecycle(unittest.TestCase):
     def child(self, body):
         path = os.path.join(self.dir, 'child.sh')
         with open(path, 'w') as f:
-            f.write('#!/bin/sh\n' + body + '\n')
+            f.write('#!/bin/bash\n' + body + '\n')
         os.chmod(path, stat.S_IRWXU)
         return path
 
     def run_child(self, body, time_limit=5.0):
-        return L.spawn_and_collect(self.child(body), b'x', BOUND, None, time_limit=time_limit)
+        return L.spawn_and_collect(self.child(body), b'x', BOUND, CHILD_IMAGE_HASH, time_limit=time_limit)
 
     def test_child_environment_is_empty(self):
         """The launcher must not pass the caller's variables (loader variables such as DYLD_*, or any other)."""
@@ -119,12 +136,12 @@ class ProcessLifecycle(unittest.TestCase):
         os.environ['DYLD_LIBRARY_PATH'] = '/nonexistent-c22'
         os.environ['C22_MARKER'] = 'must-not-reach-the-child'
         try:
-            r = L.spawn_and_collect(self.child('/usr/bin/env'), b'x', 65536, None)
+            r = L.spawn_and_collect(self.child('/usr/bin/env'), b'x', 65536, CHILD_IMAGE_HASH)
         finally:
             os.environ.clear()
             os.environ.update(saved)
         names = sorted(line.split(b'=', 1)[0] for line in r.stdout.splitlines() if b'=' in line)
-        allowed_from_shell = {b'PWD', b'SHLVL', b'_', b'OLDPWD'}   # /bin/sh sets these itself
+        allowed_from_shell = {b'PWD', b'SHLVL', b'_', b'OLDPWD'}   # the shell sets these itself
         self.assertEqual([n for n in names if n not in allowed_from_shell], [], 'child saw: %r' % names)
 
     def test_complete_frame_and_exit_zero_is_authorized(self):
@@ -164,9 +181,27 @@ class ProcessLifecycleWhenCallerIgnoresSigchld(ProcessLifecycle):
     def run_child(self, body, time_limit=5.0):
         previous = signal.signal(signal.SIGCHLD, signal.SIG_IGN)
         try:
-            return L.spawn_and_collect(self.child(body), b'x', BOUND, None, time_limit=time_limit)
+            return L.spawn_and_collect(self.child(body), b'x', BOUND, CHILD_IMAGE_HASH, time_limit=time_limit)
+        except L.LaunchRefused:
+            # The launcher itself refused the run (for example: child status unknown). That is a refusal.
+            # Give the decision rule "no process result", which it maps to REFUSED.
+            return None
         finally:
             signal.signal(signal.SIGCHLD, previous)
+
+    def test_complete_frame_and_exit_zero_is_authorized(self):
+        """With SIGCHLD ignored the launcher cannot know the exit status. AUTHORIZED (status known to be 0) and
+        REFUSED (status unknown) are both safe here; this test only records which one the launcher gives."""
+        r = self.run_child('/bin/cat frame.bin')
+        self.assertIn(L.decide_from_result(REQUEST, r)[0], ('AUTHORIZED', 'REFUSED'))
+
+    def test_child_that_does_not_end_is_stopped_and_refused(self):
+        r = self.run_child('/bin/cat frame.bin; exec /bin/sleep 30', time_limit=1.0)
+        self.assertEqual(L.decide_from_result(REQUEST, r)[0], 'REFUSED')
+
+    def test_half_a_frame_and_exit_zero_is_refused(self):
+        r = self.run_child('/bin/cat half.bin')
+        self.assertEqual(L.decide_from_result(REQUEST, r)[0], 'REFUSED')
 
     def test_nonzero_exit_status_after_a_complete_frame_is_refused(self):
         r = self.run_child('/bin/cat frame.bin; exit 3')

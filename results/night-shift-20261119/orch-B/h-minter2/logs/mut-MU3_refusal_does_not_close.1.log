@@ -1,0 +1,43 @@
+# owner=h-minter2 start=2026-11-19T16:00:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1612
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU3_refusal_does_not_close.dfy
+# memory free percent: 47
+MU3_refusal_does_not_close.dfy(303,6): Error: assertion might not hold
+    |
+303 |       assert StepFacts(m, m2, c, o) by { reveal StepFacts(); reveal SignsOk(); }
+    |       ^^^^^^
+
+MU3_refusal_does_not_close.dfy(446,2): Error: a postcondition could not be proved on this return path
+    |
+446 |   {
+    |   ^
+
+MU3_refusal_does_not_close.dfy(445,35): Related location: this is the postcondition that could not be proved
+    |
+445 |     ensures o.RefusedByCore? && m2 == m[KeyFor(a, pre, t, h) := Closed]
+    |                                    ^^
+
+
+Dafny program verifier finished with 182 verified, 2 errors
+       19.06 real        12.52 user         1.55 sys
+           213024768  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37280  page reclaims
+                 470  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                1364  voluntary context switches
+              308882  involuntary context switches
+         92546730753  instructions retired
+         41794399926  cycles elapsed
+           222954792  peak memory footprint
+# end=2026-11-19T16:00:32Z
+exit 4

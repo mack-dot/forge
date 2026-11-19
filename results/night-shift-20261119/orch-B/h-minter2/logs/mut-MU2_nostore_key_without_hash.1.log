@@ -1,0 +1,53 @@
+# owner=h-minter2 start=2026-11-19T15:59:44Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1259
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU2_nostore_key_without_hash.dfy
+# memory free percent: 44
+MU2_nostore_key_without_hash.dfy(336,2): Error: a postcondition could not be proved on this return path
+    |
+336 |   {}
+    |   ^
+
+MU2_nostore_key_without_hash.dfy(335,20): Related location: this is the postcondition that could not be proved
+    |
+335 |     ensures Harmless(s, v)
+    |                     ^
+
+MU2_nostore_key_without_hash.dfy(325,26): Related location: this proposition could not be proved
+    |
+325 |     !Admitted(s.a, s.pre) || KeyOfCall(s) != KeyOfCall(v)
+    |                           ^^
+
+MU2_nostore_key_without_hash.dfy(473,18): Error: a precondition for this call could not be proved
+    |
+473 |     m, v := NewKey(m, NoStore, W_PRE, IB.T(W_PRE, "rq_v", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
+    |                   ^
+
+MU2_nostore_key_without_hash.dfy(405,85): Related location: this is the precondition that could not be proved
+    |
+405 |     requires Admitted(a, pre) && Issuable(pre, t, sh, ch, h) && KeyFor(a, pre, t, h) !in m
+    |                                                                                      ^^^
+
+
+Dafny program verifier finished with 182 verified, 2 errors
+       19.92 real        11.99 user         1.37 sys
+           218873856  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38226  page reclaims
+                 380  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                1389  voluntary context switches
+              197779  involuntary context switches
+         92290168723  instructions retired
+         40015116754  cycles elapsed
+           207684904  peak memory footprint
+# end=2026-11-19T16:00:04Z
+exit 4

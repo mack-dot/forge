@@ -1,0 +1,28 @@
+# owner=h-minter2 start=2026-11-19T15:53:42Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1427
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IssueAuth.dfy
+# memory free percent: 56
+
+Dafny program verifier finished with 179 verified, 0 errors
+       12.33 real        10.39 user         0.67 sys
+           226754560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26290  page reclaims
+                 683  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                1323  voluntary context switches
+               43680  involuntary context switches
+         86134648220  instructions retired
+         34142688997  cycles elapsed
+           208209168  peak memory footprint
+# end=2026-11-19T15:53:54Z
+exit 0

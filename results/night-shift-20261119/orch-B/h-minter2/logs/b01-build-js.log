@@ -1,0 +1,28 @@
+# owner=h-minter2 start=2026-11-19T15:54:24Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1539
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js --output <REPO>/results/night-shift-20261119/orch-B/h-minter2/build/issueauth.js --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IssueAuth.dfy
+# memory free percent: 37
+
+Dafny program verifier finished with 179 verified, 0 errors
+       23.62 real        18.29 user         1.81 sys
+           265830400  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               74234  page reclaims
+                3393  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  45  signals received
+                2524  voluntary context switches
+              257332  involuntary context switches
+         90179974072  instructions retired
+         41568676646  cycles elapsed
+           272368960  peak memory footprint
+# end=2026-11-19T15:54:48Z
+exit 0

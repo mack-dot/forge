@@ -1,0 +1,106 @@
+PASS | setup | the issuer reports the ids that the operator computes from the files | true
+PASS | issuer | code that loads the issuer module gets no key and no signing function | 0 exported names; the ready message holds a public key only
+PASS | issuer | differential grid: 217 (pre-state, request) pairs with the proposer's candidate, against the test oracle | 0 disagreements; 35 signed; 182 refused by the core; 0 refused by the shape check
+PASS | issuer | wrong candidate for an eligible request: post-state keeps the remaining amount | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: post-state reduced by one unit less | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: post-state with another original amount | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: post-state of another charge | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: post-state with refunds switched off | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: intent with another amount | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: intent with another allowed reason | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: intent for another charge | refused: core: Refuse
+PASS | issuer | wrong candidate for an eligible request: intent with another request id | refused: core: Refuse
+PASS | issuer | wrong candidate: amount 2^53+1 for remaining 2^53, with post-state remaining 0 | refused: core: Refuse
+PASS | issuer | the honest candidate for the same request, sent twice | equal tokens
+PASS | issuer | refused message: extra key in the pre-state | refused: shape
+PASS | issuer | refused message: amount is a JSON number | refused: shape
+PASS | issuer | refused message: negative amount | refused: shape
+PASS | issuer | refused message: amount with 25 digits | refused: shape
+PASS | issuer | refused message: amount with a leading zero | refused: shape
+PASS | issuer | refused message: transition missing | refused: message shape
+PASS | issuer | refused message: pre-state is an array | refused: shape
+PASS | issuer | refused message: charge id longer than 256 characters | refused: shape
+PASS | issuer | refused message: lone surrogate in the request id | refused: shape
+PASS | issuer | refused message: U+0000 in the request id | refused: shape
+PASS | issuer | refused message: U+0000 in the charge id | refused: shape
+PASS | issuer | refused message: extra key in the message | refused: message shape
+PASS | issuer | refused message: caller supplies a pre-state hash | refused: message shape
+PASS | issuer | refused message: extra key in the transition | refused: shape
+PASS | issuer | a message whose id is 10,000 nested arrays | refused: message id; the issuer answers the next request
+PASS | issuer | a line of 500,000 bytes: 300,000 bytes are sent, then 200,000 more, then the line end | refused before the line ends: message too long; 1 answer for that line; the issuer answers the next request
+PASS | a | missing token: undefined | rejected: token is not a text; effects 0
+PASS | a | missing token: null | rejected: token is not a text; effects 0
+PASS | a | missing token: an empty object | rejected: token is not a text; effects 0
+PASS | a | missing token: the text of an empty object | rejected: token shape; effects 0
+PASS | a | missing token: a text that is not JSON | rejected: token shape; effects 0
+PASS | a | a valid token handed over as an object, not as its text | rejected: token is not a text; effects 0
+PASS | a | a valid token as JSON text with other spacing | rejected: token text is not canonical; effects 0
+PASS | a | a valid token as JSON text with the keys in another order | rejected: token text is not canonical; effects 0
+PASS | a | JSON text with the key `body` twice: an attacker's body first, the signed body last | rejected: token text is not canonical; effects 0
+PASS | a | JSON text with the key `body` twice: the signed body first, an attacker's body last | rejected: token text is not canonical; effects 0
+PASS | a | direct call with an intent and a post-state, no signature field | rejected: token shape; effects 0
+PASS | a | direct call with the intent only | rejected: token shape; effects 0
+PASS | a | empty signature | rejected: token shape; effects 0
+PASS | a | signature of 63 bytes | rejected: token shape; effects 0
+PASS | a | signature text that is not canonical base64 (same 64 bytes) | rejected: token shape; effects 0
+PASS | a | signature of 64 zero bytes | rejected: signature does not verify; effects 0
+PASS | a | forged: the body of a valid token, signed with the attacker's key | rejected: signature does not verify; effects 0
+PASS | a | forged: signed with a key made from the public key bytes | rejected: signature does not verify; effects 0
+PASS | a | forged: an attacker's body (remaining 0, amount 900), signed with the attacker's key | rejected: signature does not verify; effects 0
+PASS | a | forged: an attacker's body with the signature of the valid token | rejected: signature does not verify; effects 0
+PASS | a | forged: the valid body with the signature of an earlier committed token | rejected: signature does not verify; effects 0
+PASS | a | a token of a second issuer process (same files, another key) | rejected: signature does not verify; effects 0
+PASS | a | tampered: post-state remaining 700 -> 0 | rejected: signature does not verify; effects 0
+PASS | a | tampered: intent amount 200 -> 900 | rejected: signature does not verify; effects 0
+PASS | a | tampered: intent reason | rejected: signature does not verify; effects 0
+PASS | a | tampered: intent charge id | rejected: signature does not verify; effects 0
+PASS | a | tampered: request id | rejected: signature does not verify; effects 0
+PASS | a | tampered: pre-state hash | rejected: signature does not verify; effects 0
+PASS | a | tampered: domain text | rejected: token shape; effects 0
+PASS | a | tampered: another spec lock hash (the signature does not fit either) | rejected: spec lock is not the pinned one; effects 0
+PASS | a | tampered: another checker id (the signature does not fit either) | rejected: checker is not the pinned one; effects 0
+PASS | a | tampered: extra field in the body | rejected: token shape; effects 0
+PASS | a | tampered: extra field beside the body | rejected: token shape; effects 0
+PASS | a | tampered: intent amount as a JSON number | rejected: token shape; effects 0
+PASS | a | tampered: post-state remaining beyond 19 digits | rejected: token shape; effects 0
+PASS | a | a body whose request id holds U+0000, signed with the attacker's key | rejected: token shape; effects 0
+PASS | a | hostile object: a proxy over a valid token that counts every operation on it | rejected: token is not a text; 0 operations on the object; effects 0
+PASS | a | positive control: the untampered token of this group, as its canonical text | committed; effects 4
+PASS | a | audit after the group | problems found: 0
+PASS | a | a token with a VALID signature of the trusted key, issued with another spec lock | rejected: spec lock is not the pinned one; effects 0
+PASS | a | a token with a VALID signature of the trusted key, issued with another checker id | rejected: checker is not the pinned one; effects 0
+PASS | a | a valid token for a sink that has no stored state | rejected: the sink has no stored state; 0 rows written
+PASS | b | two tokens for one pre-state: the first commit | committed; effects 4
+PASS | b | the other token for the old pre-state (fresh request id) | rejected: stored state is not the token's pre-state; effects 0
+PASS | b | a token for a pre-state that the caller invented (remaining 1000; stored 700) | rejected: stored state is not the token's pre-state; effects 0
+PASS | b | a token for the current state | committed; effects 4
+PASS | b | the first token again after two more commits | rejected: stored state is not the token's pre-state; effects 0
+PASS | b | audit after the group | problems found: 0
+PASS | b | race: 6 valid tokens for one pre-state, committed by 6 processes that wait for one common start time | all processes ready in time; 1 committed; 5 rejected: stored state is not the token's pre-state; effects 4; the state is the post-state of the committed token
+PASS | b | audit after the race | problems found: 0
+PASS | c | replay of the committed token | replayed; effects 0
+PASS | c | a second valid transition | committed; effects 4
+PASS | c | replay of the first token after another commit | replayed; effects 0
+PASS | c | replay of the second token | replayed; effects 0
+PASS | c | a new signed token for the CURRENT state that uses a settled request id again | rejected: request id is already settled with another token; effects 0
+PASS | c | a refund of amount 0 (the approved relation allows it): the state does not change | committed; effects 3
+PASS | c | after the amount-0 commit the stored state hash is the same as before | same hash
+PASS | c | replay of the amount-0 token: its pre-state hash still matches the store | replayed; effects 0
+PASS | c | another signed amount-0 token with the same request id: the pre-state hash matches, the request id is not fresh | rejected: request id is already settled with another token; effects 0
+PASS | c | a second dispatcher run on the same outbox | 0 new outbound effects; 3 already dispatched
+PASS | c | audit after the group | problems found: 0
+PASS | c | race: one valid token committed by 6 processes that wait for one common start time | all processes ready in time; 1 committed; 5 replayed; effects 4
+PASS | c | audit after the race | problems found: 0
+PASS | d | one valid transition | committed; effects 4
+PASS | d | the one effect is exactly the checked one: state = post-state, 1 settled row, 1 outbox row and 1 outbound effect with the checked intent | exact
+PASS | d | valid transition 2 of 5 (amount 200) | committed; effects 4
+PASS | d | valid transition 3 of 5 (amount 0) | committed; effects 3
+PASS | d | valid transition 4 of 5 (amount 300) | committed; effects 4
+PASS | d | valid transition 5 of 5 (amount 400) | committed; effects 4
+PASS | d | five valid transitions: five outbound effects in order; their sum is original minus remaining | 5 effects in order; sum 1000; remaining 0
+PASS | d | after remaining 0: a candidate for amount 1 that keeps remaining 0 | refused: core: Refuse
+PASS | d | audit after the group | problems found: 0
+PASS | option | single-use on: the same transition again for one pre-state | the same token
+PASS | option | single-use on: another transition for a pre-state that has a signed token | SIGNED, a token that verifies
+PASS | option | single-use on: another transition for a request id that has a signed token (same pre-state) | refused: another candidate is already signed for this request id
+{"rows":105,"failed":0,"control_a_rows":42,"control_b_rows":8,"control_c_rows":13,"control_d_rows":9,"issuer_rows":29,"dispatcher_rows":0,"rejection_attempts":48,"effects_of_rejection_attempts":0,"rejection_attempts_that_ask_for_an_effect":42,"known_limit_rows":0}

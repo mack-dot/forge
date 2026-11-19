@@ -322,3 +322,24 @@ Overlay <SCRATCH>/redteam-C/fix-88ae6cbf (committed tree). Issuer module orch-B/
 | C-ATT-18 lost emit | d_att18_throwing_emit.ts | 0 | run1 threw (nothing sent); run2 refused r1, already=0 (NOT counted as dispatched); run3 refused r1 | PASS (closed: the loss is now visible as refused/in-doubt) |
 | positive controls | d_positive_controls.ts | 0 | PASS | honest flows work |
 - Limit of this re-test: I ran B's regression files (which encode my scenarios) and inspected effects; an independent re-attack with fresh scripts (lock-owner race under SIGSTOP, non-atomic release window, APPEND-ATOMIC) is with worker c21-sink2. C-ATT-17 and C-ATT-18 are CLOSED for the tested scenarios on 88ae6cbf.
+
+## TASK 3 (16:15:01Z): native launch path — static code audit (by C, reading orch-A/launch/launcher.py, SHA-256 fbdbea0b…) and defensive conformance tests. The classifier did NOT stop this work.
+Static audit (C's own reading): child started with env={} (no caller variable, no DYLD_*), private cwd, close_fds, new session (launcher.py:350-352); return code mapped to exit_code or signal (:418-421); decision D1 time-out, D2 signal, D3 exit code != 0, D4 stderr, D5 length, D6 empty, D7 strict parse, D8 exact rejection frame, D9 echoed ids/amount/reason, D11 exact expected frame (:209-247). The launcher does NOT set its own SIGCHLD handling (restore_signals acts on the child only).
+Tests: orch-C/c22-launch-conformance/test_process_lifecycle.py (SHA-256 b2e9ec8ecc16e23b6acc2ea61138d48d9b56ef00957dd522df30b3c75219bcfa). The test child is a harmless /bin/sh script, not the refund program; the image-identity check is off for it (pinned_cdhash=None).
+Command: cd orch-C/c22-launch-conformance && /usr/bin/python3 -B -I test_process_lifecycle.py -> EXIT 1 (run twice, same lines): 24 tests, 22 ok, 2 FAIL. Logs run1.log, run2.log.
+
+## C-LAUNCH-01 (16:15:01Z) when the caller ignores SIGCHLD, the launcher AUTHORIZES a run whose child aborted or exited non-zero after a complete frame — CONFIRMED by run, NEW (c20 saw it by reading only)
+- Failing tests: ProcessLifecycleWhenCallerIgnoresSigchld.test_abort_after_a_complete_frame_is_refused and .test_nonzero_exit_status_after_a_complete_frame_is_refused: verdict 'AUTHORIZED', expected 'REFUSED'. The same two tests PASS without SIGCHLD ignored.
+- Cause: with SIGCHLD ignored the kernel discards the child's status; Python's wait then reports return code 0; decision steps D2 and D3 see nothing.
+- Attacker power: control of how the launcher is started (its inherited signal settings). No key. The child must still write the exact expected frame, so this alone does not forge a decision; it removes the exit-status and abort checks ("a cut never decides" then rests on the output check alone).
+- Sent to A 16:15:01Z. Fix (A's work): set SIGCHLD to the default in the launcher's own start-up.
+
+## C-LAUNCH-NEG (16:15:01Z) launcher checks that HOLD (C's runs, 22 tests ok): every strict prefix of the expected frame refused; one extra byte refused; non-zero exit, signal, time-out, stderr text, overflow refused; a frame for another amount/request/charge refused; zero-amount request authorized; the child's environment is EMPTY even when the caller sets DYLD_LIBRARY_PATH and another variable; abort (SIGABRT) reported and refused; half a frame with exit 0 refused; no output refused; a child that does not end is stopped by the time limit and refused.
+- NOT covered by these tests: the real refund program, injected code at load, the code-signature check, the FFI C code itself. Those stay under C-1.
+
+## C-LAUNCH-01 RE-RUN (16:17:17Z) against A's repair orch-A/launch/launcher_v2.py (SHA-256 eec38a10…) — PASS (closed)
+- Test file updated (SHA-256 d5ceda71d243bb8df8928d62719b7ec9bcffc960f9da99264afd0adb85f2789f; the first version is kept as test_process_lifecycle_v1_as_run.py): the launcher file is a setting (C22_LAUNCHER); the test child is a /bin/bash script and the launcher's image check stays ON with the code-directory hash of /bin/bash read by the launcher's own kernel_cdhash; a refusal raised by the launcher itself counts as REFUSED; with SIGCHLD ignored an honest run may be AUTHORIZED or REFUSED (both safe).
+- Command: cd orch-C/c22-launch-conformance && C22_LAUNCHER=<file> /usr/bin/python3 -B -I test_process_lifecycle.py
+  - launcher.py (fbdbea0b…): EXIT 1 twice: 24 tests, 2 FAIL (the same two: abort and non-zero exit after a complete frame with SIGCHLD ignored -> AUTHORIZED). Logs v1-run1.log, v1-run2.log.
+  - launcher_v2.py (eec38a10…): EXIT 0 twice: 24 tests OK. With SIGCHLD ignored v2 refuses with "V2 child status unknown (ECHILD)" (it refuses the honest run too: fail closed). Logs v2-run1.log, v2-run2.log.
+- The image check with a wrong hash, the real refund program, code injected at load and the FFI C code are still NOT tested by C (C-1).

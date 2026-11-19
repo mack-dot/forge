@@ -1,0 +1,58 @@
+# owner=h-minter2 start=2026-11-19T15:59:14Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter2/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 931
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU1_no_authority.dfy
+# memory free percent: 29
+MU1_no_authority.dfy(327,2): Error: a postcondition could not be proved on this return path
+    |
+327 |   {}
+    |   ^
+
+MU1_no_authority.dfy(326,20): Related location: this is the postcondition that could not be proved
+    |
+326 |     ensures Harmless(s, v)
+    |                     ^
+
+MU1_no_authority.dfy(321,26): Related location: this proposition could not be proved
+    |
+321 |     !Admitted(s.a, s.pre) || KeyOfCall(s) != KeyOfCall(v)
+    |                           ^^
+
+MU1_no_authority.dfy(455,23): Error: a precondition for this call could not be proved
+    |
+455 |     m, s := NotAdmitted(m, a, W_FAKE, IB.T(W_FAKE, "rq_v", 0), SM.ZERO64, SM.ZERO64, HEXB);
+    |                        ^
+
+MU1_no_authority.dfy(408,13): Related location: this is the precondition that could not be proved
+    |
+408 |     requires !Admitted(a, pre) && KeyFor(a, pre, t, h) !in m
+    |              ^
+
+MU1_no_authority.dfy(589,4): Error: assertion might not hold
+    |
+589 |     assert !Admitted(calls[0].a, calls[0].pre);
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 180 verified, 3 errors
+       20.41 real        12.77 user         1.50 sys
+           209600512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48051  page reclaims
+                 716  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                1392  voluntary context switches
+              231975  involuntary context switches
+         96655533967  instructions retired
+         42658087017  cycles elapsed
+           216794384  peak memory footprint
+# end=2026-11-19T15:59:36Z
+exit 4

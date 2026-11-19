@@ -35,10 +35,10 @@ CORE = 'impl/RefundFinality.dfy'
 BINDING = 'tests/refund-finality/Bindings.dfy'
 FIXTURES = 'tests/refund-finality/fixtures'
 SUITE = 'tests/refund-finality/suite.ts'
-# The issuer's compiled module: IssueOnce (the (charge id, request id) memory rule around IssueBytes2.IssueTokenBytes,
-# which calls RefundFinality.Check and returns the body bytes to sign).
-ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
-FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+# The issuer's compiled module: IssueAuth (rule 2, night shift h-minter2: the memory rule with the authoritative stored
+# state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check and returns the body bytes to sign).
+ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
+FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
 # The sink's compiled module: ShellCoreV6 (StepQ6 decides each commit; the ShellCoreV5 fold AInit/AuditStep/AuditEnd
 # decides the start-up audit and every re-audit). It is committed at SINK_MODULE (sink.ts loads it from there);
 # this script rebuilds it and requires byte equality.
@@ -47,7 +47,7 @@ SINK_MODULE = 'ts/refund-finality/core/sinkcore-v6.cjs'
 SINK_FOOTER = (b'module.exports = { Shell6: ShellCoreV6, Shell5: ShellCoreV5, Shell4: ShellCoreV4, Shell: ShellCoreV3, '
                b'C: SinkCoreV3, F: RefundFinality, R: Refund, rt: _dafny, BigNumber };\n')
 FINALITY_CORE = ['impl/finality-core/' + name for name in
-                 ('IssueOnce.dfy', 'IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
+                 ('IssueAuth.dfy', 'IssueOnce.dfy', 'IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
                   'ShellCoreV3.dfy', 'SinkCoreV3.dfy')]
 REQUIRED = {
     'Refund.Assess (correctness)', 'Refund.Assess (well-formedness)',

@@ -1,0 +1,247 @@
+diff --git a/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts b/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts
+index 5a0fb0a0..6225668a 100644
+--- a/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts
++++ b/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts
+@@ -1,19 +1,99 @@
+-// Regression (issuer-side idempotency per request). The issuer never signs two DIFFERENT transitions for one
+-// (charge id, request id). rq_x is minted for 100 on S0 (not committed); rq_y commits; then rq_x is asked for 30 on
+-// the NEW pre-state S1: refused. Control: a fresh id on S1 issues and commits. FAILS on the earlier issuer rule
+-// (its key is the pre-state hash, so another pre-state was signed again) and with no rule ("off").
++// Regression (issuer-side idempotency per request). The issuer never signs two DIFFERENT candidates for one key.
++// Rule 2 (IssueAuth, night shift h-minter2) changed what this file can expect; it keeps its name and tests what stays true.
++// (1) NoStore mode, ONE pre-state S0: rq_x is minted for 100 (not committed); rq_y (another id, same S0) is issued and
++//     commits; rq_x for 30 on S0 (same key, other candidate bytes) is refused. FAILS on the merged per-pre-state rule
++//     (rq_y is refused: C-ATT-03) and with no rule ("off": rq_x for 30 is signed).
++// (2) Store mode (the issuer reads the sink's store): rq_x for 100 on S0 (not committed); rq_y commits; rq_x for 30 on the
++//     NEW stored state S1 is refused: "stale candidate: use a new request id" (protocol.md:64-65). A fresh id on S1 commits.
++// (3) NoStore mode on a NEW pre-state: rule 2 SIGNS rq_x on S1 (its key holds the pre-state hash). Not judged here; one
++//     line "EXPECTATION CHANGED by rule 2: ..." is printed (SINGLE_USE_2.md, OQ-H2-2). The sink commits at most one rq_x.
+ // Usage and exit codes: m_lib.ts.
+-import { argv, guard, verdict, world } from "./m_lib";
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict, world } from "./m_lib";
++// ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 50));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string) => ({
++  request: { requestId, amount, reason: "duplicate_charge" },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason: "duplicate_charge" },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
+ guard((async () => {
+   const { root, core } = argv();
+-  const S0 = { chargeId: "ch_md", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = await world(root, core, S0);
+-  const first = await w.mint(S0, "rq_x", "100");
+-  const y = await w.mint(S0, "rq_y", "200"); const cy = w.commit(y);
+-  const second = await w.mint(y.post, "rq_x", "30");
+-  const fresh = await w.mint(y.post, "rq_z", "30"); const cf = w.commit(fresh);
+-  w.stop();
+-  // On the earlier rule rq_y is refused (frozen pre-state); then y.post is not the stored state; we report it as is.
+-  verdict(first.ok && cy === "committed" && !second.ok && cf === "committed",
+-    { first: first.ok, otherRequest: cy, sameIdOtherCandidate: second.ok ? "SIGNED" : "refused: " + second.reason, freshId: cf });
++  const { E } = load(root);
++  const S0: State = { chargeId: "ch_md", original: "1000", remaining: "1000", refundEnabled: true };
++  const r: any = {};
++  {
++    const w = await world(root, core, S0);
++    const first = await w.mint(S0, "rq_x", "100");
++    const y = await w.mint(S0, "rq_y", "200");
++    const second = await w.mint(S0, "rq_x", "30");
++    r.noStoreFirst = first.ok; r.noStoreOtherRequest = w.commit(y);
++    r.noStoreSameIdSamePreOtherCandidate = second.ok ? "SIGNED" : "refused: " + second.reason;
++    const onNew = await w.mint(y.post, "rq_x", "30");
++    const c = w.commit(onNew);
++    r.noStoreSameIdNewPre = onNew.ok ? "signed; sink: " + c : c;
++    r.noStoreRqXSettled = w.sink.settled().filter((s: any) => s.request_id === "rq_x").length;
++    w.stop();
++  }
++  {
++    const path = join(tempDir(), "s.sqlite");
++    const m = await startIssuer(root, core, "on", path);
++    if (m === null) r.store = "STORE MODE NOT SUPPORTED";
++    else {
++      const sink = sinkFor(root, m.ready, S0, path);
++      await m.mint(S0, propose(S0, "rq_x", "100"));
++      const y = await m.mint(S0, propose(S0, "rq_y", "200"));
++      r.storeOtherRequest = y.ok ? sink.commit(E.tokenText(y.token)).status : "refused: " + y.reason;
++      const s1 = JSON.parse(sink.stateBlob());
++      const again = await m.mint(s1, propose(s1, "rq_x", "30"));
++      r.storeSameIdNewState = again.ok ? "SIGNED" : "refused: " + again.reason;
++      const fresh = await m.mint(s1, propose(s1, "rq_z", "30"));
++      r.storeFreshId = fresh.ok ? sink.commit(E.tokenText(fresh.token)).status : "refused: " + fresh.reason;
++      sink.close(); m.stop();
++    }
++  }
++  if (typeof r.noStoreSameIdNewPre === "string" && r.noStoreSameIdNewPre.startsWith("signed")) {
++    console.log("EXPECTATION CHANGED by rule 2: without a store the same request id on a NEW pre-state is a new key and is signed (" +
++      r.noStoreSameIdNewPre + "; rq_x settled " + r.noStoreRqXSettled + " time(s)); the Store mode refuses it (SINGLE_USE_2.md, OQ-H2-2)");
++  }
++  verdict(r.noStoreFirst === true && r.noStoreOtherRequest === "committed" && r.noStoreSameIdSamePreOtherCandidate.startsWith("refused") &&
++    r.noStoreRqXSettled <= 1 && r.storeOtherRequest === "committed" &&
++    r.storeSameIdNewState === "refused: stale candidate: use a new request id" && r.storeFreshId === "committed", r);
+ })());
+diff --git a/tests/refund-finality/suite.ts b/tests/refund-finality/suite.ts
+index 90c2c5b0..1261fcce 100644
+--- a/tests/refund-finality/suite.ts
++++ b/tests/refund-finality/suite.ts
+@@ -734,6 +734,50 @@ async function main() {
+     strict.stop();
+   }
+ 
++  // ---- h-minter2 (rule 2, IssueAuth): the issuer in STORE mode reads the sink's store (4th argument, read only).
++  // Every row above starts the issuer without a store (NoStore mode). MinterClient.start passes no store path, so these
++  // rows start the issuer process here, with the same 0x0A framing.
++  {
++    const path = join(outDir, "option-store.sqlite");
++    const child = spawn(process.execPath, ["--import", "tsx", join(GLUE, "minter.ts"), CORE, SPEC_LOCK, "on", path],
++      { cwd: ROOT, stdio: ["pipe", "pipe", "ignore"] });
++    const answers: any[] = []; let wake: (() => void) | null = null, buf = "";
++    child.stdout.on("data", (c: Buffer) => {
++      buf += c.toString("utf8");
++      for (let i = buf.indexOf("\n"); i >= 0; i = buf.indexOf("\n")) { answers.push(JSON.parse(buf.slice(0, i))); buf = buf.slice(i + 1); }
++      if (wake) { const w = wake; wake = null; w(); }
++    });
++    const nth = async (n: number): Promise<any> => {
++      const end = Date.now() + 30000;
++      while (answers.length <= n && Date.now() < end) await new Promise<void>(r => { wake = r; setTimeout(r, 100); });
++      if (answers.length <= n) throw new Error("store-mode issuer: no answer");
++      return answers[n];
++    };
++    const ready = await nth(0);
++    let n = 0;
++    const mintS = async (pre: ChargeState, t: Transition): Promise<Minted> => { n++; child.stdin.write(JSON.stringify({ id: n, pre, transition: t }) + "\n"); return nth(n); };
++    const s0 = state("opt_store");
++    const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++    sink.init(s0);
++    const fake = state("opt_store", "5", true, "5");
++    const squat = await mintS(fake, propose(fake, req("opt_victim", "0")));
++    add("option", "store mode: a zero-amount request for a victim's request id on an INVENTED pre-state (red team C-ATT-30)",
++      "refused: pre-state is not the authoritative stored state", squat.ok ? "SIGNED" : "refused: " + squat.reason,
++      !squat.ok && squat.reason === "pre-state is not the authoritative stored state");
++    const victim = await mintS(s0, propose(s0, req("opt_victim", "700")));
++    const vc = victim.ok && victim.token ? sink.commit(tokenText(victim.token)).status : "refused: " + victim.reason;
++    add("option", "store mode: then the victim's request on the stored state", "committed", vc, vc === "committed");
++    const s1 = JSON.parse(sink.stateBlob()) as ChargeState;
++    const stale = await mintS(s1, propose(s1, req("opt_victim", "100")));
++    add("option", "store mode: the settled request id with another candidate on the new stored state (completion closes it: protocol.md:61-62)",
++      "refused: attempt completed: use a new request id", stale.ok ? "SIGNED" : "refused: " + stale.reason,
++      !stale.ok && stale.reason === "attempt completed: use a new request id");
++    const zero = await mintS(s1, propose(s1, req("opt_zero", "0")));
++    const zc = zero.ok && zero.token ? sink.commit(tokenText(zero.token)).status : "refused: " + zero.reason;
++    add("option", "store mode: a zero-amount request with a new id on the new stored state", "committed", zc, zc === "committed");
++    sink.close(); child.stdin.end(); child.kill();
++  }
++
+   minter.stop();
+   const failed = rows.filter(r => !r.pass);
+   const of = (control: string) => rows.filter(r => r.control === control);
+diff --git a/scripts/exit_slice1.py b/scripts/exit_slice1.py
+index 3eea2eb0..e3daac72 100644
+--- a/scripts/exit_slice1.py
++++ b/scripts/exit_slice1.py
+@@ -35,10 +35,10 @@ CORE = 'impl/RefundFinality.dfy'
+ BINDING = 'tests/refund-finality/Bindings.dfy'
+ FIXTURES = 'tests/refund-finality/fixtures'
+ SUITE = 'tests/refund-finality/suite.ts'
+-# The issuer's compiled module: IssueOnce (the (charge id, request id) memory rule around IssueBytes2.IssueTokenBytes,
+-# which calls RefundFinality.Check and returns the body bytes to sign).
+-ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
+-FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
++# The issuer's compiled module: IssueAuth (rule 2, night shift h-minter2: the memory rule with the authoritative stored
++# state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check and returns the body bytes to sign).
++ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
++FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ # The sink's compiled module: ShellCoreV6 (StepQ6 decides each commit; the ShellCoreV5 fold AInit/AuditStep/AuditEnd
+ # decides the start-up audit and every re-audit). It is committed at SINK_MODULE (sink.ts loads it from there);
+ # this script rebuilds it and requires byte equality.
+@@ -47,7 +47,7 @@ SINK_MODULE = 'ts/refund-finality/core/sinkcore-v6.cjs'
+ SINK_FOOTER = (b'module.exports = { Shell6: ShellCoreV6, Shell5: ShellCoreV5, Shell4: ShellCoreV4, Shell: ShellCoreV3, '
+                b'C: SinkCoreV3, F: RefundFinality, R: Refund, rt: _dafny, BigNumber };\n')
+ FINALITY_CORE = ['impl/finality-core/' + name for name in
+-                 ('IssueOnce.dfy', 'IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
++                 ('IssueAuth.dfy', 'IssueOnce.dfy', 'IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
+                   'ShellCoreV3.dfy', 'SinkCoreV3.dfy')]
+ REQUIRED = {
+     'Refund.Assess (correctness)', 'Refund.Assess (well-formedness)',
+diff --git a/scripts/demo_gauntlet.py b/scripts/demo_gauntlet.py
+index 0ba2a36f..07f0ede1 100644
+--- a/scripts/demo_gauntlet.py
++++ b/scripts/demo_gauntlet.py
+@@ -62,12 +62,12 @@ ACT1 = [
+ ]
+ REFUND_CORE = 'impl/RefundFinality.dfy'
+ REFUND_FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
+-# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueOnce (the (charge id,
+-# request id) memory rule around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
++# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueAuth (rule 2: the
++# memory rule with the authoritative stored state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
+ # scripts/exit_slice1.py builds it. The Slice 1 evidence record pins only the RefundFinality module above; this module
+ # is compiled from the same RefundFinality source and is NOT in that record (its SHA-256 is reported).
+-ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
+-ISSUER_FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
++ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
++ISSUER_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ SLICE1_RECORD = 'proposals/forge2-slice1-refund-finality/records/evidence.json'
+ ISSUER = 'ts/refund-finality/minter.ts'
+ SPEC_LOCK = 'spec/refund/spec.lock'
+@@ -141,12 +141,12 @@ def compile_core(run, source, footer, name, record_path):
+ 
+ 
+ def compile_issuer_core(run):
+-    """Compiles the issuer's module (IssueOnce) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
++    """Compiles the issuer's module (IssueAuth) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
+     out = run.work / 'issuer-core'
+     out.mkdir()
+     built = run.execute([dafny.DAFNY, 'build', ISSUER_CORE, '--target', 'js', '--output', rel(out / 'model'), *dafny.OPTIONS],
+                         'compile-issuer-core')
+-    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueOnce (exit %d)' % built.returncode)
++    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueAuth (exit %d)' % built.returncode)
+     module = out / 'model.cjs'
+     module.write_bytes((out / 'model.js').read_bytes() + ISSUER_FOOTER)
+     return module, digest(module.read_bytes())
+@@ -262,7 +262,7 @@ def act2(run, flood_mib):
+     module, module_sha = compile_core(run, REFUND_CORE, REFUND_FOOTER, 'refund-core', SLICE1_RECORD)
+     say('  checker core compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
+     issuer_module, issuer_sha = compile_issuer_core(run)
+-    say('  issuer module (IssueOnce, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
++    say('  issuer module (IssueAuth, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
+     work = run.work / 'act2'
+     work.mkdir()
+     issuer = Issuer(run, issuer_module)

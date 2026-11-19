@@ -1,0 +1,47 @@
+diff --git a/scripts/exit_m1_conformance.py b/scripts/exit_m1_conformance.py
+index 01a2fcc2..06dbc632 100644
+--- a/scripts/exit_m1_conformance.py
++++ b/scripts/exit_m1_conformance.py
+@@ -56,6 +56,11 @@ REPLAY_PLAN = 'proposals/refund-executable-feasibility/m1-chain-replay-20261118/
+ REPLAY_BUDGET = 'proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/budget-phase2.json'
+ CORE = 'impl/RefundFinality.dfy'
+ ISSUER = 'ts/refund-finality/minter.ts'
++# h-minter2 (rule 2): the issuer process needs a module that exports IssueAuth (impl/finality-core/IssueAuth.dfy; the
++# memory rule around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). The Slice 1 record pins only the
++# RefundFinality module (CORE); this issuer module is built from the same RefundFinality source and is not in it.
++ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
++ISSUER_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ SPEC_LOCK = 'spec/refund/spec.lock'
+ FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
+ M1_ENVIRONMENT = {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'CML_HEAP_SIZE': '256', 'CML_STACK_SIZE': '256'}
+@@ -499,7 +504,7 @@ def run_m1(executable, inputs):
+     return records
+ 
+ 
+-def compile_core(run, source, name, verify):
++def compile_core(run, source, name, verify, footer=FOOTER):
+     out = run.work / name
+     out.mkdir()
+     options = dafny.OPTIONS if verify else ['--no-verify']
+@@ -508,7 +513,7 @@ def compile_core(run, source, name, verify):
+     require(built.returncode == 0, 'compile ' + name + ': expected exit 0, observed ' + str(built.returncode))
+     generated = (out / 'model.js').read_bytes()
+     module = out / 'model.cjs'
+-    module.write_bytes(generated + FOOTER)
++    module.write_bytes(generated + footer)
+     return module, generated
+ 
+ 
+@@ -533,7 +538,11 @@ def run_driver(run, module, typed, name):
+ def run_issuer(run, module, typed):
+     """Sends the honest transition of every finality vector to the real Slice 1 issuer process."""
+     errors = open(run.work / 'issuer.stderr', 'wb')  # a file, not a pipe: a pipe that nobody reads can block
+-    process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off'], cwd=ROOT,
++    issuer_module = getattr(run, 'issuer_module', None)
++    if issuer_module is None:  # once per run: the issuer's own module (IssueAuth), verified and compiled by the pinned Dafny
++        issuer_module, _ = compile_core(run, ISSUER_CORE, 'issuer-core', verify=True, footer=ISSUER_FOOTER)
++        run.issuer_module = issuer_module
++    process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(issuer_module), SPEC_LOCK, 'off'], cwd=ROOT,
+                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=errors)
+     answers = {}
+     try:
