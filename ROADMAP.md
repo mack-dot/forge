@@ -28,7 +28,25 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Wave Gate 1: conformance of the M1 refund executable with the Slice 1 Dafny refund checker on a finite corpus; one review with repairs; records of pull requests 47 and 48 — U458, U459, U460, U461, U462
+## Wave Gate 2: `README.md` written again as the front door; master idea items F2.7 and F3.3 (NOT STARTED); records of pull request 49 (documents only) — U463, U464
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. Documents only: `README.md`,
+`FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`. No protected file
+changed. No code file changed. No proof was run and none is claimed:
+F2.7 and F3.3 are NOT STARTED.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| the staged tree before the commit (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `README.md`, `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`; for all 91 Markdown files outside `results/` |0; 0, 0, 0, 0; 1|0 new links without a target: only the 2 older Stage 9 links; 0 protected paths among the 4 staged files |
+| any EXIT script; any Dafny, HOL or Docker process |NOT RUN|documents only; the code files are byte-equal to `e972ceb9` |
+| commit; push of branch `docs/front-door-and-v2-horizon`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected hosted result: exit 3 (UNSUPPORTED) for documents |
+
+The numbers in `README.md` are copied from the records of the named
+runs. They were not measured again for this section (U464).
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Wave Gate 1: conformance of the M1 refund executable with the Slice 1 Dafny refund checker on a finite corpus; one review with repairs; records of pull requests 47 and 48; pull request 49 merged on the owner's word as `e972ceb9` — U458, U459, U460, U461, U462, U463
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. No file of
@@ -58,6 +76,8 @@ JavaScript, no result of M1. No HOL process was started.
 | the staged tree before the commit (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the conformance report, review and owner texts; for all 91 Markdown files outside `results/`; the code and record files against the SHA-256 values of the regression record |0; 0 each (6); 1; equal|only the 2 older Stage 9 links without a target; 0 protected paths among the 34 staged files; only documents changed after the regression |
 | commit `e7ef31d4`; `git push -u origin slice4/m1-finality-conformance`; `gh pr create` (pull request 49) |0; 0|no administrator rights; the agent did not merge (U462) |
 | hosted `gate/pr_check.py`, pull request 49, head `e7ef31d4`, run 44436210874 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 35 coverage findings |
+| rows added with the Wave Gate 2 records (U463): hosted `gate/pr_check.py`, pull request 49, second head `2f9b1bdd` (documents: entry U462), run 44436453330 |3|UNSUPPORTED, as expected |
+| `gh pr merge 49 --squash --admin` (the owner's word for this one pull request: answer "Merge it for me" to a question of the agent in the session) |0|squash commit `e972ceb9`, 2026-11-19 01:25Z; OVERRIDE of the review rule and of the red gate status; `git diff --quiet origin/main 2f9b1bdd` exit 0: the tree of `main` equals the checked commit |
 
 [Conformance report](proposals/forge2-m1-conformance/REPORT.md).
 [Review text and disposition](proposals/forge2-m1-conformance/REVIEW.md).
