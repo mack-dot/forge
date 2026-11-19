@@ -1,0 +1,29 @@
+# owner=r-drafts start=2026-11-19T10:34:30Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r1
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1329
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-file <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/a4-ib2s-1.md <REPO>/results/night-shift-20261119/orch-B/r-drafts/r1/IB2S.dfy
+# memory free percent: 49
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.79 real         1.57 user         0.11 sys
+           120651776  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10333  page reclaims
+                 615  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  71  voluntary context switches
+                2408  involuntary context switches
+         12903931429  instructions retired
+          5059816745  cycles elapsed
+           110462176  peak memory footprint
+# end=2026-11-19T10:34:32Z
+exit 0

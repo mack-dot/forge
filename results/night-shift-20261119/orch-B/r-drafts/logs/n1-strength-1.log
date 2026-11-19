@@ -1,0 +1,93 @@
+# owner=r-drafts start=2026-11-19T10:17:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r1
+# power: Now drawing from 'AC Power'
+# swap free MiB: 640
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-1.csv <REPO>/results/night-shift-20261119/orch-B/r-drafts/r1/Strength.dfy
+# memory free percent: 67
+Encountered internal compilation exception: Object reference not set to an instance of an object.
+Strength.dfy(20,11): Error: Internal error occurred during verification: Object reference not set to an instance of an object.
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.BinderExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.QuantifierExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.LetExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.BinderExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.QuantifierExpr.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.Axiom.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.Program.Resolve(ResolutionContext rc)
+    at Microsoft.Boogie.Program.Resolve(CoreOptions options, IErrorSink errorSink)
+    at Microsoft.Boogie.ExecutionEngine.GetVerificationTasks(Program program, CancellationToken cancellationToken)
+    at Microsoft.Dafny.LanguageServer.Language.DafnyProgramVerifier.GetVerificationTasksAsync(ExecutionEngine engine, ResolutionResult resolution, ModuleDefinition moduleDefinition, CancellationToken cancellationToken)
+    at Microsoft.Dafny.Compilation.<>c__DisplayClass60_0.<<VerifyUnverifiedSymbol>b__1>d.MoveNext()
+ --- End of stack trace from previous location ---
+    at DafnyDriver.Commands.CliCompilation.VerifyAllLazily(Nullable`1 randomSeed)+MoveNext()
+    at Microsoft.Dafny.Compilation.VerifyUnverifiedSymbol(Boolean onlyPrepareVerificationForGutterTests, ICanVerify canVerify, ResolutionResult resolution, Func`2 taskFilter, Nullable`1 randomSeed)
+   |
+20 |   function ClaimOf(b: SM.TokenBody): F.Transition
+   |            ^^^^^^^
+
+Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.BinderExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.QuantifierExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.LetExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.NAryExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.BinderExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.QuantifierExpr.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.Axiom.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.Program.Resolve(ResolutionContext rc)
+   at Microsoft.Boogie.Program.Resolve(CoreOptions options, IErrorSink errorSink)
+   at Microsoft.Boogie.ExecutionEngine.GetVerificationTasks(Program program, CancellationToken cancellationToken)
+   at Microsoft.Dafny.LanguageServer.Language.DafnyProgramVerifier.GetVerificationTasksAsync(ExecutionEngine engine, ResolutionResult resolution, ModuleDefinition moduleDefinition, CancellationToken cancellationToken)
+   at Microsoft.Dafny.Compilation.<>c__DisplayClass60_0.<<VerifyUnverifiedSymbol>b__1>d.MoveNext()
+--- End of stack trace from previous location ---
+   at DafnyDriver.Commands.CliCompilation.VerifyAllLazily(Nullable`1 randomSeed)+MoveNext()
+   at Microsoft.Dafny.Compilation.VerifyUnverifiedSymbol(Boolean onlyPrepareVerificationForGutterTests, ICanVerify canVerify, ResolutionResult resolution, Func`2 taskFilter, Nullable`1 randomSeed)
+   at DafnyDriver.Commands.CliCompilation.VerifyAllLazily(Nullable`1 randomSeed)+System.Threading.Tasks.Sources.IValueTaskSource<System.Boolean>.GetResult()
+   at System.Linq.AsyncEnumerable.ToObservableObservable`1.<>c__DisplayClass2_0.<<Subscribe>g__Core|0>d.MoveNext() in /_/Ix.NET/Source/System.Linq.Async/System/Linq/Operators/ToObservable.cs:line 50
+--- End of stack trace from previous location ---
+   at System.Reactive.PlatformServices.ExceptionServicesImpl.Rethrow(Exception exception) in /_/Rx.NET/Source/src/System.Reactive/Internal/ExceptionServicesImpl.cs:line 16
+   at System.Reactive.ExceptionHelpers.Throw(Exception exception) in /_/Rx.NET/Source/src/System.Reactive/Internal/ExceptionServices.cs:line 14
+   at System.Reactive.Stubs.<>c.<.cctor>b__2_1(Exception ex) in /_/Rx.NET/Source/src/System.Reactive/Internal/Stubs.cs:line 16
+   at System.Reactive.AnonymousObserver`1.OnErrorCore(Exception error) in /_/Rx.NET/Source/src/System.Reactive/AnonymousObserver.cs:line 73
+   at System.Reactive.ObserverBase`1.OnError(Exception error) in /_/Rx.NET/Source/src/System.Reactive/ObserverBase.cs:line 59
+   at System.Reactive.Subjects.Subject`1.OnError(Exception error) in /_/Rx.NET/Source/src/System.Reactive/Subjects/Subject.cs:line 103
+   at System.Linq.AsyncEnumerable.ToObservableObservable`1.<>c__DisplayClass2_0.<<Subscribe>g__Core|0>d.MoveNext() in /_/Ix.NET/Source/System.Linq.Async/System/Linq/Operators/ToObservable.cs:line 60
+--- End of stack trace from previous location ---
+   at System.Linq.AsyncEnumerable.ToObservableObservable`1.<>c__DisplayClass2_0.<<Subscribe>g__Core|0>d.MoveNext() in /_/Ix.NET/Source/System.Linq.Async/System/Linq/Operators/ToObservable.cs:line 74
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.<>c.<ThrowAsync>b__128_1(Object state)
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+time: command terminated abnormally
+        1.72 real         1.48 user         0.12 sys
+           146276352  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14557  page reclaims
+                 131  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  64  voluntary context switches
+                3261  involuntary context switches
+         13345786174  instructions retired
+          4975816597  cycles elapsed
+           111559832  peak memory footprint
+# end=2026-11-19T10:17:13Z
+exit 134

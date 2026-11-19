@@ -1,0 +1,29 @@
+# owner=r-drafts start=2026-11-19T10:14:59Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r3
+# power: Now drawing from 'AC Power'
+# swap free MiB: 640
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-file <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/a3-bridge-1.md <REPO>/results/night-shift-20261119/orch-B/r-drafts/r3/Bridge.dfy
+# memory free percent: 70
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        0.70 real         0.66 user         0.05 sys
+           118472704  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9223  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  33  voluntary context switches
+                1478  involuntary context switches
+          6409371468  instructions retired
+          2217774484  cycles elapsed
+            84755584  peak memory footprint
+# end=2026-11-19T10:15:00Z
+exit 0

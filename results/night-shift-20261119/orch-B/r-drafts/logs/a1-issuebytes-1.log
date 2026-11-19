@@ -1,0 +1,29 @@
+# owner=r-drafts start=2026-11-19T10:10:40Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r1
+# power: Now drawing from 'AC Power'
+# swap free MiB: 640
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-file <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/a1-issuebytes-1.md <REPO>/results/night-shift-20261119/orch-B/r-drafts/r1/IssueBytes2.dfy
+# memory free percent: 42
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.44 real         1.31 user         0.08 sys
+           115261440  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10085  page reclaims
+                 603  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  57  voluntary context switches
+                1195  involuntary context switches
+         11757809210  instructions retired
+          4311801926  cycles elapsed
+           105284808  peak memory footprint
+# end=2026-11-19T10:10:41Z
+exit 0

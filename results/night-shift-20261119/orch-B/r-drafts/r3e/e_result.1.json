@@ -1,0 +1,140 @@
+{
+ "python": "3.9.6",
+ "results": [
+  {
+   "case": "E1 glue: x.remaining=50, d from remaining=60",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "note": "FINDING if SIGN: native checked another pre-state than Dafny; decide() cannot see it",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E2 glue: x.original=1000",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "note": "FINDING if SIGN: original/remaining/enabled are not compared",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E3 glue: x.remaining=40 (boundary), d from 60",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "note": "",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E4 d=Refuse, native authorizes",
+   "want": "DAFNY_REFUSE_NATIVE_AUTHORIZE",
+   "got": "DAFNY_REFUSE_NATIVE_AUTHORIZE",
+   "pass": true,
+   "note": "",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E5 d.amount=True, x.amount=1",
+   "want": "MISMATCH_BYTES",
+   "got": "SIGN",
+   "pass": false,
+   "note": "the field compare accepts True == 1; only the byte compare refuses",
+   "stdout": "(refund-result-v1 True 1 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E6 decide() with out-of-range x and an honest run",
+   "want": "SIGN (decide has no range check)",
+   "got": "SIGN",
+   "pass": true,
+   "note": "Bridge.dfy puts inRange inside the decision; decide.py does not"
+  },
+  {
+   "case": "E7 binary path is a symlink (last component)",
+   "want": "BINARY_OPEN_FAILED",
+   "got": "BINARY_OPEN_FAILED",
+   "pass": true,
+   "note": "",
+   "stdout": "",
+   "exit": null
+  },
+  {
+   "case": "E8 directory symlink in the path",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "note": "O_NOFOLLOW covers the last component only; content is hashed, so this is allowed",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E9 env with DYLD_INSERT_LIBRARIES",
+   "want": "ENV_NOT_ALLOWED",
+   "got": "ENV_NOT_ALLOWED",
+   "pass": true
+  },
+  {
+   "case": "E10 env CML_HEAP_SIZE=1",
+   "want": "ENV_NOT_ALLOWED",
+   "got": "ENV_NOT_ALLOWED",
+   "pass": true
+  },
+  {
+   "case": "E10b env empty (no CML_* names)",
+   "want": "LAUNCHED",
+   "got": "LAUNCHED",
+   "pass": true,
+   "note": "stdout=b'(refund-result-v1 True 40 returned_item ch_1 req_1 1)' exit=0"
+  },
+  {
+   "case": "E11 relative path",
+   "want": "PATH_NOT_ABSOLUTE",
+   "got": "PATH_NOT_ABSOLUTE",
+   "pass": true,
+   "note": "",
+   "stdout": "",
+   "exit": null
+  },
+  {
+   "case": "E-standin reopen-stdout",
+   "want": "FRAME_TRUNCATED",
+   "got": "FRAME_TRUNCATED",
+   "pass": true,
+   "note": "",
+   "stdout": "(refund-result-v1 True 40",
+   "exit": 0
+  },
+  {
+   "case": "E-standin close-early",
+   "want": "STDOUT_EMPTY",
+   "got": "STDOUT_EMPTY",
+   "pass": true,
+   "note": "",
+   "stdout": "",
+   "exit": 0
+  },
+  {
+   "case": "E-standin ignore-stdin",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "note": "",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0
+  },
+  {
+   "case": "E-standin setsid-grandchild",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "note": "",
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)",
+   "exit": 0,
+   "grandchild_alive_after_launch_returned": true
+  }
+ ]
+}

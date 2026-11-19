@@ -1,0 +1,29 @@
+# owner=r-drafts start=2026-11-19T10:14:48Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r3
+# power: Now drawing from 'AC Power'
+# swap free MiB: 640
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/v3-bridge-1.csv <REPO>/results/night-shift-20261119/orch-B/r-drafts/r3/Bridge.dfy
+# memory free percent: 70
+
+Dafny program verifier finished with 8 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/v3-bridge-1.csv
+        1.18 real         1.04 user         0.08 sys
+           125566976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12317  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  89  voluntary context switches
+                1350  involuntary context switches
+          9938617559  instructions retired
+          3544969003  cycles elapsed
+            92390504  peak memory footprint
+# end=2026-11-19T10:14:49Z
+exit 0

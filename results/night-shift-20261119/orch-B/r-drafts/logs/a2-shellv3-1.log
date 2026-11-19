@@ -1,0 +1,29 @@
+# owner=r-drafts start=2026-11-19T10:11:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 640
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-file <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/a2-shellv3-1.md <REPO>/results/night-shift-20261119/orch-B/r-drafts/r2/ShellCoreV3.dfy
+# memory free percent: 69
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.10 real         1.06 user         0.05 sys
+           131235840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10041  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  30  voluntary context switches
+                 457  involuntary context switches
+         10304841764  instructions retired
+          3519072696  cycles elapsed
+            98403480  peak memory footprint
+# end=2026-11-19T10:11:54Z
+exit 0

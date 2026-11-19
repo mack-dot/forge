@@ -1,0 +1,17 @@
+PASS E1 glue: x.remaining=50, d from remaining=60 -> SIGN  [FINDING if SIGN: native checked another pre-state than Dafny; decide() cannot see it]
+PASS E2 glue: x.original=1000 -> SIGN  [FINDING if SIGN: original/remaining/enabled are not compared]
+PASS E3 glue: x.remaining=40 (boundary), d from 60 -> SIGN
+PASS E4 d=Refuse, native authorizes -> DAFNY_REFUSE_NATIVE_AUTHORIZE
+DIFF E5 d.amount=True, x.amount=1 -> SIGN  [the field compare accepts True == 1; only the byte compare refuses]
+PASS E6 decide() with out-of-range x and an honest run -> SIGN  [Bridge.dfy puts inRange inside the decision; decide.py does not]
+PASS E7 binary path is a symlink (last component) -> BINARY_OPEN_FAILED
+PASS E8 directory symlink in the path -> SIGN  [O_NOFOLLOW covers the last component only; content is hashed, so this is allowed]
+PASS E9 env with DYLD_INSERT_LIBRARIES -> ENV_NOT_ALLOWED
+PASS E10 env CML_HEAP_SIZE=1 -> ENV_NOT_ALLOWED
+PASS E10b env empty (no CML_* names) -> LAUNCHED  [stdout=b'(refund-result-v1 True 40 returned_item ch_1 req_1 1)' exit=0]
+PASS E11 relative path -> PATH_NOT_ABSOLUTE
+PASS E-standin reopen-stdout -> FRAME_TRUNCATED
+PASS E-standin close-early -> STDOUT_EMPTY
+PASS E-standin ignore-stdin -> SIGN
+PASS E-standin setsid-grandchild -> SIGN  grandchild_alive=True
+exit 0

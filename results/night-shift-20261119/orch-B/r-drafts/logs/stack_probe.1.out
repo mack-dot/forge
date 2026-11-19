@@ -1,0 +1,15 @@
+["--stack-size=256"] {"mode":"text","n":20000,"ok":false,"err":"RangeError: Maximum call stack size exceeded"}
+[] {"mode":"text","n":20000,"ok":true,"len":20000}
+["--stack-size=256"] {"mode":"text","n":100000,"ok":false,"err":"RangeError: Maximum call stack size exceeded"}
+[] {"mode":"text","n":100000,"ok":false,"err":"RangeError: Maximum call stack size exceeded"}
+[] {"mode":"issue","n":256,"ok":true,"issued":true}
+[] {"mode":"issue","n":20000,"ok":true,"issued":false}
+[] {"mode":"issue","n":100000,"ok":false,"err":"RangeError: Maximum call stack size exceeded"}
+[] {"mode":"rows","n":10000,"set":true,"seq":10000}
+[] {"mode":"rows","n":100000,"status":null,"signal":"SIGTERM","stderr":""}
+[] {"mode":"rows","n":200000,"set":"RangeError: Maximum call stack size exceeded","seq":"RangeError: Maximum call stack size exceeded"}
+[] {"mode":"audit","n":500,"ok":true,"ms":65}
+[] {"mode":"audit","n":1000,"ok":true,"ms":247}
+[] {"mode":"audit","n":2000,"ok":true,"ms":935}
+[] {"mode":"audit","n":4000,"ok":true,"ms":3766}
+exit 0

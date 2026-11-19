@@ -1,0 +1,39 @@
+# owner=r-drafts start=2026-11-19T10:30:16Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r1
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1001
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-6.csv <REPO>/results/night-shift-20261119/orch-B/r-drafts/r1/IB2S.dfy
+# memory free percent: 55
+IB2S.dfy(269,9): Error: Verification out of resource (IssueBytes2.GlueNeeded)
+    |
+269 |   method GlueNeeded() returns (r: SM.Option<seq<uint8>>, s2: F.Charge, b: SM.TokenBody, H: map<F.Charge, string>)
+    |          ^^^^^^^^^^
+
+IB2S.dfy(298,9): Error: Verification out of resource (IssueBytes2.GlueWitness)
+    |
+298 |   method GlueWitness() returns (r: SM.Option<seq<uint8>>)
+    |          ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 135 verified, 0 errors, 2 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-6.csv
+        9.17 real         7.41 user         0.62 sys
+           211894272  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21865  page reclaims
+                  26  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 800  voluntary context switches
+               62747  involuntary context switches
+         60986949283  instructions retired
+         24174400182  cycles elapsed
+           178537696  peak memory footprint
+# end=2026-11-19T10:30:25Z
+exit 4

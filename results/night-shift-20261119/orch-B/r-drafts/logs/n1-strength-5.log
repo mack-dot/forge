@@ -1,0 +1,39 @@
+# owner=r-drafts start=2026-11-19T10:28:25Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r1
+# power: Now drawing from 'AC Power'
+# swap free MiB: 985
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-5.csv <REPO>/results/night-shift-20261119/orch-B/r-drafts/r1/IB2S.dfy
+# memory free percent: 69
+IB2S.dfy(269,9): Error: Verification out of resource (IssueBytes2.GlueNeeded)
+    |
+269 |   method GlueNeeded() returns (r: SM.Option<seq<uint8>>, s2: F.Charge, b: SM.TokenBody, H: map<F.Charge, string>)
+    |          ^^^^^^^^^^
+
+IB2S.dfy(291,9): Error: Verification out of resource (IssueBytes2.GlueWitness)
+    |
+291 |   method GlueWitness() returns (r: SM.Option<seq<uint8>>)
+    |          ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 135 verified, 0 errors, 2 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-5.csv
+        8.36 real         6.94 user         0.44 sys
+           201736192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21970  page reclaims
+                  22  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 801  voluntary context switches
+               34398  involuntary context switches
+         59485433258  instructions retired
+         22606226500  cycles elapsed
+           168346800  peak memory footprint
+# end=2026-11-19T10:28:33Z
+exit 4
