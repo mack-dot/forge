@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/home TMPDIR=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/home LANG=C node --import tsx tests/refund-finality/regress/p_full_restore_new_ids.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/tree b none 
+swap free MiB before: 
+{"test":"p_full_restore_new_ids","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","staleRemaining":"600","r4":"committed","after":[{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},{"emitted":[],"refused":["r4: in doubt: claimed by run f378644959e41a24b97aa40121d45eb4 (p"],"error":""}],"localRemainingAfter":"0","money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400","r3:100"]},"attackEvents":[{"phase":"attack","layer":"provider ceiling","detail":"r4 refused:ceiling"},{"phase":"attack","layer":"claim rule (in doubt)","detail":"dispatcher refused r4: in doubt: claimed by run f378644959e41a24b97aa40121d45eb4 (pid 4497) and its emit threw; not counted as dispatched; a person must ask the"}]}
+mode b, anchor none
+layers seen after the attack started: provider ceiling | claim rule (in doubt)
+stopped by: provider ceiling
+SAFE
+exit 0

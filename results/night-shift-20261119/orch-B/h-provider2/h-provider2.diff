@@ -1,0 +1,752 @@
+diff --git a/tests/refund-finality/provider/emit_adapter.ts b/tests/refund-finality/provider/emit_adapter.ts
+index d172f471..2f76c891 100644
+--- a/tests/refund-finality/provider/emit_adapter.ts
++++ b/tests/refund-finality/provider/emit_adapter.ts
+@@ -21,18 +21,20 @@ import { FakeProvider, ProviderError } from "./fake_provider";
+ 
+ export type EffectArg = { requestId: string; intent: string };
+ export type IntentArg = { chargeId: string; requestId: string; amount: string; reason: string };
+-export type AdapterOptions = { retries: number; journalPath: string };
++// observe (optional; h-provider2): called with every journal line after it was written (test attribution only).
++export type AdapterOptions = { retries: number; journalPath: string; observe?: (line: Record<string, unknown>) => void };
+ 
+ const keyOf = (intent: IntentArg): string => intent.requestId;   // CONTRACT CHANGE POINT (see the header)
+ const canonIntent = (i: IntentArg): string =>
+   "{" + ["amount", "chargeId", "reason", "requestId"].map(k => JSON.stringify(k) + ":" + JSON.stringify((i as any)[k])).join(",") + "}";
+ 
+-function journal(path: string, line: unknown): void {
++function journalTo(path: string, line: Record<string, unknown>): void {
+   const fd = openSync(path, "a");
+   try { writeSync(fd, JSON.stringify(line) + "\n"); fsyncSync(fd); } finally { closeSync(fd); }
+ }
+ 
+ export function makeEmit(provider: FakeProvider, opt: AdapterOptions): (effect: EffectArg, intent: IntentArg) => void {
++  const journal = (path: string, line: Record<string, unknown>): void => { journalTo(path, line); opt.observe?.(line); };
+   return (effect: EffectArg, intent: IntentArg): void => {
+     if (effect === null || intent === null || typeof effect !== "object" || typeof intent !== "object" ||
+         effect.requestId !== intent.requestId || effect.intent !== canonIntent(intent)) {
+diff --git a/tests/refund-finality/regress/p_att28_new_ledger.ts b/tests/refund-finality/regress/p_att28_new_ledger.ts
+new file mode 100644
+index 00000000..a98d87f9
+--- /dev/null
++++ b/tests/refund-finality/regress/p_att28_new_ledger.ts
+@@ -0,0 +1,28 @@
++// C-ATT-28 regression (orch-C/ATTACKS.md; orch-C/c16-hsink/hledger.ts lost-policy): a config that keeps cfg.newLedgerH0 =
++// h_0 set on EVERY run (the host cannot tell a first run from a lost ledger). r1 400 and r2 500 committed and dispatched.
++// Then <case>:
++//   ledger          : the ledger file is lost (deleted); the dispatch witness stays. A later run with an empty ledger.
++//   ledger+witness  : the ledger file AND the dispatch witness are lost (a lost dispatcher folder, or a person who removes
++//                     the witness "to bind a new ledger"); the store is intact. A later run with an empty ledger.
++// Two dispatcher runs after the loss. Expected: "ledger": the witness stops it; "ledger+witness": nothing local stops it
++// without the ledger floor; then only the provider key can. Usage: p_att28_new_ledger.ts <tree> <mode> <anchor> <case>.
++import { rmSync } from "node:fs";
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
++guard(() => {
++  const { root, mode, anchor, rest } = argv();
++  const kase = rest[0];
++  if (kase !== "ledger" && kase !== "ledger+witness") { console.error("case must be ledger or ledger+witness"); process.exit(4); }
++  const S0 = { chargeId: "ch_28", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, anchor, S0, { keepNewLedgerH0: true });
++  const r1 = w.refund("r1", "400"); const r2 = w.refund("r2", "500");
++  const f1 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && f1.error === "" && f1.emitted.join() === "r1,r2";
++  if (!setup) setupFail({ r1, r2, f1 });
++  w.atAttack();
++  const witness = w.db + ".dispatch-witness.json";
++  rmSync(w.ledger, { force: true });
++  if (kase === "ledger+witness") rmSync(witness, { force: true });
++  const after = [w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_att28_new_ledger", case: kase, after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_db_restore_new_ids.ts b/tests/refund-finality/regress/p_db_restore_new_ids.ts
+index 52da2be7..77b361b2 100644
+--- a/tests/refund-finality/regress/p_db_restore_new_ids.ts
++++ b/tests/refund-finality/regress/p_db_restore_new_ids.ts
+@@ -1,24 +1,24 @@
+-// Provider-anchor regression, the OVERPAY ROUTE of a database restore: the operator restores the database and the ledger
+-// from a backup taken after r1 (remaining 600 in the restored store; 900 was really refunded: r1 400, r2 400, r3 100).
+-// New refund requests with NEW request ids arrive; the issuer signs them on the STALE pre-state the store supplies
+-// (r4 600 = the stale remaining). No key repeats, so PROVIDER-IDEMPOTENT-KEY cannot help: only PROVIDER-CEILING can.
+-// SAFE: no request id moves money twice and money moved <= the charge. Usage and exit codes: p_lib.ts.
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++// Provider-anchor regression, the OVERPAY ROUTE of a PARTIAL database restore: the operator restores the database and the
++// ledger (NOT the dispatch witness) from a backup taken after r1 (remaining 600 in the restored store; 900 was really
++// refunded: r1 400, r2 400, r3 100). A new request r4 (a NEW request id) is signed on the STALE pre-state (r4 600 = the
++// stale remaining). No key repeats, so PROVIDER-IDEMPOTENT-KEY cannot help. At 370ff65c the dispatch witness stops the
++// dispatcher first ("CONTROL DOES NOT BITE" for mode c, anchor none); the full-restore form is p_full_restore_new_ids.ts.
++// Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pn", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0);
++  const w = world(root, mode, anchor, S0);
+   const r1 = w.refund("r1", "400"); const f1 = w.flush();
+   w.backup();
+   const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2;
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
+   w.restore("both"); w.atAttack();
+-  const stale = w.state().remaining;
+-  const r4 = w.refund("r4", "600");
++  const stale = w.state()?.remaining ?? "(no sink)";
++  const r4 = stale === "(no sink)" ? { status: "no sink (start refused)" } : w.refund("r4", stale);
+   const after = [w.flush(), w.flush()];
+-  const localRemaining = w.state().remaining;
++  const localRemaining = w.state()?.remaining ?? "(no sink)";
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2 &&
+-    stale === "600" && r4.status === "committed";
+-  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2, stale, r4 })); process.exit(3); }
+-  verdict(m.noDouble && m.withinCharge, { mode, staleRemaining: stale, r4: r4.status, after, localRemainingAfter: localRemaining, money: m });
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_db_restore_new_ids", staleRemaining: stale, r4: r4.status, after, localRemainingAfter: localRemaining, money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_db_restore_retry.ts b/tests/refund-finality/regress/p_db_restore_retry.ts
+index 301a41ad..1599acea 100644
+--- a/tests/refund-finality/regress/p_db_restore_retry.ts
++++ b/tests/refund-finality/regress/p_db_restore_retry.ts
+@@ -1,21 +1,21 @@
+-// Provider-anchor regression for C-ATT-19 mode "dir": the operator restores the database AND the co-located ledger from a
+-// backup taken after r1. The host then retries r2 and r3 with the SAME tokens (an honest retry); the restored sink commits
+-// them again; the dispatcher emits them again. SAFE: no request id moves money twice and money moved <= the charge.
+-// Usage and exit codes: p_lib.ts.
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++// Provider-anchor regression for C-ATT-19 mode "dir", PARTIAL restore: the operator restores the database AND the co-located
++// ledger (NOT the dispatch witness) from a backup taken after r1. The host then retries r2 and r3 with the SAME tokens (an
++// honest retry); without an outside head the restored sink commits them again. At 370ff65c the dispatch witness (n = 3)
++// stops the dispatcher, so mode c with anchor none is "CONTROL DOES NOT BITE" (exit 2): the full-restore form is
++// p_full_restore_retry.ts. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pd", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0);
++  const w = world(root, mode, anchor, S0);
+   const r1 = w.refund("r1", "400"); const f1 = w.flush();
+   w.backup();
+   const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2;
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
+   w.restore("both"); w.atAttack();
+   const retry = [w.commitText(r2.text), w.commitText(r3.text)];
+   const after = [w.flush(), w.flush(), w.flush()];
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2 &&
+-    retry[0] === "committed" && retry[1] === "committed";
+-  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2, retry })); process.exit(3); }
+-  verdict(m.noDouble && m.withinCharge, { mode, retry, after, money: m });
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_db_restore_retry", retry, after, money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_full_ledger_lag.ts b/tests/refund-finality/regress/p_full_ledger_lag.ts
+new file mode 100644
+index 00000000..850fd8ec
+--- /dev/null
++++ b/tests/refund-finality/regress/p_full_ledger_lag.ts
+@@ -0,0 +1,22 @@
++// FULL-RESTORE regression (C-ATT-19 "full restore", h-provider2): the backup is taken while the ledger LAGS the database:
++// r1 400 committed and dispatched; r2 400 and r3 100 committed but not yet dispatched; SNAPSHOT of every local file (sink
++// store, ledger, dispatch witness, adapter journal; list in p_lib.ts). Then the honest run dispatches r2 and r3. Then the
++// COMPLETE snapshot is restored (one consistent older state: the store holds r1..r3, the ledger and the witness claim r1
++// only) and the dispatcher runs three times. Expected without an anchor: r2 and r3 are emitted again. The outside head
++// does NOT see this (the store head is still the committed head); the ledger floor does. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
++guard(() => {
++  const { root, mode, anchor } = argv();
++  const S0 = { chargeId: "ch_fl", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, anchor, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100");
++  const snap = w.snapshotAll();
++  const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.emitted.join() === "r1" && f2.emitted.join() === "r2,r3";
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
++  const restored = w.restoreAll(); w.atAttack();
++  const after = [w.flush(), w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_full_ledger_lag", snapshot: snap, restored, sinkAfterRestore: w.sinkRefusal() || "started", after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_full_param_rebind.ts b/tests/refund-finality/regress/p_full_param_rebind.ts
+new file mode 100644
+index 00000000..cc93585d
+--- /dev/null
++++ b/tests/refund-finality/regress/p_full_param_rebind.ts
+@@ -0,0 +1,20 @@
++// FULL-RESTORE regression (h-provider2): r1 400 committed and dispatched; SNAPSHOT of every local file; r2 400 and r3 100
++// committed and dispatched; the COMPLETE snapshot is restored; the issuer (memory lost) signs r2 again with amount 500 on
++// the stale pre-state; two dispatcher runs. PROVIDER-PARAM-BINDING must refuse key r2 with other parameters inside the
++// window. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
++guard(() => {
++  const { root, mode, anchor } = argv();
++  const S0 = { chargeId: "ch_fp", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, anchor, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  const snap = w.snapshotAll();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.emitted.join() === "r1" && f2.emitted.join() === "r2,r3";
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
++  const restored = w.restoreAll(); w.atAttack();
++  const r2b = w.refund("r2", "500");
++  const after = [w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_full_param_rebind", snapshot: snap, restored, sinkAfterRestore: w.sinkRefusal() || "started", r2b: r2b.status, after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_full_restore_new_ids.ts b/tests/refund-finality/regress/p_full_restore_new_ids.ts
+new file mode 100644
+index 00000000..0a2c51ea
+--- /dev/null
++++ b/tests/refund-finality/regress/p_full_restore_new_ids.ts
+@@ -0,0 +1,24 @@
++// FULL-RESTORE regression, the OVERPAY ROUTE (h-provider2): r1 400 committed and dispatched; SNAPSHOT of every local file;
++// r2 400 and r3 100 committed and dispatched (900 really refunded); the COMPLETE snapshot is restored (stale remaining
++// 600). A NEW request id r4 for the stale remaining (600) is signed on the stale pre-state and committed; two dispatcher
++// runs. No key repeats: PROVIDER-IDEMPOTENT-KEY cannot help. Expected without an anchor: 1500 moved on a 1000 charge in
++// modes a, c, d-a; the provider ceiling refuses r4 in b and d-b. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
++guard(() => {
++  const { root, mode, anchor } = argv();
++  const S0 = { chargeId: "ch_fn", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, anchor, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  const snap = w.snapshotAll();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.emitted.join() === "r1" && f2.emitted.join() === "r2,r3";
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
++  const restored = w.restoreAll(); w.atAttack();
++  const stale = w.state()?.remaining ?? "(no sink)";
++  const r4 = stale === "(no sink)" ? { status: "no sink (start refused)" } : w.refund("r4", stale);
++  const after = [w.flush(), w.flush()];
++  const localRemaining = w.state()?.remaining ?? "(no sink)";
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_full_restore_new_ids", snapshot: snap, restored, sinkAfterRestore: w.sinkRefusal() || "started",
++    staleRemaining: stale, r4: r4.status, after, localRemainingAfter: localRemaining, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_full_restore_retry.ts b/tests/refund-finality/regress/p_full_restore_retry.ts
+new file mode 100644
+index 00000000..74f3c2c4
+--- /dev/null
++++ b/tests/refund-finality/regress/p_full_restore_retry.ts
+@@ -0,0 +1,20 @@
++// FULL-RESTORE regression (C-ATT-19 "full restore", h-provider2): r1 400 committed and dispatched; SNAPSHOT of every local
++// file; r2 400 and r3 100 committed and dispatched; the COMPLETE snapshot is restored (store, ledger, witness, adapter
++// journal all at "after r1"); the host retries r2 and r3 with the SAME tokens; three dispatcher runs. Expected without an
++// anchor: the restored sink commits r2 and r3 again and the dispatcher emits them again. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
++guard(() => {
++  const { root, mode, anchor } = argv();
++  const S0 = { chargeId: "ch_fr", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, anchor, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  const snap = w.snapshotAll();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.emitted.join() === "r1" && f2.emitted.join() === "r2,r3";
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
++  const restored = w.restoreAll(); w.atAttack();
++  const retry = [w.commitText(r2.text), w.commitText(r3.text)];
++  const after = [w.flush(), w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_full_restore_retry", snapshot: snap, restored, sinkAfterRestore: w.sinkRefusal() || "started", retry, after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_ledger_restore.ts b/tests/refund-finality/regress/p_ledger_restore.ts
+index 49a5c62d..47ccc2bf 100644
+--- a/tests/refund-finality/regress/p_ledger_restore.ts
++++ b/tests/refund-finality/regress/p_ledger_restore.ts
+@@ -1,20 +1,20 @@
+ // Provider-anchor regression for C-ATT-19 (results/night-shift-20261119/orch-C/c8-dispatcher/scripts/l3_ledger_restore.ts,
+-// mode "ledger"): an operator restores ONLY the dispatcher ledger from a backup taken after r1. The database stays current.
+-// The dispatcher at e65f9ec8 emits r2 and r3 AGAIN (its rowHead check passes: the store still extends the old ledger).
+-// The emit is the provider adapter (key = request id). Up to three dispatcher runs after the restore (a host that retries a
+-// stopped run). SAFE: no request id moves money twice and money moved <= the charge. Usage and exit codes: p_lib.ts.
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++// mode "ledger"), PARTIAL restore: an operator restores ONLY the dispatcher ledger from a backup taken after r1. The database
++// and the dispatch witness stay current. At e65f9ec8 the dispatcher emitted r2 and r3 AGAIN. At 370ff65c the dispatch witness
++// (n = 3) stops the run first. So mode c with anchor none is "CONTROL DOES NOT BITE" (exit 2) on this tree: the full-restore
++// form of this attack is p_full_ledger_lag.ts. Up to three dispatcher runs after the restore. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pl", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0);
++  const w = world(root, mode, anchor, S0);
+   const r1 = w.refund("r1", "400"); const f1 = w.flush();
+   w.backup();
+   const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.error === "" && f2.emitted.length === 2;
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
+   w.restore("ledger"); w.atAttack();
+   const after = [w.flush(), w.flush(), w.flush()];
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.error === "" && f2.emitted.length === 2;
+-  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2 })); process.exit(3); }
+-  verdict(m.noDouble && m.withinCharge, { mode, after, money: m });
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_ledger_restore", after, money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_lib.ts b/tests/refund-finality/regress/p_lib.ts
+index 1fa9130e..00c21931 100644
+--- a/tests/refund-finality/regress/p_lib.ts
++++ b/tests/refund-finality/regress/p_lib.ts
+@@ -1,38 +1,78 @@
+-// Shared helper of the provider-anchor regressions p_*.ts (night shift 2026-11-19, task h-provider). A TEST, not a proof.
++// Shared helper of the provider-anchor regressions p_*.ts (night shift 2026-11-19, tasks h-provider and h-provider2).
++// A TEST, not a proof.
+ // Usage of every p_*.ts file (pinned Node 24.3.0 first in PATH):
+-//   node --import tsx tests/refund-finality/regress/p_<name>.ts <treeRoot> <mode>
++//   node --import tsx tests/refund-finality/regress/p_<name>.ts <treeRoot> <mode> [<anchor>] [<case>]
+ // <treeRoot>: the checkout whose ts/refund-finality/{sink,dispatcher,encoding}.ts are under test.
+ // <mode>: the fake provider mode: a | b | c | d-a | d-b (tests/refund-finality/provider/fake_provider.ts).
+ //   d-a and d-b: the provider forgets a key after RETENTION ticks; the regression advances the clock past it at the
+ //   moment of the attack (a restore or a delayed retry happens AFTER the window).
+-// Exit 0: SAFE (no request id moved money twice AND the money moved per charge <= the charge amount AND the
+-// regression's own conditions). Exit 1: DEFECT. Exit 2: usage. Exit 3: the harness broke.
+-// Mode c (no idempotency, no ceiling) is the CONTROL: an attack regression must exit 1 in mode c.
++// <anchor> (default none): the LOCAL anchor that the host keeps OUTSIDE the working directory (here: a JSON file in a
++//   sibling folder that no restore touches):
++//   none  : no outside value. Only the always-on layers act (dispatch witness, h1 new-ledger rule, ledger row check).
++//   floor : dispatcher cfg.ledgerFloor = the ledgerHead of the host's last successful dispatcher run.
++//   head  : sink cfg.outsideHead {committed, pending} + cfg.onHead, kept by the FRESHNESS RULE of sink.ts
++//           (HARDENING_NOTES_2 section 2), and dispatcher cfg.expectedHead = committed.
++//   full  : floor + head.
++// WORKING DIRECTORY (<base>/local): every file that the sink, the dispatcher and the adapter write (read from the code at
++// 370ff65c): sink.sqlite; sink.sqlite-journal (SQLite rollback journal, only inside a write transaction; DELETE mode);
++// <realpath sink.sqlite>.dispatch-witness.json and its .tmp-<run> (dispatcher writeWitness); the ledger <x>ledger.jsonl,
++// <ledger>.lock, <ledger>.lock.stale-<run> (takeover), <ledger>.torn-<run> (cutTornTail); adapter-journal.jsonl (emit
++// adapter). Not written in these tests: the Sink.recover log (operator step, path chosen by the operator). The provider's
++// state (<base>/provider) and the host's anchor (<base>/outside) are NOT local: no restore touches them.
++// Exit codes. Attack regressions: 0 = SAFE (no request id moved money twice AND the money moved per charge <= the charge
++// AND the regression's own conditions); 1 = NOT STOPPED (DEFECT); 2 = CONTROL DOES NOT BITE (mode c with anchor none
++// was SAFE: the run is no evidence about the provider); 3 = the harness broke; 4 = usage.
++// Positive controls: 0 = PASS, 1 = FAIL, 3, 4 as above.
++// Every run prints "stopped by: <layer>" for the FIRST layer that refused something after the attack started, the list
++// of all layers seen, and the verdict. Layers: dispatch witness | ledger floor | outside head | h1 new-ledger rule |
++// ledger row check | claim rule (in doubt) | provider key | provider ceiling | NOT STOPPED.
+ // Tokens: a TEST Ed25519 key made in this process signs the body that an honest issuer would sign for the given
+ // pre-state (the model of tests/refund-finality/regress/harness.ts honest()). No minter process. No network.
+ import { generateKeyPairSync, sign } from "node:crypto";
+-import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
++import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join, resolve } from "node:path";
+ import { FakeProvider, ProviderMode, MODES, optionsOf } from "../provider/fake_provider";
+ import { makeEmit } from "../provider/emit_adapter";
+ 
+ export const RETENTION = 24;
++export type Anchor = "none" | "floor" | "head" | "full";
++export const ANCHORS: Anchor[] = ["none", "floor", "head", "full"];
+ export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
+-export function argv(): { root: string; mode: ProviderMode } {
+-  const [root, mode] = process.argv.slice(2);
+-  if (!root || !MODES.includes(mode as ProviderMode)) { console.error("usage: p_<name>.ts <treeRoot> a|b|c|d-a|d-b"); process.exit(2); }
+-  return { root: resolve(root), mode: mode as ProviderMode };
++export function argv(): { root: string; mode: ProviderMode; anchor: Anchor; rest: string[] } {
++  const [root, mode, anchor = "none", ...rest] = process.argv.slice(2);
++  if (!root || !MODES.includes(mode as ProviderMode) || !ANCHORS.includes(anchor as Anchor)) {
++    console.error("usage: p_<name>.ts <treeRoot> a|b|c|d-a|d-b [none|floor|head|full] [case]"); process.exit(4);
++  }
++  return { root: resolve(root), mode: mode as ProviderMode, anchor: anchor as Anchor, rest };
+ }
+ const temps: string[] = [];
+ process.on("exit", () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* best effort */ } } });
+ 
++// The names that the code may write in the working directory (see the header). A snapshot with any other name stops the
++// harness (exit 3): then this list is out of date and the "full restore" would not be full.
++const LOCAL_NAME = /^(sink\.sqlite(-journal|\.dispatch-witness\.json(\.tmp-[0-9a-f]{32})?)?|[A-Za-z0-9-]*ledger\.jsonl(\.lock(\.stale-[0-9a-f]{32})?|\.torn-[0-9a-f]{32})?|adapter-journal\.jsonl)$/;
++
++// The layer that a refusal text names. The texts are those of dispatcher.ts and sink.ts at 370ff65c.
++export function layerOf(text: string): string {
++  if (/dispatch witness|the store is bound to the ledger/.test(text)) return "dispatch witness";
++  if (/does not reach the outside anchor/.test(text)) return "ledger floor";
++  if (/cfg\.expectedHead|beyond the outside head|is not the outside head|SINK-OUTSIDE-HEAD/.test(text)) return "outside head";
++  if (/ledger is missing or empty/.test(text)) return "h1 new-ledger rule";
++  if (/do not chain to the ledger's claims/.test(text)) return "ledger row check";
++  if (/^in doubt/.test(text)) return "claim rule (in doubt)";
++  return "other: " + text.slice(0, 80);
++}
++
+ /* eslint-disable @typescript-eslint/no-require-imports */
+-export function world(root: string, mode: ProviderMode, S0: State, opts: { retries?: number } = {}) {
++export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: State, opts: { retries?: number; keepNewLedgerH0?: boolean } = {}) {
+   const E = require(join(root, "ts/refund-finality/encoding.ts"));
+   const { Sink, genesisOf } = require(join(root, "ts/refund-finality/sink.ts"));
+   const { Dispatcher } = require(join(root, "ts/refund-finality/dispatcher.ts"));
+-  const dir = mkdtempSync(join(tmpdir(), "forge-p-")); temps.push(dir);
++  const base = mkdtempSync(join(tmpdir(), "forge-p-")); temps.push(base);
++  const dir = join(base, "local"), outsideDir = join(base, "outside"), snapDir = join(base, "snapshot"), bakDir = join(base, "bak");
++  for (const d of [dir, outsideDir, join(base, "provider"), bakDir]) mkdirSync(d);
++  const useHead = anchor === "head" || anchor === "full", useFloor = anchor === "floor" || anchor === "full";
+   const keys = generateKeyPairSync("ed25519");
+   const ids = { publicKeyPem: keys.publicKey.export({ type: "spki", format: "pem" }) as string,
+     specLockSha256: E.sha256hex("h-provider test spec lock"), checkerSha256: E.sha256hex("h-provider test checker") };
+@@ -40,46 +80,120 @@ export function world(root: string, mode: ProviderMode, S0: State, opts: { retri
+   const dcfg: any = { ...ids, initialStateSha256: E.stateSha256(S0) };
+   const genesis: string = genesisOf(E.canon(S0), ids.specLockSha256, ids.checkerSha256, ids.publicKeyPem);
+   const db = join(dir, "sink.sqlite"), ledger = join(dir, "dispatch-ledger.jsonl"), journalPath = join(dir, "adapter-journal.jsonl");
+-  const provider = FakeProvider.create(join(dir, "provider-state.json"), optionsOf(mode, RETENTION), { [S0.chargeId]: S0.original });
+-  let sink = new Sink(db, cfg); sink.init(S0);
++  const provider = FakeProvider.create(join(base, "provider", "provider-state.json"), optionsOf(mode, RETENTION), { [S0.chargeId]: S0.original });
++  // The host's outside record (ANCHOR-OUTSIDE: never restored with the working directory).
++  const outsidePath = join(outsideDir, "anchor.json");
++  const outside = { read: (): any => JSON.parse(readFileSync(outsidePath, "utf8")), write: (o: any): void => writeFileSync(outsidePath, JSON.stringify(o)) };
++  outside.write({ committed: { count: 0, chainHash: genesis } });
++  // Events: every refusal by any layer, with the phase. Attribution uses the events after the attack started.
++  let phase: "setup" | "attack" = "setup";
++  const events: { phase: string; layer: string; detail: string }[] = [];
++  const note = (layer: string, detail: string): void => { events.push({ phase, layer, detail: detail.slice(0, 160) }); };
++  const markAttack = (): void => { phase = "attack"; };
++  const sinkCfg = (): any => {
++    if (!useHead) return cfg;
++    const o = outside.read();
++    return { ...cfg, outsideHead: { committed: o.committed, ...(o.pending ? { pending: o.pending } : {}) },
++      onHead: (h: any) => { const x = outside.read(); x.pending = h; outside.write(x); } };   // FRESHNESS RULE (1)
++  };
++  let sink: any = null, sinkRefusal = "";
++  const openSink = (): void => {
++    try { sink = new Sink(db, sinkCfg()); sinkRefusal = ""; } catch (e) {
++      sink = null; sinkRefusal = String((e as Error).message);
++      let layer = layerOf(sinkRefusal);
++      // The sink's text does not always name the outside head (a store that does not EXTEND committed gives the plain
++      // "start-up audit ... is false"). Probe: the same file opens WITHOUT outsideHead -> the outside head refused it.
++      if (useHead && layer.startsWith("other")) {
++        try { const p = new Sink(db, cfg); p.close(); layer = "outside head"; sinkRefusal += " [SINK-OUTSIDE-HEAD: the store opens without cfg.outsideHead]"; } catch { /* another cause */ }
++      }
++      note(layer, "sink start: " + sinkRefusal);
++    }
++  };
++  openSink(); sink.init(S0);
+   let retries = opts.retries ?? 0;
+-  const emit = makeEmit(provider, { get retries() { return retries; }, journalPath } as any);
++  const observe = (line: any): void => {
++    const o = String(line.outcome);
++    if (o === "replayed" || o === "refused:param_mismatch") note("provider key", line.requestId + " " + o);
++    else if (o === "refused:ceiling") note("provider ceiling", line.requestId + " " + o);
++  };
++  const emit = makeEmit(provider, { get retries() { return retries; }, journalPath, observe } as any);
+   const token = (pre: State, requestId: string, amount: string, reason = "returned_item"): string => {
+     const post = { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
+     const body = { domain: E.DOMAIN, ...{ specLockSha256: ids.specLockSha256, checkerSha256: ids.checkerSha256 },
+       preStateSha256: E.stateSha256(pre), requestId, post, intent: { chargeId: pre.chargeId, requestId, amount, reason } };
+     return E.canon({ body, signature: sign(null, E.signedBytes(body), keys.privateKey).toString("base64") });
+   };
+-  const state = (): State => JSON.parse(sink.stateBlob());
+-  const commitText = (text: string): string => { try { return String(sink.commit(text).status); } catch (e) { return "threw: " + (e as Error).message; } };
++  const state = (): State | null => sink === null ? null : JSON.parse(sink.stateBlob());
++  const commitText = (text: string): string => {
++    if (sink === null) return "no sink (start refused)";
++    try {
++      const r = sink.commit(text);
++      if (r.status === "committed" && useHead) { const o = outside.read(); o.committed = r.head; delete o.pending; outside.write(o); }   // FRESHNESS RULE (2)
++      return String(r.status) + (r.status === "rejected" ? ": " + String(r.reason).slice(0, 80) : "");
++    } catch (e) { return "threw: " + (e as Error).message; }
++  };
+   // An honest refund on the CURRENT stored state (the issuer signs whatever pre-state the store supplies).
+   const refund = (requestId: string, amount: string): { text: string; status: string } => {
+-    const text = token(state(), requestId, amount); return { text, status: commitText(text) };
++    const s = state();
++    if (s === null) return { text: "", status: "no sink (start refused)" };
++    const text = token(s, requestId, amount); return { text, status: commitText(text) };
+   };
+   // One dispatcher run with the provider adapter. Errors are returned, not thrown. The honest operator declares the
+   // FIRST run of the main ledger a new ledger (cfg.newLedgerH0 = h_0, the h1 rule) only while that file is missing or
+-  // empty; every other run uses the plain config unless the regression passes `extra`.
+-  const flush = (ledgerPath = ledger, extra: any = {}): { emitted: string[]; error: string } => {
+-    if (ledgerPath === ledger && (!existsSync(ledger) || statSync(ledger).size === 0) && !("newLedgerH0" in extra)) extra = { newLedgerH0: genesis };
++  // empty, unless opts.keepNewLedgerH0 (C-ATT-28: the field is left set on every run). The anchor fields come from the
++  // host's outside record; after a run that returns, the host stores result.ledgerHead (main ledger only).
++  const flush = (ledgerPath = ledger, extra: any = {}): { emitted: string[]; refused: string[]; error: string } => {
++    const o = outside.read(), c: any = { ...dcfg };
++    if (opts.keepNewLedgerH0) c.newLedgerH0 = genesis;
++    else if (ledgerPath === ledger && (!existsSync(ledger) || statSync(ledger).size === 0) && !("newLedgerH0" in extra)) c.newLedgerH0 = genesis;
++    if (useHead) c.expectedHead = o.committed;                     // FRESHNESS RULE (4)
++    if (useFloor && o.ledgerHead !== undefined) c.ledgerFloor = o.ledgerHead;
+     try {
+-      const r = new Dispatcher(db, ledgerPath, { ...dcfg, ...extra }, emit).flush();
+-      return { emitted: r.emitted.map((e: any) => e.requestId), error: "" };
+-    } catch (e) { return { emitted: [], error: String((e as Error).message).slice(0, 140) }; }
++      const r = new Dispatcher(db, ledgerPath, { ...c, ...extra }, emit).flush();
++      for (const x of r.refused) note(layerOf(x.reason), "dispatcher refused " + x.requestId + ": " + x.reason);
++      if (ledgerPath === ledger && r.ledgerHead !== undefined) { const p = outside.read(); p.ledgerHead = r.ledgerHead; outside.write(p); }
++      return { emitted: r.emitted.map((e: any) => e.requestId), refused: r.refused.map((x: any) => x.requestId + ": " + String(x.reason).slice(0, 60)), error: "" };
++    } catch (e) {
++      const m = String((e as Error).message);
++      if (!/^provider /.test(m)) note(layerOf(m), "dispatcher stopped: " + m);
++      return { emitted: [], refused: [], error: m.slice(0, 140) };
++    }
++  };
++  const closeSink = (): void => { if (sink !== null) { try { sink.close(); } catch { /* closed */ } } sink = null; };
++  const localFiles = (): string[] => readdirSync(dir).sort();
++  // FULL snapshot: every file in the working directory (checked against LOCAL_NAME), with the sink closed.
++  const snapshotAll = (): string[] => {
++    closeSink();
++    const names = localFiles(), unknown = names.filter(n => !LOCAL_NAME.test(n));
++    if (unknown.length > 0) throw new Error("unknown local file(s): " + unknown.join(", ") + " (the full-restore list is out of date)");
++    rmSync(snapDir, { recursive: true, force: true }); mkdirSync(snapDir);
++    for (const n of names) copyFileSync(join(dir, n), join(snapDir, n));
++    openSink();
++    return names;
+   };
+-  const files = [db, ledger];
+-  const backup = (): void => { sink.close(); for (const f of files) if (existsSync(f)) copyFileSync(f, f + ".bak"); sink = new Sink(db, cfg); };
++  // FULL restore: delete EVERY file in the working directory, copy the snapshot back, start the sink again.
++  const restoreAll = (): string[] => {
++    closeSink(); markAttack();
++    for (const n of localFiles()) rmSync(join(dir, n), { force: true });
++    for (const n of readdirSync(snapDir)) copyFileSync(join(snapDir, n), join(dir, n));
++    openSink();
++    return localFiles();
++  };
++  // PARTIAL backup/restore (the h-provider regressions): the database and the main ledger only, NOT the witness.
++  const backup = (): void => { closeSink(); for (const f of [db, ledger]) if (existsSync(f)) copyFileSync(f, join(bakDir, f === db ? "db" : "ledger")); openSink(); };
+   const restore = (which: "ledger" | "both"): void => {
+-    sink.close();
+-    if (which === "both") { copyFileSync(db + ".bak", db); for (const x of ["-wal", "-shm", "-journal"]) if (existsSync(db + x)) rmSync(db + x); }
+-    copyFileSync(ledger + ".bak", ledger);
+-    sink = new Sink(db, cfg);   // the sink's start-up audit: a restored older store starts (documented limit X6-P1)
++    closeSink(); markAttack();
++    if (which === "both") { copyFileSync(join(bakDir, "db"), db); for (const x of ["-wal", "-shm", "-journal"]) if (existsSync(db + x)) rmSync(db + x); }
++    copyFileSync(join(bakDir, "ledger"), ledger);
++    openSink();   // without an outside head a restored older store starts (documented limit X6-P1)
+   };
+-  const atAttack = (): void => { if (mode === "d-a" || mode === "d-b") provider.advance(RETENTION); };
++  const atAttack = (): void => { markAttack(); if (mode === "d-a" || mode === "d-b") provider.advance(RETENTION); };
+   const outboxIntents = (): { requestId: string; intent: any }[] =>
+-    sink.outbox().map((r: any) => ({ requestId: r.request_id, intent: JSON.parse(r.intent) }));
+-  const stop = (): void => { try { sink.close(); } catch { /* closed */ } };
+-  return { E, dir, db, ledger, journalPath, genesis, provider, emit, token, state, commitText, refund, flush, backup, restore,
+-    atAttack, outboxIntents, stop, setRetries: (n: number) => { retries = n; } };
++    sink === null ? [] : sink.outbox().map((r: any) => ({ requestId: r.request_id, intent: JSON.parse(r.intent) }));
++  const reopen = (): void => { closeSink(); openSink(); };
++  return { E, dir, base, db, ledger, journalPath, genesis, provider, emit, token, state, commitText, refund, flush, backup, restore,
++    snapshotAll, restoreAll, atAttack, markAttack, outboxIntents, reopen, outside, events,
++    sinkRefusal: () => sinkRefusal, sinkUp: () => sink !== null, stop: closeSink, setRetries: (n: number) => { retries = n; } };
+ }
+ /* eslint-enable @typescript-eslint/no-require-imports */
+ 
+@@ -91,9 +205,22 @@ export function moneyCheck(provider: FakeProvider, chargeId: string, chargeAmoun
+   return { total: total.toString(), charge: chargeAmount, withinCharge: total <= BigInt(chargeAmount), twice, noDouble: twice.length === 0,
+     movements: provider.movements().map(m => m.key + ":" + m.amount) };
+ }
+-export function verdict(safe: boolean, detail: unknown): never {
++// Attack verdict with the layer attribution and the control rule (see the header).
++export function attackVerdict(mode: ProviderMode, anchor: Anchor, safe: boolean, events: { phase: string; layer: string; detail: string }[], detail: unknown): never {
++  const seen: string[] = [];
++  for (const e of events) if (e.phase === "attack" && !seen.includes(e.layer)) seen.push(e.layer);
++  console.log(JSON.stringify({ ...(detail as object), attackEvents: events.filter(e => e.phase === "attack") }));
++  console.log("mode " + mode + ", anchor " + anchor);
++  console.log("layers seen after the attack started: " + (seen.length > 0 ? seen.join(" | ") : "(none)"));
++  if (!safe) { console.log("stopped by: NOT STOPPED" + (seen.length > 0 ? " (partial refusals: " + seen.join(" | ") + ")" : "")); console.log("DEFECT"); process.exit(1); }
++  console.log("stopped by: " + (seen.length > 0 ? seen[0] : "NO LAYER SEEN (the attack did not reach any layer)"));
++  if (mode === "c" && anchor === "none") { console.log("CONTROL DOES NOT BITE"); process.exit(2); }
++  console.log("SAFE"); process.exit(0);
++}
++export function positiveVerdict(ok: boolean, detail: unknown): never {
+   console.log(JSON.stringify(detail));
+-  console.log(safe ? "SAFE" : "DEFECT");
+-  process.exit(safe ? 0 : 1);
++  console.log(ok ? "positive control: PASS" : "positive control: FAIL");
++  process.exit(ok ? 0 : 1);
+ }
++export function setupFail(detail: unknown): never { console.error("SETUP FAILED " + JSON.stringify(detail)); process.exit(3); }
+ export function guard(f: () => void): void { try { f(); } catch (e) { console.error(e); process.exit(3); } }
+diff --git a/tests/refund-finality/regress/p_param_rebind.ts b/tests/refund-finality/regress/p_param_rebind.ts
+index b021d433..f77dddd1 100644
+--- a/tests/refund-finality/regress/p_param_rebind.ts
++++ b/tests/refund-finality/regress/p_param_rebind.ts
+@@ -1,21 +1,20 @@
+-// Provider-anchor regression: the same request id with OTHER parameters. The operator restores the database and the
+-// ledger from a backup taken after r1; the host sends r2 again, but the issuer (memory lost at restart) signs r2 with
+-// amount 500 on the stale pre-state. The store commits it; the dispatcher emits r2 with amount 500.
+-// PROVIDER-PARAM-BINDING must refuse it (the key r2 was used with amount 400). SAFE: no request id moves money twice
+-// and money moved <= the charge. Usage and exit codes: p_lib.ts.
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++// Provider-anchor regression: the same request id with OTHER parameters, after a PARTIAL restore (database and ledger, NOT the
++// dispatch witness) from a backup taken after r1. The issuer (memory lost at restart) signs r2 with amount 500 on the stale
++// pre-state. At 370ff65c the dispatch witness stops the dispatcher first ("CONTROL DOES NOT BITE" for mode c, anchor none);
++// the full-restore form is p_full_param_rebind.ts. Usage and exit codes: p_lib.ts.
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pp", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0);
++  const w = world(root, mode, anchor, S0);
+   const r1 = w.refund("r1", "400"); const f1 = w.flush();
+   w.backup();
+   const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2;
++  if (!setup) setupFail({ r1, r2, r3, f1, f2 });
+   w.restore("both"); w.atAttack();
+   const r2b = w.refund("r2", "500");
+   const after = [w.flush(), w.flush()];
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2 && r2b.status === "committed";
+-  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2, r2b })); process.exit(3); }
+-  verdict(m.noDouble && m.withinCharge, { mode, r2b: r2b.status, after, money: m });
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_param_rebind", r2b: r2b.status, after, money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_provider_faults.ts b/tests/refund-finality/regress/p_provider_faults.ts
+index 40403e62..b550532a 100644
+--- a/tests/refund-finality/regress/p_provider_faults.ts
++++ b/tests/refund-finality/regress/p_provider_faults.ts
+@@ -1,15 +1,15 @@
+-// Provider-anchor regression: faults that are NOT a double-payment attack. Expected SAFE in every mode (control c too).
++// Provider-anchor POSITIVE CONTROL: faults that are NOT a double-payment attack. Expected PASS in every mode and anchor.
+ // (1) crash before the money moved for r1: the adapter retries (retries 1) with the same key: r1 moves money once.
+ // (2) a refusal for r2: the adapter throws; the dispatcher run stops; r2 is not in `emitted`; the adapter journal says
+-//     refused; no money moved for r2 (the record is truthful). (3) A later run sends r3 (r2 stays "attempt started" in
+-// the ledger: a person must reconcile it). SAFE also requires the journal to match the provider's movements.
+-// Usage and exit codes: p_lib.ts.
++//     refused; no money moved for r2 (the record is truthful). (3) A later run sends r3 and reports r2 "in doubt" (claim
++//     rule of the dispatcher at 370ff65c: a person must resolve it). PASS also requires the journal to match the
++//     provider's movements. Usage and exit codes: p_lib.ts.
+ import { readFileSync } from "node:fs";
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++import { argv, guard, moneyCheck, positiveVerdict, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pf", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0, { retries: 1 });
++  const w = world(root, mode, anchor, S0, { retries: 1 });
+   const r1 = w.refund("r1", "300"); w.provider.inject("r1", "crash_before_money");
+   const f1 = w.flush();
+   const r2 = w.refund("r2", "300"); w.provider.inject("r2", "refuse");
+@@ -22,6 +22,6 @@ guard(() => {
+   const truthful = [...final].every(([rid, out]) => (out === "paid" || out === "replayed") === moved.has(rid)) &&
+     final.get("r2") === "refused:refused" && !moved.has("r2");
+   const ok = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" &&
+-    f1.emitted.join() === "r1" && f2.error !== "" && f3.emitted.join() === "r3";
+-  verdict(m.noDouble && m.withinCharge && truthful && ok, { mode, f1, f2, f3, journal: [...final], money: m });
++    f1.emitted.join() === "r1" && f2.error !== "" && f3.emitted.join() === "r3" && f3.refused.some(x => x.startsWith("r2: in doubt"));
++  positiveVerdict(m.noDouble && m.withinCharge && truthful && ok, { test: "p_provider_faults", mode, anchor, f1, f2, f3, journal: [...final], money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_second_ledger.ts b/tests/refund-finality/regress/p_second_ledger.ts
+index fc223b5e..9465175b 100644
+--- a/tests/refund-finality/regress/p_second_ledger.ts
++++ b/tests/refund-finality/regress/p_second_ledger.ts
+@@ -1,22 +1,22 @@
+-// Provider-anchor regression for C-HOST-05 (orch-C/c11-host/h7_relative_ledger.sh): a second dispatcher ledger for the
+-// same database (a relative ledger path started from another working directory). Case 1: the plain config. At e65f9ec8
+-// the h1 rule stops a NEW empty ledger on a store with committed rows (alarm; nothing sent). Case 2: the config also
+-// carries newLedgerH0 = the store's h_0 (an operator who once declared a new ledger and left the field in place): the
+-// second ledger is accepted and every committed refund is emitted again. SAFE: no request id moves money twice and
+-// money moved <= the charge. Usage and exit codes: p_lib.ts.
++// Provider-anchor regression for C-HOST-05 (orch-C/c11-host/h7_relative_ledger.sh): a second dispatcher ledger for the same
++// database (a relative ledger path started from another working directory). Case 1: the plain config (the h1 rule and the
++// witness). Case 2: the config also carries newLedgerH0 = the store's h_0 (C-ATT-28: an operator who once declared a new
++// ledger and left the field in place). At 370ff65c the dispatch witness binds the store to the first ledger and stops both
++// cases ("CONTROL DOES NOT BITE" for mode c, anchor none). The biting C-ATT-28 form (ledger AND witness lost) is
++// p_att28_new_ledger.ts. Usage and exit codes: p_lib.ts.
+ import { join } from "node:path";
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_ps", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0);
++  const w = world(root, mode, anchor, S0);
+   const r1 = w.refund("r1", "400"); const r2 = w.refund("r2", "500");
+   const fA = w.flush();
++  const setup = r1.status === "committed" && r2.status === "committed" && fA.error === "" && fA.emitted.length === 2;
++  if (!setup) setupFail({ r1, r2, fA });
+   w.atAttack();
+   const plain = w.flush(join(w.dir, "cwdB-ledger.jsonl"));
+   const declared = w.flush(join(w.dir, "cwdC-ledger.jsonl"), { newLedgerH0: w.genesis });
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const setup = r1.status === "committed" && r2.status === "committed" && fA.error === "" && fA.emitted.length === 2;
+-  if (!setup) { console.error(JSON.stringify({ r1, r2, fA })); process.exit(3); }
+-  verdict(m.noDouble && m.withinCharge, { mode, plainSecondLedger: plain, declaredNewLedger: declared, money: m });
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge, w.events, { test: "p_second_ledger", plainSecondLedger: plain, declaredNewLedger: declared, money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_timeout_retry.ts b/tests/refund-finality/regress/p_timeout_retry.ts
+index 99eea7ee..a9df8801 100644
+--- a/tests/refund-finality/regress/p_timeout_retry.ts
++++ b/tests/refund-finality/regress/p_timeout_retry.ts
+@@ -1,14 +1,15 @@
+ // Provider-anchor regression: a provider timeout AFTER the money moved (the caller sees an error).
+ // Phase 1 (immediate retry): r1 400; the adapter retries once with the same key and parameters inside the same emit.
+ // Phase 2 (delayed retry): r2 400 times out; the adapter does not retry (retries 0); the dispatcher run stops with an
+-// error; its ledger already holds r2 (line before effect), so no later run re-emits r2. A person reconciles: calls the
+-// adapter again with the outbox row of r2. In modes d-a and d-b this happens AFTER the key retention window.
++// error; its ledger already holds the claim of r2 (line before effect), so later runs report r2 "in doubt" and never
++// re-emit it. A person reconciles: calls the adapter again with the outbox row of r2 (the receiver was not asked first).
++// In modes d-a and d-b this happens AFTER the key retention window. No restore: the local anchor plays no part.
+ // SAFE: no request id moves money twice and money moved <= the charge. Usage and exit codes: p_lib.ts.
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++import { argv, attackVerdict, guard, moneyCheck, setupFail, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pt", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0, { retries: 1 });
++  const w = world(root, mode, anchor, S0, { retries: 1 });
+   const r1 = w.refund("r1", "400");
+   w.provider.inject("r1", "timeout_after_money");
+   const f1 = w.flush();
+@@ -16,13 +17,13 @@ guard(() => {
+   w.provider.inject("r2", "timeout_after_money");
+   w.setRetries(0);
+   const f2 = w.flush();
+-  const f3 = w.flush();                     // the dispatcher alone does not send r2 again
++  const f3 = w.flush();                     // the dispatcher alone does not send r2 again (in doubt)
++  const setup = r1.status === "committed" && r2.status === "committed" && f2.error !== "" && f3.emitted.length === 0;
++  if (!setup) setupFail({ r1, r2, f1, f2, f3 });
+   w.atAttack();
+   const row = w.outboxIntents().find(r => r.requestId === "r2")!;
+   let reconcile = "returned";
+   try { w.emit({ requestId: row.requestId, intent: w.E.canon(row.intent) }, row.intent); } catch (e) { reconcile = "threw: " + (e as Error).message; }
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const setup = r1.status === "committed" && r2.status === "committed" && f2.error !== "" && f3.emitted.length === 0;
+-  if (!setup) { console.error(JSON.stringify({ r1, r2, f1, f2, f3 })); process.exit(3); }
+-  verdict(m.noDouble && m.withinCharge && f1.error === "" , { mode, phase1: f1, phase2: f2, rerun: f3, reconcile, money: m });
++  attackVerdict(mode, anchor, m.noDouble && m.withinCharge && f1.error === "", w.events, { test: "p_timeout_retry", phase1: f1, phase2: f2, rerun: f3, reconcile, money: m });
+ });
+diff --git a/tests/refund-finality/regress/p_zero_amount.ts b/tests/refund-finality/regress/p_zero_amount.ts
+index 7c30d407..1cb4de1e 100644
+--- a/tests/refund-finality/regress/p_zero_amount.ts
++++ b/tests/refund-finality/regress/p_zero_amount.ts
+@@ -1,18 +1,30 @@
+-// Provider-anchor POSITIVE CONTROL: zero-amount refunds stay legitimate end to end (spec/refund/protocol.md).
+-// z1 0, z2 0, then r1 100 on one charge: all commit, all are emitted. The adapter makes NO provider call for a zero
+-// amount (the fake provider refuses zero, as many real providers do) and writes a "zero-recorded" journal line.
+-// SAFE: 3 emitted, exactly 1 provider call and 1 movement (r1 100), 2 zero-recorded lines. Usage and exit codes: p_lib.ts.
++// Provider-anchor POSITIVE CONTROL: zero-amount refunds and an honest flow stay legitimate end to end
++// (spec/refund/protocol.md), in every provider mode and with every anchor setting.
++// z1 0, z2 0, r1 100, run; r2 200, z3 0, run; a run with nothing new; a sink restart (the host passes its outside head
++// when the anchor has one); z4 0, r3 50, run. All commit, every row is emitted exactly once, and the adapter makes NO
++// provider call for a zero amount (the fake provider refuses zero, as many real providers do; "zero-recorded" journal
++// line). PASS: 7 emitted once each, 3 provider calls, 3 movements (350), 4 zero-recorded lines, no refusal by any layer.
++// Usage and exit codes: p_lib.ts.
+ import { readFileSync } from "node:fs";
+-import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++import { argv, guard, moneyCheck, positiveVerdict, world } from "./p_lib";
+ guard(() => {
+-  const { root, mode } = argv();
++  const { root, mode, anchor } = argv();
+   const S0 = { chargeId: "ch_pz", original: "1000", remaining: "1000", refundEnabled: true };
+-  const w = world(root, mode, S0);
+-  const c = [w.refund("z1", "0").status, w.refund("z2", "0").status, w.refund("r1", "100").status];
+-  const f = w.flush();
++  const w = world(root, mode, anchor, S0);
++  const c1 = [w.refund("z1", "0").status, w.refund("z2", "0").status, w.refund("r1", "100").status];
++  const f1 = w.flush();
++  const c2 = [w.refund("r2", "200").status, w.refund("z3", "0").status];
++  const f2 = w.flush(); const f3 = w.flush();
++  w.reopen();
++  const up = w.sinkUp();
++  const c3 = [w.refund("z4", "0").status, w.refund("r3", "50").status];
++  const f4 = w.flush();
+   const zero = readFileSync(w.journalPath, "utf8").trim().split("\n").map(l => JSON.parse(l)).filter(j => j.outcome === "zero-recorded").length;
+   const calls = w.provider.calls();
+   const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
+-  const ok = c.every(s => s === "committed") && f.error === "" && f.emitted.join() === "z1,z2,r1" && calls === 1 && zero === 2 && m.total === "100";
+-  verdict(ok && m.noDouble && m.withinCharge, { mode, commits: c, flush: f, providerCalls: calls, zeroRecorded: zero, money: m });
++  const emitted = [...f1.emitted, ...f2.emitted, ...f3.emitted, ...f4.emitted];
++  const ok = [...c1, ...c2, ...c3].every(s => s === "committed") && up && [f1, f2, f3, f4].every(f => f.error === "" && f.refused.length === 0) &&
++    emitted.join() === "z1,z2,r1,r2,z3,z4,r3" && calls === 3 && zero === 4 && m.total === "350" && w.events.length === 0;
++  positiveVerdict(ok && m.noDouble && m.withinCharge, { test: "p_zero_amount", mode, anchor, commits: [...c1, ...c2, ...c3], sinkRestart: up, emitted, providerCalls: calls,
++    zeroRecorded: zero, events: w.events, money: m });
+ });

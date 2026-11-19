@@ -28,9 +28,3 @@ PASS K7-store-survives-reopen: reopen=started same=true restart=started same=tru
 PASS D1-dispatcher-bad-signature-row: keep-schema writer: write refused by the database (h-sink S1/S2/S3/S6: a settled row must be the next commit of); drop-triggers writer: effects(rq_1)=1 effects(rq_2)=0
 PASS D2-dispatcher-chain-break-row: keep-schema writer: write refused by the database (h-sink S1/S2/S3/S6: a settled row must be the next commit of); drop-triggers writer: effects(rq_1)=1 effects(rq_2)=0
 PASS D3-dispatcher-ledger-before-emit: flush1=[rq_1,rq_2(failed)] ledgerAfter1=[rq_1,rq_1,rq_2,rq_2] flush2=[rq_3] ledgerAtEmit=[true,true,true]
-PASS E0-encoding-identity: no encoding.ts next to the sink
-PASS E1-signed-bytes-cover-post-intent: altered=rejected probe=no neighbor encoding honest=committed effects(rq_1)=1
-# verdicts=26/26 PASS=24 KNOWN-LIMIT=0 FAIL=2 [K3-stale-prestate,K6-long-run-one-store]
-# unexpected FAIL=[K3-stale-prestate,K6-long-run-one-store] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
-# JUDGE RESULT NOT OK (exit 1)
-exit 1

@@ -1,0 +1,203 @@
+# node v24.3.0 | Now drawing from 'AC Power' | 2026-11-19T16:28:32Z | tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/tree
+test	case	anchor	mode	exit	stopped_by
+p_zero_amount	-	none	a	0	positive control: PASS
+p_zero_amount	-	none	b	0	positive control: PASS
+p_zero_amount	-	none	c	0	positive control: PASS
+p_zero_amount	-	none	d-a	0	positive control: PASS
+p_zero_amount	-	none	d-b	0	positive control: PASS
+p_zero_amount	-	full	a	0	positive control: PASS
+p_zero_amount	-	full	b	0	positive control: PASS
+p_zero_amount	-	full	c	0	positive control: PASS
+p_zero_amount	-	full	d-a	0	positive control: PASS
+p_zero_amount	-	full	d-b	0	positive control: PASS
+p_provider_faults	-	none	a	0	positive control: PASS
+p_provider_faults	-	none	b	0	positive control: PASS
+p_provider_faults	-	none	c	0	positive control: PASS
+p_provider_faults	-	none	d-a	0	positive control: PASS
+p_provider_faults	-	none	d-b	0	positive control: PASS
+p_provider_faults	-	full	a	0	positive control: PASS
+p_provider_faults	-	full	b	0	positive control: PASS
+p_provider_faults	-	full	c	0	positive control: PASS
+p_provider_faults	-	full	d-a	0	positive control: PASS
+p_provider_faults	-	full	d-b	0	positive control: PASS
+p_timeout_retry	-	none	a	0	provider key
+p_timeout_retry	-	none	b	0	provider key
+p_timeout_retry	-	none	c	1	NOT STOPPED
+p_timeout_retry	-	none	d-a	1	NOT STOPPED
+p_timeout_retry	-	none	d-b	0	provider ceiling
+p_timeout_retry	-	full	a	0	provider key
+p_timeout_retry	-	full	b	0	provider key
+p_timeout_retry	-	full	c	1	NOT STOPPED
+p_timeout_retry	-	full	d-a	1	NOT STOPPED
+p_timeout_retry	-	full	d-b	0	provider ceiling
+p_ledger_restore	-	none	a	0	dispatch witness
+p_ledger_restore	-	none	b	0	dispatch witness
+p_ledger_restore	-	none	c	2	dispatch witness
+p_ledger_restore	-	none	d-a	0	dispatch witness
+p_ledger_restore	-	none	d-b	0	dispatch witness
+p_ledger_restore	-	full	a	0	dispatch witness
+p_ledger_restore	-	full	b	0	dispatch witness
+p_ledger_restore	-	full	c	0	dispatch witness
+p_ledger_restore	-	full	d-a	0	dispatch witness
+p_ledger_restore	-	full	d-b	0	dispatch witness
+p_db_restore_retry	-	none	a	0	dispatch witness
+p_db_restore_retry	-	none	b	0	dispatch witness
+p_db_restore_retry	-	none	c	2	dispatch witness
+p_db_restore_retry	-	none	d-a	0	dispatch witness
+p_db_restore_retry	-	none	d-b	0	dispatch witness
+p_db_restore_retry	-	full	a	0	outside head
+p_db_restore_retry	-	full	b	0	outside head
+p_db_restore_retry	-	full	c	0	outside head
+p_db_restore_retry	-	full	d-a	0	outside head
+p_db_restore_retry	-	full	d-b	0	outside head
+p_db_restore_new_ids	-	none	a	0	dispatch witness
+p_db_restore_new_ids	-	none	b	0	dispatch witness
+p_db_restore_new_ids	-	none	c	2	dispatch witness
+p_db_restore_new_ids	-	none	d-a	0	dispatch witness
+p_db_restore_new_ids	-	none	d-b	0	dispatch witness
+p_db_restore_new_ids	-	full	a	0	outside head
+p_db_restore_new_ids	-	full	b	0	outside head
+p_db_restore_new_ids	-	full	c	0	outside head
+p_db_restore_new_ids	-	full	d-a	0	outside head
+p_db_restore_new_ids	-	full	d-b	0	outside head
+p_param_rebind	-	none	a	0	dispatch witness
+p_param_rebind	-	none	b	0	dispatch witness
+p_param_rebind	-	none	c	2	dispatch witness
+p_param_rebind	-	none	d-a	0	dispatch witness
+p_param_rebind	-	none	d-b	0	dispatch witness
+p_param_rebind	-	full	a	0	outside head
+p_param_rebind	-	full	b	0	outside head
+p_param_rebind	-	full	c	0	outside head
+p_param_rebind	-	full	d-a	0	outside head
+p_param_rebind	-	full	d-b	0	outside head
+p_second_ledger	-	none	a	0	dispatch witness
+p_second_ledger	-	none	b	0	dispatch witness
+p_second_ledger	-	none	c	2	dispatch witness
+p_second_ledger	-	none	d-a	0	dispatch witness
+p_second_ledger	-	none	d-b	0	dispatch witness
+p_second_ledger	-	full	a	0	dispatch witness
+p_second_ledger	-	full	b	0	dispatch witness
+p_second_ledger	-	full	c	0	dispatch witness
+p_second_ledger	-	full	d-a	0	dispatch witness
+p_second_ledger	-	full	d-b	0	dispatch witness
+p_full_ledger_lag	-	none	a	0	provider key
+p_full_ledger_lag	-	none	b	0	provider key
+p_full_ledger_lag	-	none	c	1	NOT STOPPED
+p_full_ledger_lag	-	none	d-a	1	NOT STOPPED
+p_full_ledger_lag	-	none	d-b	1	NOT STOPPED (partial refusals: provider ceiling | claim rule (in doubt))
+p_full_ledger_lag	-	floor	a	0	ledger floor
+p_full_ledger_lag	-	floor	b	0	ledger floor
+p_full_ledger_lag	-	floor	c	0	ledger floor
+p_full_ledger_lag	-	floor	d-a	0	ledger floor
+p_full_ledger_lag	-	floor	d-b	0	ledger floor
+p_full_ledger_lag	-	head	a	0	provider key
+p_full_ledger_lag	-	head	b	0	provider key
+p_full_ledger_lag	-	head	c	1	NOT STOPPED
+p_full_ledger_lag	-	head	d-a	1	NOT STOPPED
+p_full_ledger_lag	-	head	d-b	1	NOT STOPPED (partial refusals: provider ceiling | claim rule (in doubt))
+p_full_ledger_lag	-	full	a	0	ledger floor
+p_full_ledger_lag	-	full	b	0	ledger floor
+p_full_ledger_lag	-	full	c	0	ledger floor
+p_full_ledger_lag	-	full	d-a	0	ledger floor
+p_full_ledger_lag	-	full	d-b	0	ledger floor
+p_full_restore_retry	-	none	a	0	provider key
+p_full_restore_retry	-	none	b	0	provider key
+p_full_restore_retry	-	none	c	1	NOT STOPPED
+p_full_restore_retry	-	none	d-a	1	NOT STOPPED
+p_full_restore_retry	-	none	d-b	1	NOT STOPPED (partial refusals: provider ceiling | claim rule (in doubt))
+p_full_restore_retry	-	floor	a	0	ledger floor
+p_full_restore_retry	-	floor	b	0	ledger floor
+p_full_restore_retry	-	floor	c	0	ledger floor
+p_full_restore_retry	-	floor	d-a	0	ledger floor
+p_full_restore_retry	-	floor	d-b	0	ledger floor
+p_full_restore_retry	-	head	a	0	outside head
+p_full_restore_retry	-	head	b	0	outside head
+p_full_restore_retry	-	head	c	0	outside head
+p_full_restore_retry	-	head	d-a	0	outside head
+p_full_restore_retry	-	head	d-b	0	outside head
+p_full_restore_retry	-	full	a	0	outside head
+p_full_restore_retry	-	full	b	0	outside head
+p_full_restore_retry	-	full	c	0	outside head
+p_full_restore_retry	-	full	d-a	0	outside head
+p_full_restore_retry	-	full	d-b	0	outside head
+p_full_restore_new_ids	-	none	a	1	NOT STOPPED
+p_full_restore_new_ids	-	none	b	0	provider ceiling
+p_full_restore_new_ids	-	none	c	1	NOT STOPPED
+p_full_restore_new_ids	-	none	d-a	1	NOT STOPPED
+p_full_restore_new_ids	-	none	d-b	0	provider ceiling
+p_full_restore_new_ids	-	floor	a	0	ledger floor
+p_full_restore_new_ids	-	floor	b	0	ledger floor
+p_full_restore_new_ids	-	floor	c	0	ledger floor
+p_full_restore_new_ids	-	floor	d-a	0	ledger floor
+p_full_restore_new_ids	-	floor	d-b	0	ledger floor
+p_full_restore_new_ids	-	head	a	0	outside head
+p_full_restore_new_ids	-	head	b	0	outside head
+p_full_restore_new_ids	-	head	c	0	outside head
+p_full_restore_new_ids	-	head	d-a	0	outside head
+p_full_restore_new_ids	-	head	d-b	0	outside head
+p_full_restore_new_ids	-	full	a	0	outside head
+p_full_restore_new_ids	-	full	b	0	outside head
+p_full_restore_new_ids	-	full	c	0	outside head
+p_full_restore_new_ids	-	full	d-a	0	outside head
+p_full_restore_new_ids	-	full	d-b	0	outside head
+p_full_param_rebind	-	none	a	0	provider key
+p_full_param_rebind	-	none	b	0	provider key
+p_full_param_rebind	-	none	c	1	NOT STOPPED
+p_full_param_rebind	-	none	d-a	1	NOT STOPPED
+p_full_param_rebind	-	none	d-b	0	provider ceiling
+p_full_param_rebind	-	floor	a	0	ledger floor
+p_full_param_rebind	-	floor	b	0	ledger floor
+p_full_param_rebind	-	floor	c	0	ledger floor
+p_full_param_rebind	-	floor	d-a	0	ledger floor
+p_full_param_rebind	-	floor	d-b	0	ledger floor
+p_full_param_rebind	-	head	a	0	outside head
+p_full_param_rebind	-	head	b	0	outside head
+p_full_param_rebind	-	head	c	0	outside head
+p_full_param_rebind	-	head	d-a	0	outside head
+p_full_param_rebind	-	head	d-b	0	outside head
+p_full_param_rebind	-	full	a	0	outside head
+p_full_param_rebind	-	full	b	0	outside head
+p_full_param_rebind	-	full	c	0	outside head
+p_full_param_rebind	-	full	d-a	0	outside head
+p_full_param_rebind	-	full	d-b	0	outside head
+p_att28_new_ledger	ledger	none	a	0	dispatch witness
+p_att28_new_ledger	ledger	none	b	0	dispatch witness
+p_att28_new_ledger	ledger	none	c	2	dispatch witness
+p_att28_new_ledger	ledger	none	d-a	0	dispatch witness
+p_att28_new_ledger	ledger	none	d-b	0	dispatch witness
+p_att28_new_ledger	ledger	floor	a	0	dispatch witness
+p_att28_new_ledger	ledger	floor	b	0	dispatch witness
+p_att28_new_ledger	ledger	floor	c	0	dispatch witness
+p_att28_new_ledger	ledger	floor	d-a	0	dispatch witness
+p_att28_new_ledger	ledger	floor	d-b	0	dispatch witness
+p_att28_new_ledger	ledger	head	a	0	dispatch witness
+p_att28_new_ledger	ledger	head	b	0	dispatch witness
+p_att28_new_ledger	ledger	head	c	0	dispatch witness
+p_att28_new_ledger	ledger	head	d-a	0	dispatch witness
+p_att28_new_ledger	ledger	head	d-b	0	dispatch witness
+p_att28_new_ledger	ledger	full	a	0	dispatch witness
+p_att28_new_ledger	ledger	full	b	0	dispatch witness
+p_att28_new_ledger	ledger	full	c	0	dispatch witness
+p_att28_new_ledger	ledger	full	d-a	0	dispatch witness
+p_att28_new_ledger	ledger	full	d-b	0	dispatch witness
+p_att28_new_ledger	ledger+witness	none	a	0	provider key
+p_att28_new_ledger	ledger+witness	none	b	0	provider key
+p_att28_new_ledger	ledger+witness	none	c	1	NOT STOPPED
+p_att28_new_ledger	ledger+witness	none	d-a	1	NOT STOPPED
+p_att28_new_ledger	ledger+witness	none	d-b	0	provider ceiling
+p_att28_new_ledger	ledger+witness	floor	a	0	ledger floor
+p_att28_new_ledger	ledger+witness	floor	b	0	ledger floor
+p_att28_new_ledger	ledger+witness	floor	c	0	ledger floor
+p_att28_new_ledger	ledger+witness	floor	d-a	0	ledger floor
+p_att28_new_ledger	ledger+witness	floor	d-b	0	ledger floor
+p_att28_new_ledger	ledger+witness	head	a	0	provider key
+p_att28_new_ledger	ledger+witness	head	b	0	provider key
+p_att28_new_ledger	ledger+witness	head	c	1	NOT STOPPED
+p_att28_new_ledger	ledger+witness	head	d-a	1	NOT STOPPED
+p_att28_new_ledger	ledger+witness	head	d-b	0	provider ceiling
+p_att28_new_ledger	ledger+witness	full	a	0	ledger floor
+p_att28_new_ledger	ledger+witness	full	b	0	ledger floor
+p_att28_new_ledger	ledger+witness	full	c	0	ledger floor
+p_att28_new_ledger	ledger+witness	full	d-a	0	ledger floor
+p_att28_new_ledger	ledger+witness	full	d-b	0	ledger floor
+# end 2026-11-19T16:33:03Z

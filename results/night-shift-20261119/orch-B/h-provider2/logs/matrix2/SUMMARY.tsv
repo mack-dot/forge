@@ -1,0 +1,12 @@
+# node v24.3.0 | Now drawing from 'AC Power' | 2026-11-19T16:33:27Z | tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/tree
+test	case	anchor	mode	exit	stopped_by
+p_zero_amount	-	none	a	0	positive control: PASS
+p_zero_amount	-	none	b	0	positive control: PASS
+p_zero_amount	-	none	c	0	positive control: PASS
+p_zero_amount	-	none	d-a	0	positive control: PASS
+p_zero_amount	-	none	d-b	0	positive control: PASS
+p_zero_amount	-	full	a	0	positive control: PASS
+p_zero_amount	-	full	b	0	positive control: PASS
+p_zero_amount	-	full	c	0	positive control: PASS
+p_zero_amount	-	full	d-a	0	positive control: PASS
+STOP: swap free 1006 MiB < 1024 before p_zero_amount full d-b 

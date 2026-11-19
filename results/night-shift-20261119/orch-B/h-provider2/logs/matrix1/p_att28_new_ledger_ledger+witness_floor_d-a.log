@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/home TMPDIR=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/home LANG=C node --import tsx tests/refund-finality/regress/p_att28_new_ledger.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/tree d-a floor ledger+witness
+swap free MiB before: 
+{"test":"p_att28_new_ledger","case":"ledger+witness","after":[{"emitted":[],"refused":[],"error":"dispatcher alarm: the ledger does not reach the outside anchor (row 2); an older ledger (restored backup?); nothing sent"},{"emitted":[],"refused":[],"error":"dispatcher alarm: the ledger does not reach the outside anchor (row 2); an older ledger (restored backup?); nothing sent"}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:500"]},"attackEvents":[{"phase":"attack","layer":"ledger floor","detail":"dispatcher stopped: dispatcher alarm: the ledger does not reach the outside anchor (row 2); an older ledger (restored backup?); nothing sent"},{"phase":"attack","layer":"ledger floor","detail":"dispatcher stopped: dispatcher alarm: the ledger does not reach the outside anchor (row 2); an older ledger (restored backup?); nothing sent"}]}
+mode d-a, anchor floor
+layers seen after the attack started: ledger floor
+stopped by: ledger floor
+SAFE
+exit 0

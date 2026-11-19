@@ -21,18 +21,20 @@ import { FakeProvider, ProviderError } from "./fake_provider";
 
 export type EffectArg = { requestId: string; intent: string };
 export type IntentArg = { chargeId: string; requestId: string; amount: string; reason: string };
-export type AdapterOptions = { retries: number; journalPath: string };
+// observe (optional; h-provider2): called with every journal line after it was written (test attribution only).
+export type AdapterOptions = { retries: number; journalPath: string; observe?: (line: Record<string, unknown>) => void };
 
 const keyOf = (intent: IntentArg): string => intent.requestId;   // CONTRACT CHANGE POINT (see the header)
 const canonIntent = (i: IntentArg): string =>
   "{" + ["amount", "chargeId", "reason", "requestId"].map(k => JSON.stringify(k) + ":" + JSON.stringify((i as any)[k])).join(",") + "}";
 
-function journal(path: string, line: unknown): void {
+function journalTo(path: string, line: Record<string, unknown>): void {
   const fd = openSync(path, "a");
   try { writeSync(fd, JSON.stringify(line) + "\n"); fsyncSync(fd); } finally { closeSync(fd); }
 }
 
 export function makeEmit(provider: FakeProvider, opt: AdapterOptions): (effect: EffectArg, intent: IntentArg) => void {
+  const journal = (path: string, line: Record<string, unknown>): void => { journalTo(path, line); opt.observe?.(line); };
   return (effect: EffectArg, intent: IntentArg): void => {
     if (effect === null || intent === null || typeof effect !== "object" || typeof intent !== "object" ||
         effect.requestId !== intent.requestId || effect.intent !== canonIntent(intent)) {
