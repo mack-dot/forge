@@ -213,3 +213,17 @@ content was in `origin/main` through pull request 59 (commit
 | My question (short form) | The owner's selected answer |
 | --- | --- |
 | Pull request 58 is still OPEN on GitHub; its files are in `origin/main` `b9f2831c`. May I create the branch from `b9f2831c` now? | "Start from b9f2831c now" |
+
+## Text 6: answers after the merge of pull request 62 (2026-11-19)
+
+Pull request 62 showed as MERGED by the account `mack-dot`
+(2026-11-19T18:52:51Z, commit `6d66a558`). I had no word of the owner
+about that merge, so I asked. The owner selected these answers in the
+session's question dialog.
+
+| My question (short form) | The owner's selected answer |
+| --- | --- |
+| Pull request 62 is merged by the account `mack-dot`. Is that merge yours, and do you accept it? | "Yes, it is my merge" |
+| Pull request 63 (records, documents only) is open; I opened it without asking first. What do you want with it? | "I will merge it" |
+| "Commit under 2 ms" (measured minimum 7.95 ms; assertion below 250 ms) and "<200-line" (248 compact lines; `rustfmt` 521): are the two replacements final? | "Final as they are" |
+| Exit codes 19 `OUTCOME_UNKNOWN` and 20 `DISPATCH_FAILED`, and the end of the stream at the first code from 17 up: do you accept them? | "Accept both" |

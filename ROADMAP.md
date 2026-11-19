@@ -28,7 +28,7 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs; pull request 62 merged by the owner's account as `6d66a558` — U700 to U707
+## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs; pull request 62 merged by the owner as `6d66a558` — U700 to U708
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Branch

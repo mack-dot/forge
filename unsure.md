@@ -18568,3 +18568,26 @@ curl: (6) Could not resolve host: github.com
   hosted run is not recorded: the chain of records stops here.
 - Impact: none on any stage label. M1 open. `end_to_end=false`.
 - Next check: none planned by me. A next directive of the owner.
+
+## U708 — goal 19: the owner's word on the merge, on the two replaced requirements and on exit codes 19 and 20 (resolves the open points of U702, U704 and U707)
+
+- Status: 2026-11-19, after U707. Refs U700, U702, U704, U707.
+  Record: text 6 in
+  `proposals/forge2-native-silicon-sink/OWNER_TEXTS.md`.
+- Evidence class: four answers that the owner SELECTED in the
+  session's question dialog (direct selections, not a pasted text).
+- The merge of pull request 62 as `6d66a558`: "Yes, it is my merge".
+  U707 said that I knew the account and not the hand; this answer
+  closes that point.
+- Pull request 63 (these records): "I will merge it". I do not merge
+  it.
+- "Commit under 2 ms" and "<200-line": the replacements (an assertion
+  below 250 ms; 248 lines in a compact layout, `rustfmt` 521) are
+  "Final as they are". The two requirements stay unmet as the
+  directive wrote them; the owner accepts that.
+- Exit codes 19 (`OUTCOME_UNKNOWN`) and 20 (`DISPATCH_FAILED`), and the
+  end of the stream at the first code from 17 up: "Accept both".
+- Still open, not asked: a signed token, an outside witness for the
+  ratchet, a second review of the repairs, a power-loss test.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: none planned by me.
