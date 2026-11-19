@@ -336,3 +336,10 @@ Command: cd orch-C/c22-launch-conformance && /usr/bin/python3 -B -I test_process
 
 ## C-LAUNCH-NEG (16:15:01Z) launcher checks that HOLD (C's runs, 22 tests ok): every strict prefix of the expected frame refused; one extra byte refused; non-zero exit, signal, time-out, stderr text, overflow refused; a frame for another amount/request/charge refused; zero-amount request authorized; the child's environment is EMPTY even when the caller sets DYLD_LIBRARY_PATH and another variable; abort (SIGABRT) reported and refused; half a frame with exit 0 refused; no output refused; a child that does not end is stopped by the time limit and refused.
 - NOT covered by these tests: the real refund program, injected code at load, the code-signature check, the FFI C code itself. Those stay under C-1.
+
+## C-LAUNCH-01 RE-RUN (16:17:17Z) against A's repair orch-A/launch/launcher_v2.py (SHA-256 eec38a10…) — PASS (closed)
+- Test file updated (SHA-256 d5ceda71d243bb8df8928d62719b7ec9bcffc960f9da99264afd0adb85f2789f; the first version is kept as test_process_lifecycle_v1_as_run.py): the launcher file is a setting (C22_LAUNCHER); the test child is a /bin/bash script and the launcher's image check stays ON with the code-directory hash of /bin/bash read by the launcher's own kernel_cdhash; a refusal raised by the launcher itself counts as REFUSED; with SIGCHLD ignored an honest run may be AUTHORIZED or REFUSED (both safe).
+- Command: cd orch-C/c22-launch-conformance && C22_LAUNCHER=<file> /usr/bin/python3 -B -I test_process_lifecycle.py
+  - launcher.py (fbdbea0b…): EXIT 1 twice: 24 tests, 2 FAIL (the same two: abort and non-zero exit after a complete frame with SIGCHLD ignored -> AUTHORIZED). Logs v1-run1.log, v1-run2.log.
+  - launcher_v2.py (eec38a10…): EXIT 0 twice: 24 tests OK. With SIGCHLD ignored v2 refuses with "V2 child status unknown (ECHILD)" (it refuses the honest run too: fail closed). Logs v2-run1.log, v2-run2.log.
+- The image check with a wrong hash, the real refund program, code injected at load and the FFI C code are still NOT tested by C (C-1).
