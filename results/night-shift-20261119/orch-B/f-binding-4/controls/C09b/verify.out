@@ -1,0 +1,6 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL DIGEST_MISMATCH: results/night-shift-20261119/orch-B/b-signing/logs/final-V2-01.csv: ledger 458b9b16a5e11fd2, file 1eef19736f538c82
+FAIL CSV_LEMMA: T-V2: results/night-shift-20261119/orch-B/b-signing/logs/final-V2-01.csv: SliceTheoremV2.UniqueAuthorizationV2: outcome ['Failed']
+edges per class: MACHINE-CHECKED=76, ASSUMPTION=9, TESTED-UNPROVED=23, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=135
+nodes=983 assumptions=74 mandatory=89
+REFUSED: 2 problems; codes CSV_LEMMA,DIGEST_MISMATCH; proofs NOT re-run

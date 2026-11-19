@@ -1,0 +1,7 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL DIGEST_MISMATCH: results/night-shift-20261119/orch-B/d-reqid/logs/v02-reqid-verify.log: ledger 1c7341250f2756e1, file 6b05fc3951bf29c3
+FAIL CMD_FILE_MISMATCH: U5r: results/night-shift-20261119/orch-B/d-reqid/logs/v02-reqid-verify.log `# cmd:` names ['Contrast.dfy'], the run entry is SinkCoreReqId.dfy
+FAIL CMD_ROOTS_MISMATCH: U5r: results/night-shift-20261119/orch-B/d-reqid/logs/v02-reqid-verify.log: # cmd: names ['Contrast.dfy'], the closure roots are ['SinkCoreReqId.dfy']
+edges per class: MACHINE-CHECKED=76, ASSUMPTION=9, TESTED-UNPROVED=23, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=135
+nodes=983 assumptions=74 mandatory=89
+REFUSED: 3 problems; codes CMD_FILE_MISMATCH,CMD_ROOTS_MISMATCH,DIGEST_MISMATCH; proofs NOT re-run

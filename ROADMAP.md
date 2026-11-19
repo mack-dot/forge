@@ -28,6 +28,40 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Night shift 2026-11-19, trust track, part 2 (Orchestrator B): the byte-level composed lemma; a sink step that checks the approved relation; reviews; tests in heavy windows; adoption diffs (unapplied) — U537 to U558
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing applied, merged, pushed or signed.
+Every Dafny run: pinned Dafny 4.11.0, gate options, through `results/night-shift-20261119/orch-B/tools/dafny_locked.sh`.
+Rows marked (B) are the orchestrator's own runs with a stored log under `orch-B/recheck-*` or `orch-B/heavy`; (w) are worker runs that (B) did not repeat.
+Heavy steps ran only after Orchestrator A removed the HOL lock; each window was released.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| (B) `verify ControlsBytesV3.dfy RefineHashV3.dfy` (byte-level lemma over a hash-comparing core) |0|1871 verified; reviewed: confirmed |
+| (B) `verify` of TopFromExport, IssuerLink, KeyedHash, RefineTraceV3, RTopLemmas |0; 0; 0; 0; 0|2185; 2236; 2325; 1889; 2336 verified; reviewed: confirmed |
+| (B) `verify ShellCoreV6.dfy` (the step checks the approved relation on the stored charge) |0|192 verified; reviewed: confirmed under the reading of U558 |
+| (B) `verify` of ShellCoreV5, ShellCoreV4, ShellCoreV3 (shell cores, audits) |0; 0; 0|156; 105; 79 verified |
+| (B) `verify` of Restart, KeyedStore, AttackRestart |0; 0; 0|1686; 1820; 1831 verified; rollback and forged initial state pass any database audit (proved) |
+| (B) `verify` of SerModel, RepairedBytes, RSerAttacks, IssueBytes2 |0; 0; 0; 0|96; 1790; 1804; 131 verified |
+| (B) `verify` of ExportBridge, SliceSafetyFromExport |0; 0|1823; 1892 verified; reviewed: 15 semantic changes of the export each break the proof |
+| (B) `verify` of Bridge, Bridge2, AttackR; AttackTrace, AttackCore, AttackMulti |0 each|8; 22; 30; 1642; 82; 148 verified |
+| (B) first attempt of six of these runs |1 each|my own command error (options passed as one word); logs kept; not a result |
+| (B) sink differentials, four windows: v3, v4, v6 draft sinks and patched copies against their compiled cores; 3,500 sequences per pair |0 on each matching pair|0 divergent sequences; every control pair diverges |
+| (B) differential of the v5 draft |0; 1; 0; no result line|it halts after it committed a signed but unauthorized token |
+| (B) hostile gate controls on a gate copy with the `expect` rule and supervision; first attempt |0 for each of 7; 2 each|seven halting submissions ACCEPTED; the first attempt was a setup error |
+| (B) gate copy with the draft subset rule, 51 submissions |1 for each of 8 halting; 0 for 10 of 19 and 16 of 17 correct|every known halting submission refused; nine known correct ones refused |
+| (B) Slice 1 suite on a pristine export and on an export with the v4 adoption diff |0; 0|115 rows, 0 failed, each |
+| (B) `git apply --check` of adoption.diff, adoption-v6.diff, three subset diffs (nothing applied) |0 each|they apply at `985f5eaf` |
+| (B) bridge tests with the real native program: first design; repaired design |0; 0|64 of 64; 90 of 90 |
+| (B) ledger verifiers f-binding-2, -3, -4; their controls |0; 0; 0|97, 119, 135 edges; identity and record consistency only; 40 of 40, 47 of 47 controls; the fourth set: see `orch-B/recheck-l` |
+| (B) one commit attempt during a disk incident |128|"No space left on device"; made again; cause: a worker's 58 GB of temporary copies (U557) |
+| Slice 1 suite on the export with the v6 adoption diff |NOT RUN|a window is asked |
+| every HOL step |not B's|Orchestrator A's branch |
+
+Reading: all proof rows are Dafny MODEL results; the sinks, the minter and the bridge that they describe are DRAFTS; the deployed `ts/refund-finality/sink.ts` has a proved decision defect and stays the weakest link. The v6 claim assumes that the approved context of a request is the sink's stored charge with the request taken as open (named CTX-SINK; the other reading is an owner question). Owner decisions: `results/night-shift-20261119/OWNER_REQUIRED.md`, B-1 to B-10.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Night shift 2026-11-19, trust track (Orchestrator B): a composed Dafny lemma without the impossible signing assumption; the request-id and charge-id gaps of the merged sink; reproduced proof records; admission findings — U530 to U536
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
