@@ -1,0 +1,5 @@
+{"test":"p_full_ledger_lag","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","after":[{"emitted":["r2","r3"],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"1400","charge":"1000","withinCharge":false,"twice":["r2","r3"],"noDouble":false,"movements":["r1:400","r2:400","r3:100","r2:400","r3:100"]},"attackEvents":[]}
+mode d-a, anchor none
+layers seen after the attack started: (none)
+stopped by: NOT STOPPED
+DEFECT

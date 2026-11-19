@@ -1,0 +1,5 @@
+{"test":"p_att28_new_ledger","case":"ledger+witness","after":[{"emitted":["r1","r2"],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:500"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r1 replayed"},{"phase":"attack","layer":"provider key","detail":"r2 replayed"}]}
+mode b, anchor none
+layers seen after the attack started: provider key
+stopped by: provider key
+SAFE

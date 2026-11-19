@@ -1,0 +1,4 @@
+books: remaining 0 (refunded 1000); provider moved 1500
+{"r1":"committed","r1b":"committed","r2":["900","committed"],"f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":[],"refused":[],"error":"provider param_mismatch: key r1 used with other parameters"},"f3":{"emitted":["r2"],"refused":["r1: in doubt: claimed by run 4e71218759a3f6774c94688142b0038b (p"],"error":""},"sink":"up","movements":["r1:600","r2:900"]}
+s4 none env={"RP_REPLAY":"error","RP_CEIL":"0"}
+MONEY WRONG: charge ch_rb moved 1500 > 1000

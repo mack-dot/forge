@@ -1,0 +1,3 @@
+{"ra":"committed","rb":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":["r1"],"refused":[],"error":""},"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600"},{"chargeId":"ch_B","requestId":"r1","amount":"300"}],"movements":["r1@ch_A:600"]}
+s1 collide env={"RP_REPLAY":"first","RP_SHARED":"<REPO>/results/night-shift-20261119/orch-C/c25-provider/tmp/acct.json"}
+MONEY WRONG: reported paid: ch_B/r1 300; provider movements for that key: ["ch_A:600"]

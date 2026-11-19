@@ -1,0 +1,5 @@
+{"test":"p_full_param_rebind","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","r2b":"committed","after":[{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},{"emitted":[],"refused":["r2: in doubt: claimed by run 43b4373444a5653d498d1b6b8daf5c59 (p"],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400","r3:100"]},"attackEvents":[{"phase":"attack","layer":"provider ceiling","detail":"r2 refused:ceiling"},{"phase":"attack","layer":"claim rule (in doubt)","detail":"dispatcher refused r2: in doubt: claimed by run 43b4373444a5653d498d1b6b8daf5c59 (pid 39147) and its emit threw; not counted as dispatched; a person must ask th"}]}
+mode d-b, anchor none
+layers seen after the attack started: provider ceiling | claim rule (in doubt)
+stopped by: provider ceiling
+SAFE

@@ -104,3 +104,7 @@ Split kept: C writes tests that show a gap; B writes fixes.
   - Running: c23 (gate), c25 (provider anchor).
 - 16:53:20Z: c23 is alive and waits: A holds hol.lock, so orch-B/tools/dafny_locked.sh queues its single-file Dafny runs (B's r-jsbound waits too). No action; no heavy step by C while hol.lock is held. Running: c23 (waiting), c25.
 - 16:56:31Z: c23 DONE. C's run: c23-jsgate/regress.sh exit 1 (checker ACCEPTS U01 and U02 in both forms). C's own bounded run of the two modules was STOPPED by the safety classifier: NOT RUN by C, not retried (C-1); the worker's run evidence stands (alarm exit 142). New: C-GATE-07, 08, 09, 10. Sent to B. Running: c25.
+- 16:57:04Z: U598 written; pushed 5be5730a. Next id U599. Running: c25 (provider anchor).
+- 17:03:32Z: c25 DONE; five cases re-run by C (C-ATT-41 to 44, C-NEG-17). Sent to B.
+- 17:03:32Z: OWNER DECISION D-1 (launcher relay; end of OWNER_REQUIRED.md): persistent minter key from a file opened O_NOFOLLOW + fstat checks (regular file, uid == euid, mode & 0o077 == 0); no key from an environment variable; no test bypass; pinned key_id allowlist in the sink. B implements. WHEN B SENDS THE SHA, re-attack: symlink and rename races between open and use; hard links; file swap after the check; permission change after open; FIFO, device, directory; key_id substitution and retired ids; any leftover path that reads a key from the environment or argv. TEMPORARY TEST KEYS ONLY; never a real key.
+- No worker runs now. Waiting on B: h-sink3, minter repairs, checker cost table, D-1 key file.
