@@ -1,0 +1,13 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL HOL_EXPLORE_RUN: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.go.log carries EXPLORE_COMPLETE (exploration run; proves nothing)
+FAIL HOL_EXPLORE_RUN: X-MF: run record results/m1b-routeA-20261119/attempt-0001/LOx-0001.run.json carries EXPLORE_COMPLETE
+FAIL HOL_SOURCE_MISMATCH: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.run.json source_sha256 is not the closure source digest
+FAIL HOL_CMD_MISMATCH: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.run.json source 'LOx-0001.sml' is not the closure source results/m1b-routeA-20261119/attempt-0001/MF-0002.sml
+FAIL HOL_THEOREM_MISSING: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.go.log: refund_model_frame_meets_exported_contract: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.go.log: refund_model_frame_decision: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.go.log: refund_fd1_frame_of_run: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.go.log: refund_model_success_gives_frame: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: X-MF: results/m1b-routeA-20261119/attempt-0001/LOx-0001.go.log: refund_frame_contract_key: not reported as CHECKED/FORGE_THEOREM
+edges per class: MACHINE-CHECKED=87, ASSUMPTION=9, TESTED-UNPROVED=28, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=151
+nodes=1165 assumptions=80 mandatory=105
+REFUSED: 9 problems; codes HOL_CMD_MISMATCH,HOL_EXPLORE_RUN,HOL_SOURCE_MISMATCH,HOL_THEOREM_MISSING; proofs NOT re-run

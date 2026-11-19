@@ -1,0 +1,27 @@
+# start=2026-11-19T13:59:33Z cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-v5/ts/cost_rv5.ts <REPO>/results/night-shift-20261119/orch-B/r-v5/work-cost 5000
+{"k":"build","N":5000,"ok":5000,"ms":"3421"}
+{"k":"startup-audit","ms":"635"}
+{"k":"alternating-commits-ms","per":["c1","c658","c646","c633","c632","c630"],"reauditsA":2,"reauditsB":3}
+{"k":"same-writer-twice-ms","r":["committed","committed"],"ms":"633.7"}
+{"k":"MaxMoney-full-refund","r":"committed","restart":"STARTED"}
+(node:21533) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+        8.12 real         6.17 user         1.72 sys
+           143818752  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11155  page reclaims
+                 612  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                  34  messages sent
+                  34  messages received
+                   6  signals received
+               37472  voluntary context switches
+                5500  involuntary context switches
+         71404492081  instructions retired
+         24033932684  cycles elapsed
+           106344184  peak memory footprint
+exit 0

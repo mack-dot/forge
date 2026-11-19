@@ -1,0 +1,7 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL CMD_ROOTS_MISMATCH: T-BYTES-V3: results/night-shift-20261119/orch-B/recheck-m/BytesV3.log: # cmd: names ['ControlsBytesV3.dfy', 'RefineHashV3.dfy'], the closure roots are ['ControlsBytesV3.dfy']
+FAIL CMD_ROOTS_MISMATCH: T-BYTES-V3: results/night-shift-20261119/orch-B/b-ser2/logs/final-all-01.log: # cmd: names ['ControlsBytesV3.dfy', 'RefineHashV3.dfy'], the closure roots are ['ControlsBytesV3.dfy']
+FAIL COMMAND_ROOT_MISMATCH: T-BYTES-V3: edge command: # cmd: names ['ControlsBytesV3.dfy', 'RefineHashV3.dfy'], the closure roots are ['ControlsBytesV3.dfy']
+edges per class: MACHINE-CHECKED=87, ASSUMPTION=9, TESTED-UNPROVED=28, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=151
+nodes=1165 assumptions=80 mandatory=105
+REFUSED: 3 problems; codes CMD_ROOTS_MISMATCH,COMMAND_ROOT_MISMATCH; proofs NOT re-run

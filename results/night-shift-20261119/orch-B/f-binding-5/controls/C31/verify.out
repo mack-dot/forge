@@ -1,0 +1,8 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL CMD_ROOTS_MISMATCH: T-V6-BYTES-L0: results/night-shift-20261119/orch-B/recheck-v6/BytesV6.log: # cmd: names ['ControlsBytesV6.dfy', 'KeyedV6.dfy', 'TopV6Export.dfy'], the closure roots are ['ControlsBytesV6.dfy', 'TopV6Export.dfy']
+FAIL CMD_ROOTS_MISMATCH: T-V6-BYTES-L0: results/night-shift-20261119/orch-B/b-v6bytes/logs/final-all-01.log: # cmd: names ['ControlsBytesV6.dfy', 'KeyedV6.dfy', 'TopV6Export.dfy'], the closure roots are ['ControlsBytesV6.dfy', 'TopV6Export.dfy']
+FAIL CMD_ROOTS_MISMATCH: T-V6-BYTES-L0: results/night-shift-20261119/orch-B/r-v6bytes/logs/final-rerun-01.log: # cmd: names ['ControlsBytesV6.dfy', 'KeyedV6.dfy', 'TopV6Export.dfy'], the closure roots are ['ControlsBytesV6.dfy', 'TopV6Export.dfy']
+FAIL COMMAND_ROOT_MISMATCH: T-V6-BYTES-L0: edge command: # cmd: names ['ControlsBytesV6.dfy', 'KeyedV6.dfy', 'TopV6Export.dfy'], the closure roots are ['ControlsBytesV6.dfy', 'TopV6Export.dfy']
+edges per class: MACHINE-CHECKED=87, ASSUMPTION=9, TESTED-UNPROVED=28, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=151
+nodes=1165 assumptions=80 mandatory=105
+REFUSED: 4 problems; codes CMD_ROOTS_MISMATCH,COMMAND_ROOT_MISMATCH; proofs NOT re-run

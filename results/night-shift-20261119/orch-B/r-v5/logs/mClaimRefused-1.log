@@ -1,0 +1,38 @@
+# owner=r-v5 start=2026-11-19T13:57:20Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v5/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1036
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_ClaimRefused.dfy
+# memory free percent: 61
+Mutant_ClaimRefused.dfy(8,2): Error: a postcondition could not be proved on this return path
+  |
+8 |   {
+  |   ^
+
+Mutant_ClaimRefused.dfy(7,12): Related location: this is the postcondition that could not be proved
+  |
+7 |     ensures !AuditV5(Ch(1000), Ch(900), D(), 2, 2, 2)
+  |             ^
+
+
+Dafny program verifier finished with 166 verified, 1 error
+       11.22 real        10.86 user         0.68 sys
+           239566848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               28568  page reclaims
+                 392  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                1016  voluntary context switches
+               65035  involuntary context switches
+         93573381815  instructions retired
+         35198181760  cycles elapsed
+           206554480  peak memory footprint
+# end=2026-11-19T13:57:32Z
+exit 4

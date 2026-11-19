@@ -201,3 +201,4 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - 13:23:14Z commit e94bdd1f (U563, addendum 17). New worker f-binding-5 (last ledger refresh; 100 MB cap). Running: r-subset2, f-binding-5. Watch disk: 92 GiB free.
 - 13:40:02Z r-subset2 REPORTED: rule2 cost claim REFUTED (3 bypasses; B ran the rule on them: pass). U564, addendum 18, OWNER_REQUIRED correction. Repair worker e-subset3 to start. Running: f-binding-5.
 - 13:53:48Z f-binding-5 REPORTED; B's verify_ledger exit 0 (151 edges); B's controls run started (recheck-l/controls-f5.out). Addendum 19. New worker r-v5 (review of the replaying audit and its shell). Running: e-subset3, r-v5.
+- 14:01:57Z r-v5 REPORTED: audit CONFIRMED; new limit F1 (zero-amount row deletion/reorder/recommit by a database writer without the key); B's re-run AttackV5 166 exit 0. U565, addendum 20, OWNER_REQUIRED addition. Running: e-subset3. B's f5 controls: 

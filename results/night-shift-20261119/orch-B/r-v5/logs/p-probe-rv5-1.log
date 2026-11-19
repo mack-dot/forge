@@ -1,0 +1,28 @@
+# start=2026-11-19T13:59:10Z cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-v5/ts/probe_rv5.ts <REPO>/results/night-shift-20261119/orch-B/r-v5/work-probe
+{"k":"max","original":"9999999999999999999","amount":"9999999999999999999","r":{"status":"rejected","reason":"not authorized by the approved relation for the stored state"}}
+{"k":"max","original":"9999999999999999999","amount":"1","r":{"status":"rejected","reason":"not authorized by the approved relation for the stored state"}}
+{"k":"max","original":"1000000","amount":"1000000","r":{"status":"committed"}}
+{"k":"max","original":"1000","amount":"1000","r":{"status":"committed"}}
+{"k":"max","original":"100000000","amount":"1","r":{"status":"committed"}}
+{"k":"data_version","v0":1,"afterNoop":1,"afterChangeRestore":2}
+(node:20364) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+        0.20 real         0.23 user         0.04 sys
+           118784000  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10066  page reclaims
+                 101  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   6  messages sent
+                   6  messages received
+                   2  signals received
+                 117  voluntary context switches
+                 731  involuntary context switches
+          2402338994  instructions retired
+           825241022  cycles elapsed
+            80685448  peak memory footprint
+exit 0
