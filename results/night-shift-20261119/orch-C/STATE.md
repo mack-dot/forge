@@ -1,7 +1,7 @@
 # Orchestrator C (red team) state
 
-Started 2026-11-19T14:19:25Z. Branch nightshift/C-redteam from 4af09308 (B head). Worktree: <SCRATCH>/redteam-C/wt.
-Target with adoption-v6.diff applied (uncommitted, read-only use): <SCRATCH>/redteam-C/target-v6. A target: dae1b93e.
+Started 2026-11-19T14:19:25Z. Branch nightshift/C-redteam from 4af09308 (B head). Worktree: /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/wt.
+Target with adoption-v6.diff applied (uncommitted, read-only use): /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6. A target: dae1b93e.
 unsure block U580-U619: none used yet. C holds no lock. HOL lock held by A at start (no heavy run by C).
 Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 
@@ -64,3 +64,8 @@ Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 - 15:12:56Z: c15 DONE (C-ATT-21..23; re-run by C). c18 STOPPED by a safety classifier (C-BLOCK-01): no result; C does control checks of the launcher itself (no injected code). Running: c13, c16, c17.
 - 15:13:51Z: BLOCKER C-BLOCK-01: launch-path attack (priority 4) stopped twice by a safety classifier (worker c18, then C's own control script; nothing written, nothing run). NOT retried. Goes to OWNER_REQUIRED as C-1. Continue with priorities 1-3. Running: c13, c16, c17.
 - 15:39:19Z: c16 and c17 DONE and re-run by C. Closed on 608b5165: C-ATT-04, 06, 10, 11, 12, 20; zero-amount commits. Still open/new: C-ATT-24 (old-row running), 25/32 (D14 past anchors), 26 (long-intent false rejection), 27 (stale anchor), 28 (lost ledger), 29 (stale-retry false rejection), 30 (minter squat), 31 (tsx cache). Running: c13.
+- 15:40:13Z: U593 written; pushed at c7b1866d. Next id U594. Running: c13.
+- 15:40:33Z: checkpoint. Branch pushed c7b1866d. One worker running (c13 gate-js). No HOL process. Pending B fix SHAs to re-attack: dispatcher lock C-ATT-17/18 (h-dispatch), test judges C-JUDGE-01..03 (h-judges), gate C-GATE-02..04, sink C-ATT-24/26 (long-intent + old-row), minter C-ATT-30 squat. On each SHA: mkoverlay.sh or retarget, re-run the listed commands, append PASS/FAIL. Holding worker count per launcher priority 1 (re-attack first, not volume). Confirmed-closed so far: C-ATT-01, 16; C-ATT-04,06,10,11,12,20 (by hardened sink); C-ATT-03,15 (by hardened minter).
+- 15:43:08Z: U591, U592 written; branch pushed at c7b1866d. Next unsure id U593.
+- 15:46:52Z: B sent f08a21c1 (new dispatcher + judges cf242303). My hand re-run of old scripts = module-not-found (API changed); discarded. Started c19-dispatch2 (port + re-attack dispatcher and judges) and c20-launch-read (reading-only audit of orch-A/launch, within safe scope). B's U577 recorded my 608b5165 table. B next: a second sink change (C-ATT-24,26,27,21,23,fullfsync) and second minter change (C-ATT-29,30,31). Running: c13, c19, c20.
+- 15:51:25Z: c20-launch-read DONE (static reading only; worker found F1 SIGCHLD/returncode-0, F2 csops TOCTOU, F3 no write deadline; words-only premises). I CANNOT spot-check: the classifier stops my own reading of launcher.py (extends C-BLOCK-01). Relayed to A as the worker's analysis, unverified by C. Running: c13, c19.
