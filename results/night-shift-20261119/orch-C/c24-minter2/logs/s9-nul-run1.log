@@ -1,0 +1,9 @@
+(node:7382) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Error: CHECK constraint failed: typeof(blob) = 'text' AND instr(CAST(blob AS BLOB), x'00') = 0 AND length(blob) <= 2048
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-C/c24-minter2/s9_store_read.ts:51:57)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 275,
+  errstr: 'constraint failed'
+}

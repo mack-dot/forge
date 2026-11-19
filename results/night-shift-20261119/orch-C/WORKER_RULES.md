@@ -44,4 +44,3 @@ For each finding: class; threat model; target file and line; minimal repro scrip
 behaviour vs actual behaviour; actual exit code (make the script exit 1 when the attack SUCCEEDS = defect present, 0 when
 the target is safe, so it can become a regression test); whether it is new or a known item (cite the U-id or B-item).
 Then: negative results (what you tried, with script paths and exit codes). Then: the next boundary you would attack.
-Branch copies: <REPO> = repository root, <SCRATCH> = the orchestrator's scratch folder (paths replaced for the commit; the runnable originals are in the main checkout, untracked).
