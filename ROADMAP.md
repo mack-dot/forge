@@ -28,7 +28,65 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Slice 3 of the master idea (F3.1, F3.2): runtime certificates on batch booking; checker core proved at source level against a candidate specification; three untrusted optimizers exchanged against one compiled core; one review with repairs — U453, U454, U455, U456, U457
+## Wave Gate 1: conformance of the M1 refund executable with the Slice 1 Dafny refund checker on a finite corpus; one review with repairs; records of pull requests 47 and 48 — U458, U459, U460, U461, U462
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No file of
+Slices 1, 2 or 3 changed. Not gate evidence. A finite test of two
+stacks against each other: not a proof, not a compiler proof of the
+JavaScript, no result of M1. No HOL process was started.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `scripts/exit_m1_conformance.py --case conformance`, attempts 1 to 4 (before the review) |1; 1; 1; 0|attempt 1: 3 findings, all from my own wire rule (three changes gave another typed value); attempts 2 and 3: the driver ended at a text of 100,000 code points (limit of the Dafny JavaScript runtime); attempt 4: 2,465 typed vectors, 116 wire inputs, 0 findings. No attempt showed a disagreement of the two stacks |
+| `--case record-controls`, attempt 1 (before the review) |0|29 of 29 planted faults and identity controls found or refused |
+| `--case core-controls`, attempts 1 and 2 (before the review) |1; 0|attempt 1: my own assertion was wrong (the wire rule also reads the Dafny side); attempt 2: 22 of 22 wrong cores reported |
+| `--case evidence`, attempt 1 (before the review) |0|two runs byte-identical; bundle `83afb7f4…` (replaced) |
+| the one fresh-context review |0 fail-open on the present inputs; 0 HIGH; 3 MEDIUM; 6 LOW|a pass was possible with an empty fixture file; three wrong checker cores passed; 14 sub-conditions had no planted fault (U461) |
+| after the repairs (one pass): `--case conformance`, attempt 5 |0|2,466 typed vectors, 192 wire inputs, 18 checks, 0 findings |
+| `--case record-controls`, attempts 2 and 3 |0; 0|57 of 57 |
+| `--case core-controls`, attempt 3 |0|25 of 25 wrong cores reported; pinned Dafny exit 4 for the 16 wrong decisions, exit 0 for the true one |
+| `--case evidence`, attempt 2 |stopped by me|I stopped it to change one control (the fixture-file control compared two digests and did not call the check) |
+| `--case evidence`, attempt 3 (final) |0|two runs byte-identical; bundle SHA-256 `f55391da…1da9` |
+| first scratch-clone regression (code before the review), stopped by me after the review |28 Stage EXIT cases 0 each; Slice 1 and Slice 2 evidence 0, 0; then stopped|bundles `c7f2f41c…` and `2721a293…` in the clone; Slice 3 and M1 evidence not finished |
+| after the repairs, scratch clone of `d3d1980f` plus the Wave Gate 1 files (`proposals/forge2-m1-conformance/run_regression.py`): Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the conformance report; for all 91 Markdown files outside `results/` |0; 0, 0, 0, 0; 1|only the 2 older Stage 9 links without a target |
+| the same clone: `scripts/exit_slice1.py`, `exit_slice2.py`, `exit_slice3.py`, `exit_m1_conformance.py`, each `--case evidence` |0; 0; 0; 0|bundles `c7f2f41c…`, `2721a293…` and `3cdfebfc…` as on `main`; conformance bundle equal to the working tree's (`f55391da…`) |
+| the same clone: 23 copies of the EXIT script with one check removed each, `--case record-controls` (one-off, `run_removed_checks.py`) |1 for 23 of 23|unchanged script: 0 before and 0 after; 18 checks and 5 identity or vacuity requirements |
+| `--case m1-audit` (inside the evidence case) |0|158 cases NOT RUN in the replay record; no HOL process started |
+| Stage 7; Stage 9; Stage 10; any HOL or Holmake process |NOT RUN|Docker time; deferred; no EXIT script on `main`; forbidden in this gate |
+| the staged tree before the commit (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the conformance report, review and owner texts; for all 91 Markdown files outside `results/`; the code and record files against the SHA-256 values of the regression record |0; 0 each (6); 1; equal|only the 2 older Stage 9 links without a target; 0 protected paths among the 34 staged files; only documents changed after the regression |
+| commit `e7ef31d4`; `git push -u origin slice4/m1-finality-conformance`; `gh pr create` (pull request 49) |0; 0|no administrator rights; the agent did not merge (U462) |
+| hosted `gate/pr_check.py`, pull request 49, head `e7ef31d4`, run 44436210874 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 35 coverage findings |
+
+[Conformance report](proposals/forge2-m1-conformance/REPORT.md).
+[Review text and disposition](proposals/forge2-m1-conformance/REVIEW.md).
+Tested on a finite corpus: the decision of the M1 executable against
+the compiled `Refund.Assess` and `RefundFinality.Check` and against the
+issuer process. Not proved by this work: anything. The repairs after
+the review were not reviewed again. The 158 recorded M1 cases are NOT
+RUN; their recorded wall times sum to 11,144 s (an estimate for a
+replay, not a measurement).
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Master idea: scope section and four next-horizon items (one document); pull request 48 merged by the owner as `d3d1980f` — U457, U458
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. One file changed: `FORGE_MASTER_IDEA.md`.
+No protected file changed. The four items F1.5, F1.6, F2.4, F2.5 are
+NOT STARTED: no file, no command, no proof.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the commit, tree of `c2b03946`: `check_links.py` for `FORGE_MASTER_IDEA.md`; `check_frozen_pr_gate.py` |0; 0|0 links without a target; 0 protected paths |
+| `git push -u origin docs/master-idea-v2-horizon`; `gh pr create` (pull request 48) |0; 0|no administrator rights |
+| hosted `gate/pr_check.py`, head `c2b03946`, run 44425343532 (Linux profile) |3|UNSUPPORTED, as expected for a document: 1 coverage finding |
+| merge of pull request 48 |by the owner, 2026-11-19 00:01Z, squash commit `d3d1980f`|`git diff --quiet d3d1980f c2b03946` exit 0 |
+
+These rows were written with the Wave Gate 1 records (U458).
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Slice 3 of the master idea (F3.1, F3.2): runtime certificates on batch booking; checker core proved at source level against a candidate specification; three untrusted optimizers exchanged against one compiled core; one review with repairs; pull request 47 merged by the owner as `b121bbdd` — U453, U454, U455, U456, U457, U458
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. No file of
@@ -60,6 +118,9 @@ complete; the batch model is not the approved booking specification
 | before the commit, on owner text G: SHA-256 of the evidence record file; the 60 input hashes of that record against the files of the tree (one-off) |`3cdfebfc…`; 60 of 60 equal|no code file changed after the final record; the EXIT cases and the regression were NOT run again (U457) |
 | the staged tree after the document changes of U457 (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the Slice 3 report, review and owner texts; for all 88 Markdown files outside `results/` |0; 0 each (6); 1|only the 2 older Stage 9 links without a target; 0 protected paths among the 54 staged files |
 | on owner text G: commit; push of branch `slice3/runtime-certificates`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|the owner's word is text G; expected hosted result: exit 3 (UNSUPPORTED) |
+| after that commit (rows added with the Wave Gate 1 records, U458): commit `1c2ad691`; `git push -u origin slice3/runtime-certificates`; `gh pr create` (pull request 47) |0; 0|no administrator rights; the agent did not merge |
+| hosted `gate/pr_check.py`, pull request 47, head `1c2ad691`, run 44424304046 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 79 coverage findings |
+| merge of pull request 47 |by the owner, 2026-11-18 23:55Z, squash commit `b121bbdd`|`git diff --quiet b121bbdd 1c2ad691` exit 0: the tree of `main` equals the checked commit |
 
 [Slice 3 report](proposals/forge2-slice3-runtime-certificates/REPORT.md).
 [Review text and disposition](proposals/forge2-slice3-runtime-certificates/REVIEW.md).

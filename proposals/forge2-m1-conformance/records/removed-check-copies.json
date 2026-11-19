@@ -1,0 +1,139 @@
+{
+ "copies": 23,
+ "copies_with_exit_1": 23,
+ "copies_with_exit_not_0": 23,
+ "end_to_end": false,
+ "note": "A copy that exits 1 failed a control (the planted fault was not found). Exit 2 would be a crash, not a control result.",
+ "rows": [
+  {
+   "exit_code": 0,
+   "last_line": "M1-CONFORMANCE record-controls: PASSED; end_to_end=false; M1 open",
+   "removed": "nothing (the unchanged script)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: M-EXIT",
+   "removed": "check M-EXIT (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: M-CLASS",
+   "removed": "check M-CLASS (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: REF",
+   "removed": "check REF (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: A-CALLS",
+   "removed": "check A-CALLS (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: A-PLAN",
+   "removed": "check A-PLAN (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: A-BYTES",
+   "removed": "check A-BYTES (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: F-VERDICT",
+   "removed": "check F-VERDICT (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: F-TOKEN",
+   "removed": "check F-TOKEN (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: F-POST",
+   "removed": "check F-POST (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: F-BIND",
+   "removed": "check F-BIND (2 calls)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: F-TAMPER",
+   "removed": "check F-TAMPER (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: I-VERDICT",
+   "removed": "check I-VERDICT (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: I-TOKEN",
+   "removed": "check I-TOKEN (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: W-RULE",
+   "removed": "check W-RULE (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: R-STDIN",
+   "removed": "check R-STDIN (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: R-RENDER",
+   "removed": "check R-RENDER (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: R-STDOUT",
+   "removed": "check R-STDOUT (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: VACUITY: these checks were never evaluated: R-MALFORMED",
+   "removed": "check R-MALFORMED (1 call)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: control substituted executable: other failure: EXECUTABLE: the copy changed during the runs",
+   "removed": "require EXECUTABLE (identity of the M1 executable before a run)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: control changed core module: used",
+   "removed": "require CORE_MODULE (identity of the compiled core)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: control corpus-without-accepted-vectors: an empty side was not refused",
+   "removed": "require VACUITY (both sides of the comparison are not empty)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: control never-evaluated M-EXIT: not refused",
+   "removed": "require VACUITY (every check was evaluated)"
+  },
+  {
+   "exit_code": 1,
+   "last_line": "M1-CONFORMANCE FAILED: control changed fixture file: used",
+   "removed": "require RECORDED (identity of the fixture file)"
+  },
+  {
+   "exit_code": 0,
+   "last_line": "M1-CONFORMANCE record-controls: PASSED; end_to_end=false; M1 open",
+   "removed": "nothing (the unchanged script, again)"
+  }
+ ],
+ "unchanged_script_exit_codes": [
+  0,
+  0
+ ],
+ "what": "Wave Gate 1: copies of scripts/exit_m1_conformance.py with one check removed, each run with --case record-controls"
+}
