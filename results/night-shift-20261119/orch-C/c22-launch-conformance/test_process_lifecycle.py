@@ -123,7 +123,9 @@ class ProcessLifecycle(unittest.TestCase):
     def child(self, body):
         path = os.path.join(self.dir, 'child.sh')
         with open(path, 'w') as f:
-            f.write('#!/bin/bash\n' + body + '\n')
+            # The test child first reads its whole input, as the refund program does. It is then still alive when the
+            # launcher checks its image (a child that ends at once makes the launcher refuse: a race in the test).
+            f.write('#!/bin/bash\n/bin/cat > /dev/null\n' + body + '\n')
         os.chmod(path, stat.S_IRWXU)
         return path
 

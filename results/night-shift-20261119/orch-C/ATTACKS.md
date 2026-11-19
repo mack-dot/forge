@@ -468,3 +468,11 @@ Overlay <SCRATCH>/redteam-C/fix-f67c5c16. Scripts: B's adapted copies (orch-B/h-
 | C-ATT-19 full restore | a7_full_restore.ts nofloor; floor | 1; 0 | | nofloor STILL PRESENT (B's stated limit); floor PASS |
 - NOT RUN by anyone: B's real-kill regression s3_kill_commits.ts (heavy slot); B does not claim "every crash state is recoverable".
 - Worker c27-sink3 started to VARY: the journal classifier against SQLite, the ledger hash chain and its migration, the recover path, a store moved to another folder.
+
+## FINAL RUN (17:12:18Z) of orch-C/c22-launch-conformance/test_process_lifecycle.py (SHA-256 968692dafa620d2a948faff5fd8de4d1d53f91ac1c4452571a79d90a4a0aa533) — C's own runs
+- Command: cd orch-C/c22-launch-conformance && C22_LAUNCHER=<file> /usr/bin/python3 -B -I test_process_lifecycle.py
+- A's launcher_v2.py (SHA-256 eec38a10583f1a2ba552834fca4bcad397ffde6bbc1277103a5533bfdf13c274): EXIT 0 in 5 of 5 runs; 24 tests OK. Logs final2-v2-run1..5.log.
+- A's launcher.py (fbdbea0b…): EXIT 1 in 2 of 2 runs; 2 FAIL (abort, and non-zero exit, after a complete frame with SIGCHLD ignored by the caller). Logs final2-v1-run1..2.log.
+- Correction of my own test before this run: an earlier final attempt on launcher_v2.py gave exit 1 once and exit 0 once (logs final-v2-run1.log, final-v2-run2.log). Cause: my test child ended before the launcher's image check; the launcher raised a refusal (csops errno 3); my test counted that as an error. The test child now reads its whole input first, as the refund program does (previous file kept: test_process_lifecycle_before_stdin_fix.py). That unstable attempt is not a launcher defect.
+- C-LAUNCH-01: CLOSED on launcher_v2.py. Not covered by these tests: the real refund program, code injected at load, the FFI C code (C-1).
+## c26 (reading audit of A's X8 v3, control matrix v2, gap list) and c27 (variations on B's f67c5c16): c26 is STATIC and not checked by C; c27 ran NOTHING (stopped by the owner's order). Their notes were relayed to A and B as unverified leads; none is a C finding.
