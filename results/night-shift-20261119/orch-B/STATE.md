@@ -210,3 +210,5 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - Branch nightshift/B-trust at 11adbf23. unsure U530–U566. MORNING.md final with addenda 1–21. OWNER_REQUIRED B-1 to B-11 with corrections.
 - Worker still assigned: r-subset3 (adversarial review of the third subset rule); told to do pure-Python and reading work only while on battery; its Dafny runs will be refused (exit 75) and must be recorded NOT RUN.
 - When AC returns: nothing is queued by B. Possible next steps: re-check r-subset3's result; a last ledger note; final state.
+- 14:15:16Z ROADMAP part 3 (U559–U566) and MORNING addendum 22 written and committed. On battery: only light work.
+- 14:15:42Z r-subset3 REPORTED (PARTIAL; battery): no bypass in tried classes; 10 more false refusals unverified. U567, addendum 23. No worker runs now. On battery: no Dafny, no heavy. Queue for AC: verify r-subset3/subs/correct F01–F12 (light); finish the attack list (new worker); optional: parser-based checker design.

@@ -139,3 +139,6 @@ A true audit pins the chain of charges, not the row log. A database writer witho
 4. Goal F (evidence): one runner reproduces the six stored Dafny records; five ledger versions with a verifier and up to 60 controls (identity and record consistency only); last: 151 edges, 87 machine-checked (2 about deployed Dafny source), chain 8 of 35.
 5. Goal G (deployment authority): design, threat table, tests of an admission function; `main` is unprotected and agent sessions hold the owner's credential: nothing can be enforced before owner actions (B-3).
 6. Still the weakest link: the deployed sink.ts; then enforced admission. Everything proved tonight is about models and drafts.
+
+## ADDENDUM 23 (2026-11-19T14:15:42Z) — partial review of the third subset rule (U567); battery power since about 14:14Z
+No bypass found in the classes tried (tuple matches, literal escapes, primed names, all earlier bypasses); about half of the planned attacks did not run (battery). Ten further natural correct styles are refused by the rule (not confirmed by Dafny). The third rule stays without a finished review. No Dafny run and no heavy step after 14:14Z.

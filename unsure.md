@@ -18258,3 +18258,13 @@ curl: (6) Could not resolve host: github.com
 - Not reviewed yet (r-subset3 runs).
 - Impact: three candidates now exist with measured costs: the first rule (sound on the tested sets; 26 of 36 correct), the second (46 of 47 correct; REFUTED), the third (46 of 67 correct; no known bypass; unreviewed). None is a proved bound. M1-B OPEN. end_to_end=false.
 - Next check: r-subset3.
+
+## U567 — a PARTIAL review of the third subset rule: no bypass found in the classes tried; the review was cut short by battery power
+- Status: 2026-11-19T14:15Z (inserted by the shell from `date -u`). Refs U566. Evidence under results/night-shift-20261119/orch-B/r-subset3. All runs are the reviewer's; I repeated none (battery power since about 14:14Z; the lock script refuses Dafny runs).
+- Tried and failed to break the rule: a match on a tuple of 4 to 20 components (the compiler emits linear code: read in three translate outputs); nine string and character escape forms reaching the JavaScript (escaped correctly); primed names (kept distinct in one probe); all earlier bypasses of U564 (refused). By reading the rule only: the integer-growth claim, the comparison-chain rule, the bound on value size across helper calls.
+- NOT DONE (battery): attacks on the kind inference, on huge literals, on JavaScript names beyond one probe, on the ghost skipping, on the lexer beyond escapes; no compiled run; no Dafny verify of the reviewer's new files.
+- A weaker finding, not confirmed: 10 of 12 further natural correct styles are refused for reasons outside the stated price (a match statement without braces, a constant set of reasons, a helper with a sequence parameter, a calc block in the method body, a named function result, locals named `name` or `length`, a single sequence append, a let-expression, a nested tuple selection). Each counts only if Dafny verifies the file: NOT RUN. If confirmed, the price of the third rule is higher than the 21 of 67 of U566.
+- A side note of the reviewer, open: a raw CR in a verbatim string comes out as a line feed in the generated JavaScript; whether the verifier sees the same string is not checked.
+- Reading: "no bypass found" here is weak evidence: about half of the planned attacks did not run. The third rule stays UNREVIEWED in the sense of the night's rule (a finished adversarial review).
+- Impact: none on stage labels. OWNER_REQUIRED B-11 stands with its correction: no subset rule is recommended for adoption; the scope-minimal diff, the `expect` rule and supervision are separate. M1-B OPEN. end_to_end=false.
+- Next check, on mains power: verify the twelve files; finish the attack list; then decide between the third rule as a narrow fallback and a checker over the resolved syntax tree.
