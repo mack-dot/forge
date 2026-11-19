@@ -224,3 +224,21 @@ NEXT: the HOL slot goes to worker W-repro (reproduction from the branch, 18 case
 
 ## CHECKPOINT (2026-11-19T14:25:41Z)
 Wrote `orch-A/END_TO_END_GAPS.md` (17 transitions; smallest missing boundary = T9, the FFI premise). W-repro has the HOL slot (running `repro.sh`). W-pre and W-x8 work.
+
+## CHECKPOINT (2026-11-19T14:28:13Z)
+W-pre done: no BLOCKS-RUN finding in round11/round12; LIKELY-FAIL: the read-side step `rf1_open` can hang again. Corrected copy with a watchdog (ML only): `orch-A/r6/preflight/round13/` → staged `R6rx-0003`, `R6r-0003` (deps `deps-R6r.txt`). `R6tx-0001` also hung (parts_ok_basis_ffi step 2): a worker (W-top) prepares round14 with the watchdog and a split of that step. HOL slot: W-repro.
+
+## CHECKPOINT (2026-11-19T14:29:30Z)
+W-x8 done (`orch-A/x8-x11/`). Key claim to CHECK: the FFI premise can be met by an environment CONSTRUCTED from the real run (real effect at observed calls, abstract effect elsewhere), so R6 would not be needed for X8; needs lemmas T-TRACE, T-ENV. Reviewer W-x8rev started; a proof author for T-TRACE and T-ENV starts only after its verdict. W-static runs the two static tests T1, T5. HOL slot: W-repro. W-top prepares round14.
+
+## CHECKPOINT (2026-11-19T14:30:09Z)
+Reproduction progress (W-repro): see `orch-A/repro/run/queue-repro-*.log`. Workers running: W-repro (HOL slot), W-top, W-x8rev, W-static.
+
+## CHECKPOINT (2026-11-19T14:31:54Z)
+Red team C (agent a4f587cb1a34235e8), premise audit at dae1b93e: no undisclosed false premise; two notes taken: T12 linked to CE-2 in `END_TO_END_GAPS.md`; a joint non-vacuity witness for the `_shape`/`_events` premise sets is missing → worker W-nv.
+
+## CHECKPOINT (2026-11-19T14:33:09Z)
+W-static done: T1 PASS, T5 PASS (static, TESTED-UNPROVED): code slice has 0 uses of x18, 0 of SP, 0 system/PAC instructions; `__TEXT` r-x; no hardened runtime. Report `orch-A/x8-x11/static-tests/REPORT.md`.
+
+## CHECKPOINT (2026-11-19T14:34:33Z)
+W-x8rev verdict (by reading): the constructed-environment route holds; R6 is NOT needed for the real-process claim; T-ENV is essentially tonight's L1. Report `orch-A/x8-x11/review/REPORT.md`; `END_TO_END_GAPS.md` updated. Worker W-mt writes the composed theorem for the totalised machine (`orch-A/mt/`, case MT-0001). PICK CHANGE: after the reproduction, run MT-0001 and the non-vacuity witness before further R6 read-side work.

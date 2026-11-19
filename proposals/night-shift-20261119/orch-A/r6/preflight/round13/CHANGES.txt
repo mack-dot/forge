@@ -1,0 +1,41 @@
+round13 (worker W-pre, Night-Shift Orchestrator A, preflight). STATIC copy of round12. NOTHING here ran. The guard code and
+every tactic are UNCHECKED by HOL. No tactic, statement, definition or step list changed. round12 is not changed.
+Reason: R6rx-0001 (attempt-0001/R6rx-0001/stdout.log): step "B1 open (2749-2752; IOFS_V_def)" (round10 rf1_open =
+imp_res_tac get_fd_content_eof \\ rfs [] \\ fs [MAX_DEF, MIN_DEF, IOFS_V_def, INSTREAM_BUFFERED_BL_FD_def,
+instream_buffered_inv_def] \\ xpull \\ xmatch) stopped at 240 s twice (stdout 222, 776) and ran on the third time
+(split walk, step 2 after stdout 992-1096) until the runner killed the process (command.json actual_exit -15, wall 2388 s).
+round12 still runs the same fs as the main candidate of step "B1 open IOFS_V, BL_FD, inv" and the full old chain as the
+alternative of step "B1 xmatch" (r6r_steps.sml 231, 236, 265-275), in walk (C), in try_helper (D) and in the proof R6r-0002.
+Changes:
+1. R6rx-0003.sml (from round12/R6rx-0002.sml): first comment; guard block after `fun trunc` (guarded_apply); the three
+   calls Timeout.apply (run_ts, explore_head app1, tlim) -> guarded_apply; theory forge_refundR6RExplore3; R6RDIR ->
+   .../orch-A/r6/preflight/round13/ (ends in "/"). diff-R6rx.txt.
+2. R6r-0003.sml (from round12/R6r-0002.sml): first comment; the same guard block; tlim -> guarded_apply; R6RDIR ->
+   .../preflight/round13/. Theory name, harness checks, counts unchanged. diff-R6r.txt.
+3. r6r_explore_calls.sml: block (E) moved before (C); new order (A) (B) (E) (C) (D) (F). diff-r6r_explore_calls.txt.
+4. r6r_common.sml, r6r_steps.sml, r6r_prove.sml, deps-R6r.txt: byte-identical to round12.
+Guard semantics: a step that ends before its limit is unchanged. After limit + 15 s the watchdog interrupts again every
+5 s (inside the step the interrupt state is InterruptAsynch); after limit + 300 s it prints WATCHDOG_HARD_EXIT and calls
+Posix.Process.exit 0w3 (process ends, exit code 3; nothing is exported after it). Markers: GUARD_DEFINED,
+WATCHDOG_INTERRUPT_AGAIN, WATCHDOG_HARD_EXIT. If GUARD_DEFINED is missing in stdout, the guard did not compile: run
+the round12 files instead (RUN_PLAN_R6r.md commands).
+Static checks run on these files: preflight/check_sml.py (exit 0, all six files OK).
+
+SHA-256 (originals in round12, then copies here):
+16aa8183dd5c28ff0956c408d536ed0180a275171b1ecc08b0f400c258af0052  round12/R6rx-0002.sml
+516e8e5ec850650dda2cbb458de5f2178e7f07ba82b6cdbe0dcf03c13fb8bc15  round12/R6r-0002.sml
+3e9d3e6f5ec4d81d38b3c9a3e2287b15f83de77ebdcaf9ac7b01d9b6354ed7bd  round12/r6r_explore_calls.sml
+34d55f95ba773be9016539715c4d2f5ec7f2d7d2b73415e8e60c567b23d0ab21  round12/r6r_common.sml
+b2302a4567f566572cf868862d95ca5e16e05d19ed481ea1b4566c395c1968ad  round12/r6r_steps.sml
+3518908225b687733fad1f297a879edaaa51494d920920f7423133c29361551c  round12/r6r_prove.sml
+37017fc87d46d9216ff959b3492b888de1a20e95ce7cbf3c69b7954d408cf279  round12/deps-R6r.txt
+28757a252968668fa7738f6daaffca5498625096f27cf762dcce6e134b726b4c  R6rx-0003.sml
+9b3db47b49473c956c6f4ec8a433c4dd4a62374fab05da4534738b1460975c70  R6r-0003.sml
+3b1f18e124a51548a5a127b2852aa74a4af74d920fc38501aaeeb702fd460f3e  r6r_explore_calls.sml
+34d55f95ba773be9016539715c4d2f5ec7f2d7d2b73415e8e60c567b23d0ab21  r6r_common.sml
+b2302a4567f566572cf868862d95ca5e16e05d19ed481ea1b4566c395c1968ad  r6r_steps.sml
+3518908225b687733fad1f297a879edaaa51494d920920f7423133c29361551c  r6r_prove.sml
+37017fc87d46d9216ff959b3492b888de1a20e95ce7cbf3c69b7954d408cf279  deps-R6r.txt
+48e4755f25f9f084362c150fd5d177cc04622a2c1dcb765173bb568f1b5b637e  diff-R6rx.txt
+c73efc2184723ba6df39515b771e715d5e1dadf08e22644016aa960b9cbebea3  diff-R6r.txt
+db266c1cdf0bcd937f0f5392ed0d8f80613f1ea2e55fe3443076ba5bd9440ccd  diff-r6r_explore_calls.txt

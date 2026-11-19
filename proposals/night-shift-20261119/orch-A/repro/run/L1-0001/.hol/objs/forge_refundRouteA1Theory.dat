@@ -1,0 +1,167 @@
+(theory
+ ("forge_refundRouteA1"
+  ("forge_refundSlideProfileA" .
+   "a8f4f9beaeac47cc975d23d89a8fb7f97497052e"))
+ (core-data
+  (tables
+   (string-table "min" "fun" "bool" "arm8" "arm8_state" "list" "fcp" "cart"
+    "bit0" "one" "num" "targetSem" "machine_config" "pair" "prod" "bit1"
+    "exception" "TCR_EL1" "SCTLRType" "ProcState" "asmSem" "asm_state" "!"
+    "arithmetic" "*" "+" "," "/\\" "0" "prim_rec" "<" "=" "option" "==>"
+    "BIT1" "BIT2" "COND" "CONS" "F" "FST" "IN" "combin" "K" "LENGTH"
+    "LIST_TO_SET" "NIL" "NONE" "NUMERAL" "SND" "SOME" "T" "ZERO"
+    "alignment" "aligned" "arm8_target" "arm8_ok" "asmProps" "target"
+    "misc" "asm_write_bytearray" "interference_ok" "words" "n2w"
+    "read_bytearray" "recordtype.arm8_state.seldef.MEM"
+    "recordtype.arm8_state.seldef.PC"
+    "recordtype.arm8_state.seldef.PC_fupd"
+    "recordtype.arm8_state.seldef.REG" "recordtype.asm_state.seldef.mem"
+    "recordtype.asm_state.seldef.mem_domain"
+    "recordtype.asm_state.seldef.pc_fupd"
+    "recordtype.asm_state.seldef.regs"
+    "recordtype.machine_config.seldef.ffi_interfer"
+    "recordtype.machine_config.seldef.ffi_interfer_fupd"
+    "recordtype.machine_config.seldef.next_interfer"
+    "recordtype.machine_config.seldef.prog_addresses"
+    "recordtype.target.seldef.proj" "forge_refundEnvModel" "refund_abs_ffi"
+    "refund_bad_return_ffi" "forge_refundRouteA1"
+    "refund_close_abort_model_ffi" "refund_close_call_valid"
+    "forge_refundSlideProfileA" "refund_env_ok_sl" "refund_ffi_contract_at"
+    "refund_ffi_contract_on" "refund_ffi_tot" "refund_ffi_witness_state"
+    "shift_seq" "target_state_rel" "w2n" "word_add" "word_msb" "word_sub"
+    "~" "stored_contract_demands_return_at_u393_close_state"
+    "refund_ffi_tot_valid" "refund_ffi_tot_shift_seq"
+    "refund_ffi_tot_invalid" "refund_ffi_tot_def"
+    "refund_ffi_tot_all_valid_is_identity"
+    "refund_ffi_contract_on_totalises" "refund_ffi_contract_on_def"
+    "refund_ffi_contract_on_all_valid_is_the_stored_contract"
+    "refund_env_with_ffi_interfer_fields" "refund_env_ok_sl_of_contract_on"
+    "refund_close_call_valid_rejects_u393_witness"
+    "refund_close_call_valid_excludes_zero_alen"
+    "refund_close_call_valid_def" "refund_close_abort_model_ffi_def"
+    "contract_on_without_totalisation_is_not_the_stored_contract"
+    "close_abort_model_totalised_meets_stored_contract"
+    "close_abort_model_satisfies_contract_on"
+    "close_abort_model_fails_stored_contract"
+    "bad_return_ffi_totalised_with_empty_predicate_meets_contract" "asm"
+    "bit" "numeral" "numeral_bit" "pred_set" "reduce")
+   (id-table (0 . 1) (0 . 2) (3 . 4) (5 . 5) (6 . 7) (6 . 8) (9 . 9)
+    (10 . 10) (11 . 12) (13 . 14) (6 . 15) (3 . 16) (3 . 17) (3 . 18)
+    (3 . 19) (20 . 21) (2 . 22) (23 . 24) (23 . 25) (13 . 26) (2 . 27)
+    (10 . 28) (29 . 30) (0 . 31) (32 . 32) (0 . 33) (23 . 34) (23 . 35)
+    (2 . 36) (5 . 37) (2 . 38) (13 . 39) (2 . 40) (41 . 42) (5 . 43)
+    (5 . 44) (5 . 45) (32 . 46) (23 . 47) (13 . 48) (32 . 49) (2 . 50)
+    (23 . 51) (52 . 53) (54 . 55) (54 . 54) (56 . 57) (58 . 59) (56 . 60)
+    (61 . 62) (58 . 63) (3 . 64) (3 . 65) (3 . 66) (3 . 67) (20 . 68)
+    (20 . 69) (20 . 70) (20 . 71) (11 . 72) (11 . 73) (11 . 74) (11 . 75)
+    (56 . 76) (77 . 78) (77 . 79) (80 . 81) (80 . 82) (83 . 84) (83 . 85)
+    (80 . 86) (80 . 87) (77 . 88) (58 . 89) (56 . 90) (61 . 91) (61 . 92)
+    (61 . 93) (61 . 94) (2 . 95))
+   (type-table (1) (2) (0 1 0) (6) (5 3) (5 4) (5 5) (4 0 6) (3 7) (0 8 2)
+    (7) (0 10 9) (5 6) (5 12) (5 13) (4 0 14) (0 15 0) (9 15 7) (0 17 0)
+    (9 18 15) (10 4) (4 0 20) (0 21 15) (9 22 19) (11) (9 24 23) (12)
+    (9 26 25) (13) (9 28 27) (14) (9 30 29) (8 14 1 31) (9 8 1) (9 10 33)
+    (0 34 1) (0 10 35) (15 14) (0 2 0) (0 37 0) (0 39 0) (0 16 0) (0 41 0)
+    (0 11 0) (0 43 0) (0 36 0) (0 45 0) (0 8 0) (0 47 0) (0 10 0) (0 49 0)
+    (0 34 0) (0 51 0) (0 10 10) (0 10 53) (0 1 33) (0 8 55) (0 33 34)
+    (0 10 57) (0 0 0) (0 0 59) (0 10 49) (0 1 2) (0 15 16) (0 7 0) (0 7 64)
+    (0 16 41) (0 1 1) (0 10 67) (0 68 0) (0 68 69) (0 36 45) (24 8)
+    (0 72 0) (0 72 73) (0 1 67) (0 0 75) (24 7) (0 77 77) (0 77 78)
+    (0 0 79) (3 10) (0 81 81) (0 10 82) (0 33 8) (0 34 10) (0 15 41)
+    (0 10 50) (0 15 15) (0 15 88) (0 36 36) (0 36 90) (0 8 10) (0 81 49)
+    (0 33 1) (0 34 33) (0 7 77) (0 8 72) (0 10 16) (46 14 1 31) (0 15 7)
+    (0 100 100) (0 8 101) (0 15 102) (0 1 31) (0 104 0) (0 68 105)
+    (0 10 15) (0 10 21) (0 15 77) (0 109 72) (0 10 110) (0 15 111)
+    (0 1 100) (0 1 15) (0 88 67) (0 1 22) (0 37 100) (0 37 16) (0 37 37)
+    (0 88 119) (0 37 107) (0 32 36) (0 32 32) (0 90 123) (0 32 68)
+    (0 32 16) (0 16 104) (0 99 127) (0 32 0) (0 15 129) (0 16 45)
+    (0 15 131) (0 11 45) (0 16 133) (0 15 134) (0 11 90) (0 10 90) (0 37 2)
+    (0 99 138) (0 15 10))
+   (term-table ("Vok" 11) ("a" 15) ("b" 15) ("bytes" 8) ("bytes2" 8)
+    ("dm" 16) ("envmc" 32) ("f" 36) ("ffi_i" 36) ("g" 36) ("i" 10)
+    ("index" 10) ("k" 10) ("ms" 1) ("ms2" 1) ("n" 10) ("nb" 8)
+    ("new_bytes" 8) ("r" 10) ("sl" 15) ("t1" 37) ("x" 34) (16 38) (16 40)
+    (16 41) (16 42) (16 44) (16 46) (16 48) (16 50) (16 52) (17 54) (18 54)
+    (19 56) (19 58) (20 60) (21 10) (22 61) (23 62) (23 60) (23 63) (23 65)
+    (23 66) (23 70) (23 71) (23 61) (23 74) (25 60) (26 53) (27 53) (28 76)
+    (28 80) (29 83) (30 0) (31 84) (31 85) (32 86) (32 87) (33 89) (33 91)
+    (34 92) (35 93) (36 8) (36 81) (37 77) (38 53) (39 94) (39 95) (40 96)
+    (40 97) (41 0) (42 10) (43 98) (44 2) (45 99) (47 103) (48 106)
+    (49 107) (49 108) (50 112) (51 113) (52 114) (53 115) (54 116) (55 117)
+    (56 118) (57 120) (58 121) (59 122) (60 124) (61 125) (62 126) (63 128)
+    (64 36) (65 36) (66 36) (67 11) (68 130) (69 132) (70 135) (71 136)
+    (72 1) (73 137) (74 139) (75 140) (76 89) (77 16) (78 89) (79 59)))
+  exports (nil) (nil)
+  ((96
+    (((80 16) (52 0 1) (23 21 82) (3 21 55 127 694 695 697) (54 1 17 19)
+      (116 302 305) (56 38 41 61) (20 27) (117 8)
+      (2 8 14 25 27 35 50 51 52 54 56 58 60 63 64 96 105 128 133 154)
+      (41 8 13 24) (77 21) (83 0) (5 47 747) (58 10)
+      (118 0 3 4 5 6 7 9 15 16 17 21 24 32 34 35 39 40) (119 1 2) (32 119)
+      (120 18 121) (29 6) (121 2)
+      (61 70 143 144 151 156 160 238 328 725 728)) "DISK_THM") (2 0)
+    ("%5%8%71U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U49U48U48U48U48U48U48U49U49U48U49U48U48U48U49U65U77$1B98$0@%36%71U49U65%62%71U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U49U48U48U48U48U48U48U49U48U48U48U48U48U48U49U65U77U58%101B82B33B34b0U81%36U77B40B47|U27|U25"))
+   (97 (((80 2) (2 25 56 58 63 105 133 154) (80 1) (13 8 9)) "DISK_THM")
+    (2 0)
+    ("%0%7%12%11%17%14$2$1b5$0@$5$4B100$3@$2$1$0B33B34@$3$2$1$0B33B34b4B38B47|U22|U28|U29|U29|U27|U26"))
+   (98
+    (((80 5) (23 30) (3 697) (2 25 35 56 58 60 105 133) (77 12) (80 1)
+      (58 13)) "DISK_THM") (2 0)
+    ("%15%0%7$2$1$0B100B102$1$2$0B102B100B44|U27|U26|U29"))
+   (99 (((80 3) (2 25 56 58 63 105 133 154) (80 1) (13 8 9)) "DISK_THM")
+    (2 0)
+    ("%0%7%12%11%17%14$2$1b5$0@U108$5$4B100$3@$2$1$0B33B34@$3$2$1$0B33B34B93B38B47|U22|U28|U29|U29|U27|U26"))
+   (100 (((80 1))) (1 0)
+    ("%0%7%12%21$3$2B100$1@$0@$0U55$0U67U54b3$0U67U66@$1$0b2B50$1$0B93@B38|U30|U29|U27|U26"))
+   (101 (((80 4) (2 25 35 56 60 154) (80 1)) "DISK_THM") (2 0)
+    ("%7%10%16%13%70|||$0B100$0B44|U27"))
+   (102 (((80 6) (2 25 29 50 52 56 63) (80 0 2 3) (83 0 7)) "DISK_THM")
+    (2 0) ("%2%5%0%7$3$2B99$1@$0@$3$2B98$1$0B100@B47|U27|U26|U25|U24"))
+   (103 (((80 0))) (1 0)
+    ("%2%5%0%8$3$2B99$1@$0@%12%11%17%14%20%3%4$5%71U48U49U65B37$2U85$9B42$3%36U78B83$3%71U48U65U78B83U104B79%1$0$10B56$4$0B80U68B51%64@|@$1U69B46$3%71U49U65U78B83$3%71U48U48U65U78B83U104B79%1$0$10B56$4$0B80U68B51%64@|@$0U69B46$4U60$0U60B45%74$10%71U48U48U65$5B32%71U48U48U48U49U65B31U77B107U58$2B86B103$3@%71U49U65$2%71U49U49U49U49U65B87B72$5$4b8$3@B35B35B35B35B35B35B35$6$5$4$3B33B34b7U73$6$5$4$3B33B34b7U81$2%71U49U49U49U49U65B87B40%1$0$10B56$7$6$5$4B33B34b8$0B80$3%71U49U65B87$5B75$3U84@$0@B41B47|U24%18$0%71U48U49U48U48U65%71U48U49U48U49U65%71U48U49U49U48U65%71U48U49U49U49U65%71U49U48U48U48U65%71U49U48U48U49U65%71U49U48U49U48U65%71U49U49U48U48U65%71U49U49U48U49U65%63B52B52B52B52B52B52B52B52B52U61B57$7$6$5$4B33B34b8$0U78B83$3$0B87B40B47|U29B35B35B35B47|U28|U28|U23|U22|U28|U29|U29B39|U27|U26|U25|U24"))
+   (104 (((80 9) (2 25 34 50 56) (80 0) (83 0)) "DISK_THM") (2 0)
+    ("%2%5%7$2$1B99%10%16%13%70|||@$0@$2$1B98$0@B39|U27|U25|U24"))
+   (105 (((80 7) (2 25 50 56) (41 13) (11 68)) "DISK_THM") (2 0)
+    ("%9U59%6B89U90%6U90B43%9U59%6B89U91%6U91B42%9U59%6B89U88%9B44B35B35"))
+   (106 (((80 8) (80 6 7) (83 4)) "DISK_THM") (2 0)
+    ("%6U90%74%6U91B92B76%19%71U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U49U48U48U48U48U48U48U49U49U48U49U48U48U48U49U65U77B105%6U91B99%0@%6U88@B35%19%0%6U88B100U59%6B89B97B47"))
+   (107
+    (((80 15) (23 265 267) (3 694 697) (2 25 50 52 54 56 58 63 105 128)
+      (41 13) (77 21) (80 12) (118 3 6 7) (61 110 144 453 728)) "DISK_THM")
+    (2 0)
+    ("%71U49U65%62B96%71U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U49U48U48U48U48U48U48U49U48U48U48U48U48U48U49U65U77U58%101B82@U108"))
+   (108 (((80 14) (2 27 52 56 58 63 105 128) (80 12)) "DISK_THM") (2 0)
+    ("%16%13$0%71U48U48U65U78B83%36U77B40%71U49U65$1B96$0@U108B47|U22|U28"))
+   (109 (((80 12))) (1 0)
+    ("%10%16%13$2$1B96$0@$2%71U49U65B45$0%71U48U65U78B83%71U48U48U49U65U77B40$0%71U48U48U65U78B83%36U77B40U108$0%71U48U48U65U78B83U106U108B35B35B47B39|U22|U28|U29"))
+   (110 (((80 13))) (1 0)
+    ("%12%21$1$0B95$0U55$0U67U54B96$0U67U66@$1$0B93B50%71U48U48U48U48U48U48U48U48U48U48U48U48U48U48U49U48U48U49U48U49U48U48U49U48U49U48U49U48U48U49U48U49U65U77U58$0U67U66B82@B38|U30|U29"))
+   (111
+    (((80 10) (23 265 267) (3 694 695 697)
+      (2 14 25 27 34 35 50 52 56 58 63 64 95 96 101 105 128) (41 13 24)
+      (77 12 21 22 23) (80 0) (83 1) (118 3 6 7) (13 8 9) (121 2)
+      (61 110 143 144 156 728)) "DISK_THM") (2 0)
+    ("%2%5%0%7$3$2B99$1@$0@$3$2B98$0@B47|U27|U26|U25|U24U108"))
+   (112 (((80 19) (80 6 17)) "DISK_THM") (2 0)
+    ("%2%5$1$0B98%96%95B100@|U25|U24"))
+   (113
+    (((80 17) (2 25 50 52 56 58 63 105 133 154) (80 0 13) (83 0 7)
+      (13 8 9)) "DISK_THM") (2 0) ("%2%5$1$0B99%96@%95@|U25|U24"))
+   (114
+    (((80 18) (23 265 267) (3 694 695 697)
+      (2 25 50 52 54 56 58 63 105 128 133 154) (41 13 24) (77 21)
+      (80 12 13 16) (118 3 6 7) (13 8 9) (61 110 144 453 728)) "DISK_THM")
+    (2 0)
+    ("%5%71U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U48U49U48U48U48U48U48U48U49U49U48U49U48U48U48U49U65U77$0B98%95@U108|U25"))
+   (115 (((80 11) (2 25 34 35 50 52) (80 0 6)) "DISK_THM") (2 0)
+    ("%2%5$1$0B98%10%16%13%53|||%94B100@|U25|U24"))))
+ (incorporate (incorporate-types) incorporate-consts
+  ("refund_ffi_tot" . 136) ("refund_ffi_contract_on" . 135)
+  ("refund_close_call_valid" . 11) ("refund_close_abort_model_ffi" . 36))
+ (loadable-thydata
+  ("userdef.deltas" (tag-knm 80 . 103) (tag-knm 80 . 100)
+   (tag-knm 80 . 109) (tag-knm 80 . 110))
+  ("grammardelta" (OO "refund_ffi_contract_on" (tag-tm . "%99"))
+   (OO "refund_ffi_tot" (tag-tm . "%100"))
+   (OO "refund_close_call_valid" (tag-tm . "%96"))
+   (OO "refund_close_abort_model_ffi" (tag-tm . "%95")))))

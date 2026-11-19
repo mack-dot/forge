@@ -1,0 +1,256 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_refundRouteA2b">>
+MARK D3
+D3_SOURCE imported forge_refundRouteA2.ffi_calls_ok_def
+DEFINITION ⊢ (∀P mc ffi ms. ffi_calls_ok P mc ffi 0 ms ⇔ T) ∧
+  ∀P mc ffi k ms.
+    ffi_calls_ok P mc ffi (SUC k) ms ⇔
+    if mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs then
+      if
+        encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+          (mc.target.get_byte ms) mc.prog_addresses
+      then
+        (let
+           ms1 = mc.target.next ms;
+           (ms2,new_oracle) = apply_oracle mc.next_interfer ms1;
+           mc = mc with next_interfer := new_oracle
+         in
+           if
+             EVERY mc.target.state_ok [ms; ms1; ms2] ∧
+             ∀x. x ∉ mc.prog_addresses ⇒
+                 mc.target.get_byte ms1 x = mc.target.get_byte ms x
+           then
+             ffi_calls_ok P mc ffi k ms2
+           else T)
+      else T
+    else if mc.target.get_pc ms = mc.halt_pc then T
+    else if mc.target.get_pc ms = mc.install_pc then
+      case read_ffi_bytearray mc mc.ptr_reg mc.len_reg ms of
+        NONE => T
+      | SOME bytes =>
+        (let
+           (ms1,new_oracle) = apply_oracle mc.install_interfer (bytes,ms);
+           mc = mc with install_interfer := new_oracle
+         in
+           ffi_calls_ok P mc ffi k ms1)
+    else
+      case find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 of
+        NONE => T
+      | SOME ffi_index =>
+        case mc.ffi_names❲ffi_index❳ of
+          ExtCall v1 =>
+            (case ALOOKUP mc.mmio_info ffi_index of
+               NONE =>
+                 (case read_ffi_bytearrays mc ms of
+                    (NONE,v3) => T
+                  | (SOME bytes,NONE) => T
+                  | (SOME bytes,SOME bytes2) =>
+                    case call_FFI ffi mc.ffi_names❲ffi_index❳ bytes bytes2 of
+                      FFI_return new_ffi new_bytes =>
+                        P ffi_index new_bytes ms ∧
+                        (let
+                           (ms1,new_oracle) =
+                             apply_oracle mc.ffi_interfer
+                               (ffi_index,new_bytes,ms);
+                           mc = mc with ffi_interfer := new_oracle
+                         in
+                           ffi_calls_ok P mc new_ffi k ms1)
+                    | FFI_final outcome => T)
+             | SOME v => T)
+        | SharedMem op => F
+MARK H
+BEGIN rfb2_next_interfer_update
+TACTIC_USED rfb2_next_interfer_update 1
+Saved theorem _______ "rfb2_next_interfer_update"
+CHECKED rfb2_next_interfer_update
+⊢ ∀mc g ms.
+    read_ffi_bytearrays (mc with next_interfer := g) ms =
+    read_ffi_bytearrays mc ms
+BEGIN rfb2_install_interfer_update
+TACTIC_USED rfb2_install_interfer_update 1
+Saved theorem _______ "rfb2_install_interfer_update"
+CHECKED rfb2_install_interfer_update
+⊢ ∀mc g ms.
+    read_ffi_bytearrays (mc with install_interfer := g) ms =
+    read_ffi_bytearrays mc ms
+BEGIN rfb2_ffi_interfer_update
+TACTIC_USED rfb2_ffi_interfer_update 1
+Saved theorem _______ "rfb2_ffi_interfer_update"
+CHECKED rfb2_ffi_interfer_update
+⊢ ∀mc g ms.
+    read_ffi_bytearrays (mc with ffi_interfer := g) ms =
+    read_ffi_bytearrays mc ms
+BEGIN call_FFI_return_keeps_oracle
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRouteA2b)>>
+TACTIC_USED call_FFI_return_keeps_oracle 1
+Saved theorem _______ "call_FFI_return_keeps_oracle"
+CHECKED call_FFI_return_keeps_oracle
+⊢ ∀st s c b st' b'.
+    call_FFI st s c b = FFI_return st' b' ⇒ st'.oracle = st.oracle
+MARK G
+BEGIN ffi_calls_ok_of_returning_calls
+TACTIC_USED ffi_calls_ok_of_returning_calls 1
+Saved theorem _______ "ffi_calls_ok_of_returning_calls"
+CHECKED ffi_calls_ok_of_returning_calls
+⊢ ∀P k mc ffi ms.
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+    (∀ffi1 ms1 i c ab ffi2 nb.
+       ffi1.oracle = ffi.oracle ∧ i < LENGTH mc.ffi_entry_pcs ∧
+       read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+       call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+       P i nb ms1) ⇒
+    ffi_calls_ok P mc ffi k ms
+STATEMENT_G ∀P k mc ffi ms.
+  (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+  (∀ffi1 ms1 i c ab ffi2 nb.
+     ffi1.oracle = ffi.oracle ∧ i < LENGTH mc.ffi_entry_pcs ∧
+     read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+     call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+     P i nb ms1) ⇒
+  ffi_calls_ok P mc ffi k ms
+MARK CLOSE
+BEGIN ffi_close_return_lengths
+TACTIC_USED ffi_close_return_lengths 1
+Saved theorem _______ "ffi_close_return_lengths"
+CHECKED ffi_close_return_lengths
+⊢ ∀c ab fsys nb fsys'.
+    ffi_close c ab fsys = SOME (FFIreturn nb fsys') ⇒
+    LENGTH c = 8 ∧ 1 ≤ LENGTH ab
+BEGIN basis_close_return_lengths
+TACTIC_USED basis_close_return_lengths 1
+Saved theorem _______ "basis_close_return_lengths"
+CHECKED basis_close_return_lengths
+⊢ ∀ext st c ab st' nb.
+    st.oracle = basis_ffi_oracle ext ∧
+    call_FFI st (ExtCall «close») c ab = FFI_return st' nb ⇒
+    LENGTH c = 8 ∧ 1 ≤ LENGTH ab
+BEGIN close_returning_calls_have_valid_lengths
+TACTIC_USED close_returning_calls_have_valid_lengths 1
+Saved theorem _______ "close_returning_calls_have_valid_lengths"
+CHECKED close_returning_calls_have_valid_lengths
+⊢ ∀ext k mc ffi ms.
+    mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+    mc.ffi_names❲2❳ = ExtCall «close» ∧ ffi.oracle = basis_ffi_oracle ext ⇒
+    ffi_calls_ok (λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) mc ffi k ms
+MARK REFUND
+BEGIN three_names_are_ExtCall
+TACTIC_USED three_names_are_ExtCall 1
+Saved theorem _______ "three_names_are_ExtCall"
+CHECKED three_names_are_ExtCall
+⊢ ∀i. i < 3 ⇒
+      ∃nm. [ExtCall «read»; ExtCall «write»; ExtCall «close»]❲i❳ = ExtCall nm
+BEGIN refund_names_are_ExtCall
+TACTIC_USED refund_names_are_ExtCall 1
+Saved theorem _______ "refund_names_are_ExtCall"
+CHECKED refund_names_are_ExtCall
+⊢ ∀i. i < 4 ⇒
+      ∃nm.
+        [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»]❲
+          i
+        ❳ = ExtCall nm
+BEGIN refund_mc_close_fields
+TACTIC_USED refund_mc_close_fields 1
+Saved theorem _______ "refund_mc_close_fields"
+CHECKED refund_mc_close_fields
+⊢ ∀b envmc.
+    (refund_mc b envmc).target = arm8_target ∧
+    (refund_mc b envmc).len_reg = 1 ∧ (refund_mc b envmc).len2_reg = 3 ∧
+    (refund_mc b envmc).ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    LENGTH (refund_mc b envmc).ffi_entry_pcs = 4
+BEGIN refund_ffi_calls_ok_close
+TACTIC_USED refund_ffi_calls_ok_close 1
+Saved theorem _______ "refund_ffi_calls_ok_close"
+CHECKED refund_ffi_calls_ok_close
+⊢ ∀b envmc ext ffi k ms.
+    ffi.oracle = basis_ffi_oracle ext ⇒
+    ffi_calls_ok (λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w)
+      (refund_mc b envmc) ffi k ms
+BEGIN refund_ffi_calls_ok_close_totalised
+TACTIC_USED refund_ffi_calls_ok_close_totalised 1
+Saved theorem _______ "refund_ffi_calls_ok_close_totalised"
+CHECKED refund_ffi_calls_ok_close_totalised
+⊢ ∀sl envmc Vok ext cl fs k ms.
+    ffi_calls_ok (λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w)
+      (refund_mc (sl + 0x1000040D0w)
+         (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+      (basis_ffi ext cl fs) k ms
+MARK CONTROLS
+BEGIN refund_close_premises_hold
+TACTIC_USED refund_close_premises_hold 1
+Saved theorem _______ "refund_close_premises_hold"
+CHECKED refund_close_premises_hold
+⊢ ∀b envmc ext cl fs.
+    (basis_ffi ext cl fs).oracle = basis_ffi_oracle ext ∧
+    (refund_mc b envmc).target = arm8_target ∧
+    (refund_mc b envmc).len_reg = 1 ∧ (refund_mc b envmc).len2_reg = 3 ∧
+    (∀i. i < LENGTH (refund_mc b envmc).ffi_entry_pcs ⇒
+         ∃nm. (refund_mc b envmc).ffi_names❲i❳ = ExtCall nm) ∧
+    (refund_mc b envmc).ffi_names❲2❳ = ExtCall «close»
+BEGIN basis_close_call_returns_at_a_concrete_state
+TACTIC_USED basis_close_call_returns_at_a_concrete_state 1
+Saved theorem _______ "basis_close_call_returns_at_a_concrete_state"
+CHECKED basis_close_call_returns_at_a_concrete_state
+⊢ ¬ffi_calls_ok (λi nb s. i ≠ 2)
+    <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+      ffi_entry_pcs := [16w; 32w; 0w];
+      ffi_names := [ExtCall «read»; ExtCall «write»; ExtCall «close»];
+      ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+      ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+      halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+      target := arm8_target; mmio_info := []|>
+    (basis_ffi no_ext []
+       <|inode_tbl := []; files := []; infds := []; numchars := [||];
+         maxFD := 0|>) (SUC 0)
+    <|PC := 0w;
+      REG := (λr. if r = 1w then 8w else if r = 3w then 1w else 0w);
+      MEM := (λa. 0w)|>
+BEGIN close_predicate_fails_for_a_returning_zero_length_call
+TACTIC_USED close_predicate_fails_for_a_returning_zero_length_call 1
+Saved theorem _______ "close_predicate_fails_for_a_returning_zero_length_call"
+CHECKED close_predicate_fails_for_a_returning_zero_length_call
+⊢ ¬ffi_calls_ok (λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w)
+    <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+      ffi_entry_pcs := [16w; 32w; 0w];
+      ffi_names := [ExtCall «read»; ExtCall «write»; ExtCall «close»];
+      ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+      ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+      halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+      target := arm8_target; mmio_info := []|>
+    <|oracle := (λs st c b. Oracle_return st b); ffi_state := ();
+      io_events := []|> (SUC 0)
+    <|PC := 0w; REG := (λr. if r = 1w then 8w else 0w); MEM := (λa. 0w)|>
+BEGIN returning_call_premise_is_needed
+TACTIC_USED returning_call_premise_is_needed 1
+Saved theorem _______ "returning_call_premise_is_needed"
+CHECKED returning_call_premise_is_needed
+⊢ ¬∀P k mc ffi ms.
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ⇒
+    ffi_calls_ok P mc ffi k ms
+BEGIN close_instance_needs_the_basis_oracle
+TACTIC_USED close_instance_needs_the_basis_oracle 1
+Saved theorem _______ "close_instance_needs_the_basis_oracle"
+CHECKED close_instance_needs_the_basis_oracle
+⊢ ¬∀mc ffi k ms.
+    mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+    mc.ffi_names❲2❳ = ExtCall «close» ⇒
+    ffi_calls_ok (λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) mc ffi k ms
+BEGIN close_predicate_rejects_zero_alen
+TACTIC_USED close_predicate_rejects_zero_alen 1
+Saved theorem _______ "close_predicate_rejects_zero_alen"
+CHECKED close_predicate_rejects_zero_alen
+⊢ ¬(λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) 2 nb
+    <|PC := 0w; REG := (λr. if r = 1w then 8w else 0w); MEM := (λa. 0w)|> ∧
+  (λi nb s. i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) 0 nb
+    <|PC := 0w; REG := (λr. if r = 1w then 8w else 0w); MEM := (λa. 0w)|>
+MARK OPTIONAL
+BEGIN ffi_calls_ok_mono
+TACTIC_USED ffi_calls_ok_mono 1
+Saved theorem _______ "ffi_calls_ok_mono"
+CHECKED ffi_calls_ok_mono
+⊢ ∀P Q k mc ffi ms.
+    (∀i nb s. P i nb s ⇒ Q i nb s) ∧ ffi_calls_ok P mc ffi k ms ⇒
+    ffi_calls_ok Q mc ffi k ms
+BEGIN ffi_calls_ok_conj

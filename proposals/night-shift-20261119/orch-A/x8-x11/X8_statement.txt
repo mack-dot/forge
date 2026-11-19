@@ -1,0 +1,321 @@
+X8 DRAFT: "the real process refines the machine model" (worker W-x8, 2026-11-19)
+STAGE LABEL: DRAFTING. Nothing here is proved or run. No HOL, no native run. M1-B stays OPEN.
+Status words: MACHINE-CHECKED / ASSUMPTION / TESTED-UNPROVED / MISSING / UNKNOWN (a hardware or OS fact without a
+source in the repository or toolchain; the open question is written next to it).
+
+Abbreviations (all paths under /Users/mackianni/forge/)
+ CK   = .toolchain/experiments/refund-cakeml-20261104/cakeml
+ L3   = .toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8
+ TS   = CK/compiler/backend/semantics/targetSemScript.sml        (evaluate 118-219, machine_sem 221-234)
+ AT   = CK/compiler/encoders/arm8/arm8_targetScript.sml          (arm8_next 14-16, arm8_ok 20-26, arm8_ast 138-307,
+                                                                 arm8_config 343-363, arm8_proj 365-369)
+ AP   = CK/compiler/encoders/asm/asmPropsScript.sml:77-79       (interference_ok)
+ E4   = results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001/stdout.log
+ S2   = results/refund-slide-local-20261117/attempt-0001/s2-0003/stdout.log
+ A3   = results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/
+        m1-slide-s3-20261117/records/s3/a3-0006/stdout.log
+ ENV  = results/refund-env-model-local-20261116/attempt-0001/env-0005/stdout.log
+ RA   = results/m1b-routeA-20261119/attempt-0001
+ OA   = results/night-shift-20261119/orch-A
+ SYM  = OA/ffi-hardening/recorded/symbols_stdout.log (sha256 75209732…42e3; executable b8ed5ec2…7bb8)
+ C    = CK/basis/basis_ffi.c (sha256 e65a5812…b2a1 = recorded source_sha256; checked by me with shasum, exit 0)
+ b    = sl + 0x1000040D0w  (cake_main, SYM:33);  dm = refund_mem_dm_sl sl h e (S2:68-70)
+
+=====================================================================================================
+0. TARGET (the model theorem the relation must feed)
+=====================================================================================================
+M3 = refund_model_frame_meets_exported_contract, RA/MF-0002/stdout.log:286-320, MACHINE-CHECKED (MODEL):
+  P1..P11 ⇒ ∃ms. (arm8_run 27 s = SOME ms ∧ ms.PC = b) ∧
+    ∀beh. machine_sem (refund_mc b envmc) (basis_ffi no_ext cl fs) ms beh ⇒
+      ∃t io. beh = Terminate t io ∧
+        ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒ g = refund_fields vals ∧
+            fd1_written io = explode (refund_render_fields (refund_fields vals)) ∧ [Dafny ensures = T,T,T]
+ P1 refund_entry_pre_sl sl s h stk e   P2 aligned 3 e   P3 h ≤₊ e   P4 8192w ≤₊ e − h
+ P5 refund_heap_clear_sl sl h e        P6 envmc.prog_addresses = dm  P7 refund_env_ok_sl sl envmc
+ P8 stdin_content fs = SOME (explode (sexp_to_string (refund_request vals)))  P9 wfcl cl  P10 wfFS fs  P11 STD_streams fs
+ KEY OBSERVATION: s, envmc, fs, cl are UNIVERSAL in M3. X8 therefore does NOT have to show that "the C code" or
+ "the kernel" IS some fixed envmc. It suffices to CONSTRUCT, from ONE real execution, a state s_R, an environment
+ envmc_R and a file system fs_R that (i) meet P1..P11 and (ii) make the real execution a run of evaluate.
+ This is the same idea CakeML uses internally (TS-adjacent CK/compiler/backend/semantics/targetPropsScript.sml:248-302
+ "the lab-level oracle sequences, constructed from the machine run"). Consequence, by reading only (UNCHECKED in HOL):
+ counterexample U393 (fficlose with x3 = 0 aborts) does NOT block X8 in this form, because envmc_R.ffi_interfer is
+ the real effect only ON the observed calls and the stored abstract effect refund_abs_ffi elsewhere
+ (refund_abs_ffi_contract_at, E4:207-209, ∀b dm: MACHINE-CHECKED). This sharpens review-L2d ("no envmc that describes
+ the original C can satisfy it"): true for an envmc that describes the C at ALL states; not needed here.
+
+=====================================================================================================
+1. THE REAL OBSERVATION
+=====================================================================================================
+A real execution X of the executable (sha256 b8ed5ec2…7bb8) on the owner's machine, MAIN THREAD only, observed at
+user-mode instruction boundaries from the first instruction of _cml_main (sl+0x100004000, SYM:26) until process
+end. X = r_0, ev_0, r_1, ev_1, …, r_n, END where r_i are real user states and each ev_i is one of
+ U  one user instruction retired at r_i.PC, followed by any kernel activity up to the next user instruction;
+ F  "call segment": r_i.PC ∈ FFI_PCS; everything from that branch until the first user instruction at
+    r_i.X30 (the stub branch, the C function, libSystem wrappers, system calls) collapsed into ONE event;
+ H  r_i.PC = sl+0x1000040C0 (cake_exit, SYM:32): the run of `b _cml_exit` then cml_exit(w0) then exit (C 721-743).
+ END = EXIT(status) after H, or KILLED(signal) at any point.
+FFI_PCS = [sl+0x1000040A0 (read, index 0); sl+0x100004090 (write, 1); sl+0x100004080 (close, 2);
+           sl+0x100004070 (open_in, 3)]  (A3:81-85 MACHINE-CHECKED; SYM:27-30 name the stubs).
+Real user state r: PC, X0..X30, SP_EL0, NZCV, the (unobservable) system-register bits, and the user memory map.
+
+=====================================================================================================
+(a) STATE ABSTRACTION absM : real user state → arm8_state
+=====================================================================================================
+Let F0 be one fixed arm8_state (all fields not listed take F0's value; F0 is a constant of the draft).
+ absM r = F0 with <|
+   PC        := r.PC;
+   REG       := λi. if i = 18w ∨ i = 31w then 0w else r.X[w2n i];      (x18 NORMALISED, see A-X18)
+   SP_EL0    := r.SP;
+   PSTATE    := F0.PSTATE with <| N,Z,C,V := r.NZCV; EL := 0w; SPS := F |>;
+   SCTLR_EL1 := F0.SCTLR_EL1 with <| E0E := F; SA0 := F |>;          (ERASED copy, see e3)
+   TCR_EL1   := F0.TCR_EL1 with <| TBI0 := F; TBI1 := F |>;            (ERASED copy)
+   exception := NoException;
+   MEM       := λa. if a ∈ dm then r.mem a else (if a is mapped readable in r then r.mem a else 0w) |>
+ Why these fields: arm8_proj dm s = (PSTATE, SCTLR_EL1, TCR_EL1, exception, REG, fun2set(MEM,dm), PC) (AT:365-369);
+ interference_ok (AP:77-79) and the FFI contract read exactly these; L3 steps of the encoder subset also read SP_EL0
+ (only via CheckSPAlignment, never as a base: avoid_regs [18;26;31], AT:350) and MEM outside dm only for LOADS.
+ Real state NOT in the model (absM forgets it; nothing in M3 depends on it):
+  - FP/SIMD registers V0–V31, FPCR, FPSR (fp_reg_count := 0, AT:348; FP instructions encode to NoOperation, AT:263);
+  - TPIDR_EL0, TPIDRRO_EL0 (thread pointers), PAC keys, MTE tags, exclusive monitor, branch-prediction state;
+  - the real values of TBI0/TBI1/SA0 (replaced by F) and x18 (replaced by 0w);
+  - user pages outside dm (C runtime data, GOT, libSystem, dyld, the native stack, malloc metadata) except as the
+    value a LOAD reads; kernel state; other threads; the file descriptor table; signal dispositions; time.
+ A-X18 (NEW): no instruction executed in the model region names x18 (encoder never does when CakeML respects
+   avoid_regs; for the 130,436 code bytes this is a decode lemma: MISSING, same shape as the SA0 lemma of the
+   native ledger, OA/resource-native/native-ledger.txt row A-PROC-SA0). Needed because interference_ok demands
+   (env i ms).REG = ms.REG for ALL registers (ENV:7-13, interference_ok_arm8_iff, MACHINE-CHECKED) and whether the
+   kernel preserves x18 is UNKNOWN (question: does XNU zero or reuse x18 at context switch for EL0 arm64 processes?).
+
+=====================================================================================================
+(b) STEP CLAUSE (A-CPU-ISA), for ev_i = U
+=====================================================================================================
+Precondition (from the model run, not assumed): absM r_i.PC ∈ dm \ FFI_PCS and
+ encoded_bytes_in_mem arm8_config (absM r_i).PC (absM r_i).MEM dm  (TS:122-125).
+Note: TS:123 restricts the model to PCs whose bytes are a suffix of SOME arm8_enc output; the model therefore never
+steps an instruction outside the encoder subset (a non-subset word gives Error, and M3's source theorem excludes Fail,
+E4:330-331). So A-CPU-ISA is needed ONLY for the subset below.
+Encoder subset (AT:138-307, every L3 AST the CakeML ARM8 encoder emits):
+  NoOperation (HINT #0); MoveWide Z/N/K (MOVZ/MOVN/MOVK); LogicalImmediate (AND/ORR/EOR/ANDS imm);
+  AddSubImmediate (ADD/SUB/ADDS/SUBS imm, incl. CMP); AddSubShiftedRegister; LogicalShiftedRegister;
+  Shift (LSLV/LSRV/ASRV/RORV); BitfieldMove (UBFM/SBFM); ExtractRegister (EXTR/ROR imm); Division (UDIV/SDIV);
+  MultiplyHigh (UMULH/SMULH); MultiplyAddSub (MADD/MSUB); ConditionalCompareImmediate (CCMP); ConditionalSelect
+  (CSEL/CSINC); AddSubCarry (ADC/ADCS); LoadStoreImmediate 8/16/32/64, AccType_NORMAL, unsigned-offset or unscaled,
+  no writeback (LDR/LDRH/LDRB/LDR w, STR…); BranchImmediate JMP/CALL (B/BL); BranchConditional (B.cond);
+  BranchRegister JMP (BR); Address F (ADR). (The cml_main stub of the 27 entry steps adds ADRP = Address T, export
+  CK/compiler/backend/arm8/export_arm8Script.sml:40-76.)
+  NOT in the subset: SVC/HVC/SMC, MRS/MSR, ERET, PAC/AUT/BTI (HINT #25 etc.), LDXR/STXR, LDP/STP, SIMD/FP,
+  barriers, cache maintenance, BLR/RET (calls use BL; the return uses BR), atomics, MTE.
+Clause (A-CPU-ISA, ASSUMPTION about hardware): let ŝ_i be the FAITHFUL arm8_state of r_i (real TBI0/TBI1/SA0/E0E,
+  real x18, real memory). If the hardware retires one instruction of the subset at r_i without an exception, then
+  the user-visible result equals THE (NextStateARM8 ŝ_i) on all fields absM reads.
+Transfer to the erased copy (MACHINE-CHECKED piece): NextStateARM8_erase, RA/EE-0001/stdout.log:410-413:
+  s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ (¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧
+  (∀t. NextStateARM8 (erase s) = SOME t ⇒ untagged t.PC) ⇒ NextStateARM8 (erase s) = OPTION_MAP erase (NextStateARM8 s)
+  erase keeps E0E (EE-0001.sml:183-191: only TBI0, TBI1, SA0 are cleared), so E0E = F must be REAL (N1).
+  Side conditions per step: EL0 and no pending exception (N1: UNKNOWN source); SP_EL0 16-byte aligned or SA0 clear
+  (N2: UNKNOWN; SP is never changed by the subset because no instruction writes register 31 as SP — reading of
+  AT:138-307 plus A-X18-style decode lemma, MISSING); untagged next PC (N3/N5: branch targets come from B/BL/B.cond
+  offsets and from ADR/MOVK-built code addresses: lemma MISSING). Missing for the lift: "the erased run never faults"
+  (review-EE) and both interference functions commute with erase (they do by construction in section 2, UNCHECKED).
+How A-CPU-ISA splits:
+  (b1) L3 = Arm's ASL (v8.6) on the subset: PROVABLE IN HOL — and a proof SCRIPT EXISTS in the toolchain:
+       L3/asl-equiv/l3_equivalenceProofScript.sml (7725 lines; theorems l3_models_asl_<Class> for exactly the classes
+       above, e.g. :7702 LoadStoreImmediate_8_NORMAL_STORE), defined at L3/asl-equiv/l3_equivalenceScript.sml:131-141
+       (l3_models_asl opcode: state_rel l3 asl ∧ asl_sys_regs_ok asl ∧ no L3 exception ⇒ ASL ExecuteA64 gives a
+       related state). NOT BUILT here (no .hol/objs in asl-equiv), NOT RUN; needs the ASL snapshot
+       (L3/asl-equiv/armv8.6-asl-snapshot, present but unbuilt). Its premise asl_sys_regs_ok (:103-129) fixes
+       HCR_EL2.E2H = 0 (no VHE), TCR_EL1 bits 51/52 = 0, PSTATE.nRW = 0, and models memory as FLAT (no MMU):
+       whether these match macOS on M1 is UNKNOWN (questions: does XNU run with VHE? are TCR_EL1 bits 51/52 (HPD?) set?).
+       This is the strongest available HOL evidence for A-CPU-ISA; heavy (hours, one HOL slot): owner decision.
+  (b2) Apple M1 silicon implements the Arm architecture (ASL) for these instructions at EL0: AXIOM-LEVEL trust in
+       hardware. No model of Apple's micro-architecture exists in the repository.
+  (b3) TESTABLE (differential): see tests_proposed.txt T3. Executable L3: (i) the L3-generated SML emulator
+       L3/model/arm8.sml (9782 lines; NOT proved equal to the HOL definitions, same L3 source); (ii) in HOL,
+       arm8_stepLib (L3/step/arm8_stepLib.sig:3-17: arm8_step_hex, arm8_next; built: .ui/.uo present) gives a step
+       THEOREM per instruction word: it is symbolic, so 1 theorem per distinct opcode (the code has at most 32,609
+       words) suffices, not 1 per dynamic step. Cost: UNMEASURED (question: seconds per opcode on this machine).
+
+=====================================================================================================
+(c) ENVIRONMENT CLAUSE between two user steps (A-KERNEL-PRESERVE; details in X11_statement.txt)
+=====================================================================================================
+Stored premise, quoted (E4:151-156, part of P7):
+  refund_env_ok_sl sl envmc ⇔ interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+                              refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses envmc.ffi_interfer
+Unfolded (ENV:7-13, interference_ok_arm8_iff, MACHINE-CHECKED):
+  ∀i ms. (env i ms).PSTATE = ms.PSTATE ∧ .SCTLR_EL1 = ∧ .TCR_EL1 = ∧ .exception = ∧ .REG = ms.REG ∧ .PC = ms.PC ∧
+         ∀a. a ∈ dm ⇒ (env i ms).MEM a = ms.MEM a
+Clause (A-KERNEL-PRESERVE, ASSUMPTION): for every U event, let q_i = the hardware result of the instruction (before
+kernel activity) and r_{i+1} the next observed user state. Then
+  arm8_proj dm (absM r_{i+1}) = arm8_proj dm (absM q_i)
+i.e. preemption, interrupts, page faults on mapped pages, and any kernel entry restore PC, X0..X30 (x18 normalised),
+NZCV, EL0, the (erased) control bits and every byte of dm. No signal HANDLER runs (none installed: X11 E7).
+Also needed over the 27 entry steps (arm8_run has NO interference, S2:47-57): there the kernel must preserve absM on
+ALL fields arm8_run reads (same clause, plus SP_EL0 and the loads' memory).
+
+=====================================================================================================
+(d) FFI CLAUSE, for ev_i = F at FFI_PCS index j (k = number of earlier F events)
+=====================================================================================================
+Model side (TS:204-218): bytes = read_bytearray x0 (w2n x1) over dm, bytes2 = read_bytearray x2 (w2n x3) over dm
+(both must be SOME); call_FFI (basis_ffi no_ext cl fs_k) name_j bytes bytes2 = FFI_return fs_{k+1} new_bytes;
+next model state = envmc.ffi_interfer k (j, new_bytes, absM r_i).
+Reached calls (OA/ffi-c-audit/REPORT.md "FFI index list"; R6 in review-MF): read with conf = n2w8 0, alen 4100,
+n 4096; write with conf = n2w8 1, alen 2052. close/open_in: never reached (source reading only; formal exclusion
+MISSING). The clause is only needed at REACHED calls of THIS execution.
+ (d1) EFFECT GIVEN THE BYTES (A-FFI-ABI; the L2d remaining premise restricted to the observed call):
+   r_{i+1}.PC = r_i.X30 ∧ ∀r ∈ {19..25,27,28}. r_{i+1}.X[r] = r_i.X[r] ∧
+   ∀a ∈ dm. r_{i+1}.mem a = asm_write_bytearray r_i.X2 REAL_BYTES r_i.mem a
+   where REAL_BYTES = the bytes of the array [x2, x2+x3) after return. The stored contract form is
+   RA/L2d-0001/stdout.log:455-474 (REMAINING_NATIVE_PREMISE_UNFOLDED; with shape guards) and E4:63-80.
+   Class: TESTABLE (single-step around one call, T3/T4) and PARTLY PROVABLE on the disassembly
+   (OA/ffi-hardening/layout/disasm_ffi_refund.txt:60-92 shows ffiwrite: saves x19,x20,x29,x30 on the NATIVE stack,
+   clobbers x0-x2,x8,x9 only, `ret`): an AAPCS64 reading of 23+ C instructions plus libSystem `_write`/`_read`
+   wrappers (NOT in the repository: UNKNOWN).
+ (d2) BYTES TRACK THE KERNEL (A-FD0-READ, A-FD1-WRITE): REAL_BYTES = new_bytes, where new_bytes is the oracle's
+   answer for fs_R (constructed in section 2). By the model (CK/basis/fsFFIScript.sml:307-327, 333-348, 187-197,
+   214-230) this holds iff
+   A-FD0-READ: every reached read(0, &a[4], 4096) returns nread ≥ 0 (NO error: no EINTR/EAGAIN/EIO); the nread
+     bytes are the next unread bytes of the request; nread = 0 only when all request bytes are consumed (EOF); the
+     kernel writes no byte of a outside [4, 4+nread). (The model returns k = MIN n (MIN rest (SUC strm)) ≥ 1 while
+     bytes remain; the short-read oracle numchars is CHOSEN as strm = nread − 1, section 2.) C sets a[0]=0 and
+     a[1..2]=nread big-endian (C 160-173); the model's answer 0w :: n2w2 (LENGTH l) ++ [pad2] ++ l ++ DROP… leaves
+     a[3] and the tail unchanged: equal by reading.
+   A-FD1-WRITE: every reached write(1, &a[4+off], n) returns nw ≥ 0 (NO error: no EPIPE, EAGAIN, EBADF); the kernel
+     appends exactly bytes a[4+off .. 4+off+nw) to the pipe in order; the strm for that call is chosen = nw.
+     KNOWN VIOLATIONS on the real process (TESTED, OA/ffi-c-audit/native_ffi_results.json): T08 (EPIPE, SIGPIPE
+     ignored: exit 0, empty stdout), T09/T10 (O_NONBLOCK full pipe: CE-1, 1000-byte prefix, exit 0), T04/T05.
+     In all of them the real run LEAVES the relation; the stdout is empty or a strict prefix (safe direction only
+     because the frame parser is strict: refund_frame_decision, RA/MF-0002/stdout.log:40-43).
+   Class: ENFORCEABLE by the launcher (blocking pipes created by the caller, stdin written completely and closed,
+   SIGPIPE default, reader drains stdout) + ASSUMPTION about the kernel's pipe semantics (UNKNOWN source).
+ (d3) NO OTHER WRITES (A-FFI-FRAME): during the call segment, no byte of dm outside [x2, x2+x3) changes; this needs
+   the native stack (used by C: `stp … [sp,#-0x20]!`, disasm :61) and libSystem data (errno, stdio) to lie OUTSIDE
+   dm. dm = code slice ∪ [h,e) ∪ bitmaps. [h,e) is a malloc block (C 875); disjointness of a malloc block from the
+   main-thread stack and libSystem data is a libSystem/kernel fact: UNKNOWN in the repository. TESTABLE (T2 prints
+   SP, h, e). The arm8_ok bits of the result hold by the erasure in absM (no real fact needed).
+
+=====================================================================================================
+(e) ENTRY CLAUSE: absM r_0 satisfies P1–P6 (P1 quoted from S2:29-37)
+=====================================================================================================
+ refund_entry_pre_sl sl s h stk e ⇔ ¬s.SCTLR_EL1.E0E ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧
+   s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.PC = sl + 0x100004000w ∧
+   mem_dword s.MEM (sl + 0x10002C000w) = h ∧ mem_dword s.MEM (sl + 0x10002C008w) = stk ∧
+   mem_dword s.MEM (sl + 0x10002C010w) = e ∧ aligned 3 h ∧
+   (∀i j. i < 40 ∧ j < 200496 ⇒ h + n2w i ≠ 0x100000000w + sl + n2w j) ∧ refund_image_mem sl s.MEM ∧ slide_ok sl
+ refund_image_mem sl m ⇔ bytes_in_memory (0x100000000w+sl) (TAKE 163840 refund_file) m 𝕌 ∧
+   bytes_in_memory (0x10002C018w+sl) (TAKE 20248 (DROP 180248 refund_file)) m 𝕌                     (S2:3-8)
+ slide_ok sl ⇔ aligned 12 sl ∧ sl ≤₊ 0xFFFFFFFEFFFCF0CFw                                              (S2:20)
+ refund_heap_clear_sl sl h e ⇔ ∀a. h ≤₊ a ∧ a <₊ e ⇒ ¬(0x100000000w ≤₊ a − sl ∧ a − sl <₊ 0x100030F30w) (S2:71-73)
+ Which real fact makes each conjunct true:
+  E0E=F, EL=0, NoException: REAL facts N1 (UNKNOWN). SA0, TBI0, TBI1: made F by absM (erasure); the real values do
+    not matter if the e-side conditions of NextStateARM8_erase hold. (Native ledger: D11 says XNU sets TBI0=1, SA0=1;
+    D11's headers are not in the repository → UNKNOWN.)
+  PC = sl+0x100004000: `main` (SYM:618, C 883-890) calls cml_main (SYM:26) after cml_init_memory and the empty
+    cml_init_eval (EVAL undefined: C 700-708; build argv has no -DEVAL, runtime-command.json). By reading.
+  slots at sl+0x10002C000/8/10 = h, stk, e: written by cml_init_memory (C 875-880; cml_heap etc. are .data words,
+    refund.S). By reading; the value relation h = malloc result, stk = h + heap, e = stk + stack.
+  aligned 3 h, P2 aligned 3 e: malloc alignment (≥ 8): libSystem fact, UNKNOWN; sizes are whole MiB (C 836-849), so
+    e − h is a multiple of 2^20 and aligned 3 e follows from aligned 3 h (by reading).
+  P3 h ≤₊ e, P4 8192 ≤₊ e − h: no wrap of the malloc block (UNKNOWN), sizes ≥ 1 MiB each (C 843-848).
+  separation (40 bytes) and P5: the malloc block does not overlap the image [sl+0x100000000, sl+0x100030F30): kernel
+    + malloc fact, UNKNOWN; TESTABLE (T2).
+  refund_image_mem: dyld maps file bytes [0,163840) at sl+0x100000000 and [180248,200496) at sl+0x10002C018
+    UNCHANGED at the moment cml_main starts. Evidence: no dyld fixup lies in either slice — `xcrun dyld_info -fixups`
+    lists only 5 __got binds at 0x100028020…0x1000280B0 (OA/ffi-hardening/layout/got_slots.txt:1-6; command exit 0
+    per OA/ffi-hardening/commands.txt), all outside both slices (TESTED-UNPROVED, static). _main writes argc/argv at
+    __common 0x100030F30 (SYM symbol table; native ledger row A-ENTRY-ARGV) which is OUTSIDE the bitmap slice because
+    refund_bitmaps_dm ⊆ [0x10002C018, 0x100030F30) (S2:16, strict upper bound): this resolves the ledger's UNKNOWN
+    for A-ENTRY-ARGV by reading a stored fact (slide 0 form; the _sl form is by definition S2:67).
+    Also needed: no code signing / page-in transformation alters bytes (UNKNOWN); no DYLD_INSERT_LIBRARIES (A-LOADER,
+    CE-3 TESTED: a constructor runs before main and can write a forged frame; ENFORCEABLE: scrub DYLD_* or hardened
+    runtime/library validation).
+  slide_ok sl: sl = ASLR slide. Premise that bounds it: slide_ok (aligned 12, no wrap). The real slide is a multiple
+    of the page size and small: UNKNOWN source (question: macOS arm64 slide granularity and range). The JOINT premises
+    are shown satisfiable only at sl = 0x4000 (E4:332-338); that does not depend on the real slide.
+  P6: by construction (dm is DEFINED as refund_mem_dm_sl sl h e). P7: section 2. P8–P11: section 2 (fs_R, cl_R).
+  Entry stub: the 27 real instructions of cml_main must equal arm8_run 27 (absM r_0) on absM fields (A-CPU-ISA on
+    ADRP/ADD/LDR/STR/B + A-KERNEL-PRESERVE); refund_entry_run_sl (S2:47-57) is MACHINE-CHECKED in the model.
+
+=====================================================================================================
+(f) HALT CLAUSE (A-EXIT) and OUTPUT DELIVERY
+=====================================================================================================
+ Model: PC = halt_pc = sl+0x1000040C0 (A3:84) ⇒ Halt (if x0 = 0w then Success else Resource_limit_hit) (TS:138-140).
+ Real: cake_exit `b _cml_exit` (stub word 140084e9 → 0x100025464, OA/ffi-hardening/layout/region_compare.txt);
+   _cml_exit: `cbz w0, …` (32-bit test; otool -tV -p _cml_exit on OA/ffi-hardening/recorded/refund, exit 0, run
+   by me) then the stderr line if w0 ≠ 0, then exit(w0). Status = low 8 bits (POSIX; no source: UNKNOWN).
+   M3 concludes for EVERY t, so X8 does NOT need a status equation: status is NOT evidence of success (x0 = 2^32 gives
+   model Resource_limit_hit and real status 0, empty stderr: native ledger A-EXIT-STATUS, FALSIFIED as equivalence).
+ Output delivery (A-OUT-DELIVER, A-FD1-WRITE): the consumer reads on its end of the stdout pipe exactly
+   STDOUT(X) = concatenation over reached write calls of a[4+off .. 4+off+nw), and nothing else:
+   no other writer (stderr kept separate: not 2>&1; no other process holds the write end; libSystem exit flush
+   writes nothing to fd 1 because CakeML never uses stdio for fd 1: C 721-750 by reading), pipe initially empty.
+ fd1_written (RA/LO-0006/stdout.log:58-65) counts a write event only with conf length 8, descriptor 1, success byte,
+   bytes TAKE nw (DROP off payload) (review-LO). So under (d2): STDOUT(X) = fd1_written (events of X).
+
+=====================================================================================================
+2. CONSTRUCTION FROM ONE EXECUTION (MODEL side; HOL-provable; MISSING)
+=====================================================================================================
+ s_R      := absM r_0
+ envmc_R  := <| prog_addresses := dm;
+               next_interfer := λm ms. if m < #U ∧ arm8_proj dm ms = arm8_proj dm (POST_m) then POST_m else ms;
+               ffi_interfer  := λk (j,nb,ms). if k < #F ∧ (j,nb,ms) = (J_k, NB_k, PRE_k) ∧ CONTRACT_CONCL PRE_k NB_k POST'_k
+                                              then POST'_k else refund_abs_ffi k (j,nb,ms); … |>
+   (POST_m = absM of the state after the m-th U event; PRE_k/POST'_k = absM before/after the k-th F event; the
+   oracle index m counts every model step because apply_oracle shifts after each step, TS:47-50, 127-128.)
+   interference_ok holds for every ms by the guard (UNCHECKED); refund_ffi_contract_at holds for every state:
+   off-trace by refund_abs_ffi_contract_at (E4:207-209, MACHINE-CHECKED), on-trace by the guard (UNCHECKED).
+ fs_R     := the standard basis file system with stdin content = the request bytes (P8 needs the CALLER to send
+             exactly sexp_to_string (refund_request vals): A-ENTRY-STDIN, ENFORCEABLE), stdout empty (A-STDOUT-EMPTY),
+             numchars := [one entry per reached read/write in order: nread−1 resp. nw] ++ repeat 1 (infinite and
+             always eventually non-zero ⇒ liveFS, CK/basis/fsFFIPropsScript.sml:202-210).
+ cl_R     := any wfcl list (argv is never read: the 4 FFI names exclude get_arg*, native ledger A-ENTRY-ARGV).
+ T-TRACE (MISSING, MODEL, provable from TS by induction on the trace): if every U, F, H event of X satisfies
+   (b),(c),(d) under absM, then for K = |X| events: evaluate (refund_mc b envmc_R) (basis_ffi no_ext cl_R fs_R) (K+1)
+   ms_R = (Halt t, _, ffi') with ffi'.io_events = EVENTS(X) when X ends in H; and = (TimeOut, _, ffi') with
+   ffi'.io_events = EVENTS(X) when X is KILLED early. With evaluate_add_clock_io_events_mono
+   (CK/compiler/backend/semantics/targetPropsScript.sml:1108-1112) and the existence part of the stored theorem,
+   a KILLED run's events are a prefix of some Terminate run's events.
+ T-ENV (MISSING, MODEL): refund_env_ok_sl sl envmc_R ∧ wfFS fs_R ∧ STD_streams fs_R ∧ stdin_content fs_R = … .
+
+=====================================================================================================
+3. THEOREM SHAPE OF X8 (TARGET; NOT PROVED; every native assumption named)
+=====================================================================================================
+ refund_native_x8:
+  ∀X sl h e vals.
+    REAL_RUN X b8ed5ec2…7bb8 ∧ STDIN X = explode (sexp_to_string (refund_request vals)) ∧
+    A-LOADER X ∧ A-ENTRY X sl h e ∧ A-CPU-ISA X ∧ A-PROC-N1N5 X ∧ A-X18 ∧ A-KERNEL-PRESERVE X ∧
+    A-SINGLE-THREAD X ∧ A-FFI-ABI X ∧ A-FFI-FRAME X ∧ A-FD0-READ X ∧ A-FD1-WRITE X ∧ A-STDOUT-EMPTY X ∧
+    A-OUT-DELIVER X
+    ⇒ ∃t io. machine_sem (refund_mc (sl+0x1000040D0w) envmc_R) (basis_ffi no_ext cl_R fs_R) (arm8_run27 (absM r_0))
+                         (Terminate t io) ∧ STDOUT X ≼ fd1_written io ∧ (END X = EXIT _ ⇒ STDOUT X = fd1_written io)
+ Corollary with M3 (MF-0002:286-320) and fd1_written_prefix + refund_frame_decision (MF-0002:38-43):
+    … ⇒ ∀g. refund_strict_parse (STDOUT X) = SOME g ⇒
+           g = refund_fields vals ∧ STDOUT X = explode (refund_render_fields (refund_fields vals)) ∧ [Dafny ensures]
+ (The consumer must refuse on: signal, non-parse, stderr non-empty is NOT needed. Exit status is NOT used.)
+ Differences from the candidate native_refines (proposals/m1b-mission-20261119/drafts/M1_EXACT_CLAIM.md:294-309):
+  (1) ext fixed to no_ext (the draft's ∃ext is the free-oracle defect of report D4); (2) envmc and fs are BUILT
+  from the run, not given (removes the U393 obstacle, by reading); (3) no exit-status clause; (4) killed runs covered.
+
+=====================================================================================================
+4. CLASSIFICATION OF EVERY NAMED ASSUMPTION
+=====================================================================================================
+| Name             | Content (short)                                  | PROVE in HOL?                        | TEST?                   | Else          |
+| A-CPU-ISA        | M1 = L3 on the encoder subset at EL0            | b1 L3=ASL: script exists, NOT RUN    | T3 single-step diff     | b2 AXIOM (hw) |
+| A-PROC-N1..N5    | EL0, E0E=0, SP 16-aligned, untagged PCs/data    | erasure: MACHINE-CHECKED step lemma; | T2 (SP), T3             | N1 AXIOM (OS) |
+|                  |                                                  | run lift + no-fault + untagged MISSING|                         |               |
+| A-X18            | model code never names x18                       | decode lemma over 130,436 bytes      | static decode (T5)      | —             |
+| A-KERNEL-PRESERVE| kernel restores absM fields of dm/regs/flags     | NO: no verified XNU model exists     | T3 indirectly           | AXIOM (OS)    |
+| A-SINGLE-THREAD  | no other thread/process writes dm                | NO                                   | T1 (imports), T2        | AXIOM (OS)    |
+| A-ENTRY          | P1–P5 at cml_main (dyld, _main, malloc, slide)   | partly: _main step theorem + malloc  | T2 prints sl,h,stk,e    | malloc/dyld   |
+|                  |                                                  | CONTRACT (assumed); dyld: NO         | + slice hashes          | AXIOM         |
+| A-LOADER         | no injected code before main (DYLD_* scrubbed)   | NO                                   | CE-3 shows the threat   | ENFORCE (launcher) |
+| A-FFI-ABI        | return to x30, x19–x25,x27,x28 kept, array only  | partly: C disassembly reading (clang | T4 lldb around 1 call   | libSystem AXIOM |
+|                  |                                                  | output) — no ARM8 model of libSystem |                         |               |
+| A-FFI-FRAME      | C/libSystem write nothing else in dm             | NO                                   | T2 (layout)             | AXIOM         |
+| A-FD0-READ       | read: no error; bytes = request; 0 only at EOF   | NO (kernel)                          | conformance + T11 slow  | ENFORCE + AXIOM |
+| A-FD1-WRITE      | write: no error; exact bytes appended in order   | NO (kernel)                          | CE-1/T08 FALSIFY it in  | ENFORCE (blocking |
+|                  |                                                  |                                      | hostile setups          | pipe, SIGPIPE dfl) |
+| A-STDOUT-EMPTY   | consumer's pipe starts empty, one writer         | NO                                   | —                       | ENFORCE       |
+| A-OUT-DELIVER    | consumer reads all and only fd1 bytes            | NO                                   | conformance (2,466)     | ENFORCE       |
+| T-TRACE, T-ENV   | model-side construction lemmas                   | YES (MODEL; MISSING; est. hours)     | —                       | —             |
+Overall: X8 = (MODEL lemmas T-TRACE, T-ENV, erasure lift: PROVABLE, MISSING) + (b1: PROVABLE, script exists, NOT RUN)
+ + (b2, kernel, loader, libSystem: AXIOM-LEVEL or ENFORCEABLE). HOL cannot close X8 as a whole. M1-B stays OPEN.

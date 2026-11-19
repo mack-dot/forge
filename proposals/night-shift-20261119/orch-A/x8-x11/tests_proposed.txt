@@ -1,0 +1,58 @@
+Proposed tests for the most doubtful native assumptions of X8/X11 (worker W-x8, 2026-11-19)
+ALL FIVE: NOT RUN. Each would turn at most one row from UNKNOWN into TESTED-UNPROVED. None proves anything.
+Run only on mains power, one at a time, with `nice -n 15`. Executable: a COPY of b8ed5ec2…7bb8 (verify sha256 first).
+
+T1  Static: segment protections, entitlements, code signature flags          [no approval needed: read-only, no run]
+    Command sketch: otool -l refund | grep -A12 LC_SEGMENT_64 ; codesign -dvvv --entitlements - refund
+    Measures: initprot/maxprot of __TEXT (expect r-x / r-x) and __DATA; hardened-runtime and library-validation flags
+              (the audit saw flags 0x20002 = ad hoc, no hardened runtime); any -segprot from the link.
+    Pass: __TEXT initprot = maxprot = r-x; no allow-jit / disable-library-validation entitlement.
+    Rows: A-MAP-WX (E13), A-LOADER (E19).
+    Does NOT show: run-time protections (the kernel could still change them), anything about dyld behaviour.
+
+T2  Entry layout probe under the launcher contract (environment variable read only, no debugger)
+                                                        [OWNER APPROVAL: runs the executable; uses an interposer dylib]
+    Sketch: a separate test build is NOT allowed (it would change the file). Instead run the original under a tiny
+    DYLD_INSERT_LIBRARIES probe whose constructor prints: _dyld_get_image_vmaddr_slide(0), the stack pointer, and an
+    atexit hook prints cml_heap/cml_stack/cml_stackend (exported data symbols) and SHA-256 of
+    [slide+0x100000000, +163840) and [slide+0x10002C018, +20248). N = 20 runs.
+    Measures: sl (aligned 12? within slide_ok?), h, stk, e (P2–P5, 40-byte separation), the slices equal the file
+    slices (refund_image_mem at exit — the code slice is read-only so equality at exit implies equality at entry only
+    with A-MAP-WX), SP and native-stack range disjoint from [h, e) (A-FFI-FRAME).
+    Pass: every run satisfies slide_ok, P2–P5, slice digests = 3c67983c…/the bitmap digest, SP ∉ dm.
+    Does NOT show: the state at the exact first instruction of cml_main; the probe itself is the CE-3 mechanism, so it
+    is a different launch environment than production (A-LOADER forbids it there).
+
+T3  Differential single-step of the code slice: hardware vs L3                     [OWNER APPROVAL: attaches lldb]
+    Sketch: lldb -b -o 'b cml_main' -o run -o 'script <python: for i in range(N): read PC,X0-X30,SP,NZCV and the
+    dm bytes touched by the instruction; thread step-inst>' refund < request ; then OFFLINE (no HOL slot): for each
+    distinct opcode word seen, compute the L3 next state with the L3-generated SML emulator
+    (HOL/examples/l3-machine-code/arm8/model/arm8.sml) or, later and with an HOL slot, arm8_stepLib.arm8_step_hex,
+    from the recorded pre-state with TBI0/TBI1/SA0 := F (the erased copy), and compare with the recorded post-state on
+    the absM fields. N = 10,000 steps of the canonical small request (T00 input).
+    Measures: A-CPU-ISA on the dynamically reached opcodes; A-X18 and N2 (SP unchanged, 16-aligned) on the run;
+    A-KERNEL-PRESERVE only weakly (single-stepping itself enters the kernel each step).
+    Pass: 0 differences on absM fields; every executed word in the code slice decodes to an encoder-subset class.
+    Does NOT show: steps not reached; behaviour without a debugger (single-step traps change timing and kernel paths);
+    the SML emulator is not proved equal to the HOL definition.
+
+T4  One FFI call segment, register/memory frame                                     [OWNER APPROVAL: attaches lldb]
+    Sketch: lldb breakpoints at cake_ffiwrite (sl+0x100004090) and at the return address x30; record X0–X30, SP,
+    NZCV and a checksum of [h, e) minus the array [x2, x2+x3) before and after; same for cake_ffiread. Inputs: T00 and
+    T01 (two write chunks), T11 (short reads).
+    Measures: A-FFI-ABI (PC = old x30, x19–x25, x27, x28 kept), A-FFI-FRAME (no other byte of [h, e) changed),
+    A-FD0-READ/A-FD1-WRITE (array bytes = model answer computed from the recorded nread/nw).
+    Pass: all equalities hold for every call in the three runs.
+    Does NOT show: other calls, error paths (excluded by the launcher), the code slice and bitmaps (checksum them too
+    if cheap), absence of interference outside the breakpoints.
+
+T5  Static decode of the 130,436-byte code slice                                    [no approval needed; no run]
+    Sketch: python3 -I script: read file bytes [16592, 147028) (slice digest 3c67983c…, region_compare.txt), decode
+    every 32-bit word with `llvm-objdump --disassemble` output or a small table of the encoder's 23 AST forms; report
+    (i) any word outside the subset, (ii) any operand register 18, (iii) any SP-based (register 31 as base/Rn) access,
+    (iv) any SVC/MRS/MSR/PAC/BTI/LDXR word.
+    Measures: A-X18, the SA0 lemma premise, I5 of X11 (no kernel entry from the code slice). Data words inside the
+    slice (literal pools) are expected and must be listed, not counted as failures.
+    Pass: (ii)–(iv) empty; (i) only at known non-instruction positions.
+    Does NOT show: that the listed words are the ones executed (control flow), and it is not an in-HOL proof (the
+    in-HOL decode lemma stays MISSING; T5 is its test oracle).

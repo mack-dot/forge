@@ -1,0 +1,110 @@
+X11 DRAFT: "the kernel and the processor between two user steps" (worker W-x8, 2026-11-19)
+STAGE LABEL: DRAFTING. Nothing proved, nothing run. M1-B stays OPEN. Abbreviations as in X8_statement.txt.
+Rule applied: NO macOS/XNU or Apple-silicon fact has a source in the repository or toolchain (the native ledger notes
+that the D11 header excerpts are not in the repository). Every OS/hardware row is therefore UNKNOWN, with the question.
+
+WHAT X11 MUST DELIVER (the exact model premise)
+ For every model step, TS:126-136 applies next_interfer after the instruction and demands state_ok (= arm8_ok,
+ AT:20-26) of the pre-, mid- and post-state. The stored premise (E4:153-154) is
+   interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+ = (ENV:7-13) ∀i ms. PSTATE, SCTLR_EL1, TCR_EL1, exception, REG (all 32), PC unchanged ∧ MEM unchanged on dm.
+ Under the construction of X8 §2 this becomes, per real U event: arm8_proj dm (absM r_{i+1}) = arm8_proj dm (absM q_i)
+ (A-KERNEL-PRESERVE), where absM erases TBI0/TBI1/SA0 and normalises x18. Also: the instruction itself must be a
+ user-mode step of the L3 subset (A-CPU-ISA) and the erasure side conditions N1–N5 hold.
+
+EVIDENCE ABOUT THE PROCESS ITSELF (from the repository)
+ I1 Imports (SYM:1-23, the complete undefined-symbol list, 23 names): ___assert_rtn ___clear_cache ___error ___stderrp
+    _close _exit _exp _fprintf _fputs _fwrite _getenv _log _malloc _memmove _open _pow _read _snprintf _strerror _strtod
+    _strtoull _vfprintf _write. NO pthread_*, fork, sigaction/signal, setitimer/alarm, mmap/mprotect, ptrace, shm*,
+    dlopen. (TESTED-UNPROVED, static; does not cover what libSystem initialisers or dyld do internally: UNKNOWN.)
+ I2 Dynamic binds: only 5 __got binds (_close _exit _open _read _write), no rebase/bind inside the two proved
+    slices (OA/ffi-hardening/layout/got_slots.txt:1-6).
+ I3 No signal handler: sigaction only under #ifdef EVAL (C 636-698); the build has no -DEVAL (runtime-command.json argv).
+ I4 Code location: CakeML code is in __TEXT,__text at 0x100004000, size 0x218c8 (OA/ffi-hardening/recorded/
+    sections_stdout.log:5); the build links with plain `clang refund.o basis_ffi.o -lm` (OA/ffi-hardening/commands.txt:6).
+    Segment protections (initprot/maxprot) are NOT recorded in the repository: UNKNOWN (question: is __TEXT r-x
+    with maxprot r-x in b8ed5ec2…? `otool -l` would show it: test T1). Note C 681 says "On macOS the text and code
+    buffer are linked writable (see Makefile)" — that refers to the EVAL build's Makefile; the recorded link command
+    has no -segprot flag (by reading commands.txt). UNKNOWN until T1.
+ I5 The model code never executes SVC/MRS/MSR/PAC/LDXR (encoder subset, X8 §b; AT:138-307). So within the proved
+    region there are NO synchronous kernel entries caused by the program except page faults and the FFI call
+    segments (which X8 §d treats as one event).
+ I6 Tested real behaviour (OA/ffi-c-audit/native_ffi_results.json): SIGPIPE with default action kills the process
+    (T07: rc −13); SIGPIPE ignored by the PARENT is inherited and turns EPIPE into a write error (T08: rc 0, empty
+    stdout); a slow writer on stdin gives short reads and a correct frame (T11).
+
+EVENT TABLE: what can happen between two user instructions on macOS/arm64, and the premise that handles it
+| #  | Event                                   | Premise (name)          | How it is excluded / neutralised                       | Class |
+| E1 | Timer interrupt, preemption, migration  | A-KERNEL-PRESERVE       | kernel saves/restores X0–X30, SP, PC, NZCV; no change  | ASSUMPTION (OS); UNKNOWN: |
+|    | to another core                         |                         | of dm. Model: next_interfer = identity on proj.        | XNU context switch source |
+| E2 | Page fault on a MAPPED page (first      | A-KERNEL-PRESERVE,      | kernel maps the page and re-executes the instruction;  | ASSUMPTION (OS)           |
+|    | touch of malloc pages, file-backed code | A-MAP-BACKED            | contents = file bytes / zero-fill. Heap zero-fill does |                           |
+|    | page-in, compressed-memory swap-in)     |                         | not matter (theorem ∀ heap contents beyond P1 slots).  |                           |
+|    |                                         |                         | Code page-in must give the FILE bytes (A-IMG-FILE).    |                           |
+| E3 | Page fault on an UNMAPPED/protected page| none needed (safe)      | real: SIGSEGV/SIGBUS default action terminates; model  | TESTED-UNPROVED (by kind) |
+|    | (model store into code, load outside    |                         | would continue. Real run is KILLED: X8 covers killed   |                           |
+|    | mapped memory)                          |                         | runs (stdout is a prefix ⇒ strict parse fails).        |                           |
+| E4 | Memory exhaustion: jetsam / OOM kill,   | A-MAP-BACKED            | process KILLED (safe, as E3); supervisor refuses.      | ENFORCE (launcher) +      |
+|    | RLIMIT_AS / RLIMIT_CPU / RLIMIT_STACK   | A-KERN-RLIMIT           |                                                        | UNKNOWN (OS)              |
+| E5 | SIGSTOP / SIGTSTP / debugger stop, then | A-KERN-SCHED            | no state change (model has no time); hang ⇒ supervisor | ENFORCE (timeout ⇒ REFUSE)|
+|    | SIGCONT                                 |                         | timeout.                                               |                           |
+| E6 | Signal with default action TERMINATE    | none needed (safe)      | KILLED; prefix argument as E3. SIGPIPE belongs here    | TESTED (T07)              |
+|    | (SIGTERM, SIGKILL, SIGINT, SIGPIPE dfl, |                         | ONLY if not ignored by the parent (E8).                |                           |
+|    | SIGALRM, SIGXCPU …)                     |                         |                                                        |                           |
+| E7 | Signal HANDLER runs (changes registers  | A-SIG                   | program installs none (I3) and imports no sigaction    | TESTED-UNPROVED (static I1,I3)|
+|    | or memory, or returns EINTR)            |                         | (I1); inherited dispositions are only SIG_DFL/SIG_IGN  | + UNKNOWN: libSystem init |
+|    |                                         |                         | (handlers are reset at exec: POSIX, no source: UNKNOWN)| installs none?            |
+| E8 | Signal IGNORED by inheritance (SIGPIPE  | A-SIG-DFL (NEW)         | changes a kill into a write ERROR (T08) ⇒ leaves       | ENFORCE: launcher resets  |
+|    | SIG_IGN)                                |                         | A-FD1-WRITE; safe only via strict parse                | SIGPIPE to SIG_DFL        |
+| E9 | Timer signals                           | A-SIG                   | none installed: no setitimer/alarm import (I1)         | TESTED-UNPROVED (static)  |
+| E10| Mach exceptions / exception ports,      | A-NO-DEBUGGER (NEW)     | an exception handler or debugger in another task can   | ENFORCE (no debugger;     |
+|    | task_for_pid, ptrace, debugger writes   |                         | rewrite registers and memory at any point              | not run under lldb in     |
+|    | (lldb, dtrace pid provider)             |                         |                                                        | production) + UNKNOWN (SIP)|
+| E11| Another THREAD of the process writes dm | A-SINGLE-THREAD         | no pthread_create import (I1); libSystem/dyld helper   | TESTED-UNPROVED (static)  |
+|    |                                         |                         | threads: UNKNOWN (question: does libSystem start any   | + UNKNOWN                 |
+|    |                                         |                         | thread in a plain CLI process?). Even if one exists it |                           |
+|    |                                         |                         | must not write dm (malloc block is private).           |                           |
+| E12| Another PROCESS writes dm (shared       | A-NO-SHARED (NEW)       | no mmap/shm import (I1); dm = __TEXT slice + __DATA    | TESTED-UNPROVED (static)  |
+|    | memory, vm_write via task port)         |                         | slice + private malloc block; vm_write needs a task    | + UNKNOWN (task-port      |
+|    |                                         |                         | port (E10).                                            | policy)                   |
+| E13| Code pages change (W^X/JIT toggling,    | A-MAP-WX                | no mprotect/mmap/pthread_jit_write_protect import (I1);| UNKNOWN until T1 shows    |
+|    | mprotect, self-modification)            |                         | cml_install (___clear_cache user) never reached (stored| initprot/maxprot          |
+|    |                                         |                         | exclusion E4:252-256 in the MODEL). Model stores into  |                           |
+|    |                                         |                         | code would fault in reality if __TEXT is r-x (E3).     |                           |
+| E14| System-register bits: TBI0/TBI1, SA0,   | A-PROC-N1 (E0E, EL0);   | kernel sets them at exec and keeps them constant. SA0, | UNKNOWN (no source):      |
+|    | E0E, SCTLR_EL1.A, EL, PSTATE.nRW        | erasure for TBI/SA0     | TBI0/1 are ERASED in absM (only need: constant, and    | question: XNU values of   |
+|    |                                         | (NextStateARM8_erase,   | the erasure side conditions hold); E0E must be 0 REAL; | E0E/SA0/TBI0/A at EL0     |
+|    |                                         | EE-0001:410-413)        | SCTLR_EL1.A free (native ledger A-PROC-ALIGN).         |                           |
+| E15| Pointer authentication keys, BTI, MTE   | none needed             | no PAC/AUT/BTI/MTE instruction in the encoder subset   | MODEL argument by reading |
+|    | tag checks                              |                         | (AT:138-307; NoOperation is HINT #0, not a PAC hint);  | AT; the L3 model has no   |
+|    |                                         |                         | the L3 model has no PAC (L3/model/arm8Script.sml grep  | PAC state; MTE: UNKNOWN   |
+|    |                                         |                         | "PAC": 0 hits, grep exit 1, run by me). Key state is irrelevant to  | whether M1 has MTE (by    |
+|    |                                         |                         | the subset. (C code and libSystem may use PAC: inside  | reading: not needed if    |
+|    |                                         |                         | the F events, covered by A-FFI-ABI.)                   | tags unused)              |
+| E16| x18 changed by the kernel               | A-X18                   | normalised in absM; needs "no model instruction names  | MISSING (decode lemma) +  |
+|    |                                         |                         | x18" (avoid_regs AT:350)                               | UNKNOWN (XNU)             |
+| E17| FP/SIMD state, TPIDR, branch predictor, | none needed             | not in arm8_proj (AT:365-369); fp_reg_count 0          | MODEL argument (reading)  |
+|    | caches (coherent), exclusive monitor    |                         | (AT:348). Cache incoherence after code page-in: kernel |                           |
+|    |                                         |                         | duty (UNKNOWN), covered by A-IMG-FILE.                 |                           |
+| E18| Interrupt between the C function's      | inside F event          | collapsed into the FFI event; only the post-state      | A-FFI-ABI / A-FD*         |
+|    | system call and its return; EINTR       | A-OUT-EINTR             | matters. EINTR needs a handler (E7) ⇒ excluded by I3.  | UNKNOWN (EINTR without    |
+|    |                                         |                         |                                                        | handler: question)        |
+| E19| dyld / libSystem code runs between user | A-LOADER, V2            | before cml_main only (outside X11's range); after      | ENFORCE (scrub DYLD_*)    |
+|    | instructions (interposition, injected   |                         | cml_main no lazy binding: binds are non-lazy __got     | CE-3 TESTED threat        |
+|    | constructors)                           |                         | (I2), resolved at load.                                |                           |
+| E20| Core-to-core differences (P/E cores of  | A-CPU-ISA               | each core implements the same ISA for the subset       | AXIOM (hardware)          |
+|    | M1 after migration)                     |                         |                                                        |                           |
+
+SUMMARY OF NAMED PREMISES FOR X11
+ A-KERNEL-PRESERVE (core; AXIOM about XNU), A-PROC-N1 (E0E=0, EL0; AXIOM), A-X18 (MISSING lemma + UNKNOWN OS),
+ A-SIG / A-SIG-DFL / A-NO-DEBUGGER / A-NO-SHARED / A-SINGLE-THREAD (ENFORCEABLE by the launcher or TESTED-UNPROVED
+ by the import list; residual UNKNOWN about libSystem/dyld internals), A-MAP-WX (UNKNOWN until T1),
+ A-MAP-BACKED / A-KERN-RLIMIT / A-KERN-SCHED (safe direction: a killed or stopped process gives a prefix or nothing;
+ the consumer refuses), A-CPU-ISA (see X8 §b). No row can be closed by HOL: a verified model of XNU does not exist
+ in the repository or the toolchain; the L3 model treats SVC as UNDEFINED (review-EE), so every route ends at a named
+ kernel assumption (TOP_LEVEL_GRAPH.md:64).
+LAUNCHER CONTRACT that makes the ENFORCEABLE rows true (draft; not implemented): exec with an empty or allow-listed
+ environment (no DYLD_*, no CML_* except fixed values); SIGPIPE and all signals reset to SIG_DFL, empty signal mask;
+ fds 0/1/2 = fresh BLOCKING pipes owned by the caller, stdin written completely then closed, stdout drained to EOF,
+ stderr separate; no debugger, not under lldb/dtrace; a wall-clock timeout ⇒ REFUSE; any signal death ⇒ REFUSE;
+ accept only on refund_strict_parse of the COMPLETE stdout (exit status ignored).
