@@ -1,0 +1,9 @@
+{"zeroCommit":{"status":"committed"},"mode":"on","stateUnchangedByZero":false,"laterRefund100":{"status":"mint refused: another transition is already signed for this pre-state"}}
+DEFECT: after a committed zero-amount refund no further refund can be minted for this charge
+mode=on exit=1
+{"zeroCommit":{"status":"committed"},"mode":"on","stateUnchangedByZero":false,"laterRefund100":{"status":"mint refused: another transition is already signed for this pre-state"}}
+DEFECT: after a committed zero-amount refund no further refund can be minted for this charge
+mode=on exit=1
+{"zeroCommit":{"status":"committed"},"mode":"off","stateUnchangedByZero":false,"laterRefund100":{"status":"committed"}}
+SAFE
+mode=off exit=0

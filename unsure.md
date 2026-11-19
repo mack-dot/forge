@@ -248,7 +248,7 @@ curl: (6) Could not resolve host: github.com
   does not distinguish an absent repository from one the app cannot access.
   The app can write repository files but has no repository-creation operation.
 - Observed: `git init -b main` exited 1 with
-  `/Users/mackianni/forge/.git: Operation not permitted`. The workspace's `.git`
+  `<REPO>/.git: Operation not permitted`. The workspace's `.git`
   path is read-only under this session's filesystem permissions.
 - Next step: prepare the approved workspace for publication and attempt the
   explicitly authorized public-repository creation with the GitHub CLI. Do not
@@ -4177,7 +4177,7 @@ curl: (6) Could not resolve host: github.com
   challenge 8a6ba7f4… and the 7 Rekor log indexes.
 - Observation: GitHub expires the R1/R2 artifacts on 2027-01-27. After that
   only the local copies (this manifest) and the permanent Rekor entries stay.
-  /Users/mackianni/forge is not a git working tree, and
+  <REPO> is not a git working tree, and
   ~/forge-stage9-signing-0003 is outside it; neither has a backup yet.
 - Signing variable: the pasted note recommends setting
   FORGE_SIGNING_AUTHORIZED to false. mackiannii has admin=false; repository
@@ -4660,7 +4660,7 @@ curl: (6) Could not resolve host: github.com
 
 - References: U187; proposals/incremental-verification/eval/FROZEN.json (runner
   revisions); results/stage11/eval-0006-superseded-reader-edge-fix/.
-- Observation: run_eval.py linked /Users/mackianni/forge/.toolchain into each
+- Observation: run_eval.py linked <REPO>/.toolchain into each
   case root; frozen case e17 ("Dafny missing", root_changes: delete
   .toolchain/dafny-4.11.0/dafny/dafny) followed the link and deleted the real
   pinned executable. e18 then failed with "dafny: No such file" instead of the
@@ -4879,7 +4879,7 @@ curl: (6) Could not resolve host: github.com
   package `d9e9fb40…`). **No controller row exists for lock `4e9e7e54` or source
   `4e4112c6`.** The controller has not been updated for Stage 11; doing so needs the
   separately approved signing path, which stays off. The local records working copy
-  `/Users/mackianni/forge` still carries gate files at lock `5f78da21` (v3.6); it is a
+  `<REPO>` still carries gate files at lock `5f78da21` (v3.6); it is a
   records directory, not a trusted base, and was not changed.
 
 ## U199 — PR #28 closed without merging; branch retained
@@ -4891,7 +4891,7 @@ curl: (6) Could not resolve host: github.com
 ## U200 — Disk and Docker audit (read-only); 25 GB of regenerable gate scratch identified
 
 - Record: results/ops-readiness/disk-docker-audit-0001.md. Free space 14 GiB (97% used).
-  `/Users/mackianni/forge/build/` holds 25 GB: four `stage9-integrity-*tests*` work
+  `<REPO>/build/` holds 25 GB: four `stage9-integrity-*tests*` work
   directories (6 GB each) and `stage9-receipt-candidate-0001` (1.4 GB). Their result records
   are on GitHub main (`results/stage9/integrity-repair-preparation/`); the work directories are
   fixture tree copies, not evidence. Docker: both 3 GB images are Stage 9 evidence packages
@@ -4950,11 +4950,11 @@ curl: (6) Could not resolve host: github.com
   295 repository-copy directories and files > 2 MB excluded (reproducible; list kept).
   Secret scan (values never printed): no GitHub/AWS/Slack/JWT/private-key patterns; two
   Bearer/Authorization matches in results/stage9/v35-audit-0001/probe-variant-a.py are
-  synthetic placeholders in a probe script; home path `/Users/mackianni` in 2 501 files;
+  synthetic placeholders in a probe script; home path `<HOME>` in 2 501 files;
   Keychain item name in 4 files (name only, no value); emails: docker@example.com and the
-  owner's noreply address. Raw archive `/Users/mackianni/forge-backups/forge-records-raw-2026-11-01.tar.xz`
+  owner's noreply address. Raw archive `<REPO>-backups/forge-records-raw-2026-11-01.tar.xz`
   sha256 `e2491743d39ee0fad290c34c558b3f147e4a72125e72171615cee49674f2986b` (exact bytes, per-file
-  manifest `d2f6313b…`); sanitized archive (`/Users/mackianni` → `$HOME`, 2 501 files changed,
+  manifest `d2f6313b…`); sanitized archive (`<HOME>` → `$HOME`, 2 501 files changed,
   raw↔sanitized hash map in its manifest) `ac84dd27cfe9b7a57f1eb085fd37d06df787d7dddc7f9b94fe52c06c92996570`.
   Both re-extracted: 0 hash mismatches, embedded manifests equal. **Still on the same disk**: the
   owner must copy `~/forge-backups/` off-machine; no off-machine copy was made (no destination).
@@ -7210,7 +7210,7 @@ curl: (6) Could not resolve host: github.com
   Git object checks0/0; main tracked diff0; prior unsure prefix unchanged.
 - New private same-device recovery bundle create/verify0/0; actual bare clone
   restore/fsck0/0 recovers both new heads and exact proof/record archives.
-  File:/Users/mackianni/forge-backups/forge-correspondence-commits-2026-11-03.bundle; mode0600;
+  File:<REPO>-backups/forge-correspondence-commits-2026-11-03.bundle; mode0600;
   bytes26703632; SHA256d8aa9f1620da36e3681a38636b3ed5874a0397cba867256b15459a01425c6188.
   Older bundles remain unchanged. The70MB runtime archive remains separately
   preserved in the owner workspace; it is not inside this Git bundle.
@@ -7266,7 +7266,7 @@ curl: (6) Could not resolve host: github.com
   Final whitespace0/0; committed readback0 checks38 files and996 raw archived
   members; both local worktrees clean. Parent archives/commits remain unchanged.
 - New private local recovery bundle create/verify/clone-restore/fsck0/0/0/0:
-  /Users/mackianni/forge-backups/forge-correspondence-review-2026-11-04.bundle;
+  <REPO>-backups/forge-correspondence-review-2026-11-04.bundle;
   SHA256c29177833f57363a2ed99942d007ebc744ee230669b1e4815b4c7496a5f53e0b; mode0600;26995742bytes.
   Owner-reported independent copy remains unvalidated. Existing strict integration
   EXIT1 still has only off_machine_backup_confirmed false. No remote copy or
@@ -10785,7 +10785,7 @@ curl: (6) Could not resolve host: github.com
   access(/var/tmp,W_OK) returns0 errno0; mkstemp returns fd3 errno0;33-byte
   write/read matches; own mode000 read raises EACCES13; true exits0;64MiB
   memory touch passes. sw_vers/sysctl exit0/0; RAM7516192768 bytes reported.
-- Next operation mkdir(/Users/mackianni,0700) raises EACCES13. This hosted
+- Next operation mkdir(<HOME>,0700) raises EACCES13. This hosted
   installation-path permission boundary differs from local /var/tmp EPERM.
   No input download,pinned HOL,MiniSat or SAT invocation reached. No theorem
   failure or impossibility inferred. No sudo or security-policy change occurred.
@@ -10827,7 +10827,7 @@ curl: (6) Could not resolve host: github.com
   made no progress; this continuation revalidates the same condition.
   The previous turn was not a verified wait. GitHub now confirms job128147719439
   in run42292059389 is completed/failure. No live process is awaited.
-- Original hosted step exit78 and mkdir(/Users/mackianni,0700) EACCES13 remain
+- Original hosted step exit78 and mkdir(<HOME>,0700) EACCES13 remain
   the actual execution result. One authorized run is consumed. The prepared
   second run and two scoped privileged setup commands have no new approval.
   Automatic continuation is not explicit approval for either action.
@@ -10862,7 +10862,7 @@ curl: (6) Could not resolve host: github.com
   /var/tmp access returns0; mkstemp fd3; errno0.33-byte write/read and64MiB
   memory touch pass. Own mode000 read raises expected EACCES13. Actual private
   path /Users/runner/work/_temp/forge-m1-pnsscbe1 has mode0700 and owner501.
-  sw_vers,sysctl,true and otool exit0. No /Users/mackianni mutation was attempted.
+  sw_vers,sysctl,true and otool exit0. No <HOME> mutation was attempted.
 - HOL subprocess actual exit0. Unchanged660-byte SAT source hash remains
   bc3fb212a4037ae8e8ebd500f9843bff9cd93cbfcbc76501c7a152a9004af108.
   Output contains DIAGNOSTIC_SAT_THEOREM ⊢ probe ∨ ¬probe and NATIVE_STEP_COMPLETE.
@@ -18268,3 +18268,29 @@ curl: (6) Could not resolve host: github.com
 - Reading: "no bypass found" here is weak evidence: about half of the planned attacks did not run. The third rule stays UNREVIEWED in the sense of the night's rule (a finished adversarial review).
 - Impact: none on stage labels. OWNER_REQUIRED B-11 stands with its correction: no subset rule is recommended for adoption; the scope-minimal diff, the `expect` rule and supervision are separate. M1-B OPEN. end_to_end=false.
 - Next check, on mains power: verify the twelve files; finish the attack list; then decide between the third rule as a narrow fallback and a checker over the resolved syntax tree.
+
+## U580 — red team (Orchestrator C): both duplicate-effect exploits fail at the v6 sink in independent repros; the dispatcher is not covered
+- Status: 2026-11-19T14:31Z (inserted by the shell from `date -u`). Refs U530 to U567 (B's entries on the sink), U428. Evidence: results/night-shift-20261119/orch-C/c3-identity, ATTACKS.md (C-CLOSED-01, C-ATT-06). Target: 4af09308 with orch-B/p-adopt2/adoption-v6.diff applied in a scratch checkout (NOT applied to the repository).
+- TESTED, my own runs: two effects for one request id: merged sink exit 1 (exploit works), v6 exit 0. Cross-charge double refund: merged exit 1, v6 exit 0. A 15-case substitution matrix: v6 exit 0. Honest zero-amount flows commit and are dispatched: exit 0.
+- Uncertainty: finite tests. The dispatcher does not evaluate the approved relation (dispatcher.ts:57-73): with a faulty signer and a database writer it emits 3 x 1000 on a 1000 charge while the v6 sink refuses the same tokens (exit 1). So "approval with no signing hypothesis" is a statement about sink commits, not about dispatched effects.
+- Impact: acceptance criterion "both duplicate-effect exploits fail against the fixed implementation" is met at the sink for a DRAFT that is not adopted. M1-B OPEN. end_to_end=false.
+- Next check: B's regression for the dispatcher gap; C re-runs.
+
+## U581 — red team: a crash during the first open of a fresh v6 store leaves a file that every later start refuses (new; a regression against the merged sink)
+- Status: 2026-11-19T14:31Z. Refs U554, U557. Evidence: orch-C/c1-concurrency (t2_ddl_crash.ts; recheck/), ATTACKS.md C-ATT-02.
+- TESTED, my own runs: built state after one of four DDL statements: exit 1; 60 real SIGKILLs at random delays: 9 files bricked, exit 1. Cause: v6 sink.ts:107 runs the DDL as four autocommit statements only when sqlite_schema is empty; the schema check then refuses the partial file for ever.
+- Uncertainty: the hit rate depends on timing; the built-state case is deterministic.
+- Impact: a false rejection without an attacker. The v6 adoption diff carries it. Next check: B's fix (one transaction for the DDL, or completion at restart); C re-runs both modes.
+
+## U582 — red team: the minter's single-use rule and a zero-amount refund freeze a charge (new reading of U428)
+- Status: 2026-11-19T14:31Z. Refs U428. Evidence: orch-C/c1-concurrency (t1, t7), orch-C/c3-identity (z2), ATTACKS.md C-ATT-03, C-ATT-07.
+- TESTED, my own runs: single-use on: after one zero-amount refund (committed, or only minted by any caller without the key, or lost in a client crash) the minter refuses every later refund for that charge: exit 1 in three scripts; single-use off: exit 0 for that case, and then D14 works with a database writer who does NOT hold the key (exit 1). The v6 header sentence that such a writer "holds the signing key" is contradicted by that run.
+- Uncertainty: which setting a deployment uses is not decided (B's end-to-end test uses off).
+- Impact: each setting has a confirmed defect: on = zero-amount refunds brick the charge (a fix must not refuse zero amounts); off = D14. Recovery by a minter restart changes the key and no store or token survives it (C-ATT-05, known as a B-10 duty). Next check: a rule keyed on more than the pre-state hash must be re-attacked for D14.
+
+## U583 — red team: a stored request id with U+0000 passes the v6 start-up audit and lets a zero-amount token commit twice (new mechanism; impact class of U565)
+- Status: 2026-11-19T14:31Z. Refs U565, U554. Evidence: orch-C/c6-premises (p_adb2_nul.ts; recheck/), ATTACKS.md C-ATT-04.
+- TESTED, my own run: exit 1. A database writer without the key appends U+0000 and a character to request_id in settled and outbox. node:sqlite returns TEXT cut at U+0000; SQL compares the full value. The audit sees the old id; the commit-time lookup does not find it; the same token commits again; later restarts pass.
+- Reading: premises A-DB1 and A-DB2 of AuditV5SoundRelativeToSuppliedInitial, and the settled flag of StepQ6, are false for the real shell in this state. Money is unchanged (only a zero-amount token can repeat); the dispatcher's ledger deduplicated in the run.
+- Uncertainty: BLOB-typed columns and U+0000 in other columns are NOT RUN yet.
+- Impact: any row-log anchor of B must hash what SQL stores, not what node reads. Next check: B's h-sink; C re-runs and tries typed-column variants.

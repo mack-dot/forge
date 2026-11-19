@@ -1,0 +1,21 @@
+PASS "\"" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "\\" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "\u0001" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "\b" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "\n" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "\r" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS " " {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS " " {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "￿" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "￾" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "﻿" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "😀" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "􏿿" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "é" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS " " {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "0" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS "1e3" {"c0":"committed","c1":"committed","r0":"replayed","r1":"replayed","audit":0,"d1":2,"d1ref":0,"d2":0,"d2already":2}
+PASS malformed inputs rejected without exception {"deep":"rejected","deepObj":"rejected","n8193":"rejected","nul":"rejected","num":"rejected","arr":"rejected","num2":"rejected","obj":"rejected","und":"rejected"}
+BAD 0

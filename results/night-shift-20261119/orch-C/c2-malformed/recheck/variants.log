@@ -1,0 +1,23 @@
+PASS node verify refuses S+L {"S2bits":253}
+PASS sink: S+L text not committed, canonical one commits {"a":{"status":"rejected","reason":"signature does not verify"},"b":{"status":"committed"}}
+PASS sink: all-zero signature rejected {"status":"rejected","reason":"signature does not verify"}
+PASS sink: 19 base64 variants of a valid signature all rejected {"urlsafe":"rejected","nopad":"rejected","ws":"rejected","lower":"rejected","trailbits1":"rejected","trailbits2":"rejected","trailbits3":"rejected","trailbits4":"rejected","trailbits5":"rejected","trailbits6":"rejected","trailbits7":"rejected","trailbits8":"rejected","trailbits9":"rejected","trailbi
+PASS sink: canonical signature commits after the variants
+PASS sink: 12 non-canonical texts of one valid token all rejected {"bom":"token shape","lead":"token text is not canonical","trail":"token text is not canonical","dupKey":"token text is not canonical","dupBody":"token text is not canonical","proto":"token shape","order":"token text is not canonical","escA":"token text is not canonical","slash":"token shape","num":
+PASS sink: canonical text commits; then replayed
+PASS sink: non-canonical text after commit is rejected (not replayed, not committed) {"status":"rejected","reason":"token text is not canonical"}
+PASS longest legitimate token text fits 8192 (len 6781)
+PASS sink commits the longest legitimate token {"status":"committed"}
+PASS core text round trip back(text(s)) == s on 18 strings []
+PASS core text length is the code-point count
+PASS BigNumber round trip on 19-digit money and 0 []
+PASS original > MaxMoney: zero and full refund not committed (spec: invalid context) {"r0":{"status":"rejected","reason":"not authorized by the approved relation for the stored state"},"r1":{"status":"rejected","reason":"not authorized by the approved relation for the stored state"}}
+PASS original == MaxMoney, full refund commits {"status":"committed"}
+PASS reason: exactly the 3 approved labels commit (amount 0) {"\"duplicate_charge\"":"committed","\"service_not_delivered\"":"committed","\"returned_item\"":"committed","\"Duplicate_charge\"":"rejected","\"duplicate_charge \"":"rejected","\" returned_item\"":"rejected","\"returned_item\\u0000\"":"rejected","\"returned item\"":"rejected","\"\"":"rejected","\"f
+PASS zero refund x2 on {"chargeId":"ch_z0","original":"100","remaining":"0","refundEnabled":true}: commit + dispatch {"r1":{"status":"committed"},"r2":{"status":"committed"},"emitted":2,"refused":[]}
+PASS zero refund x2 on {"chargeId":"ch_z5","original":"100","remaining":"5","refundEnabled":true}: commit + dispatch {"r1":{"status":"committed"},"r2":{"status":"committed"},"emitted":2,"refused":[]}
+PASS zero refund x2 on {"chargeId":"ch_z00","original":"0","remaining":"0","refundEnabled":true}: commit + dispatch {"r1":{"status":"committed"},"r2":{"status":"committed"},"emitted":2,"refused":[]}
+PASS refundEnabled false, amount 0: rejected (approved spec ValidContext requires the flag) {"status":"rejected","reason":"not authorized by the approved relation for the stored state"}
+INFO four request ids equal after NFC/case/trim each commit as separate refunds: ["committed","committed","committed","committed"] (spec: no normalisation; exact match)
+PASS dispatcher: hostile ledger first lines emit nothing {"nul":"throw: Cannot read properties of null (reading 'requestId')","num":"throw: dispatcher ledger is not one chain","arr":"throw: dispatcher ledger is not one chain","str":"throw: dispatcher ledger is not one chain","dup":"throw: dispatcher ledger is not one chain"}
+FAILS 0

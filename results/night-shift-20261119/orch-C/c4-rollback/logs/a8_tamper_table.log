@@ -1,0 +1,18 @@
+(node:45556) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"i":0,"name":"state-only rollback to genesis","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":1,"name":"settled tail truncated only","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":2,"name":"outbox tail truncated only","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":3,"name":"settled+outbox tail truncated, state kept","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":4,"name":"sqlite_sequence zeroed","applied":"ok","start":"serves","offlineAudit":0,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}
+{"i":5,"name":"all seq negated in reverse (order reversed)","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":6,"name":"seq shifted to negative, order kept","applied":"ok","start":"serves","offlineAudit":0,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}
+{"i":7,"name":"settled+outbox seq gaps","applied":"ok","start":"serves","offlineAudit":0,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}
+{"i":8,"name":"request_id of r1 as BLOB in settled","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":9,"name":"token of r1 as BLOB","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":10,"name":"user_version and application_id","applied":"ok","start":"serves","offlineAudit":0,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}
+{"i":11,"name":"meta rows deleted (legacy path)","applied":"ok","start":"serves","offlineAudit":1,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}
+{"i":12,"name":"second state row (CHECK ignored)","applied":"ok","start":"serves","offlineAudit":0,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}
+{"i":13,"name":"outbox r1 and r2 seq swapped","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":14,"name":"unknown meta key","applied":"ok","start":"refuses: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"i":15,"name":"temp trigger (per connection)","applied":"qualified table names are not allowed on INSERT, UPDATE, and DELETE statements within triggers","start":"serves","offlineAudit":0,"state":"700","commit":"committed","emitted":["r1","z","r2","r3"],"refused":0,"paid":350}

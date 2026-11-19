@@ -1,0 +1,3 @@
+(node:42409) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"restart","c1":{"status":"committed"},"c2":{"status":"committed"},"c1replay_before":{"status":"rejected","reason":"request id is already settled with another token"},"start1":"serves","c1again":{"status":"committed"},"reaudits":0,"outboxR1":2,"state":"600","offlineAudit":[],"restart":"serves","f":{"emitted":[],"refused":["r1: token does not continue the dispatched chain","r2: token does not continue the dispatched chain","r1: token does not continue the dispatched chain"]},"paid":0}

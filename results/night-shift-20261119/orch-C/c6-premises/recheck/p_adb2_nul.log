@@ -1,0 +1,33 @@
+{
+ "c1": {
+  "status": "committed"
+ },
+ "c1again": {
+  "status": "replayed"
+ },
+ "restartAfterTamper": true,
+ "c2": {
+  "status": "committed"
+ },
+ "restartAfterSecondCommit": true,
+ "nodeVisibleOutboxIds": [
+  [
+   1,
+   "rq_z",
+   4
+  ],
+  [
+   2,
+   "rq_z",
+   4
+  ]
+ ],
+ "countDistinctSettled": 2,
+ "nodeVisibleDistinct": 1,
+ "dispatch": {
+  "emitted": 1,
+  "refused": [],
+  "already": 0
+ }
+}
+DEFECT: the audited store holds two commits of request id rq_z (A-DB2 false for the real shell)
