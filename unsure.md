@@ -18324,3 +18324,168 @@ curl: (6) Could not resolve host: github.com
   system (owner item A-4); nothing is pushed.
 - Impact: none on any stage label. M1-B OPEN. end_to_end=false.
 - Next check: the rest of the reproduction; the staged cases.
+
+## U700 — goal 19 (native silicon sink): a pre-flight stop at an open pull request; the owner's decisions and where each one came from
+
+- Status: 2026-11-19. Not a stage. The owner's texts and answers:
+  `proposals/forge2-native-silicon-sink/OWNER_TEXTS.md`.
+- Observed at the start: pull request 58 was OPEN (head `985f5eaf`).
+  The directive (`goal19.md`, not tracked) says STOP in that case.
+  Nine older pull requests were open (14, 15, 36; drafts 1, 2, 3, 5,
+  34, 37). A night-shift HOL queue of another session ran; I did not
+  start it and did not touch it.
+- Decisions that the owner SELECTED in the session's question dialog:
+  recon only while pull request 58 is open; the nine older pull
+  requests do not block; later "Approved; PR 58 is merged", "assert
+  < 250 ms", "flood the sink; raw run as observation", "under 250
+  total lines"; later "Start from b9f2831c now".
+- One message held only PASTED text: it approves items 1 to 14 of the
+  specification and says not to wait for pull request 58. I cannot
+  tell a pasted text from the owner's own typing: its class is
+  inference. It agrees with the dialog answers.
+- The answer "PR 58 is merged" was not true on GitHub: the pull
+  request was OPEN. Its files were in `origin/main` through pull
+  request 59 (commit `b9f2831c`; `git diff`: 0 files of pull request
+  58 missing; `ROADMAP.md` and `unsure.md` supersets). I asked again
+  before I made the branch.
+- Impact: none on any stage label. Branch `feat/native-silicon-sink`
+  starts at `b9f2831c`. Pull requests 58, 60 and 61 were open at that
+  time; 60 and 61 change `ROADMAP.md` and `README.md`, and their
+  entries use the numbers U530 to U625. This work uses U700 onward.
+- Next check: the owner's review of the pull request of this work.
+
+## U701 — goal 19: two requirements of the directive cannot be met as written (commit under 2 ms; 50 MiB for a flood into the binary); measured values; the owner's replacements
+
+- Status: 2026-11-19. Refs U700. Measured in a scratch folder before
+  any code (read-only recon), then again by the EXIT script.
+- "Commits in under 2 milliseconds": one start and run of the binary
+  `b8ed5ec2…` took at least 3.8 ms (median 9.5 ms) in the recon probe.
+  One `File::sync_all()` took at least 2.5 ms (median 4.8 ms). On macOS
+  it is `fcntl(F_FULLFSYNC)` (the built program imports `fcntl` and
+  not `fsync`); plain `fsync(2)` took 0.03 ms and does not ask the
+  drive to flush. One commit holds one run of the binary and two full
+  flushes. Final runs: minimum 7.95 ms, p50 11 ms, p99 45 to 48 ms.
+- "10 GiB into the binary, resident memory below 50 MiB": the binary
+  alone took 132,120,576 bytes of the flood and then ended with exit
+  status 1 and no output; its peak resident memory was 258 MiB at the
+  recorded setting `CML_HEAP_SIZE=256`. The sink sends at most 154
+  bytes to the binary; its own peak in the 10 GiB flood was 1.86 MiB.
+- Owner decisions (U700): record p50 and p99 and assert below 250 ms;
+  flood the sink with the 50 MiB bound, and record the raw run with no
+  bound.
+- Uncertain: the spread of the times. With two other jobs on the
+  machine one run had p99 186.9 ms and a maximum of 246.4 ms. The
+  assertion can fail on a busy machine.
+- Impact: the report says "250 ms" and never "2 ms". No stage label.
+- Next check: a run on an idle machine and on a second machine.
+
+## U702 — goal 19: what the native sink does NOT give (limits stated before the code, and observed in the tests)
+
+- Status: 2026-11-19. Refs U478 (the sink core model), U475 (no
+  component consumed the M1 output), U700.
+- Nothing is proved. `src/silicon_sink/sink.rs` has no source proof.
+  The binary's theorems are machine-model theorems with open premises:
+  M1 is open. `end_to_end=false`.
+- `SpecCleared` is not enforced by the sink. The one link from this
+  binary to the approved refund spec is the finite test of Wave Gate 1
+  (bundle `f55391da…`, pinned by digest in the EXIT script).
+- No signed token: the sink starts the binary itself. Who can write
+  the two ledger files, replace the binary file or set the arguments
+  and environment of the sink can make any commit. The sink does not
+  hash the binary; the EXIT script does.
+- Who writes the request line sets the three flags, the amount and
+  the reason.
+- A restore of BOTH ledger files is not detected (observed in case
+  `rollback`): "permanently close the rollback attack" would be false.
+  A restore of the WAL alone is refused. A rewritten suffix with a
+  recomputed chain is accepted (observed in case `recovery`): FNV-1a-128
+  is not authentication. "C-ATT-10" has no record in the repository.
+- A SIGKILL keeps the page cache. No power loss was tested. The order
+  of the durable calls was observed with an interposer for one traced
+  commit, one traced recovery and one traced `init`.
+- Delivery is at most once per commit. In the kill tests 105 of 439
+  records were committed and never dispatched; only `replay` shows
+  them.
+- The sink accepts fewer requests than the binary (ids of 1 to 24
+  bytes of `[A-Za-z0-9_-]`): 3 of the 8 authorized HOL fixtures are
+  refused by the sink.
+- The file has 248 lines in a compact hand layout (lines up to 152
+  characters). `rustfmt` prints the same code on 521 lines. Whether
+  that meets "up to 250 lines" is for the owner to say.
+- Impact: this is a finite test of a new trusted program. It is not
+  gate evidence and closes no M1 item.
+- Next check: owner decisions on the line count, on a signed token,
+  and on an outside witness for the ratchet.
+
+## U703 — goal 19: actual results of the EXIT script; what failed on the way
+
+- Status: 2026-11-19. Refs U700 to U702. Report:
+  `proposals/forge2-native-silicon-sink/REPORT.md`. Bundle:
+  `proposals/forge2-native-silicon-sink/records/evidence.json`,
+  SHA-256 `1f569fcfc4c87fbeb8d787cee687eb74acde8200c9350d8f0a5959b8cd1c932c`.
+- Actual: the directive's compile command: exit 1, then 0 (first: a
+  trait that is not in scope in the default edition, and two lines
+  that were not Rust). `--case build`: 0. `--case suite`, attempt 1,
+  before the review: 0. `--case mutations`: attempt 1 exit 0 (30 of
+  30); attempts 2 to 5 after the review: 1, 1, 1, 0 (U704).
+  `--case evidence`, attempt 1: exit 0; build, 13 of 13 cases and 49 of
+  49 changed copies, twice; the two bundles byte-identical.
+- In the final runs: 120 SIGKILLs at six points and 100 SIGKILLs of
+  a running process, 0 wrong ledgers after recovery; 0 request ids
+  committed twice; 0 dispatches without a record; races of 100
+  processes: 1 commit and 99 times `STALE_STATE_HASH`; 2,048 single-bit
+  changes of records all refused; the 22 HOL-written fixtures: 5
+  committed with the HOL-written bytes, 6 rejected by the binary, 11
+  refused by the sink's grammar.
+- Faults of my own on the way: a scratch probe that blocked on its own
+  lock; a test line that held a valid request by mistake; a wrong
+  expectation of the order of two `close` calls; the sink gave code 16
+  for an id with a byte that is not UTF-8 (now 12).
+- Uncertain: the suite reads the files with its own code; that code
+  and the sink can be wrong in the same way. The bundle has no times;
+  its equality over two runs compares counts, fixed texts and the
+  SHA-256 of three final WAL files.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: the regression in a scratch clone and the hosted gate
+  (a later entry).
+
+## U704 — goal 19: the one review: 1 FAIL-OPEN by the letter of the rule, 1 HIGH, 11 MEDIUM, 5 LOW; statements of mine that were false; repairs in one pass; one proposed repair did not work
+
+- Status: 2026-11-19. Refs U703. Review text and disposition:
+  `proposals/forge2-native-silicon-sink/REVIEW.md`.
+- The reviewer (fresh context; the code, the rule and the stated
+  limits; not my results) found no path to a COMMITTED line without
+  the two syncs, no double record and no commit on a stale state. It
+  ran the production sink by hand and compiled eleven changed copies.
+  It did not run the EXIT script or the full suite.
+- R1, FAIL-OPEN by the letter: a refusal with code 18 after the record
+  was written left the record, and the next start adopted it as a
+  commit that was never dispatched. My comment "a refusal writes no
+  record" was false. R2, HIGH: after an answer could not be written
+  the stream went on and could end with exit code 0. R3: the sink
+  called the binary's rejection of a short request BAD_FRAME.
+- Other statements of mine that were false or too strong: that the
+  order of the durable calls held "for all recorded commits" (it was
+  observed for one); "no timing" in the lock case; that the suite does
+  not ask the sink about a file (after a kill it starts the recovery
+  first).
+- Repairs in one pass, NOT reviewed again: a record whose write or
+  sync failed is cut off again and the cut is synced; new codes 19
+  (`OUTCOME_UNKNOWN`) and 20 (`DISPATCH_FAILED`); the stream ends at
+  the first code from 17 up; `init` refuses beside a leftover file,
+  makes the ratchet first and removes its own files after a failure;
+  the suite reads both files directly after every commit and compares
+  the record with the request; traces of `init` and of a recovery;
+  short writes; line lengths at the bound; a case with no reader for
+  the answers; 19 more changed copies (49 in all).
+- One repair that the reviewer proposed (R11: let the lock holder wait
+  after its write) did NOT detect the reviewer's own changed copy: the
+  suite passed on it (my run, exit 0). The case now lets two processes
+  wait; exactly one may commit. Then the copy is detected.
+- Repaired in part: `init` has no lock and no kill point (R5, R8); the
+  time bounds can fail on a loaded machine (R13). Codes 19 and 20 are
+  not in the specification that the owner approved.
+- Impact: none on any stage label. The review did not show a wrong
+  dispatch; it showed that a caller could misread code 18 and exit
+  code 0.
+- Next check: the owner's decision on codes 19 and 20.

@@ -28,6 +28,34 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs — U700 to U704
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Branch
+`feat/native-silicon-sink` from `b9f2831c`; NOT merged. Nothing is
+proved: every row is a finite test on one machine.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pre-flight: `gh pr list --state open` |0|pull request 58 OPEN: the directive says STOP; the owner's decisions are in U700 |
+| `rustc -D unsafe_code -C opt-level=3 src/silicon_sink/sink.rs -o build/silicon/native_sink` (first; final) |1; 0|final: 248 lines in a compact layout (`rustfmt`: 521), std only, no `unsafe`, no crate |
+| `scripts/exit_silicon_sink.py --case build` |0|a copy with one `unsafe` block: compile exit 1; the binary `b8ed5ec2…` runs natively |
+| `--case suite`, attempt 1 (before the review) |0|12 of 12 cases; under load p99 186.9 ms of the 250 ms bound |
+| the one fresh-context review |1 FAIL-OPEN by the letter of the rule; 1 HIGH; 11 MEDIUM; 5 LOW|code 18 could leave a record; the stream went on after a failed answer; no wrong dispatch found |
+| `--case mutations`, attempt 1 (before the review); attempts 2 to 5 (after the repairs) |0; 1; 1; 1; 0|30 of 30; two wrong failure names of mine; one copy NOT detected, then the lock case repaired; 49 of 49 |
+| `--case evidence`, attempt 1 (final) |0|13 of 13 cases and 49 of 49 changed copies, twice; bundle `1f569fcf…932c` |
+| 10 GiB flood with no line end into the sink |inside the suite|peak resident memory 1.86 MiB; next request in 13 to 15 ms |
+| "commit under 2 ms" |NOT REACHED|minimum 7.95 ms; p50 11 ms; p99 45 to 48 ms; asserted bound 250 ms (owner) |
+| scratch-clone regression; push; pull request; hosted gate |NOT RUN at this commit|a second commit (documents only) adds them |
+| every HOL, Holmake and Dafny step; Stages 7, 9, 10 |NOT RUN|not part of this work |
+
+[Report](proposals/forge2-native-silicon-sink/REPORT.md).
+[Review](proposals/forge2-native-silicon-sink/REVIEW.md).
+[Owner texts](proposals/forge2-native-silicon-sink/OWNER_TEXTS.md).
+The sink has no source proof and no signed token. A restore of both
+ledger files is not detected. A SIGKILL is not a power loss.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Night shift 2026-11-19, proof track (Orchestrator A): replay ended; first HOL runs of the M1-B lemmas; native counterexamples — U481 to U498
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
