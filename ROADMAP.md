@@ -28,6 +28,27 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Night shift 2026-11-19, trust track, part 4 (Orchestrator B, phase 2: implementation hardening): regressions for both duplicate-effect counterexamples; the real sink against the approved specification; a hardened sink and minter on the branch; red-team findings (U567 to U575; branch `nightshift/B-trust`; NOT merged; no protected file changed; no stage promotion)
+
+Written 2026-11-19T15:00:05Z. Stage labels do not change. M1-B stays OPEN. `end_to_end` stays `false`. Details and limits: `unsure.md` U567 to U575; owner items B-12 to B-15 in `results/night-shift-20261119/OWNER_REQUIRED.md`.
+
+Actual results (my own runs; cwd = the branch tree; pinned Node 24.3.0):
+
+| Command (short form) | Tree | Actual exit | Class |
+| --- | --- | --- | --- |
+| `regress/run.ts` (controls C1 to C5, regressions X1 to X6) | merged sink | 1 (8 FAIL, as intended: the counterexamples reproduce) | TESTED-UNPROVED |
+| `spec-conformance/run.ts` seq, fault, interleave | merged sink | violations of P1, P2, P3, P4, P7 (U570) | TESTED-UNPROVED |
+| `h-sink/tests/db_safeguards.ts` (69 rows) | hardened sink, b7fd6be8 | 0 (69 PASS, 0 FAIL) | TESTED-UNPROVED |
+| `spec-conformance/run.ts` seq, fault, interleave, 200 cases, seed 7 | hardened sink | 0, 0, 0 | TESTED-UNPROVED |
+| red-team copies a6 restart, a6 running, a5, a2 off, a1 running, a8 hostile | hardened sink | 0 each | TESTED-UNPROVED |
+| `regress/run.ts`, unchanged harness | hardened sink | 1 (13 of 14 FAIL: the harness does not fit; NOT a pass, NOT a sink finding; U574) | harness defect |
+| `dafny verify` (gate options) `IssueOnce.dfy` | 608b5165 | 0 (160 verified, 0 errors) | MACHINE-CHECKED, source level |
+| five `regress/m_*.ts` | new minter, 608b5165 | 0 each | TESTED-UNPROVED |
+
+NOT RUN (no result is claimed): the Slice 1 suite on the hardened tree (two rows are predicted to fail by design: the raw outbox INSERT row and the row at suite.ts line 589); the differential against the V6 core; the kill storm; the 20,000-row measurement (one light attempt ended with exit 124).
+
+Known weak points, stated: the red team showed that the two judges of this branch pass twelve defective variants (U573); "passes the regressions" names the judge version from now on. The row chain of the hardened sink is unkeyed: rollback resistance is NOT claimed without an outside anchor (U571, B-14). The per-request minter rule is a proposal that conflicts with one merged suite row (B-15). The dispatcher has four open red-team findings, one HIGH with no attacker (lock without an owner; U574).
+
 ## Night shift 2026-11-19, trust track, part 3 (Orchestrator B): the layered byte-level lemma with the commit-time check; reviews; the suite with the v6 adoption diff; three subset rules, one refuted — U559 to U566
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
