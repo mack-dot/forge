@@ -1,0 +1,58 @@
+# owner=b-ser start=2026-11-19T08:58:24Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1391
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects M1-no-quote-escape.dfy
+# memory free percent: 67
+M1-no-quote-escape.dfy(299,6): Error: assertion might not hold
+    |
+299 |       assert inp[2..] == r;
+    |       ^^^^^^
+
+M1-no-quote-escape.dfy(299,16): Error: lower bound out of range
+    |
+299 |       assert inp[2..] == r;
+    |                 ^
+
+M1-no-quote-escape.dfy(300,31): Error: index out of range
+    |
+300 |       assert SimpleUnescape(inp[1]).Some? && SimpleUnescape(inp[1]).value == c;
+    |                                ^
+
+M1-no-quote-escape.dfy(300,63): Error: index out of range
+    |
+300 |       assert SimpleUnescape(inp[1]).Some? && SimpleUnescape(inp[1]).value == c;
+    |                                                                ^
+
+M1-no-quote-escape.dfy(300,74): Error: assertion might not hold
+    |
+300 |       assert SimpleUnescape(inp[1]).Some? && SimpleUnescape(inp[1]).value == c;
+    |                                                                           ^^
+
+M1-no-quote-escape.dfy(521,8): Error: assertion might not hold
+    |
+521 |         assert EscChar(ch) == inp[..2];
+    |         ^^^^^^
+
+
+Dafny program verifier finished with 94 verified, 6 errors
+        5.46 real         4.75 user         0.30 sys
+           172244992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18811  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 388  voluntary context switches
+               13554  involuntary context switches
+         41098420352  instructions retired
+         15712069764  cycles elapsed
+           139150488  peak memory footprint
+# end=2026-11-19T08:58:30Z
+exit 4

@@ -1,0 +1,46 @@
+[
+ {
+  "name": "auth",
+  "issue": true,
+  "amount": "40",
+  "reason": "returned_item",
+  "chargeId": "ch_1",
+  "requestId": "req_1",
+  "count": "1"
+ },
+ {
+  "name": "reject-disabled",
+  "issue": false
+ },
+ {
+  "name": "zero",
+  "issue": true,
+  "amount": "0",
+  "reason": "duplicate_charge",
+  "chargeId": "ch_1",
+  "requestId": "req_0",
+  "count": "1"
+ },
+ {
+  "name": "unicode",
+  "issue": true,
+  "amount": "60",
+  "reason": "service_not_delivered",
+  "chargeId": "é€😀 \"q\"\\",
+  "requestId": "r 7\t)(",
+  "count": "1"
+ },
+ {
+  "name": "max",
+  "issue": true,
+  "amount": "9223372036854775807",
+  "reason": "returned_item",
+  "chargeId": "c",
+  "requestId": "r",
+  "count": "1"
+ },
+ {
+  "name": "post-wrong",
+  "issue": false
+ }
+]

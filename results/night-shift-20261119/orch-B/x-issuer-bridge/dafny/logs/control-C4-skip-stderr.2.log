@@ -1,0 +1,43 @@
+# owner=x-issuer-bridge start=2026-11-19T09:08:59Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C4-skip-stderr
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C4-skip-stderr/Bridge.dfy
+# memory free percent: 44
+Bridge.dfy(61,2): Error: a postcondition could not be proved on this return path
+   |
+61 |   {
+   |   ^
+
+Bridge.dfy(60,34): Related location: this is the postcondition that could not be proved
+   |
+60 |       inRange && v.Issue? && Clean(p) && parsed == Some(Expected(v, enc))
+   |                                   ^
+
+Bridge.dfy(31,79): Related location: this proposition could not be proved
+   |
+31 |     p.launched && !p.timedOut && !p.signaled && p.exitCode == 0 && p.stderrLen == 0 &&
+   |                                                                                ^^
+
+
+Dafny program verifier finished with 7 verified, 1 error
+        1.39 real         1.15 user         0.12 sys
+           109903872  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12566  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  93  voluntary context switches
+                4115  involuntary context switches
+         10204183704  instructions retired
+          3931722098  cycles elapsed
+            92734640  peak memory footprint
+# end=2026-11-19T09:09:01Z
+exit 4

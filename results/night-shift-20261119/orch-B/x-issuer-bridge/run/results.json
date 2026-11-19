@@ -1,0 +1,607 @@
+{
+ "class": "TESTED-UNPROVED (finite tests)",
+ "binary_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+ "total": 64,
+ "passed": 64,
+ "results": [
+  {
+   "test": "real/auth",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)"
+  },
+  {
+   "test": "real/reject-disabled",
+   "want": "BOTH_REFUSE",
+   "got": "BOTH_REFUSE",
+   "pass": true,
+   "stdout": "(refund-result-v1 False 0 \"\" \"\" \"\" 0)"
+  },
+  {
+   "test": "real/zero",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "stdout": "(refund-result-v1 True 0 duplicate_charge ch_1 req_0 1)"
+  },
+  {
+   "test": "real/unicode",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "stdout": "(refund-result-v1 True 60 service_not_delivered \"\u00c3\u00a9\u00e2\u0082\u00ac\u00f0\u009f\u0098\u0080 \\\"q\\\"\\\\\" \"r 7\\t)(\" 1)"
+  },
+  {
+   "test": "real/max",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true,
+   "stdout": "(refund-result-v1 True 9223372036854775807 returned_item c r 1)"
+  },
+  {
+   "test": "real/post-wrong",
+   "want": "DAFNY_REFUSE_NATIVE_AUTHORIZE",
+   "got": "DAFNY_REFUSE_NATIVE_AUTHORIZE",
+   "pass": true,
+   "stdout": "(refund-result-v1 True 40 returned_item ch_1 req_1 1)"
+  },
+  {
+   "test": "real/unicode-stdout-is-utf8-literal",
+   "want": [
+    "SIGN",
+    "b'(refund-result-v1 True 60 service_not_delivered \"\\xc3\\xa9\\xe2\\x82\\xac\\xf0\\x9f\\x98\\x80 \\\\\"q\\\\\"\\\\\\\\\" \"r 7\\\\t)(\" 1)'"
+   ],
+   "got": [
+    "SIGN",
+    "b'(refund-result-v1 True 60 service_not_delivered \"\\xc3\\xa9\\xe2\\x82\\xac\\xf0\\x9f\\x98\\x80 \\\\\"q\\\\\"\\\\\\\\\" \"r 7\\\\t)(\" 1)'"
+   ],
+   "pass": true
+  },
+  {
+   "test": "real/dafny-differs-amount",
+   "want": "MISMATCH_AMOUNT",
+   "got": "MISMATCH_AMOUNT",
+   "pass": true
+  },
+  {
+   "test": "real/dafny-differs-reason",
+   "want": "MISMATCH_REASON",
+   "got": "MISMATCH_REASON",
+   "pass": true
+  },
+  {
+   "test": "real/dafny-differs-charge",
+   "want": "MISMATCH_CHARGE",
+   "got": "MISMATCH_CHARGE",
+   "pass": true
+  },
+  {
+   "test": "real/dafny-differs-request",
+   "want": "MISMATCH_REQUEST",
+   "got": "MISMATCH_REQUEST",
+   "pass": true
+  },
+  {
+   "test": "real/dafny-differs-count",
+   "want": "MISMATCH_COUNT",
+   "got": "MISMATCH_COUNT",
+   "pass": true
+  },
+  {
+   "test": "real/dafny-differs-authorized",
+   "want": "MISMATCH_AUTHORIZED",
+   "got": "MISMATCH_AUTHORIZED",
+   "pass": true
+  },
+  {
+   "test": "range/amount>MAX",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/remaining<0",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/id-257",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/id-129-astral",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/id-nul",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/lone-surrogate",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/enabled-int",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "range/amount-bool",
+   "want": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "got": [
+    "OUT_OF_RANGE",
+    true
+   ],
+   "pass": true
+  },
+  {
+   "test": "pin/wrong-digest",
+   "want": [
+    "DIGEST_MISMATCH",
+    false
+   ],
+   "got": [
+    "DIGEST_MISMATCH",
+    false
+   ],
+   "pass": true
+  },
+  {
+   "test": "pin/relative-path",
+   "want": [
+    "PATH_NOT_ABSOLUTE",
+    false
+   ],
+   "got": [
+    "PATH_NOT_ABSOLUTE",
+    false
+   ],
+   "pass": true
+  },
+  {
+   "test": "env-arg/dyld",
+   "want": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "got": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "env-arg/ld",
+   "want": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "got": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "env-arg/extra-name",
+   "want": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "got": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "env-arg/changed-value",
+   "want": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "got": [
+    false,
+    "ENV_NOT_ALLOWED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "dyld/real-hardened",
+   "want": [
+    "SIGN",
+    "b'(refund-result-v1 True 40 returned_item ch_1 req_1 1)'"
+   ],
+   "got": [
+    "SIGN",
+    "b'(refund-result-v1 True 40 returned_item ch_1 req_1 1)'"
+   ],
+   "pass": true
+  },
+  {
+   "test": "standin/honest",
+   "want": "SIGN",
+   "got": "SIGN",
+   "pass": true
+  },
+  {
+   "test": "standin/truncated",
+   "want": "FRAME_TRUNCATED",
+   "got": "FRAME_TRUNCATED",
+   "pass": true
+  },
+  {
+   "test": "standin/empty",
+   "want": "STDOUT_EMPTY",
+   "got": "STDOUT_EMPTY",
+   "pass": true
+  },
+  {
+   "test": "standin/two-frames",
+   "want": "STDOUT_OVERFLOW",
+   "got": "STDOUT_OVERFLOW",
+   "pass": true
+  },
+  {
+   "test": "standin/trailing-newline",
+   "want": "STDOUT_OVERFLOW",
+   "got": "STDOUT_OVERFLOW",
+   "pass": true
+  },
+  {
+   "test": "standin/stderr-noise",
+   "want": "STDERR_NONEMPTY",
+   "got": "STDERR_NONEMPTY",
+   "pass": true
+  },
+  {
+   "test": "standin/exit3",
+   "want": "EXIT_NONZERO",
+   "got": "EXIT_NONZERO",
+   "pass": true
+  },
+  {
+   "test": "standin/sigterm",
+   "want": "SIGNAL",
+   "got": "SIGNAL",
+   "pass": true
+  },
+  {
+   "test": "standin/flood",
+   "want": "STDOUT_OVERFLOW",
+   "got": "STDOUT_OVERFLOW",
+   "pass": true
+  },
+  {
+   "test": "standin/field-authorized",
+   "want": "MISMATCH_AUTHORIZED",
+   "got": "MISMATCH_AUTHORIZED",
+   "pass": true
+  },
+  {
+   "test": "standin/field-amount",
+   "want": "MISMATCH_AMOUNT",
+   "got": "MISMATCH_AMOUNT",
+   "pass": true
+  },
+  {
+   "test": "standin/field-reason",
+   "want": "STDOUT_OVERFLOW",
+   "got": "STDOUT_OVERFLOW",
+   "pass": true
+  },
+  {
+   "test": "standin/field-charge",
+   "want": "MISMATCH_CHARGE",
+   "got": "MISMATCH_CHARGE",
+   "pass": true
+  },
+  {
+   "test": "standin/field-request",
+   "want": "MISMATCH_REQUEST",
+   "got": "MISMATCH_REQUEST",
+   "pass": true
+  },
+  {
+   "test": "standin/field-count",
+   "want": "MISMATCH_COUNT",
+   "got": "MISMATCH_COUNT",
+   "pass": true
+  },
+  {
+   "test": "standin/timeout",
+   "want": [
+    "TIMEOUT",
+    true
+   ],
+   "got": [
+    "TIMEOUT",
+    true
+   ],
+   "pass": true,
+   "elapsed_s": 2.005
+  },
+  {
+   "test": "standin/grandchild-holds-stdout",
+   "want": [
+    "TIMEOUT",
+    true,
+    false
+   ],
+   "got": [
+    "TIMEOUT",
+    true,
+    false
+   ],
+   "pass": true
+  },
+  {
+   "test": "probe/envp-exact-allow-list",
+   "want": [
+    "CML_HEAP_SIZE=256",
+    "CML_STACK_SIZE=256"
+   ],
+   "got": [
+    "CML_HEAP_SIZE=256",
+    "CML_STACK_SIZE=256"
+   ],
+   "pass": true
+  },
+  {
+   "test": "probe/no-DYLD-LD-sentinel",
+   "want": [],
+   "got": [],
+   "pass": true
+  },
+  {
+   "test": "probe/only-fds-0-1-2",
+   "want": [
+    0,
+    1,
+    2
+   ],
+   "got": [
+    0,
+    1,
+    2
+   ],
+   "pass": true
+  },
+  {
+   "test": "probe/child-ends-blocking",
+   "want": {
+    "0": false,
+    "1": false,
+    "2": false
+   },
+   "got": {
+    "0": false,
+    "1": false,
+    "2": false
+   },
+   "pass": true
+  },
+  {
+   "test": "probe/cwd-empty",
+   "want": [],
+   "got": [],
+   "pass": true
+  },
+  {
+   "test": "probe/stdin-exact-bytes",
+   "want": "(ch_1 req_1 100 60 True True True 40 returned_item)",
+   "got": "(ch_1 req_1 100 60 True True True 40 returned_item)",
+   "pass": true
+  },
+  {
+   "test": "planted/honest",
+   "want": [
+    true,
+    "SIGN"
+   ],
+   "got": [
+    true,
+    "SIGN"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/two-frames",
+   "want": [
+    false,
+    "FRAME_EXTRA_BYTES"
+   ],
+   "got": [
+    false,
+    "FRAME_EXTRA_BYTES"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/trailing-byte",
+   "want": [
+    false,
+    "FRAME_EXTRA_BYTES"
+   ],
+   "got": [
+    false,
+    "FRAME_EXTRA_BYTES"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/reason-differs",
+   "want": [
+    false,
+    "MISMATCH_REASON"
+   ],
+   "got": [
+    false,
+    "MISMATCH_REASON"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/false-not-canonical",
+   "want": [
+    false,
+    "REJECT_FRAME_NOT_CANONICAL"
+   ],
+   "got": [
+    false,
+    "REJECT_FRAME_NOT_CANONICAL"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/stdin-incomplete",
+   "want": [
+    false,
+    "STDIN_INCOMPLETE"
+   ],
+   "got": [
+    false,
+    "STDIN_INCOMPLETE"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/binary-changed",
+   "want": [
+    false,
+    "BINARY_CHANGED"
+   ],
+   "got": [
+    false,
+    "BINARY_CHANGED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/non-canonical-int",
+   "want": [
+    false,
+    "FRAME_MALFORMED"
+   ],
+   "got": [
+    false,
+    "FRAME_MALFORMED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/exit0-truncated-CE1",
+   "want": [
+    false,
+    "FRAME_TRUNCATED"
+   ],
+   "got": [
+    false,
+    "FRAME_TRUNCATED"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/exit0-empty-CE2",
+   "want": [
+    false,
+    "STDOUT_EMPTY"
+   ],
+   "got": [
+    false,
+    "STDOUT_EMPTY"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/signal-with-frame",
+   "want": [
+    false,
+    "SIGNAL"
+   ],
+   "got": [
+    false,
+    "SIGNAL"
+   ],
+   "pass": true
+  },
+  {
+   "test": "planted/timeout-with-frame",
+   "want": [
+    false,
+    "TIMEOUT"
+   ],
+   "got": [
+    false,
+    "TIMEOUT"
+   ],
+   "pass": true
+  },
+  {
+   "test": "dyld/control-inherited-env (not the launcher)",
+   "want": "forged frame seen; bridge refuses",
+   "got": [
+    "(refund-result-v1 True 999 returned_item forged forged 1)",
+    0,
+    "MISMATCH_AMOUNT"
+   ],
+   "pass": true
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+# owner=b-ser start=2026-11-19T08:51:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1023
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects RepairedBytes.dfy
+# memory free percent: 56
+RepairedBytes.dfy(482,8): Error: Verification out of resource (RepairedBytes.WitMintsParse)
+    |
+482 |   lemma WitMintsParse()
+    |         ^^^^^^^^^^^^^
+
+RepairedBytes.dfy(491,8): Error: Verification out of resource (RepairedBytes.WitDelivParse)
+    |
+491 |   lemma WitDelivParse()
+    |         ^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 59 verified, 0 errors, 2 out of resource
+       13.03 real        11.40 user         0.66 sys
+           278085632  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               55759  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 796  voluntary context switches
+               36221  involuntary context switches
+         96603694672  instructions retired
+         36698661182  cycles elapsed
+           272123152  peak memory footprint
+# end=2026-11-19T08:52:10Z
+exit 4

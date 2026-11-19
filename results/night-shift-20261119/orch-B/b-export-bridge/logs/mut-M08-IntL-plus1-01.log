@@ -1,0 +1,38 @@
+# owner=b-export-bridge start=2026-11-19T09:12:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-export-bridge/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1711
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --filter-symbol MutantIffFlat Check-M08-IntL-plus1.dfy
+# memory free percent: 68
+Check-M08-IntL-plus1.dfy(9,2): Error: a postcondition could not be proved on this return path
+  |
+9 |   {
+  |   ^
+
+Check-M08-IntL-plus1.dfy(8,35): Related location: this is the postcondition that could not be proved
+  |
+8 |     ensures ExportedContract(x, o) <==> FlatContract(x, o)
+  |                                    ^^^^
+
+
+Dafny program verifier finished with 0 verified, 1 error
+        4.56 real         4.54 user         0.19 sys
+           203816960  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21612  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  39  voluntary context switches
+                2513  involuntary context switches
+         43224569440  instructions retired
+         14491654363  cycles elapsed
+           170722552  peak memory footprint
+# end=2026-11-19T09:12:16Z
+exit 4

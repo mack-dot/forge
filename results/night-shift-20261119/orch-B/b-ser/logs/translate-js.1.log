@@ -1,0 +1,28 @@
+# owner=b-ser start=2026-11-19T09:04:30Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1679
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --output <REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/sermodel SerModel.dfy
+# memory free percent: 57
+
+Dafny program verifier finished with 96 verified, 0 errors
+        5.61 real         6.70 user         0.30 sys
+           164970496  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23772  page reclaims
+                1057  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                1063  voluntary context switches
+               16415  involuntary context switches
+         39389279971  instructions retired
+         15311144684  cycles elapsed
+           148866248  peak memory footprint
+# end=2026-11-19T09:04:35Z
+exit 0

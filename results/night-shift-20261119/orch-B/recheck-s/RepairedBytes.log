@@ -1,0 +1,29 @@
+# owner=orchB-recheck start=2026-11-19T09:17:27Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-s/RepairedBytes.csv RepairedBytes.dfy
+# memory free percent: 56
+
+Dafny program verifier finished with 1790 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-s/RepairedBytes.csv
+       64.98 real        43.61 user         5.20 sys
+           414941184  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              110484  page reclaims
+                 362  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                4936  voluntary context switches
+              441084  involuntary context switches
+        373610955194  instructions retired
+        148116465659  cycles elapsed
+           424641928  peak memory footprint
+# end=2026-11-19T09:18:33Z
+exit 0

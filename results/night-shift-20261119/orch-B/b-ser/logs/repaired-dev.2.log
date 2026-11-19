@@ -1,0 +1,53 @@
+# owner=b-ser start=2026-11-19T08:49:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 895
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects RepairedBytes.dfy
+# memory free percent: 57
+RepairedBytes.dfy(138,8): Error: Verification out of resource (RepairedBytes.ToMsgInjective)
+    |
+138 |   lemma ToMsgInjective(u1: seq<int>, u2: seq<int>)
+    |         ^^^^^^^^^^^^^^
+
+RepairedBytes.dfy(291,8): Error: Verification out of resource (RepairedBytes.CollParse)
+    |
+291 |   lemma CollParse()
+    |         ^^^^^^^^^
+
+RepairedBytes.dfy(470,8): Error: Verification out of resource (RepairedBytes.WitParse)
+    |
+470 |   lemma WitParse()
+    |         ^^^^^^^^
+
+RepairedBytes.dfy(529,2): Error: a postcondition could not be proved on this return path
+    |
+529 |   {
+    |   ^
+
+RepairedBytes.dfy(526,36): Related location: this is the postcondition that could not be proved
+    |
+526 |     ensures out.Some? ==> out.value == RealSerOf(H, idHex, CheckedClaim(pre, t)) && Ours(CheckedClaim(pre, t)) &&
+    |                                     ^^
+
+
+Dafny program verifier finished with 47 verified, 1 error, 3 out of resource
+       12.11 real        10.64 user         0.62 sys
+           269172736  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47168  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   7  signals received
+                 722  voluntary context switches
+               18384  involuntary context switches
+         92699446971  instructions retired
+         34569373856  cycles elapsed
+           265110872  peak memory footprint
+# end=2026-11-19T08:49:38Z
+exit 4

@@ -1,0 +1,67 @@
+# owner=b-ser start=2026-11-19T08:41:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 711
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SerModel.dfy
+SerModel.dfy(840,44): Error: a postcondition could not be proved on this return path
+    |
+840 |   lemma HL2() ensures Q0("ch_1") + L1 == L2 {}
+    |                                             ^
+
+SerModel.dfy(840,38): Related location: this is the postcondition that could not be proved
+    |
+840 |   lemma HL2() ensures Q0("ch_1") + L1 == L2 {}
+    |                                       ^^
+
+SerModel.dfy(841,37): Error: a postcondition could not be proved on this return path
+    |
+841 |   lemma HL3() ensures KI1 + L2 == L3 {}
+    |                                      ^
+
+SerModel.dfy(841,31): Related location: this is the postcondition that could not be proved
+    |
+841 |   lemma HL3() ensures KI1 + L2 == L3 {}
+    |                                ^^
+
+SerModel.dfy(842,41): Error: a postcondition could not be proved on this return path
+    |
+842 |   lemma HL4() ensures Q0("0") + L3 == L4 {}
+    |                                          ^
+
+SerModel.dfy(842,35): Related location: this is the postcondition that could not be proved
+    |
+842 |   lemma HL4() ensures Q0("0") + L3 == L4 {}
+    |                                    ^^
+
+SerModel.dfy(843,44): Error: a postcondition could not be proved on this return path
+    |
+843 |   lemma HL5() ensures KI0 + L4 == COLLIDING {}
+    |                                             ^
+
+SerModel.dfy(843,31): Related location: this is the postcondition that could not be proved
+    |
+843 |   lemma HL5() ensures KI0 + L4 == COLLIDING {}
+    |                                ^^
+
+
+Dafny program verifier finished with 101 verified, 4 errors
+        5.68 real         4.50 user         0.54 sys
+           186597376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18834  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 388  voluntary context switches
+               36866  involuntary context switches
+         37325589997  instructions retired
+         15312680423  cycles elapsed
+           153568480  peak memory footprint
+# end=2026-11-19T08:42:02Z
+exit 4

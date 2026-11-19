@@ -1,0 +1,48 @@
+# owner=x-issuer-bridge start=2026-11-19T09:04:59Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C2-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1679
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C2-reject-all/Bridge.dfy
+# memory free percent: 48
+Bridge.dfy(69,2): Error: a postcondition could not be proved on this return path
+   |
+69 |   {
+   |   ^
+
+Bridge.dfy(68,47): Related location: this is the postcondition that could not be proved
+   |
+68 |     ensures Bridge(inRange, v, p, parsed, enc) == Sign
+   |                                                ^^
+
+Bridge.dfy(91,2): Error: a postcondition could not be proved on this return path
+   |
+91 |   {
+   |   ^
+
+Bridge.dfy(87,88): Related location: this is the postcondition that could not be proved
+   |
+87 |                    Some(Fields(true, 40, "returned_item", "ch_1", "req_1", 1)), s => s) == Sign
+   |                                                                                         ^^
+
+
+Dafny program verifier finished with 6 verified, 2 errors
+        1.46 real         1.19 user         0.16 sys
+           108150784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12873  page reclaims
+                  80  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 101  voluntary context switches
+                7077  involuntary context switches
+         10551448525  instructions retired
+          4135002449  cycles elapsed
+            89654448  peak memory footprint
+# end=2026-11-19T09:05:00Z
+exit 4

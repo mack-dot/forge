@@ -1,0 +1,47 @@
+# owner=b-ser start=2026-11-19T08:35:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 591
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SerModel.dfy
+SerModel.dfy(209,54): Error: value does not satisfy the subset constraints of 'nat'
+    |
+209 |     if |s| == 0 then 0 else DecVal(s[..|s| - 1]) * 10 + (s[|s| - 1] as int - '0' as int)
+    |                                                       ^
+
+SerModel.dfy(395,8): Error: Verification out of resource (SerModel.ParseIntentRT)
+    |
+395 |   lemma ParseIntentRT(i: Intent, r: string)
+    |         ^^^^^^^^^^^^^
+
+SerModel.dfy(419,8): Error: Verification out of resource (SerModel.ParseBodyRawRT)
+    |
+419 |   lemma ParseBodyRawRT(b: TokenBody, r: string)
+    |         ^^^^^^^^^^^^^^
+
+SerModel.dfy(456,8): Error: Verification out of resource (SerModel.RoundTrip)
+    |
+456 |   lemma RoundTrip(b: TokenBody)
+    |         ^^^^^^^^^
+
+
+Dafny program verifier finished with 37 verified, 1 error, 3 out of resource
+        3.07 real         2.41 user         0.18 sys
+           143704064  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14841  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 194  voluntary context switches
+               10989  involuntary context switches
+         20946155879  instructions retired
+          8007272115  cycles elapsed
+           110740680  peak memory footprint
+# end=2026-11-19T08:35:25Z
+exit 4

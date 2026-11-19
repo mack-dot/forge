@@ -1,0 +1,8 @@
+source sha256 6987ceb12b985b1c54e9f347b9ad29d577115b2197544d34de0c1dbfdee1aeb1
+clause 1: SAME (source 310 chars, normalized 833 chars)
+clause 2: DIFF (source 153 chars, normalized 338 chars)
+  source: (BinOp (Imp) (Var "authorized") (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (Eq) (Var "outputAmount") (Var "amount")) (BinOp (Eq) (Var "outputReason") (Var "reason"))) (BinOp (Eq) (Var "outputCharge") (Var "requestId"))) (BinOp (Eq) (Var "outputRequest") (Var "chargeId"))) (BinOp (Eq) (Var "intentCount") (Lit (IntL 1)))))
+  export: (BinOp (Imp) (Var "authorized") (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (Eq) (Var "outputAmount") (Var "amount")) (BinOp (Eq) (Var "outputReason") (Var "reason"))) (BinOp (Eq) (Var "outputCharge") (Var "chargeId"))) (BinOp (Eq) (Var "outputRequest") (Var "requestId"))) (BinOp (Eq) (Var "intentCount") (Lit (IntL 1)))))
+clause 3: SAME (source 132 chars, normalized 349 chars)
+differences: 1
+exit 1

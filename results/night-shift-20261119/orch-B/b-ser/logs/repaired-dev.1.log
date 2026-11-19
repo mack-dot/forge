@@ -1,0 +1,57 @@
+# owner=b-ser start=2026-11-19T08:47:31Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 799
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects RepairedBytes.dfy
+RepairedBytes.dfy(424,12): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+424 |     ensures forall m: Msg :: exists t: Tag :: TotalVB(m, t)               // the byte verifier is total
+    |             ^^^^^^
+
+RepairedBytes.dfy(431,4): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+431 |     forall m: Msg ensures exists t: Tag :: TotalVB(m, t) { assert TotalVB(m, SB(m)); }
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+RepairedBytes.dfy(127,8): Error: Verification out of resource (RepairedBytes.ToMsgInjective)
+    |
+127 |   lemma ToMsgInjective(u1: seq<int>, u2: seq<int>)
+    |         ^^^^^^^^^^^^^^
+
+RepairedBytes.dfy(241,8): Error: Verification out of resource (RepairedBytes.TextShort)
+    |
+241 |   lemma TextShort()
+    |         ^^^^^^^^^
+
+RepairedBytes.dfy(247,8): Error: Verification out of resource (RepairedBytes.CollisionControl)
+    |
+247 |   lemma CollisionControl()
+    |         ^^^^^^^^^^^^^^^^
+
+RepairedBytes.dfy(367,8): Error: Verification out of resource (RepairedBytes.WitnessHyps)
+    |
+367 |   lemma WitnessHyps()
+    |         ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 28 verified, 0 errors, 4 out of resource
+        9.07 real         8.37 user         0.32 sys
+           346062848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34028  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 590  voluntary context switches
+                8622  involuntary context switches
+         77875777446  instructions retired
+         27264974136  cycles elapsed
+           313050408  peak memory footprint
+# end=2026-11-19T08:47:40Z
+exit 4

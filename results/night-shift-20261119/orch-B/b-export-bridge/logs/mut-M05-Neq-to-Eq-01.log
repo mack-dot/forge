@@ -1,0 +1,32 @@
+# owner=b-export-bridge start=2026-11-19T09:10:34Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-export-bridge/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1703
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --filter-symbol MutantIffFlat Check-M05-Neq-to-Eq.dfy
+# memory free percent: 60
+M05-Neq-to-Eq.dfy(11,31): Error: invalid Suffix
+   |
+11 |     (o.0 == (((((((((x.chargeB = "") && (x.requestB = "")) && x.enabled) && x.requestOpen) && (((0) <= x.original) && (x.original <= (9223372036854775807)))) && (((0) <= x.remaining) && (x.remaining <= x.original))) && x.candidate) && (((0) <= x.amount) && (x.amount <= x.remaining))) && (((x.reasonB == "duplicate_charge") || (x.reasonB == "service_not_delivered")) || (x.reasonB == "returned_item"))))
+   |                                ^
+
+1 parse errors detected in Check-M05-Neq-to-Eq.dfy
+        0.40 real         0.35 user         0.04 sys
+           109477888  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7962  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  65  voluntary context switches
+                 213  involuntary context switches
+          3442914751  instructions retired
+          1246681284  cycles elapsed
+            80397392  peak memory footprint
+# end=2026-11-19T09:10:35Z
+exit 2

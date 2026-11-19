@@ -1,0 +1,48 @@
+PASS real/auth 
+PASS real/reject-disabled 
+PASS real/zero 
+PASS real/unicode 
+PASS real/max 
+PASS real/post-wrong 
+PASS real/dafny-differs-amount 
+PASS real/dafny-differs-reason 
+PASS real/dafny-differs-charge 
+PASS real/dafny-differs-request 
+PASS real/dafny-differs-count 
+PASS real/dafny-differs-authorized 
+PASS range/amount>MAX 
+PASS range/remaining<0 
+PASS range/id-257 
+PASS range/id-129-astral 
+PASS range/id-nul 
+PASS range/lone-surrogate 
+PASS range/enabled-int 
+PASS range/amount-bool 
+PASS pin/wrong-digest 
+PASS pin/relative-path 
+PASS dyld/real-hardened 
+PASS standin/honest 
+PASS standin/truncated 
+PASS standin/empty 
+FAIL standin/two-frames SIGNAL
+FAIL standin/trailing-newline STDOUT_OVERFLOW
+PASS standin/stderr-noise 
+PASS standin/exit3 
+PASS standin/sigterm 
+FAIL standin/flood SIGNAL
+PASS standin/field-authorized 
+PASS standin/field-amount 
+FAIL standin/field-reason SIGNAL
+PASS standin/field-charge 
+PASS standin/field-request 
+PASS standin/field-count 
+PASS standin/timeout 
+PASS standin/grandchild-holds-stdout 
+FAIL probe/env-exact-allow-list {'CML_HEAP_SIZE': '256', 'CML_STACK_SIZE': '256', '__CF_USER_TEXT_ENCODING': '0x1F5:0x0:0x0', 'LC_CTYPE': 'C.UTF-8'}
+PASS probe/only-fds-0-1-2 
+PASS probe/child-ends-blocking 
+PASS probe/cwd-empty 
+PASS probe/stdin-exact-bytes 
+PASS dyld/control-inherited-env (not the launcher) 
+total 46 passed 41
+exit 1

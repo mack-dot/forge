@@ -1,0 +1,318 @@
+{
+ "class": "TESTED-UNPROVED",
+ "total": 32,
+ "killed": 28,
+ "survived": [
+  "D-reject-all",
+  "D-skip-bytes",
+  "D-latin1-wire",
+  "L-no-env-filter"
+ ],
+ "not_applied": [],
+ "mutants": [
+  {
+   "mutant": "D-reject-all",
+   "status": "SURVIVED",
+   "failed_tests": []
+  },
+  {
+   "mutant": "D-ignore-native",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-amount",
+    "real/dafny-differs-reason",
+    "real/dafny-differs-charge",
+    "real/dafny-differs-request",
+    "real/dafny-differs-count",
+    "real/dafny-differs-authorized",
+    "pin/wrong-digest",
+    "pin/relative-path",
+    "standin/truncated",
+    "standin/empty",
+    "standin/two-frames",
+    "standin/trailing-newline",
+    "standin/stderr-noise",
+    "standin/exit3",
+    "standin/sigterm",
+    "standin/flood",
+    "standin/field-authorized",
+    "standin/field-amount",
+    "standin/field-reason",
+    "standin/field-charge",
+    "standin/field-request",
+    "standin/field-count",
+    "standin/timeout",
+    "standin/grandchild-holds-stdout",
+    "planted/two-frames",
+    "planted/trailing-byte",
+    "planted/reason-differs",
+    "planted/false-not-canonical",
+    "planted/stdin-incomplete",
+    "planted/binary-changed",
+    "planted/non-canonical-int",
+    "planted/exit0-truncated-CE1",
+    "planted/exit0-empty-CE2",
+    "planted/signal-with-frame",
+    "planted/timeout-with-frame"
+   ]
+  },
+  {
+   "mutant": "D-no-range",
+   "status": "KILLED",
+   "failed_tests": [
+    "suite raised: UnicodeEncodeError('utf-8', '\\ud800', 0, 1, 'surrogates not allowed')"
+   ]
+  },
+  {
+   "mutant": "D-no-timeout",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/timeout",
+    "standin/grandchild-holds-stdout",
+    "planted/timeout-with-frame"
+   ]
+  },
+  {
+   "mutant": "D-no-signal",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/sigterm",
+    "planted/signal-with-frame"
+   ]
+  },
+  {
+   "mutant": "D-no-exit",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/exit3"
+   ]
+  },
+  {
+   "mutant": "D-no-stderr",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/stderr-noise"
+   ]
+  },
+  {
+   "mutant": "D-no-overflow",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/two-frames",
+    "standin/trailing-newline",
+    "standin/flood",
+    "standin/field-reason"
+   ]
+  },
+  {
+   "mutant": "D-no-stdin-complete",
+   "status": "KILLED",
+   "failed_tests": [
+    "planted/stdin-incomplete"
+   ]
+  },
+  {
+   "mutant": "D-no-copy-check",
+   "status": "KILLED",
+   "failed_tests": [
+    "planted/binary-changed"
+   ]
+  },
+  {
+   "mutant": "D-lenient-parse-rstrip",
+   "status": "KILLED",
+   "failed_tests": [
+    "planted/trailing-byte"
+   ]
+  },
+  {
+   "mutant": "D-lenient-parse-prefix",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/truncated",
+    "planted/exit0-truncated-CE1"
+   ]
+  },
+  {
+   "mutant": "D-no-false-canonical",
+   "status": "KILLED",
+   "failed_tests": [
+    "planted/false-not-canonical"
+   ]
+  },
+  {
+   "mutant": "D-skip-field-amount",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-amount",
+    "standin/field-amount"
+   ]
+  },
+  {
+   "mutant": "D-skip-field-reason",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-reason",
+    "planted/reason-differs"
+   ]
+  },
+  {
+   "mutant": "D-skip-field-charge",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-charge",
+    "standin/field-charge"
+   ]
+  },
+  {
+   "mutant": "D-skip-field-request",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-request",
+    "standin/field-request"
+   ]
+  },
+  {
+   "mutant": "D-skip-field-count",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-count",
+    "standin/field-count"
+   ]
+  },
+  {
+   "mutant": "D-skip-field-authorized",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/dafny-differs-authorized",
+    "standin/field-authorized"
+   ]
+  },
+  {
+   "mutant": "D-skip-bytes",
+   "status": "SURVIVED",
+   "failed_tests": []
+  },
+  {
+   "mutant": "D-dafny-refuse-signs",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/post-wrong"
+   ]
+  },
+  {
+   "mutant": "D-latin1-wire",
+   "status": "SURVIVED",
+   "failed_tests": []
+  },
+  {
+   "mutant": "L-inherit-env",
+   "status": "KILLED",
+   "failed_tests": [
+    "dyld/real-hardened",
+    "probe/envp-exact-allow-list",
+    "probe/no-DYLD-LD-sentinel",
+    "probe/only-fds-0-1-2",
+    "probe/child-ends-blocking",
+    "probe/cwd-empty",
+    "probe/stdin-exact-bytes"
+   ]
+  },
+  {
+   "mutant": "L-no-env-filter",
+   "status": "SURVIVED",
+   "failed_tests": []
+  },
+  {
+   "mutant": "L-no-digest",
+   "status": "KILLED",
+   "failed_tests": [
+    "pin/wrong-digest"
+   ]
+  },
+  {
+   "mutant": "L-keep-fds",
+   "status": "KILLED",
+   "failed_tests": [
+    "probe/only-fds-0-1-2"
+   ]
+  },
+  {
+   "mutant": "L-no-timeout",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/timeout",
+    "standin/grandchild-holds-stdout"
+   ]
+  },
+  {
+   "mutant": "L-no-killpg",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/grandchild-holds-stdout"
+   ]
+  },
+  {
+   "mutant": "L-no-stdout-cap",
+   "status": "KILLED",
+   "failed_tests": [
+    "standin/two-frames",
+    "standin/trailing-newline",
+    "standin/flood",
+    "standin/field-reason"
+   ]
+  },
+  {
+   "mutant": "L-no-stdin-eof",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/auth",
+    "real/reject-disabled",
+    "real/zero",
+    "real/unicode",
+    "real/max",
+    "real/post-wrong",
+    "real/dafny-differs-amount",
+    "real/dafny-differs-reason",
+    "real/dafny-differs-charge",
+    "real/dafny-differs-request",
+    "real/dafny-differs-count",
+    "real/dafny-differs-authorized",
+    "dyld/real-hardened",
+    "probe/envp-exact-allow-list",
+    "probe/no-DYLD-LD-sentinel",
+    "probe/only-fds-0-1-2",
+    "probe/child-ends-blocking",
+    "probe/cwd-empty",
+    "probe/stdin-exact-bytes"
+   ]
+  },
+  {
+   "mutant": "L-stdin-short",
+   "status": "KILLED",
+   "failed_tests": [
+    "real/auth",
+    "real/reject-disabled",
+    "real/zero",
+    "real/unicode",
+    "real/max",
+    "real/post-wrong",
+    "real/dafny-differs-amount",
+    "real/dafny-differs-reason",
+    "real/dafny-differs-charge",
+    "real/dafny-differs-request",
+    "real/dafny-differs-count",
+    "real/dafny-differs-authorized",
+    "dyld/real-hardened",
+    "probe/stdin-exact-bytes"
+   ]
+  },
+  {
+   "mutant": "L-cwd-inherit",
+   "status": "KILLED",
+   "failed_tests": [
+    "probe/cwd-empty"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+# owner=x-issuer-bridge start=2026-11-19T09:00:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C2-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1399
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C2-reject-all/Bridge.dfy
+# memory free percent: 61
+CLI: Error: command-line argument '--solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects' is neither a recognized option nor a Dafny input file (.dfy, .doo, or .toml).
+        0.16 real         0.12 user         0.02 sys
+            64929792  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5185  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  19  voluntary context switches
+                 169  involuntary context switches
+          1315127272  instructions retired
+           475895894  cycles elapsed
+            36848672  peak memory footprint
+# end=2026-11-19T09:00:52Z
+exit 1

@@ -1,0 +1,29 @@
+# owner=b-export-bridge start=2026-11-19T09:05:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-export-bridge
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1679
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-export-bridge/logs/fromexport-01.csv SliceSafetyFromExport.dfy
+# memory free percent: 47
+
+Dafny program verifier finished with 1892 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-export-bridge/logs/fromexport-01.csv
+       87.63 real        56.63 user         5.07 sys
+           433373184  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              111347  page reclaims
+                  94  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  23  signals received
+                9874  voluntary context switches
+              498349  involuntary context switches
+        508659650031  instructions retired
+        188766664377  cycles elapsed
+           409437576  peak memory footprint
+# end=2026-11-19T09:06:50Z
+exit 0

@@ -1,0 +1,43 @@
+# owner=b-ser start=2026-11-19T09:01:02Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1399
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects M4-drop-H3d.dfy
+# memory free percent: 62
+M4-drop-H3d.dfy(243,33): Error: a precondition for this call could not be proved
+    |
+243 |     RepairedGiveClaimAuthenticity(H, idHex, vb, rebuild, acts);
+    |                                  ^
+
+M4-drop-H3d.dfy(211,31): Related location: this is the precondition that could not be proved
+    |
+211 |     requires H3d_MintsParseable(acts) && B6_DeliveriesParseable(acts)
+    |                                ^
+
+M4-drop-H3d.dfy(86,4): Related location: this proposition could not be proved
+   |
+86 |     forall j | 0 <= j < |acts| && acts[j].MintAct? :: ParseableClaim(acts[j].c)
+   |     ^^^^^^
+
+
+Dafny program verifier finished with 1789 verified, 1 error
+       65.50 real        44.47 user         4.93 sys
+           398786560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              112697  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                4879  voluntary context switches
+              657334  involuntary context switches
+        382652191166  instructions retired
+        149835951783  cycles elapsed
+           365790600  peak memory footprint
+# end=2026-11-19T09:02:08Z
+exit 4

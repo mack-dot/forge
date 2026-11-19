@@ -1,0 +1,42 @@
+# owner=b-ser start=2026-11-19T08:40:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 711
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SerModel.dfy
+SerModel.dfy(834,8): Error: Verification out of resource (SerModel.HeadOf)
+    |
+834 |   lemma HeadOf(i: Intent)
+    |         ^^^^^^
+
+SerModel.dfy(843,8): Error: Verification out of resource (SerModel.ControlNoEscape1)
+    |
+843 |   lemma ControlNoEscape1()
+    |         ^^^^^^^^^^^^^^^^
+
+SerModel.dfy(849,8): Error: Verification out of resource (SerModel.ControlNoEscape2)
+    |
+849 |   lemma ControlNoEscape2()
+    |         ^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 97 verified, 0 errors, 3 out of resource
+        6.09 real         4.54 user         0.42 sys
+           169623552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18755  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 385  voluntary context switches
+               55048  involuntary context switches
+         36661669790  instructions retired
+         14922629424  cycles elapsed
+           136611064  peak memory footprint
+# end=2026-11-19T08:41:03Z
+exit 4

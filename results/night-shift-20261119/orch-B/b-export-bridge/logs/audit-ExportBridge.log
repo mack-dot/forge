@@ -1,0 +1,29 @@
+# owner=b-export-bridge start=2026-11-19T09:15:21Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-export-bridge
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/b-export-bridge/logs/audit-ExportBridge.md ExportBridge.dfy
+# memory free percent: 71
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        5.17 real         5.66 user         0.16 sys
+           244989952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18730  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                  39  voluntary context switches
+                2628  involuntary context switches
+         55950843915  instructions retired
+         18292485365  cycles elapsed
+           211223776  peak memory footprint
+# end=2026-11-19T09:15:27Z
+exit 0

@@ -1,0 +1,36 @@
+<REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:64
+  const dBytes = Buffer.from(SM.__default.Utf8(SM.__default.SerBody(d)).toArray().map((x: BigNumber) => x.toNumber()));
+                                                                        ^
+
+
+TypeError: SM.__default.Utf8(...).toArray is not a function
+    at text (<REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:64:73)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:116:47)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at cjsLoader (node:internal/modules/esm/translators:316:5)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:208:7)
+
+Node.js v24.3.0
+        0.36 real         0.29 user         0.08 sys
+           135233536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9355  page reclaims
+                1973  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   6  messages sent
+                   6  messages received
+                  11  signals received
+                 123  voluntary context switches
+                1802  involuntary context switches
+          2924378002  instructions retired
+          1060236068  cycles elapsed
+            99512656  peak memory footprint

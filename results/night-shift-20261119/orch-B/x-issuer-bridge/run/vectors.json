@@ -1,0 +1,170 @@
+[
+ {
+  "name": "auth",
+  "pre": {
+   "chargeId": "ch_1",
+   "original": "100",
+   "remaining": "60",
+   "refundEnabled": true
+  },
+  "transition": {
+   "request": {
+    "requestId": "req_1",
+    "amount": "40",
+    "reason": "returned_item"
+   },
+   "post": {
+    "chargeId": "ch_1",
+    "original": "100",
+    "remaining": "20",
+    "refundEnabled": true
+   },
+   "intent": {
+    "chargeId": "ch_1",
+    "requestId": "req_1",
+    "amount": "40",
+    "reason": "returned_item"
+   }
+  }
+ },
+ {
+  "name": "reject-disabled",
+  "pre": {
+   "chargeId": "ch_1",
+   "original": "100",
+   "remaining": "60",
+   "refundEnabled": false
+  },
+  "transition": {
+   "request": {
+    "requestId": "req_1",
+    "amount": "40",
+    "reason": "returned_item"
+   },
+   "post": {
+    "chargeId": "ch_1",
+    "original": "100",
+    "remaining": "20",
+    "refundEnabled": false
+   },
+   "intent": {
+    "chargeId": "ch_1",
+    "requestId": "req_1",
+    "amount": "40",
+    "reason": "returned_item"
+   }
+  }
+ },
+ {
+  "name": "zero",
+  "pre": {
+   "chargeId": "ch_1",
+   "original": "100",
+   "remaining": "60",
+   "refundEnabled": true
+  },
+  "transition": {
+   "request": {
+    "requestId": "req_0",
+    "amount": "0",
+    "reason": "duplicate_charge"
+   },
+   "post": {
+    "chargeId": "ch_1",
+    "original": "100",
+    "remaining": "60",
+    "refundEnabled": true
+   },
+   "intent": {
+    "chargeId": "ch_1",
+    "requestId": "req_0",
+    "amount": "0",
+    "reason": "duplicate_charge"
+   }
+  }
+ },
+ {
+  "name": "unicode",
+  "pre": {
+   "chargeId": "\u00e9\u20ac\ud83d\ude00 \"q\"\\",
+   "original": "500",
+   "remaining": "60",
+   "refundEnabled": true
+  },
+  "transition": {
+   "request": {
+    "requestId": "r 7\t)(",
+    "amount": "60",
+    "reason": "service_not_delivered"
+   },
+   "post": {
+    "chargeId": "\u00e9\u20ac\ud83d\ude00 \"q\"\\",
+    "original": "500",
+    "remaining": "0",
+    "refundEnabled": true
+   },
+   "intent": {
+    "chargeId": "\u00e9\u20ac\ud83d\ude00 \"q\"\\",
+    "requestId": "r 7\t)(",
+    "amount": "60",
+    "reason": "service_not_delivered"
+   }
+  }
+ },
+ {
+  "name": "max",
+  "pre": {
+   "chargeId": "c",
+   "original": "9223372036854775807",
+   "remaining": "9223372036854775807",
+   "refundEnabled": true
+  },
+  "transition": {
+   "request": {
+    "requestId": "r",
+    "amount": "9223372036854775807",
+    "reason": "returned_item"
+   },
+   "post": {
+    "chargeId": "c",
+    "original": "9223372036854775807",
+    "remaining": "0",
+    "refundEnabled": true
+   },
+   "intent": {
+    "chargeId": "c",
+    "requestId": "r",
+    "amount": "9223372036854775807",
+    "reason": "returned_item"
+   }
+  }
+ },
+ {
+  "name": "post-wrong",
+  "pre": {
+   "chargeId": "ch_1",
+   "original": "100",
+   "remaining": "60",
+   "refundEnabled": true
+  },
+  "transition": {
+   "request": {
+    "requestId": "req_1",
+    "amount": "40",
+    "reason": "returned_item"
+   },
+   "post": {
+    "chargeId": "ch_1",
+    "original": "100",
+    "remaining": "59",
+    "refundEnabled": true
+   },
+   "intent": {
+    "chargeId": "ch_1",
+    "requestId": "req_1",
+    "amount": "40",
+    "reason": "returned_item"
+   }
+  }
+ }
+]

@@ -1,0 +1,42 @@
+# owner=b-ser start=2026-11-19T08:38:47Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser
+# power: Now drawing from 'AC Power'
+# swap free MiB: 695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SerModel.dfy
+SerModel.dfy(707,29): Error: index out of range
+    |
+707 |     requires |m| >= LeadLen(m[0])
+    |                              ^
+
+SerModel.dfy(801,8): Error: Verification out of resource (SerModel.ControlNoEscapeCollides)
+    |
+801 |   lemma ControlNoEscapeCollides()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^
+
+SerModel.dfy(832,8): Error: Verification out of resource (SerModel.WitnessZeroAmount)
+    |
+832 |   lemma WitnessZeroAmount()
+    |         ^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 80 verified, 1 error, 2 out of resource
+        5.26 real         4.41 user         0.39 sys
+           158220288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18951  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 381  voluntary context switches
+               31907  involuntary context switches
+         36665883983  instructions retired
+         14656712555  cycles elapsed
+           140428464  peak memory footprint
+# end=2026-11-19T08:38:53Z
+exit 4

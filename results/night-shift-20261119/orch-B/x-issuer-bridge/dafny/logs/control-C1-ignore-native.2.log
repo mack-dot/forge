@@ -1,0 +1,103 @@
+# owner=x-issuer-bridge start=2026-11-19T09:03:05Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C1-ignore-native
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1679
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/controls/C1-ignore-native/Bridge.dfy
+# memory free percent: 45
+Bridge.dfy(63,2): Error: a postcondition could not be proved on this return path
+   |
+63 |   {
+   |   ^
+
+Bridge.dfy(62,34): Related location: this is the postcondition that could not be proved
+   |
+62 |       inRange && v.Issue? && Clean(p) && parsed == Some(Expected(v, enc))
+   |                                   ^
+
+Bridge.dfy(31,6): Related location: this proposition could not be proved
+   |
+31 |     p.launched && !p.timedOut && !p.signaled && p.exitCode == 0 && p.stderrLen == 0 &&
+   |       ^^^^^^^^
+
+Bridge.dfy(63,2): Error: a postcondition could not be proved on this return path
+   |
+63 |   {
+   |   ^
+
+Bridge.dfy(62,34): Related location: this is the postcondition that could not be proved
+   |
+62 |       inRange && v.Issue? && Clean(p) && parsed == Some(Expected(v, enc))
+   |                                   ^
+
+Bridge.dfy(31,18): Related location: this proposition could not be proved
+   |
+31 |     p.launched && !p.timedOut && !p.signaled && p.exitCode == 0 && p.stderrLen == 0 &&
+   |                   ^
+
+Bridge.dfy(63,2): Error: a postcondition could not be proved on this return path
+   |
+63 |   {
+   |   ^
+
+Bridge.dfy(62,34): Related location: this is the postcondition that could not be proved
+   |
+62 |       inRange && v.Issue? && Clean(p) && parsed == Some(Expected(v, enc))
+   |                                   ^
+
+Bridge.dfy(31,59): Related location: this proposition could not be proved
+   |
+31 |     p.launched && !p.timedOut && !p.signaled && p.exitCode == 0 && p.stderrLen == 0 &&
+   |                                                            ^^
+
+Bridge.dfy(63,2): Error: a postcondition could not be proved on this return path
+   |
+63 |   {
+   |   ^
+
+Bridge.dfy(62,34): Related location: this is the postcondition that could not be proved
+   |
+62 |       inRange && v.Issue? && Clean(p) && parsed == Some(Expected(v, enc))
+   |                                   ^
+
+Bridge.dfy(31,79): Related location: this proposition could not be proved
+   |
+31 |     p.launched && !p.timedOut && !p.signaled && p.exitCode == 0 && p.stderrLen == 0 &&
+   |                                                                                ^^
+
+Bridge.dfy(63,2): Error: a postcondition could not be proved on this return path
+   |
+63 |   {
+   |   ^
+
+Bridge.dfy(62,34): Related location: this is the postcondition that could not be proved
+   |
+62 |       inRange && v.Issue? && Clean(p) && parsed == Some(Expected(v, enc))
+   |                                   ^
+
+Bridge.dfy(32,27): Related location: this proposition could not be proved
+   |
+32 |     !p.stdoutOverflow && p.stdinComplete && p.copyUnchanged
+   |                            ^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 7 verified, 5 errors
+        1.78 real         1.26 user         0.24 sys
+           113590272  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11770  page reclaims
+                 579  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 113  voluntary context switches
+               12391  involuntary context switches
+         10793040954  instructions retired
+          4524344772  cycles elapsed
+            92669128  peak memory footprint
+# end=2026-11-19T09:03:08Z
+exit 4
