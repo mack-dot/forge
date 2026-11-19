@@ -200,3 +200,8 @@ To resume: wait until `locks/heavy.lock` is gone; check `pgrep -f 'HOL/bin/[h]ol
 3. Then the upper read-side specifications, the main-program specification under STDIO_V, the assembly to R6, the machine
    transfer (lists in the A35, A36, A37 reports quoted in STATE checkpoints and in `orch-A/r6/round1*/RUN_PLAN*.md`).
 Each exit-0 theorem: a separate reviewer; unsure entry; ROADMAP row; joint report addendum.
+
+## CHECKPOINT (2026-11-19T14:14:39Z) — BATTERY POWER
+Launcher message 14:14Z: the machine is on battery. Measured now: Now drawing from 'Battery Power'.
+A starts NO HOL case until AC power returns (the wrapper and queue also refuse on battery). HOL processes of A: 0; queues: 0.
+A holds no lock. The four staged cases of STOP NOTE 2 stay NOT RUN. Lightweight work only.
