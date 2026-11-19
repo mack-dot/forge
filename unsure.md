@@ -18183,3 +18183,29 @@ curl: (6) Could not resolve host: github.com
   a long proof for the present executable, or an owner-approved
   change of the C code. M1-B OPEN. end_to_end=false.
 - Next check: the review; the R6 exploration run.
+
+## U495 — night shift, proof track: first stored lemmas toward R6; the replay shortcut is refuted in HOL; the erase lemmas for load and store stay open (refers to U491, U494)
+
+- Evidence: `R6x-0001` (exploration, exit 0); `R6base-0001`
+  (exit 0, 11 theorems, theory `forge_refundR6Base`); `R6x-0002`
+  (exploration, exit 0); `EEx-0001` (exploration, exit 0); review
+  of L2d-0001 and MG-0001 (`orch-A/review-L2d/REPORT.md`: both hold).
+- Proved: `every_clock_events` (a property of every event of the
+  terminating behaviour holds at every clock);
+  `every_of_three_parts`; `replay_cannot_exclude_error_return_events`
+  (strong form): appending one error-return read event leaves the
+  replayed file system unchanged, and that event is not valid. So
+  the stored replay equation cannot give R6.
+- Explored, not proved: the heap predicate with an event invariant
+  weakens to the standard one (two pieces closed); the two
+  FFI-level specifications stop at a type error of a postcondition
+  quotation. The erase lemmas of the load and store classes stay
+  open (112 to 304 goals per lemma in the exploration).
+- R6base-0001 has no separate review at this entry.
+- Wording fixed after review: the remaining FFI premise of the
+  shape theorem (U494) is satisfiable in the model; no environment
+  that describes the present C code satisfies it; that blocks the
+  present executable only because the premise speaks about all stub
+  states.
+- Impact: none on any graph link yet. M1-B OPEN.
+- Next check: the two FFI-level specifications with the invariant.

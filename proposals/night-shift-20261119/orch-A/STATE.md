@@ -1,6 +1,6 @@
 # Orchestrator A (proof track) state
 
-Updated: 2026-11-19T09:38Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
+Updated: 2026-11-19T10:33Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
 
 ## Branch
 - `nightshift/A-proof` from `985f5eaf`; worktree
@@ -64,12 +64,22 @@ Every `<case>.go.log` ends with `go exit N`. Swap rule: PROTOCOL.md as amended ~
 | E1r-0001 / L2r-0001 (re-runs inside the swap rule) | = E1-0003 / L2-0003 | 0 / 0 | `.dat` byte-equal to the first runs |
 | Link NB1 (new control) | 9c55bb3f… | 1 | fails at `exported_ens2_value`, as required; reasons of all controls: `link/run/attempt-0001/control_reasons.txt` |
 
+| L2c-0001 | ca624cc5… | 0 | 29 theorems; `refund_profile_a_sl_events` (Route A reduced to R6 + native contract). Reviewed (A26) |
+| EFx-0001 (EXPLORATION) / EF-0001 | 68ba8415… / ba8f9150… | 0 / 0 | `Next_frame`, `NextStateARM8_frame`, `W_nonvacuous` (69 stored). Reviewed (A26) |
+| MF-0001 / MF-0002 | 30ad1d66… / (ML-only change) | 0 / 0 | composed theorem `refund_model_frame_meets_exported_contract` (13). Reviewed (A26) |
+| MG-0001 | 80c190da… | 0 | composed theorem from the R6 premises (5). Reviewed (A27) |
+| L2dx-0001 (EXPLORATION) / L2d-0001 | 183b8ded… / f9a25452… | 0 / 0 | oracle-only shape predicate; `refund_profile_a_sl_shape`; `refund_model_frame_decision_shape` (29). Reviewed (A27) |
+| R6x-0001 (EXPLORATION) | 5b4a9809… | 0 | cfLib loads; base lemmas close |
+| R6base-0001 | a835d58e… | 0 | 11 theorems: `every_clock_events`, `replay_cannot_exclude_error_return_events` (STRONG form), `every_of_three_parts`. Not yet reviewed |
+| EEx-0001 (EXPLORATION) | e47689d8… | 0 | erase lemmas of the load/store classes stay OPEN (112–304 goals); bounded stop; see `erasure-step/REPORT.md` |
+| R6x-0002 (EXPLORATION) | 1c76b89c… | running | CF steps `writei_V`, `read_into_V` with an event invariant |
+
 ## HOL queue next
-1. `MF-0001` composed model theorem (A21 writes `orch-A/compose/compose_v1.sml`): L-OUT + exact strict parse (+ exported contract).
-2. `L2c-0001` (A19 writes `orch-A/l2c/routeA-L2c.sml`): VokY3, R4, assembly: Route A reduced to the single premise R6.
-3. `EFx-0001` exploration of the ARM8 frame lemmas (A20), then `EF-0001`.
-4. Open after these: L3/R6 (program behaviour of FFI calls: TextIO re-proofs); L-OUT and L-EXIT under the L2 premises; the lift of
-   the erasure lemmas; native links X8, X11; issuer link X16 (B).
+1. `R6x-0002` (running in `queue.sh q26`). Then A25 (or a fresh worker with `orch-A/r6/`) writes the next R6 proof pieces
+   (plan S3–S8 in the A25 report: IOFS_V, writei_V, read_into_V, write side, read side, main, assembly). Multi-day.
+2. Erasure load/store class: see blocker in `erasure-step/REPORT.md`.
+3. Optional: P9a (`resource-native/P9a_v2.sml`), not run.
+The joint report `../MORNING_REPORT.md` exists (addenda 1, 2). Later results: add an addendum there and in `MORNING.md`.
 
 ## Counterexamples tonight (native; reproduced by A; `orch-A/ffi-c-audit/REPORT.md`)
 - CE-1: real executable, exit status 0, empty stderr, stdout a 1000-byte strict prefix (non-blocking pipe).
@@ -77,10 +87,10 @@ Every `<case>.go.log` ends with `go exit N`. Swap rule: PROTOCOL.md as amended ~
 - CE-3: `DYLD_INSERT_LIBRARIES` gives a forged complete frame with exit 0 (assumption A-LOADER; existing launchers pass a fixed env).
 
 ## Workers now
-Running: A19 (L2c), A20 (frame exploration), A21 (composition), A22 (review L-OUT).
-Reviews done: L1 (A7), E1 (A10), L2 (A12), PF (A13), link (A17), L2b+PX (A18): `orch-A/review-*/REPORT.md`.
-Commits on nightshift/A-proof: 68b2e67b, f53d46d4, 65b1f0a4, 67017dc7, 9c425b56, bed20e32. unsure U481–U490. Sync: `orch-A/sync.sh`.
-B: resumed; heavy window done; `orch-B/MORNING.md` INTERIM (ask B to confirm before the joint report).
+Running: none (A25 and A20 handed back; resume them by agent id or brief fresh workers from `orch-A/r6/` and `erasure-step/v3/`).
+Reviews done: L1, E1, L2, PF, link, L2b+PX, LO, MF (+L2c, LE, EF), L2d (+MG): `orch-A/review-*/REPORT.md`.
+Commits on nightshift/A-proof up to 0c571a27 (joint report with addenda). unsure U481–U494. Sync: `orch-A/sync.sh`.
+B: `orch-B/MORNING.md` FINAL with addendum; B may ask for more heavy windows (release `hol.lock` between cases).
 
 ## Blockers
 - None for the queue. Swap free 1.6 GB at 08:12Z. Poly/ML store stops happened at low swap: re-measure before each run.

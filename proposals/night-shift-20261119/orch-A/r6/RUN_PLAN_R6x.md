@@ -54,3 +54,19 @@ Why: the CF layer knows the stdin buffer only by `instream_buffered_inv` (TextIO
 INSTREAM_STR spec on the path (+1–2 days). The new clause still gives VokY3 (x1 = 8 from conf length 8; bound;
 ¬msb x3 from x3 < 2^16). It weakens premise R6 (stronger theorem). Cost: L2c R4 and controls re-run (~7 min).
 The write clause stays as is; IOFS_V then pins the iobuff length to 2052.
+
+## Round 2 (after R6x-0001: exit 0, EXPLORE_COMPLETE). NOT RUN.
+Deps for both: `deps-R6x.txt` (ce8ebac1…b0d). Same cd/cp pattern as above.
+- `R6base-0001.sml` a835d58e2bd9d93c24585bd8b7fe91f80f9cbcd01815566619a5cb18a7f798bb — PROOF, theory `forge_refundR6Base`.
+  `./nightshift-run.sh R6base-0001 900 deps-R6x.txt`. Pass = exit 0, EXACT_COMPLETE, FAILED_LIST empty, 4 CLOSURE_AXIOM.
+  Required: every_prefix, clock_prefix_of_terminate, bad_read_event_replays_to_the_same_state, bad_read_event_is_not_valid(_w),
+  refund_valid_event_implies_weak, ffi_has_index_in_APPEND, every_of_three_parts, replay_cannot_exclude_error_return_events.
+  Optional (repaired, never explored): every_clock_events (L-CLK), extract_fs_ignores_bad_read_event (X5).
+  Read `REPLAY_FORM STRONG|WEAK` and `OPTIONAL_FAILED`.
+- `R6x-0002.sml` 1c76b89cf7649f3daebb770079f38f69181d42d14862accb2458604b44fcfd46 — EXPLORATION, no export.
+  Reads by absolute path (do not move): R6x-0002-x8.sml 1f5fc2f0…ae99, R6x-0002-writei.sml fd395574…2f21,
+  R6x-0002-readinto.sml 91d7311a…f601. `./nightshift-run.sh R6x-0002 1800 deps-R6x.txt`.
+  Read: `DEFINITION`/`DEFINITION_FAILED`; `STATEMENT writei_spec_V|read_into_spec_V`; `PART_DONE|PART_FAILED <file>`;
+  `EXPLORE_CLOSED X9r…`, `X8r…`; head-mode `STEP WRITEI_V_branch1_xffi i label goals N`, `STEP READ_INTO_V_success_xffi …`,
+  `STEP_STUCK`, `EXPLORE_HEAD_CLOSED|OPEN`. The key line per lemma: the goal after `xsimpl_after` (expected: only the
+  pure side goal EVERY Inv (events ++ [the new event])) and whether step `invariant (NEW)` closes it.
