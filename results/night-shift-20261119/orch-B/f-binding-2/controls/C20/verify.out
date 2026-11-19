@@ -1,0 +1,15 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL EXIT_NOT_ZERO: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log ends with exit 1
+FAIL HOL_RUNJSON_EXIT: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/ctl-NC1.run.json actual_exit 1
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_contract_decode: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_contract_shape: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_ens1_value: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_ens2_value: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_ens3_value: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_contract_value: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_contract_on_refund_fields: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_contract_exact: not reported as CHECKED/FORGE_THEOREM
+FAIL HOL_THEOREM_MISSING: S6: results/night-shift-20261119/orch-A/link/run/attempt-0001/NC1.go.log: exported_contract_witnesses: not reported as CHECKED/FORGE_THEOREM
+edges per class: MACHINE-CHECKED=50, ASSUMPTION=9, TESTED-UNPROVED=13, MISSING=18, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=97
+nodes=531 assumptions=41 mandatory=59
+REFUSED: 11 problems; codes EXIT_NOT_ZERO,HOL_RUNJSON_EXIT,HOL_THEOREM_MISSING; proofs NOT re-run

@@ -1,0 +1,15 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL APPROVED_SPEC_STALE: spec/refund/RefundSpec.dfy differs from the Slice 1 approved record
+FAIL APPROVED_NOT_BOUND: S2: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: S3: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: S3a: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-V1: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-V2: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-V2B: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-V3-L2: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-V3-L3: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-BYTES-R: closure holds no file byte-equal to the approved RefundSpec.dfy
+FAIL APPROVED_NOT_BOUND: T-EXPORT-SLICE: closure holds no file byte-equal to the approved RefundSpec.dfy
+edges per class: MACHINE-CHECKED=50, ASSUMPTION=9, TESTED-UNPROVED=13, MISSING=18, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=97
+nodes=531 assumptions=41 mandatory=59
+REFUSED: 11 problems; codes APPROVED_NOT_BOUND,APPROVED_SPEC_STALE; proofs NOT re-run
