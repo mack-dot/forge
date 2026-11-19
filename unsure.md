@@ -17242,3 +17242,71 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false. No protected file changed.
 - Next check: none for Stage 9 until the owner takes it up. For M1:
   the open items of M1R-1 and section 9 of the conformance report.
+
+## U471 — Pull request 54 merged; correction of a time in U470; the replay of the 158 recorded M1 cases started on a pasted instruction and waits for mains power; an owner-review packet for M1
+- Status: 2026-11-19 04:16Z (read from `date -u` when this entry was
+  written). Refs U469, U470, M1R-1, M1R-2, U401 to U404.
+- Correction of U470: its status line says "03:58Z (read from the
+  system clock)". The clock read 03:57Z in the same command. I wrote
+  the time before I read it. This is the third time (U462, U469).
+- Basis (observation and inference): the owner sent a message that
+  was only a pasted advisor text. Its box says: "Merge 54 now ...
+  Then start M1 step 1 right now: run the replay of the 158 recorded
+  M1 cases ... also prepare a concise owner-review packet". I had
+  offered twice to merge 54 on the words "merge 54". Inference: the
+  paste is the owner's instruction. The owner's own words after it:
+  "keep going i will plug it in ooon".
+- Pull request 54 (documents: U469, U470, the unapplied Stage 9 lock
+  proposal): hosted gate/pr_check.py run 44455039140, exit 3,
+  UNSUPPORTED. `gh pr merge 54 --squash --admin`, exit 0, squash commit
+  5ec606eb at 04:01Z; tree equal to 8ee3fe1a. An OVERRIDE of the
+  review rule and of the red gate status, for this one pull request.
+- The advisor text says the replay "re-verif[ies] the proof chain
+  behind b8ed5ec2". Correction: the 95 theories of the chain were
+  replayed on 2026-11-18 (M1R-1, M1R-2). The 158 cases are the
+  controls, repeat cases and import checks of the packets. A pass
+  shows that they behave as recorded on this machine. It does not
+  close M1.
+- Replay job (a background agent, started 04:02Z): rules given to it:
+  one HOL process at a time; no start on battery power; at least 20
+  GiB free disk; a time limit of four times the recorded time per
+  case; a budget of 16,200 s; no repair of any proof, script or
+  expected value; every case that does not behave as recorded is
+  reported. Measured before the start: battery power (70 percent), 90
+  GiB free, swap 6.9 of 8.2 GiB used. At 04:13Z: its plan, the
+  restored sources and a dry-run record exist under
+  results/round4-m1-replay-20261118/phase3 (not tracked); no HOL
+  process had run; the machine was still on battery power. The job
+  gives up after 120 minutes without mains power.
+- Owner-review packet: proposals/m1-owner-review-20261119/
+  REVIEW_PACKET.md. It copies the open decisions from the M1 records
+  (Profile A and questions Q1 to Q6; the 18 rows of the contract link,
+  all NOT REVIEWED; compiler premises; slide; replays). New in it: one
+  column that says what the finite test of Wave Gate 1 observed for
+  each of the 18 rows. That column is test support, not a review; for
+  row 10 the test's renderer uses the same reading as the row.
+- Uncertainty: I copied the statements of U401 to U409 and did not
+  read the proof scripts or run a proof again. The source documents
+  are on the backup branch, not on main.
+- Impact: no claim. CURRENT none. Stage 9 deferred. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: the result of the replay job; the owner's answers to Q1
+  to Q6.
+
+## U472 — Correction of the time in U471; from this entry on the time is inserted by the shell
+- Status: 2026-11-19T04:24Z (inserted by the shell from `date -u` in the command
+  that wrote this entry). Refs U471, U470, U469, U462.
+- Correction: U471 says "04:16Z (read from `date -u` when this entry
+  was written)". That is false. I typed the time into the entry text
+  before the command ran; the command's own `date -u` printed 04:24Z.
+  The times of the replay job in U471 (start 04:02Z, state at 04:13Z)
+  are from command outputs and stand.
+- Cause: I write the entry text first and the command reads the clock
+  later. A promise to "read the clock" does not repair that. Repair:
+  the status time of an entry is now a shell substitution inside the
+  command that appends the entry, as in this one.
+- The same wrong "04:16Z" in the review packet and in the roadmap
+  section of U471 is replaced by 04:24Z in this commit (those texts
+  are not append-only).
+- Impact: none on a claim.
+- Next check: none.
