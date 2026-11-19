@@ -151,3 +151,19 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   `minter.ts` plus the Dafny-to-JavaScript compiler (the proved issue method is a MODEL of the issuer); (3) the sink does
   not enforce the initial-state bound. Recorded by B as U547 and as addendum 1 in `orch-B/MORNING.md`.
 - Still open on B's side: r-drafts, b-top, f-binding-3.
+
+## Addendum 3 (from Orchestrator B's message, added by A at 2026-11-19T10:44:34Z): two defects in drafts named above; final ledger
+- DEFECT in a draft: the dual-check issuer draft does NOT, as built, stop a wrong Dafny-to-JavaScript compile that accepts a
+  wrong post-state (the compared fields and the native frame hold no post-state), and it signed when its two sides got
+  different inputs (three cases with the real native program; reviewer's run). "A dual-check issuer exists as a draft" stays
+  true; it must not be read as "a wrong compile cannot mint alone". Repair known (derive both sides from one input; compare
+  the post-state); not done.
+- The draft sink with the compiled V3 core has a quadratic cost per commit inside the write lock (fails at about 200,000
+  settled ids), and its start-up audit does not bind the initial charge. So section 7's adoption sentence reads: adopt
+  "after repair of two defects of the draft (B's U548)". Drafts only; nothing applied.
+- The proofs under those drafts (IssueBytes2, ShellCoreV3, Bridge) are confirmed by B's review.
+- Final ledger `orch-B/f-binding-3` (B's runs: verifier exit 0, identity only; 47 of 47 controls): 119 edges: 65
+  MACHINE-CHECKED (2 deployed Dafny source, 44 model, 19 draft), 9 ASSUMPTION, 18 TESTED, 20 MISSING, 1 claimed, 6 without
+  a log of tonight. It refuses the exploration runs. Note: A's review of MG-0001 and L2d-0001 exists since addendum 1
+  (`orch-A/review-L2d/REPORT.md`); R6base-0001 has no separate review.
+- Still open on B's side: b-top.
