@@ -77,17 +77,17 @@ case_R2()  { insha "$EXPORT" $EXPORT_SHA || return $?
   local c=${1:-u294-rel}; local cw; cw=$(u294cwd)
   FORGE_CWD=${cw:-$D/forge_refundCertifiedProg_experiment} FORGE_SOURCE_SEXP=$EXPORT FORGE_SOURCE_PROOF_OUT=$RUN/$c \
   FORGE_CPU_SECONDS=300 run R2 "$c" u294/relation.sml $(lp) "$RUN/u294/preload.sml" \
-    "$RUN/u294-hol/.hol/objs/$SB.sig" "$RUN/u294-hol/.hol/objs/$SB.sml"; }
+    "$RUN/u294-hol/$SB.sig" "$RUN/u294-hol/$SB.sml"; }
 case_R3()  { insha "$EXPORT" $EXPORT_SHA || return $?
   local c=${1:-u294-bridge}
   FORGE_CWD=$D/forge_refundCertifiedProg_experiment FORGE_SOURCE_SEXP=$EXPORT FORGE_SOURCE_PROOF_OUT=$RUN/$c \
   FORGE_CPU_SECONDS=300 run R3 "$c" u294/bridge.sml $(lp) "$RUN/u294/preload.sml" \
-    "$RUN/u294-hol/.hol/objs/$SB.sig" "$RUN/u294-hol/.hol/objs/$SB.sml"; }
+    "$RUN/u294-hol/$SB.sig" "$RUN/u294-hol/$SB.sml"; }
 case_I1()  { insha "$EXPORT" $EXPORT_SHA || return $?
   local c=${1:-u294-import}; local cw; cw=$(u294cwd)
   FORGE_CWD=${cw:-$D/forge_refundCertifiedProg_experiment} FORGE_SOURCE_SEXP=$EXPORT FORGE_SOURCE_PROOF_OUT=$RUN/$c \
   FORGE_CPU_SECONDS=300 run I1 "$c" u294/audit.sml $(lp) "$RUN/u294/preload.sml" \
-    "$RUN/stored/hol-0004/.hol/objs/$SB.sig" "$RUN/stored/hol-0004/.hol/objs/$SB.sml"; }
+    "$RUN/stored/hol-0004/$SB.sig" "$RUN/stored/hol-0004/$SB.sml"; }
 case_H1()  { insha "$EXPORT" $EXPORT_SHA || return $?
   FORGE_CONTRACT_SEXP=$EXPORT FORGE_CPU_SECONDS=1200 run H1 "${1:-contract-0001}" forge_refundExportedContractScript.sml; }
 case_H2()  { insha "$EXPORT" $EXPORT_SHA || return $?
@@ -110,13 +110,14 @@ case_NS1() { ctl_script NS1 NS1-amount-plus-one.sml "$@"; }
 case_NS2() { ctl_script NS2 NS2-ids-swapped.sml "$@"; }
 case_NS3() { ctl_script NS3 NS3-wrong-truth-value.sml "$@"; }
 CT=$RUN/contract-0001/.hol/objs/forge_refundExportedContractTheory
+CTA=$RUN/contract-0001/forge_refundExportedContractTheory   # Orchestrator A: HOL adds .hol/objs itself (path fix after H4, R2, R3, I1 setup errors)
 case_H4()  { [ -f "$CT.sig" ] && [ -f "$CT.sml" ] && [ -f "$CT.dat" ] || { echo "STOP: run H1 first"; return 7; }
   FORGE_CWD=$D/forge_refundWireProg_experiment FORGE_CPU_SECONDS=900 run H4 "${1:-render-0001}" \
-    forge_refundExportedRenderScript.sml "$RUN/preload-render.sml" "$CT.sig" "$CT.sml"; }
+    forge_refundExportedRenderScript.sml "$RUN/preload-render.sml" "$CTA.sig" "$CTA.sml"; }
 case_NR1() { [ -f "$CT.sig" ] || { echo "STOP: run H1 first"; return 7; }
   insha "$RUN/controls/NR1-render-ids-swapped.sml" "$(ctlsha NR1-render-ids-swapped.sml)" || return $?
   FORGE_CWD=$D/forge_refundWireProg_experiment FORGE_CPU_SECONDS=900 run NR1 "${1:-ctl-NR1}" \
-    controls/NR1-render-ids-swapped.sml "$RUN/preload-render.sml" "$CT.sig" "$CT.sml"; }
+    controls/NR1-render-ids-swapped.sml "$RUN/preload-render.sml" "$CTA.sig" "$CTA.sml"; }
 # E0 (optional): W2's drafts/link-eligible H1/H2 with loadpath.sml as first extra argument (pre-flight P6),
 # in W2's cwd forge_refund_call_experiment. Its marker ELIGIBLE_LINK_COMPLETE is not in the runner MARKERS
 # (RUN_PLAN.md section 2 lists six markers only); check.py reads it from stdout.log.

@@ -1,0 +1,24 @@
+2026-11-19T08:55:43Z
+START_STATE swap_free_mib=1263 memory_free_percent=70
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NC5-reason-literal-in-contract.sexp sha256 65a979680502a52edc2ae5db46fbafe286abe3241ac21724c65bdee22ee2089e expected 65a979680502a52edc2ae5db46fbafe286abe3241ac21724c65bdee22ee2089e
+Thu Nov 19 03:55:43 EST 2026
+System-wide memory free percentage: 70%
+vm.swapusage: total = 7168.00M  used = 5904.94M  free = 1263.06M  (encrypted)
+/dev/disk3s5       460  339        89    80% 7989486 941004600    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 82
+COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NC5 forge_refundExportedContractScript.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NC5/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+
+Exception raised at boolLib.store_thm_at:
+at Tactical.TAC_PROOF:
+  Failed to prove theorem "exported_ens1_value":
+unsolved goals
+  info: actual_exit=1 markers=[] last FORGE_BEGIN='exported_ens1_value' *_COMPLETE lines=[] wall=20.739
+VERDICT NC5 ctl-NC5 PASS
+GO.SH EXIT 1
+go exit 1

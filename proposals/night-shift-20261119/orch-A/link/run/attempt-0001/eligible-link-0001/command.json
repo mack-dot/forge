@@ -1,0 +1,42 @@
+{
+ "case": "eligible-link-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/loadpath.sml",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/eligible-link-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment",
+ "source": "eligible/forge_refundEligibleLinkScript.sml",
+ "source_sha256": "1e28be841f54224949b6e766c755e0efd6d41d8c3751b5acbe396d072e116d85",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "66b1654b4e490d41953983b967e7501febba5b955e3bc562776569300846d1f2",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/loadpath.sml": "ca77c5dd58592010467c2b5700f226750a30e212220a9c61e91ccdec06c3f644",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+ },
+ "resource_guard": {
+  "memory_free_percent": 62,
+  "disk_free_gib": 89.98,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 15.613,
+ "child_user_cpu_seconds": 16.444,
+ "child_max_rss_bytes": 442351616,
+ "markers": [],
+ "stdout_sha256": "1cefeac596e5721f8b59dc352bc743ec4f0c9aebb959fe22f1adb5d1779a78df",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/docs/forge_refundEligibleLinkTheory.html": "110d9cc07530afa1d6e7992c76a6f1e30b16073e3de18fae9527aa664093db6c",
+  ".hol/objs/forge_refundEligibleLinkTheory.dat": "5d5e96d68a989ec56c1dee96185ef7613c632695ad093063f1cf95fc7bfb19f0",
+  ".hol/objs/forge_refundEligibleLinkTheory.sig": "034d057d864225034685456ebe88924f73deb150c7b20fbaf886450ceceb1825",
+  ".hol/objs/forge_refundEligibleLinkTheory.sml": "9dd1eabad95ba50e424b7c0dc8adcdf903a0eb4050b00aa3a2d1d5d71da7bef3"
+ },
+ "inputs_unchanged_after": true
+}

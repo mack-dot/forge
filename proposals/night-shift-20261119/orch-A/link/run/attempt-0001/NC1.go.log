@@ -9,3 +9,16 @@ other HOL children:
 pgrep exit 0
 swap used percent: 82
 COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NC1 forge_refundExportedContractScript.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NC1/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+
+Exception raised at boolLib.store_thm_at:
+at Tactical.TAC_PROOF:
+  Failed to prove theorem "exported_ens1_value":
+unsolved goals
+  info: actual_exit=1 markers=[] last FORGE_BEGIN='exported_ens1_value' *_COMPLETE lines=[] wall=20.285
+VERDICT NC1 ctl-NC1 PASS
+GO.SH EXIT 1
+go exit 1

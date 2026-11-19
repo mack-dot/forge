@@ -1,0 +1,24 @@
+2026-11-19T09:06:06Z
+START_STATE swap_free_mib=1679 memory_free_percent=64
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+Thu Nov 19 04:06:06 EST 2026
+System-wide memory free percentage: 64%
+vm.swapusage: total = 7168.00M  used = 5488.81M  free = 1679.19M  (encrypted)
+/dev/disk3s5       460  338        89    80% 7994235 943449040    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 76
+COMMAND: FORGE_CWD=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment FORGE_CPU_SECONDS=300 python3 -I -B run_case.py u294-import-2 u294/audit.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294/preload.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/stored/hol-0004/forge_refundSourceBindingTheory.sig /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/stored/hol-0004/forge_refundSourceBindingTheory.sml
+RUNNER EXIT 0 (a signal or CPU-limit stop also gives 1; read actual_exit in u294-import-2/command.json)
+1:IMPORTED source_full_result EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+2:IMPORTED source_postconditions EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+3:IMPORTED source_decode EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+4:IMPORTED source_signature EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+5:IMPORTED mapped_operators EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+6:IMPORTED source_initial_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+7:IMPORTED source_export_text_def EXACT true HYPOTHESES 0 TAGGED_AXIOMS 0 ORACLES DISK_THM
+  info: CLOSURE_NODE lines equal to recorded: True (126 now, 126 recorded)
+  info: actual_exit=0 markers=['SOURCE_IMPORT_COMPLETE'] last FORGE_BEGIN=None *_COMPLETE lines=['SOURCE_IMPORT_COMPLETE'] wall=2.512
+VERDICT I1 u294-import-2 PASS
+GO.SH EXIT 0
+go exit 0

@@ -1,0 +1,54 @@
+2026-11-19T09:01:26Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 5496.81M  free = 1671.19M  (encrypted)
+System-wide memory free percentage: 66%
+START_STATE swap_free_mib=1671 memory_free_percent=66
+exit 1
+actual_exit 1 wall 155.458 cpu 146.327 rss_mib 3529 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2b-0002/proof.sml:624: Fail "problems: F1-not-the-premise"
+65:CHECKED rfb2_next_interfer_update
+72:CHECKED rfb2_install_interfer_update
+79:CHECKED rfb2_ffi_interfer_update
+87:CHECKED call_FFI_return_keeps_oracle
+94:CHECKED ffi_calls_ok_of_returning_calls
+103:STATEMENT_G ∀P k mc ffi ms.
+115:CHECKED ffi_close_return_lengths
+122:CHECKED basis_close_return_lengths
+130:CHECKED close_returning_calls_have_valid_lengths
+140:CHECKED three_names_are_ExtCall
+146:CHECKED refund_names_are_ExtCall
+155:CHECKED refund_mc_close_fields
+165:CHECKED refund_ffi_calls_ok_close
+173:CHECKED refund_ffi_calls_ok_close_totalised
+183:CHECKED refund_close_premises_hold
+194:CHECKED basis_close_call_returns_at_a_concrete_state
+212:CHECKED close_predicate_fails_for_a_returning_zero_length_call
+227:CHECKED returning_call_premise_is_needed
+234:CHECKED close_instance_needs_the_basis_oracle
+243:CHECKED close_predicate_rejects_zero_alen
+252:CHECKED ffi_calls_ok_mono
+259:CHECKED ffi_calls_ok_conj
+266:CHECKED evaluate_clock_zero
+271:CHECKED call_FFI_return_appends_its_event
+279:CHECKED returning_call_with_valid_event_gives_P
+296:CHECKED ffi_calls_ok_of_valid_events
+311:CHECKED y3_event_predicate_admits_a_two_byte_read_array
+331:CHECKED refund_l2r_third_premise_close
+340:UNEXPECTED_CONTROL_ACCEPTANCE F1-not-the-premise
+344:CHECKED refund_l2r_third_premise_close_and_rest
+368:CONTROL_OK F2 conclusion is the third premise with Vok := (close predicate /\ Q)
+370:STATEMENT_TYPECHECKS R1_rw_returning_calls_oracle_only
+380:STATEMENT_TYPECHECKS R2_open_in_returning_calls_oracle_only
+386:STATEMENT_TYPECHECKS R3_signed_alen_from_domain_size
+392:STATEMENT_TYPECHECKS R4_valid_event_gives_Vok
+421:STATEMENT_TYPECHECKS R5_events_give_ffi_calls_ok
+433:STATEMENT_TYPECHECKS R6_refund_run_events_are_valid
+459:STATEMENT_TYPECHECKS R7_L3_target_for_VokY3
+514:STATEMENT_TYPECHECKS as_proposed_with_free_P
+528:CONTROL_OK G statement is the literal statement of this file
+529:CONTROL_OK G does not mention the basis oracle
+530:CONTROL_OK close instance is literal and does not claim the signed bound (word_msb)
+531:CONTROL_OK refund close instance has the oracle equation as its only premise
+532:CONTROL_OK NV-B, N2, N1, N2' are negations
+hash_parents exit 0
+go exit 1

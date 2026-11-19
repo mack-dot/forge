@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theory: forge_refundExportedContract</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --pre-bg: #f6f8fa;
+    --pre-border: #d0d7de;
+    --rule: #d8dee4;
+  }
+  html { background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 1.25rem; }
+  h1 .thy-prefix { color: var(--muted); font-weight: 400; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.parents { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.parents li { display: inline-block; margin: 0 0.5rem 0.4rem 0; }
+  ul.parents a {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+  }
+  ul.parents a:hover { background: #eaeef2; }
+  .toc { margin: 0 0 1.75rem; }
+  .toc h3 {
+    font-size: 1.05rem; font-weight: 700; color: var(--fg);
+    margin: 1.4rem 0 0.4rem;
+    padding: 0.1rem 0 0.1rem 0.5rem;
+    border-left: 4px solid var(--accent);
+  }
+  .toc-items {
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+    font-size: 0.92rem; line-height: 1.65;
+  }
+  .toc-items a {
+    color: var(--accent); text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .toc-items a:hover { text-decoration: underline; }
+  .toc-items code {
+    color: var(--fg);
+    background: var(--pre-bg);
+    padding: 0 0.35rem; border-radius: 4px;
+  }
+  .toc-empty { color: var(--muted); font-style: italic; }
+  ul.sig-list { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.sig-list li { margin: 0.25rem 0; }
+  ul.sig-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+  }
+  .thm { margin: 1.1rem 0; }
+  .thm-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .thm-name code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .src-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .src-link:hover { text-decoration: underline; }
+  .src-icon { opacity: 0.55; }
+  .src-link:hover .src-icon { opacity: 1; }
+  .thm:target { background: #fff8c5; border-radius: 6px; }
+  pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--pre-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin: 0;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --pre-bg: #161b22;
+      --pre-border: #30363d;
+      --rule: #30363d;
+    }
+    ul.parents a:hover { background: #21262d; }
+    .thm:target { background: #4d3a00; }
+  }
+</style>
+</head>
+<body>
+<h1><span class="thy-prefix">Theory</span> forge_refundExportedContract</h1>
+<h2>Parents</h2>
+<ul class="parents">
+<li><a href="../../../../../../../../../.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment/.hol/docs/forge_refundCertifiedProgTheory.html">forge_refundCertifiedProg</a></li>
+</ul>
+<section class="toc">
+<h2>Contents</h2>
+<h3>Type operators</h3>
+<div class="toc-items"><span class="toc-empty">(none)</span></div>
+<h3>Constants</h3>
+<ul class="sig-list">
+<li><code>exported_contract_program : program</code></li>
+<li><code>exported_contract_state : heap_value list -&gt;
+mlstring -&gt;
+mlstring -&gt;
+int -&gt;
+int -&gt;
+bool -&gt;
+bool -&gt;
+bool -&gt; int -&gt; mlstring -&gt; bool -&gt; int -&gt; mlstring -&gt; mlstring -&gt; mlstring -&gt; int -&gt; dfy_state</code></li>
+<li><code>exported_contract_text : string</code></li>
+<li><code>exported_ens1 : dfy_exp</code></li>
+<li><code>exported_ens2 : dfy_exp</code></li>
+<li><code>exported_ens3 : dfy_exp</code></li>
+<li><code>exported_ensures : dfy_exp list</code></li>
+</ul>
+<h3>Definitions</h3>
+<div class="toc-items"><a href="#exported_contract_program_def">exported_contract_program_def</a><a href="#exported_contract_state_def">exported_contract_state_def</a><a href="#exported_contract_text_def">exported_contract_text_def</a><a href="#exported_ens1_def">exported_ens1_def</a><a href="#exported_ens2_def">exported_ens2_def</a><a href="#exported_ens3_def">exported_ens3_def</a><a href="#exported_ensures_def">exported_ensures_def</a></div>
+<h3>Theorems</h3>
+<div class="toc-items"><a href="#exported_contract_decode">exported_contract_decode</a><a href="#exported_contract_exact">exported_contract_exact</a><a href="#exported_contract_on_refund_fields">exported_contract_on_refund_fields</a><a href="#exported_contract_shape">exported_contract_shape</a><a href="#exported_contract_value">exported_contract_value</a><a href="#exported_contract_witnesses">exported_contract_witnesses</a><a href="#exported_ens1_value">exported_ens1_value</a><a href="#exported_ens2_value">exported_ens2_value</a><a href="#exported_ens3_value">exported_ens3_value</a></div>
+</section>
+<section>
+<h2>Definitions</h2>
+<div class="thm" id="exported_contract_program_def">
+<div class="thm-name"><code>exported_contract_program_def</code></div>
+<pre>⊢ exported_contract_program =
+  Program
+    [Method «AssessFlat»
+       [(«chargeId»,StrT); («requestId»,StrT); («original»,IntT);
+        («remaining»,IntT); («enabled»,BoolT); («requestOpen»,BoolT);
+        («candidate»,BoolT); («amount»,IntT); («reason»,StrT)] []
+       [BinOp Eq (Var «authorized»)
+          (BinOp And
+             (BinOp And
+                (BinOp And
+                   (BinOp And
+                      (BinOp And
+                         (BinOp And
+                            (BinOp And
+                               (BinOp And
+                                  (BinOp Neq (Var «chargeId»)
+                                     (Lit (StrL «»)))
+                                  (BinOp Neq (Var «requestId»)
+                                     (Lit (StrL «»)))) (Var «enabled»))
+                            (Var «requestOpen»))
+                         (BinOp And
+                            (BinOp Le (Lit (IntL 0)) (Var «original»))
+                            (BinOp Le (Var «original»)
+                               (Lit (IntL 9223372036854775807)))))
+                      (BinOp And
+                         (BinOp Le (Lit (IntL 0)) (Var «remaining»))
+                         (BinOp Le (Var «remaining») (Var «original»))))
+                   (Var «candidate»))
+                (BinOp And (BinOp Le (Lit (IntL 0)) (Var «amount»))
+                   (BinOp Le (Var «amount») (Var «remaining»))))
+             (BinOp Or
+                (BinOp Or
+                   (BinOp Eq (Var «reason») (Lit (StrL «duplicate_charge»)))
+                   (BinOp Eq (Var «reason»)
+                      (Lit (StrL «service_not_delivered»))))
+                (BinOp Eq (Var «reason») (Lit (StrL «returned_item»)))));
+        BinOp Imp (Var «authorized»)
+          (BinOp And
+             (BinOp And
+                (BinOp And
+                   (BinOp And
+                      (BinOp Eq (Var «outputAmount») (Var «amount»))
+                      (BinOp Eq (Var «outputReason») (Var «reason»)))
+                   (BinOp Eq (Var «outputCharge») (Var «chargeId»)))
+                (BinOp Eq (Var «outputRequest») (Var «requestId»)))
+             (BinOp Eq (Var «intentCount») (Lit (IntL 1))));
+        BinOp Imp (UnOp Not (Var «authorized»))
+          (BinOp And
+             (BinOp And
+                (BinOp And
+                   (BinOp And
+                      (BinOp Eq (Var «outputAmount») (Lit (IntL 0)))
+                      (BinOp Eq (Var «outputReason») (Lit (StrL «»))))
+                   (BinOp Eq (Var «outputCharge») (Lit (StrL «»))))
+                (BinOp Eq (Var «outputRequest») (Lit (StrL «»))))
+             (BinOp Eq (Var «intentCount») (Lit (IntL 0))))] []
+       [Var «chargeId»; Var «requestId»; Var «original»; Var «remaining»;
+        Var «enabled»; Var «requestOpen»; Var «candidate»; Var «amount»;
+        Var «reason»]
+       [(«authorized»,BoolT); («outputAmount»,IntT); («outputReason»,StrT);
+        («outputCharge»,StrT); («outputRequest»,StrT);
+        («intentCount»,IntT)] []
+       (Then
+          (Assign
+             [(VarLhs «authorized»,
+               ExpRhs
+                 (BinOp And
+                    (BinOp And
+                       (BinOp And
+                          (BinOp And
+                             (BinOp And
+                                (BinOp And
+                                   (BinOp And
+                                      (BinOp And
+                                         (BinOp Neq (Var «chargeId»)
+                                            (Lit (StrL «»)))
+                                         (BinOp Neq (Var «requestId»)
+                                            (Lit (StrL «»))))
+                                      (Var «enabled»)) (Var «requestOpen»))
+                                (BinOp And
+                                   (BinOp Le (Lit (IntL 0))
+                                      (Var «original»))
+                                   (BinOp Le (Var «original»)
+                                      (Lit (IntL 9223372036854775807)))))
+                             (BinOp And
+                                (BinOp Le (Lit (IntL 0)) (Var «remaining»))
+                                (BinOp Le (Var «remaining»)
+                                   (Var «original»)))) (Var «candidate»))
+                       (BinOp And (BinOp Le (Lit (IntL 0)) (Var «amount»))
+                          (BinOp Lt (Var «amount») (Var «remaining»))))
+                    (BinOp Or
+                       (BinOp Or
+                          (BinOp Eq (Var «reason»)
+                             (Lit (StrL «duplicate_charge»)))
+                          (BinOp Eq (Var «reason»)
+                             (Lit (StrL «service_not_delivered»))))
+                       (BinOp Eq (Var «reason»)
+                          (Lit (StrL «returned_item»))))))])
+          (Then
+             (If (Var «authorized»)
+                (Then
+                   (Assign [(VarLhs «outputAmount»,ExpRhs (Var «amount»))])
+                   (Then
+                      (Assign
+                         [(VarLhs «outputReason»,ExpRhs (Var «reason»))])
+                      (Then
+                         (Assign
+                            [(VarLhs «outputCharge»,ExpRhs (Var «chargeId»))])
+                         (Then
+                            (Assign
+                               [(VarLhs «outputRequest»,
+                                 ExpRhs (Var «requestId»))])
+                            (Assign
+                               [(VarLhs «intentCount»,ExpRhs (Lit (IntL 1)))])))))
+                (Then
+                   (Assign [(VarLhs «outputAmount»,ExpRhs (Lit (IntL 0)))])
+                   (Then
+                      (Assign
+                         [(VarLhs «outputReason»,ExpRhs (Lit (StrL «»)))])
+                      (Then
+                         (Assign
+                            [(VarLhs «outputCharge»,ExpRhs (Lit (StrL «»)))])
+                         (Then
+                            (Assign
+                               [(VarLhs «outputRequest»,
+                                 ExpRhs (Lit (StrL «»)))])
+                            (Assign
+                               [(VarLhs «intentCount»,ExpRhs (Lit (IntL 0)))]))))))
+             Return))]
+</pre>
+</div>
+<div class="thm" id="exported_contract_state_def">
+<div class="thm-name"><code>exported_contract_state_def</code></div>
+<pre>⊢ ∀h charge request original remaining enabled opened candidate amount
+      reason ok a r c q n.
+    exported_contract_state h charge request original remaining enabled
+      opened candidate amount reason ok a r c q n =
+    init_state 0 with
+    &lt;|heap := h;
+      locals :=
+        [(«chargeId»,SOME (StrV charge));
+         («requestId»,SOME (StrV request));
+         («original»,SOME (IntV original));
+         («remaining»,SOME (IntV remaining));
+         («enabled»,SOME (BoolV enabled));
+         («requestOpen»,SOME (BoolV opened));
+         («candidate»,SOME (BoolV candidate));
+         («amount»,SOME (IntV amount)); («reason»,SOME (StrV reason));
+         («authorized»,SOME (BoolV ok)); («outputAmount»,SOME (IntV a));
+         («outputReason»,SOME (StrV r)); («outputCharge»,SOME (StrV c));
+         («outputRequest»,SOME (StrV q)); («intentCount»,SOME (IntV n))]|&gt;
+</pre>
+</div>
+<div class="thm" id="exported_contract_text_def">
+<div class="thm-name"><code>exported_contract_text_def</code></div>
+<pre>⊢ exported_contract_text =
+  &quot;(Program ((Method \&quot;AssessFlat\&quot; ((\&quot;chargeId\&quot; (StrT)) (\&quot;requestId\&quot; (StrT)) (\&quot;original\&quot; (IntT)) (\&quot;remaining\&quot; (IntT)) (\&quot;enabled\&quot; (BoolT)) (\&quot;requestOpen\&quot; (BoolT)) (\&quot;candidate\&quot; (BoolT)) (\&quot;amount\&quot; (IntT)) (\&quot;reason\&quot; (StrT))) () ((BinOp (Eq) (Var \&quot;authorized\&quot;) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (Neq) (Var \&quot;chargeId\&quot;) (Lit (StrL \&quot;\&quot;))) (BinOp (Neq) (Var \&quot;requestId\&quot;) (Lit (StrL \&quot;\&quot;)))) (Var \&quot;enabled\&quot;)) (Var \&quot;requestOpen\&quot;)) (BinOp (And) (BinOp (Le) (Lit (IntL 0)) (Var \&quot;original\&quot;)) (BinOp (Le) (Var \&quot;original\&quot;) (Lit (IntL 9223372036854775807))))) (BinOp (And) (BinOp (Le) (Lit (IntL 0)) (Var \&quot;remaining\&quot;)) (BinOp (Le) (Var \&quot;remaining\&quot;) (Var \&quot;original\&quot;)))) (Var \&quot;candidate\&quot;)) (BinOp (And) (BinOp (Le) (Lit (IntL 0)) (Var \&quot;amount\&quot;)) (BinOp (Le) (Var \&quot;amount\&quot;) (Var \&quot;remaining\&quot;)))) (BinOp (Or) (BinOp (Or) (BinOp (Eq) (Var \&quot;reason\&quot;) (Lit (StrL \&quot;duplicate_charge\&quot;))) (BinOp (Eq) (Var \&quot;reason\&quot;) (Lit (StrL \&quot;service_not_delivered\&quot;)))) (BinOp (Eq) (Var \&quot;reason\&quot;) (Lit (StrL \&quot;returned_item\&quot;)))))) (BinOp (Imp) (Var \&quot;authorized\&quot;) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (Eq) (Var \&quot;outputAmount\&quot;) (Var \&quot;amount\&quot;)) (BinOp (Eq) (Var \&quot;outputReason\&quot;) (Var \&quot;reason\&quot;))) (BinOp (Eq) (Var \&quot;outputCharge\&quot;) (Var \&quot;chargeId\&quot;))) (BinOp (Eq) (Var \&quot;outputRequest\&quot;) (Var \&quot;requestId\&quot;))) (BinOp (Eq) (Var \&quot;intentCount\&quot;) (Lit (IntL 1))))) (BinOp (Imp) (UnOp (Not) (Var \&quot;authorized\&quot;)) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (Eq) (Var \&quot;outputAmount\&quot;) (Lit (IntL 0))) (BinOp (Eq) (Var \&quot;outputReason\&quot;) (Lit (StrL \&quot;\&quot;)))) (BinOp (Eq) (Var \&quot;outputCharge\&quot;) (Lit (StrL \&quot;\&quot;)))) (BinOp (Eq) (Var \&quot;outputRequest\&quot;) (Lit (StrL \&quot;\&quot;)))) (BinOp (Eq) (Var \&quot;intentCount\&quot;) (Lit (IntL 0)))))) () ((Var \&quot;chargeId\&quot;) (Var \&quot;requestId\&quot;) (Var \&quot;original\&quot;) (Var \&quot;remaining\&quot;) (Var \&quot;enabled\&quot;) (Var \&quot;requestOpen\&quot;) (Var \&quot;candidate\&quot;) (Var \&quot;amount\&quot;) (Var \&quot;reason\&quot;)) ((\&quot;authorized\&quot; (BoolT)) (\&quot;outputAmount\&quot; (IntT)) (\&quot;outputReason\&quot; (StrT)) (\&quot;outputCharge\&quot; (StrT)) (\&quot;outputRequest\&quot; (StrT)) (\&quot;intentCount\&quot; (IntT))) () (Then (Assign (((VarLhs \&quot;authorized\&quot;) (ExpRhs (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (And) (BinOp (Neq) (Var \&quot;chargeId\&quot;) (Lit (StrL \&quot;\&quot;))) (BinOp (Neq) (Var \&quot;requestId\&quot;) (Lit (StrL \&quot;\&quot;)))) (Var \&quot;enabled\&quot;)) (Var \&quot;requestOpen\&quot;)) (BinOp (And) (BinOp (Le) (Lit (IntL 0)) (Var \&quot;original\&quot;)) (BinOp (Le) (Var \&quot;original\&quot;) (Lit (IntL 9223372036854775807))))) (BinOp (And) (BinOp (Le) (Lit (IntL 0)) (Var \&quot;remaining\&quot;)) (BinOp (Le) (Var \&quot;remaining\&quot;) (Var \&quot;original\&quot;)))) (Var \&quot;candidate\&quot;)) (BinOp (And) (BinOp (Le) (Lit (IntL 0)) (Var \&quot;amount\&quot;)) (BinOp (Lt) (Var \&quot;amount\&quot;) (Var \&quot;remaining\&quot;)))) (BinOp (Or) (BinOp (Or) (BinOp (Eq) (Var \&quot;reason\&quot;) (Lit (StrL \&quot;duplicate_charge\&quot;))) (BinOp (Eq) (Var \&quot;reason\&quot;) (Lit (StrL \&quot;service_not_delivered\&quot;)))) (BinOp (Eq) (Var \&quot;reason\&quot;) (Lit (StrL \&quot;returned_item\&quot;))))))))) (Then (If (Var \&quot;authorized\&quot;) (Then (Assign (((VarLhs \&quot;outputAmount\&quot;) (ExpRhs (Var \&quot;amount\&quot;))))) (Then (Assign (((VarLhs \&quot;outputReason\&quot;) (ExpRhs (Var \&quot;reason\&quot;))))) (Then (Assign (((VarLhs \&quot;outputCharge\&quot;) (ExpRhs (Var \&quot;chargeId\&quot;))))) (Then (Assign (((VarLhs \&quot;outputRequest\&quot;) (ExpRhs (Var \&quot;requestId\&quot;))))) (Assign (((VarLhs \&quot;intentCount\&quot;) (ExpRhs (Lit (IntL 1)))))))))) (Then (Assign (((VarLhs \&quot;outputAmount\&quot;) (ExpRhs (Lit (IntL 0)))))) (Then (Assign (((VarLhs \&quot;outputReason\&quot;) (ExpRhs (Lit (StrL \&quot;\&quot;)))))) (Then (Assign (((VarLhs \&quot;outputCharge\&quot;) (ExpRhs (Lit (StrL \&quot;\&quot;)))))) (Then (Assign (((VarLhs \&quot;outputRequest\&quot;) (ExpRhs (Lit (StrL \&quot;\&quot;)))))) (Assign (((VarLhs \&quot;intentCount\&quot;) (ExpRhs (Lit (IntL 0))))))))))) (Return))))))&quot;
+</pre>
+</div>
+<div class="thm" id="exported_ens1_def">
+<div class="thm-name"><code>exported_ens1_def</code></div>
+<pre>⊢ exported_ens1 =
+  BinOp Eq (Var «authorized»)
+    (BinOp And
+       (BinOp And
+          (BinOp And
+             (BinOp And
+                (BinOp And
+                   (BinOp And
+                      (BinOp And
+                         (BinOp And
+                            (BinOp Neq (Var «chargeId») (Lit (StrL «»)))
+                            (BinOp Neq (Var «requestId») (Lit (StrL «»))))
+                         (Var «enabled»)) (Var «requestOpen»))
+                   (BinOp And (BinOp Le (Lit (IntL 0)) (Var «original»))
+                      (BinOp Le (Var «original»)
+                         (Lit (IntL 9223372036854775807)))))
+                (BinOp And (BinOp Le (Lit (IntL 0)) (Var «remaining»))
+                   (BinOp Le (Var «remaining») (Var «original»))))
+             (Var «candidate»))
+          (BinOp And (BinOp Le (Lit (IntL 0)) (Var «amount»))
+             (BinOp Le (Var «amount») (Var «remaining»))))
+       (BinOp Or
+          (BinOp Or
+             (BinOp Eq (Var «reason») (Lit (StrL «duplicate_charge»)))
+             (BinOp Eq (Var «reason») (Lit (StrL «service_not_delivered»))))
+          (BinOp Eq (Var «reason») (Lit (StrL «returned_item»)))))
+</pre>
+</div>
+<div class="thm" id="exported_ens2_def">
+<div class="thm-name"><code>exported_ens2_def</code></div>
+<pre>⊢ exported_ens2 =
+  BinOp Imp (Var «authorized»)
+    (BinOp And
+       (BinOp And
+          (BinOp And
+             (BinOp And (BinOp Eq (Var «outputAmount») (Var «amount»))
+                (BinOp Eq (Var «outputReason») (Var «reason»)))
+             (BinOp Eq (Var «outputCharge») (Var «chargeId»)))
+          (BinOp Eq (Var «outputRequest») (Var «requestId»)))
+       (BinOp Eq (Var «intentCount») (Lit (IntL 1))))
+</pre>
+</div>
+<div class="thm" id="exported_ens3_def">
+<div class="thm-name"><code>exported_ens3_def</code></div>
+<pre>⊢ exported_ens3 =
+  BinOp Imp (UnOp Not (Var «authorized»))
+    (BinOp And
+       (BinOp And
+          (BinOp And
+             (BinOp And (BinOp Eq (Var «outputAmount») (Lit (IntL 0)))
+                (BinOp Eq (Var «outputReason») (Lit (StrL «»))))
+             (BinOp Eq (Var «outputCharge») (Lit (StrL «»))))
+          (BinOp Eq (Var «outputRequest») (Lit (StrL «»))))
+       (BinOp Eq (Var «intentCount») (Lit (IntL 0))))
+</pre>
+</div>
+<div class="thm" id="exported_ensures_def">
+<div class="thm-name"><code>exported_ensures_def</code></div>
+<pre>⊢ exported_ensures = [exported_ens1; exported_ens2; exported_ens3]
+</pre>
+</div>
+</section>
+<section>
+<h2>Theorems</h2>
+<div class="thm" id="exported_contract_decode">
+<div class="thm-name"><code>exported_contract_decode</code></div>
+<pre>⊢ ∃se.
+    parse exported_contract_text = INR (se,&quot;&quot;) ∧
+    to_program se = INR exported_contract_program
+</pre>
+</div>
+<div class="thm" id="exported_contract_exact">
+<div class="thm-name"><code>exported_contract_exact</code></div>
+<pre>⊢ evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled
+     opened candidate amount reason ok a r c q n,
+   Rval [BoolV T; BoolV T; BoolV T]) ⇔
+  refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n)
+</pre>
+</div>
+<div class="thm" id="exported_contract_on_refund_fields">
+<div class="thm-name"><code>exported_contract_on_refund_fields</code></div>
+<pre>⊢ refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n) ⇒
+  evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled
+     opened candidate amount reason ok a r c q n,
+   Rval [BoolV T; BoolV T; BoolV T])
+</pre>
+</div>
+<div class="thm" id="exported_contract_shape">
+<div class="thm-name"><code>exported_contract_shape</code></div>
+<pre>⊢ ∃decrs body.
+    exported_contract_program =
+    Program
+      [Method «AssessFlat»
+         [(«chargeId»,StrT); («requestId»,StrT); («original»,IntT);
+          («remaining»,IntT); («enabled»,BoolT); («requestOpen»,BoolT);
+          («candidate»,BoolT); («amount»,IntT); («reason»,StrT)] []
+         exported_ensures [] decrs
+         [(«authorized»,BoolT); («outputAmount»,IntT);
+          («outputReason»,StrT); («outputCharge»,StrT);
+          («outputRequest»,StrT); («intentCount»,IntT)] [] body]
+</pre>
+</div>
+<div class="thm" id="exported_contract_value">
+<div class="thm-name"><code>exported_contract_value</code></div>
+<pre>⊢ evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled
+     opened candidate amount reason ok a r c q n,
+   Rval
+     [BoolV
+        (ok ⇔
+         eligible charge request original remaining enabled opened
+           candidate amount reason);
+      BoolV
+        (ok ⇒ a = amount ∧ r = reason ∧ c = charge ∧ q = request ∧ n = 1);
+      BoolV (¬ok ⇒ a = 0 ∧ r = «» ∧ c = «» ∧ q = «» ∧ n = 0)])
+</pre>
+</div>
+<div class="thm" id="exported_contract_witnesses">
+<div class="thm-name"><code>exported_contract_witnesses</code></div>
+<pre>⊢ refund_fields «ch_1» «rq_1» 100 60 T T T 40 «duplicate_charge» =
+  (T,40,«duplicate_charge»,«ch_1»,«rq_1»,1) ∧
+  refund_fields «ch_1» «rq_1» 100 60 T T T 61 «duplicate_charge» =
+  (F,0,«»,«»,«»,0)
+</pre>
+</div>
+<div class="thm" id="exported_ens1_value">
+<div class="thm-name"><code>exported_ens1_value</code></div>
+<pre>⊢ evaluate_exp
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ens1 =
+  (exported_contract_state h charge request original remaining enabled
+     opened candidate amount reason ok a r c q n,
+   Rval
+     (BoolV
+        (ok ⇔
+         eligible charge request original remaining enabled opened
+           candidate amount reason)))
+</pre>
+</div>
+<div class="thm" id="exported_ens2_value">
+<div class="thm-name"><code>exported_ens2_value</code></div>
+<pre>⊢ evaluate_exp
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ens2 =
+  (exported_contract_state h charge request original remaining enabled
+     opened candidate amount reason ok a r c q n,
+   Rval
+     (BoolV
+        (ok ⇒ a = amount ∧ r = reason ∧ c = charge ∧ q = request ∧ n = 1)))
+</pre>
+</div>
+<div class="thm" id="exported_ens3_value">
+<div class="thm-name"><code>exported_ens3_value</code></div>
+<pre>⊢ evaluate_exp
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ens3 =
+  (exported_contract_state h charge request original remaining enabled
+     opened candidate amount reason ok a r c q n,
+   Rval (BoolV (¬ok ⇒ a = 0 ∧ r = «» ∧ c = «» ∧ q = «» ∧ n = 0)))
+</pre>
+</div>
+</section>
+</body>
+</html>

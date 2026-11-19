@@ -1,0 +1,65 @@
+<<HOL message: Created theory "forge_refundEligibleLink">>
+Saved theorem _______ "eligible_link_decode"
+Saved theorem _______ "eligible_link_shape"
+Saved theorem _______ "eligible_link_guard_value"
+Saved theorem _______ "eligible_link_matches_compiled_guard"
+Saved theorem _______ "eligible_link_operators"
+FORGE_THEOREM eligible_link_decode
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∃se.
+    parse eligible_link_text = INR (se,"") ∧
+    to_program se = INR eligible_link_program
+FORGE_THEOREM eligible_link_shape
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∃ens_rest decrs body_rest.
+    eligible_link_program =
+    Program
+      [Method «AssessFlat»
+         [(«chargeId»,StrT); («requestId»,StrT); («original»,IntT);
+          («remaining»,IntT); («enabled»,BoolT); («requestOpen»,BoolT);
+          («candidate»,BoolT); («amount»,IntT); («reason»,StrT)] []
+         (BinOp Eq (Var «authorized») eligible_link_guard::ens_rest) [] decrs
+         [(«authorized»,BoolT); («outputAmount»,IntT); («outputReason»,StrT);
+          («outputCharge»,StrT); («outputRequest»,StrT);
+          («intentCount»,IntT)] []
+         (Then (Assign [(VarLhs «authorized»,ExpRhs eligible_link_guard)])
+            body_rest)]
+FORGE_THEOREM eligible_link_guard_value
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ evaluate_exp
+    (eligible_link_initial h charge request original remaining enabled opened
+       candidate amount reason) env eligible_link_guard =
+  (eligible_link_initial h charge request original remaining enabled opened
+     candidate amount reason,
+   Rval
+     (BoolV
+        (eligible charge request original remaining enabled opened candidate
+           amount reason)))
+FORGE_THEOREM eligible_link_matches_compiled_guard
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ SND
+    (evaluate_exp
+       (eligible_link_initial h charge request original remaining enabled
+          opened candidate amount reason) env eligible_link_guard) =
+  SND
+    (evaluate_exp
+       (refund_initial h' charge request original remaining enabled opened
+          candidate amount reason) env' refund_guard)
+FORGE_THEOREM eligible_link_operators
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ (∀s t. do_bop Eq (StrV s) (StrV t) = SOME (BoolV (explode s = explode t))) ∧
+  (∀s t. do_bop Neq (StrV s) (StrV t) = SOME (BoolV (explode s ≠ explode t))) ∧
+  ∀a b. do_bop Eq (BoolV a) (BoolV b) = SOME (BoolV (a ⇔ b))
+Exporting theory "forge_refundEligibleLink" ... done.
+Theory "forge_refundEligibleLink" took 12.4s to build
+ELIGIBLE_LINK_COMPLETE

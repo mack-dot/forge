@@ -1,0 +1,38 @@
+2026-11-19T09:04:06Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 5488.81M  free = 1679.19M  (encrypted)
+System-wide memory free percentage: 56%
+START_STATE swap_free_mib=1679 memory_free_percent=56
+exit 1
+actual_exit 1 wall 80.455 cpu 100.537 rss_mib 3415 [] inputs_unchanged_after True
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+68:CHECKED fd1_written_APPEND
+73:CHECKED fd1_written_prefix
+78:CHECKED STD_streams_facts
+92:CHECKED STD_streams_File_fd
+99:CHECKED w22n_lt
+104:CHECKED w22n_n2w2_bytes
+109:CHECKED write_stdout
+120:CHECKED ffi_write_cases
+132:CHECKED ffi_write_stdout_step
+144:CHECKED read_stdout
+151:CHECKED ffi_read_stdout_step
+160:CHECKED openFile_stdout
+167:CHECKED openFile_truncate_stdout
+176:CHECKED ffi_open_in_stdout_step
+185:CHECKED ffi_open_out_stdout_step
+194:CHECKED STD_streams_ADELKEY_File
+201:CHECKED closeFD_stdout
+208:CHECKED ffi_close_stdout_step
+217:CHECKED ALOOKUP_fs_ffi_part
+226:CHECKED fs_ffi_part_stdout_step
+238:CHECKED extract_no_ext_ExtCall
+250:SHOW TRY_ALL_ENTRY extract_no_ext_stdout_step
+251:  GOAL ∀e io cls fs cls' fs'.
+261:LEMMA_FAILED extract_no_ext_stdout_step HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+262:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6-9: parse error: expected identifier
+263:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6-9: parse error: expected close delimiter
+264:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6: parse error: expected closing parenthesis
+265:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:463: error: Type error in function application.
+hash_parents exit 0
+go exit 1

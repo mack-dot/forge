@@ -17939,3 +17939,91 @@ curl: (6) Could not resolve host: github.com
   queue waits for the condition.
 - Next check: run E1-0003 and L2-0003 again inside the rule and
   compare the exported theory digests.
+
+## U486 — night shift, proof track: the HOL half of the Dafny-to-HOL contract link passes with its controls; U294 replays (refers to U294, U473, U475)
+
+- Evidence: `proposals/night-shift-20261119/orch-A/link/run/attempt-0001/`
+  (`<CASE>.go.log`, last line `go exit N`; `linkq-q1.log`,
+  `linkq-q2.log`, `linkq-r.log`).
+- Exit 0: H0 (load probe); H1 and H2 (repeat): 9 theorems, 0
+  hypotheses, no axiom tags, oracle DISK_THM, among them
+  `exported_contract_on_refund_fields` and `exported_contract_exact`:
+  the three exported `ensures` clauses (export SHA-256
+  `58154ddf…dd0d`) evaluate to true in the CakeML Dafny semantics if
+  and only if the six outputs equal `refund_fields` of the nine
+  inputs; for all inputs. E0: `eligible_link_matches_compiled_guard`.
+  R1, R2, R3: the U294 scripts run again; I1: the stored 2026-11-04
+  theory imports. H4: the render step.
+- Controls: NC1 to NC6 (six changed exports) and NS1 to NS3 (three
+  changed statements): exit 1 each, as planned. PC1 (only the method
+  body changed): exit 0, as planned: the theorems do not read the
+  body. NR1 (changed render statement): exit 1.
+- First runs of H4, NR1, R2, R3, I1 stopped on a path error of the
+  wrapper (`.hol/objs/.hol/objs`): setup errors; logs kept as
+  `*.setup-error-1.go.log`; the first NR1 "exit 1" is not a control.
+- NOT proved: that the export has the meaning of the Dafny source
+  (the exporter build folder does not exist today); that a Dafny
+  clause and its HOL formula agree (strings as byte lists, unbounded
+  integers): named assumptions EXPORTER-ID and BETA-DAFNY-HOL. Two
+  kernels and a bridge, not one theorem. Machine model level.
+- The adversarial review of these runs is not finished at this entry.
+- Impact: graph links S5 and S6 move to machine-checked at model
+  level. M1-B OPEN. end_to_end=false.
+- Next check: the review; a third artefact for the bridge.
+
+## U487 — night shift, proof track: the strict-prefix lemma and the exact acceptance set of the strict parser pass in HOL (refers to U476, U480, U484)
+
+- Evidence: cases `PF-0001` to `PF-0003` (exit 1; lemma `lexPs_cons`
+  open: my workers read `++` as right-associated; `simp` makes it
+  left-associated), `PF-0004` (exit 0, 26 theorems), `PX-0001`
+  (exit 0, 9 theorems). Review of PF-0004:
+  `orch-A/review-PF/REPORT.md`.
+- Proved for the HOL renderer of the compiled program
+  (`forge_refundWireProg$refund_render_fields`):
+  a strict prefix of a rendered result does not parse; the complete
+  render parses to its value; `refund_strict_parse s = SOME f` if and
+  only if `s` is exactly the render of `f`; an extension is
+  rejected; `refund_frame_decision`: an output that is a prefix of
+  the correct complete output and is accepted IS the complete output
+  with the correct value.
+- NOT proved: that the real standard output is a prefix of the model
+  output (links X8, X9); that the Python consumer's renderer equals
+  the HOL renderer (tested: 0 wrong acceptances in 304,326 inputs).
+- Impact: graph link X13 at model level. With U484: the decision
+  must rest on the strict parse, not on the exit status.
+- Next check: L-OUT.
+
+## U488 — night shift, proof track: `ffi_calls_ok` for the close call from the oracle alone; the read, write and open parts stay open (refers to U482)
+
+- Evidence: `L2b-0001` (exit 1), `L2b-0002` (exit 1: every lemma
+  proved; one control comparison in the script was wrong, so the
+  script refused to export), `L2b-0003` (exit 0, 28 theorems; my
+  change is in the control code only).
+- Proved: `ffi_calls_ok_of_returning_calls`; a close call that
+  returns under the basis oracle had a configuration length 8 and a
+  non-zero array length; the third premise of
+  `refund_profile_a_sl_reach` for the close predicate.
+- NOT proved: the same premise for read, write and open_in
+  (statement R6: every event of every run is a valid read or write
+  event; it needs the program's behaviour, lemma L3). The contract at
+  valid calls for the real C code stays a NATIVE assumption.
+- The review of L2b-0003 is not finished at this entry.
+- Next check: the review; L3.
+
+## U489 — night shift, proof track: L-OUT is not proved after five case runs
+
+- Evidence: `LO-0001` (CPU limit: a rewriting loop), `LO-0002` (ML
+  error), `LO-0003` (exit 1, 24 lemmas), `LO-0004` (exit 1, 27
+  lemmas), `LO-0005` (exit 1: one lemma failed, then an ML parse
+  error); `ATTEMPT_COUNTS.md` in the run folder.
+- Open: the replay invariant `extract_no_ext_stdout` (its one-step
+  lemma fails at a step that prints no goal) and the refund instance
+  `refund_profile_a_sl_fd1` (two constants are named `arm8_run`; an
+  unqualified name in a quotation parsed to the other one; the
+  repair did not run).
+- `refund_L_OUT` and `refund_L_OUT_prefix` are proved only under the
+  assumed invariant (diagnostic; not stored).
+- Uncertainty: no evidence that a statement is false.
+- Impact: graph link X9 stays MISSING; L-EXIT needs it.
+- Next check: an exploration run that prints each goal (it proves
+  nothing), then one more proof run.

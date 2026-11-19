@@ -1,0 +1,26 @@
+<<HOL message: Created theory "forge_refundExportedRender">>
+Proof of 
+
+refund_fields charge request original remaining enabled opened candidate
+  amount reason = (ok0,a0,r0,c0,q0,n0) ∧
+parse (explode (refund_render_fields (ok0,a0,r0,c0,q0,n0))) = INR (se,rest) ∧
+refund_response_fields se = INR (ok,a,r,c,q,n) ⇒
+rest = "" ∧ (ok,a,r,c,q,n) = (ok0,a0,r0,q0,c0,n0) ∧
+evaluate_exps
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n) env exported_ensures =
+(exported_contract_state h charge request original remaining enabled opened
+   candidate amount reason ok a r c q n,Rval [BoolV T; BoolV T; BoolV T])
+
+failed.
+First unsolved sub-goal is
+
+(∀h env.
+   evaluate_exps
+     (exported_contract_state h charge request original remaining enabled
+        opened candidate amount reason ok a r c q n) env exported_ensures =
+   (exported_contract_state h charge request original remaining enabled
+      opened candidate amount reason ok a r c q n,
+    Rval [BoolV T; BoolV T; BoolV T])) ⇒
+c = q ∧ q = c
+

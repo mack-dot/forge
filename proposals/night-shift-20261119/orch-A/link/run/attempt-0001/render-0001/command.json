@@ -1,0 +1,41 @@
+{
+ "case": "render-0001",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/preload-render.sml",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/.hol/objs/forge_refundExportedContractTheory.sig",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/.hol/objs/forge_refundExportedContractTheory.sml",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/render-0001/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWireProg_experiment",
+ "source": "forge_refundExportedRenderScript.sml",
+ "source_sha256": "46a0055df8af5d1ac8da52a85a40b6e0b6267c3601ac7bbeb365ffd27d496d3d",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "66b1654b4e490d41953983b967e7501febba5b955e3bc562776569300846d1f2",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/preload-render.sml": "7371e88870d1e5050f7227c4bca232e8a36e187593a26dec19ef549a6aa461fd",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/.hol/objs/forge_refundExportedContractTheory.sig": "878cf3b845efb3c49a57b0d564a93bdd85b4b0cfb01286b4877039a5bded8721",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/.hol/objs/forge_refundExportedContractTheory.sml": "f5580a0b0d9af5a3129fd0f551374cc73001900c00cfae9f4a23854c90228c6d",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+ },
+ "resource_guard": {
+  "memory_free_percent": 70,
+  "disk_free_gib": 90.03,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false,
+ "actual_exit": 1,
+ "wall_timeout": false,
+ "wall_seconds": 11.357,
+ "child_user_cpu_seconds": 14.526,
+ "child_max_rss_bytes": 1099333632,
+ "markers": [],
+ "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "stderr_sha256": "414ce1c53b3a99b0d7bbf2f1fed6dd40dfc6633219abc61a6678dbc80bfdaf2e",
+ "objects": {},
+ "inputs_unchanged_after": true
+}

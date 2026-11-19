@@ -1,0 +1,24 @@
+<<HOL message: Created theory "forge_refundExportedContract">>
+FORGE_BEGIN exported_contract_decode
+Saved theorem _______ "exported_contract_decode"
+FORGE_BEGIN exported_contract_shape
+Saved theorem _______ "exported_contract_shape"
+FORGE_BEGIN exported_ens1_value
+Proof of 
+
+evaluate_exp
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n) env exported_ens1 =
+(exported_contract_state h charge request original remaining enabled opened
+   candidate amount reason ok a r c q n,
+ Rval
+   (BoolV
+      (ok ⇔
+       eligible charge request original remaining enabled opened candidate
+         amount reason)))
+
+failed.
+First unsolved sub-goal is
+
+(ok ⇔ reason = «returned_itex») ⇔ (ok ⇔ reason = «returned_item»)
+

@@ -1,0 +1,24 @@
+2026-11-19T08:58:14Z
+START_STATE swap_free_mib=1391 memory_free_percent=68
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+Thu Nov 19 03:58:14 EST 2026
+System-wide memory free percentage: 68%
+vm.swapusage: total = 7168.00M  used = 5776.94M  free = 1391.06M  (encrypted)
+/dev/disk3s5       460  338        90    80% 7990360 943918800    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 80
+COMMAND: FORGE_CWD=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment FORGE_CPU_SECONDS=900 python3 -I -B run_case.py u294-hol u294/proof-0004.sml
+RUNNER EXIT 0 (a signal or CPU-limit stop also gives 1; read actual_exit in u294-hol/command.json)
+7:CHECKED source_decode ⊢ ∃se.
+10:CHECKED source_signature ⊢ ∃decrs.
+21:CHECKED source_full_result ⊢ let
+42:CHECKED source_postconditions ⊢ let
+50:CHECKED mapped_operators ⊢ do_bop Eq (BoolV a) (BoolV b) = SOME (BoolV (a ⇔ b)) ∧
+  info: whole stdout byte-equal to recorded hol-0004: True
+  info: CHECKED records equal after whitespace normalisation: True (decides only a pretty-printer line-break difference; the plan asks for byte equality)
+  info: new SourceBinding .dat SHA-1 2677fe6830467fd05c52227378bef67ac05dd931; recorded 2677fe6830467fd05c52227378bef67ac05dd931; equal: True
+  info: actual_exit=0 markers=['SOURCE_BINDING_COMPLETE'] last FORGE_BEGIN=None *_COMPLETE lines=['SOURCE_BINDING_COMPLETE'] wall=166.446
+VERDICT R1 u294-hol PASS
+GO.SH EXIT 0
+go exit 0
