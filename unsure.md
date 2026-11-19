@@ -18519,3 +18519,13 @@ curl: (6) Could not resolve host: github.com
 - Red team re-test of D-2 at 219bf0ca (its own runs): C-ATT-38 (spray and state oracle), 39, 40: closed; one distinct token per request id from one minter process; my five regressions reproduce; the zero-amount squat on the real state is the stated limit.
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false.
 - Next check: the red team's re-test of this commit; then the freeze (orch-B/FINAL.md).
+
+## U631 — freeze of the trust track: the red team's re-test of D-1; the final record
+- Status: 2026-11-19T17:51:16Z (inserted by the shell from `date -u`). Refs U626 to U630. Evidence: orch-C/refix/b22b6b34 (the red team's runs); results/night-shift-20261119/orch-B/FINAL.md.
+- Red team at b22b6b34 (its own runs, temporary test keys): its own key-file script: exit 0 twice (nine unsafe modes, symbolic link, dangling link, FIFO, directory, device file, missing, empty and damaged files, a public key in the file, the key in ten environment names or as an argument: all refused; a good file wins over an environment value; a swap after the start does not change the running key). My thirteen key regressions: exit 0 each in its runs. The restart case is covered. C-ATT-05: closed in its record. Not attacked by its own script: key-id substitution and retired ids.
+- New named limit from its note: only the LAST part of the key path is protected by O_NOFOLLOW; a symbolic link in a parent directory is followed. ASSUMPTION KEY-DIR-TRUSTED: the directories above the key file are writable only by the minter's user. A hard link starts (stated in U630).
+- All three owner decisions (D-1 at b22b6b34, D-2 at 219bf0ca, D-3 at e9c79928) are on the branch and re-tested by the red team. Open owner items: B-12, B-13, B-14, B-15, B-16, B-17, OQ-H2-2 of B-18, B-20.
+- The final record lists every fix with its commit, regressions and exits, every Dafny result with its hypotheses, and sixteen open items as known limits (among them: the JavaScript gate checker is advisory only; a full restore without a ledger floor re-sends; the second judges rebuild is not re-tested by the red team).
+- Work stops here on the owner's wind-down instruction. No pull request is opened by this track.
+- Impact: none on stage labels. M1-B OPEN. end_to_end=false.
+- Next check: the integrator's pull request against origin/main; the owner's answers to the open items.

@@ -1,0 +1,41 @@
+(node:32206) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+ "table": {
+  "mode 0600": "started",
+  "mode 0400": "started",
+  "mode 0640": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0604": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0644": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0660": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0666": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0610": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0601": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0620": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "mode 0602": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "symbolic link as the key path": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "dangling symbolic link": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "FIFO": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "directory": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "character device /dev/null": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "missing file": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "empty file": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "damaged file": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "file of 5000 bytes": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "a PUBLIC key in the file": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "no key file, key text in 10 environment names": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "no key file, key path in 10 environment names": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "key text as the argument": "refused ({\"issuerIdentityInfo\":{\"bignumberForMinter\":{\"path\":\"<REPO>/node_modules/b)",
+  "good file + ANOTHER key in the environment: the file's key is used": "started",
+  "restart with the file now mode 0644": "refused"
+ },
+ "info": {
+  "symbolic link in a PARENT directory": "started (only the last path part is checked)",
+  "hard link to the key file": "started (stated by the design)",
+  "swap after start": "minter keeps the key it read at start: true",
+  "restart after the swap": "started with the NEW file's key: true",
+  "mode changed to 0644 after start": "minter still runs: true"
+ },
+ "bad": []
+}
+SAFE
