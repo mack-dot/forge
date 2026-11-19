@@ -17292,3 +17292,21 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false.
 - Next check: the result of the replay job; the owner's answers to Q1
   to Q6.
+
+## U472 — Correction of the time in U471; from this entry on the time is inserted by the shell
+- Status: 2026-11-19T04:24Z (inserted by the shell from `date -u` in the command
+  that wrote this entry). Refs U471, U470, U469, U462.
+- Correction: U471 says "04:16Z (read from `date -u` when this entry
+  was written)". That is false. I typed the time into the entry text
+  before the command ran; the command's own `date -u` printed 04:24Z.
+  The times of the replay job in U471 (start 04:02Z, state at 04:13Z)
+  are from command outputs and stand.
+- Cause: I write the entry text first and the command reads the clock
+  later. A promise to "read the clock" does not repair that. Repair:
+  the status time of an entry is now a shell substitution inside the
+  command that appends the entry, as in this one.
+- The same wrong "04:16Z" in the review packet and in the roadmap
+  section of U471 is replaced by 04:24Z in this commit (those texts
+  are not append-only).
+- Impact: none on a claim.
+- Next check: none.

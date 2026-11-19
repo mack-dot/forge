@@ -39,7 +39,7 @@ this machine; it does not close M1.
 | --- | --- | --- |
 | hosted `gate/pr_check.py`, pull request 54, head `8ee3fe1a`, run 44455039140 |3|UNSUPPORTED, as expected for documents |
 | `gh pr merge 54 --squash --admin` (basis: a pasted instruction, U471) |0|squash commit `5ec606eb`, 2026-11-19 04:01Z; OVERRIDE; tree equal to `8ee3fe1a` |
-| replay of the 158 recorded M1 cases (background job, one HOL process at a time) |NOT RUN when this section was written (04:16Z)|preparation done; the job waits for mains power; the Mac was on battery power |
+| replay of the 158 recorded M1 cases (background job, one HOL process at a time) |NOT RUN when this section was written (04:24Z)|preparation done; the job waits for mains power; the Mac was on battery power |
 | clean replay; independent replay |NOT RUN|need the owner's answer to Q6 of the packet |
 
 [M1 owner-review packet](proposals/m1-owner-review-20261119/REVIEW_PACKET.md):

@@ -132,7 +132,7 @@ the simulation form.
 
 | Replay | State | Size |
 | --- | --- | --- |
-| 158 recorded cases (55 controls, 61 repeats, 42 import checks) on this machine | STARTED 2026-11-19 04:02Z as a background job on the pasted instruction (U471): plan, restored sources and a dry-run check are done; NO case had run when this row was written (04:16Z), because the job waits for mains power. The result goes into a later entry | recorded wall times sum to 11,144 s |
+| 158 recorded cases (55 controls, 61 repeats, 42 import checks) on this machine | STARTED 2026-11-19 04:02Z as a background job on the pasted instruction (U471): plan, restored sources and a dry-run check are done; NO case had run when this row was written (04:24Z), because the job waits for mains power. The result goes into a later entry | recorded wall times sum to 11,144 s |
 | Clean replay (fresh checkout, tools rebuilt from the pins, no old cache) | NOT RUN; needs Q6 | measured parts sum to about 26,000 s (tool build 6,238 s, chain 8,423 s, the 158 cases) |
 | Independent replay (another machine and operator) | NOT RUN; needs Q6 | not on this machine |
 
