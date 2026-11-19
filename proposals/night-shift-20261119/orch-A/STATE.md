@@ -103,3 +103,28 @@ B: `orch-B/MORNING.md` FINAL with addendum; B may ask for more heavy windows (re
 
 ## Blockers
 - None for the queue. Swap free 1.6 GB at 08:12Z. Poly/ML store stops happened at low swap: re-measure before each run.
+
+## RESUME NOTE (2026-11-19T11:06:21Z)
+A was resumed by a message from B (heavy.lock released 11:05:53Z). A took `locks/hol.lock` again and runs `R6x-0004` (exploration).
+The STOP NOTE above describes the state at the first hand-back; this note supersedes its "nothing runs" line while the queue runs.
+
+## PICK (2026-11-19T11:06:34Z) — launcher order item 3
+Pick: the FFI premise via R6, narrowest sub-lemma first.
+1. `R6ffi-0001`: the two FFI-level specifications with the event invariant (`writei_spec_V`, `read_into_spec_V`). Every
+   other R6 lemma rests on them. Run after exploration `R6x-0004` closes.
+2. Then the WRITE side only (4 specifications: write, output_aux, output, print): it gives "every write event of `print`
+   is a valid descriptor-1 event". Short path; it is the half of R6 that concerns the output bytes.
+3. Then the read side (about 13 specifications), main, assembly.
+Why not the others now: X8 and X11 are NATIVE links (HOL cannot close them; only named assumptions and tests). X16 is on
+B's track (issuer). The run-level erasure lift needs an invariant "every next PC stays in the code region" that no stored
+theorem gives, and non-vacuity with the bits set is missing: larger and further from a usable statement than R6 step 1.
+Rule kept: exploration run first, then one proof run that replays it; each exit-0 theorem gets a separate reviewer.
+
+## CHECKPOINT (2026-11-19T11:12:01Z)
+R6x-0004: exit 0 but its shared file failed to compile (non-ASCII in ML strings). R6x-0005 (round5 copies, ML-only fix): exit 0,
+all four explorations closed (X9r 4 steps, X8r 4, WRITEI_V_all_branches 29, READ_INTO_V_success_and_zero 13).
+RUNNING: `queue.sh q32 "R6ffi-0002 3600 deps-R6ffi.txt"` (PROOF run; sub-files in `orch-A/r6/round5/`).
+
+## CHECKPOINT (2026-11-19T11:15:00Z)
+`R6ffi-0002`: actual exit 0, EXACT_COMPLETE, theory `forge_refundR6Ffi`: definitions IOxV, IOFS_V, STDIO_V; theorems
+`IOFS_V_FFI_part_hprop`, `IOxV_IMP_IOx`, `writei_spec_V`, `read_into_spec_V`. Pick step 1 DONE. Next: review (A32); write side (A33).

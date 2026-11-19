@@ -1,0 +1,17 @@
+2026-11-19T11:06:21Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5158.50M  free = 985.50M  (encrypted)
+System-wide memory free percentage: 69%
+START_STATE swap_free_mib=985 memory_free_percent=69
+exit 0
+actual_exit 0 wall 97.345 cpu 128.695 rss_mib 4500 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+24:GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argume
+37:TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+42:/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round4/r6_common.sml:49: error: unprintable character \194 found in string
+43:/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round4/r6_common.sml:49: error: unprintable character \171 found in string
+44:/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round4/r6_common.sml:49: error: unprintable character \194 found in string
+45:/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round4/r6_common.sml:49: error: unprintable character \187 found in string
+46:PART_FAILED r6_common.sml Fail "Static Errors"
+48:EXPLORE_COMPLETE
+hash_parents exit 0
+go exit 0

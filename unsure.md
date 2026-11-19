@@ -18233,3 +18233,31 @@ curl: (6) Could not resolve host: github.com
   not attempted. The review is not finished at this entry.
 - Impact: a sub-result for graph link X11e; the link stays MISSING.
 - Next check: the review; an invariant for the run.
+
+## U497 — night shift, proof track: the two FFI-level TextIO specifications hold with an event invariant (first step of R6) (refers to U495)
+
+- Evidence: `R6x-0003` (exploration, exit 0); `R6x-0004`
+  (exit 0, but a shared file did not compile: non-ASCII characters
+  in ML strings; nothing explored); `R6x-0005` (exploration, exit 0,
+  four pieces closed); `R6ffi-0002` (exit 0, theory
+  `forge_refundR6Ffi`, 3 definitions, 4 theorems).
+- Proved: `writei_spec_V` and `read_into_spec_V`: the CakeML
+  specifications of the two functions that call the write and read
+  FFI, with a heap predicate that also states that every recorded
+  event satisfies an invariant, under a hypothesis about the one new
+  event; `IOxV_IMP_IOx` (the new predicate implies the standard
+  one).
+- Evidence gap: the proof script reads three shared files with
+  `use`; the runner does not hash them. I recorded their SHA-256
+  after the run (`R6ffi-0002.used-files.txt`). That is a record, not
+  a binding at run time.
+- NOT proved: the specifications above these two on the program's
+  path (write side: 4 to 5; read side: about 13), the main program,
+  the step from the heap invariant to the event list, the transfer
+  to the machine: statement R6 stays open. Estimate by a worker:
+  7 to 12 working days in all.
+- I handed back once at about 11:06Z because the harness required
+  it; the launcher resumed me; the work after that is recorded in
+  `STATE.md` with a stop note and a resume note.
+- The review of R6ffi-0002 is not finished at this entry.
+- Next check: the review; the write side.

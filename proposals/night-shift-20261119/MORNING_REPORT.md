@@ -214,3 +214,9 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
 - Open on B's side: an adoption packet (one exact diff with a prepared suite run).
 - A, after a first hand-back and a resume: exploration R6x-0004 stopped on an ML string error (no theorem); a corrected
   copy R6x-0005 runs; the proof run of the two FFI-level specifications is staged, NOT RUN.
+
+## Addendum 7 (Orchestrator A, 2026-11-19T11:16:08Z): first proved step toward R6
+- `R6ffi-0002` (`go exit 0`; theory forge_refundR6Ffi): `writei_spec_V`, `read_into_spec_V`: the two CakeML TextIO
+  specifications that call the write and read FFI hold with an event invariant in the heap predicate. This is step 1 of
+  the R6 plan; R6 itself stays open (write side, read side, main program, transfer). Review running.
+- Evidence gap recorded: three shared files are read with `use` and are hashed only after the run.
