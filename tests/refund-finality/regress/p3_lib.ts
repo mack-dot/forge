@@ -28,7 +28,7 @@ export function journalOf(w: any): any[] {
   return lines.map((j: any) => { const row = rows.find((x: any) => x.requestId === j.requestId);
     return { ...j, chargeId: j.chargeId ?? row?.intent.chargeId, amount: j.amount ?? row?.intent.amount, effect: w.effectId(j.requestId) }; });
 }
-export function truth(movements: any[], emitted: Emitted[], charges: Record<string, string>, journals: { lines: any[] }[]): string[] {
+export function truth(movements: any[], emitted: Emitted[], charges: Record<string, string>, journals: { lines: any[]; w?: unknown }[]): string[] {
   const problems: string[] = [];
   const perKey: Record<string, number> = {};
   for (const m of movements) perKey[m.key] = (perKey[m.key] ?? 0) + 1;

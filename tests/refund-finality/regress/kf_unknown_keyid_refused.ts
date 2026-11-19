@@ -39,7 +39,7 @@ guard((() => {
     dispatcherPinA: dA, dispatcherPinAC_control: dBoth };
   const pass = unknown.status === "rejected" && good.status === "committed" && r.sink.rows.join() === "rq_a" &&
     c1 === "committed" && c2 === "committed" && c3 === "committed" && typeof reopenA === "string" &&
-    !dA.emitted.includes("rq_c3") && (dA.alarm !== undefined || dA.refused.some(x => x.startsWith("rq_c3"))) &&
+    !dA.emitted.includes("rq_c3") && (dA.alarm !== undefined || dA.refused.some((x: string) => x.startsWith("rq_c3"))) &&
     dBoth.alarm === undefined && dBoth.emitted.join() === "rq_1,rq_x,rq_c3";
   verdict(pass, r);
 })());
