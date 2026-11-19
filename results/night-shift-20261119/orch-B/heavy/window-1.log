@@ -1,0 +1,31 @@
+# start 2026-11-19T09:11:00Z swap free 1711 MiB memory free 66 %
+sinkcore.cjs real plain n=2000 start=2026-11-19T09:11:00Z end=2026-11-19T09:11:18Z exit 0
+sinkcore.cjs real fault-1 n=500 start=2026-11-19T09:11:18Z end=2026-11-19T09:11:22Z exit 0
+sinkcore.cjs real fault-2 n=500 start=2026-11-19T09:11:22Z end=2026-11-19T09:11:26Z exit 0
+sinkcore.cjs real interleave n=500 start=2026-11-19T09:11:26Z end=2026-11-19T09:11:31Z exit 0
+sinkcore.cjs cb-orig plain n=2000 start=2026-11-19T09:11:31Z end=2026-11-19T09:11:48Z exit 0
+sinkcore.cjs cb-orig fault-1 n=500 start=2026-11-19T09:11:48Z end=2026-11-19T09:11:53Z exit 0
+sinkcore.cjs cb-orig fault-2 n=500 start=2026-11-19T09:11:53Z end=2026-11-19T09:11:58Z exit 0
+sinkcore.cjs cb-orig interleave n=500 start=2026-11-19T09:11:58Z end=2026-11-19T09:12:03Z exit 0
+sinkcore-reqid.cjs cb-reqid plain n=2000 start=2026-11-19T09:12:03Z end=2026-11-19T09:12:20Z exit 0
+sinkcore-reqid.cjs cb-reqid fault-1 n=500 start=2026-11-19T09:12:21Z end=2026-11-19T09:12:25Z exit 0
+sinkcore-reqid.cjs cb-reqid fault-2 n=500 start=2026-11-19T09:12:25Z end=2026-11-19T09:12:30Z exit 0
+sinkcore-reqid.cjs cb-reqid interleave n=500 start=2026-11-19T09:12:30Z end=2026-11-19T09:12:35Z exit 0
+sinkcore-reqid.cjs patched-reqid plain n=2000 start=2026-11-19T09:12:35Z end=2026-11-19T09:12:50Z exit 0
+sinkcore-reqid.cjs patched-reqid fault-1 n=500 start=2026-11-19T09:12:50Z end=2026-11-19T09:12:55Z exit 0
+sinkcore-reqid.cjs patched-reqid fault-2 n=500 start=2026-11-19T09:12:55Z end=2026-11-19T09:12:59Z exit 0
+sinkcore-reqid.cjs patched-reqid interleave n=500 start=2026-11-19T09:12:59Z end=2026-11-19T09:13:04Z exit 0
+sinkcore-reqid.cjs real plain n=2000 start=2026-11-19T09:13:04Z end=2026-11-19T09:13:19Z exit 1
+sinkcore-reqid.cjs real fault-1 n=500 start=2026-11-19T09:13:19Z end=2026-11-19T09:13:23Z exit 1
+sinkcore-reqid.cjs real fault-2 n=500 start=2026-11-19T09:13:23Z end=2026-11-19T09:13:27Z exit 1
+sinkcore-reqid.cjs real interleave n=500 start=2026-11-19T09:13:27Z end=2026-11-19T09:13:31Z exit 1
+sinkcore.cjs cb-reqid plain n=2000 start=2026-11-19T09:13:31Z end=2026-11-19T09:13:46Z exit 1
+sinkcore.cjs cb-reqid fault-1 n=500 start=2026-11-19T09:13:46Z end=2026-11-19T09:13:50Z exit 1
+sinkcore.cjs cb-reqid fault-2 n=500 start=2026-11-19T09:13:50Z end=2026-11-19T09:13:54Z exit 1
+sinkcore.cjs cb-reqid interleave n=500 start=2026-11-19T09:13:54Z end=2026-11-19T09:13:58Z exit 1
+sinkcore.cjs patched-reqid plain n=2000 start=2026-11-19T09:13:58Z end=2026-11-19T09:14:13Z exit 1
+sinkcore.cjs patched-reqid fault-1 n=500 start=2026-11-19T09:14:13Z end=2026-11-19T09:14:16Z exit 1
+sinkcore.cjs patched-reqid fault-2 n=500 start=2026-11-19T09:14:16Z end=2026-11-19T09:14:20Z exit 1
+sinkcore.cjs patched-reqid interleave n=500 start=2026-11-19T09:14:20Z end=2026-11-19T09:14:24Z exit 1
+# end 2026-11-19T09:14:24Z
+window exit 0

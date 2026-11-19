@@ -1,0 +1,29 @@
+# owner=r-integrate start=2026-11-19T09:14:31Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/audit-AttackTrace.md AttackTrace.dfy
+# memory free percent: 71
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        4.29 real         4.56 user         0.12 sys
+           227704832  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               16954  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                  75  voluntary context switches
+                2355  involuntary context switches
+         41446479539  instructions retired
+         14444967727  cycles elapsed
+           194020576  peak memory footprint
+# end=2026-11-19T09:14:35Z
+exit 0

@@ -1,0 +1,119 @@
+# owner=r-integrate start=2026-11-19T09:09:24Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/mut/M1-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-M1-reject-all-SinkCoreV3.csv SinkCoreV3.dfy
+# memory free percent: 59
+SinkCoreV3.dfy(157,2): Error: a postcondition could not be proved on this return path
+    |
+157 |   {
+    |   ^
+
+SinkCoreV3.dfy(151,50): Related location: this is the postcondition that could not be proved
+    |
+151 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(184,2): Error: a postcondition could not be proved on this return path
+    |
+184 |   {
+    |   ^
+
+SinkCoreV3.dfy(182,38): Related location: this is the postcondition that could not be proved
+    |
+182 |     ensures Step(core, tok, true).out.Committed?
+    |                                       ^^^^^^^^^^
+
+SinkCoreV3.dfy(232,4): Error: a postcondition could not be proved on this return path
+    |
+232 |     if r.out.Committed? {
+    |     ^^^^^^^^^^^^^^^^^^^^^
+
+SinkCoreV3.dfy(224,50): Related location: this is the postcondition that could not be proved
+    |
+224 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(411,2): Error: a postcondition could not be proved on this return path
+    |
+411 |   {
+    |   ^
+
+SinkCoreV3.dfy(406,12): Related location: this is the postcondition that could not be proved
+    |
+406 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, Charge0().(remaining := 90), "rq_v", Charge0().(remaining := 80),
+    |             ^^^
+
+SinkCoreV3.dfy(440,2): Error: a postcondition could not be proved on this return path
+    |
+440 |   {
+    |   ^
+
+SinkCoreV3.dfy(431,12): Related location: this is the postcondition that could not be proved
+    |
+431 |             var t1 := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_1", c0.(remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(467,2): Error: a postcondition could not be proved on this return path
+    |
+467 |   {
+    |   ^
+
+SinkCoreV3.dfy(459,12): Related location: this is the postcondition that could not be proved
+    |
+459 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(477,2): Error: a postcondition could not be proved on this return path
+    |
+477 |   {
+    |   ^
+
+SinkCoreV3.dfy(473,12): Related location: this is the postcondition that could not be proved
+    |
+473 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_x", c0.(chargeId := "ch_2", remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(492,2): Error: a postcondition could not be proved on this return path
+    |
+492 |   {
+    |   ^
+
+SinkCoreV3.dfy(484,12): Related location: this is the postcondition that could not be proved
+    |
+484 |             var foreign := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_y", Charge2(),
+    |             ^^^
+
+SinkCoreV3.dfy(502,2): Error: a postcondition could not be proved on this return path
+    |
+502 |   {
+    |   ^
+
+SinkCoreV3.dfy(501,44): Related location: this is the postcondition that could not be proved
+    |
+501 |     ensures Step(Run(c, ds), tok, true).out.Committed?
+    |                                             ^^^^^^^^^^
+
+
+Dafny program verifier finished with 61 verified, 9 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-M1-reject-all-SinkCoreV3.csv
+        5.61 real         5.03 user         0.40 sys
+           209207296  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19404  page reclaims
+                  15  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                 263  voluntary context switches
+               37252  involuntary context switches
+         41610505186  instructions retired
+         16539889497  cycles elapsed
+           175949048  peak memory footprint
+# end=2026-11-19T09:09:30Z
+exit 4

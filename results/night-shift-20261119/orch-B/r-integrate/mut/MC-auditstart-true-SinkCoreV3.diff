@@ -1,0 +1,14 @@
+--- ../src/SinkCoreV3.dfy	2026-11-19 03:57:50.609216422 -0500
++++ MC-auditstart-true/SinkCoreV3.dfy	2026-11-19 04:02:09.005854273 -0500
+@@ -328,10 +328,7 @@
+   // when GoodStart holds.
+   function AuditStart(c: Core): bool
+   {
+-    (forall i | 0 <= i < |c.outbox| :: c.outbox[i].requestId in c.settled) &&
+-    (forall i, j | 0 <= i < j < |c.outbox| :: c.outbox[i].requestId != c.outbox[j].requestId) &&
+-    |c.outbox| == |c.settled| &&
+-    (forall i | 0 <= i < |c.outbox| :: c.outbox[i].chargeId == c.charge.chargeId)
++    true // MUTANT MC: AuditStart always true
+   }
+ 
+   lemma AuditStartIsGoodStart(c: Core)

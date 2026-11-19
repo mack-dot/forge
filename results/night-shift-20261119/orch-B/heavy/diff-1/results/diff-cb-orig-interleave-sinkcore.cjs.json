@@ -1,0 +1,30 @@
+{
+ "sink": "cb-orig",
+ "mode": "interleave",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 246,
+   "valid": 966,
+   "stale-or-current": 339,
+   "wrong-checker": 198,
+   "settled-id-new-body": 221,
+   "reqid-mismatch": 292,
+   "replay": 276,
+   "zero": 282,
+   "sig-bitflip": 149,
+   "non-canonical": 76,
+   "unknown-pre-hash": 83,
+   "attacker-key": 109,
+   "forged-post(key)": 125
+  },
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": []
+}

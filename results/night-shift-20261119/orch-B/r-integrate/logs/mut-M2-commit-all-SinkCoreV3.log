@@ -1,0 +1,119 @@
+# owner=r-integrate start=2026-11-19T09:09:40Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/mut/M2-commit-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-M2-commit-all-SinkCoreV3.csv SinkCoreV3.dfy
+# memory free percent: 59
+SinkCoreV3.dfy(157,2): Error: a postcondition could not be proved on this return path
+    |
+157 |   {
+    |   ^
+
+SinkCoreV3.dfy(151,50): Related location: this is the postcondition that could not be proved
+    |
+151 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(168,2): Error: a postcondition could not be proved on this return path
+    |
+168 |   {
+    |   ^
+
+SinkCoreV3.dfy(167,12): Related location: this is the postcondition that could not be proved
+    |
+167 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+SinkCoreV3.dfy(174,2): Error: a postcondition could not be proved on this return path
+    |
+174 |   {
+    |   ^
+
+SinkCoreV3.dfy(173,12): Related location: this is the postcondition that could not be proved
+    |
+173 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+SinkCoreV3.dfy(232,24): Error: a postcondition could not be proved on this return path
+    |
+232 |     if r.out.Committed? {
+    |                         ^
+
+SinkCoreV3.dfy(224,50): Related location: this is the postcondition that could not be proved
+    |
+224 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(237,22): Error: index out of range
+    |
+237 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+SinkCoreV3.dfy(237,59): Error: possible violation of postcondition of forall statement
+    |
+237 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                            ^
+
+SinkCoreV3.dfy(237,66): Error: index out of range
+    |
+237 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+SinkCoreV3.dfy(242,23): Error: index out of range
+    |
+242 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+SinkCoreV3.dfy(467,2): Error: a postcondition could not be proved on this return path
+    |
+467 |   {
+    |   ^
+
+SinkCoreV3.dfy(459,12): Related location: this is the postcondition that could not be proved
+    |
+459 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(477,2): Error: a postcondition could not be proved on this return path
+    |
+477 |   {
+    |   ^
+
+SinkCoreV3.dfy(473,12): Related location: this is the postcondition that could not be proved
+    |
+473 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_x", c0.(chargeId := "ch_2", remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(492,2): Error: a postcondition could not be proved on this return path
+    |
+492 |   {
+    |   ^
+
+SinkCoreV3.dfy(484,12): Related location: this is the postcondition that could not be proved
+    |
+484 |             var foreign := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_y", Charge2(),
+    |             ^^^
+
+
+Dafny program verifier finished with 63 verified, 11 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-M2-commit-all-SinkCoreV3.csv
+        5.14 real         5.02 user         0.33 sys
+           197312512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19363  page reclaims
+                  11  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 272  voluntary context switches
+               18392  involuntary context switches
+         43772315422  instructions retired
+         16511665149  cycles elapsed
+           163955936  peak memory footprint
+# end=2026-11-19T09:09:45Z
+exit 4

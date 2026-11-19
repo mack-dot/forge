@@ -1,0 +1,29 @@
+# owner=r-integrate start=2026-11-19T09:09:37Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/audit-MultiCharge.md MultiCharge.dfy
+# memory free percent: 60
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        2.99 real         3.19 user         0.13 sys
+           167903232  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12770  page reclaims
+                 566  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                  46  voluntary context switches
+                2090  involuntary context switches
+         30714922981  instructions retired
+         10244972845  cycles elapsed
+           135021792  peak memory footprint
+# end=2026-11-19T09:09:40Z
+exit 0

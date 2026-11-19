@@ -1,0 +1,237 @@
+{
+ "sink": "cb-reqid",
+ "mode": "plain",
+ "seed": 20261119,
+ "count": 2000,
+ "directed": [
+  {
+   "name": "valid",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "chain",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "replay",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "replay",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "same-id-other-token",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "settled-id-new-body",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "stale",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "stale",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "wrong-spec",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-spec",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "wrong-checker",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-checker",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "attacker-key",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "attacker-key",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "sig-bitflip",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "sig-bitflip",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "zero-twice",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "rejected:ReqIdMismatch"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch-onto-settled-id",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "rejected:ReqIdMismatch"
+    }
+   ]
+  },
+  {
+   "name": "forged-post(key)",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "forged-post",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "non-canonical",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "non-canonical",
+     "sink": "rejected:Decode",
+     "core": "rejected:Decode"
+    }
+   ]
+  },
+  {
+   "name": "unknown-pre-hash",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "unknown-pre",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "refund-disabled-but-signed",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid-signed",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  }
+ ],
+ "random": {
+  "run": 2000,
+  "steps": 12998,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 980,
+   "valid": 3868,
+   "stale-or-current": 1292,
+   "wrong-checker": 645,
+   "settled-id-new-body": 862,
+   "reqid-mismatch": 1036,
+   "replay": 1118,
+   "zero": 1085,
+   "sig-bitflip": 537,
+   "non-canonical": 275,
+   "unknown-pre-hash": 273,
+   "attacker-key": 505,
+   "forged-post(key)": 522
+  },
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": []
+}

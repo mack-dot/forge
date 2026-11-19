@@ -1,0 +1,28 @@
+# owner=r-integrate start=2026-11-19T09:15:13Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --include-runtime --output <REPO>/results/night-shift-20261119/orch-B/r-integrate/work/js-out3/AuditCompile AuditCompile.dfy
+# memory free percent: 71
+
+Dafny program verifier finished with 85 verified, 0 errors
+        5.70 real         7.64 user         0.32 sys
+           250953728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32574  page reclaims
+                  17  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                 998  voluntary context switches
+               14727  involuntary context switches
+         51656081167  instructions retired
+         19972933222  cycles elapsed
+           214156488  peak memory footprint
+# end=2026-11-19T09:15:19Z
+exit 0

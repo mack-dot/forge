@@ -1,0 +1,27 @@
+dafny-version: exit 0
+z3-version: exit 0
+audit-before: exit 0
+verify: exit 0
+compile-js: exit 0
+hostile: exit 0
+audit-after: exit 0
+ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+        5.43 real         5.10 user         0.66 sys
+           191643648  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              101771  page reclaims
+                 285  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   8  signals received
+                 318  voluntary context switches
+                6857  involuntary context switches
+          4391179215  instructions retired
+          1707174252  cycles elapsed
+           115819312  peak memory footprint
+exit 0

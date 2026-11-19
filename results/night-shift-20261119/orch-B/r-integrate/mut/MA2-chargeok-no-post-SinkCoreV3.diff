@@ -1,0 +1,11 @@
+--- ../src/SinkCoreV3.dfy	2026-11-19 03:57:50.609216422 -0500
++++ MA2-chargeok-no-post/SinkCoreV3.dfy	2026-11-19 04:02:09.005499897 -0500
+@@ -126,7 +126,7 @@
+   // The charge-id check of the patched sink.ts: stored chargeId == intent.chargeId, post.chargeId == intent.chargeId.
+   predicate ChargeOk(stored: F.Charge, tok: SinkToken)
+   {
+-    stored.chargeId == tok.intent.chargeId && tok.post.chargeId == tok.intent.chargeId
++    stored.chargeId == tok.intent.chargeId // MUTANT MA2: post chargeId not checked
+   }
+ 
+   // The step. Order of the checks = order of the patched sink.ts: ids, signature, request id (outside the

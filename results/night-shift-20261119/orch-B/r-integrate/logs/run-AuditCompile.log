@@ -1,0 +1,17 @@
+<REPO>/results/night-shift-20261119/orch-B/r-integrate/work/js-out/AuditCompile.js:1139
+_dafny.HandleHaltExceptions(() => AuditCompile.__default.Main(_dafny.UnicodeFromMainArguments(require('process').argv)));
+^
+
+ReferenceError: _dafny is not defined
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/r-integrate/work/js-out/AuditCompile.js:1139:1)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object..js (node:internal/modules/cjs/loader:1824:10)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:152:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.3.0
+exit 1

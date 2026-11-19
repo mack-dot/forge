@@ -1,0 +1,11 @@
+--- ../src/SinkCoreV3.dfy	2026-11-19 03:57:50.609216422 -0500
++++ MB-reqid-skip-zero/SinkCoreV3.dfy	2026-11-19 04:02:09.005691856 -0500
+@@ -120,7 +120,7 @@
+   // The request-id check of the patched sink.ts.
+   predicate Match(tok: SinkToken)
+   {
+-    tok.intent.requestId == tok.requestId
++    tok.intent.amount == 0 || tok.intent.requestId == tok.requestId // MUTANT MB: request-id check dropped for amount 0
+   }
+ 
+   // The charge-id check of the patched sink.ts: stored chargeId == intent.chargeId, post.chargeId == intent.chargeId.

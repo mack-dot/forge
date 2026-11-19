@@ -38,7 +38,7 @@ ln -s $R/.toolchain $W/.toolchain; ln -s $R/node_modules $W/node_modules
 sed -i '' "s/'hostile': 1800/'hostile': 300/" $W/gate/refund.py
 for S in $SUBS; do
   n=$(basename $S .dfy); cp $S $W/impl/Refund.dfy
-  ( cd $W && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$W LANG=C \
+  ( cd $W && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$W LANG=C PYTHONUSERBASE=<HOME>/Library/Python/3.10 \
       /usr/bin/time -l $PY gate/refund.py --tier hostile-tests --evidence build/heavy-$n.json ) \
       > $OUTD/heavy-$n.log 2>&1
   rc=$?; echo "exit $rc" >> $OUTD/heavy-$n.log; echo "$n exit $rc $(date -u +%FT%TZ)" | tee -a $OUTD/summary.txt; cp $W/build/heavy-$n.json $OUTD/ 2>/dev/null
