@@ -1,0 +1,38 @@
+== emitfail run 1
+{"status":"committed","onTime":false}
+run1 rc=0 {"stopped":"ENOENT: no such file or directory, open '<REPO>/results/night-shift-20261119/orch-C/c11-host/w/h1-emitfail/no-such-dir/effects.jsonl'","onTime":false}
+retry rc=0 {"emitted":0,"onTime":false}
+ledger lines:        1
+effects lines:        0
+EXIT 1
+== emitfail run 2
+{"status":"committed","onTime":false}
+run1 rc=0 {"stopped":"ENOENT: no such file or directory, open '<REPO>/results/night-shift-20261119/orch-C/c11-host/w/h1-emitfail/no-such-dir/effects.jsonl'","onTime":false}
+retry rc=0 {"emitted":0,"onTime":false}
+ledger lines:        1
+effects lines:        0
+EXIT 1
+== lock run 1
+{"status":"committed","onTime":false}
+rc=0 {"stopped":"dispatcher lock is held: another run is active, or a stopped run left the lock file","onTime":false}
+EXIT 1
+== lock run 2
+{"status":"committed","onTime":false}
+rc=0 {"stopped":"dispatcher lock is held: another run is active, or a stopped run left the lock file","onTime":false}
+EXIT 1
+== chain run 1
+{"status":"committed","onTime":false}
+rc=0 {"stopped":"dispatcher ledger is not one chain","onTime":false}
+EXIT 1
+== chain run 2
+{"status":"committed","onTime":false}
+rc=0 {"stopped":"dispatcher ledger is not one chain","onTime":false}
+EXIT 1
+== refused run 1
+{"status":"committed","onTime":false}
+rc=0 {"emitted":0,"onTime":false} (1 committed row pending)
+EXIT 1
+== refused run 2
+{"status":"committed","onTime":false}
+rc=0 {"emitted":0,"onTime":false} (1 committed row pending)
+EXIT 1

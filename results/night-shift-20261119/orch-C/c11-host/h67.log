@@ -1,0 +1,22 @@
+== h6_commit_exit 1
+bad token rc=0 {"status":"rejected","reason":"token shape","onTime":false}
+typo db rc=0 {"status":"rejected","reason":"the sink has no stored state","onTime":false} created=yes
+EXIT 1
+== h6_commit_exit 2
+bad token rc=0 {"status":"rejected","reason":"token shape","onTime":false}
+typo db rc=0 {"status":"rejected","reason":"the sink has no stored state","onTime":false} created=yes
+EXIT 1
+== h7_relative_ledger 1
+{"emitted":2,"onTime":false}
+ rc=0
+{"emitted":2,"onTime":false}
+ rc=0
+committed=2 effects=4 (sum of amounts: 2000 on original 1000)
+EXIT 1
+== h7_relative_ledger 2
+{"emitted":2,"onTime":false}
+ rc=0
+{"emitted":2,"onTime":false}
+ rc=0
+committed=2 effects=4 (sum of amounts: 2000 on original 1000)
+EXIT 1

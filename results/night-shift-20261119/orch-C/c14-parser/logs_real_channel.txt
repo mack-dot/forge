@@ -1,0 +1,15 @@
+OK  AUTHORIZED (40, b'returned_item') | oracle AUTHORIZED
+OK  AUTHORIZED (0, b'returned_item') | oracle AUTHORIZED
+OK  AUTHORIZED (60, b'returned_item') | oracle AUTHORIZED
+OK  NOT_AUTHORIZED ('program rejected the request',) | oracle NOT_AUTHORIZED
+OK  AUTHORIZED (9223372036854775807, b'returned_item') | oracle AUTHORIZED
+OK  AUTHORIZED (0, b'returned_item') | oracle AUTHORIZED
+OK  NOT_AUTHORIZED ('program rejected the request',) | oracle NOT_AUTHORIZED
+OK  AUTHORIZED (0, b'returned_item') | oracle AUTHORIZED
+OK  AUTHORIZED (60, b'returned_item') | oracle AUTHORIZED
+OK  NOT_AUTHORIZED ('program rejected the request',) | oracle NOT_AUTHORIZED
+OK  NOT_AUTHORIZED ('program rejected the request',) | oracle NOT_AUTHORIZED
+OK  NOT_AUTHORIZED ('program rejected the request',) | oracle NOT_AUTHORIZED
+OK  NOT_AUTHORIZED ('program rejected the request',) | oracle NOT_AUTHORIZED
+OK  AUTHORIZED (60, b'service_not_delivered') | oracle AUTHORIZED
+runs 14 bad 0

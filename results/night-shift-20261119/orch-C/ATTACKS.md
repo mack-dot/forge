@@ -184,3 +184,39 @@ Entries below: target = B's gate rule 3 (orch-B/e-subset3/subset_rule3.py, diff/
 - G01 SUBSET3_TYPE (helper with a seq parameter); G02 SUBSET3_NAME (let-expression in a helper); G03 SUBSET3_GUARD_BRACE (`reason in {..}` in a guard); G08 SUBSET3_NAME (a local declared once in each of two branches); G09 SUBSET3_PRODUCT (amount times a named constant). G08 and G09 are classes not in B's reviewer list.
 - With B's 21 of 67: the rule refuses about a third to a half of correct work. Not a reject-all gate; a high false-rejection rate.
 - Regression for C-GATE-02/03: bash c5-gate/regress.sh [RULE_PY] [GATE_PY] -> EXIT 1 now. 04be9739902cf93f9958e0e2e0433c121c4f844dfc91353f13117f4d2f0b49fe  regress.sh
+
+## RE-RUN (15:06:02Z) against B's commit 608b5165 (hardened sink b7fd6be8 + minter with the per-(charge id, request id) rule) — C's own runs
+Overlay <SCRATCH>/redteam-C/fix-608b5165 (tree as committed); scripts = copies pointed at it (<SCRATCH>/redteam-C/retarget-608b5165; issuer module orch-B/h-minter/build/issueonce.cjs). Logs: orch-C/refix/608b5165/.
+| Item | Command (script) | Exit | Verdict |
+|---|---|---|---|
+| C-ATT-03 zero-amount freeze | c1 t1_zero_singleuse.ts on; t7_minter_concurrent.ts on; c3 z2_singleuse_zero_freeze.ts; c7 p1_singleuse_zero.ts | 0, 0, 0, 0 | PASS (closed for these cases) |
+| C-ATT-15 lossy UTF-8 | c7 p2_invalid_utf8.ts | 0 ("message is not UTF-8" for all three) | PASS (closed) |
+| Minter decision (no false rejection) | c7 fuzz_diff.ts 2000 7; p5_negatives.ts | 0 (428 issued, 224 zero-amount, 0 divergences); 0 | PASS |
+| C-ATT-02 first-open crash | c1 t2_ddl_crash.ts kill 60 | 0 (0 partial files in 60 kills) | PASS (no brick seen). Mode `state` exits 1 but is NOT VALID here: it builds a partial file of the OLD schema; the new DDL is one transaction |
+| Concurrency | c1 t3_parallel_commit.ts 25 | 0 | PASS |
+| C-ATT-14 module identity | c7 p4_module_identity.ts | 0 | NOT A PASS: the shim ran in the minter process again ("attackerCodeRan": true); the script's pin compare is not valid on this tree. OPEN as B's named assumption |
+| C-ATT-05 key per start | c3 k1_key_rotation.ts | 1 | STILL PRESENT (owner item) |
+| Substitution matrix | c3 m1_substitution_matrix.ts | 0 | PASS |
+| C-ATT-04, 06, 07, 10, 11, 12, 20; E1, E2, zero-amount honest flows with the dispatcher | old scripts | throw | NOT VALID as they are: a new ledger needs cfg.newLedgerH0; raw hostile writes abort at triggers. Being ported and re-attacked by worker c16-hsink (attacker drops triggers, recomputes the unkeyed chain; with and without expectedHead) |
+- Workers started: c16-hsink (hardened sink and dispatcher), c17-hminter (new minter rule: stale-token retry of the same request id, D14 in mode on, start-up guards).
+
+Entries below: C's own re-runs at 15:06:02Z. Host-layer command form: bash c11-host/<script> [mode] (scrubbed env inside; target-v6 + the 216dfbe2 client). Logs c11-host/recheck/.
+
+## C-HOST-01 (15:06:02Z) dispatch_cli exits 0 on every error path and hides refusals — CONFIRMED, NEW. Attacker: none
+- tests/refund-finality/dispatch_cli.ts:16: the catch prints {"stopped":...} and sets no exit code; the success line prints only emitted.length (refused[] and alreadyDispatched dropped).
+- h1_dispatch_exit.sh emitfail -> EXIT 1 (the effect write fails; ledger line kept; run 1 "stopped" rc 0; retry {"emitted":0} rc 0; effects file empty: the C-ATT-18 loss through the real CLI); lock -> EXIT 1; refused -> EXIT 1 (every committed row refused, CLI prints {"emitted":0} rc 0). Worker run only: chain. SHA-256 76e015b9…aed6.
+## C-HOST-02 (15:06:02Z) SIGTERM during dispatch_cli leaves the lock; every later run exits 0 "stopped" — CONFIRMED. h2_signal_lock.sh TERM -> EXIT 1. The only documented recovery is the step that enables C-ATT-17.
+## C-HOST-03 (15:06:02Z) lock removed during a slow run: effects sent, CLI prints "stopped" (ENOENT in unlink) rc 0, retry prints {"emitted":0} — CONFIRMED, NEW (reporting side of C-ATT-17). h5_lock_removed_report.sh -> EXIT 1. SHA-256 68af64be…55b7.
+## C-HOST-04 (15:06:02Z) commit_cli exits 0 on a refusal; a mistyped database path creates a new empty store — CONFIRMED, LOW. h6_commit_exit.sh -> EXIT 1.
+## C-HOST-05 (15:06:02Z) relative ledger path + another working directory: 2000 refunded on 1000, both runs rc 0 — CONFIRMED; known class (lost ledger), new host-level trigger; attacker: none. h7_relative_ledger.sh -> EXIT 1.
+## C-HOST-06 (15:06:02Z) sink_tool init takes the anchor (initialState) from its argument when the config has none — CONFIRMED, WEAK. h3_tool_anchor.sh -> EXIT 1.
+## C-HOST-07 (15:06:02Z) EPIPE after the effect: CLI exits 1 although the effect happened; retry cannot tell "sent" from "nothing to do" — CONFIRMED, LOW. h9_epipe.sh -> EXIT 1.
+## C-NEG-10 (15:06:02Z) host layer (worker runs): the CLI flow commits and dispatches zero-amount and full refunds; no refund above the original; the demo gauntlet fails closed (it gives no v6 evidence); exit_slice1.py: no silent skip found (read only).
+
+Entries below: target = native refund executable b8ed5ec2… and the consumer proposals/m1b-mission-20261119/drafts/fail-closed/{frame.py, m1_fail_closed.py}. Command form: /usr/bin/python3 -B -I c14-parser/<script>. Logs c14-parser/recheck2/.
+
+## C-PREM-02 (15:06:02Z) "Python strict parser = HOL strict parser" is false as an identity — CONFIRMED by run (safe direction only), NEW as a precise statement
+- frame.py:259 refuses negative integers; HOL refund_strict_parse accepts any rendered frame, incl. negative amounts and counts. diff_parsers.py 1 200000 -> EXIT 0 (0 frames that Python accepts and HOL refuses; 0 field differences); with --identity -> EXIT 1 (HOL-only frames exist; worker: all have a negative amount or count).
+- A proof of the edge must state "HOL parser restricted to non-negative integers". No false rejection follows: the program prints non-negative values only.
+## C-NEG-11 (15:06:02Z) native executable versus an independent oracle and the Python consumer — NO counterexample: C's runs: fuzz_oracle.py 1 2000 -> EXIT 0 (2000 real runs, 273 authorized incl. 76 zero-amount and 27 full, 0 mismatches, all frames strict); edges.py -> EXIT 0; probe_table.py -> EXIT 0. Worker runs: 9,400+ real runs in total, never a byte after a frame.
+- Observation (known class): every request-reader error gives exit 0, empty stdout, empty stderr; the consumer maps it to REFUSED (fail closed). A trailing line feed after the request gives "no frame".

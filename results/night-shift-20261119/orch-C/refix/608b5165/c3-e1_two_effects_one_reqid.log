@@ -1,0 +1,19 @@
+<SCRATCH>/redteam-C/fix-608b5165/ts/refund-finality/dispatcher.ts:131
+        throw new Error("dispatcher alarm: the ledger is missing or empty but the store holds " + audited.length + " committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0");
+              ^
+
+
+Error: dispatcher alarm: the ledger is missing or empty but the store holds 1 committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0
+    at Dispatcher.flushLocked (<SCRATCH>/redteam-C/fix-608b5165/ts/refund-finality/dispatcher.ts:131:15)
+    at Dispatcher.flush (<SCRATCH>/redteam-C/fix-608b5165/ts/refund-finality/dispatcher.ts:90:23)
+    at <anonymous> (<SCRATCH>/redteam-C/retarget-608b5165/c3-identity/e1_two_effects_one_reqid.ts:24:51)
+    at Object.<anonymous> (<SCRATCH>/redteam-C/retarget-608b5165/c3-identity/e1_two_effects_one_reqid.ts:27:33)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+
+Node.js v24.3.0
+exit=1

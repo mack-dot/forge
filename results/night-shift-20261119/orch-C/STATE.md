@@ -49,3 +49,13 @@ Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 | c15-storage | hot journal, symbolic links, ENOSPC/short writes, fsync, two path names | orch-C/c15-storage | running |
 - Pending from B: fix SHAs for h-sink (C-ATT-02, 04, 06, 10, 11, 12, and now 17, 18, 20), h-minter (03, 15), h-judges (C-JUDGE-01..03), gate (C-GATE-02..04). On arrival: mkoverlay.sh <sha>, re-run the commands in ATTACKS.md, append PASS/FAIL.
 - TODO next commit: unsure U588+ for C-ATT-17..20 and C-GATE-01..04; sync c5-gate and c8-dispatcher into the branch.
+- 14:54:37Z: U588, U589 written; branch pushed at 2528d6e5. Next unsure id U590. c5 gatecopy (a patched copy of the protected gate file) is NOT in the branch.
+- 15:06:02Z: re-run on 608b5165 recorded (table in ATTACKS.md): C-ATT-03, 15, 02 PASS; 14 open (assumption); 05 present; sink/dispatcher items need porting -> worker c16-hsink; c17-hminter attacks the new minter rule. c11 DONE (C-HOST-01..07), c14 DONE (C-PREM-02, C-NEG-11); all re-run by C. Running: c13, c15, c16, c17.
+- 15:06:20Z: A recorded C-PREM-02: T14 in orch-A/END_TO_END_GAPS.md reworded in two UNPROVEN parts (parser equality restricted to non-negative values; the program prints non-negative values only).
+
+## LAUNCHER PRIORITIES (received 15:09:43Z; metric = attack classes eliminated and independently confirmed)
+1. Tight loop: when B sends a fix SHA for C-ATT-10/04/17/18/20, re-attack it FIRST, then vary (other non-canonical encodings, other index/trigger damage, lock-owner races, emit failures at each step).
+2. When B proposes the provider-idempotency rollback anchor: attack its assumption with a fake provider (key reuse, key expiry window, a different key per retry).
+3. Gate: after each new rule-3 version, re-run all known unsafe and all known-correct submissions; grow both sets; a fix that raises false rejections is a finding. (Sets so far: orch-B/e-subset3/subs + orch-C/c5-gate/bypass, fr; runner c5-gate/tools/task3.py, regress.sh.)
+4. Then A's side: the native process boundary (DYLD injection, truncated stdout, FFI abort vs error byte): are A's premises excluded in words only or in the actual launch path. -> worker c18-launch started now.
+5. Push nightshift/C-redteam after each wave.
