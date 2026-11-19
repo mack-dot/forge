@@ -28,6 +28,25 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## M1: replay of the 158 recorded cases started (waits for mains power); owner-review packet; records of pull request 54 — U471
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No M1 theorem
+is claimed. A replay shows that recorded cases behave as recorded on
+this machine; it does not close M1.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 54, head `8ee3fe1a`, run 44455039140 |3|UNSUPPORTED, as expected for documents |
+| `gh pr merge 54 --squash --admin` (basis: a pasted instruction, U471) |0|squash commit `5ec606eb`, 2026-11-19 04:01Z; OVERRIDE; tree equal to `8ee3fe1a` |
+| replay of the 158 recorded M1 cases (background job, one HOL process at a time) |NOT RUN when this section was written (04:16Z)|preparation done; the job waits for mains power; the Mac was on battery power |
+| clean replay; independent replay |NOT RUN|need the owner's answer to Q6 of the packet |
+
+[M1 owner-review packet](proposals/m1-owner-review-20261119/REVIEW_PACKET.md):
+Profile A and six questions, the 18-row contract link (all NOT
+REVIEWED), compiler premises, slide, replays. It approves nothing.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Stage 9 stays deferred: a lock rebind proposal was made on the owner's word, then the owner reversed the unlock; pull request 53 closed without a merge; records of pull request 52 — U469, U470
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
