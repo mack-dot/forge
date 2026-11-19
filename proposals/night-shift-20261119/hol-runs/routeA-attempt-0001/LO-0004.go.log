@@ -1,0 +1,49 @@
+2026-11-19T08:49:51Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6256.94M  free = 911.06M  (encrypted)
+System-wide memory free percentage: 55%
+START_STATE swap_free_mib=911 memory_free_percent=55
+exit 1
+actual_exit 1 wall 76.729 cpu 81.654 rss_mib 3969 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0004/proof.sml:593: Fail "failed: extract_no_ext_stdout refund_L_OUT refund_L_OUT_prefix refund_profile_a_sl_fd1"
+65:CHECKED fd1_written_APPEND
+70:CHECKED fd1_written_prefix
+75:CHECKED STD_streams_facts
+89:CHECKED STD_streams_File_fd
+96:CHECKED w22n_lt
+101:CHECKED w22n_n2w2_bytes
+106:CHECKED write_stdout
+117:CHECKED ffi_write_cases
+129:CHECKED ffi_write_stdout_step
+141:CHECKED read_stdout
+148:CHECKED ffi_read_stdout_step
+157:CHECKED openFile_stdout
+164:CHECKED openFile_truncate_stdout
+173:CHECKED ffi_open_in_stdout_step
+182:CHECKED ffi_open_out_stdout_step
+191:CHECKED STD_streams_ADELKEY_File
+198:CHECKED closeFD_stdout
+205:CHECKED ffi_close_stdout_step
+214:CHECKED ALOOKUP_fs_ffi_part
+223:CHECKED fs_ffi_part_stdout_step
+235:CHECKED extract_no_ext_ExtCall
+247:SHOW TRY_ALL_ENTRY extract_no_ext_stdout
+248:  GOAL ∀io cls fs cls' fs'.
+256:LEMMA_FAILED extract_no_ext_stdout HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+259:CHECKED extract_fs_inode_tbl
+268:LEMMA_FAILED refund_L_OUT (diagnostic only: proved only under the failed lemmas above)
+271:LEMMA_FAILED refund_L_OUT_prefix (diagnostic only: proved only under the failed lemmas above)
+282:SHOW UNSOLVED fd1_ms
+323:  GOAL arm8_run 27 s = SOME ms
+324:SHOW TRY_ALL_ENTRY refund_profile_a_sl_fd1
+325:  GOAL refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+352:SHOW UNSOLVED fd1_ms
+393:  GOAL arm8_run 27 s = SOME ms
+394:LEMMA_FAILED refund_profile_a_sl_fd1 HOL_ERR (HOL_ERROR {message = "unsolved goals at fd1_ms", origins = [{origin_function = "CL", origin_structure = "A3", source_location = Loc_Unknown}]})
+413:CHECKED STD_streams_fs0
+418:CHECKED N_O1_free_ext_breaks
+446:CHECKED N_O2_failed_write_counted_without_success_test
+457:CHECKED N_O3_fd2_write_counted_without_fd_test
+465:CHECKED P_O4_partial_write_counts_nw
+hash_parents exit 0
+go exit 1

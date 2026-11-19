@@ -1,6 +1,6 @@
 # Orchestrator A (proof track) state
 
-Updated: 2026-11-19T08:34Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
+Updated: 2026-11-19T08:54Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
 
 ## Branch
 - `nightshift/A-proof` from `985f5eaf`; worktree
@@ -36,15 +36,26 @@ Workers cannot write `REPORT.md` (harness); A saves condensed reports.
 1. L1 (running), L1imp. 2. Link: `bash orch-A/link/run/attempt-0001/go.sh <CASE>` H0, H1, H2, controls, H4, NR1, R1–R3, I1.
 3. Erasure E1 (`orch-A/ffi-erasure/erasure_v2.sml`). 4. L-OUT v3, then L-EXIT v3 (`orch-A/out-exit/`). 5. L2 v2. 6. Prefix (A2).
 
-## Theorem attempts tonight (folder `results/m1b-routeA-20261119/attempt-0001`; wrapper `nightshift-run.sh <case> <cpu> [deps]`)
-| Case | Source SHA-256 | Command | Actual exit | Result |
-|---|---|---|---|---|
-| L1-0001 | 9ddf6746… | `FORGE_CPU_SECONDS=600 ./go-routeA.sh L1-0001 L1-0001.sml deps-L1.txt` | 0 | EXACT_COMPLETE; 16 CHECKED; 6 CONTROL_OK; 4 bool axioms. MACHINE-CHECKED (same machine). Reviewed (A7): holds |
-| L1imp-0001 | 27a565ac… | `./nightshift-run.sh L1imp-0001 600 deps-L1imp.txt` | 0 | IMPORTED_COUNT 9 MISMATCH_COUNT 0 |
-| L2-0001 | 4e1c1542… | `./nightshift-run.sh L2-0001 1600 deps-L2.txt` | 1 | LEMMA_FAILED `refund_ffi_tot_evaluate_agree` (tactic gap at the ExtCall leaves). Attempt 1 of 5. `L2-0002.sml` (0e638e90…) staged |
-| LO-0001 | 553233ce… | `./nightshift-run.sh LO-0001 900 deps-LO.txt` | −24 (CPU limit) | stopped after `STD_streams_facts`; attempt 1 of 5; A3 repairs (v4) |
-| PF-0001 | 820de134… | `./nightshift-run.sh PF-0001 600 deps-L1.txt` | pending | |
-| E1-0001 | 062a12f4… | `./nightshift-run.sh E1-0001 600` | pending | |
+## Theorem attempts tonight (folder `results/m1b-routeA-20261119/attempt-0001`; wrapper `nightshift-run.sh <case> <cpu> [deps]`; queue `queue.sh`)
+Every `<case>.go.log` ends with `go exit N`. Swap rule: PROTOCOL.md as amended ~09:00Z (deviation before that: OWNER_REQUIRED A-1, U485).
+| Case | Source SHA-256 | Actual exit | Result |
+|---|---|---|---|
+| L1-0001 | 9ddf6746… | 0 | 16 theorems; `refund_ffi_contract_on_totalises`. MACHINE-CHECKED (model). Reviewed (A7) |
+| L1imp-0001 | 27a565ac… | 0 | IMPORTED_COUNT 9 MISMATCH_COUNT 0 |
+| L2-0001 / L2-0002 | 4e1c1542… / 0e638e90… | 1 / 1 | tactic gap / ML type error |
+| L2-0003 | 7c93c620… | 0 | 9 theorems; `refund_profile_a_sl_reach`. MACHINE-CHECKED (model). Reviewed (A12): correct; non-vacuity MISSING |
+| E1-0001 / E1-0002 | 062a12f4… | 1 / 1 | no theory loaded (setup) / ML static error |
+| E1-0003 | 56a87088… | 0 | 18 erasure theorems on single functions. MACHINE-CHECKED (model). Reviewed (A10) |
+| E1neg-0001 (mutant) | ab501f93… | 1 | `LEMMA_FAILED BranchTo_erase_untagged`, as required |
+| LO-0001 … LO-0004 | 553233ce…, 0c57ad6d…, 4bc9910a…, fcc80fb8… | −24, 1, 1, 1 | CPU limit; ML error; 24 CHECKED; 27 CHECKED. Open: `extract_no_ext_stdout`, `refund_profile_a_sl_fd1`. ONE attempt left (A3 writes v6) |
+| PF-0001 … PF-0003 | 820de134…, fa818253…, 74dd468c… | 1, 1, 1 | open lemma `lexPs_cons` |
+| PF-0004 | 6dc46143… | 0 | 26 theorems; `refund_strict_parse_no_strict_prefix`, `refund_strict_parse_complete`, `refund_render_fields_prefix_code`. MACHINE-CHECKED (model). Review A13 running |
+| L2b-0001 | c2a69ae1… | 1 | `ffi_calls_ok_of_returning_calls` failed; local copy of `ffi_calls_ok`; A8 writes v2 (imported mode) |
+| Link H0, H1, H2 | — | pending | `orch-A/link/run/attempt-0001/linkq.sh q1 H0 H1 H2` started 2026-11-19T08:52Z; logs `<CASE>.go.log` there |
+
+## HOL queue next
+Link controls NC1–NC6, PC1, NS1–NS3, H4, NR1, then R1–R3, I1, E0 (`linkq.sh`). LO-0005 (v6). L2b-0002. LE-0001 (needs L-OUT).
+Erasure step lift (A11 draft). Re-run of E1-0003 and L2-0003 inside the swap rule (digest comparison).
 
 ## Counterexamples tonight (native; reproduced by A; `orch-A/ffi-c-audit/REPORT.md`)
 - CE-1: real executable, exit status 0, empty stderr, stdout a 1000-byte strict prefix (non-blocking pipe).
@@ -52,7 +63,9 @@ Workers cannot write `REPORT.md` (harness); A saves condensed reports.
 - CE-3: `DYLD_INSERT_LIBRARIES` gives a forged complete frame with exit 0 (assumption A-LOADER; existing launchers pass a fixed env).
 
 ## Workers now
-A3 (resumed: L_OUT_v4), A8 (ffi_calls_ok lemma draft, `orch-A/ffi-calls-ok/`). Done: A1, A2, A4, A5 (+v3), A6, A7, A9.
+Running: A3 (L_OUT_v6), A8 (L2b v2), A11 (erasure step lift), A13 (review of PF-0004).
+Done: A1, A2 (v3–v5), A4, A5 (v2–v4), A6, A7 (review L1), A9, A10 (review E1), A12 (review L2).
+Reports: `orch-A/<task>/REPORT.md`. Answers for B's ledger: `orch-A/FIELDS_FOR_B.md`. Commits: 68b2e67b, f53d46d4 (branch nightshift/A-proof).
 
 ## Blockers
 - None for the queue. Swap free 1.6 GB at 08:12Z. Poly/ML store stops happened at low swap: re-measure before each run.

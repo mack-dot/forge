@@ -1,0 +1,25 @@
+{
+ "case": "ctl-NC1",
+ "argv": [
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap",
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/ctl-NC1/proof.sml"
+ ],
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment",
+ "source": "forge_refundExportedContractScript.sml",
+ "source_sha256": "89fee9c35153d48d0114dde0f1781407b1ba5b46d4ddafde8fc5a740f2c81384",
+ "input_sha256": {
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26",
+  "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/misc/cakeml-heap": "66b1654b4e490d41953983b967e7501febba5b955e3bc562776569300846d1f2",
+  "/Users/mackianni/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+ },
+ "resource_guard": {
+  "memory_free_percent": 68,
+  "disk_free_gib": 89.75,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 900,
+ "wall_seconds_limit": 1200,
+ "end_to_end": false
+}

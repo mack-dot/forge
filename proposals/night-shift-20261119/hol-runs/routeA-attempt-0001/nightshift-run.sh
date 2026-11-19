@@ -6,6 +6,13 @@ c=$1; cpu=$2; deps=$3
 {
   date -u +%FT%TZ; pmset -g batt | head -1; sysctl -n vm.swapusage; memory_pressure | tail -1
   if pmset -g batt | head -1 | grep -q Battery; then echo "PRECHECK_REFUSED battery"; echo "go exit 97"; exit 97; fi
+  # added 2026-11-19T08:50Z: PROTOCOL.md rule "swap free < 1 GB: start no heavy step". Before this line was added, ten cases
+  # (PF-0001, E1-0001..0003, E1neg-0001, L2-0002, L2-0003, L2b-0001, LO-0002, LO-0003, PF-0002) started below 1 GB free.
+  swfree=$(sysctl -n vm.swapusage | sed -E 's/.*free = ([0-9]+)\..*/\1/')
+  # amended rule (PROTOCOL.md, launcher, ~09:00Z): start if swap free >= 1024 MiB, OR (memory free >= 40 % AND swap free >= 512 MiB).
+  memfree=$(memory_pressure | tail -1 | sed -E 's/.*: ([0-9]+)%.*/\1/')
+  echo "START_STATE swap_free_mib=$swfree memory_free_percent=$memfree"
+  if ! { [[ $swfree -ge 1024 ]] || { [[ $memfree -ge 40 ]] && [[ $swfree -ge 512 ]]; }; }; then echo "PRECHECK_REFUSED swap free $swfree MiB memory free $memfree %"; echo "go exit 96"; exit 96; fi
   if pgrep -f 'cake_compile_heap|arm8-heap|cakeml-heap' >/dev/null; then echo "PRECHECK_REFUSED other hol"; echo "go exit 98"; exit 98; fi
   if [[ -n $deps ]]; then
     FORGE_CPU_SECONDS=$cpu ./go-routeA.sh $c $c.sml $deps; rc=$?

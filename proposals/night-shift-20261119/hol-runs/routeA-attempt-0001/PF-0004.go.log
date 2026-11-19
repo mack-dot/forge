@@ -1,0 +1,45 @@
+2026-11-19T08:51:12Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6144.94M  free = 1023.06M  (encrypted)
+System-wide memory free percentage: 59%
+START_STATE swap_free_mib=1023 memory_free_percent=59
+exit 0
+actual_exit 0 wall 82.052 cpu 82.987 rss_mib 3855 ['EXACT_COMPLETE'] inputs_unchanged_after True
+59:CHECKED prefix_append_strict
+63:CHECKED every_isPREFIX
+67:CHECKED sexp_print_eqs
+81:CHECKED read_symbol_safe_nil
+87:CHECKED read_string_aux_char_escaped
+93:CHECKED char_escaped_strict_prefix
+98:CHECKED read_string_aux_strict_prefix
+105:CHECKED atom_prefix_ISL
+122:CHECKED lexP_Atom
+126:CHECKED lexPs_nil
+130:CHECKED lexP_Expr
+134:CHECKED lexPs_cons_split
+140:CHECKED lexPs_cons_in_v
+146:CHECKED lexPs_cons_space
+155:CHECKED lexPs_cons
+161:CHECKED lexP_all
+165:CHECKED lex_aux_prefix_ISL
+174:CHECKED parse_ISL_of_lex
+178:CHECKED sexp_to_string_Expr_prefix_free
+185:CHECKED refund_render_fields_prefix_free
+204:CHECKED refund_strict_parse_no_strict_prefix
+211:CHECKED refund_strict_parse_complete
+215:CHECKED refund_render_fields_prefix_code
+221:CHECKED N1_trailing_newline_breaks
+228:CHECKED N2_atom_breaks
+234:CHECKED N3_depth0_breaks
+240:CONTROL_OK refund_strict_parse_no_strict_prefix statement is the literal planned statement
+241:CONTROL_OK refund_strict_parse_complete statement is the literal planned statement
+242:CONTROL_OK refund_render_fields_prefix_code statement is the literal planned statement
+243:CONTROL_OK N1 is a proved negation
+244:CONTROL_OK N3 is a proved negation
+245:CLOSURE_AXIOM bool.SELECT_AX
+246:CLOSURE_AXIOM bool.INFINITY_AX
+247:CLOSURE_AXIOM bool.ETA_AX
+248:CLOSURE_AXIOM bool.BOOL_CASES_AX
+253:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

@@ -1,0 +1,176 @@
+--- orig/LO-0003.sml	2026-11-19 03:45:13.621191360 -0500
++++ L_OUT_v5.sml	2026-11-19 03:46:47.947128176 -0500
+@@ -1,3 +1,7 @@
++(* L-OUT at no_ext, v5 (worker A3). DRAFT: NOT RUN. Base: LO-0003.sml (SHA-256 4bc9910a7b17a735c340ab8e27d728587a3a5db497b70e4a3ba68ceefbfd5cc7,
++   = v4 + orchestrator ML edits). Changes marked (* A3 tactic-only v5 *); no statement changed; every tactic UNCHECKED.
++   Real failures repaired: read_stdout (stdout:140), refund_profile_a_sl_fd1 (stdout:249). Failed lemmas now become
++   ASSUME of their statement (diagnostic; never stored; export still forbidden after any failure). *)
+ (* L-OUT at no_ext, v4 (worker A3). DRAFT: NOT RUN. v4 = v3 (SHA-256 553233ce...0a61, run as LO-0001: CPU limit,
+    stdout ends after CHECKED STD_streams_facts) with changes marked (* A3 tactic-only v4 *): flushed output,
+    BEGIN/END lines, Timeout.apply limits per lemma (240 s) and per alternative (60 s), and tame_uniq after
+@@ -68,8 +72,10 @@
+ val ALT_SECS = 60;     (* one try_all alternative *)
+ val LEMMA_SECS = 240;  (* one whole lemma *)
+ (* Orchestrator A, LO-0003 (ML-only): a tactic is goal -> Context.t -> ...; the limit must cover the application to the context. *)
++(* A3 tactic-only v5: the whole application (tac g ctxt) runs inside the limit; type tactic =
++   goal -> Context.t -> goal list * validation (HOL/src/1/Abbrev.sig:10). *)
+ fun tlim secs (tac : tactic) : tactic = fn g => fn ctxt =>
+-  Timeout.apply (Time.fromSeconds (Int.toLarge secs)) (tac g) ctxt
++  Timeout.apply (Time.fromSeconds (Int.toLarge secs)) (fn () => tac g ctxt) ()
+   handle Timeout.TIMEOUT _ => (pr ("TIMEOUT_ALT after " ^ Int.toString secs ^ " s");
+                                raise mk_HOL_ERR "A3" "tlim" "time limit");
+ (* The timer interrupts this thread; make sure interrupts are delivered asynchronously (Poly/ML Thread API). *)
+@@ -79,30 +85,65 @@
+ fun tags name th = let val (ors,axs) = Tag.dest_tag (Thm.tag th) in
+   if null (hyp th) andalso null axs andalso List.all (fn x => x = "DISK_THM") ors then ()
+   else raise Fail ("Unexpected assumptions: " ^ name ^ " oracles=" ^ String.concatWith "," ors) end;
+-fun show_tac tag (g as (asl, w)) = (pr ("SHOW " ^ tag);
+-   List.app (fn a => let val t = term_to_string a in pr ("  ASM " ^ String.substring (t, 0, Int.min (500, size t))) end) asl;
+-   pr ("  GOAL " ^ String.substring (term_to_string w, 0, Int.min (2500, size (term_to_string w)))); ALL_TAC g);
++(* A3 tactic-only v5: helpers as in A2's prefix_lemma_v4.sml:56-71 (same types).
++   metisTools.limit : {time : real option, infs : int option} ref (A2: HOL/src/metis/metisTools.sml 281). *)
++val _ = metisTools.limit := {time = SOME 30.0, infs = NONE};
++fun trunc n s = if size s <= n then s else String.substring (s, 0, n) ^ " ...";
++fun showg tag (asl, w) = (pr ("SHOW " ^ tag);
++   List.app (fn a => pr ("  ASM " ^ trunc 700 (term_to_string a))) asl;
++   pr ("  GOAL " ^ trunc 3000 (term_to_string w)));
++(* show_tac : string -> tactic *)
++fun show_tac tag g = (showg tag g; ALL_TAC g);
++(* ST : string -> tactic -> tactic. Runs tac; on an exception prints the goal of that stage, then re-raises. *)
++fun ST tag (tac : tactic) : tactic = fn g => fn ctxt => tac g ctxt
++  handle e => (showg ("STAGE_FAILED " ^ tag ^ " : " ^ trunc 300 (General.exnMessage e)) g; raise e);
++(* CL : string -> tactic -> tactic. tac must close the goal; else print every goal left and fail (HOL_ERR). *)
++fun CL tag (tac : tactic) : tactic = fn g => fn ctxt =>
++  let val r as (gs, _) = ST tag tac g ctxt in
++    if null gs then r
++    else (List.app (showg ("UNSOLVED " ^ tag)) gs; raise mk_HOL_ERR "A3" "CL" ("unsolved goals at " ^ tag))
++  end;
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+ val _ = new_theory "forge_refundLOut";
+ val failed = ref ([] : string list);
+ val problems = ref ([] : string list);
+ fun bad s = (pr ("UNEXPECTED_CONTROL_ACCEPTANCE " ^ s); problems := s :: !problems);
+ fun chk name th = (tags name th; pr ("CHECKED " ^ name ^ "\n" ^ thm_to_string th));
+-(* A3 tactic-only v4: BEGIN line, flush, and a time limit for each lemma. *)
++(* A3 tactic-only v5: BEGIN/END lines; a time limit per lemma; a failed lemma becomes ASSUME of its own
++   statement (a theorem WITH a hypothesis), as in A2's prefix_lemma_v4.sml:79-97. A later proof that closes only
++   through such a hypothesis prints DIAG_OK_UNDER and is NOT stored (it is counted as failed). Nothing with a
++   hypothesis is saved; the run raises Fail before export_theory when any lemma failed.
++   TAC_PROOF does not check hypotheses (HOL/src/1/Tactical.sml:75-89), so the hypothesis survives to this test. *)
++val failed_stmts = ref ([] : (string * term) list);
++val diag = ref ([] : string list);
++fun names_of_hyps th = map (fn h => case List.find (fn (_, t) => aconv t h) (!failed_stmts) of
++                                      SOME (n, _) => n | NONE => "?" ^ trunc 80 (term_to_string h)) (hyp th);
++(* thm : string -> (unit -> term) -> (unit -> tactic) -> thm *)
+ fun thm name goalf tacf =
+-  (let val _ = pr ("BEGIN " ^ name)
+-       val t0 = Time.now ()
+-       val g = goalf ()
+-       val pf = Timeout.apply (Time.fromSeconds (Int.toLarge LEMMA_SECS)) Tactical.TAC_PROOF
+-       val th = save_thm (name, pf (([], g), tacf ()))
+-   in chk name th; pr ("END " ^ name ^ " " ^ Time.toString (Time.- (Time.now (), t0)) ^ " s"); th end)
+-  handle Timeout.TIMEOUT _ => (pr ("LEMMA_FAILED " ^ name ^ " TIMEOUT " ^ Int.toString LEMMA_SECS ^ " s");
+-                               failed := name :: !failed; TRUTH)
+-       | e => (pr ("LEMMA_FAILED " ^ name ^ " " ^ General.exnMessage e); failed := name :: !failed; TRUTH);
+-(* A3 tactic-only v4: every alternative runs under ALT_SECS; a time-out counts as a failed alternative. *)
+-fun try_all name tacs =
+-  FIRST (map (fn t => tlim ALT_SECS (t \\ NO_TAC)) tacs)
+-  ORELSE tlim ALT_SECS (hd tacs \\ show_tac ("REMAINING " ^ name) \\ NO_TAC);
++  let val _ = pr ("BEGIN " ^ name)
++      val t0 = Time.now ()
++      val g = goalf ()
++      fun fail_with msg = (pr ("LEMMA_FAILED " ^ name ^ " " ^ msg); failed := name :: !failed;
++                           failed_stmts := (name, g) :: !failed_stmts; ASSUME g)
++      val pf = Timeout.apply (Time.fromSeconds (Int.toLarge LEMMA_SECS)) Tactical.TAC_PROOF
++  in
++    (let val th0 = pf (([], g), tacf ()) in
++       if null (hyp th0) then
++         (let val th = save_thm (name, th0) in
++            chk name th; pr ("END " ^ name ^ " " ^ Time.toString (Time.- (Time.now (), t0)) ^ " s"); th end)
++       else (pr ("DIAG_OK_UNDER " ^ name ^ " assumed: " ^ String.concatWith " " (names_of_hyps th0));
++             diag := name :: !diag; fail_with "(diagnostic only: proved only under the failed lemmas above)")
++     end)
++    handle Timeout.TIMEOUT _ => fail_with ("TIMEOUT " ^ Int.toString LEMMA_SECS ^ " s")
++         | e => fail_with (General.exnMessage e)
++  end
++  handle e => (pr ("LEMMA_FAILED " ^ name ^ " (statement) " ^ General.exnMessage e); failed := name :: !failed; TRUTH);
++(* try_all : string -> tactic list -> tactic. Each alternative under ALT_SECS. Only HOL_ERR is caught, so a
++   lemma-level interrupt is never swallowed. On failure: print the entry goal, then what the first alternative leaves. *)
++fun try_all name (tacs : tactic list) : tactic = fn g => fn ctxt =>
++  FIRST (map (fn t => tlim ALT_SECS (t \\ NO_TAC)) tacs) g ctxt
++  handle e as HOL_ERR _ => (showg ("TRY_ALL_ENTRY " ^ name) g;
++                            tlim ALT_SECS (hd tacs \\ show_tac ("REMAINING " ^ name) \\ NO_TAC) g ctxt);
+ fun defn name q = (let val _ = pr ("BEGIN_DEFINITION " ^ name) val th = Define q in pr ("DEFINITION " ^ name ^ "\n" ^ thm_to_string th); th end)
+   handle e => (pr ("DEFINITION_FAILED " ^ name ^ " " ^ General.exnMessage e); raise e);
+ val one_ne_zero8 = EVAL ``(1w:word8) = 0w``;
+@@ -241,8 +282,10 @@
+   (fn () => rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac \\ tame_uniq   (* A3 tactic-only v4 *)
+      \\ gvs[fsFFITheory.read_def] \\ rpt (pairarg_tac \\ gvs[])
+      \\ `fd <> 1 /\ fd <> 2` by (rpt strip_tac \\ gvs[])
+-     \\ conj_tac >- simp[STD_streams_bumpFD]
+-     \\ simp[bumpFD_def]);
++     \\ (* A3 tactic-only v5. LO-0003 stdout:140, CONJ_TAC failed: gvs had already closed the conjunct
++           fs1.inode_tbl = fs.inode_tbl with the [simp] lemma bumpFD_inode_tbl (fsFFIPropsScript.sml:109-113),
++           so the goal was only STD_streams (bumpFD ...). One simp call covers both shapes. *)
++        CL "read_stdout_end" (simp[STD_streams_bumpFD, fsFFIPropsTheory.bumpFD_inode_tbl, bumpFD_def]));
+ 
+ val RSTEP = thm "ffi_read_stdout_step"
+   (fn () => ``!conf bytes out fs fs1. STD_streams fs /\ ffi_read conf bytes fs = SOME (FFIreturn out fs1) ==>
+@@ -451,28 +494,34 @@
+            ((t = Success /\ fd1_written io = explode ^R) \/
+             (t = Resource_limit_hit /\ fd1_written io <<= explode ^R))``)
+   (fn () =>
+-   let (* A3 tactic-only (D1, D6): instantiate with NOEXT; discharge the premise by MP with the premise
+-          itself (the goal's antecedent is the stored premise term PREM, and PREM has no ext). *)
++   let (* A3 tactic-only v5. LO-0003 stdout:249: both v4 alternatives failed at a ">- simp[]" before any use of
++          LOUT (no SHOW line from the inner try_all): conj_tac >- simp[] (alt 1) and impl_tac >- simp[] (alt 2).
++          The goals there are assumptions verbatim (arm8_run 27 s = SOME ms; ms.PC = ...; the PREM conjuncts);
++          simp normalises the goal side and did not close it. v5 closes them with ACCEPT_TAC / ASM_REWRITE_TAC
++          (no normalisation) and finishes each case with drule_all; metis only as a bounded fallback. *)
++     val fd1_case =
++       FIRST [qexistsl_tac [`Success`, `io`] \\ simp[] \\ drule_all LOUT \\ simp[] \\ NO_TAC,
++              qexistsl_tac [`Resource_limit_hit`, `io'`] \\ simp[] \\ drule_all LOUTP \\ simp[] \\ NO_TAC,
++              metis_tac[LOUT, LOUTP]]
+      val end_alts =
+        [metis_tac[LOUT, LOUTP],
+-        FIRST [drule_all LOUT \\ simp[] \\ NO_TAC, drule_all LOUTP \\ simp[] \\ NO_TAC],
+-        simp[] \\ metis_tac[LOUT, LOUTP]]
++        FIRST [drule_all LOUT \\ simp[] \\ NO_TAC, drule_all LOUTP \\ simp[] \\ NO_TAC]]
+    in
+      try_all "refund_profile_a_sl_fd1"
+        [DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th))
+-          \\ qexists_tac `ms` \\ conj_tac >- simp[]
++          \\ ST "fd1_witness" (qexists_tac `ms`)
++          \\ conj_tac >- CL "fd1_ms" (conj_tac \\ FIRST [first_assum ACCEPT_TAC, ASM_REWRITE_TAC []])
+           \\ qx_gen_tac `bb` \\ strip_tac
+-          \\ qpat_x_assum `!b. _` (qspec_then `bb` mp_tac) \\ simp[]
+-          \\ rpt strip_tac \\ gvs[]
+-          \\ try_all "refund_profile_a_sl_fd1_end" end_alts,
+-        strip_tac
+-          \\ mp_tac SPE_NOEXT
+-          \\ impl_tac >- simp[]
+-          \\ strip_tac \\ qexists_tac `ms` \\ simp[]
++          \\ ST "fd1_spec" (qpat_x_assum `!b. _` (qspec_then `bb` mp_tac))
++          \\ impl_tac >- CL "fd1_sem" (first_assum ACCEPT_TAC)
++          \\ rpt strip_tac \\ rveq
++          \\ CL "fd1_case" fd1_case,
++        DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th))
++          \\ qexists_tac `ms` \\ conj_tac >- ASM_REWRITE_TAC []
+           \\ qx_gen_tac `bb` \\ strip_tac
+-          \\ qpat_x_assum `!b. _` (qspec_then `bb` mp_tac) \\ simp[]
++          \\ qpat_x_assum `!b. _` (qspec_then `bb` mp_tac) \\ ASM_REWRITE_TAC []
+           \\ rpt strip_tac \\ gvs[]
+-          \\ try_all "refund_profile_a_sl_fd1_end2" end_alts]
++          \\ try_all "refund_profile_a_sl_fd1_end" end_alts]
+    end);
+ 
+ (* ================= NEGATIVE CONTROLS ================= *)
+@@ -539,6 +588,8 @@
+ 
+ (* ================= checks ================= *)
+ val _ = pr "MARK CHECKS";
++val _ = pr ("FAILED_LIST " ^ String.concatWith " " (rev (!failed)));          (* A3 tactic-only v5 *)
++val _ = pr ("DIAG_OK_UNDER_LIST " ^ String.concatWith " " (rev (!diag)));
+ val _ = if null (!failed) then () else raise Fail ("failed: " ^ String.concatWith " " (rev (!failed)));
+ fun lit name th tm = if aconv (concl th) tm then pr ("CONTROL_OK " ^ name ^ " statement is the literal planned statement")
+                      else bad (name ^ "-literal");

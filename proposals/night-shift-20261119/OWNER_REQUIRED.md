@@ -15,3 +15,17 @@
 - B-1 needs a start-up step: before a patched sink serves an EXISTING database, run the patched audit and refuse to start on any "request id" problem. Without it, a store written by the unpatched sink can still yield two effects for one request id (proved in Dafny; shown by a Node run on copies).
 - B-2 is more than hardening: without the charge-id check, a faulty signer can cause two refunds for one charge and one request id through another charge's store (proved in Dafny on the model). Recommended: approve B-1 and B-2 together.
 - Digests that change if applied: proposals/forge2-slice1-refund-finality/records/evidence.json (sink, dispatcher), links-final.json, regression.json; the binding manifest draft. No protected path.
+
+## A-1 (Orchestrator A, 2026-11-19T08:47Z): the swap rule of PROTOCOL.md was broken by A; a rule decision is needed
+- Fact: PROTOCOL.md says "Swap free < 1 GB: start no heavy step". A's wrapper checked battery and other HOL processes only.
+  Ten HOL cases started between 08:31Z and 08:45Z with 503 to 759 MiB swap free (start state in each `<case>.go.log`,
+  folder `results/m1b-routeA-20261119/attempt-0001`): PF-0001, E1-0001, E1-0002, E1-0003, E1neg-0001, L2-0002, L2-0003,
+  L2b-0001, LO-0002, LO-0003, PF-0002. None of them ended with the Poly/ML "Run out of store" message. Their exit codes
+  are real. Two passing results fall in this group: E1-0003 and L2-0003.
+- Correction made: the wrapper `nightshift-run.sh` now refuses a start below 1024 MiB swap free (exit 96).
+- Effect: at 08:47Z swap free is 799 MiB (total 7168 MiB; memory free 65 %; AC power). The HOL queue waits.
+- Decision for the owner (not taken by A): keep the 1 GB swap rule as written, or replace it for HOL runs by the recorded
+  runner guard (`memory_pressure` free ≥ 25 % and no other HOL process). macOS changes the swap total by itself
+  (11264, 9216, 8192, 7168 MiB were seen tonight), so "swap free" is not a fixed capacity. A does not change the rule.
+- Optional owner action to confirm the two passing results: run E1-0003 and L2-0003 again when swap free is above 1 GB
+  (A will do this by itself when the condition holds).

@@ -2,3 +2,51 @@
 Now drawing from 'AC Power'
 total = 7168.00M  used = 6409.00M  free = 759.00M  (encrypted)
 System-wide memory free percentage: 55%
+exit 1
+actual_exit 1 wall 97.556 cpu 134.229 rss_mib 4065 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/src/1/boolSyntax.sml:130: HOL_ERR (HOL_ERROR {message = "not an \"==>\"", origins = [{origin_function = "dest_imp", origin_structure = "boolSyntax", source_location = Loc_Unknown}]})
+68:CHECKED rfb2_next_interfer_update
+73:CHECKED rfb2_install_interfer_update
+78:CHECKED rfb2_ffi_interfer_update
+85:CHECKED call_FFI_return_keeps_oracle
+89:SHOW G-leaf
+106:  GOAL mc.target.get_pc ms = mc.halt_pc ∨
+111:SHOW G-leaf
+128:  GOAL mc.install_pc = mc.halt_pc ∨
+132:SHOW G-leaf
+149:  GOAL mc.target.get_pc ms = mc.halt_pc ∨
+154:LEMMA_FAILED ffi_calls_ok_of_returning_calls Fail "all listed tactics failed"
+155:STATEMENT_G T
+159:CHECKED ffi_close_return_lengths
+167:CHECKED basis_close_return_lengths
+174:LEMMA_FAILED close_returning_calls_have_valid_lengths Fail "all listed tactics failed"
+179:CHECKED three_names_are_ExtCall
+185:CHECKED refund_names_are_ExtCall
+193:CHECKED refund_mc_close_fields
+202:LEMMA_FAILED refund_ffi_calls_ok_close Fail "all listed tactics failed"
+205:LEMMA_FAILED refund_ffi_calls_ok_close_totalised Fail "all listed tactics failed"
+209:CHECKED refund_close_premises_hold
+219:CHECKED basis_close_call_returns_at_a_concrete_state
+236:CHECKED close_predicate_fails_for_a_returning_zero_length_call
+250:CHECKED returning_call_premise_is_needed
+256:CHECKED close_instance_needs_the_basis_oracle
+263:CHECKED close_predicate_rejects_zero_alen
+271:CHECKED ffi_calls_ok_mono
+277:CHECKED ffi_calls_ok_conj
+283:CHECKED evaluate_clock_zero
+287:CHECKED call_FFI_return_appends_its_event
+292:SHOW GEV-leaf
+319:  GOAL P x'³' l ms
+326:STATEMENT_TYPECHECKS R1_rw_returning_calls_oracle_only
+336:STATEMENT_TYPECHECKS R2_open_in_returning_calls_oracle_only
+342:STATEMENT_TYPECHECKS R3_signed_alen_from_domain_size
+348:STATEMENT_TYPECHECKS R4_valid_event_gives_Vok
+377:STATEMENT_TYPECHECKS R5_events_give_ffi_calls_ok
+389:STATEMENT_TYPECHECKS R6_refund_run_events_are_valid
+415:STATEMENT_TYPECHECKS R7_L3_target_for_VokY3
+470:STATEMENT_TYPECHECKS as_proposed_with_free_P
+480:UNEXPECTED_CONTROL_ACCEPTANCE G-literal
+481:CONTROL_OK G does not mention the basis oracle
+482:UNEXPECTED_CONTROL_ACCEPTANCE CLOSE-scope
+hash_parents exit 0
+go exit 1

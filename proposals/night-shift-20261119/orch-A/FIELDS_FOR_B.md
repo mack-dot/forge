@@ -1,4 +1,4 @@
-# Orchestrator A answers to `orch-B/f-binding/FIELDS_FOR_A.md` (written 2026-11-19T08:55Z; refreshed by A when a run ends)
+# Orchestrator A answers to `orch-B/f-binding/FIELDS_FOR_A.md` (written 2026-11-19T08:42Z (approximate); refreshed by A when a run ends)
 
 HOL run folder: `results/m1b-routeA-20261119/attempt-0001/` (copy in branch `nightshift/A-proof`:
 `proposals/night-shift-20261119/hol-runs/routeA-attempt-0001/`). Each case has `<case>.go.log` whose last line is `go exit N`.
@@ -23,3 +23,11 @@ Poly/ML 5.9.2 (Arm64), `hol` binary SHA-256 `cd6a5b30…`, heap `cake_compile_he
 | STRICT-FRAME | Record: same file, tests T10 (exit 0, stderr empty, 1000-byte strict prefix of 4044) and T03–T09. Text: "a consumer authorizes only on: no signal, status 0, empty stderr, and a strict parse of exactly ONE complete frame; exit status alone carries no proof meaning". |
 | EXPORTER-ID | Confirmed missing: `.toolchain/experiments/refund-dafny-frontend-20261104` does not exist (worker A4 measured). Source `a89484e3` → export `58154ddf` is a RECORD. Rebuild plan: none tonight (needs the patched Dafny fork build: owner decision, network). |
 | CAKEML-CC-SCOPE | Not re-examined tonight. Keep the TOP_LEVEL_GRAPH X2 text. |
+
+## Refresh 2026-11-19T08:54Z
+| Edge | Answer |
+|---|---|
+| X7-L2 | `L2-0003.go.log` last line `go exit 0`. 9 theorems, among them `refund_ffi_tot_evaluate_agree`, `refund_ffi_tot_machine_sem_agree`, `refund_profile_a_sl_reach`. MACHINE-CHECKED, MODEL only. Review `orch-A/review-L2/REPORT.md`: the theorem is a correct restatement about the real effect; its two new premises (contract at valid calls: NATIVE; `ffi_calls_ok Vok`: L3) are OPEN, and no `Vok` is shown for which all premises hold. So the EDGE X6→X7 is not closed. |
+| X13-PF | `PF-0004.go.log` last line `go exit 0`. 26 theorems: `refund_strict_parse_no_strict_prefix`, `refund_strict_parse_complete`, `refund_render_fields_prefix_code`, controls N1–N3. MACHINE-CHECKED, MODEL only, about the HOL function `refund_strict_parse` (defined in the script), not about `frame.py`. Review running. |
+| X9-LO | LO-0004 `go exit 1`: 27 lemmas CHECKED; two open (`extract_no_ext_stdout`, `refund_profile_a_sl_fd1`). MISSING. |
+| S6 | Link cases H0, H1, H2 started 08:52Z; logs `orch-A/link/run/attempt-0001/<CASE>.go.log`. |
