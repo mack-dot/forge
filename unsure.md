@@ -18076,3 +18076,10 @@ curl: (6) Could not resolve host: github.com
 - NOT RUN: the differential for the repaired draft (prepared; it needs a window).
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false.
 - Next check: the differential for the repaired draft; x-bridge2.
+
+## U551 — the differential for the repaired draft sink: 0 divergences
+- Status: 2026-11-19T11:06Z (inserted by the shell from `date -u`). Refs U544, U550. Evidence: results/night-shift-20261119/orch-B/heavy/v4-1 (summary.txt), heavy/window-5.log.
+- TESTED, my own run in a fourth heavy window, 11:03:39Z to 11:05:53Z, after Orchestrator A removed the HOL lock at 11:03:33Z (heavy/run_window5.sh; seed 20261119; 2,000 plain sequences and 500 in each of the three other modes per pair; tokens with a foreign charge id included): 0 divergent sequences in all four modes for the repaired draft sink of U550 against the compiled V3 core; the same again for the earlier draft and for the hand-patched copy of sink.ts. The two control pairs diverge (the merged sink.ts against the V3 core; the repaired draft against the core without the charge check); one control run with faults ends with exit 1 for a "replay" kind, as in U544.
+- A correction of a time label: in a message to Orchestrator A I gave "11:0x to 11:1xZ" for a worker's scaling run from an estimate. The run's log file is dated 10:59Z. Orchestrator A reports that its slot was idle from 10:57Z to 11:03Z and that no HOL case stopped.
+- Impact: the repaired draft has the same test evidence as the earlier drafts, without their cost defect. A finite test; the draft is not applied. M1-B OPEN. end_to_end=false.
+- Next check: x-bridge2.

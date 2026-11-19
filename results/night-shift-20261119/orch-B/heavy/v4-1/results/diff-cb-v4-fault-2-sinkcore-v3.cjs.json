@@ -1,0 +1,40 @@
+{
+ "sink": "cb-v4",
+ "mode": "fault-2",
+ "seed": 20261119,
+ "count": 500,
+ "coreKind": "v3",
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 241,
+   "valid": 911,
+   "stale-or-current": 297,
+   "foreign-charge-intent": 100,
+   "replay": 271,
+   "settled-id-new-body": 198,
+   "zero": 266,
+   "sig-bitflip": 146,
+   "foreign-charge-post": 103,
+   "reqid-mismatch": 255,
+   "wrong-checker": 174,
+   "attacker-key": 129,
+   "non-canonical": 82,
+   "forged-post(key)": 129,
+   "unknown-pre-hash": 60
+  },
+  "divergentKinds": {},
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": [],
+ "allowed": [],
+ "notAllowedKinds": [],
+ "shellChecks": {
+  "stepP": 6550,
+  "audit": 6550
+ }
+}
