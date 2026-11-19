@@ -1,0 +1,11 @@
+--- ../SinkCoreV3.dfy	2026-11-19 03:29:35.412618347 -0500
++++ M4-no-reqid-check/SinkCoreV3.dfy	2026-11-19 03:41:55.621213561 -0500
+@@ -135,7 +135,7 @@
+   {
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+     else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
+-    else if !Match(tok) then StepResult(core, Rejected(ReqIdMismatch))
++    // MUTANT M4: request-id check removed
+     else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
+     else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
+     // b-integrate: the new check.

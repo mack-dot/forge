@@ -1,0 +1,28 @@
+# owner=b-integrate start=2026-11-19T08:42:03Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 711
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/final-SliceSafetyV3-01.csv SliceSafetyV3.dfy
+
+Dafny program verifier finished with 1633 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/final-SliceSafetyV3-01.csv
+       51.83 real        34.68 user         3.49 sys
+           349388800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               79853  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                3344  voluntary context switches
+              328689  involuntary context switches
+        301307864720  instructions retired
+        115974153458  cycles elapsed
+           324797736  peak memory footprint
+# end=2026-11-19T08:42:55Z
+exit 0

@@ -1,0 +1,11 @@
+--- inputs/transport/sink/SinkCore.dfy	2026-11-19 03:25:12.694849726 -0500
++++ mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy	2026-11-19 03:29:50.873513445 -0500
+@@ -132,7 +132,7 @@
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+     else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
+     else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
+-    else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
++    // MUTANT MD: pre-state check removed
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)
+   }
+ 

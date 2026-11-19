@@ -1,0 +1,33 @@
+# owner=e-expect start=2026-11-19T08:34:13Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/K04-isolate-wrapping-attribute
+# power: Now drawing from 'AC Power'
+# swap free MiB: 583
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+impl/Refund.dfy(4,46): Warning: The {:verify false} attribute should only be used during development. Consider using a bodyless method together with the {:axiom} attribute instead
+  |
+4 |   method {:isolate_assertions}{:verify false} Halt() ensures false {}
+  |                                               ^^^^
+
+
+Dafny program verifier finished with 6 verified, 0 errors
+Compilation failed because warnings were found and --allow-warnings is false
+        1.32 real         1.08 user         0.10 sys
+           126205952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12479  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  64  voluntary context switches
+                2512  involuntary context switches
+          9659592649  instructions retired
+          3665752908  cycles elapsed
+            93389976  peak memory footprint
+# end=2026-11-19T08:34:14Z
+exit 2

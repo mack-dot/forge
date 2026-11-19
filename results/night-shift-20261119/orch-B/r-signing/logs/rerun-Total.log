@@ -1,0 +1,28 @@
+# owner=r-signing start=2026-11-19T08:28:05Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 438
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/rerun-Total.csv TotalReading.dfy
+
+Dafny program verifier finished with 34 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/rerun-Total.csv
+        3.37 real         2.85 user         0.22 sys
+           141721600  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15746  page reclaims
+                  14  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 158  voluntary context switches
+                8649  involuntary context switches
+         24415452169  instructions retired
+          9465348940  cycles elapsed
+           123733192  peak memory footprint
+# end=2026-11-19T08:28:09Z
+exit 0

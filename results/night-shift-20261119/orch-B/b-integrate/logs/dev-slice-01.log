@@ -1,0 +1,42 @@
+# owner=b-integrate start=2026-11-19T08:35:09Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 591
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyV3.dfy
+SliceSafetyV3.dfy(731,14): Warning: unusual indentation in body of exists (which ends at line 732, column 67); do you perhaps need parentheses?
+    |
+731 |       ensures exists i :: 0 <= i < |r.core.outbox| && r.core.outbox[i] == e &&
+    |               ^^^^^^
+
+SliceSafetyV3.dfy(806,14): Warning: unusual indentation in body of exists (which ends at line 808, column 107); do you perhaps need parentheses?
+    |
+806 |       ensures exists i :: 0 <= i < |r.core.outbox| && r.core.outbox[i] == e &&
+    |               ^^^^^^
+
+SliceSafetyV3.dfy(871,8): Error: Verification out of resource (SliceWitnessV3.MainTrace)
+    |
+871 |   lemma MainTrace()
+    |         ^^^^^^^^^
+
+
+Dafny program verifier finished with 73 verified, 0 errors, 1 out of resource
+       12.96 real        11.02 user         0.55 sys
+           314294272  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38594  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                1164  voluntary context switches
+               27280  involuntary context switches
+         94855803013  instructions retired
+         35592750046  cycles elapsed
+           288457976  peak memory footprint
+# end=2026-11-19T08:35:22Z
+exit 4

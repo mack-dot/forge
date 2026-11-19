@@ -1,0 +1,28 @@
+# owner=e-expect start=2026-11-19T08:38:45Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/H01-such-that-enumeration-hang
+# power: Now drawing from 'AC Power'
+# swap free MiB: 695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit impl/Refund.dfy gate/refund/Bindings.dfy --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/H01-such-that-enumeration-hang/audit.md --compare-report
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        0.93 real         0.94 user         0.08 sys
+           100974592  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9075  page reclaims
+                 576  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                  43  voluntary context switches
+                3516  involuntary context switches
+          7705532418  instructions retired
+          3078441376  cycles elapsed
+            90555568  peak memory footprint
+# end=2026-11-19T08:38:46Z
+exit 0

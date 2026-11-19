@@ -1,0 +1,38 @@
+# owner=r-signing start=2026-11-19T08:30:05Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 464
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/attacks-01.csv Attacks.dfy
+Attacks.dfy(195,2): Error: a postcondition could not be proved on this return path
+    |
+195 |   {
+    |   ^
+
+Attacks.dfy(193,12): Related location: this is the postcondition that could not be proved
+    |
+193 |     ensures !H1_SignatureAuthenticity([MintAct(ClaimOf(XS_TOK), V_TOK.sig), Deliver(V_TOK, true)])
+    |             ^
+
+
+Dafny program verifier finished with 1639 verified, 1 error
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/attacks-01.csv
+       58.78 real        40.20 user         3.90 sys
+           296157184  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              129852  page reclaims
+                 710  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  11  signals received
+                4004  voluntary context switches
+              314844  involuntary context switches
+        343756946698  instructions retired
+        135254132975  cycles elapsed
+           330401136  peak memory footprint
+# end=2026-11-19T08:31:04Z
+exit 4

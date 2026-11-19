@@ -1,0 +1,10 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL DIGEST_MISMATCH: results/night-shift-20261119/orch-B/b-signing/SliceSafetyV2.dfy: ledger 1ed076d134f475c5, file 2cc78e3dfe9fc264
+FAIL CLOSURE_MISMATCH: T-V2: run results/night-shift-20261119/orch-B/b-signing/logs/final-V2-01.log closure now 7338e1f41f6b, ledger 1260626ca6f9
+FAIL CLOSURE_MISMATCH: T-V2: listed closure files differ from the recomputed closure: [('SliceSafetyV2.dfy', '1ed076d134f475c52302012cae532b1714ea204ea6bd668cfb150af93b03fa40'), ('SliceSafetyV2.dfy', '2cc78e3dfe9fc26480cdf7e750c1eccc84c22c841fbede68d41f85adf7d1019d')]
+FAIL CLOSURE_MISMATCH: T-V2B: run results/night-shift-20261119/orch-B/b-signing/logs/final-V2OnBytes-01.log closure now d2564fdf7859, ledger 1e56907165fe
+FAIL CLOSURE_MISMATCH: T-V2B: listed closure files differ from the recomputed closure: [('SliceSafetyV2.dfy', '1ed076d134f475c52302012cae532b1714ea204ea6bd668cfb150af93b03fa40'), ('SliceSafetyV2.dfy', '2cc78e3dfe9fc26480cdf7e750c1eccc84c22c841fbede68d41f85adf7d1019d')]
+FAIL CLOSURE_MISMATCH: T-V2B: run results/night-shift-20261119/orch-B/recheck-b/SliceSafetyV2OnBytes.log closure now d2564fdf7859, ledger 1e56907165fe
+edges per class: MACHINE-CHECKED=20, ASSUMPTION=8, TESTED-UNPROVED=9, MISSING=22, CLAIMED, log missing=1, UNKNOWN-TONIGHT=7; total=67
+nodes=250 assumptions=30 mandatory=40
+REFUSED: 6 problems; codes CLOSURE_MISMATCH,DIGEST_MISMATCH; proofs NOT re-run

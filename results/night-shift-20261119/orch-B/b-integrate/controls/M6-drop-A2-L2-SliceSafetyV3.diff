@@ -1,0 +1,11 @@
+--- ../SliceSafetyV3.dfy	2026-11-19 03:38:57.428138486 -0500
++++ M6-drop-A2-L2/SliceSafetyV3.dfy	2026-11-19 03:41:55.621662353 -0500
+@@ -713,7 +713,7 @@
+   // THE L2 THEOREM. InitOk + H1 + A2 + A5: every committed effect is approved and was signed; money bounds; sum.
+   lemma SliceSafetyV3_L2_Authentic(init: State, acts: seq<Act>)
+     requires InitOk(init)
+-    requires A2_MintOnlyOnCheck(acts)
++    // MUTANT M6: A2 dropped from the L2 theorem
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+     requires H1_SignatureAuthenticity(acts)
+     ensures forall e | CommittedEffect(init, acts, e) ::

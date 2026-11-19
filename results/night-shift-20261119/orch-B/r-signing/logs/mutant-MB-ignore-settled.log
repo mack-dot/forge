@@ -1,0 +1,73 @@
+# owner=r-signing start=2026-11-19T08:34:16Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 583
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MB-ignore-settled.csv mutants/MB-ignore-settled/SliceSafetyV2.dfy
+mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(173,24): Error: a postcondition could not be proved on this return path
+    |
+173 |     if r.out.Committed? {
+    |                         ^
+
+mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(165,50): Related location: this is the postcondition that could not be proved
+    |
+165 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+    |                                                   ^^^^
+
+mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(178,22): Error: index out of range
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(178,66): Error: index out of range
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(183,23): Error: index out of range
+    |
+183 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(183,27): Error: assertion might not hold
+    |
+183 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                            ^^
+
+mutants/MB-ignore-settled/inputs/SliceTheorem.dfy(299,28): Error: assertion might not hold
+    |
+299 |           assert CommittedAt(init, acts, n - 1, i);
+    |                             ^
+
+mutants/MB-ignore-settled/inputs/SliceTheorem.dfy(151,26): Related location: this proposition could not be proved
+    |
+151 |     acts[k].tok.requestId !in before.core.settled &&
+    |                           ^^^
+
+mutants/MB-ignore-settled/SliceSafetyV2.dfy(671,8): Error: Verification out of resource (SliceWitnessV2.MainTrace)
+    |
+671 |   lemma MainTrace()
+    |         ^^^^^^^^^
+
+
+Dafny program verifier finished with 1619 verified, 6 errors, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MB-ignore-settled.csv
+       47.20 real        32.81 user         3.34 sys
+           441090048  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               96103  page reclaims
+                   6  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   8  signals received
+                3600  voluntary context switches
+              258747  involuntary context switches
+        287949250088  instructions retired
+        111167777334  cycles elapsed
+           443024920  peak memory footprint
+# end=2026-11-19T08:35:03Z
+exit 4

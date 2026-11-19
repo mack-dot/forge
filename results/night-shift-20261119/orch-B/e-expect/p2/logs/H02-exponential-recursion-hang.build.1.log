@@ -1,0 +1,27 @@
+# owner=e-expect start=2026-11-19T08:45:24Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/H02-exponential-recursion-hang
+# power: Now drawing from 'AC Power'
+# swap free MiB: 759
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build impl/Refund.dfy --target js --output build/model --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+
+Dafny program verifier finished with 5 verified, 0 errors
+        1.20 real         1.12 user         0.15 sys
+           139378688  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19371  page reclaims
+                 988  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 119  voluntary context switches
+                1656  involuntary context switches
+          9646275904  instructions retired
+          3607211492  cycles elapsed
+           102745240  peak memory footprint
+# end=2026-11-19T08:45:25Z
+exit 0

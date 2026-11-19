@@ -1,0 +1,29 @@
+# owner=orchB-recheck start=2026-11-19T08:58:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1399
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-i/MultiChargeLayered.csv MultiChargeLayered.dfy
+# memory free percent: 68
+
+Dafny program verifier finished with 1730 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-i/MultiChargeLayered.csv
+       55.17 real        40.19 user         3.17 sys
+           351502336  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               91086  page reclaims
+                  22  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  18  signals received
+                4115  voluntary context switches
+              212515  involuntary context switches
+        357499966046  instructions retired
+        133833176145  cycles elapsed
+           336643392  peak memory footprint
+# end=2026-11-19T08:59:48Z
+exit 0

@@ -1,0 +1,19 @@
+174,190d173
+<   module HexConversion refines ParametricConversion {
+<     type Char = char
+<     const HEX_DIGITS: seq<char> := "0123456789ABCDEF"
+<     const chars := HEX_DIGITS
+<     const charToDigit :=
+<       map[
+<         '0' := 0, '1' := 1, '2' := 2, '3' := 3, '4' := 4, '5' := 5, '6' := 6, '7' := 7, '8' := 8, '9' := 9,
+<         'a' := 0xA, 'b' := 0xB, 'c' := 0xC, 'd' := 0xD, 'e' := 0xE, 'f' := 0xF,
+<         'A' := 0xA, 'B' := 0xB, 'C' := 0xC, 'D' := 0xD, 'E' := 0xE, 'F' := 0xF
+<       ]
+<     // The size of the map makes this impractical to verify easily.
+<     @Axiom
+<     lemma CharsConsistent()
+<       ensures forall c <- chars :: c in charToDigit && chars[charToDigit[c]] == c
+<   }
+< 
+<   @DisableNonlinearArithmetic
+

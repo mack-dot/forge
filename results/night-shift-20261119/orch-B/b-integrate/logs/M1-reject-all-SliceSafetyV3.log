@@ -1,0 +1,168 @@
+# owner=b-integrate start=2026-11-19T08:46:45Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate/controls/M1-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 799
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M1-reject-all-SliceSafetyV3.csv SliceSafetyV3.dfy
+SinkCoreV3.dfy(157,2): Error: a postcondition could not be proved on this return path
+    |
+157 |   {
+    |   ^
+
+SinkCoreV3.dfy(151,50): Related location: this is the postcondition that could not be proved
+    |
+151 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(184,2): Error: a postcondition could not be proved on this return path
+    |
+184 |   {
+    |   ^
+
+SinkCoreV3.dfy(182,38): Related location: this is the postcondition that could not be proved
+    |
+182 |     ensures Step(core, tok, true).out.Committed?
+    |                                       ^^^^^^^^^^
+
+SinkCoreV3.dfy(232,4): Error: a postcondition could not be proved on this return path
+    |
+232 |     if r.out.Committed? {
+    |     ^^^^^^^^^^^^^^^^^^^^^
+
+SinkCoreV3.dfy(224,50): Related location: this is the postcondition that could not be proved
+    |
+224 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(411,2): Error: a postcondition could not be proved on this return path
+    |
+411 |   {
+    |   ^
+
+SinkCoreV3.dfy(406,12): Related location: this is the postcondition that could not be proved
+    |
+406 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, Charge0().(remaining := 90), "rq_v", Charge0().(remaining := 80),
+    |             ^^^
+
+SinkCoreV3.dfy(440,2): Error: a postcondition could not be proved on this return path
+    |
+440 |   {
+    |   ^
+
+SinkCoreV3.dfy(431,12): Related location: this is the postcondition that could not be proved
+    |
+431 |             var t1 := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_1", c0.(remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(467,2): Error: a postcondition could not be proved on this return path
+    |
+467 |   {
+    |   ^
+
+SinkCoreV3.dfy(459,12): Related location: this is the postcondition that could not be proved
+    |
+459 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(477,2): Error: a postcondition could not be proved on this return path
+    |
+477 |   {
+    |   ^
+
+SinkCoreV3.dfy(473,12): Related location: this is the postcondition that could not be proved
+    |
+473 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_x", c0.(chargeId := "ch_2", remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(492,2): Error: a postcondition could not be proved on this return path
+    |
+492 |   {
+    |   ^
+
+SinkCoreV3.dfy(484,12): Related location: this is the postcondition that could not be proved
+    |
+484 |             var foreign := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_y", Charge2(),
+    |             ^^^
+
+SinkCoreV3.dfy(502,2): Error: a postcondition could not be proved on this return path
+    |
+502 |   {
+    |   ^
+
+SinkCoreV3.dfy(501,44): Related location: this is the postcondition that could not be proved
+    |
+501 |     ensures Step(Run(c, ds), tok, true).out.Committed?
+    |                                             ^^^^^^^^^^
+
+SliceSafetyV3.dfy(885,19): Error: assertion might not hold
+    |
+885 |     assert r2.core == Core(init, {"rq_0"}, [W0_INTENT]) && r2.toks == [V0_TOK];
+    |                    ^^
+
+SliceSafetyV3.dfy(885,67): Error: assertion might not hold
+    |
+885 |     assert r2.core == Core(init, {"rq_0"}, [W0_INTENT]) && r2.toks == [V0_TOK];
+    |                                                                    ^^
+
+SliceSafetyV3.dfy(899,2): Error: a postcondition could not be proved on this return path
+    |
+899 |   {
+    |   ^
+
+SliceSafetyV3.dfy(897,82): Related location: this is the postcondition that could not be proved
+    |
+897 |     ensures k == 4 ==> Step(Exec(W_PRE, MainActs()[..k]).core, VF_TOK, false).out == Rejected(SignatureInvalid)
+    |                                                                                   ^^
+
+SliceSafetyV3.dfy(899,2): Error: a postcondition could not be proved on this return path
+    |
+899 |   {
+    |   ^
+
+SliceSafetyV3.dfy(898,80): Related location: this is the postcondition that could not be proved
+    |
+898 |     ensures k == 5 ==> Step(Exec(W_PRE, MainActs()[..k]).core, V_TOK, true).out == Rejected(RequestSettled)
+    |                                                                                 ^^
+
+SliceSafetyV3.dfy(1013,2): Error: a postcondition could not be proved on this return path
+     |
+1013 |   {
+     |   ^
+
+SliceSafetyV3.dfy(1010,72): Related location: this is the postcondition that could not be proved
+     |
+1010 |     ensures Step(Exec(W_PRE, FaultyActs()[..1]).core, VM_TOK, true).out == Rejected(ReqIdMismatch)
+     |                                                                         ^^
+
+SliceSafetyV3.dfy(1091,4): Error: assertion might not hold
+     |
+1091 |     assert Step(r0.core, VB_TOK, true).out.Committed?;
+     |     ^^^^^^
+
+SliceSafetyV3.dfy(1136,4): Error: assertion might not hold
+     |
+1136 |     assert Step(r1.core, VB_TOK, true).out.Committed?;
+     |     ^^^^^^
+
+
+Dafny program verifier finished with 1619 verified, 16 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M1-reject-all-SliceSafetyV3.csv
+       43.52 real        30.55 user         2.74 sys
+           505856000  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               69570  page reclaims
+                 506  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  16  signals received
+                3368  voluntary context switches
+              179616  involuntary context switches
+        272705241366  instructions retired
+        103011462850  cycles elapsed
+           472565272  peak memory footprint
+# end=2026-11-19T08:47:29Z
+exit 4

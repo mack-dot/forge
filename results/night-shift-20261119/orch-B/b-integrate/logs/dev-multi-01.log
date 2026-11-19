@@ -1,0 +1,47 @@
+# owner=b-integrate start=2026-11-19T08:38:39Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects MultiCharge.dfy
+MultiCharge.dfy(180,15): Error: element might not be in domain
+    |
+180 |             st2["ch_1"].outbox == [a.intent] && st2["ch_2"].outbox == [b.intent] &&
+    |                ^
+
+MultiCharge.dfy(180,51): Error: element might not be in domain
+    |
+180 |             st2["ch_1"].outbox == [a.intent] && st2["ch_2"].outbox == [b.intent] &&
+    |                                                    ^
+
+MultiCharge.dfy(207,15): Error: element might not be in domain
+    |
+207 |             st2["ch_1"].outbox == [] && st2["ch_2"].outbox == [t2.intent] && t2.intent.amount <= C2().original
+    |                ^
+
+MultiCharge.dfy(207,43): Error: element might not be in domain
+    |
+207 |             st2["ch_1"].outbox == [] && st2["ch_2"].outbox == [t2.intent] && t2.intent.amount <= C2().original
+    |                                            ^
+
+
+Dafny program verifier finished with 24 verified, 4 errors
+        5.06 real         4.63 user         0.31 sys
+           173981696  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21832  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 223  voluntary context switches
+               14763  involuntary context switches
+         41767780683  instructions retired
+         15172856727  cycles elapsed
+           156681440  peak memory footprint
+# end=2026-11-19T08:38:45Z
+exit 4

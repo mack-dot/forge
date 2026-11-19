@@ -76,3 +76,41 @@
 - Native counterexamples: exit 0 with truncated or empty stdout (CE-1); DYLD_INSERT_LIBRARIES forges a complete frame (CE-3). B must name two assumptions outside A6: A-LOADER (launcher integrity, scrubbed environment) and strict parse of ONE complete frame by any consumer or issuer glue. HOL: L1-0001 exit 0, L1imp-0001 exit 0, L2-0001 exit 1 (A's runs).
 ### Workers running at 08:40Z (5)
 e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), b-integrate (V3: both sink checks + layered theorem + several charges).
+
+## 09:00Z update
+- Commit on nightshift/B-trust: 865730fd (part 1: evidence, U530–U534). Sync script: <scratchpad>/sync.sh (rsync + path sanitise; excludes f-records/checkout, logs of f-records, keys, >1 MB flood file).
+- B's own re-runs (exit 0): SinkCoreReqId 73; Contrast 106; SliceTheorem (from archive) 1570; SliceSafetyV2OnBytes 1632 (CSV rows Passed for the headline lemmas); TotalReading: see recheck-b/TotalReading.log (first try refused 75); check_records.py exit 0 (identity only); admission suite on B2 copy 92 pass / 3 fail.
+- r-reqid (review of d-reqid) REPORTED: counts confirmed. Findings: D1 upgrade (no-duplicate needs a good start store; false after the unpatched sink wrote; needs a start-up audit); D2 cross-charge double refund without a charge-id check (lemma CrossChargeWithReqIdPatch); ForeignPostLocksStore. Recorded in U534, OWNER_REQUIRED B-4; sent to b-integrate.
+- d-corebacked REPORTED: the token carries only preStateSha256, so the hash compare cannot be in Step; ShellCoreReqId.StepP takes a boolean preOk (A4'); `verify` exit 0, 77 verified; mutant exit 4; draft sink_core_backed.ts (127e1044…): 23 conformance cases, equal to sink.ts except the intended request-id case (worker's Node runs, exit 0). Bad-signature tokens now take BEGIN IMMEDIATE (cost); O(n) load per commit. Heavy differential prepared, NOT RUN. B's re-run of ShellCoreReqId queued (recheck-d/).
+- Running at 09:00Z (5): e-expect, r-signing, b-integrate, b-ser (serialization injectivity model, issuer glue review, IssueBytes contract), f-binding (assurance ledger + verifier + controls).
+- Queue: review of b-integrate and b-ser results; heavy window request to A (three prepared heavy scripts: d-reqid, d-corebacked, e-expect); ROADMAP section; MORNING.md.
+
+## 09:25Z update
+- r-signing (adversarial review of V2) REPORTED: claim-level theorem CONFIRMED (own runs 1622/1632 exit 0; mutants MA, MB, MC, MD, M1, M2 exit 4; no hidden global quantifier; could not derive false). DEFECTS: D1 HIGH byte-layer H3a is FALSE for the real serializer (token holds SHA-256 of the pre-state; lemma PreStateCollisionBreaksApprovedSpec); D2 no witness for the byte theorem; D3 wording: key secrecy sits in A2; D4 inherited lemmas not re-checked (CLOSED by B: `translate cs` on SliceSafetyV2OnBytes.dfy exit 0, SinkCore.Commit*/Init*/Mint* rows Passed, log recheck-b/translate-V2OnBytes.log); D5 scope: empty start, one charge. Repairs sent to b-ser (D1, D2, D3) and b-integrate (D5).
+- f-binding REPORTED: ASSURANCE_LEDGER.json (67 edges: MC 20, ASSUMPTION 8, TESTED 9, MISSING 22, UNKNOWN-TONIGHT 7, CLAIMED 1); verify_ledger.py exit 0 and run_controls.py 29/29 (B's own runs). Chain of 33 edges: MC 6. Key structural gap: X16 (issuer calls the compiled Dafny checker, not the M1 binary). FIELDS_FOR_A.md sent to A; A's answers: orch-A/FIELDS_FOR_B.md. TODO near the end: refresh the ledger (make_ledger.py) with A's fields and tonight's late results.
+- B's re-runs: TotalReading exit 0 (34); ShellCoreReqId exit 0 (77); ByteAttacks queued (recheck-b/ByteAttacks.log).
+- Running at 09:25Z (4): e-expect, b-integrate, b-ser, x-issuer-bridge (dual-check issuer: Dafny verdict AND native strict frame; hardened launcher; edges X15/X16).
+- A: hol.lock held all night; A's commit 68b2e67b.
+
+## 10:00Z update
+- PROTOCOL amended by the launcher (swap rule): heavy step if swap free >= 1024 MiB OR (memory free >= 40 % AND swap free >= 512 MiB). Applied in tools/dafny_locked.sh. Lock script also has a FIFO queue (locks/dafny.queue) since 08:19Z.
+- Commit 2 on nightshift/B-trust: fa5d74d7 (U535).
+- b-integrate REPORTED (worker runs, exit 0): SinkCoreV3.dfy 70 (request-id + charge-id checks; StepExact; GoodStart + executable AuditStart); SliceSafetyV3.dfy 1633 (layered: L0 no assumption; L1 A5; L2 InitOk+H1+A2+A5; L3 +A6b); MultiCharge.dfy 141; MultiChargeLayered.dfy 1730. Seven mutants exit 4. Protocol.md lines 61, 65: attempts keyed by (charge ID, request ID). B read the L0/L2/MultiChargeSafety statements and Step. B's re-run queued (recheck-i/). Adversarial review r-integrate started.
+- A's message 09:40Z: HOL `exported_contract_exact` passed (H1.go.log, H2.go.log go exit 0); controls pending (do not mark S6 MACHINE-CHECKED yet). PF-0004 and L2-0003 go exit 0. Worker b-export-bridge started: Dafny reading of the export <==> FlatContract; BRIDGE_STATEMENT.md.
+- B's independent rerun of the six proof records: recheck-f/rerun.out (see its last lines).
+- Running at 10:00Z (5): e-expect, b-ser, x-issuer-bridge, b-export-bridge, r-integrate.
+
+## 10:20Z update
+- e-expect REPORTED: expect rule reproduced (75/75 verdicts; 0 false refusals of 19 correct); no lexer bypass; NEW admitted run-time halts without `expect` (H04 seq(2^32) RangeError; H01b `:|` search; H02; H03); supervision diffs for 9 files (all `git apply --check` exit 0 in B's run); B re-ran the patched run() unit test: 6 of 6 ok, exit 0 (recheck-e/). Heavy controls prepared NOT RUN (e-expect/p3/heavy_controls.sh). OWNER_REQUIRED B-5.
+- B's independent rerun of the six proof records via check_records.py --rerun: SAME for all six (1489, 1486, 56, 60, 67, 1570; exit 0) — recheck-f/rerun.out.
+- Running at 10:20Z (5): b-ser, x-issuer-bridge, b-export-bridge, r-integrate, e-totality (bounded straight-line subset rule for refund submissions; confusion table on correct and hostile sets; unapplied diff).
+
+## CORRECTION (measured 09:04Z by `date -u`)
+- The headings "09:00Z", "09:25Z", "10:00Z" and "10:20Z" above, and the times "08:40Z", "08:50Z" in section titles, were B's ESTIMATES, not clock readings; they run ahead of the clock. The real time at this line is 2026-11-19T09:04Z. Order of events is as written. Times inside unsure.md entries come from `date -u` and are right. Lock-script logs carry measured start and end times.
+- B's session ended once on an API overload (529) and was resumed by the launcher at about 09:03Z. No lock was stale: dafny.lock holder (b-export-bridge, PID 42218) alive; all queue tickets alive.
+
+## HANDBACK 2026-11-19T09:04:51Z
+- The harness required B to hand back. B's loop STOPPED here; it did not continue after this line.
+- Workers assigned and not yet reported/re-checked: b-ser, x-issuer-bridge, b-export-bridge, r-integrate, e-totality (no directory seen at 09:05Z: may not have started). Their directories under orch-B/ hold whatever they wrote.
+- To resume: re-check each worker directory (re-run its final Dafny files through tools/dafny_locked.sh), write unsure entries from U537, refresh f-binding ledger with orch-A/FIELDS_FOR_B.md, add a ROADMAP section (NOT yet written), finalize MORNING.md, confirm to A.
+- OWED: ROADMAP.md section for U530–U536 on the branch.

@@ -1,0 +1,68 @@
+# owner=r-signing start=2026-11-19T08:35:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 591
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MD-ignore-prestate.csv mutants/MD-ignore-prestate/SliceSafetyV2.dfy
+mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy(173,24): Error: a postcondition could not be proved on this return path
+    |
+173 |     if r.out.Committed? {
+    |                         ^
+
+mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy(165,50): Related location: this is the postcondition that could not be proved
+    |
+165 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+    |                                                   ^^^^
+
+mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy(178,22): Error: index out of range
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy(178,66): Error: index out of range
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy(183,23): Error: index out of range
+    |
+183 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+mutants/MD-ignore-prestate/inputs/transport/sink/SinkCore.dfy(183,27): Error: assertion might not hold
+    |
+183 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                            ^^
+
+mutants/MD-ignore-prestate/inputs/SliceTheorem.dfy(299,28): Error: assertion might not hold
+    |
+299 |           assert CommittedAt(init, acts, n - 1, i);
+    |                             ^
+
+mutants/MD-ignore-prestate/inputs/SliceTheorem.dfy(150,23): Related location: this proposition could not be proved
+    |
+150 |     before.core.charge == acts[k].tok.pre &&
+    |                        ^^
+
+
+Dafny program verifier finished with 1620 verified, 6 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MD-ignore-prestate.csv
+       53.69 real        36.00 user         3.84 sys
+           345669632  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              117760  page reclaims
+                  22  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  11  signals received
+                3641  voluntary context switches
+              401313  involuntary context switches
+        315666221273  instructions retired
+        122526423134  cycles elapsed
+           354698608  peak memory footprint
+# end=2026-11-19T08:36:19Z
+exit 4

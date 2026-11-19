@@ -1,0 +1,11 @@
+--- ../SinkCoreV3.dfy	2026-11-19 03:29:35.412618347 -0500
++++ M3-no-chargeid-check/SinkCoreV3.dfy	2026-11-19 03:41:55.620964477 -0500
+@@ -139,7 +139,7 @@
+     else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
+     else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
+     // b-integrate: the new check.
+-    else if !ChargeOk(core.charge, tok) then StepResult(core, Rejected(ChargeIdMismatch))
++    // MUTANT M3: charge-id check removed
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)
+   }
+ 

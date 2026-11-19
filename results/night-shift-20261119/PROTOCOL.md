@@ -39,6 +39,13 @@ Lock dir: `results/night-shift-20261119/locks/`
 Before any heavy step: run `pmset -g batt` and `sysctl vm.swapusage`.
 - On battery: start no heavy step. Follow the existing runbook to pause.
 - Swap free < 1 GB: start no heavy step; shed workers.
+  AMENDED by the launcher at ~09:00Z: macOS keeps swapped pages until they
+  are touched, so swap free can stay < 1 GB while RAM is mostly free. A
+  heavy step may start if EITHER swap free >= 1024 MiB, OR
+  (`memory_pressure` "System-wide memory free percentage" >= 40 % AND
+  swap free >= 512 MiB). Below 512 MiB swap free, never start. Record both
+  values in each case's log at start. Evidence for the change: at the
+  amendment, swap free = 895 MiB and memory free = 67 %.
 Remove your lock in every exit path. Record a stale lock; do not delete
 another owner's lock without evidence that its process is gone.
 

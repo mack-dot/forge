@@ -1,0 +1,11 @@
+--- inputs/transport/sink/SinkCore.dfy	2026-11-19 03:25:12.694849726 -0500
++++ mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy	2026-11-19 03:29:50.873319027 -0500
+@@ -131,7 +131,7 @@
+   {
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+     else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
+-    else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
++    // MUTANT MB: settled check removed
+     else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)
+   }

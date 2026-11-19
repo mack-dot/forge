@@ -1,0 +1,15 @@
+production bounds: ({'dafny-version': 60, 'z3-version': 60, 'audit-before': 900, 'verify': 3600, 'compile-js': 1800, 'hostile': 1800, 'audit-after': 900}, 67108864)
+sleep30: exit None
+ok   sleep30     want=RESOURCE_LIMIT got=RESOURCE_LIMIT 2.01s orphans=0 files=(0, 0) rec_exit=None | RESOURCE_LIMIT: sleep30 reached the wall-clock bound of 2 s; process group killed; no verdict
+quick: exit 0
+ok   quick       want=PASS           got=PASS           0.01s orphans=0 files=(3, 0) rec_exit=0 | exit 0 stdout 3 B stderr 0 B
+exit3: exit 3
+ok   exit3       want=PASS           got=PASS           0.01s orphans=0 files=(4, 4) rec_exit=3 | exit 3 stdout 4 B stderr 4 B
+flood10mb: exit 1
+ok   flood10mb   want=RESOURCE_LIMIT got=RESOURCE_LIMIT 0.05s orphans=0 files=(1048577, 109) rec_exit=1 | RESOURCE_LIMIT: flood10mb wrote more than 1048576 bytes; no verdict
+grandchild: exit None
+ok   grandchild  want=RESOURCE_LIMIT got=RESOURCE_LIMIT 2.01s orphans=0 files=(0, 0) rec_exit=None | RESOURCE_LIMIT: grandchild reached the wall-clock bound of 2 s; process group killed; no verdict
+selfkill: exit -9
+ok   selfkill    want=RESOURCE_LIMIT got=RESOURCE_LIMIT 0.01s orphans=0 files=(0, 0) rec_exit=-9 | RESOURCE_LIMIT: selfkill ended by signal 9; no verdict
+failures: 0
+exit 0

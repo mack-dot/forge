@@ -1,0 +1,63 @@
+# owner=r-signing start=2026-11-19T08:31:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 479
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MA-commit-without-sig.csv mutants/MA-commit-without-sig/SliceSafetyV2.dfy
+mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy(173,24): Error: a postcondition could not be proved on this return path
+    |
+173 |     if r.out.Committed? {
+    |                         ^
+
+mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy(165,50): Related location: this is the postcondition that could not be proved
+    |
+165 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+    |                                                   ^^^^
+
+mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy(178,22): Error: index out of range
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy(178,59): Error: possible violation of postcondition of forall statement
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                            ^
+
+mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy(178,66): Error: index out of range
+    |
+178 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy(183,23): Error: index out of range
+    |
+183 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+mutants/MA-commit-without-sig/SliceSafetyV2.dfy(671,8): Error: Verification out of resource (SliceWitnessV2.MainTrace)
+    |
+671 |   lemma MainTrace()
+    |         ^^^^^^^^^
+
+
+Dafny program verifier finished with 1620 verified, 5 errors, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MA-commit-without-sig.csv
+       50.01 real        34.28 user         4.31 sys
+           442449920  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               92203  page reclaims
+                 187  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                3662  voluntary context switches
+              368723  involuntary context switches
+        298041285940  instructions retired
+        117733930664  cycles elapsed
+           432244152  peak memory footprint
+# end=2026-11-19T08:32:17Z
+exit 4

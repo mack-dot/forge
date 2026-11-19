@@ -1,0 +1,28 @@
+# owner=r-signing start=2026-11-19T08:32:17Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 503
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/audit-Attacks.md Attacks.dfy
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        6.06 real         5.90 user         0.23 sys
+           239599616  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               17812  page reclaims
+                 574  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                  76  voluntary context switches
+                6830  involuntary context switches
+         52330809107  instructions retired
+         18476283607  cycles elapsed
+           206603512  peak memory footprint
+# end=2026-11-19T08:32:23Z
+exit 0

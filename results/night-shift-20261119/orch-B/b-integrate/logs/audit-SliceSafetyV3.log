@@ -1,0 +1,29 @@
+# owner=b-integrate start=2026-11-19T08:53:50Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1039
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/audit-SliceSafetyV3.md SliceSafetyV3.dfy
+# memory free percent: 69
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        5.89 real         6.84 user         0.17 sys
+           292732928  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21348  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  19  signals received
+                  72  voluntary context switches
+                3919  involuntary context switches
+         62174983277  instructions retired
+         21753413681  cycles elapsed
+           259310864  peak memory footprint
+# end=2026-11-19T08:53:56Z
+exit 0

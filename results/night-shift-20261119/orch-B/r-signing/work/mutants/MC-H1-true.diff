@@ -1,0 +1,21 @@
+--- SliceSafetyV2.dfy	2026-11-19 03:25:12.688917537 -0500
++++ mutants/MC-H1-true/SliceSafetyV2.dfy	2026-11-19 03:29:50.873964655 -0500
+@@ -22,7 +22,7 @@
+ // A5 (sigOk equals VerifyTag) and A6 (ValidArtifact) stay hypotheses, as in SliceSafety.
+ // Uninterpreted symbol: VerifyTag (FinalityProtocol, inherited bodiless into SinkCore). No assume, no axiom,
+ // no bodiless lemma in this file.
+-include "inputs/SliceTheorem.dfy"
++include "../../inputs/SliceTheorem.dfy"
+ 
+ module SliceTheoremV2 {
+   import opened SinkCore
+@@ -91,8 +91,7 @@
+ 
+   ghost predicate H1_SignatureAuthenticity(acts: seq<Act>)
+   {
+-    forall k | 0 <= k < |acts| && acts[k].Deliver? ::
+-      VerifyTag(ClaimOf(acts[k].tok), acts[k].tok.sig) ==> SignedBefore(acts, k, ClaimOf(acts[k].tok))
++    true  // MUTANT MC: H1 replaced by true
+   }
+ 
+   // The pair-level form (strong unforgeability). It implies the claim-level form; V2 needs only the latter.

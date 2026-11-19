@@ -1,0 +1,83 @@
+# owner=b-integrate start=2026-11-19T08:47:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate/controls/M3-no-chargeid-check
+# power: Now drawing from 'AC Power'
+# swap free MiB: 895
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M3-no-chargeid-check-SliceSafetyV3.csv SliceSafetyV3.dfy
+SinkCoreV3.dfy(154,2): Error: a postcondition could not be proved on this return path
+    |
+154 |   {
+    |   ^
+
+SinkCoreV3.dfy(148,50): Related location: this is the postcondition that could not be proved
+    |
+148 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(171,2): Error: a postcondition could not be proved on this return path
+    |
+171 |   {
+    |   ^
+
+SinkCoreV3.dfy(170,12): Related location: this is the postcondition that could not be proved
+    |
+170 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+SinkCoreV3.dfy(229,24): Error: a postcondition could not be proved on this return path
+    |
+229 |     if r.out.Committed? {
+    |                         ^
+
+SinkCoreV3.dfy(221,50): Related location: this is the postcondition that could not be proved
+    |
+221 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(474,2): Error: a postcondition could not be proved on this return path
+    |
+474 |   {
+    |   ^
+
+SinkCoreV3.dfy(470,12): Related location: this is the postcondition that could not be proved
+    |
+470 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_x", c0.(chargeId := "ch_2", remaining := 90),
+    |             ^^^
+
+SinkCoreV3.dfy(489,2): Error: a postcondition could not be proved on this return path
+    |
+489 |   {
+    |   ^
+
+SinkCoreV3.dfy(481,12): Related location: this is the postcondition that could not be proved
+    |
+481 |             var foreign := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_y", Charge2(),
+    |             ^^^
+
+SliceSafetyV3.dfy(1031,4): Error: assertion might not hold
+     |
+1031 |     assert r4.core == r3.core;
+     |     ^^^^^^
+
+
+Dafny program verifier finished with 1627 verified, 6 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M3-no-chargeid-check-SliceSafetyV3.csv
+       49.39 real        35.08 user         3.29 sys
+           357761024  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               73131  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  14  signals received
+                3434  voluntary context switches
+              261128  involuntary context switches
+        308377839992  instructions retired
+        118160990352  cycles elapsed
+           324355368  peak memory footprint
+# end=2026-11-19T08:48:46Z
+exit 4

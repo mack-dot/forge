@@ -1,0 +1,29 @@
+# owner=orchB-recheck start=2026-11-19T08:57:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1383
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-i/SinkCoreV3.csv SinkCoreV3.dfy
+# memory free percent: 67
+
+Dafny program verifier finished with 70 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-i/SinkCoreV3.csv
+        5.00 real         5.05 user         0.29 sys
+           199294976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18298  page reclaims
+                 200  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 285  voluntary context switches
+               13706  involuntary context switches
+         43546360078  instructions retired
+         16487800449  cycles elapsed
+           165921992  peak memory footprint
+# end=2026-11-19T08:57:28Z
+exit 0

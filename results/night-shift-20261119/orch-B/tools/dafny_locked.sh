@@ -36,7 +36,11 @@ swapfree=$(sysctl -n vm.swapusage | sed -E 's/.*free = ([0-9]+)\..*/\1/')
 case "$batt" in *"AC Power"*) ;; *) echo "refused: not on AC power" >> "$LOG"; echo "exit 75" >> "$LOG"; exit 75;; esac
 # A run with TIMEOUT_SECONDS <= 90 is a LIGHT check (PROTOCOL: not an expensive Dafny run): floor 400 MiB.
 # Every other run is a heavy step: floor 1024 MiB.
-floor=1024; [ "$TMO" -le 90 ] && floor=400
+# PROTOCOL amendment (launcher, 2026-11-19): a heavy step may start if swap free >= 1024 MiB, OR
+# (memory_pressure free >= 40 % AND swap free >= 512 MiB). Never below 512 MiB.
+memfree=$(memory_pressure 2>/dev/null | sed -n 's/.*free percentage: \([0-9]*\)%.*/\1/p'); memfree=${memfree:-0}
+echo "# memory free percent: $memfree" >> "$LOG"
+floor=1024; [ "$memfree" -ge 40 ] && floor=512; [ "$TMO" -le 90 ] && floor=400
 if [ "$swapfree" -lt $floor ]; then echo "refused: swap free $swapfree < $floor MiB" >> "$LOG"; echo "exit 75" >> "$LOG"; exit 75; fi
 cd "$WORKDIR" || { echo "exit 77" >> "$LOG"; exit 77; }
 /usr/bin/time -l "$DAFNY" "$@" >> "$LOG" 2>&1 &

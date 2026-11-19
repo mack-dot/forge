@@ -1,0 +1,27 @@
+# owner=b-integrate start=2026-11-19T08:39:49Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 703
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects MultiCharge.dfy
+
+Dafny program verifier finished with 26 verified, 0 errors
+        5.04 real         4.59 user         0.27 sys
+           165281792  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21935  page reclaims
+                  16  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 229  voluntary context switches
+                8798  involuntary context switches
+         41544729490  instructions retired
+         14979290685  cycles elapsed
+           149849264  peak memory footprint
+# end=2026-11-19T08:39:54Z
+exit 0

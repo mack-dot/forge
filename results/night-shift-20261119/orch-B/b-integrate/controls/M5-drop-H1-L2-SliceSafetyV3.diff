@@ -1,0 +1,11 @@
+--- ../SliceSafetyV3.dfy	2026-11-19 03:38:57.428138486 -0500
++++ M5-drop-H1-L2/SliceSafetyV3.dfy	2026-11-19 03:41:55.621449436 -0500
+@@ -715,7 +715,7 @@
+     requires InitOk(init)
+     requires A2_MintOnlyOnCheck(acts)
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+-    requires H1_SignatureAuthenticity(acts)
++    // MUTANT M5: H1 dropped from the L2 theorem
+     ensures forall e | CommittedEffect(init, acts, e) ::
+       exists i :: 0 <= i < |Exec(init, acts).core.outbox| && Exec(init, acts).core.outbox[i] == e &&
+         ApprovedSpec(init, acts, i) && SignedInTrace(init, acts, i)

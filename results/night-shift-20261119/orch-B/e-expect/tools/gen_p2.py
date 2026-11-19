@@ -19,11 +19,16 @@ def make(name, pre_method='', in_body='', tail='}\n', raw=None):
 # ---- H: run-time failure without the token `expect` (resource class) ----
 make('H01-such-that-enumeration-hang',
      in_body='    if %s {\n      var k: int :| k >= 1000000000000000000;\n      var unused := k;\n    }\n' % KEY)
+make('H01b-such-that-modulus-hang',
+     in_body='    if %s {\n      assert 0 <= 999999999999999999 && 999999999999999999 %% 1000000000000000000 == 999999999999999999;\n'
+             '      var k: int :| 0 <= k && k %% 1000000000000000000 == 999999999999999999;\n      var unused := k;\n    }\n' % KEY)
 make('H02-exponential-recursion-hang',
      pre_method='  function Slow(n: nat): nat { if n == 0 then 0 else Slow(n - 1) + Slow(n - 1) }\n\n',
      in_body='    if %s {\n      var z := Slow(200);\n    }\n' % KEY)
 make('H03-seq-comprehension-alloc',
      in_body='    if %s {\n      var s := seq(1000000000000, i => 0);\n    }\n' % KEY)
+make('H04-seq-length-2pow32-throws',
+     in_body='    if %s {\n      var s := seq(4294967296, i => 0);\n    }\n' % KEY)
 # ---- K: hide `expect` from the lexer while Dafny still sees it ----
 make('K01-string-backslash-newline',
      in_body='    var s := "a\\\nexpect !(%s); var t := "; var u := "";\n' % KEY)

@@ -1,0 +1,28 @@
+# owner=r-signing start=2026-11-19T08:35:05Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 591
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/audit-SinkCore-direct.md inputs/transport/sink/SinkCore.dfy
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        2.91 real         2.64 user         0.14 sys
+           136822784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10631  page reclaims
+                 568  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  46  voluntary context switches
+                5020  involuntary context switches
+         25836469754  instructions retired
+          8559226077  cycles elapsed
+           103892192  peak memory footprint
+# end=2026-11-19T08:35:08Z
+exit 0

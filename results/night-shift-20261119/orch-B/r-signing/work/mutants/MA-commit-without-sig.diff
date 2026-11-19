@@ -1,0 +1,11 @@
+--- inputs/transport/sink/SinkCore.dfy	2026-11-19 03:25:12.694849726 -0500
++++ mutants/MA-commit-without-sig/inputs/transport/sink/SinkCore.dfy	2026-11-19 03:29:50.873133694 -0500
+@@ -130,7 +130,7 @@
+   function Step(core: Core, tok: SinkToken, sigOk: bool): StepResult
+   {
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+-    else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
++    // MUTANT MA: signature check removed
+     else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
+     else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)

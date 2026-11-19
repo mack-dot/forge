@@ -47,3 +47,5 @@ Truth rules:
 Final report (your last message, at most 60 lines): what is MACHINE-CHECKED with the exact command, log path and
 exit code; SHA-256 of each new source file; counterexamples; what is NOT RUN and why; open doubts; files written.
 Also write the same text to REPORT.md in your evidence directory.
+
+AMENDMENT 09:30Z (PROTOCOL.md): a heavy step (Dafny TIMEOUT_S > 90 included) may start if swap free >= 1024 MiB, OR (memory free >= 40 % AND swap free >= 512 MiB). The lock script applies it. heavy.lock items still never run while hol.lock exists.

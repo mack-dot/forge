@@ -1,0 +1,69 @@
+# owner=b-integrate start=2026-11-19T08:50:18Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate/controls/M4-no-reqid-check
+# power: Now drawing from 'AC Power'
+# swap free MiB: 911
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M4-no-reqid-check-SinkCoreV3.csv SinkCoreV3.dfy
+# memory free percent: 66
+SinkCoreV3.dfy(154,2): Error: a postcondition could not be proved on this return path
+    |
+154 |   {
+    |   ^
+
+SinkCoreV3.dfy(148,50): Related location: this is the postcondition that could not be proved
+    |
+148 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(165,2): Error: a postcondition could not be proved on this return path
+    |
+165 |   {
+    |   ^
+
+SinkCoreV3.dfy(164,12): Related location: this is the postcondition that could not be proved
+    |
+164 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+SinkCoreV3.dfy(229,24): Error: a postcondition could not be proved on this return path
+    |
+229 |     if r.out.Committed? {
+    |                         ^
+
+SinkCoreV3.dfy(221,50): Related location: this is the postcondition that could not be proved
+    |
+221 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+SinkCoreV3.dfy(464,2): Error: a postcondition could not be proved on this return path
+    |
+464 |   {
+    |   ^
+
+SinkCoreV3.dfy(456,12): Related location: this is the postcondition that could not be proved
+    |
+456 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+
+Dafny program verifier finished with 66 verified, 4 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M4-no-reqid-check-SinkCoreV3.csv
+        5.62 real         5.11 user         0.37 sys
+           177291264  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18519  page reclaims
+                  22  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                 288  voluntary context switches
+               27017  involuntary context switches
+         41526765432  instructions retired
+         16621713529  cycles elapsed
+           157713656  peak memory footprint
+# end=2026-11-19T08:50:24Z
+exit 4

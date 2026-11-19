@@ -1,0 +1,27 @@
+# owner=e-expect start=2026-11-19T08:46:34Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/H03-seq-comprehension-alloc
+# power: Now drawing from 'AC Power'
+# swap free MiB: 759
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build impl/Refund.dfy --target js --output build/model --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+
+Dafny program verifier finished with 4 verified, 0 errors
+        1.64 real         1.29 user         0.21 sys
+           139771904  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19424  page reclaims
+                1013  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 101  voluntary context switches
+                6815  involuntary context switches
+          9641195092  instructions retired
+          4036068685  cycles elapsed
+           103154864  peak memory footprint
+# end=2026-11-19T08:46:36Z
+exit 0

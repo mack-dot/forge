@@ -1,0 +1,29 @@
+# owner=b-integrate start=2026-11-19T08:53:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1039
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/audit-SinkCoreV3.md SinkCoreV3.dfy
+# memory free percent: 68
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.65 real         1.58 user         0.07 sys
+           150355968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11288  page reclaims
+                   5  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                  35  voluntary context switches
+                2056  involuntary context switches
+         14090472602  instructions retired
+          5103307337  cycles elapsed
+           117589216  peak memory footprint
+# end=2026-11-19T08:53:40Z
+exit 0

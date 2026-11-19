@@ -1,0 +1,39 @@
+# owner=r-signing start=2026-11-19T08:32:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 503
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/byteattacks-01.csv ByteAttacks.dfy
+ByteAttacks.dfy(106,12): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+106 |     ensures forall m: Msg :: exists t: Tag :: TotalVB(m, t)
+    |             ^^^^^^
+
+ByteAttacks.dfy(112,4): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+112 |     forall m: Msg
+    |     ^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 1636 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/byteattacks-01.csv
+Compilation failed because warnings were found and --allow-warnings is false
+       53.12 real        36.85 user         3.42 sys
+           402866176  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              105948  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  16  signals received
+                3883  voluntary context switches
+              248204  involuntary context switches
+        319430600940  instructions retired
+        123744731975  cycles elapsed
+           419153384  peak memory footprint
+# end=2026-11-19T08:33:17Z
+exit 2

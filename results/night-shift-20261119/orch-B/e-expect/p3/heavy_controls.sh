@@ -18,7 +18,8 @@ PY=/usr/local/bin/python3.10            # pinned 3.10.11; the gate checks its di
 SUBS="$R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy
 $R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy
 $R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E08-time-keyed.dfy
-$E/p2/subs/H01-such-that-enumeration-hang.dfy
+$E/p2/subs/H01b-such-that-modulus-hang.dfy
+$E/p2/subs/H04-seq-length-2pow32-throws.dfy
 $E/p2/subs/H02-exponential-recursion-hang.dfy
 $E/p2/subs/H03-seq-comprehension-alloc.dfy"
 # 0. Preconditions (refuse, do not wait).

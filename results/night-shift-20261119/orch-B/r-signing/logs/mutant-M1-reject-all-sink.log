@@ -1,0 +1,63 @@
+# owner=r-signing start=2026-11-19T08:38:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 695
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-M1-reject-all-sink.csv mutants/M1-reject-all-sink/SliceSafetyV2.dfy
+mutants/M1-reject-all-sink/inputs/transport/sink/SinkCore.dfy(173,4): Error: a postcondition could not be proved on this return path
+    |
+173 |     if r.out.Committed? {
+    |     ^^^^^^^^^^^^^^^^^^^^^
+
+mutants/M1-reject-all-sink/inputs/transport/sink/SinkCore.dfy(165,50): Related location: this is the postcondition that could not be proved
+    |
+165 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+    |                                                   ^^^^
+
+mutants/M1-reject-all-sink/inputs/SliceTheorem.dfy(493,4): Error: assertion might not hold
+    |
+493 |     assert Step(r1.core, tok, true).out.Committed?;
+    |     ^^^^^^
+
+mutants/M1-reject-all-sink/SliceSafetyV2.dfy(659,4): Error: assertion might not hold
+    |
+659 |     assert Step(r1.core, tok, true).out.Committed?;
+    |     ^^^^^^
+
+mutants/M1-reject-all-sink/SliceSafetyV2.dfy(695,19): Error: assertion might not hold
+    |
+695 |     assert r2.core == Core(init, {"rq_0"}, [SW.W0_INTENT]) && r2.toks == [V0_TOK];
+    |                    ^^
+
+mutants/M1-reject-all-sink/SliceSafetyV2.dfy(855,4): Error: assertion might not hold
+    |
+855 |     assert r2.core == Core(init, {"rq_0"}, [SW.W0_INTENT]);
+    |     ^^^^^^
+
+mutants/M1-reject-all-sink/SliceSafetyV2.dfy(904,4): Error: assertion might not hold
+    |
+904 |     assert Step(r0.core, VB_TOK, true).out.Committed?;
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 1616 verified, 6 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-M1-reject-all-sink.csv
+       54.23 real        36.52 user         4.06 sys
+           360824832  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               80244  page reclaims
+                  15  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  14  signals received
+                3567  voluntary context switches
+              489184  involuntary context switches
+        313106181633  instructions retired
+        122692024725  cycles elapsed
+           336676136  peak memory footprint
+# end=2026-11-19T08:39:47Z
+exit 4
