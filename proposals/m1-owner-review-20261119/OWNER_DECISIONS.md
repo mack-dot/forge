@@ -284,3 +284,33 @@ obligations, with a go or no-go; no run-time is rewritten and no build
 is started. C3: the nine overclaiming sentences are corrected in this
 same pull request. The macOS executable and every record stay as they
 are.)
+
+## Texts 10 and 11 (after pull request 56; pasted, received 2026-11-19)
+
+Two pasted texts with no words of the owner's own. Kept in short form.
+
+Text 10 proposes: merge pull request 56 with `gh pr merge 56 --squash
+--admin` in another shell; approve the one HOL probe after the replay;
+"lock in Q1–Q5", with Q4 as a dated independent review of row 16;
+set up the enforcement upgrade; three pass/fail gates (17 missing
+links to 0; a hosted exit 0 with no administrator bypass; the gauntlet
+and Stage 9 against the closed chain). It calls the result "1,489 new
+Dafny link proofs".
+
+Text 11 changes text 10: do NOT merge with `--admin`; merge through an
+owner-controlled process. Order: 1 merge 56; 2 finish the replay and
+record the out-of-memory case; 3 prove Route A's first HOL lemma;
+4 complete the Dafny-to-HOL correspondence; 5 separate agent and owner
+authority; 6 the minimal ARM64 run-time and a verified sink. Two
+corrections: zero missing links is not enough, the nine assumptions
+must also be appropriate, accepted and true in the intended
+environment; Q4 must not become a human-reviewed correspondence. No
+benchmark before a trustworthy admission boundary exists.
+
+(Agent's reading. Pull request 56 was already merged by the owner's
+account when text 11 arrived; U474 has the record. Q4 stays as text 1
+decided it: a machine-checked link is required; a review gives only a
+labelled conditional result. Text 10's count is wrong: 58 of the 1489
+rows belong to the new modules (U474). Neither text approves the HOL
+probe M-B2c-0, a build, or any protected change. Steps 2 to 4 are the
+agent's work in that order; step 3 is already directed by text 9.)
