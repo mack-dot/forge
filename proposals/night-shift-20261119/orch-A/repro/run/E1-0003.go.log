@@ -1,0 +1,55 @@
+2026-11-19T15:02:47Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 8401.25M  free = 814.75M  (encrypted)
+System-wide memory free percentage: 50%
+START_STATE swap_free_mib=814 memory_free_percent=50
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 96.593 cpu 100.826 rss_mib 2950 ['EXACT_COMPLETE'] inputs_unchanged_after True
+28:CHECKED erase_fields
+31:  (erase s).exception = s.exception ∧ (erase s).branch_hint = s.branch_hint ∧
+39:CHECKED restore_erase
+43:CHECKED erase_restore
+47:CHECKED arm8_ok_erase
+49:  s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.E0E ∧ s.exception = NoException ∧
+55:CHECKED untagged_bits
+59:CHECKED BranchTo_EL0_pc
+65:CHECKED tbi_pc_erased
+69:CHECKED tbi_pc_untagged
+73:CHECKED BranchTo_erase_untagged
+82:CHECKED CheckSPAlignment_erase
+87:CHECKED CheckSPAlignment_erase_fault
+88:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ⇒
+92:   CheckSPAlignment s = s with exception := ALIGNMENT_FAULT)
+96:CHECKED N1a_tagged_branch_breaks
+102:CHECKED N1b_bit55_branch_breaks
+108:CHECKED N2_misaligned_sp_breaks
+109:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.SCTLR_EL1.SA0 ∧
+111:  (CheckSPAlignment (erase s)).exception = NoException ∧
+112:  (CheckSPAlignment s).exception = ALIGNMENT_FAULT
+115:CHECKED N3_e0e_not_erasable
+120:CHECKED N4_slide_ok_admits_tagged_code
+125:CHECKED P1_bit55_without_TBI1_is_fine
+131:CHECKED N5_lo55_holds_at_slide_zero_and_fails_at_N4_slide
+135:STATEMENT_TYPECHECKS Next_frame
+136:STATEMENT_TYPECHECKS Next_erase_fault_mono
+137:STATEMENT_TYPECHECKS Next_erase
+138:STATEMENT_TYPECHECKS NextStateARM8_erase
+139:STATEMENT_TYPECHECKS NextStateARM8_erase_or_fault
+140:STATEMENT_TYPECHECKS arm8_target_real (as an equation)
+141:STATEMENT_TYPECHECKS lo55 (as an equation)
+144:CONTROL_OK N1a is a proved negative
+145:CONTROL_OK N1b is a proved negative
+146:CONTROL_OK N3 is a proved negative
+147:CONTROL_OK N2 proved: the real SA0 bit adds an alignment fault
+148:CONTROL_OK N4 proved: slide_ok admits a tagged code base
+149:CONTROL_OK BranchTo_erase_untagged is the literal draft statement
+150:CLOSURE_AXIOM bool.SELECT_AX
+151:CLOSURE_AXIOM bool.INFINITY_AX
+152:CLOSURE_AXIOM bool.ETA_AX
+153:CLOSURE_AXIOM bool.BOOL_CASES_AX
+156:CLOSURE_NODES 543
+159:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

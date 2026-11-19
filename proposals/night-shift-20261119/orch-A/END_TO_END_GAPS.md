@@ -59,3 +59,13 @@ by the launcher). So the smallest missing refinement boundary is now ONE stateme
 prefix lemma; the erasure run lift; a decode lemma for x18) and a native part (the named assumptions).
 R6 (and the model-total C patch, owner item A-3) remain the way to a statement about the C code at ALL states;
 they are no longer on the shortest path.
+
+## Update to T14 (2026-11-19T15:06:16Z): the parser edge, after the red team's differential (C-PREM-02; C's runs, not re-run by A)
+T14 as worded ("the consumer's parser = HOL `refund_strict_parse`") is FALSE as an identity. The consumer
+(`frame.py` `strict_parse`, check `CANON_INT`; A read lines 250-260) refuses negative integers; the HOL definition
+(`PF-0004.sml` line 418) accepts every rendered frame. Correct wording of T14, two parts, both UNPROVEN:
+(a) `frame.strict_parse` = `refund_strict_parse` restricted to frames with non-negative amount and count;
+(b) the program prints non-negative amount and count only (a model-level lemma on `refund_fields`; candidate for HOL).
+The consumer is the stricter side, so the difference can only give a refusal. TESTED by C: 200,000 mutated frames, 0
+frames that Python accepts and C's hand transcription of the HOL definition refuses (exit 0); identity mode exit 1.
+The transcription is by hand: it is not the HOL definition itself.

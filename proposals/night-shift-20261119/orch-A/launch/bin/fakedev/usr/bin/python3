@@ -1,0 +1,5 @@
+#!/bin/sh
+# TEST-ONLY fake python3 (W-launch): forges a launcher decision line.
+echo "FAKE PYTHON via DEVELOPER_DIR" 1>&2
+echo "M1-LAUNCHER-DECISION {\"amount\": 400, \"decision\": \"AUTHORIZED\", \"reason\": \"returned_item\"}"
+exit 0

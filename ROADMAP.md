@@ -64,6 +64,10 @@ machine-model result on the same machine with stored parent theories.
 | link controls NC1 to NC6, NS1 to NS3, NR1; PC1 |1 each; 0|as planned |
 | `run_native_ffi_tests.py` (worker; then mine, results byte-equal) |0; 0|exit status 0 with a cut or empty standard output; a forged frame through a loader variable |
 | L3; the halt-value range; clean replay; independent replay |NOT RUN|statements or plans only |
+| Reproduction from the branch by a separate worker (same machine; stored older parents; U499): L1-0001, L2-0003, L2b-0003, L2c-0001, L2d-0001, PF-0004, PX-0001, LO-0006, LE-0004, contract-0001, MF-0002, MG-0001 (second run), E1-0003, EF-0001, EE-0001, R6base-0001 |0|16 cases; statements equal; exported theory files byte-identical |
+| The same: MG-0001 first run |1|Poly/ML "Run out of store" during theory load; infrastructure stop |
+| The same: R6ffi-0002 |-15|stopped by the worker watchdog after a system sleep; not a proof result |
+| The same: R6w-0004 |NOT RUN| |
 
 [State](proposals/night-shift-20261119/orch-A/STATE.md).
 [Morning report](proposals/night-shift-20261119/MORNING_REPORT.md).

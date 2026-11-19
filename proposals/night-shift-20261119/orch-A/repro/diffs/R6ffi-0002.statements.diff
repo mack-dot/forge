@@ -1,0 +1,41 @@
+--- committed
++++ repro
+@@ -1,38 +0,0 @@
+-STATEMENT X9
+-STATEMENT X8
+-STATEMENT writei_spec_V
+-STATEMENT read_into_spec_V
+-CHECKED IOFS_V_FFI_part_hprop
+-⊢ ∀Inv fs. FFI_part_hprop (IOFS_V Inv fs)
+-CHECKED IOxV_IMP_IOx
+-⊢ ∀Inv fs. IOxV Inv fs ==>> IOx fs_ffi_part fs
+-CHECKED writei_spec_V
+-⊢ wfFS fs ⇒
+-  0 < n ⇒
+-  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+-  i + n < 256² ⇒
+-  get_fd_content fs fd = SOME (content,pos) ⇒
+-  get_mode fs fd = SOME WriteMode ⇒
+-  FD fd fdv ⇒
+-  NUM n nv ⇒
+-  NUM i iv ⇒
+-  bc = h1::h2::h3::... ::... ⇒
+-  (∀nb. ... = ... ∧ ... = 0w ⇒ Inv (... ... )) ⇒
+-  ... ... [... ; ... ] (... ... * ... ... )
+-    (POSTve (λ... . ... ) (λe. ... * ... ))
+-CHECKED read_into_spec_V
+-⊢ ∀fs fd fdv n nv buf.
+-    wfFS fs ⇒
+-    FD fd fdv ⇒
+-    NUM n nv ⇒
+-    n < 256² ⇒
+-    MAX n 1024 ≤ LENGTH rest ⇒
+-    get_fd_content fs fd ≠ NONE ⇒
+-    get_mode fs fd = SOME ReadMode ⇒
+-    (∀nb.
+-       LENGTH nb = 4 + ... ... ∧ HD nb = 0w ⇒
+-       Inv (... ... (... ... ) (ZIP (... ,... )))) ⇒
+-    app p TextIO_read_into_v [fdv; buf; ... ]
+-      (W8ARRAY buf (h1::... ::... ) * IOxV Inv fs)
+-      (POSTve (λnrv. SEP_EXISTS nr. ... * ... )
+-         (λe. &... * &... * IOFS_WO_iobuff fs))

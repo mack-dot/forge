@@ -1,0 +1,20 @@
+Executable=/usr/bin/python3
+Identifier=com.apple.dt.xcode_select.tool-shim-public
+CodeDirectory v=20400 size=323 flags=0x0(none) hashes=4+2 location=embedded
+Authority=macOS Software Signing
+Authority=Apple Code Signing Certification Authority
+Authority=Apple Root CA
+TeamIdentifier=not set
+Executable=/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9
+Identifier=com.apple.python3
+CodeDirectory v=20400 size=629 flags=0x0(none) hashes=9+7 location=embedded
+Authority=Software Signing
+Authority=Apple Code Signing Certification Authority
+Authority=Apple Root CA
+TeamIdentifier=59GAB85EFG
+lrwxr-xr-x  1 root  wheel  67 Jun 26  2025 /Applications/Xcode.app/Contents/Developer/usr/bin/python3 -> ../../Library/Frameworks/Python3.framework/Versions/3.9/bin/python3
+Executable=/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9
+[Dict]
+	[Key] com.apple.application-identifier
+	[Value]
+		[String] com.apple.python3

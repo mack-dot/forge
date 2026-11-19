@@ -439,7 +439,266 @@
    "source_equal": true,
    "exit": {
     "committed": 0,
-    "repro": 1
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 5,
+    "repro": 5,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 2,
+   "objects": {
+    "forge_refundModelFrameEventsTheory.dat": {
+     "committed": "af248759e08ab151dcad67ed805720dcb12596719581f3d2306d97aeb72f1af4",
+     "repro": "af248759e08ab151dcad67ed805720dcb12596719581f3d2306d97aeb72f1af4",
+     "equal": true
+    },
+    "forge_refundModelFrameEventsTheory.sig": {
+     "committed": "ebb925aef88d057e0b6befd39619cdc581d18f906be06602509a43ead6ba5866",
+     "repro": "ebb925aef88d057e0b6befd39619cdc581d18f906be06602509a43ead6ba5866",
+     "equal": true
+    },
+    "forge_refundModelFrameEventsTheory.sml": {
+     "committed": "9e94b86240490c8aefbe0b5f95fbc2a5575b8061c7974a98ac11967d28cf6b98",
+     "repro": "9e94b86240490c8aefbe0b5f95fbc2a5575b8061c7974a98ac11967d28cf6b98",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "L2d-0001": {
+   "run": true,
+   "source_sha256_committed": "f9a2545247dbc30da939fd8b09216bfcca03860c00a47f1ef4e6c4d727a952ee",
+   "source_sha256_repro": "f9a2545247dbc30da939fd8b09216bfcca03860c00a47f1ef4e6c4d727a952ee",
+   "source_equal": true,
+   "exit": {
+    "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 29,
+    "repro": 29,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 2,
+   "objects": {
+    "forge_refundRouteA2dTheory.dat": {
+     "committed": "24538952fe3fac0fbe34f4f68bf8ef7a25eb1c7e601f7282e0dd39f065a5ecb2",
+     "repro": "24538952fe3fac0fbe34f4f68bf8ef7a25eb1c7e601f7282e0dd39f065a5ecb2",
+     "equal": true
+    },
+    "forge_refundRouteA2dTheory.sig": {
+     "committed": "c46427349c5f5a791f03674c794bf1534f39813a3b8cbb47d49946b628c699bb",
+     "repro": "c46427349c5f5a791f03674c794bf1534f39813a3b8cbb47d49946b628c699bb",
+     "equal": true
+    },
+    "forge_refundRouteA2dTheory.sml": {
+     "committed": "ee63d8624f120cd1bf3a82f6a05607dcd74d163aa385f8d93aa78607c8d363be",
+     "repro": "ee63d8624f120cd1bf3a82f6a05607dcd74d163aa385f8d93aa78607c8d363be",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "E1-0003": {
+   "run": true,
+   "source_sha256_committed": "56a87088a16575be0370f53b315be9cf1adacfc59e480e9dc5589da372bdd37d",
+   "source_sha256_repro": "56a87088a16575be0370f53b315be9cf1adacfc59e480e9dc5589da372bdd37d",
+   "source_equal": true,
+   "exit": {
+    "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 25,
+    "repro": 25,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 2,
+   "objects": {
+    "forge_m1bErasureV2Theory.dat": {
+     "committed": "cf4c757a1036d3fbab7526f65035ab205172f0799cd129a5d4267dbc2fe6165e",
+     "repro": "cf4c757a1036d3fbab7526f65035ab205172f0799cd129a5d4267dbc2fe6165e",
+     "equal": true
+    },
+    "forge_m1bErasureV2Theory.sig": {
+     "committed": "a00181034f8d732c634e7ea7d98329c5bed89c65f3ae3d10509b04a43a9fb1d8",
+     "repro": "a00181034f8d732c634e7ea7d98329c5bed89c65f3ae3d10509b04a43a9fb1d8",
+     "equal": true
+    },
+    "forge_m1bErasureV2Theory.sml": {
+     "committed": "b8ccbd128f5df1f28eb346a28fcef9813071fcdbe503f1162294499ca0338c93",
+     "repro": "b8ccbd128f5df1f28eb346a28fcef9813071fcdbe503f1162294499ca0338c93",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "EF-0001": {
+   "run": true,
+   "source_sha256_committed": "ba8f915047e2fdab57e80e7ccdd7e3ec0c8dc3e80955fac0fbe91de57b2acfa4",
+   "source_sha256_repro": "ba8f915047e2fdab57e80e7ccdd7e3ec0c8dc3e80955fac0fbe91de57b2acfa4",
+   "source_equal": true,
+   "exit": {
+    "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 3,
+    "repro": 3,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 134,
+   "objects": {
+    "forge_m1bErasureFrameTheory.dat": {
+     "committed": "662d7cd2336d50b1e6737850f0c52a141033d4ed113d71b800b1b515d9391206",
+     "repro": "662d7cd2336d50b1e6737850f0c52a141033d4ed113d71b800b1b515d9391206",
+     "equal": true
+    },
+    "forge_m1bErasureFrameTheory.sig": {
+     "committed": "379bf0b81432875556299dff6b86bd559050e72bb7a61c17f4e130291b9a3620",
+     "repro": "379bf0b81432875556299dff6b86bd559050e72bb7a61c17f4e130291b9a3620",
+     "equal": true
+    },
+    "forge_m1bErasureFrameTheory.sml": {
+     "committed": "2d359f31649f72bf45985baaacd3e26988963a8327a7efc5f5e9fec2badbb495",
+     "repro": "2d359f31649f72bf45985baaacd3e26988963a8327a7efc5f5e9fec2badbb495",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "EE-0001": {
+   "run": true,
+   "source_sha256_committed": "931c0d4c0cd8fb1c1b9a3541ba4ead1058d334f0442b227dcbbe614f0f0daf05",
+   "source_sha256_repro": "931c0d4c0cd8fb1c1b9a3541ba4ead1058d334f0442b227dcbbe614f0f0daf05",
+   "source_equal": true,
+   "exit": {
+    "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 22,
+    "repro": 22,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 186,
+   "objects": {
+    "forge_m1bEraseStepTheory.dat": {
+     "committed": "e6c3a68afb091d6eede8bf2587d94bc45c4e10d90ccf11ddd5ad51a62c52c1fa",
+     "repro": "e6c3a68afb091d6eede8bf2587d94bc45c4e10d90ccf11ddd5ad51a62c52c1fa",
+     "equal": true
+    },
+    "forge_m1bEraseStepTheory.sig": {
+     "committed": "cc7a95cd2d3546afd3ea9cce8ed6088e3dda9a5ff71a7ac7c7f7013a71a77dc5",
+     "repro": "cc7a95cd2d3546afd3ea9cce8ed6088e3dda9a5ff71a7ac7c7f7013a71a77dc5",
+     "equal": true
+    },
+    "forge_m1bEraseStepTheory.sml": {
+     "committed": "a1e693a490c4c52bd5df98da0e48466204d09be117a5d89a9b57e2af897f1b38",
+     "repro": "a1e693a490c4c52bd5df98da0e48466204d09be117a5d89a9b57e2af897f1b38",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "R6base-0001": {
+   "run": true,
+   "source_sha256_committed": "a835d58e2bd9d93c24585bd8b7fe91f80f9cbcd01815566619a5cb18a7f798bb",
+   "source_sha256_repro": "a835d58e2bd9d93c24585bd8b7fe91f80f9cbcd01815566619a5cb18a7f798bb",
+   "source_equal": true,
+   "exit": {
+    "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 11,
+    "repro": 11,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 2,
+   "objects": {
+    "forge_refundR6BaseTheory.dat": {
+     "committed": "0fd1bb32b5f18c9330c0a120b5cb954e60adeea8913193eadbdd3663c34fc57e",
+     "repro": "0fd1bb32b5f18c9330c0a120b5cb954e60adeea8913193eadbdd3663c34fc57e",
+     "equal": true
+    },
+    "forge_refundR6BaseTheory.sig": {
+     "committed": "334bfef3209e8cd2349afa7d9220b044f209a39396b687567bcce06f7d024569",
+     "repro": "334bfef3209e8cd2349afa7d9220b044f209a39396b687567bcce06f7d024569",
+     "equal": true
+    },
+    "forge_refundR6BaseTheory.sml": {
+     "committed": "8e1a9bb0f0c9e88df862a24d2a4c82c45ce710f624fff199125fbdc34d92c751",
+     "repro": "8e1a9bb0f0c9e88df862a24d2a4c82c45ce710f624fff199125fbdc34d92c751",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "R6ffi-0002": {
+   "run": true,
+   "source_sha256_committed": "be5d88cc1a378d8a9bc10d82ee55d51b7efbf71e9c71ab4ffeeb0e20bbae9eaa",
+   "source_sha256_repro": "6aebb858ab0711da9357b6b3a221bcfaa8b263e3c90d5796e67e64b15894a23f",
+   "source_equal": false,
+   "source_note": "only the r6 directory string differs; see R6ffi-0002.source.diff",
+   "exit": {
+    "committed": 0,
+    "repro": -15
    },
    "markers": {
     "committed": [
@@ -449,53 +708,29 @@
    },
    "inputs_unchanged_after": true,
    "statement_blocks": {
-    "committed": 5,
+    "committed": 8,
     "repro": 0,
     "equal": false
    },
-   "stdout_lines_differing_after_normalisation": 370,
+   "stdout_lines_differing_after_normalisation": 312,
    "objects": {
-    "forge_refundModelFrameEventsTheory.dat": {
-     "committed": "af248759e08ab151dcad67ed805720dcb12596719581f3d2306d97aeb72f1af4",
+    "forge_refundR6FfiTheory.dat": {
+     "committed": "9bd6e4d295206830a7de112119f3e9d7bca831fc5e1b468cf80f249bd46e8294",
      "repro": null,
      "equal": false
     },
-    "forge_refundModelFrameEventsTheory.sig": {
-     "committed": "ebb925aef88d057e0b6befd39619cdc581d18f906be06602509a43ead6ba5866",
+    "forge_refundR6FfiTheory.sig": {
+     "committed": "ab3b7581bc47a155eda9c19697cadbaa25bf23e826265b546dd29667bf91d38a",
      "repro": null,
      "equal": false
     },
-    "forge_refundModelFrameEventsTheory.sml": {
-     "committed": "9e94b86240490c8aefbe0b5f95fbc2a5575b8061c7974a98ac11967d28cf6b98",
+    "forge_refundR6FfiTheory.sml": {
+     "committed": "56a4f132c5d5effa26b47ac1a0b110fd3acf199ac235464990749c3c072800ae",
      "repro": null,
      "equal": false
     }
    },
    "classification": "DIFFERS (exit, markers, statements, sig, sml/dat unexplained)"
-  },
-  "L2d-0001": {
-   "run": false,
-   "classification": "NOT RUN"
-  },
-  "E1-0003": {
-   "run": false,
-   "classification": "NOT RUN"
-  },
-  "EF-0001": {
-   "run": false,
-   "classification": "NOT RUN"
-  },
-  "EE-0001": {
-   "run": false,
-   "classification": "NOT RUN"
-  },
-  "R6base-0001": {
-   "run": false,
-   "classification": "NOT RUN"
-  },
-  "R6ffi-0002": {
-   "run": false,
-   "classification": "NOT RUN"
   },
   "R6w-0004": {
    "run": false,

@@ -271,3 +271,27 @@ Reproduction continues (W-repro). W-trace works.
 
 ## CHECKPOINT (2026-11-19T14:57:13Z)
 Reproduction from the branch (head dae1b93e): 10 of 18 cases REPRODUCED (L1-0001, L2-0003, L2b-0003, L2c-0001, PF-0004, PX-0001, LO-0006, LE-0004, contract-0001, MF-0002): exit 0 each; statements equal; `.sig/.sml/.dat` byte-identical (A checked `RESULT.json` and the MF-0002 `.dat` digest). MG-0001: first run stopped with Poly/ML `Run out of store` during parent load (14 s; infrastructure; not a proof failure). A tells W-repro to keep that folder as `MG-0001.fail-1` and resume; HOL slot stays with W-repro. Swap free 1283 MiB, memory free 56 %.
+
+## CHECKPOINT (2026-11-19T14:59:05Z)
+Commit 6903135a (local; U499; addendum 13). W-repro resumed: MG-0001 second try running (first kept as MG-0001.fail-1). W-trace running. New worker W-x8v2 (writing only): `x8-x11/X8_statement_v2.txt` with the six corrections. HOL slot: W-repro until its hand-back; then MT-0001 (q40), NVx/NV-0001, R6tx-0002/R6t-0002, R6rx-0003/R6r-0003. ROADMAP row for the reproduction: add after the final result.
+
+## CHECKPOINT (2026-11-19T15:08:52Z)
+W-x8v2 done: `x8-x11/X8_statement_v2.txt` (7782…; by reading). 14 model lemmas MISSING, 22 native assumptions. Condensed report `x8v2/REPORT.md`. T14 reworded after C-PREM-02. Reproduction: MG-0001 (try 2), L2d-0001, E1-0003 exit 0; continues.
+
+## CHECKPOINT (2026-11-19T15:10:27Z)
+Launcher priorities received: (1) answer C-PREM-01: `x8-x11/ANSWER_C-PREM-01.md` written; (2) attack the native launch path: one control per counterexample class, C re-attacks; worker W-launch next; (3) gap list kept; (4) push: do not retry (A-4).
+
+## CHECKPOINT (2026-11-19T15:10:53Z)
+A-4 resolved by the owner: `git ls-remote origin` shows nightshift/A-proof = 6903135a (equal to local HEAD). Note appended to OWNER_REQUIRED.md. Later commits: one push attempt each; a denial is recorded, not worked around. Workers running: W-repro (HOL slot), W-trace, W-x8v2rev, W-launch.
+
+## CHECKPOINT (2026-11-19T15:14:00Z)
+C reports (C-BLOCK-01, owner item C-1): a safety classifier stopped its launch-path attack runs; nothing ran. So no independent attack run exists for `orch-A/launch/CONTROL_MATRIX.md`; rows get the mark "no independent attack run". W-launch told: a blocked command is NOT RUN; no retry; no other route.
+
+## CHECKPOINT (2026-11-19T15:37:23Z)
+W-trace done (static). TRx-0001/TR-0001/deps-TR.txt staged in the run folder, NOT RUN. Queue after W-repro and B window: MT-0001, TRx-0001, NVx-0001, R6tx-0002, R6rx-0003.
+
+## CHECKPOINT (2026-11-19T15:37:43Z)
+Reproduction: R6ffi-0002 stopped by the worker driver (HUNG mark: empty stdout for 698 s; actual_exit -15; NOT a proof result; cause not known yet). 16 of 18 cases ran; R6w-0004 NOT RUN. hol.lock RELEASED for B heavy window (about 20 min). No HOL start until B release line.
+
+## CHECKPOINT (2026-11-19T15:40:27Z)
+W-repro hand-back: 16 of 18 cases REPRODUCED-FROM-BRANCH (the ten, plus MG-0001 try 2, L2d-0001, E1-0003, EF-0001, EE-0001, R6base-0001): exit 0, statements equal, `.sig/.sml/.dat` identical. R6ffi-0002: killed by the worker watchdog (actual_exit -15) after a system sleep on battery (file-age rule counted the sleep); NOT a proof result. R6w-0004 NOT RUN. `repro/RESULT.json` 3365b73c…. Plan: after B window, W-repro retries R6ffi-0002 then R6w-0004 under `caffeinate -i`; my own HOL runs also under `caffeinate -i` (sleep makes time limits unreliable).

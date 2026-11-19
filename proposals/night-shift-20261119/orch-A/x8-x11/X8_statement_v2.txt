@@ -1,0 +1,473 @@
+X8 DRAFT v2: "the real process refines the machine model" (constructed environment)
+Worker W-x8v2 for Night-Shift Orchestrator A (proof track), 2026-11-19.
+=====================================================================================================================
+TRUTH LABEL: EVERYTHING IN THIS FILE IS BY READING. NOTHING HERE IS MACHINE-CHECKED BY THIS WORKER.
+No HOL run, no Dafny run, no native run was made for this file. M1-B stays OPEN. end_to_end stays false.
+A lemma is called PROVED below only when its case go.log ends with the line `go exit 0` AND its statement appears in
+the case's stdout.log (both seen by me). Every other status word is weaker.
+Status words: PROVED (case named) / STAGED (source file exists, never run) / MISSING (no source) /
+  LIBRARY (a stored CakeML or HOL library theorem; source read by me; not a case of tonight; not re-checked).
+Native classes: ENFORCED-BY-LAUNCHER (a launcher can make it true by construction; NOTE: the launcher contract is a
+  draft and is NOT implemented, so today every such row is in effect an assumption) / ASSUMPTION (no proof, no
+  enforcement; a fact about the processor, kernel, loader or libSystem).
+Draft v1 (X8_statement.txt) is unchanged. This file replaces nothing; it applies CORRECTIONS.md items 1-6.
+=====================================================================================================================
+
+SOURCES AND ABBREVIATIONS (paths under /Users/mackianni/forge/)
+ RA   = results/m1b-routeA-20261119/attempt-0001          (case X: RA/X/stdout.log, RA/X.go.log)
+ OA   = results/night-shift-20261119/orch-A
+ CK   = .toolchain/experiments/refund-cakeml-20261104/cakeml
+ TS   = CK/compiler/backend/semantics/targetSemScript.sml   (evaluate_def, machine_sem_def, apply_oracle_def)
+ TP   = CK/compiler/backend/semantics/targetPropsScript.sml (evaluate_add_clock :1059, evaluate_add_clock_io_events_mono
+        :1108, machine_sem_total :1134)
+ FS   = CK/basis/fsFFIScript.sml                            (read_def :187-197, write_def :214-230, ffi_read/ffi_write
+        :307-348)
+ ENV  = results/refund-env-model-local-20261116/attempt-0001/env-0005/stdout.log (earlier session)
+ S2   = results/refund-slide-local-20261117/attempt-0001/s2-0003/stdout.log (earlier session; ends EXACT_COMPLETE;
+        no `go exit 0` line exists in that layout, so I do not call its theorems PROVED here)
+ C9   = results/night-shift-20261119/orch-C/c9-x8 (red team C runs; data only)
+ b    = sl + 0x1000040D0w (cake_main);  halt_pc = sl + 0x1000040C0w;  dm = refund_mem_dm_sl sl h e
+ req  = explode (sexp_to_string (refund_request charge request original remaining enabled opened candidate amount
+        reason));  f_vals = refund_fields charge request original remaining enabled opened candidate amount reason
+TRANSLITERATION: the logs print Unicode. I replace symbol by symbol and change nothing else:
+ forall -> !, exists -> ?, and -> /\, or -> \/, not -> ~, implies -> ==>, iff -> <=>, element -> IN,
+ isPREFIX (the prefix sign) -> <<=, word <= unsigned -> <=+, word < unsigned -> <+, minus sign -> -, turnstile -> |-,
+ universal set -> UNIV.
+
+=====================================================================================================================
+1. THE STATEMENT
+=====================================================================================================================
+
+1.0 TARGET (unchanged from v1; PROVED)
+ M3 = refund_model_frame_meets_exported_contract. RA/MF-0002/stdout.log:286-320; RA/MF-0002.go.log: go exit 0.
+ Statement (transliterated):
+  |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+     refund_heap_clear_sl sl h e /\
+     envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+     refund_env_ok_sl sl envmc /\
+     stdin_content fs = SOME (explode (sexp_to_string (refund_request charge request original remaining enabled
+       opened candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+     ?ms. (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+       !b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms b ==>
+         ?t io. b = Terminate t io /\
+           !g. refund_strict_parse (fd1_written io) = SOME g ==>
+             g = refund_fields charge request original remaining enabled opened candidate amount reason /\
+             fd1_written io = explode (refund_render_fields (refund_fields charge ... reason)) /\
+             !ok a r c q n. g = (ok,a,r,c,q,n) ==>
+               evaluate_exps (exported_contract_state dafny_heap charge ... q n) dafny_env exported_ensures =
+               (exported_contract_state dafny_heap charge ... q n, Rval [BoolV T; BoolV T; BoolV T])
+ ("..." abbreviates the same argument list as in the log; I did not change any argument.)
+ Key point (by reading): s, envmc, fs, cl are universally quantified in M3. X8 must CONSTRUCT them from one real run.
+ Correction 6: v1 said "this is the same idea CakeML uses internally". That is overstated. CakeML builds its oracles
+ from a MODEL run (targetPropsScript, lab level). Here the oracles are built from a REAL run. Only the logical shape
+ (instantiate a universally quantified oracle) is shared; CakeML gives no evidence for the native side.
+
+1.1 THE REAL OBSERVATION (HOL-side representation)
+ Executable: sha256 b8ed5ec2...7bb8. Main thread only. Observation starts at the first instruction of _cml_main
+ (PC = sl + 0x100004000) and ends at process end.
+ A real user state is a HOL record of a NEW type (to be defined; MISSING as a definition):
+   rstate = <| PC : word64; X : num -> word64 (0..30); SP : word64; NZCV : bool # bool # bool # bool;
+               mem : word64 -> word8 option (NONE = not mapped readable) |>
+ A real run is X = (r_0, ev_0, r_1, ev_1, ..., r_n, END) with ev_i in {U, F, H} and
+   U  : one user instruction retires at r_i.PC, then any kernel activity, up to the next user instruction.
+   F  : r_i.PC IN FFI_PCS; the whole call segment (stub branch, C function, libSystem, system calls) up to the first
+        user instruction at r_i.X 30 is ONE event. FFI_PCS = [sl+0x1000040A0 (index 0, read); sl+0x100004090
+        (1, write); sl+0x100004080 (2, close); sl+0x100004070 (3, open_in)].
+   H  : r_i.PC = halt_pc; then `b _cml_exit`, cml_exit, exit.
+   END is one of: EXIT_AFTER_H(status); CUT(i) = the process was killed (any signal, supervisor time-out) or exited
+        while event ev_i was in progress (this includes an exit or abort INSIDE a call segment F, and a kill inside
+        an in-flight write). r_0..r_i are the completed states; ev_i did not complete.
+ The real state is observed at user-instruction boundaries only. Nothing is claimed about states inside events.
+
+1.2 INDEX FUNCTIONS (correction 2)
+ The trace contains the 27 entry instructions of the cml_main stub. They are the U events ev_0..ev_26. The model
+ runs them with arm8_run 27 (no interference oracle; S2:47-57). The model's `evaluate` starts at r_27.
+ TS evaluate_def: a NORMAL step calls apply_oracle mc.next_interfer, which uses index 0 and shifts next_interfer by 1;
+ an FFI step calls apply_oracle mc.ffi_interfer, which shifts ffi_interfer by 1 and does NOT shift next_interfer.
+ Therefore (by reading TS):
+   NU(i) := #{ j | 27 <= j < i /\ ev_j = U }   (the count of NORMAL model steps before event i)
+   NF(i) := #{ j | 27 <= j < i /\ ev_j = F }   (the count of FFI model steps before event i)
+   The U event ev_i (i >= 27) uses next_interfer (NU i).  The F event ev_i uses ffi_interfer (NF i).
+   u(m) := the unique i >= 27 with ev_i = U /\ NU(i) = m   (the event of the m-th normal step; m counts from 0)
+   f(k) := the unique i >= 27 with ev_i = F /\ NF(i) = k   (the event of the k-th FFI step)
+   #U := NU(n), #F := NF(n) (over the completed events only).
+ v1 said "m counts every model step" and used "the m-th U event"; both are wrong (off by 27 and by the F events).
+
+1.3 ABSTRACTION (correction 1)
+ Let sr = (sr_PSTATE, sr_SCTLR, sr_TCR) be the REAL values of PSTATE (all bits except N,Z,C,V), SCTLR_EL1 and TCR_EL1
+ during the run. They are not observable at EL0. They are a parameter of the statement, fixed by assumption
+ A-F0-REAL. Let F0 be a fixed arm8_state that supplies only the GHOST fields (fields the real machine has no
+ counterpart for, e.g. branch_hint, FP/SIMD state). F0 supplies NO system-register bit.
+   regs r     := \i. if i = 18w \/ i = 31w then 0w else r.X (w2n i)                      (x18 normalised)
+   memv r     := \a. case r.mem a of SOME v => v | NONE => 0w
+   absM sr r  := erase (F0 with <| PC := r.PC; REG := regs r; SP_EL0 := r.SP;
+                     PSTATE := sr_PSTATE with <| N,Z,C,V := r.NZCV |>;
+                     SCTLR_EL1 := sr_SCTLR; TCR_EL1 := sr_TCR; exception := NoException; MEM := memv r |>)
+   UPD r ms   := ms with <| PC := r.PC; REG := regs r; SP_EL0 := r.SP;
+                     PSTATE := ms.PSTATE with <| N,Z,C,V := r.NZCV |>; MEM := memv r |>
+   OBS ms     := (ms.PC, ms.REG, ms.SP_EL0, (ms.PSTATE.N, .Z, .C, .V), ms.MEM)
+   SRF ms     := (ms.PSTATE with N,Z,C,V := F, ms.SCTLR_EL1, ms.TCR_EL1, ms.exception)
+ erase is the stored definition (RA/E1-0003/stdout.log:3-6, transliterated):
+   |- !s. erase s = s with
+        <|TCR_EL1 := s.TCR_EL1 with <|TBI0 := F; TBI1 := F|>; SCTLR_EL1 := s.SCTLR_EL1 with SA0 := F|>
+ erase keeps A, E0E, EE, SA and all of PSTATE (erase_fields, RA/E1-0003/stdout.log:28-35; go exit 0).
+ Change from v1: v1 took PSTATE (except NZCV, EL, SPS) and SCTLR_EL1 (except E0E, SA0) from the constant F0. That
+ was wrong: the L3 model reads SCTLR_EL1.A (alignment check) and PSTATE bits at EL0, and erase keeps them. v2 takes
+ every system-register bit from the REAL values sr; only TBI0, TBI1, SA0 are erased.
+
+1.4 THE CONSTRUCTED ENVIRONMENT (corrections 2 and 5; definitions are MODEL-side and total)
+ (E1) next_R X m ms :=
+        let ms' = UPD r_(u(m)+1) ms in
+        if m < #U /\ arm8_proj dm ms' = arm8_proj dm ms then ms' else ms
+      Indexed by the count m of NORMAL model steps (correction 2). When the guard holds, UPD changes only SP_EL0
+      and memory outside dm (everything in arm8_proj is equal by the guard). interference_ok holds for every
+      m and ms by the guard alone (see ML-01).
+ (E2) Observed FFI data, for k < #F, with i = f(k):
+        J_k   := the index of r_i.PC in FFI_PCS;
+        PRE_k := r_i;  POST_k := r_(i+1);
+        NB_k  := the REAL bytes of [r_i.X 2, r_i.X 2 + r_i.X 3) in POST_k (correction 5: the returned bytes are
+                 DEFINED as the real post-call bytes; no oracle value enters this definition; non-circular).
+        VALID k (j, nb, ms) := j = J_k /\ nb = NB_k /\ OBS ms = OBS (absM sr PRE_k) /\ SRF ms = SRF (absM sr PRE_k)
+      Vok_R j nb ms := ?k. k < #F /\ VALID k (j, nb, ms)
+      F_R k x := let k* = (if k < #F /\ VALID k x then k else LEAST k'. k' < #F /\ VALID k' x) in
+                 UPD POST_(k*) (SND (SND x))
+      ffi_R := refund_ffi_tot Vok_R F_R      (refund_ffi_tot_def, RA/L1-0001/stdout.log:76-79)
+      Why the LEAST clause: refund_ffi_tot passes the counter k unchanged, and Vok_R does not see k. Two calls with
+      the same observed pre-state then share one valid post-state (the contract conclusion depends only on the
+      pre-state, nb and the post-state). By reading; checked by nobody.
+ (E3) envmc_R := <| prog_addresses := dm; next_interfer := next_R X; ffi_interfer := ffi_R; ... |>
+      (other fields as fixed by refund_mc; RA/L2-0003 refund_mc_totalised_record shows refund_mc keeps the record
+      update of ffi_interfer).
+ (E4) fs_R (correction 5: defined by recursion on the REAL call sequence):
+        c_k := (if J_k = 0 then nread_k - 1 else nw_k)   for k < #F, where nread_k / nw_k are the counts the real
+               C function stored in NB_k (bytes 1..2, big-endian; FS ffi_read/ffi_write layout). (num subtraction:
+               nread = 0 gives 0; the model read returns 0 at end of input for any c_k, FS read_def.)
+        c_#F := n_req if END X = CUT(i) and ev_i is an in-flight WRITE with requested length n_req; else omitted.
+        fs_R := the standard basis file system with stdin content = req, stdout empty, fd 0 ReadMode at offset 0,
+                fd 1/2 WriteMode, and numchars := LAPPEND (fromList [c_0; ...]) (LREPEAT [1]).
+        One numchars entry per reached read or write: read consumes one (bumpFD, LTL), write consumes one
+        (fsupdate ... 1, LDROP 1) (FS :181-184, :201-207). Model write count = MIN n strm (FS write_def), so
+        c_k = nw_k reproduces the real count when nw_k <= n. Model read count = MIN n (MIN rest (SUC strm)).
+ (E5) cl_R := any wfcl list (argv is never read: the four FFI names exclude get_arg*).
+ (E6) s_R := absM sr r_0.
+
+1.5 NATIVE ASSUMPTIONS (each: exact wording; class; falsifying observation)
+ All are about ONE real run X, with parameters sl h e sr. "user step" = a U event with i >= 0.
+ N01 A-CPU-ISA [ASSUMPTION]. For every U event ev_i: let s^ be any arm8_state with OBS s^ = OBS(UPD r_i F0) and
+     SRF s^ = the real sr with REAL TBI0, TBI1, SA0. If the hardware retires the instruction at r_i.PC without a
+     synchronous exception, then NextStateARM8 s^ = SOME t and OBS t = OBS of the hardware result q_i (before any
+     kernel activity). Only words of the CakeML ARM8 encoder subset are concerned (TS encoded_bytes_in_mem).
+     Falsifier: a single-step differential (v1 T3) that shows one OBS difference between M1 and L3 on a reached word.
+ N02 A-PROC-N1 [ASSUMPTION]. At every user step: EL = 0, AArch64 (nRW = 0), ~SCTLR_EL1.E0E, no pending exception.
+     Falsifier: none from EL0 directly; a big-endian load result (E0E) or an L3/hardware mismatch in N01 tests.
+ N03 A-F0-REAL [ASSUMPTION] (correction 1). There is ONE value sr such that at every user step of X the real PSTATE
+     (except N,Z,C,V), SCTLR_EL1 and TCR_EL1 equal sr; i.e. the kernel keeps every system-register bit that the L3
+     model reads constant over the run, at least on the main thread. Includes SCTLR_EL1.A and all PSTATE bits, not
+     only E0E/EL/TBI/SA0 (X11 row E14 named only those).
+     Falsifier: an alignment fault on a misaligned access in the code slice in one run and not in another (A changed);
+     any N01 test difference that disappears when one bit of sr is flipped. Not observable from EL0 otherwise.
+ N04 A-PROC-N2-SP [ASSUMPTION]. At every user step: ~sr_SCTLR.SA0 (real) \/ aligned 4 r_i.SP (16-byte aligned).
+     With L-SP-NOWRITE (ML-07) this reduces to: SP is 16-aligned at r_0, and N05 and N07 keep SP or keep it aligned.
+     Falsifier: a recorded SP value at cml_main or after a call with SP mod 16 <> 0 (T2 or T4 records).
+ N05 A-KERNEL-PRESERVE(+SP) [ASSUMPTION] (correction 5 adds SP). For every U event ev_i with result q_i:
+     arm8_proj dm (absM sr r_(i+1)) = arm8_proj dm (absM sr q_i)  AND  (r_(i+1).SP = q_i.SP \/ aligned 4 r_(i+1).SP).
+     For the 27 entry U events (i < 27; no interference oracle there) the STRONG form is required:
+     OBS (absM sr r_(i+1)) = OBS (absM sr q_i) (all registers, SP, flags and every mapped byte, not only dm).
+     Falsifier: a perturbation differential (T6 below) that shows a different stdout under the launcher contract;
+     an lldb record (T3) showing a register or dm byte change across a preemption.
+ N06 A-SINGLE-THREAD [ASSUMPTION]. No other thread of the process writes any byte of dm or any register of the main
+     thread during X. Evidence (RUN by C, exit 0): C9/threads_probe.log shows threads=1 in one run.
+     Falsifier: a thread count > 1 at any time of a run; a dm checksum change across a U event.
+ N07 A-FFI-EFFECT-AT-CALLS(+SP) [ASSUMPTION] (W-x8rev wording; correction 5 adds SP). For every F event ev_i
+     (k = NF i): r_(i+1).PC = r_i.X 30 /\ (!j. MEM j [19;20;21;22;23;24;25;27;28] ==> r_(i+1).X j = r_i.X j) /\
+     (r_(i+1).SP = r_i.SP \/ aligned 4 r_(i+1).SP) /\ aligned 2 (r_i.X 30). The contract does not ask for
+     x0-x18, x26, x29.  Falsifier: T4 (lldb around one call) with any inequality.
+ N08 A-FFI-FRAME [ASSUMPTION]. For every F event ev_i: every byte of dm outside [r_i.X 2, r_i.X 2 + r_i.X 3) is
+     unchanged from r_i to r_(i+1), and the array lies inside dm (read_bytearray over dm is SOME).
+     With the definition of NB_k (E2) this gives: !a. a IN dm ==> memv r_(i+1) a =
+     asm_write_bytearray (r_i.X 2) NB_k (memv r_i) a.  Falsifier: a checksum of dm minus the array that changes
+     across one call (T4); a native stack or libSystem datum inside [h, e) (T2 layout).
+ N09 A-FD0-SETUP [ENFORCED-BY-LAUNCHER]. fd 0 is a fresh BLOCKING pipe owned by the launcher; the process is its sole
+     reader; the launcher writes exactly req and then closes the write end; no O_NONBLOCK.
+     Falsifier: the launcher's own record of the fd setup; CE-2 (closed or wrong-mode stdin) is the class it removes.
+ N10 A-FD0-SEM [ASSUMPTION]. Under N09, every reached read(0, a+4, n) returns nread >= 0 (no error), the nread
+     bytes are the next unread bytes of req, nread = 0 only when req is exhausted, and the C code writes
+     a[0] = 0, a[1..2] = nread big-endian, and no byte of a outside [0,3) U [4, 4+nread) changes. Then
+     NB_k = 0w :: n2w2 nread ++ [pad2] ++ bytes ++ DROP nread tail = the ffi_read answer under fs_R (FS :307-327).
+     Falsifier: T4 on reads (T11 slow-writer input); C9/truncated_stdin.log (RUN by C) shows a short input gives
+     no strict frame (consistent; not a falsifier).
+ N11 A-FD1-SETUP [ENFORCED-BY-LAUNCHER]. fd 1 is a fresh BLOCKING pipe; the launcher is the only reader and drains
+     it to EOF; no other process holds the write end; SIGPIPE is SIG_DFL; the signal mask is empty; stderr is a
+     separate descriptor (not 2>&1). Falsifier: launcher record; CE-1 (O_NONBLOCK full pipe) and T08 (SIGPIPE
+     ignored) are the classes it removes.
+ N12 A-FD1-SEM [ASSUMPTION]. Under N11, every COMPLETED reached write(1, a+4+off, n) returns nw with 1 <= nw <= n,
+     appends exactly a[4+off .. 4+off+nw) to the pipe in order, and the C code writes a[0] = 0 and a[1..2] = nw;
+     no other byte of a changes. Then NB_k = the ffi_write answer under fs_R (FS :333-348).
+     Falsifier: T4 on writes; any stdout byte that is not in a reached write's range.
+ N13 A-FD1-PARTIAL [ASSUMPTION] (NEW, correction 3). If the run is CUT during a write call with buffer
+     a[4+off .. 4+off+n), then the bytes that this call put into the pipe are a PREFIX of that buffer (possibly
+     empty). PIPE_BUF = 512 on this machine (RUN by C: getconf); chunks are up to 2048 bytes, so a partial write
+     is possible. Falsifier: a killed run whose stdout tail is not a prefix of the in-flight buffer.
+ N14 A-SIG-DFL [ENFORCED-BY-LAUNCHER]. All signal dispositions SIG_DFL and the mask empty at exec; the program
+     installs no handler (no sigaction import, I1/I3 of X11). Evidence (RUN by C, exit 0): C9/sig_stop_cont
+     (9 runs: STOP/TSTP/CONT while blocked in read or write; all give the exact frame).
+     Falsifier: a run whose disposition record shows SIG_IGN or a handler.
+ N15 A-LOADER [ENFORCED-BY-LAUNCHER]. The process starts with an empty or allow-listed environment (no DYLD_*, no
+     CML_* except fixed values); no injected library runs before main. Needed because the binary has NO hardened
+     runtime (static T1, OA/x8-x11/static-tests/REPORT.md), so the kernel does not strip DYLD_*.
+     Falsifier: CE-3 (an injected constructor writes a forged frame) shows the threat when NOT enforced.
+ N16 A-ENTRY [ASSUMPTION]. At r_0: absM sr r_0 meets P1-P5 of M3 (refund_entry_pre_sl sl, aligned 3 e, h <=+ e,
+     8192w <=+ e - h, refund_heap_clear_sl sl h e) where sl is the real slide and h, stk, e are the values that
+     cml_init_memory stored; AND the untagged bounds sl + 0x100030F30w <=+ 0x80000000000000w and
+     e <=+ 0x80000000000000w (needed by L-UNTAGGED-RUN; N4_slide_ok_admits_tagged_code, RA/E1-0003 go exit 0,
+     shows that slide_ok alone does NOT give them). Rests on dyld, _main and malloc behaviour.
+     Falsifier: T2 values of sl, h, stk, e outside these bounds; slice digests different from the file.
+ N17 A-IMG-STABLE [ASSUMPTION]. The bytes of the two image slices in dm stay equal to the file bytes during X
+     (no code-page change, no W^X toggling, page-in gives file bytes). Static T1 PASS: __TEXT initprot = maxprot
+     = r-x (TESTED-UNPROVED). Falsifier: a slice digest at exit different from the file slice.
+ N18 A-NO-SHARED [ASSUMPTION]. No other process writes dm (no shared mapping, no vm_write).
+     Falsifier: a dm checksum change across a U event with one thread.
+ N19 A-NO-DEBUGGER [ASSUMPTION]. No debugger, exception port or task port of another task changes registers or memory
+     of the process during X. The launcher can avoid starting under a debugger, but cannot stop a privileged
+     attach; so the class is ASSUMPTION, not ENFORCED. Falsifier: a debugger attach record during a run.
+ N20 A-ENTRY-STDIN [ENFORCED-BY-LAUNCHER]. The bytes on fd 0 are exactly req (the launcher renders req from vals).
+     Falsifier: launcher log of the bytes sent differs from req.
+ N21 A-STDOUT-EMPTY [ENFORCED-BY-LAUNCHER]. The stdout pipe is empty at exec and only the process writes to it.
+     Falsifier: launcher record.
+ N22 A-OUT-DELIVER [ENFORCED-BY-LAUNCHER]. The consumer reads, on its end of the stdout pipe, every byte the process
+     put into fd 1 and no other byte, until EOF; libSystem exit flush writes nothing to fd 1 (CakeML does not use
+     stdio for fd 1; by reading basis_ffi.c 721-750). Falsifier: a byte count mismatch between the launcher's read
+     total and the sum of nw over completed writes (plus the in-flight prefix).
+ Not a native assumption any more: A-X18. absM normalises x18; what remains is the MODEL lemma ML-06 (no word of the
+ code slice names x18). The kernel may change x18 freely; the C code's use of x18 is inside F events (N07).
+
+1.6 MODEL LEMMAS NEEDED (HOL; MODEL level; each: name, statement sketch, rests on, status)
+ ML-01 T-ENV-NEXT. |- !X sr. interference_ok (next_R X) (arm8_target.proj dm).
+       Rests on: interference_ok_arm8_iff (ENV:5-12, earlier session, stdout CHECKED; not a case of tonight), the
+       guard of (E1). Status: MISSING.
+ ML-02 T-ENV-FFI. |- FFI_FACTS X sr ==> refund_ffi_contract_on b dm Vok_R F_R, where FFI_FACTS is the HOL form of
+       N07 and N08 at the observed calls (a hypothesis about the rstate list, not a native fact inside HOL).
+       Rests on: refund_ffi_contract_on_def (RA/L1-0001/stdout.log:58-75, definition stored in a go exit 0 case).
+       Status: MISSING.
+ ML-03 T-ENV. |- (ML-01 and ML-02 hypotheses) ==> refund_env_ok_sl sl (envmc_R with ffi_interfer := ffi_R).
+       Rests on: refund_env_ok_sl_of_contract_on, PROVED (L1-0001; stdout.log:117-123; go exit 0):
+         |- interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+            refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok envmc.ffi_interfer ==>
+            refund_env_ok_sl sl (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+       Status of ML-03 itself: MISSING (an instantiation).
+ ML-04 T-FS. |- wfFS fs_R /\ STD_streams fs_R /\ stdin_content fs_R = SOME req, for every finite prefix list c.
+       Rests on: CakeML fsFFIProps liveFS (LIBRARY). Status: MISSING.
+ ML-05 L-GHOST. For every encoder-subset word at PC in dm: if OBS s1 = OBS s2 and SRF s1 = SRF s2 then
+       NextStateARM8 s1 and NextStateARM8 s2 are both NONE or both SOME with equal OBS and SRF. Needed because UPD
+       keeps the model's ghost fields (e.g. branch_hint) and N01 is stated for every s^ with given OBS/SRF.
+       Rests on: L3 definitions; EE-0001 field lemmas (erase_reads etc.). Status: MISSING.
+ ML-06 L-X18-DECODE. Every 32-bit word of the code slice (file 16592..147028) decodes to an encoder-subset AST that
+       names no register 18. Test oracle: static T5 PASS (0 words name x18; TESTED-UNPROVED). Status: MISSING.
+ ML-07 L-SP-NOWRITE. No word of the code slice reads SP_EL0 as a base or writes register 31 as SP. Test oracle:
+       T5 (0 uses of SP). Status: MISSING.
+ ML-08 L-UNTAGGED-RUN. Along the model run from ms_27, every next PC is untagged. Sketch: no-Error (from M3) puts
+       every reached PC in dm U {halt_pc} U FFI_PCS; slide forms of U2/U3 plus N16 bounds give untagged; then
+       U4 gives the premise of NextStateARM8_erase.
+       Rests on: U4_next_pc_from_code_invariant, PROVED (EE-0001; stdout.log:469-475; go exit 0):
+         (!t. NextStateARM8 (erase s) = SOME t ==> t.PC IN refund_code_dm) ==>
+         !t. NextStateARM8 (erase s) = SOME t ==> untagged t.PC
+       U2_code_dm_untagged |- !a. a IN refund_code_dm ==> untagged a  (PROVED, EE-0001:457-462)
+       U3_mem_dm_untagged  |- !h e a. a IN refund_mem_dm h e /\ e <=+ 0x80000000000000w ==> untagged a
+                                                                         (PROVED, EE-0001:463-468)
+       These three are SLIDE-0 forms (refund_code_dm, refund_mem_dm). The slide forms are MISSING.
+       Status: MISSING.
+ ML-09 L-ERASE-RUN. For each model normal step on a state absM-related to r_i: NextStateARM8 (erase s^) =
+       OPTION_MAP erase (NextStateARM8 s^), where s^ carries the REAL TBI0/TBI1/SA0.
+       Rests on: NextStateARM8_erase, PROVED (EE-0001; stdout.log:409-413; go exit 0):
+         |- s.PSTATE.EL = 0w /\ s.exception = NoException /\ (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0) /\
+            (!t. NextStateARM8 (erase s) = SOME t ==> untagged t.PC) ==>
+            NextStateARM8 (erase s) = OPTION_MAP erase (NextStateARM8 s)
+       arm8_ok_erase, PROVED (E1-0003; stdout.log:47-50; go exit 0):
+         |- arm8_ok (erase s) <=> s.PSTATE.EL = 0w /\ ~s.SCTLR_EL1.E0E /\ s.exception = NoException /\ aligned 2 s.PC
+       erase_fields, PROVED (E1-0003; stdout.log:28-35). Plus ML-07, ML-08, N02, N04. Status: MISSING.
+ ML-10 T-ENTRY27. If the 27 entry U events meet N01 and the STRONG form of N05, then
+       ?ms. arm8_run 27 (absM sr r_0) = SOME ms /\ OBS ms = OBS (absM sr r_27) /\ SRF ms = SRF (absM sr r_0).
+       Rests on: refund_entry_run_sl (S2:48-57; earlier session; not called PROVED here; M3 already contains the
+       arm8_run 27 conclusion). Status: MISSING.
+ ML-11 T-TRACE (the simulation; to be proved by induction on the REAL events, per W-x8rev). Let mc_R =
+       refund_mc b (envmc_R with ffi_interfer := ffi_R), st_R = basis_ffi no_ext cl_R fs_R, ms_27 from ML-10.
+       Hypotheses: the HOL forms of N01-N08, N10, N12 for X (as predicates on the rstate list) and ML-05..ML-10.
+       Conclusions, with K(i) := NU(i) + NF(i) (model steps before event i):
+        (a) for every completed event index i with 27 <= i <= n: ?ms st. evaluate mc_R st_R (K i) ms_27 =
+            (TimeOut, ms, st) /\ OBS ms = OBS (absM sr r_i) /\ SRF ms = SRF (absM sr r_0) /\
+            st.io_events = EV_i X, where EV_i X = the IO_event list built from the completed F events before i,
+            each with name J_k, conf and (before, after) bytes taken from PRE_k and NB_k;
+        (b) if END X = EXIT_AFTER_H: ?t ms st. evaluate mc_R st_R (K n + 1) ms_27 = (Halt t, ms, st) /\
+            st.io_events = EV_n X.
+       Index check: in (a) the next_interfer index used at event i is NU(i) and the ffi_interfer index is NF(i)
+       (correction 2). Rests on: TS evaluate_def, apply_oracle_def; refund_ffi_tot_valid, PROVED (L1-0001;
+       stdout.log:84-87): |- !Vok f k index new_bytes ms2. Vok index new_bytes ms2 ==>
+       refund_ffi_tot Vok f k (index,new_bytes,ms2) = f k (index,new_bytes,ms2). Status: MISSING.
+       NOTE: the worker W-trace draft (orch-A/trace/) did not exist when I read; I could not align names with it.
+ ML-12 T-KILLED-PREFIX (correction 5: behaviour existence). |- !mc st ms K ms1 st1 t io.
+         evaluate mc st K ms = (TimeOut, ms1, st1) /\ machine_sem mc st ms (Terminate t io) ==> st1.io_events <<= io
+       Proof idea: machine_sem gives a clock k' with Halt; if k' <= K then evaluate_add_clock forces Halt at K
+       (contradiction with TimeOut); so K <= k' and evaluate_add_clock_io_events_mono gives the prefix.
+       Behaviour existence: machine_sem_total (TP:1134) gives ?b. machine_sem mc st ms b; M3 then gives
+       b = Terminate t io. Rests on: evaluate_add_clock (TP:1059), evaluate_add_clock_io_events_mono (TP:1108),
+       machine_sem_total (TP:1134), all LIBRARY. Status: MISSING.
+ ML-13 T-INFLIGHT (correction 3). If END X = CUT(i), ev_i is a write call, and the numchars head of the model's file
+       system at ms_i is n_req (by (E4)), then evaluate mc_R st_R (K i + 1) ms_27 = (_, _, st') with
+       st'.io_events = EV_i X ++ [w] and write_chunk of w = the n_req bytes a[4+off .. 4+off+n_req) of r_i.
+       Rests on: FS write_def (k = MIN n strm), fd1_written_def (RA/LO-0006/stdout.log:58-65). Status: MISSING.
+ ML-14 T-X8-COMPOSE. The composition in 1.8. Rests on: M3 (PROVED, MF-0002); machine_sem_of_evaluate_Halt, PROVED
+       (LE-0004; stdout.log:79-82): |- !mc st k ms t ms' st'. evaluate mc st k ms = (Halt t,ms',st') ==>
+       machine_sem mc st ms (Terminate t st'.io_events); fd1_written_prefix, PROVED (LO-0006; stdout.log:73-74):
+       |- !io' io. io' <<= io ==> fd1_written io' <<= fd1_written io; refund_frame_decision, PROVED (PX-0001;
+       stdout.log:52-55): |- !f out g. out <<= explode (refund_render_fields f) /\ refund_strict_parse out = SOME g
+       ==> out = explode (refund_render_fields f) /\ g = f; refund_frame_accept_of_prefix, PROVED (MF-0002;
+       stdout.log:100-104). Also needs: machine_sem_unique (TP:1163, LIBRARY). Status: MISSING.
+ STAGED (optional, not on the critical path):
+ ST-1 MT1 refund_model_frame_totalised: M3 for the totalised machine with refund_env_ok_sl replaced by its two
+       L1C premises. Source RA/MT-0001.sml (= OA/mt/mt_v1.sml); no go.log; NOT RUN. It would shorten ML-03 + ML-14.
+ ST-2 Non-vacuity (one witness for the joint premise set): RA/NV-0001.sml; no go.log; NOT RUN. Not needed for the
+       validity of X8; needed to show that X8 is not vacuous at the model level.
+ PROVED theorems used (14; each go exit 0 and statement seen in stdout.log): M3 refund_model_frame_meets_exported_
+       contract (MF-0002); refund_frame_accept_of_prefix (MF-0002); refund_env_ok_sl_of_contract_on (L1-0001);
+       refund_ffi_tot_valid (L1-0001); NextStateARM8_erase (EE-0001); U2_code_dm_untagged (EE-0001);
+       U3_mem_dm_untagged (EE-0001); U4_next_pc_from_code_invariant (EE-0001); erase_fields (E1-0003);
+       arm8_ok_erase (E1-0003); machine_sem_of_evaluate_Halt (LE-0004); fd1_written_prefix (LO-0006);
+       refund_frame_decision (PX-0001);
+       refund_profile_a_sl_fd1 (LO-0006; stdout.log:467-496; used in (C5)).
+       (U2, U3, U4: the stdout shows `STATEMENT ... typechecks` with the text, then `PROVED <name>`; no separate
+       CHECKED line. I count them as PROVED on that basis.)
+
+1.7 CONCLUSION CLAUSES
+ Let PREM X sl h e sr := N01 /\ ... /\ N22 for X (all 22 rows of 1.5) and let STDOUT X be the bytes the consumer read.
+ Let mc_R, st_R, ms_27 be as in ML-11.
+ (C1) ENTRY. M3's premises hold at s := absM sr r_0, envmc := envmc_R with ffi_interfer := ffi_R, fs := fs_R,
+      cl := cl_R (N16, ML-03, ML-04, (E5)); M3's ms is ms_27 (ML-10).
+ (C2) BEHAVIOUR. ?t io. machine_sem mc_R st_R ms_27 (Terminate t io) (machine_sem_total + M3 + machine_sem_unique).
+ (C3) COMPLETED RUN (END X = EXIT_AFTER_H): io = EV_n X and STDOUT X = fd1_written io
+      (ML-11(b), machine_sem_of_evaluate_Halt, machine_sem_unique, N12, N21, N22).
+ (C4) CUT RUN: killed by any signal, stopped by the supervisor's time-out, or exited inside a call segment
+      (correction 3, corrected wording): STDOUT X is a prefix of fd1_written of an EXTENSION of the observed events:
+        EV_i X <<= io  /\  STDOUT X <<= fd1_written io,
+      where io is the model behaviour of (C2). If ev_i is an in-flight write, the extension includes that write
+      with its full requested length (ML-13), and N13 makes the bytes it already delivered a prefix of that chunk.
+      v1 clause (f) said STDOUT X = "the concatenation over reached write calls" of the written ranges. That is
+      FALSE for a cut run: an in-flight write can leave bytes in the pipe (PIPE_BUF = 512; chunks up to 2048).
+ (C5) DECISION (corollary): in both (C3) and (C4),
+        !g. refund_strict_parse (STDOUT X) = SOME g ==>
+          g = f_vals /\ STDOUT X = explode (refund_render_fields f_vals) /\ [the exported clauses evaluate to T,T,T]
+      Proof route (by reading): M3 gives the result for fd1_written io; for Success fd1_written io = render;
+      for Resource_limit_hit fd1_written io <<= render (refund_profile_a_sl_fd1, LO-0006); then STDOUT X <<= render
+      and refund_frame_decision gives g = f_vals and STDOUT X = render. Exit status is NOT used.
+ (C6) SCOPE (correction 4). X8 concludes NOTHING about a run X for which any premise in PREM fails. In particular a
+      strict parse of STDOUT X is NOT evidence of correctness for such a run. v1 lines (d2) said that runs which
+      leave A-FD1-WRITE are safe "because the frame parser is strict". That does not follow: after an unmodelled
+      error, the bytes written later are unconstrained by the model. The consumer CANNOT observe afterwards whether
+      N05 (kernel), N07/N08 (FFI frame) or N10 (read semantics) held. Therefore each such premise must either be
+      ENFORCED by the launcher or be accepted by the owner as an ASSUMPTION; the loader class (CE-3) already shows
+      that N15 fails when it is not enforced.
+
+1.8 THEOREM SHAPE (TARGET; NOT PROVED; HOL-style pseudo-syntax)
+ refund_native_x8_v2:
+  !X sl h e sr charge request original remaining enabled opened candidate amount reason.
+    REAL_RUN X b8ed5ec2...7bb8 /\ PREM X sl h e sr ==>
+    ?t io.
+      machine_sem (refund_mc (sl + 0x1000040D0w) (envmc_R X sr with ffi_interfer := ffi_R X sr))
+                  (basis_ffi no_ext cl_R (fs_R X)) (ms_27 X sr) (Terminate t io) /\
+      (END X = EXIT_AFTER_H _ ==> io = EV_n X /\ STDOUT X = fd1_written io) /\
+      (!i. END X = CUT i ==> EV_i X <<= io /\ STDOUT X <<= fd1_written io) /\
+      !g. refund_strict_parse (STDOUT X) = SOME g ==>
+          g = f_vals /\ STDOUT X = explode (refund_render_fields f_vals) /\ [exported clauses = T,T,T]
+ REAL_RUN, PREM, STDOUT, END, EV_i are HOL definitions over the rstate list (MISSING). The link "this HOL object
+ is the real run" is not a theorem; it is the meaning of N01-N22 and of the observation.
+ HOL can prove ML-01..ML-14 at most. It cannot prove N01-N22. X8 as a whole stays a conditional statement.
+
+1.9 TESTS (correction 6)
+ v1 tests T2 (interposer probe) and T4 (lldb around one call) cannot fail in the relevant direction: T2 runs under
+ DYLD_INSERT_LIBRARIES, i.e. NOT under the launcher contract (N15 forbids it), and T4 single calls under a debugger
+ change kernel paths. They can only support, not falsify, the production configuration.
+ NEW T6 (proposed, NOT RUN; needs owner approval because it runs the executable): perturbation differential UNDER
+ the launcher contract. Same request, N runs each with one perturbation: SIGSTOP/SIGCONT and SIGTSTP/SIGCONT at
+ random times; stdin delivered in 1-byte chunks with delays; stdout reader stalled to fill the pipe; CPU load to
+ force migration and preemption; low-memory pressure. Pass: every completed run gives byte-identical stdout equal to
+ explode (refund_render_fields f_vals); every killed run gives a prefix. Any other stdout falsifies at least one of
+ N05, N06, N10, N12, N13, N18. C9 runs (RUN by C, exit 0; 9 signal cases while blocked in read or write; truncated
+ stdin; thread count) are first instances of T6, not a full T6.
+
+=====================================================================================================================
+2. CORRECTION -> WHERE APPLIED IN V2
+=====================================================================================================================
+| # | Correction (CORRECTIONS.md)                                 | Where applied in v2                               |
+| 1 | A-F0-REAL: SCTLR_EL1.A and PSTATE bits from the REAL state; | 1.3 (absM takes sr; F0 gives only ghost fields);  |
+|   | kernel keeps every read system-register bit constant        | 1.5 N03 (new row); ML-05 L-GHOST                  |
+| 2 | Index next_interfer by the count of NORMAL model steps;     | 1.2 (NU, NF, u, f; first 27 U events excluded);   |
+|   | the trace includes the 27 entry instructions                | 1.4 (E1) next_R; ML-10 T-ENTRY27; ML-11 index check|
+| 3 | Killed/time-out clause: stdout is a prefix of fd1_written   | 1.7 (C4) corrected wording; 1.5 N13 A-FD1-PARTIAL |
+|   | of an EXTENSION of the observed events (in-flight write)    | (new); 1.4 (E4) c_#F; ML-13 T-INFLIGHT            |
+| 4 | No 'strict parse => correct' for premise-violating runs;    | 1.7 (C6) scope line; 1.5 classes (ENFORCED vs     |
+|   | unobservable premises: ENFORCED or stay assumptions         | ASSUMPTION; launcher not implemented); W1 below   |
+| 5 | SP preserved or 16-aligned in kernel and FFI premises;      | 1.5 N04, N05 (+SP), N07 (+SP);                    |
+|   | cite machine_sem_total and the add-clock lemmas;            | ML-12 cites machine_sem_total and add-clock lemmas;|
+|   | returned bytes = real post-call bytes                       | 1.4 (E2) NB_k = real bytes; (E4) fs_R by recursion |
+| 6 | CakeML analogy overstated; T2/T4 cannot fail in the         | 1.0 (analogy reduced to logical shape); 1.9 (T2/T4 |
+|   | relevant direction; add a perturbation differential         | weak; new T6 under the launcher contract)         |
+=====================================================================================================================
+3. POINTS WHERE I AM NOT SURE (with reason) AND CLAUSES WEAKER THAN V1
+=====================================================================================================================
+Doubts:
+ D1 L-GHOST (ML-05) may be FALSE if some L3 step reads a ghost field (e.g. branch_hint) on the encoder subset.
+    I did not read the L3 Next definition for this. If false, N01 must fix the ghost values and UPD must copy them.
+ D2 The exact set of PSTATE/SCTLR_EL1/TCR_EL1 bits L3 reads at EL0 is not listed here. I take ALL of them from sr
+    (safe but strong: N03 then asks the kernel to keep every bit constant, including bits L3 never reads).
+ D3 refund_ffi_tot passes the counter k to F_R but Vok_R cannot see k. My LEAST-k' repair (1.4 E2) is by reading
+    only. If two calls have OBS-equal pre-states but different real post-states, F_R picks one; I believe the
+    contract still holds (it depends only on pre-state, nb, post-state), but this is unchecked.
+ D4 next_R uses UPD, which also overwrites memory OUTSIDE dm and SP_EL0 with real values. interference_ok does not
+    restrict those fields (ENV:5-12), so I think this is allowed. Not checked in HOL.
+ D5 T-TRACE (a) asserts SRF ms = SRF (absM sr r_0) along the run. This needs the subset never to change PSTATE
+    bits other than NZCV and never to set exception on the run (no-Error of M3). By reading only.
+ D6 U2/U3/U4 are slide-0 forms. The slide forms (ML-08) are MISSING. N16's untagged bounds are my own reading of
+    N4/N5 in E1-0003; the exact bound needed may differ by the image size.
+ D7 The 27 entry steps need the STRONG kernel premise (all mapped memory, SP), because arm8_run has no interference
+    oracle. This is stronger than v1's sentence "same clause, plus SP_EL0 and the loads' memory" only in wording.
+ D8 (C4) for an exit INSIDE a call segment (assert/abort in C, ___assert_rtn is imported): I treat it as CUT. If
+    the C code wrote to fd 1 before exiting (it should not; stderr only), N13 does not cover it. Unchecked.
+ D9 (C4) relies on choosing c_#F = n_req for the in-flight write. If n_req = 0 the chunk is empty; fine. If the
+    in-flight call is a read, no extension entry is needed. If the run is cut between the write's return and the
+    next user instruction, the write counts as in flight; N13 then covers it only if all its bytes are a prefix
+    of the buffer, which is true. By reading.
+ D10 W-trace's draft (orch-A/trace/) was absent when I read. ML-11's names may not match it.
+ D11 ENFORCED-BY-LAUNCHER rows are not enforced today: the launcher contract is a draft and is not implemented.
+ D12 S2's refund_entry_run_sl and ENV's interference_ok_arm8_iff come from earlier sessions without a `go exit 0`
+    line in the layout I read. I cite them by stdout only. They are not on the list of PROVED theorems above.
+ D13 The rstate type, REAL_RUN, EV_i, STDOUT, PREM are not yet HOL definitions. Their exact form decides how much of
+    N01-N22 can be stated in HOL at all; some (N19, N22) may only be stated in prose.
+ D14 N10/N12 require the C code to write a[0] = 0 and the count bytes exactly as the model answer. This is a reading
+    of basis_ffi.c 160-189 by both reviewers (CORRECTIONS.md: "holds by reading"), not by me.
+ D15 I count 22 native rows. Some could be merged (N06/N18/N19 are all "no other writer"); the count is a choice.
+Clauses WEAKER than v1 (stated, not hidden):
+ W1 v1 (d2)/(f): "the stdout is empty or a strict prefix (safe direction only because the frame parser is strict)"
+    for runs that violate A-FD1-WRITE. REMOVED. v2 says nothing about such runs (C6). Reason: correction 4; the
+    claim did not follow.
+ W2 v1 (f): STDOUT(X) = concatenation of the reached writes' ranges, for every run. v2: equality only for runs that
+    end after H (C3); for cut runs only a prefix of fd1_written of an extension (C4). Reason: correction 3.
+ W3 v1 (e)/(f) cited "the existence part of M3" for killed runs. v2 uses machine_sem_total and the add-clock lemmas
+    (ML-12); not weaker in content, but it adds a MISSING lemma.
+ W4 v1 section 0 said the construction is "the same idea CakeML uses internally". v2 claims only the shared logical
+    shape (correction 6).
+ W5 v1 listed A-X18 as a native assumption with an UNKNOWN kernel question. v2 drops the kernel part (x18 is
+    normalised, so the kernel may change it) and keeps only the MODEL lemma ML-06. This is a change of class, not a
+    weakening of the conclusion.
+ W6 v1 made A-FD0-READ / A-FD1-WRITE single rows "ENFORCE + AXIOM". v2 splits each into a SETUP row
+    (ENFORCED-BY-LAUNCHER) and a SEMANTICS row (ASSUMPTION). The conclusion is unchanged; the trust base is
+    stated more exactly.
+
+=====================================================================================================================
+4. COUNTS
+=====================================================================================================================
+ Model lemmas needed (ML-01..ML-14): MISSING 14. STAGED 2 (ST-1 MT-0001, ST-2 NV-0001; optional).
+ PROVED theorems used: 14 (MF-0002 x2, L1-0001 x2, EE-0001 x4, E1-0003 x2, LE-0004, LO-0006 x2, PX-0001).
+ LIBRARY theorems cited: evaluate_add_clock, evaluate_add_clock_io_events_mono, machine_sem_total,
+ machine_sem_unique (TP), liveFS (fsFFIProps).
+ Native assumptions: 22 = ASSUMPTION 15 (N01-N08, N10, N12, N13, N16, N17, N18, N19)
+                         + ENFORCED-BY-LAUNCHER 7 (N09, N11, N14, N15, N20, N21, N22; launcher NOT implemented).
+END OF FILE (by reading; not machine-checked).

@@ -1,0 +1,514 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_m1bEraseStep">>
+MARK W
+BEGIN W_nonvacuous REQUIRED cpu=0.3
+TACTIC_USED W_nonvacuous 1
+Saved theorem _______ "W_nonvacuous"
+PROVED W_nonvacuous
+CHECKED W_nonvacuous hyps 0
+⊢ ∃s t.
+    arm8_ok (erase s) ∧ s.TCR_EL1.TBI0 ∧ s.SCTLR_EL1.SA0 ∧ untagged t ∧
+    s.PSTATE.EL = 0w
+MARK S0
+CASE_RAND_COUNT 26 of 26
+RULE_COUNTS FR_RAND 135 ER_OUT 27 ER_PAIR 54
+BEGIN FOR_proj REQUIRED cpu=0.6
+TACTIC_USED FOR_proj 1
+Saved theorem _______ "FOR_proj"
+PROVED FOR_proj
+BEGIN FOR_snd_const REQUIRED cpu=0.8
+TACTIC_USED FOR_snd_const 1
+Saved theorem _______ "FOR_snd_const"
+PROVED FOR_snd_const
+BEGIN FOR_erase REQUIRED cpu=0.8
+TACTIC_USED FOR_erase 1
+Saved theorem _______ "FOR_erase"
+PROVED FOR_erase
+BEGIN FOR_pair_erase REQUIRED cpu=0.8
+TACTIC_USED FOR_pair_erase 1
+Saved theorem _______ "FOR_pair_erase"
+PROVED FOR_pair_erase
+BEGIN Mem_state REQUIRED cpu=0.8
+TACTIC_USED Mem_state 1
+Saved theorem _______ "Mem_state"
+PROVED Mem_state
+BEGIN erase_reads REQUIRED cpu=0.9
+TACTIC_USED erase_reads 1
+Saved theorem _______ "erase_reads"
+PROVED erase_reads
+BEGIN erase_upds REQUIRED cpu=0.9
+TACTIC_USED erase_upds 1
+Saved theorem _______ "erase_upds"
+PROVED erase_upds
+BEGIN fupd_PC_id REQUIRED cpu=0.9
+TACTIC_USED fupd_PC_id 1
+Saved theorem _______ "fupd_PC_id"
+PROVED fupd_PC_id
+BEGIN SCTLR_reads REQUIRED cpu=0.9
+TACTIC_USED SCTLR_reads 1
+Saved theorem _______ "SCTLR_reads"
+PROVED SCTLR_reads
+BEGIN writeX_PC REQUIRED cpu=1.0
+TACTIC_USED writeX_PC 1
+Saved theorem _______ "writeX_PC"
+PROVED writeX_PC
+MARK F
+DEF_NAMES 130
+FRAME_LEMMAS_FROM_EF_0001 61
+MARK E1
+RULE_COUNTS ER_PUSH 27 UPD_IN 14 CSA_IN 1
+MARK ERASE_ENGINE
+BEGIN erase_raise_exception REQUIRED cpu=1.1
+TACTIC_USED erase_raise_exception 1
+Saved theorem _______ "erase_raise_exception"
+PROVED erase_raise_exception
+BEGIN erase_X REQUIRED cpu=1.1
+TACTIC_USED erase_X 1
+Saved theorem _______ "erase_X"
+PROVED erase_X
+BEGIN erase_write_X REQUIRED cpu=1.1
+TACTIC_USED erase_write_X 1
+Saved theorem _______ "erase_write_X"
+PROVED erase_write_X
+BEGIN erase_SP REQUIRED cpu=1.1
+TACTIC_USED erase_SP 1
+Saved theorem _______ "erase_SP"
+PROVED erase_SP
+BEGIN erase_write_SP REQUIRED cpu=1.1
+TACTIC_USED erase_write_SP 1
+Saved theorem _______ "erase_write_SP"
+PROVED erase_write_SP
+BEGIN erase_TranslationRegime REQUIRED cpu=1.2
+TACTIC_USED erase_TranslationRegime 1
+Saved theorem _______ "erase_TranslationRegime"
+PROVED erase_TranslationRegime
+BEGIN erase_Hint_Branch REQUIRED cpu=1.2
+TACTIC_USED erase_Hint_Branch 1
+Saved theorem _______ "erase_Hint_Branch"
+PROVED erase_Hint_Branch
+BEGIN erase_CheckAlignment REQUIRED cpu=1.2
+TACTIC_USED erase_CheckAlignment 1
+Saved theorem _______ "erase_CheckAlignment"
+PROVED erase_CheckAlignment
+BEGIN erase_BigEndian REQUIRED cpu=1.2
+TACTIC_USED erase_BigEndian 1
+Saved theorem _______ "erase_BigEndian"
+PROVED erase_BigEndian
+BEGIN erase_Mem REQUIRED cpu=1.2
+TACTIC_USED erase_Mem 1
+Saved theorem _______ "erase_Mem"
+PROVED erase_Mem
+BEGIN erase_write_Mem REQUIRED cpu=1.3
+TACTIC_USED erase_write_Mem 1
+Saved theorem _______ "erase_write_Mem"
+PROVED erase_write_Mem
+BEGIN erase_ConditionHolds REQUIRED cpu=1.3
+TACTIC_USED erase_ConditionHolds 1
+Saved theorem _______ "erase_ConditionHolds"
+PROVED erase_ConditionHolds
+BEGIN erase_SetTheFlags REQUIRED cpu=1.3
+TACTIC_USED erase_SetTheFlags 1
+Saved theorem _______ "erase_SetTheFlags"
+PROVED erase_SetTheFlags
+BEGIN erase_ShiftReg REQUIRED cpu=1.3
+TACTIC_USED erase_ShiftReg 1
+Saved theorem _______ "erase_ShiftReg"
+PROVED erase_ShiftReg
+BEGIN erase_ExtendReg REQUIRED cpu=1.3
+TACTIC_USED erase_ExtendReg 1
+Saved theorem _______ "erase_ExtendReg"
+PROVED erase_ExtendReg
+BEGIN erase_dfn_Address REQUIRED cpu=1.3
+TACTIC_USED erase_dfn_Address 1
+Saved theorem _______ "erase_dfn_Address"
+PROVED erase_dfn_Address
+BEGIN erase_dfn_AddSubCarry REQUIRED cpu=1.4
+TACTIC_USED erase_dfn_AddSubCarry 1
+Saved theorem _______ "erase_dfn_AddSubCarry"
+PROVED erase_dfn_AddSubCarry
+BEGIN erase_dfn_AddSubExtendRegister REQUIRED cpu=1.4
+TACTIC_USED erase_dfn_AddSubExtendRegister 1
+Saved theorem _______ "erase_dfn_AddSubExtendRegister"
+PROVED erase_dfn_AddSubExtendRegister
+BEGIN erase_dfn_AddSubImmediate REQUIRED cpu=1.4
+TACTIC_USED erase_dfn_AddSubImmediate 1
+Saved theorem _______ "erase_dfn_AddSubImmediate"
+PROVED erase_dfn_AddSubImmediate
+BEGIN erase_dfn_AddSubShiftedRegister REQUIRED cpu=1.4
+TACTIC_USED erase_dfn_AddSubShiftedRegister 1
+Saved theorem _______ "erase_dfn_AddSubShiftedRegister"
+PROVED erase_dfn_AddSubShiftedRegister
+BEGIN erase_dfn_LogicalImmediate REQUIRED cpu=1.5
+TACTIC_USED erase_dfn_LogicalImmediate 1
+Saved theorem _______ "erase_dfn_LogicalImmediate"
+PROVED erase_dfn_LogicalImmediate
+BEGIN erase_dfn_LogicalShiftedRegister REQUIRED cpu=1.5
+TACTIC_USED erase_dfn_LogicalShiftedRegister 1
+Saved theorem _______ "erase_dfn_LogicalShiftedRegister"
+PROVED erase_dfn_LogicalShiftedRegister
+BEGIN erase_dfn_Shift REQUIRED cpu=1.5
+TACTIC_USED erase_dfn_Shift 1
+Saved theorem _______ "erase_dfn_Shift"
+PROVED erase_dfn_Shift
+BEGIN erase_dfn_MoveWide REQUIRED cpu=1.5
+TACTIC_USED erase_dfn_MoveWide 1
+Saved theorem _______ "erase_dfn_MoveWide"
+PROVED erase_dfn_MoveWide
+BEGIN erase_dfn_BitfieldMove REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_BitfieldMove 1
+Saved theorem _______ "erase_dfn_BitfieldMove"
+PROVED erase_dfn_BitfieldMove
+BEGIN erase_dfn_ConditionalCompareImmediate REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_ConditionalCompareImmediate 1
+Saved theorem _______ "erase_dfn_ConditionalCompareImmediate"
+PROVED erase_dfn_ConditionalCompareImmediate
+BEGIN erase_dfn_ConditionalCompareRegister REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_ConditionalCompareRegister 1
+Saved theorem _______ "erase_dfn_ConditionalCompareRegister"
+PROVED erase_dfn_ConditionalCompareRegister
+BEGIN erase_dfn_ConditionalSelect REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_ConditionalSelect 1
+Saved theorem _______ "erase_dfn_ConditionalSelect"
+PROVED erase_dfn_ConditionalSelect
+BEGIN erase_dfn_CountLeading REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_CountLeading 1
+Saved theorem _______ "erase_dfn_CountLeading"
+PROVED erase_dfn_CountLeading
+BEGIN erase_dfn_ExtractRegister REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_ExtractRegister 1
+Saved theorem _______ "erase_dfn_ExtractRegister"
+PROVED erase_dfn_ExtractRegister
+BEGIN erase_dfn_Division REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_Division 1
+Saved theorem _______ "erase_dfn_Division"
+PROVED erase_dfn_Division
+BEGIN erase_dfn_MultiplyAddSub REQUIRED cpu=1.6
+TACTIC_USED erase_dfn_MultiplyAddSub 1
+Saved theorem _______ "erase_dfn_MultiplyAddSub"
+PROVED erase_dfn_MultiplyAddSub
+BEGIN erase_dfn_MultiplyAddSubLong REQUIRED cpu=1.7
+TACTIC_USED erase_dfn_MultiplyAddSubLong 1
+Saved theorem _______ "erase_dfn_MultiplyAddSubLong"
+PROVED erase_dfn_MultiplyAddSubLong
+BEGIN erase_dfn_MultiplyHigh REQUIRED cpu=1.7
+TACTIC_USED erase_dfn_MultiplyHigh 1
+Saved theorem _______ "erase_dfn_MultiplyHigh"
+PROVED erase_dfn_MultiplyHigh
+BEGIN erase_dfn_Reverse REQUIRED cpu=1.7
+TACTIC_USED erase_dfn_Reverse 1
+Saved theorem _______ "erase_dfn_Reverse"
+PROVED erase_dfn_Reverse
+BEGIN erase_dfn_CRC REQUIRED cpu=1.7
+TACTIC_USED erase_dfn_CRC 1
+Saved theorem _______ "erase_dfn_CRC"
+PROVED erase_dfn_CRC
+BEGIN erase_LoadStoreSingle REQUIRED cpu=1.8
+TACTIC_USED erase_LoadStoreSingle 1
+Saved theorem _______ "erase_LoadStoreSingle"
+PROVED erase_LoadStoreSingle
+BEGIN erase_dfn_LoadStoreImmediate REQUIRED cpu=2.5
+TACTIC_USED erase_dfn_LoadStoreImmediate 1
+Saved theorem _______ "erase_dfn_LoadStoreImmediate"
+PROVED erase_dfn_LoadStoreImmediate
+BEGIN erase_dfn_LoadStoreRegister REQUIRED cpu=2.5
+TACTIC_USED erase_dfn_LoadStoreRegister 1
+Saved theorem _______ "erase_dfn_LoadStoreRegister"
+PROVED erase_dfn_LoadStoreRegister
+BEGIN erase_dfn_LoadStorePair REQUIRED cpu=2.5
+TACTIC_USED erase_dfn_LoadStorePair 1
+Saved theorem _______ "erase_dfn_LoadStorePair"
+PROVED erase_dfn_LoadStorePair
+BEGIN erase_dfn_LoadStoreAcquire REQUIRED cpu=5.1
+TACTIC_USED erase_dfn_LoadStoreAcquire 1
+Saved theorem _______ "erase_dfn_LoadStoreAcquire"
+PROVED erase_dfn_LoadStoreAcquire
+BEGIN erase_dfn_LoadStoreAcquirePair REQUIRED cpu=5.4
+TACTIC_USED erase_dfn_LoadStoreAcquirePair 1
+Saved theorem _______ "erase_dfn_LoadStoreAcquirePair"
+PROVED erase_dfn_LoadStoreAcquirePair
+BEGIN erase_dfn_LoadLiteral REQUIRED cpu=6.5
+TACTIC_USED erase_dfn_LoadLiteral 1
+Saved theorem _______ "erase_dfn_LoadLiteral"
+PROVED erase_dfn_LoadLiteral
+BEGIN erase_dfn_MemoryBarrier REQUIRED cpu=6.5
+TACTIC_USED erase_dfn_MemoryBarrier 1
+Saved theorem _______ "erase_dfn_MemoryBarrier"
+PROVED erase_dfn_MemoryBarrier
+BEGIN erase_dfn_ClearExclusive REQUIRED cpu=6.5
+TACTIC_USED erase_dfn_ClearExclusive 1
+Saved theorem _______ "erase_dfn_ClearExclusive"
+PROVED erase_dfn_ClearExclusive
+BEGIN erase_dfn_Hint REQUIRED cpu=6.6
+TACTIC_USED erase_dfn_Hint 1
+Saved theorem _______ "erase_dfn_Hint"
+PROVED erase_dfn_Hint
+BEGIN erase_dfn_Breakpoint REQUIRED cpu=6.6
+TACTIC_USED erase_dfn_Breakpoint 1
+Saved theorem _______ "erase_dfn_Breakpoint"
+PROVED erase_dfn_Breakpoint
+BEGIN erase_dfn_DebugSwitch REQUIRED cpu=6.6
+TACTIC_USED erase_dfn_DebugSwitch 1
+Saved theorem _______ "erase_dfn_DebugSwitch"
+PROVED erase_dfn_DebugSwitch
+BEGIN erase_dfn_DebugRestore REQUIRED cpu=6.6
+TACTIC_USED erase_dfn_DebugRestore 1
+Saved theorem _______ "erase_dfn_DebugRestore"
+PROVED erase_dfn_DebugRestore
+BEGIN erase_dfn_Halt REQUIRED cpu=6.6
+TACTIC_USED erase_dfn_Halt 1
+Saved theorem _______ "erase_dfn_Halt"
+PROVED erase_dfn_Halt
+BEGIN erase_dfn_SystemInstruction REQUIRED cpu=6.6
+TACTIC_USED erase_dfn_SystemInstruction 1
+Saved theorem _______ "erase_dfn_SystemInstruction"
+PROVED erase_dfn_SystemInstruction
+BEGIN erase_dfn_MoveSystemRegister REQUIRED cpu=6.7
+TACTIC_USED erase_dfn_MoveSystemRegister 1
+Saved theorem _______ "erase_dfn_MoveSystemRegister"
+PROVED erase_dfn_MoveSystemRegister
+BEGIN erase_dfn_MoveImmediateProcState REQUIRED cpu=6.7
+TACTIC_USED erase_dfn_MoveImmediateProcState 1
+Saved theorem _______ "erase_dfn_MoveImmediateProcState"
+PROVED erase_dfn_MoveImmediateProcState
+BEGIN erase_dfn_SupervisorCall REQUIRED cpu=6.7
+TACTIC_USED erase_dfn_SupervisorCall 1
+Saved theorem _______ "erase_dfn_SupervisorCall"
+PROVED erase_dfn_SupervisorCall
+BEGIN erase_dfn_HypervisorCall REQUIRED cpu=6.7
+TACTIC_USED erase_dfn_HypervisorCall 1
+Saved theorem _______ "erase_dfn_HypervisorCall"
+PROVED erase_dfn_HypervisorCall
+BEGIN erase_dfn_SecureMonitorCall REQUIRED cpu=6.7
+TACTIC_USED erase_dfn_SecureMonitorCall 1
+Saved theorem _______ "erase_dfn_SecureMonitorCall"
+PROVED erase_dfn_SecureMonitorCall
+BEGIN erase_dfn_ExceptionReturn REQUIRED cpu=6.8
+TACTIC_USED erase_dfn_ExceptionReturn 1
+Saved theorem _______ "erase_dfn_ExceptionReturn"
+PROVED erase_dfn_ExceptionReturn
+BEGIN erase_dfn_Unallocated REQUIRED cpu=6.8
+TACTIC_USED erase_dfn_Unallocated 1
+Saved theorem _______ "erase_dfn_Unallocated"
+PROVED erase_dfn_Unallocated
+BEGIN erase_dfn_Reserved REQUIRED cpu=6.8
+TACTIC_USED erase_dfn_Reserved 1
+Saved theorem _______ "erase_dfn_Reserved"
+PROVED erase_dfn_Reserved
+BEGIN erase_Fetch REQUIRED cpu=6.8
+TACTIC_USED erase_Fetch 1
+Saved theorem _______ "erase_Fetch"
+PROVED erase_Fetch
+MARK E2
+BEGIN B1_dfn_BranchConditional REQUIRED cpu=6.8
+TACTIC_USED B1_dfn_BranchConditional 1
+Saved theorem _______ "B1_dfn_BranchConditional"
+PROVED B1_dfn_BranchConditional
+BEGIN B2_dfn_BranchConditional REQUIRED cpu=6.9
+TACTIC_USED B2_dfn_BranchConditional 1
+Saved theorem _______ "B2_dfn_BranchConditional"
+PROVED B2_dfn_BranchConditional
+BEGIN B1_dfn_BranchImmediate REQUIRED cpu=7.0
+TACTIC_USED B1_dfn_BranchImmediate 1
+Saved theorem _______ "B1_dfn_BranchImmediate"
+PROVED B1_dfn_BranchImmediate
+BEGIN B2_dfn_BranchImmediate REQUIRED cpu=7.0
+TACTIC_USED B2_dfn_BranchImmediate 1
+Saved theorem _______ "B2_dfn_BranchImmediate"
+PROVED B2_dfn_BranchImmediate
+BEGIN B1_dfn_BranchRegister REQUIRED cpu=7.1
+TACTIC_USED B1_dfn_BranchRegister 1
+Saved theorem _______ "B1_dfn_BranchRegister"
+PROVED B1_dfn_BranchRegister
+BEGIN B2_dfn_BranchRegister REQUIRED cpu=7.1
+TACTIC_USED B2_dfn_BranchRegister 1
+Saved theorem _______ "B2_dfn_BranchRegister"
+PROVED B2_dfn_BranchRegister
+BEGIN B1_dfn_CompareAndBranch REQUIRED cpu=7.2
+TACTIC_USED B1_dfn_CompareAndBranch 1
+Saved theorem _______ "B1_dfn_CompareAndBranch"
+PROVED B1_dfn_CompareAndBranch
+BEGIN B2_dfn_CompareAndBranch REQUIRED cpu=7.3
+TACTIC_USED B2_dfn_CompareAndBranch 1
+Saved theorem _______ "B2_dfn_CompareAndBranch"
+PROVED B2_dfn_CompareAndBranch
+BEGIN B1_dfn_TestBitAndBranch REQUIRED cpu=7.4
+TACTIC_USED B1_dfn_TestBitAndBranch 1
+Saved theorem _______ "B1_dfn_TestBitAndBranch"
+PROVED B1_dfn_TestBitAndBranch
+BEGIN B2_dfn_TestBitAndBranch REQUIRED cpu=7.5
+TACTIC_USED B2_dfn_TestBitAndBranch 1
+Saved theorem _______ "B2_dfn_TestBitAndBranch"
+PROVED B2_dfn_TestBitAndBranch
+BEGIN BranchImmediate_erase_untagged REQUIRED cpu=7.6
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_m1bEraseStep)>>
+TACTIC_USED BranchImmediate_erase_untagged 1
+Saved theorem _______ "BranchImmediate_erase_untagged"
+PROVED BranchImmediate_erase_untagged
+CHECKED BranchImmediate_erase_untagged hyps 0
+⊢ ∀off bt s.
+    s.PSTATE.EL = 0w ∧ untagged (s.PC + off) ⇒
+    dfn'BranchImmediate (off,bt) (erase s) =
+    erase (dfn'BranchImmediate (off,bt) s)
+BEGIN BranchRegister_erase_untagged REQUIRED cpu=7.8
+TACTIC_USED BranchRegister_erase_untagged 1
+Saved theorem _______ "BranchRegister_erase_untagged"
+PROVED BranchRegister_erase_untagged
+CHECKED BranchRegister_erase_untagged hyps 0
+⊢ ∀n bt s.
+    s.PSTATE.EL = 0w ∧ untagged (X n s) ⇒
+    dfn'BranchRegister (n,bt) (erase s) = erase (dfn'BranchRegister (n,bt) s)
+CHECKED LoadStoreSingle_erase (SP class) hyps 0
+⊢ ∀x s.
+    s.PSTATE.EL = 0w ∧ (¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ⇒
+    LoadStoreSingle x (erase s) = erase (LoadStoreSingle x s)
+DEFINITION ⊢ ∀r. NX r = if ¬IS_SOME r.branch_hint then r with PC := r.PC + 4w else r
+BEGIN Run_erase_pc REQUIRED cpu=8.1
+TACTIC_USED Run_erase_pc 1
+Saved theorem _______ "Run_erase_pc"
+PROVED Run_erase_pc
+BEGIN Run_pc REQUIRED cpu=21.2
+TACTIC_USED Run_pc 1
+Saved theorem _______ "Run_pc"
+PROVED Run_pc
+BEGIN Next_alt REQUIRED cpu=33.0
+TACTIC_USED Next_alt 1
+Saved theorem _______ "Next_alt"
+PROVED Next_alt
+BEGIN NX_erase REQUIRED cpu=33.0
+TACTIC_USED NX_erase 1
+Saved theorem _______ "NX_erase"
+PROVED NX_erase
+BEGIN NX_pc REQUIRED cpu=33.0
+TACTIC_USED NX_pc 1
+Saved theorem _______ "NX_pc"
+PROVED NX_pc
+BEGIN Fetch_keep REQUIRED cpu=33.0
+TACTIC_USED Fetch_keep 1
+Saved theorem _______ "Fetch_keep"
+PROVED Fetch_keep
+BEGIN Next_erase_pc REQUIRED cpu=33.1
+TACTIC_USED Next_erase_pc 1
+Saved theorem _______ "Next_erase_pc"
+PROVED Next_erase_pc
+BEGIN Next_pc REQUIRED cpu=33.1
+TACTIC_USED Next_pc 1
+Saved theorem _______ "Next_pc"
+PROVED Next_pc
+BEGIN Next_erase_exception REQUIRED cpu=33.1
+TACTIC_USED Next_erase_exception 1
+Saved theorem _______ "Next_erase_exception"
+PROVED Next_erase_exception
+BEGIN Next_erase_same_pc REQUIRED cpu=33.1
+TACTIC_USED Next_erase_same_pc 1
+Saved theorem _______ "Next_erase_same_pc"
+PROVED Next_erase_same_pc
+BEGIN NextStateARM8_erase REQUIRED cpu=33.1
+TACTIC_USED NextStateARM8_erase 1
+Saved theorem _______ "NextStateARM8_erase"
+PROVED NextStateARM8_erase
+CHECKED NextStateARM8_erase hyps 0
+⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+  (¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧
+  (∀t. NextStateARM8 (erase s) = SOME t ⇒ untagged t.PC) ⇒
+  NextStateARM8 (erase s) = OPTION_MAP erase (NextStateARM8 s)
+MARK STATEMENTS
+STATEMENT NextStateARM8_erase (E1-0003 text) typechecks true free_vars [s::arm8_state]
+s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+(¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧
+(∀t. NextStateARM8 (erase s) = SOME t ⇒ untagged t.PC) ⇒
+NextStateARM8 (erase s) = OPTION_MAP erase (NextStateARM8 s)
+STATEMENT_RESULT NextStateARM8_erase hyps 0 concl_literal true
+STATEMENT Next_erase (E1-0003 text; NOT derived here: no SP premise) typechecks true free_vars [s::arm8_state]
+s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+(Next s).exception = NoException ∧ untagged (Next (erase s)).PC ⇒
+Next (erase s) = erase (Next s)
+STATEMENT_CHANGE Next_erase_sp = E1-0003 Next_erase plus the SP premise (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0)
+OLD_TEXT (E1-0003 Next_erase): s.PSTATE.EL = 0w /\ s.exception = NoException /\ (arm8$Next s).exception = NoException /\ untagged (arm8$Next (erase s)).PC ==> arm8$Next (erase s) = erase (arm8$Next s)
+NEW_TEXT (Next_erase_sp): s.PSTATE.EL = 0w /\ s.exception = NoException /\ (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0) /\ (arm8$Next s).exception = NoException /\ untagged (arm8$Next (erase s)).PC ==> arm8$Next (erase s) = erase (arm8$Next s)
+WHY: without the premise the equation is false when SA0 and ~aligned 4 SP_EL0 at an SP-based access (E1-0003 N2: the real state faults, the erased one does not)
+STATEMENT Next_erase_sp typechecks true free_vars [s::arm8_state]
+s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+(¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧ (Next s).exception = NoException ∧
+untagged (Next (erase s)).PC ⇒
+Next (erase s) = erase (Next s)
+BEGIN Next_erase_sp REQUIRED cpu=33.4
+TACTIC_USED Next_erase_sp 1
+Saved theorem _______ "Next_erase_sp"
+PROVED Next_erase_sp
+CHECKED Next_erase_sp hyps 0
+⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+  (¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧
+  (Next s).exception = NoException ∧ untagged (Next (erase s)).PC ⇒
+  Next (erase s) = erase (Next s)
+STATEMENT U0_next_pc (premise of NextStateARM8_erase) typechecks true free_vars [s::arm8_state]
+∀t. NextStateARM8 (erase s) = SOME t ⇒ untagged t.PC
+STATEMENT U0_next (premise of Next_erase_sp) typechecks true free_vars [s::arm8_state]
+untagged (Next (erase s)).PC
+CONTROL_OK U0_next_pc is a literal premise of NextStateARM8_erase
+CONTROL_OK U0_next is a literal premise of Next_erase_sp
+STATEMENT U1_untagged_iff typechecks true free_vars []
+∀a. untagged a ⇔ a <₊ 0x80000000000000w
+STATEMENT U1_untagged_iff_pv typechecks true free_vars []
+∀a. untagged a ⇔ a <₊ 0x80000000000000w
+BEGIN U1_untagged_iff REQUIRED cpu=33.6
+TACTIC_USED U1_untagged_iff 1
+Saved theorem _______ "U1_untagged_iff"
+PROVED U1_untagged_iff
+STATEMENT U2_code_dm_untagged typechecks true free_vars []
+∀a. a ∈ refund_code_dm ⇒ untagged a
+BEGIN U2_code_dm_untagged REQUIRED cpu=33.8
+TACTIC_USED U2_code_dm_untagged 1
+Saved theorem _______ "U2_code_dm_untagged"
+PROVED U2_code_dm_untagged
+STATEMENT U3_mem_dm_untagged typechecks true free_vars []
+∀h e a. a ∈ refund_mem_dm h e ∧ e ≤₊ 0x80000000000000w ⇒ untagged a
+BEGIN U3_mem_dm_untagged REQUIRED cpu=33.9
+TACTIC_USED U3_mem_dm_untagged 1
+Saved theorem _______ "U3_mem_dm_untagged"
+PROVED U3_mem_dm_untagged
+STATEMENT U4_next_pc_from_code_invariant typechecks true free_vars [s::arm8_state]
+(∀t. NextStateARM8 (erase s) = SOME t ⇒ t.PC ∈ refund_code_dm) ⇒
+∀t. NextStateARM8 (erase s) = SOME t ⇒ untagged t.PC
+BEGIN U4_next_pc_from_code_invariant REQUIRED cpu=34.5
+TACTIC_USED U4_next_pc_from_code_invariant 1
+Saved theorem _______ "U4_next_pc_from_code_invariant"
+PROVED U4_next_pc_from_code_invariant
+STATEMENT U5_erase_identity typechecks true free_vars []
+∀ms. ¬ms.TCR_EL1.TBI0 ∧ ¬ms.TCR_EL1.TBI1 ∧ ¬ms.SCTLR_EL1.SA0 ⇒ erase ms = ms
+BEGIN U5_erase_identity REQUIRED cpu=34.6
+TACTIC_USED U5_erase_identity 1
+Saved theorem _______ "U5_erase_identity"
+PROVED U5_erase_identity
+STATEMENT U6_refund_end_state_erase_identity typechecks true free_vars []
+∀ms. refund_end_state ms ⇒ erase ms = ms
+BEGIN U6_refund_end_state_erase_identity REQUIRED cpu=34.6
+TACTIC_USED U6_refund_end_state_erase_identity 1
+Saved theorem _______ "U6_refund_end_state_erase_identity"
+PROVED U6_refund_end_state_erase_identity
+MARK CONTROLS
+CONTROL_OK NextStateARM8_erase is the literal E1-0003 statement, no hypotheses
+CONTROL_OK Next_erase_sp is the stated text, no hypotheses
+CONTROL_OK W is the requested statement
+CHECKED N1a_tagged_branch_breaks (E1-0003, parent) hyps 0
+⊢ s.PSTATE.EL = 0w ∧ s.TCR_EL1.TBI0 ⇒
+  BranchTo (0x100000000001000w,BranchType_JMP) (erase s) ≠
+  erase (BranchTo (0x100000000001000w,BranchType_JMP) s)
+CHECKED N2_misaligned_sp_breaks (E1-0003, parent) hyps 0
+⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.SCTLR_EL1.SA0 ∧
+  s.SP_EL0 = 8w ⇒
+  (CheckSPAlignment (erase s)).exception = NoException ∧
+  (CheckSPAlignment s).exception = ALIGNMENT_FAULT
+CONTROL_NOT_ATTEMPTED step-level N1a (no untagged premise) : needs a concrete Fetch/Decode; not a short step
+CONTROL_NOT_ATTEMPTED step-level N2 (no SP premise) : needs a concrete Fetch/Decode; not a short step
+MARK CHECKS
+CPU_SECONDS_SCRIPT 34.8
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 101
+STORED_DEFINITIONS 1
+CLOSURE_NODES 545
+Exporting theory "forge_m1bEraseStep" ... done.
+Theory "forge_m1bEraseStep" took 49.6s to build
+EXACT_COMPLETE

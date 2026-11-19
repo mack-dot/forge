@@ -1,0 +1,3 @@
+#!/bin/sh
+# TEST-ONLY fake xcrun (W-launch): shows DEVELOPER_DIR redirects /usr/bin/python3.
+exec "$(dirname "$0")/python3"
