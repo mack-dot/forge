@@ -53,6 +53,7 @@ answers = {
   'binary': b'\xff\xfeCOMMITTED\n',
   'empty-line': b'\n',
   'no-detail': b'REJECTED_POLICY\n',
+  'ok-one': b'OK 1\n',
 }
 if mode == 'short-read':
     out.write(b'COMMITTED r1 5 ' + b'a' * 32); out.flush(); sys.exit(0)
@@ -364,6 +365,47 @@ def case_py_garbage(s):
     return 'STAND-IN engine (protocol robustness only): %d garbage answers -> %s; never COMMITTED' % (len(seen), ','.join(sorted(set(seen))))
 
 
+def case_py_protocol(s):
+    """read_scoped against a STAND-IN engine that answers `OK 1` for two rows; the two local guards on their own."""
+    eng = s.standin()
+    st = fa.Store('unused', serve_argv=[sys.executable, str(eng), 'ok-one'], timeout=20)
+    try:
+        r = st.read_scoped('tA', [{'tenant_id': 'tA'}, {'tenant_id': 'tB', 'secret': 'x'}])
+        raise Failed('STAND-IN ok-one: read_scoped released rows on an OK for another row count: %r %r' % (r, r.rows))
+    except fa.ProtocolError as e:
+        require(e.outcome_known is False, 'outcome unknown')
+    finally:
+        st.close()
+    # the field guard alone (build_line, no engine): LF, CR, NUL in an amount text
+    for bad in ('5\n', '5\r', '5\x00'):
+        try:
+            fa.build_line('refund', {'tenant': 't1', 'key': 'k1', 'request_id': 'r1', 'pre_state_hash': 'a' * 32, 'reason': 'X', 'amount': bad})
+            raise Failed('the field guard let %r through build_line' % bad)
+        except fa.LocalRefusal:
+            pass
+    # the line guard alone (_send): a request line with a line end inside is refused before the pipe
+    st = fa.Store('unused', serve_argv=[sys.executable, str(eng), 'exit'], timeout=5)
+    try:
+        st._send('STATE\nSTATE')
+        raise Failed('the line guard let a line end through _send')
+    except fa.LocalRefusal:
+        pass
+    except fa.AirlockError as e:
+        raise Failed('the line guard let a line end through _send (the engine answered: %s)' % type(e).__name__)
+    finally:
+        st.close()
+    return 'OK for another row count -> ProtocolError, 0 rows; field guard refuses LF/CR/NUL; line guard refuses a line end'
+
+
+def case_py_lease_durable(s):
+    """The lease is durable before the handler runs: the handler itself sees it with the engine's `leases`."""
+    p = s.store('py-lease-durable')
+    with s.open(p) as st:
+        seen = st.with_lease('d1', 5000, lambda lease: s.leases(p))
+    require(seen == ['d1'], 'the lease was not durable when the handler ran: leases seen by the handler %r' % seen)
+    return 'the handler saw its lease in the WAL (engine leases)'
+
+
 # ------------------------------------------------------------------------------------------------ TypeScript cases
 
 def plan(s, store, steps, **kw):
@@ -487,6 +529,16 @@ def case_ts_kill(s):
     return 'TS SDK: SIGKILL of the serve child -> EngineDead (outcome unknown), never COMMITTED; WAL unchanged'
 
 
+def case_ts_protocol(s):
+    eng = s.standin()
+    o = s.ts({'store': 'unused', 'node': s.node, 'serve_argv': [sys.executable, str(eng), 'ok-one'], 'timeout_ms': 20000,
+              'steps': [{'do': 'read', 'name': 'x', 'tenant': 'tA', 'rows': [{'tenant_id': 'tA'}, {'tenant_id': 'tB', 'secret': 'x'}]}]})
+    x = o['x']
+    require(x.get('error') == 'ProtocolError' and x.get('outcome_known') is False and 'rows' not in x,
+            'TS STAND-IN ok-one: readScoped on an OK for another row count: %r' % x)
+    return 'TS: OK for another row count -> ProtocolError, no rows'
+
+
 def case_ts_garbage(s):
     eng = s.standin()
     seen = []
@@ -502,8 +554,9 @@ def case_ts_garbage(s):
 
 CASES = [('py_typed', case_py_typed), ('py_cosign', case_py_cosign), ('py_canonical', case_py_canonical),
          ('py_saga_inventory', case_py_saga_inventory), ('py_read', case_py_read), ('py_lease', case_py_lease),
-         ('py_kill', case_py_kill), ('py_garbage', case_py_garbage), ('ts_typed', case_ts_typed), ('ts_read', case_ts_read),
-         ('ts_lease', case_ts_lease), ('ts_kill', case_ts_kill), ('ts_garbage', case_ts_garbage)]
+         ('py_kill', case_py_kill), ('py_garbage', case_py_garbage), ('py_protocol', case_py_protocol), ('py_lease_durable', case_py_lease_durable),
+         ('ts_typed', case_ts_typed), ('ts_read', case_ts_read), ('ts_lease', case_ts_lease), ('ts_kill', case_ts_kill), ('ts_garbage', case_ts_garbage),
+         ('ts_protocol', case_ts_protocol)]
 
 
 def main():

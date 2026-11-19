@@ -225,6 +225,36 @@ def b_no_args(ctx):
     return 'exit 2 usage'
 
 
+# What the three cases above show, and what they do not: their model files lie in the temporary folder, where Node
+# finds no node_modules (the model needs bignumber.js), and the always-true fake has no Dafny runtime. So they show
+# exit 2 for those files, but each would give exit 2 also WITHOUT the pin or WITHOUT O_NOFOLLOW. The two cases below
+# put the file next to the built model, where node_modules is found: there only the pin or O_NOFOLLOW refuses it.
+def near_model(ctx, name):
+    if not ctx.model.is_file():
+        raise NotRun('model file missing')
+    return ctx.model.parent / ('%s-%d.cjs' % (name, os.getpid()))
+
+
+def b_model_substituted_near_runtime(ctx):
+    p = near_model(ctx, 'substituted')
+    p.write_bytes(ctx.model.read_bytes() + b'\nmodule.exports.BookingDualCert.__default.VerifyCertifiedBooking = function () { return true; };\n')
+    try:
+        return expect_booking(ctx, enc(cert(['1', '1', '0'])), 2, model=p) + ' (a working model that accepts everything; refused by the pin)'
+    finally:
+        p.unlink(missing_ok=True)
+
+
+def b_model_symlink_near_runtime(ctx):
+    p = near_model(ctx, 'link')
+    p.symlink_to(ctx.model.name)
+    try:
+        return expect_booking(ctx, enc(cert(['0', '1', '1'])), 2, model=p) + ' (a link to the pinned model; refused by O_NOFOLLOW)'
+    finally:
+        p.unlink(missing_ok=True)
+
+
+B.update({'booking_model_substituted_near_runtime': b_model_substituted_near_runtime,
+          'booking_model_symlink_near_runtime': b_model_symlink_near_runtime})
 B.update({'booking_missing_model_file': b_missing_model, 'booking_model_throws': b_model_throws,
           'booking_model_substituted_always_true': b_model_always_true,
           'booking_model_one_byte_more': b_model_one_byte_more, 'booking_model_symlink_refused': b_model_symlink,
@@ -299,6 +329,19 @@ def keygen_refuses_existing(ctx):
     p.write_bytes(b'keep')
     rc, out, err = ctx.cosign(['keygen', str(p)])
     check(rc == 2 and out == b'' and p.read_bytes() == b'keep', 'exit %d' % rc)
+    return 'exit 2, file unchanged'
+
+
+@ccase
+def keygen_refuses_existing_0600(ctx):
+    # The same as keygen_refuses_existing with an owner-only file: the mode check of keygen cannot refuse it, so
+    # only O_EXCL keeps the file unchanged.
+    p = ctx.path('existing-0600')
+    fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    os.write(fd, b'keep')
+    os.close(fd)
+    rc, out, err = ctx.cosign(['keygen', str(p)])
+    check(rc == 2 and out == b'' and p.read_bytes() == b'keep', 'an existing 0600 file: exit %d, file now %r' % (rc, p.read_bytes()[:16]))
     return 'exit 2, file unchanged'
 
 

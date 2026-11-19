@@ -134,8 +134,18 @@ ratchet entry -> `sync_all` -> lock released -> answer line. `sync_all` is
 - A policy file whose FNV-1a-128 differs from its genesis pin: `CORRUPT_WAL POLICY_CHANGED`.
 - `init` builds the store in a fresh sibling folder `<dir>.init-<pid>-<ns>`, syncs every
   file and that folder, renames it to `<dir>`, and syncs the parent folder. It refuses
-  when `<dir>` exists in any form (`IO_ERROR STORE_EXISTS`). A refused or killed `init`
-  leaves no `<dir>` (a killed one can leave the temporary folder).
+  when `<dir>` exists in any form (`IO_ERROR STORE_EXISTS`). A failure before the rename
+  removes the temporary folder and answers `IO_ERROR`; a killed `init` leaves no `<dir>`
+  (it can leave the temporary folder).
+- Rule: the answer of `init` and the disk agree. `INITIALIZED` comes only after the sync
+  of the parent folder returned Ok. If that sync fails (after the rename), the engine
+  undoes the store: it takes the store lock, checks that the WAL still holds only the
+  genesis record, empties the WAL and syncs it (a process that opened the store meanwhile
+  then gets `CORRUPT_WAL`, never a commit), renames the folder back, removes it, and syncs
+  the parent folder again. All steps worked: `IO_ERROR`, and no `<dir>` stays. Any step
+  failed, or another process wrote a record: `OUTCOME_UNKNOWN` (19); the store may stay,
+  live or with an empty WAL (then every command answers `CORRUPT_WAL`). Never
+  `INITIALIZED` without the parent sync, never a working store behind `IO_ERROR`.
 
 ## 5. Request verbs (`serve`)
 
@@ -369,8 +379,18 @@ value, nesting deeper than 64, invalid UTF-8 (row lines). Policy files: at most 
 
 Every answer is one line. Its first token is the typed code. A success line starts with
 `COMMITTED`, `LEASE_OPENED`, `OK`, `STATE`, `REPLAY`, `LEASES`, `SWEEP`, `INITIALIZED`,
-or (eval) `COMMIT` / `REQUIRE_HUMAN_COSIGN`. A refusal line is `<NAME> <detail>`. Only a
+or (eval) `COMMIT` / `REQUIRE_HUMAN_COSIGN`. A refusal line is `<NAME>` or
+`<NAME> <detail>`; the detail is free text up to the line end and can hold spaces. Only a
 line whose first token is `COMMITTED` reports a new effect. No other code means a commit.
+
+Answers with no detail (the bare name, then LF):
+
+- `DUPLICATE_REQUEST_ID`: the request id is used up (a lease open for the id gives
+  `DUPLICATE_REQUEST_ID LEASE_OPEN ...`).
+- `UNKNOWN_KEY`: the key was never opened (write verbs, `GET`, `get`).
+- `eval` only: `COMMIT` and `REQUIRE_HUMAN_COSIGN` (eval results, not refusals of a store).
+
+Every other refusal has a detail. A parser must accept both forms for every code.
 
 | Exit | Name | Class | Meaning |
 | --- | --- | --- | --- |
@@ -438,48 +458,72 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
 
 ## 13. Mutation seams
 
-Each line below is a one-line change in the source. Each was applied alone to a copy of
-`src/airlock`, built (both builds), and run with the named case of
-`tests/airlock/test_engine.py`. Result on 2026-11-19: the case failed for all 35. Text
-is exact (match once in the file); `->` gives the replacement.
+The list is the `M` and `S` entries of the `MUTANTS` list in `scripts/exit_goal20_sdk.py`
+(that script is the reference; this table is a copy). Each entry changes one place in
+the source: the exact text (it must occur exactly once in the file; `⏎` is a line end)
+is replaced, the changed copy is built (both builds), and the named case of
+`tests/airlock/test_engine.py` (19 cases) must fail. M01 to M35 remove checks of the
+verbs, the policies and the store. S01 to S18 remove a durable step, a check of its
+result, the order of the lock, or the `DISPATCH_FAILED` code; the cases `trace`,
+`dispatch` and `lock` see them (the test interposer `tests/airlock/interpose.c` traces
+the system calls and injects failed syncs and writes). Results: see the exit script's
+record, not this file.
 
-| Id | File | Exact text -> replacement | Case that must fail |
-| --- | --- | --- | --- |
-| M01 | verbs.rs | in `check_key`: delete `if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }` | tenant |
-| M02 | verbs.rs | in `check_key`: delete `if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }` | cas |
-| M03 | verbs.rs | delete `if k.hash != pre { return no(Code::Stale, hx(k.hash)) }` | race |
-| M04 | verbs.rs | in `check_open`: delete `if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }` | tenant |
-| M05 | policy.rs | delete `if amount == 0 { return Verdict::Reject("ZERO_AMOUNT") }` | money |
-| M06 | policy.rs | delete `if amount > remaining { return Verdict::Reject("TOTAL_CAP") }` | money |
-| M07 | policy.rs | delete `if !within { capped = true; continue }` | money |
-| M08 | policy.rs | `r.verdict.rank() > b.rank()` -> `false` | money |
-| M09 | verbs.rs | `if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? {` -> `if false {` | cosign |
-| M10 | helpers.rs | `(Some(0), true, o) if o == yes => Ok(true),` -> `(Some(0), _, _) => Ok(true),` | cosign |
-| M11 | helpers.rs | `let clean = r.code == Some(0) && r.err.is_empty() && r.sent;` -> `let clean = true;` | canonical |
-| M12 | verbs.rs | `if !helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect)? {` -> `if helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect).is_err() {` | canonical |
-| M13 | verbs.rs | `} else if cur_in && pair != *held {` -> `} else if false {` | saga |
-| M14 | verbs.rs | `} else if !sp.transitions.iter().any(\|(a, b)\| a == cur && b == to) {` -> `} else if false {` | saga |
-| M15 | verbs.rs | `let decision = if cert.c != *remaining {` -> `let decision = if false {` | inventory |
-| M16 | verbs.rs | `} else if cert.alpha > ip.max_alpha_bps {` -> `} else if false {` | inventory |
-| M17 | verbs.rs | `if !helpers::booking_check(&ctx.node(), &policy::cert_json(&cert))? {` -> `if false {` | inventory |
-| M18 | policy.rs | delete `if used.iter().zip(&c.c).any(\|(u, cap)\| *u > *cap as u128) { return Err("OVERBOOKED") }` | inventory |
-| M19 | verbs.rs | in `verdict`: `if s.l.leases.contains_key(req) {` -> `if false {` | leases |
-| M20 | ledger.rs | delete `self.leases.remove(req);` in `done` | leases |
-| M21 | main.rs | `} else if now > *deadline {` -> `} else if now >= *deadline {` | leases |
-| M22 | verbs.rs | `(J::Obj(_), Some(J::Str(t))) if t == tenant => Ok(()),` -> `(J::Obj(_), Some(J::Str(_))) => Ok(()),` | read |
-| M23 | verbs.rs | `(!canonical_id(tenant)).then(\|\| "TENANT_NOT_CANONICAL".to_string())` -> `None` | read |
-| M24 | json.rs | `if !seen.insert(key.clone()) {` -> `if !seen.insert(key.clone()) && false {` | read |
-| M25 | store.rs | delete `wal.lock()?;` (detection depends on timing; it failed in the one run) | race |
-| M26 | store.rs | `if l.epoch < floor {` -> `if false {` | recovery |
-| M27 | store.rs | `if got < body.len() { torn = (HDR + got) as u64; break }` -> `if got < body.len() { return no(Code::CorruptWal, "x") }` | recovery |
-| M28 | main.rs | in `serve`: delete `if is_fault(code) { return code }` | recovery |
-| M29 | main.rs | delete `input.skip_until(b'\n')?;` | lines |
-| M30 | main.rs | `pub const MAX_LINE: usize = 65536;` -> `4096` | lines |
-| M31 | verbs.rs | in `refund`: delete `if amount == 0 { return verdict(s, req, Code::RejectedPolicy, "ZERO_AMOUNT") }` | canonical |
-| M32 | verbs.rs | `cosign_message(&s.l.store_id, req, t[4], &action)` -> `cosign_message("store-a", req, t[4], &action)` | cosign |
-| M33 | verbs.rs | in `get`: delete `if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }` | tenant |
-| M34 | store.rs | `if fnv128(&bytes) != pin.hash {` -> `if false {` | recovery |
-| M35 | json.rs | `if p.i != p.b.len() {` -> `if false {` | read |
+| Id | File | Exact text | Replacement | Case that must fail | Check removed |
+| --- | --- | --- | --- | --- | --- |
+| M01_check_key_tenant | verbs.rs | `if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }⏎    if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }⏎    if k.hash != pre` | `if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }⏎    if k.hash != pre` | tenant | the tenant check of a write to an existing key |
+| M02_check_key_duplicate_id | verbs.rs | `if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }⏎    if k.hash != pre` | `if k.hash != pre` | cas | the fresh request id of a write to an existing key |
+| M03_compare_and_swap | verbs.rs | `if k.hash != pre { return no(Code::Stale, hx(k.hash)) }⏎` | (empty) | race | the compare-and-swap on the state hash |
+| M04_check_open_tenant | verbs.rs | `if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }⏎` | (empty) | tenant | the tenant check of an open |
+| M05_zero_amount | policy.rs | `if amount == 0 { return Verdict::Reject("ZERO_AMOUNT") }⏎` | (empty) | money | the zero-amount refusal of the money rules |
+| M06_total_cap | policy.rs | `if amount > remaining { return Verdict::Reject("TOTAL_CAP") }⏎` | (empty) | money | the total cap |
+| M07_reason_cap | policy.rs | `if !within { capped = true; continue }⏎` | (empty) | money | the fact-bound reason cap (SHIPPING <= shipping_paid) |
+| M08_most_restrictive | policy.rs | `r.verdict.rank() > b.rank()` | `false` | money | the rule that the most restrictive verdict wins |
+| M09_cosign_not_verified | verbs.rs | `if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? {` | `if false {` | cosign | the verification of a cosign signature |
+| M10_cosign_answer_any_bytes | helpers.rs | `(Some(0), true, o) if o == yes => Ok(true),` | `(Some(0), _, _) => Ok(true),` | cosign | the exact VALID line and the empty stderr of the cosign helper |
+| M11_refund_frame_unclean | helpers.rs | `let clean = r.code == Some(0) && r.err.is_empty() && r.sent;` | `let clean = true;` | canonical | the clean exit and empty stderr of the refund binary |
+| M12_cakeml_reject_ignored | verbs.rs | `if !helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect)? {` | `if helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect).is_err() {` | canonical | the rejection by the CakeML binary |
+| M13_processor_in_flight | verbs.rs | `} else if cur_in && pair != *held {` | `} else if false {` | saga | the refusal of a second processor while a key is in flight |
+| M14_saga_transition | verbs.rs | `} else if !sp.transitions.iter().any(\|(a, b)\| a == cur && b == to) {` | `} else if false {` | saga | the transition table |
+| M15_capacity_mismatch | verbs.rs | `let decision = if cert.c != *remaining {` | `let decision = if false {` | inventory | the comparison of the certificate capacities with the key |
+| M16_alpha_above_policy | verbs.rs | `} else if cert.alpha > ip.max_alpha_bps {` | `} else if false {` | inventory | the alpha_bps bound of the policy |
+| M17_checker_not_consulted | verbs.rs | `if !helpers::booking_check(&ctx.node(), &policy::cert_json(&cert))? {` | `if false {` | inventory | the call of the Dafny-compiled checker |
+| M18_native_overbooked | policy.rs | `if used.iter().zip(&c.c).any(\|(u, cap)\| *u > *cap as u128) { return Err("OVERBOOKED") }⏎` | (empty) | inventory | the native A x <= c check |
+| M19_lease_close_record | verbs.rs | `if s.l.leases.contains_key(req) {⏎        let (epoch, _)` | `if false {⏎        let (epoch, _)` | leases | the durable CLOSE record of a terminal refusal |
+| M20_commit_closes_lease | ledger.rs | `self.leases.remove(req);` | (empty) | leases | the close of a lease by a committed effect |
+| M21_sweep_deadline | main.rs | `} else if now > *deadline {` | `} else if now >= *deadline {` | leases | the strict deadline of a sweep |
+| M22_read_tenant_value | verbs.rs | `(J::Obj(_), Some(J::Str(t))) if t == tenant => Ok(()),` | `(J::Obj(_), Some(J::Str(_))) => Ok(()),` | read | the comparison of a row tenant_id with the caller tenant |
+| M23_read_tenant_canonical | verbs.rs | `(!canonical_id(tenant)).then(\|\| "TENANT_NOT_CANONICAL".to_string())` | `None` | read | the canonical-id rule for the caller tenant |
+| M24_json_duplicate_key | json.rs | `if !seen.insert(key.clone()) {` | `if !seen.insert(key.clone()) && false {` | read | the refusal of a duplicate JSON key |
+| M25_no_lock | store.rs | `wal.lock()?; // exclusive flock, taken before any file of the store is read; the kernel releases it at exit or kill⏎` | (empty) | lock | the store lock |
+| M26_epoch_regression | store.rs | `if l.epoch < floor {` | `if false {` | recovery | the comparison of the WAL with its ratchet |
+| M27_torn_tail_corrupt | store.rs | `if got < body.len() { torn = (HDR + got) as u64; break }` | `if got < body.len() { return no(Code::CorruptWal, "x") }` | recovery | the cut of a torn record at the end |
+| M28_serve_continues_after_fault | main.rs | `if is_fault(code) { return code }⏎    }⏎}⏎⏎/// 'eval` | `}⏎}⏎⏎/// 'eval` | recovery | the end of serve at a fault |
+| M29_oversized_line_not_skipped | main.rs | `input.skip_until(b'\n')?;⏎` | (empty) | lines | the skip of an oversized line to its line end |
+| M30_line_bound_4096 | main.rs | `pub const MAX_LINE: usize = 65536;` | `pub const MAX_LINE: usize = 4096;` | lines | the line bound of 65,536 bytes |
+| M31_canonical_zero_amount | verbs.rs | `if amount == 0 { return verdict(s, req, Code::RejectedPolicy, "ZERO_AMOUNT") }⏎` | (empty) | canonical | the native zero-amount refusal before the CakeML binary |
+| M32_cosign_store_id_fixed | verbs.rs | `cosign_message(&s.l.store_id, req, t[4], &action)` | `cosign_message("store-a", req, t[4], &action)` | cosign | the store id inside the signed cosign message |
+| M33_get_tenant | verbs.rs | `if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }⏎    let rest = match` | `let rest = match` | tenant | the tenant check of GET |
+| M34_policy_pin | store.rs | `if fnv128(&bytes) != pin.hash {` | `if false {` | recovery | the pin of a policy file |
+| M35_json_trailing_bytes | json.rs | `if p.i != p.b.len() {` | `if false {` | read | the refusal of bytes after a JSON value |
+| S01_no_wal_sync | store.rs | `if let Err(e) = written.and_then(\|()\| wal.sync_all()) {` | `if let Err(e) = written {` | trace | the F_FULLFSYNC of the WAL before the answer |
+| S02_ignore_wal_sync_error | store.rs | `if let Err(e) = written.and_then(\|()\| wal.sync_all()) {` | `let _ = wal.sync_all();⏎        if let Err(e) = written {` | trace | the result of the WAL sync |
+| S03_no_cut_after_failed_sync | store.rs | `let undone = wal.set_len(old_len).and_then(\|()\| wal.sync_all());` | `let undone: io::Result<()> = Ok(());` | trace | the cut of a record whose write or sync failed |
+| S04_no_ratchet_sync | store.rs | `.concat()).and_then(\|()\| ratchet.sync_all())` | `.concat())` | trace | the F_FULLFSYNC of the ratchet entry |
+| S05_ignore_ratchet_error | store.rs | `if push(&mut ratchet, epoch).is_err() { return no(Code::OutcomeUnknown, "OUTCOME_UNKNOWN the record is in the WAL; its ratchet entry failed") }` | `let _ = push(&mut ratchet, epoch);` | trace | the result of the ratchet write and sync |
+| S06_no_ratchet_entry | store.rs | `if push(&mut ratchet, epoch).is_err() { return no(Code::OutcomeUnknown, "OUTCOME_UNKNOWN the record is in the WAL; its ratchet entry failed") }⏎` | (empty) | trace | the ratchet entry of a commit |
+| S07_early_answer | store.rs | `cut("c");⏎` | `cut("c");⏎        let _ = io::stdout().write_all(b"COMMITTED ").and_then(\|()\| io::stdout().flush());⏎` | trace | the order: no answer byte before the WAL sync |
+| S08_no_recovery_wal_sync | store.rs | `wal_ref.sync_all()?;⏎` | (empty) | trace | the WAL sync after a recovery cut |
+| S09_ignore_recovery_sync_error | store.rs | `wal_ref.sync_all()?;⏎` | `let _ = wal_ref.sync_all();⏎` | trace | the result of the WAL sync in the recovery |
+| S10_no_init_wal_sync | store.rs | `wal.write_all(&genesis)?;⏎        wal.sync_all()?;⏎` | `wal.write_all(&genesis)?;⏎` | trace | the sync of the genesis record |
+| S11_no_init_folder_sync | store.rs | `File::open(&tmp)?.sync_all()?;⏎` | (empty) | trace | the sync of the new store folder |
+| S12_no_init_parent_sync | store.rs | `File::open(&parent)?.sync_all()?;⏎` | (empty) | trace | the sync of the parent folder after the rename |
+| S13_no_init_policy_sync | store.rs | `f.write_all(bytes)?;⏎            f.sync_all()?;⏎` | `f.write_all(bytes)?;⏎` | trace | the sync of a pinned policy file |
+| S14_init_keeps_tmp_after_failure | store.rs | `let _ = std::fs::remove_dir_all(&tmp); // a refused init leaves no folder of its own⏎` | (empty) | trace | the removal of the temporary folder of a refused init |
+| S15_ignore_init_wal_sync_error | store.rs | `wal.sync_all()?;⏎        File::open(&tmp)` | `let _ = wal.sync_all();⏎        File::open(&tmp)` | trace | the result of the sync of the genesis record |
+| S16_lock_after_wal_read | store.rs | `wal.lock()?; // exclusive flock, taken before any file of the store is read; the kernel releases it at exit or kill⏎    let (l, total) = scan(&mut BufReader::new(&wal), &mut \|_, _\| {})?;⏎` | `let (l, total) = scan(&mut BufReader::new(&wal), &mut \|_, _\| {})?;⏎    wal.lock()?;⏎` | trace | the rule that the lock comes before any read of a store file |
+| S17_shared_lock | store.rs | `wal.lock()?; // exclusive flock, taken before any file of the store is read; the kernel releases it at exit or kill⏎` | `wal.lock_shared()?; // exclusive flock, taken before any file of the store is read; the kernel releases it at exit or kill⏎` | lock | the exclusiveness of the store lock |
+| S18_ignore_failed_answer | main.rs | `{ code } else { Code::DispatchFailed.num() }` | `{ code } else { code }` | dispatch | the DISPATCH_FAILED code for an answer that could not be written |
 
-Not covered by any seam (no test can see it): removal of a `sync_all` call (a SIGKILL
-keeps the page cache), the `sent` check of a helper, the `DISPATCH_FAILED` path.
+Not covered: the `sent` check of a helper process (a stand-in cannot make the stdin write
+fail before it happens); a power loss (a SIGKILL keeps the page cache).

@@ -820,18 +820,24 @@ def case_trace(s):
             'fullfsync PARENT 0', 'write stdout N']
     got = calls(events, d.name)
     require(code == 0 and got == want, 'system-call order of init: %r' % got)
-    # init with a failed sync: no store, no temporary folder; init works again. Sync 5 (the parent folder, after the
-    # rename) is left out on purpose: see the KNOWN DEFECT note below.
-    for k in (1, 2, 3, 4):
+    # init with a failed sync: no store, no temporary folder; init works again. Sync 5 is the parent folder after the
+    # rename: the engine undoes the store (empties and syncs the WAL, renames the folder back, removes it, syncs the
+    # parent again) and answers IO_ERROR.
+    for k in (1, 2, 3, 4, 5):
         d = s.folder('trace-init-fail-%d' % k)
         code, out, _ = traced(s, ['init', d / 'store', '--store-id', 'tr', '--policy', FIX / 'money-parametric.json'], AIRLOCK_FAIL_SYNC=str(k))
         left = sorted(x.name for x in d.iterdir())
         require(code == 18 and out[:1] and out[0].startswith('IO_ERROR') and left == [], 'init with a failed sync %d: exit %d %r, left %r' % (k, code, out, left))
         code, out, _ = s.run(['init', d / 'store', '--store-id', 'tr', '--policy', FIX / 'money-parametric.json'])
         require(code == 0, 'init after a failed sync %d: %r' % (k, out))
-    # KNOWN DEFECT (reported, not repaired here; the engine is not this file's to change): AIRLOCK_FAIL_SYNC=5 fails the
-    # sync of the parent folder AFTER the rename. The answer is IO_ERROR (exit 18), and the store stays and works.
-    # PROTOCOL.md section 4 says that a refused init leaves no <dir>. This suite does not assert either behaviour.
+    # every sync from the parent-folder sync on fails: the undo cannot finish. OUTCOME_UNKNOWN (19); the store is gone,
+    # or it stays with an empty WAL that every command refuses (CORRUPT_WAL, 17); never a working store behind a refusal
+    d = s.folder('trace-init-fail-from-5')
+    code, out, _ = traced(s, ['init', d / 'store', '--store-id', 'tr', '--policy', FIX / 'money-parametric.json'], AIRLOCK_FAIL_SYNC_FROM='5')
+    require(code == 19 and out[:1] and out[0].startswith('OUTCOME_UNKNOWN'), 'init whose undo fails: expected OUTCOME_UNKNOWN (19), got exit %d %r' % (code, out))
+    if (d / 'store').exists():
+        code, out, _ = s.run(['state', d / 'store'])
+        require(code == 17, 'init whose undo fails left a store that opens: state exit %d %r' % (code, out))
 
     p = s.store('trace')
     s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000 shipping_paid=10', 'COMMITTED')
@@ -891,7 +897,7 @@ def case_trace(s):
             require(len([e for e in effects(q) if e.startswith('REFUND')]) == 1, '%s: the durable record must stay' % why)
             s.one(q, r, 'DUPLICATE_REQUEST_ID')
         require('k9' not in s.run(['replay', q])[1], '%s: the stream went on after the fault' % why)
-    return 'order of init, commit, refusal, lease close, recovery; init fails cleanly at syncs 1-4; 6 commit faults; recovery fault'
+    return 'order of init, commit, refusal, lease close, recovery; init fails cleanly at syncs 1-5, undo fault 19; 6 commit faults; recovery fault'
 
 
 def case_dispatch(s):
@@ -978,10 +984,99 @@ def case_pin(s):
     return 'substituted model and link refused directly and through the engine (HELPER_FAILED); the pinned model commits'
 
 
+# ------------------------------------------------------------------------------- crafted files and stand-in helpers
+def wal_record(epoch, prev, payload):
+    """A record in the layout of PROTOCOL.md section 4, written by the suite (CRC and chain correct)."""
+    head = b'FAR1' + struct.pack('<Q', epoch) + prev.to_bytes(16, 'little') + struct.pack('<I', len(payload)) + payload
+    return head + struct.pack('<I', zlib.crc32(head) & 0xffffffff)
+
+
+def ratchet_entry(value):
+    v = struct.pack('<Q', value)
+    return v + struct.pack('<I', zlib.crc32(v) & 0xffffffff)
+
+
+def case_crafted(s):
+    """Records with a correct CRC and chain that the fold must still refuse (CORRUPT_WAL), and a ratchet whose last
+    entry is lower than its highest entry (the highest one counts: EPOCH_REGRESSION)."""
+    p = s.store('crafted')
+    s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
+    s.one(p, 'OPEN_INVENTORY t1 inv r1 seats 3', 'COMMITTED')
+    good = files(p)
+    recs = read_wal(p)
+    epoch, tail = recs[-1][0] + 1, recs[-1][2]
+
+    def restore():
+        for n, b in good.items():
+            (p / n).write_bytes(b)
+    restore()
+    (p / 'airlock.wal').write_bytes(good['airlock.wal'] + wal_record(epoch, tail, b'REFUND t1 k1 x1 DUPLICATE_CHARGE 1 0'))
+    code, out, _ = s.run(['state', p])
+    require(code == 0 and out.startswith('STATE %d ' % epoch), 'control: a valid crafted record must be adopted: %d %r' % (code, out))
+    bad = {'a refund above the remaining amount': b'REFUND t1 k1 x1 DUPLICATE_CHARGE 1001 0',
+           'a refund under another tenant': b'REFUND t2 k1 x1 DUPLICATE_CHARGE 1 0',
+           'a refund with a used request id': b'REFUND t1 k1 r0 DUPLICATE_CHARGE 1 0',
+           'a zero refund': b'REFUND t1 k1 x1 DUPLICATE_CHARGE 0 0',
+           'a close with no open lease': b'CLOSE x1 REJECTED_POLICY NO_RULE',
+           'a booking that raises the remaining capacity': b'BOOK t1 inv x1 1 4',
+           'a second open of a key': b'OPEN_MONEY t1 k1 x1 store-refunds 5'}
+    for why, payload in bad.items():
+        restore()
+        (p / 'airlock.wal').write_bytes(good['airlock.wal'] + wal_record(epoch, tail, payload))
+        code, out, _ = s.run(['state', p])
+        require(code == 17 and out.startswith('CORRUPT_WAL'), 'crafted record (%s) must be CORRUPT_WAL: %d %r' % (why, code, out))
+    restore()
+    (p / 'airlock.epoch').write_bytes(good['airlock.epoch'] + ratchet_entry(epoch + 7) + ratchet_entry(1))
+    code, out, _ = s.run(['state', p])
+    require(code == 15 and out.startswith('EPOCH_REGRESSION'), 'a ratchet whose last entry is lower than its highest: %d %r' % (code, out))
+    restore()
+    return '1 crafted record adopted; %d crafted records refused by the fold; ratchet maximum, not last entry' % len(bad)
+
+
+def case_native_bound(s):
+    """STAND-IN refund binaries (test doubles of the helper process) that accept what the native check must refuse:
+    an amount above the remaining amount, and a reason outside the three approved reasons."""
+    p = s.store('native-bound', policies=('money-canonical',))
+    s.one(p, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
+    h = s.h(p, 't1', 'charge-1')
+    d = s.standin('accepts', {
+        'over': "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 True 101 returned_item charge-1 rq-o 1)'\n",
+        'reason': "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 True 5 goodwill charge-1 rq-r 1)'\n"})
+    for name, line in (('over', 'REFUND t1 charge-1 rq-o %s returned_item 101' % h), ('reason', 'REFUND t1 charge-1 rq-r %s goodwill 5' % h)):
+        code, out, _ = s.serve(p, [line], ['--refund-binary', d / name])
+        require(code == 23 and out[:1] and out[0].startswith('BAD_FRAME'), 'a binary that accepts %s: expected BAD_FRAME (exit 23), got exit %d %r' % (
+            'above the remaining amount' if name == 'over' else 'an unapproved reason', code, out))
+    require(len(effects(p)) == 1, 'a stand-in accept committed: %r' % effects(p))
+    return 'stand-in accepts above remaining and with an unapproved reason -> BAD_FRAME; 0 effects'
+
+
+def case_helper_env(s):
+    """A variable of the engine environment must not reach a helper process (cleared environment). STAND-IN helpers
+    say VALID / accept only when the probe variable reaches them."""
+    ex = s.node_ok()
+    env = dict(ENV, AIRLOCK_LEAK_PROBE='1')
+    d = s.standin('env', {
+        'cosign.cjs': 'const v = process.env.AIRLOCK_LEAK_PROBE; process.stdout.write(v ? "VALID\\n" : "INVALID\\n"); process.exitCode = v ? 0 : 1;',
+        'refund': "#!/bin/sh\ncat > /dev/null\nif [ -n \"$AIRLOCK_LEAK_PROBE\" ]; then printf '%s' '(refund-result-v1 True 5 returned_item charge-1 rq-e 1)'; "
+                  "else printf '%s' '(refund-result-v1 False 0 \"\" \"\" \"\" 0)'; fi\n"})
+    p = s.store('helper-env', pubkey='ab' * 32)
+    s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+    line = 'REFUND t1 o1 g1 %s GOODWILL 7500 %s' % (s.h(p, 't1', 'o1'), 'c' * 128)
+    code, out, _ = s.serve(p, [line], ['--node', s.node, '--helpers', d], env=env)
+    require(out[:1] and out[0] == 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID', 'the cosign helper saw a variable of the engine environment: exit %d %r' % (code, out))
+    q = s.store('helper-env-c', policies=('money-canonical',))
+    s.one(q, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
+    code, out, _ = s.serve(q, ['REFUND t1 charge-1 rq-e %s returned_item 5' % s.h(q, 't1', 'charge-1')], ['--refund-binary', d / 'refund'], env=env)
+    require(out[:1] and out[0] == 'REJECTED_POLICY CAKEML_REJECTED', 'the refund binary saw a variable of the engine environment: exit %d %r' % (code, out))
+    require(len(effects(p)) == 1 and len(effects(q)) == 1, 'a helper with a leaked variable committed')
+    return 'probe variable in the engine environment reached neither the cosign helper nor the refund binary'
+
+
 CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('tenant', case_tenant), ('money', case_money),
          ('canonical', case_canonical), ('cosign', case_cosign), ('saga', case_saga), ('inventory', case_inventory), ('leases', case_leases),
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
-         ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin)]
+         ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
+         ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env)]
 
 
 def main():

@@ -8,6 +8,7 @@ Cases:
   malformed   control (d): each bad-*.json stops the CLI with exit 2 and 0 Dafny processes
   no-engine   an engine path that does not exist: every row says `engine: NOT RUN`, exit 7
   engine      the engine path: table from `airlock-engine eval`, no mismatch (NOT RUN without the binary)
+  mismatch    control: a STAND-IN engine that answers COMMIT to every scenario gives TABLE_MISMATCH, exit 6
   demo        the demo store pair: the expected changed rows, cross-check passed, both NO_CHOICE
   choice      control (a): an ambiguous policy gives CHOICE with a witness that Dafny verified, exit 4
   fault       control (b): a generator that drops one amount bound fails the boundary cross-check, exit 8
@@ -167,6 +168,25 @@ def case_engine(s):
     return 'engine answered %d scenario rows over 3 pairs; no mismatch with the evaluator' % rows
 
 
+def case_mismatch(s):
+    """Control for TABLE_MISMATCH: a STAND-IN engine (a test double of `airlock-engine eval`) that answers COMMIT to
+    every scenario. The table must flag the rows where the evaluator says otherwise, and the exit code is 6."""
+    folder = ROOT / s.work('standin-engine')
+    folder.mkdir(parents=True)
+    engine = folder / 'airlock-engine'
+    engine.write_text('#!/bin/sh\n# STAND-IN ENGINE: COMMIT for every line\nwhile IFS= read -r line; do echo COMMIT; done\n')
+    engine.chmod(0o700)
+    try:
+        code, report, err, _ = s.json_cli([POL + 'demo-old.json', POL + 'demo-new.json', '--no-clearing', '--engine', str(engine)], engine=False)
+        flagged = sum(1 for r in report['rows'] if r['mismatch'])
+        expect(report['engine'] == 'RAN', 'the stand-in engine did not run: ' + err.strip()[-200:])
+        expect(flagged > 0 and report['result'] == 'TABLE_MISMATCH' and code == 6,
+               'an engine that differs from the evaluator: %d rows flagged, result %s, exit %d (expected TABLE_MISMATCH, 6)' % (flagged, report['result'], code))
+    finally:
+        shutil.rmtree(folder, ignore_errors=True)
+    return 'STAND-IN engine (COMMIT for all): %d of %d rows flagged, exit 6' % (flagged, len(report['rows']))
+
+
 def case_demo(s):
     code, report, err, work = s.json_cli([POL + 'demo-old.json', POL + 'demo-new.json'], 'demo')
     changed = {(r['reason'], r['amount'], r['reason_total'], r['facts']): (r['before'], r['after'])
@@ -253,7 +273,7 @@ def case_identical(s):
 
 
 CASES = [('loader', case_loader), ('malformed', case_malformed), ('no-engine', case_no_engine),
-         ('engine', case_engine), ('demo', case_demo), ('choice', case_choice), ('fault', case_fault),
+         ('engine', case_engine), ('mismatch', case_mismatch), ('demo', case_demo), ('choice', case_choice), ('fault', case_fault),
          ('refused', case_refused), ('saga', case_saga), ('identical', case_identical)]
 
 

@@ -229,7 +229,7 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
     let nanos = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0);
     let tmp = format!("{dir}.init-{}-{nanos}", std::process::id());
     std::fs::create_dir(&tmp)?;
-    let made = (|| -> Result<u128, Refusal> {
+    let made = (|| -> Result<(u128, u64), Refusal> {
         let mut pins = String::new();
         for (name, kind, bytes) in &loaded {
             let mut f = OpenOptions::new().write(true).create_new(true).open(path(&tmp, &policy_file(name)))?;
@@ -249,12 +249,16 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
             return no(Code::Malformed, "GENESIS_NOT_FOLDABLE");
         }
         cut("i");
-        Ok(fnv128(&genesis))
+        Ok((fnv128(&genesis), genesis.len() as u64))
     })();
-    let done = made.and_then(|h| {
+    let done = made.and_then(|(h, genesis_len)| {
         if target.symlink_metadata().is_ok() { return no(Code::IoError, "STORE_EXISTS the path exists already") }
         std::fs::rename(&tmp, dir)?;
+        let parent_synced = (|| -> io::Result<()> {
         File::open(&parent)?.sync_all()?;
+            Ok(())
+        })();
+        if let Err(e) = parent_synced { return undo_init(dir, &tmp, &parent, genesis_len, e) }
         Ok(h)
     });
     match done {
@@ -264,4 +268,19 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
             Err(e)
         }
     }
+}
+/// The sync of the parent folder failed after the rename: the store must not stay behind a refusal. Under the store
+/// lock, and only if no other process has written a record yet, the WAL is emptied and synced (a process that opened
+/// the store meanwhile then gets CORRUPT_WAL, never a commit), the folder is renamed back and removed, and the parent
+/// folder is synced again. All of that worked: IO_ERROR, no store. Any step failed, or a record was written:
+/// OUTCOME_UNKNOWN, and the store (live, or with an empty WAL) may stay.
+fn undo_init(dir: &str, tmp: &str, parent: &Path, genesis_len: u64, e: io::Error) -> Result<u128, Refusal> {
+    let unknown = |why: &str| no(Code::OutcomeUnknown, format!("OUTCOME_UNKNOWN init: the parent folder sync failed and {why}; the store may stay"));
+    let Ok(wal) = OpenOptions::new().write(true).open(path(dir, WAL)) else { return unknown("the WAL could not be opened") };
+    if wal.lock().is_err() { return unknown("the WAL could not be locked") }
+    if !matches!(wal.metadata(), Ok(m) if m.len() == genesis_len) { return unknown("another process wrote to the store") }
+    if wal.set_len(0).and_then(|()| wal.sync_all()).is_err() { return unknown("the WAL could not be emptied") }
+    let removed = std::fs::rename(dir, tmp).and_then(|()| std::fs::remove_dir_all(tmp)).and_then(|()| File::open(parent)?.sync_all());
+    if removed.is_err() { return unknown("the store could not be removed") }
+    Err(e.into())
 }
