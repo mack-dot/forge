@@ -1,0 +1,51 @@
+G1-correct C0-repo-impl exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C1-table exit 1 :: SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+G1-correct C2-recursion exit 1 :: SUBSET_RECURSION: call cycle through CountTrue
+G1-correct C3-early-returns exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C4-arith exit 1 :: SUBSET_ARITHMETIC: `*` needs an integer literal operand
+G1-correct C5-helper-lemmas exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C6-function-pair exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C7-loop-plan exit 1 :: SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+G1-correct C8-isolate-attr exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C9-comment-word-include exit 1 :: SOURCE_SCOPE: exact approved refinement and sole include required
+G1-correct C10-induction-attr exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+G1-correct C11-at-in-string exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+G1-correct C12-crlf-header exit 1 :: SOURCE_SCOPE: exact approved refinement and sole include required
+G1-correct A11-abstract-trap-dead exit 1 :: SUBSET_FORBIDDEN: `abstract`
+G1-correct A34-nested-comment-hide exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C13-comment-expect exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C14-string-char-expect exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C15-ident-expected exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct N1a-nested-comment-closed exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV01-helper-predicate exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV02-match-not-if exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV03-extra-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV04-reordered-conjuncts exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV05-local-constants exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV06-ghost-recursive-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV07-odd-comments exit 1 :: SUBSET_LEX: character U+2028 outside comments and literals
+new-correct CV08-helper-used-twice exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV09-helper-method-chain exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV10-expression-form exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV11-early-returns-assert-by exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV12-ghost-var-quantified-assert exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV13-ghost-loop-in-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV14-literal-arithmetic exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV15-reason-in-seq-literal exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV16-isolate-attr-and-crlf exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV17-odd-comments-no-line-separator exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-hostile HV11-match-huge-literal-admissible-size exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+new-hostile HV15-ghost-method-with-loop exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-hostile HV22-big-literal-multiplier-chain exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+new-hostile HV23-set-display-in-guard exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-hostile HV24-negation-doubling exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-hostile HV07-repeated-squaring exit 1 :: SUBSET_ARITHMETIC: `*` needs an integer literal operand
+new-hostile HV02-function-type-param exit 1 :: SUBSET_HEADER: default value or function type in a compiled signature
+halting E06-stack-overflow-keyed exit 1 :: SUBSET_RECURSION: call cycle through DeepM
+halting E07-oom-keyed exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+halting E08-time-keyed exit 1 :: SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+halting Z24-expect-halt-amount-61 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting H01b-such-that-modulus-hang exit 1 :: SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+halting H04-seq-length-2pow32-throws exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+halting H02-exponential-recursion-hang exit 1 :: SUBSET_ARITHMETIC: `+` needs an integer literal operand
+halting H03-seq-comprehension-alloc exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
