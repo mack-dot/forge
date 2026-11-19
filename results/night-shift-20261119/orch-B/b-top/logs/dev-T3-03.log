@@ -1,0 +1,38 @@
+# owner=b-top start=2026-11-19T10:29:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 993
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects KeyedHash.dfy
+# memory free percent: 53
+KeyedHash.dfy(606,8): Error: Verification out of resource (KeyedHashControls.KeyedWitness)
+    |
+606 |   lemma KeyedWitness()
+    |         ^^^^^^^^^^^^
+
+KeyedHash.dfy(606,8): Error: Verification out of resource (KeyedHashControls.KeyedWitness)
+    |
+606 |   lemma KeyedWitness()
+    |         ^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 74 verified, 0 errors, 2 out of resource
+       19.70 real        16.88 user         0.89 sys
+           409288704  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               63411  page reclaims
+                 680  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                1417  voluntary context switches
+               63998  involuntary context switches
+        142775533691  instructions retired
+         53553696671  cycles elapsed
+           396248480  peak memory footprint
+# end=2026-11-19T10:30:16Z
+exit 4

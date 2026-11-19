@@ -1,0 +1,58 @@
+# owner=b-top start=2026-11-19T10:27:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 985
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects KeyedHash.dfy
+# memory free percent: 69
+KeyedHash.dfy(165,13): Warning: unusual indentation in right-hand operand of ==> (which ends at line 166, column 88); do you perhaps need parentheses?
+    |
+165 |     (k in st ==> |L| == |st[k].outbox| && InitOfK(H, acts, k, n).chargeId == k && InitOk(InitOfK(H, acts, k, n)) &&
+    |              ^^^
+
+KeyedHash.dfy(308,49): Error: index out of range
+    |
+308 |       forall i | 0 <= i < |L| :: L[i] < n && acts[L[i]].key in KExec(H, acts[..L[i]]) &&
+    |                                                  ^
+
+KeyedHash.dfy(308,56): Error: destructor 'key' can only be applied to datatype values constructed by 'KCreate' or 'KDel'
+    |
+308 |       forall i | 0 <= i < |L| :: L[i] < n && acts[L[i]].key in KExec(H, acts[..L[i]]) &&
+    |                                                         ^^^
+
+KeyedHash.dfy(309,39): Error: element might not be in domain
+    |
+309 |         Approved(KExec(H, acts[..L[i]])[k].charge, acts[L[i]].tok, st[k].outbox[i]) &&
+    |                                        ^
+
+KeyedHash.dfy(309,62): Error: destructor 'tok' can only be applied to datatype values constructed by 'KDel'
+    |
+309 |         Approved(KExec(H, acts[..L[i]])[k].charge, acts[L[i]].tok, st[k].outbox[i]) &&
+    |                                                               ^^^
+
+KeyedHash.dfy(313,8): Error: Verification out of resource (KeyedHash.KeyInv2Next)
+    |
+313 |   lemma KeyInv2Next(H: HashFn, acts: seq<KAct>, vb: ByteVerifier, n: int, k: string)
+    |         ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 41 verified, 4 errors, 1 out of resource
+       12.62 real        12.44 user         0.52 sys
+           364806144  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41457  page reclaims
+                 173  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 714  voluntary context switches
+               37638  involuntary context switches
+        110590922118  instructions retired
+         39352065214  cycles elapsed
+           331793728  peak memory footprint
+# end=2026-11-19T10:27:39Z
+exit 4

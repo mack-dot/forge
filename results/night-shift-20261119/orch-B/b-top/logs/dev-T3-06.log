@@ -1,0 +1,44 @@
+# owner=b-top start=2026-11-19T10:32:27Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1001
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects KeyedHash.dfy
+# memory free percent: 62
+KeyedHash.dfy(441,12): Warning: unusual indentation in body of forall (which ends at line 443, column 83); do you perhaps need parentheses?
+    |
+441 |     ensures forall k | k in KExec(H, acts) :: |Log(H, acts, k, |acts|)| == |KExec(H, acts)[k].outbox| &&
+    |             ^^^^^^
+
+KeyedHash.dfy(645,12): Warning: unusual indentation in body of forall (which ends at line 647, column 92); do you perhaps need parentheses?
+    |
+645 |     ensures forall k | k in KExec(C.HW, KW()) :: |Log(C.HW, KW(), k, |KW()|)| == |KExec(C.HW, KW())[k].outbox| &&
+    |             ^^^^^^
+
+KeyedHash.dfy(661,12): Warning: unusual indentation in body of forall (which ends at line 663, column 92); do you perhaps need parentheses?
+    |
+661 |     ensures forall k | k in KExec(C.HW, KW()) :: |Log(C.HW, KW(), k, |KW()|)| == |KExec(C.HW, KW())[k].outbox| &&
+    |             ^^^^^^
+
+
+Dafny program verifier finished with 85 verified, 0 errors
+Compilation failed because warnings were found and --allow-warnings is false
+       18.58 real        16.92 user         0.67 sys
+           425033728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               56970  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                1607  voluntary context switches
+               20451  involuntary context switches
+        151938336606  instructions retired
+         54128740906  cycles elapsed
+           409486800  peak memory footprint
+# end=2026-11-19T10:32:46Z
+exit 2

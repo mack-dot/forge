@@ -1,0 +1,29 @@
+# owner=b-top start=2026-11-19T10:44:04Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1377
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/b-top/logs/audit-btop-01.md TopFromExport.dfy IssuerLink.dfy KeyedHash.dfy RefineTraceV3.dfy
+# memory free percent: 37
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+       15.50 real        19.83 user         0.75 sys
+           737509376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               66026  page reclaims
+                1030  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                 129  signals received
+                 171  voluntary context switches
+               22387  involuntary context switches
+        161459382606  instructions retired
+         62707249259  cycles elapsed
+           755992208  peak memory footprint
+# end=2026-11-19T10:44:20Z
+exit 0

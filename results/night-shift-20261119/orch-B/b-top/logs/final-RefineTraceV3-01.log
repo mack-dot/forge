@@ -1,0 +1,29 @@
+# owner=b-top start=2026-11-19T10:42:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1377
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-top/logs/final-RefineTraceV3-01.csv RefineTraceV3.dfy
+# memory free percent: 66
+
+Dafny program verifier finished with 1889 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-top/logs/final-RefineTraceV3-01.csv
+       77.19 real        50.50 user         5.56 sys
+           364625920  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              175609  page reclaims
+                  42  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  18  signals received
+                6214  voluntary context switches
+              534411  involuntary context switches
+        438110174104  instructions retired
+        169302527576  cycles elapsed
+           389825880  peak memory footprint
+# end=2026-11-19T10:43:49Z
+exit 0

@@ -1,0 +1,37 @@
+# owner=b-top start=2026-11-19T10:40:45Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1345
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects RefineTraceV3.dfy
+# memory free percent: 67
+RefineTraceV3.dfy(159,12): Warning: unusual indentation in body of exists (which ends at line 161, column 84); do you perhaps need parentheses?
+    |
+159 |     ensures exists tvs: seq<V.SinkToken> :: |tvs| == |acts| &&
+    |             ^^^^^^
+
+RefineTraceV3.dfy(40,66): Error: incorrect argument type at index 6 for datatype constructor parameter 'sig' (expected SinkCoreV3.Tag, found HashCore.Tag) (covariant type parameter would require int <: char)
+   |
+40 |                 ChargeOfState(th.post), IntentOfSM(th.intent), th.sig)
+   |                                                                   ^^^
+
+1 resolution/type errors detected in RefineTraceV3.dfy
+        3.44 real         3.43 user         0.11 sys
+           172736512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13478  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  36  voluntary context switches
+                1098  involuntary context switches
+         33322806133  instructions retired
+         10875525153  cycles elapsed
+           141690008  peak memory footprint
+# end=2026-11-19T10:40:49Z
+exit 2

@@ -1,0 +1,34 @@
+# owner=b-top start=2026-11-19T10:42:06Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1361
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects RefineTraceV3.dfy
+# memory free percent: 66
+RefineTraceV3.dfy(211,13): Warning: unusual indentation in body of forall (which ends at line 213, column 52); do you perhaps need parentheses?
+    |
+211 |     requires forall k | 0 <= k < 2 && C.CollActs()[k].Deliver? :: TokRelW(C.CollActs()[k].tok, tvs[k]) &&
+    |              ^^^^^^
+
+
+Dafny program verifier finished with 18 verified, 0 errors
+Compilation failed because warnings were found and --allow-warnings is false
+        9.51 real         9.43 user         0.35 sys
+           323354624  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37669  page reclaims
+                 671  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 578  voluntary context switches
+               11858  involuntary context switches
+         82949578336  instructions retired
+         29859830286  cycles elapsed
+           300664152  peak memory footprint
+# end=2026-11-19T10:42:16Z
+exit 2
