@@ -1,0 +1,4 @@
+62c62
+<     else if !AuthorizesH(core.charge, tok) then StepResult6(core, Rejected6(NotAuthorized))
+---
+>     else if tok.intent.amount != 0 && !AuthorizesH(core.charge, tok) then StepResult6(core, Rejected6(NotAuthorized))   // MUTANT: zero backdoor

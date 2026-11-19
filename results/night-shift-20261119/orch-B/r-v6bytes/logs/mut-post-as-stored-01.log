@@ -1,0 +1,118 @@
+# owner=r-v6bytes start=2026-11-19T12:56:50Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/mutants/post-as-stored
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1145
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore6.dfy SliceSafetyBytesV6.dfy ControlsBytesV6.dfy KeyedV6.dfy RV6Lemmas.dfy
+# memory free percent: 61
+RV6Lemmas.dfy(117,2): Error: a postcondition could not be proved on this return path
+    |
+117 |   {
+    |   ^
+
+RV6Lemmas.dfy(116,51): Related location: this is the postcondition that could not be proved
+    |
+116 |     ensures Step6(HC0, Core(ST, {}, []), ZF, true) == StepResult6(Core(ST, {}, []), Rejected6(NotAuthorized))
+    |                                                    ^^
+
+RV6Lemmas.dfy(130,2): Error: a postcondition could not be proved on this return path
+    |
+130 |   {
+    |   ^
+
+RV6Lemmas.dfy(128,51): Related location: this is the postcondition that could not be proved
+    |
+128 |     ensures Step6(HC0, Core(ST, {}, []), PG, true) ==
+    |                                                    ^^
+
+ControlsBytesV6.dfy(59,2): Error: a postcondition could not be proved on this return path
+   |
+59 |   {
+   |   ^
+
+ControlsBytesV6.dfy(53,78): Related location: this is the postcondition that could not be proved
+   |
+53 |     ensures Step6(CV3.HW, Core(CV3.W_PRE, {"rq_0"}, [CV3.I0]), CV3.TK1, true) ==
+   |                                                                               ^^
+
+HashCore6.dfy(94,4): Error: a postcondition could not be proved on this return path
+   |
+94 |     if AuthorizesH(core.charge, tok) { AuthorizesImpliesBindings(core.charge, tok); }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+HashCore6.dfy(80,55): Related location: this is the postcondition that could not be proved
+   |
+80 |     ensures Step6(H, core, tok, sigOk).out.Committed6? <==>
+   |                                                        ^^^^
+
+HashCore6.dfy(112,2): Error: a postcondition could not be proved on this return path
+    |
+112 |   {
+    |   ^
+
+HashCore6.dfy(111,24): Related location: this is the postcondition that could not be proved
+    |
+111 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+HashCore6.dfy(112,2): Error: a postcondition could not be proved on this return path
+    |
+112 |   {
+    |   ^
+
+HashCore6.dfy(111,24): Related location: this is the postcondition that could not be proved
+    |
+111 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(32,11): Related location: this proposition could not be proved
+   |
+32 |     t.post == pre.(remaining := pre.remaining - t.request.amount) &&
+   |            ^^
+
+HashCore6.dfy(122,2): Error: a postcondition could not be proved on this return path
+    |
+122 |   {
+    |   ^
+
+HashCore6.dfy(118,102): Related location: this is the postcondition that could not be proved
+    |
+118 |     ensures (Step(H, core, tok, sigOk).out.Committed? && !Step6(H, core, tok, sigOk).out.Committed6?) <==>
+    |                                                                                                       ^^^^
+
+HashCore6.dfy(143,2): Error: a postcondition could not be proved on this return path
+    |
+143 |   {
+    |   ^
+
+HashCore6.dfy(142,12): Related location: this is the postcondition that could not be proved
+    |
+142 |     ensures !Step6(H, core, tok, sigOk).out.Committed6? && Step6(H, core, tok, sigOk).core == core
+    |             ^
+
+
+Dafny program verifier finished with 129 verified, 8 errors
+       23.08 real        19.73 user         0.85 sys
+           365182976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               61700  page reclaims
+                  53  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                2844  voluntary context switches
+               21584  involuntary context switches
+        181806345572  instructions retired
+         63995095357  cycles elapsed
+           348685656  peak memory footprint
+# end=2026-11-19T12:57:13Z
+exit 4

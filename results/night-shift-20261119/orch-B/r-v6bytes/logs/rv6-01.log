@@ -1,0 +1,49 @@
+# owner=r-v6bytes start=2026-11-19T12:54:34Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1145
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/logs/rv6-01.csv RV6Lemmas.dfy
+# memory free percent: 55
+RV6Lemmas.dfy(92,38): Warning: unusual indentation in body of exists (which ends at line 93, column 101); do you perhaps need parentheses?
+   |
+92 |       forall i | 0 <= i < |r.toks| :: exists j :: 0 <= j < r.ks[i] && j < |acts| && acts[j].MintAct? &&
+   |                                       ^^^^^^
+
+RV6Lemmas.dfy(69,58): Error: index out of range
+   |
+69 |       forall i | 0 <= i < |r.toks| :: IssuedFrom(H, r.pres[i], TransH(r.toks[i]), BytesOf(r.toks[i]))
+   |                                                           ^
+
+RV6Lemmas.dfy(92,63): Error: index out of range
+   |
+92 |       forall i | 0 <= i < |r.toks| :: exists j :: 0 <= j < r.ks[i] && j < |acts| && acts[j].MintAct? &&
+   |                                                                ^
+
+RV6Lemmas.dfy(93,65): Error: index out of range
+   |
+93 |         acts[j].msg == BytesOf(r.toks[i]) && IssuedFrom(H, r.pres[i], TransH(r.toks[i]), acts[j].msg)
+   |                                                                  ^
+
+
+Dafny program verifier finished with 21 verified, 3 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-v6bytes/logs/rv6-01.csv
+        8.32 real         8.20 user         0.29 sys
+           324943872  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38878  page reclaims
+                 353  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 484  voluntary context switches
+                5693  involuntary context switches
+         79233368597  instructions retired
+         26537695405  cycles elapsed
+           291652928  peak memory footprint
+# end=2026-11-19T12:54:42Z
+exit 4

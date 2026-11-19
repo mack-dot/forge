@@ -1,0 +1,98 @@
+# owner=r-v6bytes start=2026-11-19T12:55:49Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/mutants/drop-auth
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1145
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore6.dfy SliceSafetyBytesV6.dfy ControlsBytesV6.dfy KeyedV6.dfy RV6Lemmas.dfy
+# memory free percent: 63
+RV6Lemmas.dfy(117,2): Error: a postcondition could not be proved on this return path
+    |
+117 |   {
+    |   ^
+
+RV6Lemmas.dfy(116,51): Related location: this is the postcondition that could not be proved
+    |
+116 |     ensures Step6(HC0, Core(ST, {}, []), ZF, true) == StepResult6(Core(ST, {}, []), Rejected6(NotAuthorized))
+    |                                                    ^^
+
+HashCore6.dfy(93,4): Error: a postcondition could not be proved on this return path
+   |
+93 |     if AuthorizesH(core.charge, tok) { AuthorizesImpliesBindings(core.charge, tok); }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+HashCore6.dfy(79,55): Related location: this is the postcondition that could not be proved
+   |
+79 |     ensures Step6(H, core, tok, sigOk).out.Committed6? <==>
+   |                                                        ^^^^
+
+HashCore6.dfy(111,2): Error: a postcondition could not be proved on this return path
+    |
+111 |   {
+    |   ^
+
+HashCore6.dfy(110,24): Related location: this is the postcondition that could not be proved
+    |
+110 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+HashCore6.dfy(111,2): Error: a postcondition could not be proved on this return path
+    |
+111 |   {
+    |   ^
+
+HashCore6.dfy(110,24): Related location: this is the postcondition that could not be proved
+    |
+110 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(32,11): Related location: this proposition could not be proved
+   |
+32 |     t.post == pre.(remaining := pre.remaining - t.request.amount) &&
+   |            ^^
+
+HashCore6.dfy(121,2): Error: a postcondition could not be proved on this return path
+    |
+121 |   {
+    |   ^
+
+HashCore6.dfy(117,102): Related location: this is the postcondition that could not be proved
+    |
+117 |     ensures (Step(H, core, tok, sigOk).out.Committed? && !Step6(H, core, tok, sigOk).out.Committed6?) <==>
+    |                                                                                                       ^^^^
+
+HashCore6.dfy(142,2): Error: a postcondition could not be proved on this return path
+    |
+142 |   {
+    |   ^
+
+HashCore6.dfy(141,12): Related location: this is the postcondition that could not be proved
+    |
+141 |     ensures !Step6(H, core, tok, sigOk).out.Committed6? && Step6(H, core, tok, sigOk).core == core
+    |             ^
+
+
+Dafny program verifier finished with 131 verified, 6 errors
+       22.65 real        19.78 user         0.81 sys
+           398573568  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               60644  page reclaims
+                 672  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                2667  voluntary context switches
+               20045  involuntary context switches
+        179115746817  instructions retired
+         63550120917  cycles elapsed
+           379176280  peak memory footprint
+# end=2026-11-19T12:56:11Z
+exit 4

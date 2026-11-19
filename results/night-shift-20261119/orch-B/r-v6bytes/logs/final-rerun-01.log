@@ -1,0 +1,29 @@
+# owner=r-v6bytes start=2026-11-19T12:52:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1145
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/logs/final-rerun-01.csv ControlsBytesV6.dfy TopV6Export.dfy KeyedV6.dfy
+# memory free percent: 51
+
+Dafny program verifier finished with 2352 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-v6bytes/logs/final-rerun-01.csv
+      127.37 real        85.41 user         5.43 sys
+           435552256  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              218966  page reclaims
+                 693  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  43  signals received
+               15717  voluntary context switches
+              256245  involuntary context switches
+        786385709106  instructions retired
+        280210014670  cycles elapsed
+           443925896  peak memory footprint
+# end=2026-11-19T12:54:18Z
+exit 0
