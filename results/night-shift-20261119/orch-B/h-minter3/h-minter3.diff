@@ -1,0 +1,1537 @@
+diff --git a/impl/finality-core/IssueAuth.dfy b/impl/finality-core/IssueAuth.dfy
+index 1ba33e5a..650dc9d1 100644
+--- a/impl/finality-core/IssueAuth.dfy
++++ b/impl/finality-core/IssueAuth.dfy
+@@ -1,47 +1,76 @@
+-// Night shift 2026-11-19, Orchestrator B, task h-minter2. A DRAFT on the branch only. NOT gate evidence.
+-// The issuer's memory rule, version 2, proved at the source level (Dafny 4.11.0). Replaces IssueOnce.Issue in
+-// minter.ts (IssueOnce.dfy stays as the record of rule 1).
++// Night shift 2026-11-19, Orchestrator B, tasks h-minter2 and h-minter3. A DRAFT on the branch only. NOT gate evidence.
++// The issuer's memory rule, version 2 under owner decision D-2 (a refusal records nothing), proved at the source level (Dafny 4.11.0). Replaces
++// IssueOnce.Issue in minter.ts (IssueOnce.dfy stays as the record of rule 1).
+ //
+ // WHY (red team C-ATT-30): rule 1 trusted the CALLER's pre-state. A caller without the key could sign a zero-amount
+ // token for the victim's (charge id, request id) on an INVENTED pre-state; the token never commits, but the pair was
+ // then taken for ever. The governing context (owner decision B-10) is the approved policy plus the AUTHORITATIVE
+ // PERSISTED charge state. Rule 2 lets only a call on that state change the memory.
+ //
++// OWNER DECISION D-2 (2026-11-19, answers B-19): "A minter refusal closes ONLY that attempt, NOT the whole request
++// ID (closing C-ATT-38). Only an accepted/minted token (and sink commit) closes the request ID, preserving <= 1 valid
++// token and <= 1 effect per request ID." So a refusal records NOTHING. A request id closes only by a minted token (the
++// memory holds Signed(bytes) for its key) or by the sink's commit (Store mode: a.requestSettled).
++// The earlier rule (h-minter2: a core refusal closed the key) stays only as a MODEL: OldAfter and the lemma
++// OldRuleFreeze show the red team's spray (C-ATT-38) against it. It is not compiled into the step.
++// Invariants (Store mode; the no-store mode keys on the pre-state hash and is a TEST mode only, see below):
++//   I1 at most one valid token per (charge id, request id): RunSeq ensures I1 (one byte string per pair among Issued
++//      and Replayed outcomes; so any other candidate for a minted pair is refused, and an identical request gets the
++//      identical bytes: WRetry, WStaleRetry).
++//   I2 a refusal records nothing that affects any later request: Issue ensures (!o.Issued? ==> m2 == m); RunSeq ensures
++//      I2; SprayHarmless (after ANY sequence of calls by anyone that were not Issued on the victim's key, the victim's
++//      honest authorized call on the authoritative state is Issued).
++//   I3 a settled request id stays closed: Issue ensures (o.Issued? ==> Admitted), RunSeq ensures I3 (no call with a
++//      settled request id is Issued; only the identical bytes already minted can be Replayed).
++//   COMPOSED CLAIM (not proved here): at most one EFFECT per request id = I1 + the sink rule (the sink's settled table
++//   has request_id UNIQUE and commits a token only on its stored pre-state; sink.ts and core/store.ts). Tested end to
++//   end in m3_one_effect_per_request_id.ts.
++// LOST against the letter of protocol.md:61-62 and 64-65 (owner-approved by D-2): after a rejection the same request
++// id can still be signed; an identical repeat of a refused request is decided again, not answered from a record (the
++// core refusal is a function of the call alone, RefusedByCore <==> !Issuable, so it gives the same answer).
++// The no-store mode: key = (charge id, request id, pre-state hash). Two tokens can exist for one request id on two
++// pre-states: it does NOT give I1. minter.ts runs it only as a test mode (a warning on stderr, "singleUse":"none" in the
++// ready line); the closed launch (minter-launch.sh) refuses it.
++//
+ // RULE 2. The shell passes `a`, what it read from the sink's store for this request (read only):
+ //   a = Store(state, requestSettled): the store's current charge, and whether the request id is settled there;
+ //   a = NoStore: no store is configured (the issuer cannot know the authoritative state).
+ //   key = (charge id, request id)        in Store mode,
+ //   key = (charge id, request id, h)     in NoStore mode (h = the pre-state hash text that the body carries).
+-//   In this order:
++//   In this order (h-minter3: the core check comes FIRST, so the text "core: Refuse" depends on the call alone and not
++//   on the stored state; red team C-ATT-38 used the earlier order as a state oracle):
++//   the core (IssueBytes2.IssueTokenBytes) refuses -> RefusedByCore, memory unchanged (D-2);
+ //   the key holds Signed(exactly the bytes of this call) -> Replayed(bytes), memory unchanged (an identical retry,
+ //                                                     also after the store moved on: protocol.md:63-64);
+-//   Store mode, pre != state                      -> RefusedNotAuthoritative, memory unchanged;
+-//   Store mode, the request id is settled          -> RefusedCompleted, memory unchanged (closed by completion;
+-//                                                     durable: it is read from the store at each call);
+-//   the core (IssueBytes2.IssueTokenBytes) refuses -> RefusedByCore; a NEW key is recorded as Closed
+-//                                                     (protocol.md:61-62: rejection closes the attempt);
+-//   the key holds Closed                           -> RefusedClosed;
+-//   the key holds Signed(other bytes)              -> RefusedOtherCandidate (protocol.md:64-65: "Reusing the pair
+-//                                                     with different trusted context is rejected. A new attempt
+-//                                                     needs a new request ID.");
+-//   the key is new                                 -> Issued(bytes), memory gets key -> Signed(bytes).
++//   Store mode, the request id is settled          -> RefusedCompleted, memory unchanged (closed by completion);
++//   the key holds Closed                           -> RefusedClosed (only a memory passed in can hold Closed:
++//                                                     this rule never records it);
++//   the key holds Signed(other bytes)              -> RefusedOtherCandidate (protocol.md:64-65);
++//   Store mode, pre != state                       -> RefusedNotAuthoritative, memory unchanged;
++//   the key is new (and the call is admitted)      -> Issued(bytes), memory gets key -> Signed(bytes).
++//
++// WHAT THE PROOF COVERS AND WHAT IT DOES NOT (review r-issueauth). The theorems are about the method Issue and about
++// sequences of Issue calls. The authoritative state, the settled flag (both inside `a`) and the pre-state hash text h
++// are FREE PARAMETERS of Issue: the model does not know which file is the sink's store, whether `a` is what that file
++// holds now, or whether h is SHA-256 of canon(pre). Those bindings are TypeScript glue in minter.ts, under named
++// assumptions: STORE-READ (the path is the sink's store and minter.ts reads it correctly at each request) and G-H (h is
++// the lowercase hex SHA-256 of canon(pre), computed once in minter.ts). The reviewer's probes ProbeFreeAuth (an invented
++// state passed as `a` is Issued) and ProbeHashFree (two hash texts for one pre-state; the first takes the key) still
++// verify against this file: no cheap strengthening was found (no uninterpreted hash exists in SerModel or IssueBytes2;
++// a bodiless function would be an audit finding; a hash-function parameter binds h only inside one RunSeq and needs a
++// rewrite of this method). The memory that minter.ts passes in is also a free parameter (C-ATT-40: in mode "off" with
++// a store, minter.ts seeds it with the body of the settled token for this request id; safety does not depend on it:
++// every signing outcome is authorized for THIS call and returns exactly its canonical bytes, whatever the memory holds).
+ //
+-// PROVED HERE (MACHINE-CHECKED only after a run of the lock script; see the evidence directory h-minter2):
+-//   Issue (step): the exact outcome and memory for each case; every signing outcome is authorized by RefundFinality,
+-//     has a well-formed body and returns exactly its canonical bytes; NEW bytes (Issued) only on the authoritative
+-//     state with an unsettled request id (Store mode); a Replayed outcome returns bytes already in the memory.
+-//   RunSeq (any finite call sequence): S1 one byte string per key; S2 every signing call is authorized, and every
+-//     Issued call in Store mode is on the authoritative state with an unsettled request id; S3 a key that the core
+-//     refused at first use never signs later; S4 a non-admitted call leaves the memory unchanged; L3 an admitted,
+-//     issuable call whose key is new at that point is Issued.
+-//   Live (liveness, per call): Store mode, authoritative pre-state, request id not settled, key new, authorized and
+-//     well-formed -> Issued. SquatsThenVictim: after ANY sequence of calls that are not on the authoritative state
+-//     (or that have another key), the victim's call is still Issued (C-ATT-30 cannot block it).
+-//   Witnesses (concrete runs, non-vacuity): WSquatStore, WSquatNoStore, WZeroZeroPositive, WRetry, WStaleRetry,
+-//     WRetryAfterMove, WClosed, WCompleted, WRunSeq, and the LIMIT WSquatRealState (a caller who sends the REAL state with the victim's id
+-//     first still takes the pair: red team C-ATT-08 class; no rule of the issuer alone can tell the callers apart).
+-// NOT proved: minter.ts (decode, SHA-256 glue G-H, the store read, sign, the token text), the store's contents
+-// (assumption STORE-READ: the file the issuer reads is the sink's store), Dafny's JavaScript back end, Node.
++// PROVED HERE (MACHINE-CHECKED only after a run of the lock script; see the evidence directory h-minter3):
++//   Issue (step): the exact outcome and memory for each case; every signing outcome is authorized by
++//     RefundFinality, has a well-formed body and returns exactly its canonical bytes; NEW bytes (Issued) only on the
++//     authoritative state with an unsettled request id (Store mode); a Replayed outcome returns bytes already in the
++//     memory; every outcome other than Issued leaves the memory unchanged.
++//   RunSeq (any finite call sequence): S1 one byte string per key; I1; I2; I3; S2 every signing call is authorized,
++//     and every Issued call in Store mode is on the authoritative state with an unsettled request id; S4 a
++//     non-admitted call leaves the memory unchanged; L3 an admitted, issuable call whose key is new is Issued.
++//   Live, SquatsThenVictim (C-ATT-30), SprayHarmless (C-ATT-38), OldRuleFreeze (the old rule's spray), witnesses.
+ // No assume, no axiom, no bodiless lemma, no {:extern}, no expect in this file.
+ include "IssueBytes2.dfy"
+ 
+@@ -71,6 +100,7 @@ module IssueAuth {
+   }
+   // A call may touch the memory only when it is admitted.
+   predicate Admitted(a: Auth, pre: F.Charge) { a.Store? ==> a.state == pre && !a.requestSettled }
++  predicate Settled(a: Auth) { a.Store? && a.requestSettled }
+ 
+   opaque ghost function Expected(t: F.Transition, sh: string, ch: string, h: string): seq<int>
+   {
+@@ -96,11 +126,16 @@ module IssueAuth {
+     forall k | k in m :: k in m2 && m2[k] == m[k]
+   }
+ 
+-  // The memory after a call (one formula, used by the step and by the lemmas).
++  // The memory after a call (one formula, used by the step and by the lemmas): only a minted token changes it (D-2).
+   ghost function After(m: Memory, k: Key, o: Outcome): Memory
++  {
++    if o.Issued? then m[k := Signed(o.bytes)] else m
++  }
++  // The EARLIER rule (h-minter2), as a model only: an admitted call that the core refused on a new key closed the key.
++  function OldAfter(adm: bool, m: Memory, k: Key, o: Outcome): Memory
+   {
+     if o.Issued? then m[k := Signed(o.bytes)]
+-    else if o.RefusedByCore? && k !in m then m[k := Closed]
++    else if adm && o.RefusedByCore? && k !in m then m[k := Closed]
+     else m
+   }
+ 
+@@ -113,61 +148,52 @@ module IssueAuth {
+ 
+   // =============================================================================================
+   // THE ISSUER STEP. The shell (minter.ts) signs exactly o.bytes when o.Signs().
+-  // Order: an identical retry is answered first (Replayed: the SAME bytes, memory unchanged; also after the store
+-  // moved on, so a client that lost the answer gets its token back: protocol.md:63-64 "An identical repeated request
+-  // returns its recorded decision"); then the authority checks; then the core; then the key.
+   method Issue(m: Memory, a: Auth, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+       returns (m2: Memory, o: Outcome)
++    // Outcome for each case.
++    ensures o.RefusedByCore? <==> !Issuable(pre, t, sh, ch, h)
+     ensures o.Replayed? <==> IsReplay(m, a, pre, t, sh, ch, h)
+     ensures o.Replayed? ==> o.bytes == m[KeyFor(a, pre, t, h)].bytes
+-    ensures o.RefusedNotAuthoritative? <==> !IsReplay(m, a, pre, t, sh, ch, h) && a.Store? && a.state != pre
+-    ensures o.RefusedCompleted? <==> !IsReplay(m, a, pre, t, sh, ch, h) && a.Store? && a.state == pre && a.requestSettled
+-    ensures !Admitted(a, pre) ==> m2 == m && (o.Signs() ==> o.Replayed?)
+-    ensures o.RefusedByCore? <==> Admitted(a, pre) && !Issuable(pre, t, sh, ch, h)
+-    ensures o.Issued? <==> Admitted(a, pre) && Issuable(pre, t, sh, ch, h) && KeyFor(a, pre, t, h) !in m
+-    ensures o.RefusedClosed? <==> Admitted(a, pre) && Issuable(pre, t, sh, ch, h) &&
++    ensures o.RefusedCompleted? <==> Issuable(pre, t, sh, ch, h) && !IsReplay(m, a, pre, t, sh, ch, h) && Settled(a)
++    ensures o.RefusedClosed? <==> Issuable(pre, t, sh, ch, h) && !Settled(a) &&
+                                   KeyFor(a, pre, t, h) in m && m[KeyFor(a, pre, t, h)].Closed?
+-    ensures o.RefusedOtherCandidate? <==> Admitted(a, pre) && Issuable(pre, t, sh, ch, h) &&
++    ensures o.RefusedOtherCandidate? <==> Issuable(pre, t, sh, ch, h) && !Settled(a) &&
+                                           KeyFor(a, pre, t, h) in m && m[KeyFor(a, pre, t, h)].Signed? &&
+                                           IB.ToInts(m[KeyFor(a, pre, t, h)].bytes) != Expected(t, sh, ch, h)
++    ensures o.RefusedNotAuthoritative? <==> Issuable(pre, t, sh, ch, h) && !Settled(a) && KeyFor(a, pre, t, h) !in m &&
++                                            a.Store? && a.state != pre
++    ensures o.Issued? <==> Admitted(a, pre) && Issuable(pre, t, sh, ch, h) && KeyFor(a, pre, t, h) !in m
++    ensures !Admitted(a, pre) ==> m2 == m && (o.Signs() ==> o.Replayed?)
+     // Safety of a signing outcome.
+     ensures o.Signs() ==> F.Authorizes(pre, t) && SM.WfBody(IB.BodyFor(sh, ch, h, t))
+     ensures o.Signs() ==> IB.ToInts(o.bytes) == Expected(t, sh, ch, h)
+     ensures o.Signs() ==> IB.ToInts(o.bytes) == SM.SignedBytes(IB.BodyFor(sh, ch, h, t))
+     // NEW bytes are signed only on the authoritative state with an unsettled request id.
+     ensures o.Issued? ==> Admitted(a, pre)
+-    ensures o.Issued? && a.Store? ==> pre == a.state && !a.requestSettled
+     // A key that holds Closed never signs.
+     ensures KeyFor(a, pre, t, h) in m && m[KeyFor(a, pre, t, h)].Closed? ==> !o.Signs()
+     // Memory.
+     ensures m2 == After(m, KeyFor(a, pre, t, h), o)
+-    ensures Extends(m, m2)
+-    ensures o.Signs() ==> KeyFor(a, pre, t, h) in m2 && m2[KeyFor(a, pre, t, h)] == Signed(o.bytes)
+-    ensures o.RefusedByCore? ==> KeyFor(a, pre, t, h) in m2
+   {
+     reveal Expected(); reveal Issuable();
+     var k := KeyFor(a, pre, t, h);
+     var r := IB.IssueTokenBytes(pre, t, sh, ch, h);
+-    if r.Some? && k in m && m[k].Signed? {
++    if r.None? {
++      o := RefusedByCore;
++      m2 := m;
++      return;
++    }
++    if k in m && m[k].Signed? {
+       if IB.ToInts(m[k].bytes) == IB.ToInts(r.value) { ToIntsInjective(m[k].bytes, r.value); }
+       if m[k].bytes == r.value {
+         m2, o := m, Replayed(m[k].bytes);
+         return;
+       }
+     }
+-    if a.Store? && a.state != pre {
+-      m2, o := m, RefusedNotAuthoritative;
+-      return;
+-    }
+     if a.Store? && a.requestSettled {
+       m2, o := m, RefusedCompleted;
+       return;
+     }
+-    if r.None? {
+-      o := RefusedByCore;
+-      m2 := if k in m then m else m[k := Closed];
+-      return;
+-    }
+     if k in m {
+       if m[k].Closed? {
+         m2, o := m, RefusedClosed;
+@@ -176,9 +202,24 @@ module IssueAuth {
+       }
+       return;
+     }
++    if a.Store? && a.state != pre {
++      m2, o := m, RefusedNotAuthoritative;
++      return;
++    }
+     m2, o := m[k := Signed(r.value)], Issued(r.value);
+   }
+ 
++  // Memory facts that follow from After (small lemmas: they keep the step method's contract short).
++  lemma AfterExtends(m: Memory, k: Key, o: Outcome)
++    requires o.Issued? ==> k !in m
++    ensures Extends(m, After(m, k, o))
++  {}
++  // I2 for one step: every outcome other than Issued leaves the memory as it was.
++  lemma RefusalRecordsNothing(m: Memory, k: Key, o: Outcome)
++    requires !o.Issued?
++    ensures After(m, k, o) == m
++  {}
++
+   // =============================================================================================
+   // RunSeq: properties over ANY finite call sequence (the auth value may change between calls: the store moves).
+   datatype Call = Call(a: Auth, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+@@ -188,24 +229,29 @@ module IssueAuth {
+     (o.Signs() ==> F.Authorizes(c.pre, c.t)) &&
+     (o.Issued? && c.a.Store? ==> c.pre == c.a.state && !c.a.requestSettled)
+   }
+-  // First-use core refusal: the call that recorded Closed.
+-  ghost predicate ClosedAt(calls: seq<Call>, outs: seq<Outcome>, ms: seq<Memory>, i: int)
+-    requires 0 <= i < |outs| <= |calls| && |ms| == |outs|
+-  {
+-    outs[i].RefusedByCore? && KeyOfCall(calls[i]) !in ms[i]
+-  }
+-
+   // What one Issue call guarantees, in the form the sequence proof needs.
+   opaque ghost predicate StepFacts(m: Memory, m2: Memory, c: Call, o: Outcome)
+   {
+     Extends(m, m2) &&
+     (o.Signs() ==> KeyOfCall(c) in m2 && m2[KeyOfCall(c)] == Signed(o.bytes)) &&
+-    (o.RefusedByCore? && KeyOfCall(c) !in m ==> KeyOfCall(c) in m2 && m2[KeyOfCall(c)] == Closed) &&
++    (!o.Issued? ==> m2 == m) &&
+     (KeyOfCall(c) in m && m[KeyOfCall(c)].Closed? ==> !o.Signs()) &&
+     (!Admitted(c.a, c.pre) ==> m2 == m) &&
+     (Admitted(c.a, c.pre) && Issuable(c.pre, c.t, c.sh, c.ch, c.h) && KeyOfCall(c) !in m ==> o.Issued?) &&
+     SignsOk(c, o)
+   }
++  // One Issue call, with its facts in the StepFacts form (keeps RunSeq's loop body small).
++  method Step(m: Memory, c: Call) returns (m2: Memory, o: Outcome)
++    ensures StepFacts(m, m2, c, o)
++    ensures !o.Issued? ==> m2 == m
++    ensures o.Issued? ==> m2 == m[KeyOfCall(c) := Signed(o.bytes)]
++    ensures o.RefusedByCore? <==> !Issuable(c.pre, c.t, c.sh, c.ch, c.h)
++  {
++    m2, o := Issue(m, c.a, c.pre, c.t, c.sh, c.ch, c.h);
++    AfterExtends(m, KeyOfCall(c), o);
++    if !o.Issued? { RefusalRecordsNothing(m, KeyOfCall(c), o); }
++    reveal StepFacts(); reveal SignsOk();
++  }
+   // The loop invariant of RunSeq after n calls.
+   ghost predicate Inv(m0: Memory, m: Memory, calls: seq<Call>, outs: seq<Outcome>, ms: seq<Memory>)
+   {
+@@ -215,10 +261,8 @@ module IssueAuth {
+     (forall i | 0 <= i < |outs| :: outs[i].Signs() ==>
+        KeyOfCall(calls[i]) in m && m[KeyOfCall(calls[i])] == Signed(outs[i].bytes)) &&
+     (forall i | 0 <= i < |outs| :: SignsOk(calls[i], outs[i])) &&
+-    (forall i | 0 <= i < |outs| :: ClosedAt(calls, outs, ms, i) ==>
+-       KeyOfCall(calls[i]) in m && m[KeyOfCall(calls[i])] == Closed) &&
+-    (forall i, j | 0 <= i < j < |outs| ::
+-       ClosedAt(calls, outs, ms, i) && KeyOfCall(calls[j]) == KeyOfCall(calls[i]) ==> !outs[j].Signs()) &&
++    (forall i | 0 <= i < |outs| - 1 :: !outs[i].Issued? ==> ms[i + 1] == ms[i]) &&
++    (|outs| > 0 && !outs[|outs| - 1].Issued? ==> m == ms[|outs| - 1]) &&
+     (forall i | 0 <= i < |outs| - 1 :: !Admitted(calls[i].a, calls[i].pre) ==> ms[i + 1] == ms[i]) &&
+     (|outs| > 0 && !Admitted(calls[|outs| - 1].a, calls[|outs| - 1].pre) ==> m == ms[|outs| - 1]) &&
+     (forall i | 0 <= i < |outs| ::
+@@ -249,17 +293,11 @@ module IssueAuth {
+     {
+       if i < n { assert outs2[i] == outs[i]; }
+     }
+-    forall i | 0 <= i < n + 1 && ClosedAt(calls, outs2, ms2, i)
+-      ensures KeyOfCall(calls[i]) in m2 && m2[KeyOfCall(calls[i])] == Closed
+-    {
+-      if i < n { assert outs2[i] == outs[i] && ms2[i] == ms[i]; assert ClosedAt(calls, outs, ms, i); }
+-    }
+-    forall i, j | 0 <= i < j < n + 1 && ClosedAt(calls, outs2, ms2, i) && KeyOfCall(calls[j]) == KeyOfCall(calls[i])
+-      ensures !outs2[j].Signs()
++    forall i | 0 <= i < n + 1 - 1 && !outs2[i].Issued?
++      ensures ms2[i + 1] == ms2[i]
+     {
+-      assert outs2[i] == outs[i] && ms2[i] == ms[i];
+-      assert ClosedAt(calls, outs, ms, i);
+-      if j < n { assert outs2[j] == outs[j]; }
++      assert outs2[i] == outs[i];
++      if i + 1 < n { assert ms2[i + 1] == ms[i + 1] && ms2[i] == ms[i]; }
+     }
+     forall i | 0 <= i < n + 1 - 1 && !Admitted(calls[i].a, calls[i].pre)
+       ensures ms2[i + 1] == ms2[i]
+@@ -284,9 +322,16 @@ module IssueAuth {
+               outs[i].bytes == outs[j].bytes
+     // S2: authority.
+     ensures forall i | 0 <= i < |calls| :: SignsOk(calls[i], outs[i])
+-    // S3: a key refused by the core at its first use never signs later.
+-    ensures forall i, j | 0 <= i < j < |calls| ::
+-              ClosedAt(calls, outs, ms, i) && KeyOfCall(calls[j]) == KeyOfCall(calls[i]) ==> !outs[j].Signs()
++    // I1 (Store mode): at most one byte string per (charge id, request id) among Issued and Replayed outcomes.
++    ensures forall i, j | 0 <= i < |calls| && 0 <= j < |calls| ::
++              calls[i].a.Store? && calls[j].a.Store? && calls[i].pre.chargeId == calls[j].pre.chargeId &&
++              calls[i].t.request.requestId == calls[j].t.request.requestId && outs[i].Signs() && outs[j].Signs() ==>
++              outs[i].bytes == outs[j].bytes
++    // I2: a call that is not Issued (every refusal) leaves the memory as it was.
++    ensures forall i | 0 <= i < |calls| - 1 :: !outs[i].Issued? ==> ms[i + 1] == ms[i]
++    ensures |calls| > 0 && !outs[|calls| - 1].Issued? ==> m == ms[|calls| - 1]
++    // I3: a call whose request id is settled in the store is never Issued.
++    ensures forall i | 0 <= i < |calls| :: Settled(calls[i].a) ==> !outs[i].Issued?
+     // S4: a call that is not admitted leaves the memory as it was.
+     ensures forall i | 0 <= i < |calls| - 1 :: !Admitted(calls[i].a, calls[i].pre) ==> ms[i + 1] == ms[i]
+     ensures |calls| > 0 ==> ms[0] == m0
+@@ -301,11 +346,18 @@ module IssueAuth {
+       decreases |calls| - |outs|
+     {
+       var c := calls[|outs|];
+-      var m2, o := Issue(m, c.a, c.pre, c.t, c.sh, c.ch, c.h);
+-      assert StepFacts(m, m2, c, o) by { reveal StepFacts(); reveal SignsOk(); }
++      var m2, o := Step(m, c);
+       StepPreserves(m0, m, m2, calls, outs, ms, o);
+       m, outs, ms := m2, outs + [o], ms + [m];
+     }
++    reveal SignsOk();
++    forall i, j | 0 <= i < |calls| && 0 <= j < |calls| &&
++        calls[i].a.Store? && calls[j].a.Store? && calls[i].pre.chargeId == calls[j].pre.chargeId &&
++        calls[i].t.request.requestId == calls[j].t.request.requestId && outs[i].Signs() && outs[j].Signs()
++      ensures outs[i].bytes == outs[j].bytes
++    {
++      assert KeyOfCall(calls[i]) == KeyOfCall(calls[j]);
++    }
+   }
+ 
+   // =============================================================================================
+@@ -335,8 +387,8 @@ module IssueAuth {
+     ensures Harmless(s, v)
+   {}
+ 
+-  // SquatsThenVictim: ANY sequence of harmless calls (C-ATT-30 squats on invented pre-states included), then the
+-  // victim's authorized, well-formed call whose key was new at the start: the victim is Issued.
++  // SquatsThenVictim: ANY sequence of harmless calls (C-ATT-30 squats on invented pre-states
++  // included), then the victim's authorized, well-formed call whose key was new at the start: the victim is Issued.
+   method SquatsThenVictim(m0: Memory, squats: seq<Call>, v: Call) returns (outs: seq<Outcome>, ov: Outcome)
+     requires Admitted(v.a, v.pre) && Issuable(v.pre, v.t, v.sh, v.ch, v.h)
+     requires KeyOfCall(v) !in m0
+@@ -360,6 +412,38 @@ module IssueAuth {
+     m3, ov := Issue(m, v.a, v.pre, v.t, v.sh, v.ch, v.h);
+   }
+ 
++  // SprayHarmless (I2; red team C-ATT-38; owner decision D-2): ANY sequence of calls by others (on any
++  // pre-state, with any key, the victim's key included), then the victim's honest call (authorized, well-formed, on the
++  // authoritative state, request id not settled, key new at the start). If no call of the sequence was Issued on the
++  // victim's key (that is: the others were refused, or signed under other keys), the victim is Issued.
++  // The excluded case (a call Issued on the victim's key before the victim) is the squat on the real state (C-ATT-08
++  // class, WSquatRealState): it needs an AUTHORIZED call; no refusal can block the victim.
++  method SprayHarmless(m0: Memory, spray: seq<Call>, v: Call) returns (outs: seq<Outcome>, ov: Outcome)
++    requires Admitted(v.a, v.pre) && Issuable(v.pre, v.t, v.sh, v.ch, v.h)
++    requires KeyOfCall(v) !in m0
++    ensures |outs| == |spray|
++    ensures forall i | 0 <= i < |spray| :: outs[i].RefusedByCore? <==> !Issuable(spray[i].pre, spray[i].t, spray[i].sh, spray[i].ch, spray[i].h)
++    ensures (forall i | 0 <= i < |spray| :: !outs[i].Issued? || KeyOfCall(spray[i]) != KeyOfCall(v)) ==>
++              ov.Issued? && IB.ToInts(ov.bytes) == Expected(v.t, v.sh, v.ch, v.h)
++  {
++    var m := m0;
++    outs := [];
++    while |outs| < |spray|
++      invariant |outs| <= |spray|
++      invariant forall i | 0 <= i < |outs| ::
++                  outs[i].RefusedByCore? <==> !Issuable(spray[i].pre, spray[i].t, spray[i].sh, spray[i].ch, spray[i].h)
++      invariant (forall i | 0 <= i < |outs| :: !outs[i].Issued? || KeyOfCall(spray[i]) != KeyOfCall(v)) ==>
++                  KeyOfCall(v) !in m
++    {
++      var s := spray[|outs|];
++      var m2, o := Step(m, s);
++      m := m2;
++      outs := outs + [o];
++    }
++    var m3;
++    m3, ov := Issue(m, v.a, v.pre, v.t, v.sh, v.ch, v.h);
++  }
++
+   // =============================================================================================
+   // WITNESSES (non-vacuity). W_PRE = Charge("ch_1", 100, 60, true) of IssueBytes2.
+   const W_PRE: F.Charge := IB.W_PRE
+@@ -409,10 +493,10 @@ module IssueAuth {
+   }
+   method NotAdmitted(m: Memory, a: Auth, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+       returns (m2: Memory, o: Outcome)
+-    requires !Admitted(a, pre) && KeyFor(a, pre, t, h) !in m
++    requires !Admitted(a, pre) && Issuable(pre, t, sh, ch, h) && KeyFor(a, pre, t, h) !in m
+     ensures m2 == m && !o.Signs()
+-    ensures a.Store? && a.state != pre ==> o.RefusedNotAuthoritative?
+-    ensures a.Store? && a.state == pre ==> o.RefusedCompleted?
++    ensures a.Store? && !a.requestSettled && a.state != pre ==> o.RefusedNotAuthoritative?
++    ensures a.Store? && a.requestSettled ==> o.RefusedCompleted?
+   {
+     m2, o := Issue(m, a, pre, t, sh, ch, h);
+   }
+@@ -443,8 +527,8 @@ module IssueAuth {
+   }
+   method CoreRefused(m: Memory, a: Auth, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+       returns (m2: Memory, o: Outcome)
+-    requires Admitted(a, pre) && !Issuable(pre, t, sh, ch, h) && KeyFor(a, pre, t, h) !in m
+-    ensures o.RefusedByCore? && m2 == m[KeyFor(a, pre, t, h) := Closed]
++    requires !Issuable(pre, t, sh, ch, h)
++    ensures o.RefusedByCore? && m2 == m
+   {
+     m2, o := Issue(m, a, pre, t, sh, ch, h);
+   }
+@@ -454,7 +538,7 @@ module IssueAuth {
+   method WSquatStore() returns (s: Outcome, v: Outcome)
+     ensures s.RefusedNotAuthoritative? && v.Issued?
+   {
+-    Hexes(); IssuableAt(W_PRE, "rq_v", 40, IB.HEXA);
++    Hexes(); IssuableAt(W_PRE, "rq_v", 40, IB.HEXA); IssuableAt(W_FAKE, "rq_v", 0, HEXB);
+     var m: Memory := map[];
+     var a := Store(W_PRE, false);
+     m, s := NotAdmitted(m, a, W_FAKE, IB.T(W_FAKE, "rq_v", 0), SM.ZERO64, SM.ZERO64, HEXB);
+@@ -473,7 +557,7 @@ module IssueAuth {
+     m, v := NewKey(m, NoStore, W_PRE, IB.T(W_PRE, "rq_v", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
+   }
+ 
+-  // Zero amounts stay legitimate: two zero-amount requests and a positive one on one state: all Issued.
++  // Zero amounts stay legitimate : two zero-amount requests and a positive one on one state: Issued.
+   method WZeroZeroPositive() returns (a: Outcome, b: Outcome, c: Outcome)
+     ensures a.Issued? && b.Issued? && c.Issued?
+     ensures IB.T(W_PRE, "rz_1", 0).request.amount == 0 && IB.T(W_PRE, "rz_2", 0).request.amount == 0
+@@ -522,23 +606,59 @@ module IssueAuth {
+     m, c := NewKey(m, Store(W_NEXT, false), W_NEXT, IB.T(W_NEXT, "rq_1b", 40), SM.ZERO64, SM.ZERO64, HEXB);
+   }
+ 
+-  // Rejection closes the attempt (protocol.md:61-62): rq_c for 61 (> remaining 60) is refused by the core; then rq_c
+-  // for 40 (authorized) is RefusedClosed; a new request id for 40 is Issued (no freeze of the charge).
+-  method WClosed() returns (a: Outcome, b: Outcome, c: Outcome)
+-    ensures a.RefusedByCore? && b.RefusedClosed? && c.Issued?
++  // D-2: rq_c for 61 (> remaining 60) is refused and records nothing; rq_c for 40 is then Issued (what is LOST
++  // against the letter of 61-62: the request id stays usable after a rejection).
++  method WRefusalThenSameId() returns (a: Outcome, b: Outcome, m: Memory)
++    ensures a.RefusedByCore? && b.Issued? && m.Keys == {KeyFor(Store(W_PRE, false), W_PRE, IB.T(W_PRE, "rq_c", 40), IB.HEXA)}
+   {
+-    Hexes(); IssuableAt(W_PRE, "rq_c", 40, IB.HEXA); IssuableAt(W_PRE, "rq_d", 40, IB.HEXA);
++    Hexes(); IssuableAt(W_PRE, "rq_c", 40, IB.HEXA);
+     assert !Issuable(W_PRE, IB.T(W_PRE, "rq_c", 61), SM.ZERO64, SM.ZERO64, IB.HEXA) by { reveal Issuable(); }
+-    var m: Memory := map[];
++    m := map[];
+     var st := Store(W_PRE, false);
+     m, a := CoreRefused(m, st, W_PRE, IB.T(W_PRE, "rq_c", 61), SM.ZERO64, SM.ZERO64, IB.HEXA);
+-    m, b := UsedKey(m, st, W_PRE, IB.T(W_PRE, "rq_c", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
+-    m, c := NewKey(m, st, W_PRE, IB.T(W_PRE, "rq_d", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
++    assert m == map[];
++    m, b := NewKey(m, st, W_PRE, IB.T(W_PRE, "rq_c", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
++  }
++
++  // OldRuleFreeze: the EARLIER rule (OldAfter) against the red team's spray C-ATT-38. A caller without the key sends,
++  // with the victim's request id, one unauthorized request (amount 61) on an invented state and one on the real state.
++  // Under the old rule the guess on the real state is admitted and refused by the core, so it records Closed; the
++  // victim's honest request is then RefusedClosed. (Under the rule of this file, WSpray: the victim is Issued.)
++  method OldRuleFreeze() returns (s1: Outcome, s2: Outcome, v: Outcome)
++    ensures s1.RefusedByCore? && s2.RefusedByCore? && v.RefusedClosed?
++  {
++    Hexes(); IssuableAt(W_PRE, "rq_v", 40, IB.HEXA);
++    assert !Issuable(W_FAKE, IB.T(W_FAKE, "rq_v", 61), SM.ZERO64, SM.ZERO64, HEXB) by { reveal Issuable(); }
++    assert !Issuable(W_PRE, IB.T(W_PRE, "rq_v", 61), SM.ZERO64, SM.ZERO64, IB.HEXA) by { reveal Issuable(); }
++    var st := Store(W_PRE, false);
++    var k := KeyFor(st, W_PRE, IB.T(W_PRE, "rq_v", 40), IB.HEXA);
++    var m: Memory := map[];
++    var m1;
++    m1, s1 := CoreRefused(m, st, W_FAKE, IB.T(W_FAKE, "rq_v", 61), SM.ZERO64, SM.ZERO64, HEXB);
++    m := OldAfter(Admitted(st, W_FAKE), m, KeyFor(st, W_FAKE, IB.T(W_FAKE, "rq_v", 61), HEXB), s1);
++    m1, s2 := CoreRefused(m, st, W_PRE, IB.T(W_PRE, "rq_v", 61), SM.ZERO64, SM.ZERO64, IB.HEXA);
++    m := OldAfter(Admitted(st, W_PRE), m, KeyFor(st, W_PRE, IB.T(W_PRE, "rq_v", 61), IB.HEXA), s2);
++    assert m == map[k := Closed];
++    m, v := UsedKey(m, st, W_PRE, IB.T(W_PRE, "rq_v", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
++  }
++
++  // The same spray under the rule of this file (D-2), through SprayHarmless: the victim is Issued.
++  method WSpray() returns (outs: seq<Outcome>, v: Outcome)
++    ensures |outs| == 2 && outs[0].RefusedByCore? && outs[1].RefusedByCore? && v.Issued?
++  {
++    Hexes(); IssuableAt(W_PRE, "rq_v", 40, IB.HEXA);
++    assert !Issuable(W_FAKE, IB.T(W_FAKE, "rq_v", 61), SM.ZERO64, SM.ZERO64, HEXB) by { reveal Issuable(); }
++    assert !Issuable(W_PRE, IB.T(W_PRE, "rq_v", 61), SM.ZERO64, SM.ZERO64, IB.HEXA) by { reveal Issuable(); }
++    var st := Store(W_PRE, false);
++    var spray := [Call(st, W_FAKE, IB.T(W_FAKE, "rq_v", 61), SM.ZERO64, SM.ZERO64, HEXB),
++                  Call(st, W_PRE, IB.T(W_PRE, "rq_v", 61), SM.ZERO64, SM.ZERO64, IB.HEXA)];
++    var vc := Call(st, W_PRE, IB.T(W_PRE, "rq_v", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
++    outs, v := SprayHarmless(map[], spray, vc);
+   }
+ 
+   // A client that lost its answer retries the identical request AFTER the store moved on (its token committed):
+   // Replayed with the same bytes (the sink then answers "replayed"); a different candidate for that settled id on
+-  // the new state is RefusedCompleted.
++  // the new state is RefusedCompleted. (minter.ts in mode "off" seeds the memory from the settled row: C-ATT-40.)
+   method WRetryAfterMove() returns (a: Outcome, a2: Outcome, b: Outcome)
+     ensures a.Issued? && a2.Replayed? && a2.bytes == a.bytes && b.RefusedCompleted?
+   {
+@@ -561,11 +681,12 @@ module IssueAuth {
+   method WCompleted() returns (o: Outcome, m2: Memory)
+     ensures o.RefusedCompleted? && m2 == map[]
+   {
++    Hexes(); IssuableAt(W_PRE, "rq_s", 0, IB.HEXA);
+     m2, o := NotAdmitted(map[], Store(W_PRE, true), W_PRE, IB.T(W_PRE, "rq_s", 0), SM.ZERO64, SM.ZERO64, IB.HEXA);
+   }
+ 
+-  // LIMIT (red team C-ATT-08 class, owner question B-12(1)): a caller who knows the REAL state and the victim's
+-  // request id, and sends a zero-amount request first, takes the pair: the victim's request is then refused.
++  // LIMIT (red team C-ATT-08 class, owner question B-12(1)): a caller who knows the REAL state and the
++  // victim's request id, and sends a zero-amount request first, takes the pair: the victim's request is then refused.
+   method WSquatRealState() returns (s: Outcome, v: Outcome)
+     ensures s.Issued? && v.RefusedOtherCandidate?
+   {
+@@ -582,7 +703,7 @@ module IssueAuth {
+     m, v := UsedKey(m, st, W_PRE, IB.T(W_PRE, "rq_v", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
+   }
+ 
+-  // RunSeq is not vacuous: a two-call sequence where the second call signs.
++  // RunSeq is not vacuous : a two-call sequence where the second call signs.
+   method WRunSeq() returns (outs: seq<Outcome>)
+     ensures |outs| == 2 && outs[1].Issued?
+   {
+diff --git a/ts/refund-finality/minter.ts b/ts/refund-finality/minter.ts
+index 86ba60ee..95b167f5 100644
+--- a/ts/refund-finality/minter.ts
++++ b/ts/refund-finality/minter.ts
+@@ -3,7 +3,10 @@
+ // (C-ATT-05: a restart changes the key; key persistence is an open owner decision: see KEY_OPTIONS in the
+ // night-shift evidence h-minter).
+ // The same interface as the earlier minter.ts (arguments, ready line, one JSON message per line in, one answer
+-// line out), plus an OPTIONAL fourth argument: the path of the sink's store (read only).
++// line out), plus an OPTIONAL fourth argument: the path of the sink's store (read only). PRODUCTION = mode "on" WITH
++// a store (the closed launch, minter-launch.sh, refuses anything else). Every other mode is a TEST mode: it does not
++// give I1 (at most one valid token per (charge id, request id)); it writes a warning line on stderr and its ready line
++// has "singleUse":"none" (h-minter3, owner decision D-2).
+ // The DECISION, the TOKEN BODY and the MEMORY RULE are not written here. They come from ONE call of the compiled
+ // proved method IssueAuth.Issue (impl/finality-core/IssueAuth.dfy; rule 2, night shift h-minter2). It calls
+ // IssueBytes2.IssueTokenBytes (RefundFinality.Check, the well-formed-body guard, the UTF-8 bytes of the canonical
+@@ -17,7 +20,17 @@
+ //     state, so in this mode a request id CAN be signed again on another pre-state; the sink commits at most one
+ //     token per request id and only on its stored pre-state (SINGLE_USE_2.md, h-minter2).
+ //   Both modes: new key -> Issued; identical retry -> Replayed (the stored bytes); same key, other candidate ->
+-//   refused; the core refuses at the first use of a key -> refused AND the key is closed (protocol.md:61-62).
++//   refused. The core's refusal is decided FIRST, from the call alone (h-minter3).
++//   OWNER DECISION D-2 (answers B-19): a refusal closes only that attempt; it records NOTHING. A request id closes
++//   only by a minted token (the memory) or by the sink's commit (Store mode: the settled table). Proved: SprayHarmless
++//   and RunSeq I1, I2, I3 (IssueAuth.dfy). This closes red team C-ATT-38 (a spray of refused requests closed a victim's
++//   request id). NOT closed: the squat on the REAL state with an AUTHORIZED request that the issuer mints (C-ATT-08
++//   class; WSquatRealState): the issuer has no caller identity.
++// WHAT THE PROOF COVERS AND WHAT IT DOES NOT: IssueAuth.Issue is proved for ANY values of its inputs. The authoritative
++// state and the settled flag (the Auth value), the pre-state hash text and the memory are FREE PARAMETERS of the proof.
++// That they are what the sink's store holds now (STORE-READ) and that the hash is SHA-256 of canon(pre) (G-H) rests on
++// THIS file only, which is not proved. The proof gives: every signing outcome is authorized for this call and its
++// bytes are the canonical body bytes, whatever the Auth value, the hash text and the memory are.
+ // This file signs EXACTLY the returned bytes. It builds no body. It embeds the returned body text VERBATIM.
+ // This file does only: line framing with a STRICT UTF-8 decode (C-ATT-15), shape decode (refuse-only), the
+ // pre-state hash in ONE place (glue G-H), the store read (two SELECTs in one read transaction), conversion to core
+@@ -26,17 +39,38 @@
+ // runtime, bignumber.js, Node, SQLite and OpenSSL, process isolation, the store's contents (assumption STORE-READ).
+ // The memory of mode "on" is PROCESS MEMORY: it is lost at restart (and the key is lost with it).
+ // Arguments: <compiled IssueAuth module> <refund spec lock> <memory rule: on | off> [<sink store path>]
+-//   on : the IssueAuth memory rule for the life of the process.
+-//   off: no memory (IssueAuth.Issue with an empty memory every time). With a store, the authority check stays.
+-//   Either way an identical request gets a byte-identical token (Ed25519 signatures are deterministic).
+-// Refusal reasons (fixed texts; a client may compare them): "core: Refuse"; "stale candidate: use a new request id";
+-// "other candidate: use a new request id"; "attempt closed: use a new request id"; "attempt completed: use a new
+-// request id"; "pre-state is not the authoritative stored state"; "store: ..." (the store cannot be read).
+-// Start refusals: NODE_OPTIONS set (C-ATT-14); a module without IssueAuth; in a CLOSED LAUNCH
++//   on : the IssueAuth memory rule for the life of the process. With a store: PRODUCTION (I1, I2, I3).
++//        Without a store: TEST MODE (key = (charge id, request id, pre-state hash); two tokens can exist for one request
++//        id on two pre-states; the sink still commits at most one).
++//   off: TEST MODE. No process memory (I1 does not hold at the issuer: two candidates for one request id can both be
++//        signed; the sink commits at most one). With a store, the authority check stays, and the memory passed to IssueAuth.Issue holds
++//        at most one entry: the body bytes of the token that the store has SETTLED for this request id (C-ATT-40).
++//   An identical request gets a byte-identical token from the same process (Ed25519 signatures are deterministic):
++//     on : always, once signed (Replayed from the memory, also after the store moved on);
++//     off without a store: always (the same bytes are issued again);
++//     off with a store: while its pre-state is still the stored state and its id is not settled (issued again), and
++//        after the sink has settled THIS token for its id (Replayed from the settled row). EXCEPTION: when the store
++//        moved on without settling this request id, the identical request is refused ("pre-state is not the
++//        authoritative stored state"); its old token cannot commit at the sink anyway (stale pre-state).
++//   A new process (new key) never gives the same token bytes: C-ATT-05.
++// Refusal reasons (fixed texts; a client may compare them): "core: Refuse" (the GENERIC text: not authorized, or not
++// on the authoritative stored state; h-minter3, C-ATT-38 state oracle); "stale candidate: use a new request id";
++// "other candidate: use a new request id"; "attempt closed: use a new request id" (only for a memory entry Closed,
++// which this rule never writes); "attempt completed: use a new request id"; "store: the store path is gone";
++// "store: ..." (the store cannot be read). The operator gets the outcome name of every refusal on stderr
++// ({"refusal": ...}); the caller does not.
++// What a caller can still learn about the STORED charge state: "core: Refuse" is the same text for a wrong pre-state and
++// for an unauthorized request. "attempt completed" depends on the settled table for the caller's request id only;
++// "stale/other candidate" on the memory for the caller's key only (the proved order checks them before the state).
++// A caller without the key can still search the state with AUTHORIZED (zero-amount) requests on fresh request ids:
++// the answer is a token or "core: Refuse". That search needs no refusal text and is NOT closed here (no caller
++// identity; C-ATT-08 class).
++// Start refusals: NODE_OPTIONS set (C-ATT-14; see the comment at the check: NOT a defence); a module without
++// IssueAuth; in a CLOSED LAUNCH
+ // (minter-launch.sh sets FORGE_MINTER_CLOSED to the pinned manifest digest): any other environment variable, other
+ // node options, a manifest with another digest, a listed file with another digest, a loaded file that is not listed.
+ import { generateKeyPairSync, sign, createHash } from "node:crypto";
+-import { readFileSync } from "node:fs";
++import { existsSync, readFileSync } from "node:fs";
+ import { createRequire } from "node:module";
+ import { resolve } from "node:path";
+ import BigNumber from "bignumber.js";
+@@ -49,8 +83,18 @@ if (!corePath || !specLockPath || (memoryArg !== "on" && memoryArg !== "off") ||
+   process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> [<sink store path>]\n");
+   process.exit(2);
+ }
++// PRODUCTION = "on" with a store (I1). Any other mode is a TEST mode (owner decision D-2; see the header).
++const production = memoryArg === "on" && storePath !== undefined;
++if (!production) {
++  process.stderr.write("minter.ts: WARNING: TEST MODE (" + (storePath === undefined ? "no store" : "memory off") +
++    "): at most one valid token per (charge id, request id) is NOT kept by this issuer; production needs \"on\" and the sink's store\n");
++}
+ // C-ATT-14: NODE_OPTIONS can make Node load other code (--require, --import, --loader) into this key-holding
+-// process. The checker id does not cover such code. Refuse to start. (NODE_PATH is reported below, not refused.)
++// process. The checker id does not cover such code. This check is NOT a defence: it runs after Node has already run a
++// --require or --import preload of NODE_OPTIONS (or of the command line), so such code has run before this line and
++// can change what this line sees. It only reports a careless launch. The defence is the CLOSED LAUNCH
++// (minter-launch.sh, assumption CLOSED-LAUNCH): `env -i` and fixed node options BEFORE Node starts.
++// (NODE_PATH is reported below, not refused.)
+ if (process.env.NODE_OPTIONS !== undefined && process.env.NODE_OPTIONS !== "") {
+   process.stderr.write("minter.ts: refused to start: NODE_OPTIONS is set\n");
+   process.exit(2);
+@@ -86,6 +130,7 @@ if (process.env.FORGE_MINTER_CLOSED !== undefined) {
+     process.exit(2);
+   };
+   const pin = process.env.FORGE_MINTER_CLOSED;
++  if (!production) refuse("the closed launch needs mode \"on\" and the sink's store (owner decision D-2: I1)");
+   for (const name of Object.keys(process.env)) {
+     // macOS adds __CF_USER_TEXT_ENCODING to every process (CoreFoundation text encoding): allowed in its own format.
+     if (name === "__CF_USER_TEXT_ENCODING" && /^0x[0-9A-Fa-f]+:0x[0-9A-Fa-f]+:0x[0-9A-Fa-f]+$/.test(process.env[name] ?? "")) continue;
+@@ -109,17 +154,17 @@ if (process.env.FORGE_MINTER_CLOSED !== undefined) {
+   closedLaunch = { manifestSha256: pin, files: listed.size };
+ }
+ 
+-// The sink's store, read only (Store mode). Opened at the first request (the sink may create the file after the
+-// issuer has started: it needs the issuer's public key first); read in one read transaction per request.
+-let storeDb: any = null;
++// The sink's store, read only (Store mode). OPENED AT EACH REQUEST and closed after it (C-ATT-39: a connection kept
++// open follows the old inode after an operator replaces the file by `mv`, and the issuer then refused every honest
++// request until a restart, which is a new key). The sink may create the file after the issuer has started (it needs
++// the issuer's public key first). A path that does not exist is refused with its own reason.
+ function openStore(): any {
+-  if (storeDb === null) {
+-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+-    const db = new (require("node:sqlite").DatabaseSync)(resolve(storePath as string), { readOnly: true });
+-    db.exec("PRAGMA busy_timeout = 5000");
+-    storeDb = db;
+-  }
+-  return storeDb;
++  const path = resolve(storePath as string);
++  if (!existsSync(path)) throw new Error("store: the store path is gone");
++  // eslint-disable-next-line @typescript-eslint/no-require-imports
++  const db = new (require("node:sqlite").DatabaseSync)(path, { readOnly: true });
++  try { db.exec("PRAGMA busy_timeout = 5000"); } catch (error) { db.close(); throw error; }
++  return db;
+ }
+ // Extra identity information (NOT part of the checker id; changing the id is the owner's decision): the resolved
+ // file of bignumber.js that this process and the core module use, and the Node version. Written to stderr, so the
+@@ -136,7 +181,7 @@ function openStore(): any {
+     node: process.version, nodePath: process.env.NODE_PATH ?? null, execArgv: process.execArgv,
+     // Names (not values) of set variables that can change which code runs or how (detection only).
+     codeEnv: Object.keys(process.env).filter(n => /^(NODE_|TSX_|DYLD_|LD_|OPENSSL_|SSL_)|^TMPDIR$/.test(n)).sort(),
+-    closedLaunch, rule: "IssueAuth", mode: storePath === undefined ? "NoStore" : "Store", store: storePath === undefined ? null : resolve(storePath) } }) + "\n");
++    closedLaunch, rule: "IssueAuth", production, mode: storePath === undefined ? "NoStore" : "Store", store: storePath === undefined ? null : resolve(storePath) } }) + "\n");
+ }
+ const text = (s: string): unknown => runtime.Seq.UnicodeFromString(s);
+ const back = (s: any): string => s.toVerbatimString(false);
+@@ -167,39 +212,51 @@ function preStateOf(pre: ChargeState): { corePre: any; preStateSha256: string }
+ 
+ let memory: any = runtime.Map.Empty;      // IssueAuth.Memory: key -> Signed(bytes) | Closed (mode "on")
+ 
+-// What the store says for this request: IssueAuth.Auth. NoStore when no store is configured.
++// What the store says for this request: IssueAuth.Auth, and (C-ATT-40) the body bytes of the token that the store
++// has settled for this request id, if any. NoStore when no store is configured.
+ // The state row must be a canonical state text (the sink writes canon(state)). Refuse-only.
+-function authOf(requestId: string): any {
+-  if (storePath === undefined) return O.Auth.create_NoStore();
++function authOf(requestId: string): { auth: any; settledBody: Buffer | null } {
++  if (storePath === undefined) return { auth: O.Auth.create_NoStore(), settledBody: null };
+   let store: any;
+-  try { store = openStore(); } catch (error) { throw new Error("store: cannot open: " + String((error as Error).message)); }
+-  store.exec("BEGIN");
++  try { store = openStore(); } catch (error) {
++    const why = String((error as Error).message);
++    throw new Error(why.startsWith("store: ") ? why : "store: cannot open: " + why);
++  }
++  try { store.exec("BEGIN"); } catch (error) { store.close(); throw new Error("store: " + String((error as Error).message)); }
+   try {
+     const row = store.prepare("SELECT blob FROM state WHERE id = 1").get() as { blob: unknown } | undefined;
+     if (row === undefined || typeof row.blob !== "string") throw new Error("store: no authoritative state");
+     const v: unknown = JSON.parse(row.blob);
+     if (!isState(v) || canon(v) !== row.blob) throw new Error("store: the state row is not a canonical state");
+-    const settled = store.prepare("SELECT 1 AS x FROM settled WHERE request_id = ?").get(requestId) !== undefined;
++    const srow = store.prepare("SELECT token FROM settled WHERE request_id = ?").get(requestId) as { token: unknown } | undefined;
++    const settled = srow !== undefined;
++    // The body bytes of the settled token (used only in mode "off"; data, not trusted: IssueAuth.Issue returns
++    // Replayed only when these bytes are exactly the bytes it computes for THIS authorized call).
++    let settledBody: Buffer | null = null;
++    if (settled && typeof srow.token === "string") {
++      try { const tk = JSON.parse(srow.token); settledBody = Buffer.from(canon(tk.body), "utf8"); } catch { settledBody = null; }
++    }
+     const coreState = charge(v);
+     if (canon(stateOf(coreState)) !== row.blob) throw new Error("store: conversion of the state");
+-    return O.Auth.create_Store(coreState, settled);
++    return { auth: O.Auth.create_Store(coreState, settled), settledBody };
+   } catch (error) {
+     const why = String((error as Error).message);
+     throw new Error(why.startsWith("store: ") ? why : "store: " + why);
+-  } finally { store.exec("COMMIT"); }
++  } finally { try { store.exec("COMMIT"); } finally { store.close(); } }
+ }
+ 
+ // The refusal text for an outcome of IssueAuth.Issue that does not sign.
+-function refusalOf(o: any, key: any, preStateSha256: string): string {
++function refusalOf(o: any, key: any, preStateSha256: string, m0: any): string {
+   if (o.is_RefusedByCore === true) return "core: Refuse";
+-  if (o.is_RefusedNotAuthoritative === true) return "pre-state is not the authoritative stored state";
++  // One generic text for "not on the authoritative state" and "not authorized" (the C-ATT-38 state oracle).
++  if (o.is_RefusedNotAuthoritative === true) return "core: Refuse";
+   if (o.is_RefusedCompleted === true) return "attempt completed: use a new request id";
+   if (o.is_RefusedClosed === true) return "attempt closed: use a new request id";
+   if (o.is_RefusedOtherCandidate === true) {
+     // Wording only: "stale" when the signed candidate of this key is for another pre-state (C-ATT-29).
+     let stale = false;
+     try {
+-      const rec = memory.get(key);
++      const rec = m0.get(key);
+       const old = JSON.parse(utf8.decode(Buffer.from(Array.from(rec.dtor_bytes as Iterable<unknown>, (b: unknown) => Number(b)))));
+       stale = old.preStateSha256 !== preStateSha256;
+     } catch { stale = false; }
+@@ -208,18 +265,27 @@ function refusalOf(o: any, key: any, preStateSha256: string): string {
+   throw new Error("conversion: outcome");
+ }
+ 
++const OUTCOMES = ["RefusedByCore", "RefusedOtherCandidate", "RefusedClosed", "RefusedNotAuthoritative", "RefusedCompleted"];
+ // Returns the signed body bytes and their text, or a refusal reason from the proved method.
+ function issue(pre: ChargeState, t: Transition): { bytes: Buffer; bodyText: string; body: any } | string {
+   const { corePre, preStateSha256 } = preStateOf(pre);
+-  const a = authOf(t.request.requestId);
++  const { auth: a, settledBody } = authOf(t.request.requestId);
+   const coreT = transition(t);
+-  const m0 = memoryOn ? memory : runtime.Map.Empty;
++  const key = O.__default.KeyFor(a, corePre, coreT, text(preStateSha256));
++  // Mode "off" with a store (C-ATT-40): the memory holds only the settled token's body for this key, if any.
++  const m0 = memoryOn ? memory
++    : settledBody !== null ? runtime.Map.Empty.update(key, O.Rec.create_Signed(runtime.Seq.of(...Array.from(settledBody))))
++    : runtime.Map.Empty;
++  // ONE call of the proved step.
+   const [m2, o] = O.__default.Issue(m0, a, corePre, coreT, text(specLockSha256), text(checkerSha256), text(preStateSha256));
+   // [D1] the proved decision. Only Issued and Replayed can lead to a signature.
+   if (o.is_Issued !== true && o.is_Replayed !== true) {
+-    const reason = refusalOf(o, O.__default.KeyFor(a, corePre, coreT, text(preStateSha256)), preStateSha256);
+-    // A core refusal closes the key (the proved memory rule); other refusals leave the memory as it was.
+-    if (memoryOn) memory = m2;
++    const reason = refusalOf(o, key, preStateSha256, m0);
++    // Operator detail (stderr only; the caller gets the fixed text).
++    process.stderr.write(JSON.stringify({ refusal: { outcome: OUTCOMES.find(n => o["is_" + n] === true) ?? "unknown",
++      requestId: t.request.requestId, reason } }) + "\n");
++    // A refusal records nothing (D-2; proved: Issue ensures m2 == After(m, k, o) == m for a refusal). The memory is
++    // left as it was; m2 is not used.
+     return reason;
+   }
+   const raw: number[] = Array.from(o.dtor_bytes as Iterable<unknown>, (b: unknown) => Number(b));
+@@ -243,7 +309,7 @@ function issue(pre: ChargeState, t: Transition): { bytes: Buffer; bodyText: stri
+ 
+ const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+ process.stdout.write(JSON.stringify({
+-  ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse: memoryOn }) + "\n");
++  ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse: production ? true : "none" }) + "\n");
+ function handle(line: string): void {
+   let id: number | null = null;
+   try {
+diff --git a/ts/refund-finality/launch/minter-launch.sh b/ts/refund-finality/launch/minter-launch.sh
+index 3240f1f8..307a09c7 100755
+--- a/ts/refund-finality/launch/minter-launch.sh
++++ b/ts/refund-finality/launch/minter-launch.sh
+@@ -1,6 +1,9 @@
+ #!/bin/sh
+ # Night shift 2026-11-19, task h-minter2 (C-ATT-14, C-ATT-31). The CLOSED LAUNCH of the issuer. TESTED-UNPROVED.
+-# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> <on|off> [<sink store path>]
++# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> on <sink store path>
++# h-minter3 (owner decision D-2): the closed launch is the PRODUCTION launch: memory rule "on" and the sink's store are
++# REQUIRED (I1: at most one valid token per (charge id, request id)). The test modes (no store, or "off") run only
++# through `node --import tsx minter.ts` and print a warning.
+ # Before Node starts: the manifest has the pinned digest; every listed file has its digest (/usr/bin/shasum); the
+ # directory holds no other file. Then: `env -i` with an allow-list (PATH, LANG, TZ, HOME, FORGE_MINTER_CLOSED), the
+ # fixed Node binary, fixed node options, the working directory = the built directory, and pre-compiled JavaScript
+@@ -11,8 +14,9 @@
+ set -eu
+ NODE=/opt/homebrew/bin/node
+ NODE_VERSION=v24.3.0
+-[ $# -ge 4 ] && [ $# -le 5 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> <on|off> [<store>]" >&2; exit 2; }
++[ $# -eq 5 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> on <store>" >&2; exit 2; }
+ DIR=$(cd "$1" && pwd -P); PIN=$2; LOCK=$3; MODE=$4
++[ "$MODE" = on ] || { echo "minter-launch.sh: refused: production needs memory rule \"on\" (owner decision D-2)" >&2; exit 2; }
+ case "$PIN" in *[!0-9a-f]*|"") echo "minter-launch.sh: refused: the pin is not lowercase hex" >&2; exit 2;; esac
+ [ ${#PIN} -eq 64 ] || { echo "minter-launch.sh: refused: the pin is not 64 hex digits" >&2; exit 2; }
+ LOCK=$(cd "$(dirname "$LOCK")" && pwd -P)/$(basename "$LOCK")
+diff --git a/tests/refund-finality/suite.ts b/tests/refund-finality/suite.ts
+index 1261fcce..9e2bf057 100644
+--- a/tests/refund-finality/suite.ts
++++ b/tests/refund-finality/suite.ts
+@@ -114,7 +114,9 @@ async function main() {
+   const pem = minter.ready.publicKeyPem, key = createPublicKey(pem);
+   const checkerSha256 = checkerSha256Of(readFileSync(CORE), readFileSync(join(GLUE, "encoding.ts")), readFileSync(join(GLUE, "minter.ts")));
+   const specLockSha256 = sha256hex(readFileSync(SPEC_LOCK));
+-  const idsEqual = minter.ready.checkerSha256 === checkerSha256 && minter.ready.specLockSha256 === specLockSha256 && minter.ready.singleUse === false;
++  const idsEqual = minter.ready.checkerSha256 === checkerSha256 && minter.ready.specLockSha256 === specLockSha256 &&
++    // h-minter3 (owner decision D-2): every mode other than "on" with a store is a TEST mode: "singleUse":"none".
++    (minter.ready.singleUse as unknown) === "none";
+   add("setup", "the issuer reports the ids that the operator computes from the files", "equal", String(idsEqual), idsEqual);
+   {
+     // Key isolation: code that loads the issuer module in its own process gets no key and no signing function.
+@@ -726,11 +728,11 @@ async function main() {
+     add("option", "single-use on: another transition for a pre-state that has a signed token",
+       perRequest ? "a token that verifies (SINGLE_USE_RULE = per-request: owner decision B-15 pending; the merged expectation is: no token)" : "no token (SINGLE_USE_RULE = per-pre-state)",
+       b.ok ? (verifies(createPublicKey(strict.ready.publicKeyPem), b) ? "SIGNED, a token that verifies" : "SIGNED, THE TOKEN DOES NOT VERIFY") : "refused: " + b.reason,
+-      strict.ready.singleUse === true && (perRequest ? verifies(createPublicKey(strict.ready.publicKeyPem), b) : !b.ok));
++      (strict.ready.singleUse as unknown) === "none" && (perRequest ? verifies(createPublicKey(strict.ready.publicKeyPem), b) : !b.ok));
+     // h-suite (added row): the same request id with ANOTHER candidate. Both readings refuse it (P-idem).
+     const other = await strict.mint(pre, propose(pre, req("opt_a", "300")));
+     add("option", "single-use on: another transition for a request id that has a signed token (same pre-state)", "no token",
+-      other.ok ? "SIGNED" : "refused: " + other.reason, strict.ready.singleUse === true && !other.ok);
++      other.ok ? "SIGNED" : "refused: " + other.reason, (strict.ready.singleUse as unknown) === "none" && !other.ok);
+     strict.stop();
+   }
+ 
+@@ -762,8 +764,9 @@ async function main() {
+     const fake = state("opt_store", "5", true, "5");
+     const squat = await mintS(fake, propose(fake, req("opt_victim", "0")));
+     add("option", "store mode: a zero-amount request for a victim's request id on an INVENTED pre-state (red team C-ATT-30)",
+-      "refused: pre-state is not the authoritative stored state", squat.ok ? "SIGNED" : "refused: " + squat.reason,
+-      !squat.ok && squat.reason === "pre-state is not the authoritative stored state");
++      // h-minter3 (C-ATT-38 state oracle): one generic text for "not on the authoritative state" and "not authorized".
++      "refused: core: Refuse", squat.ok ? "SIGNED" : "refused: " + squat.reason,
++      !squat.ok && squat.reason === "core: Refuse");
+     const victim = await mintS(s0, propose(s0, req("opt_victim", "700")));
+     const vc = victim.ok && victim.token ? sink.commit(tokenText(victim.token)).status : "refused: " + victim.reason;
+     add("option", "store mode: then the victim's request on the stored state", "committed", vc, vc === "committed");
+diff --git a/tests/refund-finality/regress/m2_closed_launch.ts b/tests/refund-finality/regress/m2_closed_launch.ts
+index e90719a5..5639644f 100644
+--- a/tests/refund-finality/regress/m2_closed_launch.ts
++++ b/tests/refund-finality/regress/m2_closed_launch.ts
+@@ -8,10 +8,14 @@
+ // no planted code, report the checker id of the three source files, and issue a zero-amount token; (4) a changed
+ // bignumber.js in a second closed directory: the launcher refuses (exit 2) BEFORE Node starts (no marker); (5) a wrong
+ // pin: refused; (6) minter.cjs started directly with FORGE_MINTER_CLOSED and an extra variable: refused (exit 2).
++// h-minter3 (owner decision D-2): the closed launch is the production launch and needs memory rule "on" AND the sink's
++// store; every launch below passes a store path (a sink store on the request's pre-state). EXPECTATION CHANGE: the
++// arguments, and one verdict term added: (7) the closed launch without a store is refused (exit 2).
+ // FAILS on the earlier tree (no launcher). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
+ // NOT shown: a process of the same user can still change files between the checks and the reads, or attach a
+ // debugger, or replace the Node binary (assumptions SAME-UID, FIXED-DEPS in SINGLE_USE_2.md).
+ import { spawn, spawnSync } from "node:child_process";
++import { generateKeyPairSync } from "node:crypto";
+ import { chmodSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+ import { join } from "node:path";
+ import { argv, guard, load, tempDir, verdict } from "./m_lib";
+@@ -53,6 +57,15 @@ guard((async () => {
+   const b = spawnSync("/bin/sh", [build, root, core, join(work, "closed")], { cwd: root, env: { PATH, HOME: work, LANG: "C" }, encoding: "utf8" });
+   const pin = (b.stdout ?? "").trim();
+   r.build = b.status === 0 && /^[0-9a-f]{64}$/.test(pin) ? "pin " + pin : "BUILD FAILED: " + b.stderr;
++  // h-minter3: a sink store on the pre-state of ZERO, pinned to a throwaway key (the issuer reads only its state and
++  // settled tables). The closed launch needs it (owner decision D-2).
++  const store = join(work, "store.sqlite"), PRE = { chargeId: "ch_cl", original: "100", remaining: "60", refundEnabled: true };
++  {
++    const { Sink } = load(root), kp = generateKeyPairSync("ed25519");
++    const s = new Sink(store, { publicKeyPem: kp.publicKey.export({ type: "spki", format: "pem" }) as string,
++      specLockSha256: "0".repeat(64), checkerSha256: "0".repeat(64), initialState: PRE });
++    s.init(PRE); s.close();
++  }
+   // (2) plant in the tsx cache (the earlier launch path)
+   const tsxEnv = { PATH, HOME: work, LANG: "C", TMPDIR: plant };
+   const first = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"], tsxEnv, root);
+@@ -71,7 +84,7 @@ guard((async () => {
+   // (3) closed launch with a hostile caller environment
+   const pinned = E.checkerSha256Of(readFileSync(core), readFileSync(join(root, "ts/refund-finality/encoding.ts")), readFileSync(join(root, "ts/refund-finality/minter.ts")));
+   const hostile = { PATH, HOME: work, LANG: "C", TMPDIR: plant, NODE_OPTIONS: "--require " + evil, NODE_PATH: shim };
+-  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on"], hostile, work);
++  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on", store], hostile, work);
+   const ready = c.lines.find(l => l.ready), answer = c.lines.find(l => l.id === 1);
+   r.closed = { started: ready !== undefined, checkerIsPinned: ready?.checkerSha256 === pinned, zeroIssued: answer?.ok === true,
+     foreignCodeRan: existsSync(marker), closedInfo: /"closedLaunch":\{"manifestSha256":"[0-9a-f]{64}"/.test(c.err) };
+@@ -80,16 +93,19 @@ guard((async () => {
+   const pin2 = (b2.stdout ?? "").trim(), bn = join(work, "closed2", "node_modules", "bignumber.js", "bignumber.js");
+   unlock(join(work, "closed2"));
+   writeFileSync(bn, `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "changed bignumber ran");\n` + readFileSync(bn, "utf8"));
+-  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
++  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on", store], { PATH, HOME: work, LANG: "C" }, work);
+   r.changedFile = { code: t.code, foreignCodeRan: existsSync(marker), err: t.err.trim().slice(0, 120) };
+   // (5) a wrong pin
+-  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
++  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on", store], { PATH, HOME: work, LANG: "C" }, work);
+   r.wrongPin = { code: w.code, err: w.err.trim().slice(0, 120) };
+   // (6) minter.cjs started directly, with the pin and one extra variable
+   const d = await run("/opt/homebrew/bin/node", ["--no-addons", "--disallow-code-generation-from-strings", join(work, "closed", "minter.cjs"),
+-    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on"], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
++    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on", store], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
+   r.directExtraVariable = { code: d.code, err: d.err.trim().split("\n").pop()?.slice(0, 120) };
++  // (7) h-minter3: the closed launch without a store (a test mode) is refused before Node starts.
++  const ns = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
++  r.closedWithoutStore = { code: ns.code, started: ns.lines.some(l => l.ready) };
+   unlock(work);
+-  verdict(b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
++  verdict(r.closedWithoutStore.code === 2 && !r.closedWithoutStore.started && b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
+     r.changedFile.code === 2 && !r.changedFile.foreignCodeRan && r.wrongPin.code === 2 && r.directExtraVariable.code === 2, r);
+ })());
+diff --git a/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts b/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts
+index 647082ca..0bbd679d 100644
+--- a/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts
++++ b/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts
+@@ -4,7 +4,11 @@
+ // post-state has remaining 0) is refused ("core: Refuse");
+ // rq_c for 40 on S0 (authorized) is then refused ("attempt closed: use a new request id"); the identical refused request
+ // is refused again; a NEW id rq_d for 40 commits; a zero-amount request with a new id commits. Store mode and NoStore mode.
+-// FAILS on rule 1 (rq_c for 40 is signed after the refusal). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
++// EXPECTATION CHANGE (h-minter3, owner decision D-2 of 2026-11-19: "A minter refusal closes ONLY that attempt, NOT the
++// whole request ID"): rq_c for 40 after the refusal is now SIGNED (a refusal records nothing; red team C-ATT-38). The
++// file name keeps its old words; the rule it now checks: a refusal does NOT close the pair, the refused request is
++// refused again ("core: Refuse"), new ids and zero amounts still commit. Replacement for the old expectation: none (the
++// owner removed it); the old rule's spray is kept as the Dafny model OldRuleFreeze (IssueAuth.dfy). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
+ import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+@@ -76,7 +80,7 @@ guard((async () => {
+     r[mode] = { refused: a.ok ? "SIGNED" : a.reason, sameIdValid: b.ok ? "SIGNED" : b.reason, refusedAgain: a2.ok ? "SIGNED" : a2.reason, newId: dc, zero: zc };
+     sink.close(); m.stop();
+   }
+-  const ok = (x: any) => typeof x === "object" && x.refused === "core: Refuse" && x.sameIdValid === "attempt closed: use a new request id" &&
++  const ok = (x: any) => typeof x === "object" && x.refused === "core: Refuse" && x.sameIdValid === "SIGNED" &&
+     x.refusedAgain === "core: Refuse" && x.newId === "committed" && x.zero === "committed";
+   verdict(ok(r.NoStore) && ok(r.Store), r);
+ })());
+diff --git a/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts b/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts
+index e75559eb..41e3ddb1 100644
+--- a/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts
++++ b/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts
+@@ -8,6 +8,9 @@
+ // FAILS on rule 1 (IssueOnce, key = (charge id, request id), no store): the victim is refused for ever.
+ // Usage: node --import tsx m2_squat_invented_prestate_does_not_block.ts <treeRoot> <compiledIssuerModule>
+ // Exit 0: PASS. Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
++// EXPECTATION CHANGE (h-minter3, red team C-ATT-38 state oracle): the Store-mode squat on an invented pre-state is
++// refused with the GENERIC text "core: Refuse" (one text for "not on the authoritative state" and "not authorized";
++// the outcome name goes to the operator's stderr). The safety terms are unchanged.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
+ import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+@@ -86,6 +89,6 @@ guard((async () => {
+       sink.close(); m.stop();
+     }
+   }
+-  verdict(r.noStoreVictim === "committed" && r.storeSquat === "refused: pre-state is not the authoritative stored state" &&
++  verdict(r.noStoreVictim === "committed" && r.storeSquat === "refused: core: Refuse" &&
+     r.storeVictim === "committed" && r.zeroControl === "committed", r);
+ })());
+diff --git a/tests/refund-finality/regress/m3_off_identical_retry.ts b/tests/refund-finality/regress/m3_off_identical_retry.ts
+new file mode 100644
+index 00000000..b142ee16
+--- /dev/null
++++ b/tests/refund-finality/regress/m3_off_identical_retry.ts
+@@ -0,0 +1,85 @@
++// Regression for red team C-ATT-40 (night shift 2026-11-19, task h-minter3; logic of orch-C s2_stale.ts "off"). A TEST.
++// Memory rule "off" (a TEST mode since D-2) with the sink's store. The header of minter.ts states the rule for an
++// identical request in this mode; this file checks each case of it:
++//  (a) before the commit: the identical request gets byte-identical token text (deterministic Ed25519);
++//  (b) after the sink settled THAT token: the identical request (old pre-state) gets the byte-identical token text
++//      (Replayed from the settled row; the sink answers "replayed"); earlier it was refused;
++//  (c) after the commit, another candidate for that settled id: refused "attempt completed: use a new request id";
++//  (d) the stated EXCEPTION: a token minted but never committed, after the store moved on by another request: the
++//      identical request is refused "core: Refuse" (generic text; its old token cannot commit: stale pre-state);
++//  (e) zero-amount refunds commit.
++// FAILS on the earlier issuer ((b) refused). Usage: <treeRoot> <compiledIssuerModule>. Exit 0 PASS, 1 FAIL.
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
++// ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information and operator details: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 5));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string, reason = "duplicate_charge") => ({
++  request: { requestId, amount, reason },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
++guard((async () => {
++  const { root, core } = argv();
++  const { E } = load(root);
++  const S0: State = { chargeId: "ch_m3f", original: "1000", remaining: "1000", refundEnabled: true };
++  const path = join(tempDir(), "s.sqlite");
++  const m = await startIssuer(root, core, "off", path);
++  if (m === null) verdict(false, { issuer: "DID NOT START" });
++  const sink = sinkFor(root, m!.ready, S0, path);
++  const r: any = { singleUse: m!.ready.singleUse };
++  const t1 = await m!.mint(S0, propose(S0, "rq_1", "300"));
++  const t2 = await m!.mint(S0, propose(S0, "rq_2", "200"));
++  const t2b = await m!.mint(S0, propose(S0, "rq_2", "200"));
++  r.a = t2.ok && t2b.ok && E.tokenText(t2.token) === E.tokenText(t2b.token) ? "same bytes" : "DIFFERENT OR REFUSED";
++  r.commit2 = sink.commit(E.tokenText(t2.token)).status;
++  const re2 = await m!.mint(S0, propose(S0, "rq_2", "200"));
++  r.b = re2.ok ? (E.tokenText(re2.token) === E.tokenText(t2.token) ? "same bytes; sink: " + sink.commit(E.tokenText(re2.token)).status : "OTHER bytes") : "refused: " + re2.reason;
++  const s1: State = JSON.parse(sink.stateBlob());
++  const other = await m!.mint(s1, propose(s1, "rq_2", "50"));
++  r.c = other.ok ? "SIGNED" : "refused: " + other.reason;
++  const re1 = await m!.mint(S0, propose(S0, "rq_1", "300"));
++  r.d = re1.ok ? "SIGNED" : "refused: " + re1.reason;
++  r.d_oldTokenAtSink = t1.ok ? sink.commit(E.tokenText(t1.token)).status : "none";
++  const z = await m!.mint(s1, propose(s1, "rq_z", "0"));
++  r.e = z.ok ? sink.commit(E.tokenText(z.token)).status : "refused: " + z.reason;
++  sink.close(); m!.stop();
++  verdict(r.a === "same bytes" && r.b === "same bytes; sink: replayed" && r.c === "refused: attempt completed: use a new request id" &&
++    r.d === "refused: core: Refuse" && r.d_oldTokenAtSink !== "committed" && r.e === "committed", r);
++})());
+diff --git a/tests/refund-finality/regress/m3_one_effect_per_request_id.ts b/tests/refund-finality/regress/m3_one_effect_per_request_id.ts
+new file mode 100644
+index 00000000..13d0eb01
+--- /dev/null
++++ b/tests/refund-finality/regress/m3_one_effect_per_request_id.ts
+@@ -0,0 +1,94 @@
++// Regression for owner decision D-2, end to end (night shift 2026-11-19, task h-minter3). A TEST, not a proof.
++// Production mode ("on" + the sink's store). Checks I1 (at most one valid token per (charge id, request id): another
++// candidate for a minted pair is refused; an identical request gets the identical bytes), I3 (a settled request id
++// stays closed), the stale-candidate case (protocol.md:64-65: "A new attempt needs a new request ID"), and the COMPOSED
++// claim at most one EFFECT per request id (I1 + the sink rule: request_id UNIQUE in the settled table): one settled row
++// per request id. Also: the ready line says "singleUse":true in production and "singleUse":"none" in the no-store TEST
++// mode; zero-amount refunds commit. Proved parts: RunSeq I1, I3 (IssueAuth.dfy).
++// FAILS on the earlier issuer (its ready line has no test-mode marker). Usage: <treeRoot> <compiledIssuerModule>.
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
++// ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information and operator details: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 5));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string, reason = "duplicate_charge") => ({
++  request: { requestId, amount, reason },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
++guard((async () => {
++  const { root, core } = argv();
++  const { E } = load(root);
++  const S0: State = { chargeId: "ch_m3e", original: "1000", remaining: "1000", refundEnabled: true };
++  const path = join(tempDir(), "s.sqlite");
++  const m = await startIssuer(root, core, "on", path);
++  if (m === null) verdict(false, { issuer: "DID NOT START" });
++  const sink = sinkFor(root, m!.ready, S0, path);
++  const r: any = { productionSingleUse: m!.ready.singleUse };
++  const tx = (a: any) => a.ok ? E.tokenText(a.token) : "refused: " + a.reason;
++  const T = await m!.mint(S0, propose(S0, "rq_r", "100"));
++  r.identical = tx(await m!.mint(S0, propose(S0, "rq_r", "100"))) === tx(T) && T.ok ? "same bytes" : "DIFFERENT";
++  r.otherCandidate = tx(await m!.mint(S0, propose(S0, "rq_r", "50")));
++  r.commit = sink.commit(tx(T)).status;
++  r.commitAgain = sink.commit(tx(T)).status;
++  const s1: State = JSON.parse(sink.stateBlob());
++  r.settledOtherCandidate = tx(await m!.mint(s1, propose(s1, "rq_r", "30")));
++  r.settledIdentical = tx(await m!.mint(S0, propose(S0, "rq_r", "100"))) === tx(T) ? "same bytes" : "DIFFERENT";
++  const S = await m!.mint(s1, propose(s1, "rq_s", "100"));
++  const U = await m!.mint(s1, propose(s1, "rq_u", "50"));
++  r.otherRequestCommit = sink.commit(tx(U)).status;
++  const s2: State = JSON.parse(sink.stateBlob());
++  r.staleRetry = tx(await m!.mint(s2, propose(s2, "rq_s", "100")));
++  r.staleOldTokenAtSink = S.ok ? sink.commit(tx(S)).status : "none";
++  r.newIdOnS2 = sink.commit(tx(await m!.mint(s2, propose(s2, "rq_s2", "100")))).status;
++  const s3: State = JSON.parse(sink.stateBlob());
++  r.zero = sink.commit(tx(await m!.mint(s3, propose(s3, "rq_z0", "0")))).status;
++  const rows = sink.settled().map((x: any) => x.request_id);
++  r.settledRowsPerId = Object.fromEntries([...new Set(rows)].map(id => [id, rows.filter((x: string) => x === id).length]));
++  sink.close(); m!.stop();
++  const t = await startIssuer(root, core, "on");
++  r.noStoreSingleUse = t === null ? "DID NOT START" : t.ready.singleUse;
++  t?.stop();
++  verdict(r.productionSingleUse === true && r.noStoreSingleUse === "none" && r.identical === "same bytes" &&
++    r.otherCandidate === "refused: other candidate: use a new request id" && r.commit === "committed" && r.commitAgain === "replayed" &&
++    r.settledOtherCandidate === "refused: attempt completed: use a new request id" && r.settledIdentical === "same bytes" &&
++    r.otherRequestCommit === "committed" && r.staleRetry === "refused: stale candidate: use a new request id" &&
++    r.staleOldTokenAtSink !== "committed" && r.newIdOnS2 === "committed" && r.zero === "committed" &&
++    Object.values(r.settledRowsPerId).every(n => n === 1), r);
++})());
+diff --git a/tests/refund-finality/regress/m3_refusal_does_not_close.ts b/tests/refund-finality/regress/m3_refusal_does_not_close.ts
+new file mode 100644
+index 00000000..887541b8
+--- /dev/null
++++ b/tests/refund-finality/regress/m3_refusal_does_not_close.ts
+@@ -0,0 +1,102 @@
++// Regression for red team C-ATT-38 and owner decision D-2 (night shift 2026-11-19, task h-minter3). A TEST, not a proof.
++// D-2: "A minter refusal closes ONLY that attempt, NOT the whole request ID." A caller without the key sprays REFUSED
++// requests with the victim's request id: the first on the REAL stored state with an amount over the remaining amount
++// (the core refuses: under the earlier rule this closed the pair), the others with an unapproved reason on guessed
++// pre-states. After 1, 10 and 1,000 such refusals, the victim's honest request is signed and commits. Store mode
++// (production: "on" + the sink's store) and the no-store TEST mode (key = charge, request id, pre-state hash: the
++// spray covers the real hash). Positive controls: a zero-amount refund and two zero-amount refunds with two ids commit.
++// FAILS on the earlier rule (h-minter2: "attempt closed: use a new request id"). Proved part: SprayHarmless (I2).
++// Usage: node --import tsx m3_refusal_does_not_close.ts <treeRoot> <compiledIssuerModule>. Exit 0 PASS, 1 FAIL, 3 harness.
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
++// ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information and operator details: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 5));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string, reason = "duplicate_charge") => ({
++  request: { requestId, amount, reason },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
++guard((async () => {
++  const { root, core } = argv();
++  const { E } = load(root);
++  const S0: State = { chargeId: "ch_m3s", original: "1000", remaining: "1000", refundEnabled: true };
++  const r: any = {};
++  for (const mode of ["Store", "NoStore"]) {
++    const path = join(tempDir(), "s.sqlite");
++    const m = await startIssuer(root, core, "on", mode === "Store" ? path : undefined);
++    if (m === null) { r[mode] = "ISSUER DID NOT START"; continue; }
++    const sink = sinkFor(root, m.ready, S0, path);
++    const h = await m.mint(S0, propose(S0, "rq_h1", "137"));
++    sink.commit(E.tokenText(h.token));
++    let cur: State = JSON.parse(sink.stateBlob());
++    const out: any = {};
++    for (const n of [1, 10, 1000]) {
++      const victim = "rq_victim_" + n;
++      let refused = 0;
++      for (let i = 0; i < n; i++) {
++        let a: any;
++        if (i === 0) {
++          // on the REAL state, amount over the remaining amount (well-formed message; the core refuses)
++          a = await m.mint(cur, { ...propose(cur, victim, "1"), request: { requestId: victim, amount: "5000", reason: "duplicate_charge" },
++            intent: { chargeId: cur.chargeId, requestId: victim, amount: "5000", reason: "duplicate_charge" } });
++        } else {
++          const g: State = { ...cur, remaining: String((Number(cur.remaining) + i) % 1001) };
++          a = await m.mint(g, propose(g, victim, "1", "attacker_text"));
++        }
++        if (!a.ok) refused++;
++      }
++      const v = await m.mint(cur, propose(cur, victim, "50"));
++      const vc = v.ok ? sink.commit(E.tokenText(v.token)).status : "refused: " + v.reason;
++      out["after" + n] = { refused, victim: vc };
++      if (vc === "committed") cur = JSON.parse(sink.stateBlob());
++    }
++    const z1 = await m.mint(cur, propose(cur, "rq_z1", "0"));
++    out.zero1 = z1.ok ? sink.commit(E.tokenText(z1.token)).status : "refused: " + z1.reason;
++    cur = JSON.parse(sink.stateBlob());
++    const z2 = await m.mint(cur, propose(cur, "rq_z2", "0"));
++    out.zero2 = z2.ok ? sink.commit(E.tokenText(z2.token)).status : "refused: " + z2.reason;
++    out.singleUse = m.ready.singleUse;
++    r[mode] = out;
++    sink.close(); m.stop();
++  }
++  const ok = (x: any) => typeof x === "object" && [1, 10, 1000].every(n => x["after" + n].refused === n && x["after" + n].victim === "committed") &&
++    x.zero1 === "committed" && x.zero2 === "committed";
++  verdict(ok(r.Store) && ok(r.NoStore), r);
++})());
+diff --git a/tests/refund-finality/regress/m3_refusal_texts_generic.ts b/tests/refund-finality/regress/m3_refusal_texts_generic.ts
+new file mode 100644
+index 00000000..f237b917
+--- /dev/null
++++ b/tests/refund-finality/regress/m3_refusal_texts_generic.ts
+@@ -0,0 +1,76 @@
++// Regression for the state-oracle part of red team C-ATT-38 (night shift 2026-11-19, task h-minter3). A TEST, not a proof.
++// A caller without the key, who knows the charge id and the original amount, sends one UNAUTHORIZED request (unapproved
++// reason) per guessed pre-state (remaining = 1000 down to 0) with a fresh request id each. The answers must not tell the
++// guesses apart: every answer is the same refusal text, and nothing is signed. (Earlier: "pre-state is not the
++// authoritative stored state" for a wrong guess and "core: Refuse" for the right one: 364 probes found the state.)
++// Store mode (production). NOT covered (a stated limit, m3_zero_squat_limit.ts): AUTHORIZED zero-amount guesses, where
++// the answer is a token for the right guess.
++// FAILS on the earlier issuer (two distinct texts). Usage: <treeRoot> <compiledIssuerModule>. Exit 0 PASS, 1 FAIL.
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
++// ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information and operator details: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 5));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string, reason = "duplicate_charge") => ({
++  request: { requestId, amount, reason },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
++guard((async () => {
++  const { root, core } = argv();
++  const { E } = load(root);
++  const S0: State = { chargeId: "ch_m3o", original: "1000", remaining: "1000", refundEnabled: true };
++  const path = join(tempDir(), "s.sqlite");
++  const m = await startIssuer(root, core, "on", path);
++  if (m === null) verdict(false, { issuer: "DID NOT START" });
++  const sink = sinkFor(root, m!.ready, S0, path);
++  let cur = S0;
++  for (const [rid, a] of [["rq_h1", "137"], ["rq_h2", "226"]]) {
++    const t = await m!.mint(cur, propose(cur, rid, a)); sink.commit(E.tokenText(t.token)); cur = JSON.parse(sink.stateBlob());
++  }
++  const texts = new Map<string, number>(); let signed = 0, probes = 0;
++  for (let rem = 1000; rem >= 1; rem--) {
++    const g: State = { ...S0, remaining: String(rem) }; probes++;
++    const a = await m!.mint(g, propose(g, "rq_probe_" + rem, "1", "attacker_text"));
++    if (a.ok) signed++; else texts.set(a.reason, (texts.get(a.reason) ?? 0) + 1);
++  }
++  const r = { probes, signed, distinctTexts: Object.fromEntries(texts), hiddenRemaining: cur.remaining, settledRows: sink.settled().length };
++  sink.close(); m!.stop();
++  verdict(signed === 0 && texts.size === 1, r);
++})());
+diff --git a/tests/refund-finality/regress/m3_store_replaced_by_mv.ts b/tests/refund-finality/regress/m3_store_replaced_by_mv.ts
+new file mode 100644
+index 00000000..f56eb3d4
+--- /dev/null
++++ b/tests/refund-finality/regress/m3_store_replaced_by_mv.ts
+@@ -0,0 +1,86 @@
++// Regression for red team C-ATT-39 (night shift 2026-11-19, task h-minter3; copy of the logic of orch-C s4_paths.ts
++// "mv"). A TEST, not a proof. Attacker: none. The operator restores the sink's store by `mv` (another inode at the same
++// path) while the issuer runs; the honest sink restarts on the file at the path. The issuer must follow the path: the
++// next two honest requests are signed and commit. Also: a store path that does not exist is refused with its own text
++// "store: the store path is gone" (and nothing is signed).
++// FAILS on the earlier issuer (it kept one connection to the old inode and refused every later honest request).
++// Usage: <treeRoot> <compiledIssuerModule>. Exit 0 PASS, 1 FAIL, 3 harness.
++import { copyFileSync, renameSync } from "node:fs";
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
++// ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information and operator details: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 5));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string, reason = "duplicate_charge") => ({
++  request: { requestId, amount, reason },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
++guard((async () => {
++  const { root, core } = argv();
++  const { E, Sink } = load(root);
++  const r: any = {};
++  const S0: State = { chargeId: "ch_m3p", original: "1000", remaining: "1000", refundEnabled: true };
++  const dir = tempDir(), real = join(dir, "real.sqlite");
++  const m = await startIssuer(root, core, "on", real);
++  if (m === null) verdict(false, { issuer: "DID NOT START" });
++  const ids = { publicKeyPem: m!.ready.publicKeyPem, specLockSha256: m!.ready.specLockSha256, checkerSha256: m!.ready.checkerSha256, initialState: S0 };
++  const sink = sinkFor(root, m!.ready, S0, real);
++  const t1 = await m!.mint(S0, propose(S0, "rq_1", "100"));
++  r.first = t1.ok ? sink.commit(E.tokenText(t1.token)).status : "refused: " + t1.reason;
++  const s1: State = JSON.parse(sink.stateBlob());
++  sink.close();
++  const copy = join(dir, "copy.sqlite"); copyFileSync(real, copy); renameSync(copy, real);   // operator restore by mv
++  const sink2 = new Sink(real, ids);
++  const t2 = await m!.mint(s1, propose(s1, "rq_2", "100"));
++  r.afterReplace = t2.ok ? "issued -> " + sink2.commit(E.tokenText(t2.token)).status : "refused: " + t2.reason;
++  const s2: State = JSON.parse(sink2.stateBlob());
++  const t3 = await m!.mint(s2, propose(s2, "rq_3", "100"));
++  r.afterNextCommit = t3.ok ? "issued -> " + sink2.commit(E.tokenText(t3.token)).status : "refused: " + t3.reason;
++  const z = await m!.mint(JSON.parse(sink2.stateBlob()), propose(JSON.parse(sink2.stateBlob()), "rq_z", "0"));
++  r.zero = z.ok ? sink2.commit(E.tokenText(z.token)).status : "refused: " + z.reason;
++  sink2.close(); m!.stop();
++  const g = await startIssuer(root, core, "on", join(dir, "typo.sqlite"));
++  if (g === null) verdict(false, { ...r, missing: "DID NOT START" });
++  const t = await g!.mint(S0, propose(S0, "rq_1", "100"));
++  r.missing = t.ok ? "SIGNED" : "refused: " + t.reason;
++  g!.stop();
++  verdict(r.first === "committed" && r.afterReplace === "issued -> committed" && r.afterNextCommit === "issued -> committed" &&
++    r.zero === "committed" && r.missing === "refused: store: the store path is gone", r);
++})());
+diff --git a/tests/refund-finality/regress/m3_zero_squat_limit.ts b/tests/refund-finality/regress/m3_zero_squat_limit.ts
+new file mode 100644
+index 00000000..b920aacd
+--- /dev/null
++++ b/tests/refund-finality/regress/m3_zero_squat_limit.ts
+@@ -0,0 +1,83 @@
++// KNOWN-LIMIT regression (night shift 2026-11-19, task h-minter3; red team C-ATT-08 class, s8_squat_search.ts "zero").
++// A caller without the key, who knows the charge id, the original amount and the victim's request id, sends AUTHORIZED
++// zero-amount requests with the victim's request id on every guessed pre-state. Wrong guesses are refused and record
++// nothing; the right guess is MINTED (a valid zero-amount token), and that token takes the victim's request id (I1:
++// at most one valid token per request id). The victim's honest request is then refused. The issuer has no caller
++// identity, so no issuer rule can tell this caller from the victim (Dafny witness: WSquatRealState). No money moves.
++// Exit codes: the limit reproduced: prints KNOWN-LIMIT and exits 0 ONLY with the argument --expect-limit; else exit 1.
++// The limit not reproduced (the victim commits): PASS, exit 0. Store mode (production).
++// Usage: node --import tsx m3_zero_squat_limit.ts <treeRoot> <compiledIssuerModule> [--expect-limit]
++import { spawn } from "node:child_process";
++import { join } from "node:path";
++import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
++// ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
++// Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
++async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
++  const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  child.stderr.on("data", () => { /* identity information and operator details: not used */ });
++  let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
++  const answers = new Map<number, any>();
++  child.on("exit", () => { exited = true; });
++  child.stdout.on("data", (c: Buffer) => {
++    buf = Buffer.concat([buf, c]);
++    for (let i = buf.indexOf(0x0a); i >= 0; i = buf.indexOf(0x0a)) {
++      const msg = JSON.parse(buf.subarray(0, i).toString("utf8")); buf = buf.subarray(i + 1);
++      if (msg.ready) ready = msg; else answers.set(msg.id, msg);
++    }
++  });
++  const until = async (p: () => boolean, ms = 30000): Promise<boolean> => {
++    const end = Date.now() + ms;
++    while (!p() && !exited && Date.now() < end) await new Promise(r => setTimeout(r, 5));
++    return p();
++  };
++  if (!(await until(() => ready !== null))) { child.kill(); return null; }
++  const mint = async (pre: State, t: unknown): Promise<any> => {
++    const id = next++;
++    child.stdin.write(JSON.stringify({ id, pre, transition: t }) + "\n");
++    if (!(await until(() => answers.has(id)))) throw new Error("no answer from the issuer");
++    return answers.get(id);
++  };
++  return { ready, mint, stop: () => { child.stdin.end(); child.kill(); } };
++}
++type Issuer = { ready: any; mint: (pre: State, t: unknown) => Promise<any>; stop: () => void };
++const propose = (pre: State, requestId: string, amount: string, reason = "duplicate_charge") => ({
++  request: { requestId, amount, reason },
++  post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++  intent: { chargeId: pre.chargeId, requestId, amount, reason },
++});
++// A sink pinned to the issuer's key, on a fresh store file.
++function sinkFor(root: string, ready: any, s0: State, path: string): any {
++  const { Sink } = load(root);
++  const sink = new Sink(path, { publicKeyPem: ready.publicKeyPem, specLockSha256: ready.specLockSha256, checkerSha256: ready.checkerSha256, initialState: s0 });
++  sink.init(s0);
++  return sink;
++}
++guard((async () => {
++  const { root, core } = argv();
++  const expectLimit = process.argv.slice(4).includes("--expect-limit");
++  const { E } = load(root);
++  const S0: State = { chargeId: "ch_m3z", original: "1000", remaining: "1000", refundEnabled: true };
++  const path = join(tempDir(), "s.sqlite");
++  const m = await startIssuer(root, core, "on", path);
++  if (m === null) verdict(false, { issuer: "DID NOT START" });
++  const sink = sinkFor(root, m!.ready, S0, path);
++  let cur = S0;
++  for (const [rid, a] of [["rq_h1", "137"], ["rq_h2", "226"]]) {
++    const t = await m!.mint(cur, propose(cur, rid, a)); sink.commit(E.tokenText(t.token)); cur = JSON.parse(sink.stateBlob());
++  }
++  const victim = "rq_victim"; let probes = 0, hit: string | null = null;
++  for (let rem = 1000; rem >= 0 && hit === null; rem--) {
++    const g: State = { ...S0, remaining: String(rem) }; probes++;
++    const a = await m!.mint(g, propose(g, victim, "0"));
++    if (a.ok) hit = String(rem);
++  }
++  const v = await m!.mint(cur, propose(cur, victim, "250"));
++  const r = { probes, squatMintedOnRemaining: hit, sinkRows: sink.settled().length,
++    victim: v.ok ? "issued -> " + sink.commit(E.tokenText(v.token)).status : "refused: " + v.reason };
++  sink.close(); m!.stop();
++  if (v.ok) verdict(true, r);
++  console.log(JSON.stringify(r));
++  if (expectLimit) { console.log("KNOWN-LIMIT (C-ATT-08 class: a minted squat on the real state takes the request id; no caller identity)"); process.exit(0); }
++  console.log("FAIL (the limit is present; run with --expect-limit to accept it as the known limit)"); process.exit(1);
++})());

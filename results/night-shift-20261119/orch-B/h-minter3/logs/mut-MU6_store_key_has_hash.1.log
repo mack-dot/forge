@@ -1,0 +1,43 @@
+# owner=h-minter3 start=2026-11-19T17:20:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter3/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1155
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU6_store_key_has_hash.dfy
+# memory free percent: 46
+MU6_store_key_has_hash.dfy(360,6): Error: assertion might not hold
+    |
+360 |       assert KeyOfCall(calls[i]) == KeyOfCall(calls[j]);
+    |       ^^^^^^
+
+MU6_store_key_has_hash.dfy(606,19): Error: a precondition for this call could not be proved
+    |
+606 |     m, b := UsedKey(m, Store(W_NEXT, false), W_NEXT, IB.T(W_NEXT, "rq_1", 40), SM.ZERO64, SM.ZERO64, HEXB);
+    |                    ^
+
+MU6_store_key_has_hash.dfy(506,85): Related location: this is the precondition that could not be proved
+    |
+506 |     requires Admitted(a, pre) && Issuable(pre, t, sh, ch, h) && KeyFor(a, pre, t, h) in m
+    |                                                                                      ^^
+
+
+Dafny program verifier finished with 192 verified, 2 errors
+       19.81 real        13.27 user         1.60 sys
+           227000320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43731  page reclaims
+                 333  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                1505  voluntary context switches
+              246826  involuntary context switches
+         99904471064  instructions retired
+         44166262721  cycles elapsed
+           232883520  peak memory footprint
+# end=2026-11-19T17:21:13Z
+exit 4

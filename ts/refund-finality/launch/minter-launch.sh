@@ -1,6 +1,9 @@
 #!/bin/sh
 # Night shift 2026-11-19, task h-minter2 (C-ATT-14, C-ATT-31). The CLOSED LAUNCH of the issuer. TESTED-UNPROVED.
-# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> <on|off> [<sink store path>]
+# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> on <sink store path>
+# h-minter3 (owner decision D-2): the closed launch is the PRODUCTION launch: memory rule "on" and the sink's store are
+# REQUIRED (I1: at most one valid token per (charge id, request id)). The test modes (no store, or "off") run only
+# through `node --import tsx minter.ts` and print a warning.
 # Before Node starts: the manifest has the pinned digest; every listed file has its digest (/usr/bin/shasum); the
 # directory holds no other file. Then: `env -i` with an allow-list (PATH, LANG, TZ, HOME, FORGE_MINTER_CLOSED), the
 # fixed Node binary, fixed node options, the working directory = the built directory, and pre-compiled JavaScript
@@ -11,8 +14,9 @@
 set -eu
 NODE=/opt/homebrew/bin/node
 NODE_VERSION=v24.3.0
-[ $# -ge 4 ] && [ $# -le 5 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> <on|off> [<store>]" >&2; exit 2; }
+[ $# -eq 5 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> on <store>" >&2; exit 2; }
 DIR=$(cd "$1" && pwd -P); PIN=$2; LOCK=$3; MODE=$4
+[ "$MODE" = on ] || { echo "minter-launch.sh: refused: production needs memory rule \"on\" (owner decision D-2)" >&2; exit 2; }
 case "$PIN" in *[!0-9a-f]*|"") echo "minter-launch.sh: refused: the pin is not lowercase hex" >&2; exit 2;; esac
 [ ${#PIN} -eq 64 ] || { echo "minter-launch.sh: refused: the pin is not 64 hex digits" >&2; exit 2; }
 LOCK=$(cd "$(dirname "$LOCK")" && pwd -P)/$(basename "$LOCK")

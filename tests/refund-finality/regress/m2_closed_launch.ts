@@ -8,10 +8,14 @@
 // no planted code, report the checker id of the three source files, and issue a zero-amount token; (4) a changed
 // bignumber.js in a second closed directory: the launcher refuses (exit 2) BEFORE Node starts (no marker); (5) a wrong
 // pin: refused; (6) minter.cjs started directly with FORGE_MINTER_CLOSED and an extra variable: refused (exit 2).
+// h-minter3 (owner decision D-2): the closed launch is the production launch and needs memory rule "on" AND the sink's
+// store; every launch below passes a store path (a sink store on the request's pre-state). EXPECTATION CHANGE: the
+// arguments, and one verdict term added: (7) the closed launch without a store is refused (exit 2).
 // FAILS on the earlier tree (no launcher). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
 // NOT shown: a process of the same user can still change files between the checks and the reads, or attach a
 // debugger, or replace the Node binary (assumptions SAME-UID, FIXED-DEPS in SINGLE_USE_2.md).
 import { spawn, spawnSync } from "node:child_process";
+import { generateKeyPairSync } from "node:crypto";
 import { chmodSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { argv, guard, load, tempDir, verdict } from "./m_lib";
@@ -53,6 +57,15 @@ guard((async () => {
   const b = spawnSync("/bin/sh", [build, root, core, join(work, "closed")], { cwd: root, env: { PATH, HOME: work, LANG: "C" }, encoding: "utf8" });
   const pin = (b.stdout ?? "").trim();
   r.build = b.status === 0 && /^[0-9a-f]{64}$/.test(pin) ? "pin " + pin : "BUILD FAILED: " + b.stderr;
+  // h-minter3: a sink store on the pre-state of ZERO, pinned to a throwaway key (the issuer reads only its state and
+  // settled tables). The closed launch needs it (owner decision D-2).
+  const store = join(work, "store.sqlite"), PRE = { chargeId: "ch_cl", original: "100", remaining: "60", refundEnabled: true };
+  {
+    const { Sink } = load(root), kp = generateKeyPairSync("ed25519");
+    const s = new Sink(store, { publicKeyPem: kp.publicKey.export({ type: "spki", format: "pem" }) as string,
+      specLockSha256: "0".repeat(64), checkerSha256: "0".repeat(64), initialState: PRE });
+    s.init(PRE); s.close();
+  }
   // (2) plant in the tsx cache (the earlier launch path)
   const tsxEnv = { PATH, HOME: work, LANG: "C", TMPDIR: plant };
   const first = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"], tsxEnv, root);
@@ -71,7 +84,7 @@ guard((async () => {
   // (3) closed launch with a hostile caller environment
   const pinned = E.checkerSha256Of(readFileSync(core), readFileSync(join(root, "ts/refund-finality/encoding.ts")), readFileSync(join(root, "ts/refund-finality/minter.ts")));
   const hostile = { PATH, HOME: work, LANG: "C", TMPDIR: plant, NODE_OPTIONS: "--require " + evil, NODE_PATH: shim };
-  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on"], hostile, work);
+  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on", store], hostile, work);
   const ready = c.lines.find(l => l.ready), answer = c.lines.find(l => l.id === 1);
   r.closed = { started: ready !== undefined, checkerIsPinned: ready?.checkerSha256 === pinned, zeroIssued: answer?.ok === true,
     foreignCodeRan: existsSync(marker), closedInfo: /"closedLaunch":\{"manifestSha256":"[0-9a-f]{64}"/.test(c.err) };
@@ -80,16 +93,19 @@ guard((async () => {
   const pin2 = (b2.stdout ?? "").trim(), bn = join(work, "closed2", "node_modules", "bignumber.js", "bignumber.js");
   unlock(join(work, "closed2"));
   writeFileSync(bn, `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "changed bignumber ran");\n` + readFileSync(bn, "utf8"));
-  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
+  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on", store], { PATH, HOME: work, LANG: "C" }, work);
   r.changedFile = { code: t.code, foreignCodeRan: existsSync(marker), err: t.err.trim().slice(0, 120) };
   // (5) a wrong pin
-  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
+  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on", store], { PATH, HOME: work, LANG: "C" }, work);
   r.wrongPin = { code: w.code, err: w.err.trim().slice(0, 120) };
   // (6) minter.cjs started directly, with the pin and one extra variable
   const d = await run("/opt/homebrew/bin/node", ["--no-addons", "--disallow-code-generation-from-strings", join(work, "closed", "minter.cjs"),
-    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on"], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
+    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on", store], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
   r.directExtraVariable = { code: d.code, err: d.err.trim().split("\n").pop()?.slice(0, 120) };
+  // (7) h-minter3: the closed launch without a store (a test mode) is refused before Node starts.
+  const ns = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
+  r.closedWithoutStore = { code: ns.code, started: ns.lines.some(l => l.ready) };
   unlock(work);
-  verdict(b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
+  verdict(r.closedWithoutStore.code === 2 && !r.closedWithoutStore.started && b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
     r.changedFile.code === 2 && !r.changedFile.foreignCodeRan && r.wrongPin.code === 2 && r.directExtraVariable.code === 2, r);
 })());

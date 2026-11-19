@@ -3,7 +3,10 @@
 // (C-ATT-05: a restart changes the key; key persistence is an open owner decision: see KEY_OPTIONS in the
 // night-shift evidence h-minter).
 // The same interface as the earlier minter.ts (arguments, ready line, one JSON message per line in, one answer
-// line out), plus an OPTIONAL fourth argument: the path of the sink's store (read only).
+// line out), plus an OPTIONAL fourth argument: the path of the sink's store (read only). PRODUCTION = mode "on" WITH
+// a store (the closed launch, minter-launch.sh, refuses anything else). Every other mode is a TEST mode: it does not
+// give I1 (at most one valid token per (charge id, request id)); it writes a warning line on stderr and its ready line
+// has "singleUse":"none" (h-minter3, owner decision D-2).
 // The DECISION, the TOKEN BODY and the MEMORY RULE are not written here. They come from ONE call of the compiled
 // proved method IssueAuth.Issue (impl/finality-core/IssueAuth.dfy; rule 2, night shift h-minter2). It calls
 // IssueBytes2.IssueTokenBytes (RefundFinality.Check, the well-formed-body guard, the UTF-8 bytes of the canonical
@@ -17,7 +20,17 @@
 //     state, so in this mode a request id CAN be signed again on another pre-state; the sink commits at most one
 //     token per request id and only on its stored pre-state (SINGLE_USE_2.md, h-minter2).
 //   Both modes: new key -> Issued; identical retry -> Replayed (the stored bytes); same key, other candidate ->
-//   refused; the core refuses at the first use of a key -> refused AND the key is closed (protocol.md:61-62).
+//   refused. The core's refusal is decided FIRST, from the call alone (h-minter3).
+//   OWNER DECISION D-2 (answers B-19): a refusal closes only that attempt; it records NOTHING. A request id closes
+//   only by a minted token (the memory) or by the sink's commit (Store mode: the settled table). Proved: SprayHarmless
+//   and RunSeq I1, I2, I3 (IssueAuth.dfy). This closes red team C-ATT-38 (a spray of refused requests closed a victim's
+//   request id). NOT closed: the squat on the REAL state with an AUTHORIZED request that the issuer mints (C-ATT-08
+//   class; WSquatRealState): the issuer has no caller identity.
+// WHAT THE PROOF COVERS AND WHAT IT DOES NOT: IssueAuth.Issue is proved for ANY values of its inputs. The authoritative
+// state and the settled flag (the Auth value), the pre-state hash text and the memory are FREE PARAMETERS of the proof.
+// That they are what the sink's store holds now (STORE-READ) and that the hash is SHA-256 of canon(pre) (G-H) rests on
+// THIS file only, which is not proved. The proof gives: every signing outcome is authorized for this call and its
+// bytes are the canonical body bytes, whatever the Auth value, the hash text and the memory are.
 // This file signs EXACTLY the returned bytes. It builds no body. It embeds the returned body text VERBATIM.
 // This file does only: line framing with a STRICT UTF-8 decode (C-ATT-15), shape decode (refuse-only), the
 // pre-state hash in ONE place (glue G-H), the store read (two SELECTs in one read transaction), conversion to core
@@ -26,17 +39,38 @@
 // runtime, bignumber.js, Node, SQLite and OpenSSL, process isolation, the store's contents (assumption STORE-READ).
 // The memory of mode "on" is PROCESS MEMORY: it is lost at restart (and the key is lost with it).
 // Arguments: <compiled IssueAuth module> <refund spec lock> <memory rule: on | off> [<sink store path>]
-//   on : the IssueAuth memory rule for the life of the process.
-//   off: no memory (IssueAuth.Issue with an empty memory every time). With a store, the authority check stays.
-//   Either way an identical request gets a byte-identical token (Ed25519 signatures are deterministic).
-// Refusal reasons (fixed texts; a client may compare them): "core: Refuse"; "stale candidate: use a new request id";
-// "other candidate: use a new request id"; "attempt closed: use a new request id"; "attempt completed: use a new
-// request id"; "pre-state is not the authoritative stored state"; "store: ..." (the store cannot be read).
-// Start refusals: NODE_OPTIONS set (C-ATT-14); a module without IssueAuth; in a CLOSED LAUNCH
+//   on : the IssueAuth memory rule for the life of the process. With a store: PRODUCTION (I1, I2, I3).
+//        Without a store: TEST MODE (key = (charge id, request id, pre-state hash); two tokens can exist for one request
+//        id on two pre-states; the sink still commits at most one).
+//   off: TEST MODE. No process memory (I1 does not hold at the issuer: two candidates for one request id can both be
+//        signed; the sink commits at most one). With a store, the authority check stays, and the memory passed to IssueAuth.Issue holds
+//        at most one entry: the body bytes of the token that the store has SETTLED for this request id (C-ATT-40).
+//   An identical request gets a byte-identical token from the same process (Ed25519 signatures are deterministic):
+//     on : always, once signed (Replayed from the memory, also after the store moved on);
+//     off without a store: always (the same bytes are issued again);
+//     off with a store: while its pre-state is still the stored state and its id is not settled (issued again), and
+//        after the sink has settled THIS token for its id (Replayed from the settled row). EXCEPTION: when the store
+//        moved on without settling this request id, the identical request is refused ("pre-state is not the
+//        authoritative stored state"); its old token cannot commit at the sink anyway (stale pre-state).
+//   A new process (new key) never gives the same token bytes: C-ATT-05.
+// Refusal reasons (fixed texts; a client may compare them): "core: Refuse" (the GENERIC text: not authorized, or not
+// on the authoritative stored state; h-minter3, C-ATT-38 state oracle); "stale candidate: use a new request id";
+// "other candidate: use a new request id"; "attempt closed: use a new request id" (only for a memory entry Closed,
+// which this rule never writes); "attempt completed: use a new request id"; "store: the store path is gone";
+// "store: ..." (the store cannot be read). The operator gets the outcome name of every refusal on stderr
+// ({"refusal": ...}); the caller does not.
+// What a caller can still learn about the STORED charge state: "core: Refuse" is the same text for a wrong pre-state and
+// for an unauthorized request. "attempt completed" depends on the settled table for the caller's request id only;
+// "stale/other candidate" on the memory for the caller's key only (the proved order checks them before the state).
+// A caller without the key can still search the state with AUTHORIZED (zero-amount) requests on fresh request ids:
+// the answer is a token or "core: Refuse". That search needs no refusal text and is NOT closed here (no caller
+// identity; C-ATT-08 class).
+// Start refusals: NODE_OPTIONS set (C-ATT-14; see the comment at the check: NOT a defence); a module without
+// IssueAuth; in a CLOSED LAUNCH
 // (minter-launch.sh sets FORGE_MINTER_CLOSED to the pinned manifest digest): any other environment variable, other
 // node options, a manifest with another digest, a listed file with another digest, a loaded file that is not listed.
 import { generateKeyPairSync, sign, createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import BigNumber from "bignumber.js";
@@ -49,8 +83,18 @@ if (!corePath || !specLockPath || (memoryArg !== "on" && memoryArg !== "off") ||
   process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> [<sink store path>]\n");
   process.exit(2);
 }
+// PRODUCTION = "on" with a store (I1). Any other mode is a TEST mode (owner decision D-2; see the header).
+const production = memoryArg === "on" && storePath !== undefined;
+if (!production) {
+  process.stderr.write("minter.ts: WARNING: TEST MODE (" + (storePath === undefined ? "no store" : "memory off") +
+    "): at most one valid token per (charge id, request id) is NOT kept by this issuer; production needs \"on\" and the sink's store\n");
+}
 // C-ATT-14: NODE_OPTIONS can make Node load other code (--require, --import, --loader) into this key-holding
-// process. The checker id does not cover such code. Refuse to start. (NODE_PATH is reported below, not refused.)
+// process. The checker id does not cover such code. This check is NOT a defence: it runs after Node has already run a
+// --require or --import preload of NODE_OPTIONS (or of the command line), so such code has run before this line and
+// can change what this line sees. It only reports a careless launch. The defence is the CLOSED LAUNCH
+// (minter-launch.sh, assumption CLOSED-LAUNCH): `env -i` and fixed node options BEFORE Node starts.
+// (NODE_PATH is reported below, not refused.)
 if (process.env.NODE_OPTIONS !== undefined && process.env.NODE_OPTIONS !== "") {
   process.stderr.write("minter.ts: refused to start: NODE_OPTIONS is set\n");
   process.exit(2);
@@ -86,6 +130,7 @@ if (process.env.FORGE_MINTER_CLOSED !== undefined) {
     process.exit(2);
   };
   const pin = process.env.FORGE_MINTER_CLOSED;
+  if (!production) refuse("the closed launch needs mode \"on\" and the sink's store (owner decision D-2: I1)");
   for (const name of Object.keys(process.env)) {
     // macOS adds __CF_USER_TEXT_ENCODING to every process (CoreFoundation text encoding): allowed in its own format.
     if (name === "__CF_USER_TEXT_ENCODING" && /^0x[0-9A-Fa-f]+:0x[0-9A-Fa-f]+:0x[0-9A-Fa-f]+$/.test(process.env[name] ?? "")) continue;
@@ -109,17 +154,17 @@ if (process.env.FORGE_MINTER_CLOSED !== undefined) {
   closedLaunch = { manifestSha256: pin, files: listed.size };
 }
 
-// The sink's store, read only (Store mode). Opened at the first request (the sink may create the file after the
-// issuer has started: it needs the issuer's public key first); read in one read transaction per request.
-let storeDb: any = null;
+// The sink's store, read only (Store mode). OPENED AT EACH REQUEST and closed after it (C-ATT-39: a connection kept
+// open follows the old inode after an operator replaces the file by `mv`, and the issuer then refused every honest
+// request until a restart, which is a new key). The sink may create the file after the issuer has started (it needs
+// the issuer's public key first). A path that does not exist is refused with its own reason.
 function openStore(): any {
-  if (storeDb === null) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const db = new (require("node:sqlite").DatabaseSync)(resolve(storePath as string), { readOnly: true });
-    db.exec("PRAGMA busy_timeout = 5000");
-    storeDb = db;
-  }
-  return storeDb;
+  const path = resolve(storePath as string);
+  if (!existsSync(path)) throw new Error("store: the store path is gone");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const db = new (require("node:sqlite").DatabaseSync)(path, { readOnly: true });
+  try { db.exec("PRAGMA busy_timeout = 5000"); } catch (error) { db.close(); throw error; }
+  return db;
 }
 // Extra identity information (NOT part of the checker id; changing the id is the owner's decision): the resolved
 // file of bignumber.js that this process and the core module use, and the Node version. Written to stderr, so the
@@ -136,7 +181,7 @@ function openStore(): any {
     node: process.version, nodePath: process.env.NODE_PATH ?? null, execArgv: process.execArgv,
     // Names (not values) of set variables that can change which code runs or how (detection only).
     codeEnv: Object.keys(process.env).filter(n => /^(NODE_|TSX_|DYLD_|LD_|OPENSSL_|SSL_)|^TMPDIR$/.test(n)).sort(),
-    closedLaunch, rule: "IssueAuth", mode: storePath === undefined ? "NoStore" : "Store", store: storePath === undefined ? null : resolve(storePath) } }) + "\n");
+    closedLaunch, rule: "IssueAuth", production, mode: storePath === undefined ? "NoStore" : "Store", store: storePath === undefined ? null : resolve(storePath) } }) + "\n");
 }
 const text = (s: string): unknown => runtime.Seq.UnicodeFromString(s);
 const back = (s: any): string => s.toVerbatimString(false);
@@ -167,39 +212,51 @@ function preStateOf(pre: ChargeState): { corePre: any; preStateSha256: string } 
 
 let memory: any = runtime.Map.Empty;      // IssueAuth.Memory: key -> Signed(bytes) | Closed (mode "on")
 
-// What the store says for this request: IssueAuth.Auth. NoStore when no store is configured.
+// What the store says for this request: IssueAuth.Auth, and (C-ATT-40) the body bytes of the token that the store
+// has settled for this request id, if any. NoStore when no store is configured.
 // The state row must be a canonical state text (the sink writes canon(state)). Refuse-only.
-function authOf(requestId: string): any {
-  if (storePath === undefined) return O.Auth.create_NoStore();
+function authOf(requestId: string): { auth: any; settledBody: Buffer | null } {
+  if (storePath === undefined) return { auth: O.Auth.create_NoStore(), settledBody: null };
   let store: any;
-  try { store = openStore(); } catch (error) { throw new Error("store: cannot open: " + String((error as Error).message)); }
-  store.exec("BEGIN");
+  try { store = openStore(); } catch (error) {
+    const why = String((error as Error).message);
+    throw new Error(why.startsWith("store: ") ? why : "store: cannot open: " + why);
+  }
+  try { store.exec("BEGIN"); } catch (error) { store.close(); throw new Error("store: " + String((error as Error).message)); }
   try {
     const row = store.prepare("SELECT blob FROM state WHERE id = 1").get() as { blob: unknown } | undefined;
     if (row === undefined || typeof row.blob !== "string") throw new Error("store: no authoritative state");
     const v: unknown = JSON.parse(row.blob);
     if (!isState(v) || canon(v) !== row.blob) throw new Error("store: the state row is not a canonical state");
-    const settled = store.prepare("SELECT 1 AS x FROM settled WHERE request_id = ?").get(requestId) !== undefined;
+    const srow = store.prepare("SELECT token FROM settled WHERE request_id = ?").get(requestId) as { token: unknown } | undefined;
+    const settled = srow !== undefined;
+    // The body bytes of the settled token (used only in mode "off"; data, not trusted: IssueAuth.Issue returns
+    // Replayed only when these bytes are exactly the bytes it computes for THIS authorized call).
+    let settledBody: Buffer | null = null;
+    if (settled && typeof srow.token === "string") {
+      try { const tk = JSON.parse(srow.token); settledBody = Buffer.from(canon(tk.body), "utf8"); } catch { settledBody = null; }
+    }
     const coreState = charge(v);
     if (canon(stateOf(coreState)) !== row.blob) throw new Error("store: conversion of the state");
-    return O.Auth.create_Store(coreState, settled);
+    return { auth: O.Auth.create_Store(coreState, settled), settledBody };
   } catch (error) {
     const why = String((error as Error).message);
     throw new Error(why.startsWith("store: ") ? why : "store: " + why);
-  } finally { store.exec("COMMIT"); }
+  } finally { try { store.exec("COMMIT"); } finally { store.close(); } }
 }
 
 // The refusal text for an outcome of IssueAuth.Issue that does not sign.
-function refusalOf(o: any, key: any, preStateSha256: string): string {
+function refusalOf(o: any, key: any, preStateSha256: string, m0: any): string {
   if (o.is_RefusedByCore === true) return "core: Refuse";
-  if (o.is_RefusedNotAuthoritative === true) return "pre-state is not the authoritative stored state";
+  // One generic text for "not on the authoritative state" and "not authorized" (the C-ATT-38 state oracle).
+  if (o.is_RefusedNotAuthoritative === true) return "core: Refuse";
   if (o.is_RefusedCompleted === true) return "attempt completed: use a new request id";
   if (o.is_RefusedClosed === true) return "attempt closed: use a new request id";
   if (o.is_RefusedOtherCandidate === true) {
     // Wording only: "stale" when the signed candidate of this key is for another pre-state (C-ATT-29).
     let stale = false;
     try {
-      const rec = memory.get(key);
+      const rec = m0.get(key);
       const old = JSON.parse(utf8.decode(Buffer.from(Array.from(rec.dtor_bytes as Iterable<unknown>, (b: unknown) => Number(b)))));
       stale = old.preStateSha256 !== preStateSha256;
     } catch { stale = false; }
@@ -208,18 +265,27 @@ function refusalOf(o: any, key: any, preStateSha256: string): string {
   throw new Error("conversion: outcome");
 }
 
+const OUTCOMES = ["RefusedByCore", "RefusedOtherCandidate", "RefusedClosed", "RefusedNotAuthoritative", "RefusedCompleted"];
 // Returns the signed body bytes and their text, or a refusal reason from the proved method.
 function issue(pre: ChargeState, t: Transition): { bytes: Buffer; bodyText: string; body: any } | string {
   const { corePre, preStateSha256 } = preStateOf(pre);
-  const a = authOf(t.request.requestId);
+  const { auth: a, settledBody } = authOf(t.request.requestId);
   const coreT = transition(t);
-  const m0 = memoryOn ? memory : runtime.Map.Empty;
+  const key = O.__default.KeyFor(a, corePre, coreT, text(preStateSha256));
+  // Mode "off" with a store (C-ATT-40): the memory holds only the settled token's body for this key, if any.
+  const m0 = memoryOn ? memory
+    : settledBody !== null ? runtime.Map.Empty.update(key, O.Rec.create_Signed(runtime.Seq.of(...Array.from(settledBody))))
+    : runtime.Map.Empty;
+  // ONE call of the proved step.
   const [m2, o] = O.__default.Issue(m0, a, corePre, coreT, text(specLockSha256), text(checkerSha256), text(preStateSha256));
   // [D1] the proved decision. Only Issued and Replayed can lead to a signature.
   if (o.is_Issued !== true && o.is_Replayed !== true) {
-    const reason = refusalOf(o, O.__default.KeyFor(a, corePre, coreT, text(preStateSha256)), preStateSha256);
-    // A core refusal closes the key (the proved memory rule); other refusals leave the memory as it was.
-    if (memoryOn) memory = m2;
+    const reason = refusalOf(o, key, preStateSha256, m0);
+    // Operator detail (stderr only; the caller gets the fixed text).
+    process.stderr.write(JSON.stringify({ refusal: { outcome: OUTCOMES.find(n => o["is_" + n] === true) ?? "unknown",
+      requestId: t.request.requestId, reason } }) + "\n");
+    // A refusal records nothing (D-2; proved: Issue ensures m2 == After(m, k, o) == m for a refusal). The memory is
+    // left as it was; m2 is not used.
     return reason;
   }
   const raw: number[] = Array.from(o.dtor_bytes as Iterable<unknown>, (b: unknown) => Number(b));
@@ -243,7 +309,7 @@ function issue(pre: ChargeState, t: Transition): { bytes: Buffer; bodyText: stri
 
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
 process.stdout.write(JSON.stringify({
-  ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse: memoryOn }) + "\n");
+  ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse: production ? true : "none" }) + "\n");
 function handle(line: string): void {
   let id: number | null = null;
   try {

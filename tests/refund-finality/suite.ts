@@ -114,7 +114,9 @@ async function main() {
   const pem = minter.ready.publicKeyPem, key = createPublicKey(pem);
   const checkerSha256 = checkerSha256Of(readFileSync(CORE), readFileSync(join(GLUE, "encoding.ts")), readFileSync(join(GLUE, "minter.ts")));
   const specLockSha256 = sha256hex(readFileSync(SPEC_LOCK));
-  const idsEqual = minter.ready.checkerSha256 === checkerSha256 && minter.ready.specLockSha256 === specLockSha256 && minter.ready.singleUse === false;
+  const idsEqual = minter.ready.checkerSha256 === checkerSha256 && minter.ready.specLockSha256 === specLockSha256 &&
+    // h-minter3 (owner decision D-2): every mode other than "on" with a store is a TEST mode: "singleUse":"none".
+    (minter.ready.singleUse as unknown) === "none";
   add("setup", "the issuer reports the ids that the operator computes from the files", "equal", String(idsEqual), idsEqual);
   {
     // Key isolation: code that loads the issuer module in its own process gets no key and no signing function.
@@ -726,11 +728,11 @@ async function main() {
     add("option", "single-use on: another transition for a pre-state that has a signed token",
       perRequest ? "a token that verifies (SINGLE_USE_RULE = per-request: owner decision B-15 pending; the merged expectation is: no token)" : "no token (SINGLE_USE_RULE = per-pre-state)",
       b.ok ? (verifies(createPublicKey(strict.ready.publicKeyPem), b) ? "SIGNED, a token that verifies" : "SIGNED, THE TOKEN DOES NOT VERIFY") : "refused: " + b.reason,
-      strict.ready.singleUse === true && (perRequest ? verifies(createPublicKey(strict.ready.publicKeyPem), b) : !b.ok));
+      (strict.ready.singleUse as unknown) === "none" && (perRequest ? verifies(createPublicKey(strict.ready.publicKeyPem), b) : !b.ok));
     // h-suite (added row): the same request id with ANOTHER candidate. Both readings refuse it (P-idem).
     const other = await strict.mint(pre, propose(pre, req("opt_a", "300")));
     add("option", "single-use on: another transition for a request id that has a signed token (same pre-state)", "no token",
-      other.ok ? "SIGNED" : "refused: " + other.reason, strict.ready.singleUse === true && !other.ok);
+      other.ok ? "SIGNED" : "refused: " + other.reason, (strict.ready.singleUse as unknown) === "none" && !other.ok);
     strict.stop();
   }
 
@@ -762,8 +764,9 @@ async function main() {
     const fake = state("opt_store", "5", true, "5");
     const squat = await mintS(fake, propose(fake, req("opt_victim", "0")));
     add("option", "store mode: a zero-amount request for a victim's request id on an INVENTED pre-state (red team C-ATT-30)",
-      "refused: pre-state is not the authoritative stored state", squat.ok ? "SIGNED" : "refused: " + squat.reason,
-      !squat.ok && squat.reason === "pre-state is not the authoritative stored state");
+      // h-minter3 (C-ATT-38 state oracle): one generic text for "not on the authoritative state" and "not authorized".
+      "refused: core: Refuse", squat.ok ? "SIGNED" : "refused: " + squat.reason,
+      !squat.ok && squat.reason === "core: Refuse");
     const victim = await mintS(s0, propose(s0, req("opt_victim", "700")));
     const vc = victim.ok && victim.token ? sink.commit(tokenText(victim.token)).status : "refused: " + victim.reason;
     add("option", "store mode: then the victim's request on the stored state", "committed", vc, vc === "committed");

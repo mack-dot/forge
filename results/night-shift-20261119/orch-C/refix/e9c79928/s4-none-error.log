@@ -1,0 +1,4 @@
+books: remaining 0 (refunded 1000); provider moved 700
+{"r1":"committed","r1b":"committed","r2":["900","committed"],"f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r2: the provider refused before any money moved for this call"},"sink":"up","movements":["39ec45f9b0d93edca78c2832b6bfc9893390af3d629c5935364a0c734b975cc2:600","af3d29d273c94ef235b036e1a76b53c6938b428f6b8917671a3f535ca9cb7cdb:100"]}
+s4 none env={"RP_REPLAY":"error","RP_CEIL":"1"}
+MONEY WRONG: reported paid: ch_rb/r1 600; provider movements for that key: [] ; reported paid: ch_rb/r1 100; provider movements for that key: []

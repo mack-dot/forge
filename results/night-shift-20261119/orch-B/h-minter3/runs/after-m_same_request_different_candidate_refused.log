@@ -1,0 +1,9 @@
+Now drawing from 'AC Power'
+(node:7304) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":null,"execArgv":["--import","tsx"],"codeEnv":["TMPDIR"],"closedLaunch":null,"rule":"IssueAuth","closeOn":"refusal","mode":"NoStore","store":null}}
+{"refusal":{"outcome":"RefusedOtherCandidate","requestId":"rq_x","closeOn":"refusal","reason":"other candidate: use a new request id"}}
+EXPECTATION CHANGED by rule 2: without a store the same request id on a NEW pre-state is a new key and is signed (signed; sink: committed; rq_x settled 1 time(s)); the Store mode refuses it (SINGLE_USE_2.md, OQ-H2-2)
+{"noStoreFirst":true,"noStoreOtherRequest":"committed","noStoreSameIdSamePreOtherCandidate":"refused: other candidate: use a new request id","noStoreSameIdNewPre":"signed; sink: committed","noStoreRqXSettled":1,"storeOtherRequest":"committed","storeSameIdNewState":"refused: stale candidate: use a new request id","storeFreshId":"committed"}
+PASS
+exit 0

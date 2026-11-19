@@ -1,0 +1,1164 @@
+{
+ "suite": "refund finality, slice 1",
+ "kind": "FINITE TEST",
+ "method": "unit_tested",
+ "end_to_end": false,
+ "counts": {
+  "rows": 126,
+  "failed": 0,
+  "control_a_rows": 42,
+  "control_b_rows": 8,
+  "control_c_rows": 13,
+  "control_d_rows": 9,
+  "issuer_rows": 29,
+  "dispatcher_rows": 17,
+  "rejection_attempts": 48,
+  "effects_of_rejection_attempts": 0,
+  "rejection_attempts_that_ask_for_an_effect": 42,
+  "known_limit_rows": 0
+ },
+ "owner_decisions_pending": [
+  "B-15 issuer single-use rule: the suite expects SINGLE_USE_RULE = per-request"
+ ],
+ "ids": {
+  "core_module_sha256": "fa855506da1333395a2579f3d6bdf6c4b41aa0577d140bd4566666d07cbc44e6",
+  "spec_lock_sha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+  "checker_sha256": "329ebf5dda1a6098625647fd022c8e2aa72350045aab4c0d760b1dc24dbe80bc"
+ },
+ "rows": [
+  {
+   "control": "setup",
+   "name": "the issuer reports the ids that the operator computes from the files",
+   "expected": "equal",
+   "observed": "true",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "code that loads the issuer module gets no key and no signing function",
+   "expected": "0 exported names; the ready message holds a public key only",
+   "observed": "0 exported names; the ready message holds a public key only",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "differential grid: 217 (pre-state, request) pairs with the proposer's candidate, against the test oracle",
+   "expected": "0 disagreements; some signed, some refused by the core",
+   "observed": "0 disagreements; 35 signed; 182 refused by the core; 0 refused by the shape check",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: post-state keeps the remaining amount",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: post-state reduced by one unit less",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: post-state with another original amount",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: post-state of another charge",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: post-state with refunds switched off",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: intent with another amount",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: intent with another allowed reason",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: intent for another charge",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate for an eligible request: intent with another request id",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "wrong candidate: amount 2^53+1 for remaining 2^53, with post-state remaining 0",
+   "expected": "no token",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "the honest candidate for the same request, sent twice",
+   "expected": "a token each time, equal bytes",
+   "observed": "equal tokens",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: extra key in the pre-state",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: amount is a JSON number",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: negative amount",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: amount with 25 digits",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: amount with a leading zero",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: transition missing",
+   "expected": "no token",
+   "observed": "refused: message shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: pre-state is an array",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: charge id longer than 256 characters",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: lone surrogate in the request id",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: U+0000 in the request id",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: U+0000 in the charge id",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: extra key in the message",
+   "expected": "no token",
+   "observed": "refused: message shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: caller supplies a pre-state hash",
+   "expected": "no token",
+   "observed": "refused: message shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "refused message: extra key in the transition",
+   "expected": "no token",
+   "observed": "refused: shape",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "a message whose id is 10,000 nested arrays",
+   "expected": "refused: message id; the issuer answers the next request",
+   "observed": "refused: message id; the issuer answers the next request",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "issuer",
+   "name": "a line of 500,000 bytes: 300,000 bytes are sent, then 200,000 more, then the line end",
+   "expected": "refused before the line ends: message too long; 1 answer for that line; the issuer answers the next request",
+   "observed": "refused before the line ends: message too long; 1 answer for that line; the issuer answers the next request",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "missing token: undefined",
+   "expected": "rejected: token is not a text; effects 0",
+   "observed": "rejected: token is not a text; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "missing token: null",
+   "expected": "rejected: token is not a text; effects 0",
+   "observed": "rejected: token is not a text; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "missing token: an empty object",
+   "expected": "rejected: token is not a text; effects 0",
+   "observed": "rejected: token is not a text; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "missing token: the text of an empty object",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "missing token: a text that is not JSON",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "a valid token handed over as an object, not as its text",
+   "expected": "rejected: token is not a text; effects 0",
+   "observed": "rejected: token is not a text; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "a valid token as JSON text with other spacing",
+   "expected": "rejected: token text is not canonical; effects 0",
+   "observed": "rejected: token text is not canonical; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "a valid token as JSON text with the keys in another order",
+   "expected": "rejected: token text is not canonical; effects 0",
+   "observed": "rejected: token text is not canonical; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "JSON text with the key `body` twice: an attacker's body first, the signed body last",
+   "expected": "rejected: token text is not canonical; effects 0",
+   "observed": "rejected: token text is not canonical; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "JSON text with the key `body` twice: the signed body first, an attacker's body last",
+   "expected": "rejected: token text is not canonical; effects 0",
+   "observed": "rejected: token text is not canonical; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "direct call with an intent and a post-state, no signature field",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "direct call with the intent only",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "empty signature",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "signature of 63 bytes",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "signature text that is not canonical base64 (same 64 bytes)",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "signature of 64 zero bytes",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "forged: the body of a valid token, signed with the attacker's key",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "forged: signed with a key made from the public key bytes",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "forged: an attacker's body (remaining 0, amount 900), signed with the attacker's key",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "forged: an attacker's body with the signature of the valid token",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "forged: the valid body with the signature of an earlier committed token",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "a token of a second issuer process (same files, another key)",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: post-state remaining 700 -> 0",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: intent amount 200 -> 900",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: intent reason",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: intent charge id",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: request id",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: pre-state hash",
+   "expected": "rejected: signature does not verify; effects 0",
+   "observed": "rejected: signature does not verify; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: domain text",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: another spec lock hash (the signature does not fit either)",
+   "expected": "rejected: spec lock is not the pinned one; effects 0",
+   "observed": "rejected: spec lock is not the pinned one; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: another checker id (the signature does not fit either)",
+   "expected": "rejected: checker is not the pinned one; effects 0",
+   "observed": "rejected: checker is not the pinned one; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: extra field in the body",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: extra field beside the body",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: intent amount as a JSON number",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "tampered: post-state remaining beyond 19 digits",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "a body whose request id holds U+0000, signed with the attacker's key",
+   "expected": "rejected: token shape; effects 0",
+   "observed": "rejected: token shape; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "hostile object: a proxy over a valid token that counts every operation on it",
+   "expected": "rejected: token is not a text; 0 operations on the object; effects 0",
+   "observed": "rejected: token is not a text; 0 operations on the object; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "a",
+   "name": "positive control: the untampered token of this group, as its canonical text",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "audit after the group",
+   "expected": "problems found: 0",
+   "observed": "problems found: 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "a",
+   "name": "a token with a VALID signature of the trusted key, issued with another spec lock",
+   "expected": "rejected: spec lock is not the pinned one; effects 0",
+   "observed": "rejected: spec lock is not the pinned one; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "a token with a VALID signature of the trusted key, issued with another checker id",
+   "expected": "rejected: checker is not the pinned one; effects 0",
+   "observed": "rejected: checker is not the pinned one; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "a",
+   "name": "a valid token for a sink that has no stored state",
+   "expected": "rejected; 0 rows written",
+   "observed": "rejected: the sink has no stored state; 0 rows written",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "b",
+   "name": "two tokens for one pre-state: the first commit",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "b",
+   "name": "the other token for the old pre-state (fresh request id)",
+   "expected": "rejected: stored state is not the token's pre-state; effects 0",
+   "observed": "rejected: stored state is not the token's pre-state; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "b",
+   "name": "a token for a pre-state that the caller invented (remaining 1000; stored 700)",
+   "expected": "rejected: stored state is not the token's pre-state; effects 0",
+   "observed": "rejected: stored state is not the token's pre-state; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "b",
+   "name": "a token for the current state",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "b",
+   "name": "the first token again after two more commits",
+   "expected": "rejected: stored state is not the token's pre-state; effects 0",
+   "observed": "rejected: stored state is not the token's pre-state; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "b",
+   "name": "audit after the group",
+   "expected": "problems found: 0",
+   "observed": "problems found: 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "b",
+   "name": "race: 6 valid tokens for one pre-state, committed by 6 processes that wait for one common start time",
+   "expected": "all processes ready in time; 1 committed; 5 rejected: stored state is not the token's pre-state; effects 4; the state is the post-state of the committed token",
+   "observed": "all processes ready in time; 1 committed; 5 rejected: stored state is not the token's pre-state; effects 4; the state is the post-state of the committed token",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 6
+  },
+  {
+   "control": "b",
+   "name": "audit after the race",
+   "expected": "problems found: 0",
+   "observed": "problems found: 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "c",
+   "name": "replay of the committed token",
+   "expected": "replayed; effects 0",
+   "observed": "replayed; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "c",
+   "name": "a second valid transition",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "c",
+   "name": "replay of the first token after another commit",
+   "expected": "replayed; effects 0",
+   "observed": "replayed; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "c",
+   "name": "replay of the second token",
+   "expected": "replayed; effects 0",
+   "observed": "replayed; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "c",
+   "name": "a new signed token for the CURRENT state that uses a settled request id again",
+   "expected": "rejected: request id is already settled with another token; effects 0",
+   "observed": "rejected: request id is already settled with another token; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "c",
+   "name": "a refund of amount 0 (the approved relation allows it): the state does not change",
+   "expected": "committed; effects 3",
+   "observed": "committed; effects 3",
+   "pass": true,
+   "effects": 3,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "c",
+   "name": "after the amount-0 commit the stored state hash is the same as before",
+   "expected": "same hash",
+   "observed": "same hash",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "c",
+   "name": "replay of the amount-0 token: its pre-state hash still matches the store",
+   "expected": "replayed; effects 0",
+   "observed": "replayed; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "c",
+   "name": "another signed amount-0 token with the same request id: the pre-state hash matches, the request id is not fresh",
+   "expected": "rejected: request id is already settled with another token; effects 0",
+   "observed": "rejected: request id is already settled with another token; effects 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "c",
+   "name": "a second dispatcher run on the same outbox",
+   "expected": "0 new outbound effects",
+   "observed": "0 new outbound effects; 3 already dispatched",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "c",
+   "name": "audit after the group",
+   "expected": "problems found: 0",
+   "observed": "problems found: 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "c",
+   "name": "race: one valid token committed by 6 processes that wait for one common start time",
+   "expected": "all processes ready in time; 1 committed; 5 replayed; effects 4",
+   "observed": "all processes ready in time; 1 committed; 5 replayed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 6
+  },
+  {
+   "control": "c",
+   "name": "audit after the race",
+   "expected": "problems found: 0",
+   "observed": "problems found: 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "d",
+   "name": "one valid transition",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "d",
+   "name": "the one effect is exactly the checked one: state = post-state, 1 settled row, 1 outbox row and 1 outbound effect with the checked intent",
+   "expected": "exact",
+   "observed": "exact",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "d",
+   "name": "valid transition 2 of 5 (amount 200)",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "d",
+   "name": "valid transition 3 of 5 (amount 0)",
+   "expected": "committed; effects 3",
+   "observed": "committed; effects 3",
+   "pass": true,
+   "effects": 3,
+   "uncheckedSinkEffects": 1
+  },
+  {
+   "control": "d",
+   "name": "valid transition 4 of 5 (amount 300)",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "d",
+   "name": "valid transition 5 of 5 (amount 400)",
+   "expected": "committed; effects 4",
+   "observed": "committed; effects 4",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": 2
+  },
+  {
+   "control": "d",
+   "name": "five valid transitions: five outbound effects in order; their sum is original minus remaining",
+   "expected": "5 effects in order; sum 1000; remaining 0",
+   "observed": "5 effects in order; sum 1000; remaining 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "d",
+   "name": "after remaining 0: a candidate for amount 1 that keeps remaining 0",
+   "expected": "no token: the core refuses",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "d",
+   "name": "audit after the group",
+   "expected": "problems found: 0",
+   "observed": "problems found: 0",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT: an outbox row without a settled row",
+   "expected": "variant 1: the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "observed": "the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT: an outbox row without a settled row; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)",
+   "expected": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "observed": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect)",
+   "expected": "variant 1: the database refuses the write; store unchanged; new outbound effects [rq_x2_1]; nothing refused",
+   "observed": "the database refuses the write; store unchanged; new outbound effects [rq_x2_1]; nothing refused",
+   "pass": true,
+   "effects": 1,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect); variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)",
+   "expected": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "observed": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key",
+   "expected": "variant 1: the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "observed": "the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)",
+   "expected": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "observed": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "the public-key audit of that changed database",
+   "expected": "problems found: more than 0",
+   "observed": "problems found: 1 (the sink refuses to start)",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice)",
+   "expected": "variant 1: the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "observed": "the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice); variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)",
+   "expected": "sink starts; new outbound effects []; nothing refused",
+   "observed": "sink starts; new outbound effects []; nothing refused",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "crash between the ledger line and the effect (simulated crash before the effect left), then a new run: the first effect is lost and never sent twice",
+   "expected": "new outbound effects [rq_x5_2]; rq_x5_1 refused: in doubt (1 row); 0 already dispatched",
+   "observed": "new outbound effects [rq_x5_2]; rq_x5_1 refused: in doubt (1 row); 0 already dispatched",
+   "pass": true,
+   "effects": 1,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT: a validly signed token for an earlier state",
+   "expected": "variant 1: the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "observed": "the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT: a validly signed token for an earlier state; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)",
+   "expected": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "observed": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT: a copy of a committed token under a new request id",
+   "expected": "variant 1: the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "observed": "the database refuses the write; store unchanged; new outbound effects []; nothing refused",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "raw INSERT: a copy of a committed token under a new request id; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)",
+   "expected": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "observed": "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "the dispatcher's own ledger is not one chain: fail closed",
+   "expected": "new outbound effects []; stopped: dispatcher ledger is not one chain",
+   "observed": "new outbound effects []; stopped: dispatcher ledger is not one chain",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "overlap: 4 dispatcher processes start at one common time on 4 pending refunds",
+   "expected": "all processes ready in time; 1 run sent 4; 3 runs stopped at the lock; each refund sent once; a later run sends 0",
+   "observed": "all processes ready in time; 1 run sent 4; 3 runs stopped at the lock; each refund sent once; a later run sends 0",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "dispatcher",
+   "name": "overlap through three names of one ledger file: 6 dispatcher processes start at one common time on 4 pending refunds",
+   "expected": "all processes ready in time; 1 run sent 4; 5 runs stopped at the lock; each refund sent once; a later run sends 0",
+   "observed": "all processes ready in time; 1 run sent 4; 5 runs stopped at the lock; each refund sent once; a later run sends 0",
+   "pass": true,
+   "effects": 4,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "single-use on: the same transition again for one pre-state",
+   "expected": "the same token",
+   "observed": "the same token",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "single-use on: another transition for a pre-state that has a signed token",
+   "expected": "a token that verifies (SINGLE_USE_RULE = per-request: owner decision B-15 pending; the merged expectation is: no token)",
+   "observed": "SIGNED, a token that verifies",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "single-use on: another transition for a request id that has a signed token (same pre-state)",
+   "expected": "no token",
+   "observed": "refused: other candidate: use a new request id",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "store mode: a zero-amount request for a victim's request id on an INVENTED pre-state (red team C-ATT-30)",
+   "expected": "refused: core: Refuse",
+   "observed": "refused: core: Refuse",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "store mode: then the victim's request on the stored state",
+   "expected": "committed",
+   "observed": "committed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "store mode: the settled request id with another candidate on the new stored state (completion closes it: protocol.md:61-62)",
+   "expected": "refused: attempt completed: use a new request id",
+   "observed": "refused: attempt completed: use a new request id",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  },
+  {
+   "control": "option",
+   "name": "store mode: a zero-amount request with a new id on the new stored state",
+   "expected": "committed",
+   "observed": "committed",
+   "pass": true,
+   "effects": 0,
+   "uncheckedSinkEffects": null
+  }
+ ]
+}

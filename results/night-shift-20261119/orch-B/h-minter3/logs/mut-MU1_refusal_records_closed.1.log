@@ -1,0 +1,38 @@
+# owner=h-minter3 start=2026-11-19T17:12:40Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter3/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1063
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU1_refusal_records_closed.dfy
+# memory free percent: 34
+MU1_refusal_records_closed.dfy(185,6): Error: a postcondition could not be proved on this return path
+    |
+185 |       return;
+    |       ^^^^^^^
+
+MU1_refusal_records_closed.dfy(177,15): Related location: this is the postcondition that could not be proved
+    |
+177 |     ensures m2 == After(m, KeyFor(a, pre, t, h), o)
+    |                ^^
+
+
+Dafny program verifier finished with 193 verified, 1 error
+       28.12 real        13.20 user         2.11 sys
+           205062144  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              112405  page reclaims
+                 676  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                1462  voluntary context switches
+              310235  involuntary context switches
+         96069930919  instructions retired
+         45075750466  cycles elapsed
+           232097016  peak memory footprint
+# end=2026-11-19T17:13:10Z
+exit 4

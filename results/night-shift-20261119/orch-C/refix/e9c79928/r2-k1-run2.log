@@ -1,0 +1,18 @@
+<SCRATCH>/redteam-C/fix-e9c79928/tests/refund-finality/provider/emit_adapter.ts:67
+  if (!HEX64.test(storeH0)) throw new Error("emit adapter: storeH0 is not 64 lower-case hex characters");
+                                  ^
+
+
+Error: emit adapter: storeH0 is not 64 lower-case hex characters
+    at Object.providerKey (<SCRATCH>/redteam-C/fix-e9c79928/tests/refund-finality/provider/emit_adapter.ts:67:35)
+    at key (<REPO>/results/night-shift-20261119/orch-C/c25-provider/k1_key_variants.ts:14:63)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-C/c25-provider/k1_key_variants.ts:22:33)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-C/c25-provider/k1_key_variants.ts:45:131)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+
+Node.js v24.3.0

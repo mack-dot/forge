@@ -1,0 +1,4 @@
+Now drawing from 'AC Power'
+{"mode":"rollback","rq1":"committed","flush1":{"emitted":["rq_1"],"refused":[]},"minterOnWritersState":"SIGNED rq_2 amount 1000 on remaining 1000","restartedSink":"started","restartedCommit":{"status":"committed","head":{"count":1,"chainHash":"c31206ab600a3b702beba50995608f95314229591e7c7345fbfb55ba00d3c9fe"}},"flush2":"dispatcher threw: dispatcher alarm: the sink's rows 1..1 do not chain to the ledger's claims (rollback or rewrite of the sink's store); nothing sent","effects":["rq_1"],"totalOut":1000}
+SAFE (exit 0)
+exit 0

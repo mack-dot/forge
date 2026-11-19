@@ -1,0 +1,3 @@
+{"ra":"committed","rb":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":["r1"],"refused":[],"error":""},"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600"},{"chargeId":"ch_B","requestId":"r1","amount":"300"}],"movements":["db822f0f1ada980c4f09be0eb90df50031ec5d28b9417277f4e104648f93e2f5@ch_A:600","402f5f15b24ee6461b99d90112e029f6ce5c357912e499532948a9436a5ea1f7@ch_B:300"]}
+s1 collide env={"RP_SHARED":"<REPO>/results/night-shift-20261119/orch-C/refix/e9c79928/tmp/acct.json","RP_REPLAY":"first"}
+MONEY WRONG: reported paid: ch_A/r1 600; provider movements for that key: [] ; reported paid: ch_B/r1 300; provider movements for that key: []

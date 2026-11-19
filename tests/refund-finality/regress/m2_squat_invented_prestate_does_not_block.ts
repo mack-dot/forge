@@ -8,6 +8,9 @@
 // FAILS on rule 1 (IssueOnce, key = (charge id, request id), no store): the victim is refused for ever.
 // Usage: node --import tsx m2_squat_invented_prestate_does_not_block.ts <treeRoot> <compiledIssuerModule>
 // Exit 0: PASS. Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
+// EXPECTATION CHANGE (h-minter3, red team C-ATT-38 state oracle): the Store-mode squat on an invented pre-state is
+// refused with the GENERIC text "core: Refuse" (one text for "not on the authoritative state" and "not authorized";
+// the outcome name goes to the operator's stderr). The safety terms are unchanged.
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
@@ -86,6 +89,6 @@ guard((async () => {
       sink.close(); m.stop();
     }
   }
-  verdict(r.noStoreVictim === "committed" && r.storeSquat === "refused: pre-state is not the authoritative stored state" &&
+  verdict(r.noStoreVictim === "committed" && r.storeSquat === "refused: core: Refuse" &&
     r.storeVictim === "committed" && r.zeroControl === "committed", r);
 })());

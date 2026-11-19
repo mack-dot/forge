@@ -1,0 +1,10 @@
+{
+ "notes": [
+  "lone surrogate ids: keys equal = false; accepted by the shape check = false",
+  "amount texts accepted by the shape check: [\"100\",\"10000\"]",
+  "keys of 100 and 10000 (minor units) differ = true (a host that changes the unit gets a NEW key: stated by B as the amount-in-key consequence)",
+  "inputs refused by the key function: 3"
+ ],
+ "bad": []
+}
+SAFE

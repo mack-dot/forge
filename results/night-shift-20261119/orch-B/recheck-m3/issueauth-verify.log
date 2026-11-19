@@ -1,0 +1,28 @@
+# owner=orchB-recheck-m3 start=2026-11-19T17:29:09Z cwd=<SCRATCH>/B-trust/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 857
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IssueAuth.dfy
+# memory free percent: 40
+
+Dafny program verifier finished with 194 verified, 0 errors
+       15.06 real        11.70 user         0.93 sys
+           234569728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32819  page reclaims
+                 712  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   7  signals received
+                1594  voluntary context switches
+               99660  involuntary context switches
+         97629328750  instructions retired
+         38617888850  cycles elapsed
+           222020928  peak memory footprint
+# end=2026-11-19T17:29:25Z
+exit 0

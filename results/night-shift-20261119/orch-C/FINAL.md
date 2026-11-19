@@ -1,6 +1,6 @@
 # Orchestrator C (red team) — FINAL
 
-Night shift 2026-11-19. Branch `nightshift/C-redteam`. unsure entries U580 to U599 (see the branch `unsure.md`).
+Night shift 2026-11-19. Branch `nightshift/C-redteam`. unsure entries U580 to U600 (see the branch `unsure.md`).
 C wrote tests and attacks only. C wrote no fix, changed no protected file, opened no pull request, merged nothing.
 M1-B stays OPEN. `end_to_end=false`. No stage label changed.
 
@@ -21,7 +21,7 @@ Exit code rule for every attack script: exit 1 = the defect is present; exit 0 =
 | C-LAUNCH-01 launcher authorizes an aborted child when the caller ignores SIGCHLD | A `launcher_v2.py` SHA-256 `eec38a10…c274` | `cd orch-C/c22-launch-conformance && C22_LAUNCHER=<file> /usr/bin/python3 -B -I test_process_lifecycle.py` | 0 in 5 of 5 runs (24 tests OK). On `launcher.py` `fbdbea0b…`: 1 in 2 of 2 runs (2 FAIL) | CLOSED on `launcher_v2.py` |
 | D-1 persistent minter key file | no commit received | — | — | NOT RUN (B: in progress, not landed) |
 | D-2 a refusal closes only the attempt (C-ATT-38) | no commit received | — | — | NOT RUN (B: in progress, not landed) |
-| D-3 provider key bound to charge, request id, amount; replay answers checked (C-ATT-41 to 44) | no commit received | — | — | NOT RUN (B: in progress, not landed) |
+| D-3 provider key bound to store, charge, request id, amount; answers checked (C-ATT-41, 42, 44) | B `e9c79928` | `RP_REPLAY=first [RP_SHARED=<file>] node --import tsx c25-provider/s1_scope.ts <tree> collide` / `squat`; `RP_REPLAY=first RP_CEIL=1 … s4_rebind.ts <tree> none`; `… k1_key_variants.ts <tree>` | 0, 0, 0, 0 (old adapter as control, `P_ADAPTER=v1`: 1, 1, 1) | CLOSED. Stated limit left (B-20): rollback without the local anchors + the same request id with another amount pays again (`p3_rollback_rebind.ts first none` exit 1; with anchors 0) |
 
 Issuer module used for the dispatcher re-test: `orch-B/h-minter/build/issueonce.cjs`, SHA-256 `4cf78df8cb0651afcf1ff4b28ac1c96d2f20b4c47b81e14154f5d7f2e2c57842`.
 
@@ -59,7 +59,7 @@ Issuer module used for the dispatcher re-test: `orch-B/h-minter/build/issueonce.
 | C-ATT-37 | ledger path cases | CLOSED | `f67c5c16`: `a8_paths.ts link` 0, `case` 0 |
 | C-HOST-01 to 05, 07 | CLI exit codes, left lock, lost result | NOT RUN by C on the repair | fixed at `f08a21c1` per the worker's runs of B's `d_host_*.ts` (exit 0); my own host scripts were not re-run |
 | C-HOST-06 | `sink_tool init` takes the anchor from its argument | OPEN-KNOWN-LIMIT | B: unapplied diff |
-| C-ATT-41, 42, 44 | provider adapter trusts a replayed answer; key scope; key taken first | OPEN; fix = D-3 | NOT RUN on a fix (no commit) |
+| C-ATT-41, 42, 44 | provider adapter trusts a replayed answer; key scope; key taken first | CLOSED | `e9c79928`: `s1_scope.ts collide` 0, `squat` 0, `s4_rebind.ts none` 0 (old adapter: 1 each); key and amount variants 0. Left as OPEN-KNOWN-LIMIT (B-20): after a rollback without anchors, another amount on the same request id is paid again |
 | C-ATT-43 | restore older than the provider's key window pays again | OPEN-KNOWN-LIMIT | B states it; safe with both local anchors (my run: exit 0) |
 
 ### Minter
@@ -105,7 +105,7 @@ Issuer module used for the dispatcher re-test: `orch-B/h-minter/build/issueonce.
   6. my bounded run of the two gate modules of C-GATE-07, 08;
   7. two commit-and-push commands (repeated later in smaller steps: these were not attack content).
   Result: tests with the real refund program against code injected at load, and tests of the FFI C code, have NO run by C.
-- D-1, D-2, D-3: no commit from B when this file was written.
+- D-1, D-2: no commit from B when this file was written. (D-3 was re-tested: section 1.)
 - Gate candidates U04 to U11 and K17: the Dafny lock script made the runs wait while A held the HOL lock.
 - Worker c27 (variations on B's `f67c5c16`): stopped by the owner's order before its first run. Its reading notes are unverified leads.
 - B's real-kill regression and any power-loss test: not run by anyone.

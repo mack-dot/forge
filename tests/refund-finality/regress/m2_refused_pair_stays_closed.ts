@@ -4,7 +4,11 @@
 // post-state has remaining 0) is refused ("core: Refuse");
 // rq_c for 40 on S0 (authorized) is then refused ("attempt closed: use a new request id"); the identical refused request
 // is refused again; a NEW id rq_d for 40 commits; a zero-amount request with a new id commits. Store mode and NoStore mode.
-// FAILS on rule 1 (rq_c for 40 is signed after the refusal). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
+// EXPECTATION CHANGE (h-minter3, owner decision D-2 of 2026-11-19: "A minter refusal closes ONLY that attempt, NOT the
+// whole request ID"): rq_c for 40 after the refusal is now SIGNED (a refusal records nothing; red team C-ATT-38). The
+// file name keeps its old words; the rule it now checks: a refusal does NOT close the pair, the refused request is
+// refused again ("core: Refuse"), new ids and zero amounts still commit. Replacement for the old expectation: none (the
+// owner removed it); the old rule's spray is kept as the Dafny model OldRuleFreeze (IssueAuth.dfy). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
@@ -76,7 +80,7 @@ guard((async () => {
     r[mode] = { refused: a.ok ? "SIGNED" : a.reason, sameIdValid: b.ok ? "SIGNED" : b.reason, refusedAgain: a2.ok ? "SIGNED" : a2.reason, newId: dc, zero: zc };
     sink.close(); m.stop();
   }
-  const ok = (x: any) => typeof x === "object" && x.refused === "core: Refuse" && x.sameIdValid === "attempt closed: use a new request id" &&
+  const ok = (x: any) => typeof x === "object" && x.refused === "core: Refuse" && x.sameIdValid === "SIGNED" &&
     x.refusedAgain === "core: Refuse" && x.newId === "committed" && x.zero === "committed";
   verdict(ok(r.NoStore) && ok(r.Store), r);
 })());

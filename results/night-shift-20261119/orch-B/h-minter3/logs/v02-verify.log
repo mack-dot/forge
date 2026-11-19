@@ -1,0 +1,37 @@
+# owner=h-minter3 start=2026-11-19T17:11:37Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter3/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1603
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IssueAuth.dfy
+# memory free percent: 39
+IssueAuth.dfy(638,17): Error: a call to a ghost function is allowed only in specification contexts (consider declaring the function without the 'ghost' keyword)
+    |
+638 |     m := OldAfter(Admitted(st, W_FAKE), m, KeyFor(st, W_FAKE, IB.T(W_FAKE, "rq_v", 61), HEXB), s1);
+    |                  ^
+
+IssueAuth.dfy(640,17): Error: a call to a ghost function is allowed only in specification contexts (consider declaring the function without the 'ghost' keyword)
+    |
+640 |     m := OldAfter(Admitted(st, W_PRE), m, KeyFor(st, W_PRE, IB.T(W_PRE, "rq_v", 61), IB.HEXA), s2);
+    |                  ^
+
+2 resolution/type errors detected in IssueAuth.dfy
+        3.19 real         1.04 user         0.20 sys
+            91127808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10258  page reclaims
+                 457  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  48  voluntary context switches
+                9639  involuntary context switches
+          6939714554  instructions retired
+          3615456581  cycles elapsed
+            73090152  peak memory footprint
+# end=2026-11-19T17:11:42Z
+exit 2

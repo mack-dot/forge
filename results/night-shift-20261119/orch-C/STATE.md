@@ -124,3 +124,4 @@ Split kept: C writes tests that show a gap; B writes fixes.
 - Waiting on B: SHAs for D-1, D-2, D-3. Asked B to say if one will not land (then NOT RUN in FINAL.md).
 - 17:12:18Z: FINAL launcher run recorded: launcher_v2.py exit 0 (5 of 5), launcher.py exit 1 (2 of 2). Drafting FINAL.md; D-1, D-2, D-3 rows wait for B's SHAs (B: all three in progress, none landed).
 - 17:13:18Z: FINAL.md DRAFT written (orch-C/FINAL.md): all findings with status; rows D-1, D-2, D-3 are NOT RUN until B's commits arrive. To finish: re-test each of B's three commits (plans above), update section 1 and the rows C-ATT-05, 38, 41, 42, 44, push, message main 'C done' with the final SHA.
+- 17:27:23Z: D-3 RE-TESTED on e9c79928: C-ATT-41, 42, 44 CLOSED (v3 exit 0; v1 control exit 1); key and amount variants exit 0; stated limit B-20 (rollback without anchors + another amount pays again: exit 1). D-1 and D-2: not landed.
