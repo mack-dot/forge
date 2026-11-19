@@ -1,4 +1,4 @@
-# Accepted-assumptions list for `end_to_end` (DRAFT: needs the owner's sign-off, line by line)
+# Accepted-assumptions list for `end_to_end` (SIGNED by the owner 2026-11-19: P1 to P6)
 
 Status: SIGNED by the owner 2026-11-19 (P1 to P6 ACCEPTED as written; see the end of this file). Drafted 2026-11-19 by the launcher on the owner's word ("Draft the Accepted-Assumptions List
 from the 6 physical boundaries"). `end_to_end=false`: the list covers only the six transitions named in it.
