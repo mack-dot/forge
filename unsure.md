@@ -16979,3 +16979,128 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false.
 - Next check: link and frozen-module checks on the staged tree; the
   hosted gate result; the owner's merge decision.
+
+## U465 — Pull request 50 (Wave Gate 2) merged with administrator rights on the owner's word for that one pull request; hosted gate exit 3
+- Status: 2026-11-19 01:31Z (GitHub merge time). Refs U463, U464.
+- Observation: commit 1cddea45 pushed; pull request 50 opened with no
+  administrator rights. Hosted gate/pr_check.py, run 44437118671: exit
+  3, UNSUPPORTED, 4 coverage findings (the four changed documents), as
+  expected. I asked the owner one question with four choices. The
+  owner chose "Merge 50 only": the word to merge pull request 50 with
+  administrator rights, and to ask again at the Wave Gate 3 pull
+  request.
+- Action: `gh pr merge 50 --squash --admin`, exit 0; squash commit
+  5fad5ce4. `git diff --quiet origin/main 1cddea45`: exit 0. An
+  OVERRIDE of the review rule and of the red gate status, as in U463.
+- The word covers pull request 50 only.
+- Impact: the README of main is the new text. No claim changes.
+  CURRENT none. M1 open. Stage 12 unauthorized. end_to_end=false.
+- Next check: none for pull request 50. Wave Gate 3 starts on branch
+  demo/skeptic-gauntlet from 5fad5ce4.
+
+## U466 — Wave Gate 3 build: scripts/demo_gauntlet.py on the real components; first runs pass; the 10 GiB flood run
+- Status: 2026-11-19, about 01:32Z to 01:45Z (system clock). Refs
+  U459, U465, U444 to U448 (Slice 1), U450 (Slice 2), U454 to U456
+  (Slice 3). Branch demo/skeptic-gauntlet from 5fad5ce4.
+- Built (no protected file; no file of the slices or of Wave Gate 1
+  changed; no new package): scripts/demo_gauntlet.py;
+  tests/demo-gauntlet/sink_tool.ts (init and report through the Slice 1
+  sink class; no rule in it); docs/demo-gauntlet.md; one link in
+  README.md.
+- What the script starts (observations): Act 1: scripts/spec_clearing.py
+  for the subjects refund, refund-rewrite, refund-cap, refund-loose.
+  Act 2: the pinned Dafny to compile impl/RefundFinality.dfy (the
+  module must equal the Slice 1 record), the issuer process
+  ts/refund-finality/minter.ts, the sink through
+  tests/refund-finality/commit_cli.ts (one process per commit, common
+  start time). Act 3: the pinned Dafny for impl/BookingCertificate.dfy
+  (module equal to the Slice 3 record), rustc for optimizer v2,
+  tests/booking-certificate/swap.ts five times (v1, v2, three adversary
+  modes); the counts must equal the Slice 3 record.
+- Actual, before the review: attempt 1 (--acts 2 --flood-mb 64) exit
+  0; attempt 2 (default, 600 MiB) exit 0, 100 s; attempt 3
+  (--flood-mb 10240) exit 0, 80 s: 10,737,418,240 bytes written in
+  3.67 s, one answer "message too long", issuer resident memory 59 MiB
+  before and 171 MiB at the largest sample, token for the next valid
+  request after 1.3 ms.
+- The directive's name "90-second" is not a measured value. Complete
+  runs took 78 s to 100 s.
+- The directive asks for a "TOCTOU race on one balance". The demo has
+  eight processes with one valid token each for the same pre-state and
+  one common start time; exactly one commits. That is one race on one
+  machine, not all schedules. The sink is tested, not proved.
+- "CHOICE caught and blocked" (directive): the clearing tool gives the
+  verdict CHOICE. Nothing in the repository blocks an approval by that
+  verdict; a person or a later rule must. The demo prints that.
+- Impact: a demonstration. No claim, no evidence class. CURRENT none.
+  M1 open. Stage 12 unauthorized. end_to_end=false.
+- Next check: the one fresh-context review (U467).
+
+## U467 — Wave Gate 3 review and closeout: no attack succeeds with exit 0 in the default run; 1 fail-open at a reduced flood size and 2 hangs repaired; one run failed by my own shell command; my own interference broke the first regression try
+- Status: 2026-11-19, about 01:45Z to 02:55Z (system clock; the
+  regression ran from about 02:00Z to 02:47Z). Refs U466. Review text
+  and disposition: proposals/forge2-demo-gauntlet/REVIEW.md.
+- The one fresh-context review (it ran the script and four broken
+  components of its own in a scratch clone): no path where an attack
+  succeeds and the default full run exits 0. R1 FAIL-OPEN at a reduced
+  flood size: the memory bound was 256 MiB of growth at every flood
+  size, so with a flood below about 250 MiB an issuer that keeps every
+  byte passed. R2, R3 HIGH (hygiene): on two failure paths a sampler
+  thread kept the script alive after "GAUNTLET FAILED". R4 MEDIUM: a
+  partial run exited 0 with the word PASSED. R5 MEDIUM: one printed
+  count could not be other than 0. R6 to R10 LOW.
+- My statements that were too strong before the review: "commands of
+  this script that start Dafny or Z3: 0 of 5" (it measured nothing);
+  "35 attack attempts, 0 effects from them" (two constants); the memory
+  bound "held" at 64 MiB.
+- Repairs in one pass, NOT reviewed again: the memory bound is checked
+  only from 512 MiB; a partial or reduced run prints NOT COMPLETE and
+  exits 3; samplers end in `finally` and are daemon threads; the issuer
+  is killed on every failure path; attempts are counted as made and the
+  effect count comes from the final outbox; answer lines have a time
+  limit; the sampler control counts only the Dafny of this run.
+- Stated, not repaired: at 600 MiB an issuer that keeps less than
+  about 43 percent of the flood passes the bound.
+- My error after the review (attempt 6, --flood-mb 10240, exit 1): the
+  sampler of Act 3 matched the text "dafny" anywhere in a command
+  line. While that run was in Act 3, I ran a shell command whose text
+  held the word "Dafny" (the text of the review file). The sampler saw
+  it and the demo failed. The same loose match also hit system
+  processes with random text in an argument when I tested it. The
+  sampler now tests the program name of a process (dafny, boogie, z3*,
+  or dotnet with such an argument). That change has no review. In
+  attempt 6 the results of Acts 1 and 2 were as required.
+- My interference: the first regression try ended with exit 1 inside
+  the runner, because I renamed a record file while the runner copied
+  the tree. No check had run. The mutation runner that followed found
+  no clone and gave exit 2 for every row; those rows are not results.
+- Actual, final: attempt 7 (--flood-mb 10240) exit 0: 10,737,418,240
+  bytes in 4.03 s, one answer "message too long", issuer resident
+  memory 42 MiB before and 159 MiB at the largest sample and at the
+  kernel's peak, token for the next valid request after 1.4 ms, 35
+  attempts that did not commit with 0 outbox rows from them, 88 s.
+  Attempt 8 (default) exit 0, 78 s. Regression, second try, scratch
+  clone of 5fad5ce4 plus the Wave Gate 3 files: 28 of 28 Stage EXIT
+  cases exit 0; frozen PR-gate modules exit 0; bundles c7f2f41c...,
+  2721a293..., 3cdfebfc..., f55391da... unchanged. Broken components:
+  7 of 7 make the unchanged demo exit 1; the unchanged clone exits 0
+  before and after. For one of the seven (issuer without its line
+  limit) the failure text was "act 2: THE ISSUER PROCESS ENDED" and my
+  runner expected "act 2d"; the record counts 6 for that reason, and
+  the runner's expected text is corrected after the run.
+- Observation worth keeping: an issuer without the line limit ENDS
+  under a flood of 600 MiB. That is the defect that the Slice 1 repair
+  check found (U447); the demo shows it again on a broken copy.
+- NOT RUN: a second review; Stage 7, Stage 9, Stage 10; any HOL
+  process; the hosted gate (expected exit 3).
+- An advisor text arrived during the work ("Silicon-to-Sink Summit",
+  to run from /tmp/forge_silicon_frontier.md in a fresh session). The
+  file does not exist on this machine; I saw no such text. The text
+  says that the 11,144 s of the 158 recorded M1 cases is a build of a
+  new verified ARMv8 binary. That is wrong: it is a replay of recorded
+  cases. A program with a parser and a signature under one theorem is
+  item F2.7, NOT STARTED. I told the owner. No action was taken on it.
+- Impact: a demonstration and its records. No proof. CURRENT none. M1
+  open. Stage 12 unauthorized. end_to_end=false.
+- Next check: the hosted gate result; the owner's merge decision. Then
+  Wave Gate 4: a printed Stage 9 plan only, no edit.

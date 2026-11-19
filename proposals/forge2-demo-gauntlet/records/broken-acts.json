@@ -1,0 +1,69 @@
+{
+ "end_to_end": false,
+ "flood_mib": 600,
+ "mutations": 7,
+ "mutations_with_exit_1_at_the_expected_act": 6,
+ "rows": [
+  {
+   "act_that_must_fail": 1,
+   "exit_code": 1,
+   "failure_names_the_act": true,
+   "file": "clearing/planted/RefundSpecRewritten.dfy",
+   "last_line": "GAUNTLET FAILED: act 1: the clearing tool gave no result for refund-rewrite",
+   "mutation": "clearing: the \"rewritten\" planted spec loses one approved reason (not equivalent any more)"
+  },
+  {
+   "act_that_must_fail": 2,
+   "exit_code": 1,
+   "failure_names_the_act": true,
+   "file": "ts/refund-finality/sink.ts",
+   "last_line": "GAUNTLET FAILED: act 2a: the sink did not reject an attempt without a valid token",
+   "mutation": "refund sink without the signature check"
+  },
+  {
+   "act_that_must_fail": 2,
+   "exit_code": 1,
+   "failure_names_the_act": true,
+   "file": "ts/refund-finality/sink.ts",
+   "last_line": "GAUNTLET FAILED: act 2b: THE RACE DID NOT END WITH EXACTLY ONE COMMIT",
+   "mutation": "refund sink without the pre-state hash check"
+  },
+  {
+   "act_that_must_fail": 2,
+   "exit_code": 1,
+   "failure_names_the_act": true,
+   "file": "ts/refund-finality/sink.ts",
+   "last_line": "GAUNTLET FAILED: act 2c: a replay or a stale token was not answered as required",
+   "mutation": "refund sink without the settled-request check"
+  },
+  {
+   "act_that_must_fail": 2,
+   "exit_code": 1,
+   "failure_names_the_act": false,
+   "file": "ts/refund-finality/minter.ts",
+   "last_line": "GAUNTLET FAILED: act 2: THE ISSUER PROCESS ENDED",
+   "mutation": "issuer without the line limit"
+  },
+  {
+   "act_that_must_fail": 2,
+   "exit_code": 1,
+   "failure_names_the_act": true,
+   "file": "impl/RefundFinality.dfy",
+   "last_line": "GAUNTLET FAILED: refund-core: CORE_MODULE: the compiled core is not the module of the evidence record",
+   "mutation": "wrong checker core (it issues a token for everything) in place of impl/RefundFinality.dfy"
+  },
+  {
+   "act_that_must_fail": 3,
+   "exit_code": 1,
+   "failure_names_the_act": true,
+   "file": "ts/booking-certificate/sink.ts",
+   "last_line": "GAUNTLET FAILED: act 3: the swap run of v3-overbook ended with exit 1",
+   "mutation": "booking sink without the signature check"
+  }
+ ],
+ "unchanged_clone_exit_codes": [
+  0,
+  0
+ ],
+ "what": "Wave Gate 3: scripts/demo_gauntlet.py (unchanged) in a scratch clone with one component broken per run"
+}

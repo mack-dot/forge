@@ -28,7 +28,41 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Wave Gate 2: `README.md` written again as the front door; master idea items F2.7 and F3.3 (NOT STARTED); records of pull request 49 (documents only) — U463, U464
+## Wave Gate 3: `scripts/demo_gauntlet.py`, a live demonstration on the real components of Slices 1 to 3; a 10 GiB flood run; one review with repairs; records of pull request 50 — U465, U466, U467
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No file of
+Slices 1 to 3 or of Wave Gate 1 changed. A FINITE DEMONSTRATION: a run
+of the script is not a proof and adds no evidence class.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `scripts/demo_gauntlet.py --acts 2 --flood-mb 64`, attempt 1 (before the review) |0|Act 2 as required |
+| `scripts/demo_gauntlet.py`, attempt 2 (before the review; 600 MiB) |0|all three acts; 100 s |
+| `scripts/demo_gauntlet.py --flood-mb 10240`, attempt 3 (before the review) |0|10,737,418,240 bytes in 3.67 s; 80 s |
+| the one fresh-context review |0 attacks that succeed with exit 0 in the default run; 1 fail-open at a reduced flood size; 2 HIGH (hangs on failure paths); 2 MEDIUM; 5 LOW|repairs in one pass, not reviewed again (U467) |
+| after the repairs: `--acts 2 --flood-mb 64`, attempt 4 |3|NOT COMPLETE (partial and reduced), as the repaired script must answer |
+| `scripts/demo_gauntlet.py`, attempt 5 |0|80 s |
+| `--flood-mb 10240`, attempt 6 |1|Act 3: the sampler matched a shell command of mine whose text held the word "Dafny"; Acts 1 and 2 as required. Sampler changed to program names (no review of that change) |
+| `--flood-mb 10240`, attempt 7 (final) |0|10,737,418,240 bytes in 4.03 s; issuer memory 42 to 159 MiB; token after 1.4 ms; 88 s |
+| `scripts/demo_gauntlet.py`, attempt 8 (final, default 600 MiB) |0|78 s |
+| scratch clone of `5fad5ce4` plus the Wave Gate 3 files (`proposals/forge2-m1-conformance/run_regression.py`), first try |1 (the runner itself)|my own interference: I renamed a record file while the runner copied the tree; no check had run |
+| the same, second try: Stage EXIT cases 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| the same clone: `check_frozen_pr_gate.py HEAD`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`; for all 93 Markdown files outside `results/` |0; 0, 0, 0; 1|the 2 older Stage 9 links, and 1 link of the demo document to this report, which was written after the clone was made (checked again on the staged tree below) |
+| the same clone: `exit_slice1.py`, `exit_slice2.py`, `exit_slice3.py`, `exit_m1_conformance.py`, each `--case evidence` |0; 0; 0; 0|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`: unchanged |
+| the same clone: the unchanged demo with one component broken, 7 mutations (`run_broken_acts.py`) |1 for 7 of 7|unchanged clone: 0 before (74 s) and 0 after (73 s) |
+| Stage 7; Stage 9; Stage 10; any HOL process; the EXIT scripts in the working tree |NOT RUN|the EXIT scripts ran in the clone only |
+| the staged tree before the commit: `check_frozen_pr_gate.py`; `check_links.py` for `README.md`, `ROADMAP.md`, `unsure.md`, the demo document, this gate's report and review; for all 94 Markdown files outside `results/`; `tsc --noEmit` |0; 0 each (6); 1; 0|only the 2 older Stage 9 links; 0 protected paths among the 15 staged files; after the regression only documents and one expected text of the mutation runner changed |
+| commit; push of branch `demo/skeptic-gauntlet`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected hosted result: exit 3 (UNSUPPORTED) |
+
+[Demo document](docs/demo-gauntlet.md).
+[Wave Gate 3 report](proposals/forge2-demo-gauntlet/REPORT.md).
+[Review text and disposition](proposals/forge2-demo-gauntlet/REVIEW.md).
+Not proved by this work: anything. The repairs after the review and
+the later change of the process sampler were not reviewed.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Wave Gate 2: `README.md` written again as the front door; master idea items F2.7 and F3.3 (NOT STARTED); records of pull request 49 (documents only); pull request 50 merged on the owner's word as `5fad5ce4` — U463, U464, U465
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. Documents only: `README.md`,
@@ -40,7 +74,9 @@ F2.7 and F3.3 are NOT STARTED.
 | --- | --- | --- |
 | the staged tree before the commit (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `README.md`, `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`; for all 91 Markdown files outside `results/` |0; 0, 0, 0, 0; 1|0 new links without a target: only the 2 older Stage 9 links; 0 protected paths among the 4 staged files |
 | any EXIT script; any Dafny, HOL or Docker process |NOT RUN|documents only; the code files are byte-equal to `e972ceb9` |
-| commit; push of branch `docs/front-door-and-v2-horizon`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected hosted result: exit 3 (UNSUPPORTED) for documents |
+| rows added with the Wave Gate 3 records (U465): commit `1cddea45`; `git push -u origin docs/front-door-and-v2-horizon`; `gh pr create` (pull request 50) |0; 0|no administrator rights at that step |
+| hosted `gate/pr_check.py`, pull request 50, head `1cddea45`, run 44437118671 (Linux profile) |3|UNSUPPORTED, as expected for documents: 4 coverage findings |
+| `gh pr merge 50 --squash --admin` (the owner's word for this one pull request: answer "Merge 50 only" to a question of the agent) |0|squash commit `5fad5ce4`, 2026-11-19 01:31Z; OVERRIDE of the review rule and of the red gate status; `git diff --quiet origin/main 1cddea45` exit 0 |
 
 The numbers in `README.md` are copied from the records of the named
 runs. They were not measured again for this section (U464).
