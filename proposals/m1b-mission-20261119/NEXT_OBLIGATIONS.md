@@ -116,3 +116,23 @@ to the existing issuer, link X16; no code exists):
 | U8 | the approved spec has no state; amount 0 commits repeatedly | owner decision |
 | S2 | `expect` gives partial correctness; the fix is in `gate/` | owner decision |
 | S1, E1, E2, E4, E5 | `main` is not protected; one machine holds both identities | ENFORCED: none today |
+
+## 6. Update after wave 5 (2026-11-19T07:26Z)
+
+- Rows 2 to 5 of section 2: second drafts exist
+  (`drafts/route-a/v2/`). Order changes: prefix lemma, then L-OUT, then
+  L-EXIT-0 (it needs the L-OUT theory). Row 5, the halt-value range,
+  is NOT derivable from the stored theorems (report G6): it leaves the
+  run order. The consequence stands: exit status carries no proof
+  meaning; a consumer decides by a strict parse.
+- New in the same class as L1: the processor erasure lemma
+  `BranchTo_erase_untagged` (report G2) and the conditional space
+  theorem P9a (report G7). Both are drafts.
+- Dafny side, no HOL needed: restate the sink core and `SliceSafety`
+  with the step-local signature assumption (reviews G10, G9).
+- Consumer tests 7 to 14 of section 3 are written and run on a
+  scratch harness (report G5). They are not product code.
+- Owner decisions now waiting: the `expect` gate diff (SHA-256
+  `70910e2e…`, report G1); amount 0 (report G3: it is approved intent
+  today); the numbers N, H, S, T of the resource assumptions (report
+  G7); enforcement (report D8); the Linux probe.

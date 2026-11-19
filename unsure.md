@@ -17791,3 +17791,42 @@ curl: (6) Could not resolve host: github.com
   executable chain. M1-B OPEN. end_to_end=false.
 - Next check: restate SliceSafety with the step-local A1; the owed
   records; the last two workers; the replay; L1.
+
+## U480 — wave 5 complete (eleven reports): the halting hole is wider than the first test showed; the halt-value range is not derivable; an unapplied gate rule
+- Status: 2026-11-19T07:26Z (inserted by the shell from `date -u`). Refs U475 to
+  U479. Reports G1 to G11. Runs named here are the workers' runs
+  unless I say otherwise.
+- CORRECTION of U475 finding A ("not run: the hostile-tests tier,
+  which may catch a halting body"): it catches the four first
+  submissions only because the gate's fixed seeds produce amount 7.
+  An `expect` that halts on amount 61, 1000, 123456789 or 2^63-3
+  passes EVERY tier of the present gate (0 of 50 other seeds catch
+  it). Also admitted by every tier: `:- expect`, `expect` in a
+  by-method, and a stack overflow, an out-of-memory and a 10^18-step
+  loop keyed to one amount. A looping submission gets no verdict: the
+  gate's runner has no time limit.
+- An UNAPPLIED rule: no word `expect` outside comments and literals
+  (a fail-closed lexer). Over 75 submissions it refuses the 12 of the
+  `expect` family and no correct one; the resource class stays
+  admitted. The diff touches only gate/refund.py (protected), SHA-256
+  70910e2e…9ce3; `git apply --check`, run by me: exit 0; nothing
+  applied. It needs the owner's approval of the exact diff.
+- The halt-value range (x0 is 0, 1 or 2 at every halt) is NOT
+  derivable from the stored theorems: each semantics layer drops the
+  halt value. So no HOL statement of today can tie the exit status to
+  the outcome beyond "Success iff x0 = 0 at the halt address". No
+  stored premise excludes an FFI return to the halt address with
+  x0 = 2^32; nothing shows it happens. Reachability is neither
+  claimed nor denied.
+- The strict-prefix statement survives a mirror test (0 of 78,357
+  prefixes accepted; a test of a Python mirror, not a proof). The
+  worker estimates 5 to 10 percent that a whole HOL script passes at
+  the first attempt.
+- Replay: 120 of 158 at 07:13Z; the machine is on battery power
+  again and no HOL process runs.
+- NOT RUN: every HOL step.
+- Impact: source admission by the present gate is a finite test for
+  halting behaviour. M1-B OPEN. CURRENT none. Stage 9 deferred.
+  Stage 12 unauthorized. end_to_end=false.
+- Next check: mains power; the owed Dafny records; the restated sink
+  core; the replay end; L1.

@@ -28,6 +28,28 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## M1-B mission, wave 5: eleven workers; one composed Dafny lemma in the shape of the target; an audit of the records; the sink core's assumption cannot be met as written; the halting hole is wider — U477 to U480
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pinned Dafny, gate options: `dafny verify SliceTheorem.dfy` (worker's attempts 1 to 4; then the orchestrator with a stored log) |1; 0; 0; 0; 0|attempt 1: a crash of the pinned Dafny on a refinement; final: 1570 verified, 0 errors; lemma `SliceSafety` |
+| `run_exit_status_broken_caller_control.py` (orchestrator) |1|9 of 18 rows differ, as it must |
+| `git apply --check` of the proposed `gate/refund.py` diff (orchestrator; nothing applied) |0|SHA-256 `70910e2e…` |
+| worker runs NOT run again: review proof `Attack.dfy`; witness; 5,500 differential sequences sink against compiled core; consumer tests; binding verifier and 22 controls; all gate tiers on 39 submissions; `0 < amount` on copies |0; 0; 0; 0; 0 and 1 each; per file; 0|60 verified (assumption A1 cannot be met by a real signature scheme); 67 verified; 0 divergences; 157 rows; identity only; an `expect` keyed to a rare amount is admitted by every tier; implementations verify unchanged |
+| hosted `gate/pr_check.py`, pull request 58, heads `ffa315e7` and `fa4f62e7` (read by a worker) |3; 3|UNSUPPORTED |
+| every HOL step |NOT RUN|the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases |WAITING on battery power|120 of 158 at 07:13Z: 116 as recorded, 1 to run again, 3 have no source file: at most 155 can run |
+
+[Tracker, wave 5](proposals/m1b-mission-20261119/TRACKER.md).
+[Graph, sections 8 and 9](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md).
+[Next obligations](proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md).
+`SliceSafety` is a Dafny model result: ValidArtifact is a hypothesis
+in it, and its signature assumption must be reworded.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission, after wave 4: exit-status statements corrected; fail-closed caller inspected; next obligations — U476
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
