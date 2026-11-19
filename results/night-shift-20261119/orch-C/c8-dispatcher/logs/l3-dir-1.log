@@ -1,0 +1,10 @@
+r1 committed
+flush 1 {"emitted":[{"requestId":"r1","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r1\"}"}],"refused":[],"alreadyDispatched":0}
+r2 committed
+r3 committed
+flush 2 {"emitted":[{"requestId":"r2","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r2\"}"},{"requestId":"r3","intent":"{\"amount\":\"100\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r3\"}"}],"refused":[],"alreadyDispatched":1}
+restored the folder
+sink restart: start-up audit passed
+retry r2 committed retry r3 committed
+flush 3 {"emitted":[{"requestId":"r2","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r2\"}"},{"requestId":"r3","intent":"{\"amount\":\"100\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r3\"}"}],"refused":[],"alreadyDispatched":1}
+effects r1,r2,r3,r2,r3 total 1400 of 1000; duplicates ["r2","r3"]

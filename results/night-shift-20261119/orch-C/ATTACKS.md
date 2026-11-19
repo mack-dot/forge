@@ -148,3 +148,39 @@ Entries below: target = B's judges at 1481d818 (tests/refund-finality/regress/, 
 - Threat reading: the sink under test runs inside the judge process. For a trusted sink this is about exit-code hygiene (early exit, missing count check), not about a hostile sink.
 
 ## C-NEG-08 (14:49:11Z) no false alarm and no v6 counterexample from B's oracle (worker runs: seeds 1-3, fault and interleave modes, 200 each: only P5-SILENT). 17 mutants are caught by at least one judge (reject-all, reject-zero, reject-full, reject-second, no outbox, outbox twice, and others).
+
+Entries below: C's own re-runs at 14:52:11Z. Dispatcher command form: c8-dispatcher/run.sh <script> <work dir> <mode> (cwd = target-v6, scrubbed env). Logs c8-dispatcher/recheck/.
+
+## C-ATT-17 (14:52:11Z) the dispatcher lock has no owner: one documented operator step gives two effects for one request id and a total above the original — CONFIRMED, NEW, HIGH
+- Class: concurrency / retry at the effect point. Attacker: NONE. An honest operator follows the header's recovery step ("a person removes the lock file") for a run that is slow, not dead; a second honest run follows. No key, no database write, no config.
+- dispatcher.ts:79 `finally { closeSync(lock); unlinkSync(lockPath); }` removes whatever lock file is at the path; the ledger (:82) and the outbox rows (:86) are read once per run.
+- Repro (deterministic: a blocking emit waits for a control file): l1_lock_theft.ts <W> two -> EXIT 1 (effects A:r1 B:r2 A:r2; 1200 of 1000). `three` -> EXIT 1: ONE operator step; run A's finally deletes run B's lock; run C starts with no operator step; effects A:r1 B:r2 C:r3 B:r3; 1200 of 1000. `control` -> EXIT 0. SHA-256 l1_lock_theft.ts a99305a8eb1a2d6dcffa7a937001ed13e4d7b20c545344d0e9e7d4aa1e8c3167, dchild.ts 1be296a2…1a79.
+- Expected: at most one effect per request id. Detection only afterwards: later runs stop with "ledger is not one chain".
+- Sent to B 14:52:11Z. Regression: PENDING. Re-run against fix: NOT RUN.
+
+## C-ATT-18 (14:52:11Z) a throwing emit loses the effect silently — CONFIRMED, NEW (claims gap, medium)
+- The ledger line is written, emit throws before sending, the finally removes the lock; the retry counts the request in alreadyDispatched with refused=[]. A ledger line for a lost effect is identical to one for a sent effect. The header covers only "a process that dies". l2_silent_loss.ts <W> throw -> EXIT 1; ok -> EXIT 0. SHA-256 ce92836b…3716.
+
+## C-ATT-19 (14:52:11Z) an OLDER ledger (restored backup) repeats emits: 1400 on 1000 — CONFIRMED; KNOWN class (C-ATT-13, B-8(a)); the header names only a MISSING ledger
+- l3_ledger_restore.ts <W> ledger -> EXIT 1; none -> EXIT 0. Attacker: none (an operator restores a backup). Worker run only: mode `dir` EXIT 1.
+
+## C-ATT-20 (14:52:11Z) a BLOB-typed outbox request_id hides a committed refund from the dispatcher — CONFIRMED, NEW, LOW (database writer without the key)
+- dispatcher.ts:87 filters the row out before any check: not emitted, not refused, counted in alreadyDispatched. l7_rowtype.ts <W> blob -> EXIT 1; nul -> EXIT 0. SHA-256 cd8d60a6…3806.
+
+## C-NEG-09 (14:52:11Z) dispatcher, honest histories — NO counterexample: 1554 histories of length 1-4 (zero and non-zero refunds, held tokens, dispatch at any point, restart): 0 bad (worker runs, 16 chunks EXIT 0); shared ledger for two charges: liveness cost only (l6: EXIT 0, C's run); U+0000 in outbox ids: deduplicated or refused (l7 nul: EXIT 0, C's run).
+
+Entries below: target = B's gate rule 3 (orch-B/e-subset3/subset_rule3.py, diff/refund-subset3-combined-scope.diff). Logs c5-gate/recheck/.
+
+## C-GATE-01 (14:52:11Z) rule 3: NO admitted submission that halts, throws or answers wrongly was found (worker: about 35 candidates; 13 refused; the admitted ones are blocked by Dafny or harmless, some by ARGUMENT only)
+- C's run: python3.10 -I c5-gate/tools/task3.py -> EXIT 0: all seven known unsafe refused; halting 24 of 24 refused; hostile rows 20 of 177 admitted = B's record; correct 46 admitted, 21 refused; drift 0.
+
+## C-GATE-02 (14:52:11Z) rule 3 recognizer is quadratic and unbounded in time inside the gate process — CONFIRMED, NEW (availability; attacker: the submitter)
+- subset_rule3.py body_open (lines 302-306) with subset3_close per `{`. Nested braces in a ghost clause: C's run of regress.sh check D1: 18.6 s, verdict "pass W=209 T=6" (ADMITTED). Worker: 20,000 levels 104.9 s. Expected: a fast bounded refusal.
+
+## C-GATE-03 (14:52:11Z) wiring: the rule checks bytes read BEFORE the input snapshot — CONFIRMED by static check only (regress.sh D2); the end-to-end swap is NOT RUN; WEAK (needs a second process that writes the submission file during the gate run)
+- Gate copy with the combined-scope diff: read at line 1055, rule at 1073, re-read by identity() at 1081, snapshot at 1193; only the end state is compared with the snapshot.
+
+## C-GATE-04 (14:52:11Z) rule 3 FALSE REJECTIONS of natural correct work: 5 of 10 new submissions refused — CONFIRMED (C's recognizer runs on G01, G02, G03, G08, G09; worker's Dafny verify exit 0 for all five: not re-run by C)
+- G01 SUBSET3_TYPE (helper with a seq parameter); G02 SUBSET3_NAME (let-expression in a helper); G03 SUBSET3_GUARD_BRACE (`reason in {..}` in a guard); G08 SUBSET3_NAME (a local declared once in each of two branches); G09 SUBSET3_PRODUCT (amount times a named constant). G08 and G09 are classes not in B's reviewer list.
+- With B's 21 of 67: the rule refuses about a third to a half of correct work. Not a reject-all gate; a high false-rejection rate.
+- Regression for C-GATE-02/03: bash c5-gate/regress.sh [RULE_PY] [GATE_PY] -> EXIT 1 now. 04be9739902cf93f9958e0e2e0433c121c4f844dfc91353f13117f4d2f0b49fe  regress.sh

@@ -1,0 +1,5 @@
+r1 committed
+r2 committed
+outbox [{"seq":1,"t":"text","h":"7231"},{"seq":2,"t":"text","h":"7232"}]
+flush {"emitted":["r1","r2"],"refused":[],"already":0}
+silently missing: [] duplicates: []

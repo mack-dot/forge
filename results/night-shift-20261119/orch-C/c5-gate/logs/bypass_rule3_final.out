@@ -1,0 +1,34 @@
+bypass/C01-literal-dead-branch.dfy | pass W=239 T=6
+bypass/C02-int-match-stmt-no-default.dfy | pass W=236 T=6
+bypass/C03-int-match-expr-no-default.dfy | pass W=227 T=6
+bypass/C04-string-match-no-default.dfy | pass W=233 T=6
+bypass/C05-unary-minus-900.dfy | pass W=1114 T=6
+bypass/C06-parens-120.dfy | SUBSET3_SHAPE: unrecognized structure (RecursionError)
+bypass/C07-const-function-cycle.dfy | SUBSET3_RECURSION: call cycle K -> F -> K
+bypass/C08-const-calls-method.dfy | SUBSET3_CALL: call of `M` in an expression is outside the allow-list
+bypass/C09-div-by-named-zero.dfy | SUBSET3_PRODUCT: division by a non-literal or zero
+bypass/C10-div-by-zero-expr.dfy | SUBSET3_PRODUCT: division by a non-literal or zero
+bypass/C11-div-by-match-zero.dfy | SUBSET3_PRODUCT: division by a non-literal or zero
+bypass/C12-div-by-neg-zero.dfy | SUBSET3_PRODUCT: division by a non-literal or zero
+bypass/C13-div-by-000.dfy | SUBSET3_PRODUCT: division by a non-literal or zero
+bypass/C14-expect-in-assert-by.dfy | SUBSET3_FORBIDDEN: `expect`
+bypass/C15-by-attr-method.dfy | SUBSET3_NAME: declared name `{` is refused (shape, JavaScript name or shadowing)
+bypass/C16-attr-on-module.dfy | pass W=209 T=6
+bypass/C17-ghost-let-semicolon.dfy | SUBSET3_STATEMENT: statement `b` is outside the allow-list (in Assess)
+bypass/C18-pattern-field-names.dfy | pass W=237 T=6
+bypass/C19-member-named-amount.dfy | pass W=227 T=6
+bypass/C20-member-toJSON.dfy | pass W=227 T=6
+bypass/C21-member-__defineGetter.dfy | pass W=240 T=6
+bypass/C22-bare-cr-lines.dfy | pass W=209 T=6
+bypass/C23-ls-comment.dfy | pass W=209 T=6
+bypass/C24-formfeed-between-tokens.dfy | SUBSET3_LEX: character U+000C outside comments and literals
+bypass/C25-string-escapes.dfy | pass W=214 T=6
+bypass/C26-eq-chain.dfy | pass W=219 T=6
+bypass/C27-neq-chain.dfy | pass W=219 T=6
+bypass/C28-bang-bang.dfy | SUBSET3_NAME: unknown or refused name `!!` in Assess
+bypass/C29-mult-chain-1900.dfy | pass W=4031 T=6
+bypass/C30-brace-nest-dos.dfy | pass W=209 T=6
+bypass/C31-keyed-mult-chain-1880.dfy | pass W=4005 T=6
+bypass/C32-keyed-mult-6x300.dfy | pass W=3910 T=6
+bypass/P1-match-and-literal-probe.dfy | pass W=273 T=6
+exit 0
