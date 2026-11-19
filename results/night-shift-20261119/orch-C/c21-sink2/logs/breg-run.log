@@ -1,8 +1,8 @@
-# judge=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-88ae6cbf/tests/refund-finality/regress/run.ts
-# sink=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-88ae6cbf/ts/refund-finality/sink.ts sha256=5a01c37a68cc4f8c46dbf2b13199930eb0da27b35c884ed323aeeec30b388879
-# dispatcher=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-88ae6cbf/ts/refund-finality/dispatcher.ts sha256=1bc6f21e860d5e73067d987c554434ef2a94de1b04836195d075a1055c195f77
-# trusted encoding=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-88ae6cbf/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
-# encoding next to the sink=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-88ae6cbf/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# judge=<SCRATCH>/redteam-C/fix-88ae6cbf/tests/refund-finality/regress/run.ts
+# sink=<SCRATCH>/redteam-C/fix-88ae6cbf/ts/refund-finality/sink.ts sha256=5a01c37a68cc4f8c46dbf2b13199930eb0da27b35c884ed323aeeec30b388879
+# dispatcher=<SCRATCH>/redteam-C/fix-88ae6cbf/ts/refund-finality/dispatcher.ts sha256=1bc6f21e860d5e73067d987c554434ef2a94de1b04836195d075a1055c195f77
+# trusted encoding=<SCRATCH>/redteam-C/fix-88ae6cbf/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=<SCRATCH>/redteam-C/fix-88ae6cbf/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
 # expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=-
 PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
 PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted

@@ -1,8 +1,8 @@
-# owner=d-reqid start=2026-11-19T07:49:28Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# owner=d-reqid start=2026-11-19T07:49:28Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1419
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SinkCoreReqId.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SinkCoreReqId.dfy
 SinkCoreReqId.dfy(631,2): Error: a postcondition could not be proved on this return path
     |
 631 |   {

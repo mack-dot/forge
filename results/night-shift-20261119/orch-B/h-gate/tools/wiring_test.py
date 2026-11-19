@@ -3,7 +3,7 @@ The functions are taken from the gate copy by text. `run` executes the real Node
 file; Dafny is NOT run: translate is stubbed by copying an existing translation. Prints one line per case."""
 import json, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
-H = Path('/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate')
+H = Path('<REPO>/results/night-shift-20261119/orch-B/h-gate')
 B = H / 'gate-new/b'
 src = (B / 'gate/refund.py').read_text()
 i = src.index('def js_bound('); j = src.index('def hostile(')

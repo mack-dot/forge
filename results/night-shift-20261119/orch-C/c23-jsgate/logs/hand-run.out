@@ -1,0 +1,8 @@
+H03-field-getter-collision run rc=2 wall=0s :: THROW TypeError Cannot set property is_Check of [object Object] which has only a getter ms 0
+H04-elementaccess-getter run rc=142 wall=30s :: 
+H05-undefined-runtime-helper run rc=2 wall=0s :: THROW TypeError _dafny.EuclideanModulo is not a function ms 0
+H06-receiver-type-confusion run rc=2 wall=0s :: THROW TypeError response.dtor_amount.Union is not a function ms 1
+H09-concat-string-literal-throw run rc=2 wall=0s :: THROW TypeError b.join is not a function ms 1
+H10-datatype-equals-recursion run rc=2 wall=0s :: THROW RangeError Maximum call stack size exceeded ms 4
+H-SETEQ-quadratic run rc=142 wall=30s :: 
+H-MOD-growth run rc=0 wall=1s :: decision Authorized plan 1 ms 305

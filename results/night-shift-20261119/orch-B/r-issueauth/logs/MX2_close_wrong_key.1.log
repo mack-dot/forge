@@ -1,0 +1,38 @@
+# owner=r-issueauth start=2026-11-19T16:39:54Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-issueauth/x/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 653
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MX2_close_wrong_key.dfy
+# memory free percent: 40
+MX2_close_wrong_key.dfy(172,6): Error: a postcondition could not be proved on this return path
+    |
+172 |       return;
+    |       ^^^^^^^
+
+MX2_close_wrong_key.dfy(144,15): Related location: this is the postcondition that could not be proved
+    |
+144 |     ensures m2 == After(m, KeyFor(a, pre, t, h), o)
+    |                ^^
+
+
+Dafny program verifier finished with 183 verified, 1 error
+       36.19 real        12.67 user         1.93 sys
+           192659456  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              107073  page reclaims
+                 268  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  26  signals received
+                1226  voluntary context switches
+              323740  involuntary context switches
+         93018801950  instructions retired
+         43405995305  cycles elapsed
+           215270696  peak memory footprint
+# end=2026-11-19T16:40:30Z
+exit 4

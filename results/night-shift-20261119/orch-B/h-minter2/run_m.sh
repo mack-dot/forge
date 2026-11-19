@@ -1,6 +1,6 @@
 #!/bin/bash
 # h-minter2: one light Node run (seconds). usage: run_m.sh <treeRoot> <script.ts> <logname> [args...]
-H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter2
+H=<REPO>/results/night-shift-20261119/orch-B/h-minter2
 T=$1; S=$2; L=$3; shift 3
 pmset -g batt | head -1 > $H/runs/$L.log
 cd "$T" || exit 65

@@ -6,8 +6,8 @@
 # started. Exit 0 = the minter started, answered the honest request, and no marker of foreign code in node exists.
 # A marker written by the launch SHELL (path_cut) is reported, not counted (it is the caller's own code, own process).
 unset GH_TOKEN GITHUB_TOKEN
-E=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c24-minter2
-R=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-370ff65c
+E=<REPO>/results/night-shift-20261119/orch-C/c24-minter2
+R=<SCRATCH>/redteam-C/fix-370ff65c
 L=$R/ts/refund-finality/launch/minter-launch.sh; D=$E/closed; PIN=$(/usr/bin/shasum -a 256 $D/MANIFEST.sha256 | /usr/bin/cut -d' ' -f1)
 C=$1; rm -f $E/markers/*; W=$E/work/s10-$C; rm -rf $W; mkdir -p $W
 REQ='{"id":1,"pre":{"chargeId":"ch_L","original":"1000","refundEnabled":true,"remaining":"1000"},"transition":{"intent":{"amount":"0","chargeId":"ch_L","reason":"duplicate_charge","requestId":"rq_L"},"post":{"chargeId":"ch_L","original":"1000","refundEnabled":true,"remaining":"1000"},"request":{"amount":"0","reason":"duplicate_charge","requestId":"rq_L"}}}'
@@ -17,7 +17,7 @@ case $C in
   honest_store|relative_store)
     # a real hardened sink store for ch_L (needs the minter's key: start once to get it, not needed for the read: the
     # minter reads only the state row; the sink pins a key, so build the store with a throwaway sink key via tsx helper)
-    (cd $R && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$E NODE_PATH=/Users/mackianni/forge/node_modules node --import tsx $E/mkstore.ts $W/s.sqlite) || exit 3
+    (cd $R && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$E NODE_PATH=<REPO>/node_modules node --import tsx $E/mkstore.ts $W/s.sqlite) || exit 3
     if [ $C = honest_store ]; then ARGS="$ARGS $W/s.sqlite"; else ARGS="$ARGS s.sqlite"; fi ;;
   node_options) EXTRA="NODE_OPTIONS=--require=$E/plant/marker.cjs" ;;
   node_path) EXTRA="NODE_PATH=$E/plant/node_modules" ;;

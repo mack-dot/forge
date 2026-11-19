@@ -1,8 +1,8 @@
-# owner=r-signing start=2026-11-19T08:34:16Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/work
+# owner=r-signing start=2026-11-19T08:34:16Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
 # power: Now drawing from 'AC Power'
 # swap free MiB: 583
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MB-ignore-settled.csv mutants/MB-ignore-settled/SliceSafetyV2.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MB-ignore-settled.csv mutants/MB-ignore-settled/SliceSafetyV2.dfy
 mutants/MB-ignore-settled/inputs/transport/sink/SinkCore.dfy(173,24): Error: a postcondition could not be proved on this return path
     |
 173 |     if r.out.Committed? {
@@ -50,7 +50,7 @@ mutants/MB-ignore-settled/SliceSafetyV2.dfy(671,8): Error: Verification out of r
 
 
 Dafny program verifier finished with 1619 verified, 6 errors, 1 out of resource
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MB-ignore-settled.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-MB-ignore-settled.csv
        47.20 real        32.81 user         3.34 sys
            441090048  maximum resident set size
                    0  average shared memory size

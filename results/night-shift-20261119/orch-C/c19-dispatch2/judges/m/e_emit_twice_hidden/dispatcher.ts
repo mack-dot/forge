@@ -1,6 +1,6 @@
 // EVASION (attack input): every effect is SENT TWICE (emit called twice); the worker's effect records are filtered
 // in-process (Array.prototype.push) so the parent sees one record per request id.
-import { Dispatcher as Base } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/dispatcher";
+import { Dispatcher as Base } from "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/dispatcher";
 const P0 = Array.prototype.push;
 Array.prototype.push = function (this: any[], ...xs: any[]) {
   const ys = xs.filter(x => !(x && typeof x === "object" && "ledgerHadLine" in x && this.some((y: any) => y && y.requestId === x.requestId)));

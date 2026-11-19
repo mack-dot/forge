@@ -9,7 +9,7 @@
 set -u
 CORE=${1:?core module}; OUT=${2:?out dir}; shift 2
 [ $# -ge 1 ] || { echo "usage: heavy_spec.sh <core> <outDir> <sink>..." >&2; exit 2; }
-LOCKS=${LOCKS:-/Users/mackianni/forge/results/night-shift-20261119/locks}
+LOCKS=${LOCKS:-<REPO>/results/night-shift-20261119/locks}
 COUNT=${COUNT:-5000}; SEED=${SEED:-20261119}; TMO=${TMO:-1800}
 refuse() { if [ -e "$LOCKS/hol.lock" ] || pgrep -f 'bin/hol' >/dev/null; then echo "refused: hol.lock or a HOL process" >&2; exit 64; fi
   pmset -g batt | head -1 | grep -q "AC Power" || { echo "refused: not on AC power" >&2; exit 75; }; }

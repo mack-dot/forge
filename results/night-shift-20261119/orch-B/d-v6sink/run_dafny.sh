@@ -1,8 +1,8 @@
 #!/bin/bash
 # d-v6sink: light Dafny runs through dafny_locked.sh (gate options). Usage: run_dafny.sh <suffix> <steps...>
 # steps: v (verify ShellCoreV6), mD mR mC mP (mutants: must FAIL), b (build --target js + .cjs wrapper), a (audit)
-V=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink; S=$V/dafny; L=$V/logs
-T=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+V=<REPO>/results/night-shift-20261119/orch-B/d-v6sink; S=$V/dafny; L=$V/logs
+T=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G=(--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects)
 TM=${TMO:-90}
 x=$1; shift

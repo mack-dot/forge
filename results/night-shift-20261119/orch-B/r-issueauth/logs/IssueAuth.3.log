@@ -1,0 +1,28 @@
+# owner=r-issueauth start=2026-11-19T16:33:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-issueauth/x/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 748
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IssueAuth.dfy
+# memory free percent: 32
+
+Dafny program verifier finished with 184 verified, 0 errors
+       65.87 real        14.76 user         2.92 sys
+           186793984  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              175385  page reclaims
+                 575  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  28  signals received
+                1863  voluntary context switches
+              442735  involuntary context switches
+         96626959608  instructions retired
+         52237523527  cycles elapsed
+           207619296  peak memory footprint
+# end=2026-11-19T16:34:59Z
+exit 0

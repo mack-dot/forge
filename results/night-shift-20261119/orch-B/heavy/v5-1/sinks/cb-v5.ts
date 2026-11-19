@@ -3,7 +3,7 @@
 // and, for a sink opened on an existing file (interleave mode), takes the anchor from meta 'initial_state' of the
 // file that the test itself wrote. That is a TEST convenience: in deployment the anchor comes from outside the file.
 import { DatabaseSync } from "node:sqlite";
-import { Sink as S5 } from "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink/sink_core_backed_v5";
+import { Sink as S5 } from "<REPO>/results/night-shift-20261119/orch-B/d-v5sink/sink_core_backed_v5";
 export class Sink {
   private s: any = null;
   constructor(private readonly p: string, private readonly c: any) {

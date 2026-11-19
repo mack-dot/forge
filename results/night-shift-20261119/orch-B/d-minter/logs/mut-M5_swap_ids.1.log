@@ -1,8 +1,8 @@
-# owner=d-minter start=2026-11-19T10:02:11Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/src/mutants
+# owner=d-minter start=2026-11-19T10:02:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-minter/src/mutants
 # power: Now drawing from 'AC Power'
 # swap free MiB: 560
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects M5_swap_ids.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects M5_swap_ids.dfy
 # memory free percent: 68
 M5_swap_ids.dfy(128,9): Error: Verification out of resource (IssueBytes2.IssueTokenBytes)
     |

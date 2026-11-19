@@ -1,12 +1,12 @@
-# owner=orchB-recheck start=2026-11-19T09:22:11Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-export-bridge
+# owner=orchB-recheck start=2026-11-19T09:22:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-export-bridge
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1719
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/recheck-x/SliceSafetyFromExport.csv SliceSafetyFromExport.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-x/SliceSafetyFromExport.csv SliceSafetyFromExport.dfy
 # memory free percent: 60
 
 Dafny program verifier finished with 1892 verified, 0 errors
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/recheck-x/SliceSafetyFromExport.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-x/SliceSafetyFromExport.csv
        89.25 real        58.45 user         5.30 sys
            405340160  maximum resident set size
                    0  average shared memory size

@@ -1,7 +1,7 @@
 #!/bin/bash
 # h-sink: builds h-sink.diff (pristine branch export -> changed tree) for the owned paths and the two test edits; checks it.
 set -u
-H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink; B=$H/pristine; T=$H/tree; W=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust
+H=<REPO>/results/night-shift-20261119/orch-B/h-sink; B=$H/pristine; T=$H/tree; W=<SCRATCH>/B-trust
 FILES=(impl/finality-core/IssueBytes2.dfy impl/finality-core/SerModel.dfy impl/finality-core/ShellCoreV3.dfy impl/finality-core/ShellCoreV4.dfy
  impl/finality-core/ShellCoreV5.dfy impl/finality-core/ShellCoreV6.dfy impl/finality-core/SinkCoreV3.dfy scripts/exit_slice1.py
  tests/demo-gauntlet/sink_tool.ts tests/refund-finality/suite.ts ts/refund-finality/core/sinkcore-v6.cjs ts/refund-finality/core/store.ts

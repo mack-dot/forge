@@ -4,9 +4,9 @@
 // F.Authorizes(stored, token).
 import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "/Users/mackianni/forge/ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "<REPO>/ts/refund-finality/encoding";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Draft6 = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6.ts").Sink;
+const Draft6 = require("<REPO>/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6.ts").Sink;
 
 const OUT = process.argv[2], DB = process.argv[3];
 rmSync(DB, { recursive: true, force: true }); mkdirSync(DB, { recursive: true });

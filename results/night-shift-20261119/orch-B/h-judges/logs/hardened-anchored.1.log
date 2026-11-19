@@ -1,11 +1,11 @@
-# 2026-11-19T15:02:52Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/anchor_hsink.ts --only X6-P1-prefix-rollback
+# 2026-11-19T15:02:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts <REPO>/results/night-shift-20261119/orch-B/h-judges/anchor_hsink.ts --only X6-P1-prefix-rollback
 Now drawing from 'AC Power'
-# judge=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
-# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts sha256=bd3f6de8b6b1c15e624531742b133071bc820dcee60cd25126a970376f8caecd
-# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts sha256=79ed98f1ffdffc6b2d5b7c2a6cc4c9101526f6e0a8ce056e2fb08ec956d7aec2
-# trusted encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
-# encoding next to the sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
-# expectedHeadMode=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/anchor_hsink.ts node=v24.3.0 expected ids=1 expect-fail=-
+# judge=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts sha256=bd3f6de8b6b1c15e624531742b133071bc820dcee60cd25126a970376f8caecd
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts sha256=79ed98f1ffdffc6b2d5b7c2a6cc4c9101526f6e0a8ce056e2fb08ec956d7aec2
+# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# expectedHeadMode=<REPO>/results/night-shift-20261119/orch-B/h-judges/anchor_hsink.ts node=v24.3.0 expected ids=1 expect-fail=-
 PASS X6-P1-prefix-rollback: keep-schema writer: write refused by the database (h-sink S5: settled is append-only); drop-triggers writer: SAFE: the rollback is refused or rq_2 is not settled again: mode=anchored honest=committed,committed started=false (h1 sink refuses to serve: start-up audit (schema, ) redelivery=not delivered resettled=false effects(rq_2)=1
 # verdicts=1/1 PASS=1 KNOWN-LIMIT=0 FAIL=0 []
 # unexpected FAIL=[] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]

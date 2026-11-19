@@ -1,4 +1,4 @@
-# 2026-11-19T15:11:44Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/spec-conformance/selftest.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/build/pristine-core/model.cjs
+# 2026-11-19T15:11:44Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/spec-conformance/selftest.ts <REPO>/results/night-shift-20261119/orch-B/p-adopt/build/pristine-core/model.cjs
 Now drawing from 'AC Power'
 {"case":"clean history (incl. zero amount, replay, wrong key, stale)","expected":"no violation","flagged":[],"first":null,"pass":true}
 {"case":"P1: unapproved reason committed","expected":"P1","flagged":["P1"],"first":{"property":"P1","index":0,"detail":"effect {\"amount\":\"30\",\"chargeId\":\"ch_1\",\"reason\":\"fraud\",\"requestId\":\"r1\"} is not the one intent that Assess authorizes (request \"r1\", open=true)"},"pass":true}

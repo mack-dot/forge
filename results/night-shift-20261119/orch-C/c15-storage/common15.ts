@@ -1,9 +1,9 @@
 // c15-storage helper. Target modules from the read-only target-v6 checkout. Throwaway Ed25519 key (fresh minter process).
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-export const ROOT = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6";
-export const CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/build/issuebytes2.cjs";
-export const EV = "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c15-storage";
+export const ROOT = "<SCRATCH>/redteam-C/target-v6";
+export const CORE = "<REPO>/results/night-shift-20261119/orch-B/d-minter/build/issuebytes2.cjs";
+export const EV = "<REPO>/results/night-shift-20261119/orch-C/c15-storage";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 // eslint-disable-next-line @typescript-eslint/no-require-imports

@@ -1,8 +1,8 @@
 // c8-dispatcher helper: throwaway minter process (fresh Ed25519 key), sink, dispatcher of the target-v6 checkout.
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-export const ROOT = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-608b5165";
-export const CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+export const ROOT = "<SCRATCH>/redteam-C/fix-608b5165";
+export const CORE = "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 // eslint-disable-next-line @typescript-eslint/no-require-imports

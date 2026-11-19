@@ -1,4 +1,4 @@
-cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/home TMPDIR=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/home LANG=C node --import tsx tests/refund-finality/regress/p_zero_amount.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2/tree c full 
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider2/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider2/home LANG=C node --import tsx tests/refund-finality/regress/p_zero_amount.ts <REPO>/results/night-shift-20261119/orch-B/h-provider2/tree c full 
 swap free MiB before: 1245
 {"test":"p_zero_amount","mode":"c","anchor":"full","commits":["committed","committed","committed","committed","committed","committed","committed"],"sinkRestart":true,"emitted":["z1","z2","r1","r2","z3","z4","r3"],"providerCalls":3,"zeroRecorded":4,"events":[],"money":{"total":"350","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:100","r2:200","r3:50"]}}
 positive control: PASS

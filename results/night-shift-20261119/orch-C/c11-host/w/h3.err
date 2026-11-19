@@ -1,14 +1,14 @@
-/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6/ts/refund-finality/sink.ts:134
+<SCRATCH>/redteam-C/target-v6/ts/refund-finality/sink.ts:134
     if (blob !== this.initText) throw new Error("initial state is not cfg.initialState");
                                       ^
 
 
 Error: initial state is not cfg.initialState
-    at Sink.init (/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6/ts/refund-finality/sink.ts:134:39)
-    at <anonymous> (/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6/tests/demo-gauntlet/sink_tool.ts:16:30)
-    at Object.<anonymous> (/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6/tests/demo-gauntlet/sink_tool.ts:23:12)
+    at Sink.init (<SCRATCH>/redteam-C/target-v6/ts/refund-finality/sink.ts:134:39)
+    at <anonymous> (<SCRATCH>/redteam-C/target-v6/tests/demo-gauntlet/sink_tool.ts:16:30)
+    at Object.<anonymous> (<SCRATCH>/redteam-C/target-v6/tests/demo-gauntlet/sink_tool.ts:23:12)
     at Module._compile (node:internal/modules/cjs/loader:1692:14)
-    at Object.transformer (/Users/mackianni/forge/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
     at Module.load (node:internal/modules/cjs/loader:1427:32)
     at Module._load (node:internal/modules/cjs/loader:1250:12)
     at TracingChannel.traceSync (node:diagnostics_channel:322:14)

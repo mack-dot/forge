@@ -15,8 +15,8 @@
 // The structural lemmas of this file use NO assumption (arbitrary tokens, arbitrary sigOk, arbitrary H).
 // IssueBytes: the issuer. It calls the PROVED F.Check and returns the signed bytes of the checked transition.
 // No assume, no axiom, no bodiless lemma, no {:extern}, no expect in this file.
-include "/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-ser2/SerModel.dfy"
-include "/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-ser2/v3/inputs/transport/impl/RefundFinality.dfy"
+include "<REPO>/results/night-shift-20261119/orch-B/b-ser2/SerModel.dfy"
+include "<REPO>/results/night-shift-20261119/orch-B/b-ser2/v3/inputs/transport/impl/RefundFinality.dfy"
 
 module HashCore {
   import F = RefundFinality

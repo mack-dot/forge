@@ -1,8 +1,8 @@
-# owner=r-restart start=2026-11-19T10:03:25Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-restart/controls/C3-step-commit-all
+# owner=r-restart start=2026-11-19T10:03:25Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/controls/C3-step-commit-all
 # power: Now drawing from 'AC Power'
 # swap free MiB: 560
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-restart/logs/C3-KeyedStore-incl.csv KeyedStore.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C3-KeyedStore-incl.csv KeyedStore.dfy
 # memory free percent: 72
 src/MultiCharge.dfy(216,23): Error: assertion might not hold
     |
@@ -156,7 +156,7 @@ src/SliceSafetyV3.dfy(1009,8): Error: Verification out of resource (SliceWitness
 
 
 Dafny program verifier finished with 1807 verified, 17 errors, 2 out of resource
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-restart/logs/C3-KeyedStore-incl.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C3-KeyedStore-incl.csv
        65.77 real        48.01 user         3.76 sys
            413433856  maximum resident set size
                    0  average shared memory size

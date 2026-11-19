@@ -4,7 +4,7 @@ that differs from the oracle (wrong authorization = (a); REFUSED for a well-type
 usage: python3 -B -I fuzz_oracle.py SEED N   (N <= 2000; 4 worker threads, one process each)"""
 import sys, random, json
 from concurrent.futures import ThreadPoolExecutor
-sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c14-parser')
+sys.path.insert(0, '<REPO>/results/night-shift-20261119/orch-C/c14-parser')
 from common import run, as_result, oracle, fc, frame, MAX, APPROVED  # noqa
 
 seed, n = int(sys.argv[1]), min(int(sys.argv[2]), 2000)

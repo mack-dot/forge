@@ -11,7 +11,7 @@ import { mkdirSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from
 import { hostname } from "node:os";
 import { join } from "node:path";
 import { procs } from "./c_lib";
-import { argv, dups, guard, total, verdict, world } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
+import { argv, dups, guard, total, verdict, world } from "<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
 const mode = process.argv[4] ?? "remove";
 guard((async () => {
   const { root, core } = argv();

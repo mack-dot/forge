@@ -1,0 +1,38 @@
+# owner=r-issueauth start=2026-11-19T16:42:19Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-issueauth/x/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 600
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MX1_settled_skipped.dfy
+# memory free percent: 33
+MX1_settled_skipped.dfy(167,6): Error: a postcondition could not be proved on this return path
+    |
+167 |       return;
+    |       ^^^^^^^
+
+MX1_settled_skipped.dfy(125,32): Related location: this is the postcondition that could not be proved
+    |
+125 |     ensures o.RefusedCompleted? <==> !IsReplay(m, a, pre, t, sh, ch, h) && a.Store? && a.state == pre && a.requestSettled
+    |                                 ^^^^
+
+
+Dafny program verifier finished with 183 verified, 1 error
+       61.90 real        14.87 user         3.02 sys
+           183517184  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              194112  page reclaims
+                 241  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  26  signals received
+                1271  voluntary context switches
+              412252  involuntary context switches
+         98224414011  instructions retired
+         52737888829  cycles elapsed
+           207095032  peak memory footprint
+# end=2026-11-19T16:43:22Z
+exit 4

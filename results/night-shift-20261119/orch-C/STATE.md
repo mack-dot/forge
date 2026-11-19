@@ -1,7 +1,7 @@
 # Orchestrator C (red team) state
 
-Started 2026-11-19T14:19:25Z. Branch nightshift/C-redteam from 4af09308 (B head). Worktree: /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/wt.
-Target with adoption-v6.diff applied (uncommitted, read-only use): /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6. A target: dae1b93e.
+Started 2026-11-19T14:19:25Z. Branch nightshift/C-redteam from 4af09308 (B head). Worktree: <SCRATCH>/redteam-C/wt.
+Target with adoption-v6.diff applied (uncommitted, read-only use): <SCRATCH>/redteam-C/target-v6. A target: dae1b93e.
 unsure block U580-U619: none used yet. C holds no lock. HOL lock held by A at start (no heavy run by C).
 Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 
@@ -94,3 +94,12 @@ Split kept: C writes tests that show a gap; B writes fixes.
 - 16:34:54Z: U596 written; pushed 03644bd0. Next unsure id U597. Branch scrub tool: <SCRATCH>/redteam-C/scrub.py <branch orch-C dir> (run after each rsync; rsync overwrites the scrubbed copies). In zsh use explicit commands or ${=var}: an unquoted variable is NOT split. Running: c23, c24; background b3p3kilen (blindspots2.sh).
 - 16:37:39Z: my first re-run of c19-dispatch2/judges/blindspots2.sh ended with exit 124 (my own 500 s time limit): NOT a result. Restarted in the background (b12wmi6em, limit 1700 s; log refix/f08a21c1/C-blindspots2.log ends with 'blindspots2 exit=N'). The judge result for cf242303 stays NOT CONFIRMED until then. Running: c23, c24.
 - 16:39:20Z: c24 DONE; minter/store findings re-run by C (C-ATT-38 spray squat, 39 cached inode, 40 off-retry; C-NEG-16). s10 closed-launch tests NOT re-run (classifier stops the launch class, C-1); worker runs stand for those. Running: c23; background b12wmi6em (judge re-run).
+- 16:40:18Z: U597 written; pushed e0178950. Next id U598. Running: c23 (gate); background b12wmi6em (judge re-run).
+- 16:44:46Z: status sent to the launcher by SendMessage (to main): steps 1-3 done; C-1 stops listed; new C-ATT-33, 36, 38; running c23 + background judge re-run (b12wmi6em). Loop continues.
+- 16:50:13Z: judge re-run DONE by C: blindspots2.sh exit 1 (3 defective inputs still pass both judges: md_ignore_sig, enc_unsigned_body, e_emit_twice_hidden2); 9 of 12 old mutants caught; C-JUDGE-02 and C-JUDGE-03 closed. Sent to B. Running: c23.
+- 16:51:56Z: LAUNCHER ORDER (after my second end of run): (1) record c23 and the judge re-run; (2) ask B for repair SHAs for C-ATT-33/36/38; (3) attack the nearest unproved boundary; status to main after each wave (max 10 lines). Launcher's own check L-CHK-01: d_att17/d_att18 exit 0 on 88ae6cbf, exit 1 on 608b5165.
+  - Done: judge re-run recorded (exit 1; 3 still pass). c23 NOT REPORTED yet (it waits in B's Dafny lock queue). Issuer module I used for the dispatcher re-test: orch-B/h-minter/build/issueonce.cjs, SHA-256 4cf78df8cb0651afcf1ff4b28ac1c96d2f20b4c47b81e14154f5d7f2e2c57842.
+  - B's answer: repairs not landed. Worker h-sink3 (base 370ff65c) has C-ATT-33, 34, 35, 36, 37; notes will be orch-B/h-sink3/HARDENING_NOTES_3.md. C-ATT-38, 39, 40: no worker yet; C-ATT-38 is owner question B-19. Judges: worker h-judges2.
+  - Started worker c25-provider on B's provider anchor at 74fb70eb (launcher priority 2): own fake provider; key scope, key expiry, key per retry, parameter mismatch, zero amount, freshness. Notes orch-B/h-provider2/PROVIDER_ANCHOR_2.md. Overlay fix-74fb70eb.
+  - Running: c23 (gate), c25 (provider anchor).
+- 16:53:20Z: c23 is alive and waits: A holds hol.lock, so orch-B/tools/dafny_locked.sh queues its single-file Dafny runs (B's r-jsbound waits too). No action; no heavy step by C while hol.lock is held. Running: c23 (waiting), c25.

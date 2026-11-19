@@ -2,7 +2,7 @@
 stdout with RLIMIT_FSIZE = bound+1, strict parse) on edge requests. Exit 1 if any verdict differs from
 the oracle. Also checks that every stdout file holds exactly one frame and no byte after it."""
 import sys, os, tempfile
-sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c14-parser')
+sys.path.insert(0, '<REPO>/results/night-shift-20261119/orch-C/c14-parser')
 from common import EXE, oracle, fc, MAX  # noqa
 tempfile.tempdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tmp')
 os.makedirs(tempfile.tempdir, exist_ok=True)

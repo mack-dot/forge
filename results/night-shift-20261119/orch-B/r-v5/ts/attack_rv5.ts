@@ -4,9 +4,9 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-import { canon, signedBytes, stateSha256, sha256hex, DOMAIN, ChargeState } from "/Users/mackianni/forge/ts/refund-finality/encoding";
+import { canon, signedBytes, stateSha256, sha256hex, DOMAIN, ChargeState } from "<REPO>/ts/refund-finality/encoding";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const V6 = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6.ts").Sink;
+const V6 = require("<REPO>/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6.ts").Sink;
 const dir = process.argv[2]; rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true });
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
 const st = (remaining: string, cid = "ch_1", original = "1000"): ChargeState => ({ chargeId: cid, original, remaining, refundEnabled: true });

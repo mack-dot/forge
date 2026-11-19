@@ -5,7 +5,7 @@
 // process and returns its answers.
 import { spawn, ChildProcessWithoutNullStreams } from "node:child_process";
 import { join } from "node:path";
-import { ChargeState, RefundRequest, Token, Transition } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6/ts/refund-finality/encoding";
+import { ChargeState, RefundRequest, Token, Transition } from "<SCRATCH>/redteam-C/target-v6/ts/refund-finality/encoding";
 
 export function propose(pre: ChargeState, request: RefundRequest): Transition {
   return {

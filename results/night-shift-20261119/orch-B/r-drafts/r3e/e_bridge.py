@@ -6,7 +6,7 @@ import hashlib, importlib.util, json, os, signal, sys, time
 
 E = os.path.dirname(os.path.abspath(__file__))
 R3 = os.path.join(os.path.dirname(E), 'r3')                    # byte-equal copies of decide.py, launcher.py, frame.py
-XB = '/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge'
+XB = '<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge'
 BIN = os.path.join(XB, 'bin', 'refund')
 PIN = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
 PY = '/Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/MacOS/Python'

@@ -6,7 +6,7 @@
 # Exit codes: the Dafny exit code; 75 = refused (battery or swap free < 1024 MiB); 76 = lock wait expired;
 # 124 = timeout (Dafny killed). The log ends with a line "exit N". The lock is removed in every exit path.
 set -u
-ROOT=/Users/mackianni/forge
+ROOT=<REPO>
 DAFNY=$ROOT/.toolchain/dafny-4.11.0/dafny/dafny
 export Z3=$ROOT/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 LOCK=$ROOT/results/night-shift-20261119/locks/dafny.lock

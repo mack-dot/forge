@@ -11,20 +11,20 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as sqlite from "node:sqlite";
-import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "<REPO>/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/encoding";
 
 const DIR = __dirname;
-const V3DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v3sink";
+const V3DIR = "<REPO>/results/night-shift-20261119/orch-B/d-v3sink";
 const DB = DIR + "/db";
 rmSync(DB, { recursive: true, force: true }); mkdirSync(DB, { recursive: true });
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Real = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/pristine/ts/refund-finality/sink.ts").Sink;
+const Real = require("<REPO>/results/night-shift-20261119/orch-B/p-adopt/pristine/ts/refund-finality/sink.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Hand = require(V3DIR + "/copies/sink-patched-reqid-chargeid.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Draft = require(V3DIR + "/sink_core_backed_v3.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Draft4 = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/sink.ts").Sink;
+const Draft4 = require("<REPO>/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/sink.ts").Sink;
 
 const trusted = generateKeyPairSync("ed25519"), attacker = generateKeyPairSync("ed25519");
 const SPEC = sha256hex("d-v3sink test spec lock"), CHK = sha256hex("d-v3sink test checker"), OTHER = sha256hex("other");

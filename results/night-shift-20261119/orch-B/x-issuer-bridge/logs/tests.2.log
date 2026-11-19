@@ -1,9 +1,9 @@
 Traceback (most recent call last):
-  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/tests.py", line 281, in <module>
+  File "<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/tests.py", line 281, in <module>
     sys.exit(main())
-  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/tests.py", line 257, in main
+  File "<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/tests.py", line 257, in main
     pins = make_standins()
-  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/tests.py", line 110, in make_standins
+  File "<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/tests.py", line 110, in make_standins
     with open(p, 'w') as f:
-PermissionError: [Errno 13] Permission denied: '/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/standin/truncated'
+PermissionError: [Errno 13] Permission denied: '<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/standin/truncated'
 exit 1

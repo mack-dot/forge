@@ -7,7 +7,7 @@
 # The spec judge does not load a dispatcher: dispatcher mutants count as passed by it.
 # Exit 1 if ANY mutant is passed by both judges (a judge blind spot is present); 0 otherwise.
 # Each mutant's defect is shown real by confirm.sh (exit 1 = defect) with the plain v6 as control (exit 0).
-EV=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges; V=$EV/v6/ts/refund-finality; cd $EV || exit 3
+EV=<REPO>/results/night-shift-20261119/orch-C/c10-judges; V=$EV/v6/ts/refund-finality; cd $EV || exit 3
 LIST="base_v6|sink|dispatcher|v6 m_accept_bad_sig|m_accept_bad_sig|dispatcher|v6 m_accept_noncanon|m_accept_noncanon|dispatcher|v6
 m_skip_prestate|m_skip_prestate|dispatcher|v6 m_replay_says_rejected|m_replay_says_rejected|dispatcher|v6 m_replayed_any|m_replayed_any|dispatcher|v6
 m_id_gt32_or_nonascii|m_id_gt32_or_nonascii|dispatcher|v6 m_late20|m_late20|dispatcher|v6 m_wipe_on_open|m_wipe_on_open|dispatcher|v6

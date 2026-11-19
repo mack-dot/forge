@@ -1,8 +1,8 @@
-# owner=b-integrate start=2026-11-19T08:35:09Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate
+# owner=b-integrate start=2026-11-19T08:35:09Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate
 # power: Now drawing from 'AC Power'
 # swap free MiB: 591
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyV3.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyV3.dfy
 SliceSafetyV3.dfy(731,14): Warning: unusual indentation in body of exists (which ends at line 732, column 67); do you perhaps need parentheses?
     |
 731 |       ensures exists i :: 0 <= i < |r.core.outbox| && r.core.outbox[i] == e &&

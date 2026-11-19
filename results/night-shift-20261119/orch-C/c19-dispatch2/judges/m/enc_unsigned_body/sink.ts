@@ -37,11 +37,11 @@
 // SHA-256, Ed25519.
 import { createPublicKey } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
-import { ChargeState, isState, canon, sha256hex } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/lib/encoding";
+import { ChargeState, isState, canon, sha256hex } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/lib/encoding";
 import { CoreMod, Pos, SinkHead, StoreAuditor, STORE_FORMAT, conv, createSchema, decodeToken, isHead, linkOf, loadCore,
-  must, readStateBlob, sigOkOf, validInitial } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/store";
-export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/store";
-export type { SinkHead } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/store";
+  must, readStateBlob, sigOkOf, validInitial } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/store";
+export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/store";
+export type { SinkHead } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/store";
 
 export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead };
 export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string };

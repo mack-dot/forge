@@ -1,7 +1,7 @@
 #!/bin/bash
 # d-v5sink: single short Node runs (pinned Node 24.3.0, env -i, HOME = this folder). Usage: run_node.sh <suffix> <steps...>
 # steps: n (31 conformance cases), k (attack_v5), d (d_sink_v5), s (ONE 20,000-row scaling probe)
-W=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink; L=$W/logs; R=/Users/mackianni/forge
+W=<REPO>/results/night-shift-20261119/orch-B/d-v5sink; L=$W/logs; R=<REPO>
 export PATH=/opt/homebrew/bin:/usr/bin:/bin
 [ "$(node --version)" = "v24.3.0" ] || { echo "not the pinned Node"; exit 2; }
 x=$1; shift; cd $R

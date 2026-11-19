@@ -1,8 +1,8 @@
 #!/bin/bash
 # r-v5: light Dafny runs through the lock script (gate options). Usage: run_dafny.sh <step...>
-E=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-v5
-L=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
-Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+E=<REPO>/results/night-shift-20261119/orch-B/r-v5
+L=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
+Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G="--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects"
 cd $E/dafny
 run() { name=$1; shift; n=1; while [ -e $E/logs/$name-$n.log ]; do n=$((n+1)); done

@@ -6,8 +6,8 @@
 # Defects of the counted inputs: judges/confirm.ts (exit 1 = defect) for the sink/dispatcher/enc mutants.
 # s_rollback_guard is the SAFER sink of C-JUDGE-02: it is reported (a FAIL there is a false rejection), not counted.
 # Skip the judge runs with REUSE=1 (only re-score existing logs).
-EV=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2; M=$EV/judges/m
-TS=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality
+EV=<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2; M=$EV/judges/m
+TS=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality
 LIST="base|$TS/sink.ts|$TS/dispatcher.ts"
 for s in m_accept_bad_sig m_accept_noncanon m_skip_prestate m_replay_says_rejected m_replayed_any m_id_gt32_or_nonascii m_late20 m_wipe_on_open i_exit_early i_forge_output e_status_lie s_rollback_guard; do LIST="$LIST $s|$M/$s/sink.ts|$TS/dispatcher.ts"; done
 for d in md_ignore_sig md_ignore_chain md_emit_before_ledger e_emit_twice_hidden e_emit_twice_hidden2 e_emit_before_ledger_hidden e_exit0; do LIST="$LIST $d|$TS/sink.ts|$M/$d/dispatcher.ts"; done

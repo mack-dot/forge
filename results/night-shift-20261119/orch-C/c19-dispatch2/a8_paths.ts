@@ -7,7 +7,7 @@
 //        For case/firm: exit 1 = the honest second run is refused (false rejection), 0 = it runs (emits r2 once).
 import { linkSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { argv, dups, guard, verdict, world } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
+import { argv, dups, guard, verdict, world } from "<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
 const mode = process.argv[4] ?? "link";
 guard((async () => {
   const { root, core } = argv();

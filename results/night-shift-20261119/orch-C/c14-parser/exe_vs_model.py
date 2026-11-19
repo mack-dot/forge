@@ -5,7 +5,7 @@ escapes, trailing bytes, NUL, non-UTF-8, nesting). Exit 1 if any stdout differs 
 or rc != 0 or stderr non-empty.  usage: python3 -B -I exe_vs_model.py SEED N (N<=2000)"""
 import sys, random
 from concurrent.futures import ThreadPoolExecutor
-sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c14-parser')
+sys.path.insert(0, '<REPO>/results/night-shift-20261119/orch-C/c14-parser')
 from common import run, MAX  # noqa
 import hol_strict as H  # noqa
 

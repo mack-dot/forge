@@ -1,0 +1,98 @@
+# owner=r-issueauth start=2026-11-19T16:38:44Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-issueauth/x/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 749
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IssueAuthVac.dfy
+# memory free percent: 30
+IssueAuthVac.dfy(160,6): Error: assertion might not hold
+    |
+160 |       assert false; // VAC-2 NotAuthoritative branch
+    |       ^^^^^^
+
+IssueAuthVac.dfy(165,6): Error: assertion might not hold
+    |
+165 |       assert false; // VAC-3 Completed branch
+    |       ^^^^^^
+
+IssueAuthVac.dfy(170,6): Error: assertion might not hold
+    |
+170 |       assert false; // VAC-4 ByCore branch
+    |       ^^^^^^
+
+IssueAuthVac.dfy(245,4): Error: assertion might not hold
+    |
+245 |     assert false; // VAC-8 StepPreserves requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(312,6): Error: assertion might not hold
+    |
+312 |       assert false; // VAC-9 RunSeq loop body
+    |       ^^^^^^
+
+IssueAuthVac.dfy(328,4): Error: assertion might not hold
+    |
+328 |     assert false; // VAC-10 Live requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(341,4): Error: assertion might not hold
+    |
+341 |   { assert false; } // VAC-11 WrongStateHarmless
+    |     ^^^^^^
+
+IssueAuthVac.dfy(346,4): Error: assertion might not hold
+    |
+346 |   { assert false; } // VAC-12 OtherHashHarmless
+    |     ^^^^^^
+
+IssueAuthVac.dfy(356,4): Error: assertion might not hold
+    |
+356 |     assert false; // VAC-13 SquatsThenVictim requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(419,4): Error: assertion might not hold
+    |
+419 |     assert false; // VAC-14 NewKey requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(429,4): Error: assertion might not hold
+    |
+429 |     assert false; // VAC-15 NotAdmitted requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(442,4): Error: assertion might not hold
+    |
+442 |     assert false; // VAC-16 UsedKey requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(456,4): Error: assertion might not hold
+    |
+456 |     assert false; // VAC-17 Replay requires
+    |     ^^^^^^
+
+IssueAuthVac.dfy(464,4): Error: assertion might not hold
+    |
+464 |     assert false; // VAC-18 CoreRefused requires
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 174 verified, 14 errors
+       61.26 real        15.60 user         2.99 sys
+           199737344  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              187528  page reclaims
+                 354  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  29  signals received
+                1622  voluntary context switches
+              436280  involuntary context switches
+        105478463545  instructions retired
+         54855262004  cycles elapsed
+           221250808  peak memory footprint
+# end=2026-11-19T16:39:46Z
+exit 4

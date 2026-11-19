@@ -1,5 +1,5 @@
-# start=2026-11-19T14:41:29Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/ddl 20 28
+# start=2026-11-19T14:41:29Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 20 28
 PASS K=20 child: killed-at 20 CREATE TRIGGER h_outbox_bu BEFORE UPDATE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
 PASS K=21 child: killed-at 21 CREATE TRIGGER h_outbox_bd BEFORE DELETE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
 PASS K=22 child: killed-at 22 COMMIT (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed

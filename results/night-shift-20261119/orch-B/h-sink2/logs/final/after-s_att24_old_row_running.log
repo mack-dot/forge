@@ -1,4 +1,4 @@
 {"sql":{"commits":["committed","committed","committed"],"applied":"ok","retry":"rejected: sink halted: another writer changed the store and the change is not an append of audit-passing rows","outbox":["r1x","z","r2"],"ok":true},"journal":{"commits":["committed","committed","committed"],"applied":"ok","retry":"rejected: sink halted: another writer changed the store and the change is not an append of audit-passing rows","outbox":["r1x","z","r2"],"ok":true},"controls":{"commits":["committed","committed","committed","committed"],"replay":"replayed","retry":"rejected: request id is already settled with another token","ok":true}}
 PASS
-# cmd: (cwd /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_att24_old_row_running.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/tree <issueonce.cjs>
+# cmd: (cwd <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_att24_old_row_running.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree <issueonce.cjs>
 exit 0

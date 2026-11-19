@@ -2,19 +2,19 @@
 node:internal/modules/run_main:105
     triggerUncaughtException(
     ^
-Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/a2_lock_race remove.ts' imported from /Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/a2_lock_race remove.ts' imported from <REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/
     at finalizeResolution (node:internal/modules/esm/resolve:274:11)
     at moduleResolve (node:internal/modules/esm/resolve:859:10)
     at defaultResolve (node:internal/modules/esm/resolve:983:11)
     at nextResolve (node:internal/modules/esm/hooks:748:28)
-    at resolveBase (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:3744)
-    at resolveDirectory (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:4243)
-    at resolveTsPaths (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:4984)
-    at resolve (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:5361)
+    at resolveBase (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:3744)
+    at resolveDirectory (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:4243)
+    at resolveTsPaths (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:4984)
+    at resolve (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104552813:2:5361)
     at nextResolve (node:internal/modules/esm/hooks:748:28)
     at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
   code: 'ERR_MODULE_NOT_FOUND',
-  url: 'file:///Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/a2_lock_race%20remove.ts'
+  url: 'file://<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/a2_lock_race%20remove.ts'
 }
 
 Node.js v24.3.0

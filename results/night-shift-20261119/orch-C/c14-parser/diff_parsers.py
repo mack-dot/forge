@@ -5,7 +5,7 @@ Exit 1 if a frame is ACCEPTED by Python and REJECTED by HOL, or both accept with
 (dangerous direction). Python-rejects/HOL-accepts frames are counted and printed (claim gap / false rejection)
 and also give exit 1 with --identity.  usage: python3 -B -I diff_parsers.py SEED N [--identity]"""
 import sys, random
-sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c14-parser')
+sys.path.insert(0, '<REPO>/results/night-shift-20261119/orch-C/c14-parser')
 from common import frame  # noqa
 import hol_strict as H  # noqa
 

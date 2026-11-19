@@ -1,9 +1,9 @@
 Traceback (most recent call last):
-  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 104, in <module>
+  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 104, in <module>
     main()
-  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 53, in main
+  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 53, in main
     c = val(v['cand'])
-  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 35, in val
+  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 35, in val
     if 'f' in v: return float(v['f'])
 TypeError: float() argument must be a string or a real number, not 'list'
         0.27 real         0.17 user         0.18 sys

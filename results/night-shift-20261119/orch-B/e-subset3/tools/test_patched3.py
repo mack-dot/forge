@@ -5,7 +5,7 @@ import ast, json, re, sys
 from pathlib import Path
 sys.dont_write_bytecode = True
 E = Path(__file__).resolve().parent.parent
-R = Path('/Users/mackianni/forge')
+R = Path('<REPO>')
 sys.path.insert(0, str(E))
 from subset_rule3 import rule as standalone
 

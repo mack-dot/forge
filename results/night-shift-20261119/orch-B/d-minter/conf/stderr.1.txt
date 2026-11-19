@@ -5,7 +5,7 @@
 
 SyntaxError: Unterminated string in JSON at position 370 (line 1 column 371)
     at JSON.parse (<anonymous>)
-    at Interface.<anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/conf/run.ts:29:26)
+    at Interface.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/d-minter/conf/run.ts:29:26)
     at Interface.emit (node:events:507:28)
     at [_onLine] [as _onLine] (node:internal/readline/interface:469:12)
     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:651:22)
@@ -46,8 +46,8 @@ Error: write EPIPE
     at writeOrBuffer (node:internal/streams/writable:570:12)
     at _write (node:internal/streams/writable:499:10)
     at Writable.write (node:internal/streams/writable:508:10)
-    at handle (/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts:103:20)
-    at Socket.<anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts:126:100)
+    at handle (<REPO>/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts:103:20)
+    at Socket.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts:126:100)
     at Socket.emit (node:events:507:28)
 Emitted 'error' event on Socket instance at:
     at Socket.onerror (node:internal/streams/readable:1031:14)

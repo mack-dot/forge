@@ -5,12 +5,12 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { copyFileSync, rmSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-import { canon, sha256hex, signedBytes, stateSha256, DOMAIN, ChargeState } from "/Users/mackianni/forge/ts/refund-finality/encoding";
-import { Sink as OldSink } from "/Users/mackianni/forge/ts/refund-finality/sink";
+import { canon, sha256hex, signedBytes, stateSha256, DOMAIN, ChargeState } from "<REPO>/ts/refund-finality/encoding";
+import { Sink as OldSink } from "<REPO>/ts/refund-finality/sink";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const WHICH = process.argv[3] === "v4" ? "v4" : "v3";
-const V3 = WHICH === "v4" ? require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v3sink2/sink_core_backed_v4.ts").Sink
-  : require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v3sink/sink_core_backed_v3.ts").Sink;
+const V3 = WHICH === "v4" ? require("<REPO>/results/night-shift-20261119/orch-B/d-v3sink2/sink_core_backed_v4.ts").Sink
+  : require("<REPO>/results/night-shift-20261119/orch-B/d-v3sink/sink_core_backed_v3.ts").Sink;
 
 const dir = process.argv[2]; mkdirSync(dir, { recursive: true });
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");

@@ -1,0 +1,5 @@
+{"test":"p_full_param_rebind","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","r2b":"committed","after":[{"emitted":[],"refused":[],"error":"provider param_mismatch: key r2 was used with other parameters"},{"emitted":[],"refused":["r2: in doubt: claimed by run b798dcdc3b28f76d98350c75d54f4737 (p"],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400","r3:100"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r2 refused:param_mismatch"},{"phase":"attack","layer":"claim rule (in doubt)","detail":"dispatcher refused r2: in doubt: claimed by run b798dcdc3b28f76d98350c75d54f4737 (pid 38751) and its emit threw; not counted as dispatched; a person must ask th"}]}
+mode a, anchor none
+layers seen after the attack started: provider key | claim rule (in doubt)
+stopped by: provider key
+SAFE

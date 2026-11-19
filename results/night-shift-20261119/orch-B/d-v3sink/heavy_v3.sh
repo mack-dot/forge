@@ -11,7 +11,7 @@
 # Exit codes of diff.ts: 0 none; 3 divergences all of allowed kinds; 1 a divergence of a kind not allowed; other = harness error.
 # A control run that ends with exit 0 is a FAILED control (the new kinds did not diverge).
 set -u
-R=/Users/mackianni/forge; V=$R/results/night-shift-20261119/orch-B/d-v3sink; LOCKS=$R/results/night-shift-20261119/locks
+R=<REPO>; V=$R/results/night-shift-20261119/orch-B/d-v3sink; LOCKS=$R/results/night-shift-20261119/locks
 H=${1:-$V/heavy-1}
 if [ -e $LOCKS/hol.lock ] || pgrep -f 'bin/hol' >/dev/null; then echo "refused: hol.lock exists or a HOL process runs"; exit 75; fi
 $V/setup_v3.sh $H || { echo "setup failed"; exit 2; }

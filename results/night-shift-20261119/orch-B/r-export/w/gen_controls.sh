@@ -1,7 +1,7 @@
 #!/bin/bash
 # Generates the table/binding mutants and the byte controls of b-export-bridge. Logs: logs/gen-<name>.txt
-cd /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-export-bridge || exit 9
-X=/Users/mackianni/forge/results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/export-0003/output.sexp
+cd <REPO>/results/night-shift-20261119/orch-B/b-export-bridge || exit 9
+X=<REPO>/results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/export-0003/output.sexp
 gen() { n=$1; shift; python3 -I gen_exported.py "$@" --slice inputs/SliceTheorem.dfy --linked inputs/LinkedRefund.dfy --out-contract mutants/$n.dfy > logs/gen-$n.txt 2>&1; echo "exit $?" >> logs/gen-$n.txt; echo "$n $(tail -2 logs/gen-$n.txt | tr '\n' ' ')"; }
 python3 -I make_controls.py $X mutants
 gen M00-none $X

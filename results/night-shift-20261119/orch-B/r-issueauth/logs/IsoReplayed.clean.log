@@ -1,0 +1,33 @@
+# owner=r-issueauth start=2026-11-19T16:51:45Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-issueauth/x/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1168
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects IsoReplayed.dfy
+# memory free percent: 33
+IsoReplayed.dfy(119,9): Error: Verification out of resource (IssueAuth.Issue)
+    |
+119 |   method Issue(m: Memory, a: Auth, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+    |          ^^^^^
+
+
+Dafny program verifier finished with 183 verified, 0 errors, 1 out of resource
+       44.86 real        13.78 user         2.69 sys
+           184844288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              168859  page reclaims
+                 190  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                1293  voluntary context switches
+              383058  involuntary context switches
+         92407126831  instructions retired
+         48441634913  cycles elapsed
+           208143584  peak memory footprint
+# end=2026-11-19T16:52:31Z
+exit 4

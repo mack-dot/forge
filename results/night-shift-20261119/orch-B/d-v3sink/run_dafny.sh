@@ -1,8 +1,8 @@
 #!/bin/bash
 # d-v3sink: the light Dafny runs (through dafny_locked.sh, gate options). Usage: run_dafny.sh <suffix> <steps...>
 # steps: v01 (verify ShellCoreV3), m01 (mutant: must fail), b01 (build --target js), a01 (audit)
-V=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v3sink; S=$V/dafny; L=$V/logs
-T=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+V=<REPO>/results/night-shift-20261119/orch-B/d-v3sink; S=$V/dafny; L=$V/logs
+T=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G=(--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects)
 x=$1; shift
 for st in "$@"; do case $st in

@@ -1,8 +1,8 @@
-# owner=r-harden start=2026-11-19T15:03:41Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# owner=r-harden start=2026-11-19T15:03:41Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
 # power: Now drawing from 'AC Power'
 # swap free MiB: 846
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --isolate-assertions --filter-symbol RunSeq RH_M5_replay_new_bytes.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --isolate-assertions --filter-symbol RunSeq RH_M5_replay_new_bytes.dfy
 # memory free percent: 50
 RH_M5_replay_new_bytes.dfy(135,13): Error: Verification out of resource (IssueOnce.RunSeq)
     |

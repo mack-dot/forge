@@ -4,7 +4,7 @@ import { join } from "node:path";
 // h-dispatch copy: ROOT from env D_ROOT (the export under test); CORE = the IssueOnce build that 608b5165 minter.ts expects.
 export const ROOT = process.env.D_ROOT as string;
 if (!ROOT) { console.error("set D_ROOT"); process.exit(2); }
-export const CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+export const CORE = "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 // eslint-disable-next-line @typescript-eslint/no-require-imports

@@ -1,6 +1,6 @@
 # Orchestrator B (trust track) STATE — refresh after each result
 
-- Branch `nightshift/B-trust` from `985f5eaf`; worktree `/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust`. No commit yet.
+- Branch `nightshift/B-trust` from `985f5eaf`; worktree `<SCRATCH>/B-trust`. No commit yet.
 - Partner: Orchestrator A, agent ID `aabe04fa1c6495747`. A holds hol.lock (replay driver PID 90163/90164, not A's).
 - unsure block U530–U579: none used yet.
 - Tools: `orch-B/tools/dafny_locked.sh` (dafny.lock, power and swap check). Rules for workers: `orch-B/WORKER_RULES.md`.
@@ -278,3 +278,6 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - 2026-11-19T16:28:12Z: before heavy slot 2: Now drawing from 'AC Power'; total = 10240.00M  used = 8924.00M  free = 1316.00M  (encrypted); running run_heavy_auth.sh B-full-2 on worktree 370ff65c.
 - 2026-11-19T16:28:47Z: heavy slot 2 done: full suite on 370ff65c: exit 0, 126 rows, 0 failed (h-suite/logs/B-full-2.*; end 16:28:42Z). heavy.lock released. To record in the next unsure entry (U622).
 - 2026-11-19T16:35:55Z: U622 committed and pushed. Next unsure ID U623. Workers (5): r-subset3b, r-jsbound, r-issueauth, h-provider2, h-sink3 (C-ATT-33 to 37; owns sink.ts, store.ts, dispatcher.ts, regress s3_/d3_; base 370ff65c). Judges: three surviving mutants (C's re-run pending) -> a judges worker when a slot frees.
+- 2026-11-19T16:39:29Z: U623 committed and pushed (h-provider2). Next unsure ID U624. Workers (4): r-subset3b, r-jsbound, r-issueauth, h-sink3.
+- 2026-11-19T16:39:33Z: C re-attack of minter rule 2 (its runs): NEW C-ATT-38 (refusal-closes lets a keyless caller close a victim's id; B-19 written), C-ATT-39 (Store-mode minter follows the old inode after an operator mv: refuses all later requests), C-ATT-40 (off mode with a store refuses an identical retry; comment at minter.ts:31 wrong). Safe: honest chain, store rollback class. Closed launch NOT re-run by C. -> minter worker (h-minter3) after r-issueauth reports.
+- 2026-11-19T16:50:49Z: C's own re-run of blindspots2.sh on judges cf242303: exit 1: three defective inputs pass both judges (dispatcher ignoring signatures; encoding that signs fewer fields; dispatcher that sends twice and hides the second record). C-JUDGE-02, 03 closed; 9 of 12 earlier mutants caught. Worker h-judges2 launched (owns regress run/harness/worker/remote/controls/x*/k*, spec-conformance/*; base 74fb70eb). Workers (5): r-subset3b, r-jsbound, r-issueauth, h-sink3, h-judges2. Until its diff lands: '26 of 26' excludes none of those three defect classes.

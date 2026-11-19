@@ -1,12 +1,12 @@
-# owner=orchC-c13 start=2026-11-19T15:53:15Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit
+# owner=orchC-c13 start=2026-11-19T15:53:15Z cwd=<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1355
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny audit impl/Refund.dfy gate/refund/Bindings.dfy --report-format md --report-file /Users/mackianni/forge/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit/audit.md --compare-report
+# cmd: dafny audit impl/Refund.dfy gate/refund/Bindings.dfy --report-format md --report-file <REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit/audit.md --compare-report
 # memory free percent: 60
 impl/Refund.dfy(4,23): Warning: This ensures clause is part of a bodyless method. Add the {:axiom} attribute to it or the enclosing method to suppress this warning
 impl/Refund.dfy(4,39): Warning: This ensures clause is part of a bodyless method. Add the {:axiom} attribute to it or the enclosing method to suppress this warning
-(0,-1): Error: Given report file (/Users/mackianni/forge/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit/audit.md) does not match text generated (and saved in /Users/mackianni/forge/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit/audit.md.expect).
+(0,-1): Error: Given report file (<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit/audit.md) does not match text generated (and saved in <REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A01audit/audit.md.expect).
 Dafny auditor completed with 1 findings
 
 Dafny program verifier did not attempt verification

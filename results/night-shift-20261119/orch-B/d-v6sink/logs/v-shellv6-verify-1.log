@@ -1,8 +1,8 @@
-# owner=d-v6sink start=2026-11-19T11:45:23Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink/dafny
+# owner=d-v6sink start=2026-11-19T11:45:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v6sink/dafny
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1176
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink/logs/v-shellv6-verify-1.csv ShellCoreV6.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v6sink/logs/v-shellv6-verify-1.csv ShellCoreV6.dfy
 # memory free percent: 46
 ShellCoreV6.dfy(228,8): Error: Verification out of resource (ShellCoreV6.V6ConformanceNoAssumption)
     |
@@ -16,7 +16,7 @@ ShellCoreV6.dfy(384,4): Error: assertion might not hold
 
 
 Dafny program verifier finished with 184 verified, 1 error, 1 out of resource
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink/logs/v-shellv6-verify-1.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v6sink/logs/v-shellv6-verify-1.csv
        14.20 real        12.59 user         1.08 sys
            202997760  maximum resident set size
                    0  average shared memory size

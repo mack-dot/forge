@@ -1,5 +1,5 @@
-# start=2026-11-19T14:28:36Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-specdiff/tree node=v24.3.0
-# cmd: node --import tsx tests/refund-finality/spec-conformance/selftest.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-specdiff/../p-adopt/build/pristine-core/model.cjs
+# start=2026-11-19T14:28:36Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-specdiff/tree node=v24.3.0
+# cmd: node --import tsx tests/refund-finality/spec-conformance/selftest.ts <REPO>/results/night-shift-20261119/orch-B/h-specdiff/../p-adopt/build/pristine-core/model.cjs
 {"case":"clean history (incl. zero amount, replay, wrong key, stale)","expected":"no violation","flagged":[],"first":null,"pass":true}
 {"case":"P1: unapproved reason committed","expected":"P1","flagged":["P1"],"first":{"property":"P1","index":0,"detail":"effect {\"amount\":\"30\",\"chargeId\":\"ch_1\",\"reason\":\"fraud\",\"requestId\":\"r1\"} is not the one intent that Assess authorizes (request \"r1\", open=true)"},"pass":true}
 {"case":"P2: second effect for (ch_1, r1)","expected":"P2","flagged":["P2","P1"],"first":{"property":"P2","index":1,"detail":"second effect for (charge id, request id) [\"ch_1\",\"r1\"]"},"pass":true}

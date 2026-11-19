@@ -4,7 +4,7 @@ the 24 halting submissions and every hostile row of eval3_results.json. Exit 1 i
 halting file is admitted, or if any current verdict differs from the recorded one; else 0."""
 import importlib.util, json, sys, hashlib
 from pathlib import Path
-R = Path('/Users/mackianni/forge'); B = R / 'results/night-shift-20261119/orch-B'
+R = Path('<REPO>'); B = R / 'results/night-shift-20261119/orch-B'
 spec = importlib.util.spec_from_file_location('r3', B / 'e-subset3/subset_rule3.py'); r3 = importlib.util.module_from_spec(spec); spec.loader.exec_module(r3)
 rows = json.loads((B / 'e-subset3/eval3_results.json').read_text())
 SEVEN = {'E06-stack-overflow-keyed', 'E07-oom-keyed', 'E08-time-keyed', 'H01b-such-that-modulus-hang',

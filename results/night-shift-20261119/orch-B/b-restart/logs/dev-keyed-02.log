@@ -1,8 +1,8 @@
-# owner=b-restart start=2026-11-19T09:35:12Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart
+# owner=b-restart start=2026-11-19T09:35:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1245
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-02.csv KeyedStore.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-02.csv KeyedStore.dfy
 # memory free percent: 63
 KeyedStore.dfy(469,28): Error: unresolved identifier: MStep
     |
@@ -15,7 +15,7 @@ KeyedStore.dfy(469,53): Error: unresolved identifier: MDelivery
     |                                                      ^^^^^^^^^
 
 2 resolution/type errors detected in KeyedStore.dfy
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-02.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-02.csv
         5.01 real         5.71 user         0.18 sys
            202768384  maximum resident set size
                    0  average shared memory size

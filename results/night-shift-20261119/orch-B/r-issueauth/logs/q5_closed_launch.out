@@ -1,0 +1,10 @@
+A1 launch+NODE_OPTIONS=--require         honest-ready (env stripped; safe)
+A2 launch+NODE_OPTIONS=--import          honest-ready (env stripped; safe)
+A3 launch+DYLD_INSERT_LIBRARIES          honest-ready (env stripped; safe)
+A4 launch+NODE_PATH                      honest-ready (env stripped; safe)
+A5 launch+hostile PATH shasum            honest-ready (env stripped; safe)
+A6 direct cjs+extra env var              refused rc=2 (safe)
+A7 direct cjs+wrong node options         refused rc=2 (safe)
+A8 direct cjs+NODE_OPTIONS req           DEFEAT(planted code ran)
+A9 launch with CWD = attacker dir        honest-ready (env stripped; safe)
+RESULT: DEFEATED

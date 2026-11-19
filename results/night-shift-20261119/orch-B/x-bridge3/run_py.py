@@ -3,7 +3,7 @@ dafny_side2.cjs). Output: one JSON result per vector. Usage: python3 -I run_py.p
 import hashlib, importlib.util, json, os, subprocess, sys, time
 X = os.path.dirname(os.path.abspath(__file__))
 REF = os.path.join(X, 'ref')
-CORE = '/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked/build/shellcore-orig.cjs'
+CORE = '<REPO>/results/night-shift-20261119/orch-B/d-corebacked/build/shellcore-orig.cjs'
 NODE = '/opt/homebrew/bin/node'
 BIN = os.path.join(X, 'bin', 'refund')
 PIN = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'

@@ -3,9 +3,9 @@
 # refuses while locks/hol.lock exists or a HOL process runs, or swap free < 512 MiB; takes locks/heavy.lock with mkdir
 # (owner h-suite), removes it by trap; holds it at most 3 minutes (timeout 170 s on the run).
 # Usage: run_heavy.sh <tree> <label>
-H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-suite; T=$1; L=$2
-LK=/Users/mackianni/forge/results/night-shift-20261119/locks
-CORE=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter2/build/issueauth.cjs
+H=<REPO>/results/night-shift-20261119/orch-B/h-suite; T=$1; L=$2
+LK=<REPO>/results/night-shift-20261119/locks
+CORE=<REPO>/results/night-shift-20261119/orch-B/h-minter2/build/issueauth.cjs
 M=$H/logs/$L.meta; : > $M
 for try in 1 2 3 4 5 6 7 8 9 10; do
   why=""

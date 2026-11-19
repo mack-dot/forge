@@ -1,0 +1,5 @@
+{"test":"p_timeout_retry","phase1":{"emitted":["r1"],"refused":[],"error":""},"phase2":{"emitted":[],"refused":[],"error":"provider timeout: no answer (the money moved)"},"rerun":{"emitted":[],"refused":["r2: in doubt: claimed by run 1f63eb3681e5c513a305b9f22d577421 (p"],"error":""},"reconcile":"threw: provider ceiling: refunds would exceed the charge amount","money":{"total":"800","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400"]},"attackEvents":[{"phase":"attack","layer":"provider ceiling","detail":"r2 refused:ceiling"}]}
+mode d-b, anchor none
+layers seen after the attack started: provider ceiling
+stopped by: provider ceiling
+SAFE

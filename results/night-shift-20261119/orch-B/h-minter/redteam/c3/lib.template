@@ -32,4 +32,4 @@ export function body(E: any, pre: any, requestId: string, post: any, intent: any
 export function fresh(dir: string) { rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true }); return dir; }
 export const st = (chargeId: string, original: string, remaining: string, refundEnabled = true) => ({ chargeId, original, remaining, refundEnabled });
 export const it = (chargeId: string, requestId: string, amount: string, reason = "duplicate_charge") => ({ chargeId, requestId, amount, reason });
-export const MINTER_CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+export const MINTER_CORE = "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";

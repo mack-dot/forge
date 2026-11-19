@@ -6,7 +6,7 @@ root, home, delay = sys.argv[1], sys.argv[2], int(sys.argv[3])
 args = sys.argv[5:]
 start = str(int(time.time() * 1000) + delay)
 args = [start if a == 'START' else a for a in args]
-env = {'PATH': '/opt/homebrew/bin:/usr/bin:/bin', 'HOME': home, 'LANG': 'C', 'NODE_PATH': '/Users/mackianni/forge/node_modules'}
+env = {'PATH': '/opt/homebrew/bin:/usr/bin:/bin', 'HOME': home, 'LANG': 'C', 'NODE_PATH': '<REPO>/node_modules'}
 r, w = os.pipe()
 p = subprocess.Popen(['/opt/homebrew/bin/node', '--import', 'tsx', *args], cwd=root, env=env, stdout=w, stderr=subprocess.PIPE, stdin=subprocess.DEVNULL)
 os.close(w); os.close(r)   # the reader is gone before the CLI writes its result line

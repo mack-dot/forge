@@ -3,7 +3,7 @@
 # `dafny translate js` WITH verification (gate verifier options), layout as the gate (impl/Refund.dfy + spec).
 # Exit 0 = verified AND translated. Output js/NAME.js (modules only, as tr.sh of B). Work copy removed.
 set -u
-R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-C/c23-jsgate
+R=<REPO>; E=$R/results/night-shift-20261119/orch-C/c23-jsgate
 SRC=$1; K=${2:-1}; N=$(basename $SRC .dfy)
 W=$E/work/$N; rm -rf $W; mkdir -p $W/impl $W/spec/refund
 cp $R/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $SRC $W/impl/Refund.dfy

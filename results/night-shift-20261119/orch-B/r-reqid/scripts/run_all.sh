@@ -1,8 +1,8 @@
 #!/bin/bash
-R=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-reqid
-L=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
+R=<REPO>/results/night-shift-20261119/orch-B/r-reqid
+L=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
 W=$R/dafny/inputs/sink
-Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 O="--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects"
 run() { n=$1; shift; f=$1; shift; $L r-reqid $W $R/logs/$n.log 90 "$@"; echo "$n $?" >> $R/logs/summary.txt; }
 run r01-reqid-verify x verify $O "--log-format" "csv;LogFileName=$R/logs/r01-reqid-verify.csv" SinkCoreReqId.dfy

@@ -1,6 +1,6 @@
 #!/bin/bash
 # second run of every case (log name suffix -run2)
-D=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c21-sink2
+D=<REPO>/results/night-shift-20261119/orch-C/c21-sink2
 while read -r n s m; do [ -z "$n" ] && continue; $D/rr.sh "$n-run2" "$s" "$D/work/$n" "$m" | head -1; done <<'L'
 a21-recover-deep a21_files.ts recover-deep
 a21-recover-one a21_files.ts recover-one

@@ -1,5 +1,5 @@
 #!/bin/bash
-D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart; C=$D/controls; cd $C
+D=<REPO>/results/night-shift-20261119/orch-B/b-restart; C=$D/controls; cd $C
 mk(){ rm -rf $1; mkdir -p $1; cp -R ../src ../Restart.dfy ../KeyedStore.dfy $1/; }
 for c in C1-audit-reject-all C2-step-reject-all C3-step-commit-all C4-drop-history C5-create-no-key-check C6-drop-A5Ledger; do mk $c; done
 python3 - <<'PY'

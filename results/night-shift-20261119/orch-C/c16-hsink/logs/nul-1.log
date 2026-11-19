@@ -1,13 +1,13 @@
-/Users/mackianni/forge/results/night-shift-20261119/orch-C/c16-hsink/port/c6-premises/p_adb2_nul.ts:34
+<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c6-premises/p_adb2_nul.ts:34
 w.prepare("UPDATE settled SET request_id = ? WHERE request_id = ?").run("rq_z\u0000x", "rq_z");
                                                                     ^
 
 
 Error: h-sink S5: settled is append-only
-    at <anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-C/c16-hsink/port/c6-premises/p_adb2_nul.ts:34:69)
-    at Object.<anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-C/c16-hsink/port/c6-premises/p_adb2_nul.ts:61:28)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c6-premises/p_adb2_nul.ts:34:69)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c6-premises/p_adb2_nul.ts:61:28)
     at Module._compile (node:internal/modules/cjs/loader:1692:14)
-    at Object.transformer (/Users/mackianni/forge/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
     at Module.load (node:internal/modules/cjs/loader:1427:32)
     at Module._load (node:internal/modules/cjs/loader:1250:12)
     at TracingChannel.traceSync (node:diagnostics_channel:322:14)

@@ -1,8 +1,8 @@
 (node:36074) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 FAILED Error: non-canonical value
-    at canon (/Users/mackianni/forge/ts/refund-finality/encoding.ts:34:9)
-    at main (/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-drafts/c_minter.ts:151:19)
+    at canon (<REPO>/ts/refund-finality/encoding.ts:34:9)
+    at main (<REPO>/results/night-shift-20261119/orch-B/r-drafts/c_minter.ts:151:19)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
-env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=/Users/mackianni/forge/$E     1.96s user 0.11s system 12% cpu 17.055 total
+env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/$E     1.96s user 0.11s system 12% cpu 17.055 total
 exit 1

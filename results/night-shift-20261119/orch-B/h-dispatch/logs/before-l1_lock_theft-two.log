@@ -1,4 +1,4 @@
-{"issuerIdentityInfo":{"bignumberForMinter":{"path":"/Users/mackianni/forge/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"/Users/mackianni/forge/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"/Users/mackianni/forge/node_modules"}}
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
 (node:97825) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 (node:97680) ExperimentalWarning: SQLite is an experimental feature and might change at any time
@@ -8,7 +8,7 @@ r2 committed
 A blocked in emit(r1); lock present: true
 operator removed the lock as stale
 B: {"name":"B","emitted":["r2"],"refused":[],"already":1}
-A: {"name":"A","stopped":"ENOENT: no such file or directory, unlink '/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/work/base-l1_lock_theft-two/dispatch-ledger.jsonl.lock'"}
+A: {"name":"A","stopped":"ENOENT: no such file or directory, unlink '<REPO>/results/night-shift-20261119/orch-B/h-dispatch/work/base-l1_lock_theft-two/dispatch-ledger.jsonl.lock'"}
 effects: A:r1 B:r2 A:r2; total 1200 of 1000; duplicate ids: ["r2"]
 next run on the ledger: stopped: dispatcher ledger is not one chain
 exit 1

@@ -1,8 +1,8 @@
-# owner=b-restart start=2026-11-19T09:36:44Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart
+# owner=b-restart start=2026-11-19T09:36:44Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1261
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-03.csv KeyedStore.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-03.csv KeyedStore.dfy
 # memory free percent: 56
 KeyedStore.dfy(421,8): Error: Verification out of resource (KeyedStore.KeyedTopMoney)
     |
@@ -11,7 +11,7 @@ KeyedStore.dfy(421,8): Error: Verification out of resource (KeyedStore.KeyedTopM
 
 
 Dafny program verifier finished with 36 verified, 0 errors, 1 out of resource
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-03.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-03.csv
        11.99 real        11.08 user         0.66 sys
            306462720  maximum resident set size
                    0  average shared memory size

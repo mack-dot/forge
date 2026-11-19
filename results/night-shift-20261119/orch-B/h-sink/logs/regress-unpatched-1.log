@@ -1,8 +1,8 @@
-# start=2026-11-19T14:44:36Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# start=2026-11-19T14:44:36Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
 # cmd: node --import tsx tests/refund-finality/regress/run.ts ts/refund-finality/sink.ts ts/refund-finality/dispatcher.ts
-# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
-# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts
-# encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/encoding.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/encoding.ts
 # expectedHeadMode=none node=v24.3.0
 FAIL C1-honest-refund: commit=committed rq_1: outbox=1 effects=0 (want 1 and 1)
 FAIL C2-zero-amount-refund: commit=committed rq_z: outbox=1 effects=0 (want 1 and 1)

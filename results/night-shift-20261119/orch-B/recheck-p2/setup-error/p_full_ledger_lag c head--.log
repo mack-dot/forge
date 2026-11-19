@@ -2,19 +2,19 @@
 node:internal/modules/run_main:105
     triggerUncaughtException(
     ^
-Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust/tests/refund-finality/regress/p_full_ledger_lag c head.ts' imported from /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust/
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '<SCRATCH>/B-trust/tests/refund-finality/regress/p_full_ledger_lag c head.ts' imported from <SCRATCH>/B-trust/
     at finalizeResolution (node:internal/modules/esm/resolve:274:11)
     at moduleResolve (node:internal/modules/esm/resolve:859:10)
     at defaultResolve (node:internal/modules/esm/resolve:983:11)
     at nextResolve (node:internal/modules/esm/hooks:748:28)
-    at resolveBase (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:3744)
-    at resolveDirectory (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:4243)
-    at resolveTsPaths (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:4984)
-    at resolve (file:///Users/mackianni/forge/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:5361)
+    at resolveBase (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:3744)
+    at resolveDirectory (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:4243)
+    at resolveTsPaths (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:4984)
+    at resolve (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795106298284:2:5361)
     at nextResolve (node:internal/modules/esm/hooks:748:28)
     at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
   code: 'ERR_MODULE_NOT_FOUND',
-  url: 'file:///private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust/tests/refund-finality/regress/p_full_ledger_lag%20c%20head.ts'
+  url: 'file://<SCRATCH>/B-trust/tests/refund-finality/regress/p_full_ledger_lag%20c%20head.ts'
 }
 
 Node.js v24.3.0

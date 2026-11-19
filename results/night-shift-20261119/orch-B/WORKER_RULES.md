@@ -1,6 +1,6 @@
 # Rules for every Orchestrator-B worker (night shift 2026-11-19). Binding.
 
-Repository: /Users/mackianni/forge (main checkout, branch docs/m1b-wave4, commit 985f5eaf). READ-ONLY for you,
+Repository: <REPO> (main checkout, branch docs/m1b-wave4, commit 985f5eaf). READ-ONLY for you,
 except your own evidence directory under results/night-shift-20261119/orch-B/<task>/ (untracked). Write all
 new files there. Use absolute paths. Do not use git to commit, push, merge, checkout, stash or reset.
 
@@ -18,9 +18,9 @@ Hard prohibitions:
 
 Resources (the machine is under memory pressure; a HOL replay runs):
 - Every Dafny run goes through
-  /Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh OWNER WORKDIR LOGFILE TIMEOUT_S <dafny args>
+  <REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh OWNER WORKDIR LOGFILE TIMEOUT_S <dafny args>
   It holds dafny.lock, checks AC power and swap, records the command, time, memory and a last line `exit N`.
-  Use the gate options: `verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+  Use the gate options: `verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
   --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects FILE.dfy`
   (add `--log-format csv;LogFileName=...` for a per-obligation record). TIMEOUT_S <= 90 is a light check.
   Exit 75 = refused (battery or low swap), 76 = lock wait expired, 124 = timeout: record it as NOT RUN, wait a few

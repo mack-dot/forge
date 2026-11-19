@@ -1,8 +1,8 @@
-# owner=b-restart start=2026-11-19T09:50:57Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/controls/C5-create-no-key-check
+# owner=b-restart start=2026-11-19T09:50:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C5-create-no-key-check
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1333
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/C5-create-no-key-check-KeyedStore.csv KeyedStore.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C5-create-no-key-check-KeyedStore.csv KeyedStore.dfy
 # memory free percent: 38
 KeyedStore.dfy(62,33): Error: a postcondition could not be proved on this return path
    |
@@ -41,7 +41,7 @@ KeyedStore.dfy(474,25): Error: assertion might not hold
 
 
 Dafny program verifier finished with 33 verified, 4 errors
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/C5-create-no-key-check-KeyedStore.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C5-create-no-key-check-KeyedStore.csv
        11.21 real        11.18 user         0.63 sys
            298876928  maximum resident set size
                    0  average shared memory size

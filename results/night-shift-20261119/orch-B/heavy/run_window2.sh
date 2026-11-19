@@ -1,7 +1,7 @@
 #!/bin/bash
 # Orchestrator B: heavy window part 2: hostile gate controls on a patched gate COPY in a scratch export.
 set -u
-R=/Users/mackianni/forge; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
+R=<REPO>; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
 [ -e $L/hol.lock ] && { echo "refused: hol.lock exists"; exit 75; }
 pgrep -f 'bin/hol' >/dev/null && { echo "refused: a HOL process runs"; exit 75; }
 case "$(pmset -g batt | head -1)" in *"AC Power"*) ;; *) echo "refused: battery"; exit 75;; esac

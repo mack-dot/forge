@@ -1,8 +1,8 @@
-# start=2026-11-19T14:44:51Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/regress-adapted/run.ts ts/refund-finality/sink.ts ts/refund-finality/dispatcher.ts
-# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
-# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts
-# encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/encoding.ts
+# start=2026-11-19T14:44:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/regress-adapted/run.ts ts/refund-finality/sink.ts ts/refund-finality/dispatcher.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/encoding.ts
 # expectedHeadMode=none node=v24.3.0
 PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
 PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted

@@ -3,10 +3,10 @@
 # finally's unlinkSync throws ENOENT, the FlushResult is lost; dispatch_cli prints {"stopped": "ENOENT ..."} with exit 0
 # although effects were sent. Exit 1 = defect present (effects sent AND the CLI said "stopped" or exited non-zero
 # without reporting them), 0 = safe.
-unset GH_TOKEN GITHUB_TOKEN; source /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/c11copy/env.sh
+unset GH_TOKEN GITHUB_TOKEN; source <REPO>/results/night-shift-20261119/orch-B/h-dispatch/c11copy/env.sh
 W=$W0/h5; tsrun $E/setup.ts $T $CORE $W two >/dev/null 2>&1 || exit 3
 for t in t0 t1; do tsrun tests/refund-finality/commit_cli.ts $W/sink.sqlite $W/sink-config.json $W/$t.token 0 >/dev/null 2>&1; done
-(cd $T && exec env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$H/home LANG=C NODE_PATH=/Users/mackianni/forge/node_modules $NODE --import tsx tests/refund-finality/dispatch_cli.ts $W/sink.sqlite $W/ledger.jsonl $W/disp-config.json $W/effects.jsonl 0 >$W/run1.out 2>/dev/null) &
+(cd $T && exec env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$H/home LANG=C NODE_PATH=<REPO>/node_modules $NODE --import tsx tests/refund-finality/dispatch_cli.ts $W/sink.sqlite $W/ledger.jsonl $W/disp-config.json $W/effects.jsonl 0 >$W/run1.out 2>/dev/null) &
 P=$!
 for i in $(seq 1 400); do [ -s $W/effects.jsonl ] && break; /bin/sleep 0.01; done
 rm -f "$(cd $W && pwd -P)/ledger.jsonl.lock"; wait $P; rc=$?

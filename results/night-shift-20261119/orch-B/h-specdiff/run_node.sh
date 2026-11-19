@@ -1,6 +1,6 @@
 #!/bin/bash
 # h-specdiff: one short scrubbed Node run (light). Usage: run_node.sh CWD LOG TIMEOUT_S <node args...>
-H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-specdiff; CWD=$1; LOG=$2; T=$3; shift 3
+H=<REPO>/results/night-shift-20261119/orch-B/h-specdiff; CWD=$1; LOG=$2; T=$3; shift 3
 pmset -g batt | head -1 | grep -q "AC Power" || { echo "refused: not on AC power" > "$LOG"; echo "exit 75" >> "$LOG"; exit 75; }
 cd "$CWD" || exit 65
 { echo "# start=$(date -u +%FT%TZ) cwd=$CWD node=$(env -i PATH=/opt/homebrew/bin:/usr/bin:/bin node --version)"; echo "# cmd: node $*"; } > "$LOG"

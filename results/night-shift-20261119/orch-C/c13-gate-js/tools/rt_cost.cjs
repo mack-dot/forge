@@ -1,7 +1,7 @@
 // c13-gate-js: cost of the admitted arithmetic shapes with the pinned Dafny runtime (no Dafny run).
 // Emulates compiled code: k products by a 19-digit literal (2 tokens each), then m terms `x % L +` (4 tokens each).
 const fs = require('fs');
-const src = fs.readFileSync('/Users/mackianni/forge/results/night-shift-20261119/orch-B/e-subset3/js/runtime-prefix.js', 'utf8');
+const src = fs.readFileSync('<REPO>/results/night-shift-20261119/orch-B/e-subset3/js/runtime-prefix.js', 'utf8');
 const m = { exports: {} };
 new Function('require', 'module', 'exports', src + '\nmodule.exports = { _dafny, BigNumber };')(require, m, m.exports);
 const { _dafny, BigNumber } = m.exports;

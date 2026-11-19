@@ -5,7 +5,7 @@ repository. Nothing here is executed by an agent after this packet. The owner de
 
 ## 1. The change (adoption.diff)
 - File: `p-adopt/adoption.diff`, 5239 lines, SHA-256 `ab2ca0dac7f249e48421a72e8c57abbd849ada7ab3755341ab682aca5b6ab042`.
-- `git -C /Users/mackianni/forge apply --check adoption.diff`: exit 0 (check only). Protected or `clearing/` paths: 0.
+- `git -C <REPO> apply --check adoption.diff`: exit 0 (check only). Protected or `clearing/` paths: 0.
 - The diff, applied to copies of the four pristine files, gives the 10 export files byte for byte (`applytest/`).
 - Rebuild: `make_diff.sh` (log `logs/make_diff-1.log`).
 
@@ -68,7 +68,7 @@ d-reqid patch checks; d-minter mutants (M1, M2 fail; M3–M6 out of resource onl
   rows for sink.ts and minter.ts (lines ~1204-1820) need new digests and a new "why" (decision now compiled core).
 
 ## 5. Heavy step for the orchestrator (prepared, not run)
-`/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/run_suite.sh [N]` — refuses (64) while
+`<REPO>/results/night-shift-20261119/orch-B/p-adopt/run_suite.sh [N]` — refuses (64) while
 locks/hol.lock exists or `bin/hol` runs; takes no heavy.lock; `env -i`, Node 24.3.0; timeout SUITE_TIMEOUT_S
 (default 1200 s) per tree; outputs suite/attempt-N/{pristine,export}.{stdout,stderr,meta}, *-out/report.json,
 summary.txt. Same command as exit_slice1.py: `node --import tsx tests/refund-finality/suite.ts <out> <module>`.

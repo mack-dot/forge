@@ -1,8 +1,8 @@
-# owner=r-signing start=2026-11-19T08:40:03Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/work
+# owner=r-signing start=2026-11-19T08:40:03Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
 # power: Now drawing from 'AC Power'
 # swap free MiB: 711
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/logs/mutant-M2-drop-H1.csv mutants/M2-drop-H1/SliceSafetyV2.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-M2-drop-H1.csv mutants/M2-drop-H1/SliceSafetyV2.dfy
 mutants/M2-drop-H1/SliceSafetyV2.dfy(261,12): Error: cannot establish the existence of LHS values that satisfy the such-that predicate
     |
 261 |       var j :| 0 <= j < k && j < |acts| && acts[j].MintAct? && acts[j].c == ClaimOf(acts[k].tok);
@@ -20,7 +20,7 @@ mutants/M2-drop-H1/SliceSafetyV2.dfy(89,4): Related location: this proposition c
 
 
 Dafny program verifier finished with 1620 verified, 2 errors
-Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/logs/mutant-M2-drop-H1.csv
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/mutant-M2-drop-H1.csv
        52.95 real        34.95 user         3.90 sys
            479363072  maximum resident set size
                    0  average shared memory size

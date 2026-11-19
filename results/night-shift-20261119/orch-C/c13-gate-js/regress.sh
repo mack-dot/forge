@@ -9,9 +9,9 @@
 #    verdicts recorded on 2026-11-19 (Probe: 29 predicates, P03 false; B01: 2000 cases x 3 seeds).
 set -u
 E=$(cd "$(dirname "$0")" && pwd)
-RULE=${1:-/Users/mackianni/forge/results/night-shift-20261119/orch-B/e-subset3/subset_rule3.py}
+RULE=${1:-<REPO>/results/night-shift-20261119/orch-B/e-subset3/subset_rule3.py}
 PY=/usr/local/bin/python3.10
-NODE="env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$E LANG=C NODE_PATH=/Users/mackianni/forge/node_modules timeout 120 node"
+NODE="env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$E LANG=C NODE_PATH=<REPO>/node_modules timeout 120 node"
 defect=0
 for f in A01-bodiless-lemma-brace-end A02-bodiless-ghost-pred-brace-end A13-ghost-method-bodiless-brace \
          A14-lemma-ensures-set-literal-end A15-forall-ensures-in-lemma A16-induction-false-lemma A17-isolate-on-bodiless; do

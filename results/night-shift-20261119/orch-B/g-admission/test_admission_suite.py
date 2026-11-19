@@ -17,7 +17,7 @@ import sys
 import tempfile
 import contextlib
 
-FORGE = Path('/Users/mackianni/forge')
+FORGE = Path('<REPO>')
 ENF = FORGE / 'proposals/m1b-mission-20261119/drafts/enforcement'
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(FORGE / 'gate'))

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Runs the h-judges regress judge (from the h-judges export) against the red team's mutants (read only).
-D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges; C=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges; V=$C/v6/ts/refund-finality
+D=<REPO>/results/night-shift-20261119/orch-B/h-judges; C=<REPO>/results/night-shift-20261119/orch-C/c10-judges; V=$C/v6/ts/refund-finality
 LIST="base_v6|$V/sink.ts|$V/dispatcher.ts m_accept_bad_sig|$V/m_accept_bad_sig.ts|$V/dispatcher.ts m_accept_noncanon|$V/m_accept_noncanon.ts|$V/dispatcher.ts
 m_skip_prestate|$V/m_skip_prestate.ts|$V/dispatcher.ts m_replay_says_rejected|$V/m_replay_says_rejected.ts|$V/dispatcher.ts m_replayed_any|$V/m_replayed_any.ts|$V/dispatcher.ts
 m_id_gt32_or_nonascii|$V/m_id_gt32_or_nonascii.ts|$V/dispatcher.ts m_late20|$V/m_late20.ts|$V/dispatcher.ts m_wipe_on_open|$V/m_wipe_on_open.ts|$V/dispatcher.ts

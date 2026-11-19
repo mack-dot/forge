@@ -5,14 +5,14 @@
 # The caller holds heavy.lock for a heavy run. Test keys are generated in the Node process. env -i.
 set -u
 OUT=$1; NP=$2; NO=$3; MODES=$4; shift 4
-R=/Users/mackianni/forge; B=$R/results/night-shift-20261119/orch-B; D=$B/d-corebacked; Q=$B/d-reqid
+R=<REPO>; B=$R/results/night-shift-20261119/orch-B; D=$B/d-corebacked; Q=$B/d-reqid
 H=$OUT; rm -rf $H; mkdir -p $H/db $H/results $H/sinks $H/patched $H/broken
 cp $R/proposals/m1b-mission-20261119/drafts/sink-differential/{lib.ts,diff.ts} $H/
-sed -i '' "s#<HOME>#/Users/mackianni#g" $H/lib.ts $H/diff.ts
+sed -i '' "s#<HOME>#<HOME>#g" $H/lib.ts $H/diff.ts
 cp $D/build/shellcore-reqid.cjs $H/sinkcore-reqid.cjs
 cp $D/build/shellcore-orig.cjs $H/sinkcore.cjs
 cp $Q/copies/patched-reqid/sink.ts $H/patched/sink-reqid.ts
-sed -i '' 's#from "./encoding"#from "/Users/mackianni/forge/ts/refund-finality/encoding"#' $H/patched/sink-reqid.ts
+sed -i '' 's#from "./encoding"#from "<REPO>/ts/refund-finality/encoding"#' $H/patched/sink-reqid.ts
 printf 'import { Sink as S } from "%s/sink_core_backed";\nexport class Sink extends S { constructor(p: string, c: any) { super(p, { ...c, core: "reqid" }); } }\n' $D > $H/sinks/cb-reqid.ts
 printf 'import { Sink as S } from "%s/sink_core_backed";\nexport class Sink extends S { constructor(p: string, c: any) { super(p, { ...c, core: "orig" }); } }\n' $D > $H/sinks/cb-orig.ts
 sed -i '' "s#^  real: ROOT + \"/ts/refund-finality/sink.ts\",#  real: ROOT + \"/ts/refund-finality/sink.ts\",\n  \"cb-reqid\": Z + \"/sinks/cb-reqid.ts\",\n  \"cb-orig\": Z + \"/sinks/cb-orig.ts\",#" $H/lib.ts

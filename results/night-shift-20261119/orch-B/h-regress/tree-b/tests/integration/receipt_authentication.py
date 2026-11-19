@@ -116,7 +116,7 @@ def main():
     path = candidate / 'impl/Booking.dfy'
     assert path.read_text().count('other < value') == 1
     path.write_text(path.read_text().replace('other < value', 'other <= value'))
-    (root / '.toolchain').symlink_to('/Users/mackianni/forge/.toolchain', target_is_directory=True)
+    (root / '.toolchain').symlink_to('<REPO>/.toolchain', target_is_directory=True)
     write(out / 'environment.json', {
         'source_commit': '561d2dda904daf18f17a0fede93f28b502d72884',
         'trusted_source_commit': subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD']).decode().strip() if (root / '.git').exists() else None,

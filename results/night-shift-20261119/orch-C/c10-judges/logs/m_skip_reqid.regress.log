@@ -1,6 +1,6 @@
-# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_skip_reqid.ts
-# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts
-# encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/encoding.ts
+# sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_skip_reqid.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/encoding.ts
 # expectedHeadMode=none node=v24.3.0
 PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
 PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted

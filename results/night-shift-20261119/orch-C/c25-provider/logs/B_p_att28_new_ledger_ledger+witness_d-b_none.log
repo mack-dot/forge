@@ -1,0 +1,5 @@
+{"test":"p_att28_new_ledger","case":"ledger+witness","after":[{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:500"]},"attackEvents":[{"phase":"attack","layer":"provider ceiling","detail":"r1 refused:ceiling"},{"phase":"attack","layer":"provider ceiling","detail":"r2 refused:ceiling"}]}
+mode d-b, anchor none
+layers seen after the attack started: provider ceiling
+stopped by: provider ceiling
+SAFE

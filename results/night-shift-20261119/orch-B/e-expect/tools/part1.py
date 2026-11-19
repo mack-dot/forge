@@ -5,7 +5,7 @@ from pathlib import Path
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from rule_harness import new_rule, source_scope
-REPO = Path('/Users/mackianni/forge')
+REPO = Path('<REPO>')
 E = Path(__file__).resolve().parent.parent
 D = REPO / 'proposals/m1b-mission-20261119/drafts'
 g1 = json.loads((D / 'expect-rule/rule_results.json').read_text())

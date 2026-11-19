@@ -1,5 +1,5 @@
 import importlib.util, sys
-sys.path.insert(0, '/Users/mackianni/forge/gate')
+sys.path.insert(0, '<REPO>/gate')
 spec = importlib.util.spec_from_file_location('ppr', sys.argv[1]); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 def cov(paths, findings=None, affected=()):
     return {'changed': [{'path': p, 'change': 'modified'} for p in paths],

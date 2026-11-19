@@ -1,5 +1,5 @@
-# start=2026-11-19T14:41:20Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/ddl 12 19
+# start=2026-11-19T14:41:20Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 12 19
 PASS K=12 child: killed-at 12 CREATE TRIGGER h_state_bi BEFORE INSERT (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
 PASS K=13 child: killed-at 13 CREATE TRIGGER h_state_bu BEFORE UPDATE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
 PASS K=14 child: killed-at 14 CREATE TRIGGER h_state_bd BEFORE DELETE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed

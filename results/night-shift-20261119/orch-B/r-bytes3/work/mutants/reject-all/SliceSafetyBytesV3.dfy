@@ -15,7 +15,7 @@
 // fact is used), A4b (merged into A4), the id-encoding injectivity (ids are hex TEXTS).
 // No assume, no axiom, no bodiless lemma, no {:extern}, no expect in this file.
 include "HashCore.dfy"
-include "/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-ser2/v3/SliceSafetyV3.dfy"
+include "<REPO>/results/night-shift-20261119/orch-B/b-ser2/v3/SliceSafetyV3.dfy"
 
 module SliceSafetyBytesV3 {
   import opened HashCore

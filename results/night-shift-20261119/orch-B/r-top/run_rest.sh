@@ -1,7 +1,7 @@
 #!/bin/bash
-E=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-top
-L=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
-Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+E=<REPO>/results/night-shift-20261119/orch-B/r-top
+L=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
+Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G="--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects"
 cd $E/src
 run() { n=$1; shift; $L r-top $E/src $E/logs/$n.log 300 "$@"; echo "$n $(tail -1 $E/logs/$n.log)"; }

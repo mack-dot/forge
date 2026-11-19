@@ -1,5 +1,5 @@
-# start=2026-11-19T14:32:22Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tests/db_safeguards.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/export/ts/refund-finality/sink.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/e1-1
+# start=2026-11-19T14:32:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/db_safeguards.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/p-adopt2/export/ts/refund-finality/sink.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/e1-1
 PASS ALL POS sink commits r1(100), z1(0), z2(0), r2(50); replay z1 | expect: 4 committed; replayed; head 4; audit 0 problems; dispatcher 4 effects; restart STARTED head=4 | got: committed,committed,committed,committed; replayed; head 4; audit 0; effects 4 refused 0; restart STARTED head=4
 PASS S1  POS unique indexes on settled.request_id and outbox.request_id | expect: 2 unique indexes | got: 2 unique: sqlite_autoindex_outbox_1,sqlite_autoindex_settled_1
 PASS S4  POS state columns after 4 commits | expect: settled 4, outbox 4, seq 4, refunded 150, remaining 850 | got: {"s":4,"o":4,"sq":4,"rf":150,"rem":"850"}

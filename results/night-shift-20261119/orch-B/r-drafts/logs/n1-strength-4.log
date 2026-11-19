@@ -1,8 +1,8 @@
-# owner=r-drafts start=2026-11-19T10:23:00Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-drafts/r1
+# owner=r-drafts start=2026-11-19T10:23:00Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-drafts/r1
 # power: Now drawing from 'AC Power'
 # swap free MiB: 953
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-4.csv /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-drafts/r1/IB2S.dfy
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-drafts/logs/n1-strength-4.csv <REPO>/results/night-shift-20261119/orch-B/r-drafts/r1/IB2S.dfy
 # memory free percent: 73
 Encountered internal compilation exception: Object reference not set to an instance of an object.
 IB2S.dfy(34,10): Error: Internal error occurred during verification: Object reference not set to an instance of an object.

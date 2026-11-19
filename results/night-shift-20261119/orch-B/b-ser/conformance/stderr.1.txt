@@ -1,13 +1,13 @@
-/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:64
+<REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:64
   const dBytes = Buffer.from(SM.__default.Utf8(SM.__default.SerBody(d)).toArray().map((x: BigNumber) => x.toNumber()));
                                                                         ^
 
 
 TypeError: SM.__default.Utf8(...).toArray is not a function
-    at text (/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:64:73)
-    at Object.<anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:116:47)
+    at text (<REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:64:73)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/b-ser/conformance/run.ts:116:47)
     at Module._compile (node:internal/modules/cjs/loader:1692:14)
-    at Object.transformer (/Users/mackianni/forge/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
     at Module.load (node:internal/modules/cjs/loader:1427:32)
     at Module._load (node:internal/modules/cjs/loader:1250:12)
     at TracingChannel.traceSync (node:diagnostics_channel:322:14)

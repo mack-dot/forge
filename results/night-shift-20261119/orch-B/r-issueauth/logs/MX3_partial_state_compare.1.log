@@ -1,0 +1,19 @@
+# owner=r-issueauth start=2026-11-19T16:43:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-issueauth/x/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1399
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MX3_partial_state_compare.dfy
+# memory free percent: 38
+MX3_partial_state_compare.dfy(171,6): Error: a postcondition could not be proved on this return path
+    |
+171 |       return;
+    |       ^^^^^^^
+
+MX3_partial_state_compare.dfy(124,39): Related location: this is the postcondition that could not be proved
+    |
+124 |     ensures o.RefusedNotAuthoritative? <==> !IsReplay(m, a, pre, t, sh, ch, h) && a.Store? && a.state != pre
+    |                                        ^^^^
+
+TIMEOUT after 90 s
+# end=2026-11-19T16:45:04Z
+exit 143

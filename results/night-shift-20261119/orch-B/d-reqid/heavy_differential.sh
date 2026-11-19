@@ -6,13 +6,13 @@
 # the original core needs one `dafny build --target js` of inputs/sink/SinkCore.dfy through dafny_locked.sh).
 # UNTESTED glue: the export wrapper below (the Z4 .cjs files are not in the repository).
 set -u   # no -e: a divergence makes diff.ts exit 1, and that is an expected result for one pair
-D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-reqid
-R=/Users/mackianni/forge
+D=<REPO>/results/night-shift-20261119/orch-B/d-reqid
+R=<REPO>
 H=$D/heavy; rm -rf $H; mkdir -p $H/db $H/results $H/patched $H/broken
 cp $R/proposals/m1b-mission-20261119/drafts/sink-differential/{lib.ts,diff.ts} $H/
-sed -i '' "s#<HOME>#/Users/mackianni#g" $H/lib.ts $H/diff.ts
+sed -i '' "s#<HOME>#<HOME>#g" $H/lib.ts $H/diff.ts
 cp $D/copies/patched-reqid/sink.ts $H/patched/sink-reqid.ts
-sed -i '' 's#from "./encoding"#from "/Users/mackianni/forge/ts/refund-finality/encoding"#' $H/patched/sink-reqid.ts
+sed -i '' 's#from "./encoding"#from "<REPO>/ts/refund-finality/encoding"#' $H/patched/sink-reqid.ts
 # core modules: the patched core exported under the name SinkCore that lib.ts reads
 { cat $D/build/sinkcore-reqid.js; echo 'module.exports = { SinkCore: SinkCoreReqId, RefundFinality, Refund, runtime: _dafny };'; } > $H/sinkcore-reqid.cjs
 # (original core: build it first, then the same wrapper with SinkCore)

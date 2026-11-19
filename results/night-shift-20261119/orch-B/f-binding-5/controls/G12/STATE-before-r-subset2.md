@@ -1,6 +1,6 @@
 # Orchestrator B (trust track) STATE — refresh after each result
 
-- Branch `nightshift/B-trust` from `985f5eaf`; worktree `/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust`. No commit yet.
+- Branch `nightshift/B-trust` from `985f5eaf`; worktree `<SCRATCH>/B-trust`. No commit yet.
 - Partner: Orchestrator A, agent ID `aabe04fa1c6495747`. A holds hol.lock (replay driver PID 90163/90164, not A's).
 - unsure block U530–U579: none used yet.
 - Tools: `orch-B/tools/dafny_locked.sh` (dafny.lock, power and swap check). Rules for workers: `orch-B/WORKER_RULES.md`.

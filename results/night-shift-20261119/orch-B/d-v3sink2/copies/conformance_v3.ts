@@ -10,13 +10,13 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as sqlite from "node:sqlite";
-import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "/Users/mackianni/forge/ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "<REPO>/ts/refund-finality/encoding";
 
 const DIR = __dirname + "/..";
 const DB = DIR + "/db";
 rmSync(DB, { recursive: true, force: true }); mkdirSync(DB, { recursive: true });
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Real = require("/Users/mackianni/forge/ts/refund-finality/sink.ts").Sink;
+const Real = require("<REPO>/ts/refund-finality/sink.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Hand = require(DIR + "/copies/sink-patched-reqid-chargeid.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports

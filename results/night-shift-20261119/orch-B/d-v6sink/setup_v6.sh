@@ -4,10 +4,10 @@
 # kind "signed-unauthorized", suffix "@disabled"); core sinkcore-v6.cjs (= this folder's build/shellcore-v6.js with
 # harness exports); sink wrapper cb-v6.ts. Records SHA-256 of every input.
 set -u
-H=$1; R=/Users/mackianni/forge; V=$R/results/night-shift-20261119/orch-B/d-v3sink; W=$R/results/night-shift-20261119/orch-B/d-v6sink
+H=$1; R=<REPO>; V=$R/results/night-shift-20261119/orch-B/d-v3sink; W=$R/results/night-shift-20261119/orch-B/d-v6sink
 rm -rf $H; mkdir -p $H/db $H/results $H/sinks $H/patched $H/broken
 cp $V/harness/lib.ts $V/harness/diff.ts $H/
-sed -i '' "s#<HOME>#/Users/mackianni#g" $H/lib.ts $H/diff.ts
+sed -i '' "s#<HOME>#<HOME>#g" $H/lib.ts $H/diff.ts
 python3 $W/harness_patch_v6.py $H || { echo "patch failed"; exit 2; }
 cp $V/build/shellcore-v3.cjs $H/sinkcore-v3.cjs
 cp $V/build/shellcore-reqid.cjs $H/sinkcore-reqid.cjs

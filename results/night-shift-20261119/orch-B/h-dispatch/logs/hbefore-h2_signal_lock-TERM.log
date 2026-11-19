@@ -1,4 +1,4 @@
-/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/c11copy/h2_signal_lock.sh: line 12: 44985 Terminated: 15          ( cd $T && exec env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$H/home LANG=C NODE_PATH=/Users/mackianni/forge/node_modules $NODE --import tsx tests/refund-finality/dispatch_cli.ts $W/sink.sqlite $W/ledger.jsonl $W/disp-config.json $W/effects.jsonl 0 > $W/run1.out 2> /dev/null )
+<REPO>/results/night-shift-20261119/orch-B/h-dispatch/c11copy/h2_signal_lock.sh: line 12: 44985 Terminated: 15          ( cd $T && exec env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$H/home LANG=C NODE_PATH=<REPO>/node_modules $NODE --import tsx tests/refund-finality/dispatch_cli.ts $W/sink.sqlite $W/ledger.jsonl $W/disp-config.json $W/effects.jsonl 0 > $W/run1.out 2> /dev/null )
 run1 rc=143 out=[] ledger=1 effects=1 lock_left=yes
 run2 rc=0 {"stopped":"dispatcher lock is held: another run is active, or a stopped run left the lock file","onTime":false}
 exit 1

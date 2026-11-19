@@ -1,9 +1,9 @@
-# owner=d-corebacked start=2026-11-19T08:21:48Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked/dafny/inputs/sink
+# owner=d-corebacked start=2026-11-19T08:21:48Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-corebacked/dafny/inputs/sink
 # power: Now drawing from 'AC Power'
 # swap free MiB: 568
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked/logs/v02-mutant-nopreok-verify.csv Mutant_ShellNoPreOk.dfy
-CLI: Error: command-line argument '--solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects' is neither a recognized option nor a Dafny input file (.dfy, .doo, or .toml).
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-corebacked/logs/v02-mutant-nopreok-verify.csv Mutant_ShellNoPreOk.dfy
+CLI: Error: command-line argument '--solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects' is neither a recognized option nor a Dafny input file (.dfy, .doo, or .toml).
         0.19 real         0.13 user         0.03 sys
             65470464  maximum resident set size
                    0  average shared memory size

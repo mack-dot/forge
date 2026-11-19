@@ -1,12 +1,12 @@
 """c14-parser shared helpers. Read-only use of the consumer (frame.py, m1_fail_closed.py)."""
 import sys, subprocess, hashlib
 sys.dont_write_bytecode = True
-FC = '/Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/fail-closed'
+FC = '<REPO>/proposals/m1b-mission-20261119/drafts/fail-closed'
 sys.path.insert(0, FC)
 import frame            # noqa: E402  the repository's Python strict parser (consumer)
 import m1_fail_closed as fc  # noqa: E402  the repository's host-side caller (decide_from_result)
 
-EXE = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
+EXE = '<REPO>/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
 PIN = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
 assert hashlib.sha256(open(EXE, 'rb').read()).hexdigest() == PIN
 ENV = dict(fc.ENVIRONMENT)

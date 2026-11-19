@@ -10,10 +10,10 @@
 # EXPECTED outcome is ACCEPTED (the harness never reaches the key): that is the point of the control — a
 # timeout bounds the gate run, not the admitted program on rare inputs. Record the actual result either way.
 set -u
-R=/Users/mackianni/forge
+R=<REPO>
 E=$R/results/night-shift-20261119/orch-B/e-expect
 L=$R/results/night-shift-20261119/locks
-W=${HEAVY_WT:-/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/orchB-hostile-heavy}
+W=${HEAVY_WT:-<SCRATCH>/orchB-hostile-heavy}
 PY=/usr/local/bin/python3.10            # pinned 3.10.11; the gate checks its digest
 SUBS="$R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy
 $R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy
@@ -38,7 +38,7 @@ ln -s $R/.toolchain $W/.toolchain; ln -s $R/node_modules $W/node_modules
 sed -i '' "s/'hostile': 1800/'hostile': 300/" $W/gate/refund.py
 for S in $SUBS; do
   n=$(basename $S .dfy); cp $S $W/impl/Refund.dfy
-  ( cd $W && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$W LANG=C PYTHONUSERBASE=/Users/mackianni/Library/Python/3.10 \
+  ( cd $W && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$W LANG=C PYTHONUSERBASE=<HOME>/Library/Python/3.10 \
       /usr/bin/time -l $PY gate/refund.py --tier hostile-tests --evidence build/heavy-$n.json ) \
       > $OUTD/heavy-$n.log 2>&1
   rc=$?; echo "exit $rc" >> $OUTD/heavy-$n.log; echo "$n exit $rc $(date -u +%FT%TZ)" | tee -a $OUTD/summary.txt; cp $W/build/heavy-$n.json $OUTD/ 2>/dev/null

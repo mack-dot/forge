@@ -1,5 +1,5 @@
-# start=2026-11-19T14:42:51Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a6_dup_reqid.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/work/a6_dup_reqid-restart restart
+# start=2026-11-19T14:42:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a6_dup_reqid.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/work/a6_dup_reqid-restart restart
 (node:97561) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 {"mode":"restart","c1":{"status":"committed"},"c2":{"status":"committed"},"c1replay_before":{"status":"rejected","reason":"request id is already settled with another token"},"start1":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: PRAGMA integrity_check is not ok: [{\"integrity_check\":\"*** in database main ***\\nPage 5: never used\\nPage 7: never used\\nPage 13: never used\\nPage 15: never used\"},{\"integrity_check\":\"row 1 missing from index sqlite_autoindex_outbox_1"}

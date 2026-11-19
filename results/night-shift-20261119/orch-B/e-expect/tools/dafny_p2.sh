@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage: dafny_p2.sh NAME MODE(verify|audit) RUNNO. Light tier (60 s). Workdir = e-expect/p2/work/NAME.
 set -u
-R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-B/e-expect
+R=<REPO>; E=$R/results/night-shift-20261119/orch-B/e-expect
 N=$1; MODE=$2; K=$3
 W=$E/p2/work/$N; mkdir -p $W/impl $W/spec/refund $W/gate/refund $W/.toolchain
 cp $R/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $R/gate/refund/Bindings.dfy $W/gate/refund/

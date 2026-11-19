@@ -17,9 +17,9 @@
 # Refuses while hol.lock exists or a HOL process runs. Does NOT take heavy.lock. Scrubbed environment; pinned Node.
 # Usage: run_suite_m.sh [N]. Exit: 0 PREDICTION MET; 1 not met; 64 refused; 65 setup problem.
 set -u
-O=/Users/mackianni/forge/results/night-shift-20261119/orch-B
+O=<REPO>/results/night-shift-20261119/orch-B
 H=$O/h-minter; P=$O/p-adopt2
-LOCKS=/Users/mackianni/forge/results/night-shift-20261119/locks
+LOCKS=<REPO>/results/night-shift-20261119/locks
 TMO=${SUITE_TIMEOUT_S:-1200}
 if [ -e "$LOCKS/hol.lock" ] || pgrep -f 'bin/hol' >/dev/null; then echo "refused: hol.lock exists or a HOL process runs"; exit 64; fi
 pmset -g batt | head -1 | grep -q "AC Power" || { echo "refused: not on AC power"; exit 64; }

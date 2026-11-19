@@ -4,7 +4,7 @@
 # Usage: LIST=heavy/list_jsbound.txt [OUT=heavy/translate-all] heavy/translate_all.sh
 # It refuses while hol.lock exists or a HOL process runs. It does not take heavy.lock (the orchestrator holds it).
 set -u
-H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate; L=/Users/mackianni/forge/results/night-shift-20261119/locks
+H=<REPO>/results/night-shift-20261119/orch-B/h-gate; L=<REPO>/results/night-shift-20261119/locks
 LIST=${LIST:-$H/heavy/list_jsbound.txt}; OUT=${OUT:-$H/heavy/translate-all}
 [ -e $L/hol.lock ] && { echo "refused: hol.lock exists"; exit 75; }
 pgrep -f 'bin/hol' >/dev/null && { echo "refused: a HOL process runs"; exit 75; }
@@ -14,8 +14,8 @@ while read cls S; do
   [ -e $L/hol.lock ] && { echo "stopped: hol.lock appeared"; break; }
   n=$(basename $S .dfy); [ -f $OUT/js/$n.js ] && continue
   W=$H/work/ta-$n; rm -rf $W; mkdir -p $W/impl $W/spec/refund
-  cp /Users/mackianni/forge/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $S $W/impl/Refund.dfy
-  sh /Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh h-gate-bulk $W $OUT/logs/$n.translate.log 60 \
+  cp <REPO>/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $S $W/impl/Refund.dfy
+  sh <REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh h-gate-bulk $W $OUT/logs/$n.translate.log 60 \
      translate js impl/Refund.dfy --no-verify --output $W/model >/dev/null 2>&1
   [ -f $W/model.js ] && cp $W/model.js $OUT/js/$n.js; rm -rf $W
   echo "$cls $n $(tail -1 $OUT/logs/$n.translate.log)"

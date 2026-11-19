@@ -6,10 +6,10 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { copyFileSync, rmSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-import { canon, sha256hex, signedBytes, stateSha256, DOMAIN, ChargeState } from "/Users/mackianni/forge/ts/refund-finality/encoding";
-import { Sink as OldSink } from "/Users/mackianni/forge/ts/refund-finality/sink";
+import { canon, sha256hex, signedBytes, stateSha256, DOMAIN, ChargeState } from "<REPO>/ts/refund-finality/encoding";
+import { Sink as OldSink } from "<REPO>/ts/refund-finality/sink";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const V3 = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink/sink_core_backed_v5.ts").Sink;
+const V3 = require("<REPO>/results/night-shift-20261119/orch-B/d-v5sink/sink_core_backed_v5.ts").Sink;
 
 const dir = process.argv[2]; mkdirSync(dir, { recursive: true });
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");

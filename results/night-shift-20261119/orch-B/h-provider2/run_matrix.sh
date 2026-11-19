@@ -2,7 +2,7 @@
 # h-provider2: every p_*.ts regression x provider mode x anchor, one short Node run at a time (about 1 s each).
 # Gate before EVERY cell: swap free >= 1024 MiB, else stop (exit 5). No concurrency. Each log ends with "exit N".
 # Usage: run_matrix.sh <tree> <logdir>
-T=$1; L=$2; D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider2
+T=$1; L=$2; D=<REPO>/results/night-shift-20261119/orch-B/h-provider2
 export PATH=/opt/homebrew/bin:/usr/bin:/bin
 mkdir -p $L; S=$L/SUMMARY.tsv
 echo "# node $(node --version) | $(pmset -g batt | head -1) | $(date -u +%FT%TZ) | tree $T" > $S

@@ -1,8 +1,8 @@
 # start=2026-11-19T14:28:36Z node=v24.3.0
-# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/work/tests/refund-finality/regress/run.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/standins/reject_all_sink.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts --encoding /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
-# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/standins/reject_all_sink.ts
-# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts
-# encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-regress/work/tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-B/h-regress/standins/reject_all_sink.ts <REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts --encoding <REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-regress/standins/reject_all_sink.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
 # expectedHeadMode=none node=v24.3.0
 FAIL C1-honest-refund: commit=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
 FAIL C2-zero-amount-refund: commit=rejected rq_z: outbox=0 effects=0 (want 1 and 1)

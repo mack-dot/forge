@@ -1,7 +1,7 @@
-# judge=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/tests/refund-finality/regress/run.ts
-# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/m_skip_prestate/sink.ts sha256=f0bcb4722ec9ca27c785709fd931f8ceeed1bbe02c42f8e99342923e8f356ff7
-# dispatcher=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/dispatcher.ts sha256=bb523824023289973c3f4a16b12e260b7f691acd34d6ef27cdb61d63ec740f7a
-# trusted encoding=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# judge=<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/run.ts
+# sink=<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/m_skip_prestate/sink.ts sha256=f0bcb4722ec9ca27c785709fd931f8ceeed1bbe02c42f8e99342923e8f356ff7
+# dispatcher=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/dispatcher.ts sha256=bb523824023289973c3f4a16b12e260b7f691acd34d6ef27cdb61d63ec740f7a
+# trusted encoding=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
 # encoding next to the sink=none
 # expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=-
 PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
@@ -28,3 +28,9 @@ PASS K7-store-survives-reopen: reopen=started same=true restart=started same=tru
 PASS D1-dispatcher-bad-signature-row: keep-schema writer: write refused by the database (h-sink S1/S2/S3/S6: a settled row must be the next commit of); drop-triggers writer: effects(rq_1)=1 effects(rq_2)=0
 PASS D2-dispatcher-chain-break-row: keep-schema writer: write refused by the database (h-sink S1/S2/S3/S6: a settled row must be the next commit of); drop-triggers writer: effects(rq_1)=1 effects(rq_2)=0
 PASS D3-dispatcher-ledger-before-emit: flush1=[rq_1,rq_2(failed)] ledgerAfter1=[rq_1,rq_1,rq_2,rq_2] flush2=[rq_3] ledgerAtEmit=[true,true,true]
+PASS E0-encoding-identity: no encoding.ts next to the sink
+PASS E1-signed-bytes-cover-post-intent: altered=rejected probe=no neighbor encoding honest=committed effects(rq_1)=1
+# verdicts=26/26 PASS=24 KNOWN-LIMIT=0 FAIL=2 [K3-stale-prestate,K6-long-run-one-store]
+# unexpected FAIL=[K3-stale-prestate,K6-long-run-one-store] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
+# JUDGE RESULT NOT OK (exit 1)
+exit 1

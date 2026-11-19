@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 HERE = Path(__file__).resolve().parent
-ORIGINAL = Path('/Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/enforcement/unapplied-proposal/gate/admission.py')
+ORIGINAL = Path('<REPO>/proposals/m1b-mission-20261119/drafts/enforcement/unapplied-proposal/gate/admission.py')
 SUITE = HERE / 'test_admission_suite.py'
 ENV = {'PATH': '/usr/bin:/bin', 'HOME': str(HERE), 'PYTHONDONTWRITEBYTECODE': '1'}
 

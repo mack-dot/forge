@@ -4,9 +4,9 @@
 import { generateKeyPairSync, sign, verify, KeyObject, createPublicKey } from "node:crypto";
 import { readFileSync } from "node:fs";
 import * as sqlite from "node:sqlite";
-import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "/Users/mackianni/forge/ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "<REPO>/ts/refund-finality/encoding";
 
-export const ROOT = "/Users/mackianni/forge";
+export const ROOT = "<REPO>";
 export const Z = __dirname;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const M = require(Z + "/" + (process.env.Z4_CORE ?? "sinkcore.cjs"));

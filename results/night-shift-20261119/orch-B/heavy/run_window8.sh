@@ -1,7 +1,7 @@
 #!/bin/bash
 # Orchestrator B: heavy window: the Slice 1 suite on the pristine export, the export with adoption-v6.diff, and the x3 probe.
 set -u
-R=/Users/mackianni/forge; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
+R=<REPO>; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
 [ -e $L/hol.lock ] && { echo "refused: hol.lock exists"; exit 75; }
 pgrep -f 'bin/hol' >/dev/null && { echo "refused: a HOL process runs"; exit 75; }
 case "$(pmset -g batt | head -1)" in *"AC Power"*) ;; *) echo "refused: battery"; exit 75;; esac
