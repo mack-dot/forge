@@ -18185,3 +18185,15 @@ curl: (6) Could not resolve host: github.com
   3. One contrast lemma does not restate that the other hypotheses hold; it relies on the earlier control it calls.
 - Impact: the layered reading stands and is simpler: approval and uniqueness with no hypothesis; "minted by the key holder" under unforgeability; the artifact layer under its hypothesis. M1-B OPEN. end_to_end=false.
 - Next check: the suite on the v6 export; e-subset2.
+
+## U561 — the Slice 1 suite on the export with the v6 adoption diff: one row cannot pass by design; all other rows pass
+- Status: 2026-11-19T13:06Z (inserted by the shell from `date -u`). Refs U553, U558. Evidence: results/night-shift-20261119/orch-B/heavy/window-8.log; orch-B/p-adopt2/suite.
+- TESTED, my own run in a seventh heavy window, 13:05:00Z to 13:05:59Z, after Orchestrator A removed the HOL lock at 13:04:54Z and confirmed that no HOL process ran (heavy/run_window8.sh; the worker's script; a scrubbed environment):
+  - pristine export of 985f5eaf: exit 0; 115 rows, 0 failed;
+  - export with the v6 adoption diff: exit 2, NO report: the suite stops at the row "dispatcher: the public-key audit of that changed database" (suite.ts line 517): there the suite opens a sink on a database that the test has rewritten with an attacker's key, and the v6 sink refuses to start ("start-up audit … is false"); the old sink serves such a store;
+  - a measurement copy of the suite that records this refusal as a failed row and goes on (not part of the diff): exit 1; 115 rows, 1 failed: only that row.
+  This is what the worker predicted before the run (its prediction is stored in its files).
+- Reading: with the v6 sink that row needs a NEW EXPECTATION (a rewritten store is refused at start, not served and reported by the audit call). That is a change of a test's meaning: the owner's decision. Until then scripts/exit_slice1.py fails on the changed tree. No other row changes; the race rows pass with the start-up audit.
+- After the window I sent no message to Orchestrator A: its session had handed back; a note file under locks/released records my release time.
+- Impact: the v6 adoption diff is a tested candidate with one known, explained suite difference and the owner questions of U557 and U558. Nothing applied. M1-B OPEN. end_to_end=false.
+- Next check: e-subset2.
