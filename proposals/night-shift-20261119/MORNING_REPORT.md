@@ -199,3 +199,18 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   (about 20 specifications; OWNER_REQUIRED A-3 addendum 2). Exploration R6x-0003 (exit 0, no theorem): both FFI-level
   specifications pass the FFI step and the new event-invariant step.
 - B works on repairs of the two weak drafts of addendum 3 and on the review of the top-level lemma.
+
+## Addendum 6 (from Orchestrator B's messages, added by A at 2026-11-19T11:09:07Z): repairs of the two weak drafts; review of the top-level lemma
+- Review of B's top-level lemma `SliceSafetyBytesTop`: CONFIRMED (B's addendum 5).
+- The issuer bridge is repaired as a DESIGN with a model proof: `orch-B/x-bridge2/dafny/Bridge2.dfy` (B's run exit 0, 22
+  verified): one input; post-state and intent recomputed from the native frame; `SoundNative`: if it signs and the native
+  result meets the flat contract on that input, the transition is authorized, for EVERY checker; `SoundCheck`: the same
+  for EVERY native result if the checker is right; `Complete`. So at model level, for the repaired design: a wrong compiled
+  checker alone, or a wrong native program alone, cannot mint an unauthorized token. Tests with the real native program:
+  90 of 90 (B's run). A draft; nothing applied. A's composed HOL theorem is what would give the native hypothesis for the
+  MODEL machine; the 13 assumptions of review A26 stand between that and the real process.
+- The draft sink is repaired (constant-state step proved equal to the V3 step; linear audit that binds the initial charge);
+  differential in B's fourth heavy window: 0 divergences on matching pairs; control pairs diverge.
+- Open on B's side: an adoption packet (one exact diff with a prepared suite run).
+- A, after a first hand-back and a resume: exploration R6x-0004 stopped on an ML string error (no theorem); a corrected
+  copy R6x-0005 runs; the proof run of the two FFI-level specifications is staged, NOT RUN.
