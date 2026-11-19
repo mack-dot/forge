@@ -15,11 +15,20 @@
 //
 // Public key hex = the raw 32-byte Ed25519 public key (the last 32 bytes of the SPKI DER). Signature hex = the raw
 // 64-byte Ed25519 signature. Hex: lowercase only, exact length.
-// Malleability: this tool claims nothing beyond what node:crypto (OpenSSL) verify does. It does not add checks.
+// Weak keys (review R4): verify refuses (exit 2) a public key, and a signature whose R, is a small-order or
+// non-canonical Ed25519 encoding: the 5 libsodium blocklist values (has_small_order in
+// src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c), compared with bit 255 cleared (that covers the 8 torsion
+// points and their non-canonical encodings: 14 byte strings; Chalkias, Garillot, Nikolaenko, "Taming the many
+// EdDSAs", 2020), and any y >= p = 2^255 - 19. Beyond that, this tool claims nothing more than node:crypto verify.
 //
-// Message (DESIGN.md "Cosign"), at most 4096 bytes, exactly five LF-terminated lines:
-//   forge-airlock-cosign-v1\n<store_id>\n<request_id>\n<pre_state_hash>\n<action>\n
-//   store_id   [A-Za-z0-9_-]{1,64}   request_id [A-Za-z0-9_-]{1,24}   pre_state_hash [0-9a-f]{32}
+// Run as a file (`node cosign.cjs ...`) or from source (`node -e <source> -- ...`, as the engine runs it; the
+// engine embeds this file at compile time and reads no helper file at run time).
+//
+// Message (src/airlock/PROTOCOL.md section 7), at most 4096 bytes, exactly six LF-terminated lines:
+//   forge-airlock-cosign-v2\n<store_id>\n<genesis_hash>\n<request_id>\n<pre_state_hash>\n<action>\n
+//   store_id   [A-Za-z0-9_-]{1,64}   genesis_hash [0-9a-f]{32} (the FNV-1a-128 of the store's genesis record, which
+//   holds a 16-byte random nonce: a signature for one store never fits another)
+//   request_id [A-Za-z0-9_-]{1,24}   pre_state_hash [0-9a-f]{32}
 //   action     1 or more bytes in 0x20..0x7e (printable ASCII, no line end)
 // Both sign and verify refuse (exit 2) any other message. No field can hold a line end, so no boundary can move.
 //
@@ -44,7 +53,15 @@ const MAX_KEY_FILE = 4096;
 const SPKI_PREFIX = Buffer.from('302a300506032b6570032100', 'hex');
 const PUB_RE = /^[0-9a-f]{64}$/;
 const SIG_RE = /^[0-9a-f]{128}$/;
-const PREFIX = 'forge-airlock-cosign-v1';
+const PREFIX = 'forge-airlock-cosign-v2';
+const SMALL_ORDER = [
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0100000000000000000000000000000000000000000000000000000000000000',
+  '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05',
+  'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a',
+  'ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
+];
+const EVAL = module.id === '[eval]';
 const STORE_RE = /^[A-Za-z0-9_-]{1,64}$/;
 const ID_RE = /^[A-Za-z0-9_-]{1,24}$/;
 const HASH_RE = /^[0-9a-f]{32}$/;
@@ -76,14 +93,23 @@ function parseMessage(buf) {
   const text = buf.toString('latin1');
   if (!text.endsWith('\n')) throw new Error('message does not end with LF');
   const lines = text.slice(0, -1).split('\n');
-  if (lines.length !== 5) throw new Error('message has ' + lines.length + ' lines, expected 5');
-  const [prefix, storeId, requestId, preStateHash, action] = lines;
+  if (lines.length !== 6) throw new Error('message has ' + lines.length + ' lines, expected 6');
+  const [prefix, storeId, genesisHash, requestId, preStateHash, action] = lines;
   if (prefix !== PREFIX) throw new Error('message prefix line is not ' + PREFIX);
   if (!STORE_RE.test(storeId)) throw new Error('store_id is not [A-Za-z0-9_-]{1,64}');
+  if (!HASH_RE.test(genesisHash)) throw new Error('genesis_hash is not 32 lowercase hex');
   if (!ID_RE.test(requestId)) throw new Error('request_id is not [A-Za-z0-9_-]{1,24}');
   if (!HASH_RE.test(preStateHash)) throw new Error('pre_state_hash is not 32 lowercase hex');
   if (!ACTION_RE.test(action)) throw new Error('action is empty or not printable ASCII');
-  return { storeId, requestId, preStateHash, action };
+  return { storeId, genesisHash, requestId, preStateHash, action };
+}
+
+// True for a 64-hex encoding that is a small-order point (any sign bit) or has y >= p (see the head of this file).
+function weakPoint(hex) {
+  const b = Buffer.from(hex, 'hex');
+  b[31] &= 0x7f;
+  const yGeP = b[31] === 0x7f && b.subarray(1, 31).every((x) => x === 0xff) && b[0] >= 0xed;
+  return yGeP || SMALL_ORDER.includes(b.toString('hex'));
 }
 
 // D-1 step 2 on a stat of the OPENED descriptor. Exported for the other-uid test only (no CLI or environment path).
@@ -157,6 +183,8 @@ function cmdVerify(args) {
   const [pubHex, sigHex] = args;
   if (!PUB_RE.test(pubHex)) return fail('public key is not 64 lowercase hex');
   if (!SIG_RE.test(sigHex)) return fail('signature is not 128 lowercase hex');
+  if (weakPoint(pubHex)) return fail('public key is a small-order or non-canonical Ed25519 encoding');
+  if (weakPoint(sigHex.slice(0, 64))) return fail('signature R is a small-order or non-canonical Ed25519 encoding');
   let publicKey;
   try {
     publicKey = crypto.createPublicKey({ key: Buffer.concat([SPKI_PREFIX, Buffer.from(pubHex, 'hex')]), format: 'der', type: 'spki' });
@@ -213,7 +241,7 @@ function cmdSign(args) {
   }
   readStdin((msg) => {
     const f = parseMessage(msg);
-    fs.writeSync(2, 'cosign: you sign:\n  store_id       ' + f.storeId + '\n  request_id     ' + f.requestId +
+    fs.writeSync(2, 'cosign: you sign:\n  store_id       ' + f.storeId + '\n  genesis_hash   ' + f.genesisHash + '\n  request_id     ' + f.requestId +
       '\n  pre_state_hash ' + f.preStateHash + '\n  action         ' + f.action + '\n');
     const sig = crypto.sign(null, msg, key);
     if (sig.length !== 64) return fail('unexpected signature length');
@@ -223,12 +251,12 @@ function cmdSign(args) {
 
 function main() {
   process.on('uncaughtException', (e) => fail('exception: ' + (e && e.message)));
-  const [cmd, ...args] = process.argv.slice(2);
+  const [cmd, ...args] = process.argv.slice(EVAL ? 1 : 2); // `node -e <src> -- a b` gives argv [node, a, b]
   if (cmd === 'verify') return cmdVerify(args);
   if (cmd === 'keygen') return cmdKeygen(args);
   if (cmd === 'sign') return cmdSign(args);
   fail('usage: cosign.cjs verify|keygen|sign ...');
 }
 
-if (require.main === module) main();
-module.exports = { checkKeyStat, parseMessage };
+if (require.main === module || EVAL) main();
+module.exports = { checkKeyStat, parseMessage, weakPoint };

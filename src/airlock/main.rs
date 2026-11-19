@@ -7,12 +7,15 @@
 //! BookingDualCert checker (run by Node: Node and the Dafny compiler are trusted) must accept a BOOK. Everything
 //! else here (WAL, fold, CAS, parametric money rules, saga table, cosign wiring, read airlock, leases) is a native
 //! check with finite tests. `sync_all` is fcntl(F_FULLFSYNC) on macOS; the kernel and the drive are assumptions.
-//! FNV-1a-128 is not cryptographic. Whoever can write the store folder is trusted. Cosign signatures are verified by
-//! Node's `node:crypto` through src/airlock/node/cosign.cjs (trusted); the engine never reads a private key.
-//! The engine does not hash the refund binary or the helpers: its launcher must pin them. Wire: PROTOCOL.md.
+//! FNV-1a-128 is not cryptographic. Cosign signatures are verified by Node's `node:crypto` through the embedded
+//! src/airlock/node/cosign.cjs (trusted); the engine never reads a private key. Pins: the refund binary (compiled-in
+//! SHA-256), the Node binary (SHA-256 in the genesis record), the helpers (compiled in). Trust boundary: every rule
+//! holds only for a caller that goes through this engine; whoever can write the store folder or run another engine
+//! build on it is trusted (PROTOCOL.md section 11). Wire: PROTOCOL.md.
 mod helpers;
 mod json;
 mod ledger;
+mod pin;
 mod policy;
 mod store;
 mod verbs;
@@ -184,37 +187,42 @@ fn eval_line(m: &policy::Money, raw: &[u8]) -> Result<String, Refusal> {
     })
 }
 
-/// `leases <dir> [--sweep [--now MS]]`. Read-only: a sweep writes no record (a dropped lease stays open and is
-/// reported again by the next sweep). Exit 24 if a sweep reports at least one DROPPED_OBLIGATION.
-fn leases(dir: &str, sweep: bool, now: Option<u64>) -> i32 {
+/// `leases <dir> [--sweep [--now MS] | --all]`. Read-only: a sweep writes no record (a dropped lease stays open and is
+/// reported again by the next sweep). Exit 24 if a sweep reports at least one DROPPED_OBLIGATION. `--all` also lists
+/// each closed lease with the record that closed it, so an obligation closed by a rejection stays visible.
+fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
     let s = match store::open(dir) { Ok(s) => s, Err(e) => return answer(Err(e)) };
     let now = now.unwrap_or_else(|| std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as u64).unwrap_or(u64::MAX));
-    let mut open: Vec<(&String, &(u64, u64))> = s.l.leases.iter().collect();
-    open.sort_by_key(|(_, (epoch, _))| *epoch);
+    let mut list: Vec<(&String, &ledger::Lease)> = s.l.leases.iter().filter(|(_, l)| all || l.is_open()).collect();
+    list.sort_by_key(|(_, l)| l.epoch);
+    let open = s.l.open_leases();
     let mut text = String::new();
     let mut dropped = 0;
-    for (req, (_, deadline)) in &open {
+    for (req, l) in &list {
+        let (deadline, tenant, key) = (&l.deadline, &l.tenant, &l.key);
         if !sweep {
-            text.push_str(&format!("\nLEASE {req} {deadline}"));
+            let status = match &l.closed { None => "OPEN".to_string(), Some((epoch, verdict, detail)) => format!("CLOSED {epoch} {verdict} {detail}") };
+            text.push_str(&if all { format!("\nLEASE {req} {deadline} {tenant} {key} {status}") } else { format!("\nLEASE {req} {deadline} {tenant} {key}") });
         } else if now > *deadline {
             dropped += 1;
-            text.push_str(&format!("\nDROPPED_OBLIGATION {req} {deadline}"));
+            text.push_str(&format!("\nDROPPED_OBLIGATION {req} {deadline} {tenant} {key}"));
         }
     }
-    let head = if sweep { format!("SWEEP {} {dropped} now={now}", open.len()) } else { format!("LEASES {}", open.len()) };
+    let head = if sweep { format!("SWEEP {open} {dropped} now={now}") } else if all { format!("LEASES {open} all={}", list.len()) } else { format!("LEASES {open}") };
     drop(s);
     let code = answer(Ok(head + &text));
     if code == 0 && dropped > 0 { Code::DroppedObligation.num() } else { code }
 }
 
-fn flag_values(rest: &[String], names: &[&str], multi: &str) -> Option<(std::collections::HashMap<String, String>, Vec<String>, bool, bool)> {
-    let (mut one, mut many, mut sweep, mut seen_sweep) = (std::collections::HashMap::new(), Vec::new(), false, false);
+/// Flags: `names` take one value each (at most once), `multi` may repeat, `bools` take no value (at most once).
+fn flag_values(rest: &[String], names: &[&str], multi: &str, bools: &[&str]) -> Option<(std::collections::HashMap<String, String>, Vec<String>, Vec<String>)> {
+    let (mut one, mut many, mut seen) = (std::collections::HashMap::new(), Vec::new(), Vec::new());
     let mut i = 0;
     while i < rest.len() {
         let f = rest[i].as_str();
-        if f == "--sweep" {
-            if seen_sweep { return None }
-            (sweep, seen_sweep) = (true, true);
+        if bools.contains(&f) {
+            if seen.iter().any(|x| x == f) { return None }
+            seen.push(f.to_string());
             i += 1;
             continue;
         }
@@ -228,35 +236,36 @@ fn flag_values(rest: &[String], names: &[&str], multi: &str) -> Option<(std::col
         }
         i += 2;
     }
-    Some((one, many, sweep, seen_sweep))
+    Some((one, many, seen))
 }
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let usage = || {
-        eprintln!("usage: airlock-engine init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64]");
-        eprintln!("       airlock-engine serve <dir> [--refund-binary P] [--node P] [--helpers DIR] [--checker MODEL]");
-        eprintln!("       airlock-engine state|replay <dir> | get <dir> <tenant> <key> | leases <dir> [--sweep [--now MS]]");
-        eprintln!("       airlock-engine eval <policy.json> | cosign-message <dir> <action>");
+        eprintln!("usage: airlock-engine init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]");
+        eprintln!("       airlock-engine serve <dir> [--refund-binary P] [--node P] [--checker MODEL]");
+        eprintln!("       airlock-engine state|replay <dir> | get <dir> <tenant> <key> | leases <dir> [--sweep [--now MS] | --all]");
+        eprintln!("       airlock-engine eval <policy.json> | cosign-message <dir> <action> | sha256 <file>");
         Code::Usage.num()
     };
     let a: Vec<&str> = args.iter().map(String::as_str).collect();
     let rest: Vec<String> = args.iter().skip(3).cloned().collect();
     let code = match a.get(1..).unwrap_or(&[]) {
-        ["init", dir, ..] => match flag_values(&rest, &["--store-id", "--cosign-pubkey"], "--policy") {
-            Some((one, policies, _, false)) => {
+        ["init", dir, ..] => match flag_values(&rest, &["--store-id", "--cosign-pubkey", "--node"], "--policy", &[]) {
+            Some((one, policies, _)) => {
                 let id = one.get("--store-id").cloned().unwrap_or_else(|| {
                     let seed = format!("{:?}{}", std::time::SystemTime::now(), std::process::id());
                     format!("st-{}", &store::hx(store::fnv128(seed.as_bytes()))[..21])
                 });
-                answer(store::init(dir, &id, &policies, one.get("--cosign-pubkey").map(String::as_str)))
+                answer(store::init(dir, &id, &policies, one.get("--cosign-pubkey").map(String::as_str), one.get("--node").map(String::as_str)))
             }
             _ => usage(),
         },
-        ["serve", dir, ..] => match flag_values(&rest, &["--refund-binary", "--node", "--helpers", "--checker"], "") {
-            Some((one, many, _, false)) if many.is_empty() => {
+        // No `--helpers`: the helpers are compiled into the engine (a caller-chosen helper folder was the review's R1).
+        ["serve", dir, ..] => match flag_values(&rest, &["--refund-binary", "--node", "--checker"], "", &[]) {
+            Some((one, many, _)) if many.is_empty() => {
                 let g = |k: &str| one.get(k).cloned();
-                serve(&verbs::Ctx { dir: dir.to_string(), binary: g("--refund-binary"), node: g("--node"), helpers: g("--helpers"), checker: g("--checker") })
+                serve(&verbs::Ctx { dir: dir.to_string(), binary: g("--refund-binary"), node: g("--node"), checker: g("--checker"), node_pin: Default::default() })
             }
             _ => usage(),
         },
@@ -274,14 +283,20 @@ fn main() {
             })?;
             Ok(format!("REPLAY {n}{lines}"))
         })),
-        ["leases", dir, ..] => match flag_values(&rest, &["--now"], "") {
-            Some((one, many, sweep, _)) if many.is_empty() && (sweep || one.is_empty()) => match one.get("--now").map(|v| store::money(v)) {
-                Some(None) => usage(),
-                now => leases(dir, sweep, now.flatten()),
-            },
+        ["leases", dir, ..] => match flag_values(&rest, &["--now"], "", &["--sweep", "--all"]) {
+            Some((one, many, b)) if many.is_empty() => {
+                let (sweep, all) = (b.iter().any(|x| x == "--sweep"), b.iter().any(|x| x == "--all"));
+                match one.get("--now").map(|v| store::money(v)) {
+                    _ if sweep && all => usage(),
+                    Some(_) if !sweep => usage(),
+                    Some(None) => usage(),
+                    now => leases(dir, sweep, all, now.flatten()),
+                }
+            }
             _ => usage(),
         },
         ["eval", file] => eval(file),
+        ["sha256", file] => answer(pin::file_sha256(file).map(|h| format!("SHA256 {h}")).map_err(Refusal::from)),
         ["cosign-message", dir, action] => match verbs::cosign_message_cmd(dir, action) {
             Ok(m) => {
                 let mut out = io::stdout().lock();

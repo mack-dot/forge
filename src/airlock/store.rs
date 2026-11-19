@@ -131,6 +131,7 @@ pub struct Store {
     ratchet: File,
     pub l: Ledger,
     pub policies: HashMap<String, Policy>,
+    pub target: Option<(String, String)>, // (tenant, key) of the present request: a terminal verdict closes only a lease bound to it
 }
 /// Every command but `init` starts here: lock, fold, ratchet check, recovery, pinned policies.
 pub fn open(dir: &str) -> Result<Store, Refusal> {
@@ -170,7 +171,7 @@ pub fn open(dir: &str) -> Result<Store, Refusal> {
         if p.kind() != pin.kind || p.name() != pin.name { return no(Code::CorruptWal, "CORRUPT_WAL POLICY_CHANGED") }
         policies.insert(pin.name.clone(), p);
     }
-    Ok(Store { wal, ratchet, l, policies })
+    Ok(Store { wal, ratchet, l, policies, target: None })
 }
 /// Prints every valid record again (for `replay`); call it on an open store (the lock is held).
 pub fn records(s: &Store, on: &mut dyn FnMut(u64, &str)) -> Result<(), Refusal> {
@@ -179,6 +180,10 @@ pub fn records(s: &Store, on: &mut dyn FnMut(u64, &str)) -> Result<(), Refusal> 
     scan(&mut BufReader::new(f).take(s.l.len), on).map(|_| ())
 }
 impl Store {
+    pub fn aimed(mut self, tenant: &str, key: &str) -> Self {
+        self.target = Some((tenant.to_string(), key.to_string()));
+        self
+    }
     /// Appends one record and makes it durable. Order: fold check -> write -> sync_all (F_FULLFSYNC on macOS)
     /// -> ratchet entry -> sync_all -> lock released. A failed write or sync leaves no record, or answers OUTCOME_UNKNOWN.
     pub fn append(self, payload: &str) -> Result<(u64, u128), Refusal> {
@@ -209,10 +214,11 @@ impl Store {
 }
 /// Creates a new store. It never replaces an existing path: it builds the store in a fresh sibling folder,
 /// syncs every file and the folder, renames the folder into place, and syncs the parent folder.
-pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&str>) -> Result<String, Refusal> {
+pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&str>, node: Option<&str>) -> Result<String, Refusal> {
     if !canonical_id(store_id) { return no(Code::Malformed, "BAD_ID store_id") }
     if let Some(k) = pubkey {
         if k.len() != 64 || !k.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)) { return no(Code::Malformed, "BAD_PUBKEY") }
+        if crate::pin::weak_ed25519(k) { return no(Code::Malformed, "WEAK_PUBKEY a small-order or non-canonical Ed25519 key") }
     }
     if policy_paths.len() > MAX_POLICIES { return no(Code::MalformedPolicy, "TOO_MANY_POLICIES") }
     let mut loaded: Vec<(String, &'static str, Vec<u8>)> = Vec::new();
@@ -223,6 +229,17 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
         if loaded.iter().any(|(n, _, _)| n == pol.name()) { return no(Code::MalformedPolicy, "DUPLICATE_POLICY_NAME") }
         loaded.push((pol.name().to_string(), pol.kind(), bytes));
     }
+    // A store whose policies need a Node helper (cosign, inventory) pins the SHA-256 of the Node binary.
+    let needs_node = pubkey.is_some() || loaded.iter().any(|(_, kind, _)| *kind == "inventory");
+    let node_pin = match node {
+        Some(n) => crate::pin::file_sha256(n).map_err(|e| Refusal(Code::Malformed, format!("NODE_UNREADABLE {:?}", e.kind())))?,
+        None if needs_node => return no(Code::Malformed, "NODE_REQUIRED --node is required with a cosign key or an inventory policy"),
+        None => "-".to_string(),
+    };
+    // 16 bytes from the kernel's random source: two stores never share a genesis record (and so no state hash).
+    let mut nonce = [0u8; 16];
+    File::open("/dev/urandom").and_then(|mut f| f.read_exact(&mut nonce)).map_err(|_| Refusal(Code::IoError, "NO_RANDOM /dev/urandom could not be read".into()))?;
+    let nonce: String = nonce.iter().map(|b| format!("{b:02x}")).collect();
     let target = Path::new(dir);
     if target.symlink_metadata().is_ok() { return no(Code::IoError, "STORE_EXISTS the path exists already") }
     let parent = match target.parent() { Some(p) if !p.as_os_str().is_empty() => p.to_path_buf(), _ => Path::new(".").to_path_buf() };
@@ -237,7 +254,7 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
             f.sync_all()?;
             pins.push_str(&format!(" {name} {kind} {}", hx(fnv128(bytes))));
         }
-        let genesis = encode(0, 0, &format!("GENESIS 1 {store_id} {} {}{pins}", pubkey.unwrap_or("-"), loaded.len()));
+        let genesis = encode(0, 0, &format!("GENESIS 2 {store_id} {nonce} {node_pin} {} {}{pins}", pubkey.unwrap_or("-"), loaded.len()));
         let mut ratchet = OpenOptions::new().append(true).create_new(true).open(path(&tmp, EPOCH))?;
         push(&mut ratchet, 0)?;
         let mut wal = OpenOptions::new().write(true).create_new(true).open(path(&tmp, WAL))?;

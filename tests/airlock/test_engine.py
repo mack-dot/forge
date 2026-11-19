@@ -15,6 +15,9 @@ Helper processes: the real CakeML refund binary (a private 0700 copy named `refu
 src/airlock/node/cosign.cjs and booking_check.cjs with the built model build/airlock/checker/model.cjs. Some cases
 also use STAND-IN helper processes written to a temp folder: they are test doubles of the HELPER PROCESS, used only
 to drive the engine's wiring (bad frames, wrong output, a helper that refuses a valid input). They are labelled.
+Since review R1 the production engine runs only its embedded helpers and only the pinned refund binary: every
+stand-in runs through the KILL-POINTS build with the test seams AIRLOCK_TEST_HELPERS / AIRLOCK_TEST_UNPINNED_BINARY
+(cfg kill_points only); case `pins` checks that the production build ignores both seams.
 A case that cannot run FAILS with NOT RUN in its message; it never passes.
 Exit 0: every selected case passed. 1: at least one failed. 2: the suite could not start.
 """
@@ -85,7 +88,7 @@ def read_wal(store):
         tail = fnv128(rec)
         records.append((epoch, payload, tail))
         pos += len(rec)
-    require(records and records[0][1].startswith('GENESIS 1 '), 'WAL: no genesis record')
+    require(records and records[0][1].startswith('GENESIS 2 '), 'WAL: no genesis record')
     return records
 
 
@@ -130,6 +133,8 @@ class Suite:
             args += ['--policy', FIX / (p + '.json')]
         if pubkey:
             args += ['--cosign-pubkey', pubkey]
+        if pubkey or 'inventory-seats' in policies:
+            args += ['--node', self.node]
         code, out, err = self.run(args)
         require(code == 0 and out.startswith('INITIALIZED '), 'init %s: %d %r %r' % (name, code, out, err))
         return path
@@ -139,9 +144,9 @@ class Suite:
         code, out, err = self.run(['serve', store] + list(extra), data, engine, env)
         return code, out.split('\n')[:-1], err
 
-    def one(self, store, line, expect, extra=()):
+    def one(self, store, line, expect, extra=(), engine=None, env=None):
         """One request; the first token of the answer must be `expect`. Returns the answer tokens."""
-        code, out, err = self.serve(store, [line], extra)
+        code, out, err = self.serve(store, [line], extra, engine, env)
         require(len(out) == 1, 'one answer expected for %r: %r %r' % (line[:80], out, err))
         tok = out[0].split(' ')
         want = 0 if expect in ('COMMITTED', 'OK', 'LEASE_OPENED', 'STATE') else CODES[expect]
@@ -172,7 +177,16 @@ class Suite:
         require(Path(self.node).exists(), 'NOT RUN: node %s is missing' % self.node)
         for f in ('cosign.cjs', 'booking_check.cjs'):
             require((HELPERS / f).exists(), 'NOT RUN: helper %s is missing' % f)
-        return ['--node', self.node, '--helpers', HELPERS]
+        return ['--node', self.node]
+
+    def seam(self, helpers=None, unpinned=False):
+        """The kill-points build and the environment of its test seams (stand-in helpers / an unpinned binary)."""
+        env = dict(ENV)
+        if helpers is not None:
+            env['AIRLOCK_TEST_HELPERS'] = str(helpers)
+        if unpinned:
+            env['AIRLOCK_TEST_UNPINNED_BINARY'] = '1'
+        return {'engine': self.kill_engine, 'env': env}
 
     def standin(self, name, files_):
         """STAND-IN helper processes (test doubles of the helper process; wiring only)."""
@@ -191,7 +205,12 @@ def case_init(s):
     code, out, _ = s.run(['init', p, '--store-id', 'other', '--policy', FIX / 'money-parametric.json'])
     require(code == 18 and 'STORE_EXISTS' in out and files(p) == before, 'second init must be refused and change nothing: %d %r' % (code, out))
     recs = read_wal(p)
-    require(len(recs) == 1 and recs[0][1].startswith('GENESIS 1 st-init - 4 store-refunds money '), 'genesis: %r' % recs[0][1])
+    g = recs[0][1].split(' ')
+    node_pin = hashlib.sha256(Path(s.node).read_bytes()).hexdigest()
+    require(len(recs) == 1 and g[:3] == ['GENESIS', '2', 'st-init'] and len(g[3]) == 32 and g[4] == node_pin and g[5:9] == ['-', '4', 'store-refunds', 'money'],
+            'genesis: %r' % recs[0][1])
+    code, out, _ = s.run(['init', s.folder('init-nonode') / 'store', '--store-id', 'x', '--policy', FIX / 'inventory-seats.json'])
+    require(code == 12 and 'NODE_REQUIRED' in out, 'an inventory policy needs --node: %d %r' % (code, out))
     require(ratchet_max(p) == 0, 'ratchet of a new store')
     d = s.folder('init-bad')
     bad = {'unknown-key.json': b'{"airlock":"inventory","version":1,"name":"x","max_alpha_bps":"0","extra":1}',
@@ -425,8 +444,10 @@ def case_canonical(s):
     s.one(q, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
     hq = s.h(q, 't1', 'charge-1')
     for name in ('longer', 'stderr', 'exit1', 'other-id', 'nothing', 'lf'):
-        s.one(q, 'REFUND t1 charge-1 rq-f %s returned_item 5' % hq, 'BAD_FRAME', ['--refund-binary', d / name])
-    s.one(q, 'REFUND t1 charge-1 rq-f %s returned_item 5' % hq, 'HELPER_FAILED', ['--refund-binary', d / 'missing'])
+        s.one(q, 'REFUND t1 charge-1 rq-f %s returned_item 5' % hq, 'BAD_FRAME', ['--refund-binary', d / name], **s.seam(unpinned=True))
+    s.one(q, 'REFUND t1 charge-1 rq-f %s returned_item 5' % hq, 'HELPER_FAILED', ['--refund-binary', d / 'missing'], **s.seam(unpinned=True))
+    tok = s.one(q, 'REFUND t1 charge-1 rq-f %s returned_item 5' % hq, 'HELPER_FAILED', ['--refund-binary', d / 'lf'])  # production: pinned
+    require(tok[1] == 'PIN_MISMATCH', 'the production engine must refuse an unpinned refund binary: %r' % tok)
     require(len(effects(q)) == 1, 'a bad frame committed')
     return 'real binary: 3 rejections, 3 commits, remaining 0 rejected; %d recorded HOL cases agree; 6 stand-in bad frames refused' % checked
 
@@ -455,7 +476,8 @@ def case_cosign(s):
     h = s.h(p, 't1', 'o1')
     action = 'REFUND t1 o1 r1 %s GOODWILL 7500' % h
     code, msg, _ = s.run(['cosign-message', p, action])
-    require(code == 0 and msg == 'forge-airlock-cosign-v1\nstore-a\nr1\n%s\n%s\n' % (h, action), 'cosign message: %r' % msg)
+    genesis = '%032x' % read_wal(p)[0][2]
+    require(code == 0 and msg == 'forge-airlock-cosign-v2\nstore-a\n%s\nr1\n%s\n%s\n' % (genesis, h, action), 'cosign message: %r' % msg)
     code, out, _ = s.run(['cosign-message', p, action + ' ' + 'a' * 128])
     require(code == 12, 'a signed action is not a cosign action')
     sig = sign(s, key, msg.encode())
@@ -478,16 +500,21 @@ def case_cosign(s):
         tok = s.one(q, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (hq, replayed), 'REQUIRE_HUMAN_COSIGN', ex)
         require(tok[1] == 'COSIGN_INVALID', 'replay on another store: %r' % tok)
     require(len(effects(q)) == 1, 'replay committed on store-b')
+    # a valid cosign on store-b with store-b's own message commits (the message binds this store's id and genesis)
+    code, msg_q, _ = s.run(['cosign-message', q, 'REFUND t1 o1 r2 %s GOODWILL 7500' % hq])
+    s.one(q, 'REFUND t1 o1 r2 %s GOODWILL 7500 %s' % (hq, sign(s, key, msg_q.encode())), 'COMMITTED', ex)
     # helper failures are refusals, never commits
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED')  # no node, no helpers
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', '/nonexistent/node', '--helpers', HELPERS])
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', s.node, '--helpers', s.folder('empty')])
-    d = s.standin('cosign', {'cosign.cjs': 'process.stdout.write("VALID\\n"); process.stderr.write("x");'})
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', s.node, '--helpers', d])
-    d = s.standin('cosign2', {'cosign.cjs': 'process.stdout.write("VALID");'})
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', s.node, '--helpers', d])
-    d = s.standin('cosign3', {'cosign.cjs': 'process.stdout.write("VALID\\n"); process.exitCode = 3;'})
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', s.node, '--helpers', d])
+    s.one(p, action + ' ' + sig, 'HELPER_FAILED')  # no node
+    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', '/nonexistent/node'])
+    tok = s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', '/bin/sh'])  # not the pinned Node binary
+    require(tok[1] == 'PIN_MISMATCH', 'a Node binary other than the pinned one: %r' % tok)
+    code, out, _ = s.serve(p, [action + ' ' + sig], ['--node', s.node, '--helpers', s.folder('empty')])
+    require(code == 2 and out == [], 'the --helpers flag is gone (USAGE): %d %r' % (code, out))
+    # STAND-IN cosign helpers through the kill-points seam: only VALID + exit 0 + empty stderr counts
+    for name, text in (('cosign', 'process.stdout.write("VALID\\n"); process.stderr.write("x");'), ('cosign2', 'process.stdout.write("VALID");'),
+                       ('cosign3', 'process.stdout.write("VALID\\n"); process.exitCode = 3;')):
+        d = s.standin(name, {'cosign.cjs': text})
+        s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', s.node], **s.seam(helpers=d))
     require(len(effects(p)) == 1, 'a refusal committed')
     tok = s.one(p, action + ' ' + sig, 'COMMITTED', ex)
     require(tok[-1] == '1', 'the record marks the cosign')
@@ -569,11 +596,11 @@ def case_inventory(s):
     # STAND-IN booking helper (a test double of the helper process): the engine must obey a REJECT and a bad answer
     good = dict(base, x=['0', '1', '1'], alpha_bps='0')
     d = s.standin('book', {'booking_check.cjs': 'process.stdout.write("REJECT\\n"); process.exitCode = 1;'})
-    tok = s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'REJECTED_POLICY', ['--node', s.node, '--helpers', d, '--checker', MODEL])
+    tok = s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'REJECTED_POLICY', ['--node', s.node, '--checker', MODEL], **s.seam(helpers=d))
     require(tok[1] == 'CHECKER_REJECTED', 'the helper must be consulted: %r' % tok)
     d = s.standin('book2', {'booking_check.cjs': 'process.stdout.write("ACCEPT\\n"); process.stderr.write("w");'})
-    s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', s.node, '--helpers', d, '--checker', MODEL])
-    s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', s.node, '--helpers', HELPERS])  # no model
+    s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', s.node, '--checker', MODEL], **s.seam(helpers=d))
+    s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', s.node])  # no model
     tok = s.one(p, cert_line(s, p, 'b4', dict(base, x=['1', '0', '0'], alpha_bps='2500'), 'inv2'), 'COMMITTED', ex)  # quarter gap accepted
     require(s.get(p, 't1', 'inv2')['remaining'] == '0,0', 'remaining: %r' % s.get(p, 't1', 'inv2'))
     require(len([e for e in effects(p) if e.startswith('BOOK')]) == 2, 'BOOK effects')
@@ -584,9 +611,12 @@ def case_leases(s):
     p = s.store('lease')
     s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000 shipping_paid=10', 'COMMITTED')
     for r, dl in (('L1', 100), ('L2', 200), ('L3', 300), ('L4', 400), ('L5', 500)):
-        tok = s.one(p, 'OPEN_LEASE %s %d' % (r, dl), 'LEASE_OPENED')
-    s.one(p, 'OPEN_LEASE L1 100', 'DUPLICATE_REQUEST_ID')
-    s.one(p, 'OPEN_LEASE r0 100', 'DUPLICATE_REQUEST_ID')
+        tok = s.one(p, 'OPEN_LEASE %s %d t1 k1' % (r, dl), 'LEASE_OPENED')
+        require(tok[3:] == [str(dl), 't1', 'k1'], 'LEASE_OPENED answer: %r' % tok)
+    s.one(p, 'OPEN_LEASE L1 100 t1 k1', 'DUPLICATE_REQUEST_ID')
+    s.one(p, 'OPEN_LEASE r0 100 t1 k1', 'DUPLICATE_REQUEST_ID')
+    s.one(p, 'OPEN_LEASE Lx 100 t2 k1', 'TENANT_ISOLATION_BREACH')
+    s.one(p, 'OPEN_LEASE Lx 100', 'MALFORMED_REQUEST')  # the unbound form is gone
     h = s.h(p, 't1', 'k1')
     s.one(p, 'REFUND t1 k1 L1 %s DUPLICATE_CHARGE 5' % h, 'COMMITTED')  # closes L1
     h = s.h(p, 't1', 'k1')
@@ -599,26 +629,143 @@ def case_leases(s):
     closes = [e for _, e, _ in read_wal(p) if e.startswith('CLOSE ')]
     require(closes == ['CLOSE L2 REJECTED_POLICY REASON_CAP', 'CLOSE L3 REJECTED_POLICY TOTAL_CAP'], 'close records: %r' % closes)
     code, out, _ = s.run(['leases', p])
-    require(code == 0 and out == 'LEASES 2\nLEASE L4 400\nLEASE L5 500\n', 'list: %r' % out)
+    require(code == 0 and out == 'LEASES 2\nLEASE L4 400 t1 k1\nLEASE L5 500 t1 k1\n', 'list: %r' % out)
     code, out, _ = s.run(['leases', p, '--sweep', '--now', '450'])
-    require(code == 24 and out == 'SWEEP 2 1 now=450\nDROPPED_OBLIGATION L4 400\n', 'sweep: %d %r' % (code, out))
+    require(code == 24 and out == 'SWEEP 2 1 now=450\nDROPPED_OBLIGATION L4 400 t1 k1\n', 'sweep: %d %r' % (code, out))
     code, out, _ = s.run(['leases', p, '--sweep', '--now', '400'])
     require(code == 0 and out == 'SWEEP 2 0 now=400\n', 'deadline itself is not past: %r' % out)
+    code, out, _ = s.run(['leases', p, '--all'])
+    lines = out.split('\n')[:-1]
+    want = [('L1', 'COMMITTED -'), ('L2', 'REJECTED_POLICY REASON_CAP'), ('L3', 'REJECTED_POLICY TOTAL_CAP'), ('L4', None), ('L5', None)]
+    ok = code == 0 and lines[0] == 'LEASES 2 all=5' and len(lines) == 6
+    for line, (r, how) in zip(lines[1:], want):
+        f = line.split(' ')
+        ok = ok and f[1] == r and (f[5:] == ['OPEN'] if how is None else (f[5] == 'CLOSED' and ' '.join(f[7:]) == how))
+    require(ok, 'leases --all must show how each lease was closed: %r' % lines)
     before = files(p)
     s.run(['leases', p, '--sweep', '--now', '9999'])
     require(files(p) == before, 'a sweep wrote to the store')
-    # REQUIRE_HUMAN_COSIGN closes a lease too; a later commit of a closed id is still possible (id stays fresh)
-    s.one(p, 'OPEN_LEASE L6 600', 'LEASE_OPENED')
+    # REQUIRE_HUMAN_COSIGN closes a lease too
+    s.one(p, 'OPEN_LEASE L6 600 t1 k1', 'LEASE_OPENED')
     s.one(p, 'REFUND t1 k1 L6 %s GOODWILL 2001' % h, 'REJECTED_POLICY')
     s.one(p, 'OPEN_MONEY t1 k2 r-k2 store-refunds 100000', 'COMMITTED')
-    s.one(p, 'OPEN_LEASE L7 700', 'LEASE_OPENED')
+    s.one(p, 'OPEN_LEASE L7 700 t1 k2', 'LEASE_OPENED')
     tok = s.one(p, 'REFUND t1 k2 L7 %s GOODWILL 2001' % s.h(p, 't1', 'k2'), 'REQUIRE_HUMAN_COSIGN')
     require('LEASE_CLOSED' in tok, 'cosign closes: %r' % tok)
     code, out, _ = s.run(['leases', p])
     require(out.startswith('LEASES 2\n'), 'leases after closes: %r' % out)
-    code, out, _ = s.run(['leases', p, '--now', '5'])
-    require(code == 2, '--now without --sweep is a usage error')
-    return '5 leases; commit, REJECTED_POLICY x3, REQUIRE_HUMAN_COSIGN close; stale and malformed do not; sweep exact and read-only'
+    s.one(p, 'OPEN_LEASE L2 900 t1 k1', 'DUPLICATE_REQUEST_ID')  # a closed lease is never opened again
+    for bad in (['--now', '5'], ['--sweep', '--all'], ['--sweep', '--sweep']):
+        code, out, _ = s.run(['leases', p] + bad)
+        require(code == 2, 'leases %r must be a usage error' % bad)
+    return '5 bound leases; commit, REJECTED_POLICY x3, REQUIRE_HUMAN_COSIGN close; stale and malformed do not; --all shows closes; sweep exact and read-only'
+
+
+def case_lease_binding(s):
+    """Review R5 with the reviewer's sequence: a verdict on another key must not close a lease, and no lease loop."""
+    p = s.store('lease-bind')
+    s.one(p, 'OPEN_MONEY t1 order-1 r0 store-refunds 1000', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE wh-1 100 t1 order-1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'order-1')
+    s.one(p, 'REFUND t9 junk wh-1 %s NOSUCH 1' % h, 'UNKNOWN_KEY')  # the reviewer's line: a key never opened
+    s.one(p, 'OPEN_MONEY t9 junk r-j store-refunds 10', 'COMMITTED')
+    tok = s.one(p, 'REFUND t9 junk wh-1 %s NOSUCH 1' % s.h(p, 't9', 'junk'), 'REJECTED_POLICY')
+    require(tok == ['REJECTED_POLICY', 'NO_RULE'], 'a verdict on another key must not name a close: %r' % tok)
+    require(not [e for _, e, _ in read_wal(p) if e.startswith('CLOSE ')], 'a verdict on another key wrote a CLOSE record')
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '200'])
+    require(code == 24 and out == 'SWEEP 1 1 now=200\nDROPPED_OBLIGATION wh-1 100 t1 order-1\n', 'the obligation must stay visible: %d %r' % (code, out))
+    # a commit of the id on another key uses the id up but leaves the lease open (and so reported)
+    s.one(p, 'REFUND t9 junk wh-1 %s DUPLICATE_CHARGE 1' % s.h(p, 't9', 'junk'), 'COMMITTED')
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '200'])
+    require(code == 24 and 'DROPPED_OBLIGATION wh-1 100 t1 order-1' in out, 'a commit on another key closed the lease: %r' % out)
+    # the lease loop: open/close cycles on one id
+    s.one(p, 'OPEN_LEASE wh-2 100 t1 order-1', 'LEASE_OPENED')
+    s.one(p, 'REFUND t1 order-1 wh-2 %s NOSUCH 1' % s.h(p, 't1', 'order-1'), 'REJECTED_POLICY')
+    n = len(read_wal(p))
+    for _ in range(5):
+        s.one(p, 'OPEN_LEASE wh-2 100 t1 order-1', 'DUPLICATE_REQUEST_ID')
+        s.one(p, 'REFUND t1 order-1 wh-2 %s NOSUCH 1' % s.h(p, 't1', 'order-1'), 'REJECTED_POLICY')
+    require(len(read_wal(p)) == n, 'the lease loop wrote records: %d -> %d' % (n, len(read_wal(p))))
+    return 'unknown key -> UNKNOWN_KEY; a rejection and a commit on another key leave the lease open (DROPPED_OBLIGATION); no lease loop'
+
+
+def case_nonce(s):
+    """Review R2: two stores with the same store id, policy and key differ (genesis nonce); a signature for one is refused on the other."""
+    s.node_ok()
+    key, pub = keygen(s, 'nonce')
+    a, b = s.store('nonce-a', pubkey=pub, store_id='same'), s.store('nonce-b', pubkey=pub, store_id='same')
+    for st in (a, b):
+        s.one(st, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+    ga, gb = read_wal(a)[0], read_wal(b)[0]
+    require(ga[1].split(' ')[3] != gb[1].split(' ')[3] and ga[2] != gb[2], 'the two genesis records must differ by their nonce')
+    ha, hb = s.h(a, 't1', 'o1'), s.h(b, 't1', 'o1')
+    require(ha != hb, 'two stores with the same id gave the same state hash %s' % ha)
+    action = 'REFUND t1 o1 r1 %s GOODWILL 7500' % ha
+    code, msg, _ = s.run(['cosign-message', a, action])
+    sig = sign(s, key, msg.encode())
+    s.one(b, action + ' ' + sig, 'STALE_STATE_HASH', s.node_ok())  # a's hash is not b's state
+    sig_b = sign(s, key, msg.replace(ha, hb).encode())  # a's message, b's hash: the genesis line still differs
+    tok = s.one(b, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (hb, sig_b), 'REQUIRE_HUMAN_COSIGN', s.node_ok())
+    require(tok[1] == 'COSIGN_INVALID', 'a signature for store a committed on store b: %r' % tok)
+    s.one(a, action + ' ' + sig, 'COMMITTED', s.node_ok())
+    require(len(effects(b)) == 1, 'store b committed')
+    return 'same id, policy, key: nonces, genesis hashes and state hashes differ; a signature for one store is refused on the other'
+
+
+WEAK_KEYS = ['00' * 32, '00' * 31 + '80', '01' + '00' * 31, '01' + '00' * 30 + '80',
+             '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05', '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85',
+             'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a', 'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa',
+             'ec' + 'ff' * 30 + '7f', 'ec' + 'ff' * 31, 'ed' + 'ff' * 30 + '7f', 'ed' + 'ff' * 31, 'ee' + 'ff' * 30 + '7f', 'ee' + 'ff' * 31,
+             'ef' + 'ff' * 30 + '7f', 'ff' * 32]
+
+
+def case_weakkey(s):
+    """Review R4: init refuses the 14 small-order / non-canonical encodings and other y >= p keys."""
+    d = s.folder('weak')
+    for i, k in enumerate(WEAK_KEYS):
+        code, out, _ = s.run(['init', d / ('st-%d' % i), '--store-id', 's', '--cosign-pubkey', k, '--node', s.node])
+        require(code == 12 and 'WEAK_PUBKEY' in out, 'weak key %s accepted: %d %r' % (k, code, out))
+    require(list(d.iterdir()) == [], 'a refused init left a folder')
+    _, pub = keygen(s, 'strong')
+    s.store('strong', pubkey=pub)
+    return '%d weak encodings refused at init; a generated key accepted' % len(WEAK_KEYS)
+
+
+def case_seams(s):
+    """Review R1: no caller-chosen helper; the test seams exist only in the kill-points build; the SHA-256 of the engine."""
+    s.node_ok()
+    key, pub = keygen(s, 'seams')
+    fake = s.standin('fake-valid', {'cosign.cjs': 'process.stdout.write("VALID\\n");'})
+    junk = 'c' * 128
+    results = []
+    for engine, env, want in ((s.engine, dict(ENV, AIRLOCK_TEST_HELPERS=str(fake)), 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID'),
+                              (s.kill_engine, dict(ENV, AIRLOCK_TEST_HELPERS=str(fake)), 'COMMITTED')):
+        p = s.store('seams-%d' % len(results), pubkey=pub)
+        s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+        line = 'REFUND t1 o1 g1 %s GOODWILL 9000 %s' % (s.h(p, 't1', 'o1'), junk)
+        code, out, _ = s.serve(p, [line], ['--node', s.node, '--helpers', fake])  # the reviewer's attack
+        require(code == 2 and out == [], 'serve --helpers must be USAGE: %d %r' % (code, out))
+        code, out, _ = s.serve(p, [line], ['--node', s.node], engine, env)
+        require(out[:1] and out[0].startswith(want), '%s with AIRLOCK_TEST_HELPERS: expected %s, got %r' % (Path(engine).name, want, out))
+        results.append(out[0].split(' ')[0])
+    # the production engine ignores the unpinned-binary seam
+    q = s.store('seams-bin', policies=('money-canonical',))
+    s.one(q, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
+    d = s.standin('seam-bin', {'yes': "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 True 5 returned_item charge-1 rq-s 1)'\n"})
+    tok = s.one(q, 'REFUND t1 charge-1 rq-s %s returned_item 5' % s.h(q, 't1', 'charge-1'), 'HELPER_FAILED', ['--refund-binary', d / 'yes'],
+                env=dict(ENV, AIRLOCK_TEST_UNPINNED_BINARY='1'))
+    require(tok[1] == 'PIN_MISMATCH', 'the production engine used the unpinned-binary seam: %r' % tok)
+    # SHA-256 of the engine against hashlib: FIPS 180-4 vectors and the padding boundaries
+    vecs = [b'', b'abc', b'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq', b'a' * 1000000] + [b'x' * n for n in (55, 56, 63, 64, 65, 119, 120, 128)]
+    f = s.folder('sha') / 'v'
+    for v in vecs:
+        f.write_bytes(v)
+        code, out, _ = s.run(['sha256', f])
+        require(code == 0 and out == 'SHA256 %s\n' % hashlib.sha256(v).hexdigest(), 'sha256 of %d bytes: %r' % (len(v), out))
+    code, out, _ = s.run(['sha256', BINARY])
+    require(out == 'SHA256 %s\n' % BINARY_SHA256, 'sha256 of the refund binary: %r' % out)
+    return 'serve --helpers is USAGE; AIRLOCK_TEST_HELPERS ignored by production (%s) and live in kill build (%s); unpinned binary refused; SHA-256 %d vectors' % (
+        results[0], results[1], len(vecs) + 1)
 
 
 def case_read(s):
@@ -677,7 +824,7 @@ def case_lines(s):
 def case_replay(s):
     p = s.store('replay')
     s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
-    s.one(p, 'OPEN_LEASE x1 5', 'LEASE_OPENED')
+    s.one(p, 'OPEN_LEASE x1 5 t1 k1', 'LEASE_OPENED')
     s.one(p, 'REFUND t1 k1 x1 %s DUPLICATE_CHARGE 5' % s.h(p, 't1', 'k1'), 'COMMITTED')
     code, out, _ = s.run(['replay', p])
     want = 'REPLAY 2\nEFFECT 1 OPEN_MONEY t1 k1 r0 store-refunds 1000\nEFFECT 3 REFUND t1 k1 x1 DUPLICATE_CHARGE 5 0\n'
@@ -742,7 +889,7 @@ def case_kill(s):
     # a kill while a lease CLOSE record is written: the lease is closed or open, never half
     p = s.store('kill-close')
     s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
-    s.one(p, 'OPEN_LEASE L1 5', 'LEASE_OPENED')
+    s.one(p, 'OPEN_LEASE L1 5 t1 k1', 'LEASE_OPENED')
     proc = subprocess.Popen([s.kill_engine, 'serve', p], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=dict(ENV, AIRLOCK_KILL_AT='b'))
     proc.stdin.write(('REFUND t1 k1 L1 %s NOPE 7\n' % s.h(p, 't1', 'k1')).encode())
     proc.stdin.flush()
@@ -750,7 +897,7 @@ def case_kill(s):
     proc.send_signal(signal.SIGKILL)
     proc.wait()
     code, out, _ = s.run(['leases', p])
-    require(code == 0 and out == 'LEASES 1\nLEASE L1 5\n', 'torn CLOSE: %r' % out)
+    require(code == 0 and out == 'LEASES 1\nLEASE L1 5 t1 k1\n', 'torn CLOSE: %r' % out)
     read_wal(p)
     return 'SIGKILL at %s and inside CLOSE: no half record, no answer before both syncs, retry gives the right code' % ','.join(results)
 
@@ -855,7 +1002,7 @@ def case_trace(s):
     require(out[:1] and out[0].startswith('STALE_STATE_HASH') and calls(events) == ['flock airlock.wal 2', 'close airlock.wal', 'close airlock.epoch', 'write stdout N'],
             'a refusal must not write or sync: %r %r' % (out, calls(events)))
     # a lease close is a durable record with the same order
-    s.one(p, 'OPEN_LEASE L1 5', 'LEASE_OPENED')
+    s.one(p, 'OPEN_LEASE L1 5 t1 k1', 'LEASE_OPENED')
     h = s.h(p, 't1', 'k1')
     code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 L1 %s NOPE 5\n' % h).encode())
     require(out[:1] and 'LEASE_CLOSED' in out[0] and calls(events) == COMMIT_ORDER, 'system-call order of a lease close: %r %r' % (out, calls(events)))
@@ -1043,7 +1190,7 @@ def case_native_bound(s):
         'over': "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 True 101 returned_item charge-1 rq-o 1)'\n",
         'reason': "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 True 5 goodwill charge-1 rq-r 1)'\n"})
     for name, line in (('over', 'REFUND t1 charge-1 rq-o %s returned_item 101' % h), ('reason', 'REFUND t1 charge-1 rq-r %s goodwill 5' % h)):
-        code, out, _ = s.serve(p, [line], ['--refund-binary', d / name])
+        code, out, _ = s.serve(p, [line], ['--refund-binary', d / name], **s.seam(unpinned=True))
         require(code == 23 and out[:1] and out[0].startswith('BAD_FRAME'), 'a binary that accepts %s: expected BAD_FRAME (exit 23), got exit %d %r' % (
             'above the remaining amount' if name == 'over' else 'an unapproved reason', code, out))
     require(len(effects(p)) == 1, 'a stand-in accept committed: %r' % effects(p))
@@ -1062,11 +1209,13 @@ def case_helper_env(s):
     p = s.store('helper-env', pubkey='ab' * 32)
     s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
     line = 'REFUND t1 o1 g1 %s GOODWILL 7500 %s' % (s.h(p, 't1', 'o1'), 'c' * 128)
-    code, out, _ = s.serve(p, [line], ['--node', s.node, '--helpers', d], env=env)
+    env['AIRLOCK_TEST_HELPERS'] = str(d)  # the kill-points seam (stand-in helpers); the probe variable is beside it
+    code, out, _ = s.serve(p, [line], ['--node', s.node], engine=s.kill_engine, env=env)
     require(out[:1] and out[0] == 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID', 'the cosign helper saw a variable of the engine environment: exit %d %r' % (code, out))
     q = s.store('helper-env-c', policies=('money-canonical',))
     s.one(q, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
-    code, out, _ = s.serve(q, ['REFUND t1 charge-1 rq-e %s returned_item 5' % s.h(q, 't1', 'charge-1')], ['--refund-binary', d / 'refund'], env=env)
+    env['AIRLOCK_TEST_UNPINNED_BINARY'] = '1'
+    code, out, _ = s.serve(q, ['REFUND t1 charge-1 rq-e %s returned_item 5' % s.h(q, 't1', 'charge-1')], ['--refund-binary', d / 'refund'], engine=s.kill_engine, env=env)
     require(out[:1] and out[0] == 'REJECTED_POLICY CAKEML_REJECTED', 'the refund binary saw a variable of the engine environment: exit %d %r' % (code, out))
     require(len(effects(p)) == 1 and len(effects(q)) == 1, 'a helper with a leaked variable committed')
     return 'probe variable in the engine environment reached neither the cosign helper nor the refund binary'
@@ -1076,7 +1225,8 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('canonical', case_canonical), ('cosign', case_cosign), ('saga', case_saga), ('inventory', case_inventory), ('leases', case_leases),
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
-         ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env)]
+         ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
+         ('lease_binding', case_lease_binding), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():

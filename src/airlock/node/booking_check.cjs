@@ -1,7 +1,8 @@
 'use strict';
 // booking_check.cjs: the inventory airlock's call of the Dafny-compiled Slice 3 checker (Goal 20).
 //
-// Usage: node booking_check.cjs <model.cjs>
+// Usage: node booking_check.cjs <model.cjs>   (or `node -e <this source> -- <model.cjs>`: the engine embeds this
+//        file at compile time and runs it that way; it reads no helper file at run time)
 //   stdin : one JSON object with exactly the keys A, c, w, x, y, z, alpha_bps (at most 1 MiB).
 //   stdout: "ACCEPT\n", exit 0, only when the compiled method VerifyCertifiedBooking returns true.
 //           "REJECT\n", exit 1, only when it returns false.
@@ -191,7 +192,8 @@ function decide(model, input) {
 
 function main() {
   process.on('uncaughtException', (e) => fail('exception: ' + (e && e.message)));
-  const args = process.argv.slice(2);
+  // As a file: argv [node, file, model]. From source (`node -e <source> -- <model>`, as the engine runs it): [node, model].
+  const args = process.argv.slice(module.id === '[eval]' ? 1 : 2);
   if (args.length !== 1) return fail('usage: node booking_check.cjs <model.cjs>');
   let model;
   try {

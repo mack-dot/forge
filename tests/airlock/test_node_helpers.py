@@ -263,8 +263,9 @@ B.update({'booking_missing_model_file': b_missing_model, 'booking_model_throws':
 
 # ---------------------------------------------------------------- cosign.cjs
 
-def message(store='store-1', rid='req-1', h='0123456789abcdef0123456789abcdef', action='REFUND order-9 7500 GOODWILL'):
-    return ('forge-airlock-cosign-v1\n%s\n%s\n%s\n%s\n' % (store, rid, h, action)).encode()
+def message(store='store-1', rid='req-1', h='0123456789abcdef0123456789abcdef', action='REFUND order-9 7500 GOODWILL',
+            genesis='fedcba9876543210fedcba9876543210'):
+    return ('forge-airlock-cosign-v2\n%s\n%s\n%s\n%s\n%s\n' % (store, genesis, rid, h, action)).encode()
 
 
 class Keys:
@@ -465,7 +466,10 @@ form_case('verify_msg_no_final_lf', lambda m: m[:-1])
 form_case('verify_msg_four_lines', lambda m: b'\n'.join(m.split(b'\n')[:4]) + b'\n')
 form_case('verify_msg_six_lines', lambda m: m + b'extra\n')
 form_case('verify_msg_cr', lambda m: m.replace(b'\n', b'\r\n', 1))
-form_case('verify_msg_bad_prefix', lambda m: m.replace(b'cosign-v1', b'cosign-v2'))
+form_case('verify_msg_bad_prefix', lambda m: m.replace(b'cosign-v2', b'cosign-v3'))
+form_case('verify_msg_old_v1_form', lambda m: m.replace(b'cosign-v2', b'cosign-v1').replace(b'fedcba9876543210fedcba9876543210\n', b''))
+form_case('verify_msg_upper_genesis', lambda m: m.replace(b'fedcba', b'FEDCBA', 1))
+form_case('verify_msg_no_genesis_line', lambda m: m.replace(b'fedcba9876543210fedcba9876543210\n', b''))
 form_case('verify_msg_upper_hash', lambda m: m.replace(b'abcdef', b'ABCDEF', 1))
 form_case('verify_msg_long_request_id', lambda m: m.replace(b'req-1', b'r' * 25))
 form_case('verify_msg_empty_action', lambda m: m[:m.rindex(b'\n', 0, len(m) - 1) + 1] + b'\n')
@@ -476,7 +480,7 @@ form_case('verify_msg_oversize', lambda m: m[:-1] + b'x' * 4100 + b'\n')
 @ccase
 def sign_refuses_wrong_form(ctx):
     key, _ = ctx.keys.get('a')
-    rc, out, err = ctx.cosign(['sign', str(key)], b'forge-airlock-cosign-v1\nstore-1\nreq-1\n')
+    rc, out, err = ctx.cosign(['sign', str(key)], b'forge-airlock-cosign-v2\nstore-1\nreq-1\n')
     check(rc == 2 and out == b'', 'exit %d stdout %r' % (rc, out))
     return 'exit 2, no signature'
 
@@ -634,6 +638,81 @@ def cosign_bad_subcommand(ctx):
     rc, out, err = ctx.cosign(['sign-anything'])
     check(rc == 2 and out == b'', 'exit %d' % rc)
     return 'exit 2'
+
+
+# Review R2: the genesis line binds the store instance (its random nonce), not only the store id.
+@ccase
+def verify_other_genesis_invalid(ctx):
+    pub, sig, msg = signed(ctx)
+    return expect_verify(ctx, pub, sig, message(genesis='fedcba9876543210fedcba9876543211'), 1)
+
+
+@ccase
+def sign_shows_genesis(ctx):
+    key, _ = ctx.keys.get('a')
+    _, err = sign(ctx, key, message())
+    check(b'genesis_hash   fedcba9876543210fedcba9876543210' in err, 'the sign tool must display the genesis line: %r' % err[:300])
+    return 'stderr shows the genesis line'
+
+
+# Review R4: small-order and non-canonical Ed25519 encodings, as a public key and as the R of a signature (exit 2).
+# The 14 strings: 5 libsodium blocklist values (has_small_order, ed25519_ref10.c) with and without bit 255, plus
+# y = p and y = p + 1 with and without bit 255; and further y >= p values.
+WEAK = ['00' * 32, '00' * 31 + '80', '01' + '00' * 31, '01' + '00' * 30 + '80',
+        '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05', '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85',
+        'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a', 'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa',
+        'ec' + 'ff' * 30 + '7f', 'ec' + 'ff' * 31, 'ed' + 'ff' * 30 + '7f', 'ed' + 'ff' * 31, 'ee' + 'ff' * 30 + '7f', 'ee' + 'ff' * 31,
+        'ef' + 'ff' * 30 + '7f', 'ff' * 32]
+
+
+@ccase
+def verify_weak_public_keys_refused(ctx):
+    # The reviewer's key 01 00..00 with the signature that node:crypto accepts for every message under it (R = identity, S = 0)
+    pub, sig, msg = signed(ctx)
+    for k in WEAK:
+        rc, out, err = ctx.cosign(['verify', k, sig], msg)
+        check(rc == 2 and out == b'' and b'small-order or non-canonical' in err, 'weak key %s: exit %d %r %r' % (k, rc, out, err[:120]))
+    reviewer = '01' + '00' * 63
+    rc, out, err = ctx.cosign(['verify', '01' + '00' * 31, reviewer], msg)
+    check(rc == 2 and out == b'', "the reviewer's small-order key and signature: exit %d %r" % (rc, out))
+    return '%d weak public keys refused (exit 2), with the reviewer\'s identity key and signature' % len(WEAK)
+
+
+@ccase
+def verify_weak_signature_r_refused(ctx):
+    pub, sig, msg = signed(ctx)
+    for r in WEAK:
+        rc, out, err = ctx.cosign(['verify', pub, r + sig[64:]], msg)
+        check(rc == 2 and out == b'' and b'signature R' in err, 'weak R %s: exit %d %r' % (r, rc, out))
+    return '%d weak R values refused (exit 2)' % len(WEAK)
+
+
+# Review R1: the engine runs the helpers from source (`node -e <source> -- args`); the same file must work that way.
+@ccase
+def eval_mode_verify(ctx):
+    pub, sig, msg = signed(ctx)
+    src = COSIGN.read_text()
+    rc, out, err = run([ctx.node, '-e', src, '--', 'verify', pub, sig], msg)
+    check(rc == 0 and out == b'VALID\n' and err == b'', 'eval mode VALID: exit %d %r %r' % (rc, out, err[:200]))
+    rc, out, err = run([ctx.node, '-e', src, '--', 'verify', pub, sig], message(rid='req-2'))
+    check(rc == 1 and out == b'INVALID\n' and err == b'', 'eval mode INVALID: exit %d %r' % (rc, out))
+    rc, out, err = run([ctx.node, '-e', src, '--'], b'')
+    check(rc == 2 and out == b'', 'eval mode with no command: exit %d' % rc)
+    return 'node -e <cosign.cjs> -- verify: VALID 0, INVALID 1, usage 2'
+
+
+B['booking_eval_mode'] = lambda ctx: _booking_eval(ctx)
+
+
+def _booking_eval(ctx):
+    if not ctx.model.is_file():
+        raise NotRun('model file missing: run src/airlock/node/build_checker.py')
+    src = BOOKING.read_text()
+    rc, out, err = run([ctx.node, '-e', src, '--', str(ctx.model)], enc(cert(['0', '1', '1'])))
+    check(rc == 0 and out == b'ACCEPT\n' and err == b'', 'eval mode ACCEPT: exit %d %r %r' % (rc, out, err[:200]))
+    rc, out, err = run([ctx.node, '-e', src, '--', str(ctx.model)], enc(cert(['1', '1', '0'])))
+    check(rc == 1 and out == b'REJECT\n', 'eval mode REJECT: exit %d %r' % (rc, out))
+    return 'node -e <booking_check.cjs> -- <model>: ACCEPT 0, REJECT 1'
 
 
 CASES = {**B, **C}

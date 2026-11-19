@@ -16,12 +16,13 @@ pub struct Ctx {
     pub dir: String,
     pub binary: Option<String>,
     pub node: Option<String>,
-    pub helpers: Option<String>,
     pub checker: Option<String>,
+    pub node_pin: std::cell::OnceCell<Option<String>>, // the store's Node pin, read from its genesis record
 }
 impl Ctx {
     fn node(&self) -> Node<'_> {
-        Node { node: self.node.as_deref(), helpers: self.helpers.as_deref(), checker: self.checker.as_deref() }
+        let pin = self.node_pin.get().and_then(|p| p.as_deref());
+        Node { node: self.node.as_deref(), pin, checker: self.checker.as_deref() }
     }
 }
 fn toks(line: &str, min: usize, max: usize) -> Result<Vec<&str>, Refusal> {
@@ -94,7 +95,9 @@ fn commit(s: Store, req: &str, payload: String) -> Result<String, Refusal> {
 /// A terminal refusal (REJECTED_POLICY or REQUIRE_HUMAN_COSIGN). If a lease is open for the request id, a durable
 /// CLOSE record is written (synced) before the answer.
 fn verdict(s: Store, req: &str, code: Code, detail: &'static str) -> Result<String, Refusal> {
-    if s.l.leases.contains_key(req) {
+    // Only a lease bound to this request id AND to the tenant and key of the request (`Store::target`) is closed.
+    let bound = s.target.as_ref().map_or(false, |(t, k)| s.l.leases.get(req).map_or(false, |l| l.binds(t, k)));
+    if bound {
         let (epoch, _) = s.append(&format!("CLOSE {req} {} {detail}", code.name()))?;
         return no(code, format!("{detail} LEASE_CLOSED {epoch}"));
     }
@@ -120,8 +123,8 @@ fn open_money(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
 }
 
 /// The canonical cosign message (DESIGN.md). No field can hold a line end.
-pub fn cosign_message(store_id: &str, req: &str, pre: &str, action: &str) -> String {
-    format!("forge-airlock-cosign-v1\n{store_id}\n{req}\n{pre}\n{action}\n")
+pub fn cosign_message(store_id: &str, genesis: u128, req: &str, pre: &str, action: &str) -> String {
+    format!("forge-airlock-cosign-v2\n{store_id}\n{}\n{req}\n{pre}\n{action}\n", hx(genesis))
 }
 /// Parses `REFUND <tenant> <key> <request_id> <pre_state_hash> <reason> <amount> [<signature>]`.
 fn parse_refund(line: &str) -> Result<(Vec<&str>, Option<&str>), Refusal> {
@@ -141,14 +144,15 @@ pub fn cosign_message_cmd(dir: &str, action: &str) -> Result<String, Refusal> {
     let (t, sig) = parse_refund(action)?;
     if sig.is_some() { return no(Code::Malformed, "ACTION_HAS_SIGNATURE") }
     let s = store::open(dir)?;
-    Ok(cosign_message(&s.l.store_id, t[3], t[4], action))
+    Ok(cosign_message(&s.l.store_id, s.l.genesis_hash, t[3], t[4], action))
 }
 fn refund(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     let (t, sig) = parse_refund(line)?;
     let (tenant, key, req, pre, reason) = (t[1], t[2], t[3], hash(t[4])?, t[5]);
     let amount = money(t[6]).expect("checked");
     let action = t[..7].join(" ");
-    let s = store::open(&ctx.dir)?;
+    let s = store::open(&ctx.dir)?.aimed(tenant, key);
+    ctx.node_pin.get_or_init(|| s.l.node_pin.clone());
     let k = check_key(&s, tenant, key, req, pre)?;
     let Body::Money { policy: pol, original, remaining, facts, totals } = &k.body else { return no(Code::Malformed, "KEY_KIND not a money key") };
     let (original, remaining, total) = (*original, *remaining, totals.get(reason).copied().unwrap_or(0));
@@ -171,7 +175,7 @@ fn refund(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
             Verdict::Cosign => {
                 let Some(sig) = sig else { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_REQUIRED") };
                 let Some(pk) = s.l.pubkey.clone() else { return verdict(s, req, Code::RequireHumanCosign, "NO_COSIGN_KEY") };
-                let msg = cosign_message(&s.l.store_id, req, t[4], &action);
+                let msg = cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action);
                 if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_INVALID") }
                 cosigned = 1;
             }
@@ -193,7 +197,8 @@ fn saga(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     if t.len() == 7 { return no(Code::Malformed, "PAIR a processor needs an idempotency key") }
     let (tenant, key, req, pre, to) = (id(t[1], "tenant")?, id(t[2], "key")?, id(t[3], "request_id")?, hash(t[4])?, id(t[5], "state")?);
     let pair = if t.len() == 8 { Some((id(t[6], "processor")?.to_string(), id(t[7], "idempotency_key")?.to_string())) } else { None };
-    let s = store::open(&ctx.dir)?;
+    let s = store::open(&ctx.dir)?.aimed(tenant, key);
+    ctx.node_pin.get_or_init(|| s.l.node_pin.clone());
     let k = check_key(&s, tenant, key, req, pre)?;
     let Body::Saga { policy: pol, state: cur, pair: held } = &k.body else { return no(Code::Malformed, "KEY_KIND not a saga key") };
     let Some(policy::Body::Saga(sp)) = s.policies.get(pol).map(|p| &p.body) else { return no(Code::CorruptWal, "CORRUPT_WAL POLICY_MISSING") };
@@ -231,7 +236,8 @@ fn book(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     if t.len() != 6 { return no(Code::Malformed, "FIELDS") }
     let (tenant, key, req, pre) = (id(t[1], "tenant")?, id(t[2], "key")?, id(t[3], "request_id")?, hash(t[4])?);
     let cert = policy::parse_cert(t[5]).or_else(|e| no(Code::Malformed, e))?;
-    let s = store::open(&ctx.dir)?;
+    let s = store::open(&ctx.dir)?.aimed(tenant, key);
+    ctx.node_pin.get_or_init(|| s.l.node_pin.clone());
     let k = check_key(&s, tenant, key, req, pre)?;
     let Body::Inventory { policy: pol, remaining } = &k.body else { return no(Code::Malformed, "KEY_KIND not an inventory key") };
     let Some(policy::Body::Inventory(ip)) = s.policies.get(pol).map(|p| &p.body) else { return no(Code::CorruptWal, "CORRUPT_WAL POLICY_MISSING") };
@@ -254,13 +260,15 @@ fn book(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
 }
 
 fn open_lease(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
-    let t = toks(line, 3, 3)?;
-    let (req, deadline) = (id(t[1], "request_id")?, amount(t[2], "deadline_ms")?);
+    let t = toks(line, 5, 5)?;
+    let (req, deadline, tenant, key) = (id(t[1], "request_id")?, amount(t[2], "deadline_ms")?, id(t[3], "tenant")?, id(t[4], "key")?);
     let s = store::open(&ctx.dir)?;
+    if s.l.keys.get(key).map_or(false, |k| k.tenant != tenant) { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }
     if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
-    if s.l.leases.contains_key(req) { return no(Code::Duplicate, "LEASE_OPEN a lease is open for this request id") }
-    let (epoch, _) = s.append(&format!("LEASE {req} {deadline}"))?;
-    Ok(format!("LEASE_OPENED {req} {epoch} {deadline}"))
+    // One lease per request id, ever: a closed lease cannot be opened again (no open/close loop, no hidden obligation).
+    if s.l.leases.contains_key(req) { return no(Code::Duplicate, "LEASE_USED this request id had a lease already") }
+    let (epoch, _) = s.append(&format!("LEASE {req} {deadline} {tenant} {key}"))?;
+    Ok(format!("LEASE_OPENED {req} {epoch} {deadline} {tenant} {key}"))
 }
 
 /// `OK <state_hash> <kind> <field>=<value>...`
@@ -287,7 +295,7 @@ pub fn get(dir: &str, tenant: &str, key: &str) -> Result<String, Refusal> {
 pub fn state(dir: &str) -> Result<String, Refusal> {
     let s = store::open(dir)?;
     let l = &s.l;
-    Ok(format!("STATE {} {} {} keys={} effects={} leases={}", l.epoch, hx(l.tail), l.store_id, l.keys.len(), l.effects, l.leases.len()))
+    Ok(format!("STATE {} {} {} keys={} effects={} leases={}", l.epoch, hx(l.tail), l.store_id, l.keys.len(), l.effects, l.open_leases()))
 }
 
 /// One row of the read airlock: a strict JSON object whose `tenant_id` is a string equal to `tenant`.
