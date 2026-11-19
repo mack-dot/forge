@@ -1,0 +1,64 @@
+standalone: 23 definitions extracted; call site after the attribute rule: True
+  ok   minimal                want=None                   got=None
+  ok   while                  want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+  ok   for                    want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `for` in compiled code
+  ok   forall-stmt            want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `forall` in compiled code
+  ok   exists-expr            want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `exists` in compiled code
+  ok   forall-in-assert       want=None                   got=None
+  ok   such-that              want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+  ok   ghost-such-that        want=None                   got=None
+  ok   seq-ctor               want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+  ok   set-compr              want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `set` in compiled code
+  ok   map-display            want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `map` in compiled code
+  ok   multiset               want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `multiset` in compiled code
+  ok   new                    want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `new`
+  ok   expect                 want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `expect`
+  ok   assume                 want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `assume`
+  ok   print                  want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `print`
+  ok   colon-dash             want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: :- Foo
+  ok   decreases-star         want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: decreases *
+  ok   extern                 want=SUBSET_ATTRIBUTE       got=SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed
+  ok   isolate-ok             want=None                   got=None
+  ok   import                 want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `import`
+  ok   nested-module          want=SUBSET_SHAPE           got=SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else
+  ok   class                  want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `class`
+  ok   datatype               want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `datatype`
+  ok   self-recursion         want=SUBSET_RECURSION       got=SUBSET_RECURSION: call cycle through F
+  ok   ghost-recursion        want=None                   got=None
+  ok   lemma-recursion        want=None                   got=None
+  ok   lambda                 want=SUBSET_LAMBDA          got=SUBSET_LAMBDA: lambda in compiled code
+  ok   arrow-type             want=SUBSET_HEADER          got=SUBSET_HEADER: default value or function type in a compiled signature
+  ok   mul-vars               want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `*` needs an integer literal operand
+  ok   mul-literal            want=None                   got=None
+  ok   add-vars-int           want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `+` needs an integer literal operand
+  ok   add-literal            want=None                   got=None
+  ok   add-length             want=None                   got=None
+  ok   concat                 want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `+` needs an integer literal operand
+  ok   div-var                want=None                   got=None
+  ok   mod-var                want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `%` needs an integer literal operand
+  ok   display-17             want=SUBSET_DISPLAY         got=SUBSET_DISPLAY: sequence display with more than 16 elements
+  ok   display-16             want=None                   got=None
+  ok   display-var            want=SUBSET_DISPLAY         got=SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor
+  ok   tuple-var              want=SUBSET_TUPLE           got=SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor
+  ok   tuple-flat             want=None                   got=None
+  ok   set-display            want=SUBSET_BRACE           got=SUBSET_BRACE: set or map display, or an unsupported block, in compiled code
+  ok   function-value         want=SUBSET_FUNCTION_VALUE  got=SUBSET_FUNCTION_VALUE: function used as a value in compiled code: Eligible
+  ok   by-method              want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: by method
+  ok   assert-by              want=None                   got=None
+  ok   calc                   want=None                   got=None
+  ok   ghost-var-method       want=SUBSET_GHOST           got=SUBSET_GHOST: a ghost statement names a compiled method
+  ok   non-utf8               want=SUBSET_LEX             got=SUBSET_LEX: implementation is not UTF-8
+  ok   nul                    want=SUBSET_LEX             got=SUBSET_LEX: character U+0000 outside comments and literals
+  ok   formfeed               want=SUBSET_LEX             got=SUBSET_LEX: character U+000C outside comments and literals
+  ok   unterminated-comment   want=SUBSET_LEX             got=SUBSET_LEX: unterminated comment
+  ok   attr-split-comment     want=SUBSET_ATTRIBUTE       got=SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}
+  ok   at-attribute           want=SUBSET_ATTRIBUTE       got=SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}
+  ok   trailing-module        want=SUBSET_SHAPE           got=SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else
+  ok   size                   want=SUBSET_SIZE            got=SUBSET_SIZE: implementation larger than 65536 bytes
+  ok   no-assess              want=SUBSET_SHAPE           got=SUBSET_SHAPE: no compiled method Assess
+  ok   bodiless-function      want=SUBSET_SHAPE           got=SUBSET_SHAPE: compiled function F without body
+  ok   long-number            want=SUBSET_LITERAL_SIZE    got=SUBSET_LITERAL_SIZE: numeric literal longer than 40 characters
+  corpus 229 files: patched-copy mismatches 0; standalone mismatches 0
+combined: 23 definitions extracted; call site after the attribute rule: True
+  corpus 229 files: patched-copy mismatches 0; standalone mismatches 0
+FAILURES 0

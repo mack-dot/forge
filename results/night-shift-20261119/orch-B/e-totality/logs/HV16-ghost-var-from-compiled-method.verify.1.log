@@ -1,0 +1,28 @@
+# owner=e-totality start=2026-11-19T09:28:59Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-totality/work/HV16-ghost-var-from-compiled-method
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1237
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 40
+
+Dafny program verifier finished with 7 verified, 0 errors
+        1.30 real         1.10 user         0.14 sys
+           111149056  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12575  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  46  voluntary context switches
+                2275  involuntary context switches
+          9857548200  instructions retired
+          3842240097  cycles elapsed
+            93324440  peak memory footprint
+# end=2026-11-19T09:29:01Z
+exit 0

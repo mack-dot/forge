@@ -1,0 +1,100 @@
+G1 subset alone: correct admitted 13, correct refused 6, wrong refused 45, wrong passed 11
+G1 correct refused by subset: [('C1-table', 'SUBSET_EXEC_FORBIDDEN'), ('C2-recursion', 'SUBSET_RECURSION'), ('C4-arith', 'SUBSET_ARITHMETIC'), ('C7-loop-plan', 'SUBSET_EXEC_FORBIDDEN'), ('C10-induction-attr', 'SUBSET_ATTRIBUTE'), ('A11-abstract-trap-dead', 'SUBSET_FORBIDDEN')]
+G1 composed (all tiers + expect rule + subset): correct admitted 10; wrong still admitted []; no verdict []
+G1 composed: correct admitted before subset 15 after 10
+G1 newly refused by subset (were admitted): [('C1-table', 'ADMITTED'), ('C2-recursion', 'ADMITTED'), ('C4-arith', 'ADMITTED'), ('C7-loop-plan', 'ADMITTED'), ('A11-abstract-trap-dead', 'ADMITTED'), ('A18-runtime-exhaustion', 'REFUSED'), ('A37-uncompilable-such-that', 'REFUSED'), ('E06-stack-overflow-keyed', 'REFUSED'), ('E07-oom-keyed', 'REFUSED'), ('E08-time-keyed', 'REFUSED')]
+REPO unique 92: subset pass 40 refuse 52; within existing scope rules 50, of which subset refuses 29:
+    proposals/m1b-mission-20261119/drafts/expect-rule/subs/E02-array-oob.dfy | SUBSET_FORBIDDEN: `new`
+    proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy | SUBSET_RECURSION: call cycle through DeepM
+    proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy | SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+    proposals/m1b-mission-20261119/drafts/expect-rule/subs/E08-time-keyed.dfy | SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A02-assume-false.dfy | SUBSET_FORBIDDEN: `assume`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A06-bodiless-function.dfy | SUBSET_SHAPE: compiled function Pick without body
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A07-bodiless-lemma-concrete.dfy | SUBSET_SHAPE: ghost lemma Bad without body
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A08-abstract-trap-toplevel-call.dfy | SUBSET_FORBIDDEN: `abstract`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A09-abstract-trap-nested-call.dfy | SUBSET_FORBIDDEN: `abstract`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A10-abstract-trap-import.dfy | SUBSET_FORBIDDEN: `import`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A11-abstract-trap-dead.dfy | SUBSET_FORBIDDEN: `abstract`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A13-shadow-spec-nested.dfy | SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A16-decreases-star.dfy | SUBSET_FORBIDDEN: decreases *
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A17-print-effect.dfy | SUBSET_FORBIDDEN: `print`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A18-runtime-exhaustion.dfy | SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A21-unicode-predicate.dfy | SUBSET_LEX: character U+0435 outside comments and literals
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A26-forall-no-body.dfy | SUBSET_EXEC_FORBIDDEN: `forall` in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A27-while-no-body.dfy | SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A28-space-attribute.dfy | SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A29-by-method-mismatch.dfy | SUBSET_FORBIDDEN: by method
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A32-dead-main-decreases-star.dfy | SUBSET_FORBIDDEN: decreases *
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A33-const-alloc-exhaustion.dfy | SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A35-assume-in-ghost-helper.dfy | SUBSET_FORBIDDEN: `assume`
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/A37-uncompilable-such-that.dfy | SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/C1-table.dfy | SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/C2-recursion.dfy | SUBSET_RECURSION: call cycle through CountTrue
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/C4-arith.dfy | SUBSET_ARITHMETIC: `*` needs an integer literal operand
+    proposals/m1b-mission-20261119/drafts/zero-review/subs/C7-loop-plan.dfy | SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+    results/stage8/wrapper-proof/attempt-0002/mutants/assumption-escape/impl/Refund.dfy | SUBSET_FORBIDDEN: `assume`
+P2
+   B01-identifiers-expected                                     N=None  SUBSET_ARITHMETIC: `+` needs an integer literal operand
+   B02-word-in-comments-strings                                 N=195   pass
+   B03-identifier-prime-expect                                  N=None  SUBSET_FORBIDDEN: `x'expect`
+   B04-formfeed-comment-word                                    N=None  SUBSET_LEX: character U+000C outside comments and literals
+   B05-latin1-comment                                           N=None  SUBSET_LEX: implementation is not UTF-8
+   B06-unicode-in-string                                        N=190   pass
+   H01-such-that-enumeration-hang                               N=None  SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+   H01b-such-that-modulus-hang                                  N=None  SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+   H02-exponential-recursion-hang                               N=None  SUBSET_ARITHMETIC: `+` needs an integer literal operand
+   H03-seq-comprehension-alloc                                  N=None  SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+   H04-seq-length-2pow32-throws                                 N=None  SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+   K01-string-backslash-newline                                 N=195   pass
+   K02-string-bad-unicode-escape                                N=None  SUBSET_FORBIDDEN: `expect`
+   K03-comment-split-attribute                                  N=None  SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}
+   K04-isolate-wrapping-attribute                               N=None  SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed
+   K05-eof-line-comment-no-newline                              N=185   pass
+   K06-unterminated-block-comment-eof                           N=None  SUBSET_LEX: unterminated comment
+   K07-u0085-line-comment                                       N=None  SUBSET_LEX: character U+0085 outside comments and literals
+   K08-nul-in-line-comment                                      N=None  SUBSET_FORBIDDEN: `expect`
+NEW-correct
+   CV01-helper-predicate                                        N=338   pass
+   CV02-match-not-if                                            N=340   pass
+   CV03-extra-lemma                                             N=185   pass
+   CV04-reordered-conjuncts                                     N=372   pass
+   CV05-local-constants                                         N=200   pass
+   CV06-ghost-recursive-lemma                                   N=185   pass
+   CV07-odd-comments                                            N=None  SUBSET_LEX: character U+2028 outside comments and literals
+   CV08-helper-used-twice                                       N=325   pass
+   CV09-helper-method-chain                                     N=207   pass
+   CV10-expression-form                                         N=185   pass
+   CV11-early-returns-assert-by                                 N=350   pass
+   CV12-ghost-var-quantified-assert                             N=185   pass
+   CV13-ghost-loop-in-lemma                                     N=185   pass
+   CV14-literal-arithmetic                                      N=348   pass
+   CV15-reason-in-seq-literal                                   N=210   pass
+   CV16-isolate-attr-and-crlf                                   N=185   pass
+   CV17-odd-comments-no-line-separator                          N=185   pass
+NEW-hostile
+   HV01-mutual-recursion-three                                  N=None  SUBSET_RECURSION: call cycle through F
+   HV02-function-type-param                                     N=None  SUBSET_HEADER: default value or function type in a compiled signature
+   HV03-function-value-reuse                                    N=None  SUBSET_FUNCTION_VALUE: function used as a value in compiled code: Heavy
+   HV04-var-such-that                                           N=None  SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+   HV05-huge-literal-sequence                                   N=None  SUBSET_DISPLAY: sequence display with more than 16 elements
+   HV06-call-tower-exponential                                  N=None  SUBSET_SIZE: T9 unfolds to more than 4096 executed tokens
+   HV07-repeated-squaring                                       N=None  SUBSET_ARITHMETIC: `*` needs an integer literal operand
+   HV08-string-doubling                                         N=None  SUBSET_ARITHMETIC: `+` needs an integer literal operand
+   HV09-string-doubling-via-display                             N=None  SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor
+   HV10-tuple-dag-equality                                      N=None  SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor
+   HV11-match-huge-literal-admissible-size                      N=2318  pass
+   HV12-match-too-large                                         N=None  SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+   HV13-cyrillic-homoglyph-while                                N=None  SUBSET_LEX: character U+0456 outside comments and literals
+   HV14-lone-cr-comment-hides-loop                              N=None  SUBSET_EXEC_FORBIDDEN: `while` in compiled code
+   HV15-ghost-method-with-loop                                  N=197   pass
+   HV16-ghost-var-from-compiled-method                          N=None  SUBSET_GHOST: a ghost statement names a compiled method
+   HV17-forall-in-compiled-predicate                            N=None  SUBSET_EXEC_FORBIDDEN: `forall` in compiled code
+   HV18-by-method-loop                                          N=None  SUBSET_FORBIDDEN: by method
+   HV19-seq-constructor-comment-split                           N=None  SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+   HV20-const-self-cycle                                        N=None  SUBSET_RECURSION: call cycle through A
+   HV21-literal-mult-chain                                      N=None  SUBSET_ARITHMETIC: `*` needs an integer literal operand
+   HV22-big-literal-multiplier-chain                            N=484   pass
+   HV23-set-display-in-guard                                    N=207   pass
+   HV24-negation-doubling                                       N=2404  pass
+   HV25-tuple-of-helper-tuples                                  N=None  SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor
+   HV26-set-display-guard-then-hidden-loop                      N=None  SUBSET_EXEC_FORBIDDEN: `while` in compiled code

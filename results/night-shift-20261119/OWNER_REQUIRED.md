@@ -49,3 +49,6 @@
   the exploration counted); my own stricter promise was bent; the change is written in the same file.
 - Decision for the owner: accept `LO-0006` (and `LE-0004`, which depends on it) as a valid model-level result, or require a
   fresh single-run confirmation under a rule the owner states. Nothing is promoted either way. M1-B stays OPEN.
+## B-7 (written 2026-11-19T09:47:15Z) — a termination-by-construction tier for refund submissions (Goal E). UNAPPLIED; protected path gate/refund.py; `git apply --check` exit 0 (B's run).
+- Diffs: orch-B/e-totality/diff/refund-subset-standalone.diff SHA-256 0bd6deb46fa0e775dad7ed4576144513ae1116c48e38fed3981b01c4c1bb04b8; refund-subset-combined.diff (with the `expect` rule and supervision) 25ef98c2e3f2af8f2369c415e29680de0ea2938445ae7d81cee4b7fd0e17f62d. Rule text: orch-B/e-totality/SUBSET.md.
+- Decision (a): accept the cost (6 of 19 known correct implementations refused: loops, recursion, a product of variables, an attribute, an extra module) for a rule that refuses every known halting or hanging submission; or keep only the `expect` rule and supervision (then the seven submissions of B-5(b) stay admitted). (b) the caps (4096 tokens, 16 elements, 65536 bytes). (c) whether an ARGUMENT-class bound may stand beside the HOL halting theorem.

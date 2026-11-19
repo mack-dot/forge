@@ -1,0 +1,32 @@
+# owner=e-totality start=2026-11-19T09:36:42Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-totality/work/HV20-const-self-cycle
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1261
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 62
+impl/Refund.dfy(4,8): Error: const definition contains a cycle: A -> B -> A
+  |
+4 |   const A: int := B + 1
+  |         ^
+
+1 resolution/type errors detected in Refund.dfy
+        0.51 real         0.42 user         0.06 sys
+            87703552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7442  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  33  voluntary context switches
+                 431  involuntary context switches
+          4003015935  instructions retired
+          1510863951  cycles elapsed
+            56804480  peak memory footprint
+# end=2026-11-19T09:36:42Z
+exit 2

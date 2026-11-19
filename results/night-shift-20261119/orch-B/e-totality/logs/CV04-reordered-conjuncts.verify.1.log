@@ -1,0 +1,28 @@
+# owner=e-totality start=2026-11-19T09:13:50Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-totality/work/CV04-reordered-conjuncts
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1711
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 71
+
+Dafny program verifier finished with 6 verified, 0 errors
+        1.23 real         1.09 user         0.09 sys
+           131170304  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12920  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  59  voluntary context switches
+                2105  involuntary context switches
+          9624492618  instructions retired
+          3628024689  cycles elapsed
+            98354328  peak memory footprint
+# end=2026-11-19T09:13:52Z
+exit 0

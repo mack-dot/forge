@@ -1,0 +1,28 @@
+# owner=e-totality start=2026-11-19T09:16:58Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-totality/work/CV16-isolate-attr-and-crlf
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 63
+
+Dafny program verifier finished with 40 verified, 0 errors
+        2.27 real         1.87 user         0.20 sys
+           127696896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13010  page reclaims
+                  52  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 138  voluntary context switches
+               10499  involuntary context switches
+         16182083522  instructions retired
+          6287258334  cycles elapsed
+            94782616  peak memory footprint
+# end=2026-11-19T09:17:01Z
+exit 0

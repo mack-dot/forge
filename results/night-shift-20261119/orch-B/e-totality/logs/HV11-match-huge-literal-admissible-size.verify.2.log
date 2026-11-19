@@ -1,0 +1,33 @@
+# owner=e-totality start=2026-11-19T09:42:55Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-totality/work/HV11-match-huge-literal-admissible-size
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1309
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 67
+impl/Refund.dfy(4,9): Error: Verification out of resource (Refund.Assess)
+  |
+4 |   method Assess(context: Context, response: ModelResponse)
+  |          ^^^^^^
+
+
+Dafny program verifier finished with 5 verified, 0 errors, 1 out of resource
+        1.80 real         1.42 user         0.12 sys
+           143835136  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14932  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                  71  voluntary context switches
+                1598  involuntary context switches
+         13641545765  instructions retired
+          4836999429  cycles elapsed
+           110970032  peak memory footprint
+# end=2026-11-19T09:42:57Z
+exit 4

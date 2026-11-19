@@ -1,0 +1,1997 @@
+[
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C0-repo-impl.dfy",
+  "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C1-table.dfy",
+  "sha256": "46c6cf4a900695506eb1803cbfb3caaee4779c4c4bafb72e8b27400a8c8d4491",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C2-recursion.dfy",
+  "sha256": "1af207b614ec7082f19c766656a47bcc487aee1dfc9c0876599257c15c8bfb28",
+  "subset": "SUBSET_RECURSION: call cycle through CountTrue",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C3-early-returns.dfy",
+  "sha256": "735667b1338195cffd6160bd1597b4c2bc402f13743a4c4d2ab0d9dcc7c2acd2",
+  "subset": "pass",
+  "N": 160,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C4-arith.dfy",
+  "sha256": "da38f20ed8fe64c1d27623882423fd56a7e205b42eb96dfccb121bf03faa0966",
+  "subset": "SUBSET_ARITHMETIC: `*` needs an integer literal operand",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C5-helper-lemmas.dfy",
+  "sha256": "c98c9bfcb0dbaecbfe83dfe9d50cc6241e4c376393ed7d087ada984bff988a53",
+  "subset": "pass",
+  "N": 346,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C6-function-pair.dfy",
+  "sha256": "a27274984e4d6883f60969c2f688e9efe9a73007aa9d2f3aaa2aeea1b4e76568",
+  "subset": "pass",
+  "N": 227,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C7-loop-plan.dfy",
+  "sha256": "7251d0bb65c8f9545053f9d2ce353fdda8254ff80bd9445b24f4751ea1b9f2d5",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C8-isolate-attr.dfy",
+  "sha256": "5996a2735ad59b11bcb8b04e29bc696e6f620be510d157350602962cd08fa3c5",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C9-comment-word-include.dfy",
+  "sha256": "de083663e729bf04db7634a8388119a65d232bc93dbbe2833300be052ba36d7e",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C10-induction-attr.dfy",
+  "sha256": "13796f4cb48b0b48bc712de40b95d58a0f452e0057572e784dea8f2287327c38",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C11-at-in-string.dfy",
+  "sha256": "930e9effc482cf57ea96688a49bac35100f8e2028ddeb298ce7402fb890d0901",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C12-crlf-header.dfy",
+  "sha256": "1ce2c12bdd29e29d4bf77eadde5521129c08ca732fd6233a03808002b0758884",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A01-wrong-amount-one-input.dfy",
+  "sha256": "cefe7055f877d83dc31d5cc95c8d6d632d934b594bd29302b310bc1325e40fc6",
+  "subset": "pass",
+  "N": 197,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A02-assume-false.dfy",
+  "sha256": "b7d5c9450ec6d5945b99ab414851a6c0dffd336760bf531e3ae7fa3c04c3fe00",
+  "subset": "SUBSET_FORBIDDEN: `assume`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A03-axiom-lemma.dfy",
+  "sha256": "3d9d28a7473b88f482bc4964630c17ee619b99d34a287faa953a7b37b4088982",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A04-verify-false.dfy",
+  "sha256": "f8c2d3e2d76853408048da68e75f89639c24a2622731fefa99ac2dc1378b54ff",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A05-extern-body.dfy",
+  "sha256": "dab4c7438272f3d8c05f63bcbe2a9b3354640bba7635c614b17a492706883e2e",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A06-bodiless-function.dfy",
+  "sha256": "4919958eaeab5bc82a052a513e79c5aeb5c70845b8ebd63f7311bccf12a1c762",
+  "subset": "SUBSET_SHAPE: compiled function Pick without body",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A07-bodiless-lemma-concrete.dfy",
+  "sha256": "d92e968bd1de642f4236a0537724eca144ba34b1411bf2df0d5e8f00ba72dd29",
+  "subset": "SUBSET_SHAPE: ghost lemma Bad without body",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A08-abstract-trap-toplevel-call.dfy",
+  "sha256": "d2524dc4a3f76a4e84036b89da9d53c51f9c4f28ee09f09e2a7d094cb92fab50",
+  "subset": "SUBSET_FORBIDDEN: `abstract`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A09-abstract-trap-nested-call.dfy",
+  "sha256": "bba661a6b17a396357f897cf8d6096b31bed9d5412badbc7ef55ab440e74942a",
+  "subset": "SUBSET_FORBIDDEN: `abstract`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A10-abstract-trap-import.dfy",
+  "sha256": "77b34ee7877e64a24581e7058dc08f16717a6cdf339f95abd1cdacb83a1c816f",
+  "subset": "SUBSET_FORBIDDEN: `import`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A11-abstract-trap-dead.dfy",
+  "sha256": "e5c830033b22801c54fb94a27c4f29b653cbb6872261ca6585d4e7e66788b360",
+  "subset": "SUBSET_FORBIDDEN: `abstract`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A12-redefine-eligible.dfy",
+  "sha256": "765fd97974ea48e110e7f2d631985c74e85f82e6ce3462da882a26d226e6d743",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A13-shadow-spec-nested.dfy",
+  "sha256": "fa630aace2882a9cef468c1883ba59de400f13b6b4f01564e7f03c6528db50d7",
+  "subset": "SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A14-include-altered-spec.dfy",
+  "sha256": "9c159ba604951252e9bd5485f9b9d9d60c02ff82fa48fd87c1328d4ae4a25a00",
+  "subset": "SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A15-second-include-hatch.dfy",
+  "sha256": "b3dec9f1b0767eb9b221909bd3dbb3da9c8482cc7761c17e387d4601dc5c950b",
+  "subset": "SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A16-decreases-star.dfy",
+  "sha256": "1b1f1b02868b13dc4d04ac965f67ae8b7a73b9f693f3981912109ad2222d5259",
+  "subset": "SUBSET_FORBIDDEN: decreases *",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A17-print-effect.dfy",
+  "sha256": "305911beafb27e411df123a1266e5a0fef42a439ad9a59088f7eba97d5df27d1",
+  "subset": "SUBSET_FORBIDDEN: `print`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A18-runtime-exhaustion.dfy",
+  "sha256": "70fe4968cee7a2b5f1da7baf99021da95227dda67f0fc8cb2fd49c6e581b2603",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "NO-VERDICT",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A19-verifier-exhaustion.dfy",
+  "sha256": "9e33a87836cef5442e95911ea6b17f96b3110feb3ab291643b861e27ab078525",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A20-unicode-module.dfy",
+  "sha256": "4a3236f1278a46e5071221bc3275ed67ebf9f6a0bb1ff0b320d2979172dbed6b",
+  "subset": "SUBSET_LEX: character U+0435 outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A21-unicode-predicate.dfy",
+  "sha256": "3fe38f4e98003f826f53349975752e7e2d98a25549153b34a6e5f2b39463641d",
+  "subset": "SUBSET_LEX: character U+0435 outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A22-requires-false-assess.dfy",
+  "sha256": "5cc253789d433dd6ecc4cb86b1d463bc20527c6323c39ce6bee1d49da73a3b55",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A23-requires-false-helper.dfy",
+  "sha256": "506341128d6156747746686f8cc5d5f15fbce01f6d29a9cddbafe200e5d99261",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A24-expect-halt-one-input.dfy",
+  "sha256": "4527791ca182274fe73941b356325f73d4b96bc15780754fe60030ae49ef2d24",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A25-expect-as-assume-wrong-value.dfy",
+  "sha256": "697dbbbd642495428c572bb65a974540c0b693d32db9951db06d44c6a41ffb68",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A26-forall-no-body.dfy",
+  "sha256": "49a701adf80d655a8343045a474ee68f4a56857a7892817f490f440ae1facdf1",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `forall` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A27-while-no-body.dfy",
+  "sha256": "31893141d86f9c283f76ccf297caa339c7287a5258a797a417f786bbbf4479f3",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A28-space-attribute.dfy",
+  "sha256": "3481862c6c8e2b04f8ce1cb9f57966799a5df19fda964c4a48ebc9d3b40f36e2",
+  "subset": "SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A29-by-method-mismatch.dfy",
+  "sha256": "cd51cfaf5724d9e67662a1f74d03d00063c81ccbb9966624cc3c1f716e59ec9f",
+  "subset": "SUBSET_FORBIDDEN: by method",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A30-dfyconfig-cwd.dfy",
+  "sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A31-dfyconfig-impl-dir.dfy",
+  "sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A32-dead-main-decreases-star.dfy",
+  "sha256": "b1269366bc5e87dba08e12d266c98a252e2f18b15ea41b20c35ed57a41a8ef13",
+  "subset": "SUBSET_FORBIDDEN: decreases *",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A33-const-alloc-exhaustion.dfy",
+  "sha256": "b686718c2474f7582c2c177f6e3b04f599e08ea68d3894e61411a30739f48fc4",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A34-nested-comment-hide.dfy",
+  "sha256": "dd53d60f0d0bc16f9d1f9a3074820d371352b7b1c48a4280be00929f133f00a9",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A35-assume-in-ghost-helper.dfy",
+  "sha256": "baf9d3d9b33a91393839d1330aac9084ed683a80014044e4274f11535b4caffc",
+  "subset": "SUBSET_FORBIDDEN: `assume`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A36-reveal-opaque-escape.dfy",
+  "sha256": "a2abb33eb0b7740456177bb5ea372760e91eb104dbf8dbc29839a9bba7cfa192",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A37-uncompilable-such-that.dfy",
+  "sha256": "71909caaf385669178306fedb44537d70aa222e3c325f5ff7cda676400106921",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `:|` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A38-expect-always-halt.dfy",
+  "sha256": "937cfbf8d520a3960bac79d7f802766a0b28c604c23a1e36826bc01a02f83ef5",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A39-expect-in-helper-method.dfy",
+  "sha256": "d53fd29b8ab841bf7aaa7ecc9c343531795db9b2210e43e9985ad416e24883ef",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A38n-control-without-expect.dfy",
+  "sha256": "a2bb621df1e8b974ff760a000f9190af38cbab7eaf7857039a852a5bb5dc506a",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-61.dfy",
+  "sha256": "a7f156b562ec036e8fa25e86eb64459a05a6278e823ebd2e8acf2aef159af5da",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-1000.dfy",
+  "sha256": "e77fefe3075d67be8bfc57c86fad0f03013334400cbaa7b8046a1bbf801882a7",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-123456789.dfy",
+  "sha256": "d030dfa8417c10262686b748e0ab6c09aca79d73abb016ced40fd8129b442fa6",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-9223372036854775805.dfy",
+  "sha256": "bfc221d4c754a1a314b5592273f571c06a6e1e2278e644c131c4bcb329667fe5",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E01-colon-dash-expect.dfy",
+  "sha256": "07d365556562f2a27073b23001f34f86df0f869aa9b376d7b21e726b76708b91",
+  "subset": "SUBSET_FORBIDDEN: `datatype`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E02-array-oob.dfy",
+  "sha256": "3133e72f818a515000fc3eceaa367148455af27fa96aa2dabbd807ce71149897",
+  "subset": "SUBSET_FORBIDDEN: `new`",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E03-div-zero.dfy",
+  "sha256": "ccacf862d593460c8178bfaeb415ef20050b4a723cc35068ea5a1b026967a52b",
+  "subset": "pass",
+  "N": 209,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E04-assert-by.dfy",
+  "sha256": "364674f5eb4ee1280c0201f1945783b1bc69f4ab57d37144fef139285f20cb97",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E05-test-attr.dfy",
+  "sha256": "1a853cd747eb023efac0e26327bd27242f400c66c2d3829fd6d455a2363ab524",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy",
+  "sha256": "d61a7abf3ac7366076d38310d79536f94d6f276d5b8b9db35ca0a4d68afa90fb",
+  "subset": "SUBSET_RECURSION: call cycle through DeepM",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy",
+  "sha256": "aa54d1448a2ca120ee073606aaaf483eddf08ddbb0e93a72981e29b62ddc073c",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E08-time-keyed.dfy",
+  "sha256": "b965d0414ff4e13b156611d98cdf9819bceb814dd7ab9a49725149de36ffa5cd",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E12-expect-in-by-method.dfy",
+  "sha256": "f248a048d7f413aaecd2cd6aec973828b7f66ed7fb3874bc6d00734a6926c261",
+  "subset": "SUBSET_FORBIDDEN: by method",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C13-comment-expect.dfy",
+  "sha256": "a70e88edcc8bd2143cfdebeb0f361cee2664bd721c2f4e441974a2171e830831",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C14-string-char-expect.dfy",
+  "sha256": "c39cb6fcbf257be09af001a7b605ac224d147d747ae1d31f9b0ca68d92524aed",
+  "subset": "pass",
+  "N": 205,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C15-ident-expected.dfy",
+  "sha256": "65ec1ad9a4b9da403771edeec7d7d0ffc58b27f5d3e1a6a1fe152d9ad4745143",
+  "subset": "pass",
+  "N": 195,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1a-nested-comment-closed.dfy",
+  "sha256": "f8dec96d90d446c5fbf347d221a89e8adf19e31b5571ee341b7a99af2863d24e",
+  "subset": "pass",
+  "N": 195,
+  "scope_after_expect_patch": "pass",
+  "ideal": "ADMITTED",
+  "before_all_tiers_with_expect_rule": "ADMITTED",
+  "after": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1b-nested-comment-reopen.dfy",
+  "sha256": "59b8f6c7fef8858db20389f8af583b80f1c29cae8e4c7820991d1757699adf2d",
+  "subset": "SUBSET_LEX: unterminated comment",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: unterminated comment",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S1-cr-ends-line-comment.dfy",
+  "sha256": "d7eebe3326bc75d2b5ec6ce720b56847820e1e9113b79293a9b0d6aae7c7a738",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S2-cr-comment-hides-keyed-expect.dfy",
+  "sha256": "f930505e04f4cf678cff6519c63f3dd1db4c76d5969f2c7bced53c5a3199181e",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S3-u2028-in-line-comment.dfy",
+  "sha256": "52c4f7ab278aea198fb8cacb302e887d0544bc54c216c0a99c33f066faf22474",
+  "subset": "SUBSET_LEX: character U+2028 outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S4-formfeed-in-line-comment.dfy",
+  "sha256": "a0393282bf6ba89d74980b021a6085f4f5658bb760391ab73fd15f5840999976",
+  "subset": "SUBSET_LEX: character U+000C outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "ideal": "REFUSED",
+  "before_all_tiers_with_expect_rule": "REFUSED",
+  "after": "REFUSED"
+ },
+ {
+  "set": "REPO",
+  "file": "impl/Refund.dfy",
+  "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C13-comment-expect.dfy",
+  "sha256": "a70e88edcc8bd2143cfdebeb0f361cee2664bd721c2f4e441974a2171e830831",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C14-string-char-expect.dfy",
+  "sha256": "c39cb6fcbf257be09af001a7b605ac224d147d747ae1d31f9b0ca68d92524aed",
+  "subset": "pass",
+  "N": 205,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C15-ident-expected.dfy",
+  "sha256": "65ec1ad9a4b9da403771edeec7d7d0ffc58b27f5d3e1a6a1fe152d9ad4745143",
+  "subset": "pass",
+  "N": 195,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E01-colon-dash-expect.dfy",
+  "sha256": "07d365556562f2a27073b23001f34f86df0f869aa9b376d7b21e726b76708b91",
+  "subset": "SUBSET_FORBIDDEN: `datatype`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E02-array-oob.dfy",
+  "sha256": "3133e72f818a515000fc3eceaa367148455af27fa96aa2dabbd807ce71149897",
+  "subset": "SUBSET_FORBIDDEN: `new`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E03-div-zero.dfy",
+  "sha256": "ccacf862d593460c8178bfaeb415ef20050b4a723cc35068ea5a1b026967a52b",
+  "subset": "pass",
+  "N": 209,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E04-assert-by.dfy",
+  "sha256": "364674f5eb4ee1280c0201f1945783b1bc69f4ab57d37144fef139285f20cb97",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E05-test-attr.dfy",
+  "sha256": "1a853cd747eb023efac0e26327bd27242f400c66c2d3829fd6d455a2363ab524",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy",
+  "sha256": "d61a7abf3ac7366076d38310d79536f94d6f276d5b8b9db35ca0a4d68afa90fb",
+  "subset": "SUBSET_RECURSION: call cycle through DeepM",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy",
+  "sha256": "aa54d1448a2ca120ee073606aaaf483eddf08ddbb0e93a72981e29b62ddc073c",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E08-time-keyed.dfy",
+  "sha256": "b965d0414ff4e13b156611d98cdf9819bceb814dd7ab9a49725149de36ffa5cd",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E12-expect-in-by-method.dfy",
+  "sha256": "f248a048d7f413aaecd2cd6aec973828b7f66ed7fb3874bc6d00734a6926c261",
+  "subset": "SUBSET_FORBIDDEN: by method",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1a-nested-comment-closed.dfy",
+  "sha256": "f8dec96d90d446c5fbf347d221a89e8adf19e31b5571ee341b7a99af2863d24e",
+  "subset": "pass",
+  "N": 195,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1b-nested-comment-reopen.dfy",
+  "sha256": "59b8f6c7fef8858db20389f8af583b80f1c29cae8e4c7820991d1757699adf2d",
+  "subset": "SUBSET_LEX: unterminated comment",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: unterminated comment"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S1-cr-ends-line-comment.dfy",
+  "sha256": "d7eebe3326bc75d2b5ec6ce720b56847820e1e9113b79293a9b0d6aae7c7a738",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S2-cr-comment-hides-keyed-expect.dfy",
+  "sha256": "f930505e04f4cf678cff6519c63f3dd1db4c76d5969f2c7bced53c5a3199181e",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S3-u2028-in-line-comment.dfy",
+  "sha256": "52c4f7ab278aea198fb8cacb302e887d0544bc54c216c0a99c33f066faf22474",
+  "subset": "SUBSET_LEX: character U+2028 outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S4-formfeed-in-line-comment.dfy",
+  "sha256": "a0393282bf6ba89d74980b021a6085f4f5658bb760391ab73fd15f5840999976",
+  "subset": "SUBSET_LEX: character U+000C outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-1000.dfy",
+  "sha256": "e77fefe3075d67be8bfc57c86fad0f03013334400cbaa7b8046a1bbf801882a7",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-123456789.dfy",
+  "sha256": "d030dfa8417c10262686b748e0ab6c09aca79d73abb016ced40fd8129b442fa6",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-61.dfy",
+  "sha256": "a7f156b562ec036e8fa25e86eb64459a05a6278e823ebd2e8acf2aef159af5da",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-9223372036854775805.dfy",
+  "sha256": "bfc221d4c754a1a314b5592273f571c06a6e1e2278e644c131c4bcb329667fe5",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A01-wrong-amount-one-input.dfy",
+  "sha256": "cefe7055f877d83dc31d5cc95c8d6d632d934b594bd29302b310bc1325e40fc6",
+  "subset": "pass",
+  "N": 197,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A02-assume-false.dfy",
+  "sha256": "b7d5c9450ec6d5945b99ab414851a6c0dffd336760bf531e3ae7fa3c04c3fe00",
+  "subset": "SUBSET_FORBIDDEN: `assume`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A03-axiom-lemma.dfy",
+  "sha256": "3d9d28a7473b88f482bc4964630c17ee619b99d34a287faa953a7b37b4088982",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A04-verify-false.dfy",
+  "sha256": "f8c2d3e2d76853408048da68e75f89639c24a2622731fefa99ac2dc1378b54ff",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A05-extern-body.dfy",
+  "sha256": "dab4c7438272f3d8c05f63bcbe2a9b3354640bba7635c614b17a492706883e2e",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A06-bodiless-function.dfy",
+  "sha256": "4919958eaeab5bc82a052a513e79c5aeb5c70845b8ebd63f7311bccf12a1c762",
+  "subset": "SUBSET_SHAPE: compiled function Pick without body",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A07-bodiless-lemma-concrete.dfy",
+  "sha256": "d92e968bd1de642f4236a0537724eca144ba34b1411bf2df0d5e8f00ba72dd29",
+  "subset": "SUBSET_SHAPE: ghost lemma Bad without body",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A08-abstract-trap-toplevel-call.dfy",
+  "sha256": "d2524dc4a3f76a4e84036b89da9d53c51f9c4f28ee09f09e2a7d094cb92fab50",
+  "subset": "SUBSET_FORBIDDEN: `abstract`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A09-abstract-trap-nested-call.dfy",
+  "sha256": "bba661a6b17a396357f897cf8d6096b31bed9d5412badbc7ef55ab440e74942a",
+  "subset": "SUBSET_FORBIDDEN: `abstract`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A10-abstract-trap-import.dfy",
+  "sha256": "77b34ee7877e64a24581e7058dc08f16717a6cdf339f95abd1cdacb83a1c816f",
+  "subset": "SUBSET_FORBIDDEN: `import`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A11-abstract-trap-dead.dfy",
+  "sha256": "e5c830033b22801c54fb94a27c4f29b653cbb6872261ca6585d4e7e66788b360",
+  "subset": "SUBSET_FORBIDDEN: `abstract`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A12-redefine-eligible.dfy",
+  "sha256": "765fd97974ea48e110e7f2d631985c74e85f82e6ce3462da882a26d226e6d743",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A13-shadow-spec-nested.dfy",
+  "sha256": "fa630aace2882a9cef468c1883ba59de400f13b6b4f01564e7f03c6528db50d7",
+  "subset": "SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A14-include-altered-spec.dfy",
+  "sha256": "9c159ba604951252e9bd5485f9b9d9d60c02ff82fa48fd87c1328d4ae4a25a00",
+  "subset": "SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A15-second-include-hatch.dfy",
+  "sha256": "b3dec9f1b0767eb9b221909bd3dbb3da9c8482cc7761c17e387d4601dc5c950b",
+  "subset": "SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec, nothing else",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A16-decreases-star.dfy",
+  "sha256": "1b1f1b02868b13dc4d04ac965f67ae8b7a73b9f693f3981912109ad2222d5259",
+  "subset": "SUBSET_FORBIDDEN: decreases *",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A17-print-effect.dfy",
+  "sha256": "305911beafb27e411df123a1266e5a0fef42a439ad9a59088f7eba97d5df27d1",
+  "subset": "SUBSET_FORBIDDEN: `print`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A18-runtime-exhaustion.dfy",
+  "sha256": "70fe4968cee7a2b5f1da7baf99021da95227dda67f0fc8cb2fd49c6e581b2603",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A19-verifier-exhaustion.dfy",
+  "sha256": "9e33a87836cef5442e95911ea6b17f96b3110feb3ab291643b861e27ab078525",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A20-unicode-module.dfy",
+  "sha256": "4a3236f1278a46e5071221bc3275ed67ebf9f6a0bb1ff0b320d2979172dbed6b",
+  "subset": "SUBSET_LEX: character U+0435 outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A21-unicode-predicate.dfy",
+  "sha256": "3fe38f4e98003f826f53349975752e7e2d98a25549153b34a6e5f2b39463641d",
+  "subset": "SUBSET_LEX: character U+0435 outside comments and literals",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A22-requires-false-assess.dfy",
+  "sha256": "5cc253789d433dd6ecc4cb86b1d463bc20527c6323c39ce6bee1d49da73a3b55",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A23-requires-false-helper.dfy",
+  "sha256": "506341128d6156747746686f8cc5d5f15fbce01f6d29a9cddbafe200e5d99261",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A24-expect-halt-one-input.dfy",
+  "sha256": "4527791ca182274fe73941b356325f73d4b96bc15780754fe60030ae49ef2d24",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A25-expect-as-assume-wrong-value.dfy",
+  "sha256": "697dbbbd642495428c572bb65a974540c0b693d32db9951db06d44c6a41ffb68",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A26-forall-no-body.dfy",
+  "sha256": "49a701adf80d655a8343045a474ee68f4a56857a7892817f490f440ae1facdf1",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `forall` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A27-while-no-body.dfy",
+  "sha256": "31893141d86f9c283f76ccf297caa339c7287a5258a797a417f786bbbf4479f3",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A28-space-attribute.dfy",
+  "sha256": "3481862c6c8e2b04f8ce1cb9f57966799a5df19fda964c4a48ebc9d3b40f36e2",
+  "subset": "SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A29-by-method-mismatch.dfy",
+  "sha256": "cd51cfaf5724d9e67662a1f74d03d00063c81ccbb9966624cc3c1f716e59ec9f",
+  "subset": "SUBSET_FORBIDDEN: by method",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A31-dfyconfig-impl-dir.dfy",
+  "sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A32-dead-main-decreases-star.dfy",
+  "sha256": "b1269366bc5e87dba08e12d266c98a252e2f18b15ea41b20c35ed57a41a8ef13",
+  "subset": "SUBSET_FORBIDDEN: decreases *",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A33-const-alloc-exhaustion.dfy",
+  "sha256": "b686718c2474f7582c2c177f6e3b04f599e08ea68d3894e61411a30739f48fc4",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A34-nested-comment-hide.dfy",
+  "sha256": "dd53d60f0d0bc16f9d1f9a3074820d371352b7b1c48a4280be00929f133f00a9",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A35-assume-in-ghost-helper.dfy",
+  "sha256": "baf9d3d9b33a91393839d1330aac9084ed683a80014044e4274f11535b4caffc",
+  "subset": "SUBSET_FORBIDDEN: `assume`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A36-reveal-opaque-escape.dfy",
+  "sha256": "a2abb33eb0b7740456177bb5ea372760e91eb104dbf8dbc29839a9bba7cfa192",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A37-uncompilable-such-that.dfy",
+  "sha256": "71909caaf385669178306fedb44537d70aa222e3c325f5ff7cda676400106921",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `:|` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A38-expect-always-halt.dfy",
+  "sha256": "937cfbf8d520a3960bac79d7f802766a0b28c604c23a1e36826bc01a02f83ef5",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A39-expect-in-helper-method.dfy",
+  "sha256": "d53fd29b8ab841bf7aaa7ecc9c343531795db9b2210e43e9985ad416e24883ef",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C1-table.dfy",
+  "sha256": "46c6cf4a900695506eb1803cbfb3caaee4779c4c4bafb72e8b27400a8c8d4491",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C10-induction-attr.dfy",
+  "sha256": "13796f4cb48b0b48bc712de40b95d58a0f452e0057572e784dea8f2287327c38",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C11-at-in-string.dfy",
+  "sha256": "930e9effc482cf57ea96688a49bac35100f8e2028ddeb298ce7402fb890d0901",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C12-crlf-header.dfy",
+  "sha256": "1ce2c12bdd29e29d4bf77eadde5521129c08ca732fd6233a03808002b0758884",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C2-recursion.dfy",
+  "sha256": "1af207b614ec7082f19c766656a47bcc487aee1dfc9c0876599257c15c8bfb28",
+  "subset": "SUBSET_RECURSION: call cycle through CountTrue",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C3-early-returns.dfy",
+  "sha256": "735667b1338195cffd6160bd1597b4c2bc402f13743a4c4d2ab0d9dcc7c2acd2",
+  "subset": "pass",
+  "N": 160,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C4-arith.dfy",
+  "sha256": "da38f20ed8fe64c1d27623882423fd56a7e205b42eb96dfccb121bf03faa0966",
+  "subset": "SUBSET_ARITHMETIC: `*` needs an integer literal operand",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C5-helper-lemmas.dfy",
+  "sha256": "c98c9bfcb0dbaecbfe83dfe9d50cc6241e4c376393ed7d087ada984bff988a53",
+  "subset": "pass",
+  "N": 346,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C6-function-pair.dfy",
+  "sha256": "a27274984e4d6883f60969c2f688e9efe9a73007aa9d2f3aaa2aeea1b4e76568",
+  "subset": "pass",
+  "N": 227,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C7-loop-plan.dfy",
+  "sha256": "7251d0bb65c8f9545053f9d2ce353fdda8254ff80bd9445b24f4751ea1b9f2d5",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C8-isolate-attr.dfy",
+  "sha256": "5996a2735ad59b11bcb8b04e29bc696e6f620be510d157350602962cd08fa3c5",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C9-comment-word-include.dfy",
+  "sha256": "de083663e729bf04db7634a8388119a65d232bc93dbbe2833300be052ba36d7e",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "results/stage8/wrapper-proof/attempt-0002/mutants/assumption-escape/impl/Refund.dfy",
+  "sha256": "a38ec949b71e03d2c5be78601170b2790fc249ff00b4db43c063069450cf52a4",
+  "subset": "SUBSET_FORBIDDEN: `assume`",
+  "N": null,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "results/stage8/wrapper-proof/attempt-0002/mutants/over-limit/impl/Refund.dfy",
+  "sha256": "2c4cdad6894cda648b3f09ad83a2632afa6876647cce3ae1c7ab3093b547ef57",
+  "subset": "pass",
+  "N": 36,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "results/stage8/wrapper-proof/attempt-0002/mutants/reject-all/impl/Refund.dfy",
+  "sha256": "a2bb621df1e8b974ff760a000f9190af38cbab7eaf7857039a852a5bb5dc506a",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsAnyReason.dfy",
+  "sha256": "f7353e97f96ffa91298a65b2ea7f87ff785112250389252896dd4e83fe3ce10d",
+  "subset": "pass",
+  "N": 197,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsEmptyRequestId.dfy",
+  "sha256": "442dbb2f2318764174ffb3bad74bfecc8c1b38fc949ea462bcf32fcb47017b43",
+  "subset": "pass",
+  "N": 358,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsNegative.dfy",
+  "sha256": "64bd36b86df3d8a3b54a4a2a2a9ddecbcf24ccffec1437fdc26e85928430c55f",
+  "subset": "pass",
+  "N": 330,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsOverRemaining.dfy",
+  "sha256": "4bf47b840b2028187c144c24de2681c07e54145a80b519f30a6a3376b7c15fd9",
+  "subset": "pass",
+  "N": 334,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsReasonPrefix.dfy",
+  "sha256": "acff42996ea151e18583d8a5fcd06b5da7f814720cab5c4548d359053d9983a4",
+  "subset": "pass",
+  "N": 217,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAuthorizesMissing.dfy",
+  "sha256": "f82b59f93336f240dd628dedc233e92814ac2bcb36d8abd51d126153b933ba24",
+  "subset": "pass",
+  "N": 353,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundClampsAmount.dfy",
+  "sha256": "371607d15b5896f0034c7dac5bdfaf14f00e05ccb0d42ab20214ce6c9627982d",
+  "subset": "pass",
+  "N": 344,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundIgnoresEnabled.dfy",
+  "sha256": "909085470e9ddfb1bab7064c58e9f5a9c8b0bc2d2fe9fd6e49db8947c85af4dd",
+  "subset": "pass",
+  "N": 360,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundIgnoresOpen.dfy",
+  "sha256": "69e9eddf4c9f21723a6610f9dc96f1ff53a270c32131b758b31c2db46182f675",
+  "subset": "pass",
+  "N": 360,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundNoMoneyCap.dfy",
+  "sha256": "bab79252b72b32cba81bf0689a060f7155d67dd0bad9b7a2ded8b162bdd90808",
+  "subset": "pass",
+  "N": 235,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundOffByOneAmount.dfy",
+  "sha256": "7b98fc1a41ccc05697ce8a50a361f3770410d7b52bd234f84c9a8bbf139718cf",
+  "subset": "pass",
+  "N": 199,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRejectsEverything.dfy",
+  "sha256": "39b8a9a7190c9d67f6c241b4f658a89c1583224d8385dfc2442efa95715d7610",
+  "subset": "pass",
+  "N": 9,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRejectsFullRemaining.dfy",
+  "sha256": "e518abf4e3bac038302f24a347a21731d1487ae9a3530d529c6c177fc9d7d174",
+  "subset": "pass",
+  "N": 332,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRejectsZero.dfy",
+  "sha256": "26cb43d97138b0941cb8a69e98d964fbeaee047fb9fd19950d4710022d5691a7",
+  "subset": "pass",
+  "N": 332,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRemainingOverOriginal.dfy",
+  "sha256": "3196a65f5ff39f54da472aa73b88dff518d7592dc4647845a2e65f875664a8bd",
+  "subset": "pass",
+  "N": 360,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundSwapsIntentIds.dfy",
+  "sha256": "6b7a98e6dae1113e0beb95a8b25b687be158992e0eb457e548e01d96fde88f13",
+  "subset": "pass",
+  "N": 185,
+  "scope_after_expect_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/B01-identifiers-expected.dfy",
+  "sha256": "4a2bdab9c7667bb20bb382890e7cea039f2e03f87c9c07c5ceedee634b7fcc55",
+  "subset": "SUBSET_ARITHMETIC: `+` needs an integer literal operand",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/B02-word-in-comments-strings.dfy",
+  "sha256": "c52401a378af03baacc05676b6fd147eed63ffb3940f26f56ce72e33f789a039",
+  "subset": "pass",
+  "N": 195
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/B03-identifier-prime-expect.dfy",
+  "sha256": "302249f6426181e6510dbd5fb470d6f7020aef1b6627034cba826d301aee25f4",
+  "subset": "SUBSET_FORBIDDEN: `x'expect`",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/B04-formfeed-comment-word.dfy",
+  "sha256": "c8d47bc752b7a042752f67c13ee69f1cb88f6ff3d0fa2cd591350aedd524554e",
+  "subset": "SUBSET_LEX: character U+000C outside comments and literals",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/B05-latin1-comment.dfy",
+  "sha256": "b620ef0d0968fad81058af2702f43c0fbfa988bc161b1e256fc2662b5beec9a0",
+  "subset": "SUBSET_LEX: implementation is not UTF-8",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/B06-unicode-in-string.dfy",
+  "sha256": "f4dfad17776127b7bc009575bea072dd4def6c6ca8202f1364138c1af9049fc0",
+  "subset": "pass",
+  "N": 190
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/H01-such-that-enumeration-hang.dfy",
+  "sha256": "4ea5e9286bbac4858a24797585ba7f1a3eb486ef306f99d520614a5e5f7c66b0",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `:|` in compiled code",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/H01b-such-that-modulus-hang.dfy",
+  "sha256": "a47f499e0e3bdf0b998c5f506007b5b9a2b2c45e414d513edc01b217e8644b91",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `:|` in compiled code",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/H02-exponential-recursion-hang.dfy",
+  "sha256": "2fde936417e82e25cf51a04601690deb3d59124b2acc852692e6ec10dee4af67",
+  "subset": "SUBSET_ARITHMETIC: `+` needs an integer literal operand",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/H03-seq-comprehension-alloc.dfy",
+  "sha256": "d158a8412a79cd8b9e6df81f1fa4b856f1aa9cc22ec86c59f7a1b217afa62f5e",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/H04-seq-length-2pow32-throws.dfy",
+  "sha256": "f25c4a407a1fc7dc7c77da3fc641ea6a67862fb8ef375859721f6fd8cfd0e6b1",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K01-string-backslash-newline.dfy",
+  "sha256": "47af4adcc9006aa4ab9c2204963ab82f7d3d518e4e318114e4feb97ac6c6877d",
+  "subset": "pass",
+  "N": 195
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K02-string-bad-unicode-escape.dfy",
+  "sha256": "7e07333e219138bf020c4ff60df324b8df20769ffd9b66cdfc903b6ebbca937c",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K03-comment-split-attribute.dfy",
+  "sha256": "61b8875169f77514614f700c482888db4bdee36c45ad960233ddf3b1584691fd",
+  "subset": "SUBSET_ATTRIBUTE: attribute syntax outside {:isolate_assertions}",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K04-isolate-wrapping-attribute.dfy",
+  "sha256": "f6838753a90b5a34efb1758cbd7d06208cc3b4a121585ff437e174f964c9a648",
+  "subset": "SUBSET_ATTRIBUTE: only {:isolate_assertions} is allowed",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K05-eof-line-comment-no-newline.dfy",
+  "sha256": "9c83cdf61529d166bdb37105657d069fdd2fd353c4fb678ab22c1e4681317e9e",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K06-unterminated-block-comment-eof.dfy",
+  "sha256": "10c552f38f63fb4e4493296d6eff9eb2286eb25453fab0245d2ab9095ff35bbf",
+  "subset": "SUBSET_LEX: unterminated comment",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K07-u0085-line-comment.dfy",
+  "sha256": "063f20bb40da2e91d8afd7600fd4db8935504b4e22a774270da5ee6d057c8c29",
+  "subset": "SUBSET_LEX: character U+0085 outside comments and literals",
+  "N": null
+ },
+ {
+  "set": "P2",
+  "file": "results/night-shift-20261119/orch-B/e-expect/p2/subs/K08-nul-in-line-comment.dfy",
+  "sha256": "cf1743625bd6ba4ff42b237b115936d05a12001ea42e380d1c4a3cddfa587736",
+  "subset": "SUBSET_FORBIDDEN: `expect`",
+  "N": null
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV01-helper-predicate.dfy",
+  "sha256": "283f29c0e591bef801ab51fbe29edb7aaef8cbbfcb27b7a34e209488ee3df30c",
+  "subset": "pass",
+  "N": 338
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV02-match-not-if.dfy",
+  "sha256": "ba273885670300f4a0158d324df39d838117db03d26feade14cb4b07aa698a34",
+  "subset": "pass",
+  "N": 340
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV03-extra-lemma.dfy",
+  "sha256": "4d5e95da56f8a1a8422dce7bd7f242762aec1060839a4f925c0e130e32c3a61c",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV04-reordered-conjuncts.dfy",
+  "sha256": "bd4fcbfc56d29e819d00daf5fe146d1879e0f80118173c7a8c4a26d2dc5bb854",
+  "subset": "pass",
+  "N": 372
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV05-local-constants.dfy",
+  "sha256": "efc6b7e21937cd4a16d8aafe0e0034bd01cf0773410336553263cef954a9afcc",
+  "subset": "pass",
+  "N": 200
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV06-ghost-recursive-lemma.dfy",
+  "sha256": "fbb4a8994b04a444b801aec5884a94d16ea4a3ab6d0eef0164dc21fd06d791bf",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV07-odd-comments.dfy",
+  "sha256": "348dd75df4cb379a856eb49c3d2514eef5ceb5f058fd57947febe51a2b086e33",
+  "subset": "SUBSET_LEX: character U+2028 outside comments and literals",
+  "N": null
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV08-helper-used-twice.dfy",
+  "sha256": "5663f8ef2db89470e73ab2bea947d2f38625759a42ef3e8e60cbe4158572b7e6",
+  "subset": "pass",
+  "N": 325
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV09-helper-method-chain.dfy",
+  "sha256": "9c6504969996bba3d0beed45aed2a4ca4ac5f3a7d2f01bf3690c7eabb472a1b9",
+  "subset": "pass",
+  "N": 207
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV10-expression-form.dfy",
+  "sha256": "6908012e33085975d6d259e532c6c32f83b685d1d1a5759715dff8bde5464b36",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV11-early-returns-assert-by.dfy",
+  "sha256": "c31f9595913b39de526aa17f7aa1217f0c7cf1addac4e2c45c4ce62553c0d0b7",
+  "subset": "pass",
+  "N": 350
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV12-ghost-var-quantified-assert.dfy",
+  "sha256": "f9abd8c32ef6bf13052bb21009fb36fba784c1672bc399b38ec6afedd8d1c08e",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV13-ghost-loop-in-lemma.dfy",
+  "sha256": "af64d84c78e241619e40b92fc0ec66e2dde66f57b52a4d5ffd5e05be3fdaecba",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV14-literal-arithmetic.dfy",
+  "sha256": "0e3377a2e117f760d0e3388dea90d41a5e7e39641fddf35823d14e4ec7b49f04",
+  "subset": "pass",
+  "N": 348
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV15-reason-in-seq-literal.dfy",
+  "sha256": "d21886fb9ce90a638e8efc54e7d2b34e007d93824ede99fa6f9e1138a587dc4f",
+  "subset": "pass",
+  "N": 210
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV16-isolate-attr-and-crlf.dfy",
+  "sha256": "4660d6710bd589955d14ac188a0c1a988bfcd4a40bfecf743f2f1e7ac23ab77c",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-correct",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/correct/CV17-odd-comments-no-line-separator.dfy",
+  "sha256": "58b96fabf6e4d475d394f772136aaffe27ed94ad4d051338fca7439702dee72b",
+  "subset": "pass",
+  "N": 185
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV01-mutual-recursion-three.dfy",
+  "sha256": "e32204acfed2f240c476c8a1438ffcfd773d0562503cf80a0a926c480d4e9aca",
+  "subset": "SUBSET_RECURSION: call cycle through F",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV02-function-type-param.dfy",
+  "sha256": "426932f4182957d9ce255805f734cdd1932c8336811d30bf4d7312b75613c47c",
+  "subset": "SUBSET_HEADER: default value or function type in a compiled signature",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV03-function-value-reuse.dfy",
+  "sha256": "8470714549b9a22f86d51d3b91043c58971bdebf4c1118b5a6d6462543d78f0f",
+  "subset": "SUBSET_FUNCTION_VALUE: function used as a value in compiled code: Heavy",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV04-var-such-that.dfy",
+  "sha256": "656ba4c38d42e5863bf4d5365d26daf8def1085ef87cd25befb0f2d92dfc71fb",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `:|` in compiled code",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV05-huge-literal-sequence.dfy",
+  "sha256": "bb1a1a7ea6e2b4f6cab2b36a6d28d3ee7daa0c199a7675c6a6ec41109aba6bbb",
+  "subset": "SUBSET_DISPLAY: sequence display with more than 16 elements",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV06-call-tower-exponential.dfy",
+  "sha256": "a2f9d7530fadb45ba753038521ace5e45907ca22c65c2561f1d8f72b6e3fa09f",
+  "subset": "SUBSET_SIZE: T9 unfolds to more than 4096 executed tokens",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV07-repeated-squaring.dfy",
+  "sha256": "edbb8c037336dd49b31dc7cbef9212a329b0c50962b60c2d74a83a2b61df012f",
+  "subset": "SUBSET_ARITHMETIC: `*` needs an integer literal operand",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV08-string-doubling.dfy",
+  "sha256": "d642136a57816ad7899c83ea761a00c733e8036eb0de9434f0a84b4a1b8f3fc4",
+  "subset": "SUBSET_ARITHMETIC: `+` needs an integer literal operand",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV09-string-doubling-via-display.dfy",
+  "sha256": "cc45855f8eddc861640d44d436151e0956e765bf170b19d3feeb8d4542a3d5da",
+  "subset": "SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV10-tuple-dag-equality.dfy",
+  "sha256": "1d21aeeaf2d06c1276db9525b64181918d7a0c010cc21abd395716f98c35f9d7",
+  "subset": "SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV11-match-huge-literal-admissible-size.dfy",
+  "sha256": "894fcde841637841c4d1edf384ca26177dd6599c3c0b4c3e7f5abe50f3ed7385",
+  "subset": "pass",
+  "N": 2318
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV12-match-too-large.dfy",
+  "sha256": "715fe527b5f2ee6a6308a08fbc9555b066a4d22b8db6a58f34e02208577f9881",
+  "subset": "SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV13-cyrillic-homoglyph-while.dfy",
+  "sha256": "0c8e832a1ca1ffe7d166cf8d669004b05972987b4e80b8702c05118b3cd3fb03",
+  "subset": "SUBSET_LEX: character U+0456 outside comments and literals",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV14-lone-cr-comment-hides-loop.dfy",
+  "sha256": "3edbc7dc676fb6b10035043a8100fa602d0ba82775b591c15a7d429e39a1b159",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV15-ghost-method-with-loop.dfy",
+  "sha256": "bbd3142bea2602286d384376e8bdbea7331dff7778628dbb6cf111cd8103b48a",
+  "subset": "pass",
+  "N": 197
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV16-ghost-var-from-compiled-method.dfy",
+  "sha256": "74198248a82da6d31fdf7309f720f717067b2e02981f9e39a014bb398619dde3",
+  "subset": "SUBSET_GHOST: a ghost statement names a compiled method",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV17-forall-in-compiled-predicate.dfy",
+  "sha256": "d2077cffeb89090796c3242c63ee464b32265fee95e31aadce692ac8cfa7a7c4",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `forall` in compiled code",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV18-by-method-loop.dfy",
+  "sha256": "257112b5d73f1adf9758bf72581c3594c4518994f5e48fe078e141ae6999c188",
+  "subset": "SUBSET_FORBIDDEN: by method",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV19-seq-constructor-comment-split.dfy",
+  "sha256": "0441b19a1fe73a8a9a4281015e3658df9bbdbcba863c0da0791dfc4efc2e06f9",
+  "subset": "SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV20-const-self-cycle.dfy",
+  "sha256": "f8ae3c3c658f3faa5ffa226cdf919d7b890ea5653855b9914236774f0d123ee9",
+  "subset": "SUBSET_RECURSION: call cycle through A",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV21-literal-mult-chain.dfy",
+  "sha256": "439e2fa39f1e6871ef89f0194ef92f8eabcd215f3fbf9af0cb5722e0a086dbd9",
+  "subset": "SUBSET_ARITHMETIC: `*` needs an integer literal operand",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV22-big-literal-multiplier-chain.dfy",
+  "sha256": "8c7fff571a32c47ff2e50dc56a057b138dea6755bc469b13427a33cb46aec9d3",
+  "subset": "pass",
+  "N": 484
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV23-set-display-in-guard.dfy",
+  "sha256": "568af61b2bab4da709101093e6a3522d365adcbeca66290d5bd5762360b41301",
+  "subset": "pass",
+  "N": 207
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV24-negation-doubling.dfy",
+  "sha256": "aade909e0e6f32a06e8ee1147c20d8793f315980b80c1d694be3d2556611c4b9",
+  "subset": "pass",
+  "N": 2404
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV25-tuple-of-helper-tuples.dfy",
+  "sha256": "0ef71ae1d8dda5e2e54a0b2c0ad66c15b6024291c1e074648717a8cb91ebe2f3",
+  "subset": "SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a nullary constructor",
+  "N": null
+ },
+ {
+  "set": "NEW-hostile",
+  "file": "results/night-shift-20261119/orch-B/e-totality/subs/hostile/HV26-set-display-guard-then-hidden-loop.dfy",
+  "sha256": "9b08dc4d010d2bb9c710d24a755350a041352aa6442b276ae09672ae2c84cfc3",
+  "subset": "SUBSET_EXEC_FORBIDDEN: `while` in compiled code",
+  "N": null
+ }
+]
