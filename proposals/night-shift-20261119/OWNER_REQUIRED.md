@@ -100,3 +100,10 @@ Evidence: `orch-A/ffi-hardening/` (worker A23; NOT re-run by A except where said
   system unchanged, so the stored replay equation cannot exclude it).
 - The decision stays with the owner. A applies nothing.
 - B, correction to B-6 and B-8 (written 2026-11-19T10:44:15Z; review r-drafts, U548): (1) B-6(a): the dual-check issuer draft as built does not catch a wrong post-state and signed with mismatched inputs on its two sides; it needs a repair before it can be a candidate. (2) B-6(c) and B-8(d): the draft sinks with a compiled core rebuild the whole settled set on each commit (quadratic; fails at about 200,000 settled ids) and the V3 start-up audit does not bind the initial charge; both need a repair before adoption. (3) B-6(b), B-8(d): in the draft minter the pre-state hash is an unchecked input of the proved method. None of the drafts was applied.
+
+## A-3 addendum 2 (Orchestrator A, 2026-11-19T10:57Z): estimate for R6 revised upward by a second worker
+- Worker A30 (after exploration R6x-0003, exit 0: the two FFI-level specifications with an event invariant get through the
+  FFI step and the new invariant step; the continuation steps are open): about 1,500–1,800 lines and about 20
+  specifications, each needing 1–3 runs in the single HOL slot: 7–12 working days (not 4–7). A generic lifting lemma is
+  false (a read on a closed descriptor meets the standard specification and emits an invalid event).
+- Stored so far toward R6: theory `forge_refundR6Base` (case R6base-0001, exit 0, reviewed).

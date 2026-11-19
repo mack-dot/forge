@@ -1,0 +1,120 @@
+--- ../R6x-0002.sml	2026-11-19 05:30:06.910290645 -0500
++++ R6x-0003.sml	2026-11-19 05:50:18.801242769 -0500
+@@ -1,10 +1,13 @@
+-(* R6x-0002.sml: R6 EXPLORATION run 2 (worker A25, Night-Shift Orchestrator A). NOT RUN. NOT a proof attempt.
+-   No export_theory, no save_thm. Local definitions IOxV, IOFS_V, STDIO_V in the scratch theory "forge_refundR6Explore2"
++(* R6x-0003.sml: R6 EXPLORATION run 3 (worker A30, Night-Shift Orchestrator A). NOT RUN. NOT a proof attempt.
++   No export_theory, no save_thm. Local definitions IOxV, IOFS_V, STDIO_V in the scratch theory "forge_refundR6Explore3"
+    (never exported). Every tactic UNCHECKED. Ends with EXPLORE_COMPLETE.
+-   Part B = R6x-0001.sml lines 11-40 (open, LOAD, new_theory, fth); changes: theory name, basisFunctionsLib in the load list.
+-   Part C = R6x-0001.sml lines 177-283 (the stepper, itself LOx-0001.sml lines 420-525), unchanged.
+-   Part D = new: definitions, X9r, the S4 statements, explore_head, and three CF files read with use:
+-   R6x-0002-x8.sml (X8r), R6x-0002-writei.sml (writei_spec_V), R6x-0002-readinto.sml (read_into_spec_V). *)
++   Base = R6x-0002.sml (SHA-256 1c76b89c...fcd46, ran with exit 0). Changes (diff in the report):
++   (1) theory name; (2) NEW section GRAMMAR after new_theory: the R6x-0002 failure of xlet_auto
++       ("Attempt to unify different type operators: semanticPrimitives$v and flatSem$v", origin cfLetAutoLib.xlet_auto)
++       comes from cfLetAutoLib.sml:739 (dummy_spec POSTv (v:v). &T): in this session the bare type name v is bound to flatSem$v
++       (the compiler-backend theories of the deps file are loaded after semanticPrimitives). The fix re-privileges the
++       bare type names of ffi, namespace, ast, semanticPrimitives with Parse.temp_add_qtype (fallback: the grammars of
++       TextIOProof); (3) NEW section INV_HELPERS (ON_INV, INV_CLOSE, INV_DIAG); (4) sub-files R6x-0003-*.sml in round3/. *)
+ open preamble basis_ffiTheory fsFFITheory fsFFIPropsTheory TextIOProofTheory MarshallingTheory;
+ val _ = Globals.max_print_depth := 60;
+ fun pr s = (print (s ^ "\n"); TextIO.flushOut TextIO.stdOut);
+@@ -28,7 +31,38 @@
+    the runner from their files; THEORY_NAMES lines below show whether they are present. *)
+ 
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val _ = new_theory "forge_refundR6Explore2";
++val _ = new_theory "forge_refundR6Explore3";
++
++(* ================= GRAMMAR (NEW in R6x-0003) ================= *)
++val _ = pr "MARK GRAMMAR";
++fun v_thy () : string = #Thy (dest_thy_type (Parse.Type [QUOTE ":v"]))
++  handle e => "PARSE_FAILED " ^ trunc 200 (General.exnMessage e);
++fun dummy_ok () : string = (ignore (Parse.Term [QUOTE "POSTv (v:v). &T"]); "OK")
++  handle e => "FAILED " ^ trunc 400 (General.exnMessage e);
++val _ = pr ("GRAMMAR_BEFORE type_v_from " ^ v_thy () ^ " ; xlet_auto_dummy_spec " ^ dummy_ok ());
++fun privileged_thy (nm : string) : string option =
++  Symtab.lookup (type_grammar.privileged_abbrevs (Parse.type_grammar ())) nm;
++fun reprivilege (thy : string) : unit =
++  let
++    val tys = Theory.types thy
++      handle e => (pr ("TYPES_FAILED " ^ thy ^ " " ^ trunc 200 (General.exnMessage e)); [])
++    fun one ((nm, _) : string * int) : unit =
++      (case privileged_thy nm of
++         SOME t => if t = thy then ()
++                   else (Parse.temp_add_qtype {Thy = thy, Name = nm};
++                         pr ("TYPE_REPRIVILEGED " ^ nm ^ " was " ^ t ^ " now " ^ thy))
++       | NONE => (Parse.temp_add_qtype {Thy = thy, Name = nm};
++                  pr ("TYPE_PRIVILEGED " ^ nm ^ " was none now " ^ thy)))
++      handle e => pr ("TYPE_REPRIVILEGE_FAILED " ^ thy ^ "$" ^ nm ^ " " ^ trunc 200 (General.exnMessage e))
++  in List.app one tys end;
++val _ = List.app reprivilege ["ffi", "namespace", "ast", "semanticPrimitives"];
++val _ = pr ("GRAMMAR_AFTER_B type_v_from " ^ v_thy () ^ " ; xlet_auto_dummy_spec " ^ dummy_ok ());
++val _ =
++  if dummy_ok () = "OK" andalso v_thy () = "semanticPrimitives" then pr "GRAMMAR_FIX B"
++  else (case Parse.grammarDB {thyname = "TextIOProof"} of
++          SOME g => (Parse.temp_set_grammars g;
++                     pr ("GRAMMAR_FIX A type_v_from " ^ v_thy () ^ " ; xlet_auto_dummy_spec " ^ dummy_ok ()))
++        | NONE => pr "GRAMMAR_FIX_FAILED grammarDB TextIOProof = NONE");
+ val _ = pr "EXPLORE_MODE nothing is exported; no theorem, no definition is stored";
+ 
+ (* fth : string -> string -> thm. A missing name prints FETCH_FAILED and gives TRUTH (no static error). *)
+@@ -186,6 +220,39 @@
+ val INU = fth "pred_set" "IN_UNION";
+ val EVA = fth "list" "EVERY_APPEND";
+ 
++(* ================= INV_HELPERS (NEW in R6x-0003) =================
++   The only new proof obligation at an xffi site is the pure goal EVERY Inv (events ++ [e]) (or EVERY Inv new_events
++   with an Abbrev), where e = IO_event (ExtCall name) conf (ZIP (ws, vs)) is the event that app_ffi_def adds
++   (cfScript.sml 1767-1783, line 1777). ON_INV tac runs tac only on such a pure goal (no heap constant in it) and is
++   ALL_TAC otherwise, so a step built from it is harmless when there is no such goal. *)
++val _ = pr "MARK INV_HELPERS";
++fun is_inv_var (t : term) : bool = is_var t andalso fst (dest_var t) = "Inv";
++fun is_inv_app (t : term) : bool = is_comb t andalso is_inv_var (rator t);
++fun is_every_inv (t : term) : bool =
++  is_comb t andalso is_comb (rator t) andalso is_inv_var (rand (rator t)) andalso
++  (let val c = rator (rator t) in is_const c andalso fst (dest_const c) = "EVERY" end);
++val HEAP_CONSTS = ["SEP_IMP", "app", "cf_let", "cf_app", "cf_if", "cf_ffi", "app_ffi", "IOxV", "FFI_part", "W8ARRAY"];
++fun mentions_heap (w : term) : bool =
++  can (find_term (fn t => is_const t andalso Lib.mem (fst (dest_const t)) HEAP_CONSTS)) w;
++fun is_inv_goal ((_, w) : goal) : bool =
++  not (mentions_heap w) andalso can (find_term (fn t => is_inv_app t orelse is_every_inv t)) w;
++fun ON_INV (tac : tactic) : tactic = fn g => if is_inv_goal g then tac g else ALL_TAC g;
++val ABD = markerTheory.Abbrev_def;
++val N2W2D = MarshallingTheory.n2w2_def;
++val MIND = arithmeticTheory.MIN_DEF;
++fun closing (t : tactic) : tactic = t \\ NO_TAC;
++(* C1: H_inv as a conditional rewrite; C2/C3: irule H_inv (as stated / after n2w2_def); C4: irule H_inv after
++   rewriting it with n2w2_def and APPEND (bytes ws in cons form); C5: metis. *)
++val INV_C1 = fs [ABD, EVA, N2W2D];
++val INV_C2 = fs [ABD, EVA] \\ first_x_assum irule \\ rw [] \\ fs [];
++val INV_C3 = fs [ABD, EVA, N2W2D] \\ first_x_assum irule \\ rw [] \\ fs [MIND] \\ rw [] \\ fs [];
++val INV_C4 = fs [ABD, EVA] \\
++  qpat_x_assum [QUOTE "!nb. _"] (irule o SIMP_RULE bool_ss [N2W2D, listTheory.APPEND]) \\
++  rw [] \\ fs [MIND] \\ rw [] \\ fs [];
++val INV_C5 = fs [ABD, EVA] \\ metis_tac [];
++val INV_CLOSE : tactic = FIRST (map closing [INV_C1, INV_C2, INV_C3, INV_C4, INV_C5]);
++val INV_DIAG : tactic = fs [ABD, EVA, N2W2D];
++
+ (* ---------- head-goal stepper ---------- *)
+ val HEAD_SECS = 240;  (* CF steps (xsimpl, big fs) are slower than the 60 s of the prefix stepper *)
+ fun explore_head (lemma : string) (goalf : unit -> term) (steps : step list) : unit =
+@@ -274,13 +341,13 @@
+           [("writei_spec_V", WRITEI_V), ("read_into_spec_V", READ_INTO_V)];
+ 
+ (* ---------- the three CF files ---------- *)
+-val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/";
++val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round3/";
+ fun use_part (f : string) =
+   (pr ("MARK USE " ^ f); use (R6DIR ^ f); pr ("PART_DONE " ^ f))
+   handle e => pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e));
+-val _ = use_part "R6x-0002-x8.sml";
+-val _ = use_part "R6x-0002-writei.sml";
+-val _ = use_part "R6x-0002-readinto.sml";
++val _ = use_part "R6x-0003-x8.sml";
++val _ = use_part "R6x-0003-writei.sml";
++val _ = use_part "R6x-0003-readinto.sml";
+ 
+ val _ = pr "EXPLORE_COMPLETE";
+ val _ = OS.Process.exit OS.Process.success;

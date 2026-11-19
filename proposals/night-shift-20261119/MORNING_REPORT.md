@@ -182,3 +182,20 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   quotation; a worker continues), EEx-0001, EEx-0002.
 - Section 4 "Missing" changes: "the lift of the processor-bit lemmas" now reads "the lift of the one-step erasure theorem
   to a whole run".
+
+## Addendum 5 (added by A at 2026-11-19T10:57:26Z): the joining point of the two tracks; reviews; revised R6 estimate
+- From B (its addendum 4; U549; commit d1a4f0c6; proved by run, review not finished): a top-level Dafny lemma
+  `SliceSafetyBytesTop` (B's run exit 0, 2236 verified) takes the artifact hypothesis in the form of the EXPORT BYTES
+  58154ddf…: from issuance by the proved issue method, byte unforgeability, the verifier boolean, a trace-local
+  no-collision hypothesis, and "the artifact's flat function meets the predicate generated from the export bytes on byte
+  strings" (A6x): every committed effect is approved on the stored charge, its bytes were minted, the flat result agrees,
+  money bounds hold. A several-charges version: `KeyedHash.dfy` (2325).
+- So the joining point of the two tracks is ONE hypothesis of one Dafny lemma (A6x) against A's HOL theorems
+  `exported_contract_exact` and `refund_model_frame_meets_exported_contract`, plus the BETA assumptions and reader
+  fidelity. It is still an assumption-joined composition of two kernels, at model level.
+- A's reviews since addendum 4: EE-0001 and R6base-0001 hold (`orch-A/review-EE/REPORT.md`). Open for the erasure line:
+  no non-vacuity witness with the bits set; the run-level lift; native facts N1–N5 listed there.
+- R6 (the open model premise for the present executable): a second worker revised the estimate to 7–12 working days
+  (about 20 specifications; OWNER_REQUIRED A-3 addendum 2). Exploration R6x-0003 (exit 0, no theorem): both FFI-level
+  specifications pass the FFI step and the new event-invariant step.
+- B works on repairs of the two weak drafts of addendum 3 and on the review of the top-level lemma.
