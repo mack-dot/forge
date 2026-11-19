@@ -62,6 +62,12 @@ ACT1 = [
 ]
 REFUND_CORE = 'impl/RefundFinality.dfy'
 REFUND_FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
+# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueAuth (rule 2: the
+# memory rule with the authoritative stored state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
+# scripts/exit_slice1.py builds it. The Slice 1 evidence record pins only the RefundFinality module above; this module
+# is compiled from the same RefundFinality source and is NOT in that record (its SHA-256 is reported).
+ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
+ISSUER_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
 SLICE1_RECORD = 'proposals/forge2-slice1-refund-finality/records/evidence.json'
 ISSUER = 'ts/refund-finality/minter.ts'
 SPEC_LOCK = 'spec/refund/spec.lock'
@@ -134,6 +140,18 @@ def compile_core(run, source, footer, name, record_path):
     return module, recorded
 
 
+def compile_issuer_core(run):
+    """Compiles the issuer's module (IssueAuth) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
+    out = run.work / 'issuer-core'
+    out.mkdir()
+    built = run.execute([dafny.DAFNY, 'build', ISSUER_CORE, '--target', 'js', '--output', rel(out / 'model'), *dafny.OPTIONS],
+                        'compile-issuer-core')
+    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueAuth (exit %d)' % built.returncode)
+    module = out / 'model.cjs'
+    module.write_bytes((out / 'model.js').read_bytes() + ISSUER_FOOTER)
+    return module, digest(module.read_bytes())
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Act 1
 
@@ -174,12 +192,24 @@ def canon(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'))
 
 
+def issuer_test_key(work):
+    """OWNER DECISION D-1 (h-key): the issuer reads its key ONLY from a key file. A NEW throwaway Ed25519 TEST key,
+    written with mode 0600 (O_EXCL) under this run's work directory. No real key is read."""
+    path = Path(work) / 'issuer-test-key.pem'
+    made = subprocess.run(['node', '-e', "process.stdout.write(require('node:crypto').generateKeyPairSync('ed25519')"
+                           ".privateKey.export({type: 'pkcs8', format: 'pem'}))"], capture_output=True, check=True)
+    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, 'wb') as out:
+        out.write(made.stdout)
+    return str(path)
+
+
 class Issuer:
     """The real Slice 1 token issuer as its own process. Raw bytes in, lines out."""
 
     def __init__(self, run, module):
         self.errors = open(run.work / 'issuer.stderr', 'wb')
-        self.process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off'], cwd=ROOT,
+        self.process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off', issuer_test_key(run.work)], cwd=ROOT,
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=self.errors, bufsize=0)
         self.next, self.attempts = 0, 0
         self.ready = self.line()
@@ -243,18 +273,23 @@ def act2(run, flood_mib):
     say('ACT 2  Proof-Carrying Finality: attacks on the real Slice 1 issuer process and SQLite sink')
     module, module_sha = compile_core(run, REFUND_CORE, REFUND_FOOTER, 'refund-core', SLICE1_RECORD)
     say('  checker core compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
+    issuer_module, issuer_sha = compile_issuer_core(run)
+    say('  issuer module (IssueAuth, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
     work = run.work / 'act2'
     work.mkdir()
-    issuer = Issuer(run, module)
+    issuer = Issuer(run, issuer_module)
     try:
-        return act2_attacks(run, work, issuer, module_sha, flood_mib)
+        return dict(act2_attacks(run, work, issuer, module_sha, flood_mib), issuer_module_sha256=issuer_sha)
     finally:
         issuer.kill()
 
 
 def act2_attacks(run, work, issuer, module_sha, flood_mib):
     config, database = work / 'sink-config.json', work / 'charge.sqlite'
-    config.write_text(json.dumps({key: issuer.ready[key] for key in ('publicKeyPem', 'specLockSha256', 'checkerSha256')}))
+    pre = {'chargeId': 'ch_demo', 'original': '1000', 'remaining': '600', 'refundEnabled': True}
+    # The hardened sink (h1) needs the initial charge (THE ANCHOR) in its config; sink_tool.ts never takes it from the
+    # command line (C-HOST-06). commit_cli.ts reads the same config.
+    config.write_text(json.dumps(dict({key: issuer.ready[key] for key in ('publicKeyPem', 'specLockSha256', 'checkerSha256')}, initialState=pre)))
     counter = [0]
 
     def node(script, *arguments):
@@ -279,7 +314,6 @@ def act2_attacks(run, work, issuer, module_sha, flood_mib):
         require(all(answer['onTime'] for answer in answers), 'act 2: a process of the %s group was late for the common start' % label)
         return answers
 
-    pre = {'chargeId': 'ch_demo', 'original': '1000', 'remaining': '600', 'refundEnabled': True}
     first = node(SINK_TOOL, 'init', rel(database), rel(config), json.dumps(pre))
     require(first['state'] == pre and first['outbox'] == [] and first['audit'] == [], 'act 2: the sink did not store the first state')
     say('  stored charge: original 1000, remaining 600, refunds enabled')
