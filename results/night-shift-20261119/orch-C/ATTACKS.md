@@ -452,3 +452,19 @@ Command form: cd orch-C/c25-provider && [RP_*=..] ./run.sh <abs script>.ts <tree
 ## Worker results NOT re-run by C: key text (a legal 256-unit or non-ASCII request id is not a valid key at many providers: the committed refund stays in doubt = a false rejection; a client that cuts keys collides: s5_keytext.ts prefix exit 1); an "in progress" answer is journalled as refused although the money moved; B's own p_*.ts results all match B's table (logs/B_SUMMARY.txt).
 ## C-NEG-17 (17:03:32Z) provider anchor, HOLDS (C's runs above and worker runs): the key comes only from the committed row on every dispatcher path (no nonce, counter or claim id); zero amounts make no provider call; an in-doubt row does not block later rows; with both local anchors every restore case is safe except the operator's manual re-send after a timeout (stated by B).
 ## What the provider anchor guarantees (worker's summary, consistent with my runs): no second money movement for a request id K on one provider account, IF the re-send is inside the key window, the provider (or the adapter) binds the parameters, K is unique on the whole account, no other party uses K first, and K is a valid key text. It gives no freshness of the sink and no rollback resistance of the record; without the local floor and outside head a restore older than the window pays again.
+
+=========================================================================
+RE-RUN by C (17:07:46Z) against B's repairs at f67c5c16 (sink 3 + dispatcher; notes orch-B/h-sink3/HARDENING_NOTES_3.md)
+Overlay <SCRATCH>/redteam-C/fix-f67c5c16. Scripts: B's adapted copies (orch-B/h-sink3/attacks/c19, c21). I compared them with my originals: they differ only in the tree path (H3_ROOT) and one try/catch around a read in a21_files.ts (the defect rule is unchanged). Command (cwd = overlay; scrubbed env; H3_ROOT=<overlay>): node --no-warnings --import tsx <script> <work> <mode> (c21) or <script> <overlay> <orch-B/h-minter2/build/issueauth.cjs> <mode> (c19). Logs orch-C/refix/f67c5c16/.
+| Item | Script and mode | Exit | Recorded outcome | Verdict |
+|---|---|---|---|---|
+| C-ATT-33 crash before COMMIT | x1_crash_journal.ts onhead | 0 | start1 REFUSED (journal present); after Sink.recover: start2 "serves" | PASS (closed for this case) |
+| C-ATT-33 planted zero file | x1_crash_journal.ts planted | 0 | start1 REFUSED; start2 "serves" | PASS |
+| control | x1_crash_journal.ts control | 0 | serves | ok |
+| C-ATT-34 recover skips its one-row limit | a21_files.ts recover-deep | 0 | | PASS |
+| C-ATT-35 replaced inode in a commit | a23_inode.ts swap-commit | 0 | | PASS (B states a window inside SQLite's own commit remains) |
+| C-ATT-36 retry decision + ledger restore | a1_retry_restore.ts attack; floor; control | 0; 0; 0 | run3 "stopped: dispatcher alarm: the ledger is shorter than or differs from ..." | PASS (closed) |
+| C-ATT-37 path cases | a8_paths.ts link; case | 0; 0 | | PASS |
+| C-ATT-19 full restore | a7_full_restore.ts nofloor; floor | 1; 0 | | nofloor STILL PRESENT (B's stated limit); floor PASS |
+- NOT RUN by anyone: B's real-kill regression s3_kill_commits.ts (heavy slot); B does not claim "every crash state is recoverable".
+- Worker c27-sink3 started to VARY: the journal classifier against SQLite, the ledger hash chain and its migration, the recover path, a store moved to another folder.
