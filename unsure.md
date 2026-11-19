@@ -17144,3 +17144,101 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false.
 - Next check: the owner's explicit unlock word for Stage 9, and the
   decisions of the plan (lock content, corpus, budget cap).
+
+## U469 — Pull request 52 merged on the owner's word; correction of a time in U468; the owner unlocks Stage 9 for the deterministic closeout only; the lock rebind is larger than eight digests
+- Status: 2026-11-19 03:55Z (read from the system clock when this
+  entry was written). Refs U468, U170, U176, U432.
+- Pull request 52 (documents: U468 and roadmap rows): hosted
+  gate/pr_check.py run 44450884898, exit 3, UNSUPPORTED. The owner's
+  answer to my question: "Merge 52 for me". `gh pr merge 52 --squash
+  --admin`, exit 0, squash commit 982890e5 at 03:25Z; tree equal to
+  32dff973. An OVERRIDE, for this one pull request.
+- Correction of U468: its status line says "03:20Z to 03:30Z". I wrote
+  the entry at 03:21Z and did not read a clock for the end time. The
+  work of U468 ended at about 03:21Z. I had made the same error in
+  U458 to U461 (corrected in U462) and repeated it. From now on a time
+  in an entry is a value that I read from `date -u` at that moment.
+- The owner asked what "700 dollars of model calls" meant and said
+  that the work uses the owner's subscription. Answer given: the
+  figure was for metered API calls and is void for a subscription run;
+  the size of the run (about 540 agent runs) stays.
+- The owner's word (an answer typed in the session; full text in
+  proposals/stage9-lock-rebind-20261119/PROPOSAL.md): Stage 9 is
+  unlocked "for the deterministic closeout ONLY": (1) this entry and
+  the lock proposal with the 8 changed digests and
+  gate/ratification.py, a pull request, a pause for the owner's merge;
+  (2) after the merge, the hosted signing run and the six EXIT cases;
+  (3) no benchmark. ROADMAP.md now says CURRENT: Stage 9 with that
+  scope.
+- Finding (observations): the rebind needs more than the owner named.
+  (a) The lock rule refuses code under scripts/ that the lock does not
+  list; six scripts of Slices 1 to 3 and Wave Gates 1 and 3 are not
+  listed. A clean clone of main gives BOOTSTRAP_REJECTED:
+  UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py, exit 1. (b)
+  spec/provenance/spec.lock, a second protected lock, has 8 stale
+  entries of its own (gate/backends/dafny.py, gate/common.py,
+  gate/core.py, gate/dependencies.py, gate/refund.py,
+  scripts/javascript_env.py, spec/refund/spec.lock,
+  toolchain/pins.json). (c) Its new digest changes one more entry of
+  the implementation lock. My Wave Gate 4 inspection (U468) missed (a)
+  and (b): I compared only the listed digests of one lock.
+- What I did: the proposal applies all parts in one diff and marks the
+  parts beyond the owner's word (B1, B2, B3), so the owner can reject
+  them. With the two candidate files a clean clone gives
+  BOOTSTRAP_VERIFIED, exit 0. That is a lock check, not a Stage 9 EXIT
+  result.
+- Uncertainty: I did not run the six EXIT cases, so I do not know
+  whether a further input is stale. The workflow
+  .github/workflows/booking-reuse.yml holds the old lock value and
+  will be stale after the merge; it is not in the proposal.
+- Blockers for step 2, from proposals/provenance-hosted-v33/INSTALL.md
+  (not resolved by me): the owner must set the signing variable and
+  dispatch the two workflows; the run makes 7 permanent public Rekor
+  entries; .toolchain/stage9/controller.json is absent; the recorded
+  precondition "the agent's gh login must not be the owner's account"
+  is false on this machine.
+- Impact: CURRENT is Stage 9 (closeout only). M1 open. Stage 12
+  unauthorized. end_to_end=false. No EXIT case ran.
+- Next check: the hosted gate result for the pull request (expected
+  exit 1, REJECTED, because protected files change without a
+  ratification record); the owner's merge decision.
+
+## U470 — The owner reverses the Stage 9 unlock: Stage 9 stays deferred until the M1 work is done; pull request 53 closed without a merge; two sentences of U469 do not hold for main
+- Status: 2026-11-19 03:58Z (read from the system clock). Refs U468,
+  U469.
+- Observation: after pull request 53 was open (hosted gate/pr_check.py
+  run 44454558079: exit 1, REJECTED, as expected for a change of
+  protected files without a ratification record), the owner pasted an
+  advisor text with no words of the owner's own. It says: keep Stage 9
+  deferred until "Silicon-to-Sink / M1" is finished, write U469, clear
+  the goal, and repeat the M1 note. That text contradicts the owner's
+  typed answer of U469. I asked one question. The owner chose "Defer
+  Stage 9".
+- Action: `gh pr close 53`, exit 0, with a comment. No merge. The
+  branch proposal/stage9-lock-rebind stays. The two lock files on main
+  are unchanged (gate/provenance/implementation.lock 76b983ac...,
+  spec/provenance/spec.lock 43610d81...).
+- Correction of U469 for main: U469 says "ROADMAP.md now says CURRENT:
+  Stage 9" and "CURRENT is Stage 9 (closeout only)". That was true only
+  on the branch of pull request 53. On main CURRENT stayed "none
+  (Stage 9 deferred)" at every time. U469 comes to main with this
+  entry, unchanged, as the record of what was done.
+- The proposal is on main as an UNAPPLIED packet
+  (proposals/stage9-lock-rebind-20261119, with a status note at its
+  head). Its diff is against 982890e5 and goes stale with the next new
+  script.
+- One point of the advisor text is supported by my finding of U469:
+  each new code file under scripts/ makes the Stage 9 lock stale, so a
+  rebind before more code work would be made twice. Two points are not
+  supported: Stage 9 is the provenance stage (signing and deployed
+  file identity), it does not "measure" the Dafny-to-JavaScript stack;
+  and "Silicon-to-Sink" is no item of this repository: the nearest
+  items are M1 (open) and F2.7 (NOT STARTED).
+- The session goal (the directive of U459): its four wave gates are
+  done and merged; its last step, the Stage 9 unlock, is declined by
+  the owner for now. I cannot clear the session goal; that is a
+  command of the owner.
+- Impact: CURRENT none. Stage 9 deferred. M1 open. Stage 12
+  unauthorized. end_to_end=false. No protected file changed.
+- Next check: none for Stage 9 until the owner takes it up. For M1:
+  the open items of M1R-1 and section 9 of the conformance report.
