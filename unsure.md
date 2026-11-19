@@ -16912,3 +16912,70 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false.
 - Next check: the owner's merge decision for pull request 49. After
   the merge: Wave Gate 2 from the new origin/main.
+
+## U463 — Pull request 49 (Wave Gate 1) merged with administrator rights on the owner's word for that one pull request; hosted gate exit 3 for both heads
+- Status: 2026-11-19 01:25Z to 01:27Z (system clock). Refs U462, R4C-1.
+- Observation: after pull request 49 was open, the session's stop
+  condition (the goal of U459) twice refused the pause that the
+  directive itself requires. I asked the owner one question with four
+  choices (merge yourself; stack the gates without a merge; "Merge it
+  for me"; stop). The owner chose "Merge it for me". The text of that
+  choice was: the owner's word to merge pull request 49 with
+  administrator rights, recorded as an override for this one pull
+  request.
+- Action: `gh pr merge 49 --squash --admin`, exit 0. Squash commit
+  e972ceb9 at 2026-11-19 01:25Z. `git diff --quiet origin/main
+  2f9b1bdd`: exit 0. This is an OVERRIDE of the review rule and of the
+  red gate status (hosted result UNSUPPORTED), as in R4C-1. It differs
+  from hard rule 3 of the directive ("never use administrator bypass
+  and never self-merge"); the owner's later word is the basis.
+- The word covers pull request 49 only. It is not a word for the pull
+  requests of Wave Gates 2 and 3.
+- Hosted gate/pr_check.py for the second head 2f9b1bdd (entry U462,
+  documents only): run 44436453330, exit 3, UNSUPPORTED. First head:
+  U462.
+- Uncertainty: the times of the system clock in this session are close
+  together (the hosted runs carry 01:21Z and 01:23Z, the merge 01:25Z).
+  I record what the clock and GitHub show.
+- Impact: Wave Gate 1 is on main. No claim changes. CURRENT none. M1
+  open. Stage 12 unauthorized. end_to_end=false.
+- Next check: none for pull request 49.
+
+## U464 — Wave Gate 2: README.md written again; two NOT STARTED items in the master idea; one class in my first README draft was wrong
+- Status: 2026-11-19 01:27Z. Refs U458, U459, U463. Branch
+  docs/front-door-and-v2-horizon from e972ceb9. Documents only.
+- README.md: written again. It now states the three parts, the scope
+  (blast radius, not intent), the evidence classes, one table of
+  evidence and trusted base (Stages 1 to 9 and 11, Round 4, Slices 1 to
+  3, M1, Wave Gate 1), and what is not done. Two old statements are
+  corrected: "Stage 9 is CURRENT" (now: none, Stage 9 deferred) and the
+  Stage 5 `print` survivor (closed by F1.2 with pull request 43).
+- Source of the README numbers: the roadmap sections and reports on
+  main. I copied them. I did not run a command for them again.
+- My error, corrected before the commit: my first draft gave Stage 7
+  the class `in_logic_compiler_proof`. That was wrong. Stage 7 is a
+  proof about the bytes of one ELF under a machine model and uses no
+  compiler proof (docs/stage7-binary.md). The row now says so. The
+  class `in_logic_compiler_proof` appears only for M1, and M1 is open.
+- The directive's highlight "47+ removed-check kills": the records
+  give 10 (Slice 1), 11 (Slice 2), 26 (Slice 3) and 23 (Wave Gate 1)
+  copies, 70 in all, each from a one-off run. The README states these
+  numbers.
+- The directive's highlight "TS / Safe Rust / Python swaps with 0 Dafny
+  starts": the README says "0 Dafny starts for the exchange". The
+  checker core itself was verified and compiled by Dafny once.
+- Master idea: F3.3 (Farkas infeasibility witnesses) and F2.7 (parser,
+  check and signature under one machine-code theorem) added with
+  status NOT STARTED and with limits. For F3.3 the limit is from
+  general knowledge, not checked against a source in this run: a
+  Farkas vector shows that the linear relaxation has no solution; an
+  integer program can be infeasible with no such vector. The section
+  "Blast-Radius Finality vs. Intent Elicitation" and the items F1.5,
+  F1.6, F2.4, F2.5 were already on main (U458); I did not add them
+  again.
+- NOT RUN: every EXIT script; the regression. Basis: no code file
+  changes in this gate.
+- Impact: documents only. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: link and frozen-module checks on the staged tree; the
+  hosted gate result; the owner's merge decision.
