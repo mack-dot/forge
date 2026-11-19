@@ -1,0 +1,16 @@
+REFUSE latest before register: witness: no record for this charge (fail closed)
+OK     register
+REFUSE register twice: EEXIST: file already exists, open '<repo>/results/night-shift-20261119/orch-B/h-anchor/home/wit-xq3L9s/witness/ch_1.heads'
+OK     publish n=1
+OK     publish n=2
+OK     publish n=3
+OK     latest 3
+REFUSE stale CAS from n=1 (rolled-back sink) with a fork n=4: witness: expected head is not the latest (stale or forked)
+REFUSE republish older head: witness: count does not increase
+REFUSE start check: rolled-back store [T1]: store is behind the witness
+REFUSE start check: zero row T2 deleted [T1,T3]: store head differs
+REFUSE start check: zero rows swapped: store head differs
+REFUSE start check: forged initial charge: store head differs
+OK     start check: honest store "equal"
+OK     after truncation (ANCHOR-MONOTONE violated) latest 1
+exit 0

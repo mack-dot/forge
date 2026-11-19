@@ -1,0 +1,7 @@
+r1 committed
+r2 committed
+run 1: flush threw: adapter: connection refused (nothing sent)
+lock left after run 1: false
+run 2 (retry): {"emitted":[{"requestId":"r2","intent":"{\"amount\":\"100\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r2\"}"}],"refused":[],"alreadyDispatched":1}
+run 3: {"emitted":[],"refused":[],"alreadyDispatched":2}
+ledger: r1,r2 ; actually sent: r2

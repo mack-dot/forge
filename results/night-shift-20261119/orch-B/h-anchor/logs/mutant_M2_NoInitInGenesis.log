@@ -1,0 +1,83 @@
+# owner=h-anchor start=2026-11-19T14:30:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 808
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny/Mutant_M2_NoInitInGenesis.dfy
+# memory free percent: 42
+Mutant_M2_NoInitInGenesis.dfy(36,2): Error: a postcondition could not be proved on this return path
+   |
+36 |   {}
+   |   ^
+
+Mutant_M2_NoInitInGenesis.dfy(35,36): Related location: this is the postcondition that could not be proved
+   |
+35 |     ensures Top(H, cfg, init, rows) in Inputs(H, cfg, init, rows)
+   |                                     ^^
+
+Mutant_M2_NoInitInGenesis.dfy(206,10): Error: a precondition for this call could not be proved
+    |
+206 |     RunInv(H, cfg0, init0, D0(H, cfg0, init0), ps, U);
+    |           ^
+
+Mutant_M2_NoInitInGenesis.dfy(185,17): Related location: this is the precondition that could not be proved
+    |
+185 |     requires DInv(H, cfg0, init0, d, U) && AllInputs(H, ps) <= U && NC(H, U)
+    |                  ^
+
+Mutant_M2_NoInitInGenesis.dfy(154,9): Related location: this proposition could not be proved
+    |
+154 |   { DCore(H, cfg0, init0, d) && Inputs(H, cfg0, init0, d.sent) <= U }
+    |          ^
+
+Mutant_M2_NoInitInGenesis.dfy(152,27): Related location: this proposition could not be proved
+    |
+152 |   { d.n == |d.sent| && d.h == Chain(H, cfg0, init0, d.sent) && d.done == Rids(d.sent) && DistinctRids(d.sent) }
+    |                            ^^
+
+Mutant_M2_NoInitInGenesis.dfy(262,2): Error: a postcondition could not be proved on this return path
+    |
+262 |   { var s := Store(cfg0, init0, [r]); assert s.rows[..0] == []; }
+    |   ^
+
+Mutant_M2_NoInitInGenesis.dfy(260,20): Related location: this is the postcondition that could not be proved
+    |
+260 |             DAccepts(H, D0(H, cfg0, init0), s) && d1.sent == [r] &&
+    |                     ^
+
+Mutant_M2_NoInitInGenesis.dfy(136,61): Related location: this proposition could not be proved
+    |
+136 |   { |s.rows| > d.n && Chain(H, s.cfg, s.init, s.rows[..d.n]) == d.h && s.rows[d.n].rid !in d.done }
+    |                                                              ^^
+
+Mutant_M2_NoInitInGenesis.dfy(294,2): Error: a postcondition could not be proved on this return path
+    |
+294 |   {
+    |   ^
+
+Mutant_M2_NoInitInGenesis.dfy(288,35): Related location: this is the postcondition that could not be proved
+    |
+288 |     ensures Chain(H0, cfg0, i, []) == H0(Genesis(cfg0, i))
+    |                                    ^^
+
+
+Dafny program verifier finished with 57 verified, 4 errors
+        5.63 real         4.02 user         0.47 sys
+           142245888  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21088  page reclaims
+                  30  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 316  voluntary context switches
+               59610  involuntary context switches
+         31527532789  instructions retired
+         13567808508  cycles elapsed
+           125027504  peak memory footprint
+# end=2026-11-19T14:30:57Z
+exit 4

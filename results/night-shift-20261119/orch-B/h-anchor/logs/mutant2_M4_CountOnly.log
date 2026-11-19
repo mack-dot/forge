@@ -1,0 +1,68 @@
+# owner=h-anchor start=2026-11-19T14:34:07Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1545
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny/Mutant_M4_CountOnly.dfy
+# memory free percent: 31
+Mutant_M4_CountOnly.dfy(97,13): Error: a precondition for this call could not be proved
+   |
+97 |   { ChainBind(H, T.cfg, T.init, T.rows, s.cfg, s.init, s.rows[..|T.rows|]); }
+   |              ^
+
+Mutant_M4_CountOnly.dfy(51,34): Related location: this is the precondition that could not be proved
+   |
+51 |     requires Chain(H, c1, i1, r1) == Chain(H, c2, i2, r2)
+   |                                   ^^
+
+Mutant_M4_CountOnly.dfy(359,2): Error: a postcondition could not be proved on this return path
+    |
+359 |   {
+    |   ^
+
+Mutant_M4_CountOnly.dfy(357,12): Related location: this is the postcondition that could not be proved
+    |
+357 |     ensures !Anchored(H0, HeadOf(H0, S), Store(cfg0, init0, [r1, r3, r2]))
+    |             ^
+
+Mutant_M4_CountOnly.dfy(367,2): Error: a postcondition could not be proved on this return path
+    |
+367 |   {
+    |   ^
+
+Mutant_M4_CountOnly.dfy(365,12): Related location: this is the postcondition that could not be proved
+    |
+365 |     ensures !Anchored(H0, HeadOf(H0, S), Store(cfg0, Init(1, 100, 1000), [r1, r2, r3]))
+    |             ^
+
+Mutant_M4_CountOnly.dfy(414,2): Error: a postcondition could not be proved on this return path
+    |
+414 |   {
+    |   ^
+
+Mutant_M4_CountOnly.dfy(413,53): Related location: this is the postcondition that could not be proved
+    |
+413 |             CountOnlyAccepts(HeadOf(H0, S), fork) && !Anchored(H0, HeadOf(H0, S), fork)
+    |                                                      ^
+
+
+Dafny program verifier finished with 56 verified, 4 errors
+        7.77 real         4.62 user         0.72 sys
+           124895232  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20423  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 303  voluntary context switches
+              135113  involuntary context switches
+         31882315746  instructions retired
+         15643799294  cycles elapsed
+           123553016  peak memory footprint
+# end=2026-11-19T14:34:15Z
+exit 4

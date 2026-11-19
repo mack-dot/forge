@@ -1,0 +1,88 @@
+# owner=h-anchor start=2026-11-19T14:31:06Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 896
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny/Mutant_M3_NoDispatcherCheck.dfy
+# memory free percent: 38
+Mutant_M3_NoDispatcherCheck.dfy(175,15): Error: a precondition for this call could not be proved
+    |
+175 |       ChainBind(H, cfg0, init0, d.sent, s.cfg, s.init, s.rows[..d.n]);
+    |                ^
+
+Mutant_M3_NoDispatcherCheck.dfy(51,34): Related location: this is the precondition that could not be proved
+   |
+51 |     requires Chain(H, c1, i1, r1) == Chain(H, c2, i2, r2)
+   |                                   ^^
+
+Mutant_M3_NoDispatcherCheck.dfy(349,2): Error: a postcondition could not be proved on this return path
+    |
+349 |   { D3Facts(); ChainS(); Expand3(init0, r1, r4, r5); assert [r1, r4, r5, Row(6, 0)][..3] == [r1, r4, r5]; }
+    |   ^
+
+Mutant_M3_NoDispatcherCheck.dfy(348,12): Related location: this is the postcondition that could not be proved
+    |
+348 |     ensures !DAccepts(H0, D3(), Store(cfg0, init0, [r1, r4, r5, Row(6, 0)]))
+    |             ^
+
+Mutant_M3_NoDispatcherCheck.dfy(354,2): Error: a postcondition could not be proved on this return path
+    |
+354 |   { D3Facts(); ChainS(); Expand3(init0, r1, r3, r5); assert [r1, r3, r5, Row(6, 0)][..3] == [r1, r3, r5]; }
+    |   ^
+
+Mutant_M3_NoDispatcherCheck.dfy(353,12): Related location: this is the postcondition that could not be proved
+    |
+353 |     ensures !DAccepts(H0, D3(), Store(cfg0, init0, [r1, r3, r5, Row(6, 0)]))
+    |             ^
+
+Mutant_M3_NoDispatcherCheck.dfy(359,2): Error: a postcondition could not be proved on this return path
+    |
+359 |   {
+    |   ^
+
+Mutant_M3_NoDispatcherCheck.dfy(358,12): Related location: this is the postcondition that could not be proved
+    |
+358 |     ensures !DAccepts(H0, D3(), Store(cfg0, init0, [r1, r3, r2, r5]))
+    |             ^
+
+Mutant_M3_NoDispatcherCheck.dfy(367,2): Error: a postcondition could not be proved on this return path
+    |
+367 |   {
+    |   ^
+
+Mutant_M3_NoDispatcherCheck.dfy(366,12): Related location: this is the postcondition that could not be proved
+    |
+366 |     ensures !DAccepts(H0, D3(), Store(cfg0, Init(1, 100, 1000), [r1, r2, r3, r5]))
+    |             ^
+
+Mutant_M3_NoDispatcherCheck.dfy(402,2): Error: a postcondition could not be proved on this return path
+    |
+402 |   {
+    |   ^
+
+Mutant_M3_NoDispatcherCheck.dfy(397,12): Related location: this is the postcondition that could not be proved
+    |
+397 |             var fork := Store(cfg0, init0, [r4, r5]);
+    |             ^^^
+
+
+Dafny program verifier finished with 55 verified, 6 errors
+        7.54 real         4.91 user         0.74 sys
+           128040960  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20345  page reclaims
+                 287  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 305  voluntary context switches
+              137703  involuntary context switches
+         35537801965  instructions retired
+         16843889809  cycles elapsed
+           122930376  peak memory footprint
+# end=2026-11-19T14:31:13Z
+exit 4

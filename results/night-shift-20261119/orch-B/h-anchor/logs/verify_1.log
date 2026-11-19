@@ -1,0 +1,98 @@
+# owner=h-anchor start=2026-11-19T14:27:48Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1234
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny/Anchor.dfy
+# memory free percent: 44
+Anchor.dfy(302,4): Error: assertion might not hold
+    |
+302 |     assert InputsOf(H0, S) == {Genesis(cfg0, init0), Link(6854, r1), Link(41467, r2), Link(249207, r3)};
+    |     ^^^^^^
+
+Anchor.dfy(329,2): Error: a postcondition could not be proved on this return path
+    |
+329 |   {
+    |   ^
+
+Anchor.dfy(314,12): Related location: this is the postcondition that could not be proved
+    |
+314 |             var L := HeadOf(H0, S);
+    |             ^^^
+
+Anchor.dfy(329,2): Error: a postcondition could not be proved on this return path
+    |
+329 |   {
+    |   ^
+
+Anchor.dfy(314,12): Related location: this is the postcondition that could not be proved
+    |
+314 |             var L := HeadOf(H0, S);
+    |             ^^^
+
+Anchor.dfy(329,2): Error: a postcondition could not be proved on this return path
+    |
+329 |   {
+    |   ^
+
+Anchor.dfy(314,12): Related location: this is the postcondition that could not be proved
+    |
+314 |             var L := HeadOf(H0, S);
+    |             ^^^
+
+Anchor.dfy(329,2): Error: a postcondition could not be proved on this return path
+    |
+329 |   {
+    |   ^
+
+Anchor.dfy(314,12): Related location: this is the postcondition that could not be proved
+    |
+314 |             var L := HeadOf(H0, S);
+    |             ^^^
+
+Anchor.dfy(348,4): Error: assertion might not hold
+    |
+348 |     assert InputsOf(H0, S) + InputsOf(H0, sw) ==
+    |     ^^^^^^
+
+Anchor.dfy(370,2): Error: a postcondition could not be proved on this return path
+    |
+370 |   {
+    |   ^
+
+Anchor.dfy(365,12): Related location: this is the postcondition that could not be proved
+    |
+365 |             var fork := Store(cfg0, init0, [r4, r5]);
+    |             ^^^
+
+Anchor.dfy(382,2): Error: a postcondition could not be proved on this return path
+    |
+382 |   {
+    |   ^
+
+Anchor.dfy(381,53): Related location: this is the postcondition that could not be proved
+    |
+381 |             CountOnlyAccepts(HeadOf(H0, S), fork) && !Anchored(H0, HeadOf(H0, S), fork)
+    |                                                      ^
+
+
+Dafny program verifier finished with 48 verified, 8 errors
+        5.97 real         3.90 user         0.58 sys
+           133906432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18740  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 286  voluntary context switches
+               91232  involuntary context switches
+         29247891650  instructions retired
+         13386522614  cycles elapsed
+           119063752  peak memory footprint
+# end=2026-11-19T14:27:54Z
+exit 4

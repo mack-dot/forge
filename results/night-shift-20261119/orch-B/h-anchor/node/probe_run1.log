@@ -1,0 +1,32 @@
+A commit r1                       "committed"
+A flush 1                         {"emitted":["r1"],"refused":[],"already":0}
+A after rollback audit            []
+A outbox rows                     0
+A re-commit dropped r1            "committed"
+A audit                           []
+A flush 2                         {"emitted":[],"refused":[],"already":1}
+A total effects                   ["r1:10"]
+A2 commit r2 on rolled-back       "committed"
+A2 audit                          []
+A2 flush                          {"emitted":[],"refused":["r2(token does not continue the dispatched chain)"],"already":0}
+A2 commit r3                      "committed"
+A2 flush r3                       {"emitted":["r3"],"refused":["r2(token does not continue the dispatched chain)"],"already":0}
+A2 total effects                  ["r1:10","r3:5"]
+B re-commit                       "committed"
+B flush                           {"emitted":["r1"],"refused":[],"already":0}
+B flush again                     {"emitted":[],"refused":[],"already":1}
+B total effects                   ["r1:10"]
+C commit from forged              "committed"
+C audit                           []
+C flush                           {"emitted":[],"refused":["r1(token does not continue the dispatched chain)"],"already":0}
+C total effects                   []
+D flush                           {"emitted":["r1","r2","r3"],"refused":[],"already":0}
+D re-commit r3 first (skip r2)    "committed"
+D audit                           []
+D flush 2                         {"emitted":[],"refused":[],"already":2}
+D total effects                   ["r1:10","r2:0","r3:5"]
+E flush after ledger loss         {"emitted":["r1"],"refused":[],"already":0}
+E total effects                   ["r1:10","r1:10"]
+(node:5234) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+exit 0

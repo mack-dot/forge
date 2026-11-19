@@ -1,0 +1,68 @@
+# owner=h-anchor start=2026-11-19T14:33:30Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1328
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny/Mutant_M2_NoInitInGenesis.dfy
+# memory free percent: 41
+Mutant_M2_NoInitInGenesis.dfy(58,4): Error: a postcondition could not be proved on this return path
+   |
+58 |     if |r1| > 0 {
+   |     ^^^^^^^^^^^^^
+
+Mutant_M2_NoInitInGenesis.dfy(54,27): Related location: this is the postcondition that could not be proved
+   |
+54 |     ensures c1 == c2 && i1 == i2 && r1 == r2
+   |                            ^^
+
+Mutant_M2_NoInitInGenesis.dfy(73,4): Error: a postcondition could not be proved on this return path
+   |
+73 |     if |r1| > 0 && |r2| > 0 {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Mutant_M2_NoInitInGenesis.dfy(69,43): Related location: this is the postcondition that could not be proved
+   |
+69 |     ensures |r1| == |r2| && c1 == c2 && i1 == i2 && r1 == r2
+   |                                            ^^
+
+Mutant_M2_NoInitInGenesis.dfy(294,2): Error: a postcondition could not be proved on this return path
+    |
+294 |   {
+    |   ^
+
+Mutant_M2_NoInitInGenesis.dfy(288,35): Related location: this is the postcondition that could not be proved
+    |
+288 |     ensures Chain(H0, cfg0, i, []) == H0(Genesis(cfg0, i))
+    |                                    ^^
+
+Mutant_M2_NoInitInGenesis.dfy(294,2): Error: a postcondition could not be proved on this return path
+    |
+294 |   {
+    |   ^
+
+Mutant_M2_NoInitInGenesis.dfy(292,43): Related location: this is the postcondition that could not be proved
+    |
+292 |     ensures Inputs(H0, cfg0, i, [a, b, c]) == {Genesis(cfg0, i), Link(H0(Genesis(cfg0, i)), a),
+    |                                            ^^
+
+
+Dafny program verifier finished with 58 verified, 4 errors
+       10.78 real         5.24 user         0.78 sys
+           128122880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29047  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 279  voluntary context switches
+              135051  involuntary context switches
+         34297318578  instructions retired
+         17456745214  cycles elapsed
+           127616224  peak memory footprint
+# end=2026-11-19T14:33:42Z
+exit 4

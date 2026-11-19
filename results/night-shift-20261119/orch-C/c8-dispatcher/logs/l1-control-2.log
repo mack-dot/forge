@@ -1,0 +1,16 @@
+(node:73399) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73501) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73464) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73540) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+r1 committed
+r2 committed
+A blocked in emit(r1); lock present: true
+B: {"name":"B","stopped":"dispatcher lock is held: another run is active, or a stopped run left the lock file"}
+A: {"name":"A","emitted":["r1","r2"],"refused":[],"already":0}
+B2 after A: {"name":"B2","emitted":[],"refused":[],"already":2}
+effects: A:r1 A:r2; total 800 of 1000; duplicate ids: []
+next run on the ledger: {"emitted":[],"refused":[],"alreadyDispatched":2}

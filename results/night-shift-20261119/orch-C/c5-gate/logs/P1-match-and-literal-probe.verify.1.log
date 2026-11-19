@@ -4,3 +4,40 @@
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
 # cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
 # memory free percent: 32
+impl/Refund.dfy(8,4): Error: missing case in match statement: not all possibilities for selector of type int have been covered
+  |
+8 |     match |context.chargeId| {
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+impl/Refund.dfy(12,13): Error: missing case in match expression: not all possibilities for selector of type int have been covered
+   |
+12 |     var j := match |context.requestId| case 0 => 1 case 1 => 2;
+   |              ^^^^^
+
+impl/Refund.dfy(14,6): Error: missing case in match statement: not all possibilities for selector of type string have been covered
+   |
+14 |       match response.reason {
+   |       ^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 5 verified, 3 errors
+        3.21 real         1.53 user         0.33 sys
+           110297088  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14143  page reclaims
+                 544  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  49  voluntary context switches
+               36408  involuntary context switches
+         10726848789  instructions retired
+          5486286291  cycles elapsed
+            98550984  peak memory footprint
+# end=2026-11-19T14:34:28Z
+exit 4

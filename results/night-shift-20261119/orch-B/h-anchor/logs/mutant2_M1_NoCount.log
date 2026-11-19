@@ -1,0 +1,88 @@
+# owner=h-anchor start=2026-11-19T14:32:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1381
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny/Mutant_M1_NoCount.dfy
+# memory free percent: 34
+Mutant_M1_NoCount.dfy(95,67): Error: upper bound below lower bound or above length of sequence
+   |
+95 |     requires NC(H, InputsOf(H, T) + Inputs(H, s.cfg, s.init, s.rows[..|T.rows|]))
+   |                                                                    ^
+
+Mutant_M1_NoCount.dfy(97,13): Error: a precondition for this call could not be proved
+   |
+97 |   { ChainBind(H, T.cfg, T.init, T.rows, s.cfg, s.init, s.rows[..|T.rows|]); }
+   |              ^
+
+Mutant_M1_NoCount.dfy(51,34): Related location: this is the precondition that could not be proved
+   |
+51 |     requires Chain(H, c1, i1, r1) == Chain(H, c2, i2, r2)
+   |                                   ^^
+
+Mutant_M1_NoCount.dfy(97,61): Error: upper bound below lower bound or above length of sequence
+   |
+97 |   { ChainBind(H, T.cfg, T.init, T.rows, s.cfg, s.init, s.rows[..|T.rows|]); }
+   |                                                              ^
+
+Mutant_M1_NoCount.dfy(109,2): Error: a postcondition could not be proved on this return path
+    |
+109 |   {}
+    |   ^
+
+Mutant_M1_NoCount.dfy(108,12): Related location: this is the postcondition that could not be proved
+    |
+108 |     ensures !Anchored(H, HeadOf(H, T), Store(T.cfg, T.init, T.rows[..k]))
+    |             ^
+
+Mutant_M1_NoCount.dfy(114,2): Error: a postcondition could not be proved on this return path
+    |
+114 |   {}
+    |   ^
+
+Mutant_M1_NoCount.dfy(113,12): Related location: this is the postcondition that could not be proved
+    |
+113 |     ensures !Anchored(H, HeadOf(H, T), Store(T.cfg, T.init, T.rows[..i] + T.rows[i+1..]))
+    |             ^
+
+Mutant_M1_NoCount.dfy(345,2): Error: a postcondition could not be proved on this return path
+    |
+345 |   { D3Facts(); }
+    |   ^
+
+Mutant_M1_NoCount.dfy(343,12): Related location: this is the postcondition that could not be proved
+    |
+343 |     ensures !Anchored(H0, HeadOf(H0, S), Store(cfg0, init0, [r1]))
+    |             ^
+
+Mutant_M1_NoCount.dfy(414,2): Error: a postcondition could not be proved on this return path
+    |
+414 |   {
+    |   ^
+
+Mutant_M1_NoCount.dfy(413,53): Related location: this is the postcondition that could not be proved
+    |
+413 |             CountOnlyAccepts(HeadOf(H0, S), fork) && !Anchored(H0, HeadOf(H0, S), fork)
+    |                                                      ^
+
+
+Dafny program verifier finished with 54 verified, 7 errors
+       21.60 real         5.78 user         1.26 sys
+           121864192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51187  page reclaims
+                 390  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 295  voluntary context switches
+              170196  involuntary context switches
+         36683565475  instructions retired
+         20326249638  cycles elapsed
+           128304280  peak memory footprint
+# end=2026-11-19T14:33:15Z
+exit 4
