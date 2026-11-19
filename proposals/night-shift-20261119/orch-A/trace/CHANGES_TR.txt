@@ -1,0 +1,34 @@
+CHANGES_TR (worker W-trace, round 2, 2026-11-19). STATIC ONLY. NOTHING HERE WAS RUN; every change is UNCHECKED by HOL.
+Input: Orchestrator A message, and attempt-0001/TRx-0002/stdout.log (151 lines). TRx-0002 is the orchestrator's sed copy of TRx-0001.
+Finding: TRx-0003.sml minus its 3-line header, with file and theory names mapped back, = TRx-0002.sml (diff exit 0).
+Log review (TRx-0002/stdout.log 14-147):
+- The datatype and all 11 generic definitions were accepted. The printed types and clauses are as intended.
+- Clauses were generalised as expected.
+- ffi_post_st and ffi_call_event got pattern completion: (NONE,v3) and (SOME b1,NONE) both go to the default. This is the intended meaning.
+- Note: "Context.snapshot: ambient context read while a proof was running" (after line 81) is a warning only.
+- The failure was toy_target_def. Define raised "Nullary definition failed" (149-151).
+- That exception was NOT caught by tr_define's handler: there is no DEFINITION_FAILED line and no PART_FAILED line, and the process exited 1.
+- Therefore a Define failure must be treated as fatal in hol run, in both modes.
+Changes:
+1. Drivers TRx-0003.sml (from TRx-0001.sml) and TR-0003.sml (from trace_v1.sml):
+   - Thread.Thread. -> Thread. and Thread.Mutex. -> Mutex. (pinned HOL, ConcIsaLib.sml lines 1, 6).
+   - Shared files: tr_common.sml -> tr_common2.sml, tr_steps.sml -> tr_steps2.sml.
+   - TRx scratch theory: forge_machineTraceExplore1 -> forge_machineTraceExplore3.
+   - Each driver has a new 3-line header. Diffs: diff-TRx-0003.txt, diff-TR-0003.txt.
+2. tr_common2.sml (diff-tr_common2.txt): the toy definitions are rewritten.
+   - New toy_config: a full asm_config literal with all 16 fields (ISA := ARMv8, as in arm8_config_def).
+   - toy_target: a full target literal (all fields, get_fp_reg included).
+   - toy_mc: a full machine_config literal (all 16 fields).
+   - toy_st: unchanged term.
+   - Each one goes through toy_define: Parse.Term, check that the left side is a variable, check that the right side has no type variable, then new_definition (not Define).
+   - Any failure prints DEFINITION_FAILED or DEFINITION_SKIPPED, sets TOY_DEFS_OK := false and continues, in BOTH modes.
+   - Remaining risk: if new_definition itself ends the process in hol run the way Define did, the run still stops. That is UNKNOWN; the pre-checks make it less likely.
+3. tr_common2.sml: tr_term never raises for OPTIONAL_NAMES (div_after, trace_diverge, and the six toy_* controls). Required statements are byte-identical.
+4. tr_steps2.sml (diff-tr_steps2.txt):
+   - TOY_ENC also unfolds toy_config_def.
+   - The lemma list is now TR_LEMMAS0, and TR_LEMMAS = List.filter keep TR_LEMMAS0.
+   - An optional lemma is dropped (it prints OPTIONAL_DROPPED) when its statement parsed to T, or when it is a toy_ lemma and TOY_DEFS_OK is false.
+   - Required lemmas are never dropped.
+   - No required step list changed.
+Unchanged: tr_explore_calls.sml, tr_prove.sml, deps-TR.txt, and all 33 required statements and step lists.
+Commands for the orchestrator (NOT RUN): as RUN_PLAN_TR.txt, with TRx-0003 / TR-0003 in place of TRx-0001 / TR-0001.

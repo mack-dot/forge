@@ -1,0 +1,48 @@
+TIMEOUT_HELPER Timeout.apply loaded
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:24: error: Structure (Thread) has not been declared in structure Thread
+Found near Thread.Thread.self ()
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:25: error: Structure (Mutex) has not been declared in structure Thread
+Found near Thread.Mutex.mutex ()
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:29: error: Structure (Mutex) has not been declared in structure Thread
+Found near
+  (
+     Thread.Mutex.lock lock;
+     let val b = ... ... in Thread.Mutex.unlock lock; b end
+     )
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:29: error: Structure (Mutex) has not been declared in structure Thread
+Found near let val b = ! finished in Thread.Mutex.unlock lock; b end
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:39: error: Structure (Mutex) has not been declared in structure Thread
+Found near
+  if is_finished () then () else
+  if since () < (secs + GUARD_GRACE) then
+  (OS.Process.sleep (Time.fromSeconds 1); dog ()) else
+  if since () >= (secs + GUARD_HARD) then (pr (... ^ ...); ... ...) else
+  (Thread.Mutex.lock lock; (if ... then ... else ...); ...)
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:40: error: Structure (Thread) has not been declared in structure Thread
+Found near Thread.Thread.interrupt self handle _ => ()
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:41: error: Structure (Mutex) has not been declared in structure Thread
+Found near
+  if is_finished () then () else
+  if since () < (secs + GUARD_GRACE) then
+  (OS.Process.sleep (Time.fromSeconds 1); dog ()) else
+  if since () >= (secs + GUARD_HARD) then (pr (... ^ ...); ... ...) else
+  (Thread.Mutex.lock lock; (if ... then ... else ...); ...)
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:45: error: Structure (Thread) has not been declared in structure Thread
+Found near Thread.Thread.fork (fn () => (... ... handle ... => ...), [])
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:46: error: Structure (Mutex) has not been declared in structure Thread
+Found near
+  (Thread.Mutex.lock lock; finished := true; Thread.Mutex.unlock lock)
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:46: error: Structure (Mutex) has not been declared in structure Thread
+Found near
+  (Thread.Mutex.lock lock; finished := true; Thread.Mutex.unlock lock)
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:47: error: Structure (Thread) has not been declared in structure Thread
+Found near
+  (
+     Thread.Thread.setAttributes
+     [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch];
+     f ()
+     )
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:47: error: Structure (Thread) has not been declared in structure Thread
+Found near [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch]
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:47: error: Structure (Thread) has not been declared in structure Thread
+Found near [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch]

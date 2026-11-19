@@ -1,0 +1,7 @@
+AC1-a nonblock-full-stdout (CE-1)  naive[naive_exit]=COMPLETE rc=0 stdout=1000 of 4044 bytes attack_ok=True(exp True) | launcher=AUTHORIZED(40) expected=True
+AC1-b stdin-closed (CE-2)          naive[naive_exit]=COMPLETE rc=0 stdout=0 attack_ok=True(exp True) | launcher=AUTHORIZED(40) expected=True
+AC1-c stdout-closed (CE-2)         naive[naive_exit]=COMPLETE rc=0 attack_ok=True(exp True) | launcher=REFUSED rc=4 expected=True
+AC1-d real-process-prefix-exit0    naive[naive_exit]=COMPLETE rc=0 stdout=b'(refund-result-v1 True 40 retu' attack_ok=True(exp True) | launcher=REFUSED D7 expected=True
+AC1-e real-process-empty-exit0     naive[naive_exit]=COMPLETE rc=0 stdout=b'' attack_ok=True(exp True) | launcher=REFUSED D6 expected=True
+AC1-f planted prefixes+suffixes (49) naive[naive_exit]=COMPLETE for 49 of 49 attack_ok=True(exp True) | launcher=non-REFUSED 0 of 49 expected=True
+test_ac1: 6 rows, 0 not as expected

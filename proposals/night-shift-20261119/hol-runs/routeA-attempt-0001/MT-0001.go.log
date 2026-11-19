@@ -1,0 +1,40 @@
+2026-11-19T15:49:56Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 7899.00M  free = 1317.00M  (encrypted)
+System-wide memory free percentage: 55%
+DISK_FREE_GIB 84
+START_STATE swap_free_mib=1317 memory_free_percent=55
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 114.711 cpu 96.156 rss_mib 2263 ['EXACT_COMPLETE'] inputs_unchanged_after True
+100:CONTROL_OK MT1 antecedent is a right-nested conjunction of 11 conjuncts
+102:CONTROL_OK MT2 antecedent is a right-nested conjunction of 11 conjuncts
+110:CHECKED refund_model_frame_totalised
+155:CHECKED refund_model_success_totalised
+181:CHECKED refund_ffi_tot_observed_set
+188:CHECKED refund_ffi_tot_classification_ignores_counter
+195:CHECKED refund_ffi_contract_on_empty_predicate
+199:CHECKED refund_ffi_tot_empty_predicate_is_abstract
+203:CONTROL_OK MT1 stored statement is the built statement
+204:CONTROL_OK MT1 conclusion = parent conclusion under envmc := envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer
+205:CONTROL_OK MT1 antecedent = parent antecedent with refund_env_ok_sl replaced by the two L1C premises
+206:CONTROL_OK MT1 antecedent contains no refund_env_ok_sl, no ffi_calls_ok, no refund_valid_event
+207:CONTROL_OK MT1 conclusion speaks only about refund_mc _ (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+208:CONTROL_OK MT1 Vok is free (the theorem holds for every predicate)
+209:CONTROL_OK MT2 stored statement is the built statement
+210:CONTROL_OK MT2 conclusion = parent conclusion under envmc := envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer
+211:CONTROL_OK MT2 antecedent = parent antecedent with refund_env_ok_sl replaced by the two L1C premises
+212:CONTROL_OK MT2 antecedent contains no refund_env_ok_sl, no ffi_calls_ok, no refund_valid_event
+213:CONTROL_OK MT2 conclusion speaks only about refund_mc _ (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+214:CONTROL_OK MT2 Vok is free (the theorem holds for every predicate)
+215:STATEMENT_MT1 refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+253:STATEMENT_MT2 refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+281:CLOSURE_AXIOM bool.SELECT_AX
+282:CLOSURE_AXIOM bool.INFINITY_AX
+283:CLOSURE_AXIOM bool.ETA_AX
+284:CLOSURE_AXIOM bool.BOOL_CASES_AX
+285:CONTROL_OK closure contains forge_refundRouteA1 and forge_refundModelFrame
+290:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

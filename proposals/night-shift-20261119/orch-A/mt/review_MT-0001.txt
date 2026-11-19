@@ -1,0 +1,288 @@
+review_MT-0001.txt -- adversarial review of HOL case MT-0001 (worker W-MTrev, Night-Shift Orchestrator A, 2026-11-19)
+Mode: READING ONLY. No HOL run, no Dafny run, no git, no network. Hashes computed with python hashlib (read only).
+RA = /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
+
+VERDICT: HOLDS WITH LIMITS
+ The stored theorems MT1 refund_model_frame_totalised and MT2 refund_model_success_totalised are kernel theorems
+ with no hypotheses and no oracle tags, proved by the forward path (INST + MP + EQ_MP). Each statement is exactly the
+ parent statement (MF-0002 M3 resp. M2) at envmc := envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer,
+ with the one conjunct refund_env_ok_sl sl envmc replaced by the two L1C premises. No parent premise is dropped
+ without proof. The claim is correct in its words. The limits are listed in section 7.
+ One part of the claim needs correction: MT-0001 does NOT use MG-0001 at all (see 3.4).
+
+------------------------------------------------------------------------------------------------------------------
+1. EXIT AND MARKERS
+ 1.1 RA/MT-0001/command.json and RA/MT-0001.run.json: "actual_exit": 0, "wall_timeout": false,
+     "markers": ["EXACT_COMPLETE"], "inputs_unchanged_after": true. wall 114.711 s, cpu 96.156 s, rss 2263 MiB.
+ 1.2 RA/MT-0001.go.log last line: "go exit 0". Also "hash_parents exit 0", "USED_FILES_UNCHANGED true".
+ 1.3 RA/MT-0001/stdout.log:288 "Exporting theory ... done." then :290 "EXACT_COMPLETE" (after export_theory, as the
+     source orders it: MT-0001.sml:223-224). OS.Process.exit success follows (:225).
+ 1.4 RA/MT-0001/stderr.log is 0 bytes (sha256 e3b0c442...b855 = empty).
+ 1.5 No LEMMA_FAILED, STAGE_FAILED, FORWARD_FAILED, TRY_ALL_ENTRY or UNEXPECTED_CONTROL_ACCEPTANCE line in stdout.log.
+     "FAILED_LIST " is empty (:202). REWRITTEN_CONJUNCT lines (:106, :151) are printed only inside fwd (sml:121), so
+     MT1 and MT2 were proved by the forward path, not by the FALLBACK tactic.
+ 1.6 stdout.log:105 has "HOL warning: Context.snapshot: ambient context read while a proof was running". Benign
+     (same warning in L1-0001/stdout.log:113). Not a soundness issue.
+ 1.7 MT-0001.sml and MT-0001/proof.sml are byte-identical (sha256 10d04ec9...adea231 = run.json source_sha256). The
+     run source is also byte-identical to the draft orch-A/mt/mt_v1.sml.
+
+2. SOUNDNESS HARNESS
+ 2.1 tags (MT-0001.sml:20-22): fails unless hyp th = [], axioms-of-tag = [], and every oracle string = "DISK_THM".
+     Any "cheat"/mk_thm/oracle tag on a parent theorem propagates through INST/MP/EQ_MP into MT1/MT2 and would be
+     caught. Applied to each new theorem at save (chk, :36/:43) AND to every stored theorem and definition of the new
+     theory at the end (:214, DB.theorems @ DB.definitions). The new theory has no definitions; 6 stored theorems (:287).
+ 2.2 Axioms: :215-218 collect DB.axioms over the full ancestry closure; stdout.log:281-284 shows exactly the 4 bool
+     axioms. The count check (:218) does not compare names, but the printed names are the bool ones. OK.
+ 2.3 ASSUME: the forward proof uses ASSUME of the antecedent and then DISCH (:109, :127); :43 rejects any theorem
+     with non-empty hyp. fail_with (:40) returns ASSUME g but does NOT save it and appends to `failed`; :184 then
+     raises before export_theory. The outer handler (:48) also appends to `failed`. try_all's `handle _` (:51) only
+     re-runs a tactic ending in NO_TAC, so it cannot produce a theorem. No path saves an unproved statement.
+ 2.4 The `problems` list is checked at :213 (raise if non-empty) before export. `bad` appends to it. OK.
+ 2.5 WEAKNESS (controls are partly self-referential; not a soundness defect):
+     MT-0001.sml:192 rebuilds the expected antecedent with the SAME List.concat/map construction as build (:103);
+     MT-0001.sml:189 repeats the INST-vs-subst check of :102. These controls compare the stored theorem with the
+     script's own construction, not with an independent statement. They cannot detect a wrong construction.
+     Mitigation: the full statements are printed (stdout.log:215-275) and I compared them by hand with the parents
+     in section 3: they agree.
+ 2.6 WEAKNESS: the "no refund_env_ok_sl / ffi_calls_ok / refund_valid_event" control (:195) is syntactic on the
+     antecedent only. It does not unfold definitions. I read refund_entry_pre_sl_def
+     (/Users/mackianni/forge/results/refund-slide-local-20261117/attempt-0001/s2-0003/proof.sml:53-57): it names
+     none of these constants. refund_ffi_contract_on_def (stdout.log:72-90) names none. refund_heap_clear_sl_def and
+     interference_ok: not unfolded by me (UNCHECKED, low risk; they are the same premises M3 already had).
+
+3. STATEMENTS AND PREMISES (exact text: see the APPENDIX, converted to ASCII: |- for the turnstile, /\ \/ ==> <=> ! ?
+   for the logical symbols, <=+ for the unsigned <=)
+ 3.1 MT1 premises (12 conjuncts; the parent has 11, see stdout.log:100 "11 conjuncts", which counts the PARENT;
+     the one conjunct refund_env_ok_sl is replaced by two):
+      P1 refund_entry_pre_sl sl s h stk e      P2 aligned 3 e        P3 h <=+ e        P4 8192w <=+ e - h
+      P5 refund_heap_clear_sl sl h e           P6 envmc.prog_addresses = refund_mem_dm_sl sl h e
+      P7a interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+      P7b refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok envmc.ffi_interfer
+      P8 stdin_content fs = SOME (explode (sexp_to_string (refund_request charge ... reason)))
+      P9 wfcl cl     P10 wfFS fs     P11 STD_streams fs
+     Conclusion: ?ms. (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+       !b. machine_sem (refund_mc (sl + 0x1000040D0w) (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+             (basis_ffi no_ext cl fs) ms b ==> ?t io. b = Terminate t io /\ !g. refund_strict_parse (fd1_written io) = SOME g ==>
+             g = refund_fields ... /\ fd1_written io = explode (refund_render_fields (refund_fields ...)) /\ [exported_ensures = T,T,T]
+     MT2: same premises; conclusion as M2 (Terminate Success io ==> strict parse = SOME (refund_fields ...)) on the same
+     totalised machine.
+ 3.2 Parent comparison (M3: MF-0002/stdout.log:287-320; M2: MF-0002/stdout.log:173-190): the parent premises are
+     P1-P6, refund_env_ok_sl sl envmc, P8-P11. P1-P6 and P8-P11 are kept verbatim (P6 stays on envmc, not on the new
+     record; the forward proof bridges it with refund_env_with_ffi_interfer_fields, stdout.log:106-108). The only
+     removed premise is refund_env_ok_sl sl envmc, and it is discharged AT THE NEW ENVIRONMENT by L1C
+     (L1-0001/stdout.log:118-123) from P7a /\ P7b. refund_env_ok_sl_def (L1-0001/stdout.log:21-27) is
+     interference_ok /\ refund_ffi_contract_at; L1C turns contract_on into contract_at for the totalised FFI.
+     No premise is dropped without proof. The conclusion is the parent conclusion with envmc replaced, nothing else.
+ 3.3 "The two L1C premises" = P7a and P7b above (stdout.log:276-278 REMAINING_NATIVE_PREMISE / REMAINING_ENV_PREMISE).
+ 3.4 MG-0001: MT-0001 does NOT name, load-use, or depend on MG-0001 (MT-0001.sml:54-63 fetch only from
+     forge_refundModelFrame and forge_refundRouteA1; PARENTS line stdout.log:286 = forge_refundModelFrame
+     forge_refundRouteA2c). So MT-0001 neither keeps nor removes MG-0001's premises (contract at VokY3, R6). What it
+     does: it gives the M3/G1-shaped conclusion with NO R6 premise and with a FREE Vok, but for the TOTALISED machine
+     only. MG-0001's G1 concludes about the NON-totalised machine refund_mc _ envmc (MG-0001/stdout.log:275-276);
+     MT1 does not. So MT1 is not a discharge of MG-0001; it is the "ST-1" side route that X8 v3 lists
+     (x8-x11/X8_statement_v3.txt:317, "not run" there; now run).
+ 3.5 Vacuity. With Vok := (\i nb ms. F): P7b holds for every f (MT4, stdout.log:196), and the machine is the abstract
+     FFI machine (MT4b, stdout.log:200). So P7b alone never makes MT1 vacuous. P7a: satisfiable by the X8 construction
+     (E1 falls back to ms when the projection would change); the HOL proof of that is ML-01, MISSING
+     (X8_statement_v3.txt:241-242). P1-P6, P8-P11 are M3's own premises (non-vacuity for them is outside this case;
+     NV-0001.sml exists in RA but has no go.log/run record: NOT RUN). Contradiction between P7a/P7b and the other
+     premises: none found by reading: P7a/P7b constrain only envmc.next_interfer / envmc.ffi_interfer / Vok, and no
+     other premise mentions those fields; P6 fixes prog_addresses, which P7a/P7b only read. For the X8 predicate
+     Vok_R (X8_statement_v3.txt:145-148) P7b is the MISSING lemma ML-02 (:243-244): MT-0001 does not prove it.
+
+4. MACHINE MATCH WITH X8 v3
+ 4.1 Same refund_mc, same base sl + 0x1000040D0w (X8_statement_v3.txt:33, :346), same no_ext.
+ 4.2 refund_ffi_tot argument order: refund_ffi_tot Vok f k x with the guard on (FST x, FST (SND x), SND (SND x)) and
+     f receiving k (stdout.log:67-71; MT3b :189-192 shows the guard ignores k). X8 E3 (:151):
+     envmc_R := envmc0_R with ffi_interfer := refund_ffi_tot Vok_R F_R. Same order.
+ 4.3 GAP (small, needs one rewrite step): MT1 instantiated at envmc := envmc0_R gives
+     refund_ffi_tot Vok_R envmc0_R.ffi_interfer, not syntactically refund_ffi_tot Vok_R F_R. The record field
+     simplification (envmc0_R.ffi_interfer = F_R) closes it. X8 ML-03 note (:155-156) already plans this instance.
+ 4.4 With MT1, X8 C1's premise P7 (refund_env_ok_sl, via ML-03) can be replaced by ML-01 /\ ML-02 directly; ML-03
+     becomes unnecessary. ML-01 and ML-02 remain MISSING.
+
+5. TRIVIALITY
+ 5.1 MT1/MT2 are corollaries: INST M3 + MP L1C (+ one field rewrite). The content sits in M3 (MF-0002) and L1C
+     (L1-0001). This is stated by the script (sml:15) and is not hidden.
+ 5.2 The empty-predicate case is stated as a control: MT4/MT4b plus NOTE (stdout.log:279). The general case is more
+     than the abstract case: on Vok-valid triples the machine uses the given envmc.ffi_interfer, which is constrained
+     only by P7b. Whether a REAL run is a run of this machine is NOT in MT-0001 (it is X8's refinement step).
+
+6. INPUT INTEGRITY
+ 6.1 DEFECT (record quality, low): RA/MT-0001.used-files.pre.txt and RA/MT-0001.used-files.post.txt are both 0 bytes
+     (go.log line "USED_FILES_PRE 0 e3b0c44298fc1c14" = empty-file hash). "pre and post agree" is therefore
+     vacuous; the used-files mechanism recorded nothing for this case.
+ 6.2 Compensating evidence (recomputed by me now): all 147 input_sha256 entries in MT-0001/command.json match disk;
+     all 215 parent files in RA/MT-0001.hashes.json "parents" match disk; hol and heap hashes match; "missing": [].
+ 6.3 Parent theory objects named by the parent run records match the files used:
+     MF-0002 .dat 25852aa9600444cd.. .sig 0807d8cafb615d42.. .sml 6c1600c7376cffaf.. (MF-0002.run.json objects = hashes.json)
+     L1-0001 .dat f1e68d49914cbf2a.. .sig b3bbd85776b43a9f.. .sml 732e806946306bef.. (L1-0001.run.json = hashes.json)
+     L2c-0001 .dat 8e280ce39967ad5d.. (L2c-0001.run.json = hashes.json). Parents MF-0002, L1-0001, L2c-0001: actual_exit 0,
+     EXACT_COMPLETE, go exit 0.
+ 6.4 Produced objects (sha256 now = run.json): .dat ee292cf1..47d3, .sig 87c854a3..ae82, .sml f21ab5aa..b1f747.
+ 6.5 NOTE (not a defect): command.json argv names parent files without ".hol/objs/" (e.g. RA/MF-0002/
+     forge_refundModelFrameTheory.sig), which do not exist on disk; input_sha256 names the .hol/objs/ paths. The
+     tool resolves them there (same pattern as earlier cases). The hash record covers the files actually present.
+
+7. WHAT MT1/MT2 DO NOT GIVE
+ 7.1 Nothing about the NON-totalised machine refund_mc _ envmc, i.e. nothing about a machine with the real FFI
+     unless the real run is shown to be a run of the totalised machine (X8 refinement, MISSING).
+ 7.2 No proof of P7a (ML-01) or P7b (ML-02) for any concrete environment; only P7b for Vok = F (MT4).
+ 7.3 No R6 / refund_valid_event result, no decision-event result (MG-0001 G1/G2 unaffected).
+ 7.4 Termination outcome t is arbitrary (Success, Resource_limit_hit, FFI_outcome); MT1 is only conditional on a
+     successful strict parse; it does not say that output exists or parses. MT2 speaks only about Terminate Success.
+ 7.5 FS model basis_ffi no_ext cl fs (model OS), not the real kernel. MODEL level only.
+ 7.6 Non-vacuity of P1-P6/P8-P11 is not shown here (NV-0001 not run).
+ 7.7 refund_ffi_tot classifies by triple (index, new_bytes, ms2), not by call number (MT3b): two calls with the same
+     triple get the same branch.
+
+DEFECTS (file:line)
+ D1 low  RA/MT-0001.used-files.pre.txt:0 bytes and .post.txt:0 bytes -- pre/post agreement is vacuous (6.1).
+ D2 low  RA/MT-0001.sml:189,192 -- controls compare with the script's own construction (self-referential) (2.5).
+ D3 low  RA/MT-0001.sml:195 -- constant-absence control is syntactic, no definition unfolding (2.6).
+ D4 info claim wording: MT-0001 does not use MG-0001 (3.4); the MG-0001 premises (VokY3 contract, R6) are neither
+         removed nor kept; MG-0001 stays as it was.
+ None of D1-D4 breaks the claim as a statement about the stored theorems.
+
+==================================================================================================================
+APPENDIX: EXACT STATEMENTS (copied from the logs; Unicode symbols converted to ASCII only)
+=== MT1 stored (MT-0001/stdout.log:215-252) ===
+  MT-0001/stdout.log:215  STATEMENT_MT1 refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+  MT-0001/stdout.log:216  refund_heap_clear_sl sl h e /\
+  MT-0001/stdout.log:217  envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+  MT-0001/stdout.log:218  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+  MT-0001/stdout.log:219  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+  MT-0001/stdout.log:220    envmc.ffi_interfer /\
+  MT-0001/stdout.log:221  stdin_content fs =
+  MT-0001/stdout.log:222  SOME
+  MT-0001/stdout.log:223    (explode
+  MT-0001/stdout.log:224       (sexp_to_string
+  MT-0001/stdout.log:225          (refund_request charge request original remaining enabled opened
+  MT-0001/stdout.log:226             candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+  MT-0001/stdout.log:227  ?ms.
+  MT-0001/stdout.log:228    (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+  MT-0001/stdout.log:229    !b. machine_sem
+  MT-0001/stdout.log:230          (refund_mc (sl + 0x1000040D0w)
+  MT-0001/stdout.log:231             (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+  MT-0001/stdout.log:232          (basis_ffi no_ext cl fs) ms b ==>
+  MT-0001/stdout.log:233        ?t io.
+  MT-0001/stdout.log:234          b = Terminate t io /\
+  MT-0001/stdout.log:235          !g. refund_strict_parse (fd1_written io) = SOME g ==>
+  MT-0001/stdout.log:236              g =
+  MT-0001/stdout.log:237              refund_fields charge request original remaining enabled opened
+  MT-0001/stdout.log:238                candidate amount reason /\
+  MT-0001/stdout.log:239              fd1_written io =
+  MT-0001/stdout.log:240              explode
+  MT-0001/stdout.log:241                (refund_render_fields
+  MT-0001/stdout.log:242                   (refund_fields charge request original remaining enabled
+  MT-0001/stdout.log:243                      opened candidate amount reason)) /\
+  MT-0001/stdout.log:244              !ok a r c q n.
+  MT-0001/stdout.log:245                g = (ok,a,r,c,q,n) ==>
+  MT-0001/stdout.log:246                evaluate_exps
+  MT-0001/stdout.log:247                  (exported_contract_state dafny_heap charge request original
+  MT-0001/stdout.log:248                     remaining enabled opened candidate amount reason ok a r c
+  MT-0001/stdout.log:249                     q n) dafny_env exported_ensures =
+  MT-0001/stdout.log:250                (exported_contract_state dafny_heap charge request original
+  MT-0001/stdout.log:251                   remaining enabled opened candidate amount reason ok a r c q
+  MT-0001/stdout.log:252                   n,Rval [BoolV T; BoolV T; BoolV T])
+
+=== MT2 stored (MT-0001/stdout.log:253-275) ===
+  MT-0001/stdout.log:253  STATEMENT_MT2 refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+  MT-0001/stdout.log:254  refund_heap_clear_sl sl h e /\
+  MT-0001/stdout.log:255  envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+  MT-0001/stdout.log:256  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+  MT-0001/stdout.log:257  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+  MT-0001/stdout.log:258    envmc.ffi_interfer /\
+  MT-0001/stdout.log:259  stdin_content fs =
+  MT-0001/stdout.log:260  SOME
+  MT-0001/stdout.log:261    (explode
+  MT-0001/stdout.log:262       (sexp_to_string
+  MT-0001/stdout.log:263          (refund_request charge request original remaining enabled opened
+  MT-0001/stdout.log:264             candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+  MT-0001/stdout.log:265  ?ms.
+  MT-0001/stdout.log:266    (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+  MT-0001/stdout.log:267    !io.
+  MT-0001/stdout.log:268      machine_sem
+  MT-0001/stdout.log:269        (refund_mc (sl + 0x1000040D0w)
+  MT-0001/stdout.log:270           (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+  MT-0001/stdout.log:271        (basis_ffi no_ext cl fs) ms (Terminate Success io) ==>
+  MT-0001/stdout.log:272      refund_strict_parse (fd1_written io) =
+  MT-0001/stdout.log:273      SOME
+  MT-0001/stdout.log:274        (refund_fields charge request original remaining enabled opened
+  MT-0001/stdout.log:275           candidate amount reason)
+
+=== Parent M3 refund_model_frame_meets_exported_contract (MF-0002/stdout.log:287-320, antecedent part) ===
+  MF-0002/stdout.log:287  |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+  MF-0002/stdout.log:288    refund_heap_clear_sl sl h e /\
+  MF-0002/stdout.log:289    envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+  MF-0002/stdout.log:290    refund_env_ok_sl sl envmc /\
+  MF-0002/stdout.log:291    stdin_content fs =
+  MF-0002/stdout.log:292    SOME
+  MF-0002/stdout.log:293      (explode
+  MF-0002/stdout.log:294         (sexp_to_string
+  MF-0002/stdout.log:295            (refund_request charge request original remaining enabled opened
+  MF-0002/stdout.log:296               candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+  MF-0002/stdout.log:297    ?ms.
+  MF-0002/stdout.log:298      (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+
+=== Parent M2 refund_model_success_gives_frame (MF-0002/stdout.log:173-190) ===
+  MF-0002/stdout.log:173  |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+  MF-0002/stdout.log:174    refund_heap_clear_sl sl h e /\
+  MF-0002/stdout.log:175    envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+  MF-0002/stdout.log:176    refund_env_ok_sl sl envmc /\
+  MF-0002/stdout.log:177    stdin_content fs =
+  MF-0002/stdout.log:178    SOME
+  MF-0002/stdout.log:179      (explode
+  MF-0002/stdout.log:180         (sexp_to_string
+  MF-0002/stdout.log:181            (refund_request charge request original remaining enabled opened
+  MF-0002/stdout.log:182               candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+  MF-0002/stdout.log:183    ?ms.
+  MF-0002/stdout.log:184      (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+  MF-0002/stdout.log:185      !io.
+  MF-0002/stdout.log:186        machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+  MF-0002/stdout.log:187          (basis_ffi no_ext cl fs) ms (Terminate Success io) ==>
+  MF-0002/stdout.log:188        refund_strict_parse (fd1_written io) =
+  MF-0002/stdout.log:189        SOME
+  MF-0002/stdout.log:190          (refund_fields charge request original remaining enabled opened
+
+=== L1C refund_env_ok_sl_of_contract_on (L1-0001/stdout.log:118-123) ===
+  L1-0001/stdout.log:118  |- interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+  L1-0001/stdout.log:119    refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+  L1-0001/stdout.log:120      envmc.ffi_interfer ==>
+  L1-0001/stdout.log:121    refund_env_ok_sl sl
+  L1-0001/stdout.log:122      (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+  L1-0001/stdout.log:123  MARK S
+
+=== refund_env_ok_sl_def (L1-0001/stdout.log:21-27) ===
+  L1-0001/stdout.log:21  USED refund_env_ok_sl_def
+  L1-0001/stdout.log:22  |- !sl envmc.
+  L1-0001/stdout.log:23      refund_env_ok_sl sl envmc <=>
+  L1-0001/stdout.log:24      interference_ok envmc.next_interfer
+  L1-0001/stdout.log:25        (arm8_target.proj envmc.prog_addresses) /\
+  L1-0001/stdout.log:26      refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+  L1-0001/stdout.log:27        envmc.ffi_interfer
+
+=== MG-0001 refund_model_frame_decision_events antecedent (MG-0001/stdout.log:252-274) ===
+  MG-0001/stdout.log:252  |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+  MG-0001/stdout.log:253    refund_heap_clear_sl sl h e /\
+  MG-0001/stdout.log:254    envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+  MG-0001/stdout.log:255    interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+  MG-0001/stdout.log:256    refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+  MG-0001/stdout.log:257      envmc.ffi_interfer /\
+  MG-0001/stdout.log:258    (!ms j.
+  MG-0001/stdout.log:259       arm8_run 27 s = SOME ms ==>
+  MG-0001/stdout.log:260       EVERY refund_valid_event
+  MG-0001/stdout.log:261         (SND
+  MG-0001/stdout.log:262            (SND
+  MG-0001/stdout.log:263               (evaluate
+  MG-0001/stdout.log:264                  (refund_mc (sl + 0x1000040D0w)
+  MG-0001/stdout.log:265                     (envmc with
+  MG-0001/stdout.log:266                      ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+  MG-0001/stdout.log:267                  (basis_ffi no_ext cl fs) j ms))).io_events) /\
+  MG-0001/stdout.log:268    stdin_content fs =
+  MG-0001/stdout.log:269    SOME
+  MG-0001/stdout.log:270      (explode
+  MG-0001/stdout.log:271         (sexp_to_string
+  MG-0001/stdout.log:272            (refund_request charge request original remaining enabled opened
+  MG-0001/stdout.log:273               candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+  MG-0001/stdout.log:274    ?ms.

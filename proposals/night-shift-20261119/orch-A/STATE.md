@@ -295,3 +295,75 @@ Reproduction: R6ffi-0002 stopped by the worker driver (HUNG mark: empty stdout f
 
 ## CHECKPOINT (2026-11-19T15:40:27Z)
 W-repro hand-back: 16 of 18 cases REPRODUCED-FROM-BRANCH (the ten, plus MG-0001 try 2, L2d-0001, E1-0003, EF-0001, EE-0001, R6base-0001): exit 0, statements equal, `.sig/.sml/.dat` identical. R6ffi-0002: killed by the worker watchdog (actual_exit -15) after a system sleep on battery (file-age rule counted the sleep); NOT a proof result. R6w-0004 NOT RUN. `repro/RESULT.json` 3365b73c…. Plan: after B window, W-repro retries R6ffi-0002 then R6w-0004 under `caffeinate -i`; my own HOL runs also under `caffeinate -i` (sleep makes time limits unreliable).
+
+## CHECKPOINT (2026-11-19T15:40:47Z)
+Commit 744e1e4d PUSHED to origin nightshift/A-proof (6903135a..744e1e4d; explicit refspec; no force). ROADMAP rows for the reproduction added. Waiting: B heavy window (hol.lock released 15:38Z); W-x8v2rev; W-launch.
+
+## CHECKPOINT (2026-11-19T15:41:08Z)
+W-x8v2rev done: X8 v2 has 3 FALSE items (F1 EL premise, F2 exception field makes N01 unsatisfiable, F3 numchars index) and 3 gaps; `x8-x11/CORRECTIONS_v2.md`. v3 to be written by W-x8v2.
+
+## CHECKPOINT (2026-11-19T15:43:53Z)
+W-launch done; A re-ran 4 test files: exit 0 each (6+18+9+15 rows, 0 unexpected; logs `launch/recheck-A/`; two results JSON rewritten by the re-run). Owner item A-5; addendum 14; gaps update. Next: tell C (reading audit of launcher.py possible); wait B release; then HOL queue under `caffeinate -i`.
+
+## CHECKPOINT (2026-11-19T15:46:01Z)
+X8 v3 on disk (`x8-x11/X8_statement_v3.txt`, 9d1f9d50…; BY READING): F1-F3, G1-G3 repaired; 15 model lemmas MISSING; 23 native rows (16 ASSUMPTION, 7 ENFORCED-BY-LAUNCHER; note: the prototype launcher now exists, tested only). Stale wording in v3 "launcher not implemented": prototype exists since 15:43Z, unverified, not deployed. Waiting: B release; W-launchrev.
+
+## CHECKPOINT (2026-11-19T15:49:51Z)
+B released heavy.lock 15:49:16Z. A takes hol.lock. Heavy step next: `caffeinate -i ./queue.sh q40 "MT-0001 900 deps-MG.txt" "TRx-0001 1200 deps-TR.txt"` (battery; logged; sleep guard by caffeinate).
+
+## CHECKPOINT (2026-11-19T15:51:36Z)
+C sent 3 static findings on launcher.py (F1 SIGCHLD inherited SIG_IGN, F2 CDHash wording, F3 no write deadline): `launch/FINDINGS_FROM_C.md`; to check; rows resting on exit status are not CLOSED until F1 is settled. q40 (MT-0001, TRx-0001) running, task bkitn62xg.
+
+## CHECKPOINT (2026-11-19T15:52:52Z)
+W-launchrev done (`launch/review_launcher.txt` 8b2a617e…): HIGH F-01 (caller-ignored SIGCHLD makes Python report exit 0; same as C F1); 5 MED; 10 LOW. The matrix v1 "CLOSED" is too strong for rows resting on the exit status until a probe decides. W-launch resumed for round 2: probe on v1, `launcher_v2.py`, `tests_v2/`, `CONTROL_MATRIX_v2.md`. Addendum 14 wording "CLOSED (tested)" must be corrected in the next addendum.
+
+## CHECKPOINT (2026-11-19T15:53:55Z)
+MT-0001: actual exit 0, EXACT_COMPLETE (114.7 s; controls MT1/MT2 OK; FAILED_LIST empty) -> reviewer next. TRx-0001: actual exit 1 (ML static error: Thread structure names; no proof step ran). All staged watchdog scripts superseded by ML-only copies (TRx-0002, TR-0002, R6rx-0004, R6r-0004, R6tx-0003, R6t-0003, NVx-0002, NV-0002). Heavy step next (hol.lock held): q41 = TRx-0002 1200 deps-TR; NVx-0002 900 deps-NV; R6tx-0003 1800 deps-R6t; R6rx-0004 3600 deps-R6r; under caffeinate -i.
+
+## CHECKPOINT (2026-11-19T15:57:32Z)
+MT-0001 reviewed: HOLDS WITH LIMITS (`review-MT/REPORT.md`, `mt/review_MT-0001.txt`). q41 running (task b4mh2t4ef). W-launch round 2 running.
+
+## CHECKPOINT (2026-11-19T15:57:59Z)
+TRx-0002 actual exit 1 (toy control definition failed; no lemma step ran). W-trace resumed for TRx-0003. q41 continues (NVx-0002, R6tx-0003, R6rx-0004).
+
+## CHECKPOINT (2026-11-19T16:01:30Z)
+q41 so far: TRx-0002 exit 1; NVx-0002 exit 1 (statement construction; no step ran); R6tx-0003 exit 0 exploration (15 closed, IOFS_V_init failed at step 3); R6rx-0004 running. Workers: W-top2 (round15), W-nv2 (nonvacuity2), W-launch round 2. TRx-0003 staged NOT RUN (run after q41).
+
+## CHECKPOINT (2026-11-19T16:05:17Z)
+W-launch round 2 done; A re-ran `tests_v2/test_v2_findings.py` (exit 0, 16 rows) and `test_mutants_v2.py` (exit 0, 4 rows), logs `launch/recheck-A2/`. Addendum 16. F-01 defect real in-process; not reproduced via exec route. R6rx-0004 still running; W-top2, W-nv2 running.
+
+## CHECKPOINT (2026-11-19T16:06:25Z)
+R6rx-0004 exploration: actual exit 0; 9 of 9 lemmas closed. hol.lock RELEASED for B 3-minute slot. Next after B release: R6r-0004 (proof; 3600; deps-R6r.txt), then TRx-0003.
+
+## CHECKPOINT (2026-11-19T16:06:35Z)
+W-nv2 done: root cause = accessor name test (selector constant name ends with ".ffi_interfer"); `nonvacuity2/`; NVx-0003 / NV-0003 staged NOT RUN (deps-NV.txt, 900). Queue after B slot: R6r-0004, TRx-0003, NVx-0003.
+
+## CHECKPOINT (2026-11-19T16:07:44Z)
+B released heavy.lock (run 16:06:33Z-16:07:02Z). A takes hol.lock. Heavy step: q42 = R6r-0004 3600 deps-R6r (PROOF; all 9 exploration lemmas closed); TRx-0003 1200 deps-TR; NVx-0003 900 deps-NV; under caffeinate -i.
+
+## CHECKPOINT (2026-11-19T16:08:17Z)
+W-top2 done (round15): IOFS_V_init step list repaired (statements unchanged); R6tx-0004 / R6t-0004 staged NOT RUN (deps-R6t.txt, 1800). R6 read side still needs 4 unplanned pieces: the refund main V-spec, LENGTH bs2 = 2052, the eval_state bridge, the transfer to the machine level. q42 running (task b6c1heobq).
+
+## CHECKPOINT (2026-11-19T16:15:20Z)
+C-LAUNCH-01 (run by C on v1: 2 of 24 fail; SIGCHLD ignored) recorded; agrees with F-01; v2 repairs it by the author tests; C told. Workers: W-nonneg. q42 running.
+
+## CHECKPOINT (2026-11-19T16:16:04Z)
+R6r-0004: actual exit 0, EXACT_COMPLETE, theory forge_refundR6Read (9 theorems, 4 definitions) -> reviewer W-R6rrev running. TRx-0003: exploration exit 0, 37 of 41 closed (T-TRACE and T-IO closed; trace_terminate, trace_fail failed at step 1) -> W-trace resumed (part 1 proof driver TR1-0001; TRx-0004 for the rest). NVx-0003 running in q42. Next in queue after q42: R6tx-0004 (then R6t-0004), TR1-0001, NV-0003 if NVx closes.
+
+## CHECKPOINT (2026-11-19T16:16:17Z)
+NVx-0003: exploration exit 0; 6 of 6 closed. Heavy step (hol.lock held): q43 = NV-0003 900 deps-NV (PROOF); R6tx-0004 1800 deps-R6t (exploration).
+
+## CHECKPOINT (2026-11-19T16:17:29Z)
+C re-ran its 24 conformance tests: v1 exit 1 (2 fail), v2 exit 0. Recorded (FINDINGS_FROM_C.md; addendum 17). q43 running (task bkb6w4djs). Workers: W-R6rrev, W-trace, W-nonneg.
+
+## CHECKPOINT (2026-11-19T16:18:12Z)
+W-nonneg: T14(b) TRUE by reading (amount = if ok then amount else 0 with 0 <= amount in eligible; count 0 or 1). NN-0001 staged NOT RUN (`./nightshift-run.sh NN-0001 900 deps-MG.txt`). Queue after q43: NN-0001, R6t-0004 (if R6tx-0004 closes all), TR1-0001 when delivered.
+
+## CHECKPOINT (2026-11-19T16:20:24Z)
+R6r-0004 reviewed: HOLDS WITH LIMITS (`review-R6r/REPORT.md`). R6 remains far (9 more V-specs, main spec, bridges). q43 running.
+
+## CHECKPOINT (2026-11-19T16:21:44Z)
+NV-0003: actual exit 0, EXACT_COMPLETE -> reviewer W-NVrev. W-trace round 3: TR1-0001, TRx-0004, TR2-0001 staged NOT RUN (deps-TR.txt; deps-TR2.txt written). R6tx-0004 running. After q43: release hol.lock for B (3 min); then q44 = NN-0001 900 deps-MG; TR1-0001 1200 deps-TR; TRx-0004 1200 deps-TR; R6t-0004 1800 deps-R6t (only if R6tx-0004 closes all).
+
+## CHECKPOINT (2026-11-19T16:28:07Z)
+R6tx-0004: exploration exit 0; 18 of 18 closed. hol.lock RELEASED 16:28:02Z for B. After B release: q44 = NN-0001 900 deps-MG; TR1-0001 1200 deps-TR; TRx-0004 1200 deps-TR; R6t-0004 1800 deps-R6t.

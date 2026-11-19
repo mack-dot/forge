@@ -1,0 +1,26 @@
+2026-11-19T15:51:52Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 9236.06M  free = 1003.94M  (encrypted)
+System-wide memory free percentage: 46%
+DISK_FREE_GIB 83
+START_STATE swap_free_mib=1003 memory_free_percent=46
+USED_FILES_PRE 7 8e4d845a272c8b46
+exit 1
+actual_exit 1 wall 39.281 cpu 41.151 rss_mib 2138 [] inputs_unchanged_after True
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+2:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:24: error: Structure (Thread) has not been declared in structure Thread
+4:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:25: error: Structure (Mutex) has not been declared in structure Thread
+6:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:29: error: Structure (Mutex) has not been declared in structure Thread
+12:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:29: error: Structure (Mutex) has not been declared in structure Thread
+14:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:39: error: Structure (Mutex) has not been declared in structure Thread
+21:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:40: error: Structure (Thread) has not been declared in structure Thread
+23:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:41: error: Structure (Mutex) has not been declared in structure Thread
+30:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:45: error: Structure (Thread) has not been declared in structure Thread
+32:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:46: error: Structure (Mutex) has not been declared in structure Thread
+35:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:46: error: Structure (Mutex) has not been declared in structure Thread
+38:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:47: error: Structure (Thread) has not been declared in structure Thread
+45:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:47: error: Structure (Thread) has not been declared in structure Thread
+47:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0001/proof.sml:47: error: Structure (Thread) has not been declared in structure Thread
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 1

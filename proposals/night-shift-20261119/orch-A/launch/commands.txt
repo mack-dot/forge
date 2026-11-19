@@ -1,3 +1,9 @@
+# commands.txt (W-launch). One line per command: UTC time | ACTUAL exit code of `bash -c` | log | command.
+# Note: lines that end with `; echo rc=$?` report the exit code of the last echo; the program's own rc is printed
+# inside the log. The first empty-env probe (static/empty_env_probe.log) failed: /usr/bin/timeout does not exist
+# (env exit 127); it was re-run without it (empty_env_probe2.log). The first helper build failed (exit 1, linker:
+# same install_name as libSystem); rebuilt with another install_name. `grep -c LC_RPATH` exit 1 = zero matches.
+# build_helpers3 exit 1 = the grep for CDHash= without --verbose found nothing; the build itself succeeded.
 2026-11-19T15:12:17Z | exit 0 | log static/shasum_orig.log | shasum -a 256 ../ffi-c-audit/refund
 2026-11-19T15:12:17Z | exit 0 | log static/codesign_orig.log | codesign -dv --verbose=4 ../ffi-c-audit/refund
 2026-11-19T15:12:17Z | exit 0 | log static/codesign_entitlements_orig.log | codesign -d --entitlements - ../ffi-c-audit/refund
@@ -29,3 +35,38 @@
 2026-11-19T15:38:33Z | exit 1 | log static/build_helpers3.log | cd bin && /usr/bin/clang -O1 -o fake_empty fake_empty.c && for f in fake_refund fake_prefix fake_empty fake_abort probe; do printf '%s ' $f; codesign -dv $f 2>&1 | grep -E '^CDHash='; done
 2026-11-19T15:39:36Z | exit 0 | log tests/test_ac1.log | /opt/homebrew/bin/timeout 120 /usr/bin/python3 -B -I tests/test_ac1.py
 2026-11-19T15:40:28Z | exit 0 | log tests/test_ac2.log | /opt/homebrew/bin/timeout 180 /usr/bin/python3 -B -I tests/test_ac2.py
+2026-11-19T15:41:06Z | exit 0 | log tests/test_ac3.log | /opt/homebrew/bin/timeout 120 /usr/bin/python3 -B -I tests/test_ac3.py
+2026-11-19T15:41:41Z | exit 0 | log tests/test_positive_and_mutants.log | /opt/homebrew/bin/timeout 180 /usr/bin/python3 -B -I tests/test_positive_and_mutants.py
+2026-11-19T15:42:55Z | exit 0 | - | find . -type f | sort | xargs shasum -a 256 > SHA256SUMS
+2026-11-19T15:54:28Z | exit 0 | log static/build_round2.log | cd bin2 && /usr/bin/clang -O1 -DEND_EXIT7 -o fake_accept_exit7 fake_accept_end.c && /usr/bin/clang -O1 -DEND_ABORT -o fake_accept_abort fake_accept_end.c && /usr/bin/clang -O1 -o fake_noread fake_noread.c && /usr/bin/clang -O1 -o fake_closestdin fake_closestdin.c && /usr/bin/clang -O1 -o probe2 probe2.c && /usr/bin/clang -O1 -o excport_exec excport_exec.c && shasum -a 256 fake_accept_exit7 fake_accept_abort fake_noread fake_closestdin probe2 excport_exec
+2026-11-19T15:54:59Z | exit 0 | log tests_v2/f01_probe_v1.log | tests_v2/f01_probe_v1.sh
+2026-11-19T15:55:14Z | exit 0 | log tests_v2/f01_probe_inproc_v1.log | tests_v2/f01_probe_inproc.sh
+2026-11-19T15:55:44Z | exit 0 | log tests_v2/probe2_direct.log | /usr/bin/env -i bin2/probe2 </dev/null
+2026-11-19T15:57:03Z | exit 0 | log tests_v2/smoke_v2.log | /opt/homebrew/bin/timeout 20 /usr/bin/env -i /usr/bin/python3 -B -I -S /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/tests_v2/driver.py /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py decide-real /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/../ffi-c-audit/refund; /opt/homebrew/bin/timeout 20 /usr/bin/env -i /usr/bin/python3 -B -I -S /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/tests_v2/driver.py /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py probe /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/bin2/probe2; /opt/homebrew/bin/timeout 20 /usr/bin/env -i /usr/bin/python3 -B -I -S /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/tests_v2/driver.py /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher.py probe /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/bin2/probe2
+2026-11-19T15:57:11Z | exit 0 | log tests_v2/smoke_v2_probe.log | /opt/homebrew/bin/timeout 20 /usr/bin/env -i /usr/bin/python3 -B -I -S /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/tests_v2/driver.py /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py probe /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/bin2/probe2
+2026-11-19T15:58:01Z | exit 0 | log tests_v2/old/test_ac1_launcher.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_ac1.py
+2026-11-19T15:58:03Z | exit 0 | log tests_v2/old/test_ac2_launcher.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_ac2.py
+2026-11-19T15:58:04Z | exit 0 | log tests_v2/old/test_ac3_launcher.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_ac3.py
+2026-11-19T15:58:09Z | exit 0 | log tests_v2/old/test_positive_and_mutants_launcher.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_positive_and_mutants.py
+2026-11-19T15:58:10Z | exit 0 | log tests_v2/old/test_ac1_launcher_v2.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_ac1.py
+2026-11-19T15:58:12Z | exit 0 | log tests_v2/old/test_ac2_launcher_v2.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_ac2.py
+2026-11-19T15:58:13Z | exit 0 | log tests_v2/old/test_ac3_launcher_v2.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_ac3.py
+2026-11-19T15:58:17Z | exit 1 | log tests_v2/old/test_positive_and_mutants_launcher_v2.log | LAUNCHER_PY=/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher_v2.py /opt/homebrew/bin/timeout 200 /usr/bin/python3 -B -I tests_v2/old/test_positive_and_mutants.py
+2026-11-19T15:59:54Z | exit 1 | log tests_v2/test_v2_findings.log | /opt/homebrew/bin/timeout 300 /usr/bin/python3 -B -I tests_v2/test_v2_findings.py
+2026-11-19T16:00:09Z | exit 0 | log tests_v2/f03_excport_direct.log | bin2/excport_exec bin2/probe2 </dev/null; bin2/excport_exec /usr/bin/env -i /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/bin2/probe2 </dev/null
+2026-11-19T16:00:48Z | exit 1 | log tests_v2/test_mutants_v2.log | /opt/homebrew/bin/timeout 120 /usr/bin/python3 -B -I tests_v2/test_mutants_v2.py
+2026-11-19T16:01:31Z | exit 1 | log tests_v2/test_v2_findings.log | /opt/homebrew/bin/timeout 300 /usr/bin/python3 -B -I tests_v2/test_v2_findings.py
+2026-11-19T16:01:53Z | exit 0 | log tests_v2/test_mutants_v2.log | /opt/homebrew/bin/timeout 120 /usr/bin/python3 -B -I tests_v2/test_mutants_v2.py
+2026-11-19T16:02:31Z | exit 0 | log tests_v2/test_v2_findings.log | /opt/homebrew/bin/timeout 300 /usr/bin/python3 -B -I tests_v2/test_v2_findings.py
+2026-11-19T16:02:37Z | exit 0 | log static/otool_lcmds_orig_round2.log | otool -l ../ffi-c-audit/refund | grep -A4 -E 'LC_RPATH|LC_LOAD|LC_MAIN|cmd LC_CODE_SIGNATURE|LC_DYLD|__RESTRICT'
+2026-11-19T16:02:37Z | exit 1 | log tests_v2/f11_syspath.log | /usr/bin/env -i /usr/bin/python3 -B -I -c 'import sys; print("-I path:", sys.path)'; /usr/bin/env -i /usr/bin/python3 -B -I -S -c 'import sys; print("-I -S path:", sys.path, "site" in sys.modules)'; ls /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/site-packages/*.pth /Library/Python/3.9/site-packages/*.pth 2>&1
+# ---- Runs by Orchestrator A (NOT by W-launch), recorded here per F-16 (b). Exit codes as reported by A:
+2026-11-19T15:43Z | exit 0 | recheck-A/test_ac1.log | run by Orchestrator A: /usr/bin/python3 -B -I tests/test_ac1.py
+2026-11-19T15:43Z | exit 0 | recheck-A/test_ac2.log | run by Orchestrator A: /usr/bin/python3 -B -I tests/test_ac2.py
+2026-11-19T15:43Z | exit 0 | recheck-A/test_ac3.log | run by Orchestrator A: /usr/bin/python3 -B -I tests/test_ac3.py
+2026-11-19T15:43Z | exit 0 | recheck-A/test_positive_and_mutants.log | run by Orchestrator A: /usr/bin/python3 -B -I tests/test_positive_and_mutants.py
+# Note (F-16 a): these re-runs rewrote tests/test_ac3_results.json and tests/test_positive_and_mutants_results.json
+# after the first SHA256SUMS; SHA256SUMS is regenerated at the end of round 2.
+# Note (F-16 c): static/otool_l_orig.log and static/otool_L_orig.log are ONE file on this case-insensitive volume;
+# it holds the `otool -L` output. The `otool -l` evidence is re-made in round 2 as static/otool_lcmds_orig_round2.log.
+# ---- Round 2 (W-launch): its commands are the lines ABOVE this block, from static/build_round2.log on; later round-2 lines follow below.

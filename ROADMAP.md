@@ -68,6 +68,13 @@ machine-model result on the same machine with stored parent theories.
 | The same: MG-0001 first run |1|Poly/ML "Run out of store" during theory load; infrastructure stop |
 | The same: R6ffi-0002 |-15|stopped by the worker watchdog after a system sleep; not a proof result |
 | The same: R6w-0004 |NOT RUN| |
+| MT-0001: the composed model theorem for the totalised machine (U500) |0|reviewed: holds with limits; model level |
+| R6r-0004: read-side bottom layer of plan R6, 9 theorems (U500) |0|reviewed: holds with limits; one read function and its wrapper |
+| NV-0003: joint non-vacuity witness for the antecedent of `refund_profile_a_sl_shape` (U500) |0|review in work |
+| Explorations TRx-0003 (37 of 41 closed), NVx-0003 (6 of 6), R6tx-0003 (15 closed, 1 failed), R6tx-0004 (18 of 18), R6rx-0004 (9 of 9) |0|exploration only; nothing stored |
+| TRx-0001, TRx-0002, NVx-0002 |1|ML or statement-construction error; no proof step ran |
+| Launcher tests: 4 files on version 1, 2 files on version 2 (re-run by A) |0|TESTED only; unverified prototype; version 1 has a known defect |
+| NN-0001, TR1-0001, TRx-0004, TR2-0001, R6t-0004 |NOT RUN|staged |
 
 [State](proposals/night-shift-20261119/orch-A/STATE.md).
 [Morning report](proposals/night-shift-20261119/MORNING_REPORT.md).

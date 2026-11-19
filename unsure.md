@@ -18324,3 +18324,47 @@ curl: (6) Could not resolve host: github.com
   system (owner item A-4); nothing is pushed.
 - Impact: none on any stage label. M1-B OPEN. end_to_end=false.
 - Next check: the rest of the reproduction; the staged cases.
+
+## U500 — second directive, proof track: the native launch path; new HOL results MT-0001, R6r-0004, NV-0003; the X8 statement after two reviews (refers to U482, U492, U498, U499)
+
+- Evidence: `proposals/night-shift-20261119/orch-A/launch/`
+  (`launcher.py`, `launcher_v2.py`, `CONTROL_MATRIX_v2.md`,
+  `review_launcher.txt`, `FINDINGS_FROM_C.md`, `tests/`, `tests_v2/`);
+  `orch-A/x8-x11/` (`X8_statement_v3.txt`, `CORRECTIONS_v2.md`,
+  `ANSWER_C-PREM-01.md`); `orch-A/review-MT/`, `orch-A/review-R6r/`;
+  HOL run folder cases MT-0001, R6r-0004, NV-0003 and the
+  explorations TRx-0003, R6tx-0004, NVx-0003.
+- MACHINE-CHECKED (HOL, actual exit 0): MT-0001: the composed model
+  theorem holds for the totalised machine for every predicate; only
+  the premise `refund_env_ok_sl` is traded for two premises (reviewed:
+  holds, model level only; the two premises are not proved for an
+  environment built from a real run). R6r-0004: nine read-side
+  theorems (reviewed: holds; covers one read function and its
+  wrapper only). NV-0003: a joint witness for the antecedent of
+  `refund_profile_a_sl_shape` (review in work).
+- Exploration only, nothing stored: the trace lemma and the event
+  lemma close (37 of 41 lemmas); the prefix lemmas for Terminate and
+  Fail did not close; the top glue of plan R6 closes 18 of 18.
+- TESTED, not proved: a prototype launcher. Its first version had a
+  real defect found by two reading reviews and shown by the red
+  team's own run (an ignored SIGCHLD removes the exit-status and
+  abort checks: 2 of 24 tests fail). Version 2: the red team's 24
+  tests pass (its run); the author's tests pass (my re-run, exit 0).
+  It is unverified Python and is not wired into any path.
+- OPEN on the launch path: the interpreter that runs the launcher
+  and the `env -i` rule (a consumer duty); a same-uid attacker; call
+  shapes outside the model (R6; owner item A-3); no independent run
+  with the real executable or with injected code (owner item C-1).
+- By reading: the X8 statement version 2 had three false items (a
+  missing EL0 premise; a free exception field that makes a premise
+  unsatisfiable; a wrong index for the read/write oracle); version 3
+  repairs them; 15 model lemmas are missing; 23 native rows.
+- The consumer parser is stricter than the HOL parser (negative
+  integers; red team). By reading, the program never prints a
+  negative amount or count; a HOL case for this is staged, not run.
+- Failed runs kept: TRx-0001, TRx-0002, NVx-0002 (exit 1 each; no
+  proof step ran); one reproduction run stopped by a watchdog after
+  a system sleep (R6ffi-0002, -15); R6w-0004 reproduction NOT RUN.
+- Impact: none on any stage label. M1-B OPEN. end_to_end=false.
+- Next check: the staged cases; the reviews in work; the remaining
+  two reproduction cases.

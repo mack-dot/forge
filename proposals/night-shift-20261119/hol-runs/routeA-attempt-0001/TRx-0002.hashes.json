@@ -1,0 +1,46 @@
+{
+ "case": "TRx-0002",
+ "parent_theories": 0,
+ "parents": [
+  {
+   "listed": "/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+   "theory": null,
+   "files": {
+    "preload.sml": {
+     "path": "/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+     "sha256": "42169f809d83487b9544d11892ec43bc2a8c045d46056866957f0b26710094b9"
+    }
+   }
+  }
+ ],
+ "produced_objects": {},
+ "tools_and_logs": {
+  "hol": {
+   "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+   "sha256": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26"
+  },
+  "heap": {
+   "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+   "sha256": "2f5dbb718599026ba1129a4d641cf9c4df62c906e111f5340edf42f2bc922932"
+  },
+  "stdout.log": "dbb7b4395aa9ba5910920b39154ece69166239e70783a4639c2cd0b3588d360f",
+  "stderr.log": "5e72306c1f6e104764e81b0a5e105cbb7a733e68a8ee967af5167f431e13a2b1",
+  "proof.sml": "87bc29a38ec355ce3fa77b0ea297e3daaf56bb101092a96c811135725a2db990",
+  "command.json": "853087e5f640942855e8904008db0ed9e31e3d49be20fd015cdc005f7819377c"
+ },
+ "statements": {
+  "DEFINITION@40": "step_event_ok_def\n⊢ ∀mc ms s.\n    step_event_ok mc ms s ⇔\n    mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧\n    encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)\n      (mc.target.get_byte ms) mc.prog_addresses ∧\n    EVERY mc.target.state_ok [ms; mc.target.next ms; s] ∧\n    ∀x. x ∉ mc.prog_addresses ⇒\n        mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x",
+  "DEFINITION@50": "ffi_event_ok_def\n⊢ ∀mc st ms i nb.\n    ffi_event_ok mc st ms i nb ⇔\n    MEM (mc.target.get_pc ms) mc.ffi_entry_pcs ∧\n    mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧\n    find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧\n    ALOOKUP mc.mmio_info i = NONE ∧\n    ∃nm b1 b2 st1.\n      mc.ffi_names❲i❳ = ExtCall nm ∧\n      read_ffi_bytearrays mc ms = (SOME b1,SOME b2) ∧\n      call_FFI st (ExtCall nm) b1 b2 = FFI_return st1 nb",
+  "DEFINITION@66": "ffi_post_st_def\n⊢ ∀mc st ms i.\n    ffi_post_st mc st ms i =\n    case read_ffi_bytearrays mc ms of\n      (NONE,v3) => st\n    | (SOME b1,NONE) => st\n    | (SOME b1,SOME b2) =>\n      case call_FFI st mc.ffi_names❲i❳ b1 b2 of\n        FFI_return st1 nb => st1\n      | FFI_final e => st",
+  "DEFINITION@81": "ffi_call_event_def\n⊢ ∀mc ms i nb.\n    ffi_call_event mc ms i nb =\n    case read_ffi_bytearrays mc ms of\n      (NONE,v3) => []\n    | (SOME b1,NONE) => []\n    | (SOME b1,SOME b2) =>\n      if mc.ffi_names❲i❳ = ExtCall «» then []\n      else [IO_event mc.ffi_names❲i❳ b1 (ZIP (b2,nb))]",
+  "DEFINITION@93": "trace_next_interfer_def\n⊢ (∀ms1 m P. trace_next_interfer P [] m ms1 = ms1) ∧\n  (∀tr s ms1 m P.\n     trace_next_interfer P (TrStep s::tr) m ms1 =\n     if m = 0 then if P ms1 = P s then s else ms1\n     else trace_next_interfer P tr (m − 1) ms1) ∧\n  ∀tr s nb ms1 m i P.\n    trace_next_interfer P (TrFfi i nb s::tr) m ms1 =\n    trace_next_interfer P tr m ms1",
+  "DEFINITION@104": "trace_ffi_interfer_def\n⊢ (∀x ms0 k g G. trace_ffi_interfer G g ms0 [] k x = g k x) ∧\n  (∀x tr s ms0 k g G.\n     trace_ffi_interfer G g ms0 (TrStep s::tr) k x =\n     trace_ffi_interfer G g s tr k x) ∧\n  ∀x tr s nb ms0 k i g G.\n    trace_ffi_interfer G g ms0 (TrFfi i nb s::tr) k x =\n    if k = 0 then if x = (i,nb,ms0) ∧ G x s then s else g 0 x\n    else trace_ffi_interfer G (shift_seq 1 g) s tr (k − 1) x",
+  "DEFINITION@115": "nffis_def\n⊢ nffis [] = 0 ∧ (∀tr s. nffis (TrStep s::tr) = nffis tr) ∧\n  ∀tr s nb i. nffis (TrFfi i nb s::tr) = nffis tr + 1",
+  "DEFINITION@120": "trace_last_def\n⊢ (∀ms. trace_last ms [] = ms) ∧\n  (∀tr s ms. trace_last ms (TrStep s::tr) = trace_last s tr) ∧\n  ∀tr s nb ms i. trace_last ms (TrFfi i nb s::tr) = trace_last s tr",
+  "DEFINITION@126": "trace_st_def\n⊢ (∀st ms mc. trace_st mc st ms [] = st) ∧\n  (∀tr st s ms mc. trace_st mc st ms (TrStep s::tr) = trace_st mc st s tr) ∧\n  ∀tr st s nb ms mc i.\n    trace_st mc st ms (TrFfi i nb s::tr) =\n    trace_st mc (ffi_post_st mc st ms i) s tr",
+  "DEFINITION@134": "trace_events_def\n⊢ (∀ms mc. trace_events mc ms [] = []) ∧\n  (∀tr s ms mc. trace_events mc ms (TrStep s::tr) = trace_events mc s tr) ∧\n  ∀tr s nb ms mc i.\n    trace_events mc ms (TrFfi i nb s::tr) =\n    ffi_call_event mc ms i nb ++ trace_events mc s tr",
+  "DEFINITION@142": "trace_ok_def\n⊢ (∀st ms mc P G. trace_ok P G mc st ms [] ⇔ T) ∧\n  (∀tr st s ms mc P G.\n     trace_ok P G mc st ms (TrStep s::tr) ⇔\n     step_event_ok mc ms s ∧ P (mc.target.next ms) = P s ∧\n     trace_ok P G mc st s tr) ∧\n  ∀tr st s nb ms mc i P G.\n    trace_ok P G mc st ms (TrFfi i nb s::tr) ⇔\n    ffi_event_ok mc st ms i nb ∧ G (i,nb,ms) s ∧\n    trace_ok P G mc (ffi_post_st mc st ms i) s tr"
+ },
+ "markers": [],
+ "missing": []
+}

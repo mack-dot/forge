@@ -1,0 +1,42 @@
+CHANGES_TR2 (worker W-trace, round 3, 2026-11-19). STATIC ONLY. NOTHING HERE WAS RUN; every tactic is UNCHECKED.
+Input: /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TRx-0003/stdout.log. TRx-0003 ended with exit 0, EXPLORE_COMPLETE, and CLOSED 37 of 41 (orchestrator report).
+Diagnosis (log lines 555-628):
+- trace_terminate, trace_fail and trace_diverge all failed at step 1, every candidate, with "predicate not true" (Lib.assert).
+- Source: drule_all (HOL src/1/Tactic.sml 1327-1336). It asserts that the final result is no longer an implication.
+- Cause: drule (mp_then) leaves the unmatched consequent variable k FREE. So the "!k. evaluate ..." antecedent of term_after, fail_after and div_after never matched.
+- toy_bad_not_followed: at step 6 the goal still showed "evaluate MCB toy_st (SUC (SUC 0)) 0w". So the REWRITE in steps 3 and 5 changed nothing, because st and k were free in the drule_all results.
+- The definitions and the other 37 lemmas need no change.
+A. PART 1. TR1-0001.sml, theory forge_machineTrace. Diff: diff-TR1-0001.txt against TR-0003.sml.
+   - tr_part1.sml sets PART1_NAMES = the 37 closed lemmas (31 required shift_seq_shift_seq..fail_after, div_after, and the 5 toy controls).
+   - TR_LEMMAS1 = these entries of tr_steps2.sml TR_LEMMAS0, unchanged (same statement terms, same step lists), with the flag set to required. Toy entries are kept only if TOY_DEFS_OK.
+   - tr_select_part1.sml sets TR_LEMMAS = TR_LEMMAS1.
+   - tr_common2.sml, tr_steps2.sml and tr_prove.sml are unchanged (no new bytes).
+   - New check: the stored list = TR_LEMMAS1 exactly. No check names the four missing lemmas. Harness otherwise as TR-0003.
+B. REPAIR. tr_steps_fix.sml: FIX_TERM, FIX_FAIL, FIX_DIV, FIX_TOY, each in 5-8 small steps with 1-2 alternatives per step.
+   - The "!k" fact is proved explicitly: gen_tac, MATCH_MP_TAC evaluate_follows_trace, ACCEPT.
+   - term_after, fail_after and div_after are instantiated in full with qspecl_then (alternative: Q.ISPECL_THEN).
+   - Their antecedents are closed by conj_tac + ACCEPT (alternative: metis).
+   - The io fact uses MATCH_MP_TAC trace_io + qexistsl [P,G].
+   - Toy steps 3 and 5 use Q.ISPECL full instances.
+   - TRx-0004.sml (diff-TRx-0004.txt, scratch theory forge_machineTraceExplore4) RE-PROVES part 1 inside the run, then tries the four, through tr_part1.sml, tr_steps_fix.sml and tr_select_fix.sml. Deps unchanged.
+   - TR2-0001.sml (diff-TR2-0001.txt), theory forge_machineTracePrefix, sits on top of forge_machineTrace:
+     - tr2_common.sml fetches the parent's 15 definitions and all its theorems. Every copied block is byte-identical to tr_common2.sml; checked with python, ranges in the file.
+     - It then reads tr_steps_fix.sml, tr2_select.sml and tr_prove.sml.
+     - Required: trace_terminate, trace_fail. Optional: trace_diverge, toy_bad_not_followed.
+     - The closure must contain forge_machineTrace.
+   - No statement changed.
+Static checks: check_sml.py on the 9 new .sml files: exit 0. ASCII grep: no non-ASCII byte.
+Commands for the orchestrator (NOT RUN; single HOL slot; one at a time):
+  cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
+  cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/TR1-0001.sml TR1-0001.sml
+  ./nightshift-run.sh TR1-0001 1200 deps-TR.txt          # success = exit 0, EXACT_COMPLETE, "CONTROL_OK stored list = part 1 exactly (37 lemmas)"
+  cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/TRx-0004.sml TRx-0004.sml
+  ./nightshift-run.sh TRx-0004 1200 deps-TR.txt          # read TRY_HELPER_* / STEP_FAILED for the last 4 lemmas
+  # TR2 only if TR1-0001 passed and TRx-0004 closed trace_terminate and trace_fail:
+  cp deps-TR.txt deps-TR2.txt
+  echo /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/forge_machineTraceTheory.sig >> deps-TR2.txt
+  echo /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/forge_machineTraceTheory.sml >> deps-TR2.txt
+  cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/TR2-0001.sml TR2-0001.sml
+  ./nightshift-run.sh TR2-0001 1200 deps-TR2.txt
+  (The two deps lines follow the deps-MG.txt convention <case>/XTheory.sig and .sml. If the runner leaves the export in
+   <case>/.hol/objs/, use those paths.)

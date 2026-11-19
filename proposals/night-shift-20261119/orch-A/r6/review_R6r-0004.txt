@@ -1,0 +1,294 @@
+review_R6r-0004.txt - worker W-R6rrev (adversarial review), Night-Shift Orchestrator A, proof track, 2026-11-19.
+READING ONLY. No HOL, no Dafny, no git, no network. No existing file changed.
+Object: /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/R6r-0004* (driver, logs, run record, theory objects)
+        + shared files /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/preflight/round13/r6r_{common,steps,prove}.sml
+
+VERDICT: HOLDS WITH LIMITS.
+  The 9 theorems and 4 definitions are machine-checked, with no HOL hypothesis, no oracle except DISK_THM, and only the
+  4 bool axioms in the closure (550 nodes). No defect breaks soundness. The limits: the specs are heap-level invariant
+  preservation for ONE function (refillBuffer_with_read, plus its STR wrapper); nothing yet connects them to the refund
+  program, to the semantic io_events list, or to the machine. The claim wording "every FFI event made by the buffered
+  stdin read functions" over-states the coverage (see D3, D4).
+
+==================================================================================================================
+1. EXIT, MARKERS, STDERR, CANDIDATE FAILURES
+==================================================================================================================
+- R6r-0004.run.json: actual_exit 0, wall_timeout false, wall 248.0 s, markers ["EXACT_COMPLETE"]. go.log: "exit 0",
+  "actual_exit 0 ... inputs_unchanged_after True", "hash_parents exit 0", "USED_FILES_UNCHANGED true", "go exit 0".
+- stderr.log: 0 bytes; run.json stderr_sha256 = e3b0c442... (sha256 of the empty string). Agrees.
+- stdout.log sha256 57e1599a...890b = run.json stdout_sha256. .dat/.sig/.sml sha256 = run.json "objects" (8821d180...,
+  6e103506..., 756fa28b...). Recomputed by this review: all equal.
+- R6r-0004/proof.sml is byte-equal to R6r-0004.sml (cmp exit 0); sha256 29af2a58... = run.json source_sha256.
+- grep of stdout for WATCHDOG, TIMEOUT_CANDIDATE, LEMMA_FAILED, DEFINITION_FAILED, STATEMENT_PARSE_FAILED,
+  FRAME_THM_FAILED, TYPES_FAILED, REPRIVILEGE_FAILED: 0 hits. The watchdog exit path (R6r-0004.sml:43-46) did not fire.
+- "GRAMMAR_BEFORE ... xlet_auto_dummy_spec FAILED" (stdout:23): HARMLESS. It is the diagnostic probe made BEFORE the
+  grammar repair (r6r_common.sml:14). The repair re-privileges the types of ffi/namespace/ast/semanticPrimitives
+  (stdout 24-37); stdout:38 "GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK" and stdout:39
+  "GRAMMAR_FIX B". A wrong type resolution could only make a statement mean something else; the statements that matter
+  are tied by successful proofs to parent constants (read_into_spec_R is proved FROM read_into_spec_V of R6ffi;
+  read_event_ok_refund is proved AGAINST refund_valid_event_def of RouteA2c; the refill specs are built by term
+  surgery on the STORED TextIOProof theorems). So a silent constant mismatch would have broken a proof, not passed it.
+- STEP_CANDIDATE_FAILED for INSTREAM_BUFFERED_FD_V_IMP (stdout:199-200): candidates 0 (metis "no solution found") and
+  1 (NO_TAC) failed; candidate 2 (rw [..., SEP_IMP_def, SEP_EXISTS_THM, cond_STAR] \\ metis_tac []) closed the goal
+  (stdout:201, goals_out 0). HARMLESS: a fallback candidate cannot store a weaker statement, because prove_steps
+  (r6r_prove.sml:9-17) runs TAC_PROOF on the FIXED statement and saves only if hyp = [] and aconv concl stmt.
+- FAILED_LIST IS appended to: r6r_prove.sml:19-20 (handler of prove_steps: a required lemma -> failed, an optional
+  lemma -> optional_failed). The driver raises if failed is non-empty (R6r-0004.sml:101). "FAILED_LIST " empty
+  (stdout) and "OPTIONAL_FAILED " empty: all 9 lemmas, including the 3 optional ones, stored.
+- "Context.snapshot: ambient context read while a proof was running" (STD_streams_fd0): a HOL warning, no effect on
+  soundness.
+
+==================================================================================================================
+2. SOUNDNESS HARNESS
+==================================================================================================================
+- One Tactical.TAC_PROOF per statement; save only if null (hyp th0) andalso aconv (concl th0) stmt (r6r_prove.sml:9-11).
+- tags (R6r-0004.sml:63-65): hyp = [], axioms tag = [], every oracle = "DISK_THM". Applied per lemma (chk, line 89) AND
+  to ALL DB.theorems @ DB.definitions of forge_refundR6Read (line 102). Oracle tags of loaded ancestors propagate
+  through the .dat files, so a cheat anywhere upstream of a used theorem would show here.
+- Axioms: line 104-106 collects DB.axioms over the whole ancestry; exactly the 4 bool axioms (stdout CLOSURE_AXIOM x4).
+- Counts: STORED_THEOREMS 9 = length stored_names, STORED_DEFINITIONS 4 (line 118-120); required names present
+  (121-123). Parents forge_refundR6Write, forge_refundR6Ffi, forge_refundRouteA2c, TextIOProof in the closure.
+  Parent objects bound by sha256 in R6r-0004/command.json (R6ffi-0002 .sig ab3b7581..., R6w-0004 .sig afa7c1e3...).
+- ASSUME: the only ASSUME is r6r_steps.sml:317-318 (REFILL_V_G_CLOSED_ASSUME). It is used ONLY by
+  REFILL_STR_V_CA_STEPS (line 398) = R6R_EXPLORE_STR_CA (line 413), an exploration walk. The proof driver does not
+  `use` r6r_explore_calls.sml (R6r-0004.sml:94-96), and R6R_LEMMAS (r6r_steps.sml:401-410) does not name it. Even if it
+  were reached, the hyp check would reject the result. No mk_thm, cheat, new_axiom, mk_oracle_thm in the 4 files.
+- `handle` review (every catch that does not re-raise):
+  r6r_common.sml:46-49 and 133-135 fall back to TRUTH / T only when R6R_PROOF_MODE = false; the driver sets it true
+    (R6r-0004.sml:92), so a failure re-raises.
+  r6r_common.sml:20, 28: grammar diagnostics; 90-95: frame-theorem registration (automation only; stdout shows
+    FRAME_THM_PRESENT for both); r6r_steps.sml:28-29: temp_delsimps (automation only; DELSIMPS_OK printed).
+  r6r_common.sml:116-124 (step_tac): a failed candidate goes to the next candidate; the final result is still checked
+    by TAC_PROOF + aconv. R6r-0004.sml:49, 54: watchdog thread internals. None turns a failure into a stored theorem.
+- Minor record defect (no soundness effect): R6r-0004.sml:1 says "R6r-0003.sml (worker W-pre, preflight round13)".
+  The file is NOT byte-equal to preflight/round13/R6r-0003.sml (sha256 9b3db47b...): 8 lines differ (R6r-0004.sml:33-34,
+  38, 48-50, 54-56: Thread.Thread.self -> Thread.self, Thread.Mutex.* -> Mutex.*, etc.). The header does not record this
+  change; it is recorded only indirectly (round15/CHANGES.txt "with the Thread/Mutex fix" for R6tx-0003). The change is
+  inside the timeout guard only and touches no statement or tactic. Call this D1.
+
+==================================================================================================================
+3. EXACT STORED STATEMENTS (ASCII transliteration of stdout.log lines 41-70 and 75-153; the stored theorems are aconv
+   to these STATEMENT terms by the check in r6r_prove.sml:10; free variables are implicitly universal)
+==================================================================================================================
+DEFINITION |- !Inv fd.
+    read_event_ok Inv fd <=>
+    !n h3 h4 rest nb.
+      n = 4096 /\ LENGTH rest = 4096 /\ LENGTH nb = 4 + LENGTH rest /\
+      HD nb = 0w ==>
+      Inv
+        (IO_event (ExtCall <<read>>) (n2w8 fd)
+           (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+DEFINITION |- !bactive fd is.
+    INSTREAM_BUFFERED_FD_V bactive fd is =
+    SEP_EXISTS bcontent.
+      INSTREAM_BUFFERED_BL_FD bcontent bactive fd is *
+      &(LENGTH bcontent = 4100)
+DEFINITION |- !fd is s fs.
+    INSTREAM_STR_V fd is s fs =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD_V (MAP (n2w o ORD) active) fd is *
+      &(s = STRCAT active left /\
+       get_fd_content fs fd =
+       SOME (STRCAT read s,STRLEN read + STRLEN active) /\
+       get_mode fs fd = SOME ReadMode)
+DEFINITION |- !fd is s fs non_empty is_empty.
+    INSTREAM_STRP_V fd is s fs non_empty is_empty =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD_V (MAP (n2w o ORD) active) fd is *
+      &(s = STRCAT active left /\ (non_empty ==> active <> "") /\
+       (is_empty ==> active = "") /\
+       get_fd_content fs fd =
+       SOME (STRCAT read s,STRLEN read + STRLEN active) /\
+       get_mode fs fd = SOME ReadMode)
+STATEMENT read_event_ok_read_into
+!Inv fd n h3 h4 rest.
+  read_event_ok Inv fd /\ n = LENGTH rest /\ LENGTH rest = 4096 ==>
+  !nb.
+    LENGTH nb = 4 + LENGTH rest /\ HD nb = 0w ==>
+    Inv
+      (IO_event (ExtCall <<read>>) (n2w8 fd) (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+STATEMENT read_event_ok_refund
+read_event_ok refund_valid_event 0
+STATEMENT STD_streams_fd0
+!fs.
+  wfFS fs /\ STD_streams fs ==>
+  get_fd_content fs 0 <> NONE /\ get_mode fs 0 = SOME ReadMode
+STATEMENT INSTREAM_STRP_V_F_F
+!fd is s fs. INSTREAM_STRP_V fd is s fs F F = INSTREAM_STR_V fd is s fs
+STATEMENT INSTREAM_BUFFERED_FD_V_IMP
+!bactive fd is.
+  INSTREAM_BUFFERED_FD_V bactive fd is ==>>
+  INSTREAM_BUFFERED_FD bactive fd is
+STATEMENT INSTREAM_STR_V_IMP
+!fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+STATEMENT read_into_spec_R
+!fs fd fdv n nv buf.
+  wfFS fs ==>
+  FD fd fdv ==>
+  NUM n nv ==>
+  n < 256**2 ==>
+  MAX n 1024 <= LENGTH rest ==>
+  get_fd_content fs fd <> NONE ==>
+  get_mode fs fd = SOME ReadMode ==>
+  n = LENGTH rest ==>
+  LENGTH rest = 4096 ==>
+  read_event_ok Inv fd ==>
+  app p TextIO_read_into_v [fdv; buf; nv]
+    (W8ARRAY buf (h1::h2::h3::h4::rest) * IOxV Inv fs)
+    (POSTve
+       (\nrv.
+          SEP_EXISTS nr.
+            &NUM nr nrv *
+            SEP_EXISTS content pos.
+              &(get_fd_content fs fd = SOME (content,pos) /\
+               get_mode fs fd = SOME ReadMode /\
+               (nr <= MIN n (STRLEN content - pos) /\
+                nr <= STRLEN content - pos) /\
+               (nr = 0 <=> eof fd fs = SOME T \/ n = 0)) *
+              IOxV Inv (bumpFD fd fs nr) *
+              W8ARRAY buf
+                (0w::n2w (nr DIV 256)::n2w nr::h4::
+                   MAP (n2w o ORD) (TAKE nr (DROP pos content)) ++
+                 DROP nr rest))
+       (\e.
+          &InvalidFD_exn e *
+          &(get_fd_content fs fd = NONE \/ get_mode fs fd <> SOME ReadMode) *
+          IOFS_WO_iobuff fs))
+STATEMENT refillBuffer_with_read_spec_V
+!fd fdv fs content pos.
+  is = Conv instreambuffered_con_stamp [fdv; rr; wr; isbuff] /\
+  get_fd_content fs fd = SOME (content,pos) ==>
+  get_mode fs fd = SOME ReadMode ==>
+  LENGTH bcontent = 4100 ==>
+  read_event_ok Inv fd ==>
+  app p TextIO_refillBuffer_with_read_v [is]
+    (IOFS_V Inv fs * INSTREAM_BUFFERED_BL_FD bcontent bactive fd is)
+    (POSTv wv. SEP_EXISTS nr h4 rest.
+       &(NUM nr wv /\
+        LENGTH bcontent = LENGTH (0w::n2w (nr DIV 256)::n2w nr::h4::rest) /\
+        (nr = 0 <=> eof fd fs = SOME T) /\ (nr = 0 <=> ~(pos < STRLEN content)) /\
+        nr = LENGTH (explode_fromI nr content pos) /\
+        nr <= STRLEN content - pos) *
+       INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+         (explode_fromI nr content pos) fd is * IOFS_V Inv (bumpFD fd fs nr))
+STATEMENT refillBuffer_with_read_spec_STR_V
+read_event_ok Inv fd ==>
+app p TextIO_refillBuffer_with_read_v [is]
+  (STDIO_V Inv fs * INSTREAM_STRP_V fd is input fs F T)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     INSTREAM_STRP_V fd is input (forwardFD fs fd nr) (~NULL input)
+       (NULL input))
+
+Per-item judgement (vacuity, comparison with CakeML /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/
+cakeml/basis/TextIOProofScript.sml):
+
+D-1 read_event_ok_def: a plain universal statement about Inv on the read events of a 4100-byte array (2 length bytes
+    n2w2 4096, then h3, h4, then 4096 bytes), success byte HD nb = 0w. Not defined as T. Satisfiable and non-trivial:
+    read_event_ok_refund proves it for Inv = refund_valid_event, fd = 0; it is false for a write-only Inv.
+D-2 INSTREAM_BUFFERED_FD_V_def: = INSTREAM_BUFFERED_FD (TextIOProofScript.sml 1009-1018) with the existential bcontent
+    exposed through INSTREAM_BUFFERED_BL_FD (1020-1029) and pinned to LENGTH 4100. STRONGER than the original
+    (INSTREAM_BUFFERED_FD_V_IMP proves V ==>> original). 4100 is inside the original bounds 1028 <= L < 65536
+    (instream_buffered_inv_def 956-968), so it is satisfiable. 4100 = min 65535 (max (4096+4) 1028) =
+    openStdIn's array (TextIOProgScript.sml 297-305). No theorem here proves that openStdIn produces it.
+D-3 INSTREAM_STR_V_def, D-4 INSTREAM_STRP_V_def: the originals INSTREAM_STR (5773-5780) and INSTREAM_STR' (5811-5819)
+    with only INSTREAM_BUFFERED_FD -> INSTREAM_BUFFERED_FD_V. Text compared: identical otherwise.
+T1 read_event_ok_read_into: the unfolding of read_event_ok into the H_inv form of read_into_spec_V. Correct, not vacuous.
+T2 read_event_ok_refund: |- read_event_ok refund_valid_event 0. THIS IS the implication "read_event_ok => valid read
+    event" for fd 0. refund_valid_event_def (attempt-0001/L2c-0001/stdout.log:35-43) read clause: ab of LENGTH 4100,
+    TAKE 2 ab = n2w2 4096, LENGTH nb = LENGTH ab, HD nb = 0w, fd byte n2w8 0. read_event_ok gives exactly ab =
+    n2w2 4096 ++ h3::h4::rest with LENGTH rest = 4096 (so 4100) and LENGTH nb = 4100. So the implication is NOT missing.
+    Limit: it holds only for fd with n2w8 fd = n2w8 0 (in practice fd 0); a caller must show that the instream's fd is 0.
+T3 STD_streams_fd0: wfFS /\ STD_streams ==> fd 0 has content and ReadMode. Not vacuous (standard initial fs). It closes
+    item "descriptor-0 lemma" of the R6ffi and R6w reviews.
+T4 INSTREAM_STRP_V_F_F: copy of the [local] INSTREAM_STR'_F_F (5821-5826). Pure rewriting lemma.
+T5 INSTREAM_BUFFERED_FD_V_IMP, T6 INSTREAM_STR_V_IMP: weakening V ==>> standard. Right direction. There is NO converse
+    (standard ==>> V is false in general), so no existing CakeML spec that RETURNS INSTREAM_STR can be reused to
+    produce INSTREAM_STR_V: every caller on the read path needs its own V-spec.
+T7 read_into_spec_R: = read_into_spec_V (R6ffi-0002) with H_inv replaced by n = LENGTH rest, LENGTH rest = 4096,
+    read_event_ok Inv fd. Compared with the CakeML read_into_spec (2132-2149): same pre/post with IOx fs_ffi_part ->
+    IOxV Inv in the success branch, plus the two error-excluding hypotheses (get_fd_content <> NONE, ReadMode) from
+    R6ffi and the three new ones. The exception branch keeps IOFS_WO_iobuff fs (no Inv), but under the hypotheses its
+    pure part (get_fd_content = NONE \/ mode <> ReadMode) is false, so the spec says no exception occurs. Specialised
+    to one buffer shape (4096 + 4 bytes, n = 4096); not vacuous: refillBuffer_with_read_spec_V uses it in both branches
+    (stdout STEP_USED 11 and 21).
+T8 refillBuffer_with_read_spec_V: built by term surgery from the STORED TextIOProof.refillBuffer_with_read_spec
+    (r6r_common.sml:172-177): all original hypotheses kept, then + LENGTH bcontent = 4100 + read_event_ok Inv fd, and
+    IOFS -> IOFS_V Inv in pre and post. Compared with 2725-2743: same shape. The event property is NOT a separate
+    conjunct; it is carried by IOFS_V Inv = IOxV Inv * (iobuff of EXACTLY 2052 bytes) * wfFS (R6ffi-0002 stdout:40-53),
+    and IOxV Inv fs = SEP_EXISTS events. FFI_part ... events * &EVERY Inv events. So T8 means: if every fs-part event
+    so far satisfies Inv, every fs-part event after the call satisfies Inv. The post keeps the buffer length (LENGTH
+    bcontent = LENGTH new), so the 4100 pin survives repeated refills. Not vacuous for the program's stdin instream,
+    provided IOFS_V Inv holds initially (the 2052 pin; see 6).
+T9 refillBuffer_with_read_spec_STR_V: = refillBuffer_with_read_spec_STR (6824-6831) with STDIO -> STDIO_V Inv,
+    INSTREAM_STR' -> INSTREAM_STRP_V, under read_event_ok Inv fd. Same shape; precondition flags F T as original.
+Is any item vacuous or trivially true? NO. No premise is unsatisfiable (4100 and 2052 are the real sizes; read_event_ok
+is satisfied by refund_valid_event at fd 0). No predicate is T. The V-predicates are STRONGER than the originals, which
+makes the specs harder to USE (callers must establish the pins), not weaker.
+
+==================================================================================================================
+4. BUFFER SIZES AND CALL SHAPES OF THE REFUND PROGRAM
+==================================================================================================================
+Program path (cakeml/compiler/dafny/forge_refundStdioProg_experiment/forge_refundStdioProgScript.sml:11-16):
+  refund_main = TextIO.inputAllFrom None, then TextIO.print.
+  inputAllFrom None -> open_option None -> openStdIn () = openStdInSetBufferSize 4096 (TextIOProgScript.sml 297-305,
+  524-529): array of 4100 bytes, fd = raw_stdIn = n2w8 0 (line 146). Then inputAll -> inputAll_aux (564-575) ->
+  inputBuff (no FFI) and refillBuffer_with_read_guard (461-465) -> refillBuffer_with_read (387-392) -> read_into
+  (Word8Array.length surplus - 4 = 4096 bytes). Then close () = consume_rest is (517-521) -> input1 -> (when empty)
+  refillBuffer_with_read (line 429). So EVERY read FFI event of the program goes through refillBuffer_with_read with
+  n = 4096 on the 4100-byte stdin buffer. T8 covers exactly this shape. (The 2052 size is the iobuff of the WRITE side
+  and of IOFS_V, not the read buffer.)
+Side conditions of T8 and who must discharge them later:
+  is = Conv instreambuffered_con_stamp [...]      -> the V-spec of openStdIn / INSTREAM_STRP_V unfolding (done in T9).
+  get_fd_content fs fd = SOME, ReadMode            -> from INSTREAM_STRP_V (T9), or STD_streams_fd0 (T3) at fd 0.
+  LENGTH bcontent = 4100                            -> from INSTREAM_BUFFERED_FD_V; initially from an openStdIn V-spec
+                                                       (NOT PROVED).
+  read_event_ok Inv fd                              -> read_event_ok_refund (T2) with fd = 0; the fd = 0 fact must
+                                                       come from the openStdIn V-spec (NOT PROVED).
+  IOFS_V Inv fs (iobuff exactly 2052, EVERY Inv on old events) -> initial heap lemma IOFS_V_init / init_heap_V
+                                                       (round15 R6t, STAGED, NOT PROVED; IOFS_V_init failed in
+                                                       R6tx-0003, round15 repair UNCHECKED).
+
+==================================================================================================================
+5. INPUT INTEGRITY
+==================================================================================================================
+- R6r-0004.used-files.pre.txt and .post.txt: byte-equal (diff exit 0). sha256 of pre.txt = 240410e204ea5abd... =
+  the 16-hex prefix in go.log "USED_FILES_PRE 6 240410e204ea5abd". 6 files listed.
+- This review recomputed the sha256 of the round13 files on disk; all 6 equal the recorded values:
+  r6r_common.sml 34d55f95..., r6r_steps.sml b2302a45..., r6r_prove.sml 35189082..., r6r_explore_calls.sml 3b1f18e1...,
+  R6r-0003.sml 9b3db47b..., R6rx-0003.sml 28757a25.... The driver `use`s only the first three (R6r-0004.sml:94-96).
+- Residual (as in the R6w review): the lists are side files bound by a 16-hex prefix; a window of seconds between the
+  wrapper's hash and HOL's `use` remains.
+
+==================================================================================================================
+6. DEFECTS AND WHAT REMAINS FOR R6
+==================================================================================================================
+Defects (none breaks soundness):
+  D1 R6r-0004.sml:1-3 header names the file R6r-0003.sml and claims "= round12/R6r-0002.sml with only ... the guard
+     block"; the run file differs from preflight/round13/R6r-0003.sml in 8 guard lines (Thread/Mutex names). Record gap.
+  D2 Claim wording "with no hypothesis": true for HOL hyp lists only. T7, T8, T9 have side conditions (implications),
+     incl. the two pins and read_event_ok; they are not discharged for the program here.
+  D3 Claim wording "every FFI event made by the buffered stdin read functions is a valid read event": over-stated.
+     Proved: invariant preservation for refillBuffer_with_read (T8) and its STR form (T9) only, for a generic Inv; with
+     Inv = refund_valid_event this gives "valid event" (read OR write disjunct), not "read event" by a stored theorem.
+     No V-spec exists for refillBuffer_with_read_guard, inputBuff, inputAll_aux, inputAll, input1, consume_rest,
+     open_option, openStdIn, inputAllFrom.
+  D4 Only the fs FFI part is covered (IOxV is about the fs_ffi_part events). Events of other FFI parts and the
+     semantic io_events list are not reached (R6w review item d).
+What remains for R6 (concrete):
+  R1 openStdIn V-spec: INSTREAM_STR_V 0 with a 4100-byte buffer and fd 0 (gives LENGTH bcontent = 4100 and fd = 0).
+  R2 refillBuffer_with_read_guard_spec_STR_V (copy of 6870-6895 with T9 instead of refillBuffer_with_read_spec_STR).
+  R3 inputBuff V-spec; inputAll_aux_spec_V (complete induction, copy of 8206-...), inputAll_spec_V.
+  R4 input1 / consume_rest V-specs (the close () of open_option reads again), open_option V-spec, and
+     inputAllFrom_NONE_spec_V incl. the "handle e => (close (); raise e)" path.
+  R5 refund main V-spec under STDIO_V refund_valid_event: success path (with print_spec_refund of R6w-0004) and the
+     Fail exception path (refund_main_error); refund_dispatch makes no FFI call (to be shown, or framed).
+  R6 Initial heap: IOFS_V_init / init_heap_V incl. LENGTH bs2 = 2052 (round15 R6t; STAGED, NOT PROVED).
+  R7 The eval_state bridge and the link from fs-part heap events to the whole semantic io_events list
+     (whole_prog_spec_V_events / sem_satisfies in round15 r6t_common.sml; STAGED, NOT PROVED).
+  R8 The transfer from the source-semantics event list to the machine level (compiler correctness / targetSem).
+  R9 Exclusion of close and open_in events on the real run (RouteA2c has them as not valid; the program must be shown
+     never to make them; on the stdin path none occurs, but this is a spec-level fact still to state).
+What the stored theorems do NOT give: no statement about the refund program; no statement about the semantic
+io_events list; no statement for any read function other than read_into / refillBuffer_with_read; no initial-state
+fact (no openStdIn V-spec, no IOFS_V_init); no machine-level fact.

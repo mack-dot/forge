@@ -1,0 +1,32 @@
+      cmd LC_DYLD_CHAINED_FIXUPS
+  cmdsize 16
+  dataoff 212992
+ datasize 368
+Load command 6
+      cmd LC_DYLD_EXPORTS_TRIE
+  cmdsize 16
+  dataoff 213360
+ datasize 640
+Load command 7
+--
+          cmd LC_LOAD_DYLINKER
+      cmdsize 32
+         name /usr/lib/dyld (offset 12)
+Load command 10
+     cmd LC_UUID
+--
+       cmd LC_MAIN
+   cmdsize 24
+  entryoff 152900
+ stacksize 0
+Load command 14
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 19:00:02 1969
+      current version 1351.0.0
+--
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 236800
+ datasize 1976

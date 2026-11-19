@@ -1,0 +1,35 @@
+2026-11-19T16:07:49Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8578.62M  free = 1661.38M  (encrypted)
+System-wide memory free percentage: 56%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=1661 memory_free_percent=56
+USED_FILES_PRE 6 240410e204ea5abd
+exit 0
+actual_exit 0 wall 248.049 cpu 168.828 rss_mib 2720 ['EXACT_COMPLETE'] inputs_unchanged_after True
+23:GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argume
+36:TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+164:CHECKED read_event_ok_read_into
+178:CHECKED read_event_ok_refund
+186:CHECKED STD_streams_fd0
+193:CHECKED INSTREAM_STRP_V_F_F
+200:CHECKED INSTREAM_BUFFERED_FD_V_IMP
+209:CHECKED INSTREAM_STR_V_IMP
+216:CHECKED read_into_spec_R
+364:CHECKED refillBuffer_with_read_spec_V
+382:CHECKED refillBuffer_with_read_spec_STR_V
+394:CLOSURE_AXIOM bool.SELECT_AX
+395:CLOSURE_AXIOM bool.INFINITY_AX
+396:CLOSURE_AXIOM bool.ETA_AX
+397:CLOSURE_AXIOM bool.BOOL_CASES_AX
+398:CONTROL_OK closure contains forge_refundR6Write
+399:CONTROL_OK closure contains forge_refundR6Ffi
+400:CONTROL_OK closure contains forge_refundRouteA2c
+401:CONTROL_OK closure contains TextIOProof
+405:CONTROL_OK theorems = stored list, 4 definitions
+406:CONTROL_OK refillBuffer_with_read_spec_V and read_event_ok_refund stored
+407:CLOSURE_NODES 550
+410:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

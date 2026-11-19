@@ -1,0 +1,5 @@
+MUT-2v2 no L2/L7 (replaced binary)   mutant=('AUTHORIZED', 400, b'returned_ite v2=('REFUSED', 'L2 SHA-256 of the executabl OK
+MUT-4v2 no L7 (swapped copy)         mutant=('AUTHORIZED', 400, b'returned_ite v2=REFUSED L7                               OK
+MUT-6v2 invented status 0 (F-01)     mutant=('AUTHORIZED', 40, b'returned_item v2=('REFUSED', 'D3 exit code 7 is not 0')   OK
+MUT-7v2 no fixed rlimits             mutant=nofile=40/-1                       v2=nofile=64/64                             OK
+test_mutants_v2: 4 rows, 0 not as expected

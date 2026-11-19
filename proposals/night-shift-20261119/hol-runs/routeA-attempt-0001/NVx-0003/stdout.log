@@ -1,0 +1,1317 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+<<HOL message: Created theory "forge_refundShapeSatExplore3">>
+EXPLORE_MODE nothing is exported (scratch theorems only)
+MARK USE nv_common.sml
+MARK COMMON
+MARK FETCH
+USED refund_env_ok_sl_def
+⊢ ∀sl envmc.
+    refund_env_ok_sl sl envmc ⇔
+    interference_ok envmc.next_interfer
+      (arm8_target.proj envmc.prog_addresses) ∧
+    refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+      envmc.ffi_interfer
+USED refund_ffi_contract_at_def
+⊢ ∀b dm ffi_i.
+    refund_ffi_contract_at b dm ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+USED refund_ffi_contract_on_def
+⊢ ∀b dm Vok ffi_i.
+    refund_ffi_contract_on b dm Vok ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ∧ Vok index new_bytes ms2 ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+USED refund_abs_env_def
+⊢ ∀envmc.
+    refund_abs_env envmc =
+    envmc with
+    <|next_interfer := refund_id_interfer; ffi_interfer := refund_abs_ffi|>
+USED refund_id_interfer_ok
+⊢ ∀proj. interference_ok refund_id_interfer proj
+USED remaining_premise_met_by_the_abstract_effect
+⊢ ∀b dm.
+    refund_ffi_contract_on b dm
+      (λi nb s.
+         (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+         (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+      refund_abs_ffi
+USED machine_sem_total
+⊢ ∃b. machine_sem mc st ms b
+USED refund_profile_a_sl_all_premises_satisfiable_at_0x4000
+⊢ ∃s h stk e envmc fs cl.
+    refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+    8192w ≤₊ e − h ∧ refund_heap_clear_sl 16384w h e ∧
+    envmc.prog_addresses = refund_mem_dm_sl 16384w h e ∧
+    refund_env_ok_sl 16384w envmc ∧
+    stdin_content fs =
+    SOME
+      (explode
+         (sexp_to_string
+            (refund_request charge request original remaining enabled opened
+               candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+    STD_streams fs
+MARK TERMS
+ANTE_CONJUNCTS 12
+ANTE_FREE_VARS cl reason amount candidate opened enabled remaining original request charge fs envmc e stk h s sl
+CONTROL_OK the antecedent has exactly 17 free variables (8 premise + 9 request)
+CONTROL_OK antecedent of refund_profile_a_sl_shape = antecedent of refund_model_frame_decision_shape
+CONTROL_OK no free ext in the antecedent (ext := no_ext changes nothing in it)
+VOKS λi nb s.
+  (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+  (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)
+SLIDE_OF_OLD_WITNESS 16384w
+CONTROL_OK the bound variables of the old witness = s h stk e envmc fs cl of the antecedent (names and types)
+CONTROL_OK the free variables of the old witness are request fields of the antecedent
+CONTROL_OK the entry witness is at the same slide
+WITNESS_ENVMC refund_abs_env
+  <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>
+WITNESS_FS sat_fs
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+WITNESS_CL [«refund»]
+ACCESSOR ffi_interfer constant recordtype.machine_config.seldef.ffi_interfer
+ACCESSOR next_interfer constant recordtype.machine_config.seldef.next_interfer
+ACCESSOR prog_addresses constant recordtype.machine_config.seldef.prog_addresses
+MARK STATEMENTS
+NV2_EXTRA_FREE_VARS dafny_env dafny_heap
+CONTROL_OK NV1 body is the stored antecedent (aconv)
+CONTROL_OK NV1 has no free variable
+CONTROL_OK NV2 has no free variable
+CONTROL_OK NV0: only request fields are free
+CONTROL_OK NV0 is an instance of the antecedent
+STATEMENT refund_ffi_contract_at_imp_on
+∀Vok b dm ffi_i.
+  refund_ffi_contract_at b dm ffi_i ⇒ refund_ffi_contract_on b dm Vok ffi_i
+STATEMENT refund_abs_env_fields
+∀envmc.
+  (refund_abs_env envmc).ffi_interfer = refund_abs_ffi ∧
+  (refund_abs_env envmc).next_interfer = refund_id_interfer ∧
+  (refund_abs_env envmc).prog_addresses = envmc.prog_addresses
+STATEMENT refund_shape_premises_hold_at_a_constructed_state
+refund_entry_pre_sl 16384w
+  <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+    exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+    TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+  0x200020000w ∧ aligned 3 0x200020000w ∧ 0x200000000w ≤₊ 0x200020000w ∧
+8192w ≤₊ 0x200020000w − 0x200000000w ∧
+refund_heap_clear_sl 16384w 0x200000000w 0x200020000w ∧
+(refund_abs_env
+   <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+prog_addresses = refund_mem_dm_sl 16384w 0x200000000w 0x200020000w ∧
+interference_ok
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  next_interfer
+  (arm8_target.proj
+     (refund_abs_env
+        <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+     prog_addresses) ∧
+refund_ffi_contract_on (16384w + 0x1000040D0w)
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  ffi_interfer ∧
+stdin_content
+  (sat_fs
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason)))) =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl [«refund»] ∧
+wfFS
+  (sat_fs
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason)))) ∧
+STD_streams
+  (sat_fs
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))))
+STATEMENT refund_shape_premises_satisfiable_for_every_request
+∀charge request original remaining enabled opened candidate amount reason.
+    ∃sl s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+STATEMENT refund_shape_premises_satisfiable
+∃charge request original remaining enabled opened candidate amount reason sl
+    s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+STATEMENT refund_shape_run_is_accepted
+∀dafny_env dafny_heap.
+    ∃charge request original remaining enabled opened candidate amount reason
+    sl s h stk e envmc fs cl.
+  (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear_sl sl h e ∧
+   envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+   interference_ok envmc.next_interfer
+     (arm8_target.proj envmc.prog_addresses) ∧
+   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+     (λi nb s.
+        (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+        (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+     envmc.ffi_interfer ∧
+   stdin_content fs =
+   SOME
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+   STD_streams fs) ∧
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi no_ext cl fs) ms b) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+PART_INFO nv_common loaded
+PART_DONE nv_common.sml
+MARK USE nv_steps.sml
+MARK STEPS
+NV_LEMMAS refund_ffi_contract_at_imp_on refund_abs_env_fields refund_shape_premises_hold_at_a_constructed_state refund_shape_premises_satisfiable_for_every_request refund_shape_premises_satisfiable refund_shape_run_is_accepted
+PART_INFO nv_steps loaded
+PART_DONE nv_steps.sml
+MARK USE nv_explore_calls.sml
+TH_ASSUMED all statements
+EXPLORE_LEMMA refund_ffi_contract_at_imp_on
+WALK_BEGIN refund_ffi_contract_at_imp_on steps 5
+  GOAL_COUNT 1
+SHOW GOAL refund_ffi_contract_at_imp_on
+  GOAL ∀Vok b dm ffi_i.
+  refund_ffi_contract_at b dm ffi_i ⇒ refund_ffi_contract_on b dm Vok ffi_i
+WALK_STEP refund_ffi_contract_at_imp_on 1 intro unfold candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_ffi_contract_at_imp_on
+  GOAL (∀k index new_bytes ms2 t1 bytes bytes2.
+   index < 4 ∧ t1.mem_domain = dm ∧
+   read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+     (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+   read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+     (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+   LENGTH new_bytes = LENGTH bytes2 ∧
+   target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+     ms2 ∧ aligned 2 (t1.regs 30) ⇒
+   arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+   (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+   (∀a. a ∈ dm ⇒
+        (ffi_i k (index,new_bytes,ms2)).MEM a =
+        asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+   ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+       (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r) ⇒
+∀k index new_bytes ms2 t1 bytes bytes2.
+  index < 4 ∧ t1.mem_domain = dm ∧
+  read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+    (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+  read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+    (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+  LENGTH new_bytes = LENGTH bytes2 ∧
+  target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2 ∧
+  aligned 2 (t1.regs 30) ∧ Vok index new_bytes ms2 ⇒
+  arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+  (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+  (∀a. a ∈ dm ⇒
+       (ffi_i k (index,new_bytes,ms2)).MEM a =
+       asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+  ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+      (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+WALK_STEP refund_ffi_contract_at_imp_on 2 disch candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_ffi_contract_at_imp_on
+  ASM Vok index new_bytes ms2
+  ASM aligned 2 (t1.regs 30)
+  ASM target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+  ASM LENGTH new_bytes = LENGTH bytes2
+  ASM read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+  ASM read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+  ASM t1.mem_domain = dm
+  ASM index < 4
+  ASM ∀k index new_bytes ms2 t1 bytes bytes2.
+  index < 4 ∧ t1.mem_domain = dm ∧
+  read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+    (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+  read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+    (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+  LENGTH new_bytes = LENGTH bytes2 ∧
+  target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2 ∧
+  aligned 2 (t1.regs 30) ⇒
+  arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+  (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+  (∀a. a ∈ dm ⇒
+   ...
+  GOAL arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+(ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (ffi_i k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+WALK_STEP refund_ffi_contract_at_imp_on 3 spec at-form candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_ffi_contract_at_imp_on
+  ASM Vok index new_bytes ms2
+  ASM aligned 2 (t1.regs 30)
+  ASM target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+  ASM LENGTH new_bytes = LENGTH bytes2
+  ASM read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+  ASM read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+  ASM t1.mem_domain = dm
+  ASM index < 4
+  GOAL (index < 4 ∧ t1.mem_domain = dm ∧
+ read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+   (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+ read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+   (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+ LENGTH new_bytes = LENGTH bytes2 ∧
+ target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2 ∧
+ aligned 2 (t1.regs 30) ⇒
+ arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+ (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+ (∀a. a ∈ dm ⇒
+      (ffi_i k (index,new_bytes,ms2)).MEM a =
+      asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+ ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+     (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r) ⇒
+arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+(ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (ffi_i k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+WALK_STEP refund_ffi_contract_at_imp_on 4 hypotheses candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_ffi_contract_at_imp_on
+  ASM Vok index new_bytes ms2
+  ASM aligned 2 (t1.regs 30)
+  ASM target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+  ASM LENGTH new_bytes = LENGTH bytes2
+  ASM read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+  ASM read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+  ASM t1.mem_domain = dm
+  ASM index < 4
+  GOAL arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+(ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (ffi_i k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+(∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+     (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r) ⇒
+arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+(ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (ffi_i k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+WALK_STEP refund_ffi_contract_at_imp_on 5 conclusion candidate 0 goals 0
+  GOAL_COUNT 0
+WALK_CLOSED refund_ffi_contract_at_imp_on after_steps 5
+TRY_HELPER_BEGIN refund_ffi_contract_at_imp_on required
+STEP_USED refund_ffi_contract_at_imp_on 1 intro unfold candidate 0 goals_out 1
+STEP_USED refund_ffi_contract_at_imp_on 2 disch candidate 0 goals_out 1
+STEP_USED refund_ffi_contract_at_imp_on 3 spec at-form candidate 0 goals_out 1
+STEP_USED refund_ffi_contract_at_imp_on 4 hypotheses candidate 0 goals_out 1
+STEP_USED refund_ffi_contract_at_imp_on 5 conclusion candidate 0 goals_out 0
+Saved theorem _______ "refund_ffi_contract_at_imp_on"
+TRY_HELPER_CLOSED refund_ffi_contract_at_imp_on hyps 0
+TAGS_OK refund_ffi_contract_at_imp_on
+EXPLORE_LEMMA refund_abs_env_fields
+WALK_BEGIN refund_abs_env_fields steps 1
+  GOAL_COUNT 1
+SHOW GOAL refund_abs_env_fields
+  GOAL ∀envmc.
+  (refund_abs_env envmc).ffi_interfer = refund_abs_ffi ∧
+  (refund_abs_env envmc).next_interfer = refund_id_interfer ∧
+  (refund_abs_env envmc).prog_addresses = envmc.prog_addresses
+WALK_STEP refund_abs_env_fields 1 simp def candidate 0 goals 0
+  GOAL_COUNT 0
+WALK_CLOSED refund_abs_env_fields after_steps 1
+TRY_HELPER_BEGIN refund_abs_env_fields optional
+STEP_USED refund_abs_env_fields 1 simp def candidate 0 goals_out 0
+Saved theorem _______ "refund_abs_env_fields"
+TRY_HELPER_CLOSED refund_abs_env_fields hyps 0
+TAGS_OK refund_abs_env_fields
+EXPLORE_LEMMA refund_shape_premises_hold_at_a_constructed_state
+WALK_BEGIN refund_shape_premises_hold_at_a_constructed_state steps 2
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_hold_at_a_constructed_state
+  GOAL refund_entry_pre_sl 16384w
+  <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+    exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+    TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+  0x200020000w ∧ aligned 3 0x200020000w ∧ 0x200000000w ≤₊ 0x200020000w ∧
+8192w ≤₊ 0x200020000w − 0x200000000w ∧
+refund_heap_clear_sl 16384w 0x200000000w 0x200020000w ∧
+(refund_abs_env
+   <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+prog_addresses = refund_mem_dm_sl 16384w 0x200000000w 0x200020000w ∧
+interference_ok
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  next_interfer
+  (arm8_target.proj
+     (refund_abs_env
+        <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+     prog_addresses) ∧
+refund_ffi_contract_on (16384w + 0x1000040D0w)
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  ffi_interfer ∧
+stdin_content
+  (sat_fs
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason)))) =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl [«refund»] ∧
+wfFS
+  (sat_fs
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason)))) ∧
+STD_streams
+  (sat_fs
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))))
+WALK_STEP refund_shape_premises_hold_at_a_constructed_state 1 rewrite stored facts candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_hold_at_a_constructed_state
+  GOAL <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>.
+prog_addresses = refund_mem_dm_sl 16384w 0x200000000w 0x200020000w
+WALK_STEP refund_shape_premises_hold_at_a_constructed_state 2 record accessor candidate 0 goals 0
+  GOAL_COUNT 0
+WALK_CLOSED refund_shape_premises_hold_at_a_constructed_state after_steps 2
+TRY_HELPER_BEGIN refund_shape_premises_hold_at_a_constructed_state optional
+STEP_USED refund_shape_premises_hold_at_a_constructed_state 1 rewrite stored facts candidate 0 goals_out 1
+STEP_USED refund_shape_premises_hold_at_a_constructed_state 2 record accessor candidate 0 goals_out 0
+Saved theorem _______ "refund_shape_premises_hold_at_a_constructed_state"
+TRY_HELPER_CLOSED refund_shape_premises_hold_at_a_constructed_state hyps 0
+TAGS_OK refund_shape_premises_hold_at_a_constructed_state
+EXPLORE_LEMMA refund_shape_premises_satisfiable_for_every_request
+WALK_BEGIN refund_shape_premises_satisfiable_for_every_request steps 5
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+  GOAL ∀charge request original remaining enabled opened candidate amount reason.
+    ∃sl s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable_for_every_request 1 intro request fields candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+  GOAL ∃sl s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable_for_every_request 2 old witness candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_at (16384w + 0x1000040D0w) envmc.prog_addresses
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl 16384w h e
+  ASM refund_heap_clear_sl 16384w h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl 16384w s h stk e
+  GOAL ∃sl s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable_for_every_request 3 contract on-form candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+  ASM refund_ffi_contract_on (16384w + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_at (16384w + 0x1000040D0w) envmc.prog_addresses
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl 16384w h e
+  ASM refund_heap_clear_sl 16384w h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl 16384w s h stk e
+  GOAL ∃sl s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable_for_every_request 4 exists 0x4000 s h stk e envmc fs cl candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+  ASM refund_ffi_contract_on (16384w + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_at (16384w + 0x1000040D0w) envmc.prog_addresses
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl 16384w h e
+  ASM refund_heap_clear_sl 16384w h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl 16384w s h stk e
+  GOAL refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+8192w ≤₊ e − h ∧ refund_heap_clear_sl 16384w h e ∧
+envmc.prog_addresses = refund_mem_dm_sl 16384w h e ∧
+interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+refund_ffi_contract_on (16384w + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable_for_every_request 5 close by assumptions candidate 0 goals 0
+  GOAL_COUNT 0
+WALK_CLOSED refund_shape_premises_satisfiable_for_every_request after_steps 5
+TRY_HELPER_BEGIN refund_shape_premises_satisfiable_for_every_request required
+STEP_USED refund_shape_premises_satisfiable_for_every_request 1 intro request fields candidate 0 goals_out 1
+STEP_USED refund_shape_premises_satisfiable_for_every_request 2 old witness candidate 0 goals_out 1
+STEP_USED refund_shape_premises_satisfiable_for_every_request 3 contract on-form candidate 0 goals_out 1
+STEP_USED refund_shape_premises_satisfiable_for_every_request 4 exists 0x4000 s h stk e envmc fs cl candidate 0 goals_out 1
+STEP_USED refund_shape_premises_satisfiable_for_every_request 5 close by assumptions candidate 0 goals_out 0
+Saved theorem _______ "refund_shape_premises_satisfiable_for_every_request"
+TRY_HELPER_CLOSED refund_shape_premises_satisfiable_for_every_request hyps 0
+TAGS_OK refund_shape_premises_satisfiable_for_every_request
+EXPLORE_LEMMA refund_shape_premises_satisfiable
+WALK_BEGIN refund_shape_premises_satisfiable steps 2
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable
+  GOAL ∃charge request original remaining enabled opened candidate amount reason sl
+    s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable 1 exists request fields candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_premises_satisfiable
+  GOAL ∃sl s h stk e envmc fs cl.
+  refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+WALK_STEP refund_shape_premises_satisfiable 2 from NV1b candidate 0 goals 0
+  GOAL_COUNT 0
+WALK_CLOSED refund_shape_premises_satisfiable after_steps 2
+TRY_HELPER_BEGIN refund_shape_premises_satisfiable required
+STEP_USED refund_shape_premises_satisfiable 1 exists request fields candidate 0 goals_out 1
+STEP_USED refund_shape_premises_satisfiable 2 from NV1b candidate 0 goals_out 0
+Saved theorem _______ "refund_shape_premises_satisfiable"
+TRY_HELPER_CLOSED refund_shape_premises_satisfiable hyps 0
+TAGS_OK refund_shape_premises_satisfiable
+EXPLORE_LEMMA refund_shape_run_is_accepted
+WALK_BEGIN refund_shape_run_is_accepted steps 9
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  GOAL ∀dafny_env dafny_heap.
+    ∃charge request original remaining enabled opened candidate amount reason
+    sl s h stk e envmc fs cl.
+  (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear_sl sl h e ∧
+   envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+   interference_ok envmc.next_interfer
+     (arm8_target.proj envmc.prog_addresses) ∧
+   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+     (λi nb s.
+        (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+        (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+     envmc.ffi_interfer ∧
+   stdin_content fs =
+   SOME
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+   STD_streams fs) ∧
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi no_ext cl fs) ms b) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 1 intro extra free variables candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  GOAL ∃charge request original remaining enabled opened candidate amount reason sl
+    s h stk e envmc fs cl.
+  (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear_sl sl h e ∧
+   envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+   interference_ok envmc.next_interfer
+     (arm8_target.proj envmc.prog_addresses) ∧
+   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+     (λi nb s.
+        (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+        (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+     envmc.ffi_interfer ∧
+   stdin_content fs =
+   SOME
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+   STD_streams fs) ∧
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi no_ext cl fs) ms b) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 2 exists request fields candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  GOAL ∃sl s h stk e envmc fs cl.
+  (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear_sl sl h e ∧
+   envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+   interference_ok envmc.next_interfer
+     (arm8_target.proj envmc.prog_addresses) ∧
+   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+     (λi nb s.
+        (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+        (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+     envmc.ffi_interfer ∧
+   stdin_content fs =
+   SOME
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+   STD_streams fs) ∧
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi no_ext cl fs) ms b) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 3 NV1b witness candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL ∃sl s h stk e envmc fs cl.
+  (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+   refund_heap_clear_sl sl h e ∧
+   envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+   interference_ok envmc.next_interfer
+     (arm8_target.proj envmc.prog_addresses) ∧
+   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+     (λi nb s.
+        (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+        (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+     envmc.ffi_interfer ∧
+   stdin_content fs =
+   SOME
+     (explode
+        (sexp_to_string
+           (refund_request charge request original remaining enabled opened
+              candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+   STD_streams fs) ∧
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi no_ext cl fs) ms b) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 4 exists premise variables candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+ refund_heap_clear_sl sl h e ∧
+ envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+ interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+ refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+   (λi nb s.
+      (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+      (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+   envmc.ffi_interfer ∧
+ stdin_content fs =
+ SOME
+   (explode
+      (sexp_to_string
+         (refund_request charge request original remaining enabled opened
+            candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs) ∧
+∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+         (basis_ffi no_ext cl fs) ms b) ∧
+  ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+        (basis_ffi no_ext cl fs) ms b ⇒
+      ∃t io.
+        b = Terminate t io ∧
+        ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+            g =
+            refund_fields charge request original remaining enabled opened
+              candidate amount reason ∧
+            fd1_written io =
+            explode
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason)) ∧
+            ∀ok a r c q n.
+              g = (ok,a,r,c,q,n) ⇒
+              evaluate_exps
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n) dafny_env exported_ensures =
+              (exported_contract_state dafny_heap charge request original
+                 remaining enabled opened candidate amount reason ok a r c q
+                 n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 5 split antecedent / run candidate 0 goals 2
+  GOAL_COUNT 2
+SHOW GOAL refund_shape_run_is_accepted
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+refund_heap_clear_sl sl h e ∧
+envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs
+SHOW GOAL refund_shape_run_is_accepted
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL ∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+         (basis_ffi no_ext cl fs) ms b) ∧
+  ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+        (basis_ffi no_ext cl fs) ms b ⇒
+      ∃t io.
+        b = Terminate t io ∧
+        ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+            g =
+            refund_fields charge request original remaining enabled opened
+              candidate amount reason ∧
+            fd1_written io =
+            explode
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason)) ∧
+            ∀ok a r c q n.
+              g = (ok,a,r,c,q,n) ⇒
+              evaluate_exps
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n) dafny_env exported_ensures =
+              (exported_contract_state dafny_heap charge request original
+                 remaining enabled opened candidate amount reason ok a r c q
+                 n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 6 antecedent candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL ∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+         (basis_ffi no_ext cl fs) ms b) ∧
+  ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+        (basis_ffi no_ext cl fs) ms b ⇒
+      ∃t io.
+        b = Terminate t io ∧
+        ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+            g =
+            refund_fields charge request original remaining enabled opened
+              candidate amount reason ∧
+            fd1_written io =
+            explode
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason)) ∧
+            ∀ok a r c q n.
+              g = (ok,a,r,c,q,n) ⇒
+              evaluate_exps
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n) dafny_env exported_ensures =
+              (exported_contract_state dafny_heap charge request original
+                 remaining enabled opened candidate amount reason ok a r c q
+                 n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 7 decision shape candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL (∃ms.
+   (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+   ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+         (basis_ffi no_ext cl fs) ms b ⇒
+       ∃t io.
+         b = Terminate t io ∧
+         ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+             g =
+             refund_fields charge request original remaining enabled opened
+               candidate amount reason ∧
+             fd1_written io =
+             explode
+               (refund_render_fields
+                  (refund_fields charge request original remaining enabled
+                     opened candidate amount reason)) ∧
+             ∀ok a r c q n.
+               g = (ok,a,r,c,q,n) ⇒
+               evaluate_exps
+                 (exported_contract_state dafny_heap charge request original
+                    remaining enabled opened candidate amount reason ok a r c
+                    q n) dafny_env exported_ensures =
+               (exported_contract_state dafny_heap charge request original
+                  remaining enabled opened candidate amount reason ok a r c q
+                  n,Rval [BoolV T; BoolV T; BoolV T])) ⇒
+∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+         (basis_ffi no_ext cl fs) ms b) ∧
+  ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+        (basis_ffi no_ext cl fs) ms b ⇒
+      ∃t io.
+        b = Terminate t io ∧
+        ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+            g =
+            refund_fields charge request original remaining enabled opened
+              candidate amount reason ∧
+            fd1_written io =
+            explode
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason)) ∧
+            ∀ok a r c q n.
+              g = (ok,a,r,c,q,n) ⇒
+              evaluate_exps
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n) dafny_env exported_ensures =
+              (exported_contract_state dafny_heap charge request original
+                 remaining enabled opened candidate amount reason ok a r c q
+                 n,Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 8 pick ms candidate 0 goals 1
+  GOAL_COUNT 1
+SHOW GOAL refund_shape_run_is_accepted
+  ASM ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+      (basis_ffi no_ext cl fs) ms b ⇒
+    ∃t io.
+      b = Terminate t io ∧
+      ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+          g =
+          refund_fields charge request original remaining enabled opened
+            candidate amount reason ∧
+          fd1_written io =
+          explode
+            (refund_render_fields
+               (refund_fields charge request original remaining enabled
+                  opened candidate amount reason)) ∧
+          ∀ok a r c q n.
+            g = (ok,a,r,c,q,n) ⇒
+      ...
+  ASM ms.PC = sl + 0x1000040D0w
+  ASM arm8_run 27 s = SOME ms
+  ASM STD_streams fs
+  ASM wfFS fs
+  ASM wfcl cl
+  ASM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+  ASM refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+  ASM interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+  ASM envmc.prog_addresses = refund_mem_dm_sl sl h e
+  ASM refund_heap_clear_sl sl h e
+  ASM 8192w ≤₊ e − h
+  ASM h ≤₊ e
+  ASM aligned 3 e
+  ASM refund_entry_pre_sl sl s h stk e
+  GOAL (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+(∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+       (basis_ffi no_ext cl fs) ms b) ∧
+∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+      (basis_ffi no_ext cl fs) ms b ⇒
+    ∃t io.
+      b = Terminate t io ∧
+      ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+          g =
+          refund_fields charge request original remaining enabled opened
+            candidate amount reason ∧
+          fd1_written io =
+          explode
+            (refund_render_fields
+               (refund_fields charge request original remaining enabled
+                  opened candidate amount reason)) ∧
+          ∀ok a r c q n.
+            g = (ok,a,r,c,q,n) ⇒
+            evaluate_exps
+              (exported_contract_state dafny_heap charge request original
+                 remaining enabled opened candidate amount reason ok a r c q
+                 n) dafny_env exported_ensures =
+            (exported_contract_state dafny_heap charge request original
+               remaining enabled opened candidate amount reason ok a r c q n,
+             Rval [BoolV T; BoolV T; BoolV T])
+WALK_STEP refund_shape_run_is_accepted 9 close run facts candidate 0 goals 0
+  GOAL_COUNT 0
+WALK_CLOSED refund_shape_run_is_accepted after_steps 9
+TRY_HELPER_BEGIN refund_shape_run_is_accepted required
+STEP_USED refund_shape_run_is_accepted 1 intro extra free variables candidate 0 goals_out 1
+STEP_USED refund_shape_run_is_accepted 2 exists request fields candidate 0 goals_out 1
+STEP_USED refund_shape_run_is_accepted 3 NV1b witness candidate 0 goals_out 1
+STEP_USED refund_shape_run_is_accepted 4 exists premise variables candidate 0 goals_out 1
+STEP_USED refund_shape_run_is_accepted 5 split antecedent / run candidate 0 goals_out 2
+STEP_USED refund_shape_run_is_accepted 6 antecedent candidate 0 goals_out 0
+STEP_USED refund_shape_run_is_accepted 7 decision shape candidate 0 goals_out 1
+STEP_USED refund_shape_run_is_accepted 8 pick ms candidate 0 goals_out 1
+STEP_USED refund_shape_run_is_accepted 9 close run facts candidate 0 goals_out 0
+Saved theorem _______ "refund_shape_run_is_accepted"
+TRY_HELPER_CLOSED refund_shape_run_is_accepted hyps 0
+TAGS_OK refund_shape_run_is_accepted
+CLOSED_NAMES refund_ffi_contract_at_imp_on refund_abs_env_fields refund_shape_premises_hold_at_a_constructed_state refund_shape_premises_satisfiable_for_every_request refund_shape_premises_satisfiable refund_shape_run_is_accepted
+REQUIRED_NOT_CLOSED 
+PART_DONE nv_explore_calls.sml
+MARK USE nv_controls.sml
+MARK CONTROLS
+CONTROL_WITNESS_FFI_INTERFER
+⊢ (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  ffi_interfer = refund_abs_ffi ∧
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  next_interfer = refund_id_interfer ∧
+  (refund_abs_env
+     <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+  prog_addresses =
+  <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>.
+  prog_addresses
+NOTE the witness of NV1/NV1b is the (abstract) witness of the stored older theorem at slide 0x4000;
+NOTE NV0 (optional) names one concrete witness; its ffi_interfer is printed above.
+CONTROL_OK NV1 body aconv the antecedent of refund_profile_a_sl_shape
+CONTROL_OK stored NV1: no hypothesis, conclusion = statement, body aconv the stored antecedent
+CONTROL_OK stored NV2: no hypothesis, conclusion = statement
+NOTE NV2 does NOT state that a Terminate Success behaviour exists: refund_profile_a_sl_shape gives only
+NOTE machine_sem .. SUBSET extend_with_resource_limit {Terminate Success io}; a resource stop is allowed.
+PART_INFO nv_controls loaded
+PART_DONE nv_controls.sml
+EXPLORE_COMPLETE

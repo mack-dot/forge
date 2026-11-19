@@ -1,0 +1,59 @@
+--- TR-0003.sml	2026-11-19 10:59:59.976826374 -0500
++++ TR2-0001.sml	2026-11-19 11:20:22.272106476 -0500
+@@ -1,3 +1,11 @@
++(* TR2-0001.sml (worker W-trace, round 3): PART 2 proof, theory forge_machineTracePrefix, on top of forge_machineTrace
++   (case TR1-0001). NOT RUN. = TR-0003.sml with only: this comment; a check that forge_machineTrace is loaded (fatal if
++   not) before new_theory "forge_machineTracePrefix"; shared files tr2_common.sml (fetches the parent's definitions and
++   37 theorems, copies the four statements), tr_steps_fix.sml, tr2_select.sml, tr_prove.sml; THY name; the closure must
++   contain forge_machineTrace, and its constants are allowed in the generic check.
++   REQUIRED: trace_terminate, trace_fail. OPTIONAL: trace_diverge, toy_bad_not_followed.
++   Deps: deps-TR.txt plus the two lines of TR1-0001's export (CHANGES_TR2.txt). Run only after TR1-0001 exits 0 with
++   EXACT_COMPLETE and TRx-0004 shows TRY_HELPER_CLOSED for the two required lemmas. *)
+ (* TR-0003.sml (worker W-trace, round 2): = trace_v1.sml with Thread.Thread. -> Thread., Thread.Mutex. -> Mutex.
+    (pinned HOL, ConcIsaLib.sml lines 1, 6), shared files tr_common2.sml / tr_steps2.sml.
+    NOT RUN. See CHANGES_TR.txt. *)
+@@ -80,22 +88,25 @@
+ val _ = tryload "lprefix_lubTheory";   (* only the optional Diverge corollary needs it *)
+ 
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val _ = new_theory "forge_machineTrace";
++val _ = (DB.fetch "forge_machineTrace" "trace_ok_def"; pr "PARENT_OK forge_machineTrace loaded")
++  handle e => (pr ("PARENT_MISSING forge_machineTrace " ^ General.exnMessage e); raise e);
++val _ = new_theory "forge_machineTracePrefix";
+ val failed = ref ([] : string list);
+ fun chk name th = (tags name th; pr ("CHECKED " ^ name ^ "\n" ^ thm_to_string th));
+ 
+ (* ================= shared files (the same bytes as in TRx-0001) ================= *)
+ val TR_PROOF_MODE = true;
+ val TRDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/";
+-val _ = (pr "MARK USE tr_common2.sml"; use (TRDIR ^ "tr_common2.sml"); pr "PART_DONE tr_common2.sml");
+-val _ = (pr "MARK USE tr_steps2.sml"; use (TRDIR ^ "tr_steps2.sml"); pr "PART_DONE tr_steps2.sml");
++val _ = (pr "MARK USE tr2_common.sml"; use (TRDIR ^ "tr2_common.sml"); pr "PART_DONE tr2_common.sml");
++val _ = (pr "MARK USE tr_steps_fix.sml"; use (TRDIR ^ "tr_steps_fix.sml"); pr "PART_DONE tr_steps_fix.sml");
++val _ = (pr "MARK USE tr2_select.sml"; use (TRDIR ^ "tr2_select.sml"); pr "PART_DONE tr2_select.sml");
+ val _ = (pr "MARK USE tr_prove.sml"; use (TRDIR ^ "tr_prove.sml"); pr "PART_DONE tr_prove.sml");
+ 
+ (* ================= checks ================= *)
+ val _ = pr "MARK CHECKS";
+ val _ = pr ("FAILED_LIST " ^ String.concatWith " " (rev (!failed)));
+ val _ = if null (!failed) then () else raise Fail ("failed: " ^ String.concatWith " " (rev (!failed)));
+-val THY = "forge_machineTrace";
++val THY = "forge_machineTracePrefix";
+ val _ = List.app (fn (n, th) => tags n th) (DB.theorems THY @ DB.definitions THY);
+ val _ = if null (DB.axioms THY) then pr "CONTROL_OK no axiom in forge_machineTrace" else raise Fail "axiom in theory";
+ val closure = THY :: Theory.ancestry THY;
+@@ -104,12 +115,12 @@
+ val _ = if length axs = 4 then () else raise Fail "closure axioms are not the four of bool";
+ val _ = List.app (fn n => if List.exists (fn m => m = n) closure then pr ("CONTROL_OK closure contains " ^ n)
+                           else raise Fail ("parent missing " ^ n))
+-          ["targetSem", "targetProps", "ffi", "misc", "asmProps"];
++          ["forge_machineTrace", "targetSem", "targetProps", "ffi", "misc", "asmProps"];
+ (* generic: no stored theorem or definition of this theory mentions a constant of a forge_ theory (other than this
+    one) or of a theory whose name contains arm8, x64, riscv, mips, ag32 or refund *)
+ val bad_thy_parts = ["arm8", "x64", "riscv", "mips", "ag32", "refund"];
+ fun bad_thy (t : string) : bool =
+-  (t <> THY andalso String.isPrefix "forge_" t) orelse
++  (t <> THY andalso t <> "forge_machineTrace" andalso String.isPrefix "forge_" t) orelse
+   List.exists (fn p => String.isSubstring p t) bad_thy_parts;
+ val const_thys =
+   Lib.mk_set (List.concat (map (fn (_, th) =>
