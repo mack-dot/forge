@@ -1,0 +1,30 @@
+EQ  EQ   honest commit  real=["committed"]
+EQ  EQ   replay of the same text  real=["committed","replayed"]
+EQ  EQ   same request id, other token  real=["committed","rejected:request id is already settled with another token"]
+EQ  EQ   stale pre-state  real=["committed","rejected:stored state is not the token's pre-state"]
+EQ  EQ   chain of two  real=["committed","committed"]
+EQ  EQ   bad signature (flipped byte)  real=["rejected:signature does not verify"]
+EQ  EQ   attacker key  real=["rejected:signature does not verify"]
+EQ  EQ   wrong spec lock id  real=["rejected:spec lock is not the pinned one"]
+EQ  EQ   wrong checker id  real=["rejected:checker is not the pinned one"]
+EQ  EQ   wrong spec and checker ids  real=["rejected:spec lock is not the pinned one"]
+DIF EQ   request-id mismatch, then the victim id  real=["committed","committed"]  draft-reqid=["rejected:request id is not the intent's request id","rejected:stored state is not the token's pre-state"]
+EQ  EQ   intent charge id is another charge (known gap ChargeIdNotBound)  real=["committed"]
+EQ  EQ   zero amount commits  real=["committed"]
+EQ  EQ   two zero amounts, distinct ids, same pre-state  real=["committed","committed"]
+EQ  EQ   fault between writes, then retry  real=["rejected:transaction failed: injected fault between writes","committed"]
+fault-only store unchanged for real: true
+fault-only store unchanged for draft-reqid: true
+fault-only store unchanged for draft-orig: true
+EQ  EQ   fault between writes only (store must stay S0)  real=["rejected:transaction failed: injected fault between writes"]
+EQ  EQ   non-canonical text  real=["rejected:token text is not canonical"]
+EQ  EQ   not a text  real=["rejected:token is not a text"]
+EQ  EQ   no stored state  real=["rejected:the sink has no stored state"]
+EQ  EQ   no stored state, bad signature  real=["rejected:signature does not verify"]
+EQ  EQ   amount 2^63 on a 19-digit charge  real=["committed"]
+EQ  EQ   non-BMP request ids  real=["committed","committed","replayed"]
+EQ  EQ   lone surrogate request id (decoder refuses)  real=["rejected:token shape"]
+columns: draft-reqid vs real, draft-orig vs real. draft-orig divergences from real: 0 of 23
+(node:162) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+exit 0

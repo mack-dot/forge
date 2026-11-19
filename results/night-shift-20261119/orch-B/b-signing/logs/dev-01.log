@@ -1,0 +1,92 @@
+# owner=b-signing start=2026-11-19T07:52:35Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1555
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyV2.dfy
+SliceSafetyV2.dfy(535,12): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+535 |     ensures forall c: Claim :: exists t: Tag :: VerifyTag(c, t)
+    |             ^^^^^^
+
+SliceSafetyV2.dfy(537,4): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+537 |     forall c: Claim
+    |     ^^^^^^^^^^^^^^^
+
+SliceSafetyV2.dfy(567,13): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+567 |     requires forall c: Claim :: exists t: Tag :: VerifyTag(c, t)
+    |              ^^^^^^
+
+SliceSafetyV2.dfy(745,12): Warning: Could not find a trigger for this quantifier. Without a trigger, the quantifier may cause brittle verification. To silence this warning, add an explicit trigger using the {:trigger} attribute. For more information, see the section on quantifier instantiation rules in the reference manual.
+    |
+745 |     ensures forall c: Claim :: exists t: Tag :: VerifyTag(c, t)
+    |             ^^^^^^
+
+SliceSafetyV2.dfy(161,28): Error: a postcondition could not be proved on this return path
+    |
+161 |     if SinkAccepts(s, c, t) {
+    |                             ^
+
+SliceSafetyV2.dfy(159,24): Related location: this is the postcondition that could not be proved
+    |
+159 |     ensures ClaimsSigned(Commit(s, c, t))
+    |                         ^
+
+SliceSafetyV2.dfy(127,4): Related location: this proposition could not be proved
+    |
+127 |     forall i | 0 <= i < |s.log| :: exists t' :: (s.log[i], t') in s.minted
+    |     ^^^^^^
+
+SliceSafetyV2.dfy(172,10): Error: assertion might not hold
+    |
+172 |           assert (c, t) in s.minted;
+    |           ^^^^^^
+
+SliceSafetyV2.dfy(181,2): Error: a postcondition could not be proved on this return path
+    |
+181 |   {
+    |   ^
+
+SliceSafetyV2.dfy(180,24): Related location: this is the postcondition that could not be proved
+    |
+180 |     ensures ClaimsSigned(s.(minted := s.minted + {(c, t)}))
+    |                         ^
+
+SliceSafetyV2.dfy(127,4): Related location: this proposition could not be proved
+    |
+127 |     forall i | 0 <= i < |s.log| :: exists t' :: (s.log[i], t') in s.minted
+    |     ^^^^^^
+
+SliceSafetyV2.dfy(574,10): Error: cannot establish the existence of LHS values that satisfy the such-that predicate
+    |
+574 |     var t :| VerifyTag(c, t);
+    |           ^^^^^^^^^^^^^^^^^^^
+
+SliceSafetyV2.dfy(781,8): Error: Verification out of resource (SliceWitnessV2.TwoZeroAmountCommits)
+    |
+781 |   lemma TwoZeroAmountCommits()
+    |         ^^^^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 46 verified, 4 errors, 1 out of resource
+       14.60 real        11.41 user         0.80 sys
+           272711680  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50788  page reclaims
+                 714  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 815  voluntary context switches
+               50473  involuntary context switches
+         94015904280  instructions retired
+         36826077681  cycles elapsed
+           278611312  peak memory footprint
+# end=2026-11-19T07:52:50Z
+exit 4

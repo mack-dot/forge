@@ -1,0 +1,28 @@
+# owner=d-reqid start=2026-11-19T07:50:47Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1475
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit Contrast.dfy
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        3.87 real         3.92 user         0.17 sys
+           122077184  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12732  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  42  voluntary context switches
+                2813  involuntary context switches
+         39681562456  instructions retired
+         12544885186  cycles elapsed
+           110838984  peak memory footprint
+# end=2026-11-19T07:50:51Z
+exit 0

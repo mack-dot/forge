@@ -1,0 +1,98 @@
+# owner=r-reqid start=2026-11-19T08:23:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 619
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r08-rejectall-verify.csv R_RejectAll.dfy
+R_RejectAll.dfy(181,4): Error: a postcondition could not be proved on this return path
+    |
+181 |     if r.out.Committed? {
+    |     ^^^^^^^^^^^^^^^^^^^^^
+
+R_RejectAll.dfy(169,50): Related location: this is the postcondition that could not be proved
+    |
+169 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+    |                                                   ^^^^
+
+R_RejectAll.dfy(451,4): Error: a postcondition could not be proved on this return path
+    |
+451 |     if r.out.Committed? {
+    |     ^^^^^^^^^^^^^^^^^^^^^
+
+R_RejectAll.dfy(444,50): Related location: this is the postcondition that could not be proved
+    |
+444 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig) && Match(tok)
+    |                                                   ^^^^
+
+R_RejectAll.dfy(486,2): Error: a postcondition could not be proved on this return path
+    |
+486 |   {
+    |   ^
+
+R_RejectAll.dfy(481,50): Related location: this is the postcondition that could not be proved
+    |
+481 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+R_RejectAll.dfy(508,2): Error: a postcondition could not be proved on this return path
+    |
+508 |   {
+    |   ^
+
+R_RejectAll.dfy(506,38): Related location: this is the postcondition that could not be proved
+    |
+506 |     ensures Step(core, tok, true).out.Committed?
+    |                                       ^^^^^^^^^^
+
+R_RejectAll.dfy(631,2): Error: a postcondition could not be proved on this return path
+    |
+631 |   {
+    |   ^
+
+R_RejectAll.dfy(622,12): Related location: this is the postcondition that could not be proved
+    |
+622 |             var t1 := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_1", c0.(remaining := 90),
+    |             ^^^
+
+R_RejectAll.dfy(664,2): Error: a postcondition could not be proved on this return path
+    |
+664 |   {
+    |   ^
+
+R_RejectAll.dfy(656,12): Related location: this is the postcondition that could not be proved
+    |
+656 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+R_RejectAll.dfy(675,2): Error: a postcondition could not be proved on this return path
+    |
+675 |   {
+    |   ^
+
+R_RejectAll.dfy(671,12): Related location: this is the postcondition that could not be proved
+    |
+671 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_x", c0.(chargeId := "ch_2", remaining := 90),
+    |             ^^^
+
+
+Dafny program verifier finished with 66 verified, 7 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r08-rejectall-verify.csv
+        7.48 real         7.03 user         0.43 sys
+           176373760  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22021  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 396  voluntary context switches
+               28898  involuntary context switches
+         60460158714  instructions retired
+         22891191110  cycles elapsed
+           159777968  peak memory footprint
+# end=2026-11-19T08:23:18Z
+exit 4

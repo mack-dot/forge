@@ -1,0 +1,17 @@
+B01-identifiers-expected 4a2bdab9c7667bb2 | rule: pass | scope: pass
+B02-word-in-comments-strings c52401a378af03ba | rule: pass | scope: pass
+B03-identifier-prime-expect 302249f6426181e6 | rule: REFUSE: run-time halt statement expect | scope: REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed
+B04-formfeed-comment-word c8d47bc752b7a042 | rule: REFUSE: run-time halt statement expect | scope: REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed
+B05-latin1-comment b620ef0d0968fad8 | rule: REFUSE: SOURCE_SCOPE: implementation is not UTF-8 | scope: REFUSE: SOURCE_SCOPE: implementation is not UTF-8
+B06-unicode-in-string f4dfad17776127b7 | rule: pass | scope: pass
+H01-such-that-enumeration-hang 4ea5e9286bbac485 | rule: pass | scope: pass
+H02-exponential-recursion-hang 2fde936417e82e25 | rule: pass | scope: pass
+H03-seq-comprehension-alloc d158a8412a79cd8b | rule: pass | scope: pass
+K01-string-backslash-newline 47af4adcc9006aa4 | rule: pass | scope: pass
+K02-string-bad-unicode-escape 7e07333e219138bf | rule: REFUSE: run-time halt statement expect | scope: REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed
+K03-comment-split-attribute 61b8875169f77514 | rule: pass | scope: pass
+K04-isolate-wrapping-attribute f6838753a90b5a34 | rule: pass | scope: REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed
+K05-eof-line-comment-no-newline 9c83cdf61529d166 | rule: pass | scope: pass
+K06-unterminated-block-comment-eof 10c552f38f63fb4e | rule: REFUSE: SOURCE_SCOPE: unterminated comment | scope: REFUSE: SOURCE_SCOPE: unterminated comment
+K07-u0085-line-comment 063f20bb40da2e91 | rule: REFUSE: run-time halt statement expect | scope: REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed
+K08-nul-in-line-comment cf1743625bd6ba4f | rule: REFUSE: run-time halt statement expect | scope: REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed

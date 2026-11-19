@@ -1,0 +1,10 @@
+keygen owner exit 0
+keygen attacker exit 0
+sign owner exit 0
+POS verify genuine (want 0) exit 0
+NEG one byte changed (want !=0) exit 255
+NEG signed by an unregistered key (want !=0) exit 255
+NEG owner key, other namespace (want !=0) exit 255
+NEG namespace not allowed for the signer (want !=0) exit 255
+NEG wrong principal (want !=0) exit 255
+exit 0

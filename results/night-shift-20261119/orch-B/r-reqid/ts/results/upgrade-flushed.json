@@ -1,0 +1,72 @@
+{
+ "mode": "flushed",
+ "node": "v24.3.0",
+ "steps": [
+  [
+   "old sink: gap token body=rq_body intent=rq_victim",
+   {
+    "status": "committed"
+   }
+  ],
+  [
+   "old dispatcher flush",
+   {
+    "emitted": [
+     {
+      "requestId": "rq_body",
+      "intent": "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+     }
+    ],
+    "refused": [],
+    "alreadyDispatched": 0
+   }
+  ],
+  [
+   "new sink: honest rq_victim on the current state",
+   {
+    "status": "committed"
+   }
+  ],
+  [
+   "new dispatcher flush",
+   {
+    "emitted": [
+     {
+      "requestId": "rq_victim",
+      "intent": "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+     }
+    ],
+    "refused": [],
+    "alreadyDispatched": 1
+   }
+  ]
+ ],
+ "audit_new_sink": [
+  "row 1: request id"
+ ],
+ "outbox": [
+  {
+   "row": "rq_body",
+   "intent_requestId": "rq_victim"
+  },
+  {
+   "row": "rq_victim",
+   "intent_requestId": "rq_victim"
+  }
+ ],
+ "emitted": [
+  {
+   "who": "old",
+   "row_request_id": "rq_body",
+   "intent_requestId": "rq_victim",
+   "amount": "100"
+  },
+  {
+   "who": "new",
+   "row_request_id": "rq_victim",
+   "intent_requestId": "rq_victim",
+   "amount": "100"
+  }
+ ],
+ "emitted_for_rq_victim": 2
+}

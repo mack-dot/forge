@@ -1,0 +1,123 @@
+# owner=r-reqid start=2026-11-19T08:23:28Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 635
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r09-commitall-verify.csv R_CommitAll.dfy
+R_CommitAll.dfy(187,22): Error: index out of range
+    |
+187 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+R_CommitAll.dfy(187,59): Error: possible violation of postcondition of forall statement
+    |
+187 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                            ^
+
+R_CommitAll.dfy(187,66): Error: index out of range
+    |
+187 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+R_CommitAll.dfy(192,23): Error: index out of range
+    |
+192 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+R_CommitAll.dfy(192,27): Error: assertion might not hold
+    |
+192 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                            ^^
+
+R_CommitAll.dfy(452,24): Error: a postcondition could not be proved on this return path
+    |
+452 |     if r.out.Committed? {
+    |                         ^
+
+R_CommitAll.dfy(445,50): Related location: this is the postcondition that could not be proved
+    |
+445 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig) && Match(tok)
+    |                                                   ^^^^
+
+R_CommitAll.dfy(457,22): Error: index out of range
+    |
+457 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+R_CommitAll.dfy(457,59): Error: possible violation of postcondition of forall statement
+    |
+457 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                            ^
+
+R_CommitAll.dfy(457,66): Error: index out of range
+    |
+457 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+R_CommitAll.dfy(462,23): Error: index out of range
+    |
+462 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+R_CommitAll.dfy(476,2): Error: a postcondition could not be proved on this return path
+    |
+476 |   {
+    |   ^
+
+R_CommitAll.dfy(475,38): Related location: this is the postcondition that could not be proved
+    |
+475 |     ensures Step(core, tok, true).out == Rejected(ReqIdMismatch)
+    |                                       ^^
+
+R_CommitAll.dfy(487,2): Error: a postcondition could not be proved on this return path
+    |
+487 |   {
+    |   ^
+
+R_CommitAll.dfy(482,50): Related location: this is the postcondition that could not be proved
+    |
+482 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+R_CommitAll.dfy(500,2): Error: a postcondition could not be proved on this return path
+    |
+500 |   {
+    |   ^
+
+R_CommitAll.dfy(499,12): Related location: this is the postcondition that could not be proved
+    |
+499 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+R_CommitAll.dfy(665,2): Error: a postcondition could not be proved on this return path
+    |
+665 |   {
+    |   ^
+
+R_CommitAll.dfy(657,12): Related location: this is the postcondition that could not be proved
+    |
+657 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+
+Dafny program verifier finished with 67 verified, 14 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r09-commitall-verify.csv
+        7.75 real         7.06 user         0.56 sys
+           187744256  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22692  page reclaims
+                  39  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                 415  voluntary context switches
+               42520  involuntary context switches
+         59797193160  instructions retired
+         23100357433  cycles elapsed
+           172082400  peak memory footprint
+# end=2026-11-19T08:23:36Z
+exit 4

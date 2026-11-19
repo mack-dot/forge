@@ -1,0 +1,78 @@
+# owner=d-reqid start=2026-11-19T07:51:09Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1475
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M1_noReqIdCheck-verify.csv Mutant_M1_noReqIdCheck.dfy
+Mutant_M1_noReqIdCheck.dfy(450,24): Error: a postcondition could not be proved on this return path
+    |
+450 |     if r.out.Committed? {
+    |                         ^
+
+Mutant_M1_noReqIdCheck.dfy(443,50): Related location: this is the postcondition that could not be proved
+    |
+443 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig) && Match(tok)
+    |                                                   ^^^^
+
+Mutant_M1_noReqIdCheck.dfy(474,2): Error: a postcondition could not be proved on this return path
+    |
+474 |   {
+    |   ^
+
+Mutant_M1_noReqIdCheck.dfy(473,38): Related location: this is the postcondition that could not be proved
+    |
+473 |     ensures Step(core, tok, true).out == Rejected(ReqIdMismatch)
+    |                                       ^^
+
+Mutant_M1_noReqIdCheck.dfy(485,2): Error: a postcondition could not be proved on this return path
+    |
+485 |   {
+    |   ^
+
+Mutant_M1_noReqIdCheck.dfy(480,50): Related location: this is the postcondition that could not be proved
+    |
+480 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+Mutant_M1_noReqIdCheck.dfy(498,2): Error: a postcondition could not be proved on this return path
+    |
+498 |   {
+    |   ^
+
+Mutant_M1_noReqIdCheck.dfy(497,12): Related location: this is the postcondition that could not be proved
+    |
+497 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+Mutant_M1_noReqIdCheck.dfy(663,2): Error: a postcondition could not be proved on this return path
+    |
+663 |   {
+    |   ^
+
+Mutant_M1_noReqIdCheck.dfy(655,12): Related location: this is the postcondition that could not be proved
+    |
+655 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+
+Dafny program verifier finished with 68 verified, 5 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M1_noReqIdCheck-verify.csv
+        8.42 real         7.08 user         0.61 sys
+           164675584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24444  page reclaims
+                 704  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 363  voluntary context switches
+               76077  involuntary context switches
+         58652204014  instructions retired
+         23106414892  cycles elapsed
+           158549192  peak memory footprint
+# end=2026-11-19T07:51:18Z
+exit 4

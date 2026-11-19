@@ -1,0 +1,13 @@
+--- a/ts/refund-finality/sink.ts
++++ b/ts/refund-finality/sink.ts
+@@ -104,6 +104,10 @@
+         this.db.exec("ROLLBACK");
+         return { status: "rejected", reason: "stored state is not the token's pre-state" };
+       }
++      if ((JSON.parse(stored) as ChargeState).chargeId !== token.body.intent.chargeId || token.body.post.chargeId !== token.body.intent.chargeId) {
++        this.db.exec("ROLLBACK");
++        return { status: "rejected", reason: "charge id is not the stored charge id" };
++      }
+       this.db.prepare("UPDATE state SET blob = ? WHERE id = 1").run(postText);
+       this.db.prepare("INSERT INTO settled(request_id, token, token_sha256) VALUES (?, ?, ?)").run(requestId, tokenText, tokenSha256);
+       this.db.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run(requestId, intentText);

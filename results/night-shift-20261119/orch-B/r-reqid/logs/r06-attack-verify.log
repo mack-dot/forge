@@ -1,0 +1,33 @@
+# owner=r-reqid start=2026-11-19T08:22:24Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 592
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r06-attack-verify.csv Attack.dfy
+Attack.dfy(42,21): Error: upper bound below lower bound or above length of sequence
+   |
+42 |             c'.outbox[..|c.outbox|] == c.outbox &&
+   |                      ^
+
+
+Dafny program verifier finished with 110 verified, 1 error
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r06-attack-verify.csv
+       11.59 real        10.88 user         0.67 sys
+           193658880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29302  page reclaims
+                 406  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 642  voluntary context switches
+               45150  involuntary context switches
+         94384576317  instructions retired
+         35320385594  cycles elapsed
+           185320720  peak memory footprint
+# end=2026-11-19T08:22:35Z
+exit 4

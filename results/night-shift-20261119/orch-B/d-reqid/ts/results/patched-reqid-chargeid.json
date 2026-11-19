@@ -1,0 +1,87 @@
+{
+ "copy": "<REPO>/results/night-shift-20261119/orch-B/d-reqid/copies/patched-reqid-chargeid",
+ "node": "v24.3.0",
+ "steps": [
+  {
+   "name": "mismatch body=rq_body intent=rq_victim",
+   "result": {
+    "status": "rejected",
+    "reason": "request id is not the intent's request id"
+   }
+  },
+  {
+   "name": "honest rq_victim",
+   "result": {
+    "status": "committed"
+   }
+  },
+  {
+   "name": "zero amount rq_zero",
+   "result": {
+    "status": "committed"
+   }
+  },
+  {
+   "name": "intent.chargeId=ch_other",
+   "result": {
+    "status": "rejected",
+    "reason": "charge id is not the stored charge id"
+   }
+  },
+  {
+   "name": "post.chargeId=ch_renamed",
+   "result": {
+    "status": "rejected",
+    "reason": "charge id is not the stored charge id"
+   }
+  },
+  {
+   "name": "replay of a committed text",
+   "result": {
+    "status": "replayed"
+   }
+  }
+ ],
+ "state": {
+  "chargeId": "ch_1",
+  "original": "1000",
+  "refundEnabled": true,
+  "remaining": "900"
+ },
+ "settled": [
+  "rq_victim",
+  "rq_zero"
+ ],
+ "outbox": [
+  {
+   "request_id": "rq_victim",
+   "intent_requestId": "rq_victim",
+   "intent_chargeId": "ch_1",
+   "amount": "100"
+  },
+  {
+   "request_id": "rq_zero",
+   "intent_requestId": "rq_zero",
+   "intent_chargeId": "ch_1",
+   "amount": "0"
+  }
+ ],
+ "outbox_intent_ids_distinct": true,
+ "outbox_intent_ids_all_settled": true,
+ "audit": [],
+ "dispatcher_emitted": [
+  {
+   "effect_requestId": "rq_victim",
+   "intent_requestId": "rq_victim",
+   "chargeId": "ch_1",
+   "amount": "100"
+  },
+  {
+   "effect_requestId": "rq_zero",
+   "intent_requestId": "rq_zero",
+   "chargeId": "ch_1",
+   "amount": "0"
+  }
+ ],
+ "dispatcher_refused": []
+}

@@ -1,0 +1,48 @@
+--- SliceSafetyV2.dfy	2026-11-19 02:53:48.352938583 -0500
++++ controls/M2-drop-H1/SliceSafetyV2.dfy	2026-11-19 02:55:38.242689262 -0500
+@@ -22,7 +22,7 @@
+ // A5 (sigOk equals VerifyTag) and A6 (ValidArtifact) stay hypotheses, as in SliceSafety.
+ // Uninterpreted symbol: VerifyTag (FinalityProtocol, inherited bodiless into SinkCore). No assume, no axiom,
+ // no bodiless lemma in this file.
+-include "inputs/SliceTheorem.dfy"
++include "../../inputs/SliceTheorem.dfy"
+ 
+ module SliceTheoremV2 {
+   import opened SinkCore
+@@ -245,9 +245,9 @@
+   // Reachability under the V2 hypotheses.
+   lemma PrefixHypsV2(acts: seq<Act>)
+     requires |acts| > 0
+-    requires A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts) && H1_SignatureAuthenticity(acts)
++    requires A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts) 
+     ensures var p := acts[..|acts| - 1];
+-      A2_MintOnlyOnCheck(p) && A5_VerifierMatchesAtEachDelivery(p) && H1_SignatureAuthenticity(p)
++      A2_MintOnlyOnCheck(p) && A5_VerifierMatchesAtEachDelivery(p) 
+   {
+     var p := acts[..|acts| - 1];
+     forall k | 0 <= k < |p|
+@@ -264,7 +264,7 @@
+   }
+ 
+   lemma ExecInvV2(init: State, acts: seq<Act>)
+-    requires A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts) && H1_SignatureAuthenticity(acts)
++    requires A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts) 
+     ensures Rel(Exec(init, acts).core, Exec(init, acts).s, Exec(init, acts).toks)
+     ensures Inv(init, Exec(init, acts).s)
+     ensures ClaimsSigned(Exec(init, acts).s)
+@@ -330,7 +330,6 @@
+     requires InitOk(init)
+     requires A2_MintOnlyOnCheck(acts)
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+-    requires H1_SignatureAuthenticity(acts)
+     requires A6_ArtifactComputesFlatContract(art)
+     requires 0 <= i < |Exec(init, acts).core.outbox|
+     ensures ApprovedSpec(init, acts, i) && FlatResultAgrees(art, init, acts, i) && UniqueAuthorizationV2(init, acts, i)
+@@ -362,7 +361,6 @@
+     requires InitOk(init)
+     requires A2_MintOnlyOnCheck(acts)                  // item 2 (issuance)
+     requires A5_VerifierMatchesAtEachDelivery(acts)    // crypto boolean equals VerifyTag
+-    requires H1_SignatureAuthenticity(acts)            // item 1 (authenticity, step-local, claim level)
+     requires A6_ArtifactComputesFlatContract(art)      // ValidArtifact
+     ensures forall e | CommittedEffect(init, acts, e) ::
+       exists i :: (0 <= i < |Exec(init, acts).core.outbox| && Exec(init, acts).core.outbox[i] == e &&

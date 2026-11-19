@@ -1,0 +1,97 @@
+PASS N01 decide-neg exit 1 REJECTED, docs only
+PASS N02 decide-neg exit 2 NOT_ESTABLISHED, docs only
+PASS N03 decide-neg exit 4 (unknown code)
+PASS N04 decide-neg exit 124 (timeout)
+PASS N05 decide-neg exit -9 (killed)
+PASS N06 decide-neg exit None (missing)
+PASS N07 decide-neg exit "0" (string)
+FAIL N08 decide-neg exit False (bool equals 0 in Python)
+FAIL N09 decide-neg exit 0.0 (float equals 0)
+PASS N10 decide-neg exit 3, no coverage
+PASS N11 decide-neg exit 3, code file
+PASS N12 decide-neg exit 3, .py under proposals
+PASS N13 decide-neg exit 3, .sh under results
+PASS N14 decide-neg exit 3, .sml draft
+PASS N15 decide-neg exit 3, workflow file
+PASS N16 decide-neg exit 3, .md under .github
+PASS N17 decide-neg exit 3, gate/approvals record
+PASS N18 decide-neg exit 3, forged approval .md under gate
+PASS N19 decide-neg exit 3, governance record .md
+PASS N20 decide-neg exit 3, upper-case GATE/x.md
+PASS N21 decide-neg exit 3, dot-dot escape
+PASS N22 decide-neg exit 3, double slash
+PASS N23 decide-neg exit 3, suffix trick a.md.sh
+PASS N24 decide-neg exit 3, upper .MD
+PASS N25 decide-neg exit 3, json result
+PASS N26 decide-neg exit 3, UNKNOWN_DEPENDENCY
+PASS N27 decide-neg exit 3, OBLIGATION_NOT_ESTABLISHED
+PASS N28 decide-neg exit 3, extra affected obligation
+PASS N29 decide-neg exit 3, affected obligations empty
+PASS N30 decide-neg exit 3, empty change list
+PASS N31 decide-neg exit 3, empty finding list
+PASS N32 decide-neg exit 3, finding on another path
+PASS N33 decide-neg exit 3, row not a dict
+PASS N34 decide-neg exit 3, path not a string
+PASS N35 decide-neg exit 3, coverage is a list
+FAIL N36 decide-neg exit 3, protected top-level AGENTS.md
+PASS N37 decide-neg exit 3, clearing/ .md (never put a file there)
+PASS N38 decide-neg exit 3, backslash path
+PASS N39 decide-neg exit 3, non-ASCII look-alike
+PASS P01 decide-pos exit 0 verified
+PASS P02 decide-pos exit 3 docs only
+PASS P03 decide-pos exit 3 single top-level README.md
+PASS P04 decide-pos exit 3 results .txt
+PASS P05 decide-pos exit 3 docs/ .md
+PASS B01 bind-neg missing receipt (gate timed out or crashed)
+PASS B02 bind-neg receipt not JSON
+PASS B03 bind-neg receipt with duplicate key
+PASS B04 bind-neg stale head: PR head moved after the run
+PASS B05 bind-neg stale base: main moved after the run
+PASS B06 bind-neg receipt for another commit
+PASS B07 bind-neg receipt for another base
+PASS B08 bind-neg receipt from another run
+PASS B09 bind-neg receipt for another PR
+PASS B10 bind-neg receipt for another repository
+PASS B11 bind-neg run in a fork repository
+PASS B12 bind-neg PR base is not main
+FAIL B13 bind-neg exit code is a bool
+PASS B14 bind-neg end_to_end missing
+FAIL B15 bind-neg exit 0 without established coverage
+FAIL B16 bind-neg exit 0 with coverage missing
+PASS B17 bind-neg exit 3 code change posts failure
+PASS B18 bind-neg exit 1 posts failure
+PASS B19 bind-neg exit 2 posts failure
+PASS B20 bind-neg exit 4 posts failure
+PASS B23 bind-neg receipt for another commit that is now the live head (event head differs)
+PASS B21 bind-pos exit 0 bound receipt posts success on HEAD
+PASS B22 bind-pos exit 3 docs bound receipt posts success on HEAD
+PASS R01 rules-neg direct push to main (agent)
+PASS R02 rules-neg direct push to main (owner admin)
+PASS R03 rules-neg force-push main
+PASS R04 rules-neg delete main
+PASS R05 rules-neg admin merge with forge/admission failure
+PASS R06 rules-neg merge with the check missing
+PASS R07 rules-neg merge with check pending
+PASS R08 rules-neg success on an old head only (stale SHA)
+PASS R09 rules-neg success posted by a PAT (no app)
+PASS R10 rules-neg success posted by another App
+PASS R11 rules-neg success then later failure
+PASS R12 rules-neg branch behind main (strict)
+PASS R13 rules-neg no approving review
+PASS R14 rules-neg self-approval by the PR author
+PASS R15 rules-neg approval on an older head (stale review)
+PASS R16 rules-neg approval by a non-code-owner
+PASS R17 rules-neg merge-commit method
+PASS R18 rules-neg create a tag
+PASS R19 rules-neg move a tag
+PASS R20 rules-neg delete a tag
+FAIL R21 rules-neg success from ANOTHER workflow of the same Actions app
+FAIL R22 rules-neg interim ruleset: merge with red gate is blocked
+PASS R23 rules-pos owner-approved, admitted, squash, up to date
+PASS R24 rules-pos agent may push its own feature branch
+PASS R25 rules-struct no bypass actor in any draft
+PASS R26 rules-struct required check is forge/admission pinned to an integration
+PASS A01 approval-neg forged approval added in the same PR is ignored
+FAIL A02 approval-neg an unsigned record that reached main is NOT accepted without an owner signature
+TOTAL 95 PASS 86 FAIL 9
+exit 1

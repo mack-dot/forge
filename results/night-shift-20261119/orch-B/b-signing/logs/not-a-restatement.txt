@@ -1,0 +1,54 @@
+Not-a-restatement check: bodies of every hypothesis predicate of SliceSafetyV2 / SliceSafetyV2Bytes (and the helpers they call).
+Forbidden tokens: ['outbox', 'ApprovedSpec', 'Unique', 'settled', 'Exec(', 'Step(', 'Commit(', '.core', '.s.', 'minted', 'Eligible', 'Rel(', 'Inv(']
+--- SliceSafetyV2.dfy :: SignedBefore
+exists j :: 0 <= j < k && j < |acts| && acts[j].MintAct? && acts[j].c == c
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: H1_SignatureAuthenticity
+forall k | 0 <= k < |acts| && acts[k].Deliver? ::
+      VerifyTag(ClaimOf(acts[k].tok), acts[k].tok.sig) ==> SignedBefore(acts, k, ClaimOf(acts[k].tok))
+    forbidden tokens found: []
+--- inputs/SliceTheorem.dfy :: A2_MintOnlyOnCheck
+forall k | 0 <= k < |acts| && acts[k].MintAct? && Ours(acts[k].c) ::
+      exists pre: F.Charge, t: F.Transition :: F.Authorizes(pre, t) && acts[k].c == CheckedClaim(pre, t)
+    forbidden tokens found: []
+--- inputs/SliceTheorem.dfy :: CheckedClaim
+ClaimOf(SinkToken(PINNED_SPEC, PINNED_CHK, pre, t.request.requestId, t.post, t.intent, ""))
+    forbidden tokens found: []
+--- inputs/SliceTheorem.dfy :: A5_VerifierMatchesAtEachDelivery
+forall k | 0 <= k < |acts| && acts[k].Deliver? :: A5_VerifierMatches(acts[k].tok, acts[k].sigOk)
+    forbidden tokens found: []
+--- inputs/transport/sink/SinkCore.dfy :: A5_VerifierMatches
+sigOk == VerifyTag(ClaimOf(tok), tok.sig)
+    forbidden tokens found: []
+--- inputs/SliceTheorem.dfy :: A6_ArtifactComputesFlatContract
+forall x: FlatIn :: FlatContract(x, art(x))
+    forbidden tokens found: []
+--- inputs/SliceTheorem.dfy :: FlatContract
+(o.0 <==>
+      x.chargeB != "" && x.requestB != "" && x.enabled && x.requestOpen &&
+      0 <= x.original <= 9223372036854775807 && 0 <= x.remaining <= x.original &&
+      x.candidate && 0 <= x.amount <= x.remaining &&
+      (x.reasonB == "duplicate_charge" || x.reasonB == "service_not_delivered" || x.reasonB == "returned_item")) &&
+    (o.0 ==> o.1 == x.amount && o.2 == x.reasonB && o.3 == x.chargeB && o.4 == x.requestB && o.5 == 1) &&
+    (!o.0 ==> o.1 == 0 && o.2 == "" && o.3 == "" && o.4 == "" && o.5 == 0)
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: H3a_SerInjective
+forall c1: Claim, c2: Claim :: ser(c1) == ser(c2) ==> c1 == c2
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: H3b_SinkRebuildsSignedBytes
+forall k | 0 <= k < |acts| && acts[k].Deliver? :: rebuild(acts[k].tok) == ser(ClaimOf(acts[k].tok))
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: H3c_VerifyTagIsByteVerifier
+forall c: Claim, t: Tag :: VerifyTag(c, t) <==> vb(ser(c), t)
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: B5_ByteVerifierMatchesAtEachDelivery
+forall k | 0 <= k < |acts| && acts[k].Deliver? :: acts[k].sigOk == vb(rebuild(acts[k].tok), acts[k].tok.sig)
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: BytesSignedBefore
+exists j :: 0 <= j < k && j < |acts| && acts[j].MintAct? && ser(acts[j].c) == m
+    forbidden tokens found: []
+--- SliceSafetyV2.dfy :: H1B_ByteUnforgeability
+forall k | 0 <= k < |acts| && acts[k].Deliver? ::
+      vb(rebuild(acts[k].tok), acts[k].tok.sig) ==> BytesSignedBefore(ser, acts, k, rebuild(acts[k].tok))
+    forbidden tokens found: []
+RESULT: no forbidden token in any hypothesis body

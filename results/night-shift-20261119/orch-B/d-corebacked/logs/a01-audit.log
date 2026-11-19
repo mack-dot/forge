@@ -1,0 +1,28 @@
+# owner=d-corebacked start=2026-11-19T08:24:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-corebacked/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 518
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit ShellCoreReqId.dfy ShellCoreOrig.dfy
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        4.30 real         4.00 user         0.20 sys
+           119668736  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12326  page reclaims
+                 595  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  61  voluntary context switches
+                4767  involuntary context switches
+         39257402076  instructions retired
+         12987593965  cycles elapsed
+           108315872  peak memory footprint
+# end=2026-11-19T08:24:31Z
+exit 0

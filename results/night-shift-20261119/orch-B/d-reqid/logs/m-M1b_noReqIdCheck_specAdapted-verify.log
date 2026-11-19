@@ -1,0 +1,73 @@
+# owner=d-reqid start=2026-11-19T07:51:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1491
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M1b_noReqIdCheck_specAdapted-verify.csv Mutant_M1b_noReqIdCheck_specAdapted.dfy
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(450,24): Error: a postcondition could not be proved on this return path
+    |
+450 |     if r.out.Committed? {
+    |                         ^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(443,50): Related location: this is the postcondition that could not be proved
+    |
+443 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig) && Match(tok)
+    |                                                   ^^^^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(474,2): Error: a postcondition could not be proved on this return path
+    |
+474 |   {
+    |   ^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(473,38): Related location: this is the postcondition that could not be proved
+    |
+473 |     ensures Step(core, tok, true).out == Rejected(ReqIdMismatch)
+    |                                       ^^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(498,2): Error: a postcondition could not be proved on this return path
+    |
+498 |   {
+    |   ^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(497,12): Related location: this is the postcondition that could not be proved
+    |
+497 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(543,80): Error: assertion might not hold
+    |
+543 |         assert c1.outbox == c.outbox + [d.tok.intent] && d.tok.intent.requestId == r;
+    |                                                                                 ^^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(663,2): Error: a postcondition could not be proved on this return path
+    |
+663 |   {
+    |   ^
+
+Mutant_M1b_noReqIdCheck_specAdapted.dfy(655,12): Related location: this is the postcondition that could not be proved
+    |
+655 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+
+Dafny program verifier finished with 68 verified, 5 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M1b_noReqIdCheck_specAdapted-verify.csv
+        7.03 real         6.50 user         0.39 sys
+           183746560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20690  page reclaims
+                 701  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   7  signals received
+                 392  voluntary context switches
+               20151  involuntary context switches
+         57134893209  instructions retired
+         21101278291  cycles elapsed
+           165872840  peak memory footprint
+# end=2026-11-19T07:51:46Z
+exit 4

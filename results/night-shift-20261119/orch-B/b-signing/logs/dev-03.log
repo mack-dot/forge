@@ -1,0 +1,27 @@
+# owner=b-signing start=2026-11-19T07:53:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing
+# power: Now drawing from 'AC Power'
+# swap free MiB: 847
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyV2.dfy
+
+Dafny program verifier finished with 52 verified, 0 errors
+       12.86 real        10.77 user         0.55 sys
+           287457280  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40083  page reclaims
+                 709  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 843  voluntary context switches
+               38327  involuntary context switches
+         92370898531  instructions retired
+         34568106905  cycles elapsed
+           275498256  peak memory footprint
+# end=2026-11-19T07:54:05Z
+exit 0

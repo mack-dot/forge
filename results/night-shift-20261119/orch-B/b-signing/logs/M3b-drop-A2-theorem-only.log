@@ -1,0 +1,48 @@
+# owner=b-signing start=2026-11-19T08:00:41Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing/controls/M3b-drop-A2-theorem-only
+# power: Now drawing from 'AC Power'
+# swap free MiB: 588
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-signing/logs/M3b-drop-A2-theorem-only.csv SliceSafetyV2.dfy
+SliceSafetyV2.dfy(329,8): Error: Verification out of resource (SliceTheoremV2.PerEntryV2)
+    |
+329 |   lemma PerEntryV2(init: State, acts: seq<Act>, art: FlatFn, i: int)
+    |         ^^^^^^^^^^
+
+SliceSafetyV2.dfy(372,13): Error: a precondition for this call could not be proved
+    |
+372 |     ExecInvV2(init, acts);
+    |              ^
+
+SliceSafetyV2.dfy(267,31): Related location: this is the precondition that could not be proved
+    |
+267 |     requires A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts) && H1_SignatureAuthenticity(acts)
+    |                                ^
+
+<REPO>/results/night-shift-20261119/orch-B/b-signing/inputs/SliceTheorem.dfy(128,4): Related location: this proposition could not be proved
+    |
+128 |     forall k | 0 <= k < |acts| && acts[k].MintAct? && Ours(acts[k].c) ::
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 50 verified, 1 error, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-signing/logs/M3b-drop-A2-theorem-only.csv
+       14.24 real        11.23 user         0.85 sys
+           281051136  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               70942  page reclaims
+                 396  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 819  voluntary context switches
+               56046  involuntary context switches
+         93877255545  instructions retired
+         36630787019  cycles elapsed
+           277136656  peak memory footprint
+# end=2026-11-19T08:00:55Z
+exit 4

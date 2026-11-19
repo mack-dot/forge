@@ -1,0 +1,20 @@
+original exit 1, 87 pass, 8 fail
+control C1-reject-all KILLED exit 1 by B21,B22,P01,P02,P03,P04,P05
+control C2-accept-all KILLED exit 1 by B17,B18,B19,B20,N01,N02,N03,N04 ...
+mutant M01-exit1-like-exit3 KILLED exit 1 by B18,N01
+mutant M02-drop-affected-check KILLED exit 1 by N28,N29
+mutant M03-match-not-fullmatch KILLED exit 1 by N23
+mutant M04-drop-reason-check KILLED exit 1 by N26,N27
+mutant M05-drop-dotdot KILLED exit 1 by N21
+mutant M06-case-sensitive-prefix SURVIVED exit 1 by 
+mutant M07-allow-empty-rows SURVIVED exit 1 by 
+mutant M08-drop-finding-path-check KILLED exit 1 by N32
+mutant M09-drop-stale-head KILLED exit 1 by B04
+mutant M10-always-success KILLED exit 1 by B17,B18,B19,B20
+mutant M11-bind-drop-head KILLED exit 1 by B23
+mutant M12-drop-gate-prefix SURVIVED exit 1 by 
+mutant M13-drop-double-slash KILLED exit 1 by N22
+mutant M14-drop-int-type-check KILLED exit 1 by B13
+mutant M15-drop-scope-check KILLED exit 1 by B11,B12
+mutant M16-drop-findings-nonempty KILLED exit 1 by N31
+exit 0

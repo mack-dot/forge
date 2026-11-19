@@ -1,0 +1,27 @@
+# owner=orchB-recheck start=2026-11-19T08:23:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/f-records/checkout/proposals/m1b-mission-20261119/proofs/slice-theorem/inputs
+# power: Now drawing from 'AC Power'
+# swap free MiB: 635
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects SliceTheorem.dfy
+
+Dafny program verifier finished with 1570 verified, 0 errors
+       47.51 real        32.95 user         3.51 sys
+           253624320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              113238  page reclaims
+                   6  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                2970  voluntary context switches
+              368009  involuntary context switches
+        282556846606  instructions retired
+        111725305314  cycles elapsed
+           306824536  peak memory footprint
+# end=2026-11-19T08:24:25Z
+exit 0

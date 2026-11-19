@@ -1,0 +1,1672 @@
+[
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C0-repo-impl.dfy",
+  "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C1-table.dfy",
+  "sha256": "46c6cf4a900695506eb1803cbfb3caaee4779c4c4bafb72e8b27400a8c8d4491",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C2-recursion.dfy",
+  "sha256": "1af207b614ec7082f19c766656a47bcc487aee1dfc9c0876599257c15c8bfb28",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C3-early-returns.dfy",
+  "sha256": "735667b1338195cffd6160bd1597b4c2bc402f13743a4c4d2ab0d9dcc7c2acd2",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C4-arith.dfy",
+  "sha256": "da38f20ed8fe64c1d27623882423fd56a7e205b42eb96dfccb121bf03faa0966",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C5-helper-lemmas.dfy",
+  "sha256": "c98c9bfcb0dbaecbfe83dfe9d50cc6241e4c376393ed7d087ada984bff988a53",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C6-function-pair.dfy",
+  "sha256": "a27274984e4d6883f60969c2f688e9efe9a73007aa9d2f3aaa2aeea1b4e76568",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C7-loop-plan.dfy",
+  "sha256": "7251d0bb65c8f9545053f9d2ce353fdda8254ff80bd9445b24f4751ea1b9f2d5",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C8-isolate-attr.dfy",
+  "sha256": "5996a2735ad59b11bcb8b04e29bc696e6f620be510d157350602962cd08fa3c5",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C9-comment-word-include.dfy",
+  "sha256": "de083663e729bf04db7634a8388119a65d232bc93dbbe2833300be052ba36d7e",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C10-induction-attr.dfy",
+  "sha256": "13796f4cb48b0b48bc712de40b95d58a0f452e0057572e784dea8f2287327c38",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C11-at-in-string.dfy",
+  "sha256": "930e9effc482cf57ea96688a49bac35100f8e2028ddeb298ce7402fb890d0901",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C12-crlf-header.dfy",
+  "sha256": "1ce2c12bdd29e29d4bf77eadde5521129c08ca732fd6233a03808002b0758884",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A01-wrong-amount-one-input.dfy",
+  "sha256": "cefe7055f877d83dc31d5cc95c8d6d632d934b594bd29302b310bc1325e40fc6",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A02-assume-false.dfy",
+  "sha256": "b7d5c9450ec6d5945b99ab414851a6c0dffd336760bf531e3ae7fa3c04c3fe00",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A03-axiom-lemma.dfy",
+  "sha256": "3d9d28a7473b88f482bc4964630c17ee619b99d34a287faa953a7b37b4088982",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A04-verify-false.dfy",
+  "sha256": "f8c2d3e2d76853408048da68e75f89639c24a2622731fefa99ac2dc1378b54ff",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A05-extern-body.dfy",
+  "sha256": "dab4c7438272f3d8c05f63bcbe2a9b3354640bba7635c614b17a492706883e2e",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A06-bodiless-function.dfy",
+  "sha256": "4919958eaeab5bc82a052a513e79c5aeb5c70845b8ebd63f7311bccf12a1c762",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A07-bodiless-lemma-concrete.dfy",
+  "sha256": "d92e968bd1de642f4236a0537724eca144ba34b1411bf2df0d5e8f00ba72dd29",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A08-abstract-trap-toplevel-call.dfy",
+  "sha256": "d2524dc4a3f76a4e84036b89da9d53c51f9c4f28ee09f09e2a7d094cb92fab50",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A09-abstract-trap-nested-call.dfy",
+  "sha256": "bba661a6b17a396357f897cf8d6096b31bed9d5412badbc7ef55ab440e74942a",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A10-abstract-trap-import.dfy",
+  "sha256": "77b34ee7877e64a24581e7058dc08f16717a6cdf339f95abd1cdacb83a1c816f",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A11-abstract-trap-dead.dfy",
+  "sha256": "e5c830033b22801c54fb94a27c4f29b653cbb6872261ca6585d4e7e66788b360",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A12-redefine-eligible.dfy",
+  "sha256": "765fd97974ea48e110e7f2d631985c74e85f82e6ce3462da882a26d226e6d743",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A13-shadow-spec-nested.dfy",
+  "sha256": "fa630aace2882a9cef468c1883ba59de400f13b6b4f01564e7f03c6528db50d7",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A14-include-altered-spec.dfy",
+  "sha256": "9c159ba604951252e9bd5485f9b9d9d60c02ff82fa48fd87c1328d4ae4a25a00",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A15-second-include-hatch.dfy",
+  "sha256": "b3dec9f1b0767eb9b221909bd3dbb3da9c8482cc7761c17e387d4601dc5c950b",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A16-decreases-star.dfy",
+  "sha256": "1b1f1b02868b13dc4d04ac965f67ae8b7a73b9f693f3981912109ad2222d5259",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A17-print-effect.dfy",
+  "sha256": "305911beafb27e411df123a1266e5a0fef42a439ad9a59088f7eba97d5df27d1",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A18-runtime-exhaustion.dfy",
+  "sha256": "70fe4968cee7a2b5f1da7baf99021da95227dda67f0fc8cb2fd49c6e581b2603",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "NO-VERDICT"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A19-verifier-exhaustion.dfy",
+  "sha256": "9e33a87836cef5442e95911ea6b17f96b3110feb3ab291643b861e27ab078525",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A20-unicode-module.dfy",
+  "sha256": "4a3236f1278a46e5071221bc3275ed67ebf9f6a0bb1ff0b320d2979172dbed6b",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A21-unicode-predicate.dfy",
+  "sha256": "3fe38f4e98003f826f53349975752e7e2d98a25549153b34a6e5f2b39463641d",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A22-requires-false-assess.dfy",
+  "sha256": "5cc253789d433dd6ecc4cb86b1d463bc20527c6323c39ce6bee1d49da73a3b55",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A23-requires-false-helper.dfy",
+  "sha256": "506341128d6156747746686f8cc5d5f15fbce01f6d29a9cddbafe200e5d99261",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A24-expect-halt-one-input.dfy",
+  "sha256": "4527791ca182274fe73941b356325f73d4b96bc15780754fe60030ae49ef2d24",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A25-expect-as-assume-wrong-value.dfy",
+  "sha256": "697dbbbd642495428c572bb65a974540c0b693d32db9951db06d44c6a41ffb68",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A26-forall-no-body.dfy",
+  "sha256": "49a701adf80d655a8343045a474ee68f4a56857a7892817f490f440ae1facdf1",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A27-while-no-body.dfy",
+  "sha256": "31893141d86f9c283f76ccf297caa339c7287a5258a797a417f786bbbf4479f3",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A28-space-attribute.dfy",
+  "sha256": "3481862c6c8e2b04f8ce1cb9f57966799a5df19fda964c4a48ebc9d3b40f36e2",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A29-by-method-mismatch.dfy",
+  "sha256": "cd51cfaf5724d9e67662a1f74d03d00063c81ccbb9966624cc3c1f716e59ec9f",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A30-dfyconfig-cwd.dfy",
+  "sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A31-dfyconfig-impl-dir.dfy",
+  "sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A32-dead-main-decreases-star.dfy",
+  "sha256": "b1269366bc5e87dba08e12d266c98a252e2f18b15ea41b20c35ed57a41a8ef13",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A33-const-alloc-exhaustion.dfy",
+  "sha256": "b686718c2474f7582c2c177f6e3b04f599e08ea68d3894e61411a30739f48fc4",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A34-nested-comment-hide.dfy",
+  "sha256": "dd53d60f0d0bc16f9d1f9a3074820d371352b7b1c48a4280be00929f133f00a9",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A35-assume-in-ghost-helper.dfy",
+  "sha256": "baf9d3d9b33a91393839d1330aac9084ed683a80014044e4274f11535b4caffc",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A36-reveal-opaque-escape.dfy",
+  "sha256": "a2abb33eb0b7740456177bb5ea372760e91eb104dbf8dbc29839a9bba7cfa192",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A37-uncompilable-such-that.dfy",
+  "sha256": "71909caaf385669178306fedb44537d70aa222e3c325f5ff7cda676400106921",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A38-expect-always-halt.dfy",
+  "sha256": "937cfbf8d520a3960bac79d7f802766a0b28c604c23a1e36826bc01a02f83ef5",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A39-expect-in-helper-method.dfy",
+  "sha256": "d53fd29b8ab841bf7aaa7ecc9c343531795db9b2210e43e9985ad416e24883ef",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A38n-control-without-expect.dfy",
+  "sha256": "a2bb621df1e8b974ff760a000f9190af38cbab7eaf7857039a852a5bb5dc506a",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-61.dfy",
+  "sha256": "a7f156b562ec036e8fa25e86eb64459a05a6278e823ebd2e8acf2aef159af5da",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-1000.dfy",
+  "sha256": "e77fefe3075d67be8bfc57c86fad0f03013334400cbaa7b8046a1bbf801882a7",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-123456789.dfy",
+  "sha256": "d030dfa8417c10262686b748e0ab6c09aca79d73abb016ced40fd8129b442fa6",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-9223372036854775805.dfy",
+  "sha256": "bfc221d4c754a1a314b5592273f571c06a6e1e2278e644c131c4bcb329667fe5",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E01-colon-dash-expect.dfy",
+  "sha256": "07d365556562f2a27073b23001f34f86df0f869aa9b376d7b21e726b76708b91",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E02-array-oob.dfy",
+  "sha256": "3133e72f818a515000fc3eceaa367148455af27fa96aa2dabbd807ce71149897",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E03-div-zero.dfy",
+  "sha256": "ccacf862d593460c8178bfaeb415ef20050b4a723cc35068ea5a1b026967a52b",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E04-assert-by.dfy",
+  "sha256": "364674f5eb4ee1280c0201f1945783b1bc69f4ab57d37144fef139285f20cb97",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E05-test-attr.dfy",
+  "sha256": "1a853cd747eb023efac0e26327bd27242f400c66c2d3829fd6d455a2363ab524",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy",
+  "sha256": "d61a7abf3ac7366076d38310d79536f94d6f276d5b8b9db35ca0a4d68afa90fb",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy",
+  "sha256": "aa54d1448a2ca120ee073606aaaf483eddf08ddbb0e93a72981e29b62ddc073c",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E08-time-keyed.dfy",
+  "sha256": "b965d0414ff4e13b156611d98cdf9819bceb814dd7ab9a49725149de36ffa5cd",
+  "ideal": "REFUSED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E12-expect-in-by-method.dfy",
+  "sha256": "f248a048d7f413aaecd2cd6aec973828b7f66ed7fb3874bc6d00734a6926c261",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C13-comment-expect.dfy",
+  "sha256": "a70e88edcc8bd2143cfdebeb0f361cee2664bd721c2f4e441974a2171e830831",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C14-string-char-expect.dfy",
+  "sha256": "c39cb6fcbf257be09af001a7b605ac224d147d747ae1d31f9b0ca68d92524aed",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C15-ident-expected.dfy",
+  "sha256": "65ec1ad9a4b9da403771edeec7d7d0ffc58b27f5d3e1a6a1fe152d9ad4745143",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1a-nested-comment-closed.dfy",
+  "sha256": "f8dec96d90d446c5fbf347d221a89e8adf19e31b5571ee341b7a99af2863d24e",
+  "ideal": "ADMITTED",
+  "stored_new_rule": "pass",
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass",
+  "stored_after_full_gate": "ADMITTED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1b-nested-comment-reopen.dfy",
+  "sha256": "59b8f6c7fef8858db20389f8af583b80f1c29cae8e4c7820991d1757699adf2d",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: SOURCE_SCOPE: unterminated comment",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: unterminated comment",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S1-cr-ends-line-comment.dfy",
+  "sha256": "d7eebe3326bc75d2b5ec6ce720b56847820e1e9113b79293a9b0d6aae7c7a738",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S2-cr-comment-hides-keyed-expect.dfy",
+  "sha256": "f930505e04f4cf678cff6519c63f3dd1db4c76d5969f2c7bced53c5a3199181e",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S3-u2028-in-line-comment.dfy",
+  "sha256": "52c4f7ab278aea198fb8cacb302e887d0544bc54c216c0a99c33f066faf22474",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "G1",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S4-formfeed-in-line-comment.dfy",
+  "sha256": "a0393282bf6ba89d74980b021a6085f4f5658bb760391ab73fd15f5840999976",
+  "ideal": "REFUSED",
+  "stored_new_rule": "REFUSE",
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed",
+  "stored_after_full_gate": "REFUSED"
+ },
+ {
+  "set": "REPO",
+  "file": "impl/Refund.dfy",
+  "copies": 239,
+  "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
+  "in_G1": true,
+  "is_impl_Refund": true,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C13-comment-expect.dfy",
+  "copies": 1,
+  "sha256": "a70e88edcc8bd2143cfdebeb0f361cee2664bd721c2f4e441974a2171e830831",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C14-string-char-expect.dfy",
+  "copies": 1,
+  "sha256": "c39cb6fcbf257be09af001a7b605ac224d147d747ae1d31f9b0ca68d92524aed",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/C15-ident-expected.dfy",
+  "copies": 1,
+  "sha256": "65ec1ad9a4b9da403771edeec7d7d0ffc58b27f5d3e1a6a1fe152d9ad4745143",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E01-colon-dash-expect.dfy",
+  "copies": 1,
+  "sha256": "07d365556562f2a27073b23001f34f86df0f869aa9b376d7b21e726b76708b91",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E02-array-oob.dfy",
+  "copies": 1,
+  "sha256": "3133e72f818a515000fc3eceaa367148455af27fa96aa2dabbd807ce71149897",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E03-div-zero.dfy",
+  "copies": 1,
+  "sha256": "ccacf862d593460c8178bfaeb415ef20050b4a723cc35068ea5a1b026967a52b",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E04-assert-by.dfy",
+  "copies": 1,
+  "sha256": "364674f5eb4ee1280c0201f1945783b1bc69f4ab57d37144fef139285f20cb97",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E05-test-attr.dfy",
+  "copies": 1,
+  "sha256": "1a853cd747eb023efac0e26327bd27242f400c66c2d3829fd6d455a2363ab524",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy",
+  "copies": 1,
+  "sha256": "d61a7abf3ac7366076d38310d79536f94d6f276d5b8b9db35ca0a4d68afa90fb",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy",
+  "copies": 1,
+  "sha256": "aa54d1448a2ca120ee073606aaaf483eddf08ddbb0e93a72981e29b62ddc073c",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E08-time-keyed.dfy",
+  "copies": 1,
+  "sha256": "b965d0414ff4e13b156611d98cdf9819bceb814dd7ab9a49725149de36ffa5cd",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/E12-expect-in-by-method.dfy",
+  "copies": 1,
+  "sha256": "f248a048d7f413aaecd2cd6aec973828b7f66ed7fb3874bc6d00734a6926c261",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1a-nested-comment-closed.dfy",
+  "copies": 1,
+  "sha256": "f8dec96d90d446c5fbf347d221a89e8adf19e31b5571ee341b7a99af2863d24e",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/N1b-nested-comment-reopen.dfy",
+  "copies": 1,
+  "sha256": "59b8f6c7fef8858db20389f8af583b80f1c29cae8e4c7820991d1757699adf2d",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: SOURCE_SCOPE: unterminated comment",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: unterminated comment"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S1-cr-ends-line-comment.dfy",
+  "copies": 1,
+  "sha256": "d7eebe3326bc75d2b5ec6ce720b56847820e1e9113b79293a9b0d6aae7c7a738",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S2-cr-comment-hides-keyed-expect.dfy",
+  "copies": 1,
+  "sha256": "f930505e04f4cf678cff6519c63f3dd1db4c76d5969f2c7bced53c5a3199181e",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S3-u2028-in-line-comment.dfy",
+  "copies": 1,
+  "sha256": "52c4f7ab278aea198fb8cacb302e887d0544bc54c216c0a99c33f066faf22474",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/S4-formfeed-in-line-comment.dfy",
+  "copies": 1,
+  "sha256": "a0393282bf6ba89d74980b021a6085f4f5658bb760391ab73fd15f5840999976",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-1000.dfy",
+  "copies": 1,
+  "sha256": "e77fefe3075d67be8bfc57c86fad0f03013334400cbaa7b8046a1bbf801882a7",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-123456789.dfy",
+  "copies": 1,
+  "sha256": "d030dfa8417c10262686b748e0ab6c09aca79d73abb016ced40fd8129b442fa6",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-61.dfy",
+  "copies": 1,
+  "sha256": "a7f156b562ec036e8fa25e86eb64459a05a6278e823ebd2e8acf2aef159af5da",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/expect-rule/subs/Z24-expect-halt-amount-9223372036854775805.dfy",
+  "copies": 1,
+  "sha256": "bfc221d4c754a1a314b5592273f571c06a6e1e2278e644c131c4bcb329667fe5",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A01-wrong-amount-one-input.dfy",
+  "copies": 1,
+  "sha256": "cefe7055f877d83dc31d5cc95c8d6d632d934b594bd29302b310bc1325e40fc6",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A02-assume-false.dfy",
+  "copies": 1,
+  "sha256": "b7d5c9450ec6d5945b99ab414851a6c0dffd336760bf531e3ae7fa3c04c3fe00",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A03-axiom-lemma.dfy",
+  "copies": 1,
+  "sha256": "3d9d28a7473b88f482bc4964630c17ee619b99d34a287faa953a7b37b4088982",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A04-verify-false.dfy",
+  "copies": 1,
+  "sha256": "f8c2d3e2d76853408048da68e75f89639c24a2622731fefa99ac2dc1378b54ff",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A05-extern-body.dfy",
+  "copies": 1,
+  "sha256": "dab4c7438272f3d8c05f63bcbe2a9b3354640bba7635c614b17a492706883e2e",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A06-bodiless-function.dfy",
+  "copies": 1,
+  "sha256": "4919958eaeab5bc82a052a513e79c5aeb5c70845b8ebd63f7311bccf12a1c762",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A07-bodiless-lemma-concrete.dfy",
+  "copies": 1,
+  "sha256": "d92e968bd1de642f4236a0537724eca144ba34b1411bf2df0d5e8f00ba72dd29",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A08-abstract-trap-toplevel-call.dfy",
+  "copies": 1,
+  "sha256": "d2524dc4a3f76a4e84036b89da9d53c51f9c4f28ee09f09e2a7d094cb92fab50",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A09-abstract-trap-nested-call.dfy",
+  "copies": 1,
+  "sha256": "bba661a6b17a396357f897cf8d6096b31bed9d5412badbc7ef55ab440e74942a",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A10-abstract-trap-import.dfy",
+  "copies": 1,
+  "sha256": "77b34ee7877e64a24581e7058dc08f16717a6cdf339f95abd1cdacb83a1c816f",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A11-abstract-trap-dead.dfy",
+  "copies": 1,
+  "sha256": "e5c830033b22801c54fb94a27c4f29b653cbb6872261ca6585d4e7e66788b360",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A12-redefine-eligible.dfy",
+  "copies": 1,
+  "sha256": "765fd97974ea48e110e7f2d631985c74e85f82e6ce3462da882a26d226e6d743",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A13-shadow-spec-nested.dfy",
+  "copies": 1,
+  "sha256": "fa630aace2882a9cef468c1883ba59de400f13b6b4f01564e7f03c6528db50d7",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A14-include-altered-spec.dfy",
+  "copies": 1,
+  "sha256": "9c159ba604951252e9bd5485f9b9d9d60c02ff82fa48fd87c1328d4ae4a25a00",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A15-second-include-hatch.dfy",
+  "copies": 1,
+  "sha256": "b3dec9f1b0767eb9b221909bd3dbb3da9c8482cc7761c17e387d4601dc5c950b",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A16-decreases-star.dfy",
+  "copies": 1,
+  "sha256": "1b1f1b02868b13dc4d04ac965f67ae8b7a73b9f693f3981912109ad2222d5259",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A17-print-effect.dfy",
+  "copies": 1,
+  "sha256": "305911beafb27e411df123a1266e5a0fef42a439ad9a59088f7eba97d5df27d1",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A18-runtime-exhaustion.dfy",
+  "copies": 1,
+  "sha256": "70fe4968cee7a2b5f1da7baf99021da95227dda67f0fc8cb2fd49c6e581b2603",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A19-verifier-exhaustion.dfy",
+  "copies": 1,
+  "sha256": "9e33a87836cef5442e95911ea6b17f96b3110feb3ab291643b861e27ab078525",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A20-unicode-module.dfy",
+  "copies": 1,
+  "sha256": "4a3236f1278a46e5071221bc3275ed67ebf9f6a0bb1ff0b320d2979172dbed6b",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A21-unicode-predicate.dfy",
+  "copies": 1,
+  "sha256": "3fe38f4e98003f826f53349975752e7e2d98a25549153b34a6e5f2b39463641d",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A22-requires-false-assess.dfy",
+  "copies": 1,
+  "sha256": "5cc253789d433dd6ecc4cb86b1d463bc20527c6323c39ce6bee1d49da73a3b55",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A23-requires-false-helper.dfy",
+  "copies": 1,
+  "sha256": "506341128d6156747746686f8cc5d5f15fbce01f6d29a9cddbafe200e5d99261",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A24-expect-halt-one-input.dfy",
+  "copies": 1,
+  "sha256": "4527791ca182274fe73941b356325f73d4b96bc15780754fe60030ae49ef2d24",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A25-expect-as-assume-wrong-value.dfy",
+  "copies": 1,
+  "sha256": "697dbbbd642495428c572bb65a974540c0b693d32db9951db06d44c6a41ffb68",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A26-forall-no-body.dfy",
+  "copies": 1,
+  "sha256": "49a701adf80d655a8343045a474ee68f4a56857a7892817f490f440ae1facdf1",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A27-while-no-body.dfy",
+  "copies": 1,
+  "sha256": "31893141d86f9c283f76ccf297caa339c7287a5258a797a417f786bbbf4479f3",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A28-space-attribute.dfy",
+  "copies": 1,
+  "sha256": "3481862c6c8e2b04f8ce1cb9f57966799a5df19fda964c4a48ebc9d3b40f36e2",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A29-by-method-mismatch.dfy",
+  "copies": 1,
+  "sha256": "cd51cfaf5724d9e67662a1f74d03d00063c81ccbb9966624cc3c1f716e59ec9f",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A31-dfyconfig-impl-dir.dfy",
+  "copies": 2,
+  "sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A32-dead-main-decreases-star.dfy",
+  "copies": 1,
+  "sha256": "b1269366bc5e87dba08e12d266c98a252e2f18b15ea41b20c35ed57a41a8ef13",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A33-const-alloc-exhaustion.dfy",
+  "copies": 1,
+  "sha256": "b686718c2474f7582c2c177f6e3b04f599e08ea68d3894e61411a30739f48fc4",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A34-nested-comment-hide.dfy",
+  "copies": 1,
+  "sha256": "dd53d60f0d0bc16f9d1f9a3074820d371352b7b1c48a4280be00929f133f00a9",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A35-assume-in-ghost-helper.dfy",
+  "copies": 1,
+  "sha256": "baf9d3d9b33a91393839d1330aac9084ed683a80014044e4274f11535b4caffc",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A36-reveal-opaque-escape.dfy",
+  "copies": 1,
+  "sha256": "a2abb33eb0b7740456177bb5ea372760e91eb104dbf8dbc29839a9bba7cfa192",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A37-uncompilable-such-that.dfy",
+  "copies": 1,
+  "sha256": "71909caaf385669178306fedb44537d70aa222e3c325f5ff7cda676400106921",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A38-expect-always-halt.dfy",
+  "copies": 1,
+  "sha256": "937cfbf8d520a3960bac79d7f802766a0b28c604c23a1e36826bc01a02f83ef5",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/A39-expect-in-helper-method.dfy",
+  "copies": 1,
+  "sha256": "d53fd29b8ab841bf7aaa7ecc9c343531795db9b2210e43e9985ad416e24883ef",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "REFUSE: run-time halt statement expect",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: run-time halt statement expect is not allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C1-table.dfy",
+  "copies": 1,
+  "sha256": "46c6cf4a900695506eb1803cbfb3caaee4779c4c4bafb72e8b27400a8c8d4491",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C10-induction-attr.dfy",
+  "copies": 1,
+  "sha256": "13796f4cb48b0b48bc712de40b95d58a0f452e0057572e784dea8f2287327c38",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C11-at-in-string.dfy",
+  "copies": 1,
+  "sha256": "930e9effc482cf57ea96688a49bac35100f8e2028ddeb298ce7402fb890d0901",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: only assertion-isolation attributes allowed"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C12-crlf-header.dfy",
+  "copies": 1,
+  "sha256": "1ce2c12bdd29e29d4bf77eadde5521129c08ca732fd6233a03808002b0758884",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C2-recursion.dfy",
+  "copies": 1,
+  "sha256": "1af207b614ec7082f19c766656a47bcc487aee1dfc9c0876599257c15c8bfb28",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C3-early-returns.dfy",
+  "copies": 1,
+  "sha256": "735667b1338195cffd6160bd1597b4c2bc402f13743a4c4d2ab0d9dcc7c2acd2",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C4-arith.dfy",
+  "copies": 1,
+  "sha256": "da38f20ed8fe64c1d27623882423fd56a7e205b42eb96dfccb121bf03faa0966",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C5-helper-lemmas.dfy",
+  "copies": 1,
+  "sha256": "c98c9bfcb0dbaecbfe83dfe9d50cc6241e4c376393ed7d087ada984bff988a53",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C6-function-pair.dfy",
+  "copies": 1,
+  "sha256": "a27274984e4d6883f60969c2f688e9efe9a73007aa9d2f3aaa2aeea1b4e76568",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C7-loop-plan.dfy",
+  "copies": 1,
+  "sha256": "7251d0bb65c8f9545053f9d2ce353fdda8254ff80bd9445b24f4751ea1b9f2d5",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C8-isolate-attr.dfy",
+  "copies": 1,
+  "sha256": "5996a2735ad59b11bcb8b04e29bc696e6f620be510d157350602962cd08fa3c5",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "proposals/m1b-mission-20261119/drafts/zero-review/subs/C9-comment-word-include.dfy",
+  "copies": 1,
+  "sha256": "de083663e729bf04db7634a8388119a65d232bc93dbbe2833300be052ba36d7e",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "results/stage8/wrapper-proof/attempt-0002/mutants/assumption-escape/impl/Refund.dfy",
+  "copies": 73,
+  "sha256": "a38ec949b71e03d2c5be78601170b2790fc249ff00b4db43c063069450cf52a4",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "results/stage8/wrapper-proof/attempt-0002/mutants/over-limit/impl/Refund.dfy",
+  "copies": 73,
+  "sha256": "2c4cdad6894cda648b3f09ad83a2632afa6876647cce3ae1c7ab3093b547ef57",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "results/stage8/wrapper-proof/attempt-0002/mutants/reject-all/impl/Refund.dfy",
+  "copies": 74,
+  "sha256": "a2bb621df1e8b974ff760a000f9190af38cbab7eaf7857039a852a5bb5dc506a",
+  "in_G1": true,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "pass"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsAnyReason.dfy",
+  "copies": 1,
+  "sha256": "f7353e97f96ffa91298a65b2ea7f87ff785112250389252896dd4e83fe3ce10d",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsEmptyRequestId.dfy",
+  "copies": 1,
+  "sha256": "442dbb2f2318764174ffb3bad74bfecc8c1b38fc949ea462bcf32fcb47017b43",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsNegative.dfy",
+  "copies": 1,
+  "sha256": "64bd36b86df3d8a3b54a4a2a2a9ddecbcf24ccffec1437fdc26e85928430c55f",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsOverRemaining.dfy",
+  "copies": 1,
+  "sha256": "4bf47b840b2028187c144c24de2681c07e54145a80b519f30a6a3376b7c15fd9",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAcceptsReasonPrefix.dfy",
+  "copies": 1,
+  "sha256": "acff42996ea151e18583d8a5fcd06b5da7f814720cab5c4548d359053d9983a4",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundAuthorizesMissing.dfy",
+  "copies": 1,
+  "sha256": "f82b59f93336f240dd628dedc233e92814ac2bcb36d8abd51d126153b933ba24",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundClampsAmount.dfy",
+  "copies": 1,
+  "sha256": "371607d15b5896f0034c7dac5bdfaf14f00e05ccb0d42ab20214ce6c9627982d",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundIgnoresEnabled.dfy",
+  "copies": 1,
+  "sha256": "909085470e9ddfb1bab7064c58e9f5a9c8b0bc2d2fe9fd6e49db8947c85af4dd",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundIgnoresOpen.dfy",
+  "copies": 1,
+  "sha256": "69e9eddf4c9f21723a6610f9dc96f1ff53a270c32131b758b31c2db46182f675",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundNoMoneyCap.dfy",
+  "copies": 1,
+  "sha256": "bab79252b72b32cba81bf0689a060f7155d67dd0bad9b7a2ded8b162bdd90808",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundOffByOneAmount.dfy",
+  "copies": 1,
+  "sha256": "7b98fc1a41ccc05697ce8a50a361f3770410d7b52bd234f84c9a8bbf139718cf",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRejectsEverything.dfy",
+  "copies": 1,
+  "sha256": "39b8a9a7190c9d67f6c241b4f658a89c1583224d8385dfc2442efa95715d7610",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRejectsFullRemaining.dfy",
+  "copies": 1,
+  "sha256": "e518abf4e3bac038302f24a347a21731d1487ae9a3530d529c6c177fc9d7d174",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRejectsZero.dfy",
+  "copies": 1,
+  "sha256": "26cb43d97138b0941cb8a69e98d964fbeaee047fb9fd19950d4710022d5691a7",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundRemainingOverOriginal.dfy",
+  "copies": 1,
+  "sha256": "3196a65f5ff39f54da472aa73b88dff518d7592dc4647845a2e65f875664a8bd",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ },
+ {
+  "set": "REPO",
+  "file": "tests/m1-conformance/fixtures/RefundSwapsIntentIds.dfy",
+  "copies": 1,
+  "sha256": "6b7a98e6dae1113e0beb95a8b25b687be158992e0eb457e548e01d96fde88f13",
+  "in_G1": false,
+  "is_impl_Refund": false,
+  "new_rule": "pass",
+  "source_scope_after_patch": "REFUSE: SOURCE_SCOPE: exact approved refinement and sole include required"
+ }
+]

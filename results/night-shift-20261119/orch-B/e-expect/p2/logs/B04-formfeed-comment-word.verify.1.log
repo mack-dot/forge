@@ -1,0 +1,27 @@
+# owner=e-expect start=2026-11-19T07:54:09Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/B04-formfeed-comment-word
+# power: Now drawing from 'AC Power'
+# swap free MiB: 847
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+
+Dafny program verifier finished with 6 verified, 0 errors
+        1.33 real         1.11 user         0.15 sys
+           121716736  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13475  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  56  voluntary context switches
+                4323  involuntary context switches
+          9708221053  instructions retired
+          3860729997  cycles elapsed
+            93291720  peak memory footprint
+# end=2026-11-19T07:54:11Z
+exit 0

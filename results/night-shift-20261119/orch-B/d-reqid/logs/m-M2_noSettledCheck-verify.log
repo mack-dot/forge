@@ -1,0 +1,98 @@
+# owner=d-reqid start=2026-11-19T07:51:18Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1483
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M2_noSettledCheck-verify.csv Mutant_M2_noSettledCheck.dfy
+Mutant_M2_noSettledCheck.dfy(180,24): Error: a postcondition could not be proved on this return path
+    |
+180 |     if r.out.Committed? {
+    |                         ^
+
+Mutant_M2_noSettledCheck.dfy(168,50): Related location: this is the postcondition that could not be proved
+    |
+168 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+    |                                                   ^^^^
+
+Mutant_M2_noSettledCheck.dfy(185,22): Error: index out of range
+    |
+185 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+Mutant_M2_noSettledCheck.dfy(185,66): Error: index out of range
+    |
+185 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+Mutant_M2_noSettledCheck.dfy(190,23): Error: index out of range
+    |
+190 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+Mutant_M2_noSettledCheck.dfy(190,27): Error: assertion might not hold
+    |
+190 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                            ^^
+
+Mutant_M2_noSettledCheck.dfy(450,24): Error: a postcondition could not be proved on this return path
+    |
+450 |     if r.out.Committed? {
+    |                         ^
+
+Mutant_M2_noSettledCheck.dfy(443,50): Related location: this is the postcondition that could not be proved
+    |
+443 |     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig) && Match(tok)
+    |                                                   ^^^^
+
+Mutant_M2_noSettledCheck.dfy(455,22): Error: index out of range
+    |
+455 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+Mutant_M2_noSettledCheck.dfy(455,66): Error: index out of range
+    |
+455 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+Mutant_M2_noSettledCheck.dfy(460,23): Error: index out of range
+    |
+460 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+Mutant_M2_noSettledCheck.dfy(460,27): Error: assertion might not hold
+    |
+460 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                            ^^
+
+Mutant_M2_noSettledCheck.dfy(485,2): Error: a postcondition could not be proved on this return path
+    |
+485 |   {
+    |   ^
+
+Mutant_M2_noSettledCheck.dfy(480,50): Related location: this is the postcondition that could not be proved
+    |
+480 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+
+Dafny program verifier finished with 70 verified, 11 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M2_noSettledCheck-verify.csv
+        7.43 real         7.02 user         0.50 sys
+           200654848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21883  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 381  voluntary context switches
+               38872  involuntary context switches
+         60713963143  instructions retired
+         22955916952  cycles elapsed
+           180176096  peak memory footprint
+# end=2026-11-19T07:51:26Z
+exit 4

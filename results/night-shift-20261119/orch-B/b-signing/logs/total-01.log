@@ -1,0 +1,32 @@
+# owner=b-signing start=2026-11-19T07:54:25Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing
+# power: Now drawing from 'AC Power'
+# swap free MiB: 855
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects TotalReading.dfy
+TotalReading.dfy(120,4): Error: assertion might not hold
+    |
+120 |     assert !VerifyTag(BAD, SigFn(GOOD));
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 5 verified, 1 error
+        1.75 real         1.46 user         0.13 sys
+           137969664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13934  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  76  voluntary context switches
+                4839  involuntary context switches
+         12845500861  instructions retired
+          4900393673  cycles elapsed
+           105170120  peak memory footprint
+# end=2026-11-19T07:54:27Z
+exit 4

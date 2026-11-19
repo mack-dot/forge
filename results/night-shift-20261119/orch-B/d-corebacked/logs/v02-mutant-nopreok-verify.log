@@ -1,0 +1,38 @@
+# owner=d-corebacked start=2026-11-19T08:22:43Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-corebacked/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 592
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-corebacked/logs/v02-mutant-nopreok-verify.csv Mutant_ShellNoPreOk.dfy
+Mutant_ShellNoPreOk.dfy(36,2): Error: a postcondition could not be proved on this return path
+   |
+36 |   {
+   |   ^
+
+Mutant_ShellNoPreOk.dfy(35,54): Related location: this is the postcondition that could not be proved
+   |
+35 |     ensures StepP(core, t, sigOk, core.charge == pre) == C.Step(core, Full(t, pre), sigOk)
+   |                                                       ^^
+
+
+Dafny program verifier finished with 76 verified, 1 error
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-corebacked/logs/v02-mutant-nopreok-verify.csv
+        7.66 real         6.99 user         0.46 sys
+           183353344  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22693  page reclaims
+                 355  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 417  voluntary context switches
+               30102  involuntary context switches
+         60197531344  instructions retired
+         22903492105  cycles elapsed
+           170116368  peak memory footprint
+# end=2026-11-19T08:22:51Z
+exit 4

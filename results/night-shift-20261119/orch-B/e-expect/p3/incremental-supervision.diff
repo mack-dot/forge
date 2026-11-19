@@ -1,0 +1,55 @@
+--- a/gate/incremental.py
++++ b/gate/incremental.py
+@@ -20,6 +20,7 @@
+ import re
+ import shlex
+ import shutil
++import signal
+ import subprocess
+ import sys
+ import tempfile
+@@ -97,11 +98,43 @@
+     return result
+ 
+ 
++STEP_SECONDS = 3600
++
++
++def bounded(command, **options):
++    """subprocess.run with a wall-clock bound. On expiry, kill the whole process group and return None."""
++    child = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                             start_new_session=True, **options)
++    try:
++        stdout, stderr = child.communicate(timeout=STEP_SECONDS)
++    except subprocess.TimeoutExpired:
++        stdout = stderr = None
++    finally:
++        try:
++            os.killpg(child.pid, signal.SIGKILL)
++        except (ProcessLookupError, PermissionError):
++            pass
++        child.wait()
++    if stdout is None:
++        return None
++    return subprocess.CompletedProcess(command, child.returncode, stdout, stderr)
++
++
++def limit_reached(command):
++    return Rejected('RESOURCE_LIMIT: ' + Path(str(command[0])).name + ' ' + ' '.join(str(c) for c in command[1:2])
++                    + ' reached the wall-clock bound of ' + str(STEP_SECONDS) + ' s; process group killed; no verdict')
++
++
+ def run(command, log, records):
+     # The checker reads candidate source; it receives no Actions/API credentials.
+     allowed = ('PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'LD_LIBRARY_PATH', 'DOTNET_ROOT')
+     environment = {name: os.environ[name] for name in allowed if name in os.environ}
+-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, env=environment)
++    result = bounded(command, cwd=ROOT, text=True, env=environment)
++    if result is None:
++        log.write_text('RESOURCE_LIMIT: wall-clock bound reached\n')
++        records.append({'command': shlex.join(str(item) for item in command),
++                        'exit_code': None, 'log': str(log.relative_to(ROOT))})
++        raise limit_reached(command)
+     output = result.stdout + result.stderr
+     log.write_text(output)
+     records.append({'command': shlex.join(str(item) for item in command),

@@ -1,0 +1,172 @@
+{
+ "C1-reject-all": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B21",
+   "B22",
+   "P01",
+   "P02",
+   "P03",
+   "P04",
+   "P05"
+  ]
+ },
+ "C2-accept-all": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B17",
+   "B18",
+   "B19",
+   "B20",
+   "N01",
+   "N02",
+   "N03",
+   "N04",
+   "N05",
+   "N06",
+   "N07",
+   "N10",
+   "N11",
+   "N12",
+   "N13",
+   "N14",
+   "N15",
+   "N16",
+   "N17",
+   "N18",
+   "N19",
+   "N20",
+   "N21",
+   "N22",
+   "N23",
+   "N24",
+   "N25",
+   "N26",
+   "N27",
+   "N28",
+   "N29",
+   "N30",
+   "N31",
+   "N32",
+   "N33",
+   "N34",
+   "N35",
+   "N37",
+   "N38",
+   "N39"
+  ]
+ },
+ "M01-exit1-like-exit3": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B18",
+   "N01"
+  ]
+ },
+ "M02-drop-affected-check": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N28",
+   "N29"
+  ]
+ },
+ "M03-match-not-fullmatch": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N23"
+  ]
+ },
+ "M04-drop-reason-check": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N26",
+   "N27"
+  ]
+ },
+ "M05-drop-dotdot": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N21"
+  ]
+ },
+ "M06-case-sensitive-prefix": {
+  "state": "SURVIVED",
+  "exit": 1,
+  "killed_by": []
+ },
+ "M07-allow-empty-rows": {
+  "state": "SURVIVED",
+  "exit": 1,
+  "killed_by": []
+ },
+ "M08-drop-finding-path-check": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N32"
+  ]
+ },
+ "M09-drop-stale-head": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B04"
+  ]
+ },
+ "M10-always-success": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B17",
+   "B18",
+   "B19",
+   "B20"
+  ]
+ },
+ "M11-bind-drop-head": {
+  "state": "SURVIVED",
+  "exit": 1,
+  "killed_by": []
+ },
+ "M12-drop-gate-prefix": {
+  "state": "SURVIVED",
+  "exit": 1,
+  "killed_by": []
+ },
+ "M13-drop-double-slash": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N22"
+  ]
+ },
+ "M14-drop-int-type-check": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B13"
+  ]
+ },
+ "M15-drop-scope-check": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "B11",
+   "B12"
+  ]
+ },
+ "M16-drop-findings-nonempty": {
+  "state": "KILLED",
+  "exit": 1,
+  "killed_by": [
+   "N31"
+  ]
+ }
+}

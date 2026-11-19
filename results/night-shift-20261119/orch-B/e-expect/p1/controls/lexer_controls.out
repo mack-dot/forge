@@ -1,0 +1,30 @@
+ok   'expect false;'            must_refuse=True  rule=True  gate_copy=True 
+ok   ':- expect F();'           must_refuse=True  rule=True  gate_copy=True 
+ok   'expect\tx;'               must_refuse=True  rule=True  gate_copy=True 
+ok   '{expect x;}'              must_refuse=True  rule=True  gate_copy=True 
+ok   '// expect\n'              must_refuse=False rule=False gate_copy=False
+ok   '/* expect */'             must_refuse=False rule=False gate_copy=False
+ok   '/* /* */ expect */'       must_refuse=False rule=False gate_copy=False
+ok   '/* */ expect x;'          must_refuse=True  rule=True  gate_copy=True 
+ok   '// a\rexpect x;'          must_refuse=True  rule=True  gate_copy=True 
+ok   '// a\x0cexpect x;'        must_refuse=True  rule=True  gate_copy=True 
+ok   '// a\u2028expect x;'      must_refuse=True  rule=True  gate_copy=True 
+ok   '"expect"'                 must_refuse=False rule=False gate_copy=False
+ok   '"a\\"expect"'             must_refuse=False rule=False gate_copy=False
+ok   '"a\\\\" expect'           must_refuse=True  rule=True  gate_copy=True 
+ok   "'\\'' expect"             must_refuse=True  rule=True  gate_copy=True 
+ok   "'e' + 'x'"                must_refuse=False rule=False gate_copy=False
+ok   "x'expect := 1;"           must_refuse=True  rule=True  gate_copy=True 
+ok   'Candidate?expect'         must_refuse=True  rule=True  gate_copy=True 
+ok   'expected := 1;'           must_refuse=False rule=False gate_copy=False
+ok   'expect_ok'                must_refuse=False rule=False gate_copy=False
+ok   '_expect'                  must_refuse=False rule=False gate_copy=False
+ok   '1expect'                  must_refuse=True  rule=True  gate_copy=True 
+ok   '@"a""expect"""'           must_refuse=False rule=False gate_copy=False
+ok   '@"a"" " expect'           must_refuse=True  rule=True  gate_copy=True 
+ok   '"unterminated'            must_refuse=True  rule=True  gate_copy=True 
+ok   '/* unterminated'          must_refuse=True  rule=True  gate_copy=True 
+ok   "'ab'"                     must_refuse=True  rule=True  gate_copy=True 
+ok   'éexpect'                  must_refuse=True  rule=True  gate_copy=True 
+ok   '\xa0expect'               must_refuse=True  rule=True  gate_copy=True 
+failures: 0

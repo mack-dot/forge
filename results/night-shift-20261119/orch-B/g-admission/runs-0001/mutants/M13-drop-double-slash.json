@@ -1,0 +1,566 @@
+[
+ {
+  "id": "N01",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 1 REJECTED, docs only"
+ },
+ {
+  "id": "N02",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 2 NOT_ESTABLISHED, docs only"
+ },
+ {
+  "id": "N03",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 4 (unknown code)"
+ },
+ {
+  "id": "N04",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 124 (timeout)"
+ },
+ {
+  "id": "N05",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit -9 (killed)"
+ },
+ {
+  "id": "N06",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit None (missing)"
+ },
+ {
+  "id": "N07",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit \"0\" (string)"
+ },
+ {
+  "id": "N08",
+  "group": "decide-neg",
+  "pass": false,
+  "text": "exit False (bool equals 0 in Python)"
+ },
+ {
+  "id": "N09",
+  "group": "decide-neg",
+  "pass": false,
+  "text": "exit 0.0 (float equals 0)"
+ },
+ {
+  "id": "N10",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, no coverage"
+ },
+ {
+  "id": "N11",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, code file"
+ },
+ {
+  "id": "N12",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, .py under proposals"
+ },
+ {
+  "id": "N13",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, .sh under results"
+ },
+ {
+  "id": "N14",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, .sml draft"
+ },
+ {
+  "id": "N15",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, workflow file"
+ },
+ {
+  "id": "N16",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, .md under .github"
+ },
+ {
+  "id": "N17",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, gate/approvals record"
+ },
+ {
+  "id": "N18",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, forged approval .md under gate"
+ },
+ {
+  "id": "N19",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, governance record .md"
+ },
+ {
+  "id": "N20",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, upper-case GATE/x.md"
+ },
+ {
+  "id": "N21",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, dot-dot escape"
+ },
+ {
+  "id": "N22",
+  "group": "decide-neg",
+  "pass": false,
+  "text": "exit 3, double slash"
+ },
+ {
+  "id": "N23",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, suffix trick a.md.sh"
+ },
+ {
+  "id": "N24",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, upper .MD"
+ },
+ {
+  "id": "N25",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, json result"
+ },
+ {
+  "id": "N26",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, UNKNOWN_DEPENDENCY"
+ },
+ {
+  "id": "N27",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, OBLIGATION_NOT_ESTABLISHED"
+ },
+ {
+  "id": "N28",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, extra affected obligation"
+ },
+ {
+  "id": "N29",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, affected obligations empty"
+ },
+ {
+  "id": "N30",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, empty change list"
+ },
+ {
+  "id": "N31",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, empty finding list"
+ },
+ {
+  "id": "N32",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, finding on another path"
+ },
+ {
+  "id": "N33",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, row not a dict"
+ },
+ {
+  "id": "N34",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, path not a string"
+ },
+ {
+  "id": "N35",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, coverage is a list"
+ },
+ {
+  "id": "N36",
+  "group": "decide-neg",
+  "pass": false,
+  "text": "exit 3, protected top-level AGENTS.md"
+ },
+ {
+  "id": "N37",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, clearing/ .md (never put a file there)"
+ },
+ {
+  "id": "N38",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, backslash path"
+ },
+ {
+  "id": "N39",
+  "group": "decide-neg",
+  "pass": true,
+  "text": "exit 3, non-ASCII look-alike"
+ },
+ {
+  "id": "P01",
+  "group": "decide-pos",
+  "pass": true,
+  "text": "exit 0 verified"
+ },
+ {
+  "id": "P02",
+  "group": "decide-pos",
+  "pass": true,
+  "text": "exit 3 docs only"
+ },
+ {
+  "id": "P03",
+  "group": "decide-pos",
+  "pass": true,
+  "text": "exit 3 single top-level README.md"
+ },
+ {
+  "id": "P04",
+  "group": "decide-pos",
+  "pass": true,
+  "text": "exit 3 results .txt"
+ },
+ {
+  "id": "P05",
+  "group": "decide-pos",
+  "pass": true,
+  "text": "exit 3 docs/ .md"
+ },
+ {
+  "id": "B01",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "missing receipt (gate timed out or crashed)"
+ },
+ {
+  "id": "B02",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt not JSON"
+ },
+ {
+  "id": "B03",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt with duplicate key"
+ },
+ {
+  "id": "B04",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "stale head: PR head moved after the run"
+ },
+ {
+  "id": "B05",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "stale base: main moved after the run"
+ },
+ {
+  "id": "B06",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt for another commit"
+ },
+ {
+  "id": "B07",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt for another base"
+ },
+ {
+  "id": "B08",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt from another run"
+ },
+ {
+  "id": "B09",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt for another PR"
+ },
+ {
+  "id": "B10",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "receipt for another repository"
+ },
+ {
+  "id": "B11",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "run in a fork repository"
+ },
+ {
+  "id": "B12",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "PR base is not main"
+ },
+ {
+  "id": "B13",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "exit code is a bool"
+ },
+ {
+  "id": "B14",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "end_to_end missing"
+ },
+ {
+  "id": "B15",
+  "group": "bind-neg",
+  "pass": false,
+  "text": "exit 0 without established coverage"
+ },
+ {
+  "id": "B16",
+  "group": "bind-neg",
+  "pass": false,
+  "text": "exit 0 with coverage missing"
+ },
+ {
+  "id": "B17",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "exit 3 code change posts failure"
+ },
+ {
+  "id": "B18",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "exit 1 posts failure"
+ },
+ {
+  "id": "B19",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "exit 2 posts failure"
+ },
+ {
+  "id": "B20",
+  "group": "bind-neg",
+  "pass": true,
+  "text": "exit 4 posts failure"
+ },
+ {
+  "id": "B21",
+  "group": "bind-pos",
+  "pass": true,
+  "text": "exit 0 bound receipt posts success on HEAD"
+ },
+ {
+  "id": "B22",
+  "group": "bind-pos",
+  "pass": true,
+  "text": "exit 3 docs bound receipt posts success on HEAD"
+ },
+ {
+  "id": "R01",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "direct push to main (agent)"
+ },
+ {
+  "id": "R02",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "direct push to main (owner admin)"
+ },
+ {
+  "id": "R03",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "force-push main"
+ },
+ {
+  "id": "R04",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "delete main"
+ },
+ {
+  "id": "R05",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "admin merge with forge/admission failure"
+ },
+ {
+  "id": "R06",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "merge with the check missing"
+ },
+ {
+  "id": "R07",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "merge with check pending"
+ },
+ {
+  "id": "R08",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "success on an old head only (stale SHA)"
+ },
+ {
+  "id": "R09",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "success posted by a PAT (no app)"
+ },
+ {
+  "id": "R10",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "success posted by another App"
+ },
+ {
+  "id": "R11",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "success then later failure"
+ },
+ {
+  "id": "R12",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "branch behind main (strict)"
+ },
+ {
+  "id": "R13",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "no approving review"
+ },
+ {
+  "id": "R14",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "self-approval by the PR author"
+ },
+ {
+  "id": "R15",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "approval on an older head (stale review)"
+ },
+ {
+  "id": "R16",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "approval by a non-code-owner"
+ },
+ {
+  "id": "R17",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "merge-commit method"
+ },
+ {
+  "id": "R18",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "create a tag"
+ },
+ {
+  "id": "R19",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "move a tag"
+ },
+ {
+  "id": "R20",
+  "group": "rules-neg",
+  "pass": true,
+  "text": "delete a tag"
+ },
+ {
+  "id": "R21",
+  "group": "rules-neg",
+  "pass": false,
+  "text": "success from ANOTHER workflow of the same Actions app"
+ },
+ {
+  "id": "R22",
+  "group": "rules-neg",
+  "pass": false,
+  "text": "interim ruleset: merge with red gate is blocked"
+ },
+ {
+  "id": "R23",
+  "group": "rules-pos",
+  "pass": true,
+  "text": "owner-approved, admitted, squash, up to date"
+ },
+ {
+  "id": "R24",
+  "group": "rules-pos",
+  "pass": true,
+  "text": "agent may push its own feature branch"
+ },
+ {
+  "id": "R25",
+  "group": "rules-struct",
+  "pass": true,
+  "text": "no bypass actor in any draft"
+ },
+ {
+  "id": "R26",
+  "group": "rules-struct",
+  "pass": true,
+  "text": "required check is forge/admission pinned to an integration"
+ },
+ {
+  "id": "A01",
+  "group": "approval-neg",
+  "pass": true,
+  "text": "forged approval added in the same PR is ignored"
+ },
+ {
+  "id": "A02",
+  "group": "approval-neg",
+  "pass": false,
+  "text": "an unsigned record that reached main is NOT accepted without an owner signature"
+ }
+]

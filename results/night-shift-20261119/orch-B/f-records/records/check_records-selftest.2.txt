@@ -1,0 +1,5 @@
+{"case": "baseline", "refused": false, "as_expected": true, "problems": []}
+{"case": "one byte in impl/Refund.dfy", "refused": true, "as_expected": true, "problems": ["linked-refund", "linked-refund-no-axiom", "sink-core", "sink-core-attack", "sink-core-witness", "slice-theorem"]}
+{"case": "one byte in a Std copy of slice-theorem", "refused": true, "as_expected": true, "problems": ["slice-theorem"]}
+{"case": "one byte in a sink-core mutant", "refused": true, "as_expected": true, "problems": ["sink-core/N1-drop-fresh-id-check"]}
+SELF-TEST as expected

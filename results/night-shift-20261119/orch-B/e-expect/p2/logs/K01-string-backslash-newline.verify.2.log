@@ -1,0 +1,41 @@
+# owner=e-expect start=2026-11-19T08:21:54Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-expect/p2/work/K01-string-backslash-newline
+# power: Now drawing from 'AC Power'
+# swap free MiB: 568
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+impl/Refund.dfy(7,13): Error: invalid Rhs
+  |
+7 |     var s := "a\
+  |              ^
+
+impl/Refund.dfy(8,85): Error: this symbol not expected in VarDeclStatement
+  |
+8 | expect !(response.Candidate? && response.amount == 123456789); var t := "; var u := "";
+  |                                                                                      ^
+
+impl/Refund.dfy(12,6): Error: rbrace expected
+   |
+12 |     } else {
+   |       ^
+
+3 parse errors detected in Refund.dfy
+        0.29 real         0.22 user         0.04 sys
+            71729152  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5763  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  19  voluntary context switches
+                 477  involuntary context switches
+          2124549858  instructions retired
+           827732892  cycles elapsed
+            44680224  peak memory footprint
+# end=2026-11-19T08:21:54Z
+exit 2

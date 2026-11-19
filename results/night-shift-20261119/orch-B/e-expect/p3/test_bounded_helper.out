@@ -1,0 +1,10 @@
+ok   sleep30    want=LIMIT got=LIMIT 2.00s orphans=0 | RESOURCE_LIMIT: sleep 30 reached the wall-clock bound of 2 s; process group killed; no verdict
+ok   quick      want=PASS  got=PASS  0.02s orphans=0 | exit 3 out 'ok\n'
+ok   grandchild want=LIMIT got=LIMIT 2.01s orphans=0 | RESOURCE_LIMIT: sh -c reached the wall-clock bound of 2 s; process group killed; no verdict
+production STEP_SECONDS = 3600; failures: 0
+exit 0
+ok   sleep30    want=LIMIT got=LIMIT 2.01s orphans=0 | CHECKER_TIMEOUT: /bin/sleep 30 reached the wall-clock bound of 2 s; process group killed; no verdict
+ok   quick      want=PASS  got=PASS  0.01s orphans=0 | exit 3 out 'ok\n'
+ok   grandchild want=LIMIT got=LIMIT 2.01s orphans=0 | CHECKER_TIMEOUT: /bin/sh -c /bin/sleep 31 & /bin/sleep 30 reached the wall-clock bound of 2 s; process group killed; no verdict
+production CHECKER_SECONDS = 7200; failures: 0
+exit 0

@@ -1,0 +1,28 @@
+# owner=d-reqid start=2026-11-19T07:50:07Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1443
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/v03-contrast-verify.csv Contrast.dfy
+
+Dafny program verifier finished with 106 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/v03-contrast-verify.csv
+       11.06 real        10.63 user         0.69 sys
+           187498496  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               30292  page reclaims
+                 694  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 610  voluntary context switches
+               48936  involuntary context switches
+         90444296604  instructions retired
+         34464042090  cycles elapsed
+           186074384  peak memory footprint
+# end=2026-11-19T07:50:19Z
+exit 0

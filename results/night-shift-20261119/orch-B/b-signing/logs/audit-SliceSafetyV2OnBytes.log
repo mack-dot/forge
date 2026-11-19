@@ -1,0 +1,28 @@
+# owner=b-signing start=2026-11-19T08:22:03Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing
+# power: Now drawing from 'AC Power'
+# swap free MiB: 592
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/b-signing/logs/audit-SliceSafetyV2OnBytes.md SliceSafetyV2OnBytes.dfy
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        6.52 real         6.90 user         0.27 sys
+           240992256  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20594  page reclaims
+                  14  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                  33  voluntary context switches
+                6592  involuntary context switches
+         58670759673  instructions retired
+         21838802191  cycles elapsed
+           230081808  peak memory footprint
+# end=2026-11-19T08:22:10Z
+exit 0

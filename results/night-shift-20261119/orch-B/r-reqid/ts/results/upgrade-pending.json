@@ -1,0 +1,52 @@
+{
+ "mode": "pending",
+ "node": "v24.3.0",
+ "steps": [
+  [
+   "old sink: gap token body=rq_body intent=rq_victim",
+   {
+    "status": "committed"
+   }
+  ],
+  [
+   "new sink: honest rq_victim on the current state",
+   {
+    "status": "committed"
+   }
+  ],
+  [
+   "new dispatcher flush",
+   {
+    "emitted": [],
+    "refused": [
+     {
+      "seq": 1,
+      "requestId": "rq_body",
+      "reason": "request id is not the signed one"
+     },
+     {
+      "seq": 2,
+      "requestId": "rq_victim",
+      "reason": "token does not continue the dispatched chain"
+     }
+    ],
+    "alreadyDispatched": 0
+   }
+  ]
+ ],
+ "audit_new_sink": [
+  "row 1: request id"
+ ],
+ "outbox": [
+  {
+   "row": "rq_body",
+   "intent_requestId": "rq_victim"
+  },
+  {
+   "row": "rq_victim",
+   "intent_requestId": "rq_victim"
+  }
+ ],
+ "emitted": [],
+ "emitted_for_rq_victim": 0
+}

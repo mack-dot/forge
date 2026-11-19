@@ -1,0 +1,186 @@
+{
+ "strings": [
+  {
+   "name": "ascii",
+   "jsUnits": 4,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "31"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "bmp",
+   "jsUnits": 5,
+   "dafnyLen": 5,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "e9",
+    "4e2d"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "non-BMP pair",
+   "jsUnits": 5,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "1f600"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "pair as escapes",
+   "jsUnits": 5,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "1f600"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "other non-BMP",
+   "jsUnits": 5,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "1f601"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "lone high",
+   "jsUnits": 4,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "d83d"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "lone low",
+   "jsUnits": 4,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "de00"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "reversed pair",
+   "jsUnits": 5,
+   "dafnyLen": 5,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "de00",
+    "d83d"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "lone high + x",
+   "jsUnits": 5,
+   "dafnyLen": 5,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "d83d",
+    "78"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "U+FFFD",
+   "jsUnits": 4,
+   "dafnyLen": 4,
+   "codePoints": [
+    "72",
+    "71",
+    "5f",
+    "fffd"
+   ],
+   "roundTrip": true
+  },
+  {
+   "name": "empty",
+   "jsUnits": 0,
+   "dafnyLen": 0,
+   "codePoints": [],
+   "roundTrip": true
+  }
+ ],
+ "equality": [],
+ "ints": [
+  {
+   "v": "0",
+   "toFixed": "0",
+   "exact": true,
+   "isInteger": true
+  },
+  {
+   "v": "1",
+   "toFixed": "1",
+   "exact": true,
+   "isInteger": true
+  },
+  {
+   "v": "9223372036854775807",
+   "toFixed": "9223372036854775807",
+   "exact": true,
+   "isInteger": true
+  },
+  {
+   "v": "9223372036854775808",
+   "toFixed": "9223372036854775808",
+   "exact": true,
+   "isInteger": true
+  },
+  {
+   "v": "18446744073709551616",
+   "toFixed": "18446744073709551616",
+   "exact": true,
+   "isInteger": true
+  },
+  {
+   "v": "9999999999999999999",
+   "toFixed": "9999999999999999999",
+   "exact": true,
+   "isInteger": true
+  },
+  {
+   "v": "99999999999999999999999999999999",
+   "toFixed": "99999999999999999999999999999999",
+   "exact": true,
+   "isInteger": true
+  }
+ ],
+ "determinism": {
+  "calls": 1000,
+  "sameAsFirst": 1000,
+  "first": "SinkCoreReqId.StepResult.StepResult(SinkCoreReqId.Core.Core(RefundFinality.Charge.Charge(\"c\", 99999999999999999999999999999998, 1, true), {['r', 'q']}, [Refund.RefundIntent.Intent(\"c\", \"rq\", 0, \"r\")]), SinkCoreReqId.Outcome.Committed)"
+ },
+ "equalityDisagreements": 0,
+ "bigCompareDistinct": true
+}

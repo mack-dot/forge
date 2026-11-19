@@ -1,0 +1,5 @@
+ok   standin-quick  want=ok      got=ok      0.09s orphans=0 ProcessResult(exit_code=0, signal=None, timed_out=False, stdout=b'hi\n', stderr=b'', overflow=False)
+FAIL standin-sleep  want=timeout got=timeout 2.01s orphans=2 ProcessResult(exit_code=None, signal=9, timed_out=True, stdout=b'', stderr=b'', overflow=False)
+FAIL standin-spin   want=cpu     got=timeout 2.01s orphans=2 ProcessResult(exit_code=None, signal=9, timed_out=True, stdout=b'', stderr=b'', overflow=False)
+failures: 2
+exit 1

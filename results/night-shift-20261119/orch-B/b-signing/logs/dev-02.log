@@ -1,0 +1,47 @@
+# owner=b-signing start=2026-11-19T07:53:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing
+# power: Now drawing from 'AC Power'
+# swap free MiB: 839
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyV2.dfy
+SliceSafetyV2.dfy(177,25): Error: assertion might not hold
+    |
+177 |       assert ClaimsSigned(s');
+    |                          ^
+
+SliceSafetyV2.dfy(127,4): Related location: this proposition could not be proved
+    |
+127 |     forall i | 0 <= i < |s.log| :: exists t' :: (s.log[i], t') in s.minted
+    |     ^^^^^^
+
+SliceSafetyV2.dfy(194,23): Error: assertion might not hold
+    |
+194 |     assert ClaimsSigned(s');
+    |                        ^
+
+SliceSafetyV2.dfy(127,4): Related location: this proposition could not be proved
+    |
+127 |     forall i | 0 <= i < |s.log| :: exists t' :: (s.log[i], t') in s.minted
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 50 verified, 2 errors
+       12.94 real        11.30 user         0.72 sys
+           293715968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37239  page reclaims
+                 721  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 834  voluntary context switches
+               61730  involuntary context switches
+         95822461697  instructions retired
+         36395428157  cycles elapsed
+           275039528  peak memory footprint
+# end=2026-11-19T07:53:36Z
+exit 4
