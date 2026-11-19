@@ -1,0 +1,88 @@
+# owner=d-v3sink2 start=2026-11-19T10:55:14Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink2/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_IgnoreSettled.dfy
+# memory free percent: 55
+Mutant_IgnoreSettled.dfy(44,2): Error: a postcondition could not be proved on this return path
+   |
+44 |   {
+   |   ^
+
+Mutant_IgnoreSettled.dfy(43,90): Related location: this is the postcondition that could not be proved
+   |
+43 |     ensures Apply(core, StepQ(core.charge, t, sigOk, preOk, t.requestId in core.settled)) == V3.StepP(core, t, sigOk, preOk)
+   |                                                                                           ^^
+
+Mutant_IgnoreSettled.dfy(54,2): Error: a postcondition could not be proved on this return path
+   |
+54 |   {
+   |   ^
+
+Mutant_IgnoreSettled.dfy(50,12): Related location: this is the postcondition that could not be proved
+   |
+50 |             var p := V3.StepP(core, t, sigOk, preOk);
+   |             ^^^
+
+Mutant_IgnoreSettled.dfy(54,2): Error: a postcondition could not be proved on this return path
+   |
+54 |   {
+   |   ^
+
+Mutant_IgnoreSettled.dfy(53,33): Related location: this is the postcondition that could not be proved
+   |
+53 |             (q.Reject? ==> p.out == C.Rejected(q.why) && p.core == core)
+   |                                  ^^
+
+Mutant_IgnoreSettled.dfy(73,2): Error: a postcondition could not be proved on this return path
+   |
+73 |   {
+   |   ^
+
+Mutant_IgnoreSettled.dfy(68,67): Related location: this is the postcondition that could not be proved
+   |
+68 |     ensures StepQ(charge, t, sigOk, preOk, alreadySettled).Commit? <==>
+   |                                                                    ^^^^
+
+Mutant_IgnoreSettled.dfy(87,2): Error: a postcondition could not be proved on this return path
+   |
+87 |   {
+   |   ^
+
+Mutant_IgnoreSettled.dfy(86,12): Related location: this is the postcondition that could not be proved
+   |
+86 |     ensures !StepQ(charge, t, sigOk, preOk, true).Commit?
+   |             ^
+
+Mutant_IgnoreSettled.dfy(272,2): Error: a postcondition could not be proved on this return path
+    |
+272 |   {
+    |   ^
+
+Mutant_IgnoreSettled.dfy(259,12): Related location: this is the postcondition that could not be proved
+    |
+259 |             var t1 := V3.ShellToken(C.PINNED_SPEC, C.PINNED_CHK, "rq_1", F.Charge("ch_1", 1000, 900, true),
+    |             ^^^
+
+
+Dafny program verifier finished with 100 verified, 6 errors
+        6.69 real         6.49 user         0.39 sys
+           188170240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22295  page reclaims
+                  10  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 425  voluntary context switches
+               16322  involuntary context switches
+         55571311363  instructions retired
+         21295589106  cycles elapsed
+           169116944  peak memory footprint
+# end=2026-11-19T10:55:20Z
+exit 4

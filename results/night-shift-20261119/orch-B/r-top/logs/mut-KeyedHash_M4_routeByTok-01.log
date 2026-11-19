@@ -1,0 +1,73 @@
+# owner=r-top start=2026-11-19T10:58:15Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 969
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects KeyedHash_M4_routeByTok.dfy
+# memory free percent: 69
+KeyedHash_M4_routeByTok.dfy(72,2): Error: a postcondition could not be proved on this return path
+   |
+72 |   {}
+   |   ^
+
+KeyedHash_M4_routeByTok.dfy(69,24): Related location: this is the postcondition that could not be proved
+   |
+69 |     ensures a.KDel? ==> forall k | k in st && k != a.key :: KStep(H, st, a)[k] == st[k]
+   |                         ^^^^^^
+
+KeyedHash_M4_routeByTok.dfy(183,6): Error: assertion might not hold
+    |
+183 |       assert st'[k].outbox == st[k].outbox + [IntentOfSM(a.tok.intent)];
+    |       ^^^^^^
+
+KeyedHash_M4_routeByTok.dfy(195,8): Error: assertion might not hold
+    |
+195 |         assert st' == st;
+    |         ^^^^^^
+
+KeyedHash_M4_routeByTok.dfy(198,21): Error: assertion might not hold
+    |
+198 |         if k in st { assert st'[k] == st[k]; }
+    |                      ^^^^^^
+
+KeyedHash_M4_routeByTok.dfy(317,8): Error: Verification out of resource (KeyedHash.KeyInv2NextCommit)
+    |
+317 |   lemma KeyInv2NextCommit(H: HashFn, acts: seq<KAct>, vb: ByteVerifier, n: int, k: string)
+    |         ^^^^^^^^^^^^^^^^^
+
+KeyedHash_M4_routeByTok.dfy(370,19): Error: assertion might not hold
+    |
+370 |       if k in st { assert st'[k] == st[k]; }
+    |                    ^^^^^^
+
+KeyedHash_M4_routeByTok.dfy(718,2): Error: a postcondition could not be proved on this return path
+    |
+718 |   {
+    |   ^
+
+KeyedHash_M4_routeByTok.dfy(717,48): Related location: this is the postcondition that could not be proved
+    |
+717 |     ensures KStep(H, st, KDel(key, tok, sigOk)) == st
+    |                                                 ^^
+
+
+Dafny program verifier finished with 84 verified, 6 errors, 1 out of resource
+       18.03 real        16.34 user         0.60 sys
+           468746240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               58453  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                1625  voluntary context switches
+               19677  involuntary context switches
+        152376631499  instructions retired
+         52867983988  cycles elapsed
+           435832272  peak memory footprint
+# end=2026-11-19T10:58:33Z
+exit 4

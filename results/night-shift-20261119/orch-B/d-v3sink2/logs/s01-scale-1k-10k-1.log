@@ -1,0 +1,26 @@
+{"which":"v4","n":1000,"setupMs":5.4,"startAuditMs":8,"commit1Ms":1.9,"commit2Ms":0.9,"commitAfterOtherWriterMs":7.3,"commitNextMs":1.1,"statuses":"committed,committed,committed,committed","reaudits":1,"rssMB":121}
+{"which":"v3","n":1000,"setupMs":5.1,"startAuditMs":326,"commit1Ms":44,"commit2Ms":43.2,"commitAfterOtherWriterMs":44.7,"commitNextMs":44.9,"statuses":"committed,committed,committed,committed","reaudits":"n/a","rssMB":134}
+{"which":"v4","n":10000,"setupMs":37.8,"startAuditMs":43.4,"commit1Ms":1.2,"commit2Ms":0.8,"commitAfterOtherWriterMs":40.6,"commitNextMs":0.8,"statuses":"committed,committed,committed,committed","reaudits":1,"rssMB":157}
+{"which":"v3","n":10000,"setupMs":38.1,"startAuditMs":37857.5,"commit1Ms":5538.7,"commit2Ms":5625.5,"commitAfterOtherWriterMs":5596.8,"commitNextMs":5795.3,"statuses":"committed,committed,committed,committed","reaudits":"n/a","rssMB":282}
+{"plan":["SEARCH settled USING INDEX sqlite_autoindex_settled_1 (request_id=?)"]}
+(node:2395) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+       61.31 real        61.34 user         0.20 sys
+           296239104  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20990  page reclaims
+                 104  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                 250  messages sent
+                 250  messages received
+                  18  signals received
+                 340  voluntary context switches
+               11746  involuntary context switches
+       1147672597765  instructions retired
+        191940169013  cycles elapsed
+           273892544  peak memory footprint
+exit 0

@@ -1,0 +1,48 @@
+# owner=d-v3sink2 start=2026-11-19T10:57:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink2/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_IgnoreHit.dfy
+# memory free percent: 66
+Mutant_IgnoreHit.dfy(143,18): Error: a postcondition could not be proved on this return path
+    |
+143 |     if |rows| > 0 {
+    |                   ^
+
+Mutant_IgnoreHit.dfy(140,42): Related location: this is the postcondition that could not be proved
+    |
+140 |     ensures Fold(cid, AState(b, k), rows) == AState(b && RowsOk(cid, rows), k + |rows|)
+    |                                           ^^
+
+Mutant_IgnoreHit.dfy(164,2): Error: a postcondition could not be proved on this return path
+    |
+164 |   {
+    |   ^
+
+Mutant_IgnoreHit.dfy(163,38): Related location: this is the postcondition that could not be proved
+    |
+163 |     ensures Fold(cid, st, rows + [r]) == AuditStep(cid, Fold(cid, st, rows), r)
+    |                                       ^^
+
+
+Dafny program verifier finished with 103 verified, 2 errors
+        6.59 real         6.31 user         0.32 sys
+           228753408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20727  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 404  voluntary context switches
+               13364  involuntary context switches
+         56299749898  instructions retired
+         20663136804  cycles elapsed
+           195691744  peak memory footprint
+# end=2026-11-19T10:57:30Z
+exit 4

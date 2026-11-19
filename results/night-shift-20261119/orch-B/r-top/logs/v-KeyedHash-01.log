@@ -1,0 +1,29 @@
+# owner=r-top start=2026-11-19T10:47:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1377
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-top/logs/v-KeyedHash-01.csv KeyedHash.dfy
+# memory free percent: 65
+
+Dafny program verifier finished with 2325 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-top/logs/v-KeyedHash-01.csv
+      126.81 real        83.39 user         7.31 sys
+           437452800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              275357  page reclaims
+                 132  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  35  signals received
+               14897  voluntary context switches
+              474615  involuntary context switches
+        769443204226  instructions retired
+        279552481317  cycles elapsed
+           456689080  peak memory footprint
+# end=2026-11-19T10:49:58Z
+exit 0

@@ -1,0 +1,38 @@
+# owner=r-top start=2026-11-19T10:56:35Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects TopFromExport_M1b_swapCR_bothSides.dfy
+# memory free percent: 51
+TopFromExport_M1b_swapCR_bothSides.dfy(49,2): Error: a postcondition could not be proved on this return path
+   |
+49 |   {}
+   |   ^
+
+TopFromExport_M1b_swapCR_bothSides.dfy(48,41): Related location: this is the postcondition that could not be proved
+   |
+48 |     ensures ST.FlatContract(ToExp(x), o) <==> S3.FlatContract(x, o)
+   |                                          ^^^^
+
+
+Dafny program verifier finished with 6 verified, 1 error
+        9.37 real        10.02 user         0.39 sys
+           356368384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               42766  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 268  voluntary context switches
+                6305  involuntary context switches
+         89686691589  instructions retired
+         31820911128  cycles elapsed
+           334333248  peak memory footprint
+# end=2026-11-19T10:56:44Z
+exit 4

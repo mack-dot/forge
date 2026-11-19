@@ -1,0 +1,29 @@
+# owner=r-top start=2026-11-19T10:58:58Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 977
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-top/logs/audit-RefineTraceV3-01.md RefineTraceV3.dfy
+# memory free percent: 70
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        5.94 real         7.11 user         0.18 sys
+           313442304  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22950  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  11  signals received
+                  41  voluntary context switches
+                3286  involuntary context switches
+         63275570148  instructions retired
+         22583511042  cycles elapsed
+           279643456  peak memory footprint
+# end=2026-11-19T10:59:04Z
+exit 0

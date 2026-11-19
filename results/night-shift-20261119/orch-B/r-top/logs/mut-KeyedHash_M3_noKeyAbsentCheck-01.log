@@ -1,0 +1,53 @@
+# owner=r-top start=2026-11-19T10:57:49Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects KeyedHash_M3_noKeyAbsentCheck.dfy
+# memory free percent: 67
+KeyedHash_M3_noKeyAbsentCheck.dfy(72,2): Error: a postcondition could not be proved on this return path
+   |
+72 |   {}
+   |   ^
+
+KeyedHash_M3_noKeyAbsentCheck.dfy(71,27): Related location: this is the postcondition that could not be proved
+   |
+71 |     ensures a.KCreate? ==> forall k | k in st :: KStep(H, st, a)[k] == st[k]
+   |                            ^^^^^^
+
+KeyedHash_M3_noKeyAbsentCheck.dfy(192,8): Error: assertion might not hold
+    |
+192 |         assert L == [];
+    |         ^^^^^^
+
+KeyedHash_M3_noKeyAbsentCheck.dfy(361,6): Error: assertion might not hold
+    |
+361 |       assert L == [];
+    |       ^^^^^^
+
+KeyedHash_M3_noKeyAbsentCheck.dfy(552,8): Error: Verification out of resource (KeyedHashControls.KW10)
+    |
+552 |   lemma KW10()
+    |         ^^^^
+
+
+Dafny program verifier finished with 85 verified, 3 errors, 1 out of resource
+       17.64 real        16.20 user         0.60 sys
+           462962688  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51887  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                1662  voluntary context switches
+               20493  involuntary context switches
+        151937531415  instructions retired
+         52326682394  cycles elapsed
+           430048720  peak memory footprint
+# end=2026-11-19T10:58:07Z
+exit 4

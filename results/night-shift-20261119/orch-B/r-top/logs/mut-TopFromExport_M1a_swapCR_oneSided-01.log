@@ -1,0 +1,58 @@
+# owner=r-top start=2026-11-19T10:57:15Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects TopFromExport_M1a_swapCR_oneSided.dfy
+# memory free percent: 66
+TopFromExport_M1a_swapCR_oneSided.dfy(38,2): Error: a postcondition could not be proved on this return path
+   |
+38 |   {}
+   |   ^
+
+TopFromExport_M1a_swapCR_oneSided.dfy(35,30): Related location: this is the postcondition that could not be proved
+   |
+35 |     ensures FromExp(ToExp(x)) == x && ToExp(FromExp(y)) == y
+   |                               ^^
+
+TopFromExport_M1a_swapCR_oneSided.dfy(38,2): Error: a postcondition could not be proved on this return path
+   |
+38 |   {}
+   |   ^
+
+TopFromExport_M1a_swapCR_oneSided.dfy(35,56): Related location: this is the postcondition that could not be proved
+   |
+35 |     ensures FromExp(ToExp(x)) == x && ToExp(FromExp(y)) == y
+   |                                                         ^^
+
+TopFromExport_M1a_swapCR_oneSided.dfy(49,2): Error: a postcondition could not be proved on this return path
+   |
+49 |   {}
+   |   ^
+
+TopFromExport_M1a_swapCR_oneSided.dfy(48,41): Related location: this is the postcondition that could not be proved
+   |
+48 |     ensures ST.FlatContract(ToExp(x), o) <==> S3.FlatContract(x, o)
+   |                                          ^^^^
+
+
+Dafny program verifier finished with 5 verified, 3 errors
+        7.80 real         8.17 user         0.26 sys
+           397262848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39624  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 203  voluntary context switches
+                3330  involuntary context switches
+         79775676706  instructions retired
+         26403497722  cycles elapsed
+           364430752  peak memory footprint
+# end=2026-11-19T10:57:23Z
+exit 4

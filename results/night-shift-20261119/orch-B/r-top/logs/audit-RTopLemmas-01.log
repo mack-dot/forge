@@ -1,0 +1,29 @@
+# owner=r-top start=2026-11-19T10:59:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-top/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 977
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-top/logs/audit-RTopLemmas-01.md RTopLemmas.dfy
+# memory free percent: 69
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        7.42 real         8.23 user         0.23 sys
+           312983552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23622  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                  35  voluntary context switches
+                3493  involuntary context switches
+         78896507679  instructions retired
+         26202979666  cycles elapsed
+           279184632  peak memory footprint
+# end=2026-11-19T10:59:20Z
+exit 0

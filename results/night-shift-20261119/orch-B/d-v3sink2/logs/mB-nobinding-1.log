@@ -1,0 +1,58 @@
+# owner=d-v3sink2 start=2026-11-19T10:57:06Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink2/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_NoBinding.dfy
+# memory free percent: 66
+Mutant_NoBinding.dfy(202,2): Error: a postcondition could not be proved on this return path
+    |
+202 |   {
+    |   ^
+
+Mutant_NoBinding.dfy(201,12): Related location: this is the postcondition that could not be proved
+    |
+201 |             == AuditStartBound(core, initId)
+    |             ^^
+
+Mutant_NoBinding.dfy(243,2): Error: a postcondition could not be proved on this return path
+    |
+243 |   {
+    |   ^
+
+Mutant_NoBinding.dfy(242,12): Related location: this is the postcondition that could not be proved
+    |
+242 |     ensures !AuditEnd(charge, initId, st, n, d)
+    |             ^
+
+Mutant_NoBinding.dfy(252,2): Error: a postcondition could not be proved on this return path
+    |
+252 |   {
+    |   ^
+
+Mutant_NoBinding.dfy(251,21): Related location: this is the postcondition that could not be proved
+    |
+251 |             !AuditEnd(core.charge, "ch_1", Fold("ch_2", AInit(), [ARow(core.outbox[0], true)]), 1, true)
+    |                      ^
+
+
+Dafny program verifier finished with 102 verified, 3 errors
+        6.89 real         6.77 user         0.31 sys
+           226590720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20566  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                 388  voluntary context switches
+               13864  involuntary context switches
+         61263441581  instructions retired
+         22036363267  cycles elapsed
+           193529080  peak memory footprint
+# end=2026-11-19T10:57:13Z
+exit 4
