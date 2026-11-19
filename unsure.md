@@ -19560,3 +19560,132 @@ curl: (6) Could not resolve host: github.com
 - The order of IDs in this file is therefore: U700 to U706, then U500, U501, U530 to U579, U620 to U631, U580 to U602, U660 and later. IDs are unique; they are not in number order.
 - The checks of U664 are for the tree before the rebase. A second full run on `9097b5a9` and the checks on the rebased head are reported in the pull request text only.
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false. No stage CURRENT. Stage 12 unauthorized.
+
+## U707 — goal 19: second hosted result; pull request 62 merged by the owner's account; what stays different from the text of the directive
+
+- Status: 2026-11-19, about 19:00Z. Refs U700, U701, U702, U706.
+- Actual: hosted `gate/pr_check.py`, pull request 62, head `e280addf`
+  (the third commit, documents only), run 44592215424: exit 3,
+  UNSUPPORTED, as expected (14 coverage findings).
+- Observed with `gh pr view 62`: state MERGED; merged by the account
+  `mack-dot` on 2026-11-19T18:52:51Z; commit `6d66a558` on `main`. I
+  did not merge and used no administrator right. I have no direct word
+  of the owner in this session about that merge: I know the account,
+  not the hand. Another session of the same owner had told me that the
+  owner wanted this pull request merged after its own.
+- After the merge: the files of this work on `main` are equal to the
+  branch head `e280addf` (`git diff`: no difference); the bundle on
+  `main` has SHA-256 `1f569fcf…`. Nothing ran again on `main`.
+- Two requirements of the directive's text are NOT met as written,
+  and stay so: "commits in under 2 milliseconds" (measured minimum
+  7.95 ms; the owner's replacement is an assertion below 250 ms,
+  U701) and "<200-line" (the file has 248 lines in a compact layout;
+  `rustfmt` prints 521; the owner's replacement is "up to 250 lines",
+  U702). Both replacements are owner selections in the question
+  dialog (U700). The reading of the line limit for a compact layout,
+  and exit codes 19 and 20, were put to the owner in the pull request;
+  the merge is not an answer in words.
+- This entry is in a later pull request (documents only). Its own
+  hosted run is not recorded: the chain of records stops here.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: none planned by me. A next directive of the owner.
+
+## U708 — goal 19: the owner's word on the merge, on the two replaced requirements and on exit codes 19 and 20 (resolves the open points of U702, U704 and U707)
+
+- Status: 2026-11-19, after U707. Refs U700, U702, U704, U707.
+  Record: text 6 in
+  `proposals/forge2-native-silicon-sink/OWNER_TEXTS.md`.
+- Evidence class: four answers that the owner SELECTED in the
+  session's question dialog (direct selections, not a pasted text).
+- The merge of pull request 62 as `6d66a558`: "Yes, it is my merge".
+  U707 said that I knew the account and not the hand; this answer
+  closes that point.
+- Pull request 63 (these records): "I will merge it". I do not merge
+  it.
+- "Commit under 2 ms" and "<200-line": the replacements (an assertion
+  below 250 ms; 248 lines in a compact layout, `rustfmt` 521) are
+  "Final as they are". The two requirements stay unmet as the
+  directive wrote them; the owner accepts that.
+- Exit codes 19 (`OUTCOME_UNKNOWN`) and 20 (`DISPATCH_FAILED`), and the
+  end of the stream at the first code from 17 up: "Accept both".
+- Still open, not asked: a signed token, an outside witness for the
+  ratchet, a second review of the repairs, a power-loss test.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: none planned by me.
+
+## U709 — after goal 19: the owner's "Apex frontier addendum" (gates APEX-1 to APEX-3) read against the repository; NOT started; findings for the session that runs it
+
+- Status: 2026-11-19, after U708. Refs U702, U704, U708. Record:
+  text 7 in `proposals/forge2-native-silicon-sink/OWNER_TEXTS.md`
+  (verbatim).
+- Evidence class: one pasted text with the owner's own words "and
+  consider this". I read these words as: examine the text. They are
+  not a word to start a gate. I started none and built nothing.
+- The queue. The text says "insert into `QUEUED.md`". No commit on any
+  reference of the repository holds a file of that name
+  (`git log --all -- QUEUED.md`: empty). One untracked file of that
+  name is in the scratch folder of another session (the launcher of
+  the night shift). The tracked record of that queue is
+  `proposals/forge2-finish-line/DIRECTIVE.md` on branch
+  `docs/finish-line-directive` (`6f6cd9a2`, no pull request). I changed
+  neither file. State read on 2026-11-19: branch
+  `feat/zero-babysitting-sdk` (Goal 20, `cea3fbae`) is work in
+  progress with no pull request; Gate F1 is not started. Thus no APEX
+  gate can start now.
+- Finding 1, a number: "`LinkedRefund.dfy` (`1,486` obligations)". A
+  search of the tracked text on `main` (`e2b8ba1d`), `results/`
+  excluded, for `1,486` and `1486` finds no obligation count. Rule 3
+  of the text applies: read the count from a run record before a
+  report gives it.
+- Finding 2, a number: "`220` `kill -9` crashes" agrees with the
+  Goal 19 bundle `1f569fcf…`: 120 kills at points (6 points, 20 each)
+  and 100 blind kills.
+- Finding 3, a conflict in APEX-1: "`std`-only Rust/Python, `0`
+  external packages" and "Ed25519" (the cosign check before the
+  commit; the signed receipt). Rust `std` has no Ed25519 and no
+  SHA-512. The standard library of Python 3.10.11 has SHA-512 and no
+  Ed25519. `/usr/bin/openssl` is LibreSSL 3.3.6:
+  `genpkey -algorithm ed25519` gives exit 1, "Algorithm ed25519 not
+  found". The Goal 20 branch signs through `node:crypto`
+  (`src/airlock/node/cosign.cjs`): that puts Node back into the path
+  of each cosigned call, and Goal 19 removed Node from that path. One
+  measured way with no package: `ssh-keygen -Y sign` and `-Y verify`
+  (OpenSSH_10.3p1) with a throwaway Ed25519 key: sign exit 0, verify
+  exit 0, verify of a changed text exit 255. It is a second process
+  per call and it is a system tool, not Rust or Python. A third way is
+  hand-written Ed25519: new cryptography in the trusted base with no
+  audit. This is the owner's decision.
+- Finding 4, APEX-3 and "the full Goal 19 torture suite":
+  (a) The 120 kills at points, the two holders of case `lock` and a
+  part of case `trace` use a seam that is compiled into the Rust sink
+  (`--cfg kill_points`). A CakeML binary has no such seam. The kills
+  need a new mechanism (for example an interposer that ends the
+  process at the n-th system call).
+  (b) Case `frames` uses stand-in programs in place of the binary, and
+  case `trace` tests that a loader variable does not reach a child
+  process named `refund`. With the decision and the fold in one binary
+  there is no child process; these parts have no object.
+  (c) `sink.rs`, the suite and the interposer are in the source
+  manifest of bundle `1f569fcf…`. The work must add new files. A
+  change to one of these files changes the Goal 19 bundle.
+  (d) The sink uses more calls than "`flock`, `write`,
+  `fcntl(F_FULLFSYNC)`": open of two files; read of the full WAL, of
+  the ratchet and of the request; `ftruncate` (the undo after a failed
+  write or sync, review finding R1 of U704); close; exit. The stock
+  `basis_ffi.c` of the local toolchain has 890 lines and 32 `ffi`
+  functions. None of them is a lock, a sync or a truncation. "At most
+  60 lines" is a claim for Step 3A to test, not a fact.
+  (e) A proof over a file-system model without a crash says nothing
+  about a sync. "Durable" stays an assumption on the operating system
+  and the device, with the proof or without it.
+  (f) The machine-code theorem for the present, smaller binary is
+  still open (M1-B OPEN in the record of pull request 64). The
+  estimate of Step 3A must start from that fact.
+- Uncertainty: I did not read the CakeML basis proofs for this entry.
+  The cost to add new FFI calls to the HOL oracle model is not
+  measured. I did not test how short the start code of a stub can be.
+- Impact: none on any stage label. No gate started. No file of
+  another session changed. M1 open. `end_to_end=false`.
+- Next check: the session that runs APEX-1 asks the owner for the
+  Ed25519 decision in its first phase. The session that runs APEX-3
+  answers (a) to (f) in its Step 3A text.
