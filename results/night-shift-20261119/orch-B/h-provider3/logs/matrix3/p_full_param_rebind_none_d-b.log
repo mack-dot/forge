@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_full_param_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree d-b none 
+swap free MiB before: 1329
+{"test":"p_full_param_rebind","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","r2b":"committed","after":[{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r2: the provider refused before any money moved for this call"},{"emitted":[],"refused":["r2: in doubt: claimed by run 6c02c806347e0431ab28a3a9e2bf2d66 (p"],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["b01dc8c3e8b3a5a1503f52f73861e3797115313366185c6c6cb85fa9636a1879:400","07b056e2376047f7a1971a6b71ca1d69ba4722f1b92825200df474ef2963c08c:400","076a0b3aeedc351652cf8762468b0554be251c904272802a9588e8f144e2c580:100"]},"attackEvents":[{"phase":"attack","layer":"provider ceiling","detail":"r2 refused:ceiling"},{"phase":"attack","layer":"claim rule (in doubt)","detail":"dispatcher refused r2: in doubt: claimed by run 6c02c806347e0431ab28a3a9e2bf2d66 (pid 71977) and its emit threw; not counted as dispatched; a person must ask th"}]}
+mode d-b, anchor none
+layers seen after the attack started: provider ceiling | claim rule (in doubt)
+stopped by: provider ceiling
+SAFE
+exit 0

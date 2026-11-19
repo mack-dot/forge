@@ -1,0 +1,6 @@
+booking check (T4,T5; C-ATT-42 proper): TRUE
+books: remaining 0; provider moved 700
+{"r1b":"committed","r2":["900","committed"],"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r2: the provider refused before any money moved for this call"},"f4":{"emitted":[],"refused":["r2: in doubt: claimed by run c6ff6275b33e57897c5a3e8140f46fb3 (p"],"error":""},"sink":"up","journal":["r1:paid","r2:refused:ceiling"],"movements":["5f39889c3d53:600","37978d933d3f:100"]}
+p3_rollback_rebind first none adapter=v3 env={"P_ADAPTER":"v3"}
+NOT STOPPED: T2 effect c6015ca3f6261907a595efaa1dcdca9/ch_rb/r1 moved money 2 times
+exit 1

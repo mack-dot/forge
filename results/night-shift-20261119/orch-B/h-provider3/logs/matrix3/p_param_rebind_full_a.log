@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_param_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree a full 
+swap free MiB before: 1291
+{"test":"p_param_rebind","r2b":"no sink (start refused)","after":[{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["2669bc4eba989321e8d69a8c5c19365b6d3ba8443e4f73d3d6a98171a7e017ab:400","af40ad0988d0f674cf092abb2c9fdf5a919999efedf2d3a754103a0b911ca30a:400","46187db63094687ed89cd2d1d2ffee96a3379f6041945414f220ad36931cebab:100"]},"attackEvents":[{"phase":"attack","layer":"outside head","detail":"sink start: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false [SINK-OUTSIDE-HEAD: the store o"}]}
+mode a, anchor full
+layers seen after the attack started: outside head
+stopped by: outside head
+SAFE
+exit 0

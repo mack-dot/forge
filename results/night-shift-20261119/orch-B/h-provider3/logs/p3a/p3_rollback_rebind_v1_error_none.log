@@ -1,0 +1,7 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v1 node --import tsx tests/refund-finality/regress/p3_rollback_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree error none
+booking check (T4,T5; C-ATT-42 proper): WRONG
+books: remaining 0; provider moved 600
+{"r1b":"committed","r2":["900","committed"],"f2":{"emitted":[],"refused":[],"error":"provider param_mismatch: key r1 was used with other parameters"},"f3":{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},"f4":{"emitted":[],"refused":["r1: in doubt: claimed by run b713b383951975683b24f1cccf6115f1 (p","r2: in doubt: claimed by run 1cf049042628c1c8fe6fcb1405022f29 (p"],"error":""},"sink":"up","journal":["r1:refused:param_mismatch","r2:refused:ceiling"],"movements":["r1:600"]}
+p3_rollback_rebind error none adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T5 journal says paid for ch_rb/r1 100; provider movement {"refundId":"re_1","key":"r1","chargeId":"ch_rb","amount":"600","at":0} ; T5 journal says refused:param_mismatch for r1 but money moved under its key
+exit 1

@@ -1,0 +1,6 @@
+cmd: env RP_KEYPOLICY=reject <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/before <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s5_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/before long
+FALSE REJECTION: legal committed refund(s) not paid: "xxxxxxxxxxxx"(len 256); f1.error=provider invalid_request: idempotency key longer than 255; f2.refused=["xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: in doubt: claimed by run 4f9aa282afa4ad7f0c42547c2195843f (p"]
+{"committed":["committed","committed"],"f1":{"emitted":[],"refused":[],"error":"provider invalid_request: idempotency key longer than 255"},"f2":{"emitted":["r_next"],"refused":["xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: in doubt: claimed by run 4f9aa282afa4ad7f0c42547c2195843f (p"],"error":""},"movements":["r_next:100"]}
+s5 long env={"RP_KEYPOLICY":"reject"}
+MONEY RIGHT
+exit 0

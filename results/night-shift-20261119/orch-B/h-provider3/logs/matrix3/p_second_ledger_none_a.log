@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_second_ledger.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree a none 
+swap free MiB before: 1043
+{"test":"p_second_ledger","plainSecondLedger":{"emitted":[],"refused":[],"error":"dispatcher alarm: the store is bound to the ledger <REPO>/results/night-shift-20261119/orch-B/h-provider3/home/forge-p-dmuiH"},"declaredNewLedger":{"emitted":[],"refused":[],"error":"dispatcher alarm: the store is bound to the ledger <REPO>/results/night-shift-20261119/orch-B/h-provider3/home/forge-p-dmuiH"},"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["2cae6e061f8694a432d557ed39a35f2fe5ad8ca3728a11f8c27244a06351edc1:400","4b22bf649fde3c735d2e4196b25ecac931896d56e6d8f5673cbcddf7d7f8576f:500"]},"attackEvents":[{"phase":"attack","layer":"dispatch witness","detail":"dispatcher stopped: dispatcher alarm: the store is bound to the ledger <REPO>/results/night-shift-20261119/orch-B/h-provider3/home/forge-p-dmuiH"},{"phase":"attack","layer":"dispatch witness","detail":"dispatcher stopped: dispatcher alarm: the store is bound to the ledger <REPO>/results/night-shift-20261119/orch-B/h-provider3/home/forge-p-dmuiH"}]}
+mode a, anchor none
+layers seen after the attack started: dispatch witness
+stopped by: dispatch witness
+SAFE
+exit 0

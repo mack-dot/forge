@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_att28_new_ledger.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree d-b head ledger
+swap free MiB before: 1529
+{"test":"p_att28_new_ledger","case":"ledger","after":[{"emitted":[],"refused":[],"error":"dispatcher alarm: the ledger does not reach the dispatch witness (row 2); an older or another ledger (restored backup?); nothing sent"},{"emitted":[],"refused":[],"error":"dispatcher alarm: the ledger does not reach the dispatch witness (row 2); an older or another ledger (restored backup?); nothing sent"}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["c920b69459a5766ad4c837f0005d18bf102f5047c7d665d88a3ab88b3c22d908:400","18268f048f2332363e9eac8842d79e40401613f7f96ca397dd6391560b9451fd:500"]},"attackEvents":[{"phase":"attack","layer":"dispatch witness","detail":"dispatcher stopped: dispatcher alarm: the ledger does not reach the dispatch witness (row 2); an older or another ledger (restored backup?); nothing sent"},{"phase":"attack","layer":"dispatch witness","detail":"dispatcher stopped: dispatcher alarm: the ledger does not reach the dispatch witness (row 2); an older or another ledger (restored backup?); nothing sent"}]}
+mode d-b, anchor head
+layers seen after the attack started: dispatch witness
+stopped by: dispatch witness
+SAFE
+exit 0

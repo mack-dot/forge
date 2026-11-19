@@ -1,0 +1,5 @@
+cmd: env RP_SHARED=<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json RP_REPLAY=first <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/before <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s1_scope.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/before collide
+{"ra":"committed","rb":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":["r1"],"refused":[],"error":""},"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600","key":"r1"},{"chargeId":"ch_B","requestId":"r1","amount":"300","key":"r1"}],"movements":["r1@ch_A:600"]}
+s1 collide env={"RP_REPLAY":"first","RP_SHARED":"<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json"}
+MONEY WRONG: reported paid: ch_B/r1 300; provider movements for that key: ["ch_A:600"]
+exit 1

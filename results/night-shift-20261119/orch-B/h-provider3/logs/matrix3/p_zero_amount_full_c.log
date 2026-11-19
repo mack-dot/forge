@@ -1,0 +1,5 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_zero_amount.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree c full 
+swap free MiB before: 1373
+{"test":"p_zero_amount","mode":"c","anchor":"full","commits":["committed","committed","committed","committed","committed","committed","committed"],"sinkRestart":true,"emitted":["z1","z2","r1","r2","z3","z4","r3"],"providerCalls":3,"zeroRecorded":4,"events":[],"money":{"total":"350","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["c810adae68bf096468a0584457ed5fbc87187d0f4d9fd9c8078399b295a1ef90:100","f87ae5302491cd0c52f3129fa8a444461efe34b4b519250ee7d20a70df031b58:200","13ccb5ddd28de96acd0da69f971119190d078b96250da2e3fe7182edebbd2996:50"]}}
+positive control: PASS
+exit 0

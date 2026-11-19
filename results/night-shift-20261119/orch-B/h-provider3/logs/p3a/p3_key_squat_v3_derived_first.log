@@ -1,0 +1,6 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v3 node --import tsx tests/refund-finality/regress/p3_key_squat.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree derived first
+LIVENESS: ch_A/r1 600 committed, not paid, in doubt: ["r1: in doubt: claimed by run c37c1218629ee04372578c6bbc855ee3 (p"]; journal: ["alarm:answer-mismatch"]
+{"squat":"moved 1","fa":{"emitted":[],"refused":[],"error":"emit adapter ALARM (alarm:answer-mismatch): r1: amount differs; never paid; money may have moved under other parameters"},"emitted":[],"movements":["2304f20596c8:1"]}
+p3_key_squat derived first adapter=v3 env={"P_ADAPTER":"v3"}
+SAFE
+exit 0

@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_timeout_retry.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree c full 
+swap free MiB before: 664
+{"test":"p_timeout_retry","phase1":{"emitted":["r1"],"refused":[],"error":""},"phase2":{"emitted":[],"refused":[],"error":"emit adapter IN DOUBT (in-doubt:timeout): r2: no final answer; money may have moved"},"rerun":{"emitted":[],"refused":["r2: in doubt: claimed by run 9a06ea4914c5348a542fe8e1b5672ea8 (p"],"error":""},"reconcile":"returned","money":{"total":"1600","charge":"1000","withinCharge":false,"twice":["0aabc444718322c059278756f6675595b8a8d5a02408a723b9372da15acac3f3","ef5f70e57e355d89a9c06f6c0691f6c40ea258409650d2efbc71683c64ae1377","effect de3f81fa15fd62e98f7cad88f579c7e04d572b7e9f8ff2e6314773888456a30e/ch_pt/r1","effect de3f81fa15fd62e98f7cad88f579c7e04d572b7e9f8ff2e6314773888456a30e/ch_pt/r2"],"noDouble":false,"movements":["0aabc444718322c059278756f6675595b8a8d5a02408a723b9372da15acac3f3:400","0aabc444718322c059278756f6675595b8a8d5a02408a723b9372da15acac3f3:400","ef5f70e57e355d89a9c06f6c0691f6c40ea258409650d2efbc71683c64ae1377:400","ef5f70e57e355d89a9c06f6c0691f6c40ea258409650d2efbc71683c64ae1377:400"]},"attackEvents":[]}
+mode c, anchor full
+layers seen after the attack started: (none)
+stopped by: NOT STOPPED
+DEFECT
+exit 1

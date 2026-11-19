@@ -10,17 +10,17 @@ guard(() => {
   const { root, mode, anchor } = argv();
   const S0 = { chargeId: "ch_pf", original: "1000", remaining: "1000", refundEnabled: true };
   const w = world(root, mode, anchor, S0, { retries: 1 });
-  const r1 = w.refund("r1", "300"); w.provider.inject("r1", "crash_before_money");
+  const r1 = w.refund("r1", "300"); w.provider.inject(w.keyOf("r1", "300"), "crash_before_money");   // h-provider3: the key the adapter sends
   const f1 = w.flush();
-  const r2 = w.refund("r2", "300"); w.provider.inject("r2", "refuse");
+  const r2 = w.refund("r2", "300"); w.provider.inject(w.keyOf("r2", "300"), "refuse");
   const r3 = w.refund("r3", "300");
   const f2 = w.flush(); const f3 = w.flush();
   const journal = readFileSync(w.journalPath, "utf8").trim().split("\n").map(l => JSON.parse(l));
   const final = new Map<string, string>(); for (const j of journal) final.set(j.requestId, j.outcome);
   const m = moneyCheck(w.provider, S0.chargeId, S0.original);
   const moved = new Set(w.provider.movements().map(x => x.key)); w.stop();
-  const truthful = [...final].every(([rid, out]) => (out === "paid" || out === "replayed") === moved.has(rid)) &&
-    final.get("r2") === "refused:refused" && !moved.has("r2");
+  const truthful = [...final].every(([rid, out]) => (out === "paid" || out === "replayed") === moved.has(w.keyOf(rid, "300"))) &&
+    final.get("r2") === "refused:refused" && !moved.has(w.keyOf("r2", "300"));
   const ok = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" &&
     f1.emitted.join() === "r1" && f2.error !== "" && f3.emitted.join() === "r3" && f3.refused.some(x => x.startsWith("r2: in doubt"));
   positiveVerdict(m.noDouble && m.withinCharge && truthful && ok, { test: "p_provider_faults", mode, anchor, f1, f2, f3, journal: [...final], money: m });

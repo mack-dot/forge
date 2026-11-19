@@ -1,0 +1,5 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v3 node --import tsx tests/refund-finality/regress/p3_in_progress.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree 
+{"f1":{"emitted":[],"refused":[],"error":"emit adapter IN DOUBT (in-doubt:in_progress): r1: no final answer; money may have moved"},"f2":{"emitted":["r2"],"refused":["r1: in doubt: claimed by run c42678221a743fd5fdb149c850c3070a (p"],"error":""},"reconcile":"returned","journal":["r1:in-doubt:in_progress","r2:unknown:in_progress","r2:replayed","r1:unknown:in_progress","r1:replayed"],"movements":["2e64cada920b:300","5be6955ae8a0:200"]}
+p3_in_progress adapter=v3 env={"P_ADAPTER":"v3"}
+SAFE
+exit 0

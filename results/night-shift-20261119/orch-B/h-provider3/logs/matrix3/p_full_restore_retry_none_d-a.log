@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_full_restore_retry.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree d-a none 
+swap free MiB before: 1246
+{"test":"p_full_restore_retry","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","retry":["committed","committed"],"after":[{"emitted":["r2","r3"],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"1400","charge":"1000","withinCharge":false,"twice":["cdbb1f4560d834a628d9b79a719606d3c72b33ae6b3f3fa9b9310c60149803a0","f10dfd5a45cae399f1981d5d03c93a34c50175c9bca1cf2fb3bd7f5928d3034f","effect d1e64d65cf58c863738ef1d8b4e88c1e2319c2660bfe064586d57d8981863b2d/ch_fr/r2","effect d1e64d65cf58c863738ef1d8b4e88c1e2319c2660bfe064586d57d8981863b2d/ch_fr/r3"],"noDouble":false,"movements":["0207f49bc7ef67086bb6ba0b6914d9f4f79b2cbde3c6e3b3f237ac6a067d8dc9:400","cdbb1f4560d834a628d9b79a719606d3c72b33ae6b3f3fa9b9310c60149803a0:400","f10dfd5a45cae399f1981d5d03c93a34c50175c9bca1cf2fb3bd7f5928d3034f:100","cdbb1f4560d834a628d9b79a719606d3c72b33ae6b3f3fa9b9310c60149803a0:400","f10dfd5a45cae399f1981d5d03c93a34c50175c9bca1cf2fb3bd7f5928d3034f:100"]},"attackEvents":[]}
+mode d-a, anchor none
+layers seen after the attack started: (none)
+stopped by: NOT STOPPED
+DEFECT
+exit 1

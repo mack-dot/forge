@@ -1,0 +1,5 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v1 node --import tsx tests/refund-finality/regress/p3_key_squat.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree derived first
+{"squat":"moved 1","fa":{"emitted":["r1"],"refused":[],"error":""},"emitted":["r1:600"],"movements":["r1:1"]}
+p3_key_squat derived first adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T4 reported paid: ch_A/r1 600; provider movements for that key: ["ch_A:1"] ; T5 journal says replayed for ch_A/r1 600; provider movement {"refundId":"re_1","key":"r1","chargeId":"ch_A","amount":"1","at":0,"effect":"no adapter call (refund re_1)"}
+exit 1

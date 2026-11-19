@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_param_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree b none 
+swap free MiB before: 530
+{"test":"p_param_rebind","r2b":"committed","after":[{"emitted":[],"refused":[],"error":"dispatcher alarm: the ledger does not reach the dispatch witness (row 3); an older or another ledger (restored backup?); nothing sent"},{"emitted":[],"refused":[],"error":"dispatcher alarm: the ledger does not reach the dispatch witness (row 3); an older or another ledger (restored backup?); nothing sent"}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["5d20d83faa8ace96fe08cea6de6fea87e0a7575c6f29c96a70eb915ad6592b12:400","dba21f4dbc26bb4a80739784bc03edbd47d41d79ae056f5ce2c42077cfa5cc52:400","aa69fd4011cb6fd638c55822bd8158138b55e339829693e40a9d0c09a3c75cb6:100"]},"attackEvents":[{"phase":"attack","layer":"dispatch witness","detail":"dispatcher stopped: dispatcher alarm: the ledger does not reach the dispatch witness (row 3); an older or another ledger (restored backup?); nothing sent"},{"phase":"attack","layer":"dispatch witness","detail":"dispatcher stopped: dispatcher alarm: the ledger does not reach the dispatch witness (row 3); an older or another ledger (restored backup?); nothing sent"}]}
+mode b, anchor none
+layers seen after the attack started: dispatch witness
+stopped by: dispatch witness
+SAFE
+exit 0

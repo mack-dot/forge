@@ -1,0 +1,5 @@
+cmd: env RP_KEYPOLICY=reject <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s5_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree nonascii
+{"committed":["committed","committed"],"f1":{"emitted":["remboursé-1"],"refused":[],"error":""},"f2":{"emitted":["r_next"],"refused":[],"error":""},"movements":["52cd5064498b:300","5c097597cb6d:100"]}
+s5 nonascii env={"RP_KEYPOLICY":"reject"}
+MONEY RIGHT
+exit 0

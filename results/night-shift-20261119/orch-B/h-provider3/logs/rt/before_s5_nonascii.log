@@ -1,0 +1,6 @@
+cmd: env RP_KEYPOLICY=reject <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/before <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s5_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/before nonascii
+FALSE REJECTION: legal committed refund(s) not paid: "remboursé-1"(len 11); f1.error=provider invalid_request: idempotency key is not printable ASCII; f2.refused=["remboursé-1: in doubt: claimed by run a4efb957bda138cc3fc4c1e27365e7f4 (p"]
+{"committed":["committed","committed"],"f1":{"emitted":[],"refused":[],"error":"provider invalid_request: idempotency key is not printable ASCII"},"f2":{"emitted":["r_next"],"refused":["remboursé-1: in doubt: claimed by run a4efb957bda138cc3fc4c1e27365e7f4 (p"],"error":""},"movements":["r_next:100"]}
+s5 nonascii env={"RP_KEYPOLICY":"reject"}
+MONEY RIGHT
+exit 0

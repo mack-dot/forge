@@ -1,0 +1,7 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v1 node --import tsx tests/refund-finality/regress/p3_rollback_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree first none
+booking check (T4,T5; C-ATT-42 proper): WRONG
+books: remaining 0; provider moved 600
+{"r1b":"committed","r2":["900","committed"],"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},"f4":{"emitted":[],"refused":["r2: in doubt: claimed by run 8c931abd267969601ee3ef7be637df59 (p"],"error":""},"sink":"up","journal":["r1:replayed","r2:refused:ceiling"],"movements":["r1:600"]}
+p3_rollback_rebind first none adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T4 reported paid: ch_rb/r1 100; provider movements for that key: ["ch_rb:600"] ; T5 journal says replayed for ch_rb/r1 100; provider movement {"refundId":"re_1","key":"r1","chargeId":"ch_rb","amount":"600","at":0,"effect":"ce5cc8ceafb24fcf64ebc/ch_rb/r1"}
+exit 1

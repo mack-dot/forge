@@ -1,0 +1,7 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v1 node --import tsx tests/refund-finality/regress/p3_rollback_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree error full
+booking check (T4,T5; C-ATT-42 proper): WRONG
+books: remaining (no sink); provider moved 600
+{"r1b":"no sink (start refused)","r2":["0","no sink (start refused)"],"f2":{"emitted":[],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":""},"f4":{"emitted":[],"refused":[],"error":""},"sink":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false [SINK-OUTSIDE-HEAD: the store opens without cfg.outsideHead]","journal":[],"movements":["r1:600"]}
+p3_rollback_rebind error full adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T5 journal says paid for undefined/r1 undefined; provider movement {"refundId":"re_1","key":"r1","chargeId":"ch_rb","amount":"600","at":0}
+exit 1

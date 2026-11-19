@@ -1,0 +1,5 @@
+cmd: env RP_SHARED=<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json RP_REPLAY=error <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s1_scope.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree collide
+{"ra":"committed","rb":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":["r1"],"refused":[],"error":""},"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600","key":"e269e5df1184ae9a52da5b589a9a93717f89c202291e24509a246926f38868f0"},{"chargeId":"ch_B","requestId":"r1","amount":"300","key":"97a99a493cb69018036137b2a1f56b68641d539cca3d6dbf6dd2e49b095bf347"}],"movements":["e269e5df1184ae9a52da5b589a9a93717f89c202291e24509a246926f38868f0@ch_A:600","97a99a493cb69018036137b2a1f56b68641d539cca3d6dbf6dd2e49b095bf347@ch_B:300"]}
+s1 collide env={"RP_REPLAY":"error","RP_SHARED":"<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json"}
+MONEY RIGHT
+exit 0

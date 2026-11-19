@@ -1,0 +1,6 @@
+cmd: env RP_REPLAY=first RP_CEIL=1 <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s4_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree none
+books: remaining 0 (refunded 1000); provider moved 700
+{"r1":"committed","r1b":"committed","r2":["900","committed"],"f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r2: the provider refused before any money moved for this call"},"sink":"up","movements":["8d3b1a5388e4b9bcf90585d558d2c1239f38a0480956387ed6f121072c5c647b:600","34344b1b9511a0da070db7b895130be68bcf7d861bb726b0941427c6717cdbe0:100"]}
+s4 none env={"RP_REPLAY":"first","RP_CEIL":"1"}
+MONEY RIGHT
+exit 0

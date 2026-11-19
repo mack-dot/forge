@@ -1,0 +1,7 @@
+cmd: env RP_INFLIGHT=1 RP_CEIL=0 <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/wrap.ts p_timeout_retry <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree a none
+{"test":"p_timeout_retry","phase1":{"emitted":[],"refused":[],"error":"emit adapter IN DOUBT (in-doubt:unknown-code): r1: unknown provider answer; money may have moved"},"phase2":{"emitted":[],"refused":[],"error":"emit adapter IN DOUBT (in-doubt:timeout): r2: no final answer; money may have moved"},"rerun":{"emitted":[],"refused":["r1: in doubt: claimed by run a5af45065b02456e855b71de197f1085 (p","r2: in doubt: claimed by run 02d219747abf58d3fada67ec98ad977c (p"],"error":""},"reconcile":"threw: emit adapter IN DOUBT (in-doubt:unknown-code): r2: unknown provider answer; money may have moved","money":{"total":"800","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["e4d08eb04e94b5419edd93b47b13dc063d5f6f03588543c4aa3f2904c430186f:400","486ad6e059e23ab78e057a1c371140a551f6e4dacd0b8eebba9e823615e36044:400"]},"attackEvents":[]}
+mode a, anchor none
+layers seen after the attack started: (none)
+stopped by: NOT STOPPED
+DEFECT
+exit 1

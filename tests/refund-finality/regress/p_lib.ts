@@ -26,14 +26,35 @@
 // Every run prints "stopped by: <layer>" for the FIRST layer that refused something after the attack started, the list
 // of all layers seen, and the verdict. Layers: dispatch witness | ledger floor | outside head | h1 new-ledger rule |
 // ledger row check | claim rule (in doubt) | provider key | provider ceiling | NOT STOPPED.
+// h-provider3 switches (environment, read by world()):
+//   P_ADAPTER=v3 (default) the adapter of provider/emit_adapter.ts (key = providerKey(h_0, charge, request id); every
+//                answer checked; answer classes). P_ADAPTER=v1: the FROZEN old adapter (provider/emit_adapter_v1.ts: key =
+//                request id, any answer accepted) ONLY to show that a p3_*.ts control bites.
+//   P_KEY=noamount (measurement only, with v3) the key sent to the provider is providerKey with the amount "*" for every
+//                call: the variant WITHOUT the amount that owner decision D-3 did not choose. It shows what the amount in
+//                the key costs (PROVIDER_ANCHOR_3.md). Never a default.
+// world() options for the provider (h-provider3): providerPath (a SHARED account file: the second world attaches to it),
+// providerOptions (merged into the mode's options: replay, keyText, ceiling, ...).
+// Money check (h-provider3): besides "no key moved money twice" it also requires "no EFFECT (charge, request id) moved money
+// twice": with the amount in the key (owner decision D-3) one request id can have two provider keys after a rebind.
 // Tokens: a TEST Ed25519 key made in this process signs the body that an honest issuer would sign for the given
 // pre-state (the model of tests/refund-finality/regress/harness.ts honest()). No minter process. No network.
 import { generateKeyPairSync, sign } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { FakeProvider, ProviderMode, MODES, optionsOf } from "../provider/fake_provider";
-import { makeEmit } from "../provider/emit_adapter";
+import { FakeProvider, ProviderMode, ProviderOptions, MODES, optionsOf } from "../provider/fake_provider";
+import { makeEmit, providerKey } from "../provider/emit_adapter";
+import { makeEmit as makeEmitV1 } from "../provider/emit_adapter_v1";
+
+export const ADAPTER: "v3" | "v1" = process.env.P_ADAPTER === "v1" ? "v1" : "v3";
+const KEY_NO_AMOUNT = process.env.P_KEY === "noamount";
+if (process.env.P_ADAPTER !== undefined && !["v1", "v3"].includes(process.env.P_ADAPTER)) { console.error("P_ADAPTER must be v1 or v3"); process.exit(4); }
+if (KEY_NO_AMOUNT && ADAPTER !== "v3") { console.error("P_KEY=noamount needs P_ADAPTER=v3"); process.exit(4); }
+if (process.env.P_KEY !== undefined && process.env.P_KEY !== "noamount") { console.error("P_KEY must be noamount"); process.exit(4); }
+// provider refund id -> the effect identity (store h_0 / charge / request id) of the adapter call during which that money
+// moved (a movement that no adapter call made, e.g. another party's call, has none). The money check counts per effect.
+const effectOfRefund = new Map<string, string>();
 
 export const RETENTION = 24;
 export type Anchor = "none" | "floor" | "head" | "full";
@@ -65,7 +86,8 @@ export function layerOf(text: string): string {
 }
 
 /* eslint-disable @typescript-eslint/no-require-imports */
-export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: State, opts: { retries?: number; keepNewLedgerH0?: boolean } = {}) {
+export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: State,
+  opts: { retries?: number; keepNewLedgerH0?: boolean; providerPath?: string; providerOptions?: Partial<ProviderOptions> } = {}) {
   const E = require(join(root, "ts/refund-finality/encoding.ts"));
   const { Sink, genesisOf } = require(join(root, "ts/refund-finality/sink.ts"));
   const { Dispatcher } = require(join(root, "ts/refund-finality/dispatcher.ts"));
@@ -80,7 +102,19 @@ export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: Stat
   const dcfg: any = { ...ids, initialStateSha256: E.stateSha256(S0) };
   const genesis: string = genesisOf(E.canon(S0), ids.specLockSha256, ids.checkerSha256, ids.publicKeyPem);
   const db = join(dir, "sink.sqlite"), ledger = join(dir, "dispatch-ledger.jsonl"), journalPath = join(dir, "adapter-journal.jsonl");
-  const provider = FakeProvider.create(join(base, "provider", "provider-state.json"), optionsOf(mode, RETENTION), { [S0.chargeId]: S0.original });
+  const providerPath = opts.providerPath ?? join(base, "provider", "provider-state.json");
+  const provider = opts.providerPath !== undefined && existsSync(providerPath) ? FakeProvider.attach(providerPath, { [S0.chargeId]: S0.original }) :
+    FakeProvider.create(providerPath, { ...optionsOf(mode, RETENTION), ...(opts.providerOptions ?? {}) }, { [S0.chargeId]: S0.original });
+  // The key that the adapter in use sends for a request id of THIS store (tests inject faults and check money with it).
+  const keyOf = (requestId: string, amount: string): string => ADAPTER === "v1" ? requestId :
+    providerKey(genesis, S0.chargeId, requestId, KEY_NO_AMOUNT ? "*" : amount);
+  // The provider as the adapter sees it (P_KEY=noamount rewrites the key; every sent key is mapped to its effect).
+  const client = { refund: (call: any) => {
+    const k = KEY_NO_AMOUNT ? providerKey(genesis, call.chargeId, effectRid(call), "*") : call.key;
+    const before = provider.movements().length;
+    try { return provider.refund({ ...call, key: k }); } finally {
+      for (const m of provider.movements().slice(before)) effectOfRefund.set(m.refundId, genesis + "/" + call.chargeId + "/" + effectRid(call)); } } };
+  const effectId = (requestId: string): string => genesis + "/" + S0.chargeId + "/" + requestId;
   // The host's outside record (ANCHOR-OUTSIDE: never restored with the working directory).
   const outsidePath = join(outsideDir, "anchor.json");
   const outside = { read: (): any => JSON.parse(readFileSync(outsidePath, "utf8")), write: (o: any): void => writeFileSync(outsidePath, JSON.stringify(o)) };
@@ -111,12 +145,18 @@ export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: Stat
   };
   openSink(); sink.init(S0);
   let retries = opts.retries ?? 0;
+  let current = "";
+  const effectRid = (call: any): string => current !== "" ? current : "(direct call, key " + String(call.key).slice(0, 16) + ")";
   const observe = (line: any): void => {
     const o = String(line.outcome);
-    if (o === "replayed" || o === "refused:param_mismatch") note("provider key", line.requestId + " " + o);
+    if (o === "replayed" || o === "refused:param_mismatch" || o === "alarm:param_mismatch") note("provider key", line.requestId + " " + o);
     else if (o === "refused:ceiling") note("provider ceiling", line.requestId + " " + o);
+    else if (o === "alarm:answer-mismatch") note("adapter answer check", line.requestId + " " + o);
   };
-  const emit = makeEmit(provider, { get retries() { return retries; }, journalPath, observe } as any);
+  const emitRaw = ADAPTER === "v1" ? makeEmitV1(client as any, { get retries() { return retries; }, journalPath, observe } as any) :
+    makeEmit(client as any, { get retries() { return retries; }, journalPath, storeH0: genesis, observe } as any);
+  // The request id of the call in flight (the provider call carries no request id; the test needs it for the money check).
+  const emit = (effect: any, intent: any): void => { current = String(intent?.requestId); try { emitRaw(effect, intent); } finally { current = ""; } };
   const token = (pre: State, requestId: string, amount: string, reason = "returned_item"): string => {
     const post = { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
     const body = { domain: E.DOMAIN, ...{ specLockSha256: ids.specLockSha256, checkerSha256: ids.checkerSha256 },
@@ -155,7 +195,8 @@ export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: Stat
       return { emitted: r.emitted.map((e: any) => e.requestId), refused: r.refused.map((x: any) => x.requestId + ": " + String(x.reason).slice(0, 60)), error: "" };
     } catch (e) {
       const m = String((e as Error).message);
-      if (!/^provider /.test(m)) note(layerOf(m), "dispatcher stopped: " + m);
+      // A provider answer or an adapter outcome is attributed by `observe` (journal lines), not here.
+      if (!/^provider /.test(m) && !/^emit adapter (ALARM|IN DOUBT|REFUSED) \((?!refused:inconsistent-effect)/.test(m)) note(layerOf(m), "dispatcher stopped: " + m);
       return { emitted: [], refused: [], error: m.slice(0, 140) };
     }
   };
@@ -191,16 +232,24 @@ export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: Stat
   const outboxIntents = (): { requestId: string; intent: any }[] =>
     sink === null ? [] : sink.outbox().map((r: any) => ({ requestId: r.request_id, intent: JSON.parse(r.intent) }));
   const reopen = (): void => { closeSink(); openSink(); };
-  return { E, dir, base, db, ledger, journalPath, genesis, provider, emit, token, state, commitText, refund, flush, backup, restore,
+  return { E, dir, base, db, ledger, journalPath, genesis, provider, providerPath, keyOf, effectId, emit, token, state, commitText, refund, flush, backup, restore,
     snapshotAll, restoreAll, atAttack, markAttack, outboxIntents, reopen, outside, events,
     sinkRefusal: () => sinkRefusal, sinkUp: () => sink !== null, stop: closeSink, setRetries: (n: number) => { retries = n; } };
 }
 /* eslint-enable @typescript-eslint/no-require-imports */
 
+// Movements per EFFECT (store h_0 / charge / request id of the adapter call during which the money moved).
+export function effectMoves(movements: { refundId: string }[]): Record<string, number> {
+  const n: Record<string, number> = {};
+  for (const m of movements) { const e = effectOf(m.refundId); n[e] = (n[e] ?? 0) + 1; }
+  return n;
+}
+export const effectOf = (refundId: string): string => effectOfRefund.get(refundId) ?? "no adapter call (refund " + refundId + ")";
 // The money check on the PROVIDER's durable state (the only place where money moves).
 export function moneyCheck(provider: FakeProvider, chargeId: string, chargeAmount: string) {
   const perKey = provider.movementsPerKey();
   const twice = Object.entries(perKey).filter(([, n]) => n > 1).map(([k]) => k);
+  for (const [e, n] of Object.entries(effectMoves(provider.movements()))) if (n > 1) twice.push("effect " + e);
   const total = provider.totalMoved(chargeId);
   return { total: total.toString(), charge: chargeAmount, withinCharge: total <= BigInt(chargeAmount), twice, noDouble: twice.length === 0,
     movements: provider.movements().map(m => m.key + ":" + m.amount) };

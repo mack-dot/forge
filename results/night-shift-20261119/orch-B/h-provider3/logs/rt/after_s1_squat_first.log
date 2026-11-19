@@ -1,0 +1,5 @@
+cmd: env RP_SHARED=<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json RP_REPLAY=first <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s1_scope.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree squat
+{"ra":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":null,"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600","key":"40df9746f6bd3b9dcd65c2fe8b6b1fa8907e96fb9480a9eb44b22620e71684c5"}],"movements":["r1@ch_A:1","40df9746f6bd3b9dcd65c2fe8b6b1fa8907e96fb9480a9eb44b22620e71684c5@ch_A:600"]}
+s1 squat env={"RP_REPLAY":"first","RP_SHARED":"<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json"}
+MONEY RIGHT
+exit 0

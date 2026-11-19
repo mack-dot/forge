@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_att28_new_ledger.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree a none ledger+witness
+swap free MiB before: 1545
+{"test":"p_att28_new_ledger","case":"ledger+witness","after":[{"emitted":["r1","r2"],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["3bfd94a0c98a3ad4465e766a8dfc424ae7667c60196f85abdbd5f0c04cdd1bdc:400","cb34889879cb2b756b9025c746fffc61d31064dbebcd7c45f2d1c82341472b79:500"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r1 replayed"},{"phase":"attack","layer":"provider key","detail":"r2 replayed"}]}
+mode a, anchor none
+layers seen after the attack started: provider key
+stopped by: provider key
+SAFE
+exit 0

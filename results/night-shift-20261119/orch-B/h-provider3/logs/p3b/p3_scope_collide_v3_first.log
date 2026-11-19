@@ -1,0 +1,5 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v3 node --import tsx tests/refund-finality/regress/p3_scope_collide.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree first
+{"fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":["z0","r1"],"refused":[],"error":""},"fb2":{"emitted":[],"refused":[],"error":""},"emitted":["ch_A/r1:600","ch_B/z0:0","ch_B/r1:300"],"providerCalls":2,"movements":["488b2d0a557d@ch_A:600","74db8249f5da@ch_B:300"]}
+p3_scope_collide first adapter=v3 env={"P_ADAPTER":"v3"}
+SAFE
+exit 0

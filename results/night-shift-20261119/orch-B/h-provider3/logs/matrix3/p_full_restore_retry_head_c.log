@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_full_restore_retry.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree c head 
+swap free MiB before: 1376
+{"test":"p_full_restore_retry","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false [SINK-OUTSIDE-HEAD: the store opens without cfg.outsideHead]","retry":["no sink (start refused)","no sink (start refused)"],"after":[{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["1bf55c3c7c800a1c59ec7b9160217560297f3ece182e6baa01855c5f79135e74:400","3b34def20415ecba85a6f4d30ba07b68b602d117ebf9d5899eb6271e933fba14:400","b6e43e7a6560d60f69314ce6f18a4860b00e912702787af89c45e62e62c69035:100"]},"attackEvents":[{"phase":"attack","layer":"outside head","detail":"sink start: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false [SINK-OUTSIDE-HEAD: the store o"}]}
+mode c, anchor head
+layers seen after the attack started: outside head
+stopped by: outside head
+SAFE
+exit 0

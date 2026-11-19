@@ -1,0 +1,5 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v1 node --import tsx tests/refund-finality/regress/p3_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree long
+{"f1":{"emitted":[],"refused":[],"error":"provider invalid_request: the idempotency key is longer than 255"},"f2":{"emitted":["r_next"],"refused":["xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: in doubt: claimed by run 1d601f707c01a9a0917f03d8969c1020 (p"],"error":""},"journal":["refused:invalid_request","paid"],"movements":["r_next:100"]}
+p3_keytext long adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T6 FALSE REJECTION: committed refund "xxxxxxxxxxxx" (len 256) not paid
+exit 1

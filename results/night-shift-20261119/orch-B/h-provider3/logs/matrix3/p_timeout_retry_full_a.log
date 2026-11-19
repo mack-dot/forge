@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_timeout_retry.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree a full 
+swap free MiB before: 1240
+{"test":"p_timeout_retry","phase1":{"emitted":["r1"],"refused":[],"error":""},"phase2":{"emitted":[],"refused":[],"error":"emit adapter IN DOUBT (in-doubt:timeout): r2: no final answer; money may have moved"},"rerun":{"emitted":[],"refused":["r2: in doubt: claimed by run 212ba8d7607910893e28982b7d54ba23 (p"],"error":""},"reconcile":"returned","money":{"total":"800","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["e319a36134ee476ca69de18573849fbe5d7e066f704a8804d3e91c40d460eba1:400","0e2af12e3e76e6d4ac41fdf7565730e54269eb401d0465a7ebcc4e6ea78f4d7e:400"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r2 replayed"}]}
+mode a, anchor full
+layers seen after the attack started: provider key
+stopped by: provider key
+SAFE
+exit 0

@@ -1,0 +1,6 @@
+cmd: env RP_REPLAY=first RP_CEIL=0 <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s4_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree none
+books: remaining 0 (refunded 1000); provider moved 1600
+{"r1":"committed","r1b":"committed","r2":["900","committed"],"f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":["r2"],"refused":[],"error":""},"sink":"up","movements":["789f3a6ad33384708de26d4300e35e4d6a38aff4658a9f2cf447ff443d447588:600","a178a1f159bf5a4d8c0e86deacf62d9cb74a51a2feea38fcf69ef3d95fad2ae6:100","2ad06cc86fe76f3c53bc3b0b8c9aa730b64d166119a633a88e248a6eb14a186c:900"]}
+s4 none env={"RP_REPLAY":"first","RP_CEIL":"0"}
+MONEY WRONG: charge ch_rb moved 1600 > 1000
+exit 1

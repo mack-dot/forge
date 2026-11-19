@@ -1,0 +1,5 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v3 node --import tsx tests/refund-finality/regress/p3_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree long
+{"f1":{"emitted":["xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],"refused":[],"error":""},"f2":{"emitted":["r_next"],"refused":[],"error":""},"journal":["paid","paid"],"movements":["1ae24ae53ba8:300","8202f7c5bd24:100"]}
+p3_keytext long adapter=v3 env={"P_ADAPTER":"v3"}
+SAFE
+exit 0

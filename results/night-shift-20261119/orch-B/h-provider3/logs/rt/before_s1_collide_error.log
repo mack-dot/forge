@@ -1,0 +1,6 @@
+cmd: env RP_SHARED=<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json RP_REPLAY=error <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/before <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s1_scope.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/before collide
+LIVENESS: ch_B/r1 300 committed, never paid, run 2: ["r1: in doubt: claimed by run b4d234e53ecfd830209e1587ce6aa143 (p"]
+{"ra":"committed","rb":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":[],"refused":[],"error":"provider param_mismatch: key r1 used with other parameters"},"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600","key":"r1"}],"movements":["r1@ch_A:600"]}
+s1 collide env={"RP_REPLAY":"error","RP_SHARED":"<REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/tmp/shared.json"}
+MONEY RIGHT
+exit 0

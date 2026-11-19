@@ -1,0 +1,8 @@
+total = 10240.00M  used = 9204.56M  free = 1035.44M  (encrypted)
+cmd: env -i ... P_KEY=noamount node --import tsx tests/refund-finality/regress/p_full_param_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree b none
+{"test":"p_full_param_rebind","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","r2b":"committed","after":[{"emitted":[],"refused":[],"error":"emit adapter ALARM (alarm:param_mismatch): r2: the provider holds this key with other parameters; never paid; money may have moved for the k"},{"emitted":[],"refused":["r2: in doubt: claimed by run 97605023aa4e071b4a4066711786bd6c (p"],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["168a317f899c884c072775eeb11a19decd18fb18b0c7e031b0d06b5825701bd4:400","551670f877a6aebdc785b230ed6ebd7294907532fa7a74b0333629501954f197:400","da36c71166401750ebc29ca97dac83be705eb98ac3288ef183c89106811061ad:100"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r2 alarm:param_mismatch"},{"phase":"attack","layer":"claim rule (in doubt)","detail":"dispatcher refused r2: in doubt: claimed by run 97605023aa4e071b4a4066711786bd6c (pid 78553) and its emit threw; not counted as dispatched; a person must ask th"}]}
+mode b, anchor none
+layers seen after the attack started: provider key | claim rule (in doubt)
+stopped by: provider key
+SAFE
+exit 0

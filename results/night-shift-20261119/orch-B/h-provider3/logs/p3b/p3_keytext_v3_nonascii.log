@@ -1,0 +1,5 @@
+cmd: cd <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C P_ADAPTER=v3 node --import tsx tests/refund-finality/regress/p3_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree nonascii
+{"f1":{"emitted":["remboursé-1"],"refused":[],"error":""},"f2":{"emitted":["r_next"],"refused":[],"error":""},"journal":["paid","paid"],"movements":["043017756529:300","5509bfaf16ce:100"]}
+p3_keytext nonascii adapter=v3 env={"P_ADAPTER":"v3"}
+SAFE
+exit 0

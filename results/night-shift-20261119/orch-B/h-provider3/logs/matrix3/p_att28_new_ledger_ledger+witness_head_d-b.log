@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_att28_new_ledger.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree d-b head ledger+witness
+swap free MiB before: 1569
+{"test":"p_att28_new_ledger","case":"ledger+witness","after":[{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r1: the provider refused before any money moved for this call"},{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r2: the provider refused before any money moved for this call"}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["7b2c9596eac46001f88f9c5cead45fa84b03813c833284341c2224bb6d4527de:400","043c8eae0aeedea7f7a461ee2dfd4fd6828670978830555d423a9e0ecdb5f996:500"]},"attackEvents":[{"phase":"attack","layer":"provider ceiling","detail":"r1 refused:ceiling"},{"phase":"attack","layer":"provider ceiling","detail":"r2 refused:ceiling"}]}
+mode d-b, anchor head
+layers seen after the attack started: provider ceiling
+stopped by: provider ceiling
+SAFE
+exit 0

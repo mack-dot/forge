@@ -1,0 +1,7 @@
+cmd: env RP_INFLIGHT=1 RP_CEIL=0 <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/before <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/wrap.ts p_timeout_retry <REPO>/results/night-shift-20261119/orch-B/h-provider3/before a none
+{"test":"p_timeout_retry","phase1":{"emitted":[],"refused":[],"error":"provider conflict: a request with this key is in progress"},"phase2":{"emitted":[],"refused":[],"error":"provider timeout: no answer (the money moved)"},"rerun":{"emitted":[],"refused":["r1: in doubt: claimed by run ddc04be6b47daa44ea15643b1aa65cac (p","r2: in doubt: claimed by run d6fd8e3ce20e5b214dce0af4e0c4d708 (p"],"error":""},"reconcile":"threw: provider conflict: a request with this key is in progress","money":{"total":"800","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400"]},"attackEvents":[]}
+mode a, anchor none
+layers seen after the attack started: (none)
+stopped by: NOT STOPPED
+DEFECT
+exit 1

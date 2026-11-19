@@ -1,0 +1,5 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_provider_faults.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree b none 
+swap free MiB before: 1420
+{"test":"p_provider_faults","mode":"b","anchor":"none","f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:refused): r2: the provider refused before any money moved for this call"},"f3":{"emitted":["r3"],"refused":["r2: in doubt: claimed by run 7b6ce491beaa1dc3714f774cca1a388f (p"],"error":""},"journal":[["r1","paid"],["r2","refused:refused"],["r3","paid"]],"money":{"total":"600","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["e6f4c7a3fb04e2dca2915c0fe72ab49324a15ef47b0d6c0d431c1d6ae4a4a3a4:300","18acfbbb0cafc70cf691a6e9fec2194f9bb8aedbbc50a39d3e7dff452354bcdb:300"]}}
+positive control: PASS
+exit 0

@@ -1,0 +1,8 @@
+cmd: env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home TMPDIR=<REPO>/results/night-shift-20261119/orch-B/h-provider3/home LANG=C node --import tsx tests/refund-finality/regress/p_full_ledger_lag.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree a head 
+swap free MiB before: 1100
+{"test":"p_full_ledger_lag","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","after":[{"emitted":["r2","r3"],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["336e575d41ed2b31e5624656ceeac63eae9356180c4dc2b1b6b0713abad0ea41:400","eef4d3a764a76ae21259e146dda3f49e08166de8a867b9ebb15d4134d82e89ca:400","5a4dbcd335e8d1634d811f3a60a1eb2a56a65c11d0af9373c5513f689c75e9a2:100"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r2 replayed"},{"phase":"attack","layer":"provider key","detail":"r3 replayed"}]}
+mode a, anchor head
+layers seen after the attack started: provider key
+stopped by: provider key
+SAFE
+exit 0

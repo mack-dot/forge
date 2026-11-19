@@ -1,0 +1,6 @@
+cmd: env RP_REPLAY=error RP_CEIL=1 <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/before <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s4_rebind.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/before none
+books: remaining 0 (refunded 1000); provider moved 600
+{"r1":"committed","r1b":"committed","r2":["900","committed"],"f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":[],"refused":[],"error":"provider param_mismatch: key r1 used with other parameters"},"f3":{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},"sink":"up","movements":["r1:600"]}
+s4 none env={"RP_REPLAY":"error","RP_CEIL":"1"}
+MONEY RIGHT
+exit 0

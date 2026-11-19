@@ -1,0 +1,5 @@
+cmd: env RP_KEYPOLICY=truncate RP_REPLAY=first <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/run.sh <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree <REPO>/results/night-shift-20261119/orch-B/h-provider3/rt/s5_keytext.ts <REPO>/results/night-shift-20261119/orch-B/h-provider3/tree prefix
+{"committed":["committed","committed"],"f1":{"emitted":["ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp1"],"refused":[],"error":""},"f2":{"emitted":["ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp2"],"refused":[],"error":""},"movements":["0719cac45d70:300","4bd7ab3aee08:100"]}
+s5 prefix env={"RP_REPLAY":"first","RP_KEYPOLICY":"truncate"}
+MONEY RIGHT
+exit 0

@@ -11,10 +11,10 @@ guard(() => {
   const S0 = { chargeId: "ch_pt", original: "1000", remaining: "1000", refundEnabled: true };
   const w = world(root, mode, anchor, S0, { retries: 1 });
   const r1 = w.refund("r1", "400");
-  w.provider.inject("r1", "timeout_after_money");
+  w.provider.inject(w.keyOf("r1", "400"), "timeout_after_money");   // h-provider3: the key the adapter sends
   const f1 = w.flush();
   const r2 = w.refund("r2", "400");
-  w.provider.inject("r2", "timeout_after_money");
+  w.provider.inject(w.keyOf("r2", "400"), "timeout_after_money");
   w.setRetries(0);
   const f2 = w.flush();
   const f3 = w.flush();                     // the dispatcher alone does not send r2 again (in doubt)
