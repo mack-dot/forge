@@ -220,3 +220,27 @@ Entries below: target = native refund executable b8ed5ec2… and the consumer pr
 - A proof of the edge must state "HOL parser restricted to non-negative integers". No false rejection follows: the program prints non-negative values only.
 ## C-NEG-11 (15:06:02Z) native executable versus an independent oracle and the Python consumer — NO counterexample: C's runs: fuzz_oracle.py 1 2000 -> EXIT 0 (2000 real runs, 273 authorized incl. 76 zero-amount and 27 full, 0 mismatches, all frames strict); edges.py -> EXIT 0; probe_table.py -> EXIT 0. Worker runs: 9,400+ real runs in total, never a byte after a frame.
 - Observation (known class): every request-reader error gives exit 0, empty stdout, empty stderr; the consumer maps it to REFUSED (fail closed). A trailing line feed after the request gives "no frame".
+
+Entries below: C's own re-runs at 15:12:56Z; target-v6 (4af09308 + v6 diff). Command form: bash c15-storage/run.sh <script> <args>. Logs c15-storage/recheck/.
+
+## C-ATT-21 (15:12:56Z) a planted hot journal rewrites the audited store; the attacker never writes the database file — CONFIRMED, NEW (weaker attacker than a database writer)
+- Class: rollback / forged state below the SQL layer. Attacker: can create ONE file `<db>-journal` in the database directory and could read the database at an earlier time. SQLite inside the sink process applies it at the first lock, before the start-up audit.
+- s1_hotjournal.ts restart -> EXIT 1 (acknowledged r2, r3 gone; audit passes; audit()=[]); running -> EXIT 1 (the running sink re-audits, passes, keeps serving; acknowledged r3 lost); nul -> EXIT 1 (the journal carries the C-ATT-04 page edit; the same zero-amount token commits twice). s2_planted.ts wal -> EXIT 1 (a planted -wal next to a rollback-mode database is applied; r3 commits twice); jinwal -> EXIT 1. Worker run only: mode uv.
+- SHA-256 s1_hotjournal.ts ed863e5b20443c1f7b4bd1ca123a4ed37c58182f1a33285373766b4d1885d552; journal.ts 5b8c8b25…d511.
+- Reading: sink.ts:25-29 lists its undetectable cases for a "database writer"; create-only access to the directory is enough. Triggers and CHECKs cannot stop a page-level journal. Sticky-directory case (second user): NOT RUN.
+- Sent to B 15:12:56Z. Regression: PENDING. Re-run against fix: NOT RUN (also NOT RUN against 608b5165: next).
+
+## C-ATT-22 (15:12:56Z) a short ledger write is not checked: the effect is sent with a torn ledger line — CONFIRMED, NEW. Attacker: none (disk full / file-size limit)
+- dispatcher.ts:98-102 ignores writeSync's count, then fsync, then emit. s3_ledger_short.ts 200 -> EXIT 1 (all 6 effects emitted with torn lines; every later run throws; the obvious repair, dropping the bad line, re-sends: worker measured 1620 on 1000); control 351 -> EXIT 0. SHA-256 4e789420…2b8c.
+- Worker run only (real ENOSPC on a 2 MB disk image, no sudo; image removed; C checked: no image attached): write returned 322 of 351 bytes with no error, the 300 refund was emitted, the next flush throws for ever.
+- Contradicts the header sentence "a line is appended and synced BEFORE the effect".
+
+## C-ATT-23 (15:12:56Z) two honest sinks through two hard-link names of one database lose acknowledged commits after one crash — CONFIRMED (known SQLite hazard; not stated in the sink's assumptions)
+- s6b_killloop.ts hardlink 100 7 3000 -> EXIT 1; control `same` -> EXIT 0. Worker: 4 of 100 and 2 of 100 lost. Symbolic links are safe (s6_twonames.ts: worker runs EXIT 0).
+
+## C-OBS-02 (15:12:56Z) durability (STATIC + measured by the worker): the sink sets no fullfsync; on macOS an acknowledged commit is durable to the drive cache only. Node's fsyncSync timing matches F_FULLFSYNC, so the ledger line is MORE durable than the sink row: a power loss can put the sink below the ledger head (C-ATT-12 class). No power cut was run.
+## C-NEG-12 (15:12:56Z) storage: s5_paths.ts -> EXIT 0 (C's run): lock as a dangling symlink or a directory, ledger symlinked or replaced during a run: fail closed (denial of service only). Worker runs: junk journal ignored; commit under a file-size limit: 21 acknowledged and present, 36 rejected with no row.
+
+## C-BLOCK-01 (15:12:56Z) worker c18-launch (native launch path) STOPPED EARLY: a safety classifier withheld part of its response; it ran NO test and wrote no file. Its table is STATIC (reading of proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py): child environment is a fixed dict (:23, :123): caller's DYLD_* do not reach the child (by reading); cwd is a private mkdtemp (:110); mkdtemp takes TMPDIR from the caller (:110; impact NOT RUN); stdout to a private file with a size limit, read after exit (:120-:134); hash of the copy before and after the run, exec by path (:114, :130). I do not retry the withheld work in another form. Reduced scope by C itself: control checks only (no injected code).
+
+## C-BLOCK-01 addendum (15:13:51Z): my own attempt at control checks of the draft launcher was ALSO stopped by the safety classifier before any file was written or any command ran (orch-C/c18-launch/ is empty). Launcher priority 4 (native launch path: loader injection, truncated stdout, FFI abort) is therefore NOT DONE by C: no run, no result. I do not retry it in any form. What exists is the STATIC table of C-BLOCK-01 only (reading, by a worker; not re-checked by a run). A's own launch-path controls (orch-A/launch/, not ready) stay un-attacked by C unless the owner decides how this class of test may be run.

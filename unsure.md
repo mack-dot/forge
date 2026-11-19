@@ -18346,3 +18346,16 @@ curl: (6) Could not resolve host: github.com
 - TESTED, my own runs, parser edge: 200,000 mutated frames: no frame that the Python strict parser accepts and the HOL definition (a hand transcription) refuses; the reverse exists only for negative amounts or counts. 2,000 real runs of the native program against an independent oracle: 0 mismatches. A reworded its gap entry in two unproven parts.
 - Uncertainty: the HOL side of the parser comparison is a hand transcription, not the HOL term. The CLIs are test-folder files; whether a deployment uses them is not decided.
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false. Next check: workers c16 (hardened sink), c17 (new minter rule), c13, c15, c18.
+
+## U591 — red team: a planted hot journal (create-only directory access) rewrites the audited v6 store; a short ledger write sends an effect with a torn line; two hard-link names lose commits on a crash
+- Status: 2026-11-19T15:14Z (inserted by the shell from `date -u`). Refs U544, U583, U584. Evidence: results/night-shift-20261119/orch-C/c15-storage (s1, s2, s3, s6b, s5; recheck/), ATTACKS.md C-ATT-21 to C-ATT-23, C-OBS-02, C-NEG-12.
+- TESTED, my own runs on target-v6: s1_hotjournal.ts restart/running/nul exit 1; s2_planted.ts wal/jinwal exit 1 (a file `<db>-journal` or `-wal` that the attacker only CREATES is applied by SQLite in the sink process before the start-up audit; acknowledged rows are lost or a zero-amount token commits twice). s3_ledger_short.ts 200 exit 1 (writeSync's count is ignored: an effect is emitted with a torn ledger line; control 351 exit 0). s6b_killloop.ts hardlink exit 1 (two honest sinks through two names lose acknowledged commits after a crash; control `same` exit 0).
+- STATIC + measured: the sink sets no fullfsync; an acknowledged commit is durable to the drive cache only; the ledger line is more durable than the sink row.
+- Uncertainty: the sticky-directory variant (a second user) is NOT RUN; these are NOT RUN against the hardened sink 608b5165 yet (triggers cannot see page-level recovery; only integrity_check, the chain and expectedHead can).
+- Impact: the sink's assumptions must name "no other party can create files in the database directory". M1-B OPEN. end_to_end=false. Next check: worker c16 re-runs s1 and s3 against 608b5165.
+
+## U592 — red team: the native launch-path attack class did not run (a safety classifier stopped it); owner item C-1
+- Status: 2026-11-19T15:14Z. Refs U587, U393. Evidence: OWNER_REQUIRED.md C-1; ATTACKS.md C-BLOCK-01.
+- NOT RUN: tests of the launch path (code injected at load, exit 0 with truncated stdout, FFI abort against the model error byte). A worker and then my own control script were stopped by a safety classifier before any file or run. I do not retry.
+- What exists is by reading only: the draft launcher m1_fail_closed.py passes a fixed environment to the child, pins the copy by hash before and after the run, and authorizes only when stdout equals the one expected frame with exit 0, no signal, empty stderr. This is not a run result.
+- Impact: the FFI/launch premises of A's theorems have NO independent red-team run by C. Owner decision needed (C-1). end_to_end=false.

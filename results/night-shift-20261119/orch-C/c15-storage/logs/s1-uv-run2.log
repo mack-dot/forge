@@ -1,0 +1,49 @@
+{
+ "mode": "uv",
+ "c1": "committed",
+ "c2": "committed",
+ "c3": "committed",
+ "flush1": [
+  "r1",
+  "r2",
+  "r3"
+ ],
+ "journalPlanted": true,
+ "restartError": null,
+ "journalAfter": false,
+ "sameInode": true,
+ "ids": [
+  "r1",
+  "r2",
+  "r3"
+ ],
+ "state": "700",
+ "audit": [],
+ "uv": 77,
+ "c2_retry": "replayed",
+ "c3_retry": "replayed",
+ "c4": "committed",
+ "idsEnd": [
+  "r1",
+  "r2",
+  "r3",
+  "r4"
+ ],
+ "flush2": {
+  "emitted": [
+   {
+    "requestId": "r4",
+    "intent": "{\"amount\":\"150\",\"chargeId\":\"ch_c15\",\"reason\":\"duplicate_charge\",\"requestId\":\"r4\"}"
+   }
+  ],
+  "refused": [],
+  "alreadyDispatched": 3
+ },
+ "effects": [
+  "r1",
+  "r2",
+  "r3",
+  "r4"
+ ]
+}
+DEFECT: a party that only created <db>-journal changed the audited store
