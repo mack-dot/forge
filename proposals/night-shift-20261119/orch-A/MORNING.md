@@ -27,7 +27,8 @@ Link cases: `results/night-shift-20261119/orch-A/link/run/attempt-0001`, `bash g
 | Link H1, H2 (+H0, E0, H4) | forge_refundExportedContract | `exported_contract_on_refund_fields`, `exported_contract_exact`: the 3 exported `ensures` clauses are true iff the outputs equal `refund_fields` of the inputs | A17: holds; checker defects noted |
 | Link R1, R2, R3, I1 | (U294 theories) | U294 scripts replayed; the stored 2026-11-04 theory imports | A17: holds |
 | MF-0001, MF-0002 | forge_refundModelFrame | `refund_model_frame_decision`; `refund_model_frame_meets_exported_contract`: machine model → every behaviour → descriptor-1 bytes → strict parse → value → exported clauses, ONE theorem | A26: holds |
-| MG-0001 | forge_refundModelFrameEvents | the same conclusion from the reduced premises (native contract at valid calls + R6) | not yet reviewed |
+| MG-0001 | forge_refundModelFrameEvents | the same conclusion from the reduced premises (native contract at valid calls + R6) | A27: holds |
+| L2d-0001 | forge_refundRouteA2d | `refund_ffi_calls_ok_shape_totalised` (program-behaviour premise from the oracle alone for the shape predicate); `refund_profile_a_sl_shape`; `refund_model_frame_decision_shape` (29) | A27: holds; wording note |
 
 Negative controls with the required failing result: link NC1–NC6, NS1–NS3, NR1 (second run), NB1 (exit 1 each; reason of each
 in `link/run/attempt-0001/control_reasons.txt`), PC1 (exit 0 as planned), E1neg-0001 (exit 1).
@@ -35,7 +36,7 @@ Confirmation runs inside the swap rule: E1r-0001, L2r-0001: exit 0, theory `.dat
 
 Failed attempts kept on disk (not hidden): L2-0001, L2-0002, L2b-0001, L2b-0002, E1-0001, E1-0002, PF-0001…0003,
 LO-0001…0005, LE-0002, ES-0001, ES-0002; setup errors of link H4, NR1, R2, R3, I1 (`*.setup-error-1.go.log`).
-Exploration runs (no export, nothing stored, prove nothing): LOx-0001, EFx-0001.
+Exploration runs (no export, nothing stored, prove nothing): LOx-0001, EFx-0001, L2dx-0001, R6x-0001.
 
 ## 2. New counterexamples and falsified claims
 
@@ -71,8 +72,8 @@ issuer (X16: it calls the compiled Dafny checker, not this binary), the sink (B'
 
 | Gap | Class | Note |
 |---|---|---|
-| R6: every FFI event of every run is a valid read/write event | MISSING (model) | program behaviour; feasibility worker A25 |
-| Native FFI contract at valid calls | ASSUMPTION (NATIVE) | plausible only at the program's own call shapes; owner item A-3 |
+| R6: every FFI event of every run is a valid read/write event (needed for the PRESENT executable) | MISSING (model) | study A25: TextIO specifications proved again with an event invariant; 4–7 working days; groundwork in `orch-A/r6/` |
+| Native FFI contract at valid calls | ASSUMPTION (NATIVE) | with the shape predicate (L2d-0001) no environment that describes the present C code meets it (the C aborts where the model returns an error byte, also at states the run never reaches); plausible for the unapplied model-total patch; owner item A-3 |
 | All-states FFI premise of the older theorems (LO-0006, LE-0004, MF-0002) | FALSE for the real C | use the `_events` forms |
 | Real process refines the model (X8); kernel and processor between steps (X11) | ASSUMPTION (NATIVE) | HOL cannot close it |
 | Processor bits TBI0/SA0: step lift of the erasure lemmas, lift to `evaluate`, untagged addresses, real bit values | MISSING / UNKNOWN | E1, EF are sub-results |

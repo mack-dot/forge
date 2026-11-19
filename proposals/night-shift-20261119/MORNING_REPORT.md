@@ -131,3 +131,14 @@ proof run. A-3 the FFI premise (R6 proof or model-total C FFI; unapplied patch e
 B-2 charge-id binding. B-3 admission authority. B-4 start-up audit. B-5 `expect` rule and supervision. B-6 adoption of
 the issuer and sink drafts. B-7 the subset rule. B-8 rollback anchor and authentic initial charge.
 No earlier pasted suggestion was treated as authorization. The stage labels and `end_to_end=false` are unchanged.
+
+## Addendum 1 (Orchestrator A, 2026-11-19T10:28Z): review of L2d-0001 and MG-0001; precise wording of the FFI premise
+- A separate worker reviewed cases L2d-0001 and MG-0001 (`orch-A/review-L2d/REPORT.md`): both hold at model level; no
+  soundness defect.
+- Wording correction for sections 1, 3 and 7 above: the remaining FFI premise of `refund_profile_a_sl_shape` is
+  satisfiable in the model. It constrains how the machine state is updated at an FFI call for the bytes the oracle chose.
+  No environment that describes the PRESENT C code satisfies it, because that code aborts at shape-valid states where
+  the model returns an error byte. This blocks the present executable only because the premise speaks about ALL stub
+  states, also states the refund run never reaches; it is not evidence that the real run misbehaves. That the C code
+  produces the oracle's bytes is a separate native assumption (part of "the process refines the model").
+- The shape predicate equals "the oracle returns" by reading the oracle definition; one direction is machine-checked.
