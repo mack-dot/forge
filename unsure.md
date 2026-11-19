@@ -16673,3 +16673,216 @@ curl: (6) Could not resolve host: github.com
   the pull request text and, with the next documents, into the
   records); the owner's merge decision. The agent does not merge. After
   the merge: the text F branch from the new origin/main.
+
+## U458 — Owed records: pull request 47 (Slice 3) merged by the owner as b121bbdd; pull request 48 (master idea scope section) merged by the owner as d3d1980f; hosted gate exit 3 for both
+- Status: 2026-11-19, about 00:10Z to 01:00Z. Refs U457. These facts
+  were only in the pull request texts until now.
+- Pull request 47 (observations): commit 1c2ad691 on branch
+  slice3/runtime-certificates, pushed, pull request opened with no
+  administrator rights. Hosted gate/pr_check.py, run 44424304046, head
+  1c2ad691: exit 3, UNSUPPORTED, "every obligation that ran holds, but
+  79 coverage finding(s) remain" (read again from the run log for this
+  entry). Merged by the owner on 2026-11-18 23:55Z as squash commit
+  b121bbdd (GitHub records the owner's account as the merger).
+  `git diff --quiet b121bbdd 1c2ad691`: exit 0. The agent did not merge.
+- Pull request 48 (observations): the text F task of U457. Branch
+  docs/master-idea-v2-horizon from b121bbdd; commit c2b03946; one file
+  changed, FORGE_MASTER_IDEA.md: the section "Blast-Radius Finality vs.
+  Intent Elicitation (Scope and Honest Limits)", the rows F1.5, F1.6,
+  F2.4, F2.5 with status NOT STARTED, the status word NOT STARTED in
+  the legend, one sentence under "Order". Before the commit:
+  check_links.py for that file exit 0; check_frozen_pr_gate.py exit 0;
+  0 protected paths. Hosted gate/pr_check.py, run 44425343532: exit 3,
+  UNSUPPORTED, 1 coverage finding (UNCOVERED_CHANGE for that file), as
+  expected for a document. Merged by the owner on 2026-11-19 00:01Z as
+  squash commit d3d1980f. `git diff --quiet d3d1980f c2b03946`: exit 0.
+  The agent did not merge.
+- How the U457 uncertainty for text F was resolved: the section states
+  the class of claim first and then the actual state in a separate
+  list (proved at source level; finite tests; NOT STARTED). The
+  reservation protocol across services is listed as NOT STARTED
+  (F2.5), not as a guarantee.
+- Not recorded at that time, by my choice: text F allowed only one
+  file, so pull request 48 held no roadmap row and no entry here. This
+  entry and one roadmap section are that record.
+- Numbers in later owner texts: the "Master Wave-2 Directive" (U459)
+  names its first pull request "PR 48" and its second "PR 49". Number
+  48 was already used by the pull request of this entry. The Wave Gate
+  pull requests get the numbers that GitHub gives them.
+- Impact: no claim changes. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: none for these two pull requests.
+
+## U459 — "Master Wave-2 Directive" received as a session goal; pre-flight; three differences between the directive and the repository; basis for the outward steps of Wave Gate 1
+- Status: 2026-11-19, about 00:10Z. Refs U457, U458, M1R-1, M1R-2.
+  Owner texts: proposals/forge2-m1-conformance/OWNER_TEXTS.md.
+- Observation: the owner pasted a text of another author ("Part 1"
+  with four frontier ideas, "Part 2" with a directive in a box: four
+  wave gates) with the own words "put this into a goal18 md". I saved
+  it as goal18.md (not tracked). Then the owner ran the session command
+  `/goal implement is <HOME>/forge/goal18.md.`
+- Inference (mine): the goal command is the owner's own instruction to
+  carry out the directive of that file. The directive itself tells the
+  agent to commit, push and open a pull request without administrator
+  bypass at the end of each gate, and to stop for the owner's merge. I
+  take the goal command as the owner's word for those steps of Wave
+  Gate 1. It is not a word for a merge. The text outside the box
+  contains the command `gh pr merge 47 --squash --admin`; it is
+  addressed to the owner, pull request 47 was already merged, and I did
+  not run it.
+- Pre-flight (observations): pull request 47 MERGED (b121bbdd);
+  origin/main = d3d1980f. Branch slice4/m1-finality-conformance made
+  from origin/main. .toolchain, node_modules and results/ not changed.
+- Difference 1: the directive names its pull requests 48, 49 and 50.
+  Number 48 is used (U458). The numbers will be the next free ones.
+- Difference 2: Wave Gate 2 asks for the section "Blast-Radius Finality
+  vs. Intent Elicitation" and for five NOT STARTED items. The section
+  and four of the items (F1.5, F1.6, F2.4, F2.5) are on main since pull
+  request 48. Only the Farkas item is new. To resolve in Wave Gate 2,
+  not now.
+- Difference 3: hard rule 1 of the directive says M1 stays open "until
+  every recorded control replays exit 0". 46 of the 158 recorded cases
+  have a recorded NON-zero exit (they are controls that must fail). I
+  read the rule as: every case gives its recorded exit again.
+- Part 1 of the text (CakeML minter with a wire parser and a signature
+  under one theorem; solver red-teaming of specs; fact-bound sub-caps;
+  Farkas certificates) is not a result and starts nothing. Its
+  sentences "nobody ... has gone" and "structurally impossible" are the
+  author's and are not claims of this repository.
+- Interpretation of "M1 HOL4/CakeML refund definition/artifact" (mine):
+  the artifact is the tracked ARM64 executable b8ed5ec2...7bb8, which
+  runs on this Mac. The HOL definition is not evaluated again (that
+  needs the HOL tool tree, which the scratch-clone check must not
+  depend on for a proof run); its 22 HOL-written fixture inputs and
+  outputs of 2026-11-04 are in the corpus.
+- Impact: no claim. CURRENT none. M1 open. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: U460 (build and first results).
+
+## U460 — Wave Gate 1 build: the M1 executable and the Slice 1 Dafny refund checker agree on a finite corpus; three failed attempts were my own defects; two observations about the stacks
+- Status: 2026-11-19, about 00:20Z to 02:00Z. Refs U459, U444, M1R-1.
+  Report: proposals/forge2-m1-conformance/REPORT.md.
+- Built (no protected file changed; no file of Slices 1 to 3 changed;
+  no new package): scripts/exit_m1_conformance.py (cases conformance,
+  record-controls, core-controls, m1-audit, evidence);
+  tests/m1-conformance/driver.cjs; 16 wrong refund decisions as Dafny
+  fixtures; tests/m1-conformance/recorded-m1-cases.json; a copy of the
+  M1 executable in the packet (238,776 bytes, SHA-256 b8ed5ec2...7bb8,
+  byte-equal to the tracked file of the backup branch at c003a982 and
+  to the untracked local copy under results/, which I read and did not
+  change).
+- Method: one corpus of typed refund requests. Each goes to the
+  executable as a canonical S-expression and to the compiled
+  Refund.Assess; the script renders the Assess result to the M1 output
+  format and compares bytes. For requests that are open and candidates,
+  RefundFinality.Check gets the honest transition and tampered ones,
+  and the Slice 1 issuer process gets the honest one. The compiled core
+  must be byte-equal to the module of the Slice 1 evidence record
+  (e6d5f5e5...).
+- Actual, before the review: conformance attempts 1 to 4: exit 1, 1, 1,
+  0. Attempt 1: 3 findings, all W-RULE, all my own defect: three of my
+  "changed wire inputs" changed a typed value (another charge id, a
+  larger remaining amount), so they were other requests and M1 was
+  right to accept them. Attempts 2 and 3: the driver ended with a
+  RangeError at a charge id of 100,000 code points. Attempt 4: 2,465
+  typed vectors (426 authorized, 2,039 rejected by M1), 116 wire
+  inputs, 0 findings. record-controls: exit 0 (29 of 29). core-controls
+  attempts 1 and 2: exit 1 (my assertion was wrong: W-RULE also reads
+  the Dafny side), exit 0 (22 of 22 wrong cores reported; pinned Dafny
+  exit 4 for the 16 wrong decisions). evidence attempt 1: exit 0, two
+  runs byte-identical, bundle 83afb7f4... (replaced after the review).
+- No attempt showed a disagreement between the two stacks.
+- Observation 1 (measured once, one-off probe): the Dafny JavaScript
+  runtime function Seq.UnicodeFromString ends with a RangeError for a
+  text of 50,000 code points and works for 20,000 (it passes each code
+  point as one call argument). M1 authorized the request with a charge
+  id of 100,000 bytes in attempt 1. Impact: the compiled Dafny code
+  cannot be compared on longer texts; the corpus stops at 20,000. The
+  Slice 1 issuer refuses texts above 256 characters first, so the
+  issuer does not reach the limit. Not examined: the same limit in the
+  compiled cores of Slice 3.
+- Observation 2: the M1 reader accepts several spellings of one
+  number (040, +40, "40") and quoted flags, and gives the result of
+  the base request. It writes nothing and exits 0 for a malformed
+  input. Not a defect of the decision. A caller must take "no output"
+  as "no decision" and must not treat one value as one spelling. The
+  M1 theorems are for canonical inputs only.
+- What the result is: `tested_against_proved_model` on a finite corpus
+  (the source of Refund.Assess is proved for R1 to R5; the JavaScript
+  and the executable are not proved by this). It is not a proof, not a
+  compiler proof and not an M1 result.
+- Uncertainty: both stacks can be wrong in the same way; the reference
+  predicate in the script is my transcription of eligible_def. The
+  renderer of the wire format is my transcription of the CakeML
+  definitions; it reproduces the 22 HOL-written fixtures.
+- M1 replay audit (read from the tracked record plan-phase2.json, no
+  HOL run): 158 cases NOT RUN (55 controls, 61 repeat cases, 42 import
+  checks); 112 with a recorded exit 0, 46 with a recorded non-zero
+  exit; sum of the recorded wall times 11,144 s.
+- Impact: CURRENT none. M1 open. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: the one fresh-context review (U461).
+
+## U461 — Wave Gate 1 review and closeout: 0 fail-open on the present inputs, 3 MEDIUM and 6 LOW; two of my statements were too strong; repairs in one pass; final record; regression on a scratch clone
+- Status: 2026-11-19, about 02:00Z to 04:15Z. Refs U459, U460.
+  Review text and disposition:
+  proposals/forge2-m1-conformance/REVIEW.md.
+- The one fresh-context review (an agent with the code and the claim,
+  not my results): no fail-open path on the present inputs; 0 HIGH.
+  R1 MEDIUM: with an empty fixture file the script reported claim X5 as
+  passed with zero checks (the file was not pinned; one conjunct of my
+  vacuity requirement could not fail). R2 MEDIUM: three wrong checker
+  cores passed with 0 findings, because each of my nine tampered
+  transitions changed a value in one direction only. R3 MEDIUM: 14
+  sub-conditions of checks had no planted fault. R4 to R9 LOW.
+- My statements that were false or too strong: "each planted record
+  fault is found by its own check" was true and hid that the reverse
+  was false (R3); a code comment said that no wire change gives another
+  typed value (four do, R5). The interim counts of U460 (29 controls,
+  22 wrong cores, 9 tampered kinds, 116 wire inputs) are replaced.
+- The reviewer did not start the EXIT script: it loaded the code and
+  used the saved records of evidence attempt 1. Its statement "checked
+  and found correct" for the wire transcription and for the reference
+  predicate is a reading, not a run.
+- Repairs in one pass, NOT reviewed again: fixture file pinned by
+  SHA-256 and counts; every group needs an accepted and a rejected
+  vector; every one of 18 checks must be evaluated; 14 kinds of
+  tampered transitions; the reviewer's three wrong cores are fixtures;
+  18 more planted faults; new check A-CALLS; a third wire base with
+  refunds disabled; the 16 Dafny rejections must be postcondition
+  errors and the true decision must be proved in the same layout;
+  texts corrected.
+- Not repaired, stated in the review file: the intent-count argument of
+  the render functions has no fault of its own; the executable copy is
+  hashed before the first and after the last run, not before each run;
+  the text limit of 20,000 code points.
+- Actual after the repairs: conformance attempt 5 exit 0 (2,466 typed
+  vectors: 426 authorized, 2,040 rejected by M1; 24,039 tampered
+  transitions refused; 192 wire inputs; 18 checks; 0 findings);
+  record-controls attempts 2 and 3 exit 0 (57 of 57); core-controls
+  attempt 3 exit 0 (25 of 25); evidence attempt 2 stopped by me (I
+  changed one control that compared two digests and did not call the
+  check); evidence attempt 3 exit 0, two runs byte-identical, final
+  bundle f55391dad17a0a4ea707806c59dbac2419df51c692161704af71f0cfe0a11da9.
+- Regression. A first scratch clone (code before the review) was
+  stopped by me after the review: its 28 Stage EXIT cases had exit 0
+  and Slice 1 and Slice 2 evidence had exit 0. The second scratch clone
+  (d3d1980f plus the Wave Gate 1 files): 28 of 28 Stage EXIT cases
+  exit 0; frozen PR-gate modules exit 0; links exit 0 for the four
+  named files and exit 1 for all 91 Markdown files (only the 2 older
+  Stage 9 links); bundles c7f2f41c..., 2721a293..., 3cdfebfc... as on
+  main; conformance bundle equal to the working tree's. 23 of 23 copies
+  of the EXIT script with one check removed exit 1; the unchanged
+  script exits 0 before and after.
+- Files that the stage runs changed in the clone only: two Stage 5
+  records (local tool path) and three new Stage 8 attempt folders, as
+  in the earlier regressions.
+- NOT RUN: any HOL or Holmake process; the 158 recorded M1 cases;
+  Stage 7, Stage 9, Stage 10; a second review; the hosted gate
+  (expected exit 3, UNSUPPORTED).
+- Impact: one more finite test record. No proof. CURRENT none. M1
+  open. Stage 12 unauthorized. end_to_end=false. Wave Gates 2, 3 and 4
+  are not started; each waits for the owner's merge of the gate before
+  it.
+- Next check: the hosted gate result for the pull request; the owner's
+  merge decision. The agent does not merge.
