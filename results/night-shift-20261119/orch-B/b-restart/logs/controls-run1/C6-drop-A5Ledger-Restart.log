@@ -1,0 +1,44 @@
+# owner=b-restart start=2026-11-19T09:42:44Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C6-drop-A5Ledger
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1309
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C6-drop-A5Ledger-Restart.csv Restart.dfy
+# memory free percent: 66
+Restart.dfy(548,14): Error: a precondition for this call could not be proved
+    |
+548 |     LedgerHyps(ms, ledger);
+    |               ^
+
+Restart.dfy(501,21): Related location: this is the precondition that could not be proved
+    |
+501 |     requires A5Ledger(ledger) && A2Mints(ms) && H1Ledger(ms, ledger)
+    |                      ^
+
+Restart.dfy(485,4): Related location: this proposition could not be proved
+    |
+485 |     forall i | 0 <= i < |ledger| :: A5_VerifierMatches(ledger[i].tok, ledger[i].sigOk)
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 51 verified, 1 error
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C6-drop-A5Ledger-Restart.csv
+       10.37 real         9.96 user         0.36 sys
+           314556416  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38579  page reclaims
+                  21  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 780  voluntary context switches
+                8419  involuntary context switches
+         90592982820  instructions retired
+         32084464749  cycles elapsed
+           281199912  peak memory footprint
+# end=2026-11-19T09:42:54Z
+exit 4

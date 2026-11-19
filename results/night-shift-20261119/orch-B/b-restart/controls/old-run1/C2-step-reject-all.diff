@@ -1,0 +1,20 @@
+diff -ru '--exclude=inputs' ../src/SinkCoreV3.dfy C2-step-reject-all/src/SinkCoreV3.dfy
+--- ../src/SinkCoreV3.dfy	2026-11-19 04:19:41.602041044 -0500
++++ C2-step-reject-all/src/SinkCoreV3.dfy	2026-11-19 04:38:52.341687881 -0500
+@@ -133,6 +133,8 @@
+   // transaction); settled, pre-state, charge id (inside the transaction).
+   function Step(core: Core, tok: SinkToken, sigOk: bool): StepResult
+   {
++    StepResult(core, Rejected(IdsNotPinned)) // CONTROL C2: reject all
++    /*
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+     else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
+     else if !Match(tok) then StepResult(core, Rejected(ReqIdMismatch))
+@@ -141,6 +143,7 @@
+     // b-integrate: the new check.
+     else if !ChargeOk(core.charge, tok) then StepResult(core, Rejected(ChargeIdMismatch))
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)
++    */
+   }
+ 
+   // ---- exact acceptance (rules out a reject-all core and a commit-all core) ----

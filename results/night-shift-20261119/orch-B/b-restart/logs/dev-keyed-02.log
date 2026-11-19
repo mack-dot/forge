@@ -1,0 +1,38 @@
+# owner=b-restart start=2026-11-19T09:35:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1245
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-02.csv KeyedStore.dfy
+# memory free percent: 63
+KeyedStore.dfy(469,28): Error: unresolved identifier: MStep
+    |
+469 |     assert KExec(A[..5]) == MStep(map["ch_1" := c0], MDelivery("ch_1", V0_TOK, true));
+    |                             ^^^^^
+
+KeyedStore.dfy(469,53): Error: unresolved identifier: MDelivery
+    |
+469 |     assert KExec(A[..5]) == MStep(map["ch_1" := c0], MDelivery("ch_1", V0_TOK, true));
+    |                                                      ^^^^^^^^^
+
+2 resolution/type errors detected in KeyedStore.dfy
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-02.csv
+        5.01 real         5.71 user         0.18 sys
+           202768384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               16407  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  78  voluntary context switches
+                2407  involuntary context switches
+         56185364328  instructions retired
+         18172886318  cycles elapsed
+           171295920  peak memory footprint
+# end=2026-11-19T09:35:17Z
+exit 2

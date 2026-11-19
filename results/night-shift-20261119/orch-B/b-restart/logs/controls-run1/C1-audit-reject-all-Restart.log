@@ -1,0 +1,79 @@
+# owner=b-restart start=2026-11-19T09:41:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C1-audit-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1293
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C1-audit-reject-all-Restart.csv Restart.dfy
+# memory free percent: 68
+Restart.dfy(616,2): Error: a postcondition could not be proved on this return path
+    |
+616 |   {
+    |   ^
+
+Restart.dfy(615,21): Related location: this is the postcondition that could not be proved
+    |
+615 |     ensures AuditFull(init, Exec(init, acts).core, LedgerOf(Exec(init, acts).toks))
+    |                      ^
+
+Restart.dfy(419,4): Related location: this proposition could not be proved
+    |
+419 |     false // CONTROL C1: reject-all audit
+    |     ^^^^^
+
+Restart.dfy(687,2): Error: a postcondition could not be proved on this return path
+    |
+687 |   {
+    |   ^
+
+Restart.dfy(684,21): Related location: this is the postcondition that could not be proved
+    |
+684 |     ensures AuditFull(F.Charge("ch_1", 100, 100, true), BadCore(), [Delivery(ForgedRow(), true)])
+    |                      ^
+
+Restart.dfy(419,4): Related location: this proposition could not be proved
+    |
+419 |     false // CONTROL C1: reject-all audit
+    |     ^^^^^
+
+Restart.dfy(709,2): Error: a postcondition could not be proved on this return path
+    |
+709 |   {
+    |   ^
+
+Restart.dfy(706,25): Related location: this is the postcondition that could not be proved
+    |
+706 |     ensures AuditFullSpec(F.Charge("ch_1", 100, 100, true),
+    |                          ^
+
+Restart.dfy(438,13): Related location: this proposition could not be proved
+    |
+438 |     AuditFull(init, core, ledger) && forall i | 0 <= i < |ledger| :: RowAuthorized(ledger[i].tok)
+    |              ^
+
+Restart.dfy(419,4): Related location: this proposition could not be proved
+    |
+419 |     false // CONTROL C1: reject-all audit
+    |     ^^^^^
+
+
+Dafny program verifier finished with 49 verified, 3 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C1-audit-reject-all-Restart.csv
+       10.82 real        10.61 user         0.42 sys
+           314982400  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39076  page reclaims
+                  22  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 688  voluntary context switches
+               21613  involuntary context switches
+         91903531747  instructions retired
+         33643557542  cycles elapsed
+           281625872  peak memory footprint
+# end=2026-11-19T09:42:02Z
+exit 4

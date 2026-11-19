@@ -1,0 +1,44 @@
+# owner=b-restart start=2026-11-19T09:31:54Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1245
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-01.csv KeyedStore.dfy
+# memory free percent: 39
+KeyedStore.dfy(162,4): Error: assertion might not hold
+    |
+162 |     assert u1 == map["db_a" := Core(F.Charge("ch_1", 100, 100, true), {}, [])];
+    |     ^^^^^^
+
+KeyedStore.dfy(386,8): Error: Verification out of resource (KeyedStore.KeyedTop)
+    |
+386 |   lemma KeyedTop(acts: seq<KAct>, k: string)
+    |         ^^^^^^^^
+
+KeyedStore.dfy(441,25): Error: assertion might not hold
+    |
+441 |     assert KExec(A[..5]) == map["ch_1" := c1];
+    |                          ^^
+
+
+Dafny program verifier finished with 32 verified, 2 errors, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-01.csv
+       11.31 real        11.20 user         0.55 sys
+           307920896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48952  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 498  voluntary context switches
+               14679  involuntary context switches
+         98823293292  instructions retired
+         36155963098  cycles elapsed
+           299844856  peak memory footprint
+# end=2026-11-19T09:32:05Z
+exit 4

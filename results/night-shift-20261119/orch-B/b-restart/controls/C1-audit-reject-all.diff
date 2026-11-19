@@ -1,0 +1,11 @@
+--- ../Restart.dfy	2026-11-19 04:46:04.219764121 -0500
++++ C1-audit-reject-all/Restart.dfy	2026-11-19 04:46:52.075417400 -0500
+@@ -416,7 +416,7 @@
+   // Every row must COMMIT again when replayed, and the replay must end at exactly the stored core.
+   function AuditFull(init: F.Charge, core: Core, ledger: seq<Delivery>): bool
+   {
+-    InitOkB(init) && Replay(init, ledger).0 && Replay(init, ledger).1 == core
++    false // CONTROL C1: reject-all audit
+   }
+ 
+   // The per-row re-check of the approved relation (an executable copy of F.Authorizes for the token's claim).

@@ -1,0 +1,29 @@
+# owner=b-restart start=2026-11-19T09:38:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1285
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-04.csv KeyedStore.dfy
+# memory free percent: 67
+
+Dafny program verifier finished with 37 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-keyed-04.csv
+       10.25 real        10.70 user         0.36 sys
+           348798976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40335  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 484  voluntary context switches
+               11397  involuntary context switches
+         99097608650  instructions retired
+         34015250689  cycles elapsed
+           315524488  peak memory footprint
+# end=2026-11-19T09:38:37Z
+exit 0

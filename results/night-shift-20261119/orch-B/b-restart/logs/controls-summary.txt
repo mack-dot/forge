@@ -1,0 +1,42 @@
+ion could not be proved on this return path
+Dafny program verifier finished with 50 verified, 3 errors exit 4
+
+   line 616 [AuditComplete(init:] a postcondition could not be proved on this return path
+   line 687 [AuditFullAloneAcceptsForgedLedger()] a postcondition could not be proved on this return path
+   line 709 [ZeroAmountRowPasses()] a postcondition could not be proved on this return path
+urce (RestartV3.Restart)
+Dafny program verifier finished with 52 verified, 0 errors, 1 out of resource exit 4
+
+   line 259 [Restart(init:] Verification out of resource (RestartV3.Restart)
+econdition for this call could not be proved
+Dafny program verifier finished with 52 verified, 1 error exit 4
+
+   line 548 [AuditSound(init:] a precondition for this call could not be proved
+ion could not be proved on this return path
+Dafny program verifier finished with 48 verified, 5 errors exit 4
+
+   line 383 [DropHistoryBreaksMoney(t:] assertion might not hold
+   line 687 [AuditFullAloneAcceptsForgedLedger()] a postcondition could not be proved on this return path
+   line 709 [ZeroAmountRowPasses()] a postcondition could not be proved on this return path
+   line 771 [A1Run()] assertion might not hold
+   line 868 [DropH1ContBreaksMoney()] a postcondition could not be proved on this return path
+tion could not be proved on this return path
+Dafny program verifier finished with 52 verified, 1 error exit 4
+
+   line 766 [A1Run()] a postcondition could not be proved on this return path
+fy(474,25): Error: assertion might not hold
+Dafny program verifier finished with 33 verified, 4 errors exit 4
+
+   line 62 [KStepKeeps(st:] a postcondition could not be proved on this return path
+   line 113 [CreateRefusals()] a postcondition could not be proved on this return path
+   line 174 [UncheckedCreateDoubleRefund()] assertion might not hold
+   line 474 [KTrace()] assertion might not hold
+dfy(478,4): Error: assertion might not hold
+Dafny program verifier finished with 35 verified, 2 errors exit 4
+
+   line 158 [UncheckedCreateDoubleRefund()] a postcondition could not be proved on this return path
+   line 478 [KTrace()] assertion might not hold
+ce (KeyedWitness.KTrace)
+Dafny program verifier finished with 36 verified, 0 errors, 1 out of resource exit 4
+
+   line 465 [KTrace()] Verification out of resource (KeyedWitness.KTrace)

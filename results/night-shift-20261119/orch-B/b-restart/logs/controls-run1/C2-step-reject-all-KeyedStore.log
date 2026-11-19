@@ -1,0 +1,44 @@
+# owner=b-restart start=2026-11-19T09:44:01Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C2-step-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1309
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C2-step-reject-all-KeyedStore.csv KeyedStore.dfy
+# memory free percent: 64
+KeyedStore.dfy(158,2): Error: a postcondition could not be proved on this return path
+    |
+158 |   {
+    |   ^
+
+KeyedStore.dfy(154,62): Related location: this is the postcondition that could not be proved
+    |
+154 |             "db_a" in st && "db_b" in st && st["db_a"].outbox == [DupToken().intent] &&
+    |                                                               ^^
+
+KeyedStore.dfy(478,4): Error: assertion might not hold
+    |
+478 |     assert Step(c0, V0_TOK, true).core == c1;
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 35 verified, 2 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C2-step-reject-all-KeyedStore.csv
+       10.63 real        11.05 user         0.37 sys
+           330940416  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39729  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 435  voluntary context switches
+               11546  involuntary context switches
+        100573712582  instructions retired
+         35002397472  cycles elapsed
+           297616728  peak memory footprint
+# end=2026-11-19T09:44:12Z
+exit 4

@@ -1,0 +1,12 @@
+diff -ru '--exclude=inputs' ../KeyedStore.dfy C5-create-no-key-check/KeyedStore.dfy
+--- ../KeyedStore.dfy	2026-11-19 04:37:01.755153343 -0500
++++ C5-create-no-key-check/KeyedStore.dfy	2026-11-19 04:38:52.342631467 -0500
+@@ -27,7 +27,7 @@
+   // The creation check (compilable).
+   predicate CreateOk(st: Store, key: string, init: F.Charge)
+   {
+-    key == init.chargeId && key !in st && 0 <= init.remaining <= init.original
++    key !in st && 0 <= init.remaining <= init.original // CONTROL C5: no key == chargeId check
+   }
+ 
+   function KStep(st: Store, a: KAct): Store

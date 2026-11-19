@@ -1,0 +1,29 @@
+# owner=b-restart start=2026-11-19T09:48:09Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1325
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/audit-KeyedStore.md KeyedStore.dfy
+# memory free percent: 58
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        7.94 real         9.32 user         0.30 sys
+           290586624  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23728  page reclaims
+                 567  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                  90  voluntary context switches
+                6954  involuntary context switches
+         83282801973  instructions retired
+         29510611337  cycles elapsed
+           280692032  peak memory footprint
+# end=2026-11-19T09:48:17Z
+exit 0

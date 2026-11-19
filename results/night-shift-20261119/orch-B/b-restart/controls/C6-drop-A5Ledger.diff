@@ -1,0 +1,11 @@
+--- ../Restart.dfy	2026-11-19 04:46:04.219764121 -0500
++++ C6-drop-A5Ledger/Restart.dfy	2026-11-19 04:46:52.077124280 -0500
+@@ -534,7 +534,7 @@
+   // applies, and the money bound and the sum equation hold AT the restart.
+   lemma AuditSound(init: F.Charge, core: Core, ledger: seq<Delivery>, ms: seq<(Claim, Tag)>)
+     requires AuditFull(init, core, ledger)
+-    requires A5Ledger(ledger) && A2Mints(ms) && H1Ledger(ms, ledger)
++    requires A2Mints(ms) && H1Ledger(ms, ledger) // CONTROL C6: A5Ledger dropped
+     ensures core == Exec(init, MintActs(ms) + DelActs(ledger)).core
+     ensures Sound(init, core)
+     ensures 0 <= core.charge.remaining <= core.charge.original == init.original

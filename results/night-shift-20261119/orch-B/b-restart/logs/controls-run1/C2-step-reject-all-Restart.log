@@ -1,0 +1,74 @@
+# owner=b-restart start=2026-11-19T09:43:02Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C2-step-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1309
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C2-step-reject-all-Restart.csv Restart.dfy
+# memory free percent: 67
+Restart.dfy(383,4): Error: assertion might not hold
+    |
+383 |     assert c'.outbox == BadCore().outbox + [t.intent];
+    |     ^^^^^^
+
+Restart.dfy(687,2): Error: a postcondition could not be proved on this return path
+    |
+687 |   {
+    |   ^
+
+Restart.dfy(684,21): Related location: this is the postcondition that could not be proved
+    |
+684 |     ensures AuditFull(F.Charge("ch_1", 100, 100, true), BadCore(), [Delivery(ForgedRow(), true)])
+    |                      ^
+
+Restart.dfy(419,42): Related location: this proposition could not be proved
+    |
+419 |     InitOkB(init) && Replay(init, ledger).0 && Replay(init, ledger).1 == core
+    |                                           ^
+
+Restart.dfy(709,2): Error: a postcondition could not be proved on this return path
+    |
+709 |   {
+    |   ^
+
+Restart.dfy(706,25): Related location: this is the postcondition that could not be proved
+    |
+706 |     ensures AuditFullSpec(F.Charge("ch_1", 100, 100, true),
+    |                          ^
+
+Restart.dfy(438,13): Related location: this proposition could not be proved
+    |
+438 |     AuditFull(init, core, ledger) && forall i | 0 <= i < |ledger| :: RowAuthorized(ledger[i].tok)
+    |              ^
+
+Restart.dfy(419,42): Related location: this proposition could not be proved
+    |
+419 |     InitOkB(init) && Replay(init, ledger).0 && Replay(init, ledger).1 == core
+    |                                           ^
+
+Restart.dfy(771,39): Error: assertion might not hold
+    |
+771 |     assert CoreRun(Core0(), A1()[..1]) == Core1();
+    |                                        ^^
+
+
+Dafny program verifier finished with 48 verified, 4 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C2-step-reject-all-Restart.csv
+       10.54 real        10.51 user         0.37 sys
+           313999360  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39021  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 721  voluntary context switches
+                9696  involuntary context switches
+         95914662995  instructions retired
+         33991050477  cycles elapsed
+           280593632  peak memory footprint
+# end=2026-11-19T09:43:13Z
+exit 4

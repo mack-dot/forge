@@ -42,7 +42,7 @@
 - (d) Deployment conditions that no code enforces today: one database per charge id (a violation gives a double refund in the model); a start-up audit before a patched sink serves an existing database; the trace lemmas start from an empty store. A repair draft is in work (b-restart).
 - (e) Token format: carry the pre-state value, not only its SHA-256, or accept the no-collision assumption twice (signature binding and state compare).
 
-## A-2 (Orchestrator A, 2026-11-19T09:40Z): I went past my own written stop for the L-OUT proof; the project rule was kept
+## A-2 (Orchestrator A, 2026-11-19T09:42Z, approximate): I went past my own written stop for the L-OUT proof; the project rule was kept
 - Fact: `results/m1b-routeA-20261119/attempt-0001/ATTEMPT_COUNTS.md` said "If LO-0005 fails, A stops L-OUT runs and reports
   the blocker". LO-0005 failed. I then ran one exploration (`LOx-0001`, no export) and one more proof run (`LO-0006`), which
   passed (exit 0). Reviewer A22: the ROADMAP rule "at most five attempts per failing proof" holds per lemma (4 tries each,
@@ -52,3 +52,31 @@
 ## B-7 (written 2026-11-19T09:47:15Z) — a termination-by-construction tier for refund submissions (Goal E). UNAPPLIED; protected path gate/refund.py; `git apply --check` exit 0 (B's run).
 - Diffs: orch-B/e-totality/diff/refund-subset-standalone.diff SHA-256 0bd6deb46fa0e775dad7ed4576144513ae1116c48e38fed3981b01c4c1bb04b8; refund-subset-combined.diff (with the `expect` rule and supervision) 25ef98c2e3f2af8f2369c415e29680de0ea2938445ae7d81cee4b7fd0e17f62d. Rule text: orch-B/e-totality/SUBSET.md.
 - Decision (a): accept the cost (6 of 19 known correct implementations refused: loops, recursion, a product of variables, an attribute, an extra module) for a rule that refuses every known halting or hanging submission; or keep only the `expect` rule and supervision (then the seven submissions of B-5(b) stay admitted). (b) the caps (4096 tokens, 16 elements, 65536 bytes). (c) whether an ARGUMENT-class bound may stand beside the HOL halting theorem.
+
+## A-3 (Orchestrator A, 2026-11-19T09:49Z): the FFI premise of the machine-model theorem needs an owner decision (nothing applied)
+Evidence: `orch-A/ffi-hardening/` (worker A23; NOT re-run by A except where said), `orch-A/review-L2b-PX/REPORT.md`,
+`orch-A/ffi-c-audit/REPORT.md`.
+- State: `refund_profile_a_sl_reach` (HOL, exit 0) needs (2) the FFI contract at "valid" calls for the real C code and
+  (3) "every returning FFI call of the run is valid". No valid-call predicate yet has both true for the PRESENT executable:
+  the present `basis_ffi.c` aborts (`assert`) where the model returns an error byte (read/write with a configuration
+  length ≠ 8 or a short array; open_in with a short array); it truncates the descriptor to 32 bits; it really closes
+  descriptors 0, 1, 2 where the model returns an error.
+- Option L3 (keep executable b8ed5ec2…7bb8): prove program behaviour (every FFI event of every run is a valid read or
+  write; about 15 CakeML TextIO specifications proved again). Large. Not started.
+- Option B2 (a model-total C FFI): UNAPPLIED patch `orch-A/ffi-hardening/basis_ffi_model_total.patch`
+  (SHA-256 ea344ad0b1c34da061cf15f790f7a9fef035a0c536fa927c6fe070c89ce2f357): each assert at a state where the model
+  returns an error byte now writes that byte and returns; a halt stays where the model's oracle fails. Worker's tests
+  (TESTED-UNPROVED): the ORIGINAL object and image rebuild byte-exactly with the recorded commands (image b8ed5ec2…);
+  the patched image (ba89fef3…c89, a research artifact in the evidence folder only) gives byte-identical stdout, stderr and
+  exit status on 2,684 vectors and on the 15 native tests; the CakeML code slice, the entry stub and all of `__DATA` are
+  byte-identical at the same offsets and addresses; six branch words of the FFI stub region, the C text and the header move.
+  Not removed by B2: the all-states premise at model-halt states (U393); real `read`/`write` errors; `open_in` of a real file.
+  With B2 the premise (3) might follow from the oracle alone (no L3); that theorem is NOT stated or run yet (A works on it).
+  B2 needs: a new image digest in the M1 records, a second extraction, the binding manifest, the runner's image assert,
+  conformance; every theorem that quotes stub words or C words (U393–U401) must be re-examined.
+- Disclosure: the worker LINKED the patched image with the recorded link command; the linker applied its default local
+  ad hoc signature (as in the recorded build). No `codesign` command ran; no key was used; nothing was deployed. If the
+  owner counts a linker ad hoc signature as "signing", this was a violation by A's worker: say so and A deletes the artifact.
+- Approval text if the owner chooses B2 (not typed by anyone yet): "I approve vendoring basis_ffi.c with
+  basis_ffi_model_total.patch (sha256 ea344ad0…f357), building refund-model-total with the recorded commands, and
+  replacing image b8ed5ec2…7bb8 in the M1 records; no deployment."

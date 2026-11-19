@@ -1,0 +1,64 @@
+# owner=b-restart start=2026-11-19T09:43:42Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C5-create-no-key-check
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1309
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C5-create-no-key-check-KeyedStore.csv KeyedStore.dfy
+# memory free percent: 67
+KeyedStore.dfy(62,33): Error: a postcondition could not be proved on this return path
+   |
+62 |       if CreateOk(st, key, init) {
+   |                                  ^
+
+KeyedStore.dfy(56,21): Related location: this is the postcondition that could not be proved
+   |
+56 |     ensures WellKeyed(KStep(st, a))
+   |                      ^
+
+src/MultiCharge.dfy(36,4): Related location: this proposition could not be proved
+   |
+36 |     forall k | k in st :: st[k].charge.chargeId == k && GoodStart(st[k])
+   |     ^^^^^^
+
+KeyedStore.dfy(113,2): Error: a postcondition could not be proved on this return path
+    |
+113 |   {
+    |   ^
+
+KeyedStore.dfy(109,71): Related location: this is the postcondition that could not be proved
+    |
+109 |     ensures KExec([KCreate("db_a", F.Charge("ch_1", 100, 100, true))]) == map[]
+    |                                                                        ^^
+
+KeyedStore.dfy(174,25): Error: assertion might not hold
+    |
+174 |     assert KExec(A[..1]) == map[];
+    |                          ^^
+
+KeyedStore.dfy(474,25): Error: assertion might not hold
+    |
+474 |     assert KExec(A[..2]) == map["ch_1" := c0];
+    |                          ^^
+
+
+Dafny program verifier finished with 33 verified, 4 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C5-create-no-key-check-KeyedStore.csv
+       10.84 real        10.93 user         0.45 sys
+           331726848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40115  page reclaims
+                 353  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 556  voluntary context switches
+               18142  involuntary context switches
+         97676935550  instructions retired
+         34734444368  cycles elapsed
+           298419568  peak memory footprint
+# end=2026-11-19T09:43:53Z
+exit 4

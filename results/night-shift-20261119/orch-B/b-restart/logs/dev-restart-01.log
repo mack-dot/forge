@@ -1,0 +1,59 @@
+# owner=b-restart start=2026-11-19T09:24:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-restart-01.csv Restart.dfy
+# memory free percent: 63
+Restart.dfy(281,14): Warning: unusual indentation in body of exists (which ends at line 283, column 67); do you perhaps need parentheses?
+    |
+281 |       ensures exists i :: 0 <= i < |r.core.outbox| && r.core.outbox[i] == e &&
+    |               ^^^^^^
+
+Restart.dfy(239,8): Error: Verification out of resource (RestartV3.RestartL0)
+    |
+239 |   lemma RestartL0(init: State, a0: seq<Act>, a: seq<Act>)
+    |         ^^^^^^^^^
+
+Restart.dfy(369,23): Error: assertion might not hold
+    |
+369 |     assert SignedBefore(acts, 1, ClaimOf(t));
+    |                        ^
+
+src/SliceSafetyV3.dfy(186,4): Related location: this proposition could not be proved
+    |
+186 |     exists j :: 0 <= j < k && j < |acts| && acts[j].MintAct? && acts[j].c == c
+    |     ^^^^^^
+
+Restart.dfy(571,2): Error: a postcondition could not be proved on this return path
+    |
+571 |   {
+    |   ^
+
+Restart.dfy(570,14): Related location: this is the postcondition that could not be proved
+    |
+570 |     ensures 0 <= SumIntents(core.outbox) <= init.original
+    |               ^^
+
+
+Dafny program verifier finished with 49 verified, 2 errors, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/dev-restart-01.csv
+       11.02 real        10.32 user         0.45 sys
+           297795584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39997  page reclaims
+                  22  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                 755  voluntary context switches
+               16928  involuntary context switches
+         90711873671  instructions retired
+         33106225485  cycles elapsed
+           278693136  peak memory footprint
+# end=2026-11-19T09:25:08Z
+exit 4

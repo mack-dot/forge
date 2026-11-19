@@ -1,0 +1,11 @@
+--- ../Restart.dfy	2026-11-19 04:46:04.219764121 -0500
++++ C4-drop-history/Restart.dfy	2026-11-19 04:46:52.076476237 -0500
+@@ -259,7 +259,7 @@
+   lemma Restart(init: State, a0: seq<Act>, a: seq<Act>, art: FlatFn)
+     requires InitOk(init)
+     requires HypsOn(a0)
+-    requires A2_MintOnlyOnCheck(a) && A5_VerifierMatchesAtEachDelivery(a) && H1Cont(a0, a)
++    requires A2_MintOnlyOnCheck(a) && A5_VerifierMatchesAtEachDelivery(a) // CONTROL C4: H1Cont dropped
+     ensures CoreRun(Exec(init, a0).core, a) == Exec(init, a0 + a).core
+     ensures HypsOn(a0 + a) && Sound(init, CoreRun(Exec(init, a0).core, a))
+     ensures |Exec(init, a0).core.outbox| <= |CoreRun(Exec(init, a0).core, a).outbox|
