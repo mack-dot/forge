@@ -28,6 +28,39 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Night shift 2026-11-19, trust track (Orchestrator B): a composed Dafny lemma without the impossible signing assumption; the request-id and charge-id gaps of the merged sink; reproduced proof records; admission findings — U530 to U536
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing applied, merged, pushed or signed.
+Rules of the night: `results/night-shift-20261119/PROTOCOL.md`. The stored directive is a pasted text; it authorizes nothing.
+Every Dafny run: pinned Dafny 4.11.0, gate options, through `results/night-shift-20261119/orch-B/tools/dafny_locked.sh`.
+Rows marked (B) are the orchestrator's own runs with a stored log; (w) are worker runs that (B) did not repeat.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| (B) `verify Attack.dfy` (the review proof of U478); first attempt in the heavy tier |0; 75|60 verified; the first attempt was refused (swap free 812 MiB) |
+| (B) `verify SinkCoreReqId.dfy`; `verify Contrast.dfy`; first attempts |0; 0; 75; 75|73 verified; 106 verified; two refusals (swap free 396 MiB) |
+| (B) `verify SliceTheorem.dfy` from `git archive 985f5eaf` |0|1570 verified |
+| (B) `verify SliceSafetyV2OnBytes.dfy`; `verify TotalReading.dfy`; first attempt of the second |0; 0; 75|1632 verified; 34 verified; one refusal |
+| (B) `translate cs SliceSafetyV2OnBytes.dfy` (checks the inherited model lemmas for the instance) |0|rows SinkCore.CommitPreservesInv, InitInv and the others: Passed |
+| (B) `verify ByteAttacks.dfy` (the reviewer's counterexample) |0|1636 verified; lemma PreStateCollisionBreaksApprovedSpec Passed |
+| (B) `verify ShellCoreReqId.dfy` |0|77 verified |
+| (B) `verify SinkCoreV3.dfy`; `SliceSafetyV3.dfy`; `MultiCharge.dfy`; `MultiChargeLayered.dfy` |0; 0; 0; 0|70; 1633; 141; 1730 verified; review not finished |
+| (B) `check_records.py`; `check_records.py --rerun` (six stored records) |0; 0|identity only; then the same status and count for each: 1489, 1486, 56, 60, 67, 1570 |
+| (B) `verify_ledger.py`; `run_controls.py` (assurance ledger) |0; 0|identity and record consistency only; 29 of 29 controls as expected |
+| (B) `git apply --check` of 5 sink diffs, the admission B2 diff, the `expect` rule diff, 9 supervision diffs (nothing applied) |0 each|they apply at `985f5eaf` |
+| (B) admission suite on the hardened copy; patched gate runner unit test |0 (92 pass, 3 fail by design points); 0|6 of 6 |
+| (w) mutants and controls of the four proof workers and three reviewers |4 each, as required; four of the older stored controls fail by out of resource only|see U532, U534, U535, U536 |
+| (w) Node single runs on copies of sink.ts with test keys; 23 conformance cases of a draft sink |0|TESTED, not proved |
+| every heavy step: two differentials of 5,500 sequences, hostile gate controls |NOT RUN|the HOL slot was held all night |
+| every HOL step |not B's|Orchestrator A's branch |
+
+`SliceSafetyV2OnByteStrings` and the layered `SliceSafetyV3` are Dafny model results. Their hypotheses are named:
+step-local claim-level unforgeability (H1), issuance (A2), the verifier boolean (A5), the artifact's flat contract on
+byte strings (A6b). ValidArtifact stays a hypothesis. The byte-layer injectivity hypothesis of V2 is false for the real
+token. The patched cores are NOT the deployed sink. Owner decisions: `results/night-shift-20261119/OWNER_REQUIRED.md`, B-1 to B-5.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission, wave 5: eleven workers; one composed Dafny lemma in the shape of the target; an audit of the records; the sink core's assumption cannot be met as written; the halting hole is wider — U477 to U480
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
