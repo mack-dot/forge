@@ -1,7 +1,7 @@
 # Accepted-assumptions list for `end_to_end` (DRAFT: needs the owner's sign-off, line by line)
 
-Status: DRAFT, written 2026-11-19 by the launcher on the owner's word ("Draft the Accepted-Assumptions List
-from the 6 physical boundaries"). Not in force until the owner signs each line. `end_to_end=false`.
+Status: SIGNED by the owner 2026-11-19 (P1 to P6 ACCEPTED as written; see the end of this file). Drafted 2026-11-19 by the launcher on the owner's word ("Draft the Accepted-Assumptions List
+from the 6 physical boundaries"). `end_to_end=false`: the list covers only the six transitions named in it.
 
 ## The rule this list serves
 
@@ -39,3 +39,20 @@ could fail, and what reduces the risk. "Covers" means only that transition, noth
 ## Owner sign-off
 
 For each of P1 to P6: "accepted", "accepted with change: …", or "rejected". Until then, this file is a draft.
+
+## Signed (owner's words, verbatim, recorded 2026-11-19T23:08Z)
+
+> - P1 (Kernel syscalls): ACCEPTED as written.
+> - P2 (Output reader): ACCEPTED as written.
+> - P3 (Volume rollback): ACCEPTED as written (requiring outside head / provider anchor).
+> - P4 (Provider behavior): ACCEPTED as written (retention window assumption).
+> - P5 (Power cuts): ACCEPTED as written (untested power-loss physics; WAL recovery trims torn writes).
+> - P6 (ARMv8 silicon): ACCEPTED as written (CPU matches ARMv8 ISA; loader/entry state in X8).
+>
+> All 6 lines P1–P6 are formally ACCEPTED. The queue order is approved.
+
+Launcher notes: each line is accepted AS WRITTEN in the table above; the owner's parentheses are summaries. For
+P3 the written line and decision D-5 require BOTH the outside head and the ledger floor; the provider key is a
+second layer only (D-3, D-5). P6 covers the CPU only; loader and entry state stay in X8 (T13, T10), MISSING.
+After this sign-off the MISSING transitions are still T4i, T9, T10, T11, T12, T13, T16, T17, T18, T23, T24;
+T14a is TESTED-UNPROVED; T19 is in progress. So .
