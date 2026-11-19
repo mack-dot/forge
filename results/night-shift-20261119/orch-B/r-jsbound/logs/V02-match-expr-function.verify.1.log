@@ -1,0 +1,28 @@
+# owner=r-jsbound start=2026-11-19T16:54:13Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-jsbound/work/v-V02-match-expr-function
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1158
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects impl/Refund.dfy
+# memory free percent: 29
+
+Dafny program verifier finished with 4 verified, 0 errors
+        6.16 real         1.50 user         0.35 sys
+            95109120  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15757  page reclaims
+                 724  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  38  voluntary context switches
+               23474  involuntary context switches
+          9027392255  instructions retired
+          5393209621  cycles elapsed
+            89736440  peak memory footprint
+# end=2026-11-19T16:54:20Z
+exit 0

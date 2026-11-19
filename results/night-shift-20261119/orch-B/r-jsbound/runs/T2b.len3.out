@@ -1,0 +1,8 @@
+checker: {"file":"T2b-set-equality-inline.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=62192 size<=6*N+10978 cost<=175658301+68*N+0*N^2","steps":62192,"maxA":6,"maxB":10978}
+./run.sh: line 15: 77030 Alarm clock: 14         env -i PATH=$P HOME=$D perl -e 'alarm 5; exec @ARGV' node --max-old-space-size=200 $E/drive.cjs $D/model.cjs $KASE $LEN
+real run exit 142 (142 = killed by 5 s alarm)
+CLAIM BROKEN -> exit 1
+real 6.50
+user 1.16
+sys 0.18
+exit 1

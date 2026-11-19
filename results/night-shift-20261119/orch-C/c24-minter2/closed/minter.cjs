@@ -21,14 +21,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../../../../../../private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-370ff65c/ts/refund-finality/minter.ts
+// ../../../../../../..<SCRATCH>/redteam-C/fix-370ff65c/ts/refund-finality/minter.ts
 var import_node_crypto2 = require("node:crypto");
 var import_node_fs = require("node:fs");
 var import_node_module = require("node:module");
 var import_node_path = require("node:path");
 var import_bignumber = __toESM(require("bignumber.js"));
 
-// ../../../../../../../private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-370ff65c/ts/refund-finality/encoding.ts
+// ../../../../../../..<SCRATCH>/redteam-C/fix-370ff65c/ts/refund-finality/encoding.ts
 var import_node_crypto = require("node:crypto");
 var DOMAIN = "FORGE_REFUND_FINALITY_SLICE1_V1";
 var MAX_TEXT = 256;
@@ -78,7 +78,7 @@ function checkerSha256Of(coreModule, encodingSource, minterSource) {
   }));
 }
 
-// ../../../../../../../private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-370ff65c/ts/refund-finality/minter.ts
+// ../../../../../../..<SCRATCH>/redteam-C/fix-370ff65c/ts/refund-finality/minter.ts
 var [corePath, specLockPath, memoryArg, storePath] = process.argv.slice(2);
 if (!corePath || !specLockPath || memoryArg !== "on" && memoryArg !== "off" || process.argv.length > 6 || storePath === "") {
   process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> [<sink store path>]\n");

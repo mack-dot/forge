@@ -1,0 +1,19 @@
+node:internal/modules/cjs/loader:1442
+  validateString(id, 'id');
+  ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "id" argument must be of type string. Received undefined
+    at Module.require (node:internal/modules/cjs/loader:1442:3)
+    at require (node:internal/modules/helpers:135:16)
+    at loadSink (<REPO>/results/night-shift-20261119/orch-B/heavy/h-1/diff/lib.ts:37:48)
+    at k (<REPO>/results/night-shift-20261119/orch-B/heavy/h-1/diff/diff.ts:22:14)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/heavy/h-1/diff/diff.ts:230:116)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v24.3.0

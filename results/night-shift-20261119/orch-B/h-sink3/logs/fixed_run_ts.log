@@ -1,0 +1,36 @@
+# judge=<REPO>/results/night-shift-20261119/orch-B/h-sink3/tree/tests/refund-finality/regress/run.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-sink3/tree/ts/refund-finality/sink.ts sha256=e0080aa945c761bb4ec57a636a2ee01237e32f72a691d00b11b45df79a56749a
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-sink3/tree/ts/refund-finality/dispatcher.ts sha256=5bfd7a6dee18e15bd0def10a93f9bcc8b61fc317f1482b766c9635b64bec0e79
+# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-sink3/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=<REPO>/results/night-shift-20261119/orch-B/h-sink3/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=-
+PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
+PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted
+PASS C3-two-zero-refunds: commits=committed,committed; two zero-valued effects
+PASS C4-replay-rejected: first=committed replay=replayed; one effect
+PASS C5-largest-refund: commits=committed,committed; remaining 0; two effects
+PASS X1-reqid-mismatch: faulty=rejected honest=committed outbox(rq_victim)=1 effects(rq_victim)=1
+PASS X2-cross-charge: A=rejected B=committed effects(ch_2,rq_x)=1 emitted(ch_2)=50 A.outbox(foreign)=0
+PASS X2b-foreign-post-locks-store: foreign=rejected storedChargeId=ch_1 honest=committed effects(rq_h)=1
+PASS X3-upgrade-legacy-gap: honest=sink refused to start (h1 sink refuses to serve: start-up audit (schema, integrity,) effects(rq_victim) before=1 after=0 outbox(rq_victim)=1 dispatcherError=dispatcher ledger is not one chain
+PASS X4-signed-unauthorized: a-amount-above-remaining:rejected/ok=committed/eff=0+1 b-post-disables-refunds:rejected/ok=committed/eff=0+1 c-post-remaining-wrong:rejected/ok=committed/eff=0+1 d-unapproved-reason:rejected/ok=committed/eff=0+1 e-post-unchanged:rejected/ok=committed/eff=0+1
+PASS X5a-hostile-balance-reset: keep-schema writer: write refused by the database (h-sink S2/S4: the state changes only by one commit (seq + 1;); drop-triggers writer: rq_1=committed rq_2=rejected outboxTotal=1000 emittedTotal=1000 original=1000
+PASS X5b-hostile-outbox-rewrite: keep-schema writer: write refused by the database (h-sink S5: outbox is append-only); drop-triggers writer: rq_1=committed rq_2=rejected unsignedEffects=0 rewrittenRowPresent=true rq_2SettledOnIt=false
+PASS X6-Z1-zero-row-deleted-recommitted: keep-schema writer: write refused by the database (h-sink S5: settled is append-only); drop-triggers writer: honest=committed,committed,committed redelivery=sink refused to start (h1 sink refuses to serve: start-up audit (schema, integrity,) outbox(rq_z1)=0 effects(rq_z1)=1
+PASS X6-P1-prefix-rollback: keep-schema writer: write refused by the database (h-sink S5: settled is append-only); drop-triggers writer: SAFE: the rollback is refused or rq_2 is not settled again: mode=no-anchor honest=committed,committed started=false (h1 sink refuses to serve: start-up audit (schema, ) redelivery=not delivered resettled=false effects(rq_2)=1
+PASS K1-foreign-key-signature: foreignKey=rejected unchanged=true pinnedKey=committed effects(rq_1)=1
+PASS K2-noncanonical-text: indent=rejected key-order=rejected escaped-letter=rejected canonical=committed effects(rq_1)=1
+PASS K3-stale-prestate: stale=rejected unchanged=true current=committed effects(rq_2)=1
+PASS K4-replay-status: first=committed identical=replayed different=rejected unchanged=true effects(rq_1)=1
+PASS K5-long-and-unicode-ids: 33:rejected/rejected/ok=committed/eff=1 64:rejected/rejected/ok=committed/eff=1 256:rejected/rejected/ok=committed/eff=1 bmp:rejected/rejected/ok=committed/eff=1 non-bmp:rejected/rejected/ok=committed/eff=1 combining:rejected/rejected/ok=committed/eff=1
+PASS K6-long-run-one-store: foreignKey=rejected stale=rejected honest=38 outbox=38 effects=38
+PASS K7-store-survives-reopen: reopen=started same=true restart=started same=true firstTokenAgain=replayed next=committed effects=rq_1,rq_2,rq_3,rq_4
+PASS D1-dispatcher-bad-signature-row: keep-schema writer: write refused by the database (h-sink S1/S2/S3/S6: a settled row must be the next commit of); drop-triggers writer: effects(rq_1)=1 effects(rq_2)=0
+PASS D2-dispatcher-chain-break-row: keep-schema writer: write refused by the database (h-sink S1/S2/S3/S6: a settled row must be the next commit of); drop-triggers writer: effects(rq_1)=1 effects(rq_2)=0
+PASS D3-dispatcher-ledger-before-emit: flush1=[rq_1,rq_2(failed)] ledgerAfter1=[rq_1,rq_1,rq_2,rq_2] flush2=[rq_3] ledgerAtEmit=[true,true,true]
+PASS E0-encoding-identity: same SHA-256 f96086b1838163e3
+PASS E1-signed-bytes-cover-post-intent: altered=rejected probe=neighbor signed bytes cover post/intent honest=committed effects(rq_1)=1
+# verdicts=26/26 PASS=26 KNOWN-LIMIT=0 FAIL=0 []
+# unexpected FAIL=[] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
+# JUDGE RESULT OK (exit 0)
+exit 0

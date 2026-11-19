@@ -1,0 +1,18 @@
+<REPO>/results/night-shift-20261119/orch-B/recheck-g2/U01.cjs:295
+module.exports = { Refund, runtime: _dafny };
+                                    ^
+
+ReferenceError: _dafny is not defined
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/recheck-g2/U01.cjs:295:37)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object..js (node:internal/modules/cjs/loader:1824:10)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1449:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-C/c23-jsgate/tools/drive.cjs:3:11)
+
+Node.js v24.3.0
+exit 1

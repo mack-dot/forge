@@ -51,8 +51,9 @@
 // or rewrite of the sink's store). It does NOT detect an OLDER LEDGER (a restored backup of the ledger, or of the ledger
 // and the database together): the rows after the restored ledger look exactly like rows not yet dispatched, and they
 // are emitted again. Detected without an outside anchor: a ledger restored WITHOUT the dispatch witness file
-// <resolved database path>.dispatch-witness.json (see writeWitness: it binds the store to one ledger path and keeps a
-// copy of the last claim). NOT detected: a restore of the ledger and the witness together. Only an outside anchor
+// <resolved database path>.dispatch-witness.json (see writeWitness: it binds the store to one ledger file and keeps a
+// copy of the last claim and, since h-sink3, {lines, lastHash} of the ledger chain: a shorter or different ledger is
+// refused, also after a "retry" re-claim, C-ATT-36). NOT detected: a restore of the ledger and the witness together. Only an outside anchor
 // detects that: cfg.ledgerFloor = {n, rowHead}, the `ledgerHead` of an earlier
 // result kept on another host or medium; the ledger must reach row n with that rowHead, else the run stops. Without it:
 // assumption LEDGER-MONOTONE (the ledger file is never replaced by an older copy) and, for the database, ANCHOR-MONOTONE.
@@ -68,6 +69,7 @@
 // stops (fail closed; a person must repair). A store BELOW the ledger (power loss; the sink sets fullfsync since h-sink2: NOT TESTED against power loss) stops the
 // run (the witness check above): never treated as new work.
 // Ledger format: lines without `kind` (the h1 format before h-dispatch) are refused ("not one chain"); no migration.
+// h-sink3: every line also carries `prev` (LEDGER CHAIN below); h-dispatch ledgers without it are accepted as a prefix.
 // APPEND-ATOMIC: one write() of one line in O_APPEND mode is not interleaved with another, and a reader that starts
 // after the writer's fsync returned sees the line and every line before it (local POSIX file system; TESTED-UNPROVED).
 // NOT proved. Assumed and not checked: the ledger file, this process and the pinned configuration are
@@ -82,8 +84,8 @@
 // and rows AFTER expectedHead.count are never sent ("beyond the outside head"): a row is sent only when the outside head
 // covers it. WITHOUT cfg.expectedHead (stated limit): a swap, a deletion or a rollback of rows after the ledger's last
 // claim is not detected; the dispatcher can send an uncommitted transition and never send the committed one.
-import { createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
-import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeSync } from "node:fs";
+import { createHash, createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
+import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, statSync, unlinkSync, writeSync } from "node:fs";
 import { hostname } from "node:os";
 import { DatabaseSync } from "node:sqlite";
 import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
@@ -93,7 +95,10 @@ import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadC
 // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
 // ledgerFloor (optional): an outside anchor of the LEDGER (an earlier result's ledgerHead): the ledger must hold the claim
 // of row n with that rowHead. Detects a restored (older) ledger only when it comes from outside the ledger's medium.
-export type LedgerHead = { n: number; rowHead: string };
+// h-sink3 (C-ATT-36): lines and lastHash (optional, ADDED) bind the ledger CONTENT: the number of complete lines and the
+// ledger chain hash after them (see LEDGER CHAIN below). A floor with them refuses any ledger shorter than or different
+// from the one that produced it. A floor without them is checked as before ({n, rowHead} only).
+export type LedgerHead = { n: number; rowHead: string; lines?: number; lastHash?: string };
 // expectedHead (optional; h-sink2): the sink's committed head from outside (see ROW ANCHOR above).
 export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
   expectedHead?: SinkHead };
@@ -103,7 +108,35 @@ export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId
 type ClaimFields = { n: number; requestId: string; tokenSha256: string; preStateSha256: string; postStateSha256: string; intentSha256: string; rowHead: string };
 type IntentLine = ClaimFields & { kind: "intent"; run: string; pid: number };
 type Slot = { claim: IntentLine; status: "pending" | "done" | "failed" | "sent" | "retry"; superseded: string[] };
-type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail: string; tailAt: number };
+// chain[i] = the ledger chain hash after the first i complete lines (chain[0] = LEDGER_GENESIS); lines = chain.length - 1.
+type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail: string; tailAt: number; lines: number; chain: string[] };
+type Witness = { ledger: string; n: number; rowHead: string; lines?: number; lastHash?: string; ledgerId?: string };
+
+// LEDGER CHAIN (h-sink3, C-ATT-36). The ledger is a hash chain of its complete lines: c_0 = LEDGER_GENESIS,
+// c_i = SHA-256("forge-refund-dispatch-ledger-v1/line\n" + c_{i-1} + "\n" + the exact bytes of line i without its 0x0A).
+// Every line this dispatcher writes carries `prev` = c_{i-1} as the writer read it just before the write. The reader
+// recomputes the chain and checks each `prev`: it must equal c_{i-1}, or (two runs that appended at once after a person
+// removed a live lock) the `prev` of line i-1 (the same earlier state). Any other value: NOT_CHAIN (fail closed).
+// The dispatch witness and cfg.ledgerFloor keep {lines, lastHash = c_lines}: a ledger with fewer lines, or other bytes
+// in its first `lines` lines, is refused. Every line kind (intent, re-claim, done, failed, resolved) advances the chain,
+// so a re-claim after "retry" changes what the witness binds (the C-ATT-36 restore is seen).
+// MIGRATION (decided): ledgers of the earlier h-dispatch format (lines with `kind` but without `prev`) are ACCEPTED as a
+// PREFIX: their lines enter the recomputed chain unchanged; the first line this version writes carries `prev`, and from
+// then on every line must carry it. Nothing is rewritten. A witness file of the earlier format ({ledger, n, rowHead}) is
+// accepted and gains {lines, lastHash, ledgerId} at its next write. Lines without `kind` (the h1 format) stay refused.
+export const LEDGER_GENESIS = createHash("sha256").update("forge-refund-dispatch-ledger-v1/genesis").digest("hex");
+const nextChain = (prev: string, line: Buffer): string =>
+  createHash("sha256").update("forge-refund-dispatch-ledger-v1/line\n" + prev + "\n").update(line).digest("hex");
+// The chain over the complete lines of a byte string (no parsing): {lines, hash}. Used by append() for `prev`.
+const chainOfBytes = (bytes: Buffer): { lines: number; hash: string } => {
+  let h = LEDGER_GENESIS, k = 0, at = 0;
+  for (;;) { const nl = bytes.indexOf(0x0a, at); if (nl < 0) break; if (nl > at) { h = nextChain(h, bytes.subarray(at, nl)); k++; } at = nl + 1; }
+  return { lines: k, hash: h };
+};
+// File identity (C-ATT-37 "case"): device and inode, compared instead of the path text.
+const fileId = (p: string): { id: string; nlink: number } | null => {
+  try { const st = statSync(p, { bigint: true }); return { id: st.dev.toString() + ":" + st.ino.toString(), nlink: Number(st.nlink) }; } catch { return null; }
+};
 
 const HEX64 = /^[0-9a-f]{64}$/, RUN = /^[0-9a-f]{32}$/;
 const NOT_CHAIN = "dispatcher ledger is not one chain";
@@ -134,11 +167,26 @@ export class Dispatcher {
     // C-ATT-22: only lines that END with 0x0A count. Bytes after the last 0x0A are an incomplete record (a short write,
     // a crash inside a write): never confirmed, so never emitted (claimAndEmit emits only after a complete line is re-read).
     const tailAt = bytes.lastIndexOf(0x0a) + 1;
-    const text = bytes.subarray(0, tailAt).toString("utf8"), tail = bytes.subarray(tailAt).toString("utf8");
-    for (const raw of text.split("\n").filter(l => l.length > 0)) {
+    const tail = bytes.subarray(tailAt).toString("utf8");
+    const chain: string[] = [LEDGER_GENESIS];
+    let chained = false, lastPrev: string | null = null;
+    for (let at = 0; at < tailAt;) {
+      const nl = bytes.indexOf(0x0a, at), lineBytes = bytes.subarray(at, nl);
+      at = nl + 1;
+      if (lineBytes.length === 0) continue;
+      const raw = lineBytes.toString("utf8");
       let e: any;
       try { e = JSON.parse(raw); } catch { throw new Error(NOT_CHAIN); }
       if (e === null || typeof e !== "object" || !Number.isSafeInteger(e.n) || e.n < 1 || typeof e.requestId !== "string") throw new Error(NOT_CHAIN);
+      // LEDGER CHAIN (h-sink3): `prev` absent only in a legacy prefix; present: c_{i-1} or the previous line's prev.
+      const c = chain[chain.length - 1];
+      if (e.prev === undefined) { if (chained) throw new Error(NOT_CHAIN); }
+      else {
+        if (typeof e.prev !== "string" || !HEX64.test(e.prev) || (e.prev !== c && e.prev !== lastPrev)) throw new Error(NOT_CHAIN);
+        chained = true;
+      }
+      lastPrev = typeof e.prev === "string" ? e.prev : null;
+      chain.push(nextChain(c, lineBytes));
       const s = slots.get(e.n);
       if (e.kind === "intent") {
         if (!HEX64.test(e.tokenSha256) || !HEX64.test(e.preStateSha256) || !HEX64.test(e.postStateSha256) || !HEX64.test(e.intentSha256) ||
@@ -166,11 +214,13 @@ export class Dispatcher {
         s.status = e.outcome;
       } else throw new Error(NOT_CHAIN);
     }
-    return { slots, ids, maxN, tail, tailAt };
+    return { slots, ids, maxN, tail, tailAt, lines: chain.length - 1, chain };
   }
   // C-ATT-22: a write loop; a short write is continued, a write of 0 bytes or an error stops the run BEFORE any emit.
+  // h-sink3: the line carries `prev` = the ledger chain hash of the complete lines read just before the write.
   private append(line: object): void {
-    const data = Buffer.from(JSON.stringify(line) + "\n", "utf8");
+    const before = existsSync(this.ledgerPath) ? readFileSync(this.ledgerPath) : Buffer.alloc(0);
+    const data = Buffer.from(JSON.stringify({ ...line, prev: chainOfBytes(before.subarray(0, before.lastIndexOf(0x0a) + 1)).hash }) + "\n", "utf8");
     const fd = openSync(this.ledgerPath, "a");
     try {
       for (let off = 0; off < data.length;) {
@@ -226,19 +276,47 @@ export class Dispatcher {
   // witness). A restore of both files together is NOT detected (LEDGER-MONOTONE). Removing the witness file is the
   // explicit operator step to bind a new ledger; the newLedgerH0 rule then applies.
   private witnessPath(): string { return realpathSync(this.dbPath) + ".dispatch-witness.json"; }
-  private readWitness(): { ledger: string; n: number; rowHead: string } | null {
+  // h-sink3: the witness also keeps {lines, lastHash} (C-ATT-36) and ledgerId = "dev:ino" of the ledger (C-ATT-37).
+  private readWitness(): Witness | null {
     const p = this.witnessPath();
     if (!existsSync(p)) return null;
     let w: any;
     try { w = JSON.parse(readFileSync(p, "utf8")); } catch { w = null; }
-    if (w === null || typeof w.ledger !== "string" || !Number.isSafeInteger(w.n) || w.n < 0 || (w.n > 0 && !HEX64.test(w.rowHead))) {
+    if (w === null || typeof w.ledger !== "string" || !Number.isSafeInteger(w.n) || w.n < 0 || (w.n > 0 && !HEX64.test(w.rowHead)) ||
+        (w.lines !== undefined && (!Number.isSafeInteger(w.lines) || w.lines < 0 || typeof w.lastHash !== "string" || !HEX64.test(w.lastHash))) ||
+        (w.ledgerId !== undefined && typeof w.ledgerId !== "string")) {
       throw new Error("dispatcher alarm: the dispatch witness " + p + " is unreadable; a person must check it");
     }
     return w;
   }
+  // The witness names THIS ledger: the same resolved path text, or (C-ATT-37: another letter case or a firmlink) the same
+  // file identity (device, inode) while the ledger has ONE name (a hard-linked second name is not accepted this way).
+  private witnessNamesThisLedger(w: Witness): boolean {
+    if (w.ledger === realpathSync(this.ledgerPath)) return true;
+    const id = fileId(this.ledgerPath);
+    return w.ledgerId !== undefined && id !== null && id.nlink === 1 && id.id === w.ledgerId;
+  }
+  // The ledger CONTENT reaches the witness (or a floor): at least `lines` complete lines, and the chain hash after them is lastHash.
+  private static reaches(L: Ledger, lines: number | undefined, lastHash: string | undefined): boolean {
+    return lines === undefined || (lines <= L.lines && L.chain[lines] === lastHash);
+  }
+  // The witness checks (binding, last claim, content); throws an alarm. Used by flush and by resolveInDoubt.
+  private checkWitness(w: Witness | null, L: Ledger): void {
+    if (w === null) return;
+    if (!this.witnessNamesThisLedger(w)) {
+      throw new Error("dispatcher alarm: the store is bound to the ledger " + w.ledger + ", not to " + realpathSync(this.ledgerPath) + "; nothing sent");
+    }
+    if (w.n > 0 && L.slots.get(w.n)?.claim.rowHead !== w.rowHead) {
+      throw new Error("dispatcher alarm: the ledger does not reach the dispatch witness (row " + w.n + "); an older or another ledger (restored backup?); nothing sent");
+    }
+    if (!Dispatcher.reaches(L, w.lines, w.lastHash)) {
+      throw new Error("dispatcher alarm: the ledger is shorter than or differs from the dispatch witness (line " + w.lines + " of " + L.lines + "); an older ledger (restored backup?); nothing sent");
+    }
+  }
   private writeWitness(L: Ledger): void {
     const p = this.witnessPath(), tmp = p + ".tmp-" + this.run;
-    const w = { ledger: realpathSync(this.ledgerPath), n: L.maxN, rowHead: L.maxN > 0 ? L.slots.get(L.maxN)!.claim.rowHead : "" };
+    const w: Witness = { ledger: realpathSync(this.ledgerPath), n: L.maxN, rowHead: L.maxN > 0 ? L.slots.get(L.maxN)!.claim.rowHead : "",
+      lines: L.lines, lastHash: L.chain[L.lines], ledgerId: fileId(this.ledgerPath)?.id };
     const fd = openSync(tmp, "w");
     try { writeSync(fd, JSON.stringify(w)); fsyncSync(fd); } finally { closeSync(fd); }
     renameSync(tmp, p);
@@ -275,10 +353,15 @@ export class Dispatcher {
     this.acquire();
     try {
       const L = this.ledger();
+      // h-sink3 (C-ATT-36): a decision is taken only on the ledger the store is bound to, at least as new as its witness;
+      // the decision line then advances the witness, so a later restore of the ledger to before it is seen.
+      const bound = existsSync(this.dbPath);
+      if (bound) this.checkWitness(this.readWitness(), L);
       const slot = [...L.slots.values()].find(s => s.claim.requestId === requestId);
       if (slot === undefined || (slot.status !== "pending" && slot.status !== "failed")) throw new Error("request id " + requestId + " is not in doubt");
       if (slot.claim.pid !== process.pid && alive(slot.claim.pid)) throw new Error("the process that claimed " + requestId + " (pid " + slot.claim.pid + ") is alive; wait for it to end");
       this.append({ kind: "resolved", n: slot.claim.n, requestId, outcome, note: String(note) });
+      if (bound) this.writeWitness(this.ledger());
     } finally { this.release(); }
   }
   // Claim, re-read, emit, done (see the header).
@@ -292,10 +375,13 @@ export class Dispatcher {
     }
     this.writeWitness(now);
     try { this.emit(effect, intent); } catch (error) {
-      try { this.append({ kind: "failed", n: line.n, requestId: line.requestId, run: this.run, error: String((error as Error)?.message ?? error).slice(0, 200) }); } catch { /* the claim stays in doubt */ }
+      try { this.append({ kind: "failed", n: line.n, requestId: line.requestId, run: this.run, error: String((error as Error)?.message ?? error).slice(0, 200) }); this.writeWitness(this.ledger()); } catch { /* the claim stays in doubt */ }
       throw error;
     }
     this.append({ kind: "done", n: line.n, requestId: line.requestId, run: this.run });
+    // h-sink3: the witness follows the done line (best effort: the effect has left; a lagging witness still binds the
+    // claim line, so a restore to before "done" shows the row in doubt, never as new work).
+    try { this.writeWitness(this.ledger()); } catch { /* the witness keeps the claim */ }
   }
   // h1 (C-ATT-06): before any effect, the dispatcher applies the SAME store audit as the sink (core/store.ts): schema
   // text, integrity_check, meta (its initial charge must hash to the pinned initialStateSha256), and the compiled
@@ -350,12 +436,7 @@ export class Dispatcher {
       // C-HOST-05 / C-ATT-19: the dispatch witness next to the store (see writeWitness). Checked BEFORE the newLedgerH0 rule,
       // so a store that is bound to a ledger never starts a second one, also with cfg.newLedgerH0 still set.
       const wit = this.readWitness();
-      if (wit !== null && wit.ledger !== realpathSync(this.ledgerPath)) {
-        throw new Error("dispatcher alarm: the store is bound to the ledger " + wit.ledger + ", not to " + realpathSync(this.ledgerPath) + "; nothing sent");
-      }
-      if (wit !== null && wit.n > 0 && L.slots.get(wit.n)?.claim.rowHead !== wit.rowHead) {
-        throw new Error("dispatcher alarm: the ledger does not reach the dispatch witness (row " + wit.n + "); an older or another ledger (restored backup?); nothing sent");
-      }
+      this.checkWitness(wit, L);
       // The dispatcher as the row-log witness (h-anchor design, point 2): the store must still EXTEND every claimed row.
       if (L.maxN === 0 && audited.length > 0 && this.cfg.newLedgerH0 !== genesis) {
         throw new Error("dispatcher alarm: the ledger is missing or empty but the store holds " + audited.length + " committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0");
@@ -369,7 +450,12 @@ export class Dispatcher {
       if (floor !== undefined && (!Number.isSafeInteger(floor.n) || floor.n < 1 || L.slots.get(floor.n)?.claim.rowHead !== floor.rowHead)) {
         throw new Error("dispatcher alarm: the ledger does not reach the outside anchor (row " + floor.n + "); an older ledger (restored backup?); nothing sent");
       }
-      if (wit === null) this.writeWitness(L);   // the first run binds the store to this ledger
+      // h-sink3 (C-ATT-36): a floor with {lines, lastHash} binds the ledger content too.
+      if (floor !== undefined && (floor.lines !== undefined || floor.lastHash !== undefined) &&
+          (!Number.isSafeInteger(floor.lines) || floor.lines! < 1 || typeof floor.lastHash !== "string" || !HEX64.test(floor.lastHash) || !Dispatcher.reaches(L, floor.lines, floor.lastHash))) {
+        throw new Error("dispatcher alarm: the ledger is shorter than or differs from the outside anchor (line " + floor.lines + " of " + L.lines + "); an older ledger (restored backup?); nothing sent");
+      }
+      if (wit === null || wit.lines === undefined || wit.ledgerId === undefined) this.writeWitness(L);   // the first run binds the store to this ledger (or upgrades an h-dispatch witness)
       if (torn !== "") result.tornTailCut = torn;
       if (this.tookOver !== null) result.staleLockTakenOver = { pid: this.tookOver.pid, run: this.tookOver.run };
       let head = L.maxN === 0 ? this.cfg.initialStateSha256 : L.slots.get(L.maxN)!.claim.postStateSha256;
@@ -409,7 +495,7 @@ export class Dispatcher {
         result.emitted.push(effect);
       }
       const last = this.ledger();
-      if (last.maxN > 0) result.ledgerHead = { n: last.maxN, rowHead: last.slots.get(last.maxN)!.claim.rowHead };
+      if (last.maxN > 0) result.ledgerHead = { n: last.maxN, rowHead: last.slots.get(last.maxN)!.claim.rowHead, lines: last.lines, lastHash: last.chain[last.lines] };
     } finally { try { db.exec("ROLLBACK"); } catch { /* none */ } db.close(); }
     return result;
   }

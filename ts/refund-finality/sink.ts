@@ -15,9 +15,12 @@
 // FILES (h-sink2, C-ATT-21/23): BEFORE the first SQLite lock the sink refuses a database with a -journal, -wal or -shm file
 // next to it (a hot journal is applied by SQLite at the first lock, before any audit), a database with more than one hard
 // link, and a header in WAL mode; it pins journal_mode = DELETE, synchronous = FULL and fullfsync = ON and reads them
-// back. Before every write transaction it checks again: the same inode, one link, no -wal, no -shm. After an honest crash
-// a hot -journal is legitimate: the sink then refuses to start, and the operator runs Sink.recover (it previews the
-// recovery on a copy, logs the head before and after, and refuses a rollback of more than the one unacknowledged commit).
+// back. Before every write transaction it checks again: the same inode, one link, no -wal, no -shm; and (h-sink3,
+// C-ATT-35) once more inside the write transaction right before COMMIT and once after COMMIT, before acknowledging. After
+// an honest crash a -journal is legitimate: the sink then refuses to start (naming the journal's class), and the operator
+// runs Sink.recover: a NOT-HOT journal (zero length or zero first byte: SQLite ignores it; C-ATT-33) is removed after a
+// preview on a copy proves the store and head unchanged; a HOT journal is rolled back after a preview, and only when the
+// step establishes that no acknowledged commit is lost (the depth rule, C-ATT-34). h-sink3 notes: HARDENING_NOTES_3.md.
 // Assumption DIR-EXCLUSIVE: no other party can create, replace, rename or link files in the database directory.
 // Database-level safeguards (DDL in core/store.ts): S1 request identity; S2 one-statement commit; S3 charge binding; S4
 // cumulative refund limit with canonical money text; S5 append-only; S6 the row-log chain; NUL-free TEXT and typed INTEGER
@@ -47,12 +50,12 @@
 // bignumber.js, SQLite (triggers, constraints, integrity_check, IMMEDIATE transactions, data_version, hot-journal
 // rollback, fullfsync), the file system, Node, OpenSSL, SHA-256, Ed25519. Durability against power loss: NOT TESTED.
 import { createPublicKey } from "node:crypto";
-import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, rmSync, writeSync } from "node:fs";
+import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, readFileSync, rmSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { ChargeState, isState, canon, sha256hex } from "./encoding";
-import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, conv, createSchema, decodeToken, isHead,
+import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, classifyJournal, conv, createSchema, decodeToken, isHead,
   linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial } from "./core/store";
 export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "./core/store";
 export type { SinkHead } from "./core/store";
@@ -65,7 +68,8 @@ export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checker
 // head: the audited head after this call (absent when the sink is halted or the decoder refused the input).
 export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string; head?: SinkHead };
 export type OutboxRow = { seq: number; request_id: string; intent: string };
-export type RecoverReport = { companions: string[]; before: SinkHead | string; after: SinkHead | string; rolledBack: number | null; applied: boolean; reason: string };
+export type RecoverReport = { companions: string[]; before: SinkHead | string; after: SinkHead | string; rolledBack: number | null; applied: boolean; reason: string;
+  journalClass?: "hot" | "not-hot"; journalWhy?: string };
 
 const sameHead = (a: SinkHead, b: SinkHead): boolean => a.count === b.count && a.chainHash === b.chainHash;
 // Pins and reads back the durability and journal settings (item 7 of h-sink2). Throws if SQLite does not keep them.
@@ -277,6 +281,11 @@ export class Sink {
             return { status: "rejected", reason: "the outside head was not persisted (onHead threw): " + String((error as Error)?.message ?? error), head: this.head() };
           }
         }
+        // C-ATT-35 (h-sink3): the file check AGAIN, inside the write transaction (the RESERVED lock is held) and after
+        // onHead, right before COMMIT: the same inode at the path, one link, no -wal, no -shm (this transaction's own
+        // -journal is expected here). A replaced inode makes this commit roll back and halts the sink.
+        const inside = sameStoreFile(this.file, false);
+        if (inside !== "") return this.halt(inside + " (seen inside the write transaction, before COMMIT; row " + seq + " is not committed)");
         const before = { pos: this.pos, dv: this.dv, guard: this.guard };
         this.pos = { st, count: seq, chain: self };
         this.mark(next);
@@ -286,6 +295,12 @@ export class Sink {
           return this.halt("COMMIT failed after the checks (the store may or may not hold row " + seq + "): " + String((error as Error).message));
         }
         this.keep([{ requestId: rid, tokenSha256 } as AuditedRow], false);
+        // C-ATT-35 (h-sink3): and once more AFTER COMMIT, before the acknowledgement: if the path no longer names the inode
+        // that took the commit, the row may exist only in an unlinked inode; it is NOT acknowledged (the host must not
+        // count it) and the sink halts. Remaining window: a replacement after this check and before the host persists
+        // result.head (stated in HARDENING_NOTES_3.md).
+        const after = sameStoreFile(this.file, false);
+        if (after !== "") { this.halted = after + " (seen after COMMIT of row " + seq + "; the row may exist only in the replaced inode; not acknowledged)"; return { status: "rejected", reason: "sink halted: " + this.halted }; }
         return { status: "committed", head };
       }
       this.db.exec("ROLLBACK");
@@ -344,18 +359,32 @@ export class Sink {
     } finally { db.close(); }
     return { tokens, prefixHead: head, complete: problem === "", problem };
   }
-  // THE OPERATOR STEP after a crash (C-ATT-21; h-sink2). The sink refuses to start while a -journal exists. This step:
-  // (1) refuses -wal and -shm (the sink pins journal_mode = DELETE and never makes them: a person must inspect and remove
-  // them) and a database with more than one link; (2) audits a COPY of the database WITHOUT the journal ("before"; after a
-  // real crash it may be unreadable or hold the unfinished commit); (3) applies the journal to a second COPY (SQLite's
-  // own hot-journal rollback) and audits it ("after"), with cfg.expectedHead / cfg.outsideHead as at start; (4) refuses
-  // when "after" does not pass, or when "before" is a valid log and "after" is not a prefix of it with at most ONE row
-  // less (an honest crash rolls back at most the one unfinished, unacknowledged commit; in DELETE mode the commit point is
-  // the journal's deletion, and the sink acknowledges only after COMMIT returned); (5) only then applies the journal to
-  // the real database and audits it again: its head must be the previewed "after". (6) One JSON line with the files,
-  // the heads before and after and the decision is appended to logPath and synced. The real files are not changed when
-  // the step refuses. Without an outside head, a planted journal that rolls back exactly one row is indistinguishable
-  // from an honest crash (stated limit). The temporary copies are removed.
+  // THE OPERATOR STEP after a crash (C-ATT-21; h-sink2; h-sink3: C-ATT-33, C-ATT-34). The sink refuses to start while a
+  // -journal exists. This step: (1) refuses -wal and -shm (the sink pins journal_mode = DELETE and never makes them: a
+  // person must inspect and remove them) and a database with more than one link; (2) classifies the journal by SQLite's
+  // hot-journal rule (core/store.ts classifyJournal).
+  // NOT HOT (zero length or zero first byte; C-ATT-33): SQLite ignores such a journal, so it cannot change the store. The
+  // step proves that on COPIES before it touches the real files: (a) the copy without the journal passes the audit
+  // (head B); (b) a copy WITH the journal is opened by SQLite and audited: the journal must still be there, byte-equal, the
+  // database copy byte-equal, and the head equal to B (SQLite ignored it); (c) on the real database, under a RESERVED lock
+  // (BEGIN IMMEDIATE: no other writer; SQLite's own rule H2), the journal must still be byte-equal to the previewed one; it
+  // is removed (directory synced) and the real store audited: its head must be B; with cfg.outsideHead, B must equal
+  // committed or pending. Nothing is rolled back.
+  // HOT: (3) audits a COPY of the database WITHOUT the journal ("before"; after a real crash it may be unreadable or hold
+  // the unfinished commit); (4) applies the journal to a second COPY (SQLite's own hot-journal rollback) and audits it
+  // ("after"), with cfg.expectedHead / cfg.outsideHead as at start; (5) THE DEPTH RULE (C-ATT-34): the step reports
+  // success only when it ESTABLISHES that the rollback loses no acknowledged commit: either (i) "before" passes the audit
+  // and "after" is "before" or "before" minus its last row (an honest crash rolls back at most the one unfinished,
+  // unacknowledged commit; in DELETE mode the commit point is the journal's deletion, and the sink acknowledges only
+  // after COMMIT returned), or (ii) cfg.outsideHead is given (the host's persisted heads under the FRESHNESS RULE) and
+  // "after" EQUALS outsideHead.committed or outsideHead.pending: the outside head authorises exactly that head. Every other
+  // case is refused: also a "before" that fails the audit without cfg.outsideHead (the head before the rollback is then
+  // unknown, so the depth of the rollback is unknown; cfg.expectedHead does not authorise it: it only bounds from below).
+  // (6) only then applies the journal to the real database and audits it again: its head must be the previewed "after".
+  // (7) One JSON line with the files, the class, the heads before and after and the decision is appended to logPath and
+  // synced. The real files are not changed when the step refuses. Without an outside head, a planted journal that rolls
+  // back exactly one row of a valid store is indistinguishable from an honest crash (stated limit). Temporary copies are
+  // removed.
   static recover(path: string, cfg: SinkConfig, logPath: string): RecoverReport {
     const report: RecoverReport = { companions: presentCompanions(path), before: "", after: "", rolledBack: null, applied: false, reason: "" };
     const log = () => {
@@ -367,6 +396,9 @@ export class Sink {
     const real = realStorePath(path), journal = presentCompanions(path, ["-journal"]);
     if (journal.length === 0) { report.reason = "no -journal: nothing to recover"; log(); return report; }
     if (journal.length !== 1 || journal[0] !== real + "-journal") return refuse("the journal is not at the real path of the database: " + journal.join(", "));
+    const jc = classifyJournal(path);
+    if (jc.kind === "none") return refuse("the journal disappeared during the step");
+    report.journalClass = jc.kind; report.journalWhy = jc.why;
     const M = loadCore(), cv = conv(M);
     if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) return refuse("cfg.initialState is not a valid context");
     const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
@@ -380,30 +412,70 @@ export class Sink {
         return at;
       } finally { db.close(); }
     };
+    const oh = cfg.outsideHead;
+    const outsideAuthorises = (h: SinkHead): boolean => oh !== undefined && (sameHead(h, oh.committed) || (oh.pending !== undefined && sameHead(h, oh.pending)));
     const tmp = mkdtempSync(join(tmpdir(), "forge-sink-recover-"));
     try {
+      if (jc.kind === "not-hot") {
+        const dbBytes = readFileSync(real);
+        writeFileSync(join(tmp, "before.sqlite"), dbBytes);
+        let before: Pos;
+        try { before = auditAt(join(tmp, "before.sqlite"), cfg.expectedHead ?? oh?.committed); } catch (error) { return refuse("not-hot journal: the store without it does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
+        report.before = { count: before.count, chainHash: before.chain };
+        if (oh !== undefined && !outsideAuthorises(report.before)) return refuse("not-hot journal: the stored head is not the outside head");
+        const w = join(tmp, "with.sqlite");
+        writeFileSync(w, dbBytes); writeFileSync(w + "-journal", jc.bytes);
+        let withJ: Pos;
+        try { withJ = auditAt(w, cfg.expectedHead ?? oh?.committed); } catch (error) { return refuse("not-hot journal: the copy with the journal does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
+        const ignored = existsSync(w + "-journal") && readFileSync(w + "-journal").equals(jc.bytes) && readFileSync(w).equals(dbBytes);
+        if (!ignored || withJ.count !== before.count || withJ.chain !== before.chain) return refuse("not-hot journal: SQLite did not ignore it on the copy (the classifier disagrees with SQLite); nothing removed");
+        report.after = { count: withJ.count, chainHash: withJ.chain }; report.rolledBack = 0;
+        // The real files: under a RESERVED lock (no other writer), the same journal bytes; remove; audit; same head.
+        const d = new DatabaseSync(real);
+        try {
+          pinPragmas(d);
+          d.exec("BEGIN IMMEDIATE");
+          try {
+            const again = classifyJournal(path);
+            if (again.kind !== "not-hot" || !again.bytes.equals(jc.bytes)) return refuse("not-hot journal: the journal changed during the step; nothing removed");
+            if (!readFileSync(real).equals(dbBytes)) return refuse("not-hot journal: the database file changed during the step; nothing removed");
+            unlinkSync(real + "-journal");
+            const dfd = openSync(dirname(real), "r");
+            try { fsyncSync(dfd); } finally { closeSync(dfd); }
+            report.applied = true;
+            const now = au.fullAudit(d, cfg.expectedHead ?? oh?.committed);
+            if (now === null || now.count !== before.count || now.chain !== before.chain) return refuse("not-hot journal removed, but the real store's head is not the previewed head (the files changed during the step)");
+          } finally { try { d.exec("ROLLBACK"); } catch { /* none */ } }
+        } finally { d.close(); }
+        report.reason = "recovered: a not-hot journal (" + jc.why + ") was removed; SQLite ignores it; the store and its head are unchanged";
+        log();
+        return report;
+      }
       let before: Pos | null = null;
       copyFileSync(real, join(tmp, "before.sqlite"));
       try { before = auditAt(join(tmp, "before.sqlite")); report.before = { count: before.count, chainHash: before.chain }; } catch (error) { report.before = "not a valid log: " + String((error as Error).message).slice(0, 200); }
       copyFileSync(real, join(tmp, "after.sqlite")); copyFileSync(real + "-journal", join(tmp, "after.sqlite-journal"));
       let after: Pos;
-      try { after = auditAt(join(tmp, "after.sqlite"), cfg.expectedHead ?? cfg.outsideHead?.committed); } catch (error) { return refuse("the recovered copy does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
+      try { after = auditAt(join(tmp, "after.sqlite"), cfg.expectedHead ?? oh?.committed); } catch (error) { return refuse("the recovered copy does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
       report.after = { count: after.count, chainHash: after.chain };
-      const oh = cfg.outsideHead, ah = report.after;
-      if (oh !== undefined && !sameHead(ah, oh.committed) && !(oh.pending !== undefined && sameHead(ah, oh.pending))) return refuse("the recovered head is not the outside head");
-      if (before !== null) {
+      const ah = report.after;
+      if (oh !== undefined && !outsideAuthorises(ah)) return refuse("the recovered head is not the outside head");
+      // THE DEPTH RULE (5).
+      if (before === null) {
+        if (oh === undefined) return refuse("the live file does not pass the audit, so the head before the rollback is unknown and so is the depth of the rollback; supply cfg.outsideHead (the persisted committed/pending heads) to authorise exactly the recovered head");
+      } else {
         report.rolledBack = before.count - after.count;
         const prefixOk = before.count === after.count ? before.chain === after.chain : (before.count === after.count + 1 && (() => {
           const d = new DatabaseSync(join(tmp, "before.sqlite"), { readOnly: true });
           try { return (d.prepare("SELECT prev FROM settled WHERE seq = ?").get(before.count) as any)?.prev === after.chain; } finally { d.close(); }
         })());
-        if (!prefixOk) return refuse("the journal would roll back " + report.rolledBack + " row(s) of a valid log (an honest crash rolls back at most the one unfinished commit)");
+        if (!prefixOk && !outsideAuthorises(ah)) return refuse("the journal would roll back " + report.rolledBack + " row(s) of a valid log (an honest crash rolls back at most the one unfinished commit; only cfg.outsideHead can authorise this exact head)");
       }
       const d = new DatabaseSync(real);
       try { pinPragmas(d); d.prepare("SELECT COUNT(*) AS n FROM sqlite_schema").get(); } finally { d.close(); }
       report.applied = true;
       if (existsSync(real + "-journal")) return refuse("the journal is still present after the rollback");
-      const now = auditAt(real, cfg.expectedHead ?? cfg.outsideHead?.committed);
+      const now = auditAt(real, cfg.expectedHead ?? oh?.committed);
       if (now.count !== after.count || now.chain !== after.chain) return refuse("the real database after the rollback is not the previewed copy (the files changed during the step)");
       report.reason = "recovered";
       log();

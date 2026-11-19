@@ -1,0 +1,6 @@
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 53: 83444 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+M1b-live-strings-in-recursion translate exit 0
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 52:  4006 Abort trap: 6           /usr/bin/time -l "$DAFNY" "$@" >> "$LOG" 2>&1
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 53:  4007 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+M1b-live-strings-in-recursion verify exit 134
+BATCH3 DONE

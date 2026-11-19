@@ -1,0 +1,4 @@
+FALSE REJECTION: legal committed refund(s) not paid: "a\u0001b"(len 3); f1.error=provider invalid_request: idempotency key is not printable ASCII; f2.refused=["a\u0001b: in doubt: claimed by run 94b0498337ff13b299f195c9a396b496 (p"]
+{"committed":["committed","committed"],"f1":{"emitted":[],"refused":[],"error":"provider invalid_request: idempotency key is not printable ASCII"},"f2":{"emitted":["r_next"],"refused":["a\u0001b: in doubt: claimed by run 94b0498337ff13b299f195c9a396b496 (p"],"error":""},"movements":["r_next:100"]}
+s5 ctrl env={"RP_X":"1"}
+MONEY RIGHT

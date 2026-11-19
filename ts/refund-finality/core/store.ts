@@ -7,7 +7,7 @@
 // on the REPLAYED charge, in a store whose whole log passed AuditEnd.
 // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
 import { KeyObject, verify } from "node:crypto";
-import { closeSync, existsSync, lstatSync, openSync, readSync, realpathSync, statSync } from "node:fs";
+import { closeSync, existsSync, lstatSync, openSync, readFileSync, readSync, realpathSync, statSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "../encoding";
@@ -176,7 +176,8 @@ export function headerOk(db: DatabaseSync): void {
 // ---- the database FILES (C-ATT-21, C-ATT-23; h-sink2). Assumption DIR-EXCLUSIVE: no other party can create, replace,
 // rename or link files in the database directory. Without it, what these checks still see is listed in
 // HARDENING_NOTES_2.md (item 5). The checks run BEFORE the first SQLite lock (a hot journal is applied by SQLite at the
-// first shared lock, before any audit can run) and again before every write transaction of the sink.
+// first shared lock, before any audit can run) and again before every write transaction of the sink (h-sink3: also
+// inside it, before COMMIT, and after COMMIT; sink.ts commit()).
 export type StoreFile = { path: string; real: string; dev: number; ino: number | bigint };
 export const COMPANIONS = ["-journal", "-wal", "-shm"] as const;
 // The name SQLite uses for the companions: the unix VFS resolves symbolic links of the database path.
@@ -188,13 +189,49 @@ export function presentCompanions(path: string, which: readonly string[] = COMPA
   for (const n of names) for (const c of which) if (existsSync(n + c)) found.add(realpathSync(n + c));
   return [...found];
 }
+// ---- the rollback-journal classifier (C-ATT-33; h-sink3). SOURCE: the SQLite file format document (sqlite.org/fileformat2.html,
+// section 4.1 "The Rollback Journal") and the pager's hot-journal test (pager.c hasHotJournal), as known to this author:
+// a journal is HOT, and SQLite rolls it back at the next shared lock, only when ALL of these hold: (H1) the journal file
+// exists; (H2) no connection holds a RESERVED (or greater) lock on the database; (H3) the database file is not empty (an
+// empty database: SQLite deletes the journal without playback); (H4) the FIRST BYTE of the journal is not zero (a
+// zero-length file reads as a zero byte). The format: header = 8 magic bytes d9 d5 05 f9 20 a1 63 d7, nRec, nonce, the
+// initial page count, the sector size and the page size (4-byte big-endian each), padded to the sector size. With
+// synchronous = FULL (pinned by the sink), SQLite writes the header with ZERO magic and nRec when it opens the journal and
+// writes the magic only at the journal sync just before it writes database pages; it also zeroes the header to finalise a
+// journal in some modes. So a crash BEFORE that sync leaves a journal with a zero first byte while the database file holds
+// only committed pages: SQLite ignores it (H4 false), and it can never change the store. A hot journal whose magic does not
+// match is played back as empty (SQLite stops at the bad header) and deleted; one that names a missing super-journal is
+// deleted without playback: both are classed "hot" here (SQLite acts on them) and go through the hot path of Sink.recover.
+// The classifier can see H1, H3 and H4 only; H2 is established by the step that removes a not-hot journal: it holds a
+// RESERVED lock itself (BEGIN IMMEDIATE) while it re-reads and removes the file. Empirical cross-check against the SQLite
+// of this Node: tests/refund-finality/regress/s3_journal_classifier.ts.
+export const JOURNAL_MAGIC = "d9d505f920a163d7";
+export type JournalClass = { kind: "none" } | { kind: "not-hot"; path: string; size: number; bytes: Buffer; why: string } | { kind: "hot"; path: string; size: number; why: string };
+export function classifyJournal(path: string): JournalClass {
+  const real = realStorePath(path), j = real + "-journal";
+  if (!existsSync(j)) return { kind: "none" };
+  const js = lstatSync(j);
+  if (!js.isFile()) return { kind: "hot", path: j, size: js.size, why: "the journal is not a regular file" };
+  const dbSize = existsSync(real) ? lstatSync(real).size : 0;
+  if (dbSize === 0) return { kind: "hot", path: j, size: js.size, why: "the database file is empty or missing (SQLite deletes such a journal)" };
+  const bytes = readFileSync(j);
+  if (bytes.length === 0) return { kind: "not-hot", path: j, size: 0, bytes, why: "zero-length journal (SQLite reads its first byte as 0: not hot)" };
+  if (bytes[0] === 0) return { kind: "not-hot", path: j, size: bytes.length, bytes, why: "the journal's first byte is 0 (zeroed or never-synced header: not hot)" };
+  return { kind: "hot", path: j, size: bytes.length, why: bytes.subarray(0, 8).toString("hex") === JOURNAL_MAGIC ? "journal header with the SQLite magic" : "non-zero first byte without the magic (SQLite treats it as hot, plays back nothing and deletes it)" };
+}
 // Refuses: a database that is not one regular file with ONE name (st_nlink 1; C-ATT-23), a header in WAL mode, and any
 // companion file named in `refuse` (the sink: all three; the read-only dispatcher: -wal and -shm, because a live sink's
 // own -journal exists during its write transactions). Returns the identity of the file (dev, ino) or undefined (no file).
+// A -journal is refused with its class (h-sink3): the start never removes a journal itself; Sink.recover does (not hot:
+// removed after a preview on a copy; hot: SQLite's rollback after a preview).
 export function checkStoreFile(path: string, refuse: readonly string[] = COMPANIONS): StoreFile | undefined {
   const real = realStorePath(path);
   const planted = presentCompanions(path, refuse);
-  if (planted.length > 0) throw new Error("companion file(s) present: " + planted.join(", ") + " (the sink did not expect them; after a crash, run the operator step Sink.recover)");
+  if (planted.length > 0) {
+    const jc = refuse.includes("-journal") ? classifyJournal(path) : { kind: "none" as const };
+    const cls = jc.kind === "none" ? "" : "; journal class: " + jc.kind + " (" + jc.why + ")";
+    throw new Error("companion file(s) present: " + planted.join(", ") + " (the sink did not expect them; after a crash, run the operator step Sink.recover" + cls + ")");
+  }
   if (!existsSync(real)) return undefined;
   const st = lstatSync(real);
   if (!st.isFile()) throw new Error("the database path is not a regular file");

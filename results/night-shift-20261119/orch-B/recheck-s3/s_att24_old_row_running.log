@@ -1,0 +1,3 @@
+{"sql":{"commits":["committed","committed","committed"],"applied":"ok","retry":"rejected: sink halted: another writer changed the store and the change is not an append of audit-passing rows","outbox":["r1x","z","r2"],"ok":true},"journal":{"commits":["committed","committed","committed"],"applied":"ok","retry":"rejected: sink halted: another writer changed the store and the change is not an append of audit-passing rows","outbox":["r1x","z","r2"],"ok":true},"controls":{"commits":["committed","committed","committed","committed"],"replay":"replayed","retry":"rejected: request id is already settled with another token","ok":true}}
+PASS
+exit 0

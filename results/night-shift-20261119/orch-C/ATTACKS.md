@@ -410,3 +410,25 @@ RE-RUN by C (16:39:20Z) of worker c24's attacks on B's minter rule 2 (370ff65c; 
 - C-JUDGE-03: the impostors (early exit, forged output, status lie, exit 0 in flush) are all caught: PASS (closed).
 - NEW evasion: e_emit_twice_hidden2 (a dispatcher that sends twice and hides the second record from the worker's effect list) is PASSED BY BOTH. B stated this weakness (the child reports its own effect records).
 - Whether the three passed mutants are really defective was shown by the worker's confirm.ts runs, NOT re-run by C.
+
+=========================================================================
+B's NEW gate tier: a checker over the generated JavaScript (orch-B/h-gate/js_bound_check.cjs; records at 6775e46e). Worker c23; C's own re-run of the checker verdicts.
+## C-GATE-07 (16:56:31Z) the checker ACCEPTS a verified submission whose run does not finish: hidden value growth through the modulo operation — checker verdict CONFIRMED by C; the run evidence is the worker's (C's own bounded run was stopped by the safety classifier: NOT RUN by C, recorded under C-1, not retried)
+- Class: gate bypass (cost and size model). Attacker: the submitter only.
+- Cause (worker's reading): js_bound_check.cjs line 592 bounds the result of mod by the smaller operand size, but the runtime uses Euclidean modulo, so (0 - 1) % m equals m - 1: the size of the divisor. A loop that sets salt := (0 - 1) % (salt*salt + 1) squares the value each round while the checker's abstract size stays small.
+- C's run: bash orch-C/c23-jsgate/regress.sh -> EXIT 1: U01-mod-hidden-growth.js "ACCEPT" (critical-tier form) and U01-mod-hidden-growth.build.js "ACCEPT" (gate build with the load check). The .dfy verified and translated: logs/U01-mod-hidden-growth.vt.2.log ends "exit 0" and has "verified, 0 errors" (worker's Dafny run; I read the log).
+- Worker's run (not re-run by C): one decision call killed by a 60 s alarm (exit 142); round 13 alone takes 16.3 s at 295,000 digits; 40 rounds asked. The checker's stated bound was "steps<=1089".
+
+## C-GATE-08 (16:56:31Z) the checker ACCEPTS a verified submission with quadratic set equality charged as linear — checker verdict CONFIRMED by C (same regress.sh run: U02-set-equality-quadratic "ACCEPT" in both forms); run evidence is the worker's (alarm at 110 s, exit 142; one equality of two 1800-element sets takes 241 ms, 4000 are asked)
+- Cause (worker's reading): the cost table marks equals as linear; the runtime's set equality calls contains per element.
+
+## C-GATE-09 (16:56:31Z) checker blind spots on hand-made JavaScript, NOT reachable from the pinned Dafny as far as shown (worker runs; not re-run by C): six accepted modules that throw or run long (a getter-name collision, a computed read of a runtime getter, a helper named in the cost table that the runtime lacks, and others).
+
+## C-GATE-10 (16:56:31Z) MEASURED false-rejection rate of the new checker (worker runs; sets.sh; not re-run by C)
+| set | files | accepted | refused |
+|---|---|---|---|
+| B's set, with the load check | 124 | 96 | 28 (0 of 7 known unsafe accepted; no drift against B's record) |
+| new natural correct submissions K01-K16 (each verified, exit 0) | 16 | 16 | 0 |
+| new unsafe with generated JavaScript (U01, U02, U03) | 3 | 3 | 0 (U01, U02 unsafe = C-GATE-07, 08; U03 is safe after name mangling) |
+- False rejections on the new correct set: 0 of 16. Rule 3 refused about a third to a half of correct work. NOT RUN (A held the HOL lock, so the Dafny lock script made the runs wait): verify/translate of U04-U11 and K17.
+- Wiring (worker's reading; regress_hgate.sh exit 0): the checker run is time-bounded and fails closed; still open: verify, translate and build each re-read the submission file, and the critical tier checks a second translation (C-GATE-03, B marks it open).

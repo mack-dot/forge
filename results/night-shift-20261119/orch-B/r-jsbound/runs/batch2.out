@@ -1,0 +1,10 @@
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 53: 74691 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+T2b-set-equality-inline translate exit 0
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 53: 90618 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+D1-checker-text-cost translate exit 0
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 53:  8766 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+T2b-set-equality-inline verify exit 0
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 52: 13147 Terminated: 15          /usr/bin/time -l "$DAFNY" "$@" >> "$LOG" 2>&1
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 53: 13148 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+D1-checker-text-cost verify exit 124
+BATCH2 DONE

@@ -1,0 +1,1154 @@
+diff --git a/ts/refund-finality/core/store.ts b/ts/refund-finality/core/store.ts
+index 2598f3fb..8d5278f3 100644
+--- a/ts/refund-finality/core/store.ts
++++ b/ts/refund-finality/core/store.ts
+@@ -7,7 +7,7 @@
+ // on the REPLAYED charge, in a store whose whole log passed AuditEnd.
+ // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
+ import { KeyObject, verify } from "node:crypto";
+-import { closeSync, existsSync, lstatSync, openSync, readSync, realpathSync, statSync } from "node:fs";
++import { closeSync, existsSync, lstatSync, openSync, readFileSync, readSync, realpathSync, statSync } from "node:fs";
+ import { basename, dirname, join } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+ import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "../encoding";
+@@ -176,7 +176,8 @@ export function headerOk(db: DatabaseSync): void {
+ // ---- the database FILES (C-ATT-21, C-ATT-23; h-sink2). Assumption DIR-EXCLUSIVE: no other party can create, replace,
+ // rename or link files in the database directory. Without it, what these checks still see is listed in
+ // HARDENING_NOTES_2.md (item 5). The checks run BEFORE the first SQLite lock (a hot journal is applied by SQLite at the
+-// first shared lock, before any audit can run) and again before every write transaction of the sink.
++// first shared lock, before any audit can run) and again before every write transaction of the sink (h-sink3: also
++// inside it, before COMMIT, and after COMMIT; sink.ts commit()).
+ export type StoreFile = { path: string; real: string; dev: number; ino: number | bigint };
+ export const COMPANIONS = ["-journal", "-wal", "-shm"] as const;
+ // The name SQLite uses for the companions: the unix VFS resolves symbolic links of the database path.
+@@ -188,13 +189,49 @@ export function presentCompanions(path: string, which: readonly string[] = COMPA
+   for (const n of names) for (const c of which) if (existsSync(n + c)) found.add(realpathSync(n + c));
+   return [...found];
+ }
++// ---- the rollback-journal classifier (C-ATT-33; h-sink3). SOURCE: the SQLite file format document (sqlite.org/fileformat2.html,
++// section 4.1 "The Rollback Journal") and the pager's hot-journal test (pager.c hasHotJournal), as known to this author:
++// a journal is HOT, and SQLite rolls it back at the next shared lock, only when ALL of these hold: (H1) the journal file
++// exists; (H2) no connection holds a RESERVED (or greater) lock on the database; (H3) the database file is not empty (an
++// empty database: SQLite deletes the journal without playback); (H4) the FIRST BYTE of the journal is not zero (a
++// zero-length file reads as a zero byte). The format: header = 8 magic bytes d9 d5 05 f9 20 a1 63 d7, nRec, nonce, the
++// initial page count, the sector size and the page size (4-byte big-endian each), padded to the sector size. With
++// synchronous = FULL (pinned by the sink), SQLite writes the header with ZERO magic and nRec when it opens the journal and
++// writes the magic only at the journal sync just before it writes database pages; it also zeroes the header to finalise a
++// journal in some modes. So a crash BEFORE that sync leaves a journal with a zero first byte while the database file holds
++// only committed pages: SQLite ignores it (H4 false), and it can never change the store. A hot journal whose magic does not
++// match is played back as empty (SQLite stops at the bad header) and deleted; one that names a missing super-journal is
++// deleted without playback: both are classed "hot" here (SQLite acts on them) and go through the hot path of Sink.recover.
++// The classifier can see H1, H3 and H4 only; H2 is established by the step that removes a not-hot journal: it holds a
++// RESERVED lock itself (BEGIN IMMEDIATE) while it re-reads and removes the file. Empirical cross-check against the SQLite
++// of this Node: tests/refund-finality/regress/s3_journal_classifier.ts.
++export const JOURNAL_MAGIC = "d9d505f920a163d7";
++export type JournalClass = { kind: "none" } | { kind: "not-hot"; path: string; size: number; bytes: Buffer; why: string } | { kind: "hot"; path: string; size: number; why: string };
++export function classifyJournal(path: string): JournalClass {
++  const real = realStorePath(path), j = real + "-journal";
++  if (!existsSync(j)) return { kind: "none" };
++  const js = lstatSync(j);
++  if (!js.isFile()) return { kind: "hot", path: j, size: js.size, why: "the journal is not a regular file" };
++  const dbSize = existsSync(real) ? lstatSync(real).size : 0;
++  if (dbSize === 0) return { kind: "hot", path: j, size: js.size, why: "the database file is empty or missing (SQLite deletes such a journal)" };
++  const bytes = readFileSync(j);
++  if (bytes.length === 0) return { kind: "not-hot", path: j, size: 0, bytes, why: "zero-length journal (SQLite reads its first byte as 0: not hot)" };
++  if (bytes[0] === 0) return { kind: "not-hot", path: j, size: bytes.length, bytes, why: "the journal's first byte is 0 (zeroed or never-synced header: not hot)" };
++  return { kind: "hot", path: j, size: bytes.length, why: bytes.subarray(0, 8).toString("hex") === JOURNAL_MAGIC ? "journal header with the SQLite magic" : "non-zero first byte without the magic (SQLite treats it as hot, plays back nothing and deletes it)" };
++}
+ // Refuses: a database that is not one regular file with ONE name (st_nlink 1; C-ATT-23), a header in WAL mode, and any
+ // companion file named in `refuse` (the sink: all three; the read-only dispatcher: -wal and -shm, because a live sink's
+ // own -journal exists during its write transactions). Returns the identity of the file (dev, ino) or undefined (no file).
++// A -journal is refused with its class (h-sink3): the start never removes a journal itself; Sink.recover does (not hot:
++// removed after a preview on a copy; hot: SQLite's rollback after a preview).
+ export function checkStoreFile(path: string, refuse: readonly string[] = COMPANIONS): StoreFile | undefined {
+   const real = realStorePath(path);
+   const planted = presentCompanions(path, refuse);
+-  if (planted.length > 0) throw new Error("companion file(s) present: " + planted.join(", ") + " (the sink did not expect them; after a crash, run the operator step Sink.recover)");
++  if (planted.length > 0) {
++    const jc = refuse.includes("-journal") ? classifyJournal(path) : { kind: "none" as const };
++    const cls = jc.kind === "none" ? "" : "; journal class: " + jc.kind + " (" + jc.why + ")";
++    throw new Error("companion file(s) present: " + planted.join(", ") + " (the sink did not expect them; after a crash, run the operator step Sink.recover" + cls + ")");
++  }
+   if (!existsSync(real)) return undefined;
+   const st = lstatSync(real);
+   if (!st.isFile()) throw new Error("the database path is not a regular file");
+diff --git a/ts/refund-finality/dispatcher.ts b/ts/refund-finality/dispatcher.ts
+index cb4c2a98..3ce1fee0 100644
+--- a/ts/refund-finality/dispatcher.ts
++++ b/ts/refund-finality/dispatcher.ts
+@@ -51,8 +51,9 @@
+ // or rewrite of the sink's store). It does NOT detect an OLDER LEDGER (a restored backup of the ledger, or of the ledger
+ // and the database together): the rows after the restored ledger look exactly like rows not yet dispatched, and they
+ // are emitted again. Detected without an outside anchor: a ledger restored WITHOUT the dispatch witness file
+-// <resolved database path>.dispatch-witness.json (see writeWitness: it binds the store to one ledger path and keeps a
+-// copy of the last claim). NOT detected: a restore of the ledger and the witness together. Only an outside anchor
++// <resolved database path>.dispatch-witness.json (see writeWitness: it binds the store to one ledger file and keeps a
++// copy of the last claim and, since h-sink3, {lines, lastHash} of the ledger chain: a shorter or different ledger is
++// refused, also after a "retry" re-claim, C-ATT-36). NOT detected: a restore of the ledger and the witness together. Only an outside anchor
+ // detects that: cfg.ledgerFloor = {n, rowHead}, the `ledgerHead` of an earlier
+ // result kept on another host or medium; the ledger must reach row n with that rowHead, else the run stops. Without it:
+ // assumption LEDGER-MONOTONE (the ledger file is never replaced by an older copy) and, for the database, ANCHOR-MONOTONE.
+@@ -68,6 +69,7 @@
+ // stops (fail closed; a person must repair). A store BELOW the ledger (power loss; the sink sets fullfsync since h-sink2: NOT TESTED against power loss) stops the
+ // run (the witness check above): never treated as new work.
+ // Ledger format: lines without `kind` (the h1 format before h-dispatch) are refused ("not one chain"); no migration.
++// h-sink3: every line also carries `prev` (LEDGER CHAIN below); h-dispatch ledgers without it are accepted as a prefix.
+ // APPEND-ATOMIC: one write() of one line in O_APPEND mode is not interleaved with another, and a reader that starts
+ // after the writer's fsync returned sees the line and every line before it (local POSIX file system; TESTED-UNPROVED).
+ // NOT proved. Assumed and not checked: the ledger file, this process and the pinned configuration are
+@@ -82,8 +84,8 @@
+ // and rows AFTER expectedHead.count are never sent ("beyond the outside head"): a row is sent only when the outside head
+ // covers it. WITHOUT cfg.expectedHead (stated limit): a swap, a deletion or a rollback of rows after the ledger's last
+ // claim is not detected; the dispatcher can send an uncommitted transition and never send the committed one.
+-import { createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
+-import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeSync } from "node:fs";
++import { createHash, createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
++import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, statSync, unlinkSync, writeSync } from "node:fs";
+ import { hostname } from "node:os";
+ import { DatabaseSync } from "node:sqlite";
+ import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
+@@ -93,7 +95,10 @@ import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadC
+ // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
+ // ledgerFloor (optional): an outside anchor of the LEDGER (an earlier result's ledgerHead): the ledger must hold the claim
+ // of row n with that rowHead. Detects a restored (older) ledger only when it comes from outside the ledger's medium.
+-export type LedgerHead = { n: number; rowHead: string };
++// h-sink3 (C-ATT-36): lines and lastHash (optional, ADDED) bind the ledger CONTENT: the number of complete lines and the
++// ledger chain hash after them (see LEDGER CHAIN below). A floor with them refuses any ledger shorter than or different
++// from the one that produced it. A floor without them is checked as before ({n, rowHead} only).
++export type LedgerHead = { n: number; rowHead: string; lines?: number; lastHash?: string };
+ // expectedHead (optional; h-sink2): the sink's committed head from outside (see ROW ANCHOR above).
+ export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
+   expectedHead?: SinkHead };
+@@ -103,7 +108,35 @@ export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId
+ type ClaimFields = { n: number; requestId: string; tokenSha256: string; preStateSha256: string; postStateSha256: string; intentSha256: string; rowHead: string };
+ type IntentLine = ClaimFields & { kind: "intent"; run: string; pid: number };
+ type Slot = { claim: IntentLine; status: "pending" | "done" | "failed" | "sent" | "retry"; superseded: string[] };
+-type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail: string; tailAt: number };
++// chain[i] = the ledger chain hash after the first i complete lines (chain[0] = LEDGER_GENESIS); lines = chain.length - 1.
++type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail: string; tailAt: number; lines: number; chain: string[] };
++type Witness = { ledger: string; n: number; rowHead: string; lines?: number; lastHash?: string; ledgerId?: string };
++
++// LEDGER CHAIN (h-sink3, C-ATT-36). The ledger is a hash chain of its complete lines: c_0 = LEDGER_GENESIS,
++// c_i = SHA-256("forge-refund-dispatch-ledger-v1/line\n" + c_{i-1} + "\n" + the exact bytes of line i without its 0x0A).
++// Every line this dispatcher writes carries `prev` = c_{i-1} as the writer read it just before the write. The reader
++// recomputes the chain and checks each `prev`: it must equal c_{i-1}, or (two runs that appended at once after a person
++// removed a live lock) the `prev` of line i-1 (the same earlier state). Any other value: NOT_CHAIN (fail closed).
++// The dispatch witness and cfg.ledgerFloor keep {lines, lastHash = c_lines}: a ledger with fewer lines, or other bytes
++// in its first `lines` lines, is refused. Every line kind (intent, re-claim, done, failed, resolved) advances the chain,
++// so a re-claim after "retry" changes what the witness binds (the C-ATT-36 restore is seen).
++// MIGRATION (decided): ledgers of the earlier h-dispatch format (lines with `kind` but without `prev`) are ACCEPTED as a
++// PREFIX: their lines enter the recomputed chain unchanged; the first line this version writes carries `prev`, and from
++// then on every line must carry it. Nothing is rewritten. A witness file of the earlier format ({ledger, n, rowHead}) is
++// accepted and gains {lines, lastHash, ledgerId} at its next write. Lines without `kind` (the h1 format) stay refused.
++export const LEDGER_GENESIS = createHash("sha256").update("forge-refund-dispatch-ledger-v1/genesis").digest("hex");
++const nextChain = (prev: string, line: Buffer): string =>
++  createHash("sha256").update("forge-refund-dispatch-ledger-v1/line\n" + prev + "\n").update(line).digest("hex");
++// The chain over the complete lines of a byte string (no parsing): {lines, hash}. Used by append() for `prev`.
++const chainOfBytes = (bytes: Buffer): { lines: number; hash: string } => {
++  let h = LEDGER_GENESIS, k = 0, at = 0;
++  for (;;) { const nl = bytes.indexOf(0x0a, at); if (nl < 0) break; if (nl > at) { h = nextChain(h, bytes.subarray(at, nl)); k++; } at = nl + 1; }
++  return { lines: k, hash: h };
++};
++// File identity (C-ATT-37 "case"): device and inode, compared instead of the path text.
++const fileId = (p: string): { id: string; nlink: number } | null => {
++  try { const st = statSync(p, { bigint: true }); return { id: st.dev.toString() + ":" + st.ino.toString(), nlink: Number(st.nlink) }; } catch { return null; }
++};
+ 
+ const HEX64 = /^[0-9a-f]{64}$/, RUN = /^[0-9a-f]{32}$/;
+ const NOT_CHAIN = "dispatcher ledger is not one chain";
+@@ -134,11 +167,26 @@ export class Dispatcher {
+     // C-ATT-22: only lines that END with 0x0A count. Bytes after the last 0x0A are an incomplete record (a short write,
+     // a crash inside a write): never confirmed, so never emitted (claimAndEmit emits only after a complete line is re-read).
+     const tailAt = bytes.lastIndexOf(0x0a) + 1;
+-    const text = bytes.subarray(0, tailAt).toString("utf8"), tail = bytes.subarray(tailAt).toString("utf8");
+-    for (const raw of text.split("\n").filter(l => l.length > 0)) {
++    const tail = bytes.subarray(tailAt).toString("utf8");
++    const chain: string[] = [LEDGER_GENESIS];
++    let chained = false, lastPrev: string | null = null;
++    for (let at = 0; at < tailAt;) {
++      const nl = bytes.indexOf(0x0a, at), lineBytes = bytes.subarray(at, nl);
++      at = nl + 1;
++      if (lineBytes.length === 0) continue;
++      const raw = lineBytes.toString("utf8");
+       let e: any;
+       try { e = JSON.parse(raw); } catch { throw new Error(NOT_CHAIN); }
+       if (e === null || typeof e !== "object" || !Number.isSafeInteger(e.n) || e.n < 1 || typeof e.requestId !== "string") throw new Error(NOT_CHAIN);
++      // LEDGER CHAIN (h-sink3): `prev` absent only in a legacy prefix; present: c_{i-1} or the previous line's prev.
++      const c = chain[chain.length - 1];
++      if (e.prev === undefined) { if (chained) throw new Error(NOT_CHAIN); }
++      else {
++        if (typeof e.prev !== "string" || !HEX64.test(e.prev) || (e.prev !== c && e.prev !== lastPrev)) throw new Error(NOT_CHAIN);
++        chained = true;
++      }
++      lastPrev = typeof e.prev === "string" ? e.prev : null;
++      chain.push(nextChain(c, lineBytes));
+       const s = slots.get(e.n);
+       if (e.kind === "intent") {
+         if (!HEX64.test(e.tokenSha256) || !HEX64.test(e.preStateSha256) || !HEX64.test(e.postStateSha256) || !HEX64.test(e.intentSha256) ||
+@@ -166,11 +214,13 @@ export class Dispatcher {
+         s.status = e.outcome;
+       } else throw new Error(NOT_CHAIN);
+     }
+-    return { slots, ids, maxN, tail, tailAt };
++    return { slots, ids, maxN, tail, tailAt, lines: chain.length - 1, chain };
+   }
+   // C-ATT-22: a write loop; a short write is continued, a write of 0 bytes or an error stops the run BEFORE any emit.
++  // h-sink3: the line carries `prev` = the ledger chain hash of the complete lines read just before the write.
+   private append(line: object): void {
+-    const data = Buffer.from(JSON.stringify(line) + "\n", "utf8");
++    const before = existsSync(this.ledgerPath) ? readFileSync(this.ledgerPath) : Buffer.alloc(0);
++    const data = Buffer.from(JSON.stringify({ ...line, prev: chainOfBytes(before.subarray(0, before.lastIndexOf(0x0a) + 1)).hash }) + "\n", "utf8");
+     const fd = openSync(this.ledgerPath, "a");
+     try {
+       for (let off = 0; off < data.length;) {
+@@ -226,19 +276,47 @@ export class Dispatcher {
+   // witness). A restore of both files together is NOT detected (LEDGER-MONOTONE). Removing the witness file is the
+   // explicit operator step to bind a new ledger; the newLedgerH0 rule then applies.
+   private witnessPath(): string { return realpathSync(this.dbPath) + ".dispatch-witness.json"; }
+-  private readWitness(): { ledger: string; n: number; rowHead: string } | null {
++  // h-sink3: the witness also keeps {lines, lastHash} (C-ATT-36) and ledgerId = "dev:ino" of the ledger (C-ATT-37).
++  private readWitness(): Witness | null {
+     const p = this.witnessPath();
+     if (!existsSync(p)) return null;
+     let w: any;
+     try { w = JSON.parse(readFileSync(p, "utf8")); } catch { w = null; }
+-    if (w === null || typeof w.ledger !== "string" || !Number.isSafeInteger(w.n) || w.n < 0 || (w.n > 0 && !HEX64.test(w.rowHead))) {
++    if (w === null || typeof w.ledger !== "string" || !Number.isSafeInteger(w.n) || w.n < 0 || (w.n > 0 && !HEX64.test(w.rowHead)) ||
++        (w.lines !== undefined && (!Number.isSafeInteger(w.lines) || w.lines < 0 || typeof w.lastHash !== "string" || !HEX64.test(w.lastHash))) ||
++        (w.ledgerId !== undefined && typeof w.ledgerId !== "string")) {
+       throw new Error("dispatcher alarm: the dispatch witness " + p + " is unreadable; a person must check it");
+     }
+     return w;
+   }
++  // The witness names THIS ledger: the same resolved path text, or (C-ATT-37: another letter case or a firmlink) the same
++  // file identity (device, inode) while the ledger has ONE name (a hard-linked second name is not accepted this way).
++  private witnessNamesThisLedger(w: Witness): boolean {
++    if (w.ledger === realpathSync(this.ledgerPath)) return true;
++    const id = fileId(this.ledgerPath);
++    return w.ledgerId !== undefined && id !== null && id.nlink === 1 && id.id === w.ledgerId;
++  }
++  // The ledger CONTENT reaches the witness (or a floor): at least `lines` complete lines, and the chain hash after them is lastHash.
++  private static reaches(L: Ledger, lines: number | undefined, lastHash: string | undefined): boolean {
++    return lines === undefined || (lines <= L.lines && L.chain[lines] === lastHash);
++  }
++  // The witness checks (binding, last claim, content); throws an alarm. Used by flush and by resolveInDoubt.
++  private checkWitness(w: Witness | null, L: Ledger): void {
++    if (w === null) return;
++    if (!this.witnessNamesThisLedger(w)) {
++      throw new Error("dispatcher alarm: the store is bound to the ledger " + w.ledger + ", not to " + realpathSync(this.ledgerPath) + "; nothing sent");
++    }
++    if (w.n > 0 && L.slots.get(w.n)?.claim.rowHead !== w.rowHead) {
++      throw new Error("dispatcher alarm: the ledger does not reach the dispatch witness (row " + w.n + "); an older or another ledger (restored backup?); nothing sent");
++    }
++    if (!Dispatcher.reaches(L, w.lines, w.lastHash)) {
++      throw new Error("dispatcher alarm: the ledger is shorter than or differs from the dispatch witness (line " + w.lines + " of " + L.lines + "); an older ledger (restored backup?); nothing sent");
++    }
++  }
+   private writeWitness(L: Ledger): void {
+     const p = this.witnessPath(), tmp = p + ".tmp-" + this.run;
+-    const w = { ledger: realpathSync(this.ledgerPath), n: L.maxN, rowHead: L.maxN > 0 ? L.slots.get(L.maxN)!.claim.rowHead : "" };
++    const w: Witness = { ledger: realpathSync(this.ledgerPath), n: L.maxN, rowHead: L.maxN > 0 ? L.slots.get(L.maxN)!.claim.rowHead : "",
++      lines: L.lines, lastHash: L.chain[L.lines], ledgerId: fileId(this.ledgerPath)?.id };
+     const fd = openSync(tmp, "w");
+     try { writeSync(fd, JSON.stringify(w)); fsyncSync(fd); } finally { closeSync(fd); }
+     renameSync(tmp, p);
+@@ -275,10 +353,15 @@ export class Dispatcher {
+     this.acquire();
+     try {
+       const L = this.ledger();
++      // h-sink3 (C-ATT-36): a decision is taken only on the ledger the store is bound to, at least as new as its witness;
++      // the decision line then advances the witness, so a later restore of the ledger to before it is seen.
++      const bound = existsSync(this.dbPath);
++      if (bound) this.checkWitness(this.readWitness(), L);
+       const slot = [...L.slots.values()].find(s => s.claim.requestId === requestId);
+       if (slot === undefined || (slot.status !== "pending" && slot.status !== "failed")) throw new Error("request id " + requestId + " is not in doubt");
+       if (slot.claim.pid !== process.pid && alive(slot.claim.pid)) throw new Error("the process that claimed " + requestId + " (pid " + slot.claim.pid + ") is alive; wait for it to end");
+       this.append({ kind: "resolved", n: slot.claim.n, requestId, outcome, note: String(note) });
++      if (bound) this.writeWitness(this.ledger());
+     } finally { this.release(); }
+   }
+   // Claim, re-read, emit, done (see the header).
+@@ -292,10 +375,13 @@ export class Dispatcher {
+     }
+     this.writeWitness(now);
+     try { this.emit(effect, intent); } catch (error) {
+-      try { this.append({ kind: "failed", n: line.n, requestId: line.requestId, run: this.run, error: String((error as Error)?.message ?? error).slice(0, 200) }); } catch { /* the claim stays in doubt */ }
++      try { this.append({ kind: "failed", n: line.n, requestId: line.requestId, run: this.run, error: String((error as Error)?.message ?? error).slice(0, 200) }); this.writeWitness(this.ledger()); } catch { /* the claim stays in doubt */ }
+       throw error;
+     }
+     this.append({ kind: "done", n: line.n, requestId: line.requestId, run: this.run });
++    // h-sink3: the witness follows the done line (best effort: the effect has left; a lagging witness still binds the
++    // claim line, so a restore to before "done" shows the row in doubt, never as new work).
++    try { this.writeWitness(this.ledger()); } catch { /* the witness keeps the claim */ }
+   }
+   // h1 (C-ATT-06): before any effect, the dispatcher applies the SAME store audit as the sink (core/store.ts): schema
+   // text, integrity_check, meta (its initial charge must hash to the pinned initialStateSha256), and the compiled
+@@ -350,12 +436,7 @@ export class Dispatcher {
+       // C-HOST-05 / C-ATT-19: the dispatch witness next to the store (see writeWitness). Checked BEFORE the newLedgerH0 rule,
+       // so a store that is bound to a ledger never starts a second one, also with cfg.newLedgerH0 still set.
+       const wit = this.readWitness();
+-      if (wit !== null && wit.ledger !== realpathSync(this.ledgerPath)) {
+-        throw new Error("dispatcher alarm: the store is bound to the ledger " + wit.ledger + ", not to " + realpathSync(this.ledgerPath) + "; nothing sent");
+-      }
+-      if (wit !== null && wit.n > 0 && L.slots.get(wit.n)?.claim.rowHead !== wit.rowHead) {
+-        throw new Error("dispatcher alarm: the ledger does not reach the dispatch witness (row " + wit.n + "); an older or another ledger (restored backup?); nothing sent");
+-      }
++      this.checkWitness(wit, L);
+       // The dispatcher as the row-log witness (h-anchor design, point 2): the store must still EXTEND every claimed row.
+       if (L.maxN === 0 && audited.length > 0 && this.cfg.newLedgerH0 !== genesis) {
+         throw new Error("dispatcher alarm: the ledger is missing or empty but the store holds " + audited.length + " committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0");
+@@ -369,7 +450,12 @@ export class Dispatcher {
+       if (floor !== undefined && (!Number.isSafeInteger(floor.n) || floor.n < 1 || L.slots.get(floor.n)?.claim.rowHead !== floor.rowHead)) {
+         throw new Error("dispatcher alarm: the ledger does not reach the outside anchor (row " + floor.n + "); an older ledger (restored backup?); nothing sent");
+       }
+-      if (wit === null) this.writeWitness(L);   // the first run binds the store to this ledger
++      // h-sink3 (C-ATT-36): a floor with {lines, lastHash} binds the ledger content too.
++      if (floor !== undefined && (floor.lines !== undefined || floor.lastHash !== undefined) &&
++          (!Number.isSafeInteger(floor.lines) || floor.lines! < 1 || typeof floor.lastHash !== "string" || !HEX64.test(floor.lastHash) || !Dispatcher.reaches(L, floor.lines, floor.lastHash))) {
++        throw new Error("dispatcher alarm: the ledger is shorter than or differs from the outside anchor (line " + floor.lines + " of " + L.lines + "); an older ledger (restored backup?); nothing sent");
++      }
++      if (wit === null || wit.lines === undefined || wit.ledgerId === undefined) this.writeWitness(L);   // the first run binds the store to this ledger (or upgrades an h-dispatch witness)
+       if (torn !== "") result.tornTailCut = torn;
+       if (this.tookOver !== null) result.staleLockTakenOver = { pid: this.tookOver.pid, run: this.tookOver.run };
+       let head = L.maxN === 0 ? this.cfg.initialStateSha256 : L.slots.get(L.maxN)!.claim.postStateSha256;
+@@ -409,7 +495,7 @@ export class Dispatcher {
+         result.emitted.push(effect);
+       }
+       const last = this.ledger();
+-      if (last.maxN > 0) result.ledgerHead = { n: last.maxN, rowHead: last.slots.get(last.maxN)!.claim.rowHead };
++      if (last.maxN > 0) result.ledgerHead = { n: last.maxN, rowHead: last.slots.get(last.maxN)!.claim.rowHead, lines: last.lines, lastHash: last.chain[last.lines] };
+     } finally { try { db.exec("ROLLBACK"); } catch { /* none */ } db.close(); }
+     return result;
+   }
+diff --git a/ts/refund-finality/sink.ts b/ts/refund-finality/sink.ts
+index cb0a7dbc..e7736616 100644
+--- a/ts/refund-finality/sink.ts
++++ b/ts/refund-finality/sink.ts
+@@ -15,9 +15,12 @@
+ // FILES (h-sink2, C-ATT-21/23): BEFORE the first SQLite lock the sink refuses a database with a -journal, -wal or -shm file
+ // next to it (a hot journal is applied by SQLite at the first lock, before any audit), a database with more than one hard
+ // link, and a header in WAL mode; it pins journal_mode = DELETE, synchronous = FULL and fullfsync = ON and reads them
+-// back. Before every write transaction it checks again: the same inode, one link, no -wal, no -shm. After an honest crash
+-// a hot -journal is legitimate: the sink then refuses to start, and the operator runs Sink.recover (it previews the
+-// recovery on a copy, logs the head before and after, and refuses a rollback of more than the one unacknowledged commit).
++// back. Before every write transaction it checks again: the same inode, one link, no -wal, no -shm; and (h-sink3,
++// C-ATT-35) once more inside the write transaction right before COMMIT and once after COMMIT, before acknowledging. After
++// an honest crash a -journal is legitimate: the sink then refuses to start (naming the journal's class), and the operator
++// runs Sink.recover: a NOT-HOT journal (zero length or zero first byte: SQLite ignores it; C-ATT-33) is removed after a
++// preview on a copy proves the store and head unchanged; a HOT journal is rolled back after a preview, and only when the
++// step establishes that no acknowledged commit is lost (the depth rule, C-ATT-34). h-sink3 notes: HARDENING_NOTES_3.md.
+ // Assumption DIR-EXCLUSIVE: no other party can create, replace, rename or link files in the database directory.
+ // Database-level safeguards (DDL in core/store.ts): S1 request identity; S2 one-statement commit; S3 charge binding; S4
+ // cumulative refund limit with canonical money text; S5 append-only; S6 the row-log chain; NUL-free TEXT and typed INTEGER
+@@ -47,12 +50,12 @@
+ // bignumber.js, SQLite (triggers, constraints, integrity_check, IMMEDIATE transactions, data_version, hot-journal
+ // rollback, fullfsync), the file system, Node, OpenSSL, SHA-256, Ed25519. Durability against power loss: NOT TESTED.
+ import { createPublicKey } from "node:crypto";
+-import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, rmSync, writeSync } from "node:fs";
++import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, readFileSync, rmSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
+ import { tmpdir } from "node:os";
+-import { join } from "node:path";
++import { dirname, join } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+ import { ChargeState, isState, canon, sha256hex } from "./encoding";
+-import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, conv, createSchema, decodeToken, isHead,
++import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, classifyJournal, conv, createSchema, decodeToken, isHead,
+   linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial } from "./core/store";
+ export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "./core/store";
+ export type { SinkHead } from "./core/store";
+@@ -65,7 +68,8 @@ export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checker
+ // head: the audited head after this call (absent when the sink is halted or the decoder refused the input).
+ export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string; head?: SinkHead };
+ export type OutboxRow = { seq: number; request_id: string; intent: string };
+-export type RecoverReport = { companions: string[]; before: SinkHead | string; after: SinkHead | string; rolledBack: number | null; applied: boolean; reason: string };
++export type RecoverReport = { companions: string[]; before: SinkHead | string; after: SinkHead | string; rolledBack: number | null; applied: boolean; reason: string;
++  journalClass?: "hot" | "not-hot"; journalWhy?: string };
+ 
+ const sameHead = (a: SinkHead, b: SinkHead): boolean => a.count === b.count && a.chainHash === b.chainHash;
+ // Pins and reads back the durability and journal settings (item 7 of h-sink2). Throws if SQLite does not keep them.
+@@ -277,6 +281,11 @@ export class Sink {
+             return { status: "rejected", reason: "the outside head was not persisted (onHead threw): " + String((error as Error)?.message ?? error), head: this.head() };
+           }
+         }
++        // C-ATT-35 (h-sink3): the file check AGAIN, inside the write transaction (the RESERVED lock is held) and after
++        // onHead, right before COMMIT: the same inode at the path, one link, no -wal, no -shm (this transaction's own
++        // -journal is expected here). A replaced inode makes this commit roll back and halts the sink.
++        const inside = sameStoreFile(this.file, false);
++        if (inside !== "") return this.halt(inside + " (seen inside the write transaction, before COMMIT; row " + seq + " is not committed)");
+         const before = { pos: this.pos, dv: this.dv, guard: this.guard };
+         this.pos = { st, count: seq, chain: self };
+         this.mark(next);
+@@ -286,6 +295,12 @@ export class Sink {
+           return this.halt("COMMIT failed after the checks (the store may or may not hold row " + seq + "): " + String((error as Error).message));
+         }
+         this.keep([{ requestId: rid, tokenSha256 } as AuditedRow], false);
++        // C-ATT-35 (h-sink3): and once more AFTER COMMIT, before the acknowledgement: if the path no longer names the inode
++        // that took the commit, the row may exist only in an unlinked inode; it is NOT acknowledged (the host must not
++        // count it) and the sink halts. Remaining window: a replacement after this check and before the host persists
++        // result.head (stated in HARDENING_NOTES_3.md).
++        const after = sameStoreFile(this.file, false);
++        if (after !== "") { this.halted = after + " (seen after COMMIT of row " + seq + "; the row may exist only in the replaced inode; not acknowledged)"; return { status: "rejected", reason: "sink halted: " + this.halted }; }
+         return { status: "committed", head };
+       }
+       this.db.exec("ROLLBACK");
+@@ -344,18 +359,32 @@ export class Sink {
+     } finally { db.close(); }
+     return { tokens, prefixHead: head, complete: problem === "", problem };
+   }
+-  // THE OPERATOR STEP after a crash (C-ATT-21; h-sink2). The sink refuses to start while a -journal exists. This step:
+-  // (1) refuses -wal and -shm (the sink pins journal_mode = DELETE and never makes them: a person must inspect and remove
+-  // them) and a database with more than one link; (2) audits a COPY of the database WITHOUT the journal ("before"; after a
+-  // real crash it may be unreadable or hold the unfinished commit); (3) applies the journal to a second COPY (SQLite's
+-  // own hot-journal rollback) and audits it ("after"), with cfg.expectedHead / cfg.outsideHead as at start; (4) refuses
+-  // when "after" does not pass, or when "before" is a valid log and "after" is not a prefix of it with at most ONE row
+-  // less (an honest crash rolls back at most the one unfinished, unacknowledged commit; in DELETE mode the commit point is
+-  // the journal's deletion, and the sink acknowledges only after COMMIT returned); (5) only then applies the journal to
+-  // the real database and audits it again: its head must be the previewed "after". (6) One JSON line with the files,
+-  // the heads before and after and the decision is appended to logPath and synced. The real files are not changed when
+-  // the step refuses. Without an outside head, a planted journal that rolls back exactly one row is indistinguishable
+-  // from an honest crash (stated limit). The temporary copies are removed.
++  // THE OPERATOR STEP after a crash (C-ATT-21; h-sink2; h-sink3: C-ATT-33, C-ATT-34). The sink refuses to start while a
++  // -journal exists. This step: (1) refuses -wal and -shm (the sink pins journal_mode = DELETE and never makes them: a
++  // person must inspect and remove them) and a database with more than one link; (2) classifies the journal by SQLite's
++  // hot-journal rule (core/store.ts classifyJournal).
++  // NOT HOT (zero length or zero first byte; C-ATT-33): SQLite ignores such a journal, so it cannot change the store. The
++  // step proves that on COPIES before it touches the real files: (a) the copy without the journal passes the audit
++  // (head B); (b) a copy WITH the journal is opened by SQLite and audited: the journal must still be there, byte-equal, the
++  // database copy byte-equal, and the head equal to B (SQLite ignored it); (c) on the real database, under a RESERVED lock
++  // (BEGIN IMMEDIATE: no other writer; SQLite's own rule H2), the journal must still be byte-equal to the previewed one; it
++  // is removed (directory synced) and the real store audited: its head must be B; with cfg.outsideHead, B must equal
++  // committed or pending. Nothing is rolled back.
++  // HOT: (3) audits a COPY of the database WITHOUT the journal ("before"; after a real crash it may be unreadable or hold
++  // the unfinished commit); (4) applies the journal to a second COPY (SQLite's own hot-journal rollback) and audits it
++  // ("after"), with cfg.expectedHead / cfg.outsideHead as at start; (5) THE DEPTH RULE (C-ATT-34): the step reports
++  // success only when it ESTABLISHES that the rollback loses no acknowledged commit: either (i) "before" passes the audit
++  // and "after" is "before" or "before" minus its last row (an honest crash rolls back at most the one unfinished,
++  // unacknowledged commit; in DELETE mode the commit point is the journal's deletion, and the sink acknowledges only
++  // after COMMIT returned), or (ii) cfg.outsideHead is given (the host's persisted heads under the FRESHNESS RULE) and
++  // "after" EQUALS outsideHead.committed or outsideHead.pending: the outside head authorises exactly that head. Every other
++  // case is refused: also a "before" that fails the audit without cfg.outsideHead (the head before the rollback is then
++  // unknown, so the depth of the rollback is unknown; cfg.expectedHead does not authorise it: it only bounds from below).
++  // (6) only then applies the journal to the real database and audits it again: its head must be the previewed "after".
++  // (7) One JSON line with the files, the class, the heads before and after and the decision is appended to logPath and
++  // synced. The real files are not changed when the step refuses. Without an outside head, a planted journal that rolls
++  // back exactly one row of a valid store is indistinguishable from an honest crash (stated limit). Temporary copies are
++  // removed.
+   static recover(path: string, cfg: SinkConfig, logPath: string): RecoverReport {
+     const report: RecoverReport = { companions: presentCompanions(path), before: "", after: "", rolledBack: null, applied: false, reason: "" };
+     const log = () => {
+@@ -367,6 +396,9 @@ export class Sink {
+     const real = realStorePath(path), journal = presentCompanions(path, ["-journal"]);
+     if (journal.length === 0) { report.reason = "no -journal: nothing to recover"; log(); return report; }
+     if (journal.length !== 1 || journal[0] !== real + "-journal") return refuse("the journal is not at the real path of the database: " + journal.join(", "));
++    const jc = classifyJournal(path);
++    if (jc.kind === "none") return refuse("the journal disappeared during the step");
++    report.journalClass = jc.kind; report.journalWhy = jc.why;
+     const M = loadCore(), cv = conv(M);
+     if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) return refuse("cfg.initialState is not a valid context");
+     const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
+@@ -380,30 +412,70 @@ export class Sink {
+         return at;
+       } finally { db.close(); }
+     };
++    const oh = cfg.outsideHead;
++    const outsideAuthorises = (h: SinkHead): boolean => oh !== undefined && (sameHead(h, oh.committed) || (oh.pending !== undefined && sameHead(h, oh.pending)));
+     const tmp = mkdtempSync(join(tmpdir(), "forge-sink-recover-"));
+     try {
++      if (jc.kind === "not-hot") {
++        const dbBytes = readFileSync(real);
++        writeFileSync(join(tmp, "before.sqlite"), dbBytes);
++        let before: Pos;
++        try { before = auditAt(join(tmp, "before.sqlite"), cfg.expectedHead ?? oh?.committed); } catch (error) { return refuse("not-hot journal: the store without it does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
++        report.before = { count: before.count, chainHash: before.chain };
++        if (oh !== undefined && !outsideAuthorises(report.before)) return refuse("not-hot journal: the stored head is not the outside head");
++        const w = join(tmp, "with.sqlite");
++        writeFileSync(w, dbBytes); writeFileSync(w + "-journal", jc.bytes);
++        let withJ: Pos;
++        try { withJ = auditAt(w, cfg.expectedHead ?? oh?.committed); } catch (error) { return refuse("not-hot journal: the copy with the journal does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
++        const ignored = existsSync(w + "-journal") && readFileSync(w + "-journal").equals(jc.bytes) && readFileSync(w).equals(dbBytes);
++        if (!ignored || withJ.count !== before.count || withJ.chain !== before.chain) return refuse("not-hot journal: SQLite did not ignore it on the copy (the classifier disagrees with SQLite); nothing removed");
++        report.after = { count: withJ.count, chainHash: withJ.chain }; report.rolledBack = 0;
++        // The real files: under a RESERVED lock (no other writer), the same journal bytes; remove; audit; same head.
++        const d = new DatabaseSync(real);
++        try {
++          pinPragmas(d);
++          d.exec("BEGIN IMMEDIATE");
++          try {
++            const again = classifyJournal(path);
++            if (again.kind !== "not-hot" || !again.bytes.equals(jc.bytes)) return refuse("not-hot journal: the journal changed during the step; nothing removed");
++            if (!readFileSync(real).equals(dbBytes)) return refuse("not-hot journal: the database file changed during the step; nothing removed");
++            unlinkSync(real + "-journal");
++            const dfd = openSync(dirname(real), "r");
++            try { fsyncSync(dfd); } finally { closeSync(dfd); }
++            report.applied = true;
++            const now = au.fullAudit(d, cfg.expectedHead ?? oh?.committed);
++            if (now === null || now.count !== before.count || now.chain !== before.chain) return refuse("not-hot journal removed, but the real store's head is not the previewed head (the files changed during the step)");
++          } finally { try { d.exec("ROLLBACK"); } catch { /* none */ } }
++        } finally { d.close(); }
++        report.reason = "recovered: a not-hot journal (" + jc.why + ") was removed; SQLite ignores it; the store and its head are unchanged";
++        log();
++        return report;
++      }
+       let before: Pos | null = null;
+       copyFileSync(real, join(tmp, "before.sqlite"));
+       try { before = auditAt(join(tmp, "before.sqlite")); report.before = { count: before.count, chainHash: before.chain }; } catch (error) { report.before = "not a valid log: " + String((error as Error).message).slice(0, 200); }
+       copyFileSync(real, join(tmp, "after.sqlite")); copyFileSync(real + "-journal", join(tmp, "after.sqlite-journal"));
+       let after: Pos;
+-      try { after = auditAt(join(tmp, "after.sqlite"), cfg.expectedHead ?? cfg.outsideHead?.committed); } catch (error) { return refuse("the recovered copy does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
++      try { after = auditAt(join(tmp, "after.sqlite"), cfg.expectedHead ?? oh?.committed); } catch (error) { return refuse("the recovered copy does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
+       report.after = { count: after.count, chainHash: after.chain };
+-      const oh = cfg.outsideHead, ah = report.after;
+-      if (oh !== undefined && !sameHead(ah, oh.committed) && !(oh.pending !== undefined && sameHead(ah, oh.pending))) return refuse("the recovered head is not the outside head");
+-      if (before !== null) {
++      const ah = report.after;
++      if (oh !== undefined && !outsideAuthorises(ah)) return refuse("the recovered head is not the outside head");
++      // THE DEPTH RULE (5).
++      if (before === null) {
++        if (oh === undefined) return refuse("the live file does not pass the audit, so the head before the rollback is unknown and so is the depth of the rollback; supply cfg.outsideHead (the persisted committed/pending heads) to authorise exactly the recovered head");
++      } else {
+         report.rolledBack = before.count - after.count;
+         const prefixOk = before.count === after.count ? before.chain === after.chain : (before.count === after.count + 1 && (() => {
+           const d = new DatabaseSync(join(tmp, "before.sqlite"), { readOnly: true });
+           try { return (d.prepare("SELECT prev FROM settled WHERE seq = ?").get(before.count) as any)?.prev === after.chain; } finally { d.close(); }
+         })());
+-        if (!prefixOk) return refuse("the journal would roll back " + report.rolledBack + " row(s) of a valid log (an honest crash rolls back at most the one unfinished commit)");
++        if (!prefixOk && !outsideAuthorises(ah)) return refuse("the journal would roll back " + report.rolledBack + " row(s) of a valid log (an honest crash rolls back at most the one unfinished commit; only cfg.outsideHead can authorise this exact head)");
+       }
+       const d = new DatabaseSync(real);
+       try { pinPragmas(d); d.prepare("SELECT COUNT(*) AS n FROM sqlite_schema").get(); } finally { d.close(); }
+       report.applied = true;
+       if (existsSync(real + "-journal")) return refuse("the journal is still present after the rollback");
+-      const now = auditAt(real, cfg.expectedHead ?? cfg.outsideHead?.committed);
++      const now = auditAt(real, cfg.expectedHead ?? oh?.committed);
+       if (now.count !== after.count || now.chain !== after.chain) return refuse("the real database after the rollback is not the previewed copy (the files changed during the step)");
+       report.reason = "recovered";
+       log();
+diff --git a/tests/refund-finality/regress/d3_att36_retry_restore.ts b/tests/refund-finality/regress/d3_att36_retry_restore.ts
+new file mode 100644
+index 00000000..261627d0
+--- /dev/null
++++ b/tests/refund-finality/regress/d3_att36_retry_restore.ts
+@@ -0,0 +1,93 @@
++// Regression C-ATT-36 (h-sink3): after resolveInDoubt(r1, "retry"), a backup of the LEDGER taken BEFORE the re-claim and
++// restored ALONE later made the slot "retry" again: r1 was sent twice (1200 on 1000). The witness and cfg.ledgerFloor kept
++// only {n, rowHead}; a re-claim changes neither. Now the ledger is a hash chain of its lines and the witness and the floor
++// keep {lines, lastHash} (dispatcher.ts, LEDGER CHAIN).
++// Cases (PASS conditions; no request id twice and total <= 1000 in each):
++//   attack   run1's emit throws (nothing sent); resolveInDoubt(r1, "retry"); backup of the ledger; run2 re-claims and sends
++//            r1; the ledger alone is restored; run3 stops (alarm) and sends nothing.
++//   floor    the same, but the ledger AND the witness are restored together; run3 carries cfg.ledgerFloor = run2's
++//            ledgerHead ({n, rowHead, lines, lastHash}): run3 stops and sends nothing.
++//   resolve  the backup is taken BEFORE the "retry" decision (run1's claim and failed line only); restored alone after
++//            run2: run3 stops (the witness follows the decision line too).
++//   control  no restore: run3 sends nothing and does not stop; then r2 (a zero-amount refund) commits and is sent once.
++//   migrate  a ledger and a witness of the h-dispatch format (no `prev` in the lines; witness {ledger, n, rowHead}): the
++//            next run accepts them, sends r2 once, and upgrades the witness ({lines, lastHash}); then a lost-race
++//            duplicate of r2's claim WITH the right `prev` is accepted (nothing sent), and the same line WITHOUT `prev`
++//            after chained lines is refused ("not one chain").
++// INFORMATION (not in the verdict; stated limit LEDGER-MONOTONE): ledger and witness restored together WITHOUT a floor.
++// FAILS on the unfixed dispatcher (attack and floor send r1 twice).
++// Usage and exit codes: d_lib.ts.
++import { createHash } from "node:crypto";
++import { appendFileSync, copyFileSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++
++const S0 = { chargeId: "ch_d36", original: "1000", remaining: "1000", refundEnabled: true };
++const full = (e: unknown): string => String((e as Error)?.message ?? e);
++async function retryCase(root: string, core: string, kase: "attack" | "floor" | "resolve" | "control" | "nofloor-info") {
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "600"); w.commit(t1.text);
++  const wit = () => realpathSync(w.db) + ".dispatch-witness.json";
++  const log: string[] = [];
++  try { w.flush(e => { if (e.requestId === "r1") throw new Error("adapter: connection refused (nothing sent)"); w.effects.push(e); }); } catch (e) { log.push("run1 threw: " + full(e)); }
++  const bk = join(w.dir, "ledger.backup"), bkw = join(w.dir, "witness.backup");
++  if (kase === "resolve") { copyFileSync(w.ledger, bk); copyFileSync(wit(), bkw); }
++  w.dispatcher().resolveInDoubt("r1", "retry", "receiver has no r1");
++  if (kase !== "resolve") { copyFileSync(w.ledger, bk); copyFileSync(wit(), bkw); }
++  const r2 = w.flush(); log.push("run2 emitted " + JSON.stringify(r2.emitted.map((e: any) => e.requestId)));
++  if (kase !== "control") { copyFileSync(bk, w.ledger); log.push("ledger restored"); }
++  if (kase === "floor" || kase === "nofloor-info") { copyFileSync(bkw, wit()); log.push("witness restored too"); }
++  let stopped = "";
++  try { const r3 = w.flush(undefined, w.ledger, kase === "floor" ? { ...w.dcfg, ledgerFloor: r2.ledgerHead } : w.dcfg); log.push("run3 emitted " + JSON.stringify(r3.emitted.map((e: any) => e.requestId))); }
++  catch (e) { stopped = full(e); log.push("run3 stopped: " + stopped); }
++  let extra = "";
++  if (kase === "control") {
++    const t2 = await w.mint(t1.post, "r2", "0"); extra = w.commit(t2.text);
++    try { const r4 = w.flush(); extra += " / run4 emitted " + JSON.stringify(r4.emitted.map((e: any) => e.requestId)); } catch (e) { extra += " / run4 stopped: " + full(e); }
++  }
++  w.stop();
++  const ids = w.effects.map((e: any) => e.requestId);
++  const safe = dups(ids).length === 0 && total(w.effects) <= 1000;
++  const ok = kase === "control" ? safe && stopped === "" && ids.join() === "r1,r2" : safe && /dispatcher alarm/.test(stopped);
++  return { ok, ids, total: total(w.effects), log, extra, ledgerHead: r2.ledgerHead };
++}
++async function migrate(root: string, core: string) {
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "300"); w.commit(t1.text); w.flush();
++  const wp = realpathSync(w.db) + ".dispatch-witness.json";
++  // Down-grade to the h-dispatch format: strip `prev` from every line; witness {ledger, n, rowHead} only.
++  const lines = readFileSync(w.ledger, "utf8").split("\n").filter(l => l.length > 0).map(l => { const o = JSON.parse(l); delete o.prev; return JSON.stringify(o); });
++  writeFileSync(w.ledger, lines.join("\n") + "\n");
++  const ow = JSON.parse(readFileSync(wp, "utf8")); writeFileSync(wp, JSON.stringify({ ledger: ow.ledger, n: ow.n, rowHead: ow.rowHead }));
++  const t2 = await w.mint(t1.post, "r2", "0"); w.commit(t2.text);
++  let run = "";
++  try { const r = w.flush(); run = "emitted " + JSON.stringify(r.emitted.map((e: any) => e.requestId)); } catch (e) { run = "stopped: " + full(e); }
++  const nw = JSON.parse(readFileSync(wp, "utf8"));
++  const chainedAfter = readFileSync(w.ledger, "utf8").split("\n").filter(l => l.length > 0).slice(lines.length).every(l => typeof JSON.parse(l).prev === "string");
++  // A lost-race duplicate of r2's claim line (another run nonce): WITH the right `prev` it is accepted (nothing sent);
++  // the same line WITHOUT `prev` after chained lines is refused. The chain formula is restated here (dispatcher.ts).
++  const chainOf = (b: Buffer) => { let h = createHash("sha256").update("forge-refund-dispatch-ledger-v1/genesis").digest("hex"), at = 0;
++    for (;;) { const nl = b.indexOf(0x0a, at); if (nl < 0) break; if (nl > at) h = createHash("sha256").update("forge-refund-dispatch-ledger-v1/line\n" + h + "\n").update(b.subarray(at, nl)).digest("hex"); at = nl + 1; }
++    return h; };
++  const claim2 = readFileSync(w.ledger, "utf8").split("\n").filter(l => l.length > 0).map(l => JSON.parse(l)).find(o => o.kind === "intent" && o.requestId === "r2");
++  const dup = { ...claim2, run: "ab".repeat(16) }; delete dup.prev;
++  appendFileSync(w.ledger, JSON.stringify({ ...dup, prev: chainOf(readFileSync(w.ledger)) }) + "\n");
++  let dupChained = "";
++  try { const r = w.flush(); dupChained = "ran, emitted " + JSON.stringify(r.emitted.map((e: any) => e.requestId)); } catch (e) { dupChained = full(e); }
++  appendFileSync(w.ledger, JSON.stringify(dup) + "\n");
++  let late = "";
++  try { w.flush(); late = "ran"; } catch (e) { late = full(e); }
++  w.stop();
++  const ids = w.effects.map((e: any) => e.requestId);
++  const ok = ids.join() === "r1,r2" && /^emitted \["r2"\]$/.test(run) && Number.isSafeInteger(nw.lines) && typeof nw.lastHash === "string" && chainedAfter && dupChained === "ran, emitted []" && /not one chain/.test(late);
++  return { ok, ids, run, witness: { lines: nw.lines, hasLastHash: typeof nw.lastHash === "string", hasLedgerId: typeof nw.ledgerId === "string" }, chainedAfter, dupChained, late };
++}
++guard((async () => {
++  const { root, core } = argv();
++  const out: any = {};
++  for (const k of ["attack", "floor", "resolve", "control"] as const) out[k] = await retryCase(root, core, k);
++  out.migrate = await migrate(root, core);
++  const info = await retryCase(root, core, "nofloor-info");
++  out.information_nofloor_both_restored = { ids: info.ids, total: info.total, log: info.log };
++  verdict(["attack", "floor", "resolve", "control", "migrate"].every(k => out[k].ok), out);
++})());
+diff --git a/tests/refund-finality/regress/d3_att37_paths.ts b/tests/refund-finality/regress/d3_att37_paths.ts
+new file mode 100644
+index 00000000..d287bc8e
+--- /dev/null
++++ b/tests/refund-finality/regress/d3_att37_paths.ts
+@@ -0,0 +1,52 @@
++// Regression C-ATT-37 (h-sink3): dispatcher path cases.
++//   case     the SAME ledger file named in another letter case (APFS and HFS+ are case-insensitive by default): the
++//            honest second run must run and send r2 once. (The h-dispatch witness compared path TEXT: every run stopped.)
++//   firm     the SAME ledger named through the /System/Volumes/Data firmlink (macOS only; skipped elsewhere).
++//   link     a hard link of the STORE in another folder + a new ledger with cfg.newLedgerH0 set: r1 must not be sent
++//            twice (the st_nlink refusal of the dispatcher's file check; closed since h-sink2).
++//   lednlink a second NAME (hard link) of the LEDGER file: the identity rule accepts another spelling only while the
++//            ledger has ONE name, so this run must stop (no second lock file on one ledger).
++// INFORMATION (not in the verdict; assumption DIR-EXCLUSIVE + the operator's newLedgerH0): the stopped store MOVED (renamed)
++// to another folder and a new ledger with newLedgerH0: the witness is keyed by the store's path, so it is not found.
++// FAILS on the unfixed dispatcher (case, firm).
++// Usage and exit codes: d_lib.ts.
++import { existsSync, linkSync, mkdirSync, renameSync } from "node:fs";
++import { join } from "node:path";
++import { argv, dups, guard, verdict, world } from "./d_lib";
++
++const full = (e: unknown): string => String((e as Error)?.message ?? e);
++async function one(root: string, core: string, mode: "case" | "firm" | "link" | "lednlink" | "move-info") {
++  const S0 = { chargeId: "ch_d37" + mode.replace(/-/g, ""), original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "700"); w.commit(t1.text);
++  const r1 = w.flush(); const log: string[] = ["run1 emitted " + r1.emitted.map((e: any) => e.requestId)];
++  let second: any = null, err = "";
++  if (mode === "link" || mode === "move-info") {
++    w.closeSink();
++    const d2 = join(w.dir, "other"); mkdirSync(d2); const alias = join(d2, "store.sqlite");
++    if (mode === "link") linkSync(w.db, alias); else renameSync(w.db, alias);
++    try { second = new w.L.Dispatcher(alias, join(d2, "ledger.jsonl"), w.dcfg, (e: any) => w.effects.push(e)).flush(); } catch (e) { err = full(e); }
++  } else {
++    const t2 = await w.mint(t1.post, "r2", "200"); w.commit(t2.text);
++    let led = "";
++    if (mode === "case") led = w.ledger.replace(/ledger\.jsonl$/, "LEDGER.JSONL");
++    else if (mode === "firm") led = "/System/Volumes/Data" + w.ledger;
++    else { led = join(w.dir, "ledger-second-name.jsonl"); linkSync(w.ledger, led); }
++    if (mode === "firm" && !existsSync(led)) { w.stop(); return { ok: true, skipped: "no /System/Volumes/Data firmlink here" }; }
++    if (mode === "case" && !existsSync(led)) { w.stop(); return { ok: true, skipped: "case-sensitive file system" }; }
++    try { second = w.flush(undefined, led); } catch (e) { err = full(e); }
++  }
++  log.push("run2 " + (second ? "emitted " + second.emitted.map((e: any) => e.requestId) + " refused " + second.refused.length : "stopped: " + err));
++  w.stop();
++  const ids = w.effects.map((e: any) => e.requestId);
++  const ok = mode === "link" ? dups(ids).length === 0 : mode === "lednlink" ? second === null && /dispatcher alarm/.test(err) && dups(ids).length === 0
++    : mode === "move-info" ? true : second !== null && ids.filter((x: string) => x === "r2").length === 1 && dups(ids).length === 0;
++  return { ok, log, effects: ids };
++}
++guard((async () => {
++  const { root, core } = argv();
++  const out: any = {};
++  for (const m of ["case", "firm", "link", "lednlink"] as const) out[m] = await one(root, core, m);
++  out.information_moved_store = await one(root, core, "move-info");
++  verdict(["case", "firm", "link", "lednlink"].every(k => out[k].ok), out);
++})());
+diff --git a/tests/refund-finality/regress/s3_att33_crash_journal.ts b/tests/refund-finality/regress/s3_att33_crash_journal.ts
+new file mode 100644
+index 00000000..f4e01b25
+--- /dev/null
++++ b/tests/refund-finality/regress/s3_att33_crash_journal.ts
+@@ -0,0 +1,109 @@
++// Regression C-ATT-33 (h-sink3), part 2: an honest crash BEFORE COMMIT leaves a NOT-HOT -journal (zero first byte: SQLite
++// writes the magic only at the journal sync). SQLite ignores it; the h-sink2 sink refused to start and Sink.recover refused
++// too ("the journal is still present after the rollback"): an intact store could never be served (false rejection).
++// The documented restart path: start; if refused, Sink.recover; start. Cases (PASS conditions):
++//   onhead      a CHILD process commits r2 and SIGKILLs itself inside cfg.onHead (inside the write transaction, before
++//               COMMIT; one deterministic kill): the restart path serves; head = the head before r2; audit clean; the
++//               host's retry of r2 then commits, and a zero-amount refund commits.
++//   zero512     a 512-byte all-zero -journal (also what a party that can only create a file plants): served, head unchanged.
++//   zerolen     a zero-length -journal: served, head unchanged.
++//   hotplanted  C-ATT-21 stays closed: a planted HOT journal (playback = the file after r1, a TWO-row rollback): the start
++//               refuses (class "hot"), Sink.recover refuses, the store file is unchanged.
++//   badstore    a not-hot journal next to a store that fails the audit (a file writer changed a token hash): Sink.recover
++//               refuses and the journal stays (the step never removes a journal unless the store and head are proved
++//               unchanged).
++//   outside     a not-hot journal and cfg.outsideHead naming another head: Sink.recover refuses.
++// FAILS on the unfixed tree (onhead, zero512, zerolen are not served).
++// Usage: node --import tsx tests/refund-finality/regress/s3_att33_crash_journal.ts <treeRoot> [<compiledIssuerModule>]
++import { spawnSync } from "node:child_process";
++import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, hostile, kit, makeJournal, st, tempDir, verdict } from "./s_lib";
++
++const full = (e: unknown): string => String((e as Error)?.message ?? e);   // never cut a reason before it is searched
++const [, , , mode, childDb, childTok] = process.argv;
++if (mode === "--child") {
++  // The child: the same sink config (from the file), one commit, SIGKILL inside onHead (before COMMIT).
++  guard((() => {
++    const { root } = argv();
++    const K = kit(root); void K;
++    const cfg = JSON.parse(readFileSync(childDb + ".cfg.json", "utf8"));
++    // eslint-disable-next-line @typescript-eslint/no-require-imports
++    const { Sink } = require(join(root, "ts/refund-finality/sink.ts"));
++    const s = new Sink(childDb, { ...cfg, onHead: () => process.kill(process.pid, "SIGKILL") });
++    s.commit(readFileSync(childTok, "utf8"));
++    process.exit(4);   // not reached: the kill comes first
++  })());
++} else guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const rec = (name: string, ok: boolean, d: any) => { out[name] = { ...d, ok }; if (!ok) pass = false; };
++  const R1 = K.tok(K.S0, "r1", "100"), R2 = K.tok(st("900"), "r2", "200"), Z = K.tok(st("700"), "z", "0");
++  const base = () => {
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = K.open(db); if (typeof s === "string") throw new Error(s);
++    s.init(K.S0); const c1 = s.commit(R1).status; const after1 = readFileSync(db); const head = s.head(); s.close();
++    return { dir, db, c1, after1, head };
++  };
++  // The documented restart path.
++  const open = (db: string, extra: any = {}): any => { try { return new K.SK.Sink(db, { ...K.cfg, ...extra }); } catch (e) { return "REFUSED: " + full(e); } };
++  const restart = (db: string, extra: any = {}) => {
++    const r: any = {};
++    let a = open(db, extra); r.start1 = typeof a === "string" ? a : "serves";
++    if (typeof a === "string") {
++      try { const rep = K.SK.Sink.recover(db, { ...K.cfg, ...extra }, join(db + ".op.log")); r.recover = rep.reason; r.journalClass = rep.journalClass; }
++      catch (e) { r.recover = full(e); }
++      a = open(db, extra); r.start2 = typeof a === "string" ? a : "serves";
++    }
++    r.served = typeof a !== "string";
++    if (r.served) { r.audit = a.audit(); r.head = a.head(); }
++    return { r, sink: r.served ? a : null };
++  };
++  { // onhead: a real child process killed inside the write transaction
++    const b = base();
++    writeFileSync(b.db + ".cfg.json", JSON.stringify(K.cfg)); writeFileSync(b.db + ".r2.tok", R2);
++    const c = spawnSync(process.execPath, ["--no-warnings", "--import", "tsx", __filename, root, "--child", b.db, b.db + ".r2.tok"], { encoding: "utf8", timeout: 60000 });
++    const jFirst = existsSync(b.db + "-journal") ? readFileSync(b.db + "-journal").subarray(0, 8).toString("hex") : "none";
++    const { r, sink } = restart(b.db);
++    let retry = "", zero = "";
++    if (sink) { retry = sink.commit(R2).status; zero = sink.commit(Z).status; sink.close(); }
++    rec("onhead", c.signal === "SIGKILL" && jFirst === "0000000000000000" && r.served && r.audit.length === 0 && r.head.count === 1 && r.head.chainHash === b.head.chainHash &&
++      retry === "committed" && zero === "committed" && !existsSync(b.db + "-journal"),
++      { child: { signal: c.signal, status: c.status, err: (c.stderr ?? "").slice(-300) }, journalFirst8: jFirst, ...r, retry, zero });
++  }
++  for (const [name, bytes] of [["zero512", Buffer.alloc(512)], ["zerolen", Buffer.alloc(0)]] as [string, Buffer][]) {
++    const b = base();
++    writeFileSync(b.db + "-journal", bytes);
++    const { r, sink } = restart(b.db);
++    let zero = ""; if (sink) { zero = sink.commit(K.tok(st("900"), "z" + name, "0")).status; sink.close(); }
++    rec(name, r.served && r.head.count === 1 && r.head.chainHash === b.head.chainHash && r.audit.length === 0 && zero === "committed" &&
++      /companion file/.test(r.start1) && /not-hot/.test(r.start1), { ...r, zero });
++  }
++  { // hotplanted: C-ATT-21 stays closed
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = open(db); s.init(K.S0); s.commit(R1); const early = readFileSync(db); s.commit(R2); s.commit(Z); s.close();
++    const live = readFileSync(db), pg = live.readUInt16BE(16), t = Buffer.alloc(Math.max(live.length, early.length)); early.copy(t);
++    writeFileSync(db + "-journal", makeJournal(t.subarray(0, Math.ceil(t.length / pg) * pg)));
++    const x = open(db); const startRefused = typeof x === "string"; if (!startRefused) x.close();
++    let rv = ""; try { rv = K.SK.Sink.recover(db, K.cfg, db + ".op.log").reason; } catch (e) { rv = full(e); }
++    const unchanged = readFileSync(db).equals(live) && existsSync(db + "-journal");
++    rec("hotplanted", startRefused && /journal class: hot/.test(x as string) && /refuses/.test(rv) && unchanged, { start: startRefused ? x : "STARTED", recover: rv, unchanged });
++  }
++  { // badstore: a not-hot journal next to a store that fails the audit
++    const b = base();
++    const ed = hostile(b.db, d => { d.exec("UPDATE settled SET token_sha256 = '" + "0".repeat(64) + "' WHERE seq = 1"); });
++    writeFileSync(b.db + "-journal", Buffer.alloc(512));
++    let rv = ""; try { rv = K.SK.Sink.recover(b.db, K.cfg, b.db + ".op.log").reason; } catch (e) { rv = full(e); }
++    rec("badstore", ed === "ok" && /refuses/.test(rv) && existsSync(b.db + "-journal"), { edit: ed, recover: rv, journalLeft: existsSync(b.db + "-journal") });
++  }
++  { // outside: a not-hot journal and an outside head that names another head
++    const b = base();
++    writeFileSync(b.db + "-journal", Buffer.alloc(512));
++    const copy = join(b.dir, "c.sqlite"); copyFileSync(b.db, copy);
++    let rv = ""; try { rv = K.SK.Sink.recover(b.db, { ...K.cfg, outsideHead: { committed: { count: 0, chainHash: K.genesis } } }, b.db + ".op.log").reason; } catch (e) { rv = full(e); }
++    rec("outside", /refuses/.test(rv) && existsSync(b.db + "-journal") && readFileSync(b.db).equals(readFileSync(copy)), { recover: rv });
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s3_att34_recover_depth.ts b/tests/refund-finality/regress/s3_att34_recover_depth.ts
+new file mode 100644
+index 00000000..64f0447a
+--- /dev/null
++++ b/tests/refund-finality/regress/s3_att34_recover_depth.ts
+@@ -0,0 +1,76 @@
++// Regression C-ATT-34 (h-sink3): Sink.recover skipped its "at most one row" check when the live file failed its audit. A
++// FILE writer without the key changed one byte of r3's token hash (the live file fails the audit) and planted a hot journal
++// whose playback is the file after r1 (a TWO-row rollback): recover reported "recovered"; acknowledged r2 and r3 were gone.
++// THE RULE (sink.ts Sink.recover, step 5): success only when the step ESTABLISHES that no acknowledged commit is lost:
++// (i) "before" (the file without the journal) passes the audit and "after" is "before" or "before" minus its last row; or
++// (ii) cfg.outsideHead is given and "after" EQUALS outsideHead.committed or outsideHead.pending. Else: refuse.
++// Cases (PASS conditions):
++//   deep        the attack above, no anchor: refused; the real file and journal unchanged.
++//   deep-stale  the same with cfg.expectedHead = the head after r1 (expectedHead only bounds from below): refused.
++//   deep-fresh  the same with cfg.outsideHead.committed = the head after r3: refused (and the files unchanged).
++//   authorised  rule (ii): cfg.outsideHead.committed = the head after r1 (the host says only r1 was acknowledged): recovered
++//               to exactly that head (INFORMATION on the rule; part of the verdict because the rule is stated).
++//   torn        an honest crash whose live file is unreadable (stand-in: the unfinished commit r3 in the file, made to fail
++//               the audit) and a journal back to the file after r2. Without an anchor: refused (the stated cost). With
++//               cfg.outsideHead {committed: head after r2, pending: head after r3}: recovered to the head after r2.
++//   one-row     an honest one-row crash with a valid live file (rule (i)), no anchor: recovered (unchanged behaviour).
++// FAILS on the unfixed tree (deep and deep-stale are "recovered").
++// Usage: node --import tsx tests/refund-finality/regress/s3_att34_recover_depth.ts <treeRoot> [<compiledIssuerModule>]
++import { existsSync, readFileSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, hostile, kit, makeJournal, st, tempDir, verdict } from "./s_lib";
++
++const full = (e: unknown): string => String((e as Error)?.message ?? e);
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const rec = (name: string, ok: boolean, d: any) => { out[name] = { ...d, ok }; if (!ok) pass = false; };
++  const R1 = K.tok(K.S0, "r1", "100"), R2 = K.tok(st("900"), "r2", "200"), R3 = K.tok(st("700"), "r3", "300");
++  const open = (db: string, extra: any = {}): any => { try { return new K.SK.Sink(db, { ...K.cfg, ...extra }); } catch (e) { return "REFUSED: " + full(e); } };
++  const journalTo = (live: Buffer, img: Buffer) => { const pg = live.readUInt16BE(16), n = Math.max(live.length, img.length) / pg, t = Buffer.alloc(n * pg); img.copy(t); return makeJournal(t); };
++  // History r1, r2, r3; the files after r1 and after r2; the heads.
++  const hist = () => {
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = open(db); if (typeof s === "string") throw new Error(s);
++    s.init(K.S0);
++    s.commit(R1); const f1 = readFileSync(db), h1 = s.head();
++    s.commit(R2); const f2 = readFileSync(db), h2 = s.head();
++    s.commit(R3); const h3 = s.head(); s.close();
++    return { dir, db, f1, f2, h1, h2, h3 };
++  };
++  const recover = (db: string, extra: any = {}) => { try { const r = K.SK.Sink.recover(db, { ...K.cfg, ...extra }, db + ".op.log"); return { ok: r.reason, after: r.after }; } catch (e) { return { refused: full(e) }; } };
++  const servedHead = (db: string, extra: any = {}) => { const a = open(db, extra); if (typeof a === "string") return a; const h = a.head(); a.close(); return h; };
++  const attack = () => {
++    const H = hist();
++    const ed = hostile(H.db, d => { d.exec("UPDATE settled SET token_sha256 = '" + "0".repeat(64) + "' WHERE request_id = 'r3'"); });
++    writeFileSync(H.db + "-journal", journalTo(readFileSync(H.db), H.f1));
++    return { ...H, ed, live: readFileSync(H.db), journal: readFileSync(H.db + "-journal") };
++  };
++  const unchanged = (A: any) => readFileSync(A.db).equals(A.live) && existsSync(A.db + "-journal") && readFileSync(A.db + "-journal").equals(A.journal);
++  { const A = attack(); const r = recover(A.db); rec("deep", A.ed === "ok" && "refused" in r && unchanged(A), { r }); }
++  { const A = attack(); const r = recover(A.db, { expectedHead: A.h1 }); rec("deep-stale", "refused" in r && unchanged(A), { r }); }
++  { const A = attack(); const r = recover(A.db, { outsideHead: { committed: A.h3 } }); rec("deep-fresh", "refused" in r && unchanged(A), { r }); }
++  { const A = attack(); const r = recover(A.db, { outsideHead: { committed: A.h1 } }); const h = servedHead(A.db, { outsideHead: { committed: A.h1 } });
++    rec("authorised", "ok" in r && typeof h !== "string" && h.count === 1 && h.chainHash === A.h1.chainHash, { r, served: h }); }
++  { // torn: the unfinished commit r3 is in the live file, which fails the audit; the journal restores the file after r2
++    const H = hist();
++    const ed = hostile(H.db, d => { d.exec("UPDATE settled SET token_sha256 = '" + "f".repeat(64) + "' WHERE request_id = 'r3'"); });
++    const jr = journalTo(readFileSync(H.db), H.f2); writeFileSync(H.db + "-journal", jr);
++    const live = readFileSync(H.db);
++    const r0 = recover(H.db);
++    const stay = readFileSync(H.db).equals(live) && existsSync(H.db + "-journal");
++    const oh = { outsideHead: { committed: H.h2, pending: H.h3 } };
++    const r1 = recover(H.db, oh); const h = servedHead(H.db, oh);
++    rec("torn", ed === "ok" && "refused" in r0 && /head before the rollback is unknown/.test(r0.refused!) && stay && "ok" in r1 && typeof h !== "string" && h.count === 2 && h.chainHash === H.h2.chainHash,
++      { noAnchor: r0, withOutside: r1, served: h });
++  }
++  { // one-row: a valid live file holding r3, the journal back to the file after r2 (an honest crash after the db write)
++    const H = hist();
++    writeFileSync(H.db + "-journal", journalTo(readFileSync(H.db), H.f2));
++    const r = recover(H.db); const h = servedHead(H.db);
++    rec("one-row", "ok" in r && typeof h !== "string" && h.count === 2 && h.chainHash === H.h2.chainHash, { r, served: h });
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s3_att35_inode_commit.ts b/tests/refund-finality/regress/s3_att35_inode_commit.ts
+new file mode 100644
+index 00000000..fea87ea0
+--- /dev/null
++++ b/tests/refund-finality/regress/s3_att35_inode_commit.ts
+@@ -0,0 +1,71 @@
++// Regression C-ATT-35 (h-sink3): the per-write file check (inode, links, companions) ran before BEGIN only. A party with
++// rename rights in the database directory (DIR-EXCLUSIVE broken) replaced the file INSIDE a commit (between the check and
++// COMMIT; made deterministic with cfg.onHead): the commit was acknowledged into an unlinked inode.
++// Cases (PASS conditions):
++//   swap-onhead  the copy (zero row z deleted, chain recomputed) is renamed over the path inside onHead: the commit of r3 is
++//                NOT acknowledged ("sink halted", "inside the write transaction"). (The deletion of z itself is the file
++//                writer's class-c edit: seen only with an outside head; not the subject here.)
++//   swap-after   the same rename right AFTER the SQLite COMMIT returned (a wrapper of the connection's exec): the commit is
++//                NOT acknowledged ("after COMMIT"); the sink halts.
++//   controls     with the checks in place: commits (a zero-amount refund included), a replay, and a single-writer sink
++//                (cfg.outsideHead + onHead) whose own -journal exists inside its transaction: all succeed.
++// Remaining window (stated, not tested): a rename after the post-COMMIT check and before the host persists the head.
++// FAILS on the unfixed tree (swap-onhead and swap-after are acknowledged).
++// Usage: node --import tsx tests/refund-finality/regress/s3_att35_inode_commit.ts <treeRoot> [<compiledIssuerModule>]
++import { copyFileSync, renameSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, hostile, ids, kit, st, tempDir, verdict } from "./s_lib";
++
++const full = (e: unknown): string => String((e as Error)?.message ?? e);
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const rec = (name: string, ok: boolean, d: any) => { out[name] = { ...d, ok }; if (!ok) pass = false; };
++  const open = (db: string, extra: any = {}): any => { try { return new K.SK.Sink(db, { ...K.cfg, ...extra }); } catch (e) { return "REFUSED: " + full(e); } };
++  const R1 = K.tok(K.S0, "r1", "600"), Z = K.tok(st("400"), "z", "0"), R2 = K.tok(st("400"), "r2", "100"), R3 = K.tok(st("300"), "r3", "50");
++  const delZ = (d: any) => {
++    const s = (d.prepare("SELECT seq FROM settled WHERE request_id = 'z'").get() as any).seq;
++    d.prepare("DELETE FROM settled WHERE seq = ?").run(s); d.prepare("DELETE FROM outbox WHERE seq = ?").run(s);
++    d.prepare("UPDATE settled SET seq = seq - 1 WHERE seq > ?").run(s); d.prepare("UPDATE outbox SET seq = seq - 1 WHERE seq > ?").run(s);
++  };
++  const setup = (when: "onhead" | "after") => {
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    let armed = false;
++    const swap = () => { const cp = join(dir, "copy.sqlite"); copyFileSync(db, cp); const e = hostile(cp, delZ, { linkOf: K.SK.linkOf, sha: K.E.sha256hex }); renameSync(cp, db); return e; };
++    let edit = "";
++    const s = open(db, when === "onhead" ? { onHead: () => { if (armed) { armed = false; edit = swap(); } } } : {});
++    if (typeof s === "string") throw new Error(s);
++    s.init(K.S0);
++    const acked: string[] = [];
++    for (const [t, id] of [[R1, "r1"], [Z, "z"], [R2, "r2"]]) if (s.commit(t).status === "committed") acked.push(id);
++    if (when === "after") {
++      const conn = (s as any).db, orig = conn.exec.bind(conn);
++      conn.exec = (sql: string) => { const r = orig(sql); if (sql === "COMMIT" && armed) { armed = false; edit = swap(); } return r; };
++    }
++    armed = true;
++    const r3 = s.commit(R3);
++    if (r3.status === "committed") acked.push("r3");
++    s.close();
++    const atPath = ids(db);
++    // lostAck: the commit under attack acknowledged but missing at the path (z is the attacker's own deletion: class c, seen
++    // only with an outside head; not this regression's subject).
++    return { r3, edit, acked, atPath, lostAck: acked.includes("r3") && !atPath.includes("r3") };
++  };
++  { const x = setup("onhead"); rec("swap-onhead", x.edit === "ok" && x.r3.status === "rejected" && /sink halted/.test(x.r3.reason ?? "") && /inside the write transaction/.test(x.r3.reason ?? "") && !x.lostAck, x); }
++  { const x = setup("after"); rec("swap-after", x.edit === "ok" && x.r3.status === "rejected" && /sink halted/.test(x.r3.reason ?? "") && /after COMMIT/.test(x.r3.reason ?? "") && !x.lostAck, x); }
++  { // controls
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const anchor: any = { committed: { count: 0, chainHash: K.genesis } };
++    const s = open(db, { outsideHead: { committed: anchor.committed }, onHead: (h: any) => { anchor.pending = h; } });
++    if (typeof s === "string") throw new Error(s);
++    s.init(K.S0);
++    const st1 = [R1, Z, R2].map(t => { const r = s.commit(t); if (r.status === "committed") anchor.committed = r.head; return r.status; });
++    const replay = s.commit(Z).status;
++    const zero2 = s.commit(K.tok(st("300"), "z2", "0")).status, z3 = s.commit(K.tok(st("300"), "z3", "0")).status, big = s.commit(K.tok(st("300"), "rmax", "300")).status;
++    s.close();
++    rec("controls", st1.every(v => v === "committed") && replay === "replayed" && zero2 === "committed" && z3 === "committed" && big === "committed", { st1, replay, zero2, z3, big });
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s3_journal_classifier.ts b/tests/refund-finality/regress/s3_journal_classifier.ts
+new file mode 100644
+index 00000000..aae2f9d8
+--- /dev/null
++++ b/tests/refund-finality/regress/s3_journal_classifier.ts
+@@ -0,0 +1,87 @@
++// Regression C-ATT-33 (h-sink3), part 1: the rollback-journal classifier (core/store.ts classifyJournal) against the SQLite
++// of this Node. For each generated journal next to a small database in DELETE mode, SQLite opens the database and reads it
++// (its hot-journal test runs at that first shared lock). Observed: IGNORED = the journal is still there, byte-equal, and
++// the database file is byte-equal; else SQLite ACTED (it deleted the journal and/or changed the database).
++// PASS: for every case, classifier "not-hot" <=> SQLite IGNORED, and classifier "hot" <=> SQLite ACTED. The cases: zero
++// length; zero first byte with many tails (all zero, random, the magic after the zero byte, a zeroed header before valid
++// records); a valid header with records (a real rollback), with nRec 0 and a smaller initial size (a truncation), with
++// nRec 0 and the same size; a non-zero first byte with random bytes; short files; an empty database (H3). Also H2: a
++// magic journal while another connection holds RESERVED is IGNORED by a reader (the classifier cannot see locks; the
++// removal step holds RESERVED itself) - reported, part of the verdict as "SQLite ignores under RESERVED".
++// FAILS on the unfixed tree: there is no classifier (classifyJournal is missing).
++// Usage: node --import tsx tests/refund-finality/regress/s3_journal_classifier.ts <treeRoot> [<compiledIssuerModule>]
++import { randomBytes } from "node:crypto";
++import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { argv, guard, load, makeJournal, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const L = load(root);
++  const classify = L.ST.classifyJournal;
++  if (typeof classify !== "function") verdict(false, { error: "core/store.ts has no classifyJournal (unfixed tree)" });
++  const dir = tempDir(), base = join(dir, "base.sqlite");
++  { // a database of several pages; an earlier image for real rollbacks
++    const d = new DatabaseSync(base); d.exec("PRAGMA journal_mode = DELETE; PRAGMA page_size = 4096; CREATE TABLE t(x TEXT)");
++    for (let i = 0; i < 20; i++) d.prepare("INSERT INTO t VALUES (?)").run("row" + i + "-".repeat(400)); d.close();
++  }
++  const early = readFileSync(base);
++  { const d = new DatabaseSync(base); for (let i = 20; i < 40; i++) d.prepare("INSERT INTO t VALUES (?)").run("row" + i + "-".repeat(400)); d.close(); }
++  const img = readFileSync(base);
++  const page = img.readUInt16BE(16), pages = img.length / page;
++  const hdr = (nRec: number, initPages: number, sector = 512, magic = true): Buffer => {
++    const h = Buffer.alloc(sector);
++    if (magic) Buffer.from("d9d505f920a163d7", "hex").copy(h, 0);
++    h.writeUInt32BE(nRec >>> 0, 8); h.writeUInt32BE(0x11223344, 12); h.writeUInt32BE(initPages, 16); h.writeUInt32BE(sector, 20); h.writeUInt32BE(page, 24);
++    return h;
++  };
++  const padded = (b: Buffer) => { const t = Buffer.alloc(img.length); b.copy(t); return t; };
++  const cases: { name: string; j: Buffer; db?: Buffer }[] = [];
++  cases.push({ name: "zero-length", j: Buffer.alloc(0) });
++  for (const n of [1, 27, 28, 511, 512, 4096, 8192]) cases.push({ name: "all-zero-" + n, j: Buffer.alloc(n) });
++  for (let i = 0; i < 60; i++) { const n = 1 + (randomBytes(2).readUInt16BE(0) % 9000), j = randomBytes(n); j[0] = 0; cases.push({ name: "zero-first-random-" + i, j }); }
++  { const j = Buffer.from(makeJournal(padded(early))); j[0] = 0; cases.push({ name: "zero-first-then-magic-rest+records", j }); }
++  { const j = Buffer.from(makeJournal(padded(early))); j.fill(0, 0, 28); cases.push({ name: "zeroed-header-before-valid-records", j }); }
++  { const j = Buffer.from(makeJournal(padded(early))); j.fill(0, 0, 8); cases.push({ name: "zeroed-magic-only", j }); }
++  cases.push({ name: "valid-rollback-to-early", j: makeJournal(padded(early)) });
++  cases.push({ name: "magic-nrec0-same-size", j: hdr(0, pages) });
++  cases.push({ name: "magic-nrec0-truncate", j: hdr(0, Math.max(1, pages - 5)) });
++  cases.push({ name: "magic-nrec-ffffffff", j: Buffer.concat([hdr(0xffffffff, pages), Buffer.alloc(page + 8)]) });
++  for (let i = 0; i < 60; i++) { const n = 1 + (randomBytes(2).readUInt16BE(0) % 9000), j = randomBytes(n); if (j[0] === 0) j[0] = 1 + (i % 255); cases.push({ name: "nonzero-first-random-" + i, j }); }
++  for (const n of [1, 7, 8, 27]) { const j = Buffer.from("d9d505f920a163d7d9d505f920a163d7d9d505f920a163d7d9", "hex").subarray(0, n); cases.push({ name: "short-magic-" + n, j }); }
++  for (let b = 1; b < 256; b += 17) cases.push({ name: "single-byte-" + b, j: Buffer.from([b]) });
++  cases.push({ name: "empty-db-zero-journal", j: Buffer.alloc(512), db: Buffer.alloc(0) });
++  cases.push({ name: "empty-db-magic-journal", j: hdr(0, 1), db: Buffer.alloc(0) });
++  const rows: any[] = [];
++  let agree = 0, disagree = 0;
++  for (const c of cases) {
++    const p = join(dir, "c.sqlite");
++    rmSync(p, { force: true }); rmSync(p + "-journal", { force: true });
++    const dbBytes = c.db ?? img;
++    writeFileSync(p, dbBytes); writeFileSync(p + "-journal", c.j);
++    const k = classify(p).kind;
++    let err = "";
++    try { const d = new DatabaseSync(p); try { d.prepare("SELECT count(*) AS n FROM sqlite_schema").get(); } finally { d.close(); } } catch (e) { err = String((e as Error).message); }
++    const jLeft = existsSync(p + "-journal") && readFileSync(p + "-journal").equals(c.j);
++    const dbSame = readFileSync(p).equals(dbBytes);
++    const sqlite = jLeft && dbSame ? "ignored" : "acted";
++    const ok = (k === "not-hot") === (sqlite === "ignored");
++    if (ok) agree++; else disagree++;
++    if (!ok || rows.length < 12 || !c.name.includes("random")) rows.push({ name: c.name, size: c.j.length, cls: k, sqlite, journalLeft: existsSync(p + "-journal"), dbSame, err: err.slice(0, 80), ok });
++  }
++  // H2: a reader while another connection holds RESERVED ignores even a valid hot journal.
++  let h2 = "";
++  {
++    const p = join(dir, "h2.sqlite"); rmSync(p, { force: true }); rmSync(p + "-journal", { force: true });
++    writeFileSync(p, img);
++    const a = new DatabaseSync(p); a.exec("BEGIN IMMEDIATE");
++    const j = makeJournal(padded(early)); writeFileSync(p + "-journal", j);
++    let err = "";
++    try { const b = new DatabaseSync(p); try { b.exec("PRAGMA busy_timeout = 0"); b.prepare("SELECT count(*) AS n FROM t").get(); } finally { b.close(); } } catch (e) { err = String((e as Error).message); }
++    const ignored = existsSync(p + "-journal") && readFileSync(p + "-journal").equals(j) && readFileSync(p).equals(img);
++    a.exec("ROLLBACK"); a.close();
++    h2 = (ignored ? "ignored" : "acted") + (err ? " (" + err.slice(0, 60) + ")" : "");
++  }
++  verdict(disagree === 0 && cases.length >= 150 && h2.startsWith("ignored"), { cases: cases.length, agree, disagree, h2ReaderUnderReserved: h2, rows });
++})());
+diff --git a/tests/refund-finality/regress/s3_kill_commits.ts b/tests/refund-finality/regress/s3_kill_commits.ts
+new file mode 100644
+index 00000000..93aaf7ad
+--- /dev/null
++++ b/tests/refund-finality/regress/s3_kill_commits.ts
+@@ -0,0 +1,99 @@
++// Regression C-ATT-33 (h-sink3), part 3: REAL kills. A child process commits refunds in a loop through a host that follows
++// the FRESHNESS RULE of sink.ts (onHead -> persist pending; "committed" -> persist committed, THEN acknowledge); the parent
++// SIGKILLs it at a random time (start-up, audit, inside a write transaction, between COMMIT and the acknowledgement), many
++// short rounds. After each kill the parent runs the DOCUMENTED procedure: start with cfg.outsideHead = the persisted heads;
++// if refused because of a companion file, Sink.recover with the same cfg; start again; the host promotes pending to
++// committed when the served head is pending.
++// PASS: every round's leftover state is served after the procedure; the served head equals the persisted committed head
++// (= the last acknowledged head) or the pending head (the unacknowledged commit); no acknowledged request id is missing.
++// Also reported (INFORMATION): the journal class after each kill, and how often Sink.recover WITHOUT an outside head (on a
++// copy) refuses (a torn live file: the stated cost of the C-ATT-34 depth rule).
++// HEAVY (a kill run): it refuses to start unless S3_HEAVY_OK=1 (exit 2: NOT RUN). The orchestrator runs it in a window:
++// orch-B/h-sink3/heavy_kill_NOT_RUN.sh. Bounded: at most S3_ROUNDS (default 30) rounds and S3_SECONDS (default 50) s.
++// Usage: S3_HEAVY_OK=1 node --import tsx tests/refund-finality/regress/s3_kill_commits.ts <treeRoot> [<compiledIssuerModule>]
++import { spawn } from "node:child_process";
++import { closeSync, copyFileSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, renameSync, rmSync, writeSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, kit, tempDir, verdict } from "./s_lib";
++
++const full = (e: unknown): string => String((e as Error)?.message ?? e);
++const durable = (p: string, text: string) => { const t = p + ".tmp"; const fd = openSync(t, "w"); try { writeSync(fd, text); fsyncSync(fd); } finally { closeSync(fd); } renameSync(t, p); };
++const appendDurable = (p: string, text: string) => { const fd = openSync(p, "a"); try { writeSync(fd, text); fsyncSync(fd); } finally { closeSync(fd); } };
++const [, , , mode, dirArg, roundArg] = process.argv;
++const S0 = { chargeId: "ch_kill", original: "1000000000000000", remaining: "1000000000000000", refundEnabled: true };
++
++if (mode === "--child") {
++  guard((() => {
++    const { root } = argv();
++    const { sign, createPrivateKey } = require("node:crypto");   // eslint-disable-line @typescript-eslint/no-require-imports
++    const E = require(join(root, "ts/refund-finality/encoding.ts"));   // eslint-disable-line @typescript-eslint/no-require-imports
++    const { Sink } = require(join(root, "ts/refund-finality/sink.ts"));   // eslint-disable-line @typescript-eslint/no-require-imports
++    const cfg = JSON.parse(readFileSync(join(dirArg, "cfg.json"), "utf8")), pk = createPrivateKey(readFileSync(join(dirArg, "key.pem"), "utf8"));
++    const outside = join(dirArg, "outside.json"), acks = join(dirArg, "acks.jsonl");
++    const anchor = JSON.parse(readFileSync(outside, "utf8"));
++    const s = new Sink(join(dirArg, "sink.sqlite"), { ...cfg, outsideHead: anchor, onHead: (h: any) => durable(outside, JSON.stringify({ committed: anchor.committed, pending: h })) });
++    for (let i = 0; ; i++) {
++      const pre = JSON.parse(s.stateBlob()), rid = "k" + roundArg + "_" + i, amount = i % 2 === 0 ? "0" : "1";
++      const body = { domain: E.DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: E.stateSha256(pre), requestId: rid,
++        post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() }, intent: { chargeId: pre.chargeId, requestId: rid, amount, reason: "duplicate_charge" } };
++      const r = s.commit(E.canon({ body, signature: sign(null, E.signedBytes(body), pk).toString("base64") }));
++      if (r.status !== "committed") { process.stderr.write("child: " + JSON.stringify(r) + "\n"); process.exit(4); }
++      anchor.committed = r.head; delete anchor.pending;
++      durable(outside, JSON.stringify({ committed: r.head }));          // persist committed, THEN acknowledge
++      appendDurable(acks, JSON.stringify({ rid, head: r.head }) + "\n");
++    }
++  })());
++} else guard((async () => {
++  const { root } = argv();
++  if (process.env.S3_HEAVY_OK !== "1") { console.log("NOT RUN: a kill run (heavy); set S3_HEAVY_OK=1 in a heavy window"); process.exit(2); }
++  const K = kit(root, S0);
++  const dir = tempDir(), db = join(dir, "sink.sqlite"), outside = join(dir, "outside.json"), acks = join(dir, "acks.jsonl");
++  // The child signs with its own throwaway key (exported here); the sink config pins its public key.
++  const { generateKeyPairSync } = require("node:crypto");   // eslint-disable-line @typescript-eslint/no-require-imports
++  const kp = generateKeyPairSync("ed25519");
++  const cfg = { ...K.cfg, publicKeyPem: kp.publicKey.export({ type: "spki", format: "pem" }) };
++  durable(join(dir, "cfg.json"), JSON.stringify(cfg)); durable(join(dir, "key.pem"), kp.privateKey.export({ type: "pkcs8", format: "pem" }) as string);
++  const genesis = K.SK.genesisOf(K.E.canon(S0), cfg.specLockSha256, cfg.checkerSha256, cfg.publicKeyPem);
++  { const s = new K.SK.Sink(db, cfg); s.init(S0); s.close(); }
++  durable(outside, JSON.stringify({ committed: { count: 0, chainHash: genesis } }));
++  const maxRounds = Number(process.env.S3_ROUNDS ?? 30), maxMs = 1000 * Number(process.env.S3_SECONDS ?? 50), t0 = Date.now();
++  const rounds: any[] = []; const classes: Record<string, number> = {}; let noAnchorRefused = 0, failures = 0, total = 0;
++  const side = join(dir, "side"); mkdirSync(side);
++  for (let k = 0; k < maxRounds && Date.now() - t0 < maxMs; k++) {
++    const c = spawn(process.execPath, ["--no-warnings", "--import", "tsx", __filename, root, "--child", dir, String(k)], { stdio: ["ignore", "ignore", "pipe"] });
++    let err = ""; c.stderr.on("data", d => { err += String(d); });
++    await new Promise(r => setTimeout(r, 700 + Math.floor(Math.random() * 1500)));
++    c.kill("SIGKILL"); await new Promise(r => c.on("exit", r));
++    total++;
++    const jc: string = typeof K.ST.classifyJournal === "function" ? K.ST.classifyJournal(db).kind : existsSync(db + "-journal") ? "present (no classifier)" : "none"; classes[jc] = (classes[jc] ?? 0) + 1;
++    // INFORMATION: Sink.recover without an outside head, on a copy.
++    if (jc !== "none") {
++      rmSync(side, { recursive: true, force: true }); mkdirSync(side);
++      copyFileSync(db, join(side, "sink.sqlite")); copyFileSync(db + "-journal", join(side, "sink.sqlite-journal"));
++      try { K.SK.Sink.recover(join(side, "sink.sqlite"), cfg, join(side, "op.log")); } catch { noAnchorRefused++; }
++    }
++    // The documented procedure.
++    const anchor = JSON.parse(readFileSync(outside, "utf8"));
++    const ackList = existsSync(acks) ? readFileSync(acks, "utf8").split("\n").filter(l => l.length > 0).map(l => JSON.parse(l)) : [];
++    const r: any = { k, journal: jc, child: err.slice(-200) };
++    let s: any;
++    try { s = new K.SK.Sink(db, { ...cfg, outsideHead: anchor }); r.start1 = "serves"; } catch (e) {
++      r.start1 = full(e);
++      if (/companion file/.test(r.start1)) { try { r.recover = K.SK.Sink.recover(db, { ...cfg, outsideHead: anchor }, join(dir, "op.log")).reason; } catch (e2) { r.recover = full(e2); } }
++      try { s = new K.SK.Sink(db, { ...cfg, outsideHead: anchor }); r.start2 = "serves"; } catch (e3) { r.start2 = full(e3); }
++    }
++    if (s === undefined) { r.ok = false; failures++; rounds.push(r); break; }
++    const h = s.head(), ids = new Set(s.settled().map((x: any) => x.request_id));
++    const lastAck = ackList.length > 0 ? ackList[ackList.length - 1].head : { count: 0, chainHash: genesis };
++    const same = (a: any, b: any) => a !== undefined && a.count === b.count && a.chainHash === b.chainHash;
++    const missing = ackList.filter(a => !ids.has(a.rid)).map(a => a.rid);
++    r.head = h.count; r.acked = ackList.length; r.missing = missing;
++    r.ok = missing.length === 0 && (same(anchor.committed, h) || same(anchor.pending, h)) && (same(lastAck, h) || same(anchor.pending, h)) && s.audit().length === 0;
++    s.close();
++    durable(outside, JSON.stringify({ committed: h }));   // the host promotes the served head (committed or pending)
++    if (!r.ok) failures++;
++    if (!r.ok || rounds.length < 8 || jc !== "none") rounds.push(r);
++    if (!r.ok) break;
++  }
++  verdict(failures === 0 && total > 0, { rounds: total, seconds: Math.round((Date.now() - t0) / 1000), journalClasses: classes, noAnchorRecoverRefused: noAnchorRefused, failures, sample: rounds.slice(-12) });
++})());

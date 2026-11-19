@@ -1,0 +1,25 @@
+node:internal/modules/cjs/loader:1372
+  throw err;
+  ^
+
+Error: Cannot find module 'results/night-shift-20261119/orch-C/c23-jsgate/build/U01-mod-hidden-growth.build.js'
+Require stack:
+- <REPO>/results/night-shift-20261119/orch-C/c23-jsgate/tools/drive.cjs
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1369:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Module._load (node:internal/modules/cjs/loader:1179:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1449:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-C/c23-jsgate/tools/drive.cjs:3:11)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '<REPO>/results/night-shift-20261119/orch-C/c23-jsgate/tools/drive.cjs'
+  ]
+}
+
+Node.js v24.3.0
+exit 1

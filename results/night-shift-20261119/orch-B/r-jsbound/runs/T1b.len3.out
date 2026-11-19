@@ -1,0 +1,8 @@
+checker: {"file":"T1b-uncharged-literal-16000-loop.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=868188 size<=6*N+16001 cost<=1457717+68*N+0*N^2","steps":868188,"maxA":6,"maxB":16001}
+./run.sh: line 15: 94174 Alarm clock: 14         env -i PATH=$P HOME=$D perl -e 'alarm 5; exec @ARGV' node --max-old-space-size=200 $E/drive.cjs $D/model.cjs $KASE $LEN
+real run exit 142 (142 = killed by 5 s alarm)
+CLAIM BROKEN -> exit 1
+real 29.33
+user 6.49
+sys 0.54
+exit 1

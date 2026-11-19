@@ -1,0 +1,18 @@
+<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts:67
+      throw new Error("h1 sink refuses to serve: cfg.initialState is not a valid context (charge id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original)");
+            ^
+
+
+Error: h1 sink refuses to serve: cfg.initialState is not a valid context (charge id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original)
+    at new Sink (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts:67:13)
+    at Sink.init (<REPO>/results/night-shift-20261119/orch-B/heavy/h-2/diff/sinks/cb-h1.ts:14:55)
+    at runSeq (<REPO>/results/night-shift-20261119/orch-B/heavy/h-2/diff/diff.ts:94:8)
+    at k (<REPO>/results/night-shift-20261119/orch-B/heavy/h-2/diff/diff.ts:199:13)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/heavy/h-2/diff/diff.ts:230:116)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+
+Node.js v24.3.0

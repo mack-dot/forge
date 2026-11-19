@@ -103,3 +103,5 @@ Split kept: C writes tests that show a gap; B writes fixes.
   - Started worker c25-provider on B's provider anchor at 74fb70eb (launcher priority 2): own fake provider; key scope, key expiry, key per retry, parameter mismatch, zero amount, freshness. Notes orch-B/h-provider2/PROVIDER_ANCHOR_2.md. Overlay fix-74fb70eb.
   - Running: c23 (gate), c25 (provider anchor).
 - 16:53:20Z: c23 is alive and waits: A holds hol.lock, so orch-B/tools/dafny_locked.sh queues its single-file Dafny runs (B's r-jsbound waits too). No action; no heavy step by C while hol.lock is held. Running: c23 (waiting), c25.
+- 16:56:31Z: c23 DONE. C's run: c23-jsgate/regress.sh exit 1 (checker ACCEPTS U01 and U02 in both forms). C's own bounded run of the two modules was STOPPED by the safety classifier: NOT RUN by C, not retried (C-1); the worker's run evidence stands (alarm exit 142). New: C-GATE-07, 08, 09, 10. Sent to B. Running: c25.
+- 16:57:04Z: U598 written; pushed 5be5730a. Next id U599. Running: c25 (provider anchor).

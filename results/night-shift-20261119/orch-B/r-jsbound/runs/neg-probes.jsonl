@@ -1,0 +1,30 @@
+{"file":"N01-math-random.js","verdict":"REFUSE","code":"NAME","detail":"free identifier Math","steps":8,"maxA":0,"maxB":32}
+{"file":"N02-json-parse.js","verdict":"REFUSE","code":"NAME","detail":"free identifier JSON","steps":8,"maxA":0,"maxB":32}
+{"file":"N03-string-repeat.js","verdict":"REFUSE","code":"CALL","detail":"method repeat is not an allow-listed runtime primitive","steps":10,"maxA":0,"maxB":32}
+{"file":"N04-padStart.js","verdict":"REFUSE","code":"CALL","detail":"method padStart is not an allow-listed runtime primitive","steps":10,"maxA":0,"maxB":32}
+{"file":"N05-toString-base.js","verdict":"REFUSE","code":"CALL","detail":"method toString is not an allow-listed runtime primitive","steps":10,"maxA":0,"maxB":32}
+{"file":"N06-exponentiatedBy.js","verdict":"REFUSE","code":"CALL","detail":"method exponentiatedBy is not an allow-listed runtime primitive","steps":10,"maxA":0,"maxB":32}
+{"file":"N07-bignumber-config.js","verdict":"REFUSE","code":"NAME","detail":"free identifier BigNumber","steps":8,"maxA":0,"maxB":32}
+{"file":"N08-proxy.js","verdict":"REFUSE","code":"EXPR","detail":"`new` other than BigNumber: new Proxy(_dafny.ONE, _dafny.ONE)","steps":7,"maxA":0,"maxB":32}
+{"file":"N09-globalThis.js","verdict":"REFUSE","code":"NAME","detail":"free identifier globalThis","steps":7,"maxA":0,"maxB":32}
+{"file":"N10-function-ctor.js","verdict":"REFUSE","code":"CALL","detail":"unresolved call target (_dafny.ONE).constructor.constructor(\"return proce","steps":7,"maxA":0,"maxB":32}
+{"file":"N11-async-iife.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=182 size<=6*N+388 cost<=7421+68*N+0*N^2","steps":182,"maxA":6,"maxB":388}
+{"file":"N12-generator-iife.js","verdict":"REFUSE","code":"LOOP","detail":"loop exit not established within 4096 unfoldings: while (true) { }","steps":4106,"maxA":0,"maxB":32}
+{"file":"N13-tagged-template.js","verdict":"REFUSE","code":"EXPR","detail":"TaggedTemplateExpression is outside the admitted expressions: String.raw`a`","steps":7,"maxA":0,"maxB":32}
+{"file":"N14-eval.js","verdict":"REFUSE","code":"CALL","detail":"unresolved call target eval","steps":7,"maxA":0,"maxB":32}
+{"file":"N15-try-finally.js","verdict":"REFUSE","code":"STATEMENT","detail":"TryStatement is outside the admitted statements: try { } finally { }","steps":6,"maxA":0,"maxB":32}
+{"file":"N16-dynamic-property.js","verdict":"REFUSE","code":"CALL","detail":"unresolved call target (_dafny.ONE)[\"plus\"]","steps":7,"maxA":0,"maxB":32}
+{"file":"N17-array-hole.js","verdict":"REFUSE","code":"EXPR","detail":"OmittedExpression is outside the admitted expressions: ","steps":8,"maxA":0,"maxB":32}
+{"file":"N18-sort-comparator.js","verdict":"REFUSE","code":"EXPR","detail":"FunctionExpression is outside the admitted expressions: function () { return 0; }","steps":11,"maxA":0,"maxB":32}
+{"file":"N19-regex.js","verdict":"REFUSE","code":"EXPR","detail":"RegularExpressionLiteral is outside the admitted expressions: /(a+)+$/","steps":8,"maxA":0,"maxB":32}
+{"file":"N20-date.js","verdict":"REFUSE","code":"NAME","detail":"free identifier Date","steps":8,"maxA":0,"maxB":32}
+{"file":"N21-proto-pollution.js","verdict":"REFUSE","code":"SHAPE","detail":"assignment target _dafny.Seq.prototype","steps":6,"maxA":0,"maxB":32}
+{"file":"N22-valueOf-hook.js","verdict":"REFUSE","code":"CALL","detail":"method valueOf is not an allow-listed runtime primitive","steps":9,"maxA":0,"maxB":32}
+{"file":"N23-throw-control.js","verdict":"REFUSE","code":"HALT","detail":"`throw` in compiled code (a run-time halt): throw _dafny.ONE;","steps":6,"maxA":0,"maxB":32}
+{"file":"N24-labeled-continue-block.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=216 size<=6*N+388 cost<=7454+68*N+0*N^2","steps":216,"maxA":6,"maxB":388}
+{"file":"N25-var-redeclare.js","verdict":"REFUSE","code":"SHAPE","detail":"`var` declaration","steps":6,"maxA":0,"maxB":32}
+{"file":"N26-lambda-value-later.js","verdict":"REFUSE","code":"EXPR","detail":"ArrowFunction is outside the admitted expressions: () => { return _dafny.ONE; }","steps":8,"maxA":0,"maxB":32}
+{"file":"N27-with.js","verdict":"REFUSE","code":"STATEMENT","detail":"WithStatement is outside the admitted statements: with (_dafny) { }","steps":6,"maxA":0,"maxB":32}
+{"file":"N28-symbol-toPrimitive.js","verdict":"REFUSE","code":"NAME","detail":"free identifier Symbol","steps":8,"maxA":0,"maxB":32}
+{"file":"N29-undefined-ident.js","verdict":"REFUSE","code":"NAME","detail":"free identifier undefined","steps":7,"maxA":0,"maxB":32}
+{"file":"N30-new-dafny-Map.js","verdict":"REFUSE","code":"EXPR","detail":"`new` other than BigNumber: new _dafny.Map()","steps":7,"maxA":0,"maxB":32}

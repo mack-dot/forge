@@ -1,0 +1,8 @@
+checker: {"file":"T1-uncharged-string-literal-loop.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=388188 size<=6*N+32001 cost<=618869+68*N+0*N^2","steps":388188,"maxA":6,"maxB":32001}
+{"ok":false,"why":"THROW RangeError: Maximum call stack size exceeded","ms":3}
+real run exit 1 (142 = killed by 5 s alarm)
+CLAIM BROKEN -> exit 1
+real 8.91
+user 4.21
+sys 1.07
+exit 1

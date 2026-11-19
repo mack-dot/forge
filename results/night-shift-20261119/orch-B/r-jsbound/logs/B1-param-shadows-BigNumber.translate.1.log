@@ -1,0 +1,28 @@
+# owner=r-jsbound start=2026-11-19T16:26:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-jsbound/work/B1-param-shadows-BigNumber
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1200
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-jsbound/work/B1-param-shadows-BigNumber/model
+# memory free percent: 31
+
+Dafny program verifier did not attempt verification
+        7.96 real         1.10 user         0.41 sys
+            77119488  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               17067  page reclaims
+                1350  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  69  voluntary context switches
+               28255  involuntary context switches
+          5501045952  instructions retired
+          4281325715  cycles elapsed
+            77120736  peak memory footprint
+# end=2026-11-19T16:26:35Z
+exit 0

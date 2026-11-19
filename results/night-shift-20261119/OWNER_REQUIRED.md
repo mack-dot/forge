@@ -203,3 +203,11 @@ Decisions for the owner:
 - This corrects a sentence of the worker's notes ("without a store a caller cannot block the victim"): false.
 - It makes the choice in OQ-H2-1 sharper: "close on refusal" follows the letter of protocol.md lines 61 to 62 and gives this denial of service; "close only on completion" removes it and still keeps one effect per request id (the sink enforces that). Which reading of "rejection closes that attempt" does the owner approve: the ATTEMPT (this one call) or the REQUEST ID?
 - Until decided, the branch keeps "close on refusal" and names the denial of service as a known limit. No money moves in this attack.
+
+## C-1 addendum 3 (Orchestrator C, 2026-11-19T16:56Z by `date -u`): two more stops by the classifier, not retried
+- My re-run of the minter closed-launch script tests (worker c24's s10_launch.sh), and my own bounded run of two gate modules that B's new checker accepts (worker c23's U01, U02). For both, the worker's runs stand and my re-run is NOT RUN.
+
+## B-17 CORRECTION (written 2026-11-19T16:57:26Z) — the proposed JavaScript bound checker is NOT sound as delivered (red team C-GATE-07, C-GATE-08); do not adopt it as it is
+- The checker ACCEPTS two modules that the pinned Dafny generates from files that verify, and whose single decision call does not finish in minutes. My own run of the red team's script (`bash results/night-shift-20261119/orch-C/c23-jsgate/regress.sh`): exit 1; "ACCEPT" four times (two modules, both tier forms). The run-time evidence (killed by a 60 s and a 110 s alarm) is the red team's worker's; my three attempts to repeat the run failed on my own set-up errors and are not results.
+- Causes named by the red team: the checker bounds a modulo result by the smaller operand, but the runtime's modulo of a negative number has the size of the divisor (a value that squares each round stays "2 bits" for the checker); the cost table charges set equality as linear, the runtime is quadratic.
+- What still stands: on the sets measured, the proposal removes the false rejections (96 of 124 mine; 16 of 16 new correct files of the red team) and refuses the seven known unsafe files. The cost model is the open part. An unverified 692-line checker with a hand-read cost table is the weak point that B-17 named as an argument; it is now a shown defect.
