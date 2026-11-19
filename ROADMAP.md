@@ -28,6 +28,25 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## M1-B mission, after wave 4: exit-status statements corrected; fail-closed caller inspected; next obligations — U476
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No new worker.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 58, head `685d07f5`, run 44472601209 |3|UNSUPPORTED, as expected |
+| pinned Dafny: the LinkedRefund proof without the library axiom module (orchestrator) |0|1486 verified; audit 0 findings, equal to the empty baseline |
+| `drafts/fail-closed/run_exit_status_controls.py` on planted process results |0|18 rows as expected (a finite test) |
+| the same test with a caller that authorizes on exit status 0 alone |1|9 rows differ: the test detects it |
+| L1 and every other HOL step |NOT RUN|the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases |WAITING on battery power|108 of 158; case 005 must run again |
+
+[Next obligations](proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md).
+Exit status 0 is not evidence of a complete output; the state x0 = 2^32
+is a counterexample to the implication, its reachability is unknown.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission, wave 4: twelve workers, one per missing link; findings on admission, processor bits, exit status and enforcement; a Dafny sink core — U475
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
