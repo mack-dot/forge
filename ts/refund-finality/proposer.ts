@@ -72,7 +72,9 @@ export class MinterClient {
   // Sends any message body. The issuer accepts only { id, pre, transition }.
   send(body: Record<string, unknown>): Promise<Minted> {
     const id = this.next++;
-    return new Promise(done => { this.waiting.set(id, done); this.child.stdin.write(JSON.stringify({ id, ...body }) + "\n"); });
+    // The client's own id comes LAST, so a key `id` inside the body cannot replace it. Before, a body with an
+    // `id` key was sent under that id and the answer went to another waiting caller (C-ATT-16).
+    return new Promise(done => { this.waiting.set(id, done); this.child.stdin.write(JSON.stringify({ ...body, id }) + "\n"); });
   }
   mint(pre: unknown, transition: unknown): Promise<Minted> { return this.send({ pre, transition }); }
   // Writes one line as it is.

@@ -48,5 +48,6 @@ and X4 and the setup checks of X5 and X6, make it FAIL.
 | id | attack class | unsafe outcome before the fix | safe outcome | how to run |
 |---|---|---|---|---|
 | C-ATT-01 | malformed input: an id with U+2028 or U+2029 | the proposer client cut the issuer's answer in two (node:readline); the mint never got its answer (liveness; no safety loss) | the client splits lines at the byte 0x0A only; the answer arrives whole | `node --import tsx tests/refund-finality/regress/c_att_01_line_separator.ts` (stands alone; exit 0 = pass) |
+| C-ATT-16 | identity substitution in the untrusted proposer client | a body key `id` replaced the client's counter: one caller got another caller's answer | the client's own counter is always the message id | `node --import tsx tests/refund-finality/regress/c_att_16_client_id_override.ts` (stands alone; exit 0 = pass) |
 
 Status words printed by the runner: `PASS` (the safe outcome holds), `FAIL` (the unsafe outcome happened or a control failed), `KNOWN-LIMIT` (an unsafe outcome that is a stated limit which no code in the sink can remove, for example a rollback of the database without an outside anchor; it is not a pass and it does not change the exit code).
