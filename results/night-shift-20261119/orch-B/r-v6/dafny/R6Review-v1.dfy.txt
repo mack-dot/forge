@@ -1,0 +1,287 @@
+// r-v6 (night shift 2026-11-19, Orchestrator B): adversarial review lemmas over ShellCoreV6.dfy. NOT gate evidence.
+// No assume, no axiom, no bodiless lemma, no {:verify false}, no expect, no extern.
+include "ShellCoreV6.dfy"
+
+module R6Review {
+  import V6 = ShellCoreV6
+  import V5 = ShellCoreV5
+  import V4 = ShellCoreV4
+  import V3 = ShellCoreV3
+  import C = SinkCoreV3
+  import F = RefundFinality
+  import R = Refund
+
+  // ================= Attack 3: an ARBITRARY alreadySettled boolean per delivery (a shell settled-lookup bug) =========
+  datatype DelS = DelS(tok: V3.ShellToken, sigOk: bool, preOk: bool, settledFlag: bool)
+
+  ghost function QS(c: C.Core, d: DelS): V6.StepResult6
+  {
+    V6.StepQ6(c.charge, d.tok, d.sigOk, d.preOk, d.settledFlag)
+  }
+
+  ghost function RunS(init: F.Charge, ds: seq<DelS>): C.Core
+    decreases |ds|
+  {
+    if |ds| == 0 then V5.Core0(init)
+    else V6.Apply6(RunS(init, ds[..|ds| - 1]), QS(RunS(init, ds[..|ds| - 1]), ds[|ds| - 1]))
+  }
+
+  ghost predicate MoneyInvS(init: F.Charge, c: C.Core)
+  {
+    0 <= c.charge.remaining <= c.charge.original && c.charge.original == init.original &&
+    c.charge.chargeId == init.chargeId && c.charge.refundEnabled == init.refundEnabled &&
+    C.SumIntents(c.outbox) == init.remaining - c.charge.remaining &&
+    (forall i | 0 <= i < |c.outbox| ::
+       c.outbox[i].chargeId == init.chargeId && R.Money(c.outbox[i].amount) && R.AllowedReason(c.outbox[i].reason))
+  }
+
+  lemma SumSnoc(o: seq<R.RefundIntent>, x: R.RefundIntent)
+    ensures C.SumIntents(o + [x]) == C.SumIntents(o) + x.amount
+  {
+    assert (o + [x])[..|o|] == o;
+  }
+
+  lemma CommitS(c: C.Core, d: DelS)
+    requires QS(c, d).Commit?
+    ensures F.Authorizes(c.charge, V5.TransOf(d.tok))
+    ensures V6.Apply6(c, QS(c, d)) == C.Core(d.tok.post, c.settled + {d.tok.requestId}, c.outbox + [d.tok.intent])
+  {
+    V6.StepQ6Exact(c.charge, d.tok, d.sigOk, d.preOk, d.settledFlag);
+  }
+
+  lemma RunSMoney(init: F.Charge, ds: seq<DelS>)
+    requires 0 <= init.remaining <= init.original
+    ensures MoneyInvS(init, RunS(init, ds))
+    decreases |ds|
+  {
+    if |ds| > 0 {
+      var p := ds[..|ds| - 1];
+      var d := ds[|ds| - 1];
+      RunSMoney(init, p);
+      var c := RunS(init, p);
+      if QS(c, d).Commit? {
+        CommitS(c, d);
+        SumSnoc(c.outbox, d.tok.intent);
+        var o2 := c.outbox + [d.tok.intent];
+        forall i | 0 <= i < |o2|
+          ensures o2[i].chargeId == init.chargeId && R.Money(o2[i].amount) && R.AllowedReason(o2[i].reason)
+        {
+          if i < |c.outbox| { assert o2[i] == c.outbox[i]; }
+        }
+      }
+    }
+  }
+
+  ghost predicate EachCommitAuthorizedS(init: F.Charge, ds: seq<DelS>)
+  {
+    forall k | 0 <= k < |ds| :: QS(RunS(init, ds[..k]), ds[k]).Commit? ==>
+      F.Authorizes(RunS(init, ds[..k]).charge, V5.TransOf(ds[k].tok))
+  }
+
+  // THEOREM (attack 3): with ANY settled boolean per delivery, each commit is still F.Authorizes on the stored
+  // charge, and money is conserved. No hypothesis on tokens, sigOk, preOk or the settled boolean.
+  lemma ArbitrarySettledKeepsConformanceAndMoney(init: F.Charge, ds: seq<DelS>)
+    requires 0 <= init.remaining <= init.original
+    ensures EachCommitAuthorizedS(init, ds) && MoneyInvS(init, RunS(init, ds))
+  {
+    RunSMoney(init, ds);
+    forall k | 0 <= k < |ds| && QS(RunS(init, ds[..k]), ds[k]).Commit?
+      ensures F.Authorizes(RunS(init, ds[..k]).charge, V5.TransOf(ds[k].tok))
+    {
+      CommitS(RunS(init, ds[..k]), ds[k]);
+    }
+  }
+
+  // COUNTEREXAMPLE (attack 3): with a wrong settled boolean (false although settled), ONE request id gets TWO
+  // effects of 100 each (uniqueness fails; money is still conserved: 200 == 1000 - 800).
+  lemma ArbitrarySettledBreaksUniqueness()
+    ensures var t1 := V5.Tk("rq_1", V5.Ch(1000), 100);
+            var t2 := V5.Tk("rq_1", V5.Ch(900), 100);
+            var ds := [DelS(t1, true, true, false), DelS(t2, true, true, false)];
+            var c := RunS(V5.Ch(1000), ds);
+            |c.outbox| == 2 && c.outbox[0].requestId == "rq_1" && c.outbox[1].requestId == "rq_1" &&
+            c.outbox[0].amount == 100 && c.outbox[1].amount == 100 && c.charge.remaining == 800 && !C.Good(c)
+    // Control: the true-membership run (Run6) commits the same deliveries ONCE.
+    ensures var t1 := V5.Tk("rq_1", V5.Ch(1000), 100);
+            var t2 := V5.Tk("rq_1", V5.Ch(900), 100);
+            var ds := [V5.Del(t1, true, true), V5.Del(t2, true, true)];
+            V6.Run6(V5.Ch(1000), ds) == C.Core(V5.Ch(900), {"rq_1"}, [t1.intent])
+  {
+    var t1 := V5.Tk("rq_1", V5.Ch(1000), 100);
+    var t2 := V5.Tk("rq_1", V5.Ch(900), 100);
+    var ds := [DelS(t1, true, true, false), DelS(t2, true, true, false)];
+    assert ds[..1] == [ds[0]];
+    assert ds[..1][..0] == [];
+    assert ds[..|ds| - 1] == [ds[0]];
+    var c1 := RunS(V5.Ch(1000), [ds[0]]);
+    assert QS(V5.Core0(V5.Ch(1000)), ds[0]).Commit?;
+    assert c1 == C.Core(V5.Ch(900), {"rq_1"}, [t1.intent]);
+    assert QS(c1, ds[1]).Commit?;
+    var c := RunS(V5.Ch(1000), ds);
+    assert c == C.Core(V5.Ch(800), {"rq_1"}, [t1.intent, t2.intent]);
+    assert |c.outbox| != |c.settled|;
+    var es := [V5.Del(t1, true, true), V5.Del(t2, true, true)];
+    assert es[..1] == [es[0]];
+    assert es[..1][..0] == [];
+    assert es[..|es| - 1] == [es[0]];
+  }
+
+  // A spuriously TRUE settled boolean only loses commits (liveness), never adds one.
+  lemma SettledTrueNeverCommits(charge: F.Charge, t: V3.ShellToken, s: bool, p: bool)
+    ensures !V6.StepQ6(charge, t, s, p, true).Commit?
+  {
+  }
+
+  // ================= Attack 4: adversarial charges and tokens =================
+  // A charge that is not a valid approved context for ANY request id.
+  ghost predicate DeadCharge(ch: F.Charge)
+  {
+    ch.chargeId == "" || !ch.refundEnabled || !R.Money(ch.original) || !(0 <= ch.remaining <= ch.original)
+  }
+
+  lemma DeadNeverCommitsStep(ch: F.Charge, t: V3.ShellToken, s: bool, p: bool, st: bool)
+    requires DeadCharge(ch)
+    ensures !V6.StepQ6(ch, t, s, p, st).Commit?
+  {
+  }
+
+  // refundEnabled false, original above MaxMoney, empty charge id, or remaining out of [0, original]: the run
+  // NEVER commits anything (reject-all FOR THIS STORE). No InitOk needed.
+  lemma DeadRunUnchanged(init: F.Charge, ds: seq<V5.Del>)
+    requires DeadCharge(init)
+    ensures V6.Run6(init, ds) == V5.Core0(init)
+    decreases |ds|
+  {
+    if |ds| > 0 {
+      DeadRunUnchanged(init, ds[..|ds| - 1]);
+      DeadNeverCommitsStep(init, ds[|ds| - 1].tok, ds[|ds| - 1].sigOk, ds[|ds| - 1].preOk,
+                           ds[|ds| - 1].tok.requestId in V5.Core0(init).settled);
+    }
+  }
+
+  lemma EmptyRequestIdNeverCommits(ch: F.Charge, t: V3.ShellToken, s: bool, p: bool, st: bool)
+    requires t.requestId == ""
+    ensures !V6.StepQ6(ch, t, s, p, st).Commit?
+  {
+  }
+
+  // A post-state that changes any field other than remaining is rejected (no change of refundEnabled, original,
+  // chargeId), and a post remaining other than remaining - intent.amount is rejected.
+  lemma PostFieldChangeRejected(ch: F.Charge, t: V3.ShellToken, s: bool, p: bool, st: bool)
+    requires t.post.refundEnabled != ch.refundEnabled || t.post.original != ch.original ||
+             t.post.chargeId != ch.chargeId || t.post.remaining != ch.remaining - t.intent.amount
+    ensures !V6.StepQ6(ch, t, s, p, st).Commit?
+  {
+  }
+
+  lemma AmountOutOfRangeRejected(ch: F.Charge, t: V3.ShellToken, s: bool, p: bool, st: bool)
+    requires t.intent.amount < 0 || t.intent.amount > ch.remaining || t.intent.amount > R.MaxMoney
+    ensures !V6.StepQ6(ch, t, s, p, st).Commit?
+  {
+  }
+
+  lemma UnapprovedReasonOrForeignIdRejected(ch: F.Charge, t: V3.ShellToken, s: bool, p: bool, st: bool)
+    requires !R.AllowedReason(t.intent.reason) || t.intent.chargeId != ch.chargeId || t.intent.requestId != t.requestId
+    ensures !V6.StepQ6(ch, t, s, p, st).Commit?
+  {
+  }
+
+  // Commits need NO InitOk: per-commit conformance (PerCommitConforms) has no hypothesis at all.
+  lemma PerCommitNeedsNoInitOk(init: F.Charge, ds: seq<V5.Del>)
+    ensures V6.PerCommitConforms(init, ds)
+  {
+    V6.PerCommitHolds(init, ds);
+  }
+
+  // ================= Attack 5: the <== direction, unconditional, stated from the approved spec side ===========
+  // Any proposal that the approved relation calls eligible on the stored charge, carried by a pinned token with the
+  // approved post-state and intent, COMMITS when signed, hash-current and fresh. No other heuristic.
+  lemma EligibleProposalCommits(ch: F.Charge, rid: string, amount: int, reason: string, sig: string)
+    requires R.Eligible(F.ContextOf(ch, rid), R.Candidate(amount, reason))
+    ensures var t := V3.ShellToken(C.PINNED_SPEC, C.PINNED_CHK, rid, ch.(remaining := ch.remaining - amount),
+                                   R.Intent(ch.chargeId, rid, amount, reason), sig);
+            V6.StepQ6(ch, t, true, true, false) == V6.Commit(t.post, rid, t.intent)
+  {
+  }
+
+  lemma AuthorizedSignedFreshCurrentCommits(ch: F.Charge, t: V3.ShellToken)
+    requires t.specId == C.PINNED_SPEC && t.checkerId == C.PINNED_CHK
+    requires F.Authorizes(ch, V5.TransOf(t))
+    ensures V6.StepQ6(ch, t, true, true, false) == V6.Commit(t.post, t.requestId, t.intent)
+  {
+    V6.StepQ6Exact(ch, t, true, true, false);
+  }
+
+  // ================= Attack 7: "every committed token's bytes were minted", transferred to StepQ6 ===========
+  // A trace with mints and deliveries. sigOk at a delivery IS the verifier on bytesOf(token) (B5 built in).
+  // bytesOf and vb are PARAMETERS: nothing is assumed about them except the per-trace unforgeability H1B-shape.
+  datatype Act6 = Mint(msg: seq<int>) | Deliver(tok: V3.ShellToken, preOk: bool)
+
+  ghost function RunA(bytesOf: V3.ShellToken -> seq<int>, vb: (seq<int>, string) -> bool, init: F.Charge,
+                      acts: seq<Act6>): C.Core
+    decreases |acts|
+  {
+    if |acts| == 0 then V5.Core0(init) else
+      var c := RunA(bytesOf, vb, init, acts[..|acts| - 1]);
+      var a := acts[|acts| - 1];
+      if a.Mint? then c
+      else V6.Apply6(c, V6.StepQ6(c.charge, a.tok, vb(bytesOf(a.tok), a.tok.sig), a.preOk, a.tok.requestId in c.settled))
+  }
+
+  ghost predicate CommitAtA(bytesOf: V3.ShellToken -> seq<int>, vb: (seq<int>, string) -> bool, init: F.Charge,
+                            acts: seq<Act6>, k: int)
+    requires 0 <= k < |acts|
+  {
+    var c := RunA(bytesOf, vb, init, acts[..k]);
+    acts[k].Deliver? &&
+    V6.StepQ6(c.charge, acts[k].tok, vb(bytesOf(acts[k].tok), acts[k].tok.sig), acts[k].preOk,
+              acts[k].tok.requestId in c.settled).Commit?
+  }
+
+  ghost predicate MintedBeforeA(acts: seq<Act6>, k: int, m: seq<int>)
+  {
+    exists j :: 0 <= j < k && j < |acts| && acts[j].Mint? && acts[j].msg == m
+  }
+
+  // The H1B shape of b-ser2: it does NOT mention the run state, so it is the same hypothesis for V4 and V6 runs.
+  ghost predicate UnforgeableA(bytesOf: V3.ShellToken -> seq<int>, vb: (seq<int>, string) -> bool, acts: seq<Act6>)
+  {
+    forall k | 0 <= k < |acts| && acts[k].Deliver? && vb(bytesOf(acts[k].tok), acts[k].tok.sig) ::
+      MintedBeforeA(acts, k, bytesOf(acts[k].tok))
+  }
+
+  lemma V6CommitsWereMinted(bytesOf: V3.ShellToken -> seq<int>, vb: (seq<int>, string) -> bool, init: F.Charge,
+                            acts: seq<Act6>)
+    requires UnforgeableA(bytesOf, vb, acts)
+    ensures forall k | 0 <= k < |acts| && CommitAtA(bytesOf, vb, init, acts, k) ::
+      MintedBeforeA(acts, k, bytesOf(acts[k].tok)) &&
+      F.Authorizes(RunA(bytesOf, vb, init, acts[..k]).charge, V5.TransOf(acts[k].tok))
+  {
+    forall k | 0 <= k < |acts| && CommitAtA(bytesOf, vb, init, acts, k)
+      ensures MintedBeforeA(acts, k, bytesOf(acts[k].tok)) &&
+              F.Authorizes(RunA(bytesOf, vb, init, acts[..k]).charge, V5.TransOf(acts[k].tok))
+    {
+      var c := RunA(bytesOf, vb, init, acts[..k]);
+      V6.StepQ6Exact(c.charge, acts[k].tok, vb(bytesOf(acts[k].tok), acts[k].tok.sig), acts[k].preOk,
+                     acts[k].tok.requestId in c.settled);
+    }
+  }
+
+  // Non-vacuity of the mint lemma: a trace where one minted token commits.
+  lemma MintWitness()
+    ensures var t := V5.Tk("rq_1", V5.Ch(1000), 100);
+            var bytesOf := (x: V3.ShellToken) => [1];
+            var vb := (m: seq<int>, s: string) => m == [1];
+            var acts := [Mint([1]), Deliver(t, true)];
+            UnforgeableA(bytesOf, vb, acts) && CommitAtA(bytesOf, vb, V5.Ch(1000), acts, 1)
+  {
+    var t := V5.Tk("rq_1", V5.Ch(1000), 100);
+    var bytesOf := (x: V3.ShellToken) => [1];
+    var vb := (m: seq<int>, s: string) => m == [1];
+    var acts := [Mint([1]), Deliver(t, true)];
+    assert acts[..1] == [acts[0]];
+    assert acts[..1][..0] == [];
+    assert MintedBeforeA(acts, 1, bytesOf(acts[1].tok));
+    assert RunA(bytesOf, vb, V5.Ch(1000), acts[..1]) == V5.Core0(V5.Ch(1000));
+  }
+}

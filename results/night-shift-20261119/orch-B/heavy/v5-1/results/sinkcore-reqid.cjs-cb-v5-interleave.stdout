@@ -1,0 +1,18 @@
+<REPO>/results/night-shift-20261119/orch-B/d-v5sink/sink_core_backed_v5.ts:125
+      throw new Error("v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false" + why);
+            ^
+
+
+Error: v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false
+    at new Sink (<REPO>/results/night-shift-20261119/orch-B/d-v5sink/sink_core_backed_v5.ts:125:13)
+    at new Sink (<REPO>/results/night-shift-20261119/orch-B/heavy/v5-1/sinks/cb-v5.ts:12:35)
+    at runSeq (<REPO>/results/night-shift-20261119/orch-B/heavy/v5-1/diff.ts:98:23)
+    at shrink (<REPO>/results/night-shift-20261119/orch-B/heavy/v5-1/diff.ts:144:11)
+    at k (<REPO>/results/night-shift-20261119/orch-B/heavy/v5-1/diff.ts:208:17)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/heavy/v5-1/diff.ts:225:116)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+
+Node.js v24.3.0

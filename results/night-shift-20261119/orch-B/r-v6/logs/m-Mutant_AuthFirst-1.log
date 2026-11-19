@@ -1,0 +1,38 @@
+# owner=r-v6 start=2026-11-19T12:11:16Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1441
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_AuthFirst.dfy
+# memory free percent: 55
+Mutant_AuthFirst.dfy(58,2): Error: a postcondition could not be proved on this return path
+   |
+58 |   {
+   |   ^
+
+Mutant_AuthFirst.dfy(57,47): Related location: this is the postcondition that could not be proved
+   |
+57 |     ensures StepQ6(charge, t, sigOk, preOk, s) == Reject(V4.StepQ(charge, t, sigOk, preOk, s).why)
+   |                                                ^^
+
+
+Dafny program verifier finished with 191 verified, 1 error
+       12.46 real        11.42 user         0.77 sys
+           225214464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29391  page reclaims
+                 344  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                1295  voluntary context switches
+               77753  involuntary context switches
+         97627855785  instructions retired
+         37172124866  cycles elapsed
+           205735136  peak memory footprint
+# end=2026-11-19T12:11:29Z
+exit 4

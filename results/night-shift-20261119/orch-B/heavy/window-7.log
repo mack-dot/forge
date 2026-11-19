@@ -1,0 +1,40 @@
+# start 2026-11-19T12:05:45Z swap free 1361 MiB memory free 56 %
+sinkcore-v6.cjs cb-v6 plain n=2000 allowed= start=2026-11-19T12:05:45Z end=2026-11-19T12:06:07Z exit 0
+sinkcore-v6.cjs cb-v6 fault-1 n=500 allowed= start=2026-11-19T12:06:07Z end=2026-11-19T12:06:13Z exit 0
+sinkcore-v6.cjs cb-v6 fault-2 n=500 allowed= start=2026-11-19T12:06:13Z end=2026-11-19T12:06:18Z exit 0
+sinkcore-v6.cjs cb-v6 interleave n=500 allowed= start=2026-11-19T12:06:18Z end=2026-11-19T12:06:24Z exit 0
+sinkcore-v3.cjs cb-v6 plain n=2000 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:06:25Z end=2026-11-19T12:06:43Z exit 1
+sinkcore-v3.cjs cb-v6 fault-1 n=500 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:06:43Z end=2026-11-19T12:06:49Z exit 1
+sinkcore-v3.cjs cb-v6 fault-2 n=500 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:06:49Z end=2026-11-19T12:06:54Z exit 1
+sinkcore-v3.cjs cb-v6 interleave n=500 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:06:54Z end=2026-11-19T12:07:00Z exit 1
+sinkcore-v6.cjs cb-v3 plain n=2000 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:07:00Z end=2026-11-19T12:07:18Z exit 1
+sinkcore-v6.cjs cb-v3 fault-1 n=500 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:07:18Z end=2026-11-19T12:07:23Z exit 1
+sinkcore-v6.cjs cb-v3 fault-2 n=500 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:07:23Z end=2026-11-19T12:07:28Z exit 1
+sinkcore-v6.cjs cb-v3 interleave n=500 allowed=signed-unauthorized,forged-post(key),forged-post,valid-signed,valid@disabled,zero@disabled,stale-or-current@disabled,forged-post(key)@disabled,signed-unauthorized@disabled start=2026-11-19T12:07:28Z end=2026-11-19T12:07:35Z exit 1
+sinkcore-v3.cjs cb-v3 plain n=2000 allowed= start=2026-11-19T12:07:35Z end=2026-11-19T12:07:57Z exit 0
+sinkcore-v3.cjs cb-v3 fault-1 n=500 allowed= start=2026-11-19T12:07:57Z end=2026-11-19T12:08:02Z exit 0
+sinkcore-v3.cjs cb-v3 fault-2 n=500 allowed= start=2026-11-19T12:08:02Z end=2026-11-19T12:08:07Z exit 0
+sinkcore-v3.cjs cb-v3 interleave n=500 allowed= start=2026-11-19T12:08:07Z end=2026-11-19T12:08:14Z exit 0
+# heavy_v6 exit 0 2026-11-19T12:08:14Z
+sinkcore-v3.cjs cb-v5 plain n=2000 allowed= start=2026-11-19T12:08:15Z end=2026-11-19T12:08:37Z exit 0
+sinkcore-v3.cjs cb-v5 fault-1 n=500 allowed= start=2026-11-19T12:08:37Z end=2026-11-19T12:08:43Z exit 1
+sinkcore-v3.cjs cb-v5 fault-2 n=500 allowed= start=2026-11-19T12:08:43Z end=2026-11-19T12:08:49Z exit 0
+sinkcore-v3.cjs cb-v5 interleave n=500 allowed= start=2026-11-19T12:08:49Z end=2026-11-19T12:08:49Z exit 1
+sinkcore-v3.cjs cb-v3 plain n=2000 allowed= start=2026-11-19T12:08:49Z end=2026-11-19T12:09:12Z exit 0
+sinkcore-v3.cjs cb-v3 fault-1 n=500 allowed= start=2026-11-19T12:09:12Z end=2026-11-19T12:09:16Z exit 0
+sinkcore-v3.cjs cb-v3 fault-2 n=500 allowed= start=2026-11-19T12:09:16Z end=2026-11-19T12:09:23Z exit 0
+sinkcore-v3.cjs cb-v3 interleave n=500 allowed= start=2026-11-19T12:09:23Z end=2026-11-19T12:09:32Z exit 0
+sinkcore-v3.cjs hand-v3 plain n=2000 allowed= start=2026-11-19T12:09:32Z end=2026-11-19T12:09:52Z exit 0
+sinkcore-v3.cjs hand-v3 fault-1 n=500 allowed= start=2026-11-19T12:09:52Z end=2026-11-19T12:09:58Z exit 0
+sinkcore-v3.cjs hand-v3 fault-2 n=500 allowed= start=2026-11-19T12:09:58Z end=2026-11-19T12:10:03Z exit 0
+sinkcore-v3.cjs hand-v3 interleave n=500 allowed= start=2026-11-19T12:10:03Z end=2026-11-19T12:10:09Z exit 0
+sinkcore-v3.cjs real plain n=2000 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T12:10:09Z end=2026-11-19T12:10:26Z exit 3
+sinkcore-v3.cjs real fault-1 n=500 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T12:10:26Z end=2026-11-19T12:10:33Z exit 1
+sinkcore-v3.cjs real fault-2 n=500 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T12:10:33Z end=2026-11-19T12:10:38Z exit 3
+sinkcore-v3.cjs real interleave n=500 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T12:10:38Z end=2026-11-19T12:10:43Z exit 3
+sinkcore-reqid.cjs cb-v5 plain n=2000 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T12:10:43Z end=2026-11-19T12:11:02Z exit 3
+sinkcore-reqid.cjs cb-v5 fault-1 n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T12:11:02Z end=2026-11-19T12:11:07Z exit 1
+sinkcore-reqid.cjs cb-v5 fault-2 n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T12:11:07Z end=2026-11-19T12:11:13Z exit 3
+sinkcore-reqid.cjs cb-v5 interleave n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T12:11:13Z end=2026-11-19T12:11:13Z exit 1
+# heavy_v5 exit 0 end 2026-11-19T12:11:13Z
+window exit 0

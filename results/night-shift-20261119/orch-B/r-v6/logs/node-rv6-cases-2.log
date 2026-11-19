@@ -1,0 +1,35 @@
+# start=2026-11-19T12:10:23Z node --import tsx rv6_cases.ts
+PASS 1 zero amount, authorized: got committed rem 1000
+PASS 2 second zero amount, other id: got committed rem 1000
+PASS 3 replay of case 1 token: got replayed rem 1000
+PASS 4 boundary amount == remaining (1000): got committed rem 0
+PASS 5 amount 1 on remaining 0, post remaining -1 (not encodable): got rejected:token shape rem 0
+PASS 51 amount 1 on remaining 0, post remaining 0: got rejected:not authorized by the approved relation for the stored state rem 0
+PASS 6 amount 1001 > remaining, post -1 (not encodable): got rejected:token shape rem 1000
+PASS 61 amount 1001 > remaining, post remaining 0: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 7 post sets refundEnabled false: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 8 post remaining 950 with intent 100: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 9 unapproved reason goodwill: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 10 intent amount 100, post decreases 0 (request built from intent): got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 11 MaxMoney charge, amount MaxMoney: got committed rem 0
+PASS 12 original MaxMoney+1, amount 0: got rejected:not authorized by the approved relation for the stored state rem 9223372036854775808
+outbox {"A":3,"B":0,"C":1,"D":0} PASS restart {"A":"ok","B":"ok","C":"ok","D":"ok"}
+        0.28 real         0.28 user         0.07 sys
+           123092992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10546  page reclaims
+                 186  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   6  messages sent
+                   6  messages received
+                   3  signals received
+                 144  voluntary context switches
+                1213  involuntary context switches
+            15226770  instructions retired
+             8548583  cycles elapsed
+             1393072  peak memory footprint
+exit 0

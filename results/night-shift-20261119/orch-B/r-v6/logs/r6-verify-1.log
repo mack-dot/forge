@@ -1,0 +1,44 @@
+# owner=r-v6 start=2026-11-19T12:09:15Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1409
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-v6/logs/r6-verify.csv R6Review.dfy
+# memory free percent: 63
+R6Review.dfy(109,2): Error: a postcondition could not be proved on this return path
+    |
+109 |   {
+    |   ^
+
+R6Review.dfy(108,37): Related location: this is the postcondition that could not be proved
+    |
+108 |             V6.Run6(V5.Ch(1000), ds) == C.Core(V5.Ch(900), {"rq_1"}, [t1.intent])
+    |                                      ^^
+
+R6Review.dfy(118,4): Error: assertion might not hold
+    |
+118 |     assert c1 == C.Core(V5.Ch(900), {"rq_1"}, [t1.intent]);
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 218 verified, 2 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-v6/logs/r6-verify.csv
+       14.86 real        12.59 user         0.87 sys
+           225738752  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32880  page reclaims
+                   9  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                1500  voluntary context switches
+               64776  involuntary context switches
+        104267573980  instructions retired
+         40923860628  cycles elapsed
+           209421584  peak memory footprint
+# end=2026-11-19T12:09:30Z
+exit 4

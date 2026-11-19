@@ -1,0 +1,256 @@
+{
+ "sink": "cb-v3",
+ "mode": "fault-2",
+ "seed": 20261119,
+ "count": 500,
+ "coreKind": "v6",
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 206,
+  "kinds": {
+   "wrong-spec": 213,
+   "signed-unauthorized@disabled": 8,
+   "foreign-charge-intent@disabled": 13,
+   "wrong-spec@disabled": 21,
+   "unknown-pre-hash@disabled": 7,
+   "wrong-checker@disabled": 14,
+   "stale-or-current@disabled": 20,
+   "attacker-key@disabled": 11,
+   "replay@disabled": 39,
+   "sig-bitflip@disabled": 11,
+   "valid": 748,
+   "foreign-charge-post": 95,
+   "reqid-mismatch": 244,
+   "stale-or-current": 282,
+   "wrong-checker": 151,
+   "foreign-charge-intent": 83,
+   "attacker-key": 122,
+   "replay": 235,
+   "zero": 231,
+   "non-canonical": 73,
+   "settled-id-new-body": 176,
+   "forged-post(key)": 114,
+   "zero@disabled": 26,
+   "valid@disabled": 66,
+   "reqid-mismatch@disabled": 20,
+   "unknown-pre-hash": 57,
+   "sig-bitflip": 135,
+   "signed-unauthorized": 96,
+   "foreign-charge-post@disabled": 8,
+   "settled-id-new-body@disabled": 21,
+   "forged-post(key)@disabled": 16,
+   "non-canonical@disabled": 6
+  },
+  "divergentKinds": {
+   "signed-unauthorized@disabled": 4,
+   "forged-post(key)": 89,
+   "zero@disabled": 9,
+   "valid@disabled": 21,
+   "signed-unauthorized": 74,
+   "stale-or-current@disabled": 5,
+   "settled-id-new-body@disabled": 3,
+   "forged-post(key)@disabled": 1
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "wrong-checker@disabled",
+      "special": "fault"
+     },
+     {
+      "kind": "stale-or-current@disabled"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 1,
+     "detail": {
+      "kind": "stale-or-current@disabled",
+      "sink_out": "committed",
+      "core_out": "rejected:NotAuthorized",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"18\"}",
+       "settledEnc": [
+        "92691660416944945738703105819149"
+       ],
+       "outbox": [
+        "{\"amount\":\"10\",\"chargeId\":\"ch_0\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_1_5\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#4",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "reqid-mismatch",
+      "special": "fault"
+     },
+     {
+      "kind": "forged-post(key)"
+     }
+    ],
+    "shrunk_len": 3,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "626",
+     "remaining": "214",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 2,
+     "detail": {
+      "kind": "forged-post(key)",
+      "sink_out": "committed",
+      "core_out": "rejected:NotAuthorized",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"230\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875",
+        "92691660416949094409556064141840"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_5\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"26\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#7",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid@disabled"
+     },
+     {
+      "kind": "reqid-mismatch@disabled",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "137",
+     "remaining": "83",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "valid@disabled",
+      "sink_out": "committed",
+      "core_out": "rejected:NotAuthorized",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"43\"}",
+       "settledEnc": [
+        "97841188889734112027228057829910"
+       ],
+       "outbox": [
+        "{\"amount\":\"40\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_8\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"83\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#1",
+   "original_len": 10,
+   "shrunk": [
+    {
+     "kind": "wrong-checker@disabled",
+     "special": "fault"
+    },
+    {
+     "kind": "stale-or-current@disabled"
+    }
+   ],
+   "shrunk_len": 2,
+   "s0": {
+    "chargeId": "ch_0",
+    "original": "717",
+    "remaining": "28",
+    "refundEnabled": false
+   },
+   "divergence": {
+    "step": 1,
+    "detail": {
+     "kind": "stale-or-current@disabled",
+     "sink_out": "committed",
+     "core_out": "rejected:NotAuthorized",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"18\"}",
+      "settledEnc": [
+       "92691660416944945738703105819149"
+      ],
+      "outbox": [
+       "{\"amount\":\"10\",\"chargeId\":\"ch_0\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_1_5\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": [],
+ "allowed": [
+  "signed-unauthorized",
+  "forged-post(key)",
+  "forged-post",
+  "valid-signed",
+  "valid@disabled",
+  "zero@disabled",
+  "stale-or-current@disabled",
+  "forged-post(key)@disabled",
+  "signed-unauthorized@disabled"
+ ],
+ "notAllowedKinds": [
+  "settled-id-new-body@disabled"
+ ],
+ "shellChecks": {
+  "stepP": 5789,
+  "audit": 5789,
+  "stepQ6": 5789
+ }
+}

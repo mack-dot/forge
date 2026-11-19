@@ -1,0 +1,304 @@
+{
+ "sink": "cb-v5",
+ "mode": "fault-1",
+ "seed": 20261119,
+ "count": 500,
+ "coreKind": "v3",
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 28,
+  "kinds": {
+   "wrong-spec": 241,
+   "valid": 911,
+   "stale-or-current": 297,
+   "foreign-charge-intent": 100,
+   "replay": 271,
+   "settled-id-new-body": 198,
+   "zero": 266,
+   "sig-bitflip": 146,
+   "foreign-charge-post": 103,
+   "reqid-mismatch": 255,
+   "wrong-checker": 174,
+   "attacker-key": 129,
+   "non-canonical": 82,
+   "forged-post(key)": 129,
+   "unknown-pre-hash": 60
+  },
+  "divergentKinds": {
+   "reqid-mismatch": 2,
+   "sig-bitflip": 2,
+   "forged-post(key)": 2,
+   "valid": 7,
+   "wrong-spec": 3,
+   "unknown-pre-hash": 1,
+   "zero": 2,
+   "stale-or-current": 5,
+   "replay": 2,
+   "wrong-checker": 1,
+   "settled-id-new-body": 1
+  },
+  "first": [
+   {
+    "name": "seed20261119#17",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "forged-post(key)"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "valid",
+      "special": "fault"
+     },
+     {
+      "kind": "forged-post(key)"
+     }
+    ],
+    "shrunk_len": 5,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "863",
+     "remaining": "413",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 4,
+     "detail": {
+      "kind": "forged-post(key)",
+      "sink_out": "rejected:OTHER(sink halted: re-audit (schema, initial charge, AuditV5) false after another writer changed the store)",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"863\",\"refundEnabled\":true,\"remaining\":\"14\"}",
+       "settledEnc": [
+        "95619441708252612117834233893165990465",
+        "97531827246717716199483365875842155074",
+        "99444212785182820281132497858518319683"
+       ],
+       "outbox": [
+        "{\"amount\":\"320\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_17_1\"}",
+        "{\"amount\":\"29\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_17_2\"}",
+        "{\"amount\":\"116\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_17_3\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"863\",\"refundEnabled\":true,\"remaining\":\"14\"}",
+       "settledEnc": [
+        "95619441708252612117834233893165990465",
+        "97531827246717716199483365875842155074",
+        "99444212785182820281132497858518319683"
+       ],
+       "outbox": [
+        "{\"amount\":\"320\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_17_1\"}",
+        "{\"amount\":\"29\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_17_2\"}",
+        "{\"amount\":\"116\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_17_3\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#22",
+    "original_len": 7,
+    "shrunk": [
+     {
+      "kind": "forged-post(key)"
+     },
+     {
+      "kind": "settled-id-new-body",
+      "special": "fault"
+     },
+     {
+      "kind": "valid"
+     }
+    ],
+    "shrunk_len": 3,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "70",
+     "remaining": "57",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 2,
+     "detail": {
+      "kind": "valid",
+      "sink_out": "rejected:OTHER(sink halted: re-audit (schema, initial charge, AuditV5) false after another writer changed the store)",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"70\",\"refundEnabled\":true,\"remaining\":\"446\"}",
+       "settledEnc": [
+        "97531827246710012720649586233881199166"
+       ],
+       "outbox": [
+        "{\"amount\":\"24\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_22_2\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"70\",\"refundEnabled\":true,\"remaining\":\"446\"}",
+       "settledEnc": [
+        "97531827246710012720649586233881199166"
+       ],
+       "outbox": [
+        "{\"amount\":\"24\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_22_2\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#34",
+    "original_len": 11,
+    "shrunk": [
+     {
+      "kind": "forged-post(key)"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "stale-or-current"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "stale-or-current"
+     },
+     {
+      "kind": "valid",
+      "special": "fault"
+     },
+     {
+      "kind": "stale-or-current"
+     }
+    ],
+    "shrunk_len": 7,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "295",
+     "remaining": "103",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 6,
+     "detail": {
+      "kind": "stale-or-current",
+      "sink_out": "rejected:OTHER(sink halted: re-audit (schema, initial charge, AuditV5) false after another writer changed the store)",
+      "core_out": "committed",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"295\",\"refundEnabled\":true,\"remaining\":\"0\"}",
+       "settledEnc": [
+        "103268983862108406359066540436741292612",
+        "93707056169782885950820880523360469567",
+        "95619441708247990032470012506036634176",
+        "97531827246713094114119144488712798785",
+        "99444212785178198195768276471388963394"
+       ],
+       "outbox": [
+        "{\"amount\":\"7\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_34_0\"}",
+        "{\"amount\":\"104\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_34_1\"}",
+        "{\"amount\":\"114\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_34_2\"}",
+        "{\"amount\":\"33\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_34_3\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_34_5\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"295\",\"refundEnabled\":true,\"remaining\":\"0\"}",
+       "settledEnc": [
+        "103268983862108406359066540436741292612",
+        "104400161500824360930189642120161705306948209",
+        "93707056169782885950820880523360469567",
+        "95619441708247990032470012506036634176",
+        "97531827246713094114119144488712798785",
+        "99444212785178198195768276471388963394"
+       ],
+       "outbox": [
+        "{\"amount\":\"7\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_34_0\"}",
+        "{\"amount\":\"104\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_34_1\"}",
+        "{\"amount\":\"114\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_34_2\"}",
+        "{\"amount\":\"33\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_34_3\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_34_5\"}",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_34_10\"}"
+       ]
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#22",
+   "original_len": 7,
+   "shrunk": [
+    {
+     "kind": "forged-post(key)"
+    },
+    {
+     "kind": "settled-id-new-body",
+     "special": "fault"
+    },
+    {
+     "kind": "valid"
+    }
+   ],
+   "shrunk_len": 3,
+   "s0": {
+    "chargeId": "ch_1",
+    "original": "70",
+    "remaining": "57",
+    "refundEnabled": true
+   },
+   "divergence": {
+    "step": 2,
+    "detail": {
+     "kind": "valid",
+     "sink_out": "rejected:OTHER(sink halted: re-audit (schema, initial charge, AuditV5) false after another writer changed the store)",
+     "core_out": "rejected:PreStateMismatch",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_1\",\"original\":\"70\",\"refundEnabled\":true,\"remaining\":\"446\"}",
+      "settledEnc": [
+       "97531827246710012720649586233881199166"
+      ],
+      "outbox": [
+       "{\"amount\":\"24\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_22_2\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_1\",\"original\":\"70\",\"refundEnabled\":true,\"remaining\":\"446\"}",
+      "settledEnc": [
+       "97531827246710012720649586233881199166"
+      ],
+      "outbox": [
+       "{\"amount\":\"24\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_22_2\"}"
+      ]
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": [],
+ "allowed": [],
+ "notAllowedKinds": [
+  "reqid-mismatch",
+  "sig-bitflip",
+  "forged-post(key)",
+  "valid",
+  "wrong-spec",
+  "unknown-pre-hash",
+  "zero",
+  "stale-or-current",
+  "replay",
+  "wrong-checker",
+  "settled-id-new-body"
+ ],
+ "shellChecks": {
+  "stepP": 6864,
+  "audit": 6864
+ }
+}

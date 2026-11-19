@@ -1,0 +1,33 @@
+# owner=r-v6 start=2026-11-19T12:10:31Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1417
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_PostDiffFull.dfy
+# memory free percent: 62
+Mutant_PostDiffFull.dfy(411,8): Error: Verification out of resource (ShellCoreV6.Witness)
+    |
+411 |   lemma Witness()
+    |         ^^^^^^^
+
+
+Dafny program verifier finished with 191 verified, 0 errors, 1 out of resource
+       13.38 real        11.24 user         0.85 sys
+           215711744  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               30435  page reclaims
+                 376  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                1314  voluntary context switches
+              114274  involuntary context switches
+         95351288485  instructions retired
+         36676980974  cycles elapsed
+           206685408  peak memory footprint
+# end=2026-11-19T12:10:45Z
+exit 4

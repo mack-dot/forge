@@ -1,0 +1,278 @@
+{
+ "sink": "cb-v3",
+ "mode": "interleave",
+ "seed": 20261119,
+ "count": 500,
+ "coreKind": "v6",
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 184,
+  "kinds": {
+   "wrong-spec": 214,
+   "signed-unauthorized@disabled": 8,
+   "foreign-charge-intent@disabled": 13,
+   "wrong-spec@disabled": 21,
+   "unknown-pre-hash@disabled": 7,
+   "wrong-checker@disabled": 14,
+   "stale-or-current@disabled": 20,
+   "attacker-key@disabled": 11,
+   "replay@disabled": 39,
+   "sig-bitflip@disabled": 11,
+   "valid": 744,
+   "foreign-charge-post": 96,
+   "reqid-mismatch": 245,
+   "stale-or-current": 282,
+   "wrong-checker": 150,
+   "foreign-charge-intent": 83,
+   "attacker-key": 121,
+   "replay": 235,
+   "zero": 233,
+   "non-canonical": 76,
+   "settled-id-new-body": 176,
+   "forged-post(key)": 112,
+   "zero@disabled": 26,
+   "valid@disabled": 66,
+   "reqid-mismatch@disabled": 20,
+   "unknown-pre-hash": 57,
+   "sig-bitflip": 135,
+   "signed-unauthorized": 96,
+   "foreign-charge-post@disabled": 8,
+   "settled-id-new-body@disabled": 21,
+   "forged-post(key)@disabled": 16,
+   "non-canonical@disabled": 6
+  },
+  "divergentKinds": {
+   "signed-unauthorized@disabled": 4,
+   "forged-post(key)": 71,
+   "zero@disabled": 8,
+   "foreign-charge-intent@disabled": 2,
+   "signed-unauthorized": 66,
+   "valid@disabled": 18,
+   "stale-or-current@disabled": 5,
+   "replay@disabled": 2,
+   "wrong-spec@disabled": 4,
+   "reqid-mismatch@disabled": 1,
+   "settled-id-new-body@disabled": 2,
+   "forged-post(key)@disabled": 1
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "wrong-checker@disabled",
+      "special": "interleave",
+      "kindB": "valid-competitor"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "wrong-checker@disabled",
+      "mode": "interleave",
+      "order": "B then A",
+      "kindA": "wrong-checker@disabled",
+      "sinkA": "rejected:IdsNotPinned",
+      "coreA": "rejected:IdsNotPinned",
+      "sinkB": "committed",
+      "coreB": "rejected:NotAuthorized",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"27\"}",
+       "settledEnc": [
+        "92691660416944945738703105819149"
+       ],
+       "outbox": [
+        "{\"amount\":\"1\",\"chargeId\":\"ch_0\",\"reason\":\"returned_item\",\"requestId\":\"rq_1_5\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#4",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "reqid-mismatch",
+      "special": "interleave",
+      "kindB": "valid-competitor"
+     },
+     {
+      "kind": "forged-post(key)"
+     }
+    ],
+    "shrunk_len": 3,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "626",
+     "remaining": "214",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 2,
+     "detail": {
+      "kind": "forged-post(key)",
+      "sink_out": "committed",
+      "core_out": "rejected:NotAuthorized",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"229\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875",
+        "89258641435095181778343373898254",
+        "94408169907876050725162409263633"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}",
+        "{\"amount\":\"1\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_4_3\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_6\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"25\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875",
+        "89258641435095181778343373898254"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}",
+        "{\"amount\":\"1\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_4_3\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#7",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch@disabled",
+      "special": "interleave",
+      "kindB": "valid-competitor"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "137",
+     "remaining": "83",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "reqid-mismatch@disabled",
+      "mode": "interleave",
+      "order": "B then A",
+      "kindA": "reqid-mismatch@disabled",
+      "sinkA": "rejected:ReqIdMismatch",
+      "coreA": "rejected:ReqIdMismatch",
+      "sinkB": "committed",
+      "coreB": "rejected:NotAuthorized",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"82\"}",
+       "settledEnc": [
+        "95619362748877657327874417117450207809"
+       ],
+       "outbox": [
+        "{\"amount\":\"1\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_11\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"83\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#1",
+   "original_len": 10,
+   "shrunk": [
+    {
+     "kind": "wrong-checker@disabled",
+     "special": "interleave",
+     "kindB": "valid-competitor"
+    }
+   ],
+   "shrunk_len": 1,
+   "s0": {
+    "chargeId": "ch_0",
+    "original": "717",
+    "remaining": "28",
+    "refundEnabled": false
+   },
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "kind": "wrong-checker@disabled",
+     "mode": "interleave",
+     "order": "B then A",
+     "kindA": "wrong-checker@disabled",
+     "sinkA": "rejected:IdsNotPinned",
+     "coreA": "rejected:IdsNotPinned",
+     "sinkB": "committed",
+     "coreB": "rejected:NotAuthorized",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"27\"}",
+      "settledEnc": [
+       "92691660416944945738703105819149"
+      ],
+      "outbox": [
+       "{\"amount\":\"1\",\"chargeId\":\"ch_0\",\"reason\":\"returned_item\",\"requestId\":\"rq_1_5\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": [],
+ "allowed": [
+  "signed-unauthorized",
+  "forged-post(key)",
+  "forged-post",
+  "valid-signed",
+  "valid@disabled",
+  "zero@disabled",
+  "stale-or-current@disabled",
+  "forged-post(key)@disabled",
+  "signed-unauthorized@disabled"
+ ],
+ "notAllowedKinds": [
+  "foreign-charge-intent@disabled",
+  "replay@disabled",
+  "wrong-spec@disabled",
+  "reqid-mismatch@disabled",
+  "settled-id-new-body@disabled"
+ ],
+ "shellChecks": {
+  "stepP": 6758,
+  "audit": 6758,
+  "stepQ6": 6758
+ }
+}

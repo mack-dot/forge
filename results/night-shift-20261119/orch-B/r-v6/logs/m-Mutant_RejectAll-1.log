@@ -1,0 +1,93 @@
+# owner=r-v6 start=2026-11-19T12:10:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1417
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_RejectAll.dfy
+# memory free percent: 41
+Mutant_RejectAll.dfy(78,2): Error: a postcondition could not be proved on this return path
+   |
+78 |   {
+   |   ^
+
+Mutant_RejectAll.dfy(73,55): Related location: this is the postcondition that could not be proved
+   |
+73 |     ensures StepQ6(charge, t, sigOk, preOk, s).Commit? <==>
+   |                                                        ^^^^
+
+Mutant_RejectAll.dfy(89,2): Error: a postcondition could not be proved on this return path
+   |
+89 |   {
+   |   ^
+
+Mutant_RejectAll.dfy(86,57): Related location: this is the postcondition that could not be proved
+   |
+86 |     ensures V4.StepQ(charge, t, sigOk, preOk, s).Commit? <==> StepQ6(charge, t, sigOk, preOk, s).Commit?
+   |                                                          ^^^^
+
+Mutant_RejectAll.dfy(99,2): Error: a postcondition could not be proved on this return path
+   |
+99 |   {
+   |   ^
+
+Mutant_RejectAll.dfy(95,106): Related location: this is the postcondition that could not be proved
+   |
+95 |     ensures (V4.StepQ(charge, t, sigOk, preOk, s).Commit? && !StepQ6(charge, t, sigOk, preOk, s).Commit?) <==>
+   |                                                                                                           ^^^^
+
+Mutant_RejectAll.dfy(114,2): Error: a postcondition could not be proved on this return path
+    |
+114 |   {
+    |   ^
+
+Mutant_RejectAll.dfy(112,49): Related location: this is the postcondition that could not be proved
+    |
+112 |     ensures StepQ6(stored, t, true, true, false) == Commit(tr.post, tr.request.requestId, tr.intent)
+    |                                                  ^^
+
+Mutant_RejectAll.dfy(387,2): Error: a postcondition could not be proved on this return path
+    |
+387 |   {
+    |   ^
+
+Mutant_RejectAll.dfy(386,49): Related location: this is the postcondition that could not be proved
+    |
+386 |             StepQ6(charge, t, true, true, false) == Commit(charge, rid, t.intent)
+    |                                                  ^^
+
+Mutant_RejectAll.dfy(397,2): Error: a postcondition could not be proved on this return path
+    |
+397 |   {
+    |   ^
+
+Mutant_RejectAll.dfy(396,49): Related location: this is the postcondition that could not be proved
+    |
+396 |             StepQ6(charge, t, true, true, false).Commit?
+    |                                                  ^^^^^^^
+
+Mutant_RejectAll.dfy(429,4): Error: assertion might not hold
+    |
+429 |     assert Q6Of(c0, ds[0]).Commit?;
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 185 verified, 7 errors
+       12.56 real        11.44 user         0.83 sys
+           226426880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29473  page reclaims
+                 471  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                1236  voluntary context switches
+              137273  involuntary context switches
+         97854314454  instructions retired
+         37234683283  cycles elapsed
+           206881992  peak memory footprint
+# end=2026-11-19T12:10:23Z
+exit 4

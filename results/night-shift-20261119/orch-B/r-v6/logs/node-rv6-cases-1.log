@@ -1,0 +1,33 @@
+# start=2026-11-19T12:10:12Z node --import tsx rv6_cases.ts
+PASS 1 zero amount, authorized: got committed rem 1000
+PASS 2 second zero amount, other id: got committed rem 1000
+PASS 3 replay of case 1 token: got replayed rem 1000
+PASS 4 boundary amount == remaining (1000): got committed rem 0
+FAIL 5 amount 1 on remaining 0 (signed, current): got rejected:token shape rem 0
+FAIL 6 amount 1001 > remaining (signed): got rejected:token shape rem 1000
+PASS 7 post sets refundEnabled false: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 8 post remaining 950 with intent 100: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 9 unapproved reason goodwill: got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 10 intent amount 100, post decreases 0 (request built from intent): got rejected:not authorized by the approved relation for the stored state rem 1000
+PASS 11 MaxMoney charge, amount MaxMoney: got committed rem 0
+PASS 12 original MaxMoney+1, amount 0: got rejected:not authorized by the approved relation for the stored state rem 9223372036854775808
+outbox {"A":3,"B":0,"C":1,"D":0} PASS restart {"A":"ok","B":"ok","C":"ok","D":"ok"}
+        0.30 real         0.28 user         0.07 sys
+           120750080  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10594  page reclaims
+                  95  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   6  messages sent
+                   6  messages received
+                   2  signals received
+                 114  voluntary context switches
+                1592  involuntary context switches
+            16739803  instructions retired
+            10570992  cycles elapsed
+             1376664  peak memory footprint
+exit 1

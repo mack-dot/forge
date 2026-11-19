@@ -1,0 +1,312 @@
+{
+ "sink": "cb-v3",
+ "mode": "plain",
+ "seed": 20261119,
+ "count": 2000,
+ "coreKind": "v3",
+ "directed": [
+  {
+   "name": "valid",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "chain",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "replay",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "replay",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "same-id-other-token",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "settled-id-new-body",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "stale",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "stale",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "wrong-spec",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-spec",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "wrong-checker",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-checker",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "attacker-key",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "attacker-key",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "sig-bitflip",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "sig-bitflip",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "zero-twice",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "rejected:ReqIdMismatch"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch-onto-settled-id",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "rejected:ReqIdMismatch"
+    }
+   ]
+  },
+  {
+   "name": "forged-post(key)",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "forged-post",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "non-canonical",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "non-canonical",
+     "sink": "rejected:Decode",
+     "core": "rejected:Decode"
+    }
+   ]
+  },
+  {
+   "name": "unknown-pre-hash",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "unknown-pre",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "refund-disabled-but-signed",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid-signed",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "foreign-charge-intent",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "foreign-charge-intent",
+     "sink": "rejected:ChargeIdMismatch",
+     "core": "rejected:ChargeIdMismatch"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "foreign-charge-post",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "foreign-charge-post",
+     "sink": "rejected:ChargeIdMismatch",
+     "core": "rejected:ChargeIdMismatch"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "zero-foreign-charge",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "foreign-charge-intent",
+     "sink": "rejected:ChargeIdMismatch",
+     "core": "rejected:ChargeIdMismatch"
+    },
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  }
+ ],
+ "random": {
+  "run": 2000,
+  "steps": 12998,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 850,
+   "signed-unauthorized@disabled": 37,
+   "foreign-charge-intent@disabled": 45,
+   "wrong-spec@disabled": 100,
+   "unknown-pre-hash@disabled": 22,
+   "wrong-checker@disabled": 61,
+   "stale-or-current@disabled": 120,
+   "attacker-key@disabled": 68,
+   "replay@disabled": 132,
+   "sig-bitflip@disabled": 55,
+   "valid": 2998,
+   "foreign-charge-post": 345,
+   "reqid-mismatch": 837,
+   "stale-or-current": 1044,
+   "wrong-checker": 561,
+   "foreign-charge-intent": 324,
+   "attacker-key": 446,
+   "replay": 949,
+   "zero": 912,
+   "non-canonical": 229,
+   "settled-id-new-body": 706,
+   "forged-post(key)": 430,
+   "zero@disabled": 98,
+   "valid@disabled": 306,
+   "reqid-mismatch@disabled": 96,
+   "unknown-pre-hash": 233,
+   "sig-bitflip": 460,
+   "signed-unauthorized": 346,
+   "foreign-charge-post@disabled": 31,
+   "non-canonical@disabled": 23,
+   "settled-id-new-body@disabled": 75,
+   "forged-post(key)@disabled": 59
+  },
+  "divergentKinds": {},
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": [],
+ "allowed": [],
+ "notAllowedKinds": [],
+ "shellChecks": {
+  "stepP": 25487,
+  "audit": 25487
+ }
+}

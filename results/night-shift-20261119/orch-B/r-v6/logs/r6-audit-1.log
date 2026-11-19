@@ -1,0 +1,29 @@
+# owner=r-v6 start=2026-11-19T12:09:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1417
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit R6Review.dfy
+# memory free percent: 51
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.91 real         1.78 user         0.08 sys
+           149061632  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10586  page reclaims
+                 702  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  58  voluntary context switches
+                2505  involuntary context switches
+         15646429596  instructions retired
+          5749104727  cycles elapsed
+           116507848  peak memory footprint
+# end=2026-11-19T12:09:40Z
+exit 0

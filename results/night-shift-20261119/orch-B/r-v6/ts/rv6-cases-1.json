@@ -1,0 +1,130 @@
+{
+ "res": [
+  {
+   "id": 1,
+   "what": "zero amount, authorized",
+   "expect": "committed",
+   "got": "committed",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 2,
+   "what": "second zero amount, other id",
+   "expect": "committed",
+   "got": "committed",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 3,
+   "what": "replay of case 1 token",
+   "expect": "replayed",
+   "got": "replayed",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 4,
+   "what": "boundary amount == remaining (1000)",
+   "expect": "committed",
+   "got": "committed",
+   "expRem": "0",
+   "rem": "0",
+   "ok": true
+  },
+  {
+   "id": 5,
+   "what": "amount 1 on remaining 0 (signed, current)",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:token shape",
+   "expRem": "0",
+   "rem": "0",
+   "ok": false
+  },
+  {
+   "id": 6,
+   "what": "amount 1001 > remaining (signed)",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:token shape",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": false
+  },
+  {
+   "id": 7,
+   "what": "post sets refundEnabled false",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:not authorized by the approved relation for the stored state",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 8,
+   "what": "post remaining 950 with intent 100",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:not authorized by the approved relation for the stored state",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 9,
+   "what": "unapproved reason goodwill",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:not authorized by the approved relation for the stored state",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 10,
+   "what": "intent amount 100, post decreases 0 (request built from intent)",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:not authorized by the approved relation for the stored state",
+   "expRem": "1000",
+   "rem": "1000",
+   "ok": true
+  },
+  {
+   "id": 11,
+   "what": "MaxMoney charge, amount MaxMoney",
+   "expect": "committed",
+   "got": "committed",
+   "expRem": "0",
+   "rem": "0",
+   "ok": true
+  },
+  {
+   "id": 12,
+   "what": "original MaxMoney+1, amount 0",
+   "expect": "rejected:not authorized by the approved relation for the stored state",
+   "got": "rejected:not authorized by the approved relation for the stored state",
+   "expRem": "9223372036854775808",
+   "rem": "9223372036854775808",
+   "ok": true
+  }
+ ],
+ "outbox": {
+  "A": 3,
+  "B": 0,
+  "C": 1,
+  "D": 0
+ },
+ "expOutbox": {
+  "A": 3,
+  "B": 0,
+  "C": 1,
+  "D": 0
+ },
+ "restart": {
+  "A": "ok",
+  "B": "ok",
+  "C": "ok",
+  "D": "ok"
+ }
+}
