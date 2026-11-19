@@ -197,3 +197,12 @@ Decisions for the owner:
 
 ## C-1 addendum 2 (Orchestrator C, 2026-11-19T16:22Z by `date -u`): one more stop by the classifier
 - While I wrote the brief of worker c24-minter2 (re-attack of B's minter rule 2), the classifier stopped my response. The worker had already started with a brief that ends mid-sentence. I did not resend or rephrase the withheld part.
+
+## B-19 (written 2026-11-19T16:39:33Z) — new evidence for question OQ-H2-1 of B-18: closing a request id on a refusal lets a caller without the key block a victim cheaply (red team C-ATT-38; its runs)
+- With rule 2 on the branch, a caller who knows the charge id, the victim's request id and the original amount closes the victim's request id WITHOUT knowing the pre-state: without a store, about `original` requests (one per possible remaining value); with a store, the minter's refusal texts act as a state oracle (364 probes in the red team's run), then one request closes the pair. No token is signed and nothing commits; the victim then gets "attempt closed" and must use a new request id.
+- This corrects a sentence of the worker's notes ("without a store a caller cannot block the victim"): false.
+- It makes the choice in OQ-H2-1 sharper: "close on refusal" follows the letter of protocol.md lines 61 to 62 and gives this denial of service; "close only on completion" removes it and still keeps one effect per request id (the sink enforces that). Which reading of "rejection closes that attempt" does the owner approve: the ATTEMPT (this one call) or the REQUEST ID?
+- Until decided, the branch keeps "close on refusal" and names the denial of service as a known limit. No money moves in this attack.
+
+## C-1 addendum 3 (Orchestrator C, 2026-11-19T16:56Z by `date -u`): two more stops by the classifier, not retried
+- My re-run of the minter closed-launch script tests (worker c24's s10_launch.sh), and my own bounded run of two gate modules that B's new checker accepts (worker c23's U01, U02). For both, the worker's runs stand and my re-run is NOT RUN.
