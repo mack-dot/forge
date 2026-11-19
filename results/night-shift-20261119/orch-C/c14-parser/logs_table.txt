@@ -1,0 +1,31 @@
+| row | rc | stdout | stderr | strict | consumer(human fields) | oracle(human) |
+| R01 canonical | 0 | b'(refund-result-v1 True 40 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R02 amount 040 | 0 | b'(refund-result-v1 True 40 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R03 amount +40 | 0 | b'(refund-result-v1 True 40 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R04 amount -0 | 0 | b'(refund-result-v1 True 0 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R05 amount ~40 | 0 | b'(refund-result-v1 False 0 "" "" "" 0)' | b'' | ok | NOT_AUTHORIZED | NOT_AUTHORIZED |
+| R06 amount -40 | 0 | b'(refund-result-v1 False 0 "" "" "" 0)' | b'' | ok | NOT_AUTHORIZED | NOT_AUTHORIZED |
+| R07 tabs as separators | 0 | b'(refund-result-v1 True 40 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R08 CR LF VT FF separators + lead ws | 0 | b'(refund-result-v1 True 40 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R09 trailing LF after ) | 0 | b'' | b'' | none | - | - |
+| R10 trailing garbage | 0 | b'' | b'' | none | - | - |
+| R11 second s-expression | 0 | b'' | b'' | none | - | - |
+| R12 ;comment field | 0 | b'' | b'' | none | - | - |
+| R13 quoted ids "c" "r" | 0 | b'(refund-result-v1 True 40 returned_item c r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R14 escapes \r \0 in id | 0 | b'(refund-result-v1 True 40 returned_item "c\r" "r\x00" 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R15 unknown escape \x | 0 | b'' | b'' | none | - | - |
+| R16 amount 2^64+40, remaining 2^64+60 | 0 | b'(refund-result-v1 False 0 "" "" "" 0)' | b'' | ok | NOT_AUTHORIZED | NOT_AUTHORIZED |
+| R17 nested parens in a field | 0 | b'' | b'' | none | - | - |
+| R18 raw NUL inside bare id | 0 | b'(refund-result-v1 True 40 returned_item "c\x00x" r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R19 non-UTF-8 id | 0 | b'(refund-result-v1 True 40 returned_item c\xff\xfe r 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R20 empty stdin | 0 | b'' | b'' | none | - | - |
+| R21 whitespace only | 0 | b'' | b'' | none | - | - |
+| R22 ten fields | 0 | b'' | b'' | none | - | - |
+| R23 extra close paren | 0 | b'' | b'' | none | - | - |
+| R24 bare atom only | 0 | b'' | b'' | none | - | - |
+| R25 true lower case | 0 | b'' | b'' | none | - | - |
+| R26 ( and " inside bare id | 0 | b'(refund-result-v1 True 40 returned_item "c(x" "r\\"y" 1)' | b'' | ok | AUTHORIZED | AUTHORIZED |
+| R27 double wrap ((...)) | 0 | b'' | b'' | none | - | - |
+| R28 amount 0x28 | 0 | b'' | b'' | none | - | - |
+| R29 1 MiB id + trailing x | 0 | b'' | b'' | none | - | - |
+violations 0

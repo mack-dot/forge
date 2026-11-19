@@ -1,0 +1,32 @@
+# start=2026-11-19T15:07:48Z Now drawing from 'AC Power'
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p1_minter.ts <REPO>/results/night-shift-20261119/orch-B/r-harden/tree <REPO>/results/night-shift-20261119/orch-B/r-harden/build/issueonce.cjs
+{
+ "A": {
+  "first": "shape",
+  "second": "signed",
+  "verdict": "DEFEAT: a refused attempt does not close the pair; another candidate for it is signed"
+ },
+ "B": {
+  "sameTokenOnRetry": true
+ },
+ "C": {
+  "otherCandidate": "another candidate is already signed for this request id"
+ },
+ "D": {
+  "nfcSigned": true,
+  "nfdSigned": true
+ },
+ "F": {
+  "twoRequestIdsOnePreStateBothSigned": true
+ },
+ "E": {
+  "afterRestartOtherCandidateSamePair": "signed",
+  "keyChanged": true
+ }
+}
+DEFEATED
+real 1.24
+user 0.99
+sys 0.20
+# end=2026-11-19T15:07:49Z
+exit 1

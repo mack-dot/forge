@@ -13,8 +13,9 @@ export const { Dispatcher } = require(join(ROOT, "ts/refund-finality/dispatcher.
 export const S0 = { chargeId: "ch_c15", original: "1000", remaining: "1000", refundEnabled: true };
 export type Fixture = { cfg: any; dcfg: any; tokens: { rid: string; amount: string; text: string }[] };
 // A chain of tokens r1..rN (each on the post-state of the previous one); amounts given. Cached in fixture.json.
-export async function fixture(amounts = ["100", "200", "0", "150", "50", "0", "100"]): Promise<Fixture> {
-  const f = join(EV, "fixture.json");
+export async function fixture(amounts = ["100", "200", "0", "150", "50", "0", "100"], name = process.env.C15_FIXTURE ?? "fixture"): Promise<Fixture> {
+  if (name === "fixture-b") amounts = ["100", "200", "300", "100", "50", "60", "70", "80", "40"];
+  const f = join(EV, name + ".json");
   if (existsSync(f)) { const x = JSON.parse(readFileSync(f, "utf8")); if (x.tokens.length === amounts.length) return x; }
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { MinterClient, propose } = require(join(ROOT, "ts/refund-finality/proposer.ts"));

@@ -1,0 +1,9 @@
+(node:11571) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+Error: dispatcher alarm: the ledger is missing or empty but the store holds 3 committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0
+    at Dispatcher.flushLocked (<SCRATCH>/redteam-C/fix-608b5165/ts/refund-finality/dispatcher.ts:131:15)
+    at Dispatcher.flush (<SCRATCH>/redteam-C/fix-608b5165/ts/refund-finality/dispatcher.ts:90:23)
+    at <anonymous> (<SCRATCH>/redteam-C/retarget-608b5165/c3-identity/q_reqid_squat.ts:37:136)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+exit=3

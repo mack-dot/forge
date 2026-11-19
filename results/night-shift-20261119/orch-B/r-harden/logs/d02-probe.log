@@ -1,0 +1,48 @@
+# owner=r-harden start=2026-11-19T15:01:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1390
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects RH_Probe.dfy
+# memory free percent: 41
+RH_Probe.dfy(38,9): Error: Verification out of resource (RHProbe.RetryAfterCommit)
+   |
+38 |   method RetryAfterCommit() returns (a: Outcome, b: Outcome)
+   |          ^^^^^^^^^^^^^^^^
+
+RH_Probe.dfy(49,55): Error: assertion might not hold
+   |
+49 |   method VacEnv() { var a, b, c := ZeroZeroPositive(); assert false; }
+   |                                                        ^^^^^^
+
+RH_Probe.dfy(54,4): Error: assertion might not hold
+   |
+54 |   { assert false; }
+   |     ^^^^^^
+
+RH_Probe.dfy(58,4): Error: assertion might not hold
+   |
+58 |   { assert false; }
+   |     ^^^^^^
+
+
+Dafny program verifier finished with 163 verified, 3 errors, 1 out of resource
+       27.44 real        11.12 user         1.70 sys
+           187564032  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               72477  page reclaims
+                 672  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  11  signals received
+                 954  voluntary context switches
+              322225  involuntary context switches
+         77491017977  instructions retired
+         37550919603  cycles elapsed
+           198198520  peak memory footprint
+# end=2026-11-19T15:01:59Z
+exit 4

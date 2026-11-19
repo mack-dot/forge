@@ -1,0 +1,10 @@
+# start=2026-11-19T15:11:44Z Now drawing from 'AC Power'
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p5_ddl_partial.ts <REPO>/results/night-shift-20261119/orch-B/r-harden/tree <REPO>/results/night-shift-20261119/orch-B/r-harden/home/p5
+{"case":"rollback on close","file":"file","result":"STARTED+INIT head=0"}
+{"case":"hot journal copy","file":"mid-transaction copy","result":"STARTED+INIT head=0"}
+SAFE
+real 0.39
+user 0.32
+sys 0.08
+# end=2026-11-19T15:11:44Z
+exit 0

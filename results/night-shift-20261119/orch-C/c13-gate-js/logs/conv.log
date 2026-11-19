@@ -1,0 +1,17 @@
+harness BigNumber is the model's CommonJS class: true ; mod(-3,2) with harness class: 1
+amount 0 authorized true returned 0 exact
+amount 9007199254740993 authorized true returned 9007199254740993 exact
+amount 9007199254740995 authorized true returned 9007199254740995 exact
+amount 9223372036854775807 authorized true returned 9223372036854775807 exact
+amount 9223372036854775807 authorized true returned 9223372036854775807 exact
+amount 9223372036854775806 authorized true returned 9223372036854775806 exact
+amount 9007199254740993 authorized true returned 9007199254740993 exact
+amount 18014398509481985 authorized true returned 18014398509481985 exact
+context original=remaining 9223372036854775808 authorized false expected false
+context original=remaining 10000000000000000000000000000000000000000 authorized false expected false
+context original=remaining -1 authorized false expected false
+context original=remaining -10000000000000000000 authorized false expected false
+UnicodeFromString "\ud800" -> length 1 first code point d800
+UnicodeFromString "a\udc00" -> length 2 first code point 61
+UnicodeFromString "😀" -> length 1 first code point 1f600
+defects 0

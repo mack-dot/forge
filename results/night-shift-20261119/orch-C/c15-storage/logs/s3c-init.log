@@ -1,0 +1,12 @@
+{
+ "op": "init",
+ "templateBytes": 36864,
+ "limits": 113,
+ "firstOutcomes": {
+  "INIT throw \"cannot rollback - no transaction is active\"": 34,
+  "INIT ok": 79
+ },
+ "bad": []
+}
+SAFE
+init EXIT 0

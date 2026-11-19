@@ -1,0 +1,4 @@
+HOL_ONLY example b'(refund-result-v1 True ~1180591620717411303424 \x10~7\xe3 service_not_delivered \xb8\x83\xd8\x8e 0)'
+HOL_ONLY example b'(refund-result-v1 True 18446744073709551617 \xc1\xcc\xaf\x8f\xa4 \x95%\xbc\x9d\xca \xb5\xe1 ~1180591620717411303424)'
+HOL_ONLY example b'(refund-result-v1 True ~1180591620717411303424 \xa84\x03\'i duplicate_charge "x y" 18446744073709551617)'
+{'frames': 200000, 'render_differs': 0, 'both_accept': 57896, 'both_reject': 136602, 'py_only': 0, 'hol_only': 5502, 'field_diff': 0, 'hol_only_negative': 5502}

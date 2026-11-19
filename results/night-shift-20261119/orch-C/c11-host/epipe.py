@@ -11,4 +11,4 @@ r, w = os.pipe()
 p = subprocess.Popen(['/opt/homebrew/bin/node', '--import', 'tsx', *args], cwd=root, env=env, stdout=w, stderr=subprocess.PIPE, stdin=subprocess.DEVNULL)
 os.close(w); os.close(r)   # the reader is gone before the CLI writes its result line
 err = p.stderr.read().decode(errors='replace'); p.wait(timeout=120)
-print(json.dumps({'exit': p.returncode, 'stderr_tail': [l for l in err.splitlines() if 'Warning' not in l and 'trace-warnings' not in l][-3:]}))
+print(json.dumps({'exit': p.returncode, 'epipe_in_stderr': 'EPIPE' in err, 'stderr_tail': [l for l in err.splitlines() if 'Warning' not in l and 'trace-warnings' not in l][-3:]}))

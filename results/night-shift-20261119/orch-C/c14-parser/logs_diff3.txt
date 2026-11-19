@@ -1,0 +1,4 @@
+HOL_ONLY example b'(refund-result-v1 False ~1180591620717411303424 service_not_delivered "\\n" \\ 1)'
+HOL_ONLY example b'(refund-result-v1 False ~1 returned_item \xc0\xeb 4\x8a\xdcy 1844674407370955617)'
+HOL_ONLY example b'(refund-result-v1 False 1 "" service_not_delivered duplicate_charge ~1180591620717411303424)'
+{'frames': 200000, 'render_differs': 0, 'both_accept': 58081, 'both_reject': 136306, 'py_only': 0, 'hol_only': 5613, 'field_diff': 0, 'hol_only_negative': 5613}

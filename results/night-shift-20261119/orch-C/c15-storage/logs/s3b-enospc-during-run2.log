@@ -1,0 +1,2 @@
+{"c1":"committed","flush1":["r1"],"mode":"during","fillStop":"ENOSPC","fillBlocks":3751,"flush2":"throws: ENOSPC: no space left on device, write","effects":["r2","r3"],"lineLengths":[350,350,322],"ledgerIds":["r1","r2","TORN"],"lockLeft":false,"emittedWithoutCompleteLine":["r3"],"flush3":"throws: Unterminated string in JSON at position 322 (line 1 column 323)"}
+DEFECT: effect emitted after a short ledger write (ENOSPC)

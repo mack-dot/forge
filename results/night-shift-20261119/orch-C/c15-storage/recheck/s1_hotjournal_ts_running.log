@@ -1,0 +1,48 @@
+{
+ "mode": "running",
+ "c1": "committed",
+ "c2": "committed",
+ "c3": "committed",
+ "flush1": [
+  "r1",
+  "r2",
+  "r3"
+ ],
+ "journalPlanted": true,
+ "c4_running": {
+  "status": "rejected",
+  "reason": "stored state is not the token's pre-state"
+ },
+ "reaudits": 1,
+ "idsSeenByRunningSink": [
+  "r1"
+ ],
+ "c2_retry_running": {
+  "status": "committed"
+ },
+ "restartError": null,
+ "journalAfter": false,
+ "sameInode": true,
+ "ids": [
+  "r1",
+  "r2"
+ ],
+ "state": "700",
+ "audit": [],
+ "uv": 0,
+ "idsEnd": [
+  "r1",
+  "r2"
+ ],
+ "flush2": {
+  "emitted": [],
+  "refused": [],
+  "alreadyDispatched": 2
+ },
+ "effects": [
+  "r1",
+  "r2",
+  "r3"
+ ]
+}
+DEFECT: a party that only created <db>-journal changed the audited store

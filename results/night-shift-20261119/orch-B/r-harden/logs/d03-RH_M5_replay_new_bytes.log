@@ -1,0 +1,73 @@
+# owner=r-harden start=2026-11-19T15:02:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1417
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects RH_M5_replay_new_bytes.dfy
+# memory free percent: 31
+RH_M5_replay_new_bytes.dfy(114,9): Error: Verification out of resource (IssueOnce.RunSeq)
+    |
+114 |   method RunSeq(m0: Memory, calls: seq<Call>) returns (m: Memory, outs: seq<Outcome>)
+    |          ^^^^^^
+
+RH_M5_replay_new_bytes.dfy(155,9): Error: Verification out of resource (IssueOnce.Retry)
+    |
+155 |   method Retry(m: Memory, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+    |          ^^^^^
+
+RH_M5_replay_new_bytes.dfy(164,9): Error: Verification out of resource (IssueOnce.OtherCandidate)
+    |
+164 |   method OtherCandidate(m: Memory, pre1: F.Charge, t1: F.Transition, pre2: F.Charge, t2: F.Transition,
+    |          ^^^^^^^^^^^^^^
+
+RH_M5_replay_new_bytes.dfy(190,2): Error: a postcondition could not be proved on this return path
+    |
+190 |   {
+    |   ^
+
+RH_M5_replay_new_bytes.dfy(188,14): Related location: this is the postcondition that could not be proved
+    |
+188 |     ensures o.Issued? && IB.ToInts(o.bytes) == Expected(t, sh, ch, h)
+    |               ^^^^^^^
+
+RH_M5_replay_new_bytes.dfy(240,2): Error: a postcondition could not be proved on this return path
+    |
+240 |   {
+    |   ^
+
+RH_M5_replay_new_bytes.dfy(239,41): Related location: this is the postcondition that could not be proved
+    |
+239 |     ensures a.Issued? && b.Issued? && a2.Replayed? && a2.bytes == a.bytes
+    |                                          ^^^^^^^^^
+
+RH_M5_replay_new_bytes.dfy(267,2): Error: a postcondition could not be proved on this return path
+    |
+267 |   {
+    |   ^
+
+RH_M5_replay_new_bytes.dfy(266,14): Related location: this is the postcondition that could not be proved
+    |
+266 |     ensures o.RefusedByCore?
+    |               ^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 154 verified, 3 errors, 3 out of resource
+       18.34 real        11.15 user         1.31 sys
+           179945472  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               35734  page reclaims
+                 672  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                 960  voluntary context switches
+              318939  involuntary context switches
+         81239086980  instructions retired
+         36937413947  cycles elapsed
+           177227000  peak memory footprint
+# end=2026-11-19T15:02:40Z
+exit 4

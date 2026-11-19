@@ -50,3 +50,15 @@ Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 - Pending from B: fix SHAs for h-sink (C-ATT-02, 04, 06, 10, 11, 12, and now 17, 18, 20), h-minter (03, 15), h-judges (C-JUDGE-01..03), gate (C-GATE-02..04). On arrival: mkoverlay.sh <sha>, re-run the commands in ATTACKS.md, append PASS/FAIL.
 - TODO next commit: unsure U588+ for C-ATT-17..20 and C-GATE-01..04; sync c5-gate and c8-dispatcher into the branch.
 - 14:54:37Z: U588, U589 written; branch pushed at 2528d6e5. Next unsure id U590. c5 gatecopy (a patched copy of the protected gate file) is NOT in the branch.
+- 15:06:02Z: re-run on 608b5165 recorded (table in ATTACKS.md): C-ATT-03, 15, 02 PASS; 14 open (assumption); 05 present; sink/dispatcher items need porting -> worker c16-hsink; c17-hminter attacks the new minter rule. c11 DONE (C-HOST-01..07), c14 DONE (C-PREM-02, C-NEG-11); all re-run by C. Running: c13, c15, c16, c17.
+- 15:06:20Z: A recorded C-PREM-02: T14 in orch-A/END_TO_END_GAPS.md reworded in two UNPROVEN parts (parser equality restricted to non-negative values; the program prints non-negative values only).
+
+## LAUNCHER PRIORITIES (received 15:09:43Z; metric = attack classes eliminated and independently confirmed)
+1. Tight loop: when B sends a fix SHA for C-ATT-10/04/17/18/20, re-attack it FIRST, then vary (other non-canonical encodings, other index/trigger damage, lock-owner races, emit failures at each step).
+2. When B proposes the provider-idempotency rollback anchor: attack its assumption with a fake provider (key reuse, key expiry window, a different key per retry).
+3. Gate: after each new rule-3 version, re-run all known unsafe and all known-correct submissions; grow both sets; a fix that raises false rejections is a finding. (Sets so far: orch-B/e-subset3/subs + orch-C/c5-gate/bypass, fr; runner c5-gate/tools/task3.py, regress.sh.)
+4. Then A's side: the native process boundary (DYLD injection, truncated stdout, FFI abort vs error byte): are A's premises excluded in words only or in the actual launch path. -> worker c18-launch started now.
+5. Push nightshift/C-redteam after each wave.
+- 15:10:48Z: U590 written; branch pushed at f5c0fc3f. Next unsure id U591. Running: c13, c15, c16, c17, c18.
+- 15:10:52Z: A: all four C-PREM-01 points accepted (orch-A/x8-x11/ANSWER_C-PREM-01.md); restated draft X8_statement_v2.txt may be attacked (low priority: still a draft, 14 model lemmas MISSING). A builds launch-path controls in orch-A/launch/ (launcher.py, CONTROL_MATRIX.md) for AC-1 truncated/empty stdout, AC-2 DYLD, AC-3 FFI abort: NOT ready. When A sends the line: re-attack each control row (c18-launch attacks the existing draft launcher proposals/.../fail-closed/m1_fail_closed.py meanwhile; reuse its scripts on orch-A/launch/launcher.py).
+- 15:12:56Z: c15 DONE (C-ATT-21..23; re-run by C). c18 STOPPED by a safety classifier (C-BLOCK-01): no result; C does control checks of the launcher itself (no injected code). Running: c13, c16, c17.

@@ -1,0 +1,32 @@
+# start=2026-11-19T15:11:20Z Now drawing from 'AC Power'
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p3_legit.ts <REPO>/results/night-shift-20261119/orch-B/r-harden/tree <REPO>/results/night-shift-20261119/orch-B/r-harden/home/p3 1000
+{"name":"zero-amount first","got":"committed","want":"committed","ok":true}
+{"name":"second zero-amount, other id, same pre","got":"committed","want":"committed","ok":true}
+{"name":"replay of z_a (same token)","got":"replayed","want":"replayed","ok":true}
+{"name":"refund > remaining","got":"rejected","want":"rejected","ok":true}
+{"name":"refund equal to remaining (1000)","got":"committed","want":"committed","ok":true}
+{"name":"zero-amount on remaining 0","got":"committed","want":"committed","ok":true}
+{"name":"1 on remaining 0","got":"rejected","want":"rejected","ok":true}
+{"name":"stored state","got":"{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"0\"}","want":"{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"0\"}","ok":true}
+{"name":"audit","got":"[]","want":"[]","ok":true}
+{"name":"restart head count","got":"4","want":"4","ok":true}
+{"name":"dispatcher effects","got":"z_a,z_b,all,z_c","want":"z_a,z_b,all,z_c","ok":true}
+{"name":"dispatcher second flush emits none","got":"0","want":"0","ok":true}
+{"name":"A commits rq_1","got":"committed","want":"committed","ok":true}
+{"name":"B gets rq_1 (same token)","got":"replayed","want":"replayed","ok":true}
+{"name":"B commits rq_2","got":"committed","want":"committed","ok":true}
+{"name":"A: rq_2 other token","got":"rejected","want":"rejected","ok":true}
+{"name":"A: rq_2 same token","got":"replayed","want":"replayed","ok":true}
+{"name":"A commits rq_3","got":"committed","want":"committed","ok":true}
+{"name":"B commits rq_4","got":"committed","want":"committed","ok":true}
+{"name":"A sees B's state","got":"{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"845\"}","want":"{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"845\"}","ok":true}
+{"name":"A audit","got":"[]","want":"[]","ok":true}
+{"name":"1000 commits all committed","got":"1000","want":"1000","ok":true}
+{"name":"restart audit count","got":"1000","want":"1000","ok":true}
+{"name":"timing","commitsMs":3853,"perCommitMs":3.85,"restartAuditMs":385}
+PASS
+real 4.93
+user 1.93
+sys 0.90
+# end=2026-11-19T15:11:25Z
+exit 0

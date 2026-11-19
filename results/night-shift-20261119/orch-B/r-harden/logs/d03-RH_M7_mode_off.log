@@ -1,0 +1,43 @@
+# owner=r-harden start=2026-11-19T15:03:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 846
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects RH_M7_mode_off.dfy
+# memory free percent: 58
+RH_M7_mode_off.dfy(148,13): Error: a precondition for this call could not be proved
+    |
+148 |       RecStep(m, m2, calls, outs, o);
+    |              ^
+
+RH_M7_mode_off.dfy(155,63): Related location: this is the precondition that could not be proved
+    |
+155 |     requires |outs| < |calls| && Rec(m, calls, outs) && Extends(m, m2)
+    |                                                                ^
+
+RH_M7_mode_off.dfy(71,4): Related location: this proposition could not be proved
+   |
+71 |     forall k | k in m :: k in m2 && m2[k] == m[k]
+   |     ^^^^^^
+
+
+Dafny program verifier finished with 159 verified, 1 error
+       12.46 real         9.78 user         0.86 sys
+           198787072  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24613  page reclaims
+                 224  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                1035  voluntary context switches
+              144392  involuntary context switches
+         77231895542  instructions retired
+         32196427807  cycles elapsed
+           182469928  peak memory footprint
+# end=2026-11-19T15:03:24Z
+exit 4

@@ -1,0 +1,23 @@
+<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c3-identity/v1_dispatcher_trusts_signer.ts:27
+  db.prepare("INSERT OR IGNORE INTO settled(request_id, token, token_sha256) VALUES (?, ?, ?)").run(t.body.requestId, tok, E.sha256hex(tok));
+                                                                                                ^
+
+
+Error: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store
+    at ins (<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c3-identity/v1_dispatcher_trusts_signer.ts:27:97)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c3-identity/v1_dispatcher_trusts_signer.ts:31:18)
+    at Array.forEach (<anonymous>)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c3-identity/v1_dispatcher_trusts_signer.ts:31:5)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-C/c16-hsink/port/c3-identity/v1_dispatcher_trusts_signer.ts:45:46)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 1811,
+  errstr: 'constraint failed'
+}
+
+Node.js v24.3.0
+exit=1

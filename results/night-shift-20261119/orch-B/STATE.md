@@ -233,3 +233,30 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - 14:41:54Z POWER AMENDMENT applied: tools/dafny_locked.sh no longer refuses on battery (it logs the power state); PHASE2_RULES.md updated. Memory, swap, disk gates stay. Checkpoint STATE.md before each heavy step.
 - 14:42:40Z C re-ran on 216dfbe2: C-ATT-16 PASS (closed); C-ATT-01 still closed; C agrees C-ATT-14 is a claims gap (CLOSED-LAUNCH, FIXED-DEPS). RED-TEAM LEDGER: closed: 01, 16. Open with h-sink: 02, 04, 06, 10, 11, 12. Open with h-minter: 03, 15. Owner: 05. Claims gap recorded: 14.
 - 14:50:24Z C batch 5 (C-JUDGE-01..03: both judges pass 12 defective mutants; X6-P1 fails a safer sink; exit codes can hide failures) → U573; new worker h-judges (owns tests/refund-finality/regress/ except c_att_*.ts and m_*.ts, and spec-conformance/). COMMIT 7413cb2f PUSHED. Running (5): h-sink, h-gate, r-subset3b, h-minter, h-judges. Integration order when diffs arrive: h-judges and h-sink touch different paths; h-minter may add regress/m_*.ts.
+
+## Checkpoint 2026-11-19T14:59:44Z (from `date -u`)
+- Branch nightshift/B-trust head 608b5165 (pushed). b7fd6be8 = hardened sink (U574). 608b5165 = minter per-request rule (U575; owner item B-15).
+- My re-checks: orch-B/recheck-h: db_safeguards 69/0 exit 0 (before and after the minter); red-team copies a6 x2, a5, a2, a1, a8 hostile exit 0; spec-conformance seq/fault/interleave exit 0; IssueOnce 160 verified exit 0; five m_*.ts exit 0.
+- NOT a pass: regress runner on the hardened tree exit 1 (harness needs newLedgerH0; hostile raw writes abort at triggers). h-judges has both causes.
+- Red-team ledger: sent C the SHA for re-attack of C-ATT-02, 04, 06, 10, 11, 12 (sink) and 03, 15 (minter). OPEN: C-ATT-17 (HIGH, lock without owner), 18, 19, 20 -> worker h-dispatch (owns dispatcher.ts, regress/d_*.ts). C-GATE-02, 03, 04 -> forwarded to h-gate.
+- Workers running (5): h-gate, h-judges, r-subset3b, h-dispatch, r-harden (adversarial review of IssueOnce and of store.ts triggers).
+- Next unsure ID: U576. Next owner item: B-16.
+- TODO: on h-judges diff: apply, re-check, commit, push, tell C (blindspots.sh). On h-dispatch diff: same; tell C (17 to 20). Ask A for a heavy window: Slice 1 suite on the hardened tree (predicted failing rows: x1 raw outbox INSERT; row 589), h-sink/heavy_h.sh, spec heavy, kill storm. ROADMAP section for U567 onward not written. MORNING.md phase 2 addenda not written. Ledger refresh pending.
+
+## Checkpoint 2026-11-19T15:06:19Z (from `date -u`)
+- Branch head e65f9ec8 (ROADMAP part 4), pushed.
+- Red team re-run on 608b5165 (its runs): CLOSED for tested cases: C-ATT-02, C-ATT-03, C-ATT-15. Still open: C-ATT-05 (key per start; owner, B-13), C-ATT-14 (assumption; the shim still runs inside the minter). C's scripts for 04, 06, 07, 10, 11, 12, 20 are not valid on the new schema; C ports them (c16: writer who drops triggers; c17: minter rule). C's threat model = FILE writer (can drop triggers): the triggers are a defence only against a writer that keeps the schema; say so in every claim.
+- New: C-HOST-01 to 07 (CLI exit codes, SIGTERM lock, relative ledger path gives a second ledger: 2000 on 1000) -> sent to h-dispatch (now also owns tests/refund-finality/dispatch_cli.ts, commit_cli.ts).
+- A: heavy window after its HOL job (estimate 40 to 90 min from about 15:06Z); A sends "A RELEASE hol.lock". Then run orch-B/heavy/run_window9.sh (PREPARED, NOT RUN) and send take and release lines.
+
+## Checkpoint 2026-11-19T15:10:24Z: launcher priorities P1 to P4 received
+- P1 money safety (C-ATT-10, 04, 17, 18, 20): 17/18/20 + lease/fencing + outbox state machine ideas sent to h-dispatch. 10 and 04: hardened sink claims them; C ports its attacks (c16).
+- P2 rollback: worker h-provider launched (fake provider, idempotency key = request id, ceiling; new files only; base e65f9ec8).
+- P3 gate: requirements sent to h-gate (linear recognizer, outside time bound, read-once, per-change tables, B-7 tier evaluation).
+- P4 judges: h-judges (already has C-JUDGE-01..03 and mutants).
+- Workers running (6): h-gate, h-judges, r-subset3b, h-dispatch, r-harden, h-provider.
+
+## Checkpoint 2026-11-19T15:13:16Z: red-team batch 8 (storage; target v6 overlay, NOT the hardened tree)
+- C-ATT-21 (planted hot journal / -wal rewrites the store before the audit; attacker only creates a file in the db directory), C-ATT-23 (two hard-link names lose acknowledged commits), no fullfsync -> sent to r-harden to test on 608b5165. Fix worker for sink.ts/store.ts (h-sink2) to launch when r-harden reports: nlink check, journal/wal presence policy at open, synchronous/fullfsync, name the assumption "no other party can create files in the database directory".
+- C-ATT-22 (short ledger write, no attacker; effect emitted with torn line) -> h-dispatch.
+- Not yet in unsure: batches 6, 7, 8 detail beyond U574. Write U576 when the first of these is fixed or tested on the hardened tree.

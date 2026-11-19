@@ -1,0 +1,29 @@
+# owner=r-harden start=2026-11-19T15:04:06Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 910
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-file <REPO>/results/night-shift-20261119/orch-B/r-harden/logs/d05-audit.md IssueOnce.dfy
+# memory free percent: 40
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        2.13 real         1.74 user         0.12 sys
+           121421824  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10832  page reclaims
+                 618  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  40  voluntary context switches
+                5981  involuntary context switches
+         13279224538  instructions retired
+          5638579781  cycles elapsed
+           111346936  peak memory footprint
+# end=2026-11-19T15:04:09Z
+exit 0

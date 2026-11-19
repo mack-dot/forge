@@ -147,3 +147,6 @@ Evidence: `orch-A/ffi-hardening/` (worker A23; NOT re-run by A except where said
 - Cost: the Slice 1 suite row at tests/refund-finality/suite.ts line 589 ("single-use on: another transition for a pre-state that has a signed token" expects "no token") will FAIL by design (prediction; suite NOT RUN). Two different tokens on one pre-state can now exist; the sink commits at most one of them (its pre-state check); this is TESTED-UNPROVED at the composed level.
 - Decision needed: (a) accept the per-request rule and change the expectation of that row; or (b) keep the per-pre-state rule and accept the freeze as a stated limit (then zero-amount refunds and single-use ON do not go together); or (c) another rule.
 - Also needed with any choice: scripts/demo_gauntlet.py and scripts/exit_m1_conformance.py start the minter with a module that has no issuer core; they need the same module change as scripts/exit_slice1.py (done on the branch only for exit_slice1.py).
+
+### A-4 note (2026-11-19T15:10:50Z; appended; the entry above is unchanged)
+The launcher reports that the owner pushed `nightshift/A-proof` themselves. A checked with `git ls-remote`: see STATE.md for the value read. A-4 is resolved by the owner for commit 6903135a. For later commits A tries `git push origin nightshift/A-proof` once; a denial is recorded here and not worked around.

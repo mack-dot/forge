@@ -1,0 +1,41 @@
+{
+ "mode": "nul",
+ "c1": "committed",
+ "c2": "committed",
+ "c3": "committed",
+ "flush1": [
+  "r1",
+  "r2",
+  "r3"
+ ],
+ "journalPlanted": true,
+ "restartError": null,
+ "journalAfter": false,
+ "sameInode": true,
+ "ids": [
+  "r1",
+  "r2",
+  "r3"
+ ],
+ "state": "700",
+ "audit": [],
+ "uv": 0,
+ "c3_again": "committed",
+ "idsEnd": [
+  "r1",
+  "r2",
+  "r3",
+  "r3"
+ ],
+ "flush2": {
+  "emitted": [],
+  "refused": [],
+  "alreadyDispatched": 4
+ },
+ "effects": [
+  "r1",
+  "r2",
+  "r3"
+ ]
+}
+DEFECT: a party that only created <db>-journal changed the audited store

@@ -1,0 +1,73 @@
+# owner=r-harden start=2026-11-19T15:02:49Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 814
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects RH_M6_no_lookup.dfy
+# memory free percent: 55
+RH_M6_no_lookup.dfy(115,9): Error: Verification out of resource (IssueOnce.RunSeq)
+    |
+115 |   method RunSeq(m0: Memory, calls: seq<Call>) returns (m: Memory, outs: seq<Outcome>)
+    |          ^^^^^^
+
+RH_M6_no_lookup.dfy(156,9): Error: Verification out of resource (IssueOnce.Retry)
+    |
+156 |   method Retry(m: Memory, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+    |          ^^^^^
+
+RH_M6_no_lookup.dfy(165,9): Error: Verification out of resource (IssueOnce.OtherCandidate)
+    |
+165 |   method OtherCandidate(m: Memory, pre1: F.Charge, t1: F.Transition, pre2: F.Charge, t2: F.Transition,
+    |          ^^^^^^^^^^^^^^
+
+RH_M6_no_lookup.dfy(191,2): Error: a postcondition could not be proved on this return path
+    |
+191 |   {
+    |   ^
+
+RH_M6_no_lookup.dfy(189,14): Related location: this is the postcondition that could not be proved
+    |
+189 |     ensures o.Issued? && IB.ToInts(o.bytes) == Expected(t, sh, ch, h)
+    |               ^^^^^^^
+
+RH_M6_no_lookup.dfy(241,2): Error: a postcondition could not be proved on this return path
+    |
+241 |   {
+    |   ^
+
+RH_M6_no_lookup.dfy(240,41): Related location: this is the postcondition that could not be proved
+    |
+240 |     ensures a.Issued? && b.Issued? && a2.Replayed? && a2.bytes == a.bytes
+    |                                          ^^^^^^^^^
+
+RH_M6_no_lookup.dfy(268,2): Error: a postcondition could not be proved on this return path
+    |
+268 |   {
+    |   ^
+
+RH_M6_no_lookup.dfy(267,14): Related location: this is the postcondition that could not be proved
+    |
+267 |     ensures o.RefusedByCore?
+    |               ^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 154 verified, 3 errors, 3 out of resource
+       12.69 real         9.57 user         0.99 sys
+           222216192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24545  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 984  voluntary context switches
+              153423  involuntary context switches
+         75437858602  instructions retired
+         31999109879  cycles elapsed
+           192185616  peak memory footprint
+# end=2026-11-19T15:03:02Z
+exit 4
