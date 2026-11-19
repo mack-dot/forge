@@ -1,0 +1,42 @@
+round12 (worker A37) = copy of round10 (worker A35) with the changes below. NOTHING here ran. Every new tactic UNCHECKED.
+Source of evidence: /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/R6rx-0001/stdout.log (1096 lines,
+mtime 07:38; the run was still at 99.8 % CPU at 08:03 with no new line; it had not reached EXPLORE_COMPLETE).
+
+Unchanged files (byte-identical to round10): r6r_common.sml, r6r_prove.sml, deps-R6r.txt.
+Unchanged step lists (byte-identical text): the six closed lemmas (read_event_ok_read_into, read_event_ok_refund,
+STD_streams_fd0, INSTREAM_STRP_V_F_F, read_into_spec_R, INSTREAM_BUFFERED_FD_V_IMP; stdout 166-207) and all round10
+tactic values rf_setup .. rf2_tail (r6r_steps.sml round10 lines 1-107 and 115-189 are copied unchanged; checked by diff).
+
+r6r_steps.sml
+1. New first comment (9 lines).
+2. INSTREAM_STR_V_IMP (optional): new 3-step structural list (unfold; SEP_IMP_EXISTS_EXISTS x3; SEP_IMP_FRAME or
+   SEP_IMP_STAR + the closed INSTREAM_BUFFERED_FD_V_IMP). Old candidates dropped (both failed, stdout 192-198).
+3. refillBuffer_with_read_spec_V (required): the old step 2 "B1 open" (stdout 222: candidate 0 time limit; 776: TIMEOUT
+   after 240 s; in the __split walk the same step ran > 25 min without a STEP or TIMEOUT line) is cut, per branch, into:
+   eof fact (B1: Q "eof fd fs = SOME T" by ..., no goal simplification; alt = original imp_res_tac + rfs) /
+   xmatch with the precondition still FOLDED (alt = original order fs + xpull + xmatch) /
+   open by the original fs [IOFS_V_def, BL_FD_def, inv_def] (B1 + MAX_DEF, MIN_DEF) (alt pure rewrite_tac; ALL_TAC) /
+   xpull (alt ALL_TAC, used only after the xmatch alternative) / Word8Array.length / minus 4 / get_in (alt REWRITE_RULE
+   on the INSTREAM assumption) / FD + split bcontent / NEW "LENGTH t = 4096" (needed by read_into_spec_R).
+   The read_into call + tail stay ONE closing step in the PROOF list (unchanged text and alternatives): no log shows the
+   goal count after the call. The exploration walk refillBuffer_with_read_spec_V__split cuts call and tail into 8 (B1)
+   and 9 (B2) steps.
+4. refillBuffer_with_read_spec_STR_V (optional): PROOF list semantics unchanged (rs_xapp and rs_rest are now THEN chains
+   of named parts, equal to the round10 chains by the infixl-0 rule). Its round10 failure "Could not apply specification"
+   (stdout 320-321, 933) is attributed to the ASSUMEd V-spec: GEN_ALL cannot generalise variables free in the ASSUME
+   hypothesis, so is/Inv/p stay fixed and is cannot match Conv (..) of the goal (stdout 905-931). This is an inference,
+   not a run result. New exploration-only spec REFILL_V_G_CLOSED_ASSUME (ASSUME of the universal closure) so that the
+   STR_V walk shows goals even if V stays open; never used by the PROOF list.
+5. Lemma list R6R_LEMMAS: same names, order, required flags. R6R_EXPLORE_EXTRA replaced by R6R_LATE_LEMMAS,
+   R6R_EXPLORE_STR_CA, R6R_EXPLORE_V_SPLIT, R6R_EXPLORE_STR_SPLIT.
+
+r6r_explore_calls.sml: closed_names ref; new order (A) try_helper all except V, STR_V; (B) STR_V walk with closed
+ASSUME; (C) V split walk; (D) try_helper V, STR_V; (E) explore_head of lemmas from (A) that did not close; (F) STR_V
+split walk with the real V-spec only if V closed. Reason: one step can outlast the 240 s Timeout (evidence above).
+
+R6rx-0002.sml / R6r-0002.sml: first comment, R6RDIR round10 -> round12; exploration theory forge_refundR6RExplore2.
+Unified diffs: diff-r6r_steps.txt, diff-r6r_explore_calls.txt, diff-R6rx.txt, diff-R6r.txt.
+
+Not determined from the log: which part of the old step 2 takes the time (eof/rfs, fs unfold, xpull, or xmatch); every
+goal after the old step 2 in both branches (count and shape after the read_into call; whether xlet_auto_spec discharges
+n = LENGTH rest and LENGTH rest = 4096; the shape the tail sees); every STR_V goal after the open step.

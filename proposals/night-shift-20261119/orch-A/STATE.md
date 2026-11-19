@@ -183,3 +183,20 @@ A36 delivered the initial-heap and event-link layer (`orch-A/r6/round11/`; diges
 ## CHECKPOINT (2026-11-19T12:50:46Z) — A's error, corrected
 At about 12:50:30Z A removed `locks/hol.lock` although `R6rx-0001` was STILL RUNNING (A's wait loop had ended by its own time limit, not by the case end; A did not check). A restored the lock at 12:50:37Z. No `heavy.lock` appeared; A had not sent B the release line; B's scripts also refuse while a HOL process runs. RULE: before removing hol.lock run `pgrep -f bin/hol` and require 0.
 `R6rx-0001` still runs (limit 3600 CPU s). Partial: 6 lemmas close; `refillBuffer_with_read_spec_V` fails at step 2.
+
+## CHECKPOINT (2026-11-19T13:04:48Z)
+`R6rx-0001` hung in one step (the step time limit did not interrupt it); A stopped its own HOL child with SIGTERM after 39 minutes: `actual_exit` -15, no EXPLORE_COMPLETE; exploration only, nothing lost. `hol.lock` released at 13:04:54Z after a pgrep check that cannot match the checking shell (pattern `HOL/bin/[h]ol run`) for B's window 8. Staged: `R6tx-0001`; A37 delivered `orch-A/r6/round12/` (`R6rx-0002`, `R6r-0002`).
+
+## STOP NOTE 2 (2026-11-19T13:05:20Z)
+The harness required Orchestrator A to hand back again. A's loop STOPS here. HOL processes of A: 0. A holds NO lock
+(`hol.lock` released 13:04:54Z for B's window 8; B may hold `heavy.lock`).
+To resume: wait until `locks/heavy.lock` is gone; check `pgrep -f 'HOL/bin/[h]ol run'` = nothing; `mkdir locks/hol.lock`
+(write `owner`); then in `results/m1b-routeA-20261119/attempt-0001`, one at a time:
+1. `./queue.sh q39 "R6tx-0001 1800 deps-R6t.txt"` (EXPLORATION: initial heap and event link; files `orch-A/r6/round11/`);
+   only if every required lemma shows TRY_HELPER_CLOSED: `./queue.sh q40 "R6t-0001 1800 deps-R6t.txt"` (PROOF).
+2. `./queue.sh q41 "R6rx-0002 3600 deps-R6r.txt"` (EXPLORATION: read side bottom layer; `orch-A/r6/round12/`); a step may
+   hang past its time limit (R6rx-0001 did): watch the log; stop the own HOL child if it does not move for 10 minutes;
+   only if all required lemmas close: `./queue.sh q42 "R6r-0002 3600 deps-R6r.txt"` (PROOF).
+3. Then the upper read-side specifications, the main-program specification under STDIO_V, the assembly to R6, the machine
+   transfer (lists in the A35, A36, A37 reports quoted in STATE checkpoints and in `orch-A/r6/round1*/RUN_PLAN*.md`).
+Each exit-0 theorem: a separate reviewer; unsure entry; ROADMAP row; joint report addendum.
