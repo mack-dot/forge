@@ -22,11 +22,20 @@ pre.original, pre.remaining, pre.refundEnabled, rid not settled).
 | P6 | A rejected (or replayed) delivery changes no durable state (state row, settled ids, outbox) and releases no effect. | PR 28-30: "Fallback ... authorizes no refund, changes no financial state, and does not call the refund executor." PR 63-64 (replay: no other executor call). PR 66-67 allow control bookkeeping; the oracle compares only state, settled and outbox. | sink |
 | P7 | Every effect carries the persisted charge's id. | RS 53 ("its target is caller-bound"); RS 59-63 (`intent.chargeId == context.chargeId`); PR 15-17 ("The model cannot set or replace them"). | sink (host binds the charge, PR 13-17) |
 
+| P6R | REPLAY ANSWER: an identical repeat of a COMMITTED token answers `replayed` (no state change, P6); `replayed` is never the answer to another token; another token for a settled request id answers `rejected`. | PR 63-65: "An identical repeated request returns its recorded decision without another executor call. Reusing the pair with different trusted context is rejected." | sink |
+| P8 | AUTHENTICITY OF COMMITS: every committed delivery is the one canonical text of a token (TRUSTED encoding.ts of the judge's tree) with the pinned domain, spec lock and checker; its Ed25519 signature verifies under the PINNED key over the TRUSTED signed bytes; its pre-state hash equals the hash of the persisted state immediately before; the store records its signed request id and intent (one outbox row) and its signed post state. | NOT the approved refund spec: protocol.md is SILENT on tokens. Source: the Slice 1 finality design (ts/refund-finality/sink.ts header, checks 1-4; encoding.ts "post and intent are the effect that the token allows"). Named as a property of the finality design. | sink |
+| P9 | DURABILITY ACROSS RESTART: closing and opening the sink changes no durable state (state, settled ids, outbox). | Slice 1 design (one durable store per charge); PR 89-90 ("durable payment idempotency"). | sink |
+| E-P1, E-P2, E-P4 | EMISSIONS (driver option `--dispatcher`): every emitted effect is an intent of the store's outbox; at most one emitted effect per (charge id, request id); the emitted sum for the charge is at most its original. Reported as P1, P2, P4 with index -2. | as P1, P2, P4 | dispatcher (host integration, PR 68-70) |
+
 ## How the oracle decides (oracle.ts)
 - The only decision procedure is the compiled approved `Refund.Assess` (impl/Refund.dfy refines RS). The oracle
   builds Context and Candidate with the module's own constructors and BigNumber. It calls no sink core.
-- It replays the snapshots after each delivery. It checks P6 on non-commits, P1/P2/P4/P7 on each new outbox
-  row, P3 on each changed state, and P5 on each non-commit that is not a driver-injected storage fault.
+- It replays the snapshots after each delivery. It checks P6 and P6R on non-commits, P8 and P1/P2/P4/P7 on each
+  commit and its new outbox row, P3 on each changed state, P9 on each restart, P5 on each non-commit that is not a
+  driver-injected storage fault, and the emission checks on the dispatcher's effects.
+- It uses the TRUSTED encoding.ts of its own tree (import `../../../ts/refund-finality/encoding`). Before task
+  h-judges a red-team run that copied the judges into a tree with a defective encoding.ts made the oracle trust
+  that file (C-JUDGE-01); run the judges from the branch tree and point them at the sink BY PATH.
 - P5 has a sub-class P5-SILENT: the token meets every P5 condition but is outside the encoding.ts domain
   (a text longer than 256 UTF-16 units, U+0000, a token text above 8,192 units, or non-canonical text). The
   approved text states no such limit for ids (PR 17 says only "IDs must be nonempty"; the 4,096-byte cap of

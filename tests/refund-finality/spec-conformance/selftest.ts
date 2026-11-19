@@ -50,6 +50,34 @@ const cases: [string, History, Prop | null][] = [
   ["P7: effect carries a foreign charge id", H([{ text: tok(c0, "r1", S("70"), I("r1", "30", "duplicate_charge", "ch_x")), outcome: "committed",
     after: snap(S("70"), ["r1"], [I("r1", "30", "duplicate_charge", "ch_x")]) }]), "P7"],
   ["P5 (extra): authorized zero-amount token rejected", H([{ text: tok(c0, "r1", c0, I("r1", "0")), outcome: "rejected", after: snap(c0, [], []) }]), "P5"],
+  // task h-judges: P8 (authenticity of commits), P6R (replay answers), P9 (restart), dispatcher emissions, start refusal.
+  ["P8: commit of a token signed by a foreign key", H([{ text: tok(c0, "r1", S("70"), a30, other), outcome: "committed", after: snap(S("70"), ["r1"], [a30]) }]), "P8"],
+  ["P8: commit of a non-canonical token text", H([{ text: JSON.stringify(JSON.parse(t1), null, 1), outcome: "committed", after: snap(S("70"), ["r1"], [a30]) }]), "P8"],
+  ["P8: commit of a stale pre-state token (zero amount)", H([
+    { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
+    { text: tok(c0, "r2", S("70"), a0), outcome: "committed", after: snap(S("70"), ["r1", "r2"], [a30, a0]) }]), "P8"],
+  ["P6R: identical repeat of a committed token answered rejected", H([
+    { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
+    { text: t1, outcome: "rejected", after: snap(S("70"), ["r1"], [a30]) }]), "P6R"],
+  ["P6R: another token for a settled id answered replayed", H([
+    { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
+    { text: tok(S("70"), "r1", S("60"), I("r1", "10")), outcome: "replayed", after: snap(S("70"), ["r1"], [a30]) }]), "P6R"],
+  ["P9: a restart wiped the store", H([
+    { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
+    { text: "", outcome: "rejected", restart: true, after: snap(c0, [], []) }]), "P9"],
+  ["clean restart (nothing changes)", H([
+    { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
+    { text: "", outcome: "rejected", restart: true, after: snap(S("70"), ["r1"], [a30]) }]), null],
+  ["P2 (emitted): the dispatcher emitted r1 twice", { ...H([{ text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) }]),
+    emitted: [{ requestId: "r1", intent: a30 }, { requestId: "r1", intent: a30 }] }, "P2"],
+  ["P1 (emitted): the dispatcher emitted an intent that is not in the outbox", { ...H([{ text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) }]),
+    emitted: [{ requestId: "r1", intent: I("r1", "31") }] }, "P1"],
+  ["P4 (emitted): the dispatcher emitted more than the original", { ...H([{ text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) }]),
+    emitted: [{ requestId: "r1", intent: a30 }, { requestId: "rx", intent: I("rx", "71") }] }, "P4"],
+  ["clean emissions (each committed intent once)", { ...H([{ text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) }]),
+    emitted: [{ requestId: "r1", intent: a30 }] }, null],
+  ["P5: sink refused to start on a valid charge", { ...H([]), startRefused: "refused" }, "P5"],
+  ["no violation: sink refused a charge with refundEnabled false", { ...H([]), initial: { ...c0, refundEnabled: false }, startRefused: "refused" }, null],
 ];
 let failed = 0;
 for (const [name, h, want] of cases) {

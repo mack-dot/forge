@@ -11,16 +11,16 @@
 // most 1, and the outbox holds at most one intent for rq_victim. (Refusing to serve the legacy store is safe.)
 // Unsafe on the merged sink and on a sink with only the commit-time request-id check: a second effect.
 import { writeFileSync } from "node:fs";
-import { Harness, MERGED_DDL, Regression, fail, pass, standalone } from "./harness";
+import { Harness, MERGED_DDL, Regression, fail, pass } from "./harness";
 
 export const regression: Regression = {
   id: "X3-upgrade-legacy-gap", kind: "attack", title: "legacy gap row, then honest token after an upgrade",
-  run(h: Harness) {
+  async run(h: Harness) {
     const E = h.E, S0 = h.st("ch_1", "1000", "1000"), p1 = h.dec(S0, "100");
     const intentV = h.intent("ch_1", "rq_victim", "100");
     const gap = h.sign(S0, "rq_body", p1, intentV);
     const db = h.path("legacy.sqlite");
-    h.foreign(db, d => {
+    h.create(db, d => {
       d.exec(MERGED_DDL);
       d.prepare("INSERT INTO meta(k, v) VALUES ('initial_state_sha256', ?)").run(E.sha256hex(E.canon(S0)));
       d.prepare("INSERT INTO state(id, blob) VALUES (1, ?)").run(E.canon(p1));
@@ -32,10 +32,10 @@ export const regression: Regression = {
       postStateSha256: E.sha256hex(E.canon(p1)), intentSha256: E.sha256hex(E.canon(intentV)) };
     writeFileSync(h.path("ledger.jsonl"), JSON.stringify(line) + "\n");
     const before = 1;
-    const { sink, error } = h.openSink(db, h.cfg(S0));
+    const { sink, error } = await h.openSink(db, h.cfg(S0));
     let r = "sink refused to start (" + error.slice(0, 60) + ")";
-    if (sink !== null) { const cur = h.stored(db)!; r = h.commit(sink, h.honest(cur, "rq_victim", "100")); h.close(sink); }
-    const f = h.flush(db, S0);
+    if (sink !== null) { const cur = h.stored(db)!; r = await h.commit(sink, h.honest(cur, "rq_victim", "100")); await h.close(sink); }
+    const f = await h.flush(db, S0);
     const after = f.effects.filter(e => e.intent.requestId === "rq_victim").length;
     const ob = h.outbox(db).filter(o => o.intent.requestId === "rq_victim").length;
     const why = `honest=${r} effects(rq_victim) before=${before} after=${after} outbox(rq_victim)=${ob}${f.error ? " dispatcherError=" + f.error : ""}`;
@@ -43,4 +43,3 @@ export const regression: Regression = {
     return pass(why);
   },
 };
-if (require.main === module) standalone([regression], process.argv);

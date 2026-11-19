@@ -1,6 +1,8 @@
 #!/bin/bash
 # HEAVY spec-conformance run (task h-specdiff). PREPARED; the orchestrator runs it in a window.
 # Usage: heavy_spec.sh <compiledCoreModule> <outDir> <sinkModulePath>...
+# Since task h-judges run.ts exits 1 when a property is violated (P5-SILENT excluded) or a run did not complete;
+# a nonzero status of this script therefore also means "violations found": read results.jsonl (field violated).
 #   For each sink: modes seq, fault, interleave; 5,000 sequences each (COUNT overrides); seed 20261119 (SEED overrides).
 #   Typical sinks: ts/refund-finality/sink.ts (merged), the v6 draft sink, the hardened sink (any path).
 # Refuses (exit 64) while results/night-shift-20261119/locks/hol.lock exists or a HOL process runs; refuses (75)

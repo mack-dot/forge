@@ -9,16 +9,16 @@
 // amounts emitted for ch_2 is at most ch_2's original 50; store A's outbox holds no intent naming ch_2.
 // Liveness part: B's honest refund is emitted exactly once.
 // Unsafe outcome on the merged sink: two effects for (ch_2, rq_x), 100 in total for a charge of 50.
-import { Harness, Regression, fail, pass, standalone, sum } from "./harness";
+import { Harness, Regression, fail, pass, sum } from "./harness";
 
 export const regression: Regression = {
   id: "X2-cross-charge", kind: "attack", title: "intent for charge B committed in charge A's store",
-  run(h: Harness) {
+  async run(h: Harness) {
     const C0 = h.st("ch_1", "100", "100"), C2 = h.st("ch_2", "50", "50");
-    const A = h.newStore("a", C0), B = h.newStore("b", C2);
-    const rA = h.commit(A.sink, h.sign(C0, "rq_x", C0, h.intent("ch_2", "rq_x", "50", "duplicate_charge")));
-    const rB = h.commit(B.sink, h.honest(C2, "rq_x", "50", "duplicate_charge"));
-    const fA = h.flush(A.db, C0, "ledger-a.jsonl"), fB = h.flush(B.db, C2, "ledger-b.jsonl");
+    const A = await h.newStore("a", C0), B = await h.newStore("b", C2);
+    const rA = await h.commit(A.sink, h.sign(C0, "rq_x", C0, h.intent("ch_2", "rq_x", "50", "duplicate_charge")));
+    const rB = await h.commit(B.sink, h.honest(C2, "rq_x", "50", "duplicate_charge"));
+    const fA = await h.flush(A.db, C0, "ledger-a.jsonl"), fB = await h.flush(B.db, C2, "ledger-b.jsonl");
     const ch2 = [...fA.effects, ...fB.effects].filter(e => e.intent.chargeId === "ch_2");
     const dup = ch2.filter(e => e.intent.requestId === "rq_x").length;
     const total = sum(ch2.map(e => e.intent.amount));
@@ -35,13 +35,13 @@ export const regression: Regression = {
 // (rq_h, 10) is emitted exactly once. Unsafe on the merged sink: A holds ch_2's state; no ch_1 token commits again.
 export const regressionB: Regression = {
   id: "X2b-foreign-post-locks-store", kind: "attack", title: "post-state of another charge committed",
-  run(h: Harness) {
+  async run(h: Harness) {
     const C0 = h.st("ch_1", "100", "100"), C2 = h.st("ch_2", "50", "50");
-    const A = h.newStore("a", C0);
-    const r1 = h.commit(A.sink, h.sign(C0, "rq_y", C2, h.intent("ch_1", "rq_y", "0", "duplicate_charge")));
+    const A = await h.newStore("a", C0);
+    const r1 = await h.commit(A.sink, h.sign(C0, "rq_y", C2, h.intent("ch_1", "rq_y", "0", "duplicate_charge")));
     const storedId = h.stored(A.db)?.chargeId;
-    const r2 = h.commit(A.sink, h.honest(C0, "rq_h", "10"));
-    const f = h.flush(A.db, C0);
+    const r2 = await h.commit(A.sink, h.honest(C0, "rq_h", "10"));
+    const f = await h.flush(A.db, C0);
     const hEff = f.effects.filter(e => e.intent.requestId === "rq_h").length;
     const why = `foreign=${r1} storedChargeId=${storedId} honest=${r2} effects(rq_h)=${hEff}`;
     if (storedId !== "ch_1") return fail("STORE NOW HOLDS ANOTHER CHARGE: " + why);
@@ -49,4 +49,3 @@ export const regressionB: Regression = {
     return pass(why);
   },
 };
-if (require.main === module) standalone([regression, regressionB], process.argv);

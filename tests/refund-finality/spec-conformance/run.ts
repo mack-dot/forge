@@ -1,20 +1,27 @@
-// Spec-conformance DRIVER (task h-specdiff). TESTED-UNPROVED new code.
-// Run: node --import tsx tests/refund-finality/spec-conformance/run.ts <sinkModulePath> <mode> <count> <seed> <compiledCoreModule> [workDir]
+// Spec-conformance DRIVER (task h-specdiff; process model, dispatcher and exit codes: task h-judges). TESTED-UNPROVED.
+// Run: node --import tsx tests/refund-finality/spec-conformance/run.ts <sinkModulePath> <mode> <count> <seed> <compiledCoreModule>
+//        [workDir] [--dispatcher <dispatcherModulePath>] [--expect-violations P1,P2,...]
 //   sinkModulePath: a module that exports class Sink(path, cfg) with init(state), commit(text), close()
 //   mode: seq | fault | interleave
 //     seq: one sink instance, one delivery after another
 //     fault: as seq, and a storage fault is injected (an exception) at a random write of some commits
 //     interleave: two sink instances on the same database file; each delivery goes to one of them at random
 //   compiledCoreModule: the compiled Slice 1 core (model.cjs); the oracle uses only its Refund.Assess.
-// It generates delivery sequences with its own seeded generator, delivers them, reads the durable state through
-// its OWN read-only SQLite connection (tables state, settled, outbox), and calls the oracle (oracle.ts).
-// Output: one JSON line. Exit 0 when it ran (violations are DATA, not an exit code); exit 2 on a usage error.
+//   --dispatcher: after each sequence the dispatcher flushes the store; the oracle checks the EMITTED effects.
+// The sink and dispatcher run in a CHILD process (../regress/worker.ts); this process generates the deliveries,
+// reads the durable state through its OWN read-only SQLite connection (tables state, settled, outbox), and calls
+// the oracle (oracle.ts) with the TRUSTED encoding.ts of this tree. Some sequences have restarts of the sink, more
+// than 20 deliveries, long or non-ASCII request ids, and non-canonical token texts.
+// Output: one JSON line. Exit 0 only when all sequences ran, the child stayed alive, and the set of violated
+// properties (P5-SILENT excluded: a question, not a verdict) is empty, or equals --expect-violations. Exit 1
+// otherwise; exit 2 on a usage error.
 import { generateKeyPairSync, sign, KeyObject } from "node:crypto";
 import { mkdtempSync, rmSync, readFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import * as sqlite from "node:sqlite";
+import { ChildGone, Remote } from "../regress/remote";
+import { TRUSTED_ENCODING_PATH } from "../regress/harness";
 import { ChargeState, DOMAIN, TokenBody, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
 import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
 
@@ -33,10 +40,10 @@ function rng(seed: number) {
 }
 export type Kind = "honest" | "zero" | "full" | "replay" | "stale" | "bad-sig" | "bad-pin" | "reuse-id" |
   "f-reqid" | "f-foreign-intent" | "f-foreign-post" | "f-over-zero-post" | "f-over-unchanged" | "f-reason" |
-  "f-over-bound" | "f-disabled" | "probe-long-id" | "probe-nul-id";
+  "f-over-bound" | "f-disabled" | "probe-long-id" | "probe-nul-id" | "noncanon";
 const KINDS: [Kind, number][] = [["honest", 22], ["zero", 8], ["full", 6], ["replay", 8], ["stale", 6], ["bad-sig", 4],
   ["bad-pin", 4], ["reuse-id", 4], ["f-reqid", 4], ["f-foreign-intent", 4], ["f-foreign-post", 3], ["f-over-zero-post", 3],
-  ["f-over-unchanged", 4], ["f-reason", 4], ["f-over-bound", 3], ["probe-long-id", 3], ["probe-nul-id", 2]];
+  ["f-over-unchanged", 4], ["f-reason", 4], ["f-over-bound", 3], ["probe-long-id", 3], ["probe-nul-id", 2], ["noncanon", 4]];
 const REASONS = ["duplicate_charge", "service_not_delivered", "returned_item"];
 
 type Keys = { pub: string; priv: KeyObject; otherPriv: KeyObject };
@@ -56,26 +63,26 @@ function readSnap(path: string): Snapshot {
   } finally { db.close(); }
 }
 
-// ---- fault injection: an armed write throws before it runs (inside the sink's transaction).
-let faultArmed = -1, writeCount = 0, faultHit = false;
-const SP: any = (sqlite as any).StatementSync.prototype, origRun = SP.run;
-SP.run = function (...args: unknown[]) {
-  const sql = String(this.sourceSQL ?? "");
-  if (/^\s*(INSERT|UPDATE)/i.test(sql) && faultArmed >= 0) {
-    if (writeCount++ === faultArmed) { faultHit = true; throw new Error("injected storage fault"); }
+// ---- PROCESS MODEL (task h-judges): the sink (and the dispatcher) run in ONE CHILD process (regress/worker.ts) for
+// the whole run; this process holds the generator, the keys, the snapshots (its own read-only connection) and the
+// oracle. Storage faults are injected in the child (worker.ts patches StatementSync.run before the sink loads).
+// A child that exits, is killed or stops answering ends the run with exit 1 (field childGone).
+type Res = { status: string; reason?: string; faultHit?: boolean };
+async function main(): Promise<number> {
+  const argv = process.argv.slice(2);
+  const take = (flag: string): string | null => { const i = argv.indexOf(flag); if (i < 0) return null; const v = argv[i + 1] ?? ""; argv.splice(i, 2); return v; };
+  const dispArg = take("--dispatcher"), expArg = take("--expect-violations");
+  const [sinkPath, mode, countArg, seedArg, corePath, workArg] = argv;
+  if (!sinkPath || !["seq", "fault", "interleave"].includes(mode) || !corePath || !/^\d+$/.test(countArg ?? "") || !/^\d+$/.test(seedArg ?? "") || dispArg === "" || expArg === "") {
+    process.stderr.write("usage: run.ts <sinkModulePath> <seq|fault|interleave> <count> <seed> <compiledCoreModule> [workDir] [--dispatcher <path>] [--expect-violations P1,P2,...]\n");
+    return 2;
   }
-  return origRun.apply(this, args);
-};
-
-function main(): void {
-  const [sinkPath, mode, countArg, seedArg, corePath, workArg] = process.argv.slice(2);
-  if (!sinkPath || !["seq", "fault", "interleave"].includes(mode) || !corePath || !/^\d+$/.test(countArg ?? "") || !/^\d+$/.test(seedArg ?? "")) {
-    process.stderr.write("usage: run.ts <sinkModulePath> <seq|fault|interleave> <count> <seed> <compiledCoreModule> [workDir]\n");
-    process.exit(2);
-  }
+  const expected = expArg === null ? null : new Set(expArg.split(",").map(s => s.trim()).filter(s => s.length > 0));
   const count = Number(countArg), seed = Number(seedArg);
-  const SinkClass = createRequire(__filename)(resolve(sinkPath)).Sink;
   const oracle = new Oracle(corePath);
+  const remote = new Remote(resolve(sinkPath), dispArg ? resolve(dispArg) : null);
+  await remote.ready;
+  const caps = await remote.call<{ loadError: string; hasSink: boolean; hasDispatcher: boolean; hasGenesisOf: boolean }>("hello");
   const work = mkdtempSync(join(workArg ? resolve(workArg) : tmpdir(), "specdiff-"));
   const R = rng(seed);
   const k1 = generateKeyPairSync("ed25519"), k2 = generateKeyPairSync("ed25519");
@@ -83,80 +90,116 @@ function main(): void {
   const specLockSha256 = sha256hex("spec-lock-test"), checkerSha256 = sha256hex("checker-test");
   const perProp: Record<string, number> = {}; const smallest: Record<string, unknown> = {};
   const outcomes: Record<string, number> = {}; const kindViolation: Record<string, Record<string, number>> = {}; const kindOutcome: Record<string, Record<string, number>> = {};
-  let deliveriesTotal = 0, faultsHit = 0, sinkErrors = 0;
+  let deliveriesTotal = 0, faultsHit = 0, sinkErrors = 0, restarts = 0, emittedTotal = 0, done = 0;
+  let childGone: string | null = caps.hasSink ? null : "module under test does not export Sink: " + caps.loadError;
   const t0 = Date.now();
-  for (let n = 0; n < count; n++) {
+  for (let n = 0; n < count && childGone === null; n++) {
     const dbPath = join(work, `s${n}.sqlite`);
     const orig = R.pick([0n, 1n, 100n, 1000n, MAX, R.big(MAX)]);
     const c0 = st({ chargeId: `ch_${seed}_${n}`, original: orig, remaining: R.big(orig), refundEnabled: R.next() >= 0.15 });
     const cfg = { publicKeyPem: keys.pub, specLockSha256, checkerSha256, initialState: c0 };
-    const sinks: any[] = [];
+    const handles: number[] = [];
     const history: History = { initial: c0, publicKeyPem: keys.pub, specLockSha256, checkerSha256, start: { state: null, settled: [], outbox: [] }, deliveries: [] };
-    const trace: { kind: Kind; outcome: string; reason?: string; fault?: boolean }[] = [];
+    const trace: { kind: Kind | "restart"; outcome: string; reason?: string; fault?: boolean }[] = [];
+    const openOne = async (): Promise<string> => { const o = await remote.call<{ handle: number; error: string }>("open", { db: dbPath, cfg }); if (!o.handle) return o.error || "refused"; handles.push(o.handle); return ""; };
     try {
-      sinks.push(new SinkClass(dbPath, cfg)); sinks[0].init(c0);
-      if (mode === "interleave") sinks.push(new SinkClass(dbPath, cfg));
-      history.start = readSnap(dbPath);
-      const sent: string[] = [], states: string[] = [history.start.state ?? canon(c0)];
-      const len = 1 + R.int(10);
-      let ridN = 0;
-      const fresh = () => `rq_${n}_${ridN++}`;
-      for (let d = 0; d < len; d++) {
-        const before = readSnap(dbPath);
-        const preText = before.state ?? canon(c0), pre = pstate(preText);
-        let kind = weighted(R);
-        if (kind === "replay" && sent.length === 0) kind = "honest";
-        if (kind === "reuse-id" && before.settled.length === 0) kind = "honest";
-        // An honest-shaped refund on a charge with refundEnabled false is a FAULTY-SIGNER token.
-        if ((kind === "honest" || kind === "zero" || kind === "full") && !pre.refundEnabled) kind = "f-disabled";
-        let text: string;
-        if (kind === "replay") text = R.pick(sent);
-        else {
-          const body = buildBody(kind, R, pre, preText, states, before, fresh, specLockSha256, checkerSha256);
-          const signer = kind === "bad-sig" ? keys.otherPriv : keys.priv;
-          text = canon({ body, signature: sign(null, signedBytes(body as TokenBody), signer).toString("base64") });
+      let err = await openOne();
+      if (!err) { const i = await remote.call<{ error: string }>("init", { handle: handles[0], state: c0 }); err = i.error; }
+      if (!err && mode === "interleave") err = await openOne();
+      if (err) { history.startRefused = err; sinkErrors++; trace.push({ kind: "honest", outcome: "sink setup failed", reason: err }); }
+      else {
+        history.start = readSnap(dbPath);
+        const sent: string[] = [], states: string[] = [history.start.state ?? canon(c0)];
+        const len = R.next() < 0.1 ? 21 + R.int(15) : 1 + R.int(10);           // some stores get more than 20 deliveries
+        let ridN = 0;
+        const fresh = () => { const base = `rq_${n}_${ridN++}`; const r = R.next();      // ids: plain, long, non-ASCII
+          return r < 0.08 ? base + "_" + "r".repeat(40) : r < 0.12 ? base + "_\u00e9\u4e2d" : r < 0.15 ? base + "_" + String.fromCodePoint(0x1f600) : r < 0.17 ? base + "_e\u0301" : base; };
+        for (let d = 0; d < len; d++) {
+          if (R.next() < 0.06) {                                                    // a restart of the sink
+            for (const hd of handles.splice(0)) await remote.call("close", { handle: hd });
+            let e2 = await openOne(); if (!e2 && mode === "interleave") e2 = await openOne();
+            history.deliveries.push({ text: "", outcome: "rejected", restart: true, after: readSnap(dbPath) });
+            trace.push({ kind: "restart", outcome: e2 ? "reopen refused: " + e2.slice(0, 80) : "reopened" }); restarts++;
+            if (e2) break;
+            continue;
+          }
+          const before = readSnap(dbPath);
+          const preText = before.state ?? canon(c0), pre = pstate(preText);
+          let kind = weighted(R);
+          if (kind === "replay" && sent.length === 0) kind = "honest";
+          if (kind === "reuse-id" && before.settled.length === 0) kind = "honest";
+          if ((kind === "honest" || kind === "zero" || kind === "full" || kind === "noncanon") && !pre.refundEnabled) kind = "f-disabled";
+          let text: string;
+          if (kind === "replay") text = R.pick(sent);
+          else {
+            const body = buildBody(kind, R, pre, preText, states, before, fresh, specLockSha256, checkerSha256);
+            const signer = kind === "bad-sig" ? keys.otherPriv : keys.priv;
+            const tok = { body, signature: sign(null, signedBytes(body as TokenBody), signer).toString("base64") };
+            text = kind === "noncanon" ? JSON.stringify(tok, null, 1) : canon(tok);
+          }
+          sent.push(text);
+          const target = handles[mode === "interleave" ? R.int(handles.length) : 0];
+          const faultAt = mode === "fault" && R.next() < 0.3 ? R.int(3) : undefined;
+          const res = await remote.call<Res>("commit", { handle: target, text, faultAt });
+          if (res.status === "threw") sinkErrors++;
+          const hit = res.faultHit === true; if (hit) faultsHit++;
+          const after = readSnap(dbPath);
+          if (after.state !== null && after.state !== preText) states.push(after.state);
+          const outcome = (["committed", "replayed", "rejected"].includes(res.status) ? res.status : "rejected") as Delivery["outcome"];
+          history.deliveries.push({ text, outcome, reason: res.reason, faultInjected: hit, after });
+          trace.push({ kind, outcome, reason: res.reason, ...(hit ? { fault: true } : {}) });
+          outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
+          (kindOutcome[kind] ??= {})[outcome] = ((kindOutcome[kind] ?? {})[outcome] ?? 0) + 1;
+          deliveriesTotal++;
         }
-        sent.push(text);
-        const target = sinks[mode === "interleave" ? R.int(2) : 0];
-        faultArmed = mode === "fault" && R.next() < 0.3 ? R.int(3) : -1; writeCount = 0; faultHit = false;
-        let res: { status: string; reason?: string };
-        try { res = target.commit(text); } catch (e) { sinkErrors++; res = { status: "rejected", reason: "sink threw: " + String((e as Error).message) }; }
-        const hit = faultHit; faultArmed = -1; if (hit) faultsHit++;
-        const after = readSnap(dbPath);
-        if (after.state !== null && after.state !== preText) states.push(after.state);
-        const outcome = (["committed", "replayed", "rejected"].includes(res.status) ? res.status : "rejected") as Delivery["outcome"];
-        history.deliveries.push({ text, outcome, reason: res.reason, faultInjected: hit, after });
-        trace.push({ kind, outcome, reason: res.reason, ...(hit ? { fault: true } : {}) });
-        outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
-        (kindOutcome[kind] ??= {})[outcome] = ((kindOutcome[kind] ?? {})[outcome] ?? 0) + 1;
-        deliveriesTotal++;
+        if (caps.hasDispatcher) {
+          const dcfg: any = { publicKeyPem: keys.pub, specLockSha256, checkerSha256, initialStateSha256: sha256hex(canon(c0)) };
+          if (caps.hasGenesisOf) dcfg.newLedgerH0 = await remote.call("genesis", { initText: canon(c0), lock: specLockSha256, checker: checkerSha256, pem: keys.pub });
+          const f = await remote.call<{ effects: { requestId: string; intent: unknown }[]; error: string }>("flush", { db: dbPath, ledger: dbPath + ".ledger.jsonl", dcfg });
+          history.emitted = f.effects.map(e => ({ requestId: e.requestId, intent: e.intent }));
+          emittedTotal += f.effects.length;
+        }
       }
     } catch (e) {
-      sinkErrors++; trace.push({ kind: "honest", outcome: "sink setup failed", reason: String((e as Error).message) });
+      if (e instanceof ChildGone) { childGone = e.message + " | child output: " + remote.outputTail(200).replace(/\s+/g, " "); break; }
+      sinkErrors++; trace.push({ kind: "honest", outcome: "driver error", reason: String((e as Error).message) });
     } finally {
-      for (const s of sinks) { try { s.close(); } catch { /* closed */ } }
-      for (const f of [dbPath, dbPath + "-wal", dbPath + "-shm", dbPath + "-journal"]) rmSync(f, { force: true });
+      if (childGone === null) for (const hd of handles) { try { await remote.call("close", { handle: hd }); } catch { /* gone */ } }
+      for (const f of [dbPath, dbPath + "-wal", dbPath + "-shm", dbPath + "-journal", dbPath + ".ledger.jsonl", dbPath + ".ledger.jsonl.lock"]) rmSync(f, { force: true });
     }
+    done++;
     const v = oracle.check(history);
     const seen = new Set<Prop>();
     for (const x of v.violations) {
-      const kk = x.index >= 0 && trace[x.index] ? trace[x.index].kind : "init";
+      const kk = x.index >= 0 && trace[x.index] ? trace[x.index].kind : x.index === -2 ? "dispatcher" : "init";
       (kindViolation[kk] ??= {})[x.property] = ((kindViolation[kk] ?? {})[x.property] ?? 0) + 1;
       if (seen.has(x.property)) continue; seen.add(x.property);
       perProp[x.property] = (perProp[x.property] ?? 0) + 1;
-      const cut = trace.slice(0, x.index + 1), cur = smallest[x.property] as { length: number } | undefined;
+      const cut = x.index >= 0 ? trace.slice(0, x.index + 1) : trace, cur = smallest[x.property] as { length: number } | undefined;
       if (cur === undefined || cut.length < cur.length)
         smallest[x.property] = { length: cut.length, sequence: n, initial: c0, at: x.index, detail: x.detail.slice(0, 300), trace: cut };
     }
   }
+  await remote.stop();
   rmSync(work, { recursive: true, force: true });
+  // VERDICT. P5-SILENT is a question for the owner, not a violation. Exit 0 only when the run completed all
+  // sequences, the child stayed alive, and the violated set is empty (or equals --expect-violations).
+  const violated = Object.keys(perProp).filter(p => p !== "P5-SILENT").sort();
+  const completed = childGone === null && done === count;
+  const want = expected ? [...expected].sort() : [];
+  const ok = completed && canon(violated) === canon(want);
   process.stdout.write(JSON.stringify({
     tool: "spec-conformance/run.ts", sink: resolve(sinkPath), sinkSha256: sha256hex(readFileSync(resolve(sinkPath))),
-    core: oracle.coreModule, coreSha256: sha256hex(readFileSync(oracle.coreModule)), mode, count, seed,
-    deliveries: deliveriesTotal, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
-    sequencesWithViolation: perProp, kindOutcome, violationsByKind: kindViolation, smallest,
+    dispatcher: dispArg ? resolve(dispArg) : null, dispatcherSha256: dispArg ? sha256hex(readFileSync(resolve(dispArg))) : null,
+    trustedEncodingSha256: sha256hex(readFileSync(TRUSTED_ENCODING_PATH)),
+    core: oracle.coreModule, coreSha256: sha256hex(readFileSync(oracle.coreModule)), mode, count, seed, sequencesDone: done, childGone,
+    deliveries: deliveriesTotal, restarts, emitted: emittedTotal, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
+    sequencesWithViolation: perProp, violated, expectedViolations: expected ? want : null, verdict: ok ? "OK" : "NOT OK",
+    kindOutcome, violationsByKind: kindViolation, smallest,
   }) + "\n");
+  return ok ? 0 : 1;
 }
+
 
 function weighted(R: ReturnType<typeof rng>): Kind {
   const total = KINDS.reduce((a, [, w]) => a + w, 0); let x = R.int(total);
@@ -200,4 +243,4 @@ function buildBody(kind: Kind, R: ReturnType<typeof rng>, pre: ReturnType<typeof
   return body;
 }
 
-main();
+main().then(c => process.exit(c), e => { process.stderr.write("judge error: " + String((e as Error)?.stack ?? e) + "\n"); process.exit(1); });

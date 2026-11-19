@@ -11,11 +11,11 @@
 // EXPECTED SAFE OUTCOME per store: the outbox stays empty, the dispatcher emits nothing, the stored state is the
 // initial state. Liveness part: an honest refund (rq_ok, 100) delivered afterwards is emitted exactly once.
 // Unsafe on the merged sink: every case commits and is dispatched (case a: 1001 out of a charge of 1000).
-import { Harness, Regression, fail, pass, standalone } from "./harness";
+import { Harness, Regression, fail, pass } from "./harness";
 
 export const regression: Regression = {
   id: "X4-signed-unauthorized", kind: "attack", title: "signed tokens outside the approved relation",
-  run(h: Harness) {
+  async run(h: Harness) {
     const S0 = h.st("ch_1", "1000", "1000");
     const cases: [string, string][] = [
       ["a-amount-above-remaining", h.sign(S0, "rq_a", { ...S0, remaining: "0" }, h.intent("ch_1", "rq_a", "1001"))],
@@ -26,11 +26,11 @@ export const regression: Regression = {
     ];
     const bad: string[] = [], dead: string[] = [], notes: string[] = [];
     for (const [name, text] of cases) {
-      const { db, sink } = h.newStore(name, S0);
-      const r = h.commit(sink, text);
+      const { db, sink } = await h.newStore(name, S0);
+      const r = await h.commit(sink, text);
       const unchanged = h.E.canon(h.stored(db)) === h.E.canon(S0);
-      const okR = h.commit(sink, h.honest(h.stored(db)!, "rq_ok", "100"));
-      const f = h.flush(db, S0, name + ".ledger.jsonl");      // one ledger per store
+      const okR = await h.commit(sink, h.honest(h.stored(db)!, "rq_ok", "100"));
+      const f = await h.flush(db, S0, name + ".ledger.jsonl");      // one ledger per store
       const badEff = f.effects.filter(e => e.intent.requestId !== "rq_ok").length;
       const badOut = h.outbox(db).filter(o => o.intent.requestId !== "rq_ok").length;
       const okEff = f.effects.filter(e => e.intent.requestId === "rq_ok").length;
@@ -43,4 +43,3 @@ export const regression: Regression = {
     return dead.length > 0 ? fail("honest refund not dispatched exactly once in " + dead.join(",") + ": " + why) : pass(why);
   },
 };
-if (require.main === module) standalone([regression], process.argv);
