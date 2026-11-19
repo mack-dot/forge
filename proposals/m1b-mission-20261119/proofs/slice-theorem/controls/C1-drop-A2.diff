@@ -1,0 +1,39 @@
+--- SliceTheorem.dfy	2026-11-19 02:02:59.416746783 -0500
++++ <session scratch folder>/m1b/Z9/controls/C1-drop-A2/SliceTheorem.dfy	2026-11-19 02:04:32.508528809 -0500
+@@ -223,9 +223,9 @@
+ 
+   lemma PrefixHyps(init: State, acts: seq<Act>)
+     requires |acts| > 0
+-    requires A1_IdealMacAtEachDelivery(init, acts) && A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts)
++    requires A1_IdealMacAtEachDelivery(init, acts) && A5_VerifierMatchesAtEachDelivery(acts)
+     ensures var p := acts[..|acts| - 1];
+-      A1_IdealMacAtEachDelivery(init, p) && A2_MintOnlyOnCheck(p) && A5_VerifierMatchesAtEachDelivery(p)
++      A1_IdealMacAtEachDelivery(init, p) && A5_VerifierMatchesAtEachDelivery(p)
+   {
+     var p := acts[..|acts| - 1];
+     forall k | 0 <= k < |p|
+@@ -235,7 +235,7 @@
+   }
+ 
+   lemma ExecInv(init: State, acts: seq<Act>)
+-    requires A1_IdealMacAtEachDelivery(init, acts) && A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts)
++    requires A1_IdealMacAtEachDelivery(init, acts) && A5_VerifierMatchesAtEachDelivery(acts)
+     ensures Rel(Exec(init, acts).core, Exec(init, acts).s, Exec(init, acts).toks)
+     ensures Inv(init, Exec(init, acts).s)
+     ensures |Exec(init, acts).toks| > 0 ==> IdealMac(Exec(init, acts).s)
+@@ -324,7 +324,6 @@
+   lemma PerEntry(init: State, acts: seq<Act>, art: FlatFn, i: int)
+     requires InitOk(init)
+     requires A1_IdealMacAtEachDelivery(init, acts)
+-    requires A2_MintOnlyOnCheck(acts)
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+     requires A6_ArtifactComputesFlatContract(art)
+     requires 0 <= i < |Exec(init, acts).core.outbox|
+@@ -350,7 +349,6 @@
+   lemma SliceSafety(init: State, acts: seq<Act>, art: FlatFn)
+     requires InitOk(init)
+     requires A1_IdealMacAtEachDelivery(init, acts)
+-    requires A2_MintOnlyOnCheck(acts)
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+     requires A6_ArtifactComputesFlatContract(art)
+     ensures forall e | CommittedEffect(init, acts, e) ::

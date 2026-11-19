@@ -17748,3 +17748,46 @@ curl: (6) Could not resolve host: github.com
   lemmas restated. M1-B OPEN. end_to_end=false.
 - Next check: restate the sink core under the step-local A1 (a
   Dafny task); my own run of the reviewer's Attack.dfy.
+
+## U479 — one composed Dafny lemma in the shape of the target (model level, under an assumption that needs rewording); a binding manifest draft and what it found in my records
+- Status: 2026-11-19T07:12Z (inserted by the shell from `date -u`). Refs U475,
+  U477, U478. Reports G8 and G9.
+- RESULT (my own run, stored log and CSV under
+  proposals/m1b-mission-20261119/proofs/slice-theorem/records):
+  `dafny verify SliceTheorem.dfy` with the gate options: exit 0,
+  1570 verified, 0 errors; 23 rows belong to the new module;
+  SliceTheorem.dfy SHA-256 1d64e8ef…cd87; closure of 38 files with a
+  digest list. The worker's attempts: 1 (a resolver crash, exit 1),
+  then 0, 0, 0.
+- What lemma SliceSafety says: after any sequence of mint and deliver
+  actions on one charge, every effect in the outbox satisfies the
+  approved eligibility rule on the state stored at commit time; the
+  flat result of the artifact decodes to exactly that refund; it has
+  one token and one request id and is never committed twice. The
+  three earlier Dafny assets are included byte-equal.
+- What it does NOT say. (1) Its hypothesis A1 is the global ideal-MAC
+  predicate at each delivery; the review of U478 proved that no real
+  signature scheme meets it. I read the predicate in the file myself.
+  The non-vacuity witness holds only under a reading where the
+  verifier accepts one token's tag. (2) ValidArtifact is hypothesis
+  A6 about a parameter; nothing about the HOL functions or the
+  executable is proved by it. (3) One charge only. (4) Nothing about
+  sink.ts, the issuer glue, compiled code, storage or native
+  execution. (5) Zero-amount commits are not excluded (approved
+  intent, U477). (6) Two of the worker's six controls fail only by
+  out of resource.
+- The binding manifest draft (the worker's runs: verifier exit 0; 22
+  controls refused): it found that my present run_check.py has never
+  run, that the stored record of the refund proof names 4 of 33
+  files, that the closure without the axiom module and the sink core
+  have no byte-binding record in the repository, and that my rerun
+  record of the second extraction is a crash. OWED: those runs with
+  full records.
+- Replay: 120 of 158 at 07:03Z (116 as recorded).
+- NOT RUN: every HOL step.
+- Impact: the target has, for the first time, one machine-checked
+  statement of its shape, at the Dafny model level and under
+  assumptions of which one must be reworded and one is the whole
+  executable chain. M1-B OPEN. end_to_end=false.
+- Next check: restate SliceSafety with the step-local A1; the owed
+  records; the last two workers; the replay; L1.

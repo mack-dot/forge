@@ -1,0 +1,10 @@
+--- SliceTheorem.dfy	2026-11-19 02:02:59.416746783 -0500
++++ <session scratch folder>/m1b/Z9/controls/C4-every-commit-changes-store/SliceTheorem.dfy	2026-11-19 02:04:32.579763328 -0500
+@@ -358,6 +358,7 @@
+         ApprovedSpec(init, acts, i) && FlatResultAgrees(art, init, acts, i) && UniqueAuthorization(init, acts, i))
+     ensures 0 <= Exec(init, acts).core.charge.remaining <= Exec(init, acts).core.charge.original == init.original
+     ensures SumIntents(Exec(init, acts).core.outbox) == init.remaining - Exec(init, acts).core.charge.remaining
++    ensures forall i | 0 <= i < |Exec(init, acts).toks| :: Exec(init, acts).toks[i].post != Exec(init, acts).toks[i].pre
+   {
+     var r := Exec(init, acts);
+     ExecInv(init, acts);

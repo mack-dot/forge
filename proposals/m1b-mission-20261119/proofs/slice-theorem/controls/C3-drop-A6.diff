@@ -1,0 +1,18 @@
+--- SliceTheorem.dfy	2026-11-19 02:02:59.416746783 -0500
++++ <session scratch folder>/m1b/Z9/controls/C3-drop-A6/SliceTheorem.dfy	2026-11-19 02:04:32.557068005 -0500
+@@ -326,7 +326,6 @@
+     requires A1_IdealMacAtEachDelivery(init, acts)
+     requires A2_MintOnlyOnCheck(acts)
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+-    requires A6_ArtifactComputesFlatContract(art)
+     requires 0 <= i < |Exec(init, acts).core.outbox|
+     ensures ApprovedSpec(init, acts, i) && FlatResultAgrees(art, init, acts, i) && UniqueAuthorization(init, acts, i)
+   {
+@@ -352,7 +351,6 @@
+     requires A1_IdealMacAtEachDelivery(init, acts)
+     requires A2_MintOnlyOnCheck(acts)
+     requires A5_VerifierMatchesAtEachDelivery(acts)
+-    requires A6_ArtifactComputesFlatContract(art)
+     ensures forall e | CommittedEffect(init, acts, e) ::
+       exists i :: (0 <= i < |Exec(init, acts).core.outbox| && Exec(init, acts).core.outbox[i] == e &&
+         ApprovedSpec(init, acts, i) && FlatResultAgrees(art, init, acts, i) && UniqueAuthorization(init, acts, i))

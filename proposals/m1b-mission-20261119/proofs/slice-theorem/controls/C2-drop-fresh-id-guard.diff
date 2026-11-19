@@ -1,0 +1,10 @@
+--- transport/sink/SinkCore.dfy	2026-11-19 01:49:19.012489169 -0500
++++ <session scratch folder>/m1b/Z9/controls/C2-drop-fresh-id-guard/transport/sink/SinkCore.dfy	2026-11-19 02:04:32.534259099 -0500
+@@ -131,7 +131,6 @@
+   {
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+     else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
+-    else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
+     else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)
+   }

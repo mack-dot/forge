@@ -217,3 +217,25 @@ bits (X5).
 | all | the replay cannot reach 158: three recorded cases have no source file |
 | U5b | stays MISSING as a proof; now TESTED: 5,500 sequences, the unchanged `sink.ts` against the compiled core, 0 divergences (the worker's run); `sink.ts` is stricter than the core in eight places |
 | U3 | by a run: `sink.ts` (and the core) accept a token whose body request id differs from the intent's, if the signing key signs it; the real issuer refuses to sign it |
+
+## 9. The first composed statement (step G9; 2026-11-19T07:12Z)
+
+A single Dafny lemma now has the SHAPE of the owner's target for one
+charge: `SliceSafety` in `proofs/slice-theorem/inputs/SliceTheorem.dfy`
+(orchestrator's run with a stored log: exit 0, 1570 verified).
+
+    Committed(e) ⇒ ApprovedSpec(e) ∧ FlatResultAgrees(e) ∧ UniqueAuthorization(e)
+    under A1 (ideal MAC at each delivery), A2 (mint only on Check),
+    A5 (verifier matches), A6 (the artifact computes the flat contract)
+
+| Conjunct of the target | In this lemma | Kind |
+| --- | --- | --- |
+| ApprovedSpec | proved: the approved `Eligible` on the state stored at commit time | Dafny MODEL |
+| UniqueAuthorization | proved: one token, one request id, no second commit | Dafny MODEL |
+| ValidArtifact | NOT proved: hypothesis A6 on a parameter `art`; closing it is links S4 to S7 and X1 to X16 | ASSUMPTION |
+
+It is NOT a link to anything real yet: A1 as written cannot be met by
+a real signature scheme (section 8, U5a); `sink.ts`, the issuer glue,
+compiled code, storage and native execution are outside it. It joins
+the existing rows S2, S3, U1, U4 and U5a into one statement; it adds
+no new link class.
