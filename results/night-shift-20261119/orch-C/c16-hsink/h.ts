@@ -6,8 +6,8 @@
 import { mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-export const ROOT = process.env.H_ROOT ?? "<SCRATCH>/redteam-C/fix-608b5165";
-export const CORE = process.env.H_CORE ?? "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+export const ROOT = process.env.H_ROOT ?? "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-608b5165";
+export const CORE = process.env.H_CORE ?? "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
 /* eslint-disable @typescript-eslint/no-require-imports */
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 export const SK = require(join(ROOT, "ts/refund-finality/sink.ts"));

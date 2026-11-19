@@ -4,7 +4,7 @@ Exit 1 if any row AUTHORIZES under the consumer with a decision that differs fro
 (column 'human'), or if the executable writes a byte after a frame, or exits non-zero/with stderr on a
 reader error and the consumer would accept. Prints a table. Info rows have human=None (no claim)."""
 import sys, json
-sys.path.insert(0, '<REPO>/results/night-shift-20261119/orch-C/c14-parser')
+sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c14-parser')
 from common import run, as_result, oracle, fc, frame  # noqa
 
 C = b'(c r 100 60 True True True 40 returned_item)'

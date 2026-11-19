@@ -1,8 +1,8 @@
-# owner=x-bridge2 start=2026-11-19T10:51:41Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny
+# owner=x-bridge2 start=2026-11-19T10:51:41Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/dafny
 # power: Now drawing from 'AC Power'
 # swap free MiB: 865
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/logs/verify-bridge2.1.csv <REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/Bridge2.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/dafny/logs/verify-bridge2.1.csv /Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/dafny/Bridge2.dfy
 # memory free percent: 65
 Bridge2.dfy(36,5): Error: quantifiers in non-ghost contexts must be compilable, but Dafny's heuristics can't figure out how to produce or compile a bounded set of values for 's'
    |
@@ -10,7 +10,7 @@ Bridge2.dfy(36,5): Error: quantifiers in non-ghost contexts must be compilable, 
    |      ^^^^^^
 
 1 resolution/type errors detected in Bridge2.dfy
-Results File: <REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/logs/verify-bridge2.1.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/dafny/logs/verify-bridge2.1.csv
         0.49 real         0.43 user         0.05 sys
             92454912  maximum resident set size
                    0  average shared memory size

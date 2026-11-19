@@ -3,7 +3,7 @@ import { join } from "node:path";
 export const ROOT = process.env.RT_ROOT as string;
 export const CORE = process.env.RT_CORE as string;
 export const SPEC = join(ROOT, "spec/refund/spec.lock");
-export const EVID = "<REPO>/results/night-shift-20261119/orch-B/h-minter2/rt/c1";
+export const EVID = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter2/rt/c1";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 // eslint-disable-next-line @typescript-eslint/no-require-imports

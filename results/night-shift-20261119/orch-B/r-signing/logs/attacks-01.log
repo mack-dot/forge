@@ -1,8 +1,8 @@
-# owner=r-signing start=2026-11-19T08:30:05Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-signing/work
+# owner=r-signing start=2026-11-19T08:30:05Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/work
 # power: Now drawing from 'AC Power'
 # swap free MiB: 464
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-signing/logs/attacks-01.csv Attacks.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/logs/attacks-01.csv Attacks.dfy
 Attacks.dfy(195,2): Error: a postcondition could not be proved on this return path
     |
 195 |   {
@@ -15,7 +15,7 @@ Attacks.dfy(193,12): Related location: this is the postcondition that could not 
 
 
 Dafny program verifier finished with 1639 verified, 1 error
-Results File: <REPO>/results/night-shift-20261119/orch-B/r-signing/logs/attacks-01.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-signing/logs/attacks-01.csv
        58.78 real        40.20 user         3.90 sys
            296157184  maximum resident set size
                    0  average shared memory size

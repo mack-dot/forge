@@ -1,4 +1,4 @@
-{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"/Users/mackianni/forge/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"/Users/mackianni/forge/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"/Users/mackianni/forge/node_modules"}}
 r1 committed
 flush 1 {"emitted":[{"requestId":"r1","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r1\"}"}],"refused":[],"alreadyDispatched":0,"inDoubt":[],"ledgerHead":{"n":1,"rowHead":"0c0c4f8da1d20a0737c308af186d209ccc616f5e37f743f6e21d78638ccadc76"}}
 r2 committed
@@ -8,9 +8,9 @@ restored the folder
 sink restart: start-up audit passed
 retry r2 committed retry r3 committed
 Error: dispatcher alarm: the ledger does not reach the dispatch witness (row 3); an older or another ledger (restored backup?); nothing sent
-    at Dispatcher.flushLocked (<REPO>/results/night-shift-20261119/orch-B/h-dispatch/tree/ts/refund-finality/dispatcher.ts:310:15)
-    at Dispatcher.flush (<REPO>/results/night-shift-20261119/orch-B/h-dispatch/tree/ts/refund-finality/dispatcher.ts:228:23)
-    at Object.flush (<REPO>/results/night-shift-20261119/orch-B/h-dispatch/c8copy/common.ts:37:81)
-    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-dispatch/c8copy/l3_ledger_restore.ts:29:43)
+    at Dispatcher.flushLocked (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/tree/ts/refund-finality/dispatcher.ts:310:15)
+    at Dispatcher.flush (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/tree/ts/refund-finality/dispatcher.ts:228:23)
+    at Object.flush (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/c8copy/common.ts:37:81)
+    at <anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/c8copy/l3_ledger_restore.ts:29:43)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 exit 3

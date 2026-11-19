@@ -1,8 +1,8 @@
-# owner=d-v5sink start=2026-11-19T11:25:07Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# owner=d-v5sink start=2026-11-19T11:25:07Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink/dafny
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1141
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/logs/v-shellv5-verify-1.csv ShellCoreV5.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink/logs/v-shellv5-verify-1.csv ShellCoreV5.dfy
 # memory free percent: 60
 ShellCoreV5.dfy(459,2): Error: a postcondition could not be proved on this return path
     |
@@ -26,7 +26,7 @@ ShellCoreV5.dfy(585,4): Error: assertion might not hold
 
 
 Dafny program verifier finished with 150 verified, 3 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/d-v5sink/logs/v-shellv5-verify-1.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink/logs/v-shellv5-verify-1.csv
        10.10 real         9.30 user         0.57 sys
            211173376  maximum resident set size
                    0  average shared memory size

@@ -9,8 +9,8 @@
 // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
 import { KeyObject, verify } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
-import { reducedBytes } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/lib/encoding";
-import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/lib/encoding";
+import { reducedBytes } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/lib/encoding";
+import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/enc_unsigned_body/lib/encoding";
 
 export const MAX_TOKEN_TEXT = 8192;
 export const STORE_FORMAT = "forge-sink-h1";
@@ -183,7 +183,7 @@ export function readMeta(db: DatabaseSync): MetaRow | undefined {
 }
 
 // ---- the compiled core (dafny build --target js through the lock script)
-const CORE_FILE = "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/core/sinkcore-v6.cjs";
+const CORE_FILE = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/core/sinkcore-v6.cjs";
 export type CoreMod = { Shell6: any; Shell5: any; Shell4: any; Shell: any; C: any; F: any; R: any; rt: any; BigNumber: any };
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const loadCore = (): CoreMod => require(CORE_FILE);

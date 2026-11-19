@@ -4,10 +4,10 @@
 # reference cores (v3, reqid) from d-v3sink/build, the patched sink copies, wrappers cb-v3 (d-v3sink draft, core v3)
 # and cb-v4 (this folder's sink_core_backed_v4.ts). Records SHA-256 of every input.
 set -u
-H=$1; R=<REPO>; V=$R/results/night-shift-20261119/orch-B/d-v3sink; W=$R/results/night-shift-20261119/orch-B/d-v3sink2
+H=$1; R=/Users/mackianni/forge; V=$R/results/night-shift-20261119/orch-B/d-v3sink; W=$R/results/night-shift-20261119/orch-B/d-v3sink2
 rm -rf $H; mkdir -p $H/db $H/results $H/sinks $H/patched $H/broken
 cp $V/harness/lib.ts $V/harness/diff.ts $H/
-sed -i '' "s#<HOME>#<HOME>#g" $H/lib.ts $H/diff.ts
+sed -i '' "s#<HOME>#/Users/mackianni#g" $H/lib.ts $H/diff.ts
 sed -i '' 's#^  "cb-v3": Z + "/sinks/cb-v3.ts",#  "cb-v3": Z + "/sinks/cb-v3.ts",\n  "cb-v4": Z + "/sinks/cb-v4.ts",#' $H/lib.ts
 grep -q '"cb-v4"' $H/lib.ts || { echo "lib.ts edit failed"; exit 2; }
 cp $V/build/shellcore-v3.cjs $H/sinkcore-v3.cjs

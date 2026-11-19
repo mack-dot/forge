@@ -4,7 +4,7 @@
 const fs = require('fs');
 const BigNumber = require('bignumber.js');
 const [jsf, seedArg] = process.argv.slice(2);
-const src = fs.readFileSync('<REPO>/results/night-shift-20261119/orch-B/e-subset3/js/runtime-prefix.js', 'utf8') +
+const src = fs.readFileSync('/Users/mackianni/forge/results/night-shift-20261119/orch-B/e-subset3/js/runtime-prefix.js', 'utf8') +
   fs.readFileSync(jsf, 'utf8') + '\nmodule.exports = { Refund, runtime: _dafny };\n';
 const m = { exports: {} };
 new Function('require', 'module', 'exports', src)(require, m, m.exports);

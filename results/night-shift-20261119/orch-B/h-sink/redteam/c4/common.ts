@@ -2,8 +2,8 @@
 // Usage from a script: const h = await setup(workDir); ... h.stop();
 import { mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
-export const ROOT = "<REPO>/results/night-shift-20261119/orch-B/h-sink/tree";
-export const CORE = "<REPO>/results/night-shift-20261119/orch-B/d-minter/build/issuebytes2.cjs";
+export const ROOT = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree";
+export const CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/build/issuebytes2.cjs";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 // eslint-disable-next-line @typescript-eslint/no-require-imports

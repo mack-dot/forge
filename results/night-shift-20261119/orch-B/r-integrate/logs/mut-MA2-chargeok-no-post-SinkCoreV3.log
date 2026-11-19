@@ -1,8 +1,8 @@
-# owner=r-integrate start=2026-11-19T09:11:33Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/mut/MA2-chargeok-no-post
+# owner=r-integrate start=2026-11-19T09:11:33Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-integrate/mut/MA2-chargeok-no-post
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1711
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MA2-chargeok-no-post-SinkCoreV3.csv SinkCoreV3.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MA2-chargeok-no-post-SinkCoreV3.csv SinkCoreV3.dfy
 # memory free percent: 66
 SinkCoreV3.dfy(171,2): Error: a postcondition could not be proved on this return path
     |
@@ -31,7 +31,7 @@ SinkCoreV3.dfy(481,12): Related location: this is the postcondition that could n
 
 
 Dafny program verifier finished with 67 verified, 3 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MA2-chargeok-no-post-SinkCoreV3.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MA2-chargeok-no-post-SinkCoreV3.csv
         5.08 real         5.01 user         0.26 sys
            201129984  maximum resident set size
                    0  average shared memory size

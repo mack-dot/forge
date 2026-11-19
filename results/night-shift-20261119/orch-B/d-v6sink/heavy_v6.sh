@@ -12,7 +12,7 @@
 #   sinkcore-v3.cjs:cb-v3     0  (reference: the d-v3sink pair, unchanged harness semantics for V3 core)
 # Exit codes of diff.ts: 0 none; 3 divergences all of allowed kinds; 1 a divergence of a kind not allowed; other = harness error.
 set -u
-R=<REPO>; W=$R/results/night-shift-20261119/orch-B/d-v6sink; LOCKS=$R/results/night-shift-20261119/locks
+R=/Users/mackianni/forge; W=$R/results/night-shift-20261119/orch-B/d-v6sink; LOCKS=$R/results/night-shift-20261119/locks
 H=${1:-$W/heavy-1}; ONLY=${2:-}
 if [ "$ONLY" != smoke ] && { [ -e $LOCKS/hol.lock ] || pgrep -f 'bin/hol' >/dev/null; }; then echo "refused: hol.lock exists or a HOL process runs"; exit 75; fi
 $W/setup_v6.sh $H || { echo "setup failed"; exit 2; }

@@ -1,8 +1,8 @@
-# judge=<REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine/tests/refund-finality/regress/run.ts
-# sink=<REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/sink.ts sha256=bd3f6de8b6b1c15e624531742b133071bc820dcee60cd25126a970376f8caecd
-# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/dispatcher.ts sha256=bb523824023289973c3f4a16b12e260b7f691acd34d6ef27cdb61d63ec740f7a
-# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
-# encoding next to the sink=<REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# judge=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine/tests/refund-finality/regress/run.ts
+# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/sink.ts sha256=bd3f6de8b6b1c15e624531742b133071bc820dcee60cd25126a970376f8caecd
+# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/dispatcher.ts sha256=bb523824023289973c3f4a16b12e260b7f691acd34d6ef27cdb61d63ec740f7a
+# trusted encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
 # expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=-
 PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
 PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted

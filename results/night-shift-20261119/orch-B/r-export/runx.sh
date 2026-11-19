@@ -1,8 +1,8 @@
 #!/bin/bash
 # r-export: run MutantIffFlat (ExportedContract <==> FlatContract) on each export mutant via the lock script.
-R=<REPO>/results/night-shift-20261119/orch-B/r-export
-T=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
-Z=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+R=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-export
+T=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh
+Z=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 for n in "$@"; do
   d=$R/xm/$n
   cat > $d/Check.dfy <<EOD

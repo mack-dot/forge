@@ -2,7 +2,7 @@
 # Usage: dv.sh SRC.dfy TAG [verify|translate]. One single-file Dafny run (60 s) through orch-B/tools/dafny_locked.sh.
 # Layout as the gate: impl/Refund.dfy + spec/refund/RefundSpec.dfy (+ gate/refund/Bindings.dfy). Work copy removed after.
 set -u
-R=<REPO>; E=$R/results/night-shift-20261119/orch-C/c5-gate
+R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-C/c5-gate
 SRC=$1; K=$2; MODE=${3:-verify}; N=$(basename $SRC .dfy)
 W=$E/work/$N; rm -rf $W; mkdir -p $W/impl $W/spec/refund $W/gate/refund $E/js
 git -C $R show 4af09308:spec/refund/RefundSpec.dfy > $W/spec/refund/RefundSpec.dfy

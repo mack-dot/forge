@@ -4,7 +4,7 @@ import hashlib, shutil, subprocess
 from pathlib import Path
 E = Path(__file__).resolve().parent.parent
 B = E.parent
-R = Path('<REPO>')
+R = Path('/Users/mackianni/forge')
 D = E / 'diff'
 src = (E / 'subset_rule2.py').read_text()
 block = src[src.index('# BEGIN GATE BLOCK\n') + len('# BEGIN GATE BLOCK\n'):src.index('# END GATE BLOCK')]

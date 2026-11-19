@@ -4,10 +4,10 @@ blocked in read(0) or write(1), change its observable behaviour?  Targets X11 ro
 exit 0 = every case gave the expected complete frame and status 0.  At most ~12 short runs.
 """
 import fcntl, hashlib, json, os, signal, subprocess, sys, time
-sys.path.insert(0, '<REPO>/proposals/m1b-mission-20261119/drafts/fail-closed')
+sys.path.insert(0, '/Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/fail-closed')
 import frame  # noqa: E402
 
-EXE = '<REPO>/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
+EXE = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
 assert hashlib.sha256(open(EXE, 'rb').read()).hexdigest() == \
     'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
 ENV = {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'CML_HEAP_SIZE': '256', 'CML_STACK_SIZE': '256'}

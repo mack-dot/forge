@@ -18,8 +18,8 @@
 # Refuses (64) while hol.lock exists or a HOL process runs. Does NOT take heavy.lock. Scrubbed env; pinned Node 24.3.0.
 # Usage: run_suite_h.sh [N]
 set -u
-O=<REPO>/results/night-shift-20261119/orch-B; H=$O/h-sink
-LOCKS=<REPO>/results/night-shift-20261119/locks; TMO=${SUITE_TIMEOUT_S:-1200}
+O=/Users/mackianni/forge/results/night-shift-20261119/orch-B; H=$O/h-sink
+LOCKS=/Users/mackianni/forge/results/night-shift-20261119/locks; TMO=${SUITE_TIMEOUT_S:-1200}
 if [ -e "$LOCKS/hol.lock" ] || pgrep -f 'bin/hol' >/dev/null; then echo "refused: hol.lock exists or a HOL process runs"; exit 64; fi
 pmset -g batt | head -1 | grep -q "AC Power" || { echo "refused: not on AC power"; exit 64; }
 N=${1:-$(( $(ls -d $H/suite/attempt-* 2>/dev/null | sed 's/.*attempt-//' | sort -n | tail -1) + 1 ))}

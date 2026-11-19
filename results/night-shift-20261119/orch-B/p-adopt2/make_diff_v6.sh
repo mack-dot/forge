@@ -2,7 +2,7 @@
 # p-adopt2: builds adoption-v6.diff (pristine export of 985f5eaf -> changed export), then checks it. Applies nothing.
 # Baseline: orch-B/p-adopt/pristine (read-only reuse). Changed export: p-adopt2/export.
 set -u
-O=<REPO>/results/night-shift-20261119/orch-B; P=$O/p-adopt2; B=$O/p-adopt/pristine; cd $P
+O=/Users/mackianni/forge/results/night-shift-20261119/orch-B; P=$O/p-adopt2; B=$O/p-adopt/pristine; cd $P
 FILES=(impl/finality-core/IssueBytes2.dfy impl/finality-core/SerModel.dfy impl/finality-core/ShellCoreV3.dfy
  impl/finality-core/ShellCoreV4.dfy impl/finality-core/ShellCoreV5.dfy impl/finality-core/ShellCoreV6.dfy
  impl/finality-core/SinkCoreV3.dfy scripts/exit_slice1.py tests/demo-gauntlet/sink_tool.ts tests/refund-finality/suite.ts
@@ -18,6 +18,6 @@ done
 echo "lines $(wc -l < adoption-v6.diff)"
 grep -E '^\+\+\+ ' adoption-v6.diff
 echo "protected-or-clearing hits: $(grep -E '^(\+\+\+|---) ' adoption-v6.diff | grep -cE ' [ab]/(gate|policy|spec|toolchain|schemas|\.github|governance|clearing)/|/clearing/|spec\.lock|AGENTS\.md|javascript_env\.py|build_model\.py|interop/export\.cjs|interop/model\.ts|ledger\.property|tsconfig\.json|package(-lock)?\.json')"
-git -C <REPO> apply --check $P/adoption-v6.diff; echo "git apply --check exit $?"
+git -C /Users/mackianni/forge apply --check $P/adoption-v6.diff; echo "git apply --check exit $?"
 shasum -a 256 adoption-v6.diff
 (cd export && shasum -a 256 "${FILES[@]}") > new-files-sha256.txt

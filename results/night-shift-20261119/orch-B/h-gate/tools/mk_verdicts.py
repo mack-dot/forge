@@ -1,6 +1,6 @@
 """Builds VERDICTS.md: the JS checker verdict per file and per mutant (results/check-*.jsonl, MACHINE)."""
 import json
-H = '<REPO>/results/night-shift-20261119/orch-B/h-gate'
+H = '/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate'
 M = ['none', 'no-loop', 'no-recursion', 'no-load', 'no-shape', 'no-cost']
 R = {m: {json.loads(l)['file'][:-3]: json.loads(l) for l in open('%s/results/check-%s.jsonl' % (H, m))} for m in M}
 UNSAFE = ['E06-stack-overflow-keyed', 'E07-oom-keyed', 'E08-time-keyed', 'H01b-such-that-modulus-hang',

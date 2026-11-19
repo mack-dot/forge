@@ -1,8 +1,8 @@
-# owner=h-gate start=2026-11-19T15:24:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/A16-decreases-star
+# owner=h-gate start=2026-11-19T15:24:26Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate/work/A16-decreases-star
 # power: Now drawing from 'Battery Power'
 # swap free MiB: 920
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/A16-decreases-star/model
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate/work/A16-decreases-star/model
 # note: on battery power; run allowed by the POWER AMENDMENT
 # memory free percent: 39
 impl/Refund.dfy(6,14): Error: decreases clause on refining method not supported, unless the refined method was specified with 'decreases *'

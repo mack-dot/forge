@@ -1,8 +1,8 @@
-# owner=h-minter start=2026-11-19T14:36:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
+# owner=h-minter start=2026-11-19T14:36:56Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
 # power: Now drawing from 'AC Power'
 # swap free MiB: 877
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v01-verify.csv IssueOnce.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/logs/v01-verify.csv IssueOnce.dfy
 # memory free percent: 37
 IssueOnce.dfy(117,9): Error: Verification out of resource (IssueOnce.RunSeq)
     |
@@ -31,7 +31,7 @@ IssueOnce.dfy(265,9): Error: Verification out of resource (IssueOnce.OldFreeze)
 
 
 Dafny program verifier finished with 149 verified, 0 errors, 5 out of resource
-Results File: <REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v01-verify.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/logs/v01-verify.csv
        24.54 real        11.17 user         1.75 sys
            163463168  maximum resident set size
                    0  average shared memory size

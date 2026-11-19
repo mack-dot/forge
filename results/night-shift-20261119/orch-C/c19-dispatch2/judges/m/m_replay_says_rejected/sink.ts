@@ -37,11 +37,11 @@
 // SHA-256, Ed25519.
 import { createPublicKey } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
-import { ChargeState, isState, canon, sha256hex } from "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/encoding";
+import { ChargeState, isState, canon, sha256hex } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/encoding";
 import { CoreMod, Pos, SinkHead, StoreAuditor, STORE_FORMAT, conv, createSchema, decodeToken, isHead, linkOf, loadCore,
-  must, readStateBlob, sigOkOf, validInitial } from "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/core/store";
-export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/core/store";
-export type { SinkHead } from "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/core/store";
+  must, readStateBlob, sigOkOf, validInitial } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/core/store";
+export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/core/store";
+export type { SinkHead } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/core/store";
 
 export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead };
 export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string };

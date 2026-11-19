@@ -1,7 +1,7 @@
 #!/bin/bash
 # d-corebacked: the light Dafny runs (through dafny_locked.sh, gate options). Usage: run_dafny.sh <suffix>
-D=<REPO>/results/night-shift-20261119/orch-B/d-corebacked; S=$D/dafny/inputs/sink; L=$D/logs
-T=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked; S=$D/dafny/inputs/sink; L=$D/logs
+T=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G=(--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects)
 x=${1:-}
 $T d-corebacked $S $L/v02-mutant-nopreok-verify$x.log 90 verify "${G[@]}" --log-format "csv;LogFileName=$L/v02-mutant-nopreok-verify$x.csv" Mutant_ShellNoPreOk.dfy; echo "v02 exit $?"

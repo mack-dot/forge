@@ -1,8 +1,8 @@
-# owner=b-restart start=2026-11-19T09:50:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-restart/controls/C3-step-commit-all
+# owner=b-restart start=2026-11-19T09:50:32Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/controls/C3-step-commit-all
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1333
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C3-step-commit-all-Restart.csv Restart.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/C3-step-commit-all-Restart.csv Restart.dfy
 # memory free percent: 42
 Restart.dfy(766,2): Error: a postcondition could not be proved on this return path
     |
@@ -16,7 +16,7 @@ Restart.dfy(764,43): Related location: this is the postcondition that could not 
 
 
 Dafny program verifier finished with 52 verified, 1 error
-Results File: <REPO>/results/night-shift-20261119/orch-B/b-restart/logs/C3-step-commit-all-Restart.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-restart/logs/C3-step-commit-all-Restart.csv
        11.30 real        10.96 user         0.53 sys
            292683776  maximum resident set size
                    0  average shared memory size

@@ -11,7 +11,7 @@ import { canon, isToken, signedBytes, signatureBytes } from "../../../../../ts/r
 import { Sink } from "../../../../../ts/refund-finality/sink";
 import { propose } from "../../../../../ts/refund-finality/proposer";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Sink6 = require("<REPO>/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6.ts").Sink;
+const Sink6 = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6.ts").Sink;
 
 const ROOT = resolve(__dirname, "../../../../..");
 const [corePath, specLockPath, outPath] = process.argv.slice(2);
@@ -108,7 +108,7 @@ cases.push({ name: "shape:extra-top", body: { pre: st("ch_1", "100", "60"), tran
 // ---------------------------------------------------------------- run
 (async () => {
   const real = await Client.start(join(ROOT, "ts/refund-finality/minter.ts"));
-  const draft = await Client.start("<REPO>/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts");
+  const draft = await Client.start("/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts");
   const realKey = createPublicKey(real.ready.publicKeyPem), draftKey = createPublicKey(draft.ready.publicKeyPem);
   const draftCfg = { publicKeyPem: draft.ready.publicKeyPem, specLockSha256: draft.ready.specLockSha256, checkerSha256: draft.ready.checkerSha256 };
   const realCfg = { publicKeyPem: real.ready.publicKeyPem, specLockSha256: real.ready.specLockSha256, checkerSha256: real.ready.checkerSha256 };

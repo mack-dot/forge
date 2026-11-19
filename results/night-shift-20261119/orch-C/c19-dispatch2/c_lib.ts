@@ -2,7 +2,7 @@
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-export const D = "<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
+export const D = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
 export function procs(root: string, w: any, ctl: string, effects: string, dcfgFile: string) {
   const running = new Map<string, { pid: number; done: Promise<string> }>();
   const start = (name: string, hooks: string) => {

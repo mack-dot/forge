@@ -1,8 +1,8 @@
-# owner=b-integrate start=2026-11-19T08:47:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate/controls/M3-no-chargeid-check
+# owner=b-integrate start=2026-11-19T08:47:56Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate/controls/M3-no-chargeid-check
 # power: Now drawing from 'AC Power'
 # swap free MiB: 895
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M3-no-chargeid-check-SliceSafetyV3.csv SliceSafetyV3.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate/logs/M3-no-chargeid-check-SliceSafetyV3.csv SliceSafetyV3.dfy
 SinkCoreV3.dfy(154,2): Error: a postcondition could not be proved on this return path
     |
 154 |   {
@@ -60,7 +60,7 @@ SliceSafetyV3.dfy(1031,4): Error: assertion might not hold
 
 
 Dafny program verifier finished with 1627 verified, 6 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M3-no-chargeid-check-SliceSafetyV3.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate/logs/M3-no-chargeid-check-SliceSafetyV3.csv
        49.39 real        35.08 user         3.29 sys
            357761024  maximum resident set size
                    0  average shared memory size

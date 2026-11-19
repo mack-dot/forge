@@ -1,7 +1,7 @@
 """Builds FALSE_REJECTIONS.md from the hand-written row facts below and the MACHINE results:
 results/check-none.jsonl (JS checker on translations) and logs/scope_new.out (new source-scope rules)."""
 import json, os
-H = '<REPO>/results/night-shift-20261119/orch-B/h-gate'
+H = '/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate'
 js = {}
 for l in open(H + '/results/check-none.jsonl'):
     r = json.loads(l); js[r['file'][:-3]] = r

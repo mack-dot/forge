@@ -1,7 +1,7 @@
-# owner=orchB-smoke start=2026-11-19T07:42:35Z cwd=<REPO>/results/night-shift-20261119/orch-B/smoke/inputs/sink
+# owner=orchB-smoke start=2026-11-19T07:42:35Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/smoke/inputs/sink
 # power: Now drawing from 'AC Power'
 # swap free MiB: 812
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Attack.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Attack.dfy
 refused: swap free < 1024 MiB
 exit 75

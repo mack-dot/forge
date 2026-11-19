@@ -1,7 +1,7 @@
 #!/bin/bash
 # c11-host H6: commit_cli.ts exits 0 on a rejected token (and on a typo'd database path, where it also creates a new empty
 # store file). Exit 1 = defect present (a refusal path exits 0), 0 = safe.
-unset GH_TOKEN GITHUB_TOKEN; source <REPO>/results/night-shift-20261119/orch-B/h-dispatch/c11copy/env.sh
+unset GH_TOKEN GITHUB_TOKEN; source /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/c11copy/env.sh
 W=$W0/h6; tsrun $E/setup.ts $T $CORE $W two >/dev/null 2>&1 || exit 3
 echo '{}' > $W/bad.token
 o1=$(tsrun tests/refund-finality/commit_cli.ts $W/sink.sqlite $W/sink-config.json $W/bad.token 0 2>/dev/null); r1=$?

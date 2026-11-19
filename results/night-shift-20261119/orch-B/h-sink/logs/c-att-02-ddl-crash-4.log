@@ -1,5 +1,5 @@
-# start=2026-11-19T14:41:35Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 1 1
+# start=2026-11-19T14:41:35Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/ddl 1 1
 PASS K=1 child: killed-at 1 CREATE TABLE meta(id INTEGER PRIMARY KEY (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
 FAIL partial h1 schema (meta table only, committed outside the sink) | REFUSED: no such table: state
 failed 1

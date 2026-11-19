@@ -1,7 +1,7 @@
 #!/bin/bash
 # h-provider: run every p_*.ts regression in every provider mode, sequentially (light: under 1 s each).
 # Each log ends with a line "exit N" (the actual exit code). Summary: logs/SUMMARY.txt.
-D=<REPO>/results/night-shift-20261119/orch-B/h-provider
+D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-provider
 cd $D/tree || exit 3
 : > $D/logs/SUMMARY.txt
 echo "node $(/opt/homebrew/bin/node --version) $(pmset -g batt | head -1) $(date -u +%FT%TZ) tree=e65f9ec8 export" >> $D/logs/SUMMARY.txt

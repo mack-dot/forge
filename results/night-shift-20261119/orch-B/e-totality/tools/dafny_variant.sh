@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage: dafny_variant.sh SUBDIR NAME MODE(verify|translate) RUNNO. Light tier (60 s). Layout as impl/Refund.dfy.
 set -u
-R=<REPO>; E=$R/results/night-shift-20261119/orch-B/e-totality
+R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-B/e-totality
 D=$1; N=$2; MODE=$3; K=$4
 W=$E/work/$N; mkdir -p $W/impl $W/spec/refund $W/gate/refund
 cp $R/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $R/gate/refund/Bindings.dfy $W/gate/refund/

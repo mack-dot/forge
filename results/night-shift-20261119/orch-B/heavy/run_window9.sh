@@ -1,7 +1,7 @@
 #!/bin/bash
 # Orchestrator B: heavy window 9: hardened sink: Slice 1 suite (pristine and hardened), differential against the V6 core, kill storm, 20,000-row measurement. PREPARED; power state is logged, not a gate (POWER AMENDMENT).
 set -u
-R=<REPO>; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
+R=/Users/mackianni/forge; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
 [ -e $L/hol.lock ] && { echo "refused: hol.lock exists"; exit 75; }
 pgrep -f 'bin/hol' >/dev/null && { echo "refused: a HOL process runs"; exit 75; }
 echo "# power: $(pmset -g batt | head -1)"

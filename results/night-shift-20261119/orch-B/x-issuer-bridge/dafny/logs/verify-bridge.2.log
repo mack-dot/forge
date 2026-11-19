@@ -1,12 +1,12 @@
-# owner=x-issuer-bridge start=2026-11-19T09:01:00Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny
+# owner=x-issuer-bridge start=2026-11-19T09:01:00Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1399
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/logs/verify-bridge.2.csv <REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/Bridge.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/logs/verify-bridge.2.csv /Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/Bridge.dfy
 # memory free percent: 61
 
 Dafny program verifier finished with 8 verified, 0 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/logs/verify-bridge.2.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/x-issuer-bridge/dafny/logs/verify-bridge.2.csv
         1.26 real         1.09 user         0.10 sys
            125779968  maximum resident set size
                    0  average shared memory size

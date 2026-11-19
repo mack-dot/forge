@@ -1,0 +1,4 @@
+(node:8721) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"nul","rq1":"committed","flush1":{"emitted":["rq_1"],"refused":[]},"minterOnWritersState":"SIGNED rq_2 amount 0 on remaining 0","runningSinkCommit":{"status":"rejected","reason":"sink halted: the state row cannot be read: state blob is not UTF-8 text without U+0000"},"restartedSink":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: PRAGMA integrity_check is not ok: [{\"integrity_check\":\"CHECK constraint failed in state\"}]","flush2":{"emitted":[],"refused":[]},"effects":["rq_1"],"totalOut":1000}
+SAFE (exit 0)

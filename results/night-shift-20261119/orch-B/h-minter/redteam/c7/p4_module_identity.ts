@@ -12,14 +12,14 @@ import { pinnedChecker, ROOT, SPEC_LOCK } from "./raw";
 const SHADOW = join(__dirname, "shadow");
 const CORE = join(SHADOW, "issueonce.cjs");                 // byte-identical copy of the pinned core
 const MARKER = join(SHADOW, "ran_in_process.marker");
-const GENUINE = "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+const GENUINE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
 (async () => {
   if (existsSync(MARKER)) rmSync(MARKER);
   const pinned = pinnedChecker(GENUINE);                      // identity computed against the GENUINE deployment core
   const child = spawn(process.execPath, ["--import", "tsx", join(ROOT, "ts/refund-finality/minter.ts"), CORE, SPEC_LOCK, "off"],
     { cwd: ROOT, stdio: ["pipe", "pipe", "inherit"],
       env: { PATH: process.env.PATH, HOME: process.env.HOME, LANG: "C",
-        NODE_PATH: SHADOW + "/node_modules:<REPO>/node_modules" } });
+        NODE_PATH: SHADOW + "/node_modules:/Users/mackianni/forge/node_modules" } });
   let ready: any = null, buf = "";
   child.stdout.on("data", d => { buf += d; const i = buf.indexOf("\n"); if (i >= 0 && !ready) ready = JSON.parse(buf.slice(0, i)); });
   const end = Date.now() + 30000; while (!ready && Date.now() < end) await new Promise(r => setTimeout(r, 100));

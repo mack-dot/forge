@@ -1,7 +1,7 @@
 # Orchestrator C (red team) state
 
-Started 2026-11-19T14:19:25Z. Branch nightshift/C-redteam from 4af09308 (B head). Worktree: <SCRATCH>/redteam-C/wt.
-Target with adoption-v6.diff applied (uncommitted, read-only use): <SCRATCH>/redteam-C/target-v6. A target: dae1b93e.
+Started 2026-11-19T14:19:25Z. Branch nightshift/C-redteam from 4af09308 (B head). Worktree: /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/wt.
+Target with adoption-v6.diff applied (uncommitted, read-only use): /private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/target-v6. A target: dae1b93e.
 unsure block U580-U619: none used yet. C holds no lock. HOL lock held by A at start (no heavy run by C).
 Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 
@@ -88,3 +88,7 @@ Split kept: C writes tests that show a gap; B writes fixes.
 - 16:15:01Z: TASK 3 done: static audit + test_process_lifecycle.py (24 tests, exit 1: 22 ok, 2 FAIL). C-LAUNCH-01 CONFIRMED by run (SIGCHLD ignored -> launcher AUTHORIZES an aborted / non-zero child). Sent to A. C-1 addendum appended to OWNER_REQUIRED. Running: c21 (c19 still silent).
 - 16:17:17Z: C-LAUNCH-01 re-run on A's launcher_v2.py (eec38a10…): 24/24 OK, exit 0 twice; v1 still exit 1 (2 FAIL). CLOSED. B sent the new gate proposal (h-gate/js_bound_check.cjs at 6775e46e; U620): next = worker c23 attacks it and grows the gate sets (launcher order item 5). Running: c21; c19 silent.
 - 16:18:07Z: started worker c23-jsgate (attack on B's new JavaScript-tier gate checker h-gate/js_bound_check.cjs; grows the correct and unsafe sets; measures the false-rejection rate). Running: c21 (88ae6cbf sink2), c23 (gate). c19 silent.
+- 16:21:58Z: re-run on B's minter rule 2 (370ff65c, NoStore): C-ATT-29 PASS, C-ATT-30 fake PASS, zero still present (stated limit), C-ATT-31 still present on the tsx path (closed launch script NOT tested), fuzz 0 divergences. Started c24-minter2 (Store mode, closed launch, STORE-READ). Running: c21, c23, c24.
+- 16:22:53Z: worker c24-minter2 STARTED (Store mode honest flows, which refusals close a request id, STORE-READ, the closed launch script, model versus code by reading). A safety classifier stopped my response while I wrote its brief: the brief ends mid-sentence (the last line about the report format is missing; WORKER_RULES covers it). Recorded under C-1; the withheld text is NOT resent. Running: c21, c23, c24.
+- 16:33:48Z: c19 and c21 DONE; key cases re-run by C (table in ATTACKS.md). New: C-ATT-33 (crash before COMMIT bricks the hardened store; HIGH false rejection), 34 (recover skips its one-row check), 35 (replaced inode in a commit), 36 (retry + ledger restore re-sends 1200/1000; HIGH), 37 (path cases). Closed on 88ae6cbf: C-ATT-17, 18, 23 hard link, 24, 25 with anchor, 26. blindspots2.sh re-run in background (b3p3kilen). Running: c23, c24.
+- 16:34:54Z: U596 written; pushed 03644bd0. Next unsure id U597. Branch scrub tool: <SCRATCH>/redteam-C/scrub.py <branch orch-C dir> (run after each rsync; rsync overwrites the scrubbed copies). In zsh use explicit commands or ${=var}: an unquoted variable is NOT split. Running: c23, c24; background b3p3kilen (blindspots2.sh).

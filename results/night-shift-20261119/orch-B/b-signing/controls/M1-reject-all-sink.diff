@@ -1,5 +1,5 @@
---- <REPO>/results/night-shift-20261119/orch-B/b-signing/inputs/transport/sink/SinkCore.dfy	2026-11-19 02:10:42.498876181 -0500
-+++ <REPO>/results/night-shift-20261119/orch-B/b-signing/controls/M1-reject-all-sink/inputs/transport/sink/SinkCore.dfy	2026-11-19 02:54:59.451625117 -0500
+--- /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-signing/inputs/transport/sink/SinkCore.dfy	2026-11-19 02:10:42.498876181 -0500
++++ /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-signing/controls/M1-reject-all-sink/inputs/transport/sink/SinkCore.dfy	2026-11-19 02:54:59.451625117 -0500
 @@ -133,7 +133,7 @@
      else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
      else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))

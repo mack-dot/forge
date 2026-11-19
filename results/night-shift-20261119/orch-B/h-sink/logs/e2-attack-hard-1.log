@@ -1,5 +1,5 @@
-# start=2026-11-19T14:45:37Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/attack-hard <REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
+# start=2026-11-19T14:45:37Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/attack-hard /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
 {"k":"H0-honest-control","restart":"STARTED"}
 {"k":"A1-outbox-rows-swapped","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":2,"o":2,"z1":0},"restartAfter":null}
 {"k":"A2-settled-rows-swapped","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":null,"counts":{"s":2,"o":2,"z1":0},"restartAfter":null}
@@ -23,17 +23,17 @@
 {"k":"G2-wal-switch-then-rollback-by-foreign","sqlAbort":"SQL-ABORT: cannot change into wal mode from within a transaction","c":"replayed","reaudits":0,"counts":{"s":1,"o":1,"z1":0}}
 {"k":"C1-commit-then-rejected-deliveries","rj":["replayed","rejected","rejected","rejected"],"restart":"STARTED"}
 {"k":"C2-300-zero-commits","n":300,"restart":"STARTED"}
-<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts:67
+/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts:67
       throw new Error("h1 sink refuses to serve: cfg.initialState is not a valid context (charge id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original)");
             ^
 
 
 Error: h1 sink refuses to serve: cfg.initialState is not a valid context (charge id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original)
-    at new Sink (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts:67:13)
-    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts:88:112)
-    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts:100:69)
+    at new Sink (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts:67:13)
+    at <anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts:88:112)
+    at Object.<anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts:100:69)
     at Module._compile (node:internal/modules/cjs/loader:1692:14)
-    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Object.transformer (/Users/mackianni/forge/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
     at Module.load (node:internal/modules/cjs/loader:1427:32)
     at Module._load (node:internal/modules/cjs/loader:1250:12)
     at TracingChannel.traceSync (node:diagnostics_channel:322:14)

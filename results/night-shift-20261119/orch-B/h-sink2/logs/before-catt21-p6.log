@@ -6,5 +6,5 @@
 {"mode":"wal-swap","walBytes":28872,"start":"STARTED count=3","idsAfter":["r1","r2","x3"],"startAnchor":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is","dispatcher":"ALARM/throw: dispatcher alarm: the sink's rows 1..3 do not chain to the ledger's cl","cls":"ii (non-prefix rewrite passes the start-up audit; ledger/anchor catch it)"}
 {"mode":"jinwal","start":"STARTED count=1","idsAfter":["r1"],"startAnchor":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is","dispatcher":"ALARM/throw: dispatcher alarm: the sink's rows 1..3 do not chain to the ledger's cl","cls":"ii (prefix rollback: stated anchor limit)"}
 SAFE
-# cmd: rt.sh <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <REPO>/results/night-shift-20261119/orch-B/h-sink2/work/p6
+# cmd: rt.sh /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/work/p6
 exit 0

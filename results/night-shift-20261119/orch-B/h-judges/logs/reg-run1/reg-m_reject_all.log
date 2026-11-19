@@ -1,10 +1,10 @@
-# 2026-11-19T15:01:49Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_reject_all.ts <REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts --expect-fail X6-Z1-zero-row-deleted-recommitted
+# 2026-11-19T15:01:49Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts /Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_reject_all.ts /Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts --expect-fail X6-Z1-zero-row-deleted-recommitted
 Now drawing from 'AC Power'
-# judge=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
-# sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_reject_all.ts sha256=c456c2a9d06b51f13b87ac1cca08f94705885662a5c1e57a1659a4ea293e59b5
-# dispatcher=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts sha256=5cecfd775a10d6da49a21ef3360ccfc8277e59aafb7be3a066b606a2a193836e
-# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
-# encoding next to the sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# judge=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
+# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_reject_all.ts sha256=c456c2a9d06b51f13b87ac1cca08f94705885662a5c1e57a1659a4ea293e59b5
+# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts sha256=5cecfd775a10d6da49a21ef3360ccfc8277e59aafb7be3a066b606a2a193836e
+# trusted encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
 # expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=X6-Z1-zero-row-deleted-recommitted
 FAIL C1-honest-refund: commit=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
 FAIL C2-zero-amount-refund: commit=rejected rq_z: outbox=0 effects=0 (want 1 and 1)

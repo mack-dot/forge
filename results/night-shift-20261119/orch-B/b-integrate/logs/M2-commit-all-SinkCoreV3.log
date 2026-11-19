@@ -1,8 +1,8 @@
-# owner=b-integrate start=2026-11-19T08:47:43Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-integrate/controls/M2-commit-all
+# owner=b-integrate start=2026-11-19T08:47:43Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate/controls/M2-commit-all
 # power: Now drawing from 'AC Power'
 # swap free MiB: 799
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M2-commit-all-SinkCoreV3.csv SinkCoreV3.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate/logs/M2-commit-all-SinkCoreV3.csv SinkCoreV3.dfy
 SinkCoreV3.dfy(157,2): Error: a postcondition could not be proved on this return path
     |
 157 |   {
@@ -95,7 +95,7 @@ SinkCoreV3.dfy(484,12): Related location: this is the postcondition that could n
 
 
 Dafny program verifier finished with 63 verified, 11 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/b-integrate/logs/M2-commit-all-SinkCoreV3.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-integrate/logs/M2-commit-all-SinkCoreV3.csv
         5.21 real         4.74 user         0.27 sys
            209879040  maximum resident set size
                    0  average shared memory size

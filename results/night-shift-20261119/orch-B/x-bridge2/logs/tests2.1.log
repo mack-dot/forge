@@ -1,8 +1,8 @@
 Traceback (most recent call last):
-  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge2/tests2.py", line 353, in <module>
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/tests2.py", line 353, in <module>
     sys.exit(main())
-  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge2/tests2.py", line 321, in main
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/tests2.py", line 321, in main
     rr = run_suite(ra, load('launcher_ra', os.path.join(X, 'launcher.py')), chk, pins, True)
-  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge2/tests2.py", line 209, in run_suite
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/x-bridge2/tests2.py", line 209, in run_suite
     check('pin/wrong-digest', (dec.reason, r.launched), ('DIGEST_MISMATCH', False))
 AttributeError: 'NoneType' object has no attribute 'launched'

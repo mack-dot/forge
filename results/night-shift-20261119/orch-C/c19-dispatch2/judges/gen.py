@@ -1,7 +1,7 @@
 # gen.py: builds the C-JUDGE-01 mutants again, re-derived against fix-f08a21c1 (ATTACK INPUTS, not fixes).
 # Each mutant lives in judges/m/<name>/ with imports rewritten to ABSOLUTE paths of the target tree (no tree copy).
 import pathlib, re, sys
-T = pathlib.Path("<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality")
+T = pathlib.Path("/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality")
 OUT = pathlib.Path(sys.argv[1])
 SINK, DISP, STORE, ENC = [(T / f).read_text() for f in ("sink.ts", "dispatcher.ts", "core/store.ts", "encoding.ts")]
 def absimp(src, enc=str(T / "encoding"), store=str(T / "core/store")):

@@ -343,3 +343,45 @@ Command: cd orch-C/c22-launch-conformance && /usr/bin/python3 -B -I test_process
   - launcher.py (fbdbea0b…): EXIT 1 twice: 24 tests, 2 FAIL (the same two: abort and non-zero exit after a complete frame with SIGCHLD ignored -> AUTHORIZED). Logs v1-run1.log, v1-run2.log.
   - launcher_v2.py (eec38a10…): EXIT 0 twice: 24 tests OK. With SIGCHLD ignored v2 refuses with "V2 child status unknown (ECHILD)" (it refuses the honest run too: fail closed). Logs v2-run1.log, v2-run2.log.
 - The image check with a wrong hash, the real refund program, code injected at load and the FFI C code are still NOT tested by C (C-1).
+
+## RE-RUN BY C (16:21:58Z) against B's minter rule 2 at 370ff65c (module orch-B/h-minter2/build/issueauth.cjs), NoStore mode (three minter arguments)
+Overlay <SCRATCH>/redteam-C/fix-370ff65c. Command form (cwd = overlay; C7_ROOT=<overlay> C7_CORE=<issueauth.cjs>): node --import tsx orch-C/c17-hminter/<script>.ts <work> <mode>. Logs orch-C/refix/370ff65c/.
+| Item | Script | Exit | Outcome | Verdict |
+|---|---|---|---|---|
+| C-ATT-29 honest stale retry of the same request id | f1_stale_retry.ts stale | 0 | the retry on the new state is signed and commits | PASS (closed in NoStore mode). In Store mode B KEEPS the refusal as specified behaviour: NOT tested by C yet |
+| C-ATT-30 squat with an invented pre-state | f2_squat.ts fake | 0 | squat token refused by the sink; the victim's request commits | PASS (closed in NoStore mode) |
+| C-ATT-30 squat on the REAL state with amount 0 | f2_squat.ts zero | 1 | victim refused: "other candidate: use a new request id" | STILL PRESENT; B states it as a limit (the issuer has no caller identity) |
+| C-ATT-31 foreign code via the tsx cache | f9_tsx_cache.ts | 1 | marker written; pinned identity unchanged | STILL PRESENT on the tsx start path; B says its closed launch is ts/refund-finality/launch/minter-launch.sh: NOT tested by C yet |
+| Minter decision | c7-minter/fuzz_diff.ts 2000 7 | 0 | 428 issued, 224 zero-amount, 208 full, 0 divergences | PASS (no false rejection) |
+| Key framing, strict UTF-8 | f6_key_framing.ts | 0 | 16 probes safe | PASS |
+| Replay | f3_replay_growth.ts (N not set by my command: 0) | 1 | replay byte-identical: true, true; the same request id on ANOTHER pre-state is now SIGNED (new bytes) | NOT a defect: my old expectation; rule 2 keys on the pre-state hash by design. Consequence to keep in mind: two signed tokens can exist for one request id (the sink's one-row-per-id rule must hold) |
+- Worker c24-minter2 started for Store mode, the closed launch script, and the assumption STORE-READ (a database writer steers the issuer).
+
+=========================================================================
+RE-ATTACK of B's SECOND sink hardening and dispatcher at 88ae6cbf (worker c21, fresh scripts) and of the dispatcher/judges at f08a21c1 (worker c19). C's own re-runs at 16:33:48Z; exit 1 = defect present.
+Commands: bash orch-C/c21-sink2/run.sh <script>.ts <work> <mode>   (cwd = overlay fix-88ae6cbf);   bash orch-C/c19-dispatch2/run.sh <abs script> <overlay fix-f08a21c1> <orch-B/h-minter/build/issueonce.cjs> <mode>. Logs orch-C/refix/88ae6cbf/C21-*.log and orch-C/refix/f08a21c1/C-*.log.
+NOTE: two earlier hand-runs of mine in this block gave "exit 1" from shell mistakes (zsh does not split an unquoted variable; one wrong script name). They were errors, not verdicts, and are replaced by the runs below.
+
+## CLOSED on 88ae6cbf (C's runs, exit 0):
+- C-ATT-24 old or middle row changed while the sink runs: a24_map.ts sqlrename 0, midswap 0 (the sink halts). C-ATT-25 D14 with the dispatcher's expectedHead: a25_anchor.ts d14-head 0 (without an anchor d14-none 1: B's stated limit). C-ATT-26 long intent: a26_bound.ts 0 (52 of 52 legal boundary cases commit and dispatch). C-ATT-23 hard link: a23_inode.ts hardlink 0. C-ATT-17 lock theft with fresh scripts: d17_lock.ts theft 0; c19 a2_lock_race.ts remove 0, deadpid 0. C-ATT-18: d17_lock.ts throw 0 (r1 reported in doubt); c19 a3_indoubt.ts kill 0.
+- Worker runs only (not re-run by C): honest fuzz on 88ae6cbf (204 issued = committed = dispatched, 135 zero-amount), APPEND-ATOMIC under real interleaving (holds on local APFS), B's run.ts 26 of 26, host CLI cases C-HOST-01..05, 07 fixed.
+
+## C-ATT-33 (16:33:48Z) an ordinary crash before COMMIT leaves B's hardened store unable to start, and Sink.recover refuses too — CONFIRMED, NEW, HIGH (false rejection; attacker: none)
+- A kill inside a write transaction leaves a `-journal` whose first bytes are zero (not a hot journal for SQLite, so it stays on disk). core/store.ts:194-197 refuses to start while any `-journal` exists; sink.ts:405 Sink.recover says "the journal is still present after the rollback". The store content is intact.
+- Repro: x1_crash_journal.ts <W> onhead -> EXIT 1 (start1 REFUSED "companion file(s) present"; recover refuses; start2 REFUSED); planted (a 512-byte zero file made by a party that can only create a file) -> EXIT 1; control -> EXIT 0. Worker: random kills, stuck after 4 and after 24 kills. SHA-256 412ff484ba2a6bd91419f00f832051496bfc7371557f3ce84fd91db703451d3e.
+- This is the fix for C-ATT-21 (planted journal) refusing honest crash states: it contradicts HARDENING_NOTES_2 section 2 ("crash before COMMIT -> starts").
+- Sent to B 16:33:48Z. Regression: PENDING.
+
+## C-ATT-34 (16:33:48Z) Sink.recover skips its "at most one row" check when the live file fails its audit — CONFIRMED, NEW (file writer without the key)
+- sink.ts:394. a21_files.ts <W> recover-deep -> EXIT 1: one byte of r3's token hash changed + a planted journal back to the state after r1; recover reports "recovered"; acknowledged r2 and r3 are gone. An outside head refuses it (worker). SHA-256 5be089e4…02bd.
+
+## C-ATT-35 (16:33:48Z) the per-write file check runs before BEGIN, not before COMMIT: a replaced inode inside a commit — CONFIRMED, NEW, LOW (needs rename rights in the database directory)
+- a23_inode.ts <W> swap-commit -> EXIT 1: r3 is acknowledged into an unlinked inode; a restart without an anchor serves the older head. SHA-256 731cd3bc…ac86.
+
+## C-ATT-36 (16:33:48Z) after an operator's "retry" decision, a restore of the ledger ALONE re-sends: 1200 on 1000; the witness and cfg.ledgerFloor do not see it — CONFIRMED, NEW, HIGH (attacker: none; target f08a21c1 dispatcher, unchanged at 88ae6cbf)
+- dispatcher.ts:230-236, :355: the witness and the floor keep only {n, rowHead}; a re-claim after resolveInDoubt(r1,"retry") changes neither. A backup taken between the decision and the re-claim, restored later, makes the slot "retry" again.
+- Repro: a1_retry_restore.ts attack -> EXIT 1 (effects r1, r1; total 1200); floor -> EXIT 1; control -> EXIT 0. SHA-256 in orch-C/c19-dispatch2.
+
+## C-ATT-37 (16:33:48Z) dispatcher path cases — CONFIRMED: a8_paths.ts link -> EXIT 1 (a hard link of the store + a new ledger with newLedgerH0 set: r1 twice; known class C-ATT-28); case -> EXIT 1 (the same ledger spelled in another letter case: every run stops until a person removes the witness: a false alarm, LOW).
+## C-ATT-19 full restore on f08a21c1: a7_full_restore.ts nofloor -> EXIT 1 (B's stated limit); floor -> EXIT 0.
+## Worker findings NOT re-run by C: short write of the lock or witness file not checked (c19 a6_fsize 60,130: fail closed, liveness); judges at cf242303: blindspots2.sh running in the background for C's re-run (worker: 9 of 12 mutants now caught; md_ignore_sig and the shared-encoding mutant still passed; a new evasion e_emit_twice_hidden2 passes both judges); the pre-lock window for a planted journal (1-2 of 60 starts without an anchor; B's stated limit).

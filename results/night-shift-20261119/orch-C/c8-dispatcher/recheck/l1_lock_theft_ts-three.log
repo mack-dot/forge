@@ -13,6 +13,6 @@ B blocked in emit(r2)
 A: {"name":"A","emitted":["r1"],"refused":[],"already":0}
 after A ended, lock present (B is still running): false
 C (no operator step): {"name":"C","emitted":["r3"],"refused":[],"already":2}
-B: {"name":"B","stopped":"ENOENT: no such file or directory, unlink '<REPO>/results/night-shift-20261119/orch-C/c8-dispatcher/recheck/work-l1_lock_theft_ts-three/dispatch-ledger.jsonl.lock'"}
+B: {"name":"B","stopped":"ENOENT: no such file or directory, unlink '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c8-dispatcher/recheck/work-l1_lock_theft_ts-three/dispatch-ledger.jsonl.lock'"}
 effects: A:r1 B:r2 C:r3 B:r3; total 1200 of 1000; duplicate ids: ["r3"]
 next run on the ledger: stopped: dispatcher ledger is not one chain

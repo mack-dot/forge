@@ -1,12 +1,12 @@
-# start=2026-11-19T14:42:55Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a2_brick.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/work/a2_brick-off off
+# start=2026-11-19T14:42:55Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a2_brick.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/work/a2_brick-off off
 (node:97866) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 Error: dispatcher alarm: the ledger is missing or empty but the store holds 1 committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0
-    at Dispatcher.flushLocked (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts:131:15)
-    at Dispatcher.flush (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts:90:23)
-    at Object.flush (<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/common.ts:29:108)
-    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a2_brick.ts:18:67)
+    at Dispatcher.flushLocked (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts:131:15)
+    at Dispatcher.flush (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts:90:23)
+    at Object.flush (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c4/common.ts:29:108)
+    at <anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a2_brick.ts:18:67)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 real 1.17
 user 0.36

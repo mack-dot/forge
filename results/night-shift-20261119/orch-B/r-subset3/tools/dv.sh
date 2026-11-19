@@ -2,7 +2,7 @@
 # Usage: dv3.sh SRC.dfy RUNNO [verify|translate]. Light tier (90 s) through dafny_locked.sh. Layout as impl/Refund.dfy.
 # Copy of r-subset2/tools/dv.sh with a source path. The work copy is removed after the run.
 set -u
-R=<REPO>; E=$R/results/night-shift-20261119/orch-B/r-subset3
+R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-B/r-subset3
 SRC=$1; K=$2; MODE=${3:-verify}; N=$(basename $SRC .dfy)
 W=$E/work/$N; rm -rf $W; mkdir -p $W/impl $W/spec/refund $W/gate/refund
 cp $R/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $R/gate/refund/Bindings.dfy $W/gate/refund/

@@ -5,12 +5,12 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-const T = "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality";
+const T = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality";
 /* eslint-disable @typescript-eslint/no-require-imports */
 const E = require(T + "/encoding.ts"), ST = require(T + "/core/store.ts");
 const [kase, sinkP, dispP] = process.argv.slice(2);
 const { Sink } = require(sinkP), { Dispatcher } = require(dispP);
-const { hostile } = require("<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/h.ts");
+const { hostile } = require("/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/h.ts");
 /* eslint-enable @typescript-eslint/no-require-imports */
 const K = generateKeyPairSync("ed25519"), F = generateKeyPairSync("ed25519");
 const pem = K.publicKey.export({ type: "spki", format: "pem" }) as string;
@@ -50,7 +50,7 @@ switch (kase) {
     const t = kase === "d_ignore_sig" ? tok(body(S1, "rq_2", "50"), F.privateKey) : tok(body(S0, "rq_2", "50"));
     const w = appendRow(t); const f: any = flush(); defect = effects.some(e => e.rid === "rq_2"); why = w + " " + JSON.stringify(f).slice(0, 160); break; }
   case "d_emit_before_ledger": { s.commit(tok(body(S0, "rq_1", "100"))); const f: any = flush(); defect = effects.some(e => !e.had); why = JSON.stringify(effects); break; }
-  case "d_emit_twice": { s.commit(tok(body(S0, "rq_1", "100"))); flush(); defect = effects.length !== 1; why = JSON.stringify(effects); break; }
+  case "d_emit_twice": { s.commit(tok(body(S0, "rq_1", "50"))); flush(); defect = effects.length !== 1; why = JSON.stringify(effects); break; }
   case "enc": { // a minter that shares the defective encoding signs only the REDUCED bytes; post and intent are then altered
     const b = body(S0, "rq_1", "0"); const red = Buffer.from(E.canon((({ post, intent, ...rest }: any) => rest)(b)), "utf8");
     const alt = { ...b, post: dec(S0, "900"), intent: { ...b.intent, amount: "900" } };

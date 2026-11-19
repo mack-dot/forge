@@ -1,6 +1,6 @@
 // Loads the Dafny 4.11 JS runtime prefix (orch-B copy) and checks Euclidean / and % against the Dafny definition.
 const fs = require('fs');
-const src = fs.readFileSync('<REPO>/results/night-shift-20261119/orch-B/e-subset3/js/runtime-prefix.js', 'utf8');
+const src = fs.readFileSync('/Users/mackianni/forge/results/night-shift-20261119/orch-B/e-subset3/js/runtime-prefix.js', 'utf8');
 const m = { exports: {} };
 new Function('require', 'module', 'exports', src + '\nmodule.exports = { _dafny, BigNumber };')(require, m, m.exports);
 const { _dafny, BigNumber } = m.exports;

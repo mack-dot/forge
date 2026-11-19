@@ -5,7 +5,7 @@ Nothing here is applied to the repository. Nothing here is executed by an agent 
 
 ## 1. The change (adoption-v6.diff)
 - File `p-adopt2/adoption-v6.diff`: 6731 lines, SHA-256 `0207444f1622d8542e6fd0fb86636bb9b102eb0b5015a0b63b6f88b2780d193d`.
-- `git -C <REPO> apply --check adoption-v6.diff`: exit 0 (check only). Protected or `clearing/` paths: 0.
+- `git -C /Users/mackianni/forge apply --check adoption-v6.diff`: exit 0 (check only). Protected or `clearing/` paths: 0.
   File list = full tree difference (`changed-files.txt`); applied to copies, it gives all 14 files byte for byte (make_diff_v6.sh).
 
 | File | Kind | SHA-256 (after) |
@@ -57,7 +57,7 @@ from `proposals/` or a copy; commit the generated .cjs; the "DRAFT" .dfy headers
 Earlier evidence (not repeated): heavy/v6-1/summary.txt (v6 draft vs compiled core: 0 divergences); d-v6sink logs; r-v6.
 
 ## 4. Heavy step for the orchestrator (prepared, NOT run)
-`<REPO>/results/night-shift-20261119/orch-B/p-adopt2/run_suite_v6.sh [N]`: refuses (64) while
+`/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/run_suite_v6.sh [N]`: refuses (64) while
 locks/hol.lock exists or `bin/hol` runs; takes no heavy.lock; `env -i`, Node 24.3.0; SUITE_TIMEOUT_S (default 1200 s)
 per run. Runs: pristine (p-adopt/pristine), export, x3probe (a measurement copy of suite.ts in suite-variant/: only the
 x3 audit row catches a refusal; its pass condition is unchanged; NOT in the diff; NO_PROBE=1 skips it). Writes

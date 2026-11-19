@@ -4,7 +4,7 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
-const SC = "<SCRATCH>/redteam-C";
+const SC = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C";
 /* eslint-disable @typescript-eslint/no-require-imports */
 const E = require(join(SC, "target-v6/ts/refund-finality/encoding.ts"));
 const V6 = require(join(SC, "target-v6/ts/refund-finality/sink.ts"));

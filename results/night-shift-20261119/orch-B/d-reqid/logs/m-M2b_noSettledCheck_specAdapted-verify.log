@@ -1,8 +1,8 @@
-# owner=d-reqid start=2026-11-19T07:51:46Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
+# owner=d-reqid start=2026-11-19T07:51:46Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1491
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M2b_noSettledCheck_specAdapted-verify.csv Mutant_M2b_noSettledCheck_specAdapted.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-reqid/logs/m-M2b_noSettledCheck_specAdapted-verify.csv Mutant_M2b_noSettledCheck_specAdapted.dfy
 Mutant_M2b_noSettledCheck_specAdapted.dfy(180,24): Error: a postcondition could not be proved on this return path
     |
 180 |     if r.out.Committed? {
@@ -70,7 +70,7 @@ Mutant_M2b_noSettledCheck_specAdapted.dfy(541,50): Error: assertion might not ho
 
 
 Dafny program verifier finished with 70 verified, 11 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/d-reqid/logs/m-M2b_noSettledCheck_specAdapted-verify.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/d-reqid/logs/m-M2b_noSettledCheck_specAdapted-verify.csv
         7.48 real         7.04 user         0.44 sys
            179847168  maximum resident set size
                    0  average shared memory size

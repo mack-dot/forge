@@ -15,7 +15,7 @@ if (mode === "text") {
 }
 if (mode === "issue") {
   const core = require(ib), F = core.RefundFinality, R = core.Refund, I = core.IssueBytes2, tx = s => core.runtime.Seq.UnicodeFromString(s);
-  const BN = require(require.resolve("bignumber.js", { paths: ["<REPO>"] }));
+  const BN = require(require.resolve("bignumber.js", { paths: ["/Users/mackianni/forge"] }));
   const n = Number(arg), id = "c".repeat(n);
   try {
     const ch = (r) => F.Charge.create_Charge(tx(id), new BN(100), new BN(r), true);

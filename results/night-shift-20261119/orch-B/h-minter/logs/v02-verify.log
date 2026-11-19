@@ -1,8 +1,8 @@
-# owner=h-minter start=2026-11-19T14:37:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
+# owner=h-minter start=2026-11-19T14:37:57Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
 # power: Now drawing from 'AC Power'
 # swap free MiB: 609
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v02-verify.csv IssueOnce.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/logs/v02-verify.csv IssueOnce.dfy
 # memory free percent: 29
 IssueOnce.dfy(119,9): Error: Verification out of resource (IssueOnce.RunSeq)
     |
@@ -19,7 +19,7 @@ IssueOnce.dfy(213,24): Related location: this is the postcondition that could no
 213 |     ensures F.Authorizes(W_PRE, IB.T(W_PRE, rq, amount))
     |                         ^
 
-<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/tree/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
    |
 31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
    |               ^
@@ -66,7 +66,7 @@ IssueOnce.dfy(185,27): Related location: this is the precondition that could not
 
 
 Dafny program verifier finished with 153 verified, 5 errors, 1 out of resource
-Results File: <REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v02-verify.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/logs/v02-verify.csv
        56.08 real        12.05 user         2.68 sys
            180469760  maximum resident set size
                    0  average shared memory size

@@ -1,0 +1,2 @@
+{"mode":"two-writers","c1":"committed","c2":"committed","c3":"committed","f":{"emitted":["r1","z","r2"],"refused":[],"already":0},"bCommit":"committed","aCommit":{"status":"rejected","reason":"sink halted: another writer changed the store and the change is not an append of audit-passing rows (cfg.outsideHead: single writer)"},"aRestart":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: the stored head 4 is not the outs","outbox":["r1","z","r2","rb"],"defect":false}
+exit=0

@@ -81,8 +81,8 @@ import { createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
 import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeSync } from "node:fs";
 import { hostname } from "node:os";
 import { DatabaseSync } from "node:sqlite";
-import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/encoding";
-import { AuditedRow, StoreAuditor, conv, loadCore, readMeta, validInitial } from "<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/md_ignore_chain/store";
+import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/ts/refund-finality/encoding";
+import { AuditedRow, StoreAuditor, conv, loadCore, readMeta, validInitial } from "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/md_ignore_chain/store";
 
 // newLedgerH0 (optional): the registered h_0 of the store (sink.ts genesisOf). A missing or empty ledger is an ERROR when
 // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").

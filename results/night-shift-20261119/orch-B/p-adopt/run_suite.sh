@@ -11,8 +11,8 @@
 # Usage: run_suite.sh [N]   (N = attempt number; default: the next free one). Exit: 0 both suites exit 0;
 #        1 a suite failed (see summary); 64 refused (HOL lock or process); 65 setup problem.
 set -u
-P=<REPO>/results/night-shift-20261119/orch-B/p-adopt
-LOCKS=<REPO>/results/night-shift-20261119/locks
+P=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt
+LOCKS=/Users/mackianni/forge/results/night-shift-20261119/locks
 TMO=${SUITE_TIMEOUT_S:-1200}
 if [ -e "$LOCKS/hol.lock" ] || pgrep -f 'bin/hol' >/dev/null; then echo "refused: hol.lock exists or a HOL process runs"; exit 64; fi
 N=${1:-$(( $(ls -d $P/suite/attempt-* 2>/dev/null | sed 's/.*attempt-//' | sort -n | tail -1) + 1 ))}

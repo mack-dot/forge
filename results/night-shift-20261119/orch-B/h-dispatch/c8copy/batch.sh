@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage: batch.sh <base|tree> <prefix>: runs the four C scripts (copies) with all modes; one log per run.
-D=<REPO>/results/night-shift-20261119/orch-B/h-dispatch
+D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch
 T=$1; P=$2
 [ -n "$T" ] && [ -n "$P" ] || exit 2
 mkdir -p "$D/work" "$D/logs"

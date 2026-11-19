@@ -5,9 +5,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 export const ROOT = process.env.C7_ROOT ||
-  "<SCRATCH>/redteam-C/fix-608b5165";
+  "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-608b5165";
 export const CORE = process.env.C7_CORE ||
-  "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+  "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
 export const SPEC_LOCK = join(ROOT, "spec/refund/spec.lock");
 export const sha = (b: string | Buffer) => createHash("sha256").update(b).digest("hex");
 

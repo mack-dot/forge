@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "fake cut ran in the LAUNCH SHELL (pid $$), not in node" > /Users/mackianni/forge/results/night-shift-20261119/orch-C/c24-minter2/markers/shell-cut-$$
+exec /usr/bin/cut "$@"

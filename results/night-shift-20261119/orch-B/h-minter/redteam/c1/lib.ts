@@ -1,9 +1,9 @@
 // c1-concurrency helper: paths into the read-only target-v6 checkout; throwaway minter keys only.
 import { join } from "node:path";
-export const ROOT = "<REPO>/results/night-shift-20261119/orch-B/h-minter/tree-v6";
-export const CORE = "<REPO>/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
+export const ROOT = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/tree-v6";
+export const CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/build/issueonce.cjs";
 export const SPEC = join(ROOT, "spec/refund/spec.lock");
-export const EVID = "<REPO>/results/night-shift-20261119/orch-B/h-minter/redteam/c1";
+export const EVID = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter/redteam/c1";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 // eslint-disable-next-line @typescript-eslint/no-require-imports

@@ -1,0 +1,1 @@
+require("fs").writeFileSync(process.env.C24_MARK || "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c24-minter2/markers/node-" + process.pid, "foreign code ran in pid " + process.pid + "\n");

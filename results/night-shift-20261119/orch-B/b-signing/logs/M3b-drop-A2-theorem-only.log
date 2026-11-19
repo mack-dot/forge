@@ -1,8 +1,8 @@
-# owner=b-signing start=2026-11-19T08:00:41Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing/controls/M3b-drop-A2-theorem-only
+# owner=b-signing start=2026-11-19T08:00:41Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-signing/controls/M3b-drop-A2-theorem-only
 # power: Now drawing from 'AC Power'
 # swap free MiB: 588
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/b-signing/logs/M3b-drop-A2-theorem-only.csv SliceSafetyV2.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-signing/logs/M3b-drop-A2-theorem-only.csv SliceSafetyV2.dfy
 SliceSafetyV2.dfy(329,8): Error: Verification out of resource (SliceTheoremV2.PerEntryV2)
     |
 329 |   lemma PerEntryV2(init: State, acts: seq<Act>, art: FlatFn, i: int)
@@ -18,14 +18,14 @@ SliceSafetyV2.dfy(267,31): Related location: this is the precondition that could
 267 |     requires A2_MintOnlyOnCheck(acts) && A5_VerifierMatchesAtEachDelivery(acts) && H1_SignatureAuthenticity(acts)
     |                                ^
 
-<REPO>/results/night-shift-20261119/orch-B/b-signing/inputs/SliceTheorem.dfy(128,4): Related location: this proposition could not be proved
+/Users/mackianni/forge/results/night-shift-20261119/orch-B/b-signing/inputs/SliceTheorem.dfy(128,4): Related location: this proposition could not be proved
     |
 128 |     forall k | 0 <= k < |acts| && acts[k].MintAct? && Ours(acts[k].c) ::
     |     ^^^^^^
 
 
 Dafny program verifier finished with 50 verified, 1 error, 1 out of resource
-Results File: <REPO>/results/night-shift-20261119/orch-B/b-signing/logs/M3b-drop-A2-theorem-only.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/b-signing/logs/M3b-drop-A2-theorem-only.csv
        14.24 real        11.23 user         0.85 sys
            281051136  maximum resident set size
                    0  average shared memory size

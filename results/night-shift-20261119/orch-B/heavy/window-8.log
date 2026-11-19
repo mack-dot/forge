@@ -1,9 +1,9 @@
 # start 2026-11-19T13:05:00Z swap free 1169 MiB memory free 65 % disk 92 GiB
-# pristine start=2026-11-19T13:05:01Z tree=<REPO>/results/night-shift-20261119/orch-B/p-adopt/pristine suite=tests/refund-finality/suite.ts module=<REPO>/results/night-shift-20261119/orch-B/p-adopt/build/pristine-core/model.cjs timeout=600s
+# pristine start=2026-11-19T13:05:01Z tree=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/pristine suite=tests/refund-finality/suite.ts module=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/build/pristine-core/model.cjs timeout=600s
 # pristine end=2026-11-19T13:05:23Z exit 0
-# export start=2026-11-19T13:05:23Z tree=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export suite=tests/refund-finality/suite.ts module=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/build/issuer/model.cjs timeout=600s
+# export start=2026-11-19T13:05:23Z tree=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/export suite=tests/refund-finality/suite.ts module=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/build/issuer/model.cjs timeout=600s
 # export end=2026-11-19T13:05:36Z exit 2
-# x3probe start=2026-11-19T13:05:36Z tree=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export suite=tests/refund-finality/suite_x3probe.ts module=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/build/issuer/model.cjs timeout=600s
+# x3probe start=2026-11-19T13:05:36Z tree=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/export suite=tests/refund-finality/suite_x3probe.ts module=/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/build/issuer/model.cjs timeout=600s
 # x3probe end=2026-11-19T13:05:59Z exit 1
 pristine exit 0 counts {"rows": 115, "failed": 0, "control_a_rows": 42, "control_b_rows": 8, "control_c_rows": 13, "control_d_rows": 9, "issuer_rows": 29, "dispatcher_rows": 11, "rejection_attempts": 48, "effects_of_rejection_attempts": 0, "rejection_attempts_that_ask_for_an_effect": 42} ids {"core_module_sha256": "e6d5f5e54405f2767de59e054c329b86fc5d769c873c055c08780e89fbd906ce", "spec_lock_sha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b", "checker_sha256": "f42af94e32b2cb394c6a80a5013c2beadcb977ef9ca1814a97c5b0d2470520d8"}
 export exit 2 counts NO REPORT ids 

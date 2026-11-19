@@ -29,7 +29,7 @@ test_nonzero_exit_status_after_a_complete_frame_is_refused (__main__.ProcessLife
 FAIL: test_abort_after_a_complete_frame_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "<REPO>/results/night-shift-20261119/orch-C/c22-launch-conformance/test_process_lifecycle.py", line 177, in test_abort_after_a_complete_frame_is_refused
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c22-launch-conformance/test_process_lifecycle.py", line 177, in test_abort_after_a_complete_frame_is_refused
     self.assertEqual(L.decide_from_result(REQUEST, r)[0], 'REFUSED', 'launcher result: %r' % (r,))
 AssertionError: 'AUTHORIZED' != 'REFUSED'
 - AUTHORIZED
@@ -40,7 +40,7 @@ AssertionError: 'AUTHORIZED' != 'REFUSED'
 FAIL: test_nonzero_exit_status_after_a_complete_frame_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "<REPO>/results/night-shift-20261119/orch-C/c22-launch-conformance/test_process_lifecycle.py", line 173, in test_nonzero_exit_status_after_a_complete_frame_is_refused
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-C/c22-launch-conformance/test_process_lifecycle.py", line 173, in test_nonzero_exit_status_after_a_complete_frame_is_refused
     self.assertEqual(L.decide_from_result(REQUEST, r)[0], 'REFUSED', 'launcher result: %r' % (r,))
 AssertionError: 'AUTHORIZED' != 'REFUSED'
 - AUTHORIZED

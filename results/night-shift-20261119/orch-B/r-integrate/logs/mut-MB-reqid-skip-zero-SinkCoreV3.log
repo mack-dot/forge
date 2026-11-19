@@ -1,8 +1,8 @@
-# owner=r-integrate start=2026-11-19T09:11:50Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-integrate/mut/MB-reqid-skip-zero
+# owner=r-integrate start=2026-11-19T09:11:50Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-integrate/mut/MB-reqid-skip-zero
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1711
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MB-reqid-skip-zero-SinkCoreV3.csv SinkCoreV3.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MB-reqid-skip-zero-SinkCoreV3.csv SinkCoreV3.dfy
 # memory free percent: 67
 SinkCoreV3.dfy(280,80): Error: assertion might not hold
     |
@@ -11,7 +11,7 @@ SinkCoreV3.dfy(280,80): Error: assertion might not hold
 
 
 Dafny program verifier finished with 69 verified, 1 error
-Results File: <REPO>/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MB-reqid-skip-zero-SinkCoreV3.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-integrate/logs/mut-MB-reqid-skip-zero-SinkCoreV3.csv
         5.42 real         5.33 user         0.29 sys
            203194368  maximum resident set size
                    0  average shared memory size

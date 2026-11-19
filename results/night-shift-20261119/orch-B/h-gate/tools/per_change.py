@@ -3,8 +3,8 @@ were RUN: source scope (tools/scope_check.py on the variant's text, MACHINE) and
 the JS checker on the file's translation (results/check-none.jsonl, MACHINE). Dafny verification and the test
 tier are NOT RUN here (heavy/gate_jsbound.sh). Writes PER_CHANGE.md."""
 import json, subprocess, os
-H = '<REPO>/results/night-shift-20261119/orch-B/h-gate'
-NS = '<REPO>/results/night-shift-20261119'
+H = '/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-gate'
+NS = '/Users/mackianni/forge/results/night-shift-20261119'
 L3 = [l.split() for l in open(NS + '/orch-B/e-subset3/heavy/list3.txt')]
 correct67 = [p for c, p in L3 if c.startswith('correct')]
 fr10 = sorted(NS + '/orch-C/c5-gate/fr/' + f for f in os.listdir(NS + '/orch-C/c5-gate/fr') if f.endswith('.dfy')) + [H + '/subs/c13/G11-digit-separator-cap.dfy']

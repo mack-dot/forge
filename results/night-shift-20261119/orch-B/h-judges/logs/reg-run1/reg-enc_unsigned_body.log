@@ -1,10 +1,10 @@
-# 2026-11-19T15:01:05Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/sink.ts <REPO>/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/dispatcher.ts --expect-fail X6-Z1-zero-row-deleted-recommitted
+# 2026-11-19T15:01:05Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts /Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/sink.ts /Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/dispatcher.ts --expect-fail X6-Z1-zero-row-deleted-recommitted
 Now drawing from 'AC Power'
-# judge=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
-# sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/sink.ts sha256=1ba4682b7a979fa7dd5aaff239628ac7960d82c28a13b458de094670a29fbd14
-# dispatcher=<REPO>/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/dispatcher.ts sha256=5cecfd775a10d6da49a21ef3360ccfc8277e59aafb7be3a066b606a2a193836e
-# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
-# encoding next to the sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/encoding.ts sha256=bf30ddab8e01e647b857582137072c24d520aec8a0a70f39d25b2561f54e44f2
+# judge=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
+# sink=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/sink.ts sha256=1ba4682b7a979fa7dd5aaff239628ac7960d82c28a13b458de094670a29fbd14
+# dispatcher=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/dispatcher.ts sha256=5cecfd775a10d6da49a21ef3360ccfc8277e59aafb7be3a066b606a2a193836e
+# trusted encoding=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=/Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/encoding.ts sha256=bf30ddab8e01e647b857582137072c24d520aec8a0a70f39d25b2561f54e44f2
 # expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=X6-Z1-zero-row-deleted-recommitted
 FAIL C1-honest-refund: commit=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
 FAIL C2-zero-amount-refund: commit=rejected rq_z: outbox=0 effects=0 (want 1 and 1)
@@ -30,7 +30,7 @@ FAIL K7-store-survives-reopen: setup: honest commits refused: rejected,rejected,
 FAIL D1-dispatcher-bad-signature-row: setup: honest rq_1 refused: rejected
 FAIL D2-dispatcher-chain-break-row: setup: honest rq_1 refused: rejected
 FAIL D3-dispatcher-ledger-before-emit: setup: honest commits refused: rejected,rejected,rejected
-FAIL E0-encoding-identity: FOREIGN ENCODING: <REPO>/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/encoding.ts sha256 bf30ddab8e01e647 differs from the trusted f96086b1838163e3
+FAIL E0-encoding-identity: FOREIGN ENCODING: /Users/mackianni/forge/results/night-shift-20261119/orch-C/c10-judges/enc/ts/refund-finality/encoding.ts sha256 bf30ddab8e01e647 differs from the trusted f96086b1838163e3
 FAIL E1-signed-bytes-cover-post-intent: ALTERED POST/INTENT COMMITTED (sink's encoding): NEIGHBOR SIGNED BYTES OMIT post/intent; altered token signed over them: committed
 # verdicts=26/26 PASS=1 KNOWN-LIMIT=0 FAIL=25 [C1-honest-refund,C2-zero-amount-refund,C3-two-zero-refunds,C4-replay-rejected,C5-largest-refund,X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted,X6-P1-prefix-rollback,K1-foreign-key-signature,K2-noncanonical-text,K3-stale-prestate,K4-replay-status,K5-long-and-unicode-ids,K6-long-run-one-store,K7-store-survives-reopen,D1-dispatcher-bad-signature-row,D2-dispatcher-chain-break-row,D3-dispatcher-ledger-before-emit,E0-encoding-identity,E1-signed-bytes-cover-post-intent]
 # unexpected FAIL=[C1-honest-refund,C2-zero-amount-refund,C3-two-zero-refunds,C4-replay-rejected,C5-largest-refund,X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-P1-prefix-rollback,K1-foreign-key-signature,K2-noncanonical-text,K3-stale-prestate,K4-replay-status,K5-long-and-unicode-ids,K6-long-run-one-store,K7-store-survives-reopen,D1-dispatcher-bad-signature-row,D2-dispatcher-chain-break-row,D3-dispatcher-ledger-before-emit,E0-encoding-identity,E1-signed-bytes-cover-post-intent] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]

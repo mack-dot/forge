@@ -1,5 +1,5 @@
 {"status":"committed","onTime":false}
-run1 rc=3 {"status":"emit-failed","stopped":"ENOENT: no such file or directory, open '<REPO>/results/night-shift-20261119/orch-B/h-dispatch/work/c11-tree/h1-emitfail/no-such-dir/effects.jsonl'","emitted":0,"emittedIds":[],"onTime":false}
+run1 rc=3 {"status":"emit-failed","stopped":"ENOENT: no such file or directory, open '/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-dispatch/work/c11-tree/h1-emitfail/no-such-dir/effects.jsonl'","emitted":0,"emittedIds":[],"onTime":false}
 retry rc=4 {"status":"in-doubt","emitted":0,"emittedIds":[],"refused":[{"seq":1,"requestId":"rq_a","reason":"in doubt: claimed by run e6389792c35798ee0b2dbd4994fde19d (pid 78886) and its emit threw; not counted as dispatched; a person must ask the receiver and call resolveInDoubt"}],"alreadyDispatched":0,"inDoubt":["rq_a"],"ledgerHead":{"n":1,"rowHead":"f8cb83e656f3a44ac3af491e8c6563d52da985dc595e18bb36c9a794e014948a"},"staleLockTakenOver":null,"onTime":false}
 ledger lines:        2
 effects lines:        0

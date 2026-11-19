@@ -1,5 +1,5 @@
-# start=2026-11-19T14:42:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 1 3
+# start=2026-11-19T14:42:10Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/ddl 1 3
 PASS K=1 child: killed-at 1 CREATE TABLE meta(id INTEGER PRIMARY KEY (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
 PASS K=2 child: killed-at 2 PRAGMA busy_timeout = 30000 (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
 PASS K=3 child: killed-at 3 BEGIN IMMEDIATE (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed

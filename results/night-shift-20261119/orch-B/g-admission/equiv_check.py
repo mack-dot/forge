@@ -1,7 +1,7 @@
 """Bounded check: survivors M06, M07, M12 give the same decision as the original on enumerated inputs."""
 import importlib.util, itertools, sys
 sys.dont_write_bytecode = True
-sys.path.insert(0, '<REPO>/gate')
+sys.path.insert(0, '/Users/mackianni/forge/gate')
 def load(p, n):
     s = importlib.util.spec_from_file_location(n, p); m = importlib.util.module_from_spec(s); s.loader.exec_module(m); return m
 orig = load(sys.argv[1], 'o')

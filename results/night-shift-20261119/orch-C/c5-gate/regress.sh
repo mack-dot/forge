@@ -9,7 +9,7 @@
 #    later in main(); no re-check of the snapshotted bytes follows. Static order check.
 set -u
 E=$(cd "$(dirname "$0")" && pwd)
-RULE=${1:-<REPO>/results/night-shift-20261119/orch-B/e-subset3/subset_rule3.py}
+RULE=${1:-/Users/mackianni/forge/results/night-shift-20261119/orch-B/e-subset3/subset_rule3.py}
 GATE=${2:-$E/gatecopy/refund.py}
 PY=/usr/local/bin/python3.10
 defect=0

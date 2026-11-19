@@ -2,7 +2,7 @@
 Check (dafny_side2.cjs, no stand-in) or a forced accept-all checker (models a miscompiled Check)."""
 import dataclasses, importlib.util, json, os, subprocess, sys, unicodedata
 X = os.path.dirname(os.path.abspath(__file__))
-CORE = '<REPO>/results/night-shift-20261119/orch-B/d-corebacked/build/shellcore-orig.cjs'
+CORE = '/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked/build/shellcore-orig.cjs'
 PIN = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
 MAX = 9223372036854775807
 def load(n, p):

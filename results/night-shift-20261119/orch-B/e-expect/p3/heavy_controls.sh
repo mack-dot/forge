@@ -10,10 +10,10 @@
 # EXPECTED outcome is ACCEPTED (the harness never reaches the key): that is the point of the control — a
 # timeout bounds the gate run, not the admitted program on rare inputs. Record the actual result either way.
 set -u
-R=<REPO>
+R=/Users/mackianni/forge
 E=$R/results/night-shift-20261119/orch-B/e-expect
 L=$R/results/night-shift-20261119/locks
-W=${HEAVY_WT:-<SCRATCH>/e-expect-heavy}
+W=${HEAVY_WT:-/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/e-expect-heavy}
 PY=/usr/local/bin/python3.10            # pinned 3.10.11; the gate checks its digest
 SUBS="$R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E06-stack-overflow-keyed.dfy
 $R/proposals/m1b-mission-20261119/drafts/expect-rule/subs/E07-oom-keyed.dfy

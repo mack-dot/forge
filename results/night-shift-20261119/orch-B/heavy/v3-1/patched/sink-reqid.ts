@@ -19,7 +19,7 @@
 // One database holds one charge.
 import { createPublicKey, verify, KeyObject } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
-import { ChargeState, Token, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "<REPO>/ts/refund-finality/encoding";
+import { ChargeState, Token, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "/Users/mackianni/forge/ts/refund-finality/encoding";
 
 const MAX_TOKEN_TEXT = 8192;
 

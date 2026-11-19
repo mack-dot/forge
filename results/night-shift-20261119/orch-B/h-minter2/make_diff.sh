@@ -1,6 +1,6 @@
 #!/bin/bash
 # h-minter2: build h-minter2.diff (owned paths only) between pristine/ (export of f08a21c1) and tree/.
-H=<REPO>/results/night-shift-20261119/orch-B/h-minter2; cd $H || exit 1
+H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter2; cd $H || exit 1
 FILES="ts/refund-finality/minter.ts ts/refund-finality/launch/minter-build.sh ts/refund-finality/launch/minter-launch.sh impl/finality-core/IssueAuth.dfy $(cd tree && ls tests/refund-finality/regress/m2_*.ts)"
 : > h-minter2.diff
 for f in $FILES; do

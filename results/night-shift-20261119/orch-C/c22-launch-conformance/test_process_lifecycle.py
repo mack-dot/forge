@@ -27,7 +27,7 @@ import tempfile
 import unittest
 
 # The launcher file under test. Default: launcher.py. Set C22_LAUNCHER to test another version (launcher_v2.py).
-LAUNCHER = os.environ.get('C22_LAUNCHER', '<REPO>/results/night-shift-20261119/orch-A/launch/launcher.py')
+LAUNCHER = os.environ.get('C22_LAUNCHER', '/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/launcher.py')
 _spec = importlib.util.spec_from_file_location('launcher_under_test', LAUNCHER)
 L = importlib.util.module_from_spec(_spec)
 sys.dont_write_bytecode = True

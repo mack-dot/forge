@@ -1,0 +1,4 @@
+(node:8515) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"rollback","rq1":"committed","flush1":{"emitted":["rq_1"],"refused":[]},"minterOnWritersState":"SIGNED rq_2 amount 1000 on remaining 1000","restartedSink":"started","restartedCommit":{"status":"committed","head":{"count":1,"chainHash":"d185d4c964b6b27ab9b88b67e9031d5df99b5fe5940d36cbafe3c04963f58c98"}},"flush2":"dispatcher threw: dispatcher alarm: the sink's rows 1..1 do not chain to the ledger's claims (rollback or rewrite of the sink's store); nothing sent","effects":["rq_1"],"totalOut":1000}
+SAFE (exit 0)

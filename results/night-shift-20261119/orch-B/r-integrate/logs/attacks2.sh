@@ -1,6 +1,6 @@
 #!/bin/bash
-O=<REPO>/results/night-shift-20261119/orch-B
-D=$O/r-integrate; W=$D/work; Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+O=/Users/mackianni/forge/results/night-shift-20261119/orch-B
+D=$O/r-integrate; W=$D/work; Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G="--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects"
 $O/tools/dafny_locked.sh r-integrate $W $D/logs/translate-js-AuditCompile-02.log 90 translate js $G --output $W/js-out/AuditCompile AuditCompile.dfy >/dev/null 2>&1
 echo "translate js AuditCompile: $(grep finished $D/logs/translate-js-AuditCompile-02.log) $(tail -1 $D/logs/translate-js-AuditCompile-02.log)"

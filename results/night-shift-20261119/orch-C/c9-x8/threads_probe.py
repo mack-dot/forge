@@ -2,7 +2,7 @@
 Spawn the real refund executable blocked in read(0); count its threads with ps -M; then finish the run.
 Exit 1 if more than one thread is seen (A-SINGLE-THREAD premise false as stated); 0 otherwise."""
 import hashlib, subprocess, sys, time
-EXE = '<REPO>/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
+EXE = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
 assert hashlib.sha256(open(EXE, 'rb').read()).hexdigest().startswith('b8ed5ec2')
 ENV = {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'CML_HEAP_SIZE': '256', 'CML_STACK_SIZE': '256'}
 p = subprocess.Popen([EXE], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENV)

@@ -6,7 +6,7 @@ sys.dont_write_bytecode = True
 E = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(E))
 from subset_rule import rule, straight_line_subset, Rejected
-R = Path('<REPO>')
+R = Path('/Users/mackianni/forge')
 P1 = json.loads((E.parent / 'e-expect/p1/part1_results.json').read_text())
 rows = []
 def bound(data):

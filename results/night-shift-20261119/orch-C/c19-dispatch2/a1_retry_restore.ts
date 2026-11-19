@@ -6,7 +6,7 @@
 // "control": no restore. Exit 1 = some request id emitted twice (defect), 0 = safe.
 import { copyFileSync } from "node:fs";
 import { join } from "node:path";
-import { argv, dups, guard, total, verdict, world } from "<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
+import { argv, dups, guard, total, verdict, world } from "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-f08a21c1/tests/refund-finality/regress/d_lib";
 const mode = process.argv[4] ?? "attack";
 guard((async () => {
   const { root, core } = argv();

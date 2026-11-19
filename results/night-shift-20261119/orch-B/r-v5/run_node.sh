@@ -1,6 +1,6 @@
 #!/bin/bash
 # r-v5: single short Node runs (pinned Node 24.3.0, env -i, HOME = this folder). Usage: run_node.sh <logname> <script> <args...>
-W=<REPO>/results/night-shift-20261119/orch-B/r-v5; R=<REPO>
+W=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-v5; R=/Users/mackianni/forge
 export PATH=/opt/homebrew/bin:/usr/bin:/bin
 [ "$(node --version)" = "v24.3.0" ] || { echo "not the pinned Node"; exit 2; }
 [ -e $R/results/night-shift-20261119/locks/hol.lock ] && { echo "hol.lock exists"; exit 3; }

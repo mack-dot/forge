@@ -4,7 +4,7 @@
 #        lock (a lock file left by a killed run), chain (dispatcher ledger is not one chain), refused (a pinned id is wrong:
 #        every row refused; the CLI prints only the emitted count).
 # Usage: bash h1_dispatch_exit.sh <case>
-unset GH_TOKEN GITHUB_TOKEN; source <REPO>/results/night-shift-20261119/orch-C/c11-host/env.sh
+unset GH_TOKEN GITHUB_TOKEN; source /Users/mackianni/forge/results/night-shift-20261119/orch-C/c11-host/env.sh
 C=$1; W=$E/w/h1-$C
 tsrun $E/setup.ts $T $CORE $W two >/dev/null 2>&1 || { echo "setup failed"; exit 3; }
 tsrun tests/refund-finality/commit_cli.ts $W/sink.sqlite $W/sink-config.json $W/t0.token 0 2>/dev/null

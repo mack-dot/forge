@@ -1,12 +1,12 @@
-# owner=d-minter start=2026-11-19T09:53:21Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-minter/src
+# owner=d-minter start=2026-11-19T09:53:21Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/src
 # power: Now drawing from 'AC Power'
 # swap free MiB: 747
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-minter/logs/v05-verify.csv IssueBytes2.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/logs/v05-verify.csv IssueBytes2.dfy
 # memory free percent: 32
 
 Dafny program verifier finished with 131 verified, 0 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/d-minter/logs/v05-verify.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/d-minter/logs/v05-verify.csv
         8.93 real         7.06 user         0.68 sys
            182091776  maximum resident set size
                    0  average shared memory size

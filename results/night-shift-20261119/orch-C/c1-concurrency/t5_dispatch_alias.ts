@@ -20,7 +20,7 @@ import { E, EVID, S0, Sink, minter } from "./lib";
     symlinkFile: d => { symlinkSync(join(d, "ledger.jsonl"), join(d, "alias.jsonl")); return [join(d, "ledger.jsonl"), join(d, "alias.jsonl")]; },
     symlinkDir: d => { symlinkSync(d, d + "-ln"); return [join(d, "ledger.jsonl"), join(d + "-ln", "ledger.jsonl")]; },
     caseName: d => [join(d, "ledger.jsonl"), join(d, "LEDGER.JSONL")],
-    caseDir: d => [join(d, "ledger.jsonl"), join(d.toUpperCase().replace("/USERS/MACKIANNI", "<HOME>"), "ledger.jsonl")],
+    caseDir: d => [join(d, "ledger.jsonl"), join(d.toUpperCase().replace("/USERS/MACKIANNI", "/Users/mackianni"), "ledger.jsonl")],
     firmlink: d => [join(d, "ledger.jsonl"), "/System/Volumes/Data" + join(d, "ledger.jsonl")],
     hardlinkKNOWN: d => { writeFileSync(join(d, "ledger.jsonl"), ""); linkSync(join(d, "ledger.jsonl"), join(d, "hl.jsonl")); return [join(d, "ledger.jsonl"), join(d, "hl.jsonl")]; },
   };

@@ -1,8 +1,8 @@
 export bytes 3622 sha256 e7d81ba32fee59bb1b706b1985c0b8ac1dba63eda4a9b6006049a37b419b5495
 Traceback (most recent call last):
-  File "<REPO>/results/night-shift-20261119/orch-B/r-export/w/gen_exported.py", line 276, in <module>
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-export/w/gen_exported.py", line 276, in <module>
     sys.exit(main())
-  File "<REPO>/results/night-shift-20261119/orch-B/r-export/w/gen_exported.py", line 160, in main
+  File "/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-export/w/gen_exported.py", line 160, in main
     text = data.decode("ascii")  # fail closed on non-ASCII
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 1045: ordinal not in range(128)
 exit 1

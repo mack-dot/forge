@@ -1,8 +1,8 @@
-# owner=d-v5sink start=2026-11-19T11:28:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# owner=d-v5sink start=2026-11-19T11:28:53Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink/dafny
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1541
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_NoAuthorizes.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_NoAuthorizes.dfy
 # memory free percent: 48
 Mutant_NoAuthorizes.dfy(238,24): Error: assertion might not hold
     |

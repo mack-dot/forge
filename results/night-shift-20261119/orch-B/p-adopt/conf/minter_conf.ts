@@ -5,11 +5,11 @@ import { spawn, ChildProcessWithoutNullStreams } from "node:child_process";
 import { createPublicKey, verify } from "node:crypto";
 import { writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { canon, isToken, signedBytes, signatureBytes } from "<REPO>/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/encoding";
-import { Sink } from "<REPO>/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/sink";
-import { propose } from "<REPO>/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/proposer";
+import { canon, isToken, signedBytes, signatureBytes } from "/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/encoding";
+import { Sink } from "/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/sink";
+import { propose } from "/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/export/ts/refund-finality/proposer";
 
-const ROOT = "<REPO>/results/night-shift-20261119/orch-B/p-adopt/export";
+const ROOT = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/export";
 const [corePath, specLockPath, outPath] = process.argv.slice(2);
 
 type Answer = { line: string; msg: any };
@@ -103,7 +103,7 @@ cases.push({ name: "shape:extra-top", body: { pre: st("ch_1", "100", "60"), tran
 
 // ---------------------------------------------------------------- run
 (async () => {
-  const real = await Client.start("<REPO>/results/night-shift-20261119/orch-B/p-adopt/pristine/ts/refund-finality/minter.ts");
+  const real = await Client.start("/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/pristine/ts/refund-finality/minter.ts");
   const draft = await Client.start(join(ROOT, "ts/refund-finality/minter.ts"));
   const realKey = createPublicKey(real.ready.publicKeyPem), draftKey = createPublicKey(draft.ready.publicKeyPem);
   const draftCfg = { publicKeyPem: draft.ready.publicKeyPem, specLockSha256: draft.ready.specLockSha256, checkerSha256: draft.ready.checkerSha256 };

@@ -10,13 +10,13 @@ open exactly while its id is not settled in the sink for that charge); POST-RULE
 by the amount and changes nothing else). Zero-amount refunds are legitimate and must keep succeeding.
 
 How code reaches the branch: you do NOT commit. You work in a SMALL scratch export inside your evidence directory:
-  mkdir -p <your dir>/tree && git -C <REPO> archive nightshift/B-trust ts tests impl scripts spec interop \
+  mkdir -p <your dir>/tree && git -C /Users/mackianni/forge archive nightshift/B-trust ts tests impl scripts spec interop \
      proposals/forge2-pillar2-finality-protocol package.json tsconfig.json | tar -x -C <your dir>/tree
-  ln -s <REPO>/node_modules <your dir>/tree/node_modules ; ln -s <REPO>/.toolchain <your dir>/tree/.toolchain
+  ln -s /Users/mackianni/forge/node_modules <your dir>/tree/node_modules ; ln -s /Users/mackianni/forge/.toolchain <your dir>/tree/.toolchain
 (no other copy of a tree; check `df -g /System/Volumes/Data`: stop below 30 GiB free). You deliver ONE diff against the branch
 head for the paths you own (`git diff --no-index` or `diff -ruN` between a pristine export and your changed one, restricted to
 your files), with `git -C <branch worktree> apply --check` evidence. The branch worktree (READ ONLY for you) is
-<SCRATCH>/B-trust .
+/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/B-trust .
 Protected paths stay untouched (gate/, policy/, spec/, toolchain/, schemas/, .github/, governance/, spec.lock, AGENTS.md,
 scripts/javascript_env.py, scripts/build_model.py, interop/export.cjs, interop/model.ts, tests/ledger.property.ts,
 tsconfig.json, package.json, package-lock.json). Never put a file under clearing/. State file ownership in your report.

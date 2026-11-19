@@ -3,8 +3,8 @@
 # subset rule) in a scratch export of 985f5eaf, over correct and hostile submissions. HEAVY (Dafny + Node per file).
 # Takes heavy.lock and dafny.lock (FIFO ticket). Nothing in the repository is changed.
 set -u
-R=<REPO>; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
-OUT=${OUT:-$B/e-subset2/heavy/gate-subset2}; W=<SCRATCH>/orchB-gate-subset2; DIFF=${DIFF:-$B/e-subset2/diff/refund-subset2-combined-scope.diff}; LIST=${LIST:-$B/e-subset2/heavy/list2.txt}
+R=/Users/mackianni/forge; NS=$R/results/night-shift-20261119; B=$NS/orch-B; L=$NS/locks
+OUT=${OUT:-$B/e-subset2/heavy/gate-subset2}; W=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/orchB-gate-subset2; DIFF=${DIFF:-$B/e-subset2/diff/refund-subset2-combined-scope.diff}; LIST=${LIST:-$B/e-subset2/heavy/list2.txt}
 PY=/usr/local/bin/python3.10
 [ -e $L/hol.lock ] && { echo "refused: hol.lock exists"; exit 75; }
 pgrep -f 'bin/hol' >/dev/null && { echo "refused: a HOL process runs"; exit 75; }
@@ -26,7 +26,7 @@ mkdir -p $OUT/logs; : > $OUT/summary.txt
 while read cls S; do
   [ -e $L/hol.lock ] && { echo "stopped: hol.lock appeared" | tee -a $OUT/summary.txt; break; }
   n=$(basename $S .dfy); cp $S $W/impl/Refund.dfy
-  ( cd $W && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$W LANG=C PYTHONUSERBASE=<HOME>/Library/Python/3.10 \
+  ( cd $W && env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$W LANG=C PYTHONUSERBASE=/Users/mackianni/Library/Python/3.10 \
       $PY gate/refund.py --tier hostile-tests --evidence build/gs-$n.json ) > $OUT/logs/$n.log 2>&1
   rc=$?; echo "exit $rc" >> $OUT/logs/$n.log
   v=$(grep -h 'ACCEPTED\|REJECTED\|RESOURCE_LIMIT\|SUBSET\|EXPECT\|SCOPE\|ERROR' $OUT/logs/$n.log | tail -1 | cut -c1-90)

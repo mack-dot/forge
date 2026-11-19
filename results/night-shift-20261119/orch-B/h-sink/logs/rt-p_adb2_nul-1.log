@@ -1,15 +1,15 @@
-# start=2026-11-19T14:43:55Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
-# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/work/p_adb2_nul
-<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts:34
+# start=2026-11-19T14:43:55Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/work/p_adb2_nul
+/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts:34
 w.prepare("UPDATE settled SET request_id = ? WHERE request_id = ?").run("rq_z\u0000x", "rq_z");
                                                                     ^
 
 
 Error: h-sink S5: settled is append-only
-    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts:34:69)
-    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts:61:28)
+    at <anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts:34:69)
+    at Object.<anonymous> (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/redteam/c6/p_adb2_nul.ts:61:28)
     at Module._compile (node:internal/modules/cjs/loader:1692:14)
-    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Object.transformer (/Users/mackianni/forge/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
     at Module.load (node:internal/modules/cjs/loader:1427:32)
     at Module._load (node:internal/modules/cjs/loader:1250:12)
     at TracingChannel.traceSync (node:diagnostics_channel:322:14)

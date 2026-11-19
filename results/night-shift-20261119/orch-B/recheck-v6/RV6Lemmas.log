@@ -1,12 +1,12 @@
-# owner=orchB-recheck start=2026-11-19T13:00:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/src
+# owner=orchB-recheck start=2026-11-19T13:00:11Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-v6bytes/src
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1161
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-v6/RV6Lemmas.csv RV6Lemmas.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/recheck-v6/RV6Lemmas.csv RV6Lemmas.dfy
 # memory free percent: 56
 
 Dafny program verifier finished with 2004 verified, 0 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-v6/RV6Lemmas.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/recheck-v6/RV6Lemmas.csv
        80.89 real        55.21 user         4.12 sys
            464240640  maximum resident set size
                    0  average shared memory size

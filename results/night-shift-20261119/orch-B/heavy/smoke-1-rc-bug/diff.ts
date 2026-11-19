@@ -9,8 +9,8 @@
 // Run (cwd = repository): NODE_PATH=<repo>/node_modules Z4_SEED=<n> node --import tsx diff.ts <sink> <mode> <count>
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { canon } from "<REPO>/ts/refund-finality/encoding";
-import { ChargeState } from "<REPO>/ts/refund-finality/encoding";
+import { canon } from "/Users/mackianni/forge/ts/refund-finality/encoding";
+import { ChargeState } from "/Users/mackianni/forge/ts/refund-finality/encoding";
 import { attacker, body, coreInit, coreStep, coreView, cfg, hook, loadSink, OTHER_HEX, refund, remember, rng, sinkOut, sinkView, tokenText, Z } from "./lib";
 
 const [sinkName, mode, countArg] = process.argv.slice(2);

@@ -9,12 +9,12 @@
 # Core modules: build/shellcore-reqid.cjs exports SinkCore = SinkCoreReqId; build/shellcore-orig.cjs exports
 # SinkCore = SinkCore (unpatched). Both are this worker's light builds (logs/v03, logs/v04).
 set -u   # no -e: diff.ts exits 1 on a divergence, which is an expected result for some pairs
-D=<REPO>/results/night-shift-20261119/orch-B/d-corebacked
-R=<REPO>
+D=/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked
+R=/Users/mackianni/forge
 H=$D/heavy; rm -rf $H; mkdir -p $H/db $H/results $H/sinks
 [ -e $R/results/night-shift-20261119/locks/hol.lock ] && { echo "hol.lock exists: NOT RUN"; exit 75; }
 cp $R/proposals/m1b-mission-20261119/drafts/sink-differential/{lib.ts,diff.ts} $H/
-sed -i '' "s#<HOME>#<HOME>#g" $H/lib.ts $H/diff.ts
+sed -i '' "s#<HOME>#/Users/mackianni#g" $H/lib.ts $H/diff.ts
 cp $D/build/shellcore-reqid.cjs $H/sinkcore-reqid.cjs
 cp $D/build/shellcore-orig.cjs $H/sinkcore.cjs
 printf 'import { Sink as S } from "%s/sink_core_backed";\nexport class Sink extends S { constructor(p: string, c: any) { super(p, { ...c, core: "reqid" }); } }\n' $D > $H/sinks/cb-reqid.ts

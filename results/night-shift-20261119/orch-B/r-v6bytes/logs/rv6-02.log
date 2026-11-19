@@ -1,8 +1,8 @@
-# owner=r-v6bytes start=2026-11-19T12:54:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/src
+# owner=r-v6bytes start=2026-11-19T12:54:57Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-v6bytes/src
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1145
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-v6bytes/logs/rv6-02.csv RV6Lemmas.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-v6bytes/logs/rv6-02.csv RV6Lemmas.dfy
 # memory free percent: 57
 RV6Lemmas.dfy(92,50): Warning: unusual indentation in body of exists (which ends at line 93, column 101); do you perhaps need parentheses?
    |
@@ -11,7 +11,7 @@ RV6Lemmas.dfy(92,50): Warning: unusual indentation in body of exists (which ends
 
 
 Dafny program verifier finished with 23 verified, 0 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/r-v6bytes/logs/rv6-02.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-v6bytes/logs/rv6-02.csv
 Compilation failed because warnings were found and --allow-warnings is false
         8.21 real         8.35 user         0.29 sys
            323764224  maximum resident set size

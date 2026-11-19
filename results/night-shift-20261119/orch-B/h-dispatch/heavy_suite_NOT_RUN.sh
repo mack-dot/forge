@@ -4,7 +4,7 @@
 # Refuses while results/night-shift-20261119/locks/hol.lock exists or a HOL process runs. Does not take heavy.lock.
 # Usage: bash heavy_suite_NOT_RUN.sh <empty work dir>
 set -u
-F=<REPO>; H=$F/results/night-shift-20261119/orch-B/h-dispatch; W=${1:?work dir}
+F=/Users/mackianni/forge; H=$F/results/night-shift-20261119/orch-B/h-dispatch; W=${1:?work dir}
 [ -e $F/results/night-shift-20261119/locks/hol.lock ] && { echo "refused: hol.lock exists"; exit 75; }
 pgrep -f bin/hol >/dev/null && { echo "refused: a HOL process runs"; exit 75; }
 mkdir -p "$W" && cd "$W" || exit 4

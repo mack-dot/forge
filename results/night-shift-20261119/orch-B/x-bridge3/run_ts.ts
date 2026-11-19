@@ -7,7 +7,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 const X = __dirname;
-const CORE = "<REPO>/results/night-shift-20261119/orch-B/d-corebacked/build/shellcore-orig.cjs";
+const CORE = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-corebacked/build/shellcore-orig.cjs";
 const BIN = path.join(X, "bin", "refund");
 const PIN = "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8";
 const WR = path.join(X, "run", "work-ts");

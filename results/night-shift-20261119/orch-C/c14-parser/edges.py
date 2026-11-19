@@ -4,7 +4,7 @@ amount == remaining, MaxMoney, ids at 2047..2049/4095..4097/65535..65537/1 MiB b
 Exit 1 if any consumer verdict differs from the oracle (false rejection or wrong authorization)."""
 import sys, json
 from concurrent.futures import ThreadPoolExecutor
-sys.path.insert(0, '<REPO>/results/night-shift-20261119/orch-C/c14-parser')
+sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-C/c14-parser')
 from common import run, as_result, oracle, fc, MAX  # noqa
 
 

@@ -1,11 +1,11 @@
-# owner=r-harden start=2026-11-19T15:01:19Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
+# owner=r-harden start=2026-11-19T15:01:19Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-harden/tree/impl/finality-core
 # power: Now drawing from 'AC Power'
 # swap free MiB: 1390
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects RH_Probe.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects RH_Probe.dfy
 # memory free percent: 41
 Warning: this way of using the CLI is deprecated. Use 'dafny --help' to see help for the new Dafny CLI format
-*** Error: 'verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects': Filename extension '.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects' is not supported. Input files must be Dafny programs (.dfy) or supported auxiliary files (.cs, .dll)
+*** Error: 'verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects': Filename extension '.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects' is not supported. Input files must be Dafny programs (.dfy) or supported auxiliary files (.cs, .dll)
         0.21 real         0.11 user         0.03 sys
             59604992  maximum resident set size
                    0  average shared memory size

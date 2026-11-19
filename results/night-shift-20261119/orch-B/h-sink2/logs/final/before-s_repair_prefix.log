@@ -1,4 +1,4 @@
 {"wrong-self":{"commits":["committed","committed","committed"],"insert":"accepted by the triggers","running":"rejected: sink halted: another writer changed the store and the change","restart":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, Audi","err":"no Sink.validPrefix","ok":false},"unsigned":{"commits":["committed","committed","committed"],"insert":"accepted by the triggers","running":"rejected: sink halted: another writer changed the store and the change","restart":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, Audi","err":"no Sink.validPrefix","ok":false}}
 FAIL
-# cmd: (cwd <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_repair_prefix.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <issueonce.cjs>
+# cmd: (cwd /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_repair_prefix.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine <issueonce.cjs>
 exit 1

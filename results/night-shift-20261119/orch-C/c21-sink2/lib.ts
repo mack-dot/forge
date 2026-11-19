@@ -6,7 +6,7 @@ import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-export const ROOT = "<SCRATCH>/redteam-C/fix-88ae6cbf";
+export const ROOT = "/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/redteam-C/fix-88ae6cbf";
 /* eslint-disable @typescript-eslint/no-require-imports */
 export const E = require(join(ROOT, "ts/refund-finality/encoding.ts"));
 export const SK = require(join(ROOT, "ts/refund-finality/sink.ts"));

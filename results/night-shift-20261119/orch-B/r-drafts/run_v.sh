@@ -1,7 +1,7 @@
 #!/bin/bash
 # r-drafts: light re-verification and audit of R1-R3 copies (gate options, CSV). Sequential.
-E=<REPO>/results/night-shift-20261119/orch-B/r-drafts; L=$E/logs
-T=<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=<REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
+E=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-drafts; L=$E/logs
+T=/Users/mackianni/forge/results/night-shift-20261119/orch-B/tools/dafny_locked.sh; Z3=/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1
 G=(--solver-path $Z3 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects)
 x=$1; shift
 for st in "$@"; do case $st in

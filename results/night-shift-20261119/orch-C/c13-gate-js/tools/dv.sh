@@ -3,7 +3,7 @@
 # gate: layout as the gate (impl/Refund.dfy + spec/refund/RefundSpec.dfy from 4af09308 + gate/refund/Bindings.dfy), options = gate dafny.OPTIONS.
 # alone: the file by itself (probe). Work copy removed after; model.js kept in js/.
 set -u
-R=<REPO>; E=$R/results/night-shift-20261119/orch-C/c13-gate-js
+R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-C/c13-gate-js
 SRC=$1; K=$2; MODE=${3:-verify}; LAY=${4:-gate}; N=$(basename $SRC .dfy)
 W=$E/work/$N; rm -rf $W; mkdir -p $W/impl $W/spec/refund $W/gate/refund $E/js $E/logs
 Z3=$R/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1

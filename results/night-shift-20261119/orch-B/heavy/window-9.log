@@ -1,12 +1,12 @@
 # power: Now drawing from 'Battery Power'
 # start 2026-11-19T15:41:00Z swap free 891 MiB memory free 42 % disk 85 GiB
-# pristine start=2026-11-19T15:41:00Z tree=<REPO>/results/night-shift-20261119/orch-B/h-sink/pristine timeout=600s
+# pristine start=2026-11-19T15:41:00Z tree=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/pristine timeout=600s
 # pristine end=2026-11-19T15:41:23Z exit 0
-# hardened start=2026-11-19T15:41:23Z tree=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree timeout=600s
+# hardened start=2026-11-19T15:41:23Z tree=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree timeout=600s
 # hardened end=2026-11-19T15:41:35Z exit 2
 pristine exit 0 counts {"rows": 115, "failed": 0, "control_a_rows": 42, "control_b_rows": 8, "control_c_rows": 13, "control_d_rows": 9, "issuer_rows": 29, "dispatcher_rows": 11, "rejection_attempts": 48, "effects_of_rejection_attempts": 0, "rejection_attempts_that_ask_for_an_effect": 42}
 hardened exit 2 counts NO REPORT
-  stderr: (node:99271) ExperimentalWarning: SQLite is an experimental feature and might change at any time / (Use `node --trace-warnings ...` to show where the warning was created) / Error: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cumulative limit /     at main (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/tests/refund-finality/suite.ts:506:74)
+  stderr: (node:99271) ExperimentalWarning: SQLite is an experimental feature and might change at any time / (Use `node --trace-warnings ...` to show where the warning was created) / Error: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cumulative limit /     at main (/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/tests/refund-finality/suite.ts:506:74)
 PREDICTION MET
 exit 0
 # run_suite_h exit 0 end 2026-11-19T15:41:35Z

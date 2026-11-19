@@ -1,8 +1,8 @@
-# owner=r-reqid start=2026-11-19T08:23:28Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-reqid/dafny/inputs/sink
+# owner=r-reqid start=2026-11-19T08:23:28Z cwd=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-reqid/dafny/inputs/sink
 # power: Now drawing from 'AC Power'
 # swap free MiB: 635
 # dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
-# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r09-commitall-verify.csv R_CommitAll.dfy
+# cmd: dafny verify --solver-path /Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=/Users/mackianni/forge/results/night-shift-20261119/orch-B/r-reqid/logs/r09-commitall-verify.csv R_CommitAll.dfy
 R_CommitAll.dfy(187,22): Error: index out of range
     |
 187 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
@@ -100,7 +100,7 @@ R_CommitAll.dfy(657,12): Related location: this is the postcondition that could 
 
 
 Dafny program verifier finished with 67 verified, 14 errors
-Results File: <REPO>/results/night-shift-20261119/orch-B/r-reqid/logs/r09-commitall-verify.csv
+Results File: /Users/mackianni/forge/results/night-shift-20261119/orch-B/r-reqid/logs/r09-commitall-verify.csv
         7.75 real         7.06 user         0.56 sys
            187744256  maximum resident set size
                    0  average shared memory size

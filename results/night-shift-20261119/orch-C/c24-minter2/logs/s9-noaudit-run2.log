@@ -1,0 +1,4 @@
+(node:8599) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"noaudit","rq1":"committed","flush1":{"emitted":["rq_1"],"refused":[]},"minterOnWritersState":"SIGNED rq_2 amount 1000 on remaining 1000","restartedSink":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: schema text (tables, indexes, triggers) is not the sink's DDL","flush2":"dispatcher threw: no such table: outbox","effects":["rq_1"],"totalOut":1000}
+SAFE (exit 0)

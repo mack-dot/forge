@@ -18,15 +18,15 @@
 import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as sqlite from "node:sqlite";
-import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export/ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, Intent, TokenBody, canon, sha256hex, signedBytes, stateSha256 } from "/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/export/ts/refund-finality/encoding";
 
-const DIR = "<REPO>/results/night-shift-20261119/orch-B/h-sink/runs/conf31";
-const V5DIR = "<REPO>/results/night-shift-20261119/orch-B/d-v5sink";
-const V3DIR = "<REPO>/results/night-shift-20261119/orch-B/d-v3sink";
+const DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/runs/conf31";
+const V5DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v5sink";
+const V3DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-B/d-v3sink";
 const DB = DIR + "/db";
 rmSync(DB, { recursive: true, force: true }); mkdirSync(DB, { recursive: true });
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Real = require("<REPO>/results/night-shift-20261119/orch-B/p-adopt/pristine/ts/refund-finality/sink.ts").Sink;
+const Real = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt/pristine/ts/refund-finality/sink.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Hand = require(V3DIR + "/copies/sink-patched-reqid-chargeid.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -34,9 +34,9 @@ const Draft = require(V3DIR + "/sink_core_backed_v3.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Draft5 = require(V5DIR + "/sink_core_backed_v5.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Draft6 = require("<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export/ts/refund-finality/sink.ts").Sink;
+const Draft6 = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/p-adopt2/export/ts/refund-finality/sink.ts").Sink;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const Hard = require("<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts").Sink;
+const Hard = require("/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts").Sink;
 const EXPECT_CHANGED = new Set([24]);
 
 const trusted = generateKeyPairSync("ed25519"), attacker = generateKeyPairSync("ed25519");

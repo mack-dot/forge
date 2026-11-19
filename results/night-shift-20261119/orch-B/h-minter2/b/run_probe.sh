@@ -1,6 +1,6 @@
 #!/bin/bash
 # LIGHT probe (one suite copy without the dispatcher section). usage: run_probe.sh <tree> <core> <label>
-H=<REPO>/results/night-shift-20261119/orch-B/h-minter2/b; T=$1; C=$2; L=$3
+H=/Users/mackianni/forge/results/night-shift-20261119/orch-B/h-minter2/b; T=$1; C=$2; L=$3
 rm -rf $H/runs/$L; mkdir -p $H/runs
 { date -u +%FT%TZ; pmset -g batt | head -1; sysctl -n vm.swapusage; echo "tree=$T core=$C"; } > $H/logs/$L.meta
 cd $T || exit 9

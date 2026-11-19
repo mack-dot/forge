@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage: dv.sh NAME RUNNO [verify|translate|build|audit]. Light tier (90 s). Layout as impl/Refund.dfy. Work copy removed after.
 set -u
-R=<REPO>; E=$R/results/night-shift-20261119/orch-B/r-subset2
+R=/Users/mackianni/forge; E=$R/results/night-shift-20261119/orch-B/r-subset2
 N=$1; K=$2; MODE=${3:-verify}
 W=$E/work/$N; rm -rf $W; mkdir -p $W/impl $W/spec/refund $W/gate/refund
 cp $R/spec/refund/RefundSpec.dfy $W/spec/refund/; cp $R/gate/refund/Bindings.dfy $W/gate/refund/

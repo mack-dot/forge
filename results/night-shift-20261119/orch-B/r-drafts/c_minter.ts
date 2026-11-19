@@ -6,10 +6,10 @@
 import { spawn, ChildProcessWithoutNullStreams } from "node:child_process";
 import { createPublicKey, verify } from "node:crypto";
 import { writeFileSync } from "node:fs";
-import { canon, isToken, sha256hex } from "<REPO>/ts/refund-finality/encoding";
-import { Sink } from "<REPO>/ts/refund-finality/sink";
+import { canon, isToken, sha256hex } from "/Users/mackianni/forge/ts/refund-finality/encoding";
+import { Sink } from "/Users/mackianni/forge/ts/refund-finality/sink";
 
-const ROOT = "<REPO>";
+const ROOT = "/Users/mackianni/forge";
 const REAL = ROOT + "/ts/refund-finality/minter.ts";
 const DRAFT = ROOT + "/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts";
 const [corePath, specLockPath, outPath] = process.argv.slice(2);

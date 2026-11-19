@@ -1,4 +1,4 @@
 {"sql":{"commits":["committed","committed","committed"],"applied":"ok","retry":"committed","outbox":["r1x","z","r2","r1"],"ok":false},"journal":{"commits":["committed","committed","committed"],"applied":"ok","retry":"committed","outbox":["r1x","z","r2","r1"],"ok":false},"controls":{"commits":["committed","committed","committed","committed"],"replay":"replayed","retry":"rejected: request id is already settled with another token","ok":true}}
 FAIL
-# cmd: (cwd <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_att24_old_row_running.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <issueonce.cjs>
+# cmd: (cwd /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_att24_old_row_running.ts /Users/mackianni/forge/results/night-shift-20261119/orch-B/h-sink2/pristine <issueonce.cjs>
 exit 1
