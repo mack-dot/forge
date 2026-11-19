@@ -1,0 +1,450 @@
+--- a/gate/refund.py
++++ b/gate/refund.py
+@@ -6,10 +6,13 @@
+ """
+ 
+ import argparse
++import os
+ from pathlib import Path
+ import platform
+ import re
++import resource
+ import shlex
++import signal
+ import subprocess
+ import sys
+ import tempfile
+@@ -60,20 +63,410 @@
+     'package.json', 'package-lock.json', 'tsconfig.json',
+ )
+ FOOTER = b'\nmodule.exports = { Refund, runtime: _dafny };\n'
++# Fail closed: a `//` comment ends at the earliest possible line break (Dafny 4.11 ends it at a lone CR).
++LINE_END = re.compile('[\r\n\x0b\x0c\x85\u2028\u2029]')
++CHAR = re.compile(r"'(\\U\{[0-9A-Fa-f_]{1,8}\}|\\u[0-9A-Fa-f]{4}|\\[^\r\n]|[^'\\\r\n])'")
++
++
++def code_words(code):
++    """Words of Dafny source outside comments and literals; block comments nest. Unsure input fails closed."""
++    try:
++        text = code.decode('utf-8')
++    except UnicodeDecodeError:
++        raise Rejected('SOURCE_SCOPE: implementation is not UTF-8')
++    words, i, n = [], 0, len(text)
++    while i < n:
++        if text.startswith('//', i):
++            end = LINE_END.search(text, i)
++            i = n if end is None else end.start()
++        elif text.startswith('/*', i):
++            depth, i = 1, i + 2
++            while depth:
++                if i >= n:
++                    raise Rejected('SOURCE_SCOPE: unterminated comment')
++                step = 1 if text[i:i + 2] not in ('/*', '*/') else 2
++                depth += {'/*': 1, '*/': -1}.get(text[i:i + 2], 0)
++                i += step
++        elif text[i] == '"' or text.startswith('@"', i):
++            verbatim, i = text[i] == '@', i + (2 if text[i] == '@' else 1)
++            while True:
++                if i >= n or (not verbatim and text[i] in '\r\n'):
++                    raise Rejected('SOURCE_SCOPE: unterminated string')
++                if verbatim and text.startswith('""', i) or not verbatim and text[i] == '\\':
++                    i += 2
++                elif text[i] == '"':
++                    i += 1
++                    break
++                else:
++                    i += 1
++        elif text[i] == "'":
++            literal = CHAR.match(text, i)
++            if not literal:
++                raise Rejected('SOURCE_SCOPE: unrecognized character literal')
++            i = literal.end()
++        elif re.match('[A-Za-z_]', text[i]):
++            word = re.compile(r"[A-Za-z0-9_?']*").match(text, i + 1).end()
++            words += re.split(r"[?']", text[i:word])
++            i = word
++        else:
++            i += 1
++    return words
++
++
++# Bounds on every child process. The gate never waits without a bound for a submission-dependent step.
++# A step that reaches its wall-clock bound, ends by a signal, or writes more than OUTPUT_BYTES to stdout
++# or stderr gives a refusal with the distinct reason RESOURCE_LIMIT. Its whole process group is killed.
++STEP_SECONDS = {'dafny-version': 60, 'z3-version': 60, 'audit-before': 900, 'verify': 3600,
++                'compile-js': 1800, 'hostile': 1800, 'audit-after': 900}
++OUTPUT_BYTES = 64 * 1024 * 1024
++
++
++def child_limits():
++    # The kernel stops each file write of the child and its descendants after OUTPUT_BYTES + 1 bytes.
++    resource.setrlimit(resource.RLIMIT_FSIZE, (OUTPUT_BYTES + 1, OUTPUT_BYTES + 1))
+ 
+ 
+ def run(command, work, name, records):
+-    child = subprocess.run(command, cwd=ROOT, capture_output=True)
+     stdout, stderr = work / (name + '.stdout'), work / (name + '.stderr')
+-    stdout.write_bytes(child.stdout)
+-    stderr.write_bytes(child.stderr)
+-    records.append({'argv': command, 'cwd': '.', 'exit_code': child.returncode,
+-                    'stdout': relative(stdout), 'stdout_sha256': digest(child.stdout),
+-                    'stderr': relative(stderr), 'stderr_sha256': digest(child.stderr)})
++    with stdout.open('wb') as out, stderr.open('wb') as err:
++        child = subprocess.Popen(command, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=out, stderr=err,
++                                 start_new_session=True, preexec_fn=child_limits)
++        try:
++            code = child.wait(timeout=STEP_SECONDS[name])
++        except subprocess.TimeoutExpired:
++            code = None
++        finally:
++            try:
++                os.killpg(child.pid, signal.SIGKILL)
++            except (ProcessLookupError, PermissionError):
++                pass
++            child.wait()
++    output, errors = stdout.read_bytes(), stderr.read_bytes()
++    records.append({'argv': command, 'cwd': '.', 'exit_code': code,
++                    'stdout': relative(stdout), 'stdout_sha256': digest(output),
++                    'stderr': relative(stderr), 'stderr_sha256': digest(errors)})
+     (work / 'operations.json').write_bytes(canonical({'commands': records,
+                                                     'stage_exit': False}))
+-    print(name + ': exit ' + str(child.returncode), flush=True)
+-    return child
++    print(name + ': exit ' + str(code), flush=True)
++    if code is None:
++        raise Rejected('RESOURCE_LIMIT: ' + name + ' reached the wall-clock bound of '
++                       + str(STEP_SECONDS[name]) + ' s; process group killed; no verdict')
++    if code < 0:
++        raise Rejected('RESOURCE_LIMIT: ' + name + ' ended by signal ' + str(-code) + '; no verdict')
++    if max(len(output), len(errors)) > OUTPUT_BYTES:
++        raise Rejected('RESOURCE_LIMIT: ' + name + ' wrote more than ' + str(OUTPUT_BYTES) + ' bytes; no verdict')
++    return subprocess.CompletedProcess(command, code, output, errors)
++
++
++# Bounded straight-line subset (SUBSET_*). A refund implementation must be a straight-line decision:
++# no loops, no recursion, no comprehension or such-that, no growth operation without a literal bound.
++# The rule works on tokens and fails closed: an unknown shape is a refusal with a reason code.
++SUBSET_LINE_END = re.compile('[\r\n\x0b\x0c\x85  ]')
++SUBSET_CHAR = re.compile(r"'(\\U\{[0-9A-Fa-f_]{1,8}\}|\\u[0-9A-Fa-f]{4}|\\[^\r\n]|[^'\\\r\n])'")
++SUBSET_NUM = re.compile(r'0x[0-9A-Fa-f_]+|[0-9][0-9_]*(\.[0-9][0-9_]*)?')
++SUBSET_ID = re.compile(r"[A-Za-z_][A-Za-z0-9_?']*")
++SUBSET_OPS = ('<==>', '==>', '<==', '-->', ':=', ':|', ':-', '::', '==', '!=', '<=', '>=', '&&', '||',
++              '..', '=>', '->', '~>', '!!', '{:')
++SUBSET_GLOBAL = {'expect', 'assume', 'print', 'new', 'class', 'trait', 'iterator', 'import', 'export',
++                 'opened', 'abstract', 'extern', 'axiom', 'codatatype', 'newtype', 'type', 'datatype',
++                 'object', 'yield', 'modify', 'label', 'twostate', 'least', 'greatest', 'inductive',
++                 'copredicate', 'colemma', 'constructor', 'iset', 'imap', 'ORDINAL'}
++SUBSET_EXEC = {'while', 'for', 'forall', 'exists', 'set', 'multiset', 'map', 'by', 'break', 'continue',
++               'old', 'fresh', 'unchanged', 'allocated', 'this', 'method', 'function', 'predicate', 'lemma',
++               'const', 'static', 'requires', 'ensures', 'reads', 'invariant', 'decreases', 'modifies'}
++SUBSET_EXPR_KEYWORDS = {'return', 'then', 'else', 'in', 'case', 'if', 'match', 'assert', 'var'}
++SUBSET_RECORDS = {'Intent', 'Authorized', 'Candidate', 'ChargeContext'}
++SUBSET_NULLARY = {'true', 'false', 'Rejected', 'Missing', 'TimedOut', 'Failed', 'Malformed', 'Oversized',
++                  'Unsupported'}
++SUBSET_SPEC = {'Eligible', 'ValidContext', 'Money', 'AllowedReason'}
++SUBSET_SPEC_WEIGHT = 128     # upper bound on the unfolded tokens of one call of a pinned spec predicate
++SUBSET_MAX_WEIGHT = 4096     # bound N on executed tokens of one Assess call (unfolded over calls)
++SUBSET_MAX_BYTES = 65536
++SUBSET_MAX_DISPLAY = 16
++
++
++def subset_refuse(code, message):
++    raise Rejected('SUBSET_' + code + ': ' + message)
++
++
++def subset_tokens(text):
++    """All tokens outside comments as (kind, text). Comments end at the earliest line break (fail closed)."""
++    tokens, i, n = [], 0, len(text)
++    while i < n:
++        c = text[i]
++        if text.startswith('//', i):
++            end = SUBSET_LINE_END.search(text, i)
++            i = n if end is None else end.start()
++        elif text.startswith('/*', i):
++            depth, i = 1, i + 2
++            while depth:
++                if i >= n:
++                    subset_refuse('LEX', 'unterminated comment')
++                pair = text[i:i + 2]
++                depth += {'/*': 1, '*/': -1}.get(pair, 0)
++                i += 2 if pair in ('/*', '*/') else 1
++        elif c in ' \t\r\n':
++            i += 1
++        elif c == '"' or text.startswith('@"', i):
++            verbatim, start = c == '@', i
++            i += 2 if verbatim else 1
++            while True:
++                if i >= n or (not verbatim and text[i] in '\r\n'):
++                    subset_refuse('LEX', 'unterminated string')
++                if verbatim and text.startswith('""', i) or not verbatim and text[i] == '\\':
++                    i += 2
++                elif text[i] == '"':
++                    i += 1
++                    break
++                else:
++                    i += 1
++            if i - start > 256:
++                subset_refuse('LITERAL_SIZE', 'string literal longer than 256 characters')
++            tokens.append(('str', text[start:i]))
++        elif c == "'":
++            literal = SUBSET_CHAR.match(text, i)
++            if not literal:
++                subset_refuse('LEX', 'unrecognized character literal')
++            tokens.append(('char', literal.group(0)))
++            i = literal.end()
++        elif SUBSET_ID.match(text, i) and c.isascii():
++            word = SUBSET_ID.match(text, i).group(0)
++            tokens.append(('id', word))
++            i += len(word)
++        elif c.isdigit() and c.isascii():
++            number = SUBSET_NUM.match(text, i).group(0)
++            if len(number) > 40:
++                subset_refuse('LITERAL_SIZE', 'numeric literal longer than 40 characters')
++            tokens.append(('num', number))
++            i += len(number)
++        elif c.isascii() and c.isprintable():
++            op = next((o for o in SUBSET_OPS if text.startswith(o, i)), c)
++            tokens.append(('op', op))
++            i += len(op)
++        else:
++            subset_refuse('LEX', 'character U+%04X outside comments and literals' % ord(c))
++    return tokens
++
++
++def subset_match(toks, k):
++    """Index of the bracket that closes toks[k]."""
++    pairs, depth = {'(': ')', '[': ']', '{': '}'}, 0
++    opener, closer = toks[k][1], pairs[toks[k][1]]
++    for j in range(k, len(toks)):
++        depth += (toks[j][1] == opener) - (toks[j][1] == closer)
++        if depth == 0:
++            return j
++    subset_refuse('SHAPE', 'unbalanced ' + opener)
++
++
++def subset_literal_operand(toks, k, plus):
++    """True if an operand of the operator at k is an integer literal, so the operation is integer arithmetic
++    that adds at most a constant number of bits. For `+` (also sequence concatenation) a length |e| or a
++    parenthesized `if` whose else branch is a literal also types the operand as an integer."""
++    texts = [t for _, t in toks]
++    right = toks[k + 1][0] == 'num' and texts[k + 2] not in ('(', '[', '.')
++    left = toks[k - 1][0] == 'num' and texts[k - 2] not in ('.', '*', '/', '%')
++    if right or left or not plus:
++        return right or left
++    if texts[k - 1] == '|' or texts[k + 1] == '|':
++        return True
++    if texts[k - 1] == ')' and toks[k - 2][0] == 'num' and texts[k - 3] == 'else':
++        return True
++    if texts[k + 1] == '(':
++        close = subset_match(toks, k + 1)
++        return texts[k + 2] == 'if' and toks[close - 1][0] == 'num' and texts[close - 2] == 'else'
++    return False
++
++
++def subset_flat_element(e, tuple_element):
++    """An element whose value cannot hold a sequence or tuple built by the submission (bounded nesting).
++    A tuple element may also be one sequence display; that display's own elements are checked separately."""
++    texts = [t for _, t in e]
++    whole = len(e) >= 3 and e[1][1] == '(' and subset_match(e, 1) == len(e) - 1
++    depth, boolean = 0, False
++    for t in texts:
++        depth += (t in ('(', '[', '{')) - (t in (')', ']', '}'))
++        boolean |= depth == 0 and t in ('<=', '>=', '==', '!=', '&&', '||', '==>', '<==>', 'in')
++    return (len(e) == 1 and (e[0][0] in ('num', 'str', 'char') or texts[0] in SUBSET_NULLARY) or
++            whole and texts[0] in SUBSET_RECORDS | SUBSET_SPEC or boolean or
++            tuple_element and texts[:1] == ['['] and subset_match(e, 0) == len(e) - 1)
++
++
++def subset_words(tok):
++    return set(re.split(r"[?']", tok[1])) if tok[0] == 'id' else set()
++
++
++def straight_line_subset(code):
++    """Refuse unless impl/Refund.dfy is in the bounded straight-line subset. Returns the bound N."""
++    try:
++        return subset_check(code)
++    except (IndexError, StopIteration, ValueError, KeyError) as error:
++        raise Rejected('SUBSET_SHAPE: unrecognized structure (' + type(error).__name__ + ')')
++
++
++def subset_check(code):
++    if len(code) > SUBSET_MAX_BYTES:
++        subset_refuse('SIZE', 'implementation larger than 65536 bytes')
++    try:
++        toks = subset_tokens(code.decode('utf-8'))
++    except UnicodeDecodeError:
++        subset_refuse('LEX', 'implementation is not UTF-8')
++    texts = [t for _, t in toks]
++    for k, tok in enumerate(toks):
++        if subset_words(tok) & SUBSET_GLOBAL:
++            subset_refuse('FORBIDDEN', '`' + tok[1] + '`')
++        if tok[1] == '@' or tok[1] == '{' and texts[k + 1:k + 2] == [':']:
++            subset_refuse('ATTRIBUTE', 'attribute syntax outside {:isolate_assertions}')
++        if tok[1] == '{:' and texts[k + 1:k + 3] != ['isolate_assertions', '}']:
++            subset_refuse('ATTRIBUTE', 'only {:isolate_assertions} is allowed')
++        if tok[1] == ':-' or texts[k:k + 2] in (['by', 'method'], ['decreases', '*']):
++            subset_refuse('FORBIDDEN', ' '.join(texts[k:k + 2]))
++        if tok[0] == 'id' and (re.fullmatch(r'array[0-9]*\??|bv[0-9]+', tok[1])):
++            subset_refuse('FORBIDDEN', '`' + tok[1] + '`')
++    keep = [k for k in range(len(toks)) if not (texts[k] == '{:' or texts[k - 1:k + 1] == ['{:', 'isolate_assertions']
++                                              or texts[k - 2:k + 1] == ['{:', 'isolate_assertions', '}'])]
++    toks = [toks[k] for k in keep]
++    texts = [texts[k] for k in keep]
++    if (texts[:7] != ['include', '"../spec/refund/RefundSpec.dfy"', 'module', 'Refund', 'refines',
++                      'RefundSpec', '{'] or subset_match(toks, 6) != len(toks) - 1 or
++            texts.count('module') != 1 or texts.count('refines') != 1 or texts.count('include') != 1):
++        subset_refuse('SHAPE', 'exactly one include and one module Refund refines RefundSpec, nothing else')
++    modifiers, kinds = {'ghost', 'static', 'opaque'}, {'function', 'predicate', 'method', 'lemma', 'const'}
++    members, k, end = [], 7, len(toks) - 1
++    while k < end:
++        start, mods = k, set()
++        while texts[k] in modifiers:
++            mods.add(texts[k])
++            k += 1
++        if texts[k] not in kinds:
++            subset_refuse('DECLARATION', 'unsupported module member at `' + texts[k] + '`')
++        kind, k = texts[k], k + 1
++        if texts[k] == 'method':
++            subset_refuse('DECLARATION', 'legacy function method')
++        name, j = texts[k], k + 1
++        while j < end and texts[j] not in modifiers | kinds:
++            j = subset_match(toks, j) + 1 if texts[j] in '([{' else j + 1
++        ghost = kind == 'lemma' or 'ghost' in mods
++        members.append((kind, name, ghost, k + 1, j))
++        k = j
++    compiled = {m[1]: m for m in members if not m[2]}
++    ghost_calls = {m[1] for m in members if m[2] and m[0] in ('lemma', 'method')}
++    methods = {m[1] for m in members if not m[2] and m[0] == 'method'}
++    if compiled.get('Assess', ('',))[0] != 'method':
++        subset_refuse('SHAPE', 'no compiled method Assess')
++
++    def ghost_statement(k, hi):
++        j, word = k, texts[k]
++        if word == 'ghost' and texts[k + 1] != 'var':
++            subset_refuse('GHOST', 'ghost statement other than ghost var')
++        while j < hi:
++            if texts[j] == '{' and (word == 'calc' or texts[j - 1] == 'by'):
++                j = subset_match(toks, j) + 1
++                break
++            if texts[j] in '([{':
++                j = subset_match(toks, j)
++            elif texts[j] == ';':
++                j += 1
++                break
++            j += 1
++        else:
++            subset_refuse('GHOST', 'ghost statement without end')
++        if {texts[x] for x in range(k, j)} & methods:
++            subset_refuse('GHOST', 'a ghost statement names a compiled method')
++        return j
++
++    def executable(lo, hi):
++        out, blocks, cases, k = [], set(), 0, lo
++        while k < hi:
++            kind, text = toks[k]
++            prev = texts[k - 1]
++            nxt = texts[k + 1:k + 3] + ['', '']
++            if text in ('assert', 'reveal', 'hide', 'calc', 'ghost') or (
++                    text in ghost_calls and nxt[0] == '('):
++                k = ghost_statement(k, hi)
++                continue
++            if subset_words(toks[k]) & SUBSET_EXEC:
++                subset_refuse('EXEC_FORBIDDEN', '`' + text + '` in compiled code')
++            if text == 'seq' and nxt[0] == '(':
++                subset_refuse('EXEC_FORBIDDEN', 'seq constructor in compiled code')
++            if text in (':|', '::', '->', '~>', '-->', '!!'):
++                subset_refuse('EXEC_FORBIDDEN', '`' + text + '` in compiled code')
++            base = text.split('?')[0]
++            if kind == 'id' and nxt[0] != '(' and (base in SUBSET_SPEC or base in compiled and
++                                                     compiled[base][0] != 'const'):
++                subset_refuse('FUNCTION_VALUE', 'function used as a value in compiled code: ' + text)
++            if text == 'case':
++                cases += 1
++            if text == '=>':
++                if not cases:
++                    subset_refuse('LAMBDA', 'lambda in compiled code')
++                cases -= 1
++            if text in ('+', '*', '/', '%') and kind == 'op' and not subset_literal_operand(toks, k, text == '+'):
++                subset_refuse('ARITHMETIC', '`' + text + '` needs an integer literal operand')
++            if text in ('if', 'match'):
++                j = k + 1
++                while j < hi and texts[j] not in ('{', 'then', 'case'):
++                    j = subset_match(toks, j) + 1 if texts[j] in '([' else j + 1
++                if j < hi and texts[j] == '{':
++                    blocks.add(j)
++            if text == '{' and k not in blocks and prev not in ('{', '}', ';', '=>', 'else'):
++                subset_refuse('BRACE', 'set or map display, or an unsupported block, in compiled code')
++            callish = toks[k - 1][0] in ('id', 'str') and prev not in SUBSET_EXPR_KEYWORDS or prev in (')', ']')
++            if text in ('(', '[') and not callish:
++                close, j, elements = subset_match(toks, k), k + 1, []
++                while j < close:
++                    first = j
++                    while j < close and texts[j] != ',':
++                        j = subset_match(toks, j) + 1 if texts[j] in '([{' else j + 1
++                    elements.append(toks[first:j])
++                    j += 1
++                if text == '[' and len(elements) > SUBSET_MAX_DISPLAY:
++                    subset_refuse('DISPLAY', 'sequence display with more than 16 elements')
++                if text == '[' or len(elements) > 1:
++                    for e in elements:
++                        if not subset_flat_element(e, text == '('):
++                            subset_refuse('DISPLAY' if text == '[' else 'TUPLE', 'a display or tuple element '
++                                          'must be a literal, a spec record, a boolean or a nullary constructor')
++            out.append(k)
++            k += 1
++        return out
++
++    weights, calls = {}, {}
++    for kind, name, ghost, lo, hi in compiled.values():
++        if kind == 'const':
++            if ':=' not in texts[lo:hi]:
++                subset_refuse('SHAPE', 'compiled const without initializer')
++            region = (texts.index(':=', lo) + 1, hi)
++        else:
++            if texts[hi - 1] != '}':
++                subset_refuse('SHAPE', 'compiled ' + kind + ' ' + name + ' without body')
++            body = next(x for x in range(lo, hi) if texts[x] == '{' and subset_match(toks, x) == hi - 1)
++            header = set(texts[lo:body])
++            if header & {':=', '->', '~>', '-->'}:
++                subset_refuse('HEADER', 'default value or function type in a compiled signature')
++            region = (body + 1, hi - 1)
++        out = executable(*region)
++        words = [texts[x].split('?')[0] for x in out if toks[x][0] == 'id']
++        calls[name] = [w for w in words if w in compiled]
++        weights[name] = len(out) + SUBSET_SPEC_WEIGHT * sum(w in SUBSET_SPEC for w in words)
++    for kind, name, ghost, lo, hi in members:
++        if ghost and texts[hi - 1] != '}' and kind != 'const':
++            subset_refuse('SHAPE', 'ghost ' + kind + ' ' + name + ' without body')
++    total, state = {}, {}
++
++    def unfold(name):
++        if state.get(name) == 'open':
++            subset_refuse('RECURSION', 'call cycle through ' + name)
++        if name not in total:
++            state[name] = 'open'
++            total[name] = weights[name] + sum(unfold(callee) for callee in calls[name])
++            state[name] = 'done'
++        return total[name]
++
++    for name in compiled:
++        if unfold(name) > SUBSET_MAX_WEIGHT:
++            subset_refuse('SIZE', name + ' unfolds to more than 4096 executed tokens')
++    return total['Assess']
+ 
+ 
+ def prepare():
+@@ -103,6 +496,14 @@
+     # Input restrictions only. Dafny parses, verifies and audits the source.
+     if b'{:' in code.replace(b'{:isolate_assertions}', b'') or b'@' in code:
+         raise Rejected('SOURCE_SCOPE: only assertion-isolation attributes allowed')
++    # Dafny assumes an `expect` condition when it verifies and halts the program at run time when the
++    # condition is false. A verified Assess with `expect` can halt instead of returning a decision. The
++    # keyword covers `expect E;`, `expect E, m;` and `:- expect`. Other halts (resources) stay test-only.
++    if 'expect' in code_words(code):
++        raise Rejected('SOURCE_SCOPE: run-time halt statement expect is not allowed')
++    # Termination by construction (SUBSET.md): a straight-line decision with no loop, recursion,
++    # comprehension, such-that or unbounded growth in compiled code. Unsure shapes are refused.
++    straight_line_subset(code)
+     if b'include' in (ROOT / BINDING).read_bytes().replace(b'include paths', b''):
+         raise Rejected('SOURCE_SCOPE: the trusted binding must add no include')
+     return pins, executables

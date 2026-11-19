@@ -1,0 +1,6 @@
+booking check (T4,T5; C-ATT-42 proper): WRONG
+books: remaining 0; provider moved 600
+{"r1b":"committed","r2":["900","committed"],"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":"provider ceiling: refunds would exceed the charge amount"},"f4":{"emitted":[],"refused":["r2: in doubt: claimed by run 109298c20ca072b4685400f56d293b8b (p"],"error":""},"sink":"up","journal":["r1:replayed","r2:refused:ceiling"],"movements":["r1:600"]}
+p3_rollback_rebind first none adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T4 reported paid: ch_rb/r1 100; provider movements for that key: ["ch_rb:600"] ; T5 journal says replayed for ch_rb/r1 100; provider movement {"refundId":"re_1","key":"r1","chargeId":"ch_rb","amount":"600","at":0,"effect":"af35a457856a3e6164ddf/ch_rb/r1"}
+exit 1

@@ -1,0 +1,18 @@
+2c2,3
+< """Post the forge/admission status from the bound gate receipt (UNAPPLIED PROPOSAL, worker Y8, 2026-11-19).
+---
+> """Post the forge/admission status from the bound gate receipt (UNAPPLIED PROPOSAL, worker Y8, 2026-11-19;
+> hardened by task g-admission: exact int exit, exit 0 needs established coverage, protected AGENTS.md is no document).
+22a24
+> PROTECTED_DOCUMENTS = ('agents.md',)      # protected top-level file (gate/incremental.py PROTECTED_FILES)
+26a29,30
+>     if type(code) is not int:
+>         return False, 'Not admitted: malformed gate exit'
+27a32,33
+>         if not (isinstance(coverage, dict) and coverage.get('covered') is True and coverage.get('findings') == []):
+>             return False, 'Not admitted: exit 0 without an established coverage record'
+39c45,46
+<                 or path.lower().startswith(NEVER_DOCUMENT) or not DOCUMENT_PATH.fullmatch(path)):
+---
+>                 or path.lower().startswith(NEVER_DOCUMENT) or path.lower() in PROTECTED_DOCUMENTS
+>                 or not DOCUMENT_PATH.fullmatch(path)):

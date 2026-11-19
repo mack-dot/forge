@@ -1,0 +1,36 @@
+diff --git a/scripts/exit_m1_conformance.py b/scripts/exit_m1_conformance.py
+index 01a2fcc2..91fb9dbd 100644
+--- a/scripts/exit_m1_conformance.py
++++ b/scripts/exit_m1_conformance.py
+@@ -31,6 +31,7 @@ import argparse
+ from concurrent.futures import ThreadPoolExecutor
+ import copy
+ import json
++import os
+ from pathlib import Path
+ import platform
+ import shutil
+@@ -530,10 +531,22 @@ def run_driver(run, module, typed, name):
+     return {row['id']: row for row in rows}
+ 
+ 
++def issuer_test_key(work):
++    """OWNER DECISION D-1 (h-key): the issuer reads its key ONLY from a key file. A NEW throwaway Ed25519 TEST key,
++    written with mode 0600 (O_EXCL) under this run's work directory. No real key is read."""
++    path = Path(work) / 'issuer-test-key.pem'
++    made = subprocess.run(['node', '-e', "process.stdout.write(require('node:crypto').generateKeyPairSync('ed25519')"
++                           ".privateKey.export({type: 'pkcs8', format: 'pem'}))"], capture_output=True, check=True)
++    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
++    with os.fdopen(fd, 'wb') as out:
++        out.write(made.stdout)
++    return str(path)
++
++
+ def run_issuer(run, module, typed):
+     """Sends the honest transition of every finality vector to the real Slice 1 issuer process."""
+     errors = open(run.work / 'issuer.stderr', 'wb')  # a file, not a pipe: a pipe that nobody reads can block
+-    process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off'], cwd=ROOT,
++    process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off', issuer_test_key(run.work)], cwd=ROOT,
+                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=errors)
+     answers = {}
+     try:

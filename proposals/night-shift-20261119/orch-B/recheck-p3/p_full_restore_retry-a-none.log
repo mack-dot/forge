@@ -1,0 +1,5 @@
+{"test":"p_full_restore_retry","snapshot":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"restored":["adapter-journal.jsonl","dispatch-ledger.jsonl","sink.sqlite","sink.sqlite.dispatch-witness.json"],"sinkAfterRestore":"started","retry":["committed","committed"],"after":[{"emitted":["r2","r3"],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""},{"emitted":[],"refused":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["6f2277aa132f31a6fd53c79b614bb4e4d725fa62f2148dc9012bdd1048c1d8fb:400","d7d8a33df2ec2db38ce4ecbfe64a0d73a42e32b3bb50ddfd21fe74479d31109e:400","bc73c0c0a4cfd82df3163300890fa16907d9d64d2b255ff994dc24e79c381f69:100"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r2 replayed"},{"phase":"attack","layer":"provider key","detail":"r3 replayed"}]}
+mode a, anchor none
+layers seen after the attack started: provider key
+stopped by: provider key
+SAFE

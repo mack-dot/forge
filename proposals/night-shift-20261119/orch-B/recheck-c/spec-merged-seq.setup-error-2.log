@@ -1,0 +1,23 @@
+node:fs:3033
+  return binding.mkdtemp(prefix, options.encoding);
+                 ^
+
+Error: ENOENT: no such file or directory, mkdtemp '<REPO>/results/night-shift-20261119/orch-B/recheck-c/spec-work/specdiff-XXXXXX'
+    at mkdtempSync (node:fs:3033:18)
+    at main (<SCRATCH>/B-trust/tests/refund-finality/spec-conformance/run.ts:79:16)
+    at <anonymous> (<SCRATCH>/B-trust/tests/refund-finality/spec-conformance/run.ts:203:1)
+    at Object.<anonymous> (<SCRATCH>/B-trust/tests/refund-finality/spec-conformance/run.ts:203:6)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdtemp',
+  path: '<REPO>/results/night-shift-20261119/orch-B/recheck-c/spec-work/specdiff-XXXXXX'
+}
+
+Node.js v24.3.0
+merged exit 1

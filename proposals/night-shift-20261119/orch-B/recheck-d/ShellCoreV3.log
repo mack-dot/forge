@@ -1,0 +1,28 @@
+# owner=orchB-recheck start=2026-11-19T10:02:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/./dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 560
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects ShellCoreV3.dfy
+# memory free percent: 68
+
+Dafny program verifier finished with 79 verified, 0 errors
+        5.59 real         5.60 user         0.28 sys
+           200081408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19173  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                 323  voluntary context switches
+               11105  involuntary context switches
+         49132576509  instructions retired
+         18364499286  cycles elapsed
+           167019696  peak memory footprint
+# end=2026-11-19T10:02:37Z
+exit 0
