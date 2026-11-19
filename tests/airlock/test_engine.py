@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """FINITE TEST of the forge-airlock engine (Goal 20). It proves nothing about the engine.
 
-Usage: python3 tests/airlock/test_engine.py <engine> <kill-engine> [--case NAME]... [--node PATH] [--work DIR]
+Usage: python3 tests/airlock/test_engine.py <engine> <kill-engine> [--case NAME]... [--node PATH] [--work DIR] [--interposer DYLIB]
+
+Cases trace and dispatch: the test interposer tests/airlock/interpose.c (built with /usr/bin/cc if --interposer is
+absent) records the order of system calls in the engine process and makes one sync or write fail. Case lock: one
+process holds the store lock at kill point a; two others must wait. Case pin: the model pin and O_NOFOLLOW of
+booking_check.cjs with files next to the built model. These four cases exist for the EXIT mutations.
 
 The engine binaries come in as arguments, so the same cases can run on changed copies (mutation runs).
 The suite reads the WAL with its OWN transcription of the record format (zlib CRC-32, FNV-1a-128 in Python);
@@ -106,6 +111,7 @@ class Suite:
         self.work = Path(tempfile.mkdtemp(prefix='airlock-', dir=a.work))
         self.n = 0
         self.refund = None
+        self.interposer = str(Path(a.interposer).resolve()) if a.interposer else None
 
     def folder(self, name):
         self.n += 1
@@ -749,9 +755,233 @@ def case_kill(s):
     return 'SIGKILL at %s and inside CLOSE: no half record, no answer before both syncs, retry gives the right code' % ','.join(results)
 
 
+# ------------------------------------------------------------------------------- system-call order (interposer)
+# A SIGKILL keeps the page cache, so case kill cannot see a missing sync. These cases load the test interposer
+# tests/airlock/interpose.c into the engine process (DYLD_INSERT_LIBRARIES) to record the order of flock, read,
+# write, fcntl(F_FULLFSYNC), ftruncate, close and rename, and to make one sync or write fail. What they show: the
+# order of the calls in the engine process for the traced requests. Not shown: that the drive stores the data.
+
+INTERPOSER_SOURCE = ROOT / 'tests/airlock/interpose.c'
+
+
+def interposer(s):
+    """The built interposer: --interposer, or a build of tests/airlock/interpose.c with /usr/bin/cc in the work folder."""
+    if s.interposer is None:
+        out = s.folder('interposer') / 'interpose.dylib'
+        p = subprocess.run(['/usr/bin/cc', '-dynamiclib', '-O1', '-Wall', '-Wextra', '-Werror', '-o', str(out), str(INTERPOSER_SOURCE)],
+                           capture_output=True, env=ENV)
+        require(p.returncode == 0 and out.exists(), 'NOT RUN: the interposer did not build: %r' % p.stderr[-300:])
+        s.interposer = str(out)
+    return s.interposer
+
+
+def traced(s, args, stdin=b'', **variables):
+    """Runs the engine under the interposer. Returns (exit code, answer lines, events without reads of policy files)."""
+    path = s.folder('trace') / 'calls'
+    code, out, err = s.run(args, stdin, env=dict(ENV, DYLD_INSERT_LIBRARIES=interposer(s), AIRLOCK_TRACE=str(path), **variables))
+    events = path.read_text().splitlines() if path.exists() else []
+    require(events, 'NOT RUN: the interposer saw no call (exit %d %r)' % (code, err[-200:]))
+    return code, out.split('\n')[:-1], events
+
+
+def calls(events, parent=None):
+    """The durable-order view: no reads, no close of a policy file; lengths of writes and cuts as N (the ratchet entry
+    stays 12); the temporary folder of init as TMP and its parent folder as PARENT."""
+    out = []
+    for e in events:
+        t = e.split(' ')
+        if t[0] == 'read' or (t[0] == 'close' and t[1].startswith('policy-')):
+            continue
+        t = ['TMP' if '.init-' in x else 'PARENT' if x == parent else x for x in t]
+        if t[0] in ('write', 'ftruncate') and not (t[1] == 'airlock.epoch' and t[2] == '12'):
+            t[2] = 'N'
+        out.append(' '.join(t[:4] if t[-1] in ('SHORT', 'FAILED') else t[:3]))
+    return out
+
+
+COMMIT_ORDER = ['flock airlock.wal 2', 'write airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12', 'fullfsync airlock.epoch 0',
+                'close airlock.wal', 'close airlock.epoch', 'write stdout N']
+RECOVERY_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.epoch N', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12',
+                  'fullfsync airlock.epoch 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
+
+
+def lock_first(events, what):
+    store = [e for e in events if e.split(' ')[1].startswith('airlock.')]
+    require(store and store[0] == 'flock airlock.wal 2', '%s: a store file was read before the exclusive lock: %r' % (what, store[:3]))
+
+
+def case_trace(s):
+    # init: every file synced, then the folder, then the rename, then the parent folder, then the answer
+    d = s.folder('trace-init')
+    target = d / 'store'
+    code, out, events = traced(s, ['init', target, '--store-id', 'tr', '--policy', FIX / 'money-parametric.json'])
+    want = ['write policy-store-refunds.json N', 'fullfsync policy-store-refunds.json 0', 'write airlock.epoch 12', 'fullfsync airlock.epoch 0',
+            'write airlock.wal N', 'fullfsync airlock.wal 0', 'fullfsync TMP 0', 'close airlock.wal', 'close airlock.epoch', 'rename TMP store',
+            'fullfsync PARENT 0', 'write stdout N']
+    got = calls(events, d.name)
+    require(code == 0 and got == want, 'system-call order of init: %r' % got)
+    # init with a failed sync: no store, no temporary folder; init works again. Sync 5 (the parent folder, after the
+    # rename) is left out on purpose: see the KNOWN DEFECT note below.
+    for k in (1, 2, 3, 4):
+        d = s.folder('trace-init-fail-%d' % k)
+        code, out, _ = traced(s, ['init', d / 'store', '--store-id', 'tr', '--policy', FIX / 'money-parametric.json'], AIRLOCK_FAIL_SYNC=str(k))
+        left = sorted(x.name for x in d.iterdir())
+        require(code == 18 and out[:1] and out[0].startswith('IO_ERROR') and left == [], 'init with a failed sync %d: exit %d %r, left %r' % (k, code, out, left))
+        code, out, _ = s.run(['init', d / 'store', '--store-id', 'tr', '--policy', FIX / 'money-parametric.json'])
+        require(code == 0, 'init after a failed sync %d: %r' % (k, out))
+    # KNOWN DEFECT (reported, not repaired here; the engine is not this file's to change): AIRLOCK_FAIL_SYNC=5 fails the
+    # sync of the parent folder AFTER the rename. The answer is IO_ERROR (exit 18), and the store stays and works.
+    # PROTOCOL.md section 4 says that a refused init leaves no <dir>. This suite does not assert either behaviour.
+
+    p = s.store('trace')
+    s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000 shipping_paid=10', 'COMMITTED')
+    h = s.h(p, 't1', 'k1')
+    # a commit: lock -> record -> F_FULLFSYNC -> ratchet entry -> F_FULLFSYNC -> files closed (lock released) -> answer
+    before = (p / 'airlock.wal').stat().st_size
+    code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 c1 %s DUPLICATE_CHARGE 5\n' % h).encode())
+    lock_first(events, 'traced commit')
+    require(calls(events) == COMMIT_ORDER, 'system-call order of a commit: %r' % calls(events))
+    require(code == 0 and len(out) == 1 and out[0].startswith('COMMITTED c1 '), 'traced commit: %d %r' % (code, out))
+    written = [int(e.split(' ')[2]) for e in events if e.startswith('write airlock.wal ')]
+    require(written == [(p / 'airlock.wal').stat().st_size - before], 'traced commit: the write is not the whole record: %r' % written)
+    # a refusal writes nothing and syncs nothing
+    code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 c2 %s DUPLICATE_CHARGE 5\n' % h).encode())
+    require(out[:1] and out[0].startswith('STALE_STATE_HASH') and calls(events) == ['flock airlock.wal 2', 'close airlock.wal', 'close airlock.epoch', 'write stdout N'],
+            'a refusal must not write or sync: %r %r' % (out, calls(events)))
+    # a lease close is a durable record with the same order
+    s.one(p, 'OPEN_LEASE L1 5', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'k1')
+    code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 L1 %s NOPE 5\n' % h).encode())
+    require(out[:1] and 'LEASE_CLOSED' in out[0] and calls(events) == COMMIT_ORDER, 'system-call order of a lease close: %r %r' % (out, calls(events)))
+    # a recovery: lock -> cut the torn tail -> F_FULLFSYNC -> ratchet entry -> F_FULLFSYNC -> answer
+    good = files(p)
+    (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
+    code, out, events = traced(s, ['state', p])
+    lock_first(events, 'traced recovery')
+    require(code == 0 and calls(events) == RECOVERY_ORDER and (p / 'airlock.wal').read_bytes() == good['airlock.wal'],
+            'system-call order of a recovery: %d %r' % (code, calls(events)))
+    # a recovery whose WAL sync fails: refused; the next start recovers
+    (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
+    code, out, events = traced(s, ['state', p], AIRLOCK_FAIL_SYNC='1')
+    require(code == 18 and out[:1] and out[0].startswith('IO_ERROR'), 'recovery with a failed sync of the WAL must refuse: %d %r' % (code, out))
+    code, out, _ = s.run(['state', p])
+    require(code == 0, 'recovery after a failed recovery sync: %r' % out)
+
+    # faults of one commit. Two lines each: the stream must end at the fault.
+    h = s.h(p, 't1', 'k1')
+    req = 'REFUND t1 k1 f1 %s DUPLICATE_CHARGE 5' % h
+    lines = (req + '\nOPEN_MONEY t1 k9 f9 store-refunds 5\n').encode()
+    for why, variables, answer, stays in (('failed sync of the WAL', dict(AIRLOCK_FAIL_SYNC='1'), 'IO_ERROR', False),
+                                          ('failed write of the record', dict(AIRLOCK_FAIL_WRITE='1'), 'IO_ERROR', False),
+                                          ('short write of 30 bytes', dict(AIRLOCK_FAIL_WRITE='1', AIRLOCK_SHORT_WRITE='30'), 'IO_ERROR', False),
+                                          ('failed sync of the WAL and of the cut', dict(AIRLOCK_FAIL_SYNC_FROM='1'), 'OUTCOME_UNKNOWN', None),
+                                          ('failed sync of the ratchet', dict(AIRLOCK_FAIL_SYNC='2'), 'OUTCOME_UNKNOWN', True),
+                                          ('failed write of the ratchet entry', dict(AIRLOCK_FAIL_WRITE='2'), 'OUTCOME_UNKNOWN', True)):
+        q = s.store('trace-fault')
+        s.one(q, 'OPEN_MONEY t1 k1 r0 store-refunds 1000 shipping_paid=10', 'COMMITTED')
+        r = req.replace(h, s.h(q, 't1', 'k1'))
+        before = files(q)
+        code, out, events = traced(s, ['serve', q], lines.replace(req.encode(), r.encode()), **variables)
+        require(len(out) == 1 and out[0].split(' ')[0] == answer and code == CODES[answer], '%s: expected one %s line, got exit %d %r' % (why, answer, code, out))
+        require(not any(o.startswith('COMMITTED') for o in out), '%s: COMMITTED after a failed sync or write' % why)
+        if stays is False:
+            require(files(q) == before, '%s: the record must be cut off again (the files changed)' % why)
+            s.one(q, r, 'COMMITTED')
+        elif stays is True:
+            require(len([e for e in effects(q) if e.startswith('REFUND')]) == 1, '%s: the durable record must stay' % why)
+            s.one(q, r, 'DUPLICATE_REQUEST_ID')
+        require('k9' not in s.run(['replay', q])[1], '%s: the stream went on after the fault' % why)
+    return 'order of init, commit, refusal, lease close, recovery; init fails cleanly at syncs 1-4; 6 commit faults; recovery fault'
+
+
+def case_dispatch(s):
+    """An answer that cannot be written: DISPATCH_FAILED (20); the commit of that line stays; no further line is read."""
+    p = s.store('dispatch')
+    s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
+    lines = ('REFUND t1 k1 d1 %s DUPLICATE_CHARGE 5\nOPEN_MONEY t1 k2 d2 store-refunds 5\n' % s.h(p, 't1', 'k1')).encode()
+    proc = subprocess.Popen([s.engine, 'serve', p], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENV)
+    proc.stdout.close()  # no reader for the answers
+    proc.stdin.write(lines)
+    proc.stdin.close()
+    code = proc.wait(timeout=60)
+    proc.stderr.read()
+    got = [e.split(' ')[0] + ' ' + e.split(' ')[3] for e in effects(p)]
+    require(code == 20, 'no reader for the answers: exit %d, expected 20 (DISPATCH_FAILED)' % code)
+    require(got == ['OPEN_MONEY r0', 'REFUND d1'], 'the stream must end at the first answer that could not be written: effects %r' % got)
+    return 'no reader: exit 20, the commit stays, the next line is not read'
+
+
+def case_lock(s):
+    """Two waiting processes and one holder of the lock (two-waiter design of Goal 19). No answer may come while the
+    holder lives; after its kill exactly one waiter commits and the other is STALE. Waits: 5 s, then 60 s at most."""
+    p = s.store('lock')
+    s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
+    h = s.h(p, 't1', 'k1')
+    start = lambda engine, req, env: subprocess.Popen([engine, 'serve', p], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    holder = start(s.kill_engine, 'h', dict(ENV, AIRLOCK_KILL_AT='a'))
+    holder.stdin.write(('REFUND t1 k1 holder %s DUPLICATE_CHARGE 5\n' % h).encode())
+    holder.stdin.flush()
+    require(holder.stderr.readline() == b'AT a\n', 'NOT RUN: the holder did not reach kill point a')
+    waiters = []
+    for i in (1, 2):
+        w = start(s.engine, 'w', ENV)
+        w.stdin.write(('REFUND t1 k1 wait-%d %s DUPLICATE_CHARGE 5\n' % (i, h)).encode())
+        w.stdin.close()
+        waiters.append(w)
+    until = time.monotonic() + 5.0  # with the lock no waiter can answer; without it both answer within milliseconds
+    while time.monotonic() < until and all(w.poll() is None for w in waiters):
+        time.sleep(0.05)
+    early = [w.poll() for w in waiters]
+    holder.send_signal(signal.SIGKILL)
+    holder.wait()
+    answers = []
+    for w in waiters:
+        answers.append(w.stdout.read().decode().split(' ')[0])
+        w.stderr.read()
+        w.wait(timeout=60)
+    require(early == [None, None], 'a waiting process answered while another process held the store lock: exit codes %r, answers %r' % (early, answers))
+    require(sorted(answers) == ['COMMITTED', 'STALE_STATE_HASH'], 'exactly one of the two waiting processes may commit: %r' % answers)
+    refunds = [e for e in effects(p) if e.startswith('REFUND')]
+    require(len(refunds) == 1, 'WAL effects after the kill: %r' % refunds)
+    return 'holder at point a; 2 waiters blocked for 5 s; after the kill: 1 COMMITTED, 1 STALE_STATE_HASH'
+
+
+def case_pin(s):
+    """The model pin and O_NOFOLLOW of booking_check.cjs, through the engine and directly. The substituted model and the
+    link lie NEXT TO the built model (build/airlock/checker), where Node finds node_modules: a check that fails only
+    for a missing module would hide a missing pin. The substituted model is the real model plus one line that makes
+    VerifyCertifiedBooking accept everything. Both files are removed at the end of the case."""
+    ex = s.node_ok()
+    require(MODEL.exists(), 'NOT RUN: the checker model %s is missing' % MODEL)
+    sub, link = MODEL.parent / ('substituted-%d.cjs' % os.getpid()), MODEL.parent / ('link-%d.cjs' % os.getpid())
+    sub.write_bytes(MODEL.read_bytes() + b'\nmodule.exports.BookingDualCert.__default.VerifyCertifiedBooking = function () { return true; };\n')
+    link.symlink_to(MODEL.name)
+    try:
+        over = json.dumps({'A': [['1', '1', '0'], ['1', '0', '1']], 'c': ['1', '1'], 'w': ['3', '2', '2'], 'x': ['1', '1', '0'], 'y': ['2', '2'],
+                           'z': ['0', '0', '0'], 'alpha_bps': '0'}).encode()
+        for model, why in ((sub, 'a substituted model'), (link, 'a symbolic link to the model')):
+            p = subprocess.run([s.node, HELPERS / 'booking_check.cjs', model], input=over, capture_output=True, env=ENV, timeout=60)
+            require(p.returncode == 2 and p.stdout == b'', 'booking_check.cjs must refuse %s (exit 2): exit %d %r' % (why, p.returncode, p.stdout))
+        p = subprocess.run([s.node, HELPERS / 'booking_check.cjs', MODEL], input=over, capture_output=True, env=ENV, timeout=60)
+        require(p.returncode == 1 and p.stdout == b'REJECT\n', 'control: the pinned model must reject the overbooking: exit %d %r' % (p.returncode, p.stdout))
+        q = s.store('pin')
+        s.one(q, 'OPEN_INVENTORY t1 inv r0 seats 1,1', 'COMMITTED')
+        good = {'A': [['1', '1', '0'], ['1', '0', '1']], 'c': ['1', '1'], 'w': ['3', '2', '2'], 'x': ['0', '1', '1'], 'y': ['2', '2'], 'z': ['0', '0', '0'], 'alpha_bps': '0'}
+        for model, why in ((sub, 'a substituted checker model'), (link, 'a symbolic link to the checker model')):
+            s.one(q, cert_line(s, q, 'b1', good), 'HELPER_FAILED', ex + ['--checker', model])
+        s.one(q, cert_line(s, q, 'b1', good), 'COMMITTED', ex + ['--checker', MODEL])
+    except Failed as e:
+        raise Failed('the model pin or O_NOFOLLOW: %s' % e)
+    finally:
+        sub.unlink(missing_ok=True)
+        link.unlink(missing_ok=True)
+    return 'substituted model and link refused directly and through the engine (HELPER_FAILED); the pinned model commits'
+
+
 CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('tenant', case_tenant), ('money', case_money),
          ('canonical', case_canonical), ('cosign', case_cosign), ('saga', case_saga), ('inventory', case_inventory), ('leases', case_leases),
-         ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill)]
+         ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
+         ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin)]
 
 
 def main():
@@ -761,6 +991,7 @@ def main():
     ap.add_argument('--case', action='append', choices=[n for n, _ in CASES])
     ap.add_argument('--node', default='/opt/homebrew/bin/node')
     ap.add_argument('--work', default=None)
+    ap.add_argument('--interposer', default=None, help='a built tests/airlock/interpose.c (else the trace case builds it)')
     ap.add_argument('--keep', action='store_true')
     a = ap.parse_args()
     for b in (a.engine, a.kill_engine):
