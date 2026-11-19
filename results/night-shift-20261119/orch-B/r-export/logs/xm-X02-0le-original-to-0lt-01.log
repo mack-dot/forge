@@ -1,0 +1,38 @@
+# owner=r-export start=2026-11-19T09:28:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-export/xm/X02-0le-original-to-0lt
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1237
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --filter-symbol MutantIffFlat Check.dfy
+# memory free percent: 40
+Check.dfy(9,2): Error: a postcondition could not be proved on this return path
+  |
+9 |   {
+  |   ^
+
+Check.dfy(8,35): Related location: this is the postcondition that could not be proved
+  |
+8 |     ensures ExportedContract(x, o) <==> FlatContract(x, o)
+  |                                    ^^^^
+
+
+Dafny program verifier finished with 0 verified, 1 error
+        4.93 real         4.64 user         0.26 sys
+           191299584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21814  page reclaims
+                 194  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                  75  voluntary context switches
+                6053  involuntary context switches
+         43171934691  instructions retired
+         15018148222  cycles elapsed
+           170673352  peak memory footprint
+# end=2026-11-19T09:28:58Z
+exit 4

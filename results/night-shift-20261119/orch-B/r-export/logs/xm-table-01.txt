@@ -1,0 +1,19 @@
+N1-neutral-eq-commuted | exit 0 | Dafny program verifier finished with 1 verified, 0 errors | 
+N2-neutral-double-negation | exit 0 | Dafny program verifier finished with 1 verified, 0 errors | 
+X02-0le-original-to-0lt | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X03-maxint-minus1 | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X04-reason-literal | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X05-swap-le-operands | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X06-drop-0le-amount | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X07-drop-request-nonempty | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X08-rename-intentCount-everywhere | exit 0 | Dafny program verifier finished with 1 verified, 0 errors | 
+X09-decl-swap-out-charge-request | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X10-decl-swap-in-charge-request | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X11-decl-double-swap | exit 0 | Dafny program verifier finished with 1 verified, 0 errors | 
+X12-count-1-to-2 | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X13-outputCharge-eq-requestId | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X14-clause3-tautology | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X15-neg-literal | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X16-eq-to-neq-count0 | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X17-huge-literal | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path
+X20-imp-to-reverse | exit 4 | Dafny program verifier finished with 0 verified, 1 error | Error: a postcondition could not be proved on this return path

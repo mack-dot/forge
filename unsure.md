@@ -17961,3 +17961,13 @@ curl: (6) Could not resolve host: github.com
 - No way was found to derive a contradiction from the hypotheses; the no-collision hypothesis is trace-local (the witness hash is not injective).
 - Impact: U538's claim is narrowed, not withdrawn. M1-B OPEN. end_to_end=false.
 - Next check: b-ser2: a core that compares hashes, with one no-collision hypothesis for both uses, issuance stated through IssueBytes, and a witness with real-shaped values.
+
+## U541 — review of U539 (export bridge): confirmed; fifteen semantic changes of the export bytes each break the equivalence proof
+- Status: 2026-11-19T09:43Z (inserted by the shell from `date -u`). Refs U539. Evidence under results/night-shift-20261119/orch-B/r-export. All runs here are the reviewer's; my own runs of the two reviewed files are in U539.
+- The reviewer's runs: ExportBridge.dfy exit 0, 1823 verified; SliceSafetyFromExport.dfy exit 0, 1892; audits without finding; the generator, run again on the export, gives byte-equal Dafny text. Its first run was a command error (exit 1; kept; not a result).
+- The main attack: is the equivalence proof vacuous because the generator writes the answer whatever the export says? No: fifteen semantic changes of the EXPORT bytes (a comparison changed, a literal changed, a conjunct dropped, a field swapped on one side, a clause made a tautology) each give exit 4 on the equivalence lemma (three of them on the full file); four neutral rewrites verify, as they must; five malformed changes are refused by the reader.
+- The double swap of U539: it is harmless at this layer (the swapped artifact is the same function); a swap on one side only is refuted by two proved lemmas, and it would break the flat-result conclusion.
+- Corrections to U539: (1) the reader binds by POSITION and checks arity and types, not names; the names are pinned on the HOL side only. (2) "the exporter's identity is not needed" must read: exporter fidelity is replaced by READER fidelity (the reader's tree equals the HOL parser's tree on these bytes): corroborated by a second reader, not proved. (3) `dafny audit` reports the top file only; an included library file holds one axiom attribute that nothing outside that file uses (the reviewer's grep).
+- The residual bridge the reviewer would sign: reader fidelity; equal values; the nine operator readings; position against name binding; the digest check on both sides; the artifact function is the HOL function and the run-time bytes are the UTF-8 encodings; tool soundness.
+- Impact: none on stage labels. M1-B OPEN. end_to_end=false.
+- Next check: none planned for this layer tonight.

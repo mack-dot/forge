@@ -1,0 +1,99 @@
+# owner=r-export start=2026-11-19T09:38:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-export/xm/X13-outputCharge-eq-requestId
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1285
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-export/logs/full-X13-outputCharge-eq-requestId-01.csv ExportBridge.dfy
+# memory free percent: 69
+ExportBridge.dfy(20,2): Error: a postcondition could not be proved on this return path
+   |
+20 |   {
+   |   ^
+
+ExportBridge.dfy(19,35): Related location: this is the postcondition that could not be proved
+   |
+19 |     ensures ExportedContract(x, o) <==> FlatContract(x, o)
+   |                                    ^^^^
+
+ExportBridge.dfy(26,2): Error: a postcondition could not be proved on this return path
+   |
+26 |   {
+   |   ^
+
+ExportBridge.dfy(25,45): Related location: this is the postcondition that could not be proved
+   |
+25 |     ensures RT.Tree1 == HM.Tree1 && RT.Tree2 == HM.Tree2 && RT.Tree3 == HM.Tree3
+   |                                              ^^
+
+ExportBridge.dfy(37,2): Error: a postcondition could not be proved on this return path
+   |
+37 |   {
+   |   ^
+
+ExportBridge.dfy(33,34): Related location: this is the postcondition that could not be proved
+   |
+33 |     ensures ExportedClause2(x, o) == HM.Source2(x.chargeB, x.requestB, x.original, x.remaining, x.enabled,
+   |                                   ^^
+
+ExportBridge.dfy(75,2): Error: a postcondition could not be proved on this return path
+   |
+75 |   {
+   |   ^
+
+ExportBridge.dfy(73,28): Related location: this is the postcondition that could not be proved
+   |
+73 |     ensures ExportedContract(FlatIn("ch_1", "rq_0", 100, 60, true, true, true, 0, "duplicate_charge"),
+   |                             ^
+
+gen/ExportedContract.dfy(26,44): Related location: this proposition could not be proved
+   |
+26 |     ExportedClause1(x, o) && ExportedClause2(x, o) && ExportedClause3(x, o)
+   |                                             ^
+
+gen/ExportedContract.dfy(16,66): Related location: this proposition could not be proved
+   |
+16 |     (o.0 ==> (((((o.1 == x.amount) && (o.2 == x.reasonB)) && (o.3 == x.requestB)) && (o.4 == x.requestB)) && (o.5 == (1))))
+   |                                                                   ^^
+
+ExportBridge.dfy(87,2): Error: a postcondition could not be proved on this return path
+   |
+87 |   {
+   |   ^
+
+ExportBridge.dfy(81,28): Related location: this is the postcondition that could not be proved
+   |
+81 |     ensures ExportedContract(FlatIn("ch_1", "rq_1", 100, 60, true, true, true, 40, "duplicate_charge"),
+   |                             ^
+
+gen/ExportedContract.dfy(26,44): Related location: this proposition could not be proved
+   |
+26 |     ExportedClause1(x, o) && ExportedClause2(x, o) && ExportedClause3(x, o)
+   |                                             ^
+
+gen/ExportedContract.dfy(16,66): Related location: this proposition could not be proved
+   |
+16 |     (o.0 ==> (((((o.1 == x.amount) && (o.2 == x.reasonB)) && (o.3 == x.requestB)) && (o.4 == x.requestB)) && (o.5 == (1))))
+   |                                                                   ^^
+
+
+Dafny program verifier finished with 1818 verified, 5 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-export/logs/full-X13-outputCharge-eq-requestId-01.csv
+       72.92 real        50.25 user         3.55 sys
+           371965952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              116368  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  23  signals received
+                8852  voluntary context switches
+              227225  involuntary context switches
+        471232132577  instructions retired
+        166312345924  cycles elapsed
+           338576728  peak memory footprint
+# end=2026-11-19T09:39:51Z
+exit 4

@@ -1,0 +1,28 @@
+# owner=r-export start=2026-11-19T09:28:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-export/xm/N1-neutral-eq-commuted
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1237
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --filter-symbol MutantIffFlat Check.dfy
+# memory free percent: 40
+
+Dafny program verifier finished with 1 verified, 0 errors
+        4.79 real         4.63 user         0.24 sys
+           191315968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21979  page reclaims
+                 173  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                  77  voluntary context switches
+                4303  involuntary context switches
+         43628520888  instructions retired
+         15016860002  cycles elapsed
+           170788064  peak memory footprint
+# end=2026-11-19T09:28:28Z
+exit 0

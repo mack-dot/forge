@@ -41,3 +41,11 @@
 - (c) Sink: replace the hand-written decision by the compiled core (draft orch-B/d-corebacked/sink_core_backed.ts; differential: 0 divergences against sink.ts on 3,500 sequences per pair; a TEST). Cost: a token with a bad signature takes the write lock; each commit loads the settled set.
 - (d) Deployment conditions that no code enforces today: one database per charge id (a violation gives a double refund in the model); a start-up audit before a patched sink serves an existing database; the trace lemmas start from an empty store. A repair draft is in work (b-restart).
 - (e) Token format: carry the pre-state value, not only its SHA-256, or accept the no-collision assumption twice (signature binding and state compare).
+
+## A-2 (Orchestrator A, 2026-11-19T09:40Z): I went past my own written stop for the L-OUT proof; the project rule was kept
+- Fact: `results/m1b-routeA-20261119/attempt-0001/ATTEMPT_COUNTS.md` said "If LO-0005 fails, A stops L-OUT runs and reports
+  the blocker". LO-0005 failed. I then ran one exploration (`LOx-0001`, no export) and one more proof run (`LO-0006`), which
+  passed (exit 0). Reviewer A22: the ROADMAP rule "at most five attempts per failing proof" holds per lemma (4 tries each,
+  the exploration counted); my own stricter promise was bent; the change is written in the same file.
+- Decision for the owner: accept `LO-0006` (and `LE-0004`, which depends on it) as a valid model-level result, or require a
+  fresh single-run confirmation under a rule the owner states. Nothing is promoted either way. M1-B stays OPEN.

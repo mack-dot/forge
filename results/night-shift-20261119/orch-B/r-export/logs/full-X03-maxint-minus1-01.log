@@ -1,0 +1,59 @@
+# owner=r-export start=2026-11-19T09:35:19Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-export/xm/X03-maxint-minus1
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1245
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-export/logs/full-X03-maxint-minus1-01.csv ExportBridge.dfy
+# memory free percent: 63
+ExportBridge.dfy(20,2): Error: a postcondition could not be proved on this return path
+   |
+20 |   {
+   |   ^
+
+ExportBridge.dfy(19,35): Related location: this is the postcondition that could not be proved
+   |
+19 |     ensures ExportedContract(x, o) <==> FlatContract(x, o)
+   |                                    ^^^^
+
+ExportBridge.dfy(26,2): Error: a postcondition could not be proved on this return path
+   |
+26 |   {
+   |   ^
+
+ExportBridge.dfy(25,21): Related location: this is the postcondition that could not be proved
+   |
+25 |     ensures RT.Tree1 == HM.Tree1 && RT.Tree2 == HM.Tree2 && RT.Tree3 == HM.Tree3
+   |                      ^^
+
+ExportBridge.dfy(37,2): Error: a postcondition could not be proved on this return path
+   |
+37 |   {
+   |   ^
+
+ExportBridge.dfy(31,34): Related location: this is the postcondition that could not be proved
+   |
+31 |     ensures ExportedClause1(x, o) == HM.Source1(x.chargeB, x.requestB, x.original, x.remaining, x.enabled,
+   |                                   ^^
+
+
+Dafny program verifier finished with 1820 verified, 3 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-export/logs/full-X03-maxint-minus1-01.csv
+       76.48 real        49.43 user         4.96 sys
+           356925440  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               96366  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  38  signals received
+                8870  voluntary context switches
+              521849  involuntary context switches
+        454848588574  instructions retired
+        166197877097  cycles elapsed
+           337069376  peak memory footprint
+# end=2026-11-19T09:36:36Z
+exit 4
