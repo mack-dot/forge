@@ -1,0 +1,172 @@
+# owner=b-ser2 start=2026-11-19T09:45:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2/scratch
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1317
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 SC.dfy
+# memory free percent: 47
+Encountered internal compilation exception: Object reference not set to an instance of an object.
+SC.dfy(17,11): Error: Internal error occurred during verification: Object reference not set to an instance of an object.
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+    at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+    at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+    at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+    at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Dafny.BoogieGenerator.VariableNameVisitor.VisitBinderExpr(BinderExpr node)
+    at Microsoft.Boogie.StandardVisitor.VisitQuantifierExpr(QuantifierExpr node)
+    at Microsoft.Boogie.StandardVisitor.VisitForallExpr(ForallExpr node)
+    at Microsoft.Boogie.ForallExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitLetExpr(LetExpr node)
+    at Microsoft.Boogie.LetExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+    at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+    at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+    at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+    at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+    at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+    at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+    at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+    at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+    at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+    at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+    at Microsoft.Dafny.BoogieGenerator.BplForallTrim(IEnumerable`1 varsAndAntecedents, Trigger trg, Expr body)
+    at Microsoft.Dafny.BoogieGenerator.ExpressionTranslator.CanCallAssumption(Expression expr, CanCallOptions cco)
+    at Microsoft.Dafny.BoogieGenerator.GetFunctionAxiom(Function f, Expression body, List`1 lits)
+    at Microsoft.Dafny.BoogieGenerator.AddFunctionAxiom(Function boogieFunction, Function f, Expression body)
+    at Microsoft.Dafny.BoogieGenerator.AddClassMember_Function(Function f)
+    at Microsoft.Dafny.BoogieGenerator.AddFunction_Top(Function f, Boolean includeAllMethods)
+    at Microsoft.Dafny.BoogieGenerator.AddClassMembers(TopLevelDeclWithMembers c, Boolean includeAllMethods, Boolean includeInformationAboutType)
+    at Microsoft.Dafny.BoogieGenerator.AddRevealableTypeDecl(RevealableTypeDecl d)
+    at Microsoft.Dafny.BoogieGenerator.DoTranslation(Program p, ModuleDefinition forModule)
+    at Microsoft.Dafny.LanguageServer.Language.DafnyProgramVerifier.<>c__DisplayClass3_0.<GetVerificationTasksAsync>b__0()
+    at System.Threading.Tasks.Task`1.InnerInvoke()
+    at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+ --- End of stack trace from previous location ---
+    at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+    at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+ --- End of stack trace from previous location ---
+    at Microsoft.Dafny.LanguageServer.Language.DafnyProgramVerifier.GetVerificationTasksAsync(ExecutionEngine engine, ResolutionResult resolution, ModuleDefinition moduleDefinition, CancellationToken cancellationToken)
+    at Microsoft.Dafny.Compilation.<>c__DisplayClass60_0.<<VerifyUnverifiedSymbol>b__1>d.MoveNext()
+ --- End of stack trace from previous location ---
+    at Microsoft.Dafny.Compilation.VerifyUnverifiedSymbol(Boolean onlyPrepareVerificationForGutterTests, ICanVerify canVerify, ResolutionResult resolution, Func`2 taskFilter, Nullable`1 randomSeed)
+    at DafnyDriver.Commands.CliCompilation.VerifyAllLazily(Nullable`1 randomSeed)+MoveNext()
+   |
+17 |   function TNext(H: HashFn, r: RunSt, a: Act): RunSt
+   |            ^^^^^
+
+Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+   at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+   at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+   at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+   at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Dafny.BoogieGenerator.VariableNameVisitor.VisitBinderExpr(BinderExpr node)
+   at Microsoft.Boogie.StandardVisitor.VisitQuantifierExpr(QuantifierExpr node)
+   at Microsoft.Boogie.StandardVisitor.VisitForallExpr(ForallExpr node)
+   at Microsoft.Boogie.ForallExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitLetExpr(LetExpr node)
+   at Microsoft.Boogie.LetExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+   at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+   at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+   at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+   at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+   at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+   at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Boogie.StandardVisitor.VisitExpr(Expr node)
+   at Microsoft.Boogie.StandardVisitor.VisitExprSeq(IList`1 exprSeq)
+   at Microsoft.Boogie.StandardVisitor.VisitNAryExpr(NAryExpr node)
+   at Microsoft.Boogie.NAryExpr.StdDispatch(StandardVisitor visitor)
+   at Microsoft.Boogie.StandardVisitor.Visit(Absy node)
+   at Microsoft.Dafny.BoogieGenerator.BplForallTrim(IEnumerable`1 varsAndAntecedents, Trigger trg, Expr body)
+   at Microsoft.Dafny.BoogieGenerator.ExpressionTranslator.CanCallAssumption(Expression expr, CanCallOptions cco)
+   at Microsoft.Dafny.BoogieGenerator.GetFunctionAxiom(Function f, Expression body, List`1 lits)
+   at Microsoft.Dafny.BoogieGenerator.AddFunctionAxiom(Function boogieFunction, Function f, Expression body)
+   at Microsoft.Dafny.BoogieGenerator.AddClassMember_Function(Function f)
+   at Microsoft.Dafny.BoogieGenerator.AddFunction_Top(Function f, Boolean includeAllMethods)
+   at Microsoft.Dafny.BoogieGenerator.AddClassMembers(TopLevelDeclWithMembers c, Boolean includeAllMethods, Boolean includeInformationAboutType)
+   at Microsoft.Dafny.BoogieGenerator.AddRevealableTypeDecl(RevealableTypeDecl d)
+   at Microsoft.Dafny.BoogieGenerator.DoTranslation(Program p, ModuleDefinition forModule)
+   at Microsoft.Dafny.LanguageServer.Language.DafnyProgramVerifier.<>c__DisplayClass3_0.<GetVerificationTasksAsync>b__0()
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.Dafny.LanguageServer.Language.DafnyProgramVerifier.GetVerificationTasksAsync(ExecutionEngine engine, ResolutionResult resolution, ModuleDefinition moduleDefinition, CancellationToken cancellationToken)
+   at Microsoft.Dafny.Compilation.<>c__DisplayClass60_0.<<VerifyUnverifiedSymbol>b__1>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.Dafny.Compilation.VerifyUnverifiedSymbol(Boolean onlyPrepareVerificationForGutterTests, ICanVerify canVerify, ResolutionResult resolution, Func`2 taskFilter, Nullable`1 randomSeed)
+   at DafnyDriver.Commands.CliCompilation.VerifyAllLazily(Nullable`1 randomSeed)+System.Threading.Tasks.Sources.IValueTaskSource<System.Boolean>.GetResult()
+   at System.Linq.AsyncEnumerable.ToObservableObservable`1.<>c__DisplayClass2_0.<<Subscribe>g__Core|0>d.MoveNext() in /_/Ix.NET/Source/System.Linq.Async/System/Linq/Operators/ToObservable.cs:line 50
+--- End of stack trace from previous location ---
+   at System.Reactive.PlatformServices.ExceptionServicesImpl.Rethrow(Exception exception) in /_/Rx.NET/Source/src/System.Reactive/Internal/ExceptionServicesImpl.cs:line 16
+   at System.Reactive.ExceptionHelpers.Throw(Exception exception) in /_/Rx.NET/Source/src/System.Reactive/Internal/ExceptionServices.cs:line 14
+   at System.Reactive.Stubs.<>c.<.cctor>b__2_1(Exception ex) in /_/Rx.NET/Source/src/System.Reactive/Internal/Stubs.cs:line 16
+   at System.Reactive.AnonymousObserver`1.OnErrorCore(Exception error) in /_/Rx.NET/Source/src/System.Reactive/AnonymousObserver.cs:line 73
+   at System.Reactive.ObserverBase`1.OnError(Exception error) in /_/Rx.NET/Source/src/System.Reactive/ObserverBase.cs:line 59
+   at System.Reactive.Subjects.Subject`1.OnError(Exception error) in /_/Rx.NET/Source/src/System.Reactive/Subjects/Subject.cs:line 103
+   at System.Linq.AsyncEnumerable.ToObservableObservable`1.<>c__DisplayClass2_0.<<Subscribe>g__Core|0>d.MoveNext() in /_/Ix.NET/Source/System.Linq.Async/System/Linq/Operators/ToObservable.cs:line 60
+--- End of stack trace from previous location ---
+   at System.Linq.AsyncEnumerable.ToObservableObservable`1.<>c__DisplayClass2_0.<<Subscribe>g__Core|0>d.MoveNext() in /_/Ix.NET/Source/System.Linq.Async/System/Linq/Operators/ToObservable.cs:line 74
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.<>c.<ThrowAsync>b__128_1(Object state)
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+time: command terminated abnormally
+        4.07 real         3.68 user         0.18 sys
+           169246720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15557  page reclaims
+                  98  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  76  voluntary context switches
+                3467  involuntary context switches
+         33345631819  instructions retired
+         11689663500  cycles elapsed
+           147293360  peak memory footprint
+# end=2026-11-19T09:45:36Z
+exit 134

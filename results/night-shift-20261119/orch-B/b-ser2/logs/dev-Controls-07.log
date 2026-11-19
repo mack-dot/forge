@@ -1,0 +1,53 @@
+# owner=b-ser2 start=2026-11-19T10:05:08Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 568
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --isolate-assertions --filter-symbol Wf ControlsBytesV3.dfy
+# memory free percent: 72
+ControlsBytesV3.dfy(253,51): Error: Verification out of resource (ControlsBytesV3.WfCommon)
+    |
+253 |     ShortText("ch_1"); ShortText("ch_2"); ShortText(DC);
+    |                                                    ^
+
+ControlsBytesV3.dfy(257,25): Error: Verification out of resource (ControlsBytesV3.WfTK0)
+    |
+257 |     WfCommon(); ShortText("rq_0");
+    |                          ^
+
+ControlsBytesV3.dfy(262,25): Error: Verification out of resource (ControlsBytesV3.WfTK1)
+    |
+262 |     WfCommon(); ShortText("rq_1");
+    |                          ^
+
+ControlsBytesV3.dfy(267,25): Error: Verification out of resource (ControlsBytesV3.WfTKC)
+    |
+267 |     WfCommon(); ShortText("rq_c");
+    |                          ^
+
+ControlsBytesV3.dfy(272,25): Error: Verification out of resource (ControlsBytesV3.WfFTOK)
+    |
+272 |     WfCommon(); ShortText("rq_f");
+    |                          ^
+
+
+Dafny program verifier finished with 228 verified, 0 errors, 5 out of resource
+       19.68 real        14.82 user         0.75 sys
+           314097664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               42813  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  20  signals received
+                2412  voluntary context switches
+               34487  involuntary context switches
+        131708912100  instructions retired
+         47777059957  cycles elapsed
+           281085224  peak memory footprint
+# end=2026-11-19T10:05:27Z
+exit 4

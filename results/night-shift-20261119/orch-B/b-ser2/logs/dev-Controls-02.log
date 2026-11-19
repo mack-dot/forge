@@ -1,0 +1,98 @@
+# owner=b-ser2 start=2026-11-19T09:58:01Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 536
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects ControlsBytesV3.dfy
+# memory free percent: 61
+ControlsBytesV3.dfy(61,38): Error: assertion might not hold
+   |
+61 |     assert HX0[0] != HX1[0] && HX0[0] != HX2[0] && HX1[0] != HX2[0];
+   |                                       ^^
+
+ControlsBytesV3.dfy(61,58): Error: assertion might not hold
+   |
+61 |     assert HX0[0] != HX1[0] && HX0[0] != HX2[0] && HX1[0] != HX2[0];
+   |                                                           ^^
+
+ControlsBytesV3.dfy(62,18): Error: assertion might not hold
+   |
+62 |     assert HX0[0] != HX3[0] && HX1[0] != HX3[0] && HX2[0] != HX3[0];
+   |                   ^^
+
+ControlsBytesV3.dfy(62,38): Error: assertion might not hold
+   |
+62 |     assert HX0[0] != HX3[0] && HX1[0] != HX3[0] && HX2[0] != HX3[0];
+   |                                       ^^
+
+ControlsBytesV3.dfy(62,58): Error: assertion might not hold
+   |
+62 |     assert HX0[0] != HX3[0] && HX1[0] != HX3[0] && HX2[0] != HX3[0];
+   |                                                           ^^
+
+ControlsBytesV3.dfy(114,8): Error: Verification out of resource (ControlsBytesV3.WitPrefixes)
+    |
+114 |   lemma WitPrefixes()
+    |         ^^^^^^^^^^^
+
+ControlsBytesV3.dfy(209,4): Error: assertion might not hold
+    |
+209 |     assert PIN_SPEC == seq(64, _ => 'a');
+    |     ^^^^^^
+
+ControlsBytesV3.dfy(210,4): Error: assertion might not hold
+    |
+210 |     assert PIN_CHK == seq(64, _ => 'b');
+    |     ^^^^^^
+
+ControlsBytesV3.dfy(211,4): Error: assertion might not hold
+    |
+211 |     assert HX0 == seq(64, _ => '0');
+    |     ^^^^^^
+
+ControlsBytesV3.dfy(212,4): Error: assertion might not hold
+    |
+212 |     assert HX1 == seq(64, _ => '1');
+    |     ^^^^^^
+
+ControlsBytesV3.dfy(213,4): Error: assertion might not hold
+    |
+213 |     assert HX2 == seq(64, _ => '2');
+    |     ^^^^^^
+
+ControlsBytesV3.dfy(293,80): Error: index out of range
+    |
+293 |       r.core.outbox == [I1] && r.pres == [P_COLL] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0]) &&
+    |                                                                                 ^
+
+ControlsBytesV3.dfy(356,79): Error: index out of range
+    |
+356 |       r.core.outbox == [IB] && r.pres == [W_PRE] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                                                ^
+
+ControlsBytesV3.dfy(383,79): Error: index out of range
+    |
+383 |       r.core.outbox == [IB] && r.pres == [W_PRE] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                                                ^
+
+
+Dafny program verifier finished with 40 verified, 13 errors, 1 out of resource
+       10.47 real         8.73 user         0.35 sys
+           357597184  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37388  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 816  voluntary context switches
+               13991  involuntary context switches
+         84307442103  instructions retired
+         28468656947  cycles elapsed
+           324633992  peak memory footprint
+# end=2026-11-19T09:58:12Z
+exit 4

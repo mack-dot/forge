@@ -1,0 +1,28 @@
+# owner=b-ser2 start=2026-11-19T09:51:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1333
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyBytesV3.dfy
+# memory free percent: 43
+
+Dafny program verifier finished with 38 verified, 0 errors
+       10.77 real         9.79 user         0.47 sys
+           267272192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49467  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 961  voluntary context switches
+               11150  involuntary context switches
+         86003978520  instructions retired
+         31631868634  cycles elapsed
+           270746944  peak memory footprint
+# end=2026-11-19T09:51:43Z
+exit 0

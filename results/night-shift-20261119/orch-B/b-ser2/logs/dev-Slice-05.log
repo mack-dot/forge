@@ -1,0 +1,48 @@
+# owner=b-ser2 start=2026-11-19T09:49:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1333
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects SliceSafetyBytesV3.dfy
+# memory free percent: 55
+SliceSafetyBytesV3.dfy(411,40): Warning: unusual indentation in body of exists (which ends at line 412, column 121); do you perhaps need parentheses?
+    |
+411 |       (forall e | e in r.core.outbox :: exists i :: 0 <= i < |r.toks| && r.core.outbox[i] == e &&
+    |                                         ^^^^^^
+
+SliceSafetyBytesV3.dfy(422,14): Warning: unusual indentation in body of exists (which ends at line 423, column 121); do you perhaps need parentheses?
+    |
+422 |       ensures exists i :: 0 <= i < |r.toks| && r.core.outbox[i] == e &&
+    |               ^^^^^^
+
+SliceSafetyBytesV3.dfy(345,8): Error: Verification out of resource (SliceSafetyBytesV3.InvL2Holds)
+    |
+345 |   lemma InvL2Holds(H: HashFn, init: F.Charge, acts: seq<Act>, vb: ByteVerifier, k: int)
+    |         ^^^^^^^^^^
+
+SliceSafetyBytesV3.dfy(411,86): Error: index out of range
+    |
+411 |       (forall e | e in r.core.outbox :: exists i :: 0 <= i < |r.toks| && r.core.outbox[i] == e &&
+    |                                                                                       ^
+
+
+Dafny program verifier finished with 34 verified, 1 error, 1 out of resource
+       11.39 real        10.78 user         0.43 sys
+           290996224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43337  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   8  signals received
+                 907  voluntary context switches
+               12883  involuntary context switches
+         95141315578  instructions retired
+         34442189892  cycles elapsed
+           275924216  peak memory footprint
+# end=2026-11-19T09:50:08Z
+exit 4

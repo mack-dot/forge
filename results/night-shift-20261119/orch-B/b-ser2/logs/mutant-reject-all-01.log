@@ -1,0 +1,88 @@
+# owner=b-ser2 start=2026-11-19T10:09:08Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2/mutants/reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 640
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore.dfy SliceSafetyBytesV3.dfy ControlsBytesV3.dfy
+# memory free percent: 71
+ControlsBytesV3.dfy(118,2): Error: a postcondition could not be proved on this return path
+    |
+118 |   {
+    |   ^
+
+ControlsBytesV3.dfy(113,53): Related location: this is the postcondition that could not be proved
+    |
+113 |     ensures Step(HW, Core(W_PRE, {}, []), TK0, true) == StepResult(Core(W_PRE, {"rq_0"}, [I0]), Committed)
+    |                                                      ^^
+
+ControlsBytesV3.dfy(311,2): Error: a postcondition could not be proved on this return path
+    |
+311 |   {
+    |   ^
+
+ControlsBytesV3.dfy(309,79): Related location: this is the postcondition that could not be proved
+    |
+309 |     ensures Step(HW, Core(W_POST, {"rq_0", "rq_1"}, [I0, I1]), MTOK, true).out == Rejected(ReqIdMismatch)
+    |                                                                                ^^
+
+ControlsBytesV3.dfy(340,2): Error: a postcondition could not be proved on this return path
+    |
+340 |   {
+    |   ^
+
+ControlsBytesV3.dfy(339,42): Related location: this is the postcondition that could not be proved
+    |
+339 |     ensures TExec(HC, P_COLL, CollActs()) == RunSt(Core(W_POST, {"rq_1"}, [I1]), [TCOLL], [P_COLL], [1], 2)
+    |                                           ^^
+
+ControlsBytesV3.dfy(390,2): Error: a postcondition could not be proved on this return path
+    |
+390 |   {
+    |   ^
+
+ControlsBytesV3.dfy(389,34): Related location: this is the postcondition that could not be proved
+    |
+389 |     ensures TExec(H, W_PRE, acts) == RunSt(Core(F.Charge("ch_1", 100, 0, true), {"rq_b"}, [IB]), [BTOK], [W_PRE], [1], 2)
+    |                                   ^^
+
+HashCore.dfy(106,2): Error: a postcondition could not be proved on this return path
+    |
+106 |   {}
+    |   ^
+
+HashCore.dfy(99,53): Related location: this is the postcondition that could not be proved
+   |
+99 |     ensures Step(H, core, tok, sigOk).out.Committed? <==>
+   |                                                      ^^^^
+
+HashCore.dfy(142,2): Error: a postcondition could not be proved on this return path
+    |
+142 |   {}
+    |   ^
+
+HashCore.dfy(140,41): Related location: this is the postcondition that could not be proved
+    |
+140 |     ensures Step(H, core, tok, true).out.Committed?
+    |                                          ^^^^^^^^^^
+
+
+Dafny program verifier finished with 133 verified, 6 errors
+       18.45 real        16.68 user         0.97 sys
+           365428736  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45255  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   8  signals received
+                1841  voluntary context switches
+               45075  involuntary context switches
+        149477821262  instructions retired
+         54147951632  cycles elapsed
+           332449136  peak memory footprint
+# end=2026-11-19T10:09:26Z
+exit 4

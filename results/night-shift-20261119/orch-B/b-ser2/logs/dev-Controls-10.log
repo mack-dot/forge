@@ -1,0 +1,33 @@
+# owner=b-ser2 start=2026-11-19T10:07:39Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 584
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects ControlsBytesV3.dfy
+# memory free percent: 62
+ControlsBytesV3.dfy(11,8): Error: Verification out of resource (ShortTexts.Texts)
+   |
+11 |   lemma Texts()
+   |         ^^^^^
+
+
+Dafny program verifier finished with 59 verified, 0 errors, 1 out of resource
+       10.76 real         9.28 user         0.34 sys
+           365772800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34180  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   7  signals received
+                 938  voluntary context switches
+                9530  involuntary context switches
+         88498684505  instructions retired
+         30251816411  cycles elapsed
+           332793176  peak memory footprint
+# end=2026-11-19T10:07:50Z
+exit 4

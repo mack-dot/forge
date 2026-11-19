@@ -85,3 +85,17 @@ Evidence: `orch-A/ffi-hardening/` (worker A23; NOT re-run by A except where said
 - (b) Initial state: the sink stores only a hash of the initial charge; an audit must take the value as an input. Decision: the issuer (or the owner) signs the initial charge at creation, and the sink checks that signature; this also answers "who may create a charge", which no code decides today.
 - (c) One store per charge id: make the charge key mandatory in the sink configuration and derive the database path from the charge id inside the sink; never reuse a key after a delete (a tombstone). Draft diff (opt-in key, per-row audit checks): orch-B/b-restart/ts/sink-keyed-chargeid.diff SHA-256 556b55fb6a4bbf2e3081fb02a9ad047c75398eed7e68333d9dc83fc8cae29882; it applies on top of the B-2 diff, not on the repository file.
 - (d) Adoption candidates, both drafts with a clean differential or conformance test: the sink with the compiled V3 core and a start-up audit (orch-B/d-v3sink/sink_core_backed_v3.ts, SHA-256 d9c8c46f7a977a90c9040691fdccff0ba5991a67440e61c80f1c6395b5ea9148); the minter that signs only the bytes of the proved method (orch-B/d-minter/minter_issuebytes.ts, 463e9f8ebac92c294ea896deba550faebfe837967b6bc3c1641122e02a3fa3ab). Each changes the Slice 1 bundle and the checker pin of every sink. An existing store written by the present sink can fail the start-up audit; it then needs a repair decision.
+
+## A-3 addendum (Orchestrator A, 2026-11-19T10:20Z): two HOL results now bear on the decision
+- Proved (case `L2d-0001`, exit 0; review running): with the valid-call predicate "the argument SHAPES that the basis
+  oracle accepts" (read/write: array length ≥ 4; close: configuration length 8 and array length ≥ 1; open_in: array
+  length ≥ 1), the program-behaviour premise follows from the oracle ALONE. Theorems `refund_profile_a_sl_shape` and
+  `refund_model_frame_decision_shape`: the machine-model theorem and the composed theorem (machine model → strict parse →
+  exported contract) with ONE FFI premise left: the contract at shape-valid calls for the FFI effect (NATIVE).
+  For the PRESENT C code that premise fails where the C aborts and the model returns an error byte. For the unapplied
+  model-total patch it is plausible (TESTED-UNPROVED). So Option B2 needs no program-behaviour proof at model level.
+- Study (worker A25, by reading; exploration run pending): for the PRESENT executable the missing statement R6 needs a
+  re-proof of the CakeML TextIO specifications on the program path with an event invariant: about 1,700–1,900 lines,
+  estimated 4–7 working days, medium-high risk. A replay-based shortcut is refuted (an error-return event leaves the file
+  system unchanged, so the stored replay equation cannot exclude it).
+- The decision stays with the owner. A applies nothing.

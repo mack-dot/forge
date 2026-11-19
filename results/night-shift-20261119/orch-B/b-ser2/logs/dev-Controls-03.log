@@ -1,0 +1,58 @@
+# owner=b-ser2 start=2026-11-19T10:00:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-ser2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 544
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects ControlsBytesV3.dfy
+# memory free percent: 64
+ControlsBytesV3.dfy(92,8): Error: Verification out of resource (ControlsBytesV3.WitSteps)
+   |
+92 |   lemma WitSteps()
+   |         ^^^^^^^^
+
+ControlsBytesV3.dfy(185,8): Error: Verification out of resource (ControlsBytesV3.WitSig)
+    |
+185 |   lemma WitSig()
+    |         ^^^^^^
+
+ControlsBytesV3.dfy(207,8): Error: Verification out of resource (ControlsBytesV3.WitA4)
+    |
+207 |   lemma WitA4()
+    |         ^^^^^
+
+ControlsBytesV3.dfy(224,8): Error: Verification out of resource (ControlsBytesV3.WitBodiesWf)
+    |
+224 |   lemma WitBodiesWf()
+    |         ^^^^^^^^^^^
+
+ControlsBytesV3.dfy(364,8): Error: Verification out of resource (ControlsBytesV3.DropA2pBreaksApproval)
+    |
+364 |   lemma DropA2pBreaksApproval()
+    |         ^^^^^^^^^^^^^^^^^^^^^
+
+ControlsBytesV3.dfy(391,8): Error: Verification out of resource (ControlsBytesV3.DropH1BBreaksApproval)
+    |
+391 |   lemma DropH1BBreaksApproval()
+    |         ^^^^^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 48 verified, 0 errors, 6 out of resource
+       10.35 real         8.55 user         0.34 sys
+           351059968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37144  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   7  signals received
+                 895  voluntary context switches
+                8604  involuntary context switches
+         80610751285  instructions retired
+         27838032167  cycles elapsed
+           318096752  peak memory footprint
+# end=2026-11-19T10:00:20Z
+exit 4
