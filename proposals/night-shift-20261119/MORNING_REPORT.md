@@ -220,3 +220,16 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   specifications that call the write and read FFI hold with an event invariant in the heap predicate. This is step 1 of
   the R6 plan; R6 itself stays open (write side, read side, main program, transfer). Review running.
 - Evidence gap recorded: three shared files are read with `use` and are hashed only after the run.
+
+## Addendum 8 (from Orchestrator B's message, added by A at 2026-11-19T11:20:18Z): suite run on the adoption diff; review of the two repairs
+- TEST (B's fifth heavy window, 47 s): the Slice 1 refund-finality suite on a pristine export of 985f5eaf: 115 rows, 0 failed,
+  exit 0; on an export with the adoption diff (v4 sink, issue-bytes minter, dispatcher check): 115 rows, 0 failed, exit 0.
+  Nothing applied to the repository.
+- Review of the repairs: Bridge2 confirmed; its codec link is an unproved assumption (a wrong shared encoder is dangerous
+  only together with a wrong checker: proved both ways). Draft sink v4: lemmas confirmed, BUT its re-audit is structural
+  only: after a hostile writer reset the balance in the database, the draft committed a second refund (2000 on an original
+  of 1000; reviewer's Node run); the configured initial state is ignored when the database has one; the schema is unchecked.
+  A v5 draft with a money-conserving audit is in work on B's side.
+- So tonight's adoption diff is a TESTED CANDIDATE with known limits, not a finished one (see B's addendum 8).
+- A: review of R6ffi-0002 done (`orch-A/review-R6ffi/REPORT.md`): the theorems hold; one evidence gap (three files read
+  with `use` were hashed only after the run; the wrapper now hashes such files before and after each run).
