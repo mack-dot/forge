@@ -204,3 +204,9 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - 14:01:57Z r-v5 REPORTED: audit CONFIRMED; new limit F1 (zero-amount row deletion/reorder/recommit by a database writer without the key); B's re-run AttackV5 166 exit 0. U565, addendum 20, OWNER_REQUIRED addition. Running: e-subset3. B's f5 controls: 
 - 14:03:12Z commit 484d45e8 (U565, addendum 20). e-subset3 REPORTED (rule 3: allow-list recognizer; refuses all review bypasses; refuses 21 of 67 correct; worker's judgement: only a narrow fallback; parser-based route needed for trust). B: diffs check 0. HEAVY WINDOW 9 STARTED 14:02:13Z by B (no HOL process; A stopped): e-subset3/heavy/gate_subset3.sh, 272 files; log heavy/window-10.log; holds heavy.lock and dafny.lock. Review r-subset3 started. Running: r-subset3.
 - 14:10:13Z HEAVY WINDOW 9 DONE (14:02:13Z–14:09:48Z): rule 3 gate copy: correct 46/67; halting 0/24; review bypasses 0/23; new attacks 12/51 accepted (argued bounded). Locks: none held. U566, addendum 21. Running: r-subset3.
+
+## BATTERY at 2026-11-19T14:14:40Z (launcher order 14:14Z): no Dafny multi-module run, no heavy window, no HOL until AC returns
+- B holds no lock. No heavy job of B runs. The lock script refuses every Dafny run on battery (exit 75) by itself.
+- Branch nightshift/B-trust at 11adbf23. unsure U530–U566. MORNING.md final with addenda 1–21. OWNER_REQUIRED B-1 to B-11 with corrections.
+- Worker still assigned: r-subset3 (adversarial review of the third subset rule); told to do pure-Python and reading work only while on battery; its Dafny runs will be refused (exit 75) and must be recorded NOT RUN.
+- When AC returns: nothing is queued by B. Possible next steps: re-check r-subset3's result; a last ledger note; final state.

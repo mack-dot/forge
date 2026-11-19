@@ -28,6 +28,28 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Night shift 2026-11-19, trust track, part 3 (Orchestrator B): the layered byte-level lemma with the commit-time check; reviews; the suite with the v6 adoption diff; three subset rules, one refuted — U559 to U566
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing applied, merged, pushed or signed.
+Rows marked (B) are the orchestrator's own runs with a stored log; (w) are worker runs that (B) did not repeat. Heavy steps ran only when no HOL process ran.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| (B) `verify ControlsBytesV6.dfy TopV6Export.dfy KeyedV6.dfy` |0|2352 verified; approval of committed effects with no hypothesis (reading CTX-SINK); reviewed: confirmed, wording narrowed |
+| (B) `verify` of the reviewers' files RV6Lemmas, AttackV5 |0; 0|2004; 166 verified; a hash collision cannot cause a commit; a zero-amount row can be deleted from an audited store and commits again |
+| (B) Slice 1 suite: pristine export; export with the v6 adoption diff; a measurement copy |0; 2; 1|115 rows, 0 failed; stops at one row by design (the v6 sink refuses a rewritten store); 115 rows, 1 failed |
+| (B) gate copy with the second subset rule, 138 submissions |0 for 46 of 47 correct; 1 for each of 24 halting|a measurement over those files; the rule's cost claim is REFUTED (next row) |
+| (B) the second rule on three files of its review; (w) Dafny verify of those files |"pass" each; 0 each|admitted submissions that hang, run in time unbounded by the text, or fail to load |
+| (B) gate copy with the third subset rule, 272 submissions |0 for 46 of 67 correct; 1 for each of 24 halting and each of 23 review cases|no known bypass; not reviewed; its bound is an argument |
+| (B) TypeScript issuer bridge against the reference, 111 vectors |0|0 differences |
+| (B) ledger verifiers f-binding-4 and f-binding-5; controls of f-binding-4 |0; 0; 0|135 and 151 edges; identity and record consistency only; 53 of 53 |
+| (B) `git apply --check` of adoption-v6.diff and of the diffs of the second and third subset rules (nothing applied) |0 each|they apply at `985f5eaf`; log for the first under `orch-B/recheck-l` |
+| review of the third subset rule; any run after 14:14Z that needs Dafny |NOT RUN (battery power)|— |
+
+Reading: model and draft results only. The deployed `ts/refund-finality/sink.ts` stays the weakest link. No subset rule has a proved bound. Owner decisions: `results/night-shift-20261119/OWNER_REQUIRED.md`, B-1 to B-11 with their corrections.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Night shift 2026-11-19, trust track, part 2 (Orchestrator B): the byte-level composed lemma; a sink step that checks the approved relation; reviews; tests in heavy windows; adoption diffs (unapplied) — U537 to U558
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
